@@ -9,8 +9,13 @@ So, this lib has more or less the same api as react-motion (Spring -> Motion, fr
 ```jsx
 import Spring from 'react-spring'
 
-const Content = ({ toggle, color, opacity, scale, path, gradientStart, gradientEnd }) => (
-    <div style={{  background: `linear-gradient(to bottom, ${gradientStart} 0%, ${gradientEnd} 100%)` }}>
+const TRIANGLE = 'M20,380 L380,380 L380,380 L200,20 L20,380 Z'
+const RECTANGLE = 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
+const RED = '#c23369'
+const GREEN = '#28d79f'
+
+const Content = ({ toggle, color, opacity, scale, path, start, stop, end }) => (
+    <div style={{ background: `linear-gradient(to bottom, ${start} ${stop}, ${end} 100%)` }}>
         <svg
             onClick={toggle}
             style={{ opacity, transform: `scale3d(${scale}, ${scale}, ${scale})` }}
@@ -23,26 +28,24 @@ const Content = ({ toggle, color, opacity, scale, path, gradientStart, gradientE
     </div>
 )
 
-const TRIANGLE = 'M20,380 L380,380 L380,380 L200,20 L20,380 Z'
-const RECTANGLE = 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
-
 class App extends React.Component {
     state = { toggle: true }
     toggle = () => this.setState(state => ({ toggle: !state.toggle }))
     render() {
         const toggle = this.state.toggle
-        const color = toggle ? '#c23369' : '#28d79f'
+        const color = toggle ? RED : GREEN
         return (
             <Spring
-                // Default state, optional ...
+                // Default values, optional ...
                 from={{ opacity: 0 }}
-                // Will spring to ...
+                // Will animate to ...
                 to={{
-                    // Can be numbers, colors, paths, patterns ...
+                    // Can be numbers, colors, paths, patterns, percentages ...
                     color,
                     opacity: 1,
-                    gradientStart: toggle ? color : 'black',
-                    gradientEnd: toggle ? 'black' : color,
+                    start: toggle ? color : 'black',
+                    stop: toggle ? '0%' : '50%',
+                    end: toggle ? 'black' : color,
                     scale: toggle ? 1 : 2,
                     path: toggle ? TRIANGLE : RECTANGLE,
                 }}
