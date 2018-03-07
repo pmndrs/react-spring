@@ -13,8 +13,8 @@ function createAnimatedValue(name, from, to) {
 }
 
 export default class Spring extends React.PureComponent {
-    static propTypes = { to: PropTypes.object, from: PropTypes.object }
-    static defaultProps = { to: {}, from: {} }
+    static propTypes = { to: PropTypes.object, from: PropTypes.object, interpolator: PropTypes.func }
+    static defaultProps = { to: {}, from: {}, interpolator: Animated.spring }
 
     constructor(props) {
         super()
@@ -27,7 +27,7 @@ export default class Spring extends React.PureComponent {
     }
 
     update = props => {
-        const { to, from } = props
+        const { to, from, interpolator } = props
         for (let anim of this.animations) {
             const currentValue = anim.animation._value
             anim.animation.stopAnimation()
@@ -37,7 +37,7 @@ export default class Spring extends React.PureComponent {
                     inputRange: [0, 1],
                     outputRange: [anim.interpolate._interpolation(currentValue), to[anim.name]],
                 })
-                Animated.spring(anim.animation, { toValue: 1 }).start()
+                interpolator(anim.animation, { toValue: 1 }).start()
             }
         }
         this.to = this.animations.reduce((acc, anim) => ({ ...acc, [anim.name]: anim.interpolate }), {})
@@ -48,7 +48,7 @@ export default class Spring extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.animations.forEach(anim => Animated.spring(anim.animation, { toValue: 1 }).start())
+        this.animations.forEach(anim => this.props.interpolator(anim.animation, { toValue: 1 }).start())
     }
 
     render() {
