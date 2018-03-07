@@ -4,43 +4,21 @@ Demo: https://codesandbox.io/embed/oln44nx8xq
 
 Proof of concept, for now. Trying to bridge react-motion and animated. React-motion is great, but doesn't interpolate well, non-binary (as in shifting from one state to another instead of toggling between 0 and 1) [get very hard to do](https://github.com/chenglou/react-motion/issues/526) as it can't deal with colors, gradients, paths, etc. Animated is awesome and it can interpolate everything, but the downside is manually having to manage animation-handles, doing the stopping/cleaning chores.
 
-So, this lib has more or less the same api as react-motion (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in (which is used underneath). 
+So, this lib has more or less the same api as react-motion (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in (which is used underneath).
 
 ```jsx
-import React from 'react'
-import ReactDOM from 'react-dom'
 import Spring from 'react-spring'
 
-const Content = ({ toggle, number, scale, path, gradientStart, gradientEnd, ...style }) => (
-    <div
-        style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            background: `linear-gradient(to bottom, ${gradientStart} 0%, ${gradientEnd} 100%)`,
-        }}>
+const Content = ({ toggle, color, opacity, scale, path, gradientStart, gradientEnd }) => (
+    <div style={{  background: `linear-gradient(to bottom, ${gradientStart} 0%, ${gradientEnd} 100%)` }}>
         <svg
             onClick={toggle}
-            style={{
-                width: 300,
-                height: 300,
-                ...style,
-                tranformOrigin: 'center center',
-                transform: `scale(${scale})`,
-            }}
+            style={{ opacity, transform: `scale3d(${scale}, ${scale}, ${scale})` }}
             version="1.1"
-            viewBox="0 0 400 400"
-            className="header-triangle">
-            <g className="path" fill={style.color} fillRule="evenodd">
+            viewBox="0 0 400 400">
+            <g fill={color} fillRule="evenodd">
                 <path id="path-1" d={path} />
             </g>
-            <text fontSize="2em" textAnchor="middle" x="50%" y="50%" fill="#FFFFFF">
-                <tspan x="50%" dy="1em" textAnchor="middle">
-                    Click me ...
-                </tspan>
-            </text>
         </svg>
     </div>
 )
@@ -56,13 +34,15 @@ class App extends React.Component {
         const color = toggle ? '#c23369' : '#28d79f'
         return (
             <Spring
+                // Default state, optional ...
                 from={{ opacity: 0 }}
+                // Will spring to ...
                 to={{
+                    // Can be numbers, colors, paths, patterns ...
                     color,
                     opacity: 1,
                     gradientStart: toggle ? color : 'black',
                     gradientEnd: toggle ? 'black' : color,
-                    number: toggle ? 100 : 0,
                     scale: toggle ? 1 : 2,
                     path: toggle ? TRIANGLE : RECTANGLE,
                 }}
@@ -72,6 +52,4 @@ class App extends React.Component {
         )
     }
 }
-
-render(<App />, document.getElementById('root'))
 ```
