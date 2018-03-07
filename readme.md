@@ -1,6 +1,6 @@
     npm install react-spring
 
-Demo: https://codesandbox.io/s/oln44nx8xq
+Demo: https://codesandbox.io/embed/oln44nx8xq
 
 ```jsx
 import React from 'react'
