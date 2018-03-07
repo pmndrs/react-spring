@@ -48,12 +48,12 @@ class App extends React.Component {
                     scale: toggle ? 1 : 2,
                     path: toggle ? TRIANGLE : RECTANGLE,
                 }}
-                // Content is rendered by prop
-                children={Content}
                 // You can finetune spring settings
                 config={{ friction: 1, tension: 10 }}
                 // All additional props will be spread over the child
                 toggle={this.toggle}
+                // Child as function/render-prop, receives interpolated values
+                children={Content}
             />
         )
     }
