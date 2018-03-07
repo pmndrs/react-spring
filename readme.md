@@ -33,7 +33,6 @@ class App extends React.Component {
     toggle = () => this.setState(state => ({ toggle: !state.toggle }))
     render() {
         const toggle = this.state.toggle
-        const color = toggle ? RED : GREEN
         return (
             <Spring
                 // Default values, optional ...
@@ -41,20 +40,20 @@ class App extends React.Component {
                 // Will animate to ...
                 to={{
                     // Can be numbers, colors, paths, patterns, percentages ...
-                    color,
                     opacity: 1,
-                    start: toggle ? color : 'black',
+                    color: toggle ? RED : GREEN,
+                    start: toggle ? RED : 'black',
+                    end: toggle ? 'black' : GREEN,
                     stop: toggle ? '0%' : '50%',
-                    end: toggle ? 'black' : color,
                     scale: toggle ? 1 : 2,
                     path: toggle ? TRIANGLE : RECTANGLE,
                 }}
-                // Content is rendered by prop
-                children={Content}
                 // You can finetune spring settings
                 config={{ friction: 1, tension: 10 }}
                 // All additional props will be spread over the child
                 toggle={this.toggle}
+                // Child as function/render-prop, receives interpolated values
+                children={Content}
             />
         )
     }
