@@ -48,7 +48,6 @@ function createInterpolator(interpolator) {
         }
     
         render() {
-            console.log(this.props)
             const { children, to, config, ...rest } = this.props
             return React.createElement(this.component, { ...this.to, ...rest })
         }
