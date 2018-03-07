@@ -2,11 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Animated from './animated'
 
-const createAnimatedValue = (animation, name, from, to) => ({
-    name,
-    interpolate: animation.interpolate({ inputRange: [0, 1], outputRange: [from, to] }),
-})
-
 export default class Spring extends React.PureComponent {
     static propTypes = { to: PropTypes.object, from: PropTypes.object, interpolator: PropTypes.func }
     static defaultProps = { to: {}, from: {}, interpolator: Animated.spring }
@@ -16,9 +11,13 @@ export default class Spring extends React.PureComponent {
         const { children, to, from } = props
         this.animation = new Animated.Value(0)
         this.component = Animated.createAnimatedComponent(children)
-        this.animations = Object.entries(to).map(([key, value]) =>
-            createAnimatedValue(this.animation, key, from[key] !== undefined ? from[key] : value, value),
-        )
+        this.animations = Object.entries(to).map(([name, value]) => ({
+            name,
+            interpolate: this.animation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [from[name] !== undefined ? from[name] : value, value],
+            }),
+        }))
         this.to = this.animations.reduce((acc, anim) => ({ ...acc, [anim.name]: anim.interpolate }), {})
     }
 
