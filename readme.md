@@ -7,7 +7,7 @@ Proof of concept, for now. Trying to bridge react-motion and animated. React-mot
 So, this lib has more or less the same api as react-motion (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in (which is used underneath).
 
 ```jsx
-import Spring from 'react-spring'
+import { Spring } from 'react-spring'
 
 const TRIANGLE = 'M20,380 L380,380 L380,380 L200,20 L20,380 Z'
 const RECTANGLE = 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
@@ -49,8 +49,12 @@ class App extends React.Component {
                     scale: toggle ? 1 : 2,
                     path: toggle ? TRIANGLE : RECTANGLE,
                 }}
-                children={Content} // Render prop
-                toggle={this.toggle} // Additional props will be spread over the child
+                // Content is rendered by prop
+                children={Content}
+                // You can finetune spring settings
+                config={{ friction: 1, tension: 10 }}
+                // All additional props will be spread over the child
+                toggle={this.toggle}
             />
         )
     }
