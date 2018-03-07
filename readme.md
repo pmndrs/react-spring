@@ -1,9 +1,8 @@
     npm install react-spring
 
 ```jsx
-import React, { PureComponent } from 'react'
+import React from 'react'
 import Spring from 'react-spring'
-import '../global.pcss'
 
 const Content = ({ toggle, number, scale, path, gradientStart, gradientEnd, ...style }) => (
     <div
@@ -42,7 +41,7 @@ const Content = ({ toggle, number, scale, path, gradientStart, gradientEnd, ...s
 const TRIANGLE = 'M20,380 L380,380 L380,380 L200,20 L20,380 Z'
 const RECTANGLE = 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
 
-export default class App extends React.Component {
+class App extends React.Component {
     state = { toggle: true }
     toggle = () => this.setState(state => ({ toggle: !state.toggle }))
     render() {
@@ -66,4 +65,6 @@ export default class App extends React.Component {
         )
     }
 }
+
+render(<App />, document.getElementById('root'))
 ```

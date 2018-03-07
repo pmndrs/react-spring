@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Animated from 'animated/lib/targets/react-dom'
+import Animated from './animated'
 
 function createAnimatedValue(name, from, to) {
     const animation = new Animated.Value(0)
@@ -47,7 +47,7 @@ export default class Spring extends React.PureComponent {
         this.update(props)
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.animations.forEach(anim => this.props.interpolator(anim.animation, { toValue: 1 }).start())
     }
 
