@@ -52,6 +52,7 @@ export default class Spring extends React.PureComponent {
     }
 
     render() {
-        return React.createElement(this.component, this.to)
+        const { children, to, ...rest } = this.props
+        return React.createElement(this.component, { ...this.to, ...rest })
     }
 }
