@@ -4,6 +4,8 @@ Demo: https://codesandbox.io/embed/oln44nx8xq
 
 Proof of concept, for now. Trying to bridge react-motion and animated. React-motion is great, but doesn't interpolate well, non-binary (0 -> 1) animations [get very hard to do](https://github.com/chenglou/react-motion/issues/526) as it can't deal with colors, gradients, paths, etc. Animated is awesome and it can interpolate everything, but the downside is manually having to manage animation-handles, doing the stopping/cleaning chores.
 
+So, this lib has more or less the same api as react-motion (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in (which is used underneath). 
+
 ```jsx
 import React from 'react'
 import ReactDOM from 'react-dom'
