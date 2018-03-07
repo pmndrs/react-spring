@@ -2,15 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Animated from './animated'
 
-function createAnimatedValue(name, from, to) {
-    const animation = new Animated.Value(0)
-    const result = {
-        name,
-        animation,
-        interpolate: animation.interpolate({ inputRange: [0, 1], outputRange: [from, to] }),
-    }
-    return result
-}
+const createAnimatedValue = (animation, name, from, to) => ({
+    name,
+    interpolate: animation.interpolate({ inputRange: [0, 1], outputRange: [from, to] }),
+})
 
 export default class Spring extends React.PureComponent {
     static propTypes = { to: PropTypes.object, from: PropTypes.object, interpolator: PropTypes.func }
@@ -19,28 +14,29 @@ export default class Spring extends React.PureComponent {
     constructor(props) {
         super()
         const { children, to, from } = props
+        this.animation = new Animated.Value(0)
         this.component = Animated.createAnimatedComponent(children)
         this.animations = Object.entries(to).map(([key, value]) =>
-            createAnimatedValue(key, from[key] !== undefined ? from[key] : value, value),
+            createAnimatedValue(this.animation, key, from[key] !== undefined ? from[key] : value, value),
         )
         this.to = this.animations.reduce((acc, anim) => ({ ...acc, [anim.name]: anim.interpolate }), {})
     }
 
     update = props => {
+        const currentValue = this.animation._value
+        this.animation.stopAnimation()
+        this.animation.setValue(0)
         const { to, from, interpolator } = props
         for (let anim of this.animations) {
-            const currentValue = anim.animation._value
-            anim.animation.stopAnimation()
             if (to[anim.name] !== anim.to) {
-                anim.animation = new Animated.Value(0)
-                anim.interpolate = anim.animation.interpolate({
+                anim.interpolate = this.animation.interpolate({
                     inputRange: [0, 1],
                     outputRange: [anim.interpolate._interpolation(currentValue), to[anim.name]],
                 })
-                interpolator(anim.animation, { toValue: 1 }).start()
             }
         }
         this.to = this.animations.reduce((acc, anim) => ({ ...acc, [anim.name]: anim.interpolate }), {})
+        this.props.interpolator(this.animation, { toValue: 1 }).start()
     }
 
     componentWillReceiveProps(props) {
@@ -48,7 +44,7 @@ export default class Spring extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.animations.forEach(anim => this.props.interpolator(anim.animation, { toValue: 1 }).start())
+        this.props.interpolator(this.animation, { toValue: 1 }).start()
     }
 
     render() {
