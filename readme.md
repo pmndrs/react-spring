@@ -18,6 +18,10 @@ Animated
 
 This lib inherits React-motions api (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in as well as allowing for native animations.
 
+## Default rendering
+
+Like React-motion by default we'll render the receiving component on every frame as it gives you more freedom to animate whatever you like. In this mode you can animate everything, styles, native props, react props, contents.
+
 ```jsx
 import { Spring } from 'react-spring'
 
@@ -72,11 +76,9 @@ class App extends React.Component {
 }
 ```
 
-### Native rendering
+## Native rendering
 
-Demo: https://codesandbox.io/embed/882njxpz29
-
-Like React-motion by default we'll render the receiving component on every frame as it gives you more freedom to animate whatever you like. If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be applied straight in the dom.
+If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be applied straight in the dom.
 
 Just be aware of the following conditions:
 
@@ -84,6 +86,8 @@ Just be aware of the following conditions:
 2. If you use transforms make sure it's an array
 3. Receiving components have to be "animated components"
 4. The values you receive are opaque objects, not regular values
+
+Demo: https://codesandbox.io/embed/882njxpz29
 
 ```jsx
 import { Spring, animated } from 'react-spring'
