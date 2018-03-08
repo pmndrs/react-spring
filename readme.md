@@ -68,9 +68,12 @@ React-spring will re-render the receiving component on every frame. It is usuall
 
 This has a few gotchas:
 
-1.  You can only animate styles!
-2.  The components that receive your styles have to be special, animated components. The styles are opaque objects, not regular styles!
-3.  If you use transforms, make sure it's an array
+1. You can only animate styles!
+2. If you use transforms, make sure it's an array
+3. The components that receive your styles have to be special, animated components. The styles are opaque objects, not regular styles!
+   
+   By default you can use `animated.div`, `animated.span` and `animated.img`, you can create your own by calling: `animated.createAnimatedComponent('h1')` or whatever element you need.
+
 
 ```jsx
 import { Spring, animated } from 'react-spring'
@@ -109,5 +112,3 @@ class App extends React.Component {
     }
 }
 ```
-
-By default you can use `animated.div`, `animated.span` and `animated.img`, you can create your own by calling: `animated.createAnimatedComponent('h1')` or whatever element you need.
