@@ -62,37 +62,52 @@ class App extends React.Component {
 
 ### Native rendering
 
+Demo: https://codesandbox.io/s/882njxpz29
+
 React-spring will re-render the receiving component on every frame. It is usually fine and gives you more freedom to animate whatever you like. If you need more performance supply the `native` flag. Now your component will only render once and all updates will efficiently be applied to it outside of Reacts render loop.
 
 This has a few gotchas:
 
 1.  You can only animate styles!
 2.  The components that receive your styles have to be special, animated components. The styles are opaque objects, not regular styles!
-3. If you use transforms, make sure it's an array
+3.  If you use transforms, make sure it's an array
 
 ```jsx
 import { Spring, animated } from 'react-spring'
+
+const DIV = animated.div
+const SVG = animated.createAnimatedComponent('svg')
+
+const Content = ({ toggle, color, backgroundColor, transform }) => (
+    <DIV style={{ backgroundColor }}>
+        <SVG style={{ transform }} version="1.1" viewBox="0 0 400 400">
+            <g style={{ color }} fillRule="evenodd" onClick={toggle}>
+                <path id="path-1" d="M20,380 L380,380 L380,380 L200,20 L20,380 Z" />
+            </g>
+        </SVG>
+    </DIV>
+)
 
 class App extends React.Component {
     state = { toggle: true }
     toggle = () => this.setState(state => ({ toggle: !state.toggle }))
     render() {
+        const toggle = this.state.toggle
         return (
             <Spring
                 native
-                from={{ color: 'white', opacity: 0, transform: [{ scale: 0 }] }}
-                to={{ color: 'red', opacity: 1, transform: [{ scale: this.state.toggle ? 2 : 1 }] }}>
-                {style => (
-                    <animated.div style={{ ...style, transformOrigin: 'left' }}>
-                        {this.state.toggle ? 'open' : 'closed'}
-                    </animated.div>
-                )}
-            </Spring>
+                from={{ color: 'black' }}
+                to={{
+                    color: toggle ? '#247BA0' : '#70C1B3',
+                    backgroundColor: toggle ? '#B2DBBF' : '#F3FFBD',
+                    transform: [{ rotate: toggle ? '0deg' : '180deg' }, { scale: toggle ? 0.6 : 1.5 }],
+                }}
+                toggle={this.toggle}
+                children={Content}
+            />
         )
     }
 }
 ```
 
 By default you can use `animated.div`, `animated.span` and `animated.img`, you can create your own by calling: `animated.createAnimatedComponent('h1')` or whatever element you need.
-
-
