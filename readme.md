@@ -8,12 +8,12 @@ React-motion
 
 - [x] Declarative api that doesn't involve manual management of handles
 - [ ] Performance suffers because components are re-rendered on every frame
-- [ ] It is best used for toggle animations but can't transition between raw state as it doesn't know colors, paths, gradients, etc. 
+- [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc. 
 
 Animated
 
 - [x] Very powerful, lots of features
-- [x] Very efficient, it changes styles outside of Reacts render loop, the component itself renders only once
+- [x] Very efficient, it does not re-render components and changes styles directly in the dom
 - [ ] Managing and orchestrating handles becomes a real chore
 
 This lib inherits React-motions api (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in as well as allowing for native animations.
