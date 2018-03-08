@@ -2,9 +2,21 @@
 
 Demo: https://codesandbox.io/embed/oln44nx8xq
 
-React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge react-motion and animated in fact. React-motion is great but doesn't interpolate well, shifting from one state to another is [hard](https://github.com/chenglou/react-motion/issues/526) as it can't deal with colors, gradients, paths, etc. Animated does that well, but the downside is manually having to manage animation-handles, doing stopping/cleaning chores.
+React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge Chenglou's [React-motion](https://github.com/chenglou/react-motion) and animated as both have their pros and cons, but definitively could benefit from one another:
 
-This lib has a similar api as react-motion (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in.
+React-motion
+
+- [x] Declarative api that doesn't involve manual management of handles
+- [ ] Performance suffers because components are re-rendered on every frame
+- [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc. 
+
+Animated
+
+- [x] Very powerful, lots of features
+- [x] Very efficient, it does not re-render components and changes styles directly in the dom
+- [ ] Managing and orchestrating handles becomes a real chore
+
+This lib inherits React-motions api (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in as well as allowing for native animations.
 
 ```jsx
 import { Spring } from 'react-spring'
