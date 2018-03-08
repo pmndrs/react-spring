@@ -76,14 +76,14 @@ class App extends React.Component {
 
 Demo: https://codesandbox.io/embed/882njxpz29
 
-Just like React-motion this lib will re-render the receiving component on every frame by default as it gives you more freedom to animate whatever you like. If you need more performance then add the `native` flag. Now your component will only render once and all updates will efficiently be applied to it outside of Reacts render loop.
+Like React-motion by default we'll render the receiving component on every frame as it gives you more freedom to animate whatever you like. If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be applied straight in the dom.
 
-This has a few gotchas:
+Just be aware of the following conditions:
 
-1. You can only native animate styles and props, nothing else!
-2. If you use transforms, make sure it's an array!
-3. Receiving components have to be "animated components", the styles are opaque objects, not regular styles!
-
+1. You can only animate native styles and props
+2. If you use transforms make sure it's an array
+3. Receiving components have to be "animated components"
+4. The values you receive are opaque objects, not regular values
 
 ```jsx
 import { Spring, animated } from 'react-spring'
@@ -120,3 +120,8 @@ class App extends React.Component {
     }
 }
 ```
+
+If you need to interpolate native styles, use `animated.template`. For instance, given that you receive startColor and endColor as animatable values you could do it like so:
+
+    background: animated.template`linear-gradient(bottom ${startColor} 0%, ${EndColor} 100%)`
+
