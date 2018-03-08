@@ -2,15 +2,17 @@
 
 Demo: https://codesandbox.io/embed/oln44nx8xq
 
+# Why 🤔
+
 React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge Chenglou's [React-motion](https://github.com/chenglou/react-motion) and animated as both have their pros and cons, but definitively could benefit from one another:
 
-React-motion
+### React-motion
 
 - [x] Declarative api that doesn't involve manual management of handles
 - [ ] Performance suffers because components are re-rendered on every frame
 - [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc. 
 
-Animated
+### Animated
 
 - [x] Very powerful, lots of features
 - [x] Very efficient, it does not re-render components and changes styles directly in the dom
@@ -18,9 +20,9 @@ Animated
 
 This lib inherits React-motions api (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in as well as allowing for native animations.
 
-## Default rendering
+# Default rendering 🐎
 
-Like React-motion by default we'll render the receiving component on every frame as it gives you more freedom to animate whatever you like. In this mode you can animate everything, styles, native props, react props, contents.
+Like React-motion by default we'll render the receiving component on every frame as it gives you more freedom to animate whatever you like. In most situations this will be ok.
 
 ```jsx
 import { Spring } from 'react-spring'
@@ -76,9 +78,9 @@ class App extends React.Component {
 }
 ```
 
-## Native rendering
+# Native rendering 🚀
 
-If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be applied straight in the dom.
+If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be sent straight to the dom without any React reconciliation passes.
 
 Just be aware of the following conditions:
 
