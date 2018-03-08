@@ -6,7 +6,7 @@ Demo: https://codesandbox.io/embed/oln44nx8xq
 
 React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge Chenglou's [React-motion](https://github.com/chenglou/react-motion) and animated as both have their pros and cons, but definitively could benefit from one another:
 
-### React-motion
+### React-motion
 
 - [x] Declarative api that doesn't involve manual management of handles
 - [ ] Performance suffers because components are re-rendered on every frame
