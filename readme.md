@@ -76,13 +76,13 @@ class App extends React.Component {
 
 Demo: https://codesandbox.io/embed/882njxpz29
 
-React-spring will re-render the receiving component on every frame. It is usually fine and gives you more freedom to animate whatever you like. If you need more performance supply the `native` flag. Now your component will only render once and all updates will efficiently be applied to it outside of Reacts render loop.
+Just like React-motion this lib will re-render the receiving component on every frame by default as it gives you more freedom to animate whatever you like. If you need more performance then add the `native` flag. Now your component will only render once and all updates will efficiently be applied to it outside of Reacts render loop.
 
 This has a few gotchas:
 
-1. You can only animate styles!
-2. If you use transforms, make sure it's an array
-3. The components that receive your styles have to be special, animated components. The styles are opaque objects, not regular styles!
+1. You can only animate styles, nothing else!
+2. If you use transforms, make sure it's an array!
+3. Receiving components have to be "animated components", the styles are opaque objects, not regular styles!
 
 
 ```jsx
