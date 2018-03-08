@@ -70,12 +70,11 @@ function createInterpolator(interpolator) {
 
         componentWillReceiveProps(props) {
             if (props.children !== this._original) {
-                // So, this is probably the weirdest issue that has to be dealt.
-                // People seem to advocate render props, but in a way that re-calls the anonomous child function
-                // on every render. Since Animated wraps it into an animatedComponent we first tried to cut down
-                // on the re-creation by doing it only once, but that would freeze the component for ever and it
-                // becomes stale. Instead, this check at least tries to benefit those that don't re-do their
-                // render functions, the rest will suffer through weird issue.
+                // So, this is probably the weirdest issue that has to be dealt with.
+                // Twitter advocates render props, but in a way that re-calls the anonomous child function
+                // on every render. Since Animated wraps it into an animatedComponent it needs to be updated
+                // or else it would freeze forever and become stale. This following check at least tries to benefit
+                // those that don't re-create their child on every render, the rest will get mounts and unmounts.
                 this._original = props.children
                 this._component = props.native ? props.children : Animated.createAnimatedComponent(props.children)
             }
