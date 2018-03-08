@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Animated from './animated'
+import Animated from './animated/index'
 
 function createInterpolator(interpolator) {
     return class extends React.PureComponent {

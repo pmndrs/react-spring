@@ -2,9 +2,9 @@
 
 Demo: https://codesandbox.io/embed/oln44nx8xq
 
-Proof of concept, for now. Trying to bridge react-motion and animated. React-motion is great, but doesn't interpolate well, non-binary (as in shifting from one state to another instead of toggling between 0 and 1) [get very hard to do](https://github.com/chenglou/react-motion/issues/526) as it can't deal with colors, gradients, paths, etc. Animated is awesome and it can interpolate everything, but the downside is manually having to manage animation-handles, doing the stopping/cleaning chores.
+React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge react-motion and animated in fact. React-motion is great but doesn't interpolate well, shifting from one state to another is [hard](https://github.com/chenglou/react-motion/issues/526) as it can't deal with colors, gradients, paths, etc. Animated does that well, but the downside is manually having to manage animation-handles, doing stopping/cleaning chores.
 
-So, this lib has more or less the same api as react-motion (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in (which is used underneath).
+This lib has a similar api as react-motion (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in.
 
 ```jsx
 import { Spring } from 'react-spring'
@@ -77,7 +77,6 @@ class App extends React.Component {
     state = { toggle: true }
     toggle = () => this.setState(state => ({ toggle: !state.toggle }))
     render() {
-        const toggle = this.state.toggle
         return (
             <Spring
                 native
