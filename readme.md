@@ -62,7 +62,7 @@ class App extends React.Component {
 
 ### Native rendering
 
-React-spring will re-render the receiving component on every frame. It is usually fine and give you more freedom to animate whatever you like. If you need more performance supply the `native` flag. Now your component will only render once and all updates will efficiently be applied to it outside of Reacts render loop.
+React-spring will re-render the receiving component on every frame. It is usually fine and gives you more freedom to animate whatever you like. If you need more performance supply the `native` flag. Now your component will only render once and all updates will efficiently be applied to it outside of Reacts render loop.
 
 This has a few gotchas:
 
