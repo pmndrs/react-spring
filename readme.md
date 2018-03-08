@@ -89,8 +89,6 @@ Just be aware of the following conditions:
 3. Receiving components have to be "animated components"
 4. The values you receive are opaque objects, not regular values
 
-Demo: https://codesandbox.io/embed/882njxpz29
-
 ```jsx
 import { Spring, animated } from 'react-spring'
 
