@@ -67,21 +67,6 @@ function createInterpolator(interpolator) {
             interpolator(this._animation, { toValue: 1, ...config }).start()
         }
 
-        /*_updateAnimations = props => {
-            const { to, from, config } = props
-            const currentValue = this._animation._value
-            this._animation.stopAnimation()
-            this._animation.setValue(0)
-            for (let i=0; i < this._interpolations.length; i++) {
-                let anim = this._interpolations[i]
-                let toValue = Object.values(to)[i]
-                anim.interpolate = mapValues(this._animation, anim.name, toValue, from, anim.interpolate._interpolation(currentValue)).interpolate
-            }
-            //}
-            this._to = this._interpolations.reduce((acc, anim) => ({ ...acc, [anim.name]: anim.interpolate }), {})
-            interpolator(this._animation, { toValue: 1, ...config }).start()
-        }*/
-
         componentWillReceiveProps(props) {
             this._updateAnimations(props)
         }
