@@ -10,7 +10,7 @@ function createInterpolator(interpolator) {
             config: PropTypes.object,
             native: PropTypes.bool,
         }
-        static defaultProps = { to: {}, from: {}, native: false }
+        static defaultProps = { to: {}, from: {}, config: { tension: 170, friction: 26 }, native: false }
 
         constructor(props) {
             super()
