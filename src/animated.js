@@ -1,1 +1,2292 @@
-"use strict";function _interopDefault(t){return t&&"object"==typeof t&&"default"in t?t.default:t}Object.defineProperty(exports,"__esModule",{value:!0});var react=_interopDefault(require("react")),NODE_ENV=process.env.NODE_ENV,invariant=function(t,e,n,i,r,a,o,s){if("production"!==NODE_ENV&&void 0===e)throw new Error("invariant requires an error message argument");if(!t){var l;if(void 0===e)l=new Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.");else{var u=[n,i,r,a,o,s],c=0;(l=new Error(e.replace(/%s/g,function(){return u[c++]}))).name="Invariant Violation"}throw l.framesToPop=1,l}},invariant_1=invariant,Animated=function(){function t(){}var e=t.prototype;return e.__attach=function(){},e.__detach=function(){},e.__getValue=function(){},e.__getAnimatedValue=function(){return this.__getValue()},e.__addChild=function(t){},e.__removeChild=function(t){},e.__getChildren=function(){return[]},t}(),Animated_1=Animated,commonjsGlobal="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:{};function _classCallCheck(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function _extends(){return(_extends=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var n=arguments[e];for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(t[i]=n[i])}return t}).apply(this,arguments)}function _inheritsLoose(t,e){t.prototype=Object.create(e.prototype),t.prototype.constructor=t,t.__proto__=e}function _objectWithoutProperties(t,e){if(null==t)return{};var n,i,r={},a=Object.keys(t);for(i=0;i<a.length;i++)n=a[i],e.indexOf(n)>=0||(r[n]=t[n]);if(Object.getOwnPropertySymbols){var o=Object.getOwnPropertySymbols(t);for(i=0;i<o.length;i++)n=o[i],e.indexOf(n)>=0||Object.prototype.propertyIsEnumerable.call(t,n)&&(r[n]=t[n])}return r}function _possibleConstructorReturn(t,e){if(e&&("object"==typeof e||"function"==typeof e))return e;if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}var rollupPluginBabelHelpers=Object.freeze({classCallCheck:_classCallCheck,get extends(){return _extends},inheritsLoose:_inheritsLoose,objectWithoutProperties:_objectWithoutProperties,possibleConstructorReturn:_possibleConstructorReturn}),require$$0=rollupPluginBabelHelpers,_inheritsLoose$1=require$$0.inheritsLoose,AnimatedWithChildren=function(t){function e(){var e;return(e=t.call(this)||this)._children=[],e}_inheritsLoose$1(e,t);var n=e.prototype;return n.__addChild=function(t){0===this._children.length&&this.__attach(),this._children.push(t)},n.__removeChild=function(t){var e=this._children.indexOf(t);-1!==e?(this._children.splice(e,1),0===this._children.length&&this.__detach()):console.warn("Trying to remove a child that doesn't exist")},n.__getChildren=function(){return this._children},e}(Animated_1),AnimatedWithChildren_1=AnimatedWithChildren,InteractionManager={current:{createInteractionHandle:function(){},clearInteractionHandle:function(){}},inject:function(t){InteractionManager.current=t}},InteractionManager_1=InteractionManager;function normalizeColor(t){var e;return"number"==typeof t?t>>>0===t&&t>=0&&t<=4294967295?t:null:(e=matchers.hex6.exec(t))?parseInt(e[1]+"ff",16)>>>0:names.hasOwnProperty(t)?names[t]:(e=matchers.rgb.exec(t))?(parse255(e[1])<<24|parse255(e[2])<<16|parse255(e[3])<<8|255)>>>0:(e=matchers.rgba.exec(t))?(parse255(e[1])<<24|parse255(e[2])<<16|parse255(e[3])<<8|parse1(e[4]))>>>0:(e=matchers.hex3.exec(t))?parseInt(e[1]+e[1]+e[2]+e[2]+e[3]+e[3]+"ff",16)>>>0:(e=matchers.hex8.exec(t))?parseInt(e[1],16)>>>0:(e=matchers.hex4.exec(t))?parseInt(e[1]+e[1]+e[2]+e[2]+e[3]+e[3]+e[4]+e[4],16)>>>0:(e=matchers.hsl.exec(t))?(255|hslToRgb(parse360(e[1]),parsePercentage(e[2]),parsePercentage(e[3])))>>>0:(e=matchers.hsla.exec(t))?(hslToRgb(parse360(e[1]),parsePercentage(e[2]),parsePercentage(e[3]))|parse1(e[4]))>>>0:null}function hue2rgb(t,e,n){return n<0&&(n+=1),n>1&&(n-=1),n<1/6?t+6*(e-t)*n:n<.5?e:n<2/3?t+(e-t)*(2/3-n)*6:t}function hslToRgb(t,e,n){var i=n<.5?n*(1+e):n+e-n*e,r=2*n-i,a=hue2rgb(r,i,t+1/3),o=hue2rgb(r,i,t),s=hue2rgb(r,i,t-1/3);return Math.round(255*a)<<24|Math.round(255*o)<<16|Math.round(255*s)<<8}var NUMBER="[-+]?\\d*\\.?\\d+",PERCENTAGE=NUMBER+"%";function toArray(t){return Array.prototype.slice.call(t,0)}function call(){return"\\(\\s*("+toArray(arguments).join(")\\s*,\\s*(")+")\\s*\\)"}var matchers={rgb:new RegExp("rgb"+call(NUMBER,NUMBER,NUMBER)),rgba:new RegExp("rgba"+call(NUMBER,NUMBER,NUMBER,NUMBER)),hsl:new RegExp("hsl"+call(NUMBER,PERCENTAGE,PERCENTAGE)),hsla:new RegExp("hsla"+call(NUMBER,PERCENTAGE,PERCENTAGE,NUMBER)),hex3:/^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,hex4:/^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,hex6:/^#([0-9a-fA-F]{6})$/,hex8:/^#([0-9a-fA-F]{8})$/};function parse255(t){var e=parseInt(t,10);return e<0?0:e>255?255:e}function parse360(t){return(parseFloat(t)%360+360)%360/360}function parse1(t){var e=parseFloat(t);return e<0?0:e>1?255:Math.round(255*e)}function parsePercentage(t){var e=parseFloat(t,10);return e<0?0:e>100?1:e/100}var names={transparent:0,aliceblue:4042850303,antiquewhite:4209760255,aqua:16777215,aquamarine:2147472639,azure:4043309055,beige:4126530815,bisque:4293182719,black:255,blanchedalmond:4293643775,blue:65535,blueviolet:2318131967,brown:2771004159,burlywood:3736635391,burntsienna:3934150143,cadetblue:1604231423,chartreuse:2147418367,chocolate:3530104575,coral:4286533887,cornflowerblue:1687547391,cornsilk:4294499583,crimson:3692313855,cyan:16777215,darkblue:35839,darkcyan:9145343,darkgoldenrod:3095792639,darkgray:2846468607,darkgreen:6553855,darkgrey:2846468607,darkkhaki:3182914559,darkmagenta:2332068863,darkolivegreen:1433087999,darkorange:4287365375,darkorchid:2570243327,darkred:2332033279,darksalmon:3918953215,darkseagreen:2411499519,darkslateblue:1211993087,darkslategray:793726975,darkslategrey:793726975,darkturquoise:13554175,darkviolet:2483082239,deeppink:4279538687,deepskyblue:12582911,dimgray:1768516095,dimgrey:1768516095,dodgerblue:512819199,firebrick:2988581631,floralwhite:4294635775,forestgreen:579543807,fuchsia:4278255615,gainsboro:3705462015,ghostwhite:4177068031,gold:4292280575,goldenrod:3668254975,gray:2155905279,green:8388863,greenyellow:2919182335,grey:2155905279,honeydew:4043305215,hotpink:4285117695,indianred:3445382399,indigo:1258324735,ivory:4294963455,khaki:4041641215,lavender:3873897215,lavenderblush:4293981695,lawngreen:2096890111,lemonchiffon:4294626815,lightblue:2916673279,lightcoral:4034953471,lightcyan:3774873599,lightgoldenrodyellow:4210742015,lightgray:3553874943,lightgreen:2431553791,lightgrey:3553874943,lightpink:4290167295,lightsalmon:4288707327,lightseagreen:548580095,lightskyblue:2278488831,lightslategray:2005441023,lightslategrey:2005441023,lightsteelblue:2965692159,lightyellow:4294959359,lime:16711935,limegreen:852308735,linen:4210091775,magenta:4278255615,maroon:2147483903,mediumaquamarine:1724754687,mediumblue:52735,mediumorchid:3126187007,mediumpurple:2473647103,mediumseagreen:1018393087,mediumslateblue:2070474495,mediumspringgreen:16423679,mediumturquoise:1221709055,mediumvioletred:3340076543,midnightblue:421097727,mintcream:4127193855,mistyrose:4293190143,moccasin:4293178879,navajowhite:4292783615,navy:33023,oldlace:4260751103,olive:2155872511,olivedrab:1804477439,orange:4289003775,orangered:4282712319,orchid:3664828159,palegoldenrod:4008225535,palegreen:2566625535,paleturquoise:2951671551,palevioletred:3681588223,papayawhip:4293907967,peachpuff:4292524543,peru:3448061951,pink:4290825215,plum:3718307327,powderblue:2967529215,purple:2147516671,rebeccapurple:1714657791,red:4278190335,rosybrown:3163525119,royalblue:1097458175,saddlebrown:2336560127,salmon:4202722047,sandybrown:4104413439,seagreen:780883967,seashell:4294307583,sienna:2689740287,silver:3233857791,skyblue:2278484991,slateblue:1784335871,slategray:1887473919,slategrey:1887473919,snow:4294638335,springgreen:16744447,steelblue:1182971135,tan:3535047935,teal:8421631,thistle:3636451583,tomato:4284696575,turquoise:1088475391,violet:4001558271,wheat:4125012991,white:4294967295,whitesmoke:4126537215,yellow:4294902015,yellowgreen:2597139199};function rgba(t){return{r:Math.round((4278190080&t)>>>24),g:Math.round((16711680&t)>>>16),b:Math.round((65280&t)>>>8),a:((255&t)>>>0)/255}}normalizeColor.rgba=rgba;var normalizeCssColor=normalizeColor,_extends$1=require$$0.extends,linear=function(t){return t},Interpolation=function(){function t(){}return t.create=function(t){if(t.outputRange&&"string"==typeof t.outputRange[0])return createInterpolationFromStringOutputRange(t);var e=t.outputRange;checkInfiniteRange("outputRange",e);var n=t.inputRange;checkInfiniteRange("inputRange",n),checkValidInputRange(n),invariant_1(n.length===e.length,"inputRange ("+n.length+") and outputRange ("+e.length+") must have the same length");var i=t.easing||linear,r="extend";void 0!==t.extrapolateLeft?r=t.extrapolateLeft:void 0!==t.extrapolate&&(r=t.extrapolate);var a="extend";return void 0!==t.extrapolateRight?a=t.extrapolateRight:void 0!==t.extrapolate&&(a=t.extrapolate),function(t){invariant_1("number"==typeof t,"Cannot interpolation an input which is not a number");var o=findRange(t,n);return interpolate(t,n[o],n[o+1],e[o],e[o+1],i,r,a)}},t}();function interpolate(t,e,n,i,r,a,o,s){var l=t;if(l<e){if("identity"===o)return l;"clamp"===o&&(l=e)}if(l>n){if("identity"===s)return l;"clamp"===s&&(l=n)}return i===r?i:e===n?t<=e?i:r:(e===-1/0?l=-l:n===1/0?l-=e:l=(l-e)/(n-e),l=a(l),i===-1/0?l=-l:r===1/0?l+=i:l=l*(r-i)+i,l)}function colorToRgba(t){var e=normalizeCssColor(t);return null===e?t:"rgba("+((4278190080&(e=e||0))>>>24)+", "+((16711680&e)>>>16)+", "+((65280&e)>>>8)+", "+(255&e)/255+")"}var stringShapeRegex=/[0-9\.-]+/g;function createInterpolationFromStringOutputRange(t){var e=t.outputRange;invariant_1(e.length>=2,"Bad output range"),checkPattern(e=e.map(colorToRgba));var n=e[0].match(stringShapeRegex).map(function(){return[]});e.forEach(function(t){t.match(stringShapeRegex).forEach(function(t,e){n[e].push(+t)})});var i=e[0].match(stringShapeRegex).map(function(e,i){return Interpolation.create(_extends$1({},t,{outputRange:n[i]}))}),r=/^rgb/.test(e[0]);return function(t){var n=0;return e[0].replace(stringShapeRegex,function(){var e=i[n++](t);return String(r&&n<4?Math.round(e):e)})}}function checkPattern(t){for(var e=t[0].replace(stringShapeRegex,""),n=1;n<t.length;++n)invariant_1(e===t[n].replace(stringShapeRegex,""),"invalid pattern "+t[0]+" and "+t[n])}function findRange(t,e){for(var n=1;n<e.length-1&&!(e[n]>=t);++n);return n-1}function checkValidInputRange(t){invariant_1(t.length>=2,"inputRange must have at least 2 elements");for(var e=1;e<t.length;++e)invariant_1(t[e]>=t[e-1],"inputRange must be monotonically increasing "+t)}function checkInfiniteRange(t,e){invariant_1(e.length>=2,t+" must have at least 2 elements"),invariant_1(2!==e.length||e[0]!==-1/0||e[1]!==1/0,t+"cannot be ]-infinity;+infinity[ "+e)}var Interpolation_1=Interpolation,_uniqueId=0,guid=function(){return String(_uniqueId++)},_inheritsLoose$2=require$$0.inheritsLoose,AnimatedInterpolation=function(t){function e(e,n){var i;return(i=t.call(this)||this)._parent=e,i._interpolation=n,i._listeners={},i}_inheritsLoose$2(e,t);var n=e.prototype;return n.__getValue=function(){var t=this._parent.__getValue();return invariant_1("number"==typeof t,"Cannot interpolate an input which is not a number."),this._interpolation(t)},n.addListener=function(t){var e=this;this._parentListener||(this._parentListener=this._parent.addListener(function(){for(var t in e._listeners)e._listeners[t]({value:e.__getValue()})}));var n=guid();return this._listeners[n]=t,n},n.removeListener=function(t){delete this._listeners[t]},n.interpolate=function(t){return new e(this,Interpolation_1.create(t))},n.__attach=function(){this._parent.__addChild(this)},n.__detach=function(){this._parent.__removeChild(this),this._parentListener=this._parent.removeListener(this._parentListener)},e}(AnimatedWithChildren_1),AnimatedInterpolation_1=AnimatedInterpolation,Animation=function(){function t(){}var e=t.prototype;return e.start=function(t,e,n,i){},e.stop=function(){},e.__debouncedOnEnd=function(t){var e=this.__onEnd;this.__onEnd=null,e&&e(t)},t}(),Animation_1=Animation;function SetPolyfill(){this._cache=[]}SetPolyfill.prototype.add=function(t){-1===this._cache.indexOf(t)&&this._cache.push(t)},SetPolyfill.prototype.forEach=function(t){this._cache.forEach(t)};var SetPolyfill_1=SetPolyfill,_inheritsLoose$3=require$$0.inheritsLoose,Set=commonjsGlobal.Set||SetPolyfill_1;function _flush(t){var e=new Set;!function t(n){"function"==typeof n.update?e.add(n):n.__getChildren().forEach(t)}(t),e.forEach(function(t){return t.update()})}var AnimatedValue=function(t){function e(e){var n;return(n=t.call(this)||this)._value=e,n._offset=0,n._animation=null,n._listeners={},n}_inheritsLoose$3(e,t);var n=e.prototype;return n.__detach=function(){this.stopAnimation()},n.__getValue=function(){return this._value+this._offset},n.setValue=function(t){this._animation&&(this._animation.stop(),this._animation=null),this._updateValue(t)},n.setOffset=function(t){this._offset=t},n.flattenOffset=function(){this._value+=this._offset,this._offset=0},n.addListener=function(t){var e=guid();return this._listeners[e]=t,e},n.removeListener=function(t){delete this._listeners[t]},n.removeAllListeners=function(){this._listeners={}},n.stopAnimation=function(t){this.stopTracking(),this._animation&&this._animation.stop(),this._animation=null,t&&t(this.__getValue())},n.interpolate=function(t){return new AnimatedInterpolation_1(this,Interpolation_1.create(t))},n.animate=function(t,e){var n=this,i=null;t.__isInteraction&&(i=InteractionManager_1.current.createInteractionHandle());var r=this._animation;this._animation&&this._animation.stop(),this._animation=t,t.start(this._value,function(t){n._updateValue(t)},function(t){n._animation=null,null!==i&&InteractionManager_1.current.clearInteractionHandle(i),e&&e(t)},r)},n.stopTracking=function(){this._tracking&&this._tracking.__detach(),this._tracking=null},n.track=function(t){this.stopTracking(),this._tracking=t},n._updateValue=function(t){for(var e in this._value=t,_flush(this),this._listeners)this._listeners[e]({value:this.__getValue()})},e}(AnimatedWithChildren_1),AnimatedValue_1=AnimatedValue,_extends$2=require$$0.extends,_inheritsLoose$4=require$$0.inheritsLoose,AnimatedTracking=function(t){function e(e,n,i,r,a){var o;return(o=t.call(this)||this)._value=e,o._parent=n,o._animationClass=i,o._animationConfig=r,o._callback=a,o.__attach(),o}_inheritsLoose$4(e,t);var n=e.prototype;return n.__getValue=function(){return this._parent.__getValue()},n.__attach=function(){this._parent.__addChild(this)},n.__detach=function(){this._parent.__removeChild(this)},n.update=function(){this._value.animate(new this._animationClass(_extends$2({},this._animationConfig,{toValue:this._animationConfig.toValue.__getValue()})),this._callback)},e}(Animated_1),AnimatedTracking_1=AnimatedTracking,RequestAnimationFrame={current:function(t){return commonjsGlobal.requestAnimationFrame(t)},inject:function(t){RequestAnimationFrame.current=t}},RequestAnimationFrame_1=RequestAnimationFrame,CancelAnimationFrame={current:function(t){return commonjsGlobal.cancelAnimationFrame(t)},inject:function(t){CancelAnimationFrame.current=t}},CancelAnimationFrame_1=CancelAnimationFrame;function tensionFromOrigamiValue(t){return 3.62*(t-30)+194}function frictionFromOrigamiValue(t){return 3*(t-8)+25}function fromOrigamiTensionAndFriction(t,e){return{tension:tensionFromOrigamiValue(t),friction:frictionFromOrigamiValue(e)}}function fromBouncinessAndSpeed(t,e){function n(t,e,n){return(t-e)/(n-e)}function i(t,e,n){return e+t*(n-e)}var r=n(t/1.7,0,20);r=i(r,0,.8);var a,o,s,l,u=i(n(e/1.7,0,20),.5,200),c=(a=r,o=(s=u)<=18?(l=s,7e-4*Math.pow(l,3)-.031*Math.pow(l,2)+.64*l+1.28):s>18&&s<=44?function(t){return 44e-6*Math.pow(t,3)-.006*Math.pow(t,2)+.36*t+2}(s):function(t){return 4.5e-7*Math.pow(t,3)-332e-6*Math.pow(t,2)+.1078*t+5.84}(s),function(t,e,n){return t*n+(1-t)*e}(2*a-a*a,o,.01));return{tension:tensionFromOrigamiValue(u),friction:frictionFromOrigamiValue(c)}}var SpringConfig={fromOrigamiTensionAndFriction:fromOrigamiTensionAndFriction,fromBouncinessAndSpeed:fromBouncinessAndSpeed},_inheritsLoose$5=require$$0.inheritsLoose;function withDefault(t,e){return void 0===t||null===t?e:t}var SpringAnimation=function(t){function e(e){var n,i;return(n=t.call(this)||this)._overshootClamping=withDefault(e.overshootClamping,!1),n._restDisplacementThreshold=withDefault(e.restDisplacementThreshold,.001),n._restSpeedThreshold=withDefault(e.restSpeedThreshold,.001),n._initialVelocity=e.velocity,n._lastVelocity=withDefault(e.velocity,0),n._toValue=e.toValue,n.__isInteraction=void 0===e.isInteraction||e.isInteraction,void 0!==e.bounciness||void 0!==e.speed?(invariant_1(void 0===e.tension&&void 0===e.friction,"You can only define bounciness/speed or tension/friction but not both"),i=SpringConfig.fromBouncinessAndSpeed(withDefault(e.bounciness,8),withDefault(e.speed,12))):i=SpringConfig.fromOrigamiTensionAndFriction(withDefault(e.tension,40),withDefault(e.friction,7)),n._tension=i.tension,n._friction=i.friction,n}_inheritsLoose$5(e,t);var n=e.prototype;return n.start=function(t,n,i,r){if(this.__active=!0,this._startPosition=t,this._lastPosition=this._startPosition,this._onUpdate=n,this.__onEnd=i,this._lastTime=Date.now(),r instanceof e){var a=r.getInternalState();this._lastPosition=a.lastPosition,this._lastVelocity=a.lastVelocity,this._lastTime=a.lastTime}void 0!==this._initialVelocity&&null!==this._initialVelocity&&(this._lastVelocity=this._initialVelocity),this.onUpdate()},n.getInternalState=function(){return{lastPosition:this._lastPosition,lastVelocity:this._lastVelocity,lastTime:this._lastTime}},n.onUpdate=function(){var t=this._lastPosition,e=this._lastVelocity,n=this._lastPosition,i=this._lastVelocity,r=Date.now();r>this._lastTime+64&&(r=this._lastTime+64);for(var a=Math.floor((r-this._lastTime)/1),o=0;o<a;++o){var s=e,l=this._tension*(this._toValue-n)-this._friction*i,u=(n=t+.001*s/2,i=e+.001*l/2),c=this._tension*(this._toValue-n)-this._friction*i;n=t+.001*u/2;var h=i=e+.001*c/2,_=this._tension*(this._toValue-n)-this._friction*i;n=t+.001*h/2;var f=i=e+.001*_/2,p=this._tension*(this._toValue-n)-this._friction*i;n=t+.001*h/2,i=e+.001*_/2,t+=.001*((s+2*(u+h)+f)/6),e+=.001*((l+2*(c+_)+p)/6)}if(this._lastTime=r,this._lastPosition=t,this._lastVelocity=e,this._onUpdate(t),this.__active){var d=!1;this._overshootClamping&&0!==this._tension&&(d=this._startPosition<this._toValue?t>this._toValue:t<this._toValue);var m=Math.abs(e)<=this._restSpeedThreshold,g=!0;if(0!==this._tension&&(g=Math.abs(this._toValue-t)<=this._restDisplacementThreshold),d||m&&g)return 0!==this._tension&&this._onUpdate(this._toValue),void this.__debouncedOnEnd({finished:!0});this._animationFrame=RequestAnimationFrame_1.current(this.onUpdate.bind(this))}},n.stop=function(){this.__active=!1,CancelAnimationFrame_1.current(this._animationFrame),this.__debouncedOnEnd({finished:!1})},e}(Animation_1),SpringAnimation_1=SpringAnimation,_inheritsLoose$6=require$$0.inheritsLoose,AnimatedTransform=function(t){function e(e){var n;return(n=t.call(this)||this)._transforms=e,n}_inheritsLoose$6(e,t);var n=e.prototype;return n.__getValue=function(){return this._transforms.map(function(t){var e={};for(var n in t){var i=t[n];e[n]=i instanceof Animated_1?i.__getValue():i}return e})},n.__getAnimatedValue=function(){return this._transforms.map(function(t){var e={};for(var n in t){var i=t[n];e[n]=i instanceof Animated_1?i.__getAnimatedValue():i}return e})},n.__attach=function(){var t=this;this._transforms.forEach(function(e){for(var n in e){var i=e[n];i instanceof Animated_1&&i.__addChild(t)}})},n.__detach=function(){var t=this;this._transforms.forEach(function(e){for(var n in e){var i=e[n];i instanceof Animated_1&&i.__removeChild(t)}})},e}(AnimatedWithChildren_1),AnimatedTransform_1=AnimatedTransform,FlattenStyle={current:function(t){return t},inject:function(t){FlattenStyle.current=t}},FlattenStyle_1=FlattenStyle,_extends$3=require$$0.extends,_inheritsLoose$7=require$$0.inheritsLoose,AnimatedStyle=function(t){function e(e){var n;return n=t.call(this)||this,!(e=FlattenStyle_1.current(e)||{}).transform||e.transform instanceof Animated_1||(e=_extends$3({},e,{transform:new AnimatedTransform_1(e.transform)})),n._style=e,n}_inheritsLoose$7(e,t);var n=e.prototype;return n.__getValue=function(){var t={};for(var e in this._style){var n=this._style[e];t[e]=n instanceof Animated_1?n.__getValue():n}return t},n.__getAnimatedValue=function(){var t={};for(var e in this._style){var n=this._style[e];n instanceof Animated_1&&(t[e]=n.__getAnimatedValue())}return t},n.__attach=function(){for(var t in this._style){var e=this._style[t];e instanceof Animated_1&&e.__addChild(this)}},n.__detach=function(){for(var t in this._style){var e=this._style[t];e instanceof Animated_1&&e.__removeChild(this)}},e}(AnimatedWithChildren_1),AnimatedStyle_1=AnimatedStyle,_extends$4=require$$0.extends,_inheritsLoose$8=require$$0.inheritsLoose,AnimatedProps=function(t){function e(e,n){var i;return i=t.call(this)||this,e.style&&(e=_extends$4({},e,{style:new AnimatedStyle_1(e.style)})),i._props=e,i._callback=n,i.__attach(),i}_inheritsLoose$8(e,t);var n=e.prototype;return n.__getValue=function(){var t={};for(var e in this._props){var n=this._props[e];t[e]=n instanceof Animated_1?n.__getValue():n}return t},n.__getAnimatedValue=function(){var t={};for(var e in this._props){var n=this._props[e];n instanceof Animated_1&&(t[e]=n.__getAnimatedValue())}return t},n.__attach=function(){for(var t in this._props){var e=this._props[t];e instanceof Animated_1&&e.__addChild(this)}},n.__detach=function(){for(var t in this._props){var e=this._props[t];e instanceof Animated_1&&e.__removeChild(this)}},n.update=function(){this._callback()},e}(Animated_1),AnimatedProps_1=AnimatedProps,ApplyAnimatedValues={current:function(t,e){if(!t.setNativeProps)return!1;t.setNativeProps(e)},transformStyles:function(t){return t},inject:function(t,e){ApplyAnimatedValues.current=t,ApplyAnimatedValues.transformStyles=e}},ApplyAnimatedValues_1=ApplyAnimatedValues,_extends$5=require$$0.extends,_objectWithoutProperties$1=require$$0.objectWithoutProperties,_inheritsLoose$9=require$$0.inheritsLoose;function createAnimatedComponent(t){var e=function(e){function n(){return e.apply(this,arguments)||this}_inheritsLoose$9(n,e);var i=n.prototype;return i.componentWillUnmount=function(){this._propsAnimated&&this._propsAnimated.__detach()},i.setNativeProps=function(t){this.refName&&ApplyAnimatedValues_1.current(this.refName,t,this)||this.forceUpdate()},i.componentWillMount=function(){this.attachProps(this.props)},i.attachProps=function(t){var e=this,n=this._propsAnimated;this._propsAnimated=new AnimatedProps_1(t,function(){e.refName&&ApplyAnimatedValues_1.current(e.refName,e._propsAnimated.__getAnimatedValue(),e)||e.forceUpdate()}),n&&n.__detach()},i.componentWillReceiveProps=function(t){this.attachProps(t)},i.render=function(){var e=this,n=this._propsAnimated.__getValue(),i=n.style,r=_objectWithoutProperties$1(n,["style"]);return react.createElement(t,_extends$5({},r,{style:ApplyAnimatedValues_1.transformStyles(i),ref:function(t){return e.refName=t}}))},n}(react.Component);return"production"!==process.env.NODE_ENV&&(e.propTypes={style:function(e,n,i){t.propTypes}}),e}var createAnimatedComponent_1=createAnimatedComponent,spring=function(t,e){return{start:function(n){var i=t,r=e;i.stopTracking(),e.toValue instanceof Animated_1?i.track(new AnimatedTracking_1(i,e.toValue,SpringAnimation_1,r,n)):i.animate(new SpringAnimation_1(r),n)},stop:function(){t.stopAnimation()}}},src={Value:AnimatedValue_1,spring:spring,createAnimatedComponent:createAnimatedComponent_1,inject:{ApplyAnimatedValues:ApplyAnimatedValues_1.inject,InteractionManager:InteractionManager_1.inject,FlattenStyle:FlattenStyle_1.inject,RequestAnimationFrame:RequestAnimationFrame_1.inject,CancelAnimationFrame:CancelAnimationFrame_1.inject},__PropsOnlyForTests:AnimatedProps_1},src_1=src.Value,src_2=src.spring,src_3=src.createAnimatedComponent,src_4=src.inject,src_5=src.__PropsOnlyForTests;exports.default=src,exports.Value=src_1,exports.spring=src_2,exports.createAnimatedComponent=src_3,exports.inject=src_4,exports.__PropsOnlyForTests=src_5;
+import react from 'react';
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+  subClass.__proto__ = superClass;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (typeof call === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+var rollupPluginBabelHelpers = Object.freeze({
+	classCallCheck: _classCallCheck,
+	get extends () { return _extends; },
+	inheritsLoose: _inheritsLoose,
+	objectWithoutProperties: _objectWithoutProperties,
+	possibleConstructorReturn: _possibleConstructorReturn
+});
+
+/**
+ * Copyright 2013-2015, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var NODE_ENV = process.env.NODE_ENV;
+
+var invariant = function invariant(condition, format, a, b, c, d, e, f) {
+  if (NODE_ENV !== 'production') {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  }
+
+  if (!condition) {
+    var error;
+
+    if (format === undefined) {
+      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(format.replace(/%s/g, function () {
+        return args[argIndex++];
+      }));
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+
+    throw error;
+  }
+};
+
+var invariant_1 = invariant;
+
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+// support them yet
+
+var Animated =
+/*#__PURE__*/
+function () {
+  function Animated() {}
+
+  var _proto = Animated.prototype;
+
+  _proto.__attach = function __attach() {};
+
+  _proto.__detach = function __detach() {};
+
+  _proto.__getValue = function __getValue() {};
+
+  _proto.__getAnimatedValue = function __getAnimatedValue() {
+    return this.__getValue();
+  };
+
+  _proto.__addChild = function __addChild(child) {};
+
+  _proto.__removeChild = function __removeChild(child) {};
+
+  _proto.__getChildren = function __getChildren() {
+    return [];
+  };
+
+  return Animated;
+}();
+
+var Animated_1 = Animated;
+
+var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+var require$$0 = ( rollupPluginBabelHelpers && undefined ) || rollupPluginBabelHelpers;
+
+var _inheritsLoose$1 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+var AnimatedWithChildren =
+/*#__PURE__*/
+function (_Animated) {
+  _inheritsLoose$1(AnimatedWithChildren, _Animated);
+
+  function AnimatedWithChildren() {
+    var _this;
+
+    _this = _Animated.call(this) || this;
+    _this._children = [];
+    return _this;
+  }
+
+  var _proto = AnimatedWithChildren.prototype;
+
+  _proto.__addChild = function __addChild(child) {
+    if (this._children.length === 0) {
+      this.__attach();
+    }
+
+    this._children.push(child);
+  };
+
+  _proto.__removeChild = function __removeChild(child) {
+    var index = this._children.indexOf(child);
+
+    if (index === -1) {
+      console.warn('Trying to remove a child that doesn\'t exist');
+      return;
+    }
+
+    this._children.splice(index, 1);
+
+    if (this._children.length === 0) {
+      this.__detach();
+    }
+  };
+
+  _proto.__getChildren = function __getChildren() {
+    return this._children;
+  };
+
+  return AnimatedWithChildren;
+}(Animated_1);
+
+var AnimatedWithChildren_1 = AnimatedWithChildren;
+
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var InteractionManager = {
+  current: {
+    createInteractionHandle: function createInteractionHandle() {},
+    clearInteractionHandle: function clearInteractionHandle() {}
+  },
+  inject: function inject(manager) {
+    InteractionManager.current = manager;
+  }
+};
+var InteractionManager_1 = InteractionManager;
+
+/*
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+function normalizeColor(color) {
+  var match;
+
+  if (typeof color === 'number') {
+    if (color >>> 0 === color && color >= 0 && color <= 0xffffffff) {
+      return color;
+    }
+
+    return null;
+  } // Ordered based on occurrences on Facebook codebase
+
+
+  if (match = matchers.hex6.exec(color)) {
+    return parseInt(match[1] + 'ff', 16) >>> 0;
+  }
+
+  if (names.hasOwnProperty(color)) {
+    return names[color];
+  }
+
+  if (match = matchers.rgb.exec(color)) {
+    return (parse255(match[1]) << 24 | // r
+    parse255(match[2]) << 16 | // g
+    parse255(match[3]) << 8 | // b
+    0x000000ff // a
+    ) >>> 0;
+  }
+
+  if (match = matchers.rgba.exec(color)) {
+    return (parse255(match[1]) << 24 | // r
+    parse255(match[2]) << 16 | // g
+    parse255(match[3]) << 8 | // b
+    parse1(match[4]) // a
+    ) >>> 0;
+  }
+
+  if (match = matchers.hex3.exec(color)) {
+    return parseInt(match[1] + match[1] + // r
+    match[2] + match[2] + // g
+    match[3] + match[3] + // b
+    'ff', // a
+    16) >>> 0;
+  } // https://drafts.csswg.org/css-color-4/#hex-notation
+
+
+  if (match = matchers.hex8.exec(color)) {
+    return parseInt(match[1], 16) >>> 0;
+  }
+
+  if (match = matchers.hex4.exec(color)) {
+    return parseInt(match[1] + match[1] + // r
+    match[2] + match[2] + // g
+    match[3] + match[3] + // b
+    match[4] + match[4], // a
+    16) >>> 0;
+  }
+
+  if (match = matchers.hsl.exec(color)) {
+    return (hslToRgb(parse360(match[1]), // h
+    parsePercentage(match[2]), // s
+    parsePercentage(match[3]) // l
+    ) | 0x000000ff // a
+    ) >>> 0;
+  }
+
+  if (match = matchers.hsla.exec(color)) {
+    return (hslToRgb(parse360(match[1]), // h
+    parsePercentage(match[2]), // s
+    parsePercentage(match[3]) // l
+    ) | parse1(match[4]) // a
+    ) >>> 0;
+  }
+
+  return null;
+}
+
+function hue2rgb(p, q, t) {
+  if (t < 0) {
+    t += 1;
+  }
+
+  if (t > 1) {
+    t -= 1;
+  }
+
+  if (t < 1 / 6) {
+    return p + (q - p) * 6 * t;
+  }
+
+  if (t < 1 / 2) {
+    return q;
+  }
+
+  if (t < 2 / 3) {
+    return p + (q - p) * (2 / 3 - t) * 6;
+  }
+
+  return p;
+}
+
+function hslToRgb(h, s, l) {
+  var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  var p = 2 * l - q;
+  var r = hue2rgb(p, q, h + 1 / 3);
+  var g = hue2rgb(p, q, h);
+  var b = hue2rgb(p, q, h - 1 / 3);
+  return Math.round(r * 255) << 24 | Math.round(g * 255) << 16 | Math.round(b * 255) << 8;
+} // var INTEGER = '[-+]?\\d+';
+
+
+var NUMBER = '[-+]?\\d*\\.?\\d+';
+var PERCENTAGE = NUMBER + '%';
+
+function toArray(arrayLike) {
+  return Array.prototype.slice.call(arrayLike, 0);
+}
+
+function call() {
+  return '\\(\\s*(' + toArray(arguments).join(')\\s*,\\s*(') + ')\\s*\\)';
+}
+
+var matchers = {
+  rgb:
+  /*#__PURE__*/
+  new RegExp('rgb' +
+  /*#__PURE__*/
+  call(NUMBER, NUMBER, NUMBER)),
+  rgba:
+  /*#__PURE__*/
+  new RegExp('rgba' +
+  /*#__PURE__*/
+  call(NUMBER, NUMBER, NUMBER, NUMBER)),
+  hsl:
+  /*#__PURE__*/
+  new RegExp('hsl' +
+  /*#__PURE__*/
+  call(NUMBER, PERCENTAGE, PERCENTAGE)),
+  hsla:
+  /*#__PURE__*/
+  new RegExp('hsla' +
+  /*#__PURE__*/
+  call(NUMBER, PERCENTAGE, PERCENTAGE, NUMBER)),
+  hex3: /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+  hex4: /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+  hex6: /^#([0-9a-fA-F]{6})$/,
+  hex8: /^#([0-9a-fA-F]{8})$/
+};
+
+function parse255(str) {
+  var int = parseInt(str, 10);
+
+  if (int < 0) {
+    return 0;
+  }
+
+  if (int > 255) {
+    return 255;
+  }
+
+  return int;
+}
+
+function parse360(str) {
+  var int = parseFloat(str);
+  return (int % 360 + 360) % 360 / 360;
+}
+
+function parse1(str) {
+  var num = parseFloat(str);
+
+  if (num < 0) {
+    return 0;
+  }
+
+  if (num > 1) {
+    return 255;
+  }
+
+  return Math.round(num * 255);
+}
+
+function parsePercentage(str) {
+  // parseFloat conveniently ignores the final %
+  var int = parseFloat(str, 10);
+
+  if (int < 0) {
+    return 0;
+  }
+
+  if (int > 100) {
+    return 1;
+  }
+
+  return int / 100;
+}
+
+var names = {
+  transparent: 0x00000000,
+  // http://www.w3.org/TR/css3-color/#svg-color
+  aliceblue: 0xf0f8ffff,
+  antiquewhite: 0xfaebd7ff,
+  aqua: 0x00ffffff,
+  aquamarine: 0x7fffd4ff,
+  azure: 0xf0ffffff,
+  beige: 0xf5f5dcff,
+  bisque: 0xffe4c4ff,
+  black: 0x000000ff,
+  blanchedalmond: 0xffebcdff,
+  blue: 0x0000ffff,
+  blueviolet: 0x8a2be2ff,
+  brown: 0xa52a2aff,
+  burlywood: 0xdeb887ff,
+  burntsienna: 0xea7e5dff,
+  cadetblue: 0x5f9ea0ff,
+  chartreuse: 0x7fff00ff,
+  chocolate: 0xd2691eff,
+  coral: 0xff7f50ff,
+  cornflowerblue: 0x6495edff,
+  cornsilk: 0xfff8dcff,
+  crimson: 0xdc143cff,
+  cyan: 0x00ffffff,
+  darkblue: 0x00008bff,
+  darkcyan: 0x008b8bff,
+  darkgoldenrod: 0xb8860bff,
+  darkgray: 0xa9a9a9ff,
+  darkgreen: 0x006400ff,
+  darkgrey: 0xa9a9a9ff,
+  darkkhaki: 0xbdb76bff,
+  darkmagenta: 0x8b008bff,
+  darkolivegreen: 0x556b2fff,
+  darkorange: 0xff8c00ff,
+  darkorchid: 0x9932ccff,
+  darkred: 0x8b0000ff,
+  darksalmon: 0xe9967aff,
+  darkseagreen: 0x8fbc8fff,
+  darkslateblue: 0x483d8bff,
+  darkslategray: 0x2f4f4fff,
+  darkslategrey: 0x2f4f4fff,
+  darkturquoise: 0x00ced1ff,
+  darkviolet: 0x9400d3ff,
+  deeppink: 0xff1493ff,
+  deepskyblue: 0x00bfffff,
+  dimgray: 0x696969ff,
+  dimgrey: 0x696969ff,
+  dodgerblue: 0x1e90ffff,
+  firebrick: 0xb22222ff,
+  floralwhite: 0xfffaf0ff,
+  forestgreen: 0x228b22ff,
+  fuchsia: 0xff00ffff,
+  gainsboro: 0xdcdcdcff,
+  ghostwhite: 0xf8f8ffff,
+  gold: 0xffd700ff,
+  goldenrod: 0xdaa520ff,
+  gray: 0x808080ff,
+  green: 0x008000ff,
+  greenyellow: 0xadff2fff,
+  grey: 0x808080ff,
+  honeydew: 0xf0fff0ff,
+  hotpink: 0xff69b4ff,
+  indianred: 0xcd5c5cff,
+  indigo: 0x4b0082ff,
+  ivory: 0xfffff0ff,
+  khaki: 0xf0e68cff,
+  lavender: 0xe6e6faff,
+  lavenderblush: 0xfff0f5ff,
+  lawngreen: 0x7cfc00ff,
+  lemonchiffon: 0xfffacdff,
+  lightblue: 0xadd8e6ff,
+  lightcoral: 0xf08080ff,
+  lightcyan: 0xe0ffffff,
+  lightgoldenrodyellow: 0xfafad2ff,
+  lightgray: 0xd3d3d3ff,
+  lightgreen: 0x90ee90ff,
+  lightgrey: 0xd3d3d3ff,
+  lightpink: 0xffb6c1ff,
+  lightsalmon: 0xffa07aff,
+  lightseagreen: 0x20b2aaff,
+  lightskyblue: 0x87cefaff,
+  lightslategray: 0x778899ff,
+  lightslategrey: 0x778899ff,
+  lightsteelblue: 0xb0c4deff,
+  lightyellow: 0xffffe0ff,
+  lime: 0x00ff00ff,
+  limegreen: 0x32cd32ff,
+  linen: 0xfaf0e6ff,
+  magenta: 0xff00ffff,
+  maroon: 0x800000ff,
+  mediumaquamarine: 0x66cdaaff,
+  mediumblue: 0x0000cdff,
+  mediumorchid: 0xba55d3ff,
+  mediumpurple: 0x9370dbff,
+  mediumseagreen: 0x3cb371ff,
+  mediumslateblue: 0x7b68eeff,
+  mediumspringgreen: 0x00fa9aff,
+  mediumturquoise: 0x48d1ccff,
+  mediumvioletred: 0xc71585ff,
+  midnightblue: 0x191970ff,
+  mintcream: 0xf5fffaff,
+  mistyrose: 0xffe4e1ff,
+  moccasin: 0xffe4b5ff,
+  navajowhite: 0xffdeadff,
+  navy: 0x000080ff,
+  oldlace: 0xfdf5e6ff,
+  olive: 0x808000ff,
+  olivedrab: 0x6b8e23ff,
+  orange: 0xffa500ff,
+  orangered: 0xff4500ff,
+  orchid: 0xda70d6ff,
+  palegoldenrod: 0xeee8aaff,
+  palegreen: 0x98fb98ff,
+  paleturquoise: 0xafeeeeff,
+  palevioletred: 0xdb7093ff,
+  papayawhip: 0xffefd5ff,
+  peachpuff: 0xffdab9ff,
+  peru: 0xcd853fff,
+  pink: 0xffc0cbff,
+  plum: 0xdda0ddff,
+  powderblue: 0xb0e0e6ff,
+  purple: 0x800080ff,
+  rebeccapurple: 0x663399ff,
+  red: 0xff0000ff,
+  rosybrown: 0xbc8f8fff,
+  royalblue: 0x4169e1ff,
+  saddlebrown: 0x8b4513ff,
+  salmon: 0xfa8072ff,
+  sandybrown: 0xf4a460ff,
+  seagreen: 0x2e8b57ff,
+  seashell: 0xfff5eeff,
+  sienna: 0xa0522dff,
+  silver: 0xc0c0c0ff,
+  skyblue: 0x87ceebff,
+  slateblue: 0x6a5acdff,
+  slategray: 0x708090ff,
+  slategrey: 0x708090ff,
+  snow: 0xfffafaff,
+  springgreen: 0x00ff7fff,
+  steelblue: 0x4682b4ff,
+  tan: 0xd2b48cff,
+  teal: 0x008080ff,
+  thistle: 0xd8bfd8ff,
+  tomato: 0xff6347ff,
+  turquoise: 0x40e0d0ff,
+  violet: 0xee82eeff,
+  wheat: 0xf5deb3ff,
+  white: 0xffffffff,
+  whitesmoke: 0xf5f5f5ff,
+  yellow: 0xffff00ff,
+  yellowgreen: 0x9acd32ff
+};
+
+function rgba(colorInt) {
+  var r = Math.round((colorInt & 0xff000000) >>> 24);
+  var g = Math.round((colorInt & 0x00ff0000) >>> 16);
+  var b = Math.round((colorInt & 0x0000ff00) >>> 8);
+  var a = ((colorInt & 0x000000ff) >>> 0) / 255;
+  return {
+    r: r,
+    g: g,
+    b: b,
+    a: a
+  };
+}
+normalizeColor.rgba = rgba;
+var normalizeCssColor = normalizeColor;
+
+var _extends$1 =
+/*#__PURE__*/
+require$$0.extends;
+
+
+
+
+
+var linear = function linear(t) {
+  return t;
+};
+/**
+ * Very handy helper to map input ranges to output ranges with an easing
+ * function and custom behavior outside of the ranges.
+ */
+
+
+var Interpolation =
+/*#__PURE__*/
+function () {
+  function Interpolation() {}
+
+  Interpolation.create = function create(config) {
+    if (config.outputRange && typeof config.outputRange[0] === 'string') {
+      return createInterpolationFromStringOutputRange(config);
+    }
+
+    var outputRange = config.outputRange;
+    checkInfiniteRange('outputRange', outputRange);
+    var inputRange = config.inputRange;
+    checkInfiniteRange('inputRange', inputRange);
+    checkValidInputRange(inputRange);
+    invariant_1(inputRange.length === outputRange.length, 'inputRange (' + inputRange.length + ') and outputRange (' + outputRange.length + ') must have the same length');
+    var easing = config.easing || linear;
+    var extrapolateLeft = 'extend';
+
+    if (config.extrapolateLeft !== undefined) {
+      extrapolateLeft = config.extrapolateLeft;
+    } else if (config.extrapolate !== undefined) {
+      extrapolateLeft = config.extrapolate;
+    }
+
+    var extrapolateRight = 'extend';
+
+    if (config.extrapolateRight !== undefined) {
+      extrapolateRight = config.extrapolateRight;
+    } else if (config.extrapolate !== undefined) {
+      extrapolateRight = config.extrapolate;
+    }
+
+    return function (input) {
+      invariant_1(typeof input === 'number', 'Cannot interpolation an input which is not a number');
+      var range = findRange(input, inputRange);
+      return interpolate(input, inputRange[range], inputRange[range + 1], outputRange[range], outputRange[range + 1], easing, extrapolateLeft, extrapolateRight);
+    };
+  };
+
+  return Interpolation;
+}();
+
+function interpolate(input, inputMin, inputMax, outputMin, outputMax, easing, extrapolateLeft, extrapolateRight) {
+  var result = input; // Extrapolate
+
+  if (result < inputMin) {
+    if (extrapolateLeft === 'identity') {
+      return result;
+    } else if (extrapolateLeft === 'clamp') {
+      result = inputMin;
+    } else if (extrapolateLeft === 'extend') {// noop
+    }
+  }
+
+  if (result > inputMax) {
+    if (extrapolateRight === 'identity') {
+      return result;
+    } else if (extrapolateRight === 'clamp') {
+      result = inputMax;
+    } else if (extrapolateRight === 'extend') {// noop
+    }
+  }
+
+  if (outputMin === outputMax) {
+    return outputMin;
+  }
+
+  if (inputMin === inputMax) {
+    if (input <= inputMin) {
+      return outputMin;
+    }
+
+    return outputMax;
+  } // Input Range
+
+
+  if (inputMin === -Infinity) {
+    result = -result;
+  } else if (inputMax === Infinity) {
+    result = result - inputMin;
+  } else {
+    result = (result - inputMin) / (inputMax - inputMin);
+  } // Easing
+
+
+  result = easing(result); // Output Range
+
+  if (outputMin === -Infinity) {
+    result = -result;
+  } else if (outputMax === Infinity) {
+    result = result + outputMin;
+  } else {
+    result = result * (outputMax - outputMin) + outputMin;
+  }
+
+  return result;
+}
+
+function colorToRgba(input) {
+  var int32Color = normalizeCssColor(input);
+
+  if (int32Color === null) {
+    return input;
+  }
+
+  int32Color = int32Color || 0; // $FlowIssue
+
+  var r = (int32Color & 0xff000000) >>> 24;
+  var g = (int32Color & 0x00ff0000) >>> 16;
+  var b = (int32Color & 0x0000ff00) >>> 8;
+  var a = (int32Color & 0x000000ff) / 255;
+  return "rgba(" + r + ", " + g + ", " + b + ", " + a + ")";
+}
+
+var stringShapeRegex = /[0-9\.-]+/g;
+/**
+ * Supports string shapes by extracting numbers so new values can be computed,
+ * and recombines those values into new strings of the same shape.  Supports
+ * things like:
+ *
+ *   rgba(123, 42, 99, 0.36) // colors
+ *   -45deg                  // values with units
+ */
+
+function createInterpolationFromStringOutputRange(config) {
+  var outputRange = config.outputRange;
+  invariant_1(outputRange.length >= 2, 'Bad output range');
+  outputRange = outputRange.map(colorToRgba);
+  checkPattern(outputRange); // ['rgba(0, 100, 200, 0)', 'rgba(50, 150, 250, 0.5)']
+  // ->
+  // [
+  //   [0, 50],
+  //   [100, 150],
+  //   [200, 250],
+  //   [0, 0.5],
+  // ]
+
+  /* $FlowFixMe(>=0.18.0): `outputRange[0].match()` can return `null`. Need to
+   * guard against this possibility.
+   */
+
+  var outputRanges = outputRange[0].match(stringShapeRegex).map(function () {
+    return [];
+  });
+  outputRange.forEach(function (value) {
+    /* $FlowFixMe(>=0.18.0): `value.match()` can return `null`. Need to guard
+     * against this possibility.
+     */
+    value.match(stringShapeRegex).forEach(function (number, i) {
+      outputRanges[i].push(+number);
+    });
+  });
+  /* $FlowFixMe(>=0.18.0): `outputRange[0].match()` can return `null`. Need to
+   * guard against this possibility.
+   */
+
+  var interpolations = outputRange[0].match(stringShapeRegex).map(function (value, i) {
+    return Interpolation.create(_extends$1({}, config, {
+      outputRange: outputRanges[i]
+    }));
+  }); // rgba requires that the r,g,b are integers.... so we want to round them, but we *dont* want to
+  // round the opacity (4th column).
+
+  var shouldRound = /^rgb/.test(outputRange[0]);
+  return function (input) {
+    var i = 0; // 'rgba(0, 100, 200, 0)'
+    // ->
+    // 'rgba(${interpolations[0](input)}, ${interpolations[1](input)}, ...'
+
+    return outputRange[0].replace(stringShapeRegex, function () {
+      var val = interpolations[i++](input);
+      return String(shouldRound && i < 4 ? Math.round(val) : val);
+    });
+  };
+}
+
+function checkPattern(arr) {
+  var pattern = arr[0].replace(stringShapeRegex, '');
+
+  for (var i = 1; i < arr.length; ++i) {
+    invariant_1(pattern === arr[i].replace(stringShapeRegex, ''), 'invalid pattern ' + arr[0] + ' and ' + arr[i]);
+  }
+}
+
+function findRange(input, inputRange) {
+  for (var i = 1; i < inputRange.length - 1; ++i) {
+    if (inputRange[i] >= input) {
+      break;
+    }
+  }
+
+  return i - 1;
+}
+
+function checkValidInputRange(arr) {
+  invariant_1(arr.length >= 2, 'inputRange must have at least 2 elements');
+
+  for (var i = 1; i < arr.length; ++i) {
+    invariant_1(arr[i] >= arr[i - 1],
+    /* $FlowFixMe(>=0.13.0) - In the addition expression below this comment,
+     * one or both of the operands may be something that doesn't cleanly
+     * convert to a string, like undefined, null, and object, etc. If you really
+     * mean this implicit string conversion, you can do something like
+     * String(myThing)
+     */
+    'inputRange must be monotonically increasing ' + arr);
+  }
+}
+
+function checkInfiniteRange(name, arr) {
+  invariant_1(arr.length >= 2, name + ' must have at least 2 elements');
+  invariant_1(arr.length !== 2 || arr[0] !== -Infinity || arr[1] !== Infinity,
+  /* $FlowFixMe(>=0.13.0) - In the addition expression below this comment,
+   * one or both of the operands may be something that doesn't cleanly convert
+   * to a string, like undefined, null, and object, etc. If you really mean
+   * this implicit string conversion, you can do something like
+   * String(myThing)
+   */
+  name + 'cannot be ]-infinity;+infinity[ ' + arr);
+}
+
+var Interpolation_1 = Interpolation;
+
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var _uniqueId = 0;
+
+var guid = function uniqueId() {
+  return String(_uniqueId++);
+};
+
+var _inheritsLoose$2 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+
+
+
+
+
+
+
+
+var AnimatedInterpolation =
+/*#__PURE__*/
+function (_AnimatedWithChildren) {
+  _inheritsLoose$2(AnimatedInterpolation, _AnimatedWithChildren);
+
+  function AnimatedInterpolation(parent, interpolation) {
+    var _this;
+
+    _this = _AnimatedWithChildren.call(this) || this;
+    _this._parent = parent;
+    _this._interpolation = interpolation;
+    _this._listeners = {};
+    return _this;
+  }
+
+  var _proto = AnimatedInterpolation.prototype;
+
+  _proto.__getValue = function __getValue() {
+    var parentValue = this._parent.__getValue();
+
+    invariant_1(typeof parentValue === 'number', 'Cannot interpolate an input which is not a number.');
+    return this._interpolation(parentValue);
+  };
+
+  _proto.addListener = function addListener(callback) {
+    var _this2 = this;
+
+    if (!this._parentListener) {
+      this._parentListener = this._parent.addListener(function () {
+        for (var key in _this2._listeners) {
+          _this2._listeners[key]({
+            value: _this2.__getValue()
+          });
+        }
+      });
+    }
+
+    var id = guid();
+    this._listeners[id] = callback;
+    return id;
+  };
+
+  _proto.removeListener = function removeListener(id) {
+    delete this._listeners[id];
+  };
+
+  _proto.interpolate = function interpolate(config) {
+    return new AnimatedInterpolation(this, Interpolation_1.create(config));
+  };
+
+  _proto.__attach = function __attach() {
+    this._parent.__addChild(this);
+  };
+
+  _proto.__detach = function __detach() {
+    this._parent.__removeChild(this);
+
+    this._parentListener = this._parent.removeListener(this._parentListener);
+  };
+
+  return AnimatedInterpolation;
+}(AnimatedWithChildren_1);
+
+var AnimatedInterpolation_1 = AnimatedInterpolation;
+
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+// Important note: start() and stop() will only be called at most once.
+// Once an animation has been stopped or finished its course, it will
+// not be reused.
+var Animation =
+/*#__PURE__*/
+function () {
+  function Animation() {}
+
+  var _proto = Animation.prototype;
+
+  _proto.start = function start(fromValue, onUpdate, onEnd, previousAnimation) {};
+
+  _proto.stop = function stop() {}; // Helper function for subclasses to make sure onEnd is only called once.
+
+
+  _proto.__debouncedOnEnd = function __debouncedOnEnd(result) {
+    var onEnd = this.__onEnd;
+    this.__onEnd = null;
+    onEnd && onEnd(result);
+  };
+
+  return Animation;
+}();
+
+var Animation_1 = Animation;
+
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+function SetPolyfill() {
+  this._cache = [];
+}
+
+SetPolyfill.prototype.add = function (e) {
+  if (this._cache.indexOf(e) === -1) {
+    this._cache.push(e);
+  }
+};
+
+SetPolyfill.prototype.forEach = function (cb) {
+  this._cache.forEach(cb);
+};
+
+var SetPolyfill_1 = SetPolyfill;
+
+var _inheritsLoose$3 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+
+
+
+
+
+
+
+
+
+
+var Set = commonjsGlobal.Set ||
+/*#__PURE__*/
+SetPolyfill_1;
+
+/**
+ * Animated works by building a directed acyclic graph of dependencies
+ * transparently when you render your Animated components.
+ *
+ *               new Animated.Value(0)
+ *     .interpolate()        .interpolate()    new Animated.Value(1)
+ *         opacity               translateY      scale
+ *          style                         transform
+ *         View#234                         style
+ *                                         View#123
+ *
+ * A) Top Down phase
+ * When an Animated.Value is updated, we recursively go down through this
+ * graph in order to find leaf nodes: the views that we flag as needing
+ * an update.
+ *
+ * B) Bottom Up phase
+ * When a view is flagged as needing an update, we recursively go back up
+ * in order to build the new value that it needs. The reason why we need
+ * this two-phases process is to deal with composite props such as
+ * transform which can receive values from multiple parents.
+ */
+function _flush(rootNode) {
+  var animatedStyles = new Set();
+
+  function findAnimatedStyles(node) {
+    if (typeof node.update === 'function') {
+      animatedStyles.add(node);
+    } else {
+      node.__getChildren().forEach(findAnimatedStyles);
+    }
+  }
+
+  findAnimatedStyles(rootNode);
+  animatedStyles.forEach(function (animatedStyle) {
+    return animatedStyle.update();
+  });
+}
+/**
+ * Standard value for driving animations.  One `Animated.Value` can drive
+ * multiple properties in a synchronized fashion, but can only be driven by one
+ * mechanism at a time.  Using a new mechanism (e.g. starting a new animation,
+ * or calling `setValue`) will stop any previous ones.
+ */
+
+
+var AnimatedValue =
+/*#__PURE__*/
+function (_AnimatedWithChildren) {
+  _inheritsLoose$3(AnimatedValue, _AnimatedWithChildren);
+
+  function AnimatedValue(value) {
+    var _this;
+
+    _this = _AnimatedWithChildren.call(this) || this;
+    _this._value = value;
+    _this._offset = 0;
+    _this._animation = null;
+    _this._listeners = {};
+    return _this;
+  }
+
+  var _proto = AnimatedValue.prototype;
+
+  _proto.__detach = function __detach() {
+    this.stopAnimation();
+  };
+
+  _proto.__getValue = function __getValue() {
+    return this._value + this._offset;
+  };
+  /**
+   * Directly set the value.  This will stop any animations running on the value
+   * and update all the bound properties.
+   */
+
+
+  _proto.setValue = function setValue(value) {
+    if (this._animation) {
+      this._animation.stop();
+
+      this._animation = null;
+    }
+
+    this._updateValue(value);
+  };
+  /**
+   * Sets an offset that is applied on top of whatever value is set, whether via
+   * `setValue`, an animation, or `Animated.event`.  Useful for compensating
+   * things like the start of a pan gesture.
+   */
+
+
+  _proto.setOffset = function setOffset(offset) {
+    this._offset = offset;
+  };
+  /**
+   * Merges the offset value into the base value and resets the offset to zero.
+   * The final output of the value is unchanged.
+   */
+
+
+  _proto.flattenOffset = function flattenOffset() {
+    this._value += this._offset;
+    this._offset = 0;
+  };
+  /**
+   * Adds an asynchronous listener to the value so you can observe updates from
+   * animations.  This is useful because there is no way to
+   * synchronously read the value because it might be driven natively.
+   */
+
+
+  _proto.addListener = function addListener(callback) {
+    var id = guid();
+    this._listeners[id] = callback;
+    return id;
+  };
+
+  _proto.removeListener = function removeListener(id) {
+    delete this._listeners[id];
+  };
+
+  _proto.removeAllListeners = function removeAllListeners() {
+    this._listeners = {};
+  };
+  /**
+   * Stops any running animation or tracking.  `callback` is invoked with the
+   * final value after stopping the animation, which is useful for updating
+   * state to match the animation position with layout.
+   */
+
+
+  _proto.stopAnimation = function stopAnimation(callback) {
+    this.stopTracking();
+    this._animation && this._animation.stop();
+    this._animation = null;
+    callback && callback(this.__getValue());
+  };
+  /**
+   * Interpolates the value before updating the property, e.g. mapping 0-1 to
+   * 0-10.
+   */
+
+
+  _proto.interpolate = function interpolate(config) {
+    return new AnimatedInterpolation_1(this, Interpolation_1.create(config));
+  };
+  /**
+   * Typically only used internally, but could be used by a custom Animation
+   * class.
+   */
+
+
+  _proto.animate = function animate(animation, callback) {
+    var _this2 = this;
+
+    var handle = null;
+
+    if (animation.__isInteraction) {
+      handle = InteractionManager_1.current.createInteractionHandle();
+    }
+
+    var previousAnimation = this._animation;
+    this._animation && this._animation.stop();
+    this._animation = animation;
+    animation.start(this._value, function (value) {
+      _this2._updateValue(value);
+    }, function (result) {
+      _this2._animation = null;
+
+      if (handle !== null) {
+        InteractionManager_1.current.clearInteractionHandle(handle);
+      }
+
+      callback && callback(result);
+    }, previousAnimation);
+  };
+  /**
+   * Typically only used internally.
+   */
+
+
+  _proto.stopTracking = function stopTracking() {
+    this._tracking && this._tracking.__detach();
+    this._tracking = null;
+  };
+  /**
+   * Typically only used internally.
+   */
+
+
+  _proto.track = function track(tracking) {
+    this.stopTracking();
+    this._tracking = tracking;
+  };
+
+  _proto._updateValue = function _updateValue(value) {
+    this._value = value;
+
+    _flush(this);
+
+    for (var key in this._listeners) {
+      this._listeners[key]({
+        value: this.__getValue()
+      });
+    }
+  };
+
+  return AnimatedValue;
+}(AnimatedWithChildren_1);
+
+var AnimatedValue_1 = AnimatedValue;
+
+var _extends$2 =
+/*#__PURE__*/
+require$$0.extends;
+
+var _inheritsLoose$4 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+
+
+var AnimatedTracking =
+/*#__PURE__*/
+function (_Animated) {
+  _inheritsLoose$4(AnimatedTracking, _Animated);
+
+  function AnimatedTracking(value, parent, animationClass, animationConfig, callback) {
+    var _this;
+
+    _this = _Animated.call(this) || this;
+    _this._value = value;
+    _this._parent = parent;
+    _this._animationClass = animationClass;
+    _this._animationConfig = animationConfig;
+    _this._callback = callback;
+
+    _this.__attach();
+
+    return _this;
+  }
+
+  var _proto = AnimatedTracking.prototype;
+
+  _proto.__getValue = function __getValue() {
+    return this._parent.__getValue();
+  };
+
+  _proto.__attach = function __attach() {
+    this._parent.__addChild(this);
+  };
+
+  _proto.__detach = function __detach() {
+    this._parent.__removeChild(this);
+  };
+
+  _proto.update = function update() {
+    this._value.animate(new this._animationClass(_extends$2({}, this._animationConfig, {
+      toValue: this._animationConfig.toValue.__getValue()
+    })), this._callback);
+  };
+
+  return AnimatedTracking;
+}(Animated_1);
+
+var AnimatedTracking_1 = AnimatedTracking;
+
+var RequestAnimationFrame = {
+  current: function current(cb) {
+    return commonjsGlobal.requestAnimationFrame(cb);
+  },
+  inject: function inject(injected) {
+    RequestAnimationFrame.current = injected;
+  }
+};
+var RequestAnimationFrame_1 = RequestAnimationFrame;
+
+var CancelAnimationFrame = {
+  current: function current(id) {
+    return commonjsGlobal.cancelAnimationFrame(id);
+  },
+  inject: function inject(injected) {
+    CancelAnimationFrame.current = injected;
+  }
+};
+var CancelAnimationFrame_1 = CancelAnimationFrame;
+
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+function tensionFromOrigamiValue(oValue) {
+  return (oValue - 30) * 3.62 + 194;
+}
+
+function frictionFromOrigamiValue(oValue) {
+  return (oValue - 8) * 3 + 25;
+}
+
+function fromOrigamiTensionAndFriction(tension, friction) {
+  return {
+    tension: tensionFromOrigamiValue(tension),
+    friction: frictionFromOrigamiValue(friction)
+  };
+}
+
+function fromBouncinessAndSpeed(bounciness, speed) {
+  function normalize(value, startValue, endValue) {
+    return (value - startValue) / (endValue - startValue);
+  }
+
+  function projectNormal(n, start, end) {
+    return start + n * (end - start);
+  }
+
+  function linearInterpolation(t, start, end) {
+    return t * end + (1 - t) * start;
+  }
+
+  function quadraticOutInterpolation(t, start, end) {
+    return linearInterpolation(2 * t - t * t, start, end);
+  }
+
+  function b3Friction1(x) {
+    return 0.0007 * Math.pow(x, 3) - 0.031 * Math.pow(x, 2) + 0.64 * x + 1.28;
+  }
+
+  function b3Friction2(x) {
+    return 0.000044 * Math.pow(x, 3) - 0.006 * Math.pow(x, 2) + 0.36 * x + 2;
+  }
+
+  function b3Friction3(x) {
+    return 0.00000045 * Math.pow(x, 3) - 0.000332 * Math.pow(x, 2) + 0.1078 * x + 5.84;
+  }
+
+  function b3Nobounce(tension) {
+    if (tension <= 18) {
+      return b3Friction1(tension);
+    } else if (tension > 18 && tension <= 44) {
+      return b3Friction2(tension);
+    } else {
+      return b3Friction3(tension);
+    }
+  }
+
+  var b = normalize(bounciness / 1.7, 0, 20);
+  b = projectNormal(b, 0, 0.8);
+  var s = normalize(speed / 1.7, 0, 20);
+  var bouncyTension = projectNormal(s, 0.5, 200);
+  var bouncyFriction = quadraticOutInterpolation(b, b3Nobounce(bouncyTension), 0.01);
+  return {
+    tension: tensionFromOrigamiValue(bouncyTension),
+    friction: frictionFromOrigamiValue(bouncyFriction)
+  };
+}
+
+var SpringConfig = {
+  fromOrigamiTensionAndFriction: fromOrigamiTensionAndFriction,
+  fromBouncinessAndSpeed: fromBouncinessAndSpeed
+};
+
+var _inheritsLoose$5 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+
+
+
+
+
+
+
+
+
+
+function withDefault(value, defaultValue) {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+
+  return value;
+}
+
+var SpringAnimation =
+/*#__PURE__*/
+function (_Animation) {
+  _inheritsLoose$5(SpringAnimation, _Animation);
+
+  function SpringAnimation(config) {
+    var _this;
+
+    _this = _Animation.call(this) || this;
+    _this._overshootClamping = withDefault(config.overshootClamping, false);
+    _this._restDisplacementThreshold = withDefault(config.restDisplacementThreshold, 0.001);
+    _this._restSpeedThreshold = withDefault(config.restSpeedThreshold, 0.001);
+    _this._initialVelocity = config.velocity;
+    _this._lastVelocity = withDefault(config.velocity, 0);
+    _this._toValue = config.toValue;
+    _this.__isInteraction = config.isInteraction !== undefined ? config.isInteraction : true;
+    var springConfig;
+
+    if (config.bounciness !== undefined || config.speed !== undefined) {
+      invariant_1(config.tension === undefined && config.friction === undefined, 'You can only define bounciness/speed or tension/friction but not both');
+      springConfig = SpringConfig.fromBouncinessAndSpeed(withDefault(config.bounciness, 8), withDefault(config.speed, 12));
+    } else {
+      springConfig = SpringConfig.fromOrigamiTensionAndFriction(withDefault(config.tension, 40), withDefault(config.friction, 7));
+    }
+
+    _this._tension = springConfig.tension;
+    _this._friction = springConfig.friction;
+    return _this;
+  }
+
+  var _proto = SpringAnimation.prototype;
+
+  _proto.start = function start(fromValue, onUpdate, onEnd, previousAnimation) {
+    this.__active = true;
+    this._startPosition = fromValue;
+    this._lastPosition = this._startPosition;
+    this._onUpdate = onUpdate;
+    this.__onEnd = onEnd;
+    this._lastTime = Date.now();
+
+    if (previousAnimation instanceof SpringAnimation) {
+      var internalState = previousAnimation.getInternalState();
+      this._lastPosition = internalState.lastPosition;
+      this._lastVelocity = internalState.lastVelocity;
+      this._lastTime = internalState.lastTime;
+    }
+
+    if (this._initialVelocity !== undefined && this._initialVelocity !== null) {
+      this._lastVelocity = this._initialVelocity;
+    }
+
+    this.onUpdate();
+  };
+
+  _proto.getInternalState = function getInternalState() {
+    return {
+      lastPosition: this._lastPosition,
+      lastVelocity: this._lastVelocity,
+      lastTime: this._lastTime
+    };
+  };
+
+  _proto.onUpdate = function onUpdate() {
+    var position = this._lastPosition;
+    var velocity = this._lastVelocity;
+    var tempPosition = this._lastPosition;
+    var tempVelocity = this._lastVelocity; // If for some reason we lost a lot of frames (e.g. process large payload or
+    // stopped in the debugger), we only advance by 4 frames worth of
+    // computation and will continue on the next frame. It's better to have it
+    // running at faster speed than jumping to the end.
+
+    var MAX_STEPS = 64;
+    var now = Date.now();
+
+    if (now > this._lastTime + MAX_STEPS) {
+      now = this._lastTime + MAX_STEPS;
+    } // We are using a fixed time step and a maximum number of iterations.
+    // The following post provides a lot of thoughts into how to build this
+    // loop: http://gafferongames.com/game-physics/fix-your-timestep/
+
+
+    var TIMESTEP_MSEC = 1;
+    var numSteps = Math.floor((now - this._lastTime) / TIMESTEP_MSEC);
+
+    for (var i = 0; i < numSteps; ++i) {
+      // Velocity is based on seconds instead of milliseconds
+      var step = TIMESTEP_MSEC / 1000; // This is using RK4. A good blog post to understand how it works:
+      // http://gafferongames.com/game-physics/integration-basics/
+
+      var aVelocity = velocity;
+      var aAcceleration = this._tension * (this._toValue - tempPosition) - this._friction * tempVelocity;
+      var tempPosition = position + aVelocity * step / 2;
+      var tempVelocity = velocity + aAcceleration * step / 2;
+      var bVelocity = tempVelocity;
+      var bAcceleration = this._tension * (this._toValue - tempPosition) - this._friction * tempVelocity;
+      tempPosition = position + bVelocity * step / 2;
+      tempVelocity = velocity + bAcceleration * step / 2;
+      var cVelocity = tempVelocity;
+      var cAcceleration = this._tension * (this._toValue - tempPosition) - this._friction * tempVelocity;
+      tempPosition = position + cVelocity * step / 2;
+      tempVelocity = velocity + cAcceleration * step / 2;
+      var dVelocity = tempVelocity;
+      var dAcceleration = this._tension * (this._toValue - tempPosition) - this._friction * tempVelocity;
+      tempPosition = position + cVelocity * step / 2;
+      tempVelocity = velocity + cAcceleration * step / 2;
+      var dxdt = (aVelocity + 2 * (bVelocity + cVelocity) + dVelocity) / 6;
+      var dvdt = (aAcceleration + 2 * (bAcceleration + cAcceleration) + dAcceleration) / 6;
+      position += dxdt * step;
+      velocity += dvdt * step;
+    }
+
+    this._lastTime = now;
+    this._lastPosition = position;
+    this._lastVelocity = velocity;
+
+    this._onUpdate(position);
+
+    if (!this.__active) {
+      // a listener might have stopped us in _onUpdate
+      return;
+    } // Conditions for stopping the spring animation
+
+
+    var isOvershooting = false;
+
+    if (this._overshootClamping && this._tension !== 0) {
+      if (this._startPosition < this._toValue) {
+        isOvershooting = position > this._toValue;
+      } else {
+        isOvershooting = position < this._toValue;
+      }
+    }
+
+    var isVelocity = Math.abs(velocity) <= this._restSpeedThreshold;
+
+    var isDisplacement = true;
+
+    if (this._tension !== 0) {
+      isDisplacement = Math.abs(this._toValue - position) <= this._restDisplacementThreshold;
+    }
+
+    if (isOvershooting || isVelocity && isDisplacement) {
+      if (this._tension !== 0) {
+        // Ensure that we end up with a round value
+        this._onUpdate(this._toValue);
+      }
+
+      this.__debouncedOnEnd({
+        finished: true
+      });
+
+      return;
+    }
+
+    this._animationFrame = RequestAnimationFrame_1.current(this.onUpdate.bind(this));
+  };
+
+  _proto.stop = function stop() {
+    this.__active = false;
+    CancelAnimationFrame_1.current(this._animationFrame);
+
+    this.__debouncedOnEnd({
+      finished: false
+    });
+  };
+
+  return SpringAnimation;
+}(Animation_1);
+
+var SpringAnimation_1 = SpringAnimation;
+
+var _inheritsLoose$6 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+
+
+var AnimatedTransform =
+/*#__PURE__*/
+function (_AnimatedWithChildren) {
+  _inheritsLoose$6(AnimatedTransform, _AnimatedWithChildren);
+
+  function AnimatedTransform(transforms) {
+    var _this;
+
+    _this = _AnimatedWithChildren.call(this) || this;
+    _this._transforms = transforms;
+    return _this;
+  }
+
+  var _proto = AnimatedTransform.prototype;
+
+  _proto.__getValue = function __getValue() {
+    return this._transforms.map(function (transform) {
+      var result = {};
+
+      for (var key in transform) {
+        var value = transform[key];
+
+        if (value instanceof Animated_1) {
+          result[key] = value.__getValue();
+        } else {
+          result[key] = value;
+        }
+      }
+
+      return result;
+    });
+  };
+
+  _proto.__getAnimatedValue = function __getAnimatedValue() {
+    return this._transforms.map(function (transform) {
+      var result = {};
+
+      for (var key in transform) {
+        var value = transform[key];
+
+        if (value instanceof Animated_1) {
+          result[key] = value.__getAnimatedValue();
+        } else {
+          // All transform components needed to recompose matrix
+          result[key] = value;
+        }
+      }
+
+      return result;
+    });
+  };
+
+  _proto.__attach = function __attach() {
+    var _this2 = this;
+
+    this._transforms.forEach(function (transform) {
+      for (var key in transform) {
+        var value = transform[key];
+
+        if (value instanceof Animated_1) {
+          value.__addChild(_this2);
+        }
+      }
+    });
+  };
+
+  _proto.__detach = function __detach() {
+    var _this3 = this;
+
+    this._transforms.forEach(function (transform) {
+      for (var key in transform) {
+        var value = transform[key];
+
+        if (value instanceof Animated_1) {
+          value.__removeChild(_this3);
+        }
+      }
+    });
+  };
+
+  return AnimatedTransform;
+}(AnimatedWithChildren_1);
+
+var AnimatedTransform_1 = AnimatedTransform;
+
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var FlattenStyle = {
+  current: function current(style) {
+    return style;
+  },
+  inject: function inject(flatten) {
+    FlattenStyle.current = flatten;
+  }
+};
+var FlattenStyle_1 = FlattenStyle;
+
+var _extends$3 =
+/*#__PURE__*/
+require$$0.extends;
+
+var _inheritsLoose$7 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+
+
+
+
+
+
+var AnimatedStyle =
+/*#__PURE__*/
+function (_AnimatedWithChildren) {
+  _inheritsLoose$7(AnimatedStyle, _AnimatedWithChildren);
+
+  function AnimatedStyle(style) {
+    var _this;
+
+    _this = _AnimatedWithChildren.call(this) || this;
+    style = FlattenStyle_1.current(style) || {};
+
+    if (style.transform && !(style.transform instanceof Animated_1)) {
+      style = _extends$3({}, style, {
+        transform: new AnimatedTransform_1(style.transform)
+      });
+    }
+
+    _this._style = style;
+    return _this;
+  }
+
+  var _proto = AnimatedStyle.prototype;
+
+  _proto.__getValue = function __getValue() {
+    var style = {};
+
+    for (var key in this._style) {
+      var value = this._style[key];
+
+      if (value instanceof Animated_1) {
+        style[key] = value.__getValue();
+      } else {
+        style[key] = value;
+      }
+    }
+
+    return style;
+  };
+
+  _proto.__getAnimatedValue = function __getAnimatedValue() {
+    var style = {};
+
+    for (var key in this._style) {
+      var value = this._style[key];
+
+      if (value instanceof Animated_1) {
+        style[key] = value.__getAnimatedValue();
+      }
+    }
+
+    return style;
+  };
+
+  _proto.__attach = function __attach() {
+    for (var key in this._style) {
+      var value = this._style[key];
+
+      if (value instanceof Animated_1) {
+        value.__addChild(this);
+      }
+    }
+  };
+
+  _proto.__detach = function __detach() {
+    for (var key in this._style) {
+      var value = this._style[key];
+
+      if (value instanceof Animated_1) {
+        value.__removeChild(this);
+      }
+    }
+  };
+
+  return AnimatedStyle;
+}(AnimatedWithChildren_1);
+
+var AnimatedStyle_1 = AnimatedStyle;
+
+var _extends$4 =
+/*#__PURE__*/
+require$$0.extends;
+
+var _inheritsLoose$8 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+
+
+var AnimatedProps =
+/*#__PURE__*/
+function (_Animated) {
+  _inheritsLoose$8(AnimatedProps, _Animated);
+
+  function AnimatedProps(props, callback) {
+    var _this;
+
+    _this = _Animated.call(this) || this;
+
+    if (props.style) {
+      props = _extends$4({}, props, {
+        style: new AnimatedStyle_1(props.style)
+      });
+    }
+
+    _this._props = props;
+    _this._callback = callback;
+
+    _this.__attach();
+
+    return _this;
+  }
+
+  var _proto = AnimatedProps.prototype;
+
+  _proto.__getValue = function __getValue() {
+    var props = {};
+
+    for (var key in this._props) {
+      var value = this._props[key];
+
+      if (value instanceof Animated_1) {
+        props[key] = value.__getValue();
+      } else {
+        props[key] = value;
+      }
+    }
+
+    return props;
+  };
+
+  _proto.__getAnimatedValue = function __getAnimatedValue() {
+    var props = {};
+
+    for (var key in this._props) {
+      var value = this._props[key];
+
+      if (value instanceof Animated_1) {
+        props[key] = value.__getAnimatedValue();
+      }
+    }
+
+    return props;
+  };
+
+  _proto.__attach = function __attach() {
+    for (var key in this._props) {
+      var value = this._props[key];
+
+      if (value instanceof Animated_1) {
+        value.__addChild(this);
+      }
+    }
+  };
+
+  _proto.__detach = function __detach() {
+    for (var key in this._props) {
+      var value = this._props[key];
+
+      if (value instanceof Animated_1) {
+        value.__removeChild(this);
+      }
+    }
+  };
+
+  _proto.update = function update() {
+    this._callback();
+  };
+
+  return AnimatedProps;
+}(Animated_1);
+
+var AnimatedProps_1 = AnimatedProps;
+
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var ApplyAnimatedValues = {
+  current: function ApplyAnimatedValues(instance, props) {
+    if (instance.setNativeProps) {
+      instance.setNativeProps(props);
+    } else {
+      return false;
+    }
+  },
+  transformStyles: function transformStyles(style) {
+    return style;
+  },
+  inject: function inject(apply, transform) {
+    ApplyAnimatedValues.current = apply;
+    ApplyAnimatedValues.transformStyles = transform;
+  }
+};
+var ApplyAnimatedValues_1 = ApplyAnimatedValues;
+
+var _extends$5 =
+/*#__PURE__*/
+require$$0.extends;
+
+var _objectWithoutProperties$1 =
+/*#__PURE__*/
+require$$0.objectWithoutProperties;
+
+var _inheritsLoose$9 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+
+
+
+
+function createAnimatedComponent(Component) {
+  var AnimatedComponent =
+  /*#__PURE__*/
+  function (_React$Component) {
+    _inheritsLoose$9(AnimatedComponent, _React$Component);
+
+    function AnimatedComponent() {
+      return _React$Component.apply(this, arguments) || this;
+    }
+
+    var _proto = AnimatedComponent.prototype;
+
+    _proto.componentWillUnmount = function componentWillUnmount() {
+      this._propsAnimated && this._propsAnimated.__detach();
+    };
+
+    _proto.setNativeProps = function setNativeProps(props) {
+      var didUpdate = this.refName && ApplyAnimatedValues_1.current(this.refName, props, this);
+
+      if (!didUpdate) {
+        this.forceUpdate();
+      }
+    };
+
+    _proto.componentWillMount = function componentWillMount() {
+      this.attachProps(this.props);
+    };
+
+    _proto.attachProps = function attachProps(nextProps) {
+      var _this = this;
+
+      var oldPropsAnimated = this._propsAnimated; // The system is best designed when setNativeProps is implemented. It is
+      // able to avoid re-rendering and directly set the attributes that
+      // changed. However, setNativeProps can only be implemented on leaf
+      // native components. If you want to animate a composite component, you
+      // need to re-render it. In this case, we have a fallback that uses
+      // forceUpdate.
+
+      var callback = function callback() {
+        var didUpdate = _this.refName && ApplyAnimatedValues_1.current(_this.refName, _this._propsAnimated.__getAnimatedValue(), _this);
+
+        if (!didUpdate) {
+          _this.forceUpdate();
+        }
+      };
+
+      this._propsAnimated = new AnimatedProps_1(nextProps, callback); // When you call detach, it removes the element from the parent list
+      // of children. If it goes to 0, then the parent also detaches itself
+      // and so on.
+      // An optimization is to attach the new elements and THEN detach the old
+      // ones instead of detaching and THEN attaching.
+      // This way the intermediate state isn't to go to 0 and trigger
+      // this expensive recursive detaching to then re-attach everything on
+      // the very next operation.
+
+      oldPropsAnimated && oldPropsAnimated.__detach();
+    };
+
+    _proto.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      this.attachProps(nextProps);
+    };
+
+    _proto.render = function render() {
+      var _this2 = this;
+
+      var _propsAnimated$__getV = this._propsAnimated.__getValue(),
+          style = _propsAnimated$__getV.style,
+          other = _objectWithoutProperties$1(_propsAnimated$__getV, ["style"]);
+
+      return react.createElement(Component, _extends$5({}, other, {
+        style: ApplyAnimatedValues_1.transformStyles(style),
+        ref: function ref(_ref) {
+          return _this2.refName = _ref;
+        }
+      }));
+    };
+
+    return AnimatedComponent;
+  }(react.Component);
+
+  process.env.NODE_ENV !== "production" ? AnimatedComponent.propTypes = {
+    style: function style(props, propName, componentName) {
+      if (!Component.propTypes) {
+        return;
+      } // TODO(lmr): We will probably bring this back in at some point, but maybe
+      // just a subset of the proptypes... We should have a common set of props
+      // that will be used for all platforms.
+      //
+      // for (var key in ViewStylePropTypes) {
+      //   if (!Component.propTypes[key] && props[key] !== undefined) {
+      //     console.error(
+      //       'You are setting the style `{ ' + key + ': ... }` as a prop. You ' +
+      //       'should nest it in a style object. ' +
+      //       'E.g. `{ style: { ' + key + ': ... } }`'
+      //     );
+      //   }
+      // }
+
+    }
+  } : void 0;
+  return AnimatedComponent;
+}
+
+var createAnimatedComponent_1 = createAnimatedComponent;
+
+var spring = function spring(value, config) {
+  return {
+    start: function start(callback) {
+      var singleValue = value;
+      var singleConfig = config;
+      singleValue.stopTracking();
+
+      if (config.toValue instanceof Animated_1) {
+        singleValue.track(new AnimatedTracking_1(singleValue, config.toValue, SpringAnimation_1, singleConfig, callback));
+      } else {
+        singleValue.animate(new SpringAnimation_1(singleConfig), callback);
+      }
+    },
+    stop: function stop() {
+      value.stopAnimation();
+    }
+  };
+};
+
+var src = {
+  Value: AnimatedValue_1,
+  spring: spring,
+
+  /**
+   * Make any React component Animatable.  Used to create `Animated.View`, etc.
+   */
+  createAnimatedComponent:
+  /*#__PURE__*/
+  createAnimatedComponent_1,
+  inject: {
+    ApplyAnimatedValues:
+    /*#__PURE__*/
+    ApplyAnimatedValues_1.inject,
+    InteractionManager:
+    /*#__PURE__*/
+    InteractionManager_1.inject,
+    FlattenStyle:
+    /*#__PURE__*/
+    FlattenStyle_1.inject,
+    RequestAnimationFrame:
+    /*#__PURE__*/
+    RequestAnimationFrame_1.inject,
+    CancelAnimationFrame:
+    /*#__PURE__*/
+    CancelAnimationFrame_1.inject
+  },
+  __PropsOnlyForTests:
+  /*#__PURE__*/
+  AnimatedProps_1
+};
+
+var _extends$6 =
+/*#__PURE__*/
+require$$0.extends;
+
+ // Following are transform functions who accept arguments of type <length> or <length-percentage>.
+// These functions won't work if we send them numbers, so we convert those numbers to px.
+// Source: https://developer.mozilla.org/en-US/docs/Web/CSS/transform?v=b
+
+
+var transformWithLengthUnits = {
+  translateX: true,
+  translateY: true,
+  translateZ: true,
+  perspective: true
+}; // { translateY: 35 } => 'translateY(35px)'
+// { scale: 2 } => 'scale(2)'
+
+function mapTransform(t) {
+  var k = Object.keys(t)[0];
+  var unit = transformWithLengthUnits[k] && typeof t[k] === 'number' ? 'px' : '';
+  return k + "(" + t[k] + unit + ")";
+}
+
+var isUnitlessNumber = {
+  animationIterationCount: true,
+  borderImageOutset: true,
+  borderImageSlice: true,
+  borderImageWidth: true,
+  boxFlex: true,
+  boxFlexGroup: true,
+  boxOrdinalGroup: true,
+  columnCount: true,
+  columns: true,
+  flex: true,
+  flexGrow: true,
+  flexPositive: true,
+  flexShrink: true,
+  flexNegative: true,
+  flexOrder: true,
+  gridRow: true,
+  gridRowEnd: true,
+  gridRowSpan: true,
+  gridRowStart: true,
+  gridColumn: true,
+  gridColumnEnd: true,
+  gridColumnSpan: true,
+  gridColumnStart: true,
+  fontWeight: true,
+  lineClamp: true,
+  lineHeight: true,
+  opacity: true,
+  order: true,
+  orphans: true,
+  tabSize: true,
+  widows: true,
+  zIndex: true,
+  zoom: true,
+  // SVG-related properties
+  fillOpacity: true,
+  floodOpacity: true,
+  stopOpacity: true,
+  strokeDasharray: true,
+  strokeDashoffset: true,
+  strokeMiterlimit: true,
+  strokeOpacity: true,
+  strokeWidth: true
+};
+/**
+ * @param {string} prefix vendor-specific prefix, eg: Webkit
+ * @param {string} key style name, eg: transitionDuration
+ * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
+ * WebkitTransitionDuration
+ */
+
+function prefixKey(prefix, key) {
+  return prefix + key.charAt(0).toUpperCase() + key.substring(1);
+}
+/**
+ * Support style names that may come passed in prefixed by adding permutations
+ * of vendor prefixes.
+ */
+
+
+var prefixes = ['Webkit', 'ms', 'Moz', 'O']; // Using Object.keys here, or else the vanilla for-in loop makes IE8 go into an
+// infinite loop, because it iterates over the newly added props too.
+
+Object.keys(isUnitlessNumber).forEach(function (prop) {
+  prefixes.forEach(function (prefix) {
+    isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop];
+  });
+}); // NOTE(lmr):
+// Since this is a hot code path, right now this is mutative...
+// As far as I can tell, this shouldn't cause any unexpected behavior.
+
+function mapStyle(style) {
+  if (style && style.transform && typeof style.transform !== 'string') {
+    // TODO(lmr): this doesn't attempt to use vendor prefixed styles
+    style.transform = style.transform.map(mapTransform).join(' ');
+  }
+
+  return style;
+}
+
+function dangerousStyleValue(name, value, isCustomProperty) {
+  // Note that we've removed escapeTextForBrowser() calls here since the
+  // whole string will be escaped when the attribute is injected into
+  // the markup. If you provide unsafe user data here they can inject
+  // arbitrary CSS which may be problematic (I couldn't repro this):
+  // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+  // http://www.thespanner.co.uk/2007/11/26/ultimate-xss-css-injection/
+  // This is not an XSS hole but instead a potential CSS injection issue
+  // which has lead to a greater discussion about how we're going to
+  // trust URLs moving forward. See #2115901
+  var isEmpty = value == null || typeof value === 'boolean' || value === '';
+
+  if (isEmpty) {
+    return '';
+  }
+
+  if (!isCustomProperty && typeof value === 'number' && value !== 0 && !(isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name])) {
+    return value + 'px'; // Presumes implicit 'px' suffix for unitless numbers
+  }
+
+  return ('' + value).trim();
+}
+
+function setValueForStyles(node, styles) {
+  var style = node.style;
+
+  for (var styleName in styles) {
+    if (!styles.hasOwnProperty(styleName)) {
+      continue;
+    }
+
+    var isCustomProperty = styleName.indexOf('--') === 0;
+    var styleValue = dangerousStyleValue(styleName, styles[styleName], isCustomProperty);
+
+    if (styleName === 'float') {
+      styleName = 'cssFloat';
+    }
+
+    if (isCustomProperty) {
+      style.setProperty(styleName, styleValue);
+    } else {
+      style[styleName] = styleValue;
+    }
+  }
+}
+
+function ApplyAnimatedValues$2(instance, props) {
+  if (instance.setNativeProps) {
+    instance.setNativeProps(props);
+  } else if (instance.nodeType && instance.setAttribute !== undefined) {
+    setValueForStyles(instance, mapStyle(props.style));
+  } else {
+    return false;
+  }
+}
+
+src.inject.ApplyAnimatedValues(ApplyAnimatedValues$2, mapStyle);
+var reactDom =
+/*#__PURE__*/
+_extends$6({}, src, {
+  div:
+  /*#__PURE__*/
+  src.createAnimatedComponent('div'),
+  span:
+  /*#__PURE__*/
+  src.createAnimatedComponent('span'),
+  img:
+  /*#__PURE__*/
+  src.createAnimatedComponent('img')
+});
+
+export default reactDom;

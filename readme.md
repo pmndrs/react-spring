@@ -59,3 +59,41 @@ class App extends React.Component {
     }
 }
 ```
+
+### Native rendering
+
+React-spring will re-render the receiving component on every frame. It is usually fine and give you more freedom to animate whatever you like. If you need more performance supply the `native` flag. Now your component will only render once and all updates will efficiently be applied to it outside of Reacts render loop.
+
+This has a few gotchas:
+
+1.  You can only animate styles!
+2.  The components that receive your styles have to be special, animated components. The styles are opaque objects, not regular styles!
+3. If you use transforms, make sure it's an array
+
+```jsx
+import { Spring, animated } from 'react-spring'
+
+class App extends React.Component {
+    state = { toggle: true }
+    toggle = () => this.setState(state => ({ toggle: !state.toggle }))
+    render() {
+        const toggle = this.state.toggle
+        return (
+            <Spring
+                native
+                from={{ color: 'white', opacity: 0, transform: [{ scale: 0 }] }}
+                to={{ color: 'red', opacity: 1, transform: [{ scale: this.state.toggle ? 2 : 1 }] }}>
+                {style => (
+                    <animated.div style={{ ...style, transformOrigin: 'left' }}>
+                        {this.state.toggle ? 'open' : 'closed'}
+                    </animated.div>
+                )}
+            </Spring>
+        )
+    }
+}
+```
+
+By default you can use `animated.div`, `animated.span` and `animated.img`, you can create your own by calling: `animated.createAnimatedComponent('h1')` or whatever element you need.
+
+
