@@ -8,7 +8,8 @@
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "rollup -c",
-        "prepare": "npm run build"
+        "prepare": "npm run build",
+        "test": "echo will do"
     },
     "repository": {
         "type": "git",
