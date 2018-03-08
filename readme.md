@@ -1,22 +1,28 @@
     npm install react-spring
 
-Demo: https://codesandbox.io/embed/oln44nx8xq
+<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Super fast native rendering](https://codesandbox.io/embed/882njxpz29)
+
+# Why 🤔
 
 React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge Chenglou's [React-motion](https://github.com/chenglou/react-motion) and animated as both have their pros and cons, but definitively could benefit from one another:
 
-React-motion
+### React-motion
 
 - [x] Declarative api that doesn't involve manual management of handles
-- [ ] Performance suffers because components are re-rendered on every frame
+- [ ] Performance can suffer because components are re-rendered every frame
 - [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc. 
 
-Animated
+### Animated
 
-- [x] Very powerful, lots of features
-- [x] Very efficient, it does not re-render components and changes styles directly in the dom
-- [ ] Managing and orchestrating handles becomes a real chore
+- [x] Interpolates most web privimites, units and patterns
+- [x] Efficiently changes styles in the dom instead of re-rendering a component with fresh props frame by frame
+- [ ] Managing and orchestrating handles (starting/stopping/waiting/cleaning) can become a real chore
 
-This lib inherits React-motions api (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in as well as allowing for native animations.
+This lib inherits React-motions api while you can feed it everything animated can interpolate. It also has support for animateds efficient native rendering.
+
+# Default rendering 🐎
+
+Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. In many situations this will be ok.
 
 ```jsx
 import { Spring } from 'react-spring'
@@ -72,11 +78,9 @@ class App extends React.Component {
 }
 ```
 
-### Native rendering
+# Native rendering 🚀
 
-Demo: https://codesandbox.io/embed/882njxpz29
-
-Like React-motion by default we'll render the receiving component on every frame as it gives you more freedom to animate whatever you like. If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be applied straight in the dom.
+If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be sent straight to the dom without any React reconciliation passes.
 
 Just be aware of the following conditions:
 
