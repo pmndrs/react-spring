@@ -9,7 +9,7 @@ React-spring is a wrapper around a cooked down fork of [Facebooks animated](http
 ### React-motion
 
 - [x] Declarative api that doesn't involve manual management of handles
-- [ ] Performance suffers because components are re-rendered on every frame
+- [ ] Performance can suffer because components are re-rendered every frame
 - [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc. 
 
 ### Animated
