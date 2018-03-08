@@ -1254,11 +1254,74 @@ function (_AnimatedWithChildren) {
 
 var AnimatedValue_1 = AnimatedValue;
 
+var _inheritsLoose$4 =
+/*#__PURE__*/
+require$$0.inheritsLoose;
+
+
+
+
+
+var AnimatedTemplate =
+/*#__PURE__*/
+function (_AnimatedWithChildren) {
+  _inheritsLoose$4(AnimatedTemplate, _AnimatedWithChildren);
+
+  function AnimatedTemplate(strings, values) {
+    var _this;
+
+    _this = _AnimatedWithChildren.call(this) || this;
+    _this._strings = strings;
+    _this._values = values;
+    return _this;
+  }
+
+  var _proto = AnimatedTemplate.prototype;
+
+  _proto.__transformValue = function __transformValue(value) {
+    if (value instanceof Animated_1) {
+      return value.__getValue();
+    } else {
+      return value;
+    }
+  };
+
+  _proto.__getValue = function __getValue() {
+    var value = this._strings[0];
+
+    for (var i = 0; i < this._values.length; ++i) {
+      value += this.__transformValue(this._values[i]) + this._strings[1 + i];
+    }
+
+    return value;
+  };
+
+  _proto.__attach = function __attach() {
+    for (var i = 0; i < this._values.length; ++i) {
+      if (this._values[i] instanceof Animated_1) {
+        this._values[i].__addChild(this);
+      }
+    }
+  };
+
+  _proto.__detach = function __detach() {
+    for (var i = 0; i < this._values.length; ++i) {
+      if (this._values[i] instanceof Animated_1) {
+        this._values[i].__removeChild(this);
+      }
+    }
+  };
+
+  return AnimatedTemplate;
+}(AnimatedWithChildren_1);
+
+var AnimatedTemplate_1 = AnimatedTemplate;
+
 var _extends$2 =
 /*#__PURE__*/
 require$$0.extends;
 
-var _inheritsLoose$4 =
+var _inheritsLoose$5 =
 /*#__PURE__*/
 require$$0.inheritsLoose;
 
@@ -1269,7 +1332,7 @@ require$$0.inheritsLoose;
 var AnimatedTracking =
 /*#__PURE__*/
 function (_Animated) {
-  _inheritsLoose$4(AnimatedTracking, _Animated);
+  _inheritsLoose$5(AnimatedTracking, _Animated);
 
   function AnimatedTracking(value, parent, animationClass, animationConfig, callback) {
     var _this;
@@ -1412,7 +1475,7 @@ var SpringConfig = {
   fromBouncinessAndSpeed: fromBouncinessAndSpeed
 };
 
-var _inheritsLoose$5 =
+var _inheritsLoose$6 =
 /*#__PURE__*/
 require$$0.inheritsLoose;
 
@@ -1439,7 +1502,7 @@ function withDefault(value, defaultValue) {
 var SpringAnimation =
 /*#__PURE__*/
 function (_Animation) {
-  _inheritsLoose$5(SpringAnimation, _Animation);
+  _inheritsLoose$6(SpringAnimation, _Animation);
 
   function SpringAnimation(config) {
     var _this;
@@ -1607,7 +1670,7 @@ function (_Animation) {
 
 var SpringAnimation_1 = SpringAnimation;
 
-var _inheritsLoose$6 =
+var _inheritsLoose$7 =
 /*#__PURE__*/
 require$$0.inheritsLoose;
 
@@ -1618,7 +1681,7 @@ require$$0.inheritsLoose;
 var AnimatedTransform =
 /*#__PURE__*/
 function (_AnimatedWithChildren) {
-  _inheritsLoose$6(AnimatedTransform, _AnimatedWithChildren);
+  _inheritsLoose$7(AnimatedTransform, _AnimatedWithChildren);
 
   function AnimatedTransform(transforms) {
     var _this;
@@ -1725,7 +1788,7 @@ var _extends$3 =
 /*#__PURE__*/
 require$$0.extends;
 
-var _inheritsLoose$7 =
+var _inheritsLoose$8 =
 /*#__PURE__*/
 require$$0.inheritsLoose;
 
@@ -1740,7 +1803,7 @@ require$$0.inheritsLoose;
 var AnimatedStyle =
 /*#__PURE__*/
 function (_AnimatedWithChildren) {
-  _inheritsLoose$7(AnimatedStyle, _AnimatedWithChildren);
+  _inheritsLoose$8(AnimatedStyle, _AnimatedWithChildren);
 
   function AnimatedStyle(style) {
     var _this;
@@ -1819,7 +1882,7 @@ var _extends$4 =
 /*#__PURE__*/
 require$$0.extends;
 
-var _inheritsLoose$8 =
+var _inheritsLoose$9 =
 /*#__PURE__*/
 require$$0.inheritsLoose;
 
@@ -1830,7 +1893,7 @@ require$$0.inheritsLoose;
 var AnimatedProps =
 /*#__PURE__*/
 function (_Animated) {
-  _inheritsLoose$8(AnimatedProps, _Animated);
+  _inheritsLoose$9(AnimatedProps, _Animated);
 
   function AnimatedProps(props, callback) {
     var _this;
@@ -1949,7 +2012,7 @@ var _objectWithoutProperties$1 =
 /*#__PURE__*/
 require$$0.objectWithoutProperties;
 
-var _inheritsLoose$9 =
+var _inheritsLoose$10 =
 /*#__PURE__*/
 require$$0.inheritsLoose;
 
@@ -1963,7 +2026,7 @@ function createAnimatedComponent(Component) {
   var AnimatedComponent =
   /*#__PURE__*/
   function (_React$Component) {
-    _inheritsLoose$9(AnimatedComponent, _React$Component);
+    _inheritsLoose$10(AnimatedComponent, _React$Component);
 
     function AnimatedComponent() {
       return _React$Component.apply(this, arguments) || this;
@@ -2086,10 +2149,13 @@ var spring = function spring(value, config) {
 var src = {
   Value: AnimatedValue_1,
   spring: spring,
+  template: function template(strings) {
+    for (var _len = arguments.length, values = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      values[_key - 1] = arguments[_key];
+    }
 
-  /**
-   * Make any React component Animatable.  Used to create `Animated.View`, etc.
-   */
+    return new AnimatedTemplate_1(strings, values);
+  },
   createAnimatedComponent:
   /*#__PURE__*/
   createAnimatedComponent_1,

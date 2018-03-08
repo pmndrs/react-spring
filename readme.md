@@ -80,7 +80,7 @@ Just like React-motion this lib will re-render the receiving component on every 
 
 This has a few gotchas:
 
-1. You can only animate styles, nothing else!
+1. You can only native animate styles and props, nothing else!
 2. If you use transforms, make sure it's an array!
 3. Receiving components have to be "animated components", the styles are opaque objects, not regular styles!
 
@@ -88,11 +88,11 @@ This has a few gotchas:
 ```jsx
 import { Spring, animated } from 'react-spring'
 
-const Content = ({ toggle, color, backgroundColor, transform }) => (
+const Content = ({ toggle, color, backgroundColor, transform, path }) => (
     <animated.div style={{ backgroundColor }}>
         <animated.svg style={{ transform }} version="1.1" viewBox="0 0 400 400">
             <g style={{ color }} fillRule="evenodd" onClick={toggle}>
-                <path id="path-1" d="M20,380 L380,380 L380,380 L200,20 L20,380 Z" />
+                <path id="path-1" d={path} />
             </g>
         </animated.svg>
     </animated.div>
@@ -111,6 +111,7 @@ class App extends React.Component {
                     color: toggle ? '#247BA0' : '#70C1B3',
                     backgroundColor: toggle ? '#B2DBBF' : '#F3FFBD',
                     transform: [{ rotate: toggle ? '0deg' : '180deg' }, { scale: toggle ? 0.6 : 1.5 }],
+                    path: toggle ? TRIANGLE : RECTANGLE,
                 }}
                 toggle={this.toggle}
                 children={Content}
