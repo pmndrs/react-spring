@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Animated from './animated/index'
+import animated from './animated/index'
 
-function createInterpolator(interpolator) {
+function createAnimator(interpolator, defaultConfig) {
     return class extends React.PureComponent {
         static propTypes = {
             to: PropTypes.object,
@@ -10,14 +10,14 @@ function createInterpolator(interpolator) {
             config: PropTypes.object,
             native: PropTypes.bool,
         }
-        static defaultProps = { to: {}, from: {}, config: { tension: 170, friction: 26 }, native: false }
+        static defaultProps = { to: {}, from: {}, config: defaultConfig, native: false }
 
         constructor(props) {
             super()
             const { children, to, from, native } = props
-            this._animation = new Animated.Value(0)
+            this._animation = new animated.Value(0)
             this._original = children
-            this._component = native ? children : Animated.createAnimatedComponent(children)
+            this._component = native ? children : animated.createAnimatedComponent(children)
             this._updateInterpolations(props)
         }
 
@@ -76,7 +76,7 @@ function createInterpolator(interpolator) {
                 // or else it would freeze forever and become stale. This following check at least tries to benefit
                 // those that don't re-create their child on every render, the rest will get mounts and unmounts.
                 this._original = props.children
-                this._component = props.native ? props.children : Animated.createAnimatedComponent(props.children)
+                this._component = props.native ? props.children : animated.createAnimatedComponent(props.children)
             }
             this._updateAnimations(props)
         }
@@ -96,6 +96,5 @@ function createInterpolator(interpolator) {
     }
 }
 
-const Spring = createInterpolator(Animated.spring)
-const animated = Animated
-export { createInterpolator, Spring, animated }
+const Spring = createAnimator(animated.spring, { tension: 170, friction: 26 })
+export { createAnimator, Spring, animated }
