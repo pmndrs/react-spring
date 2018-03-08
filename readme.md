@@ -88,9 +88,6 @@ This has a few gotchas:
 ```jsx
 import { Spring, animated } from 'react-spring'
 
-const DIV = animated.div
-const SVG = animated.createAnimatedComponent('svg')
-
 const Content = ({ toggle, color, backgroundColor, transform }) => (
     <animated.div style={{ backgroundColor }}>
         <animated.svg style={{ transform }} version="1.1" viewBox="0 0 400 400">
