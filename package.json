@@ -1,6 +1,6 @@
 {
     "name": "react-spring",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "description": "Animate React with ease",
     "main": "dist/react-spring",
     "module": "dist/react-spring.es",
