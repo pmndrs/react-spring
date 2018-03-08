@@ -16,6 +16,7 @@ function createInterpolator(interpolator) {
             super()
             const { children, to, from, native } = props
             this._animation = new Animated.Value(0)
+            this._original = children
             this._component = native ? children : Animated.createAnimatedComponent(children)
             this._updateInterpolations(props)
         }
@@ -68,6 +69,16 @@ function createInterpolator(interpolator) {
         }
 
         componentWillReceiveProps(props) {
+            if (props.children !== this._original) {
+                // So, this is probably the weirdest issue that has to be dealt.
+                // People seem to advocate render props, but in a way that re-calls the anonomous child function
+                // on every render. Since Animated wraps it into an animatedComponent we first tried to cut down
+                // on the re-creation by doing it only once, but that would freeze the component for ever and it
+                // becomes stale. Instead, this check at least tries to benefit those that don't re-do their
+                // render functions, the rest will suffer through weird issue.
+                this._original = props.children
+                this._component = props.native ? props.children : Animated.createAnimatedComponent(props.children)
+            }
             this._updateAnimations(props)
         }
 
@@ -75,8 +86,12 @@ function createInterpolator(interpolator) {
             interpolator(this._animation, { toValue: 1, ...this.props.config }).start()
         }
 
+        componentWillUnmount() {
+            this._animation.stopAnimation()
+        }
+
         render() {
-            const { children, from, to, config, native, ...rest } = this.props
+            const { from, to, config, native, ...rest } = this.props
             return React.createElement(this._component, { ...this._to, ...rest })
         }
     }
