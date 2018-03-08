@@ -18,11 +18,11 @@ React-spring is a wrapper around a cooked down fork of [Facebooks animated](http
 - [x] Very efficient, it does not re-render components and changes styles directly in the dom
 - [ ] Managing and orchestrating handles becomes a real chore
 
-This lib inherits React-motions api (Spring -> Motion, from -> defaultStyles, to -> styles) while you can feed it everything animated can take in as well as allowing for native animations.
+This lib inherits React-motions api while you can feed it everything animated can interpolate. It also has support for animateds efficient native rendering.
 
 # Default rendering 🐎
 
-Like React-motion by default we'll render the receiving component on every frame as it gives you more freedom to animate whatever you like. In most situations this will be ok.
+Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. In many situations this will be ok.
 
 ```jsx
 import { Spring } from 'react-spring'
