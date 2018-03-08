@@ -71,8 +71,6 @@ This has a few gotchas:
 1. You can only animate styles!
 2. If you use transforms, make sure it's an array
 3. The components that receive your styles have to be special, animated components. The styles are opaque objects, not regular styles!
-   
-   By default you can use `animated.div`, `animated.span` and `animated.img`, you can create your own by calling: `animated.createAnimatedComponent('h1')` or whatever element you need.
 
 
 ```jsx
@@ -82,13 +80,13 @@ const DIV = animated.div
 const SVG = animated.createAnimatedComponent('svg')
 
 const Content = ({ toggle, color, backgroundColor, transform }) => (
-    <DIV style={{ backgroundColor }}>
-        <SVG style={{ transform }} version="1.1" viewBox="0 0 400 400">
+    <animated.div style={{ backgroundColor }}>
+        <animated.svg style={{ transform }} version="1.1" viewBox="0 0 400 400">
             <g style={{ color }} fillRule="evenodd" onClick={toggle}>
                 <path id="path-1" d="M20,380 L380,380 L380,380 L200,20 L20,380 Z" />
             </g>
-        </SVG>
-    </DIV>
+        </animated.svg>
+    </animated.div>
 )
 
 class App extends React.Component {

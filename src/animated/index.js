@@ -2128,9 +2128,10 @@ var transformWithLengthUnits = {
   translateX: true,
   translateY: true,
   translateZ: true,
-  perspective: true
-}; // { translateY: 35 } => 'translateY(35px)'
-// { scale: 2 } => 'scale(2)'
+  perspective: true // { translateY: 35 } => 'translateY(35px)'
+  // { scale: 2 } => 'scale(2)'
+
+};
 
 function mapTransform(t) {
   var k = Object.keys(t)[0];
@@ -2181,13 +2182,14 @@ var isUnitlessNumber = {
   strokeMiterlimit: true,
   strokeOpacity: true,
   strokeWidth: true
+  /**
+   * @param {string} prefix vendor-specific prefix, eg: Webkit
+   * @param {string} key style name, eg: transitionDuration
+   * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
+   * WebkitTransitionDuration
+   */
+
 };
-/**
- * @param {string} prefix vendor-specific prefix, eg: Webkit
- * @param {string} key style name, eg: transitionDuration
- * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
- * WebkitTransitionDuration
- */
 
 function prefixKey(prefix, key) {
   return prefix + key.charAt(0).toUpperCase() + key.substring(1);
@@ -2275,18 +2277,16 @@ function ApplyAnimatedValues$2(instance, props) {
 }
 
 src.inject.ApplyAnimatedValues(ApplyAnimatedValues$2, mapStyle);
+var elements =
+/*#__PURE__*/
+['a', 'abbr', 'address', 'area', 'article', 'aside', 'audio', 'b', 'base', 'bdi', 'bdo', 'big', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'link', 'main', 'map', 'mark', 'marquee', 'menu', 'menuitem', 'meta', 'meter', 'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'source', 'span', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'u', 'ul', 'var', 'video', 'wbr', // SVG
+'circle', 'clipPath', 'defs', 'ellipse', 'foreignObject', 'g', 'image', 'line', 'linearGradient', 'mask', 'path', 'pattern', 'polygon', 'polyline', 'radialGradient', 'rect', 'stop', 'svg', 'text', 'tspan'].reduce(function (acc, element) {
+  var _extends2;
+
+  return _extends$6({}, acc, (_extends2 = {}, _extends2[element] = src.createAnimatedComponent(element), _extends2));
+}, {});
 var reactDom =
 /*#__PURE__*/
-_extends$6({}, src, {
-  div:
-  /*#__PURE__*/
-  src.createAnimatedComponent('div'),
-  span:
-  /*#__PURE__*/
-  src.createAnimatedComponent('span'),
-  img:
-  /*#__PURE__*/
-  src.createAnimatedComponent('img')
-});
+_extends$6({}, src, elements);
 
 export default reactDom;
