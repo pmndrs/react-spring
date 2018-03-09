@@ -29,16 +29,11 @@ Like React-motion by default we'll render the receiving component every frame as
 ```jsx
 import { Spring } from 'react-spring'
 
-const TRIANGLE = 'M20,380 L380,380 L380,380 L200,20 L20,380 Z'
-const RECTANGLE = 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
-const RED = '#c23369'
-const GREEN = '#28d79f'
-
-const Content = ({ toggle, color, opacity, scale, path, start, stop, end }) => (
+const Content = ({ toggle, color, scale, rotate, path, start, stop, end }) => (
     <div style={{ background: `linear-gradient(to bottom, ${start} ${stop}, ${end} 100%)` }}>
         <svg
             onClick={toggle}
-            style={{ opacity, transform: `scale3d(${scale}, ${scale}, ${scale})` }}
+            style={{ transform: `scale(${scale}) rotate(${rotate})` }}
             version="1.1"
             viewBox="0 0 400 400">
             <g fill={color} fillRule="evenodd">
@@ -60,17 +55,19 @@ class App extends React.Component {
                 // Will animate to ...
                 to={{
                     // Can be numbers, colors, paths, degrees, percentages, ...
-                    opacity: 1,
-                    color: toggle ? RED : GREEN,
-                    start: toggle ? RED : 'black',
-                    end: toggle ? 'black' : GREEN,
+                    color: toggle ? 'red' : '#00ff00',
+                    start: toggle ? '#abc' : 'rgb(10,20,30)',
+                    end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5),
                     stop: toggle ? '0%' : '50%',
                     scale: toggle ? 1 : 2,
-                    path: toggle ? TRIANGLE : RECTANGLE,
+                    rotate: toggle ? '0deg' : '45deg',
+                    path: toggle
+                        ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z'
+                        : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
                 }}
-                // You can finetune spring settings
+                // If you like you can finetune spring settings
                 config={{ friction: 1, tension: 10 }}
-                // All additional props will be spread over the child
+                // All additional props will be available to the child
                 toggle={this.toggle}
                 // Child as function/render-prop, receives interpolated values
                 children={Content}
