@@ -161,8 +161,8 @@ export default class AppContent extends PureComponent {
                     from={{ opacity: 0, color: 'black', height: 0 }}
                     enter={{ opacity: 1, color: 'red', height: 18 }}
                     leave={{ opacity: 0, color: 'blue', height: 0 }}>
-                    {this.state.items.map(item => styles =>
-                        <li style={{ overflow: 'hidden', ...styles }}>{item}</li>
+                    {this.state.items.map(
+                        item => styles => <li style={styles}>{item}</li>
                     )}
                 </SpringTransition>
             </ul>
