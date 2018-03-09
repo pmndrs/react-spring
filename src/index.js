@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import animated from './animated/index'
+import uuid from 'tiny-uuid'
 
 function createAnimation(interpolator, defaultConfig) {
     return class extends React.PureComponent {
@@ -57,7 +58,9 @@ function createAnimation(interpolator, defaultConfig) {
 
         _updateInterpolations = props => {
             const { from, to } = props
-            this._interpolations = Object.entries({ ...from, ...to }).map(([n, v], i) => this._mapValues(props, n, v, i))
+            this._interpolations = Object.entries({ ...from, ...to }).map(([n, v], i) =>
+                this._mapValues(props, n, v, i),
+            )
             this._to = this._interpolations.reduce((acc, anim) => ({ ...acc, [anim.name]: anim.interpolate }), {})
         }
 
@@ -101,14 +104,6 @@ function createAnimation(interpolator, defaultConfig) {
     }
 }
 
-function arrayDiff(next = [], current = []) {
-    let nextSet = new Set(next)
-    let currentSet = new Set(current)
-    let added = next.filter(item => !currentSet.has(item))
-    let deleted = current.filter(item => !nextSet.has(item))
-    return { added, deleted }
-}
-
 function createTransition(interpolator, defaultConfig) {
     const Animation = createAnimation(interpolator, defaultConfig)
     return class TransitionSpring extends React.PureComponent {
@@ -122,55 +117,78 @@ function createTransition(interpolator, defaultConfig) {
 
         constructor(props) {
             super()
-            const { children, keys, from, enter, leave } = props
-            this.state = {
-                transitions: children.map((child, i) => this._wrapTransition(child, keys[i], props)),
+            let { children, keys, from, enter, leave } = props
+            if (!Array.isArray(children)) {
+                children = [children]
+                keys = [uuid()]
             }
-        }
-
-        _wrapTransition(child, key, props) {
-            const { from, enter, native } = props
-            return <Animation native={native} from={from} to={enter} key={key} children={child} />
+            this.state = {
+                transitionsKeys: keys,
+                transitions: children.map((child, i) => (
+                    <Animation native={props.native} from={from} to={enter} key={keys[i]} children={child} />
+                )),
+            }
         }
 
         componentWillReceiveProps(props) {
-            let { transitions } = this.state
-            const { children, keys, from, enter, leave } = props
-            const { added, deleted } = arrayDiff(keys, transitions.map(child => child.key))
+            let { transitions, transitionsKeys } = this.state
+            let { native, children, keys, from, enter, leave } = props
 
-            if (added) {
-                added.forEach(key => {
-                    const index = keys.indexOf(key)
-                    const wrappedChild = this._wrapTransition(children[index], key, props)
-                    transitions = [...transitions.slice(0, index), wrappedChild, ...transitions.slice(index)]
-                })
+            if (!Array.isArray(children)) {
+                children = [children]
+                keys = [props.children !== this.props.children ? uuid() : this.props.transitionsKeys[0]]
             }
 
-            if (deleted) {
+            // Compare next keys with current keys
+            let nextSet = new Set(keys)
+            let currentSet = new Set(transitionsKeys)
+            let added = keys.filter(item => !currentSet.has(item))
+            let deleted = transitionsKeys.filter(item => !nextSet.has(item))
+            // Add new children
+            if (added.length) {
+                added.forEach(key => {
+                    const index = keys.indexOf(key)
+                    const addedChild = (
+                        <Animation native={native} from={from} to={enter} key={key} children={children[index]} />
+                    )
+                    transitions = [...transitions.slice(0, index), addedChild, ...transitions.slice(index)]
+                })
+            }
+            // Remove old children
+            if (deleted.length) {
                 deleted.forEach(key => {
-                    const deletedChild = transitions.find(child => child.key === key)
-
-                    if (deletedChild) {
-                        const wrappedChild = React.cloneElement(deletedChild, {
-                            to: leave,
-                            onRest: () =>
-                                this.setState(state => ({
-                                    transitions: state.transitions.filter(child => child.key !== key),
-                                })),
-                        })
-                        transitions = transitions.map(child => (child === deletedChild ? wrappedChild : child))
+                    const oldChild = transitions.find(child => child.key === key)
+                    if (oldChild) {
+                        const leavingChild = (
+                            <Animation
+                                destroy
+                                native={native}
+                                from={from}
+                                to={leave}
+                                key={key}
+                                children={oldChild.props.children}
+                                onRest={() =>
+                                    this.setState(state => ({
+                                        transitions: state.transitions.filter(child => child !== leavingChild),
+                                    }))
+                                }
+                            />
+                        )
+                        transitions = transitions.map(child => (child === oldChild ? leavingChild : child))
                     }
                 })
             }
-
+            // Update transition keys, remove leaving children
+            transitionsKeys = transitions.filter(child => child.props.destroy === undefined).map(child => child.key)
+            // Re-order list
             let ordered = keys.map(key => transitions.find(child => child.key === key))
             deleted.forEach(key => {
                 let index = transitions.findIndex(child => child.key === key)
                 let child = transitions.find(child => child.key === key)
-                ordered = [...ordered.slice(0, index), child, ...ordered.slice(index)]
+                if (child) ordered = [...ordered.slice(0, index), child, ...ordered.slice(index)]
             })
-
-            this.setState({ transitions: ordered })
+            // Push new state
+            this.setState({ transitions: ordered, transitionsKeys })
         }
 
         render() {
