@@ -56,8 +56,8 @@ function createAnimation(interpolator, defaultConfig) {
         }
 
         _updateInterpolations = props => {
-            const { to } = props
-            this._interpolations = Object.entries(to).map(([n, v], i) => this._mapValues(props, n, v, i))
+            const { from, to } = props
+            this._interpolations = Object.entries({ ...from, ...to }).map(([n, v], i) => this._mapValues(props, n, v, i))
             this._to = this._interpolations.reduce((acc, anim) => ({ ...acc, [anim.name]: anim.interpolate }), {})
         }
 
