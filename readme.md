@@ -130,8 +130,8 @@ class App extends React.Component {
 If you need to interpolate native styles, use `animated.template`. For instance, given that you receive startColor and endColor as animatable values you could do it like so:
 
 ```jsx
-const Content = ({ startColor, EndColor }) => {
-    const background = animated.template`linear-gradient(bottom ${startColor} 0%, ${EndColor} 100%)`
+const Content = ({ startColor, endColor }) => {
+    const background = animated.template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)`
     return (
         <animated.div style={{ background }}>
             ...
