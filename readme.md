@@ -142,7 +142,7 @@ const Content = ({ startColor, endColor }) => {
 
 # Transitions ☔️
 
-Use `SpringTransition`, pass in your `keys`, `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. You do not pass components as children, you pass functions that receive a style object. Keys and children have to match in their order! You can again use the `native` flag for direct dom transitions. 
+Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. You do not pass in components as children but rather functions that receive a style object. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation. 
 
 ```jsx
 import React, { PureComponent } from 'react'
@@ -158,7 +158,7 @@ export default class AppContent extends PureComponent {
     
     render() {
         return (
-            <ul style={{ margin: 0, padding: 0, width: '100%', height: '100%', backgroundColor: 'white' }}>
+            <ul>
                 <SpringTransition
                     native
                     keys={this.state.items}
