@@ -2,7 +2,7 @@
 
     npm install react-spring
 
-<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Super fast native rendering](https://codesandbox.io/embed/882njxpz29) | [Transitions](https://codesandbox.io/s/j150ykxrv)
+<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Super fast native rendering](https://codesandbox.io/embed/882njxpz29) | [Transitions](https://codesandbox.io/embed/j150ykxrv)
 
 # Why 🤔
 
