@@ -175,4 +175,4 @@ function createTransition(interpolator, defaultConfig) {
 
 const Spring = createAnimation(animated.spring, { tension: 170, friction: 26 })
 const SpringTransition = createTransition(animated.spring, { tension: 170, friction: 26 })
-export { createAnimator, Spring, SpringTransition, animated }
+export { createAnimation, createTransition, Spring, SpringTransition, animated }
