@@ -134,37 +134,43 @@ function createTransition(interpolator, defaultConfig) {
         }
 
         componentWillReceiveProps(props) {
-            const { transitions } = this.state
+            let { transitions } = this.state
             const { children, keys, from, enter, leave } = props
             const { added, deleted } = arrayDiff(keys, transitions.map(child => child.key))
 
+            if (added) {
+                added.forEach(key => {
+                    const index = keys.indexOf(key)
+                    const wrappedChild = this._wrapTransition(children[index], key, props)
+                    transitions = [...transitions.slice(0, index), wrappedChild, ...transitions.slice(index)]
+                })
+            }
+
+            if (deleted) {
+                deleted.forEach(key => {
+                    const deletedChild = transitions.find(child => child.key === key)
+
+                    if (deletedChild) {
+                        const wrappedChild = React.cloneElement(deletedChild, {
+                            to: leave,
+                            onRest: () =>
+                                this.setState(state => ({
+                                    transitions: state.transitions.filter(child => child.key !== key),
+                                })),
+                        })
+                        transitions = transitions.map(child => (child === deletedChild ? wrappedChild : child))
+                    }
+                })
+            }
+
+            let ordered = keys.map(key => transitions.find(child => child.key === key))
             deleted.forEach(key => {
-                const deletedChild = transitions.find(child => child.key === key)
-                if (deletedChild) {
-                    const wrappedChild = React.cloneElement(deletedChild, {
-                        to: leave,
-                        onRest: () =>
-                            this.setState(state => ({
-                                transitions: state.transitions.filter(child => child.key !== key),
-                            })),
-                    })
-                    this.setState(state => ({
-                        transitions: state.transitions.map(child => (child === deletedChild ? wrappedChild : child)),
-                    }))
-                }
+                let index = transitions.findIndex(child => child.key === key)
+                let child = transitions.find(child => child.key === key)
+                ordered = [...ordered.slice(0, index), child, ...ordered.slice(index)]
             })
 
-            added.forEach(key => {
-                const index = keys.indexOf(key)
-                const wrappedChild = this._wrapTransition(children[index], key, props)
-                this.setState(state => ({
-                    transitions: [
-                        ...state.transitions.slice(0, index),
-                        wrappedChild,
-                        ...state.transitions.slice(index),
-                    ],
-                }))
-            })
+            this.setState({ transitions: ordered })
         }
 
         render() {
