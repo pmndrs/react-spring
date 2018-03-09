@@ -54,6 +54,7 @@
         "react-dom": ">= 16.0.0"
     },
     "dependencies": {
-        "animated": "^0.2.2"
+        "animated": "^0.2.2",
+        "tiny-uuid": "^1.0.0"
     }
 }
