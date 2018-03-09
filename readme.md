@@ -2,7 +2,7 @@
 
     npm install react-spring
 
-<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Super fast native rendering](https://codesandbox.io/embed/882njxpz29)
+<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Super fast native rendering](https://codesandbox.io/embed/882njxpz29) | [Transitions](https://codesandbox.io/s/j150ykxrv)
 
 # Why 🤔
 
@@ -140,3 +140,37 @@ const Content = ({ startColor, EndColor }) => {
 )
 ```
 
+# Transitions ☔️
+
+Use `SpringTransition`, pass in your `keys`, `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. You do not pass components as children, you pass functions that receive a style object. Keys and children have to match in their order! You can again use the `native` flag for direct dom transitions. 
+
+```jsx
+import React, { PureComponent } from 'react'
+import { SpringTransition, animated } from 'react-spring'
+
+export default class AppContent extends PureComponent {
+    state = { items: ['item1', 'item2', 'item3'] }
+
+    componentDidMount() {
+        setTimeout(() => this.setState({ items: ['item1', 'item2', 'item3', 'item4'] }), 2000)
+        setTimeout(() => this.setState({ items: ['item1', 'item3', 'item4'] }), 4000)
+    }
+    
+    render() {
+        return (
+            <ul style={{ margin: 0, padding: 0, width: '100%', height: '100%', backgroundColor: 'white' }}>
+                <SpringTransition
+                    native
+                    keys={this.state.items}
+                    from={{ opacity: 0, color: 'black', height: 0 }}
+                    enter={{ opacity: 1, color: 'red', height: 18 }}
+                    leave={{ opacity: 0, color: 'blue', height: 0 }}>
+                    {this.state.items.map(item => styles => (
+                        <animated.li style={{ overflow: 'hidden', ...styles }}>{item}</animated.li>
+                    ))}
+                </SpringTransition>
+            </ul>
+        )
+    }
+}
+```

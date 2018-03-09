@@ -2,13 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import animated from './animated/index'
 
-function createAnimator(interpolator, defaultConfig) {
+function createAnimation(interpolator, defaultConfig) {
     return class extends React.PureComponent {
         static propTypes = {
             to: PropTypes.object,
             from: PropTypes.object,
             config: PropTypes.object,
             native: PropTypes.bool,
+            onRest: PropTypes.func,
         }
         static defaultProps = { to: {}, from: {}, config: defaultConfig, native: false }
 
@@ -65,7 +66,11 @@ function createAnimator(interpolator, defaultConfig) {
             this._updateInterpolations(props)
             this._animation.stopAnimation()
             this._animation.setValue(0)
-            interpolator(this._animation, { toValue: 1, ...config }).start()
+            interpolator(this._animation, { toValue: 1, ...config }).start(this._onRest)
+        }
+
+        _onRest = props => {
+            if (props.finished && this.props.onRest) this.props.onRest()
         }
 
         componentWillReceiveProps(props) {
@@ -82,7 +87,7 @@ function createAnimator(interpolator, defaultConfig) {
         }
 
         componentDidMount() {
-            interpolator(this._animation, { toValue: 1, ...this.props.config }).start()
+            interpolator(this._animation, { toValue: 1, ...this.props.config }).start(this._onRest)
         }
 
         componentWillUnmount() {
@@ -96,5 +101,78 @@ function createAnimator(interpolator, defaultConfig) {
     }
 }
 
-const Spring = createAnimator(animated.spring, { tension: 170, friction: 26 })
-export { createAnimator, Spring, animated }
+function arrayDiff(next = [], current = []) {
+    let nextSet = new Set(next)
+    let currentSet = new Set(current)
+    let added = next.filter(item => !currentSet.has(item))
+    let deleted = current.filter(item => !nextSet.has(item))
+    return { added, deleted }
+}
+
+function createTransition(interpolator, defaultConfig) {
+    const Animation = createAnimation(interpolator, defaultConfig)
+    return class TransitionSpring extends React.PureComponent {
+        static propTypes = {
+            from: PropTypes.object,
+            enter: PropTypes.object,
+            leave: PropTypes.object,
+            keys: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
+            native: PropTypes.bool,
+        }
+
+        constructor(props) {
+            super()
+            const { children, keys, from, enter, leave } = props
+            this.state = {
+                transitions: children.map((child, i) => this._wrapTransition(child, keys[i], props)),
+            }
+        }
+
+        _wrapTransition(child, key, props) {
+            const { from, enter, native } = props
+            return <Animation native={native} from={from} to={enter} key={key} children={child} />
+        }
+
+        componentWillReceiveProps(props) {
+            const { transitions } = this.state
+            const { children, keys, from, enter, leave } = props
+            const { added, deleted } = arrayDiff(keys, transitions.map(child => child.key))
+
+            deleted.forEach(key => {
+                const deletedChild = transitions.find(child => child.key === key)
+                if (deletedChild) {
+                    const wrappedChild = React.cloneElement(deletedChild, {
+                        to: leave,
+                        onRest: () =>
+                            this.setState(state => ({
+                                transitions: state.transitions.filter(child => child.key !== key),
+                            })),
+                    })
+                    this.setState(state => ({
+                        transitions: state.transitions.map(child => (child === deletedChild ? wrappedChild : child)),
+                    }))
+                }
+            })
+
+            added.forEach(key => {
+                const index = keys.indexOf(key)
+                const wrappedChild = this._wrapTransition(children[index], key, props)
+                this.setState(state => ({
+                    transitions: [
+                        ...state.transitions.slice(0, index),
+                        wrappedChild,
+                        ...state.transitions.slice(index),
+                    ],
+                }))
+            })
+        }
+
+        render() {
+            return this.state.transitions
+        }
+    }
+}
+
+const Spring = createAnimation(animated.spring, { tension: 170, friction: 26 })
+const SpringTransition = createTransition(animated.spring, { tension: 170, friction: 26 })
+export { createAnimator, Spring, SpringTransition, animated }
