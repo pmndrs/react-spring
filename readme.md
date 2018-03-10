@@ -2,7 +2,7 @@
 
     npm install react-spring
 
-<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Single transition](https://codesandbox.io/embed/yj52v5689) | [Multiple item transition](https://codesandbox.io/embed/j150ykxrv)
+<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Single transition](https://codesandbox.io/embed/yj52v5689) | [Multiple item transition](https://codesandbox.io/embed/j150ykxrv) | [Animated Todo MVC](https://codesandbox.io/embed/2pk8l7n7kn)
 
 # Why 🤔
 
@@ -65,8 +65,6 @@ class App extends React.Component {
                         ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z'
                         : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
                 }}
-                // If you like you can finetune spring settings
-                config={{ friction: 1, tension: 10 }}
                 // All additional props will be available to the child
                 toggle={this.toggle}
                 // Child as function/render-prop, receives interpolated values
@@ -127,8 +125,10 @@ class App extends React.Component {
 If you need to interpolate native styles, use `animated.template`. For instance, given that you receive startColor and endColor as animatable values you could do it like so:
 
 ```jsx
+import { animated, template } from 'react-spring'
+
 const Content = ({ startColor, endColor }) => {
-    const background = animated.template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)`
+    const background = template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)`
     return (
         <animated.div style={{ background }}>
             ...

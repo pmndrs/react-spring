@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import animated from './animated/targets/react-dom'
 import uuid from 'tiny-uuid'
+import Animated from './animated/targets/react-dom'
+
+console.log(Animated)
 
 function createAnimation(interpolator, defaultConfig) {
     return class extends React.PureComponent {
@@ -17,10 +19,15 @@ function createAnimation(interpolator, defaultConfig) {
         constructor(props) {
             super()
             const { children, to, from, native } = props
-            this._animation = new animated.Value(0)
-            this._original = children
-            this._component = native ? children : animated.createAnimatedComponent(children)
+            this._animation = new Animated.Value(0)
             this._updateInterpolations(props)
+        }
+
+        _callback = () => !this.props.native && this.forceUpdate()
+        _attachProps(nextProps) {
+            var oldPropsAnimated = this._propsAnimated 
+            this._propsAnimated = new Animated.AnimatedProps(nextProps, this._callback) 
+            oldPropsAnimated && oldPropsAnimated.__detach()
         }
 
         _mapValues(props, name, value, index) {
@@ -62,6 +69,7 @@ function createAnimation(interpolator, defaultConfig) {
                 this._mapValues(props, n, v, i),
             )
             this._to = this._interpolations.reduce((acc, anim) => ({ ...acc, [anim.name]: anim.interpolate }), {})
+            this._attachProps(this._to)
         }
 
         _updateAnimations = props => {
@@ -76,16 +84,7 @@ function createAnimation(interpolator, defaultConfig) {
             if (props.finished && this.props.onRest) this.props.onRest()
         }
 
-        componentWillUpdate(props) {
-            if (props.children !== this._original) {
-                // So, this is probably the weirdest issue that has to be dealt with.
-                // Twitter advocates render props, but in a way that re-calls the anonomous child function
-                // on every render. Since Animated wraps it into an animatedComponent it needs to be updated
-                // or else it would freeze forever and become stale. This following check at least tries to benefit
-                // those that don't re-create their child on every render, the rest will get mounts and unmounts.
-                this._original = props.children
-                this._component = props.native ? props.children : animated.createAnimatedComponent(props.children)
-            }
+        componentWillReceiveProps(props) {
             this._updateAnimations(props)
         }
 
@@ -98,8 +97,9 @@ function createAnimation(interpolator, defaultConfig) {
         }
 
         render() {
-            const { from, to, config, native, ...rest } = this.props
-            return React.createElement(this._component, { ...this._to, ...rest })
+            const { children, from, to, config, native, ...rest } = this.props
+            let animatedProps = native ? this._to : this._propsAnimated.__getValue()
+            return children({ ...animatedProps, ...rest })
         }
     }
 }
@@ -142,6 +142,15 @@ function createTransition(interpolator, defaultConfig) {
             let currentSet = new Set(transitionsKeys)
             let added = keys.filter(item => !currentSet.has(item))
             let deleted = transitionsKeys.filter(item => !nextSet.has(item))
+
+            // Update child functions
+            transitions = transitions.map(transition => {
+                if (transition.destroy === undefined) {
+                    const index = keys.indexOf(transition.key)
+                    transition.children = children[index]
+                }
+                return transition
+            })
 
             // Add new children
             if (added.length) {
@@ -194,6 +203,8 @@ function createTransition(interpolator, defaultConfig) {
     }
 }
 
-const Spring = createAnimation(animated.spring, { tension: 170, friction: 26 })
-const SpringTransition = createTransition(animated.spring, { tension: 170, friction: 26 })
-export { createAnimation, createTransition, Spring, SpringTransition, animated }
+const Spring = createAnimation(Animated.spring, { tension: 170, friction: 26 })
+const SpringTransition = createTransition(Animated.spring, { tension: 170, friction: 26 })
+const template = Animated.template
+const animated = Animated.elements
+export { createAnimation, createTransition, Spring, SpringTransition, template, animated }

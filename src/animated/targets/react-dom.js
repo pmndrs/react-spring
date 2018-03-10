@@ -304,7 +304,7 @@ const elements = [
 
 const exports = {
     ...Animated,
-    ...elements,
+    elements,
 }
 
 export default exports

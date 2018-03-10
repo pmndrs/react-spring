@@ -21,13 +21,14 @@ function createAnimatedComponent(Component) {
         }
 
         attachProps(nextProps) {
-            var oldPropsAnimated = this._propsAnimated // The system is best designed when setNativeProps is implemented. It is
+            var oldPropsAnimated = this._propsAnimated 
+            
+            // The system is best designed when setNativeProps is implemented. It is
             // able to avoid re-rendering and directly set the attributes that
             // changed. However, setNativeProps can only be implemented on leaf
             // native components. If you want to animate a composite component, you
             // need to re-render it. In this case, we have a fallback that uses
             // forceUpdate.
-
             var callback = () => {
                 var didUpdate =
                     this.refName &&
@@ -38,7 +39,9 @@ function createAnimatedComponent(Component) {
                 }
             }
 
-            this._propsAnimated = new AnimatedProps(nextProps, callback) // When you call detach, it removes the element from the parent list
+            this._propsAnimated = new AnimatedProps(nextProps, callback) 
+
+            // When you call detach, it removes the element from the parent list
             // of children. If it goes to 0, then the parent also detaches itself
             // and so on.
             // An optimization is to attach the new elements and THEN detach the old
@@ -46,7 +49,6 @@ function createAnimatedComponent(Component) {
             // This way the intermediate state isn't to go to 0 and trigger
             // this expensive recursive detaching to then re-attach everything on
             // the very next operation.
-
             oldPropsAnimated && oldPropsAnimated.__detach()
         }
 
