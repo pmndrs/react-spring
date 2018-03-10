@@ -108,7 +108,7 @@ import { Spring, animated, template } from 'react-spring'
 const Content = ({ startColor, endColor }) => {
     const background = template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)`
     return (
-        <animated.div style={{ background }} />
+        <animated.div style={{ background }}>
             hello
         </animated.div>
     )
