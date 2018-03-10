@@ -23,8 +23,8 @@ function createAnimation(interpolator, defaultConfig) {
 
         _callback = () => !this.props.native && this.forceUpdate()
         _attachProps(nextProps) {
-            var oldPropsAnimated = this._propsAnimated 
-            this._propsAnimated = new Animated.AnimatedProps(nextProps, this._callback) 
+            var oldPropsAnimated = this._propsAnimated
+            this._propsAnimated = new Animated.AnimatedProps(nextProps, this._callback)
             oldPropsAnimated && oldPropsAnimated.__detach()
         }
 
@@ -32,32 +32,15 @@ function createAnimation(interpolator, defaultConfig) {
             const { from } = props
             const currentValue = this._animation._value
             let interpolate, overrideFrom
-            if (Array.isArray(value)) {
-                interpolate = value.map((array, i) => {
-                    const [key, value] = Object.entries(array)[0]
-                    const [fromValue] = (from && from[name] && from[name][i] && Object.values(from[name][i])) || [value]
-                    const previousValue =
-                        this._interpolations &&
-                        this._interpolations[index] &&
-                        Object.values(this._interpolations[index].interpolate[i])[0]._interpolation(currentValue)
-                    return {
-                        [key]: this._animation.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [previousValue !== undefined ? previousValue : fromValue, value],
-                        }),
-                    }
-                })
-            } else {
-                const previous =
-                    this._interpolations &&
-                    this._interpolations[index] &&
-                    this._interpolations[index].interpolate._interpolation(currentValue)
-                const fromValue = previous !== undefined ? previous : from[name] !== undefined ? from[name] : value
-                interpolate = this._animation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [overrideFrom !== undefined ? overrideFrom : fromValue, value],
-                })
-            }
+            const previous =
+                this._interpolations &&
+                this._interpolations[index] &&
+                this._interpolations[index].interpolate._interpolation(currentValue)
+            const fromValue = previous !== undefined ? previous : from[name] !== undefined ? from[name] : value
+            interpolate = this._animation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [overrideFrom !== undefined ? overrideFrom : fromValue, value],
+            })
             return { name, interpolate }
         }
 
