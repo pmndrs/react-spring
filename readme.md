@@ -74,7 +74,7 @@ Just be aware of the following conditions:
 ```jsx
 import { Spring, animated } from 'react-spring'
 
-const App = () => (
+const App = ({ toggle }) => (
     <Spring
         native
         from={{ fill: 'black' }}
@@ -89,9 +89,7 @@ const App = () => (
         {({ fill, backgroundColor, rotate, scale, path }) => (
             <animated.div style={{ backgroundColor }}>
                 <animated.svg style={{ transform: [{ rotate }, { scale }], fill }}>
-                    <g onClick={toggle}>
-                        <animated.path d={path} />
-                    </g>
+                    <g><animated.path d={path} /></g>
                 </animated.svg>
             </animated.div>
         )}
