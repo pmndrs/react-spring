@@ -117,17 +117,17 @@ If you need to interpolate native styles, use `animated.template`. For instance,
 ```jsx
 import { Spring, animated, template } from 'react-spring'
 
-const Content = ({ startColor, endColor }) => (
-    <animated.div style={{ background: template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)` }}>
+const Content = ({ start, end }) => (
+    <animated.h1 style={{ background: template`linear-gradient(${start} 0%, ${end} 100%)` }}>
         hello
-    </animated.div>
+    </animated.h1>
 )
 
 const App = () => (
     <Spring
         native
-        from={{ startColor: 'black', endColor: 'black' }}
-        to={{ startColor: '#70C1B3', endColor: 'seagreen' }}
+        from={{ start: 'black', end: 'black' }}
+        to={{ start: '#70C1B3', end: 'seagreen' }}
         children={Content} />
 )
 ```
