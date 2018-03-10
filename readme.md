@@ -63,6 +63,18 @@ const App = ({ toggle }) => (
 )
 ```
 
+Don't like the way render props wrap your code? You can always move out component definitions and refer to them like so:
+
+```jsx
+const Content = ({ text, ...styles }) => <div style={styles}>{text}</div>
+
+const App = () => (
+    <Spring to={{ color: 'red' }} text="all additional props are spread over the child" children={Content}/>
+)
+```
+
+Et voilà! Now you have a animated version of the `Content` component! It's actually faster as well, since the function isn't recreated on every prop-change.
+
 # Native rendering 🚀
 
 If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be sent straight to the dom without any React reconciliation passes.
@@ -105,13 +117,10 @@ If you need to interpolate native styles, use `animated.template`. For instance,
 ```jsx
 import { Spring, animated, template } from 'react-spring'
 
-const Content = ({ startColor, endColor }) => {
-    const background = template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)`
-    return (
-        <animated.div style={{ background }}>
-            hello
-        </animated.div>
-    )
+const Content = ({ startColor, endColor }) => (
+    <animated.div style={{ background: template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)` }}>
+        hello
+    </animated.div>
 )
 
 const App = () => (
