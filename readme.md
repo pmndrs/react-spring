@@ -73,7 +73,7 @@ const App = () => (
 )
 ```
 
-Et voilà! Now you have a animated version of the `Content` component! It's actually faster as well, since the function isn't recreated on every prop-change.
+Et voilà! Now you render a animated version of the `Header` component! It's actually faster as well since the function isn't recreated on every prop-change.
 
 # Native rendering 🚀
 
