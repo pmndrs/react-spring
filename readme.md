@@ -67,10 +67,9 @@ If you need more performance then pass the `native` flag. Now your component wil
 
 Just be aware of the following conditions:
 
-1.  You can only animate native styles and props
-2.  If you use transforms make sure it's an array
-3.  Receiving components have to be "animated components"
-4.  The values you receive are opaque objects, not regular values
+1.  You can only animate styles and standard props, the values you receive are opaque objects, not regular values
+2.  Receiving elements must be `animated.[elementName]`, f.i. `div` > `animated.div`
+3.  You can slap animated values right into styles and props, `style.transform` takes an array
 
 ```jsx
 import { Spring, animated } from 'react-spring'
