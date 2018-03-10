@@ -24,7 +24,7 @@ React-spring is a wrapper around a cooked down fork of [Facebooks animated](http
 
 This lib inherits React-motions api while you can feed it everything animated can interpolate. It also has support for animateds efficient native rendering.
 
-# Default rendering 🐎
+# Default rendering 🏎
 
 Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. In many situations this will be ok.
 
@@ -132,7 +132,7 @@ const App = () => (
 )
 ```
 
-# Transitions ☔️
+# Transitions 🌔
 
 Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. You do not pass in components as children but rather functions that receive a style object. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation.
 
