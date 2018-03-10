@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import animated from './animated/targets/react-dom'
 import uuid from 'tiny-uuid'
 
-console.log("hhhhhh")
-
 function shallowDiffers (a, b) {
     for (let i in a) if (!(i in b)) return true
     for (let i in b) if (a[i] !== b[i]) return true
@@ -23,7 +21,6 @@ function createAnimation(interpolator, defaultConfig) {
         static defaultProps = { to: {}, from: {}, config: defaultConfig, native: false }
 
         constructor(props) {
-            console.log("new spring")
             super()
             const { children, to, from, native } = props
             this._animation = new animated.Value(0)
@@ -67,7 +64,6 @@ function createAnimation(interpolator, defaultConfig) {
 
         _updateInterpolations = props => {
             const { from, to } = props
-            console.log(to)
             this._interpolations = Object.entries({ ...from, ...to }).map(([n, v], i) =>
                 this._mapValues(props, n, v, i),
             )
@@ -86,12 +82,7 @@ function createAnimation(interpolator, defaultConfig) {
             if (props.finished && this.props.onRest) this.props.onRest()
         }
 
-        componentWillReceiveProps() {
-            console.log("so???")
-        }
-
         componentWillUpdate(props) {
-            console.log("willupadte")
             if (props.children !== this._original) {
                 // So, this is probably the weirdest issue that has to be dealt with.
                 // Twitter advocates render props, but in a way that re-calls the anonomous child function
@@ -105,12 +96,10 @@ function createAnimation(interpolator, defaultConfig) {
         }
 
         componentDidMount() {
-            console.log("mount")
             interpolator(this._animation, { toValue: 1, ...this.props.config }).start(this._onRest)
         }
 
         componentWillUnmount() {
-            console.log("unmount")
             this._animation.stopAnimation()
         }
 
@@ -142,10 +131,6 @@ function createTransition(interpolator, defaultConfig) {
             this.state = {
                 transitionsKeys: keys,
                 transitions: children.map((child, i) => ({ children: child, key: keys[i], to: enter, from })),
-
-                /*children.map((child, i) => (
-                    <Animation native={props.native} from={from} to={enter} key={keys[i]} children={child} />
-                )),*/
             }
         }
 
@@ -168,12 +153,7 @@ function createTransition(interpolator, defaultConfig) {
             if (added.length) {
                 added.forEach(key => {
                     const index = keys.indexOf(key)
-
                     const addedChild = { children: children[index], key, to: enter, from }
-
-                    /*const addedChild = (
-                        <Animation native={native} from={from} to={enter} key={key} children={children[index]} />
-                    )*/
                     transitions = [...transitions.slice(0, index), addedChild, ...transitions.slice(index)]
                 })
             }
@@ -194,21 +174,6 @@ function createTransition(interpolator, defaultConfig) {
                                     transitions: state.transitions.filter(child => child !== leavingChild),
                                 })),
                         }
-                        /*const leavingChild = (
-                            <Animation
-                                destroy
-                                native={native}
-                                from={from}
-                                to={leave}
-                                key={key}
-                                children={oldChild.props.children}
-                                onRest={() =>
-                                    this.setState(state => ({
-                                        transitions: state.transitions.filter(child => child !== leavingChild),
-                                    }))
-                                }
-                            />
-                        )*/
                         transitions = transitions.map(child => (child === oldChild ? leavingChild : child))
                     }
                 })
@@ -230,7 +195,6 @@ function createTransition(interpolator, defaultConfig) {
         }
 
         render() {
-            console.log("render", this.state.transitions)
             return this.state.transitions.map(({ key, ...rest }) => <Animation {...rest} key={key} />)
         }
     }
