@@ -20,7 +20,7 @@ React-spring is a wrapper around a cooked down fork of [Facebooks animated](http
 *   [x] Interpolates most web privimites, units and patterns
 *   [x] Efficiently writes to the dom directly instead of re-rendering components frame by frame
 *   [ ] Managing and orchestrating handles (starting/stopping/waiting/cleaning) can become a real chore
-*   [ ] Missing essential prototypes from mount/unmount transitions
+*   [ ] Missing essential prototypes like mount/unmount transitions
 
 This lib inherits React-motions api while you can feed it everything animated can interpolate. It also has support for animateds efficient native rendering.
 
