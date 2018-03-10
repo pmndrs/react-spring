@@ -10,15 +10,15 @@ React-spring is a wrapper around a cooked down fork of [Facebooks animated](http
 
 ### React-motion
 
-- [x] Declarative api that doesn't involve manual management of handles
-- [ ] Performance can suffer because components are re-rendered every frame
-- [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc. 
+*   [x] Declarative api that doesn't involve manual management of handles
+*   [ ] Performance can suffer because components are re-rendered every frame
+*   [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc.
 
 ### Animated
 
-- [x] Interpolates most web privimites, units and patterns
-- [x] Efficiently changes styles in the dom instead of re-rendering a component with fresh props frame by frame
-- [ ] Managing and orchestrating handles (starting/stopping/waiting/cleaning) can become a real chore
+*   [x] Interpolates most web privimites, units and patterns
+*   [x] Efficiently changes styles in the dom instead of re-rendering a component with fresh props frame by frame
+*   [ ] Managing and orchestrating handles (starting/stopping/waiting/cleaning) can become a real chore
 
 This lib inherits React-motions api while you can feed it everything animated can interpolate. It also has support for animateds efficient native rendering.
 
@@ -29,50 +29,34 @@ Like React-motion by default we'll render the receiving component every frame as
 ```jsx
 import { Spring } from 'react-spring'
 
-const Content = ({ toggle, color, scale, rotate, path, start, stop, end }) => (
-    <div style={{ background: `linear-gradient(to bottom, ${start} ${stop}, ${end} 100%)` }}>
-        <svg
-            onClick={toggle}
-            style={{ transform: `scale(${scale}) rotate(${rotate})` }}
-            version="1.1"
-            viewBox="0 0 400 400">
-            <g fill={color} fillRule="evenodd">
-                <path id="path-1" d={path} />
-            </g>
-        </svg>
-    </div>
+const App = ({ toggle }) => (
+    <Spring
+        // Default values, optional ...
+        from={{ opacity: 0 }}
+        // Will animate to ...
+        to={{
+            // Can be numbers, colors, paths, degrees, percentages, ...
+            color: toggle ? 'red' : '#00ff00',
+            start: toggle ? '#abc' : 'rgb(10,20,30)',
+            end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
+            stop: toggle ? '0%' : '50%',
+            scale: toggle ? 1 : 2,
+            rotate: toggle ? '0deg' : '45deg',
+            path: toggle
+                ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' 
+                : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
+        }}>
+        {({ color, scale, rotate, path, start, stop, end }) => (
+            <div style={{ background: `linear-gradient(to bottom, ${start} ${stop}, ${end} 100%)` }}>
+                <svg style={{ transform: `scale(${scale}) rotate(${rotate})` }}>
+                    <g fill={color}>
+                        <path d={path} />
+                    </g>
+                </svg>
+            </div>
+        )}
+    </Spring>
 )
-
-class App extends React.Component {
-    state = { toggle: true }
-    toggle = () => this.setState(state => ({ toggle: !state.toggle }))
-    render() {
-        const toggle = this.state.toggle
-        return (
-            <Spring
-                // Default values, optional ...
-                from={{ opacity: 0 }}
-                // Will animate to ...
-                to={{
-                    // Can be numbers, colors, paths, degrees, percentages, ...
-                    color: toggle ? 'red' : '#00ff00',
-                    start: toggle ? '#abc' : 'rgb(10,20,30)',
-                    end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5),
-                    stop: toggle ? '0%' : '50%',
-                    scale: toggle ? 1 : 2,
-                    rotate: toggle ? '0deg' : '45deg',
-                    path: toggle
-                        ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z'
-                        : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
-                }}
-                // All additional props will be available to the child
-                toggle={this.toggle}
-                // Child as function/render-prop, receives interpolated values
-                children={Content}
-            />
-        )
-    }
-}
 ```
 
 # Native rendering 🚀
@@ -81,51 +65,43 @@ If you need more performance then pass the `native` flag. Now your component wil
 
 Just be aware of the following conditions:
 
-1. You can only animate native styles and props
-2. If you use transforms make sure it's an array
-3. Receiving components have to be "animated components"
-4. The values you receive are opaque objects, not regular values
+1.  You can only animate native styles and props
+2.  If you use transforms make sure it's an array
+3.  Receiving components have to be "animated components"
+4.  The values you receive are opaque objects, not regular values
 
 ```jsx
 import { Spring, animated } from 'react-spring'
 
-const Content = ({ toggle, fill, backgroundColor, transform, path }) => (
-    <animated.div style={{ backgroundColor }}>
-        <animated.svg style={{ transform, fill }} version="1.1" viewBox="0 0 400 400">
-            <g fillRule="evenodd" onClick={toggle}>
-                <animated.path id="path-1" d={path} />
-            </g>
-        </animated.svg>
-    </animated.div>
-)
+const App = () => (
+    <Spring
+        native
+        from={{ fill: 'black' }}
+        to={{
+            fill: toggle ? '#247BA0' : '#70C1B3',
+            backgroundColor: toggle ? '#B2DBBF' : '#F3FFBD',
+            transform: [{ rotate: toggle ? '0deg' : '180deg' }, { scale: toggle ? 0.6 : 1.5 }],
+            path: toggle ? TRIANGLE : RECTANGLE,
+        }}>
 
-class App extends React.Component {
-    state = { toggle: true }
-    toggle = () => this.setState(state => ({ toggle: !state.toggle }))
-    render() {
-        const toggle = this.state.toggle
-        return (
-            <Spring
-                native
-                from={{ fill: 'black' }}
-                to={{
-                    fill: toggle ? '#247BA0' : '#70C1B3',
-                    backgroundColor: toggle ? '#B2DBBF' : '#F3FFBD',
-                    transform: [{ rotate: toggle ? '0deg' : '180deg' }, { scale: toggle ? 0.6 : 1.5 }],
-                    path: toggle ? TRIANGLE : RECTANGLE,
-                }}
-                toggle={this.toggle}
-                children={Content}
-            />
-        )
-    }
-}
+        {({ toggle, fill, backgroundColor, transform, path }) => (
+            <animated.div style={{ backgroundColor }}>
+                <animated.svg style={{ transform, fill }}>
+                    <g onClick={toggle}>
+                        <animated.path d={path} />
+                    </g>
+                </animated.svg>
+            </animated.div>
+        )}
+
+    </Spring>
+)
 ```
 
 If you need to interpolate native styles, use `animated.template`. For instance, given that you receive startColor and endColor as animatable values you could do it like so:
 
 ```jsx
-import { animated, template } from 'react-spring'
+import { Spring, animated, template } from 'react-spring'
 
 const Content = ({ startColor, endColor }) => {
     const background = template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)`
@@ -135,11 +111,19 @@ const Content = ({ startColor, endColor }) => {
         </animated.div>
     )
 )
+
+const App = () => (
+    <Spring
+        native
+        from={{ startColor: 'black', endColor: 'black' }}
+        to={{ startColor: '#70C1B3', endColor: 'seagreen' }}
+        children={Content} />
+)
 ```
 
 # Transitions ☔️
 
-Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. You do not pass in components as children but rather functions that receive a style object. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation. 
+Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. You do not pass in components as children but rather functions that receive a style object. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation.
 
 ```jsx
 import React, { PureComponent } from 'react'
@@ -152,7 +136,7 @@ export default class AppContent extends PureComponent {
         setTimeout(() => this.setState({ items: ['item1', 'item2', 'item3', 'item4'] }), 2000)
         setTimeout(() => this.setState({ items: ['item1', 'item3', 'item4'] }), 4000)
     }
-    
+
     render() {
         return (
             <ul>
@@ -161,9 +145,7 @@ export default class AppContent extends PureComponent {
                     from={{ opacity: 0, color: 'black', height: 0 }}
                     enter={{ opacity: 1, color: 'red', height: 18 }}
                     leave={{ opacity: 0, color: 'blue', height: 0 }}>
-                    {this.state.items.map(
-                        item => styles => <li style={styles}>{item}</li>
-                    )}
+                    {this.state.items.map(item => styles => <li style={styles}>{item}</li>)}
                 </SpringTransition>
             </ul>
         )
