@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import uuid from 'tiny-uuid'
 import Animated from './animated/targets/react-dom'
 
-console.log(Animated)
-
 function createAnimation(interpolator, defaultConfig) {
     return class extends React.PureComponent {
         static propTypes = {
@@ -145,9 +143,10 @@ function createTransition(interpolator, defaultConfig) {
 
             // Update child functions
             transitions = transitions.map(transition => {
-                if (transition.destroy !== undefined) {
+                if (transition.destroy === undefined) {
                     const index = keys.indexOf(transition.key)
-                    transition.children = children[index]
+                    const updatedChild = children[index]
+                    if (updatedChild) transition.children = updatedChild
                 }
                 return transition
             })
