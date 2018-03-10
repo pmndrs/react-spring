@@ -3,12 +3,6 @@ import PropTypes from 'prop-types'
 import animated from './animated/targets/react-dom'
 import uuid from 'tiny-uuid'
 
-function shallowDiffers (a, b) {
-    for (let i in a) if (!(i in b)) return true
-    for (let i in b) if (a[i] !== b[i]) return true
-    return false
-  }
-
 function createAnimation(interpolator, defaultConfig) {
     return class extends React.PureComponent {
         static propTypes = {
