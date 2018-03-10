@@ -145,7 +145,7 @@ function createTransition(interpolator, defaultConfig) {
 
             // Update child functions
             transitions = transitions.map(transition => {
-                if (transition.destroy === undefined) {
+                if (transition.destroy !== undefined) {
                     const index = keys.indexOf(transition.key)
                     transition.children = children[index]
                 }
