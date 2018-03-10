@@ -46,6 +46,7 @@ const App = ({ toggle }) => (
                 ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' 
                 : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
         }}>
+        
         {({ color, scale, rotate, path, start, stop, end }) => (
             <div style={{ background: `linear-gradient(to bottom, ${start} ${stop}, ${end} 100%)` }}>
                 <svg style={{ transform: `scale(${scale}) rotate(${rotate})` }}>
@@ -55,6 +56,7 @@ const App = ({ toggle }) => (
                 </svg>
             </div>
         )}
+        
     </Spring>
 )
 ```
@@ -106,8 +108,8 @@ import { Spring, animated, template } from 'react-spring'
 const Content = ({ startColor, endColor }) => {
     const background = template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)`
     return (
-        <animated.div style={{ background }}>
-            ...
+        <animated.div style={{ background }} />
+            hello
         </animated.div>
     )
 )
@@ -145,7 +147,9 @@ export default class AppContent extends PureComponent {
                     from={{ opacity: 0, color: 'black', height: 0 }}
                     enter={{ opacity: 1, color: 'red', height: 18 }}
                     leave={{ opacity: 0, color: 'blue', height: 0 }}>
+                    
                     {this.state.items.map(item => styles => <li style={styles}>{item}</li>)}
+                    
                 </SpringTransition>
             </ul>
         )
