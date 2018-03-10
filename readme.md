@@ -63,13 +63,13 @@ const App = ({ toggle }) => (
 )
 ```
 
-Don't like the way render props wrap your code? You can always move out component definitions and refer to them like so:
+Don't like the way render props wrap your code? You can always move out component definitions, like so:
 
 ```jsx
-const Content = ({ text, ...styles }) => <div style={styles}>{text}</div>
+const Header = ({ text, ...styles }) => <h1 style={styles}>{text}</h1>
 
 const App = () => (
-    <Spring to={{ color: 'red' }} text="all additional props are spread over the child" children={Content}/>
+    <Spring to={{ color: 'red' }} text="extra props are spread over the child" children={Header}/>
 )
 ```
 
