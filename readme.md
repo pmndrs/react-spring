@@ -82,13 +82,14 @@ const App = () => (
         to={{
             fill: toggle ? '#247BA0' : '#70C1B3',
             backgroundColor: toggle ? '#B2DBBF' : '#F3FFBD',
-            transform: [{ rotate: toggle ? '0deg' : '180deg' }, { scale: toggle ? 0.6 : 1.5 }],
+            rotate: toggle ? '0deg' : '180deg',
+            scale: toggle ? 0.6 : 1.5,
             path: toggle ? TRIANGLE : RECTANGLE,
         }}>
 
-        {({ toggle, fill, backgroundColor, transform, path }) => (
+        {({ fill, backgroundColor, rotate, scale, path }) => (
             <animated.div style={{ backgroundColor }}>
-                <animated.svg style={{ transform, fill }}>
+                <animated.svg style={{ transform: [{ rotate }, { scale }], fill }}>
                     <g onClick={toggle}>
                         <animated.path d={path} />
                     </g>
