@@ -1,7 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import animated from './animated/index'
+import animated from './animated/targets/react-dom'
 import uuid from 'tiny-uuid'
+
+console.log("hhhhhh")
+
+function shallowDiffers (a, b) {
+    for (let i in a) if (!(i in b)) return true
+    for (let i in b) if (a[i] !== b[i]) return true
+    return false
+  }
 
 function createAnimation(interpolator, defaultConfig) {
     return class extends React.PureComponent {
@@ -15,6 +23,7 @@ function createAnimation(interpolator, defaultConfig) {
         static defaultProps = { to: {}, from: {}, config: defaultConfig, native: false }
 
         constructor(props) {
+            console.log("new spring")
             super()
             const { children, to, from, native } = props
             this._animation = new animated.Value(0)
@@ -58,6 +67,7 @@ function createAnimation(interpolator, defaultConfig) {
 
         _updateInterpolations = props => {
             const { from, to } = props
+            console.log(to)
             this._interpolations = Object.entries({ ...from, ...to }).map(([n, v], i) =>
                 this._mapValues(props, n, v, i),
             )
@@ -76,7 +86,12 @@ function createAnimation(interpolator, defaultConfig) {
             if (props.finished && this.props.onRest) this.props.onRest()
         }
 
-        componentWillReceiveProps(props) {
+        componentWillReceiveProps() {
+            console.log("so???")
+        }
+
+        componentWillUpdate(props) {
+            console.log("willupadte")
             if (props.children !== this._original) {
                 // So, this is probably the weirdest issue that has to be dealt with.
                 // Twitter advocates render props, but in a way that re-calls the anonomous child function
@@ -90,10 +105,12 @@ function createAnimation(interpolator, defaultConfig) {
         }
 
         componentDidMount() {
+            console.log("mount")
             interpolator(this._animation, { toValue: 1, ...this.props.config }).start(this._onRest)
         }
 
         componentWillUnmount() {
+            console.log("unmount")
             this._animation.stopAnimation()
         }
 
@@ -124,9 +141,11 @@ function createTransition(interpolator, defaultConfig) {
             }
             this.state = {
                 transitionsKeys: keys,
-                transitions: children.map((child, i) => (
+                transitions: children.map((child, i) => ({ children: child, key: keys[i], to: enter, from })),
+
+                /*children.map((child, i) => (
                     <Animation native={props.native} from={from} to={enter} key={keys[i]} children={child} />
-                )),
+                )),*/
             }
         }
 
@@ -144,22 +163,38 @@ function createTransition(interpolator, defaultConfig) {
             let currentSet = new Set(transitionsKeys)
             let added = keys.filter(item => !currentSet.has(item))
             let deleted = transitionsKeys.filter(item => !nextSet.has(item))
+
             // Add new children
             if (added.length) {
                 added.forEach(key => {
                     const index = keys.indexOf(key)
-                    const addedChild = (
+
+                    const addedChild = { children: children[index], key, to: enter, from }
+
+                    /*const addedChild = (
                         <Animation native={native} from={from} to={enter} key={key} children={children[index]} />
-                    )
+                    )*/
                     transitions = [...transitions.slice(0, index), addedChild, ...transitions.slice(index)]
                 })
             }
+
             // Remove old children
             if (deleted.length) {
                 deleted.forEach(key => {
                     const oldChild = transitions.find(child => child.key === key)
                     if (oldChild) {
-                        const leavingChild = (
+                        const leavingChild = {
+                            destroy: true,
+                            children: oldChild.children,
+                            key,
+                            to: leave,
+                            from,
+                            onRest: () =>
+                                this.setState(state => ({
+                                    transitions: state.transitions.filter(child => child !== leavingChild),
+                                })),
+                        }
+                        /*const leavingChild = (
                             <Animation
                                 destroy
                                 native={native}
@@ -173,13 +208,15 @@ function createTransition(interpolator, defaultConfig) {
                                     }))
                                 }
                             />
-                        )
+                        )*/
                         transitions = transitions.map(child => (child === oldChild ? leavingChild : child))
                     }
                 })
             }
+
             // Update transition keys, remove leaving children
-            transitionsKeys = transitions.filter(child => child.props.destroy === undefined).map(child => child.key)
+            transitionsKeys = transitions.filter(child => child.destroy === undefined).map(child => child.key)
+
             // Re-order list
             let ordered = keys.map(key => transitions.find(child => child.key === key))
             deleted.forEach(key => {
@@ -187,12 +224,14 @@ function createTransition(interpolator, defaultConfig) {
                 let child = transitions.find(child => child.key === key)
                 if (child) ordered = [...ordered.slice(0, index), child, ...ordered.slice(index)]
             })
+
             // Push new state
             this.setState({ transitions: ordered, transitionsKeys })
         }
 
         render() {
-            return this.state.transitions
+            console.log("render", this.state.transitions)
+            return this.state.transitions.map(({ key, ...rest }) => <Animation {...rest} key={key} />)
         }
     }
 }
