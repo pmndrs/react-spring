@@ -112,7 +112,7 @@ const App = ({ toggle }) => (
 )
 ```
 
-If you need to interpolate native styles, use `animated.template`. For instance, given that you receive startColor and endColor as animatable values you could do it like so:
+If you need to interpolate native styles, use `template`. For instance, given that you receive the start of a gradient and its end as animatable values you could do it like so:
 
 ```jsx
 import { Spring, animated, template } from 'react-spring'
