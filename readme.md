@@ -2,7 +2,7 @@
 
     npm install react-spring
 
-<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Single transition](https://codesandbox.io/embed/yj52v5689) | [Multiple item transition](https://codesandbox.io/embed/j150ykxrv) | [Animated Todo MVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Staggered animation](https://codesandbox.io/s/vvmv6x01l5)
+<b>Examples</b>: [Interpolation](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Reveals](https://codesandbox.io/embed/yj52v5689) | [List transitions](https://codesandbox.io/embed/j150ykxrv) | [Animated Todo MVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Staggered animation](https://codesandbox.io/embed/vvmv6x01l5)
 
 # Why 🤔
 
@@ -178,9 +178,9 @@ const App = ({ toggle }) => (
 )
 ```
 
-Trails/Staggered transitions 👣
+# Trails/Staggered transitions 👣
 
-Create trailing animations by using SpringTrail.
+Create trailing animations by using SpringTrail. The api is similar to SpringTransition though it will assume your list is fixed. The items will drop in in a trailing motion.
 
 ```jsx
 import { SpringTrail } from 'react-spring'
