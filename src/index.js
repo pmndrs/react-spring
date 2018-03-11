@@ -17,8 +17,9 @@ export function createAnimation(interpolator, defaultConfig) {
             config: PropTypes.object,
             native: PropTypes.bool,
             onRest: PropTypes.func,
+            immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
         }
-        static defaultProps = { from: {}, to: {}, config: defaultConfig, native: false }
+        static defaultProps = { from: {}, to: {}, config: defaultConfig, native: false, immediate: false }
 
         constructor(props) {
             super()
@@ -27,7 +28,7 @@ export function createAnimation(interpolator, defaultConfig) {
             this.update(props, false)
         }
 
-        update({ from, to, config, attach }, start = false) {
+        update({ from, to, config, attach, immediate }, start = false) {
             const allProps = Object.entries({ ...from, ...to })
             const defaultAnimationValue = this.defaultAnimation._value
 
@@ -60,6 +61,8 @@ export function createAnimation(interpolator, defaultConfig) {
                     })
                 }
 
+                if (immediate && (immediate === true || immediate.indexOf(name) !== -1))
+                    entry.animation.setValue(toValue)
                 entry.start = () => interpolator(entry.animation, { toValue, ...config }).start(i === 0 && this.onRest)
                 entry.stop = () => entry.animation.stopAnimation()
                 start && entry.start()
