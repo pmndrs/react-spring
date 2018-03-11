@@ -10,10 +10,10 @@ React-spring is a wrapper around a cooked down fork of [Facebooks animated](http
 
 ### React-motion
 
-*   [x] Declarative api that doesn't involve manual management of handles
+*   [x] Declarative api that doesn't involve manual management of animations
+*   [x] Covers most of the essentials (springs, lists, transitions, reveals, staggered animations)
 *   [ ] Performance can suffer because components are re-rendered every frame with fresh props
 *   [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc.
-*   [ ] Some of the api is needlessly complex (f.i MotionTransition)
 
 ### Animated
 
@@ -82,7 +82,7 @@ If you need more performance then pass the `native` flag. Now your component wil
 Just be aware of the following conditions:
 
 1.  You can only animate styles and standard props, the values you receive are opaque objects, not regular values
-2.  Receiving elements must be `animated.[elementName]`, f.i. `div` > `animated.div`
+2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
 3.  You can slap animated values right into styles and props, `style.transform` takes an array
 
 ```jsx
