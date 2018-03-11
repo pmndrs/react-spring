@@ -137,10 +137,9 @@ const App = () => (
 Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation.
 
 ```jsx
-import React, { PureComponent } from 'react'
-import { SpringTransition, animated } from 'react-spring'
+import { SpringTransition } from 'react-spring'
 
-export default class AppContent extends PureComponent {
+class AppContent extends PureComponent {
     state = { items: ['item1', 'item2', 'item3'] }
 
     componentDidMount() {
@@ -164,4 +163,15 @@ export default class AppContent extends PureComponent {
         )
     }
 }
+```
+
+You can use this prototype for two-state reveals, in that case simply don't supply keys and render a single child that you can switch out for another any time!
+
+
+```jsx
+const App = ({ toggle }) => (
+    <SpringTransition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
+        {toggle ? ComponentA : ComponentB}
+    </SpringTransition>
+)
 ```
