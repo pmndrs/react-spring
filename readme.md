@@ -83,10 +83,10 @@ Just be aware of the following conditions:
 
 1.  You can only animate styles and standard props, the values you receive are opaque objects, not regular values
 2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
-3.  You can slap animated values right into styles and props, `style.transform` takes an array
+3.  If you need to interpolate styles use the `template` string literal
 
 ```jsx
-import { Spring, animated } from 'react-spring'
+import { Spring, animated, template } from 'react-spring'
 
 const App = ({ toggle }) => (
     <Spring
@@ -102,33 +102,13 @@ const App = ({ toggle }) => (
 
         {({ fill, backgroundColor, rotate, scale, path }) => (
             <animated.div style={{ backgroundColor }}>
-                <animated.svg style={{ transform: [{ rotate }, { scale }], fill }}>
+                <animated.svg style={{ transform: template`rotate(${rotate}) scale(${scale})`, fill }}>
                     <g><animated.path d={path} /></g>
                 </animated.svg>
             </animated.div>
         )}
 
     </Spring>
-)
-```
-
-If you need to interpolate native styles, use `template`. For instance, given that you receive the start of a gradient and its end as animatable values you could do it like so:
-
-```jsx
-import { Spring, animated, template } from 'react-spring'
-
-const Content = ({ start, end }) => (
-    <animated.h1 style={{ background: template`linear-gradient(${start} 0%, ${end} 100%)` }}>
-        hello
-    </animated.h1>
-)
-
-const App = () => (
-    <Spring
-        native
-        from={{ start: 'black', end: 'black' }}
-        to={{ start: '#70C1B3', end: 'seagreen' }}
-        children={Content} />
 )
 ```
 
