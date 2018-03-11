@@ -6,23 +6,25 @@
 
 # Why 🤔
 
-React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge Chenglou's [React-motion](https://github.com/chenglou/react-motion) and animated as both have their pros and cons, but definitively could benefit from one another:
+React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge Chenglou's [React-motion](https://github.com/chenglou/react-motion) and animated, as both have their pros and cons, but definitively could benefit from one another:
 
 ### React-motion
 
-*   [x] Declarative api that doesn't involve manual management of handles
-*   [ ] Performance can suffer because components are re-rendered every frame
+*   [x] Declarative api that doesn't involve manual management of animations
+*   [x] Covers most of the essentials (springs, lists, transitions, reveals, staggered animations)
+*   [ ] Performance can suffer because components are re-rendered every frame with fresh props
 *   [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc.
 
 ### Animated
 
 *   [x] Interpolates most web privimites, units and patterns
-*   [x] Efficiently changes styles in the dom instead of re-rendering a component with fresh props frame by frame
+*   [x] Efficiently writes to the dom directly instead of re-rendering components frame by frame
 *   [ ] Managing and orchestrating handles (starting/stopping/waiting/cleaning) can become a real chore
+*   [ ] Missing essential prototypes like mount/unmount transitions
 
-This lib inherits React-motions api while you can feed it everything animated can interpolate. It also has support for animateds efficient native rendering.
+So as you see, they're polar opposites and the strengths of one are the weaknesses of another. React-spring inherits React-motions api while you can feed it everything animated can interpolate. It also has support for animateds efficient native rendering.
 
-# Default rendering 🐎
+# Default rendering 🏎
 
 Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. In many situations this will be ok.
 
@@ -61,21 +63,32 @@ const App = ({ toggle }) => (
 )
 ```
 
+Don't like the way render props wrap your code? You can always move out component definitions, like so:
+
+```jsx
+const Header = ({ text, ...styles }) => <h1 style={styles}>{text}</h1>
+
+const App = () => (
+    <Spring to={{ color: 'red' }} text="extra props are spread over the child" children={Header}/>
+)
+```
+
+Et voilà! Now you render a animated version of the `Header` component! It's actually faster as well since the function isn't recreated on every prop-change.
+
 # Native rendering 🚀
 
 If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be sent straight to the dom without any React reconciliation passes.
 
 Just be aware of the following conditions:
 
-1.  You can only animate native styles and props
-2.  If you use transforms make sure it's an array
-3.  Receiving components have to be "animated components"
-4.  The values you receive are opaque objects, not regular values
+1.  You can only animate styles and standard props, the values you receive are opaque objects, not regular values
+2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
+3.  You can slap animated values right into styles and props, `style.transform` takes an array
 
 ```jsx
 import { Spring, animated } from 'react-spring'
 
-const App = () => (
+const App = ({ toggle }) => (
     <Spring
         native
         from={{ fill: 'black' }}
@@ -90,9 +103,7 @@ const App = () => (
         {({ fill, backgroundColor, rotate, scale, path }) => (
             <animated.div style={{ backgroundColor }}>
                 <animated.svg style={{ transform: [{ rotate }, { scale }], fill }}>
-                    <g onClick={toggle}>
-                        <animated.path d={path} />
-                    </g>
+                    <g><animated.path d={path} /></g>
                 </animated.svg>
             </animated.div>
         )}
@@ -101,38 +112,34 @@ const App = () => (
 )
 ```
 
-If you need to interpolate native styles, use `animated.template`. For instance, given that you receive startColor and endColor as animatable values you could do it like so:
+If you need to interpolate native styles, use `template`. For instance, given that you receive the start of a gradient and its end as animatable values you could do it like so:
 
 ```jsx
 import { Spring, animated, template } from 'react-spring'
 
-const Content = ({ startColor, endColor }) => {
-    const background = template`linear-gradient(bottom ${startColor} 0%, ${endColor} 100%)`
-    return (
-        <animated.div style={{ background }}>
-            hello
-        </animated.div>
-    )
+const Content = ({ start, end }) => (
+    <animated.h1 style={{ background: template`linear-gradient(${start} 0%, ${end} 100%)` }}>
+        hello
+    </animated.h1>
 )
 
 const App = () => (
     <Spring
         native
-        from={{ startColor: 'black', endColor: 'black' }}
-        to={{ startColor: '#70C1B3', endColor: 'seagreen' }}
+        from={{ start: 'black', end: 'black' }}
+        to={{ start: '#70C1B3', end: 'seagreen' }}
         children={Content} />
 )
 ```
 
-# Transitions ☔️
+# Transitions 🌔
 
-Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. You do not pass in components as children but rather functions that receive a style object. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation.
+Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation.
 
 ```jsx
-import React, { PureComponent } from 'react'
-import { SpringTransition, animated } from 'react-spring'
+import { SpringTransition } from 'react-spring'
 
-export default class AppContent extends PureComponent {
+class AppContent extends PureComponent {
     state = { items: ['item1', 'item2', 'item3'] }
 
     componentDidMount() {
@@ -156,4 +163,15 @@ export default class AppContent extends PureComponent {
         )
     }
 }
+```
+
+You can use this prototype for two-state reveals, in that case simply don't supply keys and render a single child that you can switch out for another any time!
+
+
+```jsx
+const App = ({ toggle }) => (
+    <SpringTransition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
+        {toggle ? ComponentA : ComponentB}
+    </SpringTransition>
+)
 ```
