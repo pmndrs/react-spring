@@ -134,7 +134,7 @@ const App = () => (
 
 # Transitions 🌔
 
-Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. You do not pass in components as children but rather functions that receive a style object. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation.
+Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation.
 
 ```jsx
 import React, { PureComponent } from 'react'
