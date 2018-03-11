@@ -244,4 +244,4 @@ const SpringTransition = createTransition(Animated.spring, config.default)
 const SpringTrail = createTrail(Animated.spring, config.default)
 const template = Animated.template
 const animated = Animated.elements
-export { Spring, SpringTransition, SpringStagger, SpringTrail, config, template, animated }
+export { Spring, SpringTransition, SpringTrail, config, template, animated }
