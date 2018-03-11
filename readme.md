@@ -2,7 +2,7 @@
 
     npm install react-spring
 
-<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Single transition](https://codesandbox.io/embed/yj52v5689) | [Multiple item transition](https://codesandbox.io/embed/j150ykxrv) | [Animated Todo MVC](https://codesandbox.io/embed/2pk8l7n7kn)
+<b>Examples</b>: [Api demonstration](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Single transition](https://codesandbox.io/embed/yj52v5689) | [Multiple item transition](https://codesandbox.io/embed/j150ykxrv) | [Animated Todo MVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Staggered animation](https://codesandbox.io/s/vvmv6x01l5)
 
 # Why 🤔
 
@@ -132,7 +132,7 @@ const App = () => (
 )
 ```
 
-# Transitions 🌔
+# Transitions 🌑🌒🌓🌔🌕
 
 Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation.
 
@@ -155,9 +155,7 @@ class AppContent extends PureComponent {
                     from={{ opacity: 0, color: 'black', height: 0 }}
                     enter={{ opacity: 1, color: 'red', height: 18 }}
                     leave={{ opacity: 0, color: 'blue', height: 0 }}>
-                    
                     {this.state.items.map(item => styles => <li style={styles}>{item}</li>)}
-                    
                 </SpringTransition>
             </ul>
         )
@@ -165,13 +163,35 @@ class AppContent extends PureComponent {
 }
 ```
 
-You can use this prototype for two-state reveals, in that case simply don't supply keys and render a single child that you can switch out for another any time!
+You can use this prototype for two-state reveals, in that case simply render a single child that you can switch out for another.
 
 
 ```jsx
 const App = ({ toggle }) => (
-    <SpringTransition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
+    <SpringTransition
+        keys={toggle ? 'ComponentA' : 'ComponentB'} 
+        from={{ opacity: 0 }} 
+        enter={{ opacity: 1 }} 
+        leave={{ opacity: 0 }}>
         {toggle ? ComponentA : ComponentB}
     </SpringTransition>
+)
+```
+
+Trails/Staggered transitions 👣
+
+Create trailing animations by using SpringTrail.
+
+```jsx
+import { SpringTrail } from 'react-spring'
+
+const App = ({ items }) => (
+    <SpringTrail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
+        {items.map(item => styles => (
+            <div style={styles}>
+                {item.text}
+            </div>
+        ))}
+    </SpringTrail>
 )
 ```
