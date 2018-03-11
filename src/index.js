@@ -1,108 +1,124 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import uuid from 'tiny-uuid'
 import Animated from './animated/targets/react-dom'
 
-function createAnimation(interpolator, defaultConfig) {
+const config = {
+    default: { tension: 170, friction: 26 },
+    gentle: { tension: 120, friction: 14 },
+    wobbly: { tension: 180, friction: 12 },
+    stiff: { tension: 210, friction: 20 },
+}
+
+export function createAnimation(interpolator, defaultConfig) {
     return class extends React.PureComponent {
         static propTypes = {
-            to: PropTypes.object,
+            to: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
             from: PropTypes.object,
             config: PropTypes.object,
             native: PropTypes.bool,
             onRest: PropTypes.func,
         }
-        static defaultProps = { to: {}, from: {}, config: defaultConfig, native: false }
+        static defaultProps = { from: {}, to: {}, config: defaultConfig, native: false }
 
         constructor(props) {
             super()
-            const { children, to, from, native } = props
-            this._animation = new Animated.Value(0)
-            this._updateInterpolations(props)
+            this.defaultAnimation = new Animated.Value(0)
+            this.animations = {}
+            this.update(props, false)
         }
 
-        _callback = () => !this.props.native && this.forceUpdate()
-        _attachProps(nextProps) {
-            var oldPropsAnimated = this._propsAnimated
-            this._propsAnimated = new Animated.AnimatedProps(nextProps, this._callback)
+        update({ from, to, config, attach }, start = false) {
+            const allProps = Object.entries({ ...from, ...to })
+            const defaultAnimationValue = this.defaultAnimation._value
+
+            this.interpolators = {}
+            this.defaultAnimation.setValue(0)
+            this.animations = allProps.reduce((acc, [name, value], i) => {
+                const entry = this.animations[name] || (this.animations[name] = {})
+
+                let isNumber = typeof value === 'number'
+                let fromValue = from[name] !== undefined ? from[name] : value
+                let toValue = isNumber ? value : 1
+
+                if (isNumber && attach) {
+                    // Attach value to target animation
+                    const target = attach(this)
+                    const targetAnimation = target && target.animations[name]
+                    if (targetAnimation) toValue = targetAnimation.animation
+                }
+
+                if (isNumber) {
+                    // Create animated value
+                    entry.animation = entry.interpolation = entry.animation || new Animated.Value(fromValue)
+                } else {
+                    // Deal with interpolations
+                    const previous = entry.interpolation && entry.interpolation._interpolation(defaultAnimationValue)
+                    entry.animation = this.defaultAnimation
+                    entry.interpolation = this.defaultAnimation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [previous !== undefined ? previous : fromValue, value],
+                    })
+                }
+
+                entry.start = () => interpolator(entry.animation, { toValue, ...config }).start(i === 0 && this.onRest)
+                entry.stop = () => entry.animation.stopAnimation()
+                start && entry.start()
+
+                this.interpolators[name] = entry.interpolation
+                return { ...acc, [name]: entry }
+            }, {})
+
+            var oldPropsAnimated = this.propsAnimated
+            this.propsAnimated = new Animated.AnimatedProps(this.interpolators, this.callback)
             oldPropsAnimated && oldPropsAnimated.__detach()
         }
 
-        _mapValues(props, name, value, index) {
-            const { from } = props
-            const currentValue = this._animation._value
-            let interpolate, overrideFrom
-            const previous =
-                this._interpolations &&
-                this._interpolations[index] &&
-                this._interpolations[index].interpolate._interpolation(currentValue)
-            const fromValue = previous !== undefined ? previous : from[name] !== undefined ? from[name] : value
-            interpolate = this._animation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [overrideFrom !== undefined ? overrideFrom : fromValue, value],
-            })
-            return { name, interpolate }
-        }
-
-        _updateInterpolations = props => {
-            const { from, to } = props
-            this._interpolations = Object.entries({ ...from, ...to }).map(([n, v], i) =>
-                this._mapValues(props, n, v, i),
-            )
-            this._to = this._interpolations.reduce((acc, anim) => ({ ...acc, [anim.name]: anim.interpolate }), {})
-            this._attachProps(this._to)
-        }
-
-        _updateAnimations = props => {
-            const { to, from, config } = props
-            this._updateInterpolations(props)
-            this._animation.stopAnimation()
-            this._animation.setValue(0)
-            interpolator(this._animation, { toValue: 1, ...config }).start(this._onRest)
-        }
-
-        _onRest = props => {
-            if (props.finished && this.props.onRest) this.props.onRest()
-        }
+        callback = () => !this.props.native && this.forceUpdate()
+        onRest = props => props.finished && this.props.onRest && this.props.onRest()
 
         componentWillReceiveProps(props) {
-            this._updateAnimations(props)
+            this.update(props, true)
         }
 
         componentDidMount() {
-            interpolator(this._animation, { toValue: 1, ...this.props.config }).start(this._onRest)
+            Object.values(this.animations).forEach(({ start }) => start())
         }
 
         componentWillUnmount() {
-            this._animation.stopAnimation()
+            Object.values(this.animations).forEach(({ stop }) => stop())
         }
 
         render() {
-            const { children, from, to, config, native, ...rest } = this.props
-            let animatedProps = native ? this._to : this._propsAnimated.__getValue()
-            return children({ ...animatedProps, ...rest })
+            const { children, from, to, config, native, ...extra } = this.props
+            let animatedProps = native ? this.interpolators : this.propsAnimated.__getValue()
+            return children({ ...animatedProps, ...extra })
         }
     }
 }
 
-function createTransition(interpolator, defaultConfig) {
+export function createTransition(interpolator, defaultConfig) {
     const Animation = createAnimation(interpolator, defaultConfig)
-    return class TransitionSpring extends React.PureComponent {
+    return class SpringTransition extends React.PureComponent {
         static propTypes = {
+            native: PropTypes.bool,
+            config: PropTypes.object,
             from: PropTypes.object,
             enter: PropTypes.object,
             leave: PropTypes.object,
-            keys: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
-            native: PropTypes.bool,
+            keys: PropTypes.oneOfType([
+                PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
+                PropTypes.number,
+            ]),
+            children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
         }
+
+        static defaultProps = { from: {}, enter: {}, leave: {}, native: false, config: defaultConfig }
 
         constructor(props) {
             super()
             let { children, keys, from, enter, leave } = props
-            if (!Array.isArray(children)) {
-                children = [children]
-                keys = [uuid()]
-            }
+            if (!Array.isArray(children)) children = [children]
+            if (!Array.isArray(keys)) keys = [keys]
             this.state = {
                 transitionsKeys: keys,
                 transitions: children.map((child, i) => ({ children: child, key: keys[i], to: enter, from })),
@@ -111,12 +127,9 @@ function createTransition(interpolator, defaultConfig) {
 
         componentWillReceiveProps(props) {
             let { transitions, transitionsKeys } = this.state
-            let { native, children, keys, from, enter, leave } = props
-
-            if (!Array.isArray(children)) {
-                children = [children]
-                keys = [props.children !== this.props.children ? uuid() : this.props.transitionsKeys[0]]
-            }
+            let { children, keys, from, enter, leave } = props
+            if (!Array.isArray(children)) children = [children]
+            if (!Array.isArray(keys)) keys = [keys]
 
             // Compare next keys with current keys
             let nextSet = new Set(keys)
@@ -180,13 +193,55 @@ function createTransition(interpolator, defaultConfig) {
         }
 
         render() {
-            return this.state.transitions.map(({ key, ...rest }) => <Animation {...rest} key={key} />)
+            const { children, from, enter, leave, native, config, keys, ...extra } = this.props
+            return this.state.transitions.map(({ key, ...rest }) => (
+                <Animation key={key} native={native} config={config} {...rest} {...extra} />
+            ))
         }
     }
 }
 
-const Spring = createAnimation(Animated.spring, { tension: 170, friction: 26 })
-const SpringTransition = createTransition(Animated.spring, { tension: 170, friction: 26 })
+export function createTrail(interpolator, defaultConfig) {
+    const Animation = createAnimation(interpolator, defaultConfig)
+    return class SpringTrail extends React.PureComponent {
+        static propTypes = {
+            native: PropTypes.bool,
+            config: PropTypes.object,
+            from: PropTypes.object,
+            to: PropTypes.object,
+            keys: PropTypes.oneOfType([
+                PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
+                PropTypes.number,
+            ]),
+            children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
+        }
+        static defaultProps = { from: {}, to: {}, native: false, config: defaultConfig }
+        render() {
+            const { children, from, to, native, config, keys, ...extra } = this.props
+            const animations = new Set()
+            const hook = (index, animation) => {
+                animations.add(animation)
+                if (index === 0) return undefined
+                else return Array.from(animations)[index - 1]
+            }
+            return children.map((child, i) => (
+                <Animation
+                    key={keys[i]}
+                    native={native}
+                    config={config}
+                    from={from}
+                    to={to}
+                    attach={animation => hook(i, animation)}
+                    children={child}
+                />
+            ))
+        }
+    }
+}
+
+const Spring = createAnimation(Animated.spring, config.default)
+const SpringTransition = createTransition(Animated.spring, config.default)
+const SpringTrail = createTrail(Animated.spring, config.default)
 const template = Animated.template
 const animated = Animated.elements
-export { createAnimation, createTransition, Spring, SpringTransition, template, animated }
+export { Spring, SpringTransition, SpringStagger, SpringTrail, config, template, animated }
