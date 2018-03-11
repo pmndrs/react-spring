@@ -178,7 +178,7 @@ const App = ({ toggle }) => (
 )
 ```
 
-Trails/Staggered transitions 👣
+# Trails/Staggered transitions 👣
 
 Create trailing animations by using SpringTrail. The api is similar to SpringTransition though it will assume your list is fixed. The items will drop in in a trailing motion.
 
