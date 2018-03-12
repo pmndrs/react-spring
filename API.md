@@ -36,7 +36,7 @@ class Spring extends React.PureComponent {
         children: PropTypes.func,
         // Same as children, but takes precedence if present
         render: PropTypes.func,
-        // Prevents animation if true, you can also pass keys for individual keys
+        // Prevents animation if true, you can also pass individual keys
         immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
     }
     static defaultProps = { from: {}, to: {}, config: defaultConfig, native: false, immediate: false }
