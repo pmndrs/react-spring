@@ -18,7 +18,7 @@ var spring = function(value, config) {
         start: function(callback) {
             var singleValue = value
             var singleConfig = config
-            singleValue.stopTracking()
+            //singleValue.stopTracking()
 
             if (config.toValue instanceof Animated) {
                 singleValue.track(

@@ -21,8 +21,8 @@ function createAnimatedComponent(Component) {
         }
 
         attachProps(nextProps) {
-            var oldPropsAnimated = this._propsAnimated 
-            
+            var oldPropsAnimated = this._propsAnimated
+
             // The system is best designed when setNativeProps is implemented. It is
             // able to avoid re-rendering and directly set the attributes that
             // changed. However, setNativeProps can only be implemented on leaf
@@ -39,7 +39,7 @@ function createAnimatedComponent(Component) {
                 }
             }
 
-            this._propsAnimated = new AnimatedProps(nextProps, callback) 
+            this._propsAnimated = new AnimatedProps(nextProps, callback)
 
             // When you call detach, it removes the element from the parent list
             // of children. If it goes to 0, then the parent also detaches itself
@@ -57,14 +57,8 @@ function createAnimatedComponent(Component) {
         }
 
         render() {
-            const { style, ...other } = this._propsAnimated.__getValue()
-            return (
-                <Component
-                    {...other}
-                    style={ApplyAnimatedValues.transformStyles(style)}
-                    ref={ref => (this.refName = ref)}
-                />
-            )
+            const styles = this._propsAnimated.__getValue()
+            return <Component {...styles} ref={ref => (this.refName = ref)} />
         }
     }
 

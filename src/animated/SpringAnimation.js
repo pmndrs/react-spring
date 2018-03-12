@@ -24,21 +24,10 @@ class SpringAnimation extends Animation {
         this.__isInteraction = config.isInteraction !== undefined ? config.isInteraction : true
         var springConfig
 
-        if (config.bounciness !== undefined || config.speed !== undefined) {
-            invariant(
-                config.tension === undefined && config.friction === undefined,
-                'You can only define bounciness/speed or tension/friction but not both',
-            )
-            springConfig = SpringConfig.fromBouncinessAndSpeed(
-                withDefault(config.bounciness, 8),
-                withDefault(config.speed, 12),
-            )
-        } else {
-            springConfig = SpringConfig.fromOrigamiTensionAndFriction(
-                withDefault(config.tension, 40),
-                withDefault(config.friction, 7),
-            )
-        }
+        springConfig = SpringConfig.fromOrigamiTensionAndFriction(
+            withDefault(config.tension, 40),
+            withDefault(config.friction, 7),
+        )
 
         this._tension = springConfig.tension
         this._friction = springConfig.friction

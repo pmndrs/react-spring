@@ -229,6 +229,7 @@ export function createTrail(interpolator, defaultConfig) {
             }
             return children.map((child, i) => (
                 <Animation
+                    {...extra}
                     key={keys[i]}
                     native={native}
                     config={config}

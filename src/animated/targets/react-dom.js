@@ -1,23 +1,5 @@
 import Animated from '../'
 
-// Following are transform functions who accept arguments of type <length> or <length-percentage>.
-// These functions won't work if we send them numbers, so we convert those numbers to px.
-// Source: https://developer.mozilla.org/en-US/docs/Web/CSS/transform?v=b
-
-const transformWithLengthUnits = {
-    translateX: true,
-    translateY: true,
-    translateZ: true,
-    perspective: true, // { translateY: 35 } => 'translateY(35px)'
-    // { scale: 2 } => 'scale(2)'
-}
-
-function mapTransform(t) {
-    var k = Object.keys(t)[0]
-    var unit = transformWithLengthUnits[k] && typeof t[k] === 'number' ? 'px' : ''
-    return `${k}(${t[k]}${unit})`
-}
-
 const isUnitlessNumber = {
     animationIterationCount: true,
     borderImageOutset: true,
@@ -61,14 +43,14 @@ const isUnitlessNumber = {
     strokeMiterlimit: true,
     strokeOpacity: true,
     strokeWidth: true,
-    /**
-     * @param {string} prefix vendor-specific prefix, eg: Webkit
-     * @param {string} key style name, eg: transitionDuration
-     * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
-     * WebkitTransitionDuration
-     */
 }
 
+/**
+ * @param {string} prefix vendor-specific prefix, eg: Webkit
+ * @param {string} key style name, eg: transitionDuration
+ * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
+ * WebkitTransitionDuration
+ */
 function prefixKey(prefix, key) {
     return prefix + key.charAt(0).toUpperCase() + key.substring(1)
 }
@@ -76,24 +58,17 @@ function prefixKey(prefix, key) {
  * Support style names that may come passed in prefixed by adding permutations
  * of vendor prefixes.
  */
+var prefixes = ['Webkit', 'ms', 'Moz', 'O']
 
-var prefixes = ['Webkit', 'ms', 'Moz', 'O'] // Using Object.keys here, or else the vanilla for-in loop makes IE8 go into an
+// Using Object.keys here, or else the vanilla for-in loop makes IE8 go into an
 // infinite loop, because it iterates over the newly added props too.
-
 Object.keys(isUnitlessNumber).forEach(function(prop) {
     prefixes.forEach(function(prefix) {
         isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop]
     })
-}) // NOTE(lmr):
-// Since this is a hot code path, right now this is mutative...
-// As far as I can tell, this shouldn't cause any unexpected behavior.
+})
 
 function mapStyle(style) {
-    if (style && style.transform && typeof style.transform !== 'string') {
-        // TODO(lmr): this doesn't attempt to use vendor prefixed styles
-        style.transform = style.transform.map(mapTransform).join(' ')
-    }
-
     return style
 }
 
@@ -152,7 +127,7 @@ function ApplyAnimatedValues(instance, props) {
     if (instance.setNativeProps) {
         instance.setNativeProps(props)
     } else if (instance.nodeType && instance.setAttribute !== undefined) {
-        setValueForStyles(instance, mapStyle(props.style))
+        setValueForStyles(instance, props.style)
     } else {
         return false
     }

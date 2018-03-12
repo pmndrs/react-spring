@@ -1,20 +1,11 @@
 import Animated from './Animated'
 import AnimatedWithChildren from './AnimatedWithChildren'
-import AnimatedTransform from './AnimatedTransform'
 import FlattenStyle from './injectable/FlattenStyle'
 
 class AnimatedStyle extends AnimatedWithChildren {
     constructor(style) {
         super()
         style = FlattenStyle.current(style) || {}
-
-        if (style.transform && !(style.transform instanceof Animated)) {
-            style = {
-                ...style,
-                transform: new AnimatedTransform(style.transform),
-            }
-        }
-
         this._style = style
     }
 
