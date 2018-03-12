@@ -65,14 +65,18 @@ const App = ({ toggle }) => (
 Don't like the way render props wrap your code?
 
 ```jsx
-const Header = ({ text, ...styles }) => <h1 style={styles}>{text}</h1>
+const Header = ({ children, ...styles }) => (
+    <h1 style={styles}>
+        {children}
+    </h1>
+)
 
-const App = () => (
-    <Spring to={{ color: 'red' }} text="extra props are spread over the child" children={Header}/>
+const AnimatedHeader = ({ children, color }) => (
+    <Spring to={{ color }} render={Header} children={children}/>
 )
 ```
 
-Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the component, so you can still communicate locals to it. It's actually faster as well since the function isn't recreated on every prop-change.
+Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the component, *including `children` if you use `render` to refer to the Springs child", which then takes precedence. This is also how you can communicate locals to it. It's actually faster as well since the function isn't recreated on every prop-change.
 
 # Native rendering 🚀
 
@@ -149,7 +153,7 @@ const App = ({ toggle }) => (
 
 ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
-Create trailing animations by using SpringTrail. The api is similar to SpringTransition though it will assume your list is fixed. The items will drop in in a trailing motion.
+Create trailing animations by using `SpringTrail`. The api is similar to `SpringTransition` though it will assume your list is fixed. The items will drop in in a trailing motion.
 
 ```jsx
 import { SpringTrail } from 'react-spring'
