@@ -17,6 +17,8 @@ export function createAnimation(interpolator, defaultConfig) {
             config: PropTypes.object,
             native: PropTypes.bool,
             onRest: PropTypes.func,
+            children: PropTypes.func,
+            render: PropTypes.func,
             immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
         }
         static defaultProps = { from: {}, to: {}, config: defaultConfig, native: false, immediate: false }
@@ -92,9 +94,9 @@ export function createAnimation(interpolator, defaultConfig) {
         }
 
         render() {
-            const { children, from, to, config, native, ...extra } = this.props
+            const { children, render, from, to, config, native, ...extra } = this.props
             let animatedProps = native ? this.interpolators : this.propsAnimated.__getValue()
-            return children({ ...animatedProps, ...extra })
+            return render ? render({ ...animatedProps, ...extra, children }) : children({ ...animatedProps, ...extra })
         }
     }
 }
@@ -110,16 +112,18 @@ export function createTransition(interpolator, defaultConfig) {
             leave: PropTypes.object,
             keys: PropTypes.oneOfType([
                 PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
-                PropTypes.number,
+                PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
             ]),
             children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
+            render: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
         }
 
         static defaultProps = { from: {}, enter: {}, leave: {}, native: false, config: defaultConfig }
 
         constructor(props) {
             super()
-            let { children, keys, from, enter, leave } = props
+            let { children, render, keys, from, enter, leave } = props
+            children = render || children
             if (!Array.isArray(children)) children = [children]
             if (!Array.isArray(keys)) keys = [keys]
             this.state = {
@@ -130,7 +134,8 @@ export function createTransition(interpolator, defaultConfig) {
 
         componentWillReceiveProps(props) {
             let { transitions, transitionsKeys } = this.state
-            let { children, keys, from, enter, leave } = props
+            let { children, render, keys, from, enter, leave } = props
+            children = render || children
             if (!Array.isArray(children)) children = [children]
             if (!Array.isArray(keys)) keys = [keys]
 
@@ -196,10 +201,13 @@ export function createTransition(interpolator, defaultConfig) {
         }
 
         render() {
-            const { children, from, enter, leave, native, config, keys, ...extra } = this.props
-            return this.state.transitions.map(({ key, ...rest }) => (
-                <Animation key={key} native={native} config={config} {...rest} {...extra} />
-            ))
+            const { render, from, enter, leave, native, config, keys, ...extra } = this.props
+            const props = { native, config, ...extra }
+            return this.state.transitions.map(({ key, children, ...rest }) =>
+                render
+                    ? <Animation key={key} {...rest} {...props} render={children} children={this.props.children} />
+                    : <Animation key={key} {...rest} {...props} children={children} />
+            )
         }
     }
 }
@@ -212,33 +220,26 @@ export function createTrail(interpolator, defaultConfig) {
             config: PropTypes.object,
             from: PropTypes.object,
             to: PropTypes.object,
-            keys: PropTypes.oneOfType([
-                PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
-                PropTypes.number,
-            ]),
+            keys: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
             children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
+            render: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
         }
         static defaultProps = { from: {}, to: {}, native: false, config: defaultConfig }
         render() {
-            const { children, from, to, native, config, keys, ...extra } = this.props
+            const { children, render, from, to, native, config, keys, ...extra } = this.props
             const animations = new Set()
             const hook = (index, animation) => {
                 animations.add(animation)
                 if (index === 0) return undefined
                 else return Array.from(animations)[index - 1]
             }
-            return children.map((child, i) => (
-                <Animation
-                    {...extra}
-                    key={keys[i]}
-                    native={native}
-                    config={config}
-                    from={from}
-                    to={to}
-                    attach={animation => hook(i, animation)}
-                    children={child}
-                />
-            ))
+            const props = { ...extra, native, config, from, to }
+            return (render || children).map((child, i) => {
+                const attachedHook = animation => hook(i, animation)
+                return render
+                    ? <Animation key={keys[i]} {...props} attach={attachedHook} render={child} children={children} />
+                    : <Animation key={keys[i]} {...props} attach={attachedHook} children={child} />
+            })
         }
     }
 }
