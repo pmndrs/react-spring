@@ -2,7 +2,9 @@
 
 ```jsx
 import { config } from 'react-spring'
+```
 
+```jsx
 /*
     default: { tension: 170, friction: 26 },
     gentle: { tension: 120, friction: 14 },
@@ -12,6 +14,10 @@ import { config } from 'react-spring'
 ```
 
 # Spring
+
+```jsx
+import { Spring } from 'react-spring'
+```
 
 ```jsx
 class Spring extends React.PureComponent {
@@ -40,6 +46,10 @@ class Spring extends React.PureComponent {
 # SpringTransition
 
 ```jsx
+import { SpringTransition } from 'react-spring'
+```
+
+```jsx
 class SpringTransition extends React.PureComponent {
     static propTypes = {
         native: PropTypes.bool,
@@ -64,6 +74,10 @@ class SpringTransition extends React.PureComponent {
 ```
 
 # SpringTrail
+
+```jsx
+import { SpringTrail } from 'react-spring'
+```
 
 ```jsx
 class SpringTrail extends React.PureComponent {
