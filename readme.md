@@ -80,7 +80,7 @@ const App = () => (
 )
 ```
 
-Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the component, that also includes `children` if you use `render` to refer to the Springs child. This is also how you can communicate locals to it. It's actually faster as well since the function isn't recreated on every prop-change.
+Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the component, *including `children` if you use `render` to refer to the Springs child", which then takes precedence. This is also how you can communicate locals to it. It's actually faster as well since the function isn't recreated on every prop-change.
 
 # Native rendering 🚀
 
@@ -172,3 +172,7 @@ const App = ({ items }) => (
     </SpringTrail>
 )
 ```
+
+---
+
+[API](https://github.com/drcmda/react-contextual/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-contextual/blob/master/CHANGELOG.md)
