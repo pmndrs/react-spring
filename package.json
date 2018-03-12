@@ -1,6 +1,6 @@
 {
     "name": "react-spring",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "description": "Animate React with ease",
     "main": "dist/react-spring",
     "module": "dist/react-spring.es",
@@ -55,7 +55,7 @@
         "react-dom": ">= 16.0.0"
     },
     "dependencies": {
-        "animated": "^0.2.2",
-        "tiny-uuid": "^1.0.0"
+        "invariant": "^2.2.3",
+        "normalize-css-color": "^1.0.2"
     }
 }
