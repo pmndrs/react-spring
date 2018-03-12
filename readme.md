@@ -71,12 +71,10 @@ const Header = ({ children, ...styles }) => (
     </h1>
 )
 
-const AnimatedHeader = ({ children, color }) => (
-    <Spring to={{ color }} render={Header} children={children}/>
-)
-
-const App = () => (
-    <AnimatedHeader color="mintcream">hello world</AnimatedHeader>
+const App = ({ color, children }) => (
+    <Spring to={{ color }} render={Header}>
+        {children}
+    </Spring>
 )
 ```
 
