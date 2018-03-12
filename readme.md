@@ -62,7 +62,7 @@ const App = ({ toggle }) => (
 )
 ```
 
-Don't like the way render props wrap your code? You can always move out component definitions, like so:
+Don't like the way render props wrap your code?
 
 ```jsx
 const Header = ({ text, ...styles }) => <h1 style={styles}>{text}</h1>
@@ -72,7 +72,7 @@ const App = () => (
 )
 ```
 
-Et voilà! Now you render a animated version of the `Header` component! It's actually faster as well since the function isn't recreated on every prop-change.
+Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the component, so you can still communicate locals to it. It's actually faster as well since the function isn't recreated on every prop-change.
 
 # Native rendering 🚀
 
