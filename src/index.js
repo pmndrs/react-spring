@@ -103,7 +103,7 @@ export function createAnimation(interpolator, defaultConfig) {
 
 export function createTransition(interpolator, defaultConfig) {
     const Animation = createAnimation(interpolator, defaultConfig)
-    return class SpringTransition extends React.PureComponent {
+    return class extends React.PureComponent {
         static propTypes = {
             native: PropTypes.bool,
             config: PropTypes.object,
@@ -214,7 +214,7 @@ export function createTransition(interpolator, defaultConfig) {
 
 export function createTrail(interpolator, defaultConfig) {
     const Animation = createAnimation(interpolator, defaultConfig)
-    return class SpringTrail extends React.PureComponent {
+    return class extends React.PureComponent {
         static propTypes = {
             native: PropTypes.bool,
             config: PropTypes.object,
