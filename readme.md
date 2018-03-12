@@ -26,6 +26,8 @@ So as you see, they're polar opposites and the strengths of one are the weakness
 
 # Default rendering 🏎
 
+([Demo](https://codesandbox.io/embed/oln44nx8xq))
+
 Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. In many situations this will be ok.
 
 ```jsx
@@ -38,7 +40,6 @@ const App = ({ toggle }) => (
         // Will animate to ...
         to={{
             // Can be numbers, colors, paths, degrees, percentages, ...
-            color: toggle ? 'red' : '#00ff00',
             start: toggle ? '#abc' : 'rgb(10,20,30)',
             end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
             stop: toggle ? '0%' : '50%',
@@ -52,9 +53,7 @@ const App = ({ toggle }) => (
         {({ color, scale, rotate, path, start, stop, end }) => (
             <div style={{ background: `linear-gradient(to bottom, ${start} ${stop}, ${end} 100%)` }}>
                 <svg style={{ transform: `scale(${scale}) rotate(${rotate})` }}>
-                    <g fill={color}>
-                        <path d={path} />
-                    </g>
+                    <g><path d={path} /></g>
                 </svg>
             </div>
         )}
@@ -77,9 +76,9 @@ Et voilà! Now you render a animated version of the `Header` component! It's act
 
 # Native rendering 🚀
 
-If you need more performance then pass the `native` flag. Now your component will only render once and all updates will be sent straight to the dom without any React reconciliation passes.
+([Demo](https://codesandbox.io/embed/882njxpz29))
 
-Just be aware of the following conditions:
+Pass the `native` flag for more performance. Your component will render once and all updates will be applied straight to the dom. Just be aware of the following conditions:
 
 1.  You can only animate styles and standard props, the values you receive are opaque objects, not regular values
 2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
@@ -93,19 +92,15 @@ const App = ({ toggle }) => (
         native
         from={{ fill: 'black' }}
         to={{
-            fill: toggle ? '#247BA0' : '#70C1B3',
-            backgroundColor: toggle ? '#B2DBBF' : '#F3FFBD',
             rotate: toggle ? '0deg' : '180deg',
-            scale: toggle ? 0.6 : 1.5,
+            scale: toggle ? 1 : 2,
             path: toggle ? TRIANGLE : RECTANGLE,
         }}>
 
-        {({ fill, backgroundColor, rotate, scale, path }) => (
-            <animated.div style={{ backgroundColor }}>
-                <animated.svg style={{ transform: template`rotate(${rotate}) scale(${scale})`, fill }}>
-                    <g><animated.path d={path} /></g>
-                </animated.svg>
-            </animated.div>
+        {({ rotate, scale, path }) => (
+            <animated.svg style={{ transform: template`rotate(${rotate}) scale(${scale})` }}>
+                <g><animated.path d={path} /></g>
+            </animated.svg>
         )}
 
     </Spring>
@@ -114,32 +109,24 @@ const App = ({ toggle }) => (
 
 # Transitions 🌑🌒🌓🌔🌕
 
-Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order! You can again use the `native` flag for direct dom animation.
+([Demo](https://codesandbox.io/embed/j150ykxrv))
+
+Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
 
 ```jsx
 import { SpringTransition } from 'react-spring'
 
-class AppContent extends PureComponent {
-    state = { items: ['item1', 'item2', 'item3'] }
-
-    componentDidMount() {
-        setTimeout(() => this.setState({ items: ['item1', 'item2', 'item3', 'item4'] }), 2000)
-        setTimeout(() => this.setState({ items: ['item1', 'item3', 'item4'] }), 4000)
-    }
-
-    render() {
-        return (
-            <ul>
-                <SpringTransition
-                    keys={this.state.items}
-                    from={{ opacity: 0, color: 'black', height: 0 }}
-                    enter={{ opacity: 1, color: 'red', height: 18 }}
-                    leave={{ opacity: 0, color: 'blue', height: 0 }}>
-                    {this.state.items.map(item => styles => <li style={styles}>{item}</li>)}
-                </SpringTransition>
-            </ul>
-        )
-    }
+const App = ({ items }) => (
+    <ul>
+        <SpringTransition
+            keys={items.map(item => item.key)}
+            from={{ opacity: 0, color: 'black', height: 0 }}
+            enter={{ opacity: 1, color: 'red', height: 18 }}
+            leave={{ opacity: 0, color: 'blue', height: 0 }}>
+            {items.map(item => styles => <li style={styles}>{item.text}</li>)}
+        </SpringTransition>
+     </ul>
+  )
 }
 ```
 
@@ -159,6 +146,8 @@ const App = ({ toggle }) => (
 ```
 
 # Trails/Staggered transitions 👣
+
+([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
 Create trailing animations by using SpringTrail. The api is similar to SpringTransition though it will assume your list is fixed. The items will drop in in a trailing motion.
 
