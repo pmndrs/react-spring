@@ -78,7 +78,7 @@ Et voilà! Now you render a animated version of the `Header` component! All prop
 
 ([Demo](https://codesandbox.io/embed/882njxpz29))
 
-Pass the `native` flag for more performance. Your component will render once and all updates will be applied straight to the dom. Just be aware of the following conditions:
+Pass the `native` flag for more performance. The animations will be applied to the dom, skipping any React render passes. Just be aware of the following conditions:
 
 1.  You can only animate styles and standard props, the values you receive are opaque objects, not regular values
 2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
