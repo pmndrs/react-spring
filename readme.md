@@ -151,7 +151,7 @@ const App = ({ toggle }) => (
 )
 ```
 
-# Trails/Staggered transitions 👣
+# Trails/Staggered transitions 🐾🐾🐾
 
 ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
