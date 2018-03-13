@@ -136,7 +136,7 @@ const App = ({ items }) => (
 }
 ```
 
-You can use this prototype for two-state reveals, in that case simply render a single child that you can switch out for another.
+You can use this prototype for two-state reveals, simply render a single child that you can switch out for another.
 
 
 ```jsx
@@ -155,7 +155,7 @@ const App = ({ toggle }) => (
 
 ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
-Create trailing animations by using `SpringTrail`. The api is similar to `SpringTransition` though it will assume your list is fixed. The items will drop in in a trailing motion.
+Create trailing animations by using `SpringTrail`. The api is similar to `SpringTransition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
 
 ```jsx
 import { SpringTrail } from 'react-spring'
