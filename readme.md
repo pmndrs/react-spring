@@ -71,24 +71,24 @@ const Header = ({ children, ...styles }) => (
     </h1>
 )
 
-const AnimatedHeader = ({ children, color }) => (
-    <Spring to={{ color }} render={Header} children={children}/>
-)
-
-const App = () => (
-    <AnimatedHeader color="mintcream">hello world</AnimatedHeader>
+const App = ({ color, children }) => (
+    <Spring to={{ color }} render={Header}>
+        {children}
+    </Spring>
 )
 ```
 
-Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the component, *including `children` if you use `render` to refer to the Springs child", which then takes precedence. This is also how you can communicate locals to it. It's actually faster as well since the function isn't recreated on every prop-change.
+Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the receiving component, including `children` if you use `render` instead. It's actually faster as well since the function isn't recreated on every prop-change.
 
 # Native rendering 🚀
 
 ([Demo](https://codesandbox.io/embed/882njxpz29))
 
-Pass the `native` flag for more performance. The animations will be applied to the dom, skipping any React render passes. Just be aware of the following conditions:
+Pass the `native` flag for more performance. The animations will now be applied *directly* to the dom through requestAnimationFrame and the component will only render when it receives new props. The flag is available for all primitives (Spring, SpringTransition & SpringTrail).
 
-1.  You can only animate styles and standard props, the values you receive are opaque objects, not regular values
+Just be aware of the following conditions:
+
+1.  It only animates standard styles and element props, the values you receive *are opaque objects, not regular values*
 2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
 3.  If you need to interpolate styles use the `template` string literal
 
@@ -138,7 +138,7 @@ const App = ({ items }) => (
 }
 ```
 
-You can use this prototype for two-state reveals, in that case simply render a single child that you can switch out for another.
+You can use this prototype for two-state reveals, simply render a single child that you can switch out for another.
 
 
 ```jsx
@@ -153,11 +153,11 @@ const App = ({ toggle }) => (
 )
 ```
 
-# Trails/Staggered transitions 👣
+# Trails/Staggered transitions 🐾🐾🐾
 
 ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
-Create trailing animations by using `SpringTrail`. The api is similar to `SpringTransition` though it will assume your list is fixed. The items will drop in in a trailing motion.
+Create trailing animations by using `SpringTrail`. The api is similar to `SpringTransition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
 
 ```jsx
 import { SpringTrail } from 'react-spring'
@@ -175,4 +175,4 @@ const App = ({ items }) => (
 
 ---
 
-[API](https://github.com/drcmda/react-contextual/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-contextual/blob/master/CHANGELOG.md)
+[API](https://github.com/drcmda/react-spring/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md)

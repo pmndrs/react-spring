@@ -2,7 +2,9 @@
 
 ```jsx
 import { config } from 'react-spring'
+```
 
+```jsx
 /*
     default: { tension: 170, friction: 26 },
     gentle: { tension: 120, friction: 14 },
@@ -12,6 +14,10 @@ import { config } from 'react-spring'
 ```
 
 # Spring
+
+```jsx
+import { Spring } from 'react-spring'
+```
 
 ```jsx
 class Spring extends React.PureComponent {
@@ -30,7 +36,7 @@ class Spring extends React.PureComponent {
         children: PropTypes.func,
         // Same as children, but takes precedence if present
         render: PropTypes.func,
-        // Prevents animation if true, you can also pass keys for individual keys
+        // Prevents animation if true, you can also pass individual keys
         immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
     }
     static defaultProps = { from: {}, to: {}, config: defaultConfig, native: false, immediate: false }
@@ -38,6 +44,10 @@ class Spring extends React.PureComponent {
 ```
 
 # SpringTransition
+
+```jsx
+import { SpringTransition } from 'react-spring'
+```
 
 ```jsx
 class SpringTransition extends React.PureComponent {
@@ -64,6 +74,10 @@ class SpringTransition extends React.PureComponent {
 ```
 
 # SpringTrail
+
+```jsx
+import { SpringTrail } from 'react-spring'
+```
 
 ```jsx
 class SpringTrail extends React.PureComponent {
