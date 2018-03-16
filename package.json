@@ -55,7 +55,6 @@
         "react-dom": ">= 16.0.0"
     },
     "dependencies": {
-        "invariant": "^2.2.3",
         "normalize-css-color": "^1.0.2"
     }
 }

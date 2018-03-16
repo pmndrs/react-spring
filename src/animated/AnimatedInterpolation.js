@@ -1,6 +1,5 @@
 import Animated from './Animated'
 import AnimatedWithChildren from './AnimatedWithChildren'
-import invariant from 'invariant'
 import Interpolation from './Interpolation'
 import guid from './guid'
 
@@ -14,8 +13,6 @@ class AnimatedInterpolation extends AnimatedWithChildren {
 
     __getValue() {
         const parentValue = this._parent.__getValue()
-
-        invariant(typeof parentValue === 'number', 'Cannot interpolate an input which is not a number.')
         return this._interpolation(parentValue)
     }
 

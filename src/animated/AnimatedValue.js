@@ -142,26 +142,16 @@ class AnimatedValue extends AnimatedWithChildren {
 
     animate(animation, callback) {
         var handle = null
-
-        if (animation.__isInteraction) {
-            handle = InteractionManager.current.createInteractionHandle()
-        }
-
+        if (animation.__isInteraction) handle = InteractionManager.current.createInteractionHandle()
         var previousAnimation = this._animation
         this._animation && this._animation.stop()
         this._animation = animation
         animation.start(
             this._value,
-            value => {
-                this._updateValue(value)
-            },
+            value => this._updateValue(value),
             result => {
                 this._animation = null
-
-                if (handle !== null) {
-                    InteractionManager.current.clearInteractionHandle(handle)
-                }
-
+                if (handle !== null) InteractionManager.current.clearInteractionHandle(handle)
                 callback && callback(result)
             },
             previousAnimation,
@@ -186,9 +176,7 @@ class AnimatedValue extends AnimatedWithChildren {
 
     _updateValue(value) {
         this._value = value
-
         _flush(this)
-
         for (var key in this._listeners) {
             this._listeners[key]({
                 value: this.__getValue(),

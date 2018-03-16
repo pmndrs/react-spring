@@ -11,15 +11,10 @@ class AnimatedStyle extends AnimatedWithChildren {
 
     __getValue() {
         const style = {}
-
         for (const key in this._style) {
             const value = this._style[key]
-
-            if (value instanceof Animated) {
-                style[key] = value.__getValue()
-            } else {
-                style[key] = value
-            }
+            if (value instanceof Animated) style[key] = value.__getValue()
+            else style[key] = value
         }
 
         return style
@@ -27,35 +22,24 @@ class AnimatedStyle extends AnimatedWithChildren {
 
     __getAnimatedValue() {
         const style = {}
-
         for (const key in this._style) {
             const value = this._style[key]
-
-            if (value instanceof Animated) {
-                style[key] = value.__getAnimatedValue()
-            }
+            if (value instanceof Animated) style[key] = value.__getAnimatedValue()
         }
-
         return style
     }
 
     __attach() {
         for (const key in this._style) {
             const value = this._style[key]
-
-            if (value instanceof Animated) {
-                value.__addChild(this)
-            }
+            if (value instanceof Animated) value.__addChild(this)
         }
     }
 
     __detach() {
         for (const key in this._style) {
             const value = this._style[key]
-
-            if (value instanceof Animated) {
-                value.__removeChild(this)
-            }
+            if (value instanceof Animated) value.__removeChild(this)
         }
     }
 }

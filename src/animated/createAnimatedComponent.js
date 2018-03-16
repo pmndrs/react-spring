@@ -10,10 +10,7 @@ function createAnimatedComponent(Component) {
 
         setNativeProps(props) {
             var didUpdate = this.refName && ApplyAnimatedValues.current(this.refName, props, this)
-
-            if (!didUpdate) {
-                this.forceUpdate()
-            }
+            if (!didUpdate) this.forceUpdate()
         }
 
         componentWillMount() {
@@ -34,9 +31,7 @@ function createAnimatedComponent(Component) {
                     this.refName &&
                     ApplyAnimatedValues.current(this.refName, this._propsAnimated.__getAnimatedValue(), this)
 
-                if (!didUpdate) {
-                    this.forceUpdate()
-                }
+                if (!didUpdate) this.forceUpdate()
             }
 
             this._propsAnimated = new AnimatedProps(nextProps, callback)
@@ -64,9 +59,8 @@ function createAnimatedComponent(Component) {
 
     AnimatedComponent.propTypes = {
         style: function(props, propName, componentName) {
-            if (!Component.propTypes) {
-                return
-            } // TODO(lmr): We will probably bring this back in at some point, but maybe
+            if (!Component.propTypes) return
+            // TODO(lmr): We will probably bring this back in at some point, but maybe
             // just a subset of the proptypes... We should have a common set of props
             // that will be used for all platforms.
             //

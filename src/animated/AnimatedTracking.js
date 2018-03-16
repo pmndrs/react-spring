@@ -9,7 +9,6 @@ class AnimatedTracking extends Animated {
         this._animationClass = animationClass
         this._animationConfig = animationConfig
         this._callback = callback
-
         this.__attach()
     }
 

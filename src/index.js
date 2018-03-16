@@ -40,8 +40,9 @@ export function createAnimation(interpolator, defaultConfig) {
                 const entry = this.animations[name] || (this.animations[name] = {})
 
                 let isNumber = typeof value === 'number'
+                let isArray = !isNumber && Array.isArray(value)
                 let fromValue = from[name] !== undefined ? from[name] : value
-                let toValue = isNumber ? value : 1
+                let toValue = isNumber || isArray ? value : 1
 
                 if (isNumber && attach) {
                     // Attach value to target animation
@@ -53,6 +54,9 @@ export function createAnimation(interpolator, defaultConfig) {
                 if (isNumber) {
                     // Create animated value
                     entry.animation = entry.interpolation = entry.animation || new Animated.Value(fromValue)
+                } else if (isArray) {
+                    // Create animated array
+                    entry.animation = entry.interpolation = entry.animation || new Animated.Array(fromValue)
                 } else {
                     // Deal with interpolations
                     const previous = entry.interpolation && entry.interpolation._interpolation(defaultAnimationValue)
@@ -123,7 +127,7 @@ export function createTransition(interpolator, defaultConfig) {
         constructor(props) {
             super()
             let { children, render, keys, from, enter, leave } = props
-            children = render || children
+            children = render || children
             if (!Array.isArray(children)) children = [children]
             if (!Array.isArray(keys)) keys = [keys]
             this.state = {
@@ -135,7 +139,7 @@ export function createTransition(interpolator, defaultConfig) {
         componentWillReceiveProps(props) {
             let { transitions, transitionsKeys } = this.state
             let { children, render, keys, from, enter, leave } = props
-            children = render || children
+            children = render || children
             if (!Array.isArray(children)) children = [children]
             if (!Array.isArray(keys)) keys = [keys]
 
@@ -203,10 +207,13 @@ export function createTransition(interpolator, defaultConfig) {
         render() {
             const { render, from, enter, leave, native, config, keys, ...extra } = this.props
             const props = { native, config, ...extra }
-            return this.state.transitions.map(({ key, children, ...rest }) =>
-                render
-                    ? <Animation key={key} {...rest} {...props} render={children} children={this.props.children} />
-                    : <Animation key={key} {...rest} {...props} children={children} />
+            return this.state.transitions.map(
+                ({ key, children, ...rest }) =>
+                    render ? (
+                        <Animation key={key} {...rest} {...props} render={children} children={this.props.children} />
+                    ) : (
+                        <Animation key={key} {...rest} {...props} children={children} />
+                    ),
             )
         }
     }
@@ -236,9 +243,11 @@ export function createTrail(interpolator, defaultConfig) {
             const props = { ...extra, native, config, from, to }
             return (render || children).map((child, i) => {
                 const attachedHook = animation => hook(i, animation)
-                return render
-                    ? <Animation key={keys[i]} {...props} attach={attachedHook} render={child} children={children} />
-                    : <Animation key={keys[i]} {...props} attach={attachedHook} children={child} />
+                return render ? (
+                    <Animation key={keys[i]} {...props} attach={attachedHook} render={child} children={children} />
+                ) : (
+                    <Animation key={keys[i]} {...props} attach={attachedHook} children={child} />
+                )
             })
         }
     }

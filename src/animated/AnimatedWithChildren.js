@@ -7,26 +7,18 @@ class AnimatedWithChildren extends Animated {
     }
 
     __addChild(child) {
-        if (this._children.length === 0) {
-            this.__attach()
-        }
-
+        if (this._children.length === 0) this.__attach()
         this._children.push(child)
     }
 
     __removeChild(child) {
         const index = this._children.indexOf(child)
-
         if (index === -1) {
             console.warn("Trying to remove a child that doesn't exist")
             return
         }
-
         this._children.splice(index, 1)
-
-        if (this._children.length === 0) {
-            this.__detach()
-        }
+        if (this._children.length === 0) this.__detach()
     }
 
     __getChildren() {

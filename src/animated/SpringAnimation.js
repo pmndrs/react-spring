@@ -2,7 +2,6 @@ import Animation from './Animation'
 import AnimatedValue from './AnimatedValue'
 import RequestAnimationFrame from './injectable/RequestAnimationFrame'
 import CancelAnimationFrame from './injectable/CancelAnimationFrame'
-import invariant from 'invariant'
 import SpringConfig from './SpringConfig'
 
 function withDefault(value, defaultValue) {

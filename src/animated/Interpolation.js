@@ -1,5 +1,4 @@
 import normalizeColor from 'normalize-css-color'
-import invariant from 'invariant'
 
 var linear = t => t
 /**
@@ -12,20 +11,8 @@ class Interpolation {
         if (config.outputRange && typeof config.outputRange[0] === 'string') {
             return createInterpolationFromStringOutputRange(config)
         }
-
         var outputRange = config.outputRange
-        checkInfiniteRange('outputRange', outputRange)
         var inputRange = config.inputRange
-        checkInfiniteRange('inputRange', inputRange)
-        checkValidInputRange(inputRange)
-        invariant(
-            inputRange.length === outputRange.length,
-            'inputRange (' +
-                inputRange.length +
-                ') and outputRange (' +
-                outputRange.length +
-                ') must have the same length',
-        )
         var easing = config.easing || linear
         var extrapolateLeft = 'extend'
 
@@ -44,7 +31,6 @@ class Interpolation {
         }
 
         return input => {
-            invariant(typeof input === 'number', 'Cannot interpolation an input which is not a number')
             var range = findRange(input, inputRange)
             return interpolate(
                 input,
@@ -144,9 +130,7 @@ var stringShapeRegex = /[0-9\.-]+/g
 
 function createInterpolationFromStringOutputRange(config) {
     var outputRange = config.outputRange
-    invariant(outputRange.length >= 2, 'Bad output range')
     outputRange = outputRange.map(colorToRgba)
-    checkPattern(outputRange) // ['rgba(0, 100, 200, 0)', 'rgba(50, 150, 250, 0.5)']
     // ->
     // [
     //   [0, 50],
@@ -185,7 +169,6 @@ function createInterpolationFromStringOutputRange(config) {
         var i = 0 // 'rgba(0, 100, 200, 0)'
         // ->
         // 'rgba(${interpolations[0](input)}, ${interpolations[1](input)}, ...'
-
         return outputRange[0].replace(stringShapeRegex, () => {
             const val = interpolations[i++](input)
             return String(shouldRound && i < 4 ? Math.round(val) : val)
@@ -193,53 +176,11 @@ function createInterpolationFromStringOutputRange(config) {
     }
 }
 
-function checkPattern(arr) {
-    var pattern = arr[0].replace(stringShapeRegex, '')
-
-    for (var i = 1; i < arr.length; ++i) {
-        invariant(pattern === arr[i].replace(stringShapeRegex, ''), 'invalid pattern ' + arr[0] + ' and ' + arr[i])
-    }
-}
-
 function findRange(input, inputRange) {
     for (var i = 1; i < inputRange.length - 1; ++i) {
-        if (inputRange[i] >= input) {
-            break
-        }
+        if (inputRange[i] >= input) break
     }
-
     return i - 1
-}
-
-function checkValidInputRange(arr) {
-    invariant(arr.length >= 2, 'inputRange must have at least 2 elements')
-
-    for (var i = 1; i < arr.length; ++i) {
-        invariant(
-            arr[i] >= arr[i - 1],
-            /* $FlowFixMe(>=0.13.0) - In the addition expression below this comment,
-     * one or both of the operands may be something that doesn't cleanly
-     * convert to a string, like undefined, null, and object, etc. If you really
-     * mean this implicit string conversion, you can do something like
-     * String(myThing)
-     */
-            'inputRange must be monotonically increasing ' + arr,
-        )
-    }
-}
-
-function checkInfiniteRange(name, arr) {
-    invariant(arr.length >= 2, name + ' must have at least 2 elements')
-    invariant(
-        arr.length !== 2 || arr[0] !== -Infinity || arr[1] !== Infinity,
-        /* $FlowFixMe(>=0.13.0) - In the addition expression below this comment,
-   * one or both of the operands may be something that doesn't cleanly convert
-   * to a string, like undefined, null, and object, etc. If you really mean
-   * this implicit string conversion, you can do something like
-   * String(myThing)
-   */
-        name + 'cannot be ]-infinity;+infinity[ ' + arr,
-    )
 }
 
 export default Interpolation
