@@ -30,8 +30,9 @@ As you see, they're polar opposites. React-spring inherits React-motions api, bu
   <img src="assets/reveal.gif" width="280" />
 </p>
 <p align="middle">
-  <img src="assets/trail.gif" width="420" />
-  <img src="assets/parallax.gif" width="420" /> 
+  <img src="assets/trail.gif" width="280" />
+  <img src="assets/scroll.gif" width="280" /> 
+  <img src="assets/parallax.gif" width="280" /> 
 </p>
 
 ```jsx
