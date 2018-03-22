@@ -24,23 +24,86 @@ React-spring is a wrapper around a cooked down fork of [Facebooks animated](http
 
 As you see, they're polar opposites. React-spring inherits React-motions api, but simplified, while adding more primitives and being able to interpolate. It also has support for native rendering, where components animate directly in the dom.
 
-# Default rendering 🏎
+# Overview 🔭
+
+```jsx
+import { Spring, Transition, Trail, Parallax } from 'react-spring'
+```
+
+### Springs
 
 <p align="center">
   <img src="assets/spring.gif"/>
 </p>
 
-([Demo](https://codesandbox.io/embed/oln44nx8xq))
-
-Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. That means you can animate dom styles & props, but also any React component. In many situations the performance will be fine.
-
 ```jsx
-import { Spring } from 'react-spring'
-
 <Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
     {styles => <div style={styles}>i will fade in</div>}
 </Spring>
 ```
+
+### Mount/unmount transitions
+
+<p align="center">
+  <img src="assets/transition.gif"/>
+</p>
+
+```jsx
+<Transition
+    keys={items.map(item => item.key)}
+    from={{ opacity: 0 }}
+    enter={{ opacity: 1 }}
+    leave={{ opacity: 0 }}>
+    {items.map(item => styles => <li style={styles}>{item.text}</li>)}
+</Transition>
+```
+
+### Reveals
+
+<p align="center">
+  <img src="assets/reveal.gif"/>
+</p>
+
+```jsx
+<Transition
+    keys={toggle ? 'ComponentA' : 'ComponentB'} 
+    from={{ opacity: 0 }} 
+    enter={{ opacity: 1 }} 
+    leave={{ opacity: 0 }}>
+    {toggle ? ComponentA : ComponentB}
+</Transition>
+```
+
+### Trails/staggered animations
+
+<p align="center">
+  <img src="assets/trail.gif"/>
+</p>
+
+```jsx
+<Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
+    {items.map(item => styles => <div style={styles}>{item.text}</div>)}
+</Trail>
+```
+
+### Parallax & page transitions
+
+<p align="center">
+  <img src="assets/parallax.gif"/>
+</p>
+
+```jsx
+<Parallax pages={2}>
+    <Parallax.Layer offset={0} speed={0.2}>first Page</Parallax.Layer>
+    <Parallax.Layer offset={1} speed={0.5}>second Page</Parallax.Layer>
+</Parallax>
+```
+
+# API
+
+## Springs and default rendering
+
+([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
 You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
 
@@ -72,9 +135,11 @@ const App = ({ color, children }) => (
 
 Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the receiving component, including `children` if you use `render` instead. It's actually faster as well since the function isn't recreated on every prop-change.
 
-# Native rendering 🚀
+## Native rendering
 
 ([Demo](https://codesandbox.io/embed/882njxpz29))
+
+Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. That means you can animate dom styles & props, but also any React component. In some situations this can be expensive.
 
 Pass the `native` flag and the animations will now be applied *directly* to the dom through requestAnimationFrame. The component will only re-render when it receives new props. The flag is available for all primitives (Spring, Transition & Trail, Parallax is native by design).
 
@@ -96,11 +161,7 @@ import { Spring, animated, template } from 'react-spring'
 </Spring>
 ```
 
-# Transitions 🌑🌒🌓🌔🌕
-
-<p align="center">
-  <img src="assets/transition.gif"/>
-</p>
+## Transitions
 
 ([Demo](https://codesandbox.io/embed/j150ykxrv))
 
@@ -122,7 +183,6 @@ import { Transition } from 'react-spring'
 
 You can use this prototype for two-state reveals, simply render a single child that you can switch out for another.
 
-
 ```jsx
 <Transition
     keys={toggle ? 'ComponentA' : 'ComponentB'} 
@@ -133,11 +193,7 @@ You can use this prototype for two-state reveals, simply render a single child t
 </Transition>
 ```
 
-# Trails/Staggered transitions 🐾🐾🐾
-
-<p align="center">
-  <img src="assets/trail.gif"/>
-</p>
+## Trails/Staggered transitions
 
 ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
@@ -151,11 +207,7 @@ import { Trail } from 'react-spring'
 </Trail>
 ```
 
-# Parallax and page transitions 📜
-
-<p align="center">
-  <img src="assets/parallax.gif"/>
-</p>
+## Parallax and page transitions
 
 ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
