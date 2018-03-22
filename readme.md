@@ -107,9 +107,11 @@ Given a single child instead of a list you can reveal components with it.
 
 #### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Animated graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Animated todoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag n drop](https://codesandbox.io/embed/l9zqz0m18z)
 
-# API 📖
+# API overview 📖
 
-## Springs and default rendering
+For a detailed api documentation with all possible properties look [here](https://github.com/drcmda/react-spring/blob/master/API.md).
+
+### Springs and interpolation
 
 You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
 
@@ -122,6 +124,8 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
     rotate: toggle ? '0deg' : '45deg',
     path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z' }}>
 ```
+
+### Render props
 
 Don't like the way render props wrap your code?
 
@@ -141,7 +145,7 @@ const App = ({ color, children }) => (
 
 Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, including `children` if you use `render` to refer to the render-child.
 
-## Native rendering ([Demo](https://codesandbox.io/embed/882njxpz29))
+### Native rendering ([Demo](https://codesandbox.io/embed/882njxpz29))
 
 By default we'll render the receiving component every frame as it gives you more freedom to animate. In situations where that becomes expensive add the `native` flag and animations will now be applied directly to the dom. The flag is available for all primitives (Spring, Transition & Trail, Parallax is native by design).
 
@@ -163,7 +167,7 @@ import { Spring, animated, template } from 'react-spring'
 </Spring>
 ```
 
-## Transitions
+### Transitions
 
 Animates children as they mount and unmount. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
 
@@ -193,7 +197,7 @@ You can use this prototype for two-state reveals, simply render a single child t
 </Transition>
 ```
 
-## Trails/Staggered transitions
+### Trails/Staggered transitions
 
 `Trail` animates the first child of the list you pass, the others will follow in a trailing motion. The api is similar to `Transition` though it will assume your list is fixed.
 
@@ -205,7 +209,7 @@ import { Trail } from 'react-spring'
 </Trail>
 ```
 
-## Parallax and page transitions
+### Parallax and page transitions
 
 `Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and scrolling speeds.
 
