@@ -40,6 +40,8 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 
 #### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
+A `Spring` will move data from one state to another. It remembers the current state, value changes are always fluid.
+
 ```jsx
 <Spring
     from={{ opacity: 0 }}
@@ -49,6 +51,8 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 ```
 
 #### Mount/unmount Transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
+
+`Transition` watches elements it wraps as they mount and unmount, it helps you to animate these changes.
 
 ```jsx
 <Transition
@@ -62,6 +66,8 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 
 #### 2-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
 
+If given a single child instead of a list you can reveal components with it.
+
 ```jsx
 <Transition
     keys={toggle ? 'ComponentA' : 'ComponentB'} 
@@ -74,6 +80,8 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 
 #### Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
+`Trail` animates the first child of a list you pass, the rest follows the spring of the their previous sibling.
+
 ```jsx
 <Trail
     from={{ opacity: 0 }}
@@ -84,6 +92,8 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 ```
 
 #### Parallax and page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
+
+`Parallax` allows you to declaratively create page/scroll-based animations.
 
 ```jsx
 <Parallax pages={2}>
@@ -126,13 +136,11 @@ const App = ({ color, children }) => (
 )
 ```
 
-Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the receiving component, including `children` if you use `render` instead. It's actually faster as well since the function isn't recreated on every prop-change.
+Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, including `children` if you use `render` to refer to the render-child.
 
 ## Native rendering ([Demo](https://codesandbox.io/embed/882njxpz29))
 
-Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. That means you can animate dom styles & props, but also any React component. In some situations this can be expensive.
-
-Pass the `native` flag and the animations will now be applied *directly* to the dom through requestAnimationFrame. The component will only re-render when it receives new props. The flag is available for all primitives (Spring, Transition & Trail, Parallax is native by design).
+By default we'll render the receiving component every frame as it gives you more freedom to animate. In situations where that becomes expensive add the `native` flag and animations will now be applied directly to the dom. The flag is available for all primitives (Spring, Transition & Trail, Parallax is native by design).
 
 Just be aware of the following conditions:
 
@@ -154,7 +162,7 @@ import { Spring, animated, template } from 'react-spring'
 
 ## Transitions
 
-Use `Transition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
+Animates children as they mount and unmount. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
 
 ```jsx
 import { Transition } from 'react-spring'
@@ -184,7 +192,7 @@ You can use this prototype for two-state reveals, simply render a single child t
 
 ## Trails/Staggered transitions
 
-Create trailing animations by using `Trail`. The api is similar to `Transition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
+`Trail` animates the first child of the list you pass, the others will follow in a trailing motion. The api is similar to `Transition` though it will assume your list is fixed.
 
 ```jsx
 import { Trail } from 'react-spring'
@@ -196,9 +204,9 @@ import { Trail } from 'react-spring'
 
 ## Parallax and page transitions
 
-`Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and scrolling speeds. This makes complex page transitions as effortless as it gets.
+`Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and scrolling speeds.
 
-`Parallax.pages` determines the total height/width of the inner content where each page takes 100% height of the visible container. `Layer.offset` determines where the layer will be at when scrolled to (0=start, 1=1st page, and so on ...). `Layer.speed` allows for positive and negative values, it shifts the layer in accordance to its offset.
+`Parallax.pages` determines the total space of the inner content where each page takes 100% of the visible container. `Layer.offset` determines where the layer will be at when scrolled to (0=start, 1=1st page, ...). `Layer.speed` shifts the layer in accordance to its offset, values can be positive or negative.
 
 ```jsx
 import { Parallax } from 'react-spring'
