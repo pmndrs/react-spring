@@ -2,8 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Animated from './animated/targets/react-dom'
 
-const Value = Animated.Value
-const Array = Animated.Array
 const template = Animated.template
 const animated = Animated.elements
 const config = {
@@ -14,7 +12,7 @@ const config = {
     slow: { tension: 280, friction: 60 },
 }
 
-export { config, template, animated, Value, Array }
+export { config, template, animated }
 
 export default class Spring extends React.PureComponent {
     static propTypes = {
