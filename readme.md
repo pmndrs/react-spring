@@ -2,8 +2,6 @@
 
     npm install react-spring
 
-<b>Examples</b>: [Interpolation](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Reveals](https://codesandbox.io/embed/yj52v5689) | [Transitions](https://codesandbox.io/embed/j150ykxrv) | [Staggered](https://codesandbox.io/embed/vvmv6x01l5) | [Parallax](https://codesandbox.io/embed/548lqnmk6l) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z)
-
 # Why 🤔
 
 React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to cross it with Chenglou's [React-motion](https://github.com/chenglou/react-motion). Both have their pros and cons and could benefit from one another:
@@ -103,6 +101,8 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
     <Parallax.Layer offset={1} speed={0.5}>second Page</Parallax.Layer>
 </Parallax>
 ```
+
+### Additional demos: [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v)
 
 # API
 
