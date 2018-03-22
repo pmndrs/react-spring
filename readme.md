@@ -58,7 +58,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 </Transition>
 ```
 
-### Reveals ([Demo](https://codesandbox.io/embed/882njxpz29))
+### Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
 
 <p align="center">
   <img src="assets/reveal.gif"/>
