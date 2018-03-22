@@ -51,10 +51,7 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
     stop: toggle ? '0%' : '50%',
     scale: toggle ? 1 : 2,
     rotate: toggle ? '0deg' : '45deg',
-    path: toggle
-        ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' 
-        : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
-    }}>
+    path: toggle ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z' }}>
 ```
 
 Don't like the way render props wrap your code?
@@ -115,9 +112,9 @@ import { Transition } from 'react-spring'
 <ul>
     <Transition
         keys={items.map(item => item.key)}
-        from={{ opacity: 0, color: 'black', height: 0 }}
-        enter={{ opacity: 1, color: 'red', height: 18 }}
-        leave={{ opacity: 0, color: 'blue', height: 0 }}>
+        from={{ opacity: 0, height: 0 }}
+        enter={{ opacity: 1, height: 20 }}
+        leave={{ opacity: 0, height: 0 }}>
         {items.map(item => styles => <li style={styles}>{item.text}</li>)}
     </Transition>
 </ul>
