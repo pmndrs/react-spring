@@ -22,7 +22,7 @@ React-spring is a wrapper around a cooked down fork of [Facebooks animated](http
 *   [ ] Managing and orchestrating handles (starting/stopping/waiting/cleaning) can become a real chore
 *   [ ] Missing essential prototypes like mount/unmount transitions
 
-So as you see, they're polar opposites and the strengths of one are the weaknesses of another. React-spring inherits React-motions api while you can feed it everything animated can interpolate. It also has support for animateds efficient native rendering.
+So as you see, they're polar opposites and the strengths of one are the weaknesses of another. React-spring inherits React-motions api in a more simplified way, while adding more primitives and being able to digest everything animated could interpolate. It also has support for animateds efficient native rendering.
 
 # Default rendering 🏎
 
@@ -84,7 +84,7 @@ Et voilà! Now you render a animated version of the `Header` component! All prop
 
 ([Demo](https://codesandbox.io/embed/882njxpz29))
 
-Pass the `native` flag for more performance. The animations will now be applied *directly* to the dom through requestAnimationFrame and the component will only render when it receives new props. The flag is available for all primitives (Spring, SpringTransition & SpringTrail).
+Pass the `native` flag for more performance. The animations will now be applied *directly* to the dom through requestAnimationFrame and the component will only render when it receives new props. The flag is available for all primitives (Spring, Transition & Trail).
 
 Just be aware of the following conditions:
 
@@ -119,7 +119,7 @@ const App = ({ toggle }) => (
 
 ([Demo](https://codesandbox.io/embed/j150ykxrv))
 
-Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
+Use `Transition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
 
 ```jsx
 import { Transition } from 'react-spring'
@@ -157,7 +157,7 @@ const App = ({ toggle }) => (
 
 ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
-Create trailing animations by using `SpringTrail`. The api is similar to `SpringTransition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
+Create trailing animations by using `Trail`. The api is similar to `Transition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
 
 ```jsx
 import { Trail } from 'react-spring'
@@ -177,7 +177,7 @@ const App = ({ items }) => (
 
 ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
-Create trailing animations by using `SpringTrail`. The api is similar to `SpringTransition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
+`Parallax` creates a scroll container. Throw in any amount of layers you want and it will take care of moving them up and down/left and right in accordance to their offsets and scrolling speeds. This makes complex page transitions where you move from one into another as effortless as it gets. 
 
 ```jsx
 import { Parallax } from 'react-spring'
@@ -191,6 +191,7 @@ const App = () => (
         scrolling={false}
         // Horizontal or vertical scroll direction
         horizontal={true}
+        // Capture the main ref to call "scrollTo" on it
         ref={ref => this.parallax = ref}>
 
         // Add as many layers as you like
@@ -202,7 +203,6 @@ const App = () => (
             // Shifts the layer up or down in accordance to its offset
             speed={0.5}>
 
-            // You can programatically scroll anywhere
             <span onClick={() => this.parallax.scrollTo(1)}>>
                 Layers can contain anything
             </span>
