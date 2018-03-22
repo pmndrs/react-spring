@@ -39,18 +39,18 @@ class Spring extends React.PureComponent {
         // Prevents animation if true, you can also pass individual keys
         immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
     }
-    static defaultProps = { from: {}, to: {}, config: defaultConfig, native: false, immediate: false }
+    static defaultProps = { from: {}, to: {}, config: config.default, native: false, immediate: false }
 }
 ```
 
-# SpringTransition
+# Transition
 
 ```jsx
-import { SpringTransition } from 'react-spring'
+import { Transition } from 'react-spring'
 ```
 
 ```jsx
-class SpringTransition extends React.PureComponent {
+class Transition extends React.PureComponent {
     static propTypes = {
         native: PropTypes.bool,
         config: PropTypes.object,
@@ -69,18 +69,18 @@ class SpringTransition extends React.PureComponent {
         render: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
     }
 
-    static defaultProps = { from: {}, enter: {}, leave: {}, native: false, config: defaultConfig }
+    static defaultProps = { from: {}, enter: {}, leave: {}, native: false, config: config.default }
 }
 ```
 
-# SpringTrail
+# Trail
 
 ```jsx
-import { SpringTrail } from 'react-spring'
+import { Trail } from 'react-spring'
 ```
 
 ```jsx
-class SpringTrail extends React.PureComponent {
+class Trail extends React.PureComponent {
     static propTypes = {
         native: PropTypes.bool,
         config: PropTypes.object,
@@ -90,6 +90,41 @@ class SpringTrail extends React.PureComponent {
         children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
         render: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
     }
-    static defaultProps = { from: {}, to: {}, native: false, config: defaultConfig }
+    static defaultProps = { from: {}, to: {}, native: false, config: config.default }
+}
+```
+
+# Parallax
+
+```jsx
+import { Parallax } from 'react-spring'
+```
+
+```jsx
+class Parallax extends React.PureComponent {
+    static propTypes = {
+        pages: PropTypes.number.isRequired,
+        config: PropTypes.object,
+        scrolling: PropTypes.bool,
+        horizontal: PropTypes.bool,
+    }
+    static defaultProps = {
+        config: config.slow,
+        scrolling: true,
+        horizontal: false,
+    }
+
+    static Layer = class extends React.PureComponent {
+        static propTypes = {
+            factor: PropTypes.number,
+            offset: PropTypes.number,
+            speed: PropTypes.number,
+        }
+        static defaultProps = {
+            factor: 1,
+            offset: 0,
+            speed: 0,
+        }
+    }
 }
 ```

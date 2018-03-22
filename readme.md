@@ -2,7 +2,7 @@
 
     npm install react-spring
 
-<b>Examples</b>: [Interpolation](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Reveals](https://codesandbox.io/embed/yj52v5689) | [List transitions](https://codesandbox.io/embed/j150ykxrv) | [Staggered](https://codesandbox.io/embed/vvmv6x01l5) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z)
+<b>Examples</b>: [Interpolation](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Reveals](https://codesandbox.io/embed/yj52v5689) | [transitions](https://codesandbox.io/embed/j150ykxrv) | [Staggered](https://codesandbox.io/embed/vvmv6x01l5) | Parallax (https://codesandbox.io/embed/548lqnmk6l) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z)
 
 # Why 🤔
 
@@ -122,17 +122,17 @@ const App = ({ toggle }) => (
 Use `SpringTransition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
 
 ```jsx
-import { SpringTransition } from 'react-spring'
+import { Transition } from 'react-spring'
 
 const App = ({ items }) => (
     <ul>
-        <SpringTransition
+        <Transition
             keys={items.map(item => item.key)}
             from={{ opacity: 0, color: 'black', height: 0 }}
             enter={{ opacity: 1, color: 'red', height: 18 }}
             leave={{ opacity: 0, color: 'blue', height: 0 }}>
             {items.map(item => styles => <li style={styles}>{item.text}</li>)}
-        </SpringTransition>
+        </Transition>
      </ul>
   )
 }
@@ -143,13 +143,13 @@ You can use this prototype for two-state reveals, simply render a single child t
 
 ```jsx
 const App = ({ toggle }) => (
-    <SpringTransition
+    <Transition
         keys={toggle ? 'ComponentA' : 'ComponentB'} 
         from={{ opacity: 0 }} 
         enter={{ opacity: 1 }} 
         leave={{ opacity: 0 }}>
         {toggle ? ComponentA : ComponentB}
-    </SpringTransition>
+    </Transition>
 )
 ```
 
@@ -160,16 +160,56 @@ const App = ({ toggle }) => (
 Create trailing animations by using `SpringTrail`. The api is similar to `SpringTransition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
 
 ```jsx
-import { SpringTrail } from 'react-spring'
+import { Trail } from 'react-spring'
 
 const App = ({ items }) => (
-    <SpringTrail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
+    <Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
         {items.map(item => styles => (
             <div style={styles}>
                 {item.text}
             </div>
         ))}
-    </SpringTrail>
+    </Trail>
+)
+```
+
+# Parallax and page transitions 𝌆𝌇𝌈𝌉𝌊𝌋
+
+([Demo](https://codesandbox.io/embed/548lqnmk6l))
+
+Create trailing animations by using `SpringTrail`. The api is similar to `SpringTransition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
+
+```jsx
+import { Parallax } from 'react-spring'
+
+const App = () => (
+    <Parallax
+        // Pages determines the total height of the inner content container
+        // Each page takes 100% height of the visible outer container by default
+        pages={3}
+        // Enables or disables the scrollbar
+        scrolling={false}
+        // Horizontal or vertical scroll direction
+        horizontal={true}
+        ref={ref => this.parallax = ref}>
+
+        // Add as many layers as you like
+        <Parallax.Layer
+            // Page offset, or where the layer will be at when scrolled to
+            // 0 means start, 1 second page, 1.5 second and half, and so on ...
+            offset={0}
+            // Parallax factor, allows for positive and negative values
+            // Shifts the layer up or down in accordance to its offset
+            speed={0.5}>
+
+            // You can programatically scroll anywhere
+            <span onClick={() => this.parallax.scrollTo(1)}>>
+                Layers can contain anything
+            </span>
+
+        </Parallax.Layer>
+
+    </Parallax>
 )
 ```
 
