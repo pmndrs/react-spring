@@ -52,7 +52,7 @@ A `Spring` will move data from one state to another. It remembers the current st
 
 #### Mount/unmount Transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
 
-`Transition` watches elements it wraps as they mount and unmount, it helps you to animate these changes.
+`Transition` watches elements as they mount and unmount, it helps you to animate these changes.
 
 ```jsx
 <Transition
@@ -66,7 +66,7 @@ A `Spring` will move data from one state to another. It remembers the current st
 
 #### 2-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
 
-If given a single child instead of a list you can reveal components with it.
+Given a single child instead of a list you can reveal components with it.
 
 ```jsx
 <Transition
@@ -80,7 +80,7 @@ If given a single child instead of a list you can reveal components with it.
 
 #### Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
-`Trail` animates the first child of a list you pass, the rest follows the spring of the their previous sibling.
+`Trail` animates the first child of a list of elements, the rest follow the spring of their previous sibling.
 
 ```jsx
 <Trail
