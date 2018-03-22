@@ -30,10 +30,6 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 
 ### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
-<p align="center">
-  <img src="assets/spring.gif"/>
-</p>
-
 ```jsx
 <Spring
     from={{ opacity: 0 }}
@@ -42,11 +38,11 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 </Spring>
 ```
 
-### Mount/unmount transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
-
 <p align="center">
-  <img src="assets/transition.gif"/>
+  <img src="assets/spring.gif"/>
 </p>
+
+### Mount/unmount transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
 
 ```jsx
 <Transition
@@ -58,11 +54,11 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 </Transition>
 ```
 
-### Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
-
 <p align="center">
-  <img src="assets/reveal.gif"/>
+  <img src="assets/transition.gif"/>
 </p>
+
+### Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
 
 ```jsx
 <Transition
@@ -74,11 +70,11 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 </Transition>
 ```
 
-### Trails/staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
-
 <p align="center">
-  <img src="assets/trail.gif"/>
+  <img src="assets/reveal.gif"/>
 </p>
+
+### Trails/staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
 ```jsx
 <Trail
@@ -89,11 +85,11 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 </Trail>
 ```
 
-### Parallax & page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
-
 <p align="center">
-  <img src="assets/parallax.gif"/>
+  <img src="assets/trail.gif"/>
 </p>
+
+### Parallax & page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
 ```jsx
 <Parallax pages={2}>
@@ -101,6 +97,10 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
     <Parallax.Layer offset={1} speed={0.5}>second Page</Parallax.Layer>
 </Parallax>
 ```
+
+<p align="center">
+  <img src="assets/parallax.gif"/>
+</p>
 
 ### Additional demos: [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v)
 
