@@ -43,7 +43,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
     </tr>
     <tr>
         <td>
-            <h5>a href="https://codesandbox.io/embed/j150ykxrv">Mount/unmount transitions</a></h5>
+            <h5><a href="https://codesandbox.io/embed/j150ykxrv">Mount/unmount transitions</a></h5>
 <pre>
 &lt;Transition
   keys={items.map(item =&gt; item.key)}
