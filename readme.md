@@ -31,7 +31,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 <table>
     <tr>
         <td>
-            <h5>Springs</h5>
+            <h5><a href="https://codesandbox.io/embed/oln44nx8xq">Springs</a></h5>
 <pre>
 &lt;Spring from={{ opacity: 0 }}
   to={{ opacity: 1 }}&gt;
@@ -43,7 +43,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
     </tr>
     <tr>
         <td>
-            <h5>Mount/unmount transitions</h5>
+            <h5>a href="https://codesandbox.io/embed/j150ykxrv">Mount/unmount transitions</a></h5>
 <pre>
 &lt;Transition
   keys={items.map(item =&gt; item.key)}
@@ -59,7 +59,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
     </tr>
     <tr>
         <td>
-            <h5>Two state reveals</h5>
+            <h5><a href="https://codesandbox.io/embed/yj52v5689">Two state reveals</a></h5>
 <pre>
 &lt;Transition
   keys={toggle ? 'ComponentA' : 'ComponentB'}
@@ -74,7 +74,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
     </tr>
     <tr>
         <td>
-            <h5>Trails and staggered animations</h5>
+            <h5><a href="https://codesandbox.io/embed/vvmv6x01l5">Trails and staggered animations</a></h5>
 <pre>
 &lt;Trail
   from={{ opacity: 0 }}
@@ -89,10 +89,9 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
     </tr>
     <tr>
         <td>
-            <h5>Parallax and page transitions</h5>
+            <h5><a href="https://codesandbox.io/embed/548lqnmk6l">Parallax and page transitions</a></h5>
 <pre>
-&lt;Parallax
-  pages={2}&gt;
+&lt;Parallax pages={2}&gt;
   &lt;Parallax.Layer offset={0} speed={0.2}&gt;1&lt;/Parallax.Layer&gt;
   &lt;Parallax.Layer offset={1} speed={0.5}&gt;2&lt;/Parallax.Layer&gt;
 &lt;/Parallax&gt;
@@ -102,9 +101,9 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
     </tr>
 </table>
 
-### Additional demos: [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v)
+#### Additional demos: [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v)
 
-# API 🧐
+# API 📖
 
 ## Springs and default rendering
 
