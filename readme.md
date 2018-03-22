@@ -173,7 +173,7 @@ const App = ({ items }) => (
 )
 ```
 
-# Parallax and page transitions 𝌆𝌇𝌈𝌉𝌊𝌋
+# Parallax and page transitions 📜
 
 ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
