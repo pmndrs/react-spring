@@ -33,7 +33,8 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
         <td>
             <h5><a href="https://codesandbox.io/embed/oln44nx8xq">Springs</a></h5>
 <pre>
-&lt;Spring from={{ opacity: 0 }}
+&lt;Spring
+  from={{ opacity: 0 }}
   to={{ opacity: 1 }}&gt;
   {styles =&gt; &lt;div style={styles}&gt;hello&lt;/div&gt;}
 &lt;/Spring&gt;
