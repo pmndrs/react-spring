@@ -46,9 +46,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 A `Spring` will move data from one state to another. It remembers the current state, value changes are always fluid.
 
 ```jsx
-<Spring
-    from={{ opacity: 0 }}
-    to={{ opacity: 1 }}>
+<Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
     {styles => <div style={styles}>i will fade in</div>}
 </Spring>
 ```
@@ -73,7 +71,7 @@ Given a single child instead of a list you can reveal components with it.
 
 ```jsx
 <Transition
-    keys={toggle ? 'ComponentA' : 'ComponentB'} 
+    keys={toggle ? 'A' : 'B'} 
     from={{ opacity: 0 }} 
     enter={{ opacity: 1 }} 
     leave={{ opacity: 0 }}>
@@ -86,10 +84,7 @@ Given a single child instead of a list you can reveal components with it.
 `Trail` animates the first child of a list of elements, the rest follow the spring of their previous sibling.
 
 ```jsx
-<Trail
-    from={{ opacity: 0 }}
-    to={{ opacity: 1 }}
-    keys={items.map(item => item.key)}>
+<Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
     {items.map(item => styles => <div style={styles}>{item.text}</div>)}
 </Trail>
 ```
@@ -169,7 +164,7 @@ import { Spring, animated, template } from 'react-spring'
 
 ### Transitions
 
-Animates children as they mount and unmount. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
+Animates children as they mount and unmount. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order! The keys are the same that you would provide in any other looping situation.
 
 ```jsx
 import { Transition } from 'react-spring'
@@ -211,7 +206,7 @@ import { Trail } from 'react-spring'
 
 ### Parallax and page transitions
 
-`Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and scrolling speeds.
+`Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and speeds.
 
 `Parallax.pages` determines the total space of the inner content where each page takes 100% of the visible container. `Layer.offset` determines where the layer will be at when scrolled to (0=start, 1=1st page, ...). `Layer.speed` shifts the layer in accordance to its offset, values can be positive or negative.
 
