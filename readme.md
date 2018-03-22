@@ -24,84 +24,73 @@ As you see, they're polar opposites. React-spring inherits React-motions api, bu
 
 # Overview 🔭
 
+<p align="middle">
+  <img src="assets/spring.gif" width="300" />
+  <img src="assets/transition.gif" width="300" /> 
+  <img src="assets/reveal.gif" width="300" />
+</p>
+<p align="middle">
+  <img src="assets/trail.gif" width="450" />
+  <img src="assets/parallax.gif" width="450" /> 
+</p>
+
 ```jsx
 import { Spring, Transition, Trail, Parallax } from 'react-spring'
 ```
 
-<table>
-    <tr>
-        <td>
-            <h5><a href="https://codesandbox.io/embed/oln44nx8xq">Springs</a></h5>
-<pre>
-&lt;Spring
-  from={{ opacity: 0 }}
-  to={{ opacity: 1 }}&gt;
-  {styles =&gt; &lt;div style={styles}&gt;hello&lt;/div&gt;}
-&lt;/Spring&gt;
-</pre>
-        </td>
-        <td><img src="assets/spring.gif" /></td>
-    </tr>
-    <tr>
-        <td>
-            <h5><a href="https://codesandbox.io/embed/j150ykxrv">Mount/unmount transitions</a></h5>
-<pre>
-&lt;Transition
-  keys={items.map(item =&gt; item.key)}
-  from={{ opacity: 0 }}
-  enter={{ opacity: 1 }}
-  leave={{ opacity: 0 }}&gt;
-  {items.map(item =&gt; styles =&gt;
-    &lt;li style={styles}&gt;{item.text}&lt;/li&gt;)}
-&lt;/Transition&gt;
-</pre>
-        </td>
-        <td><img src="assets/transition.gif" /></td>
-    </tr>
-    <tr>
-        <td>
-            <h5><a href="https://codesandbox.io/embed/yj52v5689">Two state reveals</a></h5>
-<pre>
-&lt;Transition
-  keys={toggle ? 'ComponentA' : 'ComponentB'}
-  from={{ opacity: 0 }}
-  enter={{ opacity: 1 }}
-  leave={{ opacity: 0 }}&gt;
-  {toggle ? ComponentA : ComponentB}
-&lt;/Transition&gt;
-</pre>
-        </td>
-        <td><img src="assets/reveal.gif" /></td>
-    </tr>
-    <tr>
-        <td>
-            <h5><a href="https://codesandbox.io/embed/vvmv6x01l5">Trails and staggered animations</a></h5>
-<pre>
-&lt;Trail
-  from={{ opacity: 0 }}
-  to={{ opacity: 1 }}
-  keys={items.map(item =&gt; item.key)}&gt;
-  {items.map(item =&gt; styles =&gt;
-    &lt;div style={styles}&gt;{item.text}&lt;/div&gt;)}
-&lt;/Trail&gt;
-</pre
-        </td>
-        <td><img src="assets/trail.gif" /></td>
-    </tr>
-    <tr>
-        <td>
-            <h5><a href="https://codesandbox.io/embed/548lqnmk6l">Parallax and page transitions</a></h5>
-<pre>
-&lt;Parallax pages={2}&gt;
-  &lt;Parallax.Layer offset={0} speed={0.2}&gt;
-    Page 1
-  &lt;/Parallax.Layer&gt;
-&lt;/Parallax&gt;
-</pre
-        </td>
-        <td><img src="assets/parallax.gif" /></td>
-    </tr>
-</table>
+#### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
+
+```jsx
+<Spring
+    from={{ opacity: 0 }}
+    to={{ opacity: 1 }}>
+    {styles => <div style={styles}>i will fade in</div>}
+</Spring>
+```
+
+#### Mount/unmount Transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
+
+```jsx
+<Transition
+    keys={toggle ? 'ComponentA' : 'ComponentB'} 
+    from={{ opacity: 0 }} 
+    enter={{ opacity: 1 }} 
+    leave={{ opacity: 0 }}>
+    {toggle ? ComponentA : ComponentB}
+</Transition>
+```
+
+#### 2-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
+
+```jsx
+<Transition
+    keys={toggle ? 'ComponentA' : 'ComponentB'} 
+    from={{ opacity: 0 }} 
+    enter={{ opacity: 1 }} 
+    leave={{ opacity: 0 }}>
+    {toggle ? ComponentA : ComponentB}
+</Transition>
+```
+
+#### Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
+
+```jsx
+<Trail
+    from={{ opacity: 0 }}
+    to={{ opacity: 1 }}
+    keys={items.map(item => item.key)}>
+    {items.map(item => styles => <div style={styles}>{item.text}</div>)}
+</Trail>
+```
+
+#### Parallax and page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
+
+```jsx
+<Parallax pages={2}>
+    <Parallax.Layer offset={0} speed={0.2}>first Page</Parallax.Layer>
+    <Parallax.Layer offset={1} speed={0.5}>second Page</Parallax.Layer>
+</Parallax>
+```
 
 #### Additional demos: [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v)
 
