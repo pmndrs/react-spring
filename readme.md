@@ -2,7 +2,7 @@
 
     npm install react-spring
 
-<b>Examples</b>: [Interpolation](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Reveals](https://codesandbox.io/embed/yj52v5689) | [transitions](https://codesandbox.io/embed/j150ykxrv) | [Staggered](https://codesandbox.io/embed/vvmv6x01l5) | [Parallax](https://codesandbox.io/embed/548lqnmk6l) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z)
+<b>Examples</b>: [Interpolation](https://codesandbox.io/embed/oln44nx8xq) | [Native rendering](https://codesandbox.io/embed/882njxpz29) | [Reveals](https://codesandbox.io/embed/yj52v5689) | [Transitions](https://codesandbox.io/embed/j150ykxrv) | [Staggered](https://codesandbox.io/embed/vvmv6x01l5) | [Parallax](https://codesandbox.io/embed/548lqnmk6l) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z)
 
 # Why 🤔
 
@@ -162,9 +162,9 @@ import { Trail } from 'react-spring'
 
 ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
-`Parallax` creates a scroll container. Throw in any amount of layers you want and it will take care of moving them up and down/left and right in accordance to their offsets and scrolling speeds. This makes complex page transitions where you move from one into another as effortless as it gets.
+`Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and scrolling speeds. This makes complex page transitions as effortless as it gets.
 
-`pages` determines the total height/width of the inner content where each page takes 100% height of the visible container. `offset` determines where the layer will be at when scrolled to (0=start, 1=1st page, and so on ...). `factor` allows for positive and negative values, it shifts the layer up or down/left or right in accordance to its offset. 
+`Parallax.pages` determines the total height/width of the inner content where each page takes 100% height of the visible container. `Layer.offset` determines where the layer will be at when scrolled to (0=start, 1=1st page, and so on ...). `Layer.speed` allows for positive and negative values, it shifts the layer in accordance to its offset.
 
 ```jsx
 import { Parallax } from 'react-spring'
