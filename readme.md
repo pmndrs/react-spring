@@ -30,19 +30,21 @@ As you see, they're polar opposites. React-spring inherits React-motions api, bu
 import { Spring, Transition, Trail, Parallax } from 'react-spring'
 ```
 
-### Springs
+### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
 <p align="center">
   <img src="assets/spring.gif"/>
 </p>
 
 ```jsx
-<Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
+<Spring
+    from={{ opacity: 0 }}
+    to={{ opacity: 1 }}>
     {styles => <div style={styles}>i will fade in</div>}
 </Spring>
 ```
 
-### Mount/unmount transitions
+### Mount/unmount transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
 
 <p align="center">
   <img src="assets/transition.gif"/>
@@ -58,7 +60,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 </Transition>
 ```
 
-### Reveals
+### Reveals ([Demo](https://codesandbox.io/embed/882njxpz29))
 
 <p align="center">
   <img src="assets/reveal.gif"/>
@@ -74,19 +76,22 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 </Transition>
 ```
 
-### Trails/staggered animations
+### Trails/staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
 <p align="center">
   <img src="assets/trail.gif"/>
 </p>
 
 ```jsx
-<Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
+<Trail
+    from={{ opacity: 0 }}
+    to={{ opacity: 1 }}
+    keys={items.map(item => item.key)}>
     {items.map(item => styles => <div style={styles}>{item.text}</div>)}
 </Trail>
 ```
 
-### Parallax & page transitions
+### Parallax & page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
 <p align="center">
   <img src="assets/parallax.gif"/>
@@ -102,8 +107,6 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 # API
 
 ## Springs and default rendering
-
-([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
 You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
 
@@ -135,9 +138,7 @@ const App = ({ color, children }) => (
 
 Et voilà! Now you render a animated version of the `Header` component! All props that `Spring` doesn't recognize as its own will be spread over the receiving component, including `children` if you use `render` instead. It's actually faster as well since the function isn't recreated on every prop-change.
 
-## Native rendering
-
-([Demo](https://codesandbox.io/embed/882njxpz29))
+## Native rendering ([Demo](https://codesandbox.io/embed/882njxpz29))
 
 Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. That means you can animate dom styles & props, but also any React component. In some situations this can be expensive.
 
@@ -162,8 +163,6 @@ import { Spring, animated, template } from 'react-spring'
 ```
 
 ## Transitions
-
-([Demo](https://codesandbox.io/embed/j150ykxrv))
 
 Use `Transition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
 
@@ -195,8 +194,6 @@ You can use this prototype for two-state reveals, simply render a single child t
 
 ## Trails/Staggered transitions
 
-([Demo](https://codesandbox.io/embed/vvmv6x01l5))
-
 Create trailing animations by using `Trail`. The api is similar to `Transition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
 
 ```jsx
@@ -208,8 +205,6 @@ import { Trail } from 'react-spring'
 ```
 
 ## Parallax and page transitions
-
-([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
 `Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and scrolling speeds. This makes complex page transitions as effortless as it gets.
 
