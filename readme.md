@@ -26,6 +26,10 @@ So as you see, they're polar opposites and the strengths of one are the weakness
 
 # Default rendering 🏎
 
+<p align="center">
+  <img src="assets/spring.gif"/>
+</p>
+
 ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
 Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. In many situations this will be ok.
@@ -117,6 +121,10 @@ const App = ({ toggle }) => (
 
 # Transitions 🌑🌒🌓🌔🌕
 
+<p align="center">
+  <img src="assets/transition.gif"/>
+</p>
+
 ([Demo](https://codesandbox.io/embed/j150ykxrv))
 
 Use `Transition` and pass in your `keys`. `from` denotes base styles, `enter` styles are applied when objects appear, `leave` styles are applied when objects disappear. Keys and children have to match in their order!
@@ -155,6 +163,10 @@ const App = ({ toggle }) => (
 
 # Trails/Staggered transitions 🐾🐾🐾
 
+<p align="center">
+  <img src="assets/trail.gif"/>
+</p>
+
 ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
 Create trailing animations by using `Trail`. The api is similar to `Transition` though it will assume your list is fixed. The items will interpolate in a staggered fashion, internally one spring follows the interpolated value of the previous one thereby creating a staggered chain.
@@ -174,6 +186,10 @@ const App = ({ items }) => (
 ```
 
 # Parallax and page transitions 📜
+
+<p align="center">
+  <img src="assets/parallax.gif"/>
+</p>
 
 ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
