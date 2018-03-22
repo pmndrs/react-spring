@@ -4,7 +4,7 @@
 
 # Why 🤔
 
-React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to cross it with Chenglou's [React-motion](https://github.com/chenglou/react-motion). Both have their pros and cons and could benefit from one another:
+React-spring is a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge it with Chenglou's [React-motion](https://github.com/chenglou/react-motion) because both have their pros and cons but could definitively benefit from one another:
 
 #### React-motion
 
@@ -104,7 +104,7 @@ Given a single child instead of a list you can reveal components with it.
 
 # API overview 📖
 
-For a detailed api documentation with all possible properties look [here](https://github.com/drcmda/react-spring/blob/master/API.md).
+For a raw documentation of all possible properties look [here](https://github.com/drcmda/react-spring/blob/master/API.md).
 
 ### Springs and interpolation
 
