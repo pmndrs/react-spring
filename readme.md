@@ -39,7 +39,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 ```
 
 <p align="center">
-  <img src="assets/spring.gif"/>
+  <img width="600px" src="assets/spring.gif"/>
 </p>
 
 ### Mount/unmount transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
@@ -55,7 +55,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 ```
 
 <p align="center">
-  <img src="assets/transition.gif"/>
+  <img width="600px" src="assets/transition.gif"/>
 </p>
 
 ### Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
@@ -71,7 +71,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 ```
 
 <p align="center">
-  <img src="assets/reveal.gif"/>
+  <img width="600px" src="assets/reveal.gif"/>
 </p>
 
 ### Trails/staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
@@ -86,7 +86,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 ```
 
 <p align="center">
-  <img src="assets/trail.gif"/>
+  <img width="600px" src="assets/trail.gif"/>
 </p>
 
 ### Parallax & page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
@@ -99,7 +99,7 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 ```
 
 <p align="center">
-  <img src="assets/parallax.gif"/>
+  <img width="600px" src="assets/parallax.gif"/>
 </p>
 
 ### Additional demos: [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [DragList](https://codesandbox.io/embed/l9zqz0m18z) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v)
