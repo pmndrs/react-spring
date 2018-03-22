@@ -93,8 +93,9 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
             <h5><a href="https://codesandbox.io/embed/548lqnmk6l">Parallax and page transitions</a></h5>
 <pre>
 &lt;Parallax pages={2}&gt;
-  &lt;Parallax.Layer offset={0} speed={0.2}&gt;1&lt;/Parallax.Layer&gt;
-  &lt;Parallax.Layer offset={1} speed={0.5}&gt;2&lt;/Parallax.Layer&gt;
+  &lt;Parallax.Layer offset={0} speed={0.2}&gt;
+    Page 1
+  &lt;/Parallax.Layer&gt;
 &lt;/Parallax&gt;
 </pre
         </td>
