@@ -37,32 +37,26 @@ Like React-motion by default we'll render the receiving component every frame as
 ```jsx
 import { Spring } from 'react-spring'
 
-const App = ({ toggle }) => (
-    <Spring
-        // Default values, optional ...
-        from={{ opacity: 0 }}
-        // Will animate to ...
-        to={{
-            // Can be numbers, colors, paths, degrees, percentages, arrays, ...
-            start: toggle ? '#abc' : 'rgb(10,20,30)',
-            end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
-            stop: toggle ? '0%' : '50%',
-            scale: toggle ? 1 : 2,
-            rotate: toggle ? '0deg' : '45deg',
-            path: toggle
-                ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' 
-                : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
-        }}>
-        
-        {({ color, scale, rotate, path, start, stop, end }) => (
-            <div style={{ background: `linear-gradient(to bottom, ${start} ${stop}, ${end} 100%)` }}>
-                <svg style={{ transform: `scale(${scale}) rotate(${rotate})` }}>
-                    <g><path d={path} /></g>
-                </svg>
-            </div>
-        )}
-        
+const App = () => (
+    <Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
+        {styles => <div style={styles}>i will fade in</div>}
     </Spring>
+)
+```
+
+You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
+
+```jsx
+<spring to={{
+    start: toggle ? '#abc' : 'rgb(10,20,30)',
+    end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
+    stop: toggle ? '0%' : '50%',
+    scale: toggle ? 1 : 2,
+    rotate: toggle ? '0deg' : '45deg',
+    path: toggle
+        ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' 
+        : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
+    }}>
 )
 ```
 
@@ -99,22 +93,13 @@ Just be aware of the following conditions:
 ```jsx
 import { Spring, animated, template } from 'react-spring'
 
-const App = ({ toggle }) => (
-    <Spring
-        native
-        from={{ fill: 'black' }}
-        to={{
-            rotate: toggle ? '0deg' : '180deg',
-            scale: toggle ? 1 : 2,
-            path: toggle ? TRIANGLE : RECTANGLE,
-        }}>
-
+const App = ({ toggle, path = 'M20,20 L20,380 L380,380 L380,20 L20,20 Z', rotate = '0deg', scale = '1' }) => (
+    <Spring native to={{ path, rotate, scale }}>
         {({ rotate, scale, path }) => (
             <animated.svg style={{ transform: template`rotate(${rotate}) scale(${scale})` }}>
                 <g><animated.path d={path} /></g>
             </animated.svg>
         )}
-
     </Spring>
 )
 ```
@@ -176,11 +161,7 @@ import { Trail } from 'react-spring'
 
 const App = ({ items }) => (
     <Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
-        {items.map(item => styles => (
-            <div style={styles}>
-                {item.text}
-            </div>
-        ))}
+        {items.map(item => styles => <div style={styles}>{item.text}</div>)}
     </Trail>
 )
 ```
@@ -193,38 +174,20 @@ const App = ({ items }) => (
 
 ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
-`Parallax` creates a scroll container. Throw in any amount of layers you want and it will take care of moving them up and down/left and right in accordance to their offsets and scrolling speeds. This makes complex page transitions where you move from one into another as effortless as it gets. 
+`Parallax` creates a scroll container. Throw in any amount of layers you want and it will take care of moving them up and down/left and right in accordance to their offsets and scrolling speeds. This makes complex page transitions where you move from one into another as effortless as it gets.
+
+`pages` determines the total height/width of the inner content where each page takes 100% height of the visible container. `offset` determines where the layer will be at when scrolled to (0=start, 1=1st page, and so on ...). `factor` allows for positive and negative values, it shifts the layer up or down/left or right in accordance to its offset. 
 
 ```jsx
 import { Parallax } from 'react-spring'
 
 const App = () => (
-    <Parallax
-        // Pages determines the total height of the inner content container
-        // Each page takes 100% height of the visible outer container by default
-        pages={3}
-        // Enables or disables the scrollbar
-        scrolling={false}
-        // Horizontal or vertical scroll direction
-        horizontal={true}
-        // Capture the main ref to call "scrollTo" on it
-        ref={ref => this.parallax = ref}>
-
-        // Add as many layers as you like
-        <Parallax.Layer
-            // Page offset, or where the layer will be at when scrolled to
-            // 0 means start, 1 second page, 1.5 second and half, and so on ...
-            offset={0}
-            // Parallax factor, allows for positive and negative values
-            // Shifts the layer up or down in accordance to its offset
-            speed={0.5}>
-
+    <Parallax pages={3} scrolling={false} horizontal ref={ref => this.parallax = ref}>
+        <Parallax.Layer offset={0} speed={0.5}>
             <span onClick={() => this.parallax.scrollTo(1)}>>
                 Layers can contain anything
             </span>
-
         </Parallax.Layer>
-
     </Parallax>
 )
 ```
