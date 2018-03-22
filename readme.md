@@ -6,23 +6,23 @@
 
 # Why 🤔
 
-React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge Chenglou's [React-motion](https://github.com/chenglou/react-motion) and animated, as both have their pros and cons, but definitively could benefit from one another:
+React-spring is a wrapper around a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to cross it with Chenglou's [React-motion](https://github.com/chenglou/react-motion). Both have their pros and cons and could benefit from one another:
 
-### React-motion
+#### React-motion
 
 *   [x] Declarative api that doesn't involve manual management of animations
 *   [x] Covers most of the essentials (springs, lists, transitions, reveals, staggered animations)
 *   [ ] Performance can suffer because components are re-rendered every frame with fresh props
 *   [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc.
 
-### Animated
+#### Animated
 
 *   [x] Interpolates most web privimites, units and patterns
 *   [x] Efficiently writes to the dom directly instead of re-rendering components frame by frame
 *   [ ] Managing and orchestrating handles (starting/stopping/waiting/cleaning) can become a real chore
 *   [ ] Missing essential prototypes like mount/unmount transitions
 
-So as you see, they're polar opposites and the strengths of one are the weaknesses of another. React-spring inherits React-motions api in a more simplified way, while adding more primitives and being able to digest everything animated could interpolate. It also has support for animateds efficient native rendering.
+As you see, they're polar opposites. React-spring inherits React-motions api, but simplified, while adding more primitives and being able to interpolate. It also has support for native rendering, where components animate directly in the dom.
 
 # Default rendering 🏎
 
@@ -32,7 +32,7 @@ So as you see, they're polar opposites and the strengths of one are the weakness
 
 ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
-Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. In many situations this will be ok.
+Like React-motion by default we'll render the receiving component every frame as it gives you more freedom to animate whatever you like. That means you can animate dom styles & props, but also any React component. In many situations the performance will be fine.
 
 ```jsx
 import { Spring } from 'react-spring'
@@ -76,7 +76,7 @@ Et voilà! Now you render a animated version of the `Header` component! All prop
 
 ([Demo](https://codesandbox.io/embed/882njxpz29))
 
-Pass the `native` flag for more performance. The animations will now be applied *directly* to the dom through requestAnimationFrame and the component will only render when it receives new props. The flag is available for all primitives (Spring, Transition & Trail).
+Pass the `native` flag and the animations will now be applied *directly* to the dom through requestAnimationFrame. The component will only re-render when it receives new props. The flag is available for all primitives (Spring, Transition & Trail, Parallax is native by design).
 
 Just be aware of the following conditions:
 
