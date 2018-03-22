@@ -37,11 +37,9 @@ Like React-motion by default we'll render the receiving component every frame as
 ```jsx
 import { Spring } from 'react-spring'
 
-const App = () => (
-    <Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
-        {styles => <div style={styles}>i will fade in</div>}
-    </Spring>
-)
+<Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
+    {styles => <div style={styles}>i will fade in</div>}
+</Spring>
 ```
 
 You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
@@ -57,7 +55,6 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
         ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' 
         : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
     }}>
-)
 ```
 
 Don't like the way render props wrap your code?
@@ -93,15 +90,13 @@ Just be aware of the following conditions:
 ```jsx
 import { Spring, animated, template } from 'react-spring'
 
-const App = ({ toggle, path = 'M20,20 L20,380 L380,380 L380,20 L20,20 Z', rotate = '0deg', scale = '1' }) => (
-    <Spring native to={{ path, rotate, scale }}>
-        {({ rotate, scale, path }) => (
-            <animated.svg style={{ transform: template`rotate(${rotate}) scale(${scale})` }}>
-                <g><animated.path d={path} /></g>
-            </animated.svg>
-        )}
-    </Spring>
-)
+<Spring native to={{ path, rotate, scale }}>
+    {({ rotate, scale, path }) => (
+        <animated.svg style={{ transform: template`rotate(${rotate}) scale(${scale})` }}>
+            <g><animated.path d={path} /></g>
+        </animated.svg>
+    )}
+</Spring>
 ```
 
 # Transitions 🌑🌒🌓🌔🌕
@@ -117,33 +112,28 @@ Use `Transition` and pass in your `keys`. `from` denotes base styles, `enter` st
 ```jsx
 import { Transition } from 'react-spring'
 
-const App = ({ items }) => (
-    <ul>
-        <Transition
-            keys={items.map(item => item.key)}
-            from={{ opacity: 0, color: 'black', height: 0 }}
-            enter={{ opacity: 1, color: 'red', height: 18 }}
-            leave={{ opacity: 0, color: 'blue', height: 0 }}>
-            {items.map(item => styles => <li style={styles}>{item.text}</li>)}
-        </Transition>
-     </ul>
-  )
-}
+<ul>
+    <Transition
+        keys={items.map(item => item.key)}
+        from={{ opacity: 0, color: 'black', height: 0 }}
+        enter={{ opacity: 1, color: 'red', height: 18 }}
+        leave={{ opacity: 0, color: 'blue', height: 0 }}>
+        {items.map(item => styles => <li style={styles}>{item.text}</li>)}
+    </Transition>
+</ul>
 ```
 
 You can use this prototype for two-state reveals, simply render a single child that you can switch out for another.
 
 
 ```jsx
-const App = ({ toggle }) => (
-    <Transition
-        keys={toggle ? 'ComponentA' : 'ComponentB'} 
-        from={{ opacity: 0 }} 
-        enter={{ opacity: 1 }} 
-        leave={{ opacity: 0 }}>
-        {toggle ? ComponentA : ComponentB}
-    </Transition>
-)
+<Transition
+    keys={toggle ? 'ComponentA' : 'ComponentB'} 
+    from={{ opacity: 0 }} 
+    enter={{ opacity: 1 }} 
+    leave={{ opacity: 0 }}>
+    {toggle ? ComponentA : ComponentB}
+</Transition>
 ```
 
 # Trails/Staggered transitions 🐾🐾🐾
@@ -159,11 +149,9 @@ Create trailing animations by using `Trail`. The api is similar to `Transition` 
 ```jsx
 import { Trail } from 'react-spring'
 
-const App = ({ items }) => (
-    <Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
-        {items.map(item => styles => <div style={styles}>{item.text}</div>)}
-    </Trail>
-)
+<Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
+    {items.map(item => styles => <div style={styles}>{item.text}</div>)}
+</Trail>
 ```
 
 # Parallax and page transitions 📜
@@ -181,15 +169,13 @@ const App = ({ items }) => (
 ```jsx
 import { Parallax } from 'react-spring'
 
-const App = () => (
-    <Parallax pages={3} scrolling={false} horizontal ref={ref => this.parallax = ref}>
-        <Parallax.Layer offset={0} speed={0.5}>
-            <span onClick={() => this.parallax.scrollTo(1)}>>
-                Layers can contain anything
-            </span>
-        </Parallax.Layer>
-    </Parallax>
-)
+<Parallax pages={3} scrolling={false} horizontal ref={ref => this.parallax = ref}>
+    <Parallax.Layer offset={0} speed={0.5}>
+        <span onClick={() => this.parallax.scrollTo(1)}>>
+            Layers can contain anything
+        </span>
+    </Parallax.Layer>
+</Parallax>
 ```
 
 ---
