@@ -51,7 +51,7 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
     stop: toggle ? '0%' : '50%',
     scale: toggle ? 1 : 2,
     rotate: toggle ? '0deg' : '45deg',
-    path: toggle ? 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' : 'M20,20 L20,380 L380,380 L380,20 L20,20 Z' }}>
+    path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z' }}>
 ```
 
 Don't like the way render props wrap your code?
