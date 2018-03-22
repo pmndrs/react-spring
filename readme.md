@@ -59,11 +59,11 @@ A `Spring` will move data from one state to another. It remembers the current st
 
 ```jsx
 <Transition
-    keys={toggle ? 'ComponentA' : 'ComponentB'} 
-    from={{ opacity: 0 }} 
-    enter={{ opacity: 1 }} 
-    leave={{ opacity: 0 }}>
-    {toggle ? ComponentA : ComponentB}
+    keys={items.map(item => item.key)}
+    from={{ opacity: 0, height: 0 }}
+    enter={{ opacity: 1, height: 20 }}
+    leave={{ opacity: 0, height: 0 }}>
+    {items.map(item => styles => <li style={styles}>{item.text}</li>)}
 </Transition>
 ```
 
