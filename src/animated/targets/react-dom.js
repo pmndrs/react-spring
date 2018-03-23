@@ -104,9 +104,7 @@ function setValueForStyles(node, styles) {
     var style = node.style
 
     for (var styleName in styles) {
-        if (!styles.hasOwnProperty(styleName)) {
-            continue
-        }
+        if (!styles.hasOwnProperty(styleName)) continue
 
         var isCustomProperty = styleName.indexOf('--') === 0
         var styleValue = dangerousStyleValue(styleName, styles[styleName], isCustomProperty)
@@ -123,11 +121,22 @@ function setValueForStyles(node, styles) {
     }
 }
 
+function setValueForAttributes(node, props) {
+    var attributes = node.attributes, attribute
+    for (let name in props) {
+        if (name !== 'style') {
+            attribute = attributes.getNamedItem(name)
+            if (attribute) attribute.value = props[name]
+        }
+    }
+}
+
 function ApplyAnimatedValues(instance, props) {
     if (instance.setNativeProps) {
         instance.setNativeProps(props)
     } else if (instance.nodeType && instance.setAttribute !== undefined) {
         setValueForStyles(instance, props.style)
+        setValueForAttributes(instance, props)
     } else {
         return false
     }
