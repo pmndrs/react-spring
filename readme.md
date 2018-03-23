@@ -6,21 +6,27 @@
 
 React-spring is a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge it with Chenglou's [React-motion](https://github.com/chenglou/react-motion) because both have their pros and cons but could definitively benefit from one another:
 
-#### React-motion
+##### React-motion
 
 *   [x] Declarative api that doesn't involve manual management of animations
 *   [x] Covers most of the essentials (springs, lists, transitions, reveals, staggered animations)
 *   [ ] Performance can suffer because components are re-rendered every frame with fresh props
 *   [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc.
 
-#### Animated
+##### Animated
 
 *   [x] Interpolates most web privimites, units and patterns
 *   [x] Efficiently writes to the dom directly instead of re-rendering components frame by frame
 *   [ ] Managing and orchestrating handles (starting/stopping/waiting/cleaning) can become a real chore
 *   [ ] Missing essential prototypes like mount/unmount transitions
 
-As you see, they're polar opposites. React-spring inherits React-motions api, but simplified, while adding more primitives and being able to interpolate. It also has support for native rendering, where components animate directly in the dom.
+### React-spring
+
+
+*   [x] Beautiful, simplified api
+*   [x] Lot's of primitives (Springs, Trails, Transitions, Reveals, Parallax)
+*   [x] Interpolates mostly everything
+*   [x] Can animate efficiently by skipping render passes and committing directly to the dom
 
 # Overview 🔭
 
