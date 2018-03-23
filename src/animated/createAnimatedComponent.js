@@ -2,6 +2,8 @@ import React from 'react'
 import AnimatedProps from './AnimatedProps'
 import ApplyAnimatedValues from './injectable/ApplyAnimatedValues'
 
+const refName = 'node'
+
 function createAnimatedComponent(Component) {
     class AnimatedComponent extends React.Component {
         componentWillUnmount() {
