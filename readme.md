@@ -146,7 +146,7 @@ By default we'll render the receiving component every frame as it gives you more
 
 Just be aware of the following conditions:
 
-1.  It only animates standard styles and element props, the values you receive *are opaque objects, not regular values*
+1.  It only animates element styles and attributes, the values you receive *are opaque objects, not regular values*
 2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
 3.  If you need to interpolate styles use the `template` string literal
 
