@@ -104,12 +104,14 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
 
 ```jsx
 <spring to={{
+    scale: toggle ? 1 : 2,
     start: toggle ? '#abc' : 'rgb(10,20,30)',
     end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
     stop: toggle ? '0%' : '50%',
-    scale: toggle ? 1 : 2,
     rotate: toggle ? '0deg' : '45deg',
-    path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z' }}>
+    path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z',
+    vector: toggle ? [1,2,50,100] : [20,30,1,-100],
+}}>
 ```
 
 ### Render props
