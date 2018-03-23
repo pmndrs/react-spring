@@ -6,7 +6,7 @@
 
 React-spring is a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge it with Chenglou's [React-motion](https://github.com/chenglou/react-motion) because both have their pros and cons and could definitively benefit from one another:
 
-| Task           | Declarative | Interpolations | Primitives     | Performance | 
+|                | Declarative | Interpolations | Primitives     | Performance | 
 |----------------|-------------|----------------|----------------|-------------|
 | React-motion   | ✔︎ | ✘ | ✔︎ | ✘
 | Animated       | ✘ | ✔︎ | ✘ | ✔︎
