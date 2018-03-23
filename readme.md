@@ -119,17 +119,17 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
 Don't like the way render props wrap your code?
 
 ```jsx
-const Header = ({ children, ...styles }) => (
+const Header = ({ children, bold, ...styles }) => (
     <h1 style={styles}>
         {children}
     </h1>
 )
 
-const App = ({ color, children }) => (
-    <Spring to={{ color }} render={Header}>
-        {children}
-    </Spring>
-)
+
+<Spring to={{ color: 'fuchsia' }} render={Header}>
+    {children}
+</Spring>
+
 ```
 
 Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, including `children` if you use `render` to refer to the render-child.
