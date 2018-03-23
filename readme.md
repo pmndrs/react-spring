@@ -6,10 +6,10 @@
 
 React-spring is a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge it with Chenglou's [React-motion](https://github.com/chenglou/react-motion) because both have their pros and cons and could definitively benefit from one another:
 
-|                | Declarative | Interpolations | Primitives     | Performance | 
+|                | Declarative | Primitives | Interpolations     | Performance | 
 |----------------|-------------|----------------|----------------|-------------|
-| React-motion   | ✔︎ | ✘ | ✔︎ | ✘
-| Animated       | ✘ | ✔︎ | ✘ | ✔︎
+| React-motion   | ✔︎ | ✔︎ | ✘ | ✘
+| Animated       | ✘ | ✘ | ✔︎ | ✔︎
 | React-spring   | ✔︎ | ✔︎ | ✔︎ | ✔︎
 
 React-spring inherits react-motions api (and simplifies it), has lots of primitives (Springs, Trails, Transitions, Reveals, Parallax), can interpolate mostly everything (colors, gradients, percentages, degrees, svg-paths, arrays, etc.) and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
