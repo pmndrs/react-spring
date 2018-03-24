@@ -4,23 +4,15 @@
 
 # Why 🤔
 
-React-spring is a cooked down fork of [Facebooks animated](http://animatedjs.github.io/interactive-docs/). It is trying to bridge it with Chenglou's [React-motion](https://github.com/chenglou/react-motion) because both have their pros and cons but could definitively benefit from one another:
+React-spring is a cooked down fork of [Facebooks animated](https://github.com/animatedjs/animated). It is trying to bridge it with Chenglou's [React-motion](https://github.com/chenglou/react-motion) because both have their pros and cons and could definitively benefit from one another:
 
-#### React-motion
+|                | Declarative | Primitives | Interpolations     | Performance | 
+|----------------|-------------|----------------|----------------|-------------|
+| React-motion   | ✅ | ✅ | ❌ | ❌
+| Animated       | ❌ | ❌ | ✅ | ✅
+| React-spring   | ✅ | ✅ | ✅ | ✅
 
-*   [x] Declarative api that doesn't involve manual management of animations
-*   [x] Covers most of the essentials (springs, lists, transitions, reveals, staggered animations)
-*   [ ] Performance can suffer because components are re-rendered every frame with fresh props
-*   [ ] Can't interpolate between raw state as it doesn't know colors, paths, gradients, etc.
-
-#### Animated
-
-*   [x] Interpolates most web privimites, units and patterns
-*   [x] Efficiently writes to the dom directly instead of re-rendering components frame by frame
-*   [ ] Managing and orchestrating handles (starting/stopping/waiting/cleaning) can become a real chore
-*   [ ] Missing essential prototypes like mount/unmount transitions
-
-As you see, they're polar opposites. React-spring inherits React-motions api, but simplified, while adding more primitives and being able to interpolate. It also has support for native rendering, where components animate directly in the dom.
+React-spring inherits react-motions api (and simplifies it), has lots of primitives (springs, trails, transitions, reveals, parallax), can interpolate mostly everything (colors, gradients, percentages, degrees, svg-paths, arrays, etc.) and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
 # Overview 🔭
 
@@ -100,7 +92,7 @@ Given a single child instead of a list you can reveal components with it.
 </Parallax>
 ```
 
-#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Animated graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Animated todoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag n drop](https://codesandbox.io/embed/l9zqz0m18z)
+#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Animated graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Button slider](https://codesandbox.io/embed/jzn14k0ppy) | [Animated todoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag n drop](https://codesandbox.io/embed/l9zqz0m18z)
 
 # API overview 📖
 
@@ -112,12 +104,14 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
 
 ```jsx
 <spring to={{
+    scale: toggle ? 1 : 2,
     start: toggle ? '#abc' : 'rgb(10,20,30)',
     end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
     stop: toggle ? '0%' : '50%',
-    scale: toggle ? 1 : 2,
     rotate: toggle ? '0deg' : '45deg',
-    path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z' }}>
+    path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z',
+    vector: toggle ? [1,2,50,100] : [20,30,1,-100],
+}}>
 ```
 
 ### Render props
@@ -125,17 +119,17 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
 Don't like the way render props wrap your code?
 
 ```jsx
-const Header = ({ children, ...styles }) => (
+const Header = ({ children, bold, ...styles }) => (
     <h1 style={styles}>
         {children}
     </h1>
 )
 
-const App = ({ color, children }) => (
-    <Spring to={{ color }} render={Header}>
-        {children}
-    </Spring>
-)
+
+<Spring to={{ color: 'fuchsia' }} render={Header}>
+    {children}
+</Spring>
+
 ```
 
 Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, including `children` if you use `render` to refer to the render-child.
@@ -146,7 +140,7 @@ By default we'll render the receiving component every frame as it gives you more
 
 Just be aware of the following conditions:
 
-1.  It only animates standard styles and element props, the values you receive *are opaque objects, not regular values*
+1.  It only animates element styles and attributes, the values you receive *are opaque objects, not regular values*
 2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
 3.  If you need to interpolate styles use the `template` string literal
 
