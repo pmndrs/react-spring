@@ -26,7 +26,6 @@ class AnimatedInterpolation extends AnimatedWithChildren {
                 }
             })
         }
-
         const id = guid()
         this._listeners[id] = callback
         return id
@@ -46,7 +45,6 @@ class AnimatedInterpolation extends AnimatedWithChildren {
 
     __detach() {
         this._parent.__removeChild(this)
-
         this._parentListener = this._parent.removeListener(this._parentListener)
     }
 }

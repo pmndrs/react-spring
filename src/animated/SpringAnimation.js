@@ -5,10 +5,7 @@ import CancelAnimationFrame from './injectable/CancelAnimationFrame'
 import SpringConfig from './SpringConfig'
 
 function withDefault(value, defaultValue) {
-    if (value === undefined || value === null) {
-        return defaultValue
-    }
-    return value
+    return (value === undefined || value === null) ? defaultValue : value
 }
 
 class SpringAnimation extends Animation {
@@ -21,13 +18,7 @@ class SpringAnimation extends Animation {
         this._lastVelocity = withDefault(config.velocity, 0)
         this._toValue = config.toValue
         this.__isInteraction = config.isInteraction !== undefined ? config.isInteraction : true
-        var springConfig
-
-        springConfig = SpringConfig.fromOrigamiTensionAndFriction(
-            withDefault(config.tension, 40),
-            withDefault(config.friction, 7),
-        )
-
+        var springConfig = SpringConfig.fromOrigamiTensionAndFriction(withDefault(config.tension, 40), withDefault(config.friction, 7))
         this._tension = springConfig.tension
         this._friction = springConfig.friction
     }
@@ -47,47 +38,42 @@ class SpringAnimation extends Animation {
             this._lastTime = internalState.lastTime
         }
 
-        if (this._initialVelocity !== undefined && this._initialVelocity !== null) {
-            this._lastVelocity = this._initialVelocity
-        }
+        if (this._initialVelocity !== undefined && this._initialVelocity !== null) this._lastVelocity = this._initialVelocity
 
         this.onUpdate()
     }
 
     getInternalState() {
-        return {
-            lastPosition: this._lastPosition,
-            lastVelocity: this._lastVelocity,
-            lastTime: this._lastTime,
-        }
+        return { lastPosition: this._lastPosition, lastVelocity: this._lastVelocity, lastTime: this._lastTime }
     }
 
     onUpdate() {
         var position = this._lastPosition
         var velocity = this._lastVelocity
         var tempPosition = this._lastPosition
-        var tempVelocity = this._lastVelocity // If for some reason we lost a lot of frames (e.g. process large payload or
+        var tempVelocity = this._lastVelocity
+
+        // If for some reason we lost a lot of frames (e.g. process large payload or
         // stopped in the debugger), we only advance by 4 frames worth of
         // computation and will continue on the next frame. It's better to have it
         // running at faster speed than jumping to the end.
-
         var MAX_STEPS = 64
         var now = Date.now()
 
-        if (now > this._lastTime + MAX_STEPS) {
-            now = this._lastTime + MAX_STEPS
-        } // We are using a fixed time step and a maximum number of iterations.
+        if (now > this._lastTime + MAX_STEPS) now = this._lastTime + MAX_STEPS
+
+        // We are using a fixed time step and a maximum number of iterations.
         // The following post provides a lot of thoughts into how to build this
         // loop: http://gafferongames.com/game-physics/fix-your-timestep/
-
         var TIMESTEP_MSEC = 1
         var numSteps = Math.floor((now - this._lastTime) / TIMESTEP_MSEC)
 
         for (var i = 0; i < numSteps; ++i) {
             // Velocity is based on seconds instead of milliseconds
-            var step = TIMESTEP_MSEC / 1000 // This is using RK4. A good blog post to understand how it works:
+            var step = TIMESTEP_MSEC / 1000
+            
+            // This is using RK4. A good blog post to understand how it works:
             // http://gafferongames.com/game-physics/integration-basics/
-
             var aVelocity = velocity
             var aAcceleration = this._tension * (this._toValue - tempPosition) - this._friction * tempVelocity
             var tempPosition = position + aVelocity * step / 2
@@ -116,13 +102,11 @@ class SpringAnimation extends Animation {
 
         this._onUpdate(position)
 
-        if (!this.__active) {
-            // a listener might have stopped us in _onUpdate
-            return
-        } // Conditions for stopping the spring animation
+        // a listener might have stopped us in _onUpdate
+        if (!this.__active) return
 
+        // Conditions for stopping the spring animation
         var isOvershooting = false
-
         if (this._overshootClamping && this._tension !== 0) {
             if (this._startPosition < this._toValue) {
                 isOvershooting = position > this._toValue
@@ -132,36 +116,21 @@ class SpringAnimation extends Animation {
         }
 
         var isVelocity = Math.abs(velocity) <= this._restSpeedThreshold
-
         var isDisplacement = true
-
-        if (this._tension !== 0) {
-            isDisplacement = Math.abs(this._toValue - position) <= this._restDisplacementThreshold
-        }
-
+        if (this._tension !== 0) isDisplacement = Math.abs(this._toValue - position) <= this._restDisplacementThreshold
         if (isOvershooting || (isVelocity && isDisplacement)) {
-            if (this._tension !== 0) {
-                // Ensure that we end up with a round value
-                this._onUpdate(this._toValue)
-            }
-
-            this.__debouncedOnEnd({
-                finished: true,
-            })
-
+            // Ensure that we end up with a round value
+            if (this._tension !== 0) this._onUpdate(this._toValue)
+            this.__debouncedOnEnd({ finished: true })
             return
         }
-
         this._animationFrame = RequestAnimationFrame.current(this.onUpdate.bind(this))
     }
 
     stop() {
         this.__active = false
         CancelAnimationFrame.current(this._animationFrame)
-
-        this.__debouncedOnEnd({
-            finished: false,
-        })
+        this.__debouncedOnEnd({ finished: false })
     }
 }
 

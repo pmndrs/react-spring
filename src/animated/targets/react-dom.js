@@ -84,45 +84,34 @@ function dangerousStyleValue(name, value, isCustomProperty) {
     // trust URLs moving forward. See #2115901
     var isEmpty = value == null || typeof value === 'boolean' || value === ''
 
-    if (isEmpty) {
-        return ''
-    }
+    if (isEmpty) return ''
 
     if (
         !isCustomProperty &&
         typeof value === 'number' &&
         value !== 0 &&
         !(isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name])
-    ) {
-        return value + 'px' // Presumes implicit 'px' suffix for unitless numbers
-    }
-
+    ) return value + 'px' 
+    
+    // Presumes implicit 'px' suffix for unitless numbers
     return ('' + value).trim()
 }
 
 function setValueForStyles(node, styles) {
-    var style = node.style
-
-    for (var styleName in styles) {
+    let style = node.style
+    for (let styleName in styles) {
         if (!styles.hasOwnProperty(styleName)) continue
-
         var isCustomProperty = styleName.indexOf('--') === 0
         var styleValue = dangerousStyleValue(styleName, styles[styleName], isCustomProperty)
-
-        if (styleName === 'float') {
-            styleName = 'cssFloat'
-        }
-
-        if (isCustomProperty) {
-            style.setProperty(styleName, styleValue)
-        } else {
-            style[styleName] = styleValue
-        }
+        if (styleName === 'float') styleName = 'cssFloat'
+        if (isCustomProperty) style.setProperty(styleName, styleValue)
+        else style[styleName] = styleValue
     }
 }
 
 function setValueForAttributes(node, props) {
-    var attributes = node.attributes, attribute
+    let attributes = node.attributes,
+        attribute
     for (let name in props) {
         if (name !== 'style') {
             attribute = attributes.getNamedItem(name)
@@ -137,9 +126,7 @@ function ApplyAnimatedValues(instance, props) {
     } else if (instance.nodeType && instance.setAttribute !== undefined) {
         setValueForStyles(instance, props.style)
         setValueForAttributes(instance, props)
-    } else {
-        return false
-    }
+    } else return false
 }
 
 Animated.inject.ApplyAnimatedValues(ApplyAnimatedValues, mapStyle)

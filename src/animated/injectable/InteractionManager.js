@@ -3,7 +3,6 @@ const InteractionManager = {
         createInteractionHandle() {},
         clearInteractionHandle() {},
     },
-
     inject(manager) {
         InteractionManager.current = manager
     },

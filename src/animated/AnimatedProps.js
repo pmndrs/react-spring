@@ -22,7 +22,6 @@ class AnimatedProps extends Animated {
             if (value instanceof Animated) props[key] = value.__getValue()
             else props[key] = value
         }
-
         return props
     }
 

@@ -7,10 +7,7 @@ function frictionFromOrigamiValue(oValue) {
 }
 
 function fromOrigamiTensionAndFriction(tension, friction) {
-    return {
-        tension: tensionFromOrigamiValue(tension),
-        friction: frictionFromOrigamiValue(friction),
-    }
+    return { tension: tensionFromOrigamiValue(tension), friction: frictionFromOrigamiValue(friction) }
 }
 
 export default {

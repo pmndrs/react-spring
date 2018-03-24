@@ -30,9 +30,7 @@ var spring = function(value, config) {
                 var singleConfig = config
                 singleValue.stopTracking()
                 if (config.toValue instanceof Animated) {
-                    singleValue.track(
-                        new AnimatedTracking(singleValue, config.toValue, SpringAnimation, singleConfig, callback),
-                    )
+                    singleValue.track(new AnimatedTracking(singleValue, config.toValue, SpringAnimation, singleConfig, callback))
                 } else {
                     singleValue.animate(new SpringAnimation(singleConfig), callback)
                 }

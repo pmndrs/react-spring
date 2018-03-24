@@ -1,11 +1,11 @@
 import normalizeColor from 'normalize-css-color'
 
 var linear = t => t
+
 /**
  * Very handy helper to map input ranges to output ranges with an easing
  * function and custom behavior outside of the ranges.
  */
-
 class Interpolation {
     static create(config) {
         if (config.outputRange && typeof config.outputRange[0] === 'string') {
@@ -47,8 +47,9 @@ class Interpolation {
 }
 
 function interpolate(input, inputMin, inputMax, outputMin, outputMax, easing, extrapolateLeft, extrapolateRight) {
-    var result = input // Extrapolate
-
+    var result = input
+    
+    // Extrapolate
     if (result < inputMin) {
         if (extrapolateLeft === 'identity') {
             return result
@@ -77,7 +78,6 @@ function interpolate(input, inputMin, inputMax, outputMin, outputMax, easing, ex
         if (input <= inputMin) {
             return outputMin
         }
-
         return outputMax
     } // Input Range
 
@@ -105,9 +105,7 @@ function interpolate(input, inputMin, inputMax, outputMin, outputMax, easing, ex
 function colorToRgba(input) {
     var int32Color = normalizeColor(input)
 
-    if (int32Color === null) {
-        return input
-    }
+    if (int32Color === null) return input
 
     int32Color = int32Color || 0 // $FlowIssue
 
@@ -119,6 +117,7 @@ function colorToRgba(input) {
 }
 
 var stringShapeRegex = /[0-9\.-]+/g
+
 /**
  * Supports string shapes by extracting numbers so new values can be computed,
  * and recombines those values into new strings of the same shape.  Supports
@@ -127,10 +126,10 @@ var stringShapeRegex = /[0-9\.-]+/g
  *   rgba(123, 42, 99, 0.36) // colors
  *   -45deg                  // values with units
  */
-
 function createInterpolationFromStringOutputRange(config) {
     var outputRange = config.outputRange
     outputRange = outputRange.map(colorToRgba)
+
     // ->
     // [
     //   [0, 50],
@@ -142,7 +141,6 @@ function createInterpolationFromStringOutputRange(config) {
     /* $FlowFixMe(>=0.18.0): `outputRange[0].match()` can return `null`. Need to
    * guard against this possibility.
    */
-
     var outputRanges = outputRange[0].match(stringShapeRegex).map(() => [])
     outputRange.forEach(value => {
         /* $FlowFixMe(>=0.18.0): `value.match()` can return `null`. Need to guard
@@ -152,18 +150,16 @@ function createInterpolationFromStringOutputRange(config) {
             outputRanges[i].push(+number)
         })
     })
+
     /* $FlowFixMe(>=0.18.0): `outputRange[0].match()` can return `null`. Need to
-   * guard against this possibility.
-   */
-
+     * guard against this possibility.
+     */
     var interpolations = outputRange[0].match(stringShapeRegex).map((value, i) => {
-        return Interpolation.create({
-            ...config,
-            outputRange: outputRanges[i],
-        })
-    }) // rgba requires that the r,g,b are integers.... so we want to round them, but we *dont* want to
-    // round the opacity (4th column).
+        return Interpolation.create({ ...config, outputRange: outputRanges[i] })
+    })
 
+    // rgba requires that the r,g,b are integers.... so we want to round them, but we *dont* want to
+    // round the opacity (4th column).
     const shouldRound = /^rgb/.test(outputRange[0])
     return input => {
         var i = 0 // 'rgba(0, 100, 200, 0)'
@@ -177,9 +173,7 @@ function createInterpolationFromStringOutputRange(config) {
 }
 
 function findRange(input, inputRange) {
-    for (var i = 1; i < inputRange.length - 1; ++i) {
-        if (inputRange[i] >= input) break
-    }
+    for (var i = 1; i < inputRange.length - 1; ++i) if (inputRange[i] >= input) break
     return i - 1
 }
 
