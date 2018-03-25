@@ -30,7 +30,7 @@ import guid from './guid'
 
 function findAnimatedStyles(node, styles) {
     if (typeof node.update === 'function') styles.add(node)
-    else node.__getChildren().forEach(findAnimatedStyles, styles)
+    else node.__getChildren().forEach(child => findAnimatedStyles(child, styles))
 }
 
 function _flush(rootNode) {
