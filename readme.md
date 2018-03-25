@@ -120,18 +120,18 @@ Don't like the way render props wrap your code?
 ```jsx
 const Header = ({ children, bold, ...styles }) => (
     <h1 style={styles}>
-        {children}
+        {bold ? <b>{children}</b> : children}
     </h1>
 )
 
 
-<Spring to={{ color: 'fuchsia' }} render={Header}>
+<Spring to={{ color: 'fuchsia' }} render={Header} bold>
     {children}
 </Spring>
 
 ```
 
-Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, including `children` if you use `render` to refer to the render-child.
+Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, in this eample `bold`, but it also includes `children` if you use `render` to refer to the render-child.
 
 ### Native rendering ([Demo](https://codesandbox.io/embed/882njxpz29))
 
