@@ -91,7 +91,7 @@ Given a single child instead of a list you can reveal components with it.
 </Parallax>
 ```
 
-#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Button slider](https://codesandbox.io/embed/jzn14k0ppy) | [Router transitions](https://codesandbox.io/embed/xo0lrqw2nz) | [Animated graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Animated todoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag n drop](https://codesandbox.io/embed/l9zqz0m18z)
+#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Gestures](https://codesandbox.io/embed/jzn14k0ppy) | [Routing](https://codesandbox.io/embed/xo0lrqw2nz) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag/n/drop](https://codesandbox.io/embed/l9zqz0m18z)
 
 # API overview 📖
 
@@ -120,18 +120,18 @@ Don't like the way render props wrap your code?
 ```jsx
 const Header = ({ children, bold, ...styles }) => (
     <h1 style={styles}>
-        {children}
+        {bold ? <b>{children}</b> : children}
     </h1>
 )
 
 
-<Spring to={{ color: 'fuchsia' }} render={Header}>
-    {children}
+<Spring render={Header} to={{ color: 'fuchsia' }} bold>
+    hello there
 </Spring>
 
 ```
 
-Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, including `children` if you use `render` to refer to the render-child.
+Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, in this example `bold`, but it also includes `children` if you use `render` to refer to the render-child.
 
 ### Native rendering ([Demo](https://codesandbox.io/embed/882njxpz29))
 
