@@ -91,7 +91,7 @@ Given a single child instead of a list you can reveal components with it.
 </Parallax>
 ```
 
-#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Button slider](https://codesandbox.io/embed/jzn14k0ppy) | [Router transitions](https://codesandbox.io/embed/xo0lrqw2nz) | [Animated graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Animated todoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag n drop](https://codesandbox.io/embed/l9zqz0m18z)
+#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Gestures](https://codesandbox.io/embed/jzn14k0ppy) | [Route transitions](https://codesandbox.io/embed/xo0lrqw2nz) | [Animated graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Animated todoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag n drop](https://codesandbox.io/embed/l9zqz0m18z)
 
 # API overview 📖
 
