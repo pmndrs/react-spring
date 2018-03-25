@@ -10,6 +10,7 @@ import { config } from 'react-spring'
     gentle: { tension: 120, friction: 14 },
     wobbly: { tension: 180, friction: 12 },
     stiff: { tension: 210, friction: 20 },
+    slow: { tension: 280, friction: 60 },
 */
 ```
 
@@ -61,6 +62,7 @@ class Transition extends React.PureComponent {
         // Unmpount styles
         leave: PropTypes.object,
         // A collectiomn of unique keys that must match with the childrens order
+        // Can be omitted if children/render aren't an array
         keys: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
             PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -103,9 +105,12 @@ import { Parallax } from 'react-spring'
 ```jsx
 class Parallax extends React.PureComponent {
     static propTypes = {
+        // Total (inner) height/width of the scroll container
         pages: PropTypes.number.isRequired,
         config: PropTypes.object,
+        // Has a scrollbar or doesn't ...
         scrolling: PropTypes.bool,
+        // Scroll horizontally or vertically
         horizontal: PropTypes.bool,
     }
     static defaultProps = {
@@ -116,8 +121,11 @@ class Parallax extends React.PureComponent {
 
     static Layer = class extends React.PureComponent {
         static propTypes = {
+            // Size of a page, by default 1
             factor: PropTypes.number,
+            // Where the layer will be projected to (0=start, 1=first page, ...)
             offset: PropTypes.number,
+            // Speed (and direction) it scrolls there, can be positive or negative
             speed: PropTypes.number,
         }
         static defaultProps = {
