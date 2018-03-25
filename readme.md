@@ -125,7 +125,7 @@ const Header = ({ children, bold, ...styles }) => (
 )
 
 
-<Spring to={{ color: 'fuchsia' }} render={Header} bold>
+<Spring render={Header} to={{ color: 'fuchsia' }} bold>
     hello there
 </Spring>
 
