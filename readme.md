@@ -126,12 +126,12 @@ const Header = ({ children, bold, ...styles }) => (
 
 
 <Spring to={{ color: 'fuchsia' }} render={Header} bold>
-    {children}
+    hello there
 </Spring>
 
 ```
 
-Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, in this eample `bold`, but it also includes `children` if you use `render` to refer to the render-child.
+Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, in this example `bold`, but it also includes `children` if you use `render` to refer to the render-child.
 
 ### Native rendering ([Demo](https://codesandbox.io/embed/882njxpz29))
 
