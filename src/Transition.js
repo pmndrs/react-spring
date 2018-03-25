@@ -24,8 +24,10 @@ export default class Transition extends React.PureComponent {
             super()
             let { children, render, keys, from, enter, leave } = props
             children = render || children
-            if (!Array.isArray(children)) children = [children]
-            if (!Array.isArray(keys)) keys = [keys]
+            if (!Array.isArray(children)) {
+                children = [children]
+                keys = keys ? [keys] : [children]
+            }
             this.state = {
                 transitionsKeys: keys,
                 transitions: children.map((child, i) => ({ children: child, key: keys[i], to: enter, from })),
@@ -36,8 +38,10 @@ export default class Transition extends React.PureComponent {
             let { transitions, transitionsKeys } = this.state
             let { children, render, keys, from, enter, leave } = props
             children = render || children
-            if (!Array.isArray(children)) children = [children]
-            if (!Array.isArray(keys)) keys = [keys]
+            if (!Array.isArray(children)) {
+                children = [children]
+                keys = keys ? [keys] : [children]
+            }
 
             // Compare next keys with current keys
             let nextSet = new Set(keys)

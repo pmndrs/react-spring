@@ -63,7 +63,6 @@ Given a single child instead of a list you can reveal components with it.
 
 ```jsx
 <Transition
-    keys={toggle ? 'A' : 'B'} 
     from={{ opacity: 0 }} 
     enter={{ opacity: 1 }} 
     leave={{ opacity: 0 }}>
@@ -92,7 +91,7 @@ Given a single child instead of a list you can reveal components with it.
 </Parallax>
 ```
 
-#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Animated graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Button slider](https://codesandbox.io/embed/jzn14k0ppy) | [Animated todoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag n drop](https://codesandbox.io/embed/l9zqz0m18z)
+#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Button slider](https://codesandbox.io/embed/jzn14k0ppy) | [Router transitions](https://codesandbox.io/embed/xo0lrqw2nz) | [Animated graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Animated todoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag n drop](https://codesandbox.io/embed/l9zqz0m18z)
 
 # API overview 📖
 
@@ -174,11 +173,10 @@ import { Transition } from 'react-spring'
 </ul>
 ```
 
-You can use this prototype for two-state reveals, simply render a single child that you can switch out for another.
+You can use this prototype for two-state reveals, simply render a single child that you can switch out for another. You don't have to pass keys for this one.
 
 ```jsx
 <Transition
-    keys={toggle ? 'ComponentA' : 'ComponentB'} 
     from={{ opacity: 0 }} 
     enter={{ opacity: 1 }} 
     leave={{ opacity: 0 }}>
