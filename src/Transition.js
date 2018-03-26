@@ -26,7 +26,7 @@ export default class Transition extends React.PureComponent {
             children = render || children
             if (!Array.isArray(children)) {
                 children = [children]
-                keys = keys ? [keys] : [children]
+                keys = keys ? [keys] : children
             }
             this.state = {
                 transitionsKeys: keys,
@@ -40,7 +40,7 @@ export default class Transition extends React.PureComponent {
             children = render || children
             if (!Array.isArray(children)) {
                 children = [children]
-                keys = keys ? [keys] : [children]
+                keys = keys ? [keys] : children
             }
 
             // Compare next keys with current keys
