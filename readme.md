@@ -4,7 +4,7 @@
 
 # Why 🤔
 
-react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion), because both have their pros and cons and could definitively benefit from one another:
+react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are smilar in that they are spring-physics based, they have their pros and cons and could definitively benefit from one another:
 
 |                | Declarative | Primitives | Interpolations     | Performance | 
 |----------------|-------------|----------------|----------------|-------------|
