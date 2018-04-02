@@ -1,6 +1,23 @@
 [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring)
-
+# Installation 🔧
     npm install react-spring
+
+# Table of Contents 🔗
+* [Installation](#installation-)
+* [Why](#why-)
+* [Overview](#overview-)
+    * [Springs](#springs-demo)
+    * [Mount/unmount Transitions](#mountunmount-transitions-demo)
+    * [2-state Reveals](#2-state-reveals-demo) 
+    * [Trails/Staggered animations](#trails-and-staggered-animations-demo) 
+    * [Parallax and page instructions](#parallax-and-page-transitions-demo) 
+* [API Overview](#api-overview-)
+    * [Springs and Interpolation](#springs-and-interpolation)
+    * [Render Props](#render-props)
+    * [Native rendering](#native-rendering-demo) 
+    * [Transitions](#transitions) 
+    * [Parallax and page transitions](#parallax-and-page-transitions) 
+* [License](#license-)
 
 # Why 🤔
 
@@ -217,3 +234,6 @@ import { Parallax } from 'react-spring'
 ---
 
 [API](https://github.com/drcmda/react-spring/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md)
+
+# License ⚖
+### [MIT](https://github.com/drcmda/react-spring/blob/master/LICENSE)
