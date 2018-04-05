@@ -1,9 +1,9 @@
 [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring)
 
-# Installation >_
-    npm install react-spring
+# Installation 🖥
+    npm install react-spring
 
-# Table of Contents 🔗
+# Table of Contents 👇
 * [Installation](#installation-)
 * [Why](#why-)
 * [Overview](#overview-)
@@ -227,7 +227,8 @@ import { Parallax } from 'react-spring'
 </Parallax>
 ```
 
----
+# Links 🔗
+
 
 [API](https://github.com/drcmda/react-spring/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md)
 
