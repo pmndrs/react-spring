@@ -1,16 +1,12 @@
 [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring)
-# Installation 🔧
+
+# Installation >_
     npm install react-spring
 
 # Table of Contents 🔗
 * [Installation](#installation-)
 * [Why](#why-)
 * [Overview](#overview-)
-    * [Springs](#springs-demo)
-    * [Mount/unmount Transitions](#mountunmount-transitions-demo)
-    * [2-state Reveals](#2-state-reveals-demo) 
-    * [Trails/Staggered animations](#trails-and-staggered-animations-demo) 
-    * [Parallax and page instructions](#parallax-and-page-transitions-demo) 
 * [API Overview](#api-overview-)
     * [Springs and Interpolation](#springs-and-interpolation)
     * [Render Props](#render-props)
