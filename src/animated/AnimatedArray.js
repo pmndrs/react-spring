@@ -1,13 +1,11 @@
 import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 import AnimatedWithChildren from './AnimatedWithChildren'
-import guid from './guid'
 
 export default class extends AnimatedWithChildren {
     constructor(array) {
         super()
         this._values = array.map(n => new AnimatedValue(n))
-        this._listeners = {}
     }
 
     setValue(values) {
@@ -29,18 +27,6 @@ export default class extends AnimatedWithChildren {
     stopAnimation(callback) {
         this._values.forEach(v => v.stopAnimation())
         callback && callback(this.__getValue())
-    }
-
-    addListener(callback) {
-        const id = guid()
-        const jointCallback = ({ value: number }) => callback(this.__getValue())
-        this._listeners[id] = this._values.map(v => v.addListener(jointCallback))
-        return id
-    }
-
-    removeListener(id) {
-        this._values.forEach(v => v.removeListener(id))
-        delete this._listeners[id]
     }
 
     __attach() {

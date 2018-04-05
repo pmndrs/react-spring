@@ -3,7 +3,6 @@ import InteractionManager from './injectable/InteractionManager'
 import AnimatedInterpolation from './AnimatedInterpolation'
 import Interpolation from './Interpolation'
 import Animation from './Animation'
-import guid from './guid'
 
 /**
  * Animated works by building a directed acyclic graph of dependencies
@@ -45,7 +44,6 @@ export default class extends AnimatedWithChildren {
         this._value = value
         this._offset = 0
         this._animation = null
-        this._listeners = {}
         this._animatedStyles = new Set()
     }
 
@@ -65,8 +63,6 @@ export default class extends AnimatedWithChildren {
     _updateValue(value) {
         this._value = value
         this._flush()
-        for (var key in this._listeners)
-            this._listeners[key]({ value: this.__getValue() })
     }
 
     /**
@@ -101,25 +97,6 @@ export default class extends AnimatedWithChildren {
     }
 
     /**
-     * Adds an asynchronous listener to the value so you can observe updates from
-     * animations.  This is useful because there is no way to
-     * synchronously read the value because it might be driven natively.
-     */
-    addListener(callback) {
-        var id = guid()
-        this._listeners[id] = callback
-        return id
-    }
-
-    removeListener(id) {
-        delete this._listeners[id]
-    }
-
-    removeAllListeners() {
-        this._listeners = {}
-    }
-
-    /**
      * Stops any running animation or tracking.  `callback` is invoked with the
      * final value after stopping the animation, which is useful for updating
      * state to match the animation position with layout.
@@ -136,7 +113,7 @@ export default class extends AnimatedWithChildren {
      * 0-10.
      */
     interpolate(config) {
-        return new AnimatedInterpolation(this, Interpolation.create(config))
+        return new AnimatedInterpolation(this, config)
     }
 
     /**

@@ -1,46 +1,29 @@
 import Animated from './Animated'
 import AnimatedWithChildren from './AnimatedWithChildren'
 import Interpolation from './Interpolation'
-import guid from './guid'
 
 export default class AnimatedInterpolation extends AnimatedWithChildren {
-    constructor(parent, interpolation) {
+    constructor(parents, config) {
         super()
-        this._parent = parent
-        this._interpolation = interpolation
-        this._listeners = {}
+        this._parents = Array.isArray(parents) ? parents : [parents]
+        this._interpolation = Interpolation.create(config)
     }
 
     __getValue() {
-        const parentValue = this._parent.__getValue()
-        return this._interpolation(parentValue)
-    }
-
-    addListener(callback) {
-        if (!this._parentListener) {
-            this._parentListener = this._parent.addListener(() => {
-                for (const key in this._listeners) this._listeners[key]({ value: this.__getValue() })
-            })
-        }
-        const id = guid()
-        this._listeners[id] = callback
-        return id
-    }
-
-    removeListener(id) {
-        delete this._listeners[id]
-    }
-
-    interpolate(config) {
-        return new AnimatedInterpolation(this, Interpolation.create(config))
+        return this._interpolation(...this._parents.map(value => value.__getValue()))
     }
 
     __attach() {
-        this._parent.__addChild(this)
+        for (let i = 0; i < this._parents.length; ++i)
+            if (this._parents[i] instanceof Animated) this._parents[i].__addChild(this)
     }
 
     __detach() {
-        this._parent.__removeChild(this)
-        this._parentListener = this._parent.removeListener(this._parentListener)
+        for (let i = 0; i < this._parents.length; ++i)
+            if (this._parents[i] instanceof Animated) this._parents[i].__removeChild(this)
+    }
+
+    interpolate(config) {
+        return new AnimatedInterpolation(this, config)
     }
 }

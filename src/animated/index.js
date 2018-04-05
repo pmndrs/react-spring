@@ -3,7 +3,7 @@ import AnimatedValue from './AnimatedValue'
 import AnimatedArray from './AnimatedArray'
 import Animation from './Animation'
 import AnimatedTemplate from './AnimatedTemplate'
-import AnimatedInterpolate from './AnimatedInterpolate'
+import AnimatedInterpolation from './AnimatedInterpolation'
 import AnimatedTracking from './AnimatedTracking'
 import SpringAnimation from './SpringAnimation'
 import createAnimatedComponent from './createAnimatedComponent'
@@ -85,8 +85,8 @@ const exports = {
     template: function template(strings, ...values) {
         return new AnimatedTemplate(strings, values)
     },
-    interpolate: function(values, callback) {
-        return new AnimatedInterpolate(values, callback)
+    interpolate: function(parents, config) {
+        return new AnimatedInterpolation(values, config)
     },
     createAnimatedComponent,
     inject: {

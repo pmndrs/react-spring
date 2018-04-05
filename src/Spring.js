@@ -2,6 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Animated from './animated/targets/react-dom'
 
+const animated = Animated.elements
+const template = Animated.template
+const interpolate = Animated.interpolate
 const config = {
     default: { tension: 170, friction: 26 },
     gentle: { tension: 120, friction: 14 },
@@ -10,7 +13,7 @@ const config = {
     slow: { tension: 280, friction: 60 },
 }
 
-export { config }
+export { config, template, animated, interpolate }
 
 export default class Spring extends React.PureComponent {
     static propTypes = {

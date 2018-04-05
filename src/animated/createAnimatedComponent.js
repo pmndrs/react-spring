@@ -7,21 +7,8 @@ const refName = 'node'
 export default function(Component) {
     return class AnimatedComponent extends React.Component {
         static propTypes = {
-            style: function(props, propName, componentName) {
+            style(props, propName, componentName) {
                 if (!Component.propTypes) return
-                // TODO(lmr): We will probably bring this back in at some point, but maybe
-                // just a subset of the proptypes... We should have a common set of props
-                // that will be used for all platforms.
-                //
-                // for (var key in ViewStylePropTypes) {
-                //   if (!Component.propTypes[key] && props[key] !== undefined) {
-                //     console.error(
-                //       'You are setting the style `{ ' + key + ': ... }` as a prop. You ' +
-                //       'should nest it in a style object. ' +
-                //       'E.g. `{ style: { ' + key + ': ... } }`'
-                //     );
-                //   }
-                // }
             },
         }
 
