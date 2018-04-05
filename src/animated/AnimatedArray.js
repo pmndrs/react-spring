@@ -3,7 +3,7 @@ import AnimatedValue from './AnimatedValue'
 import AnimatedWithChildren from './AnimatedWithChildren'
 import guid from './guid'
 
-class AnimatedArray extends AnimatedWithChildren {
+export default class extends AnimatedWithChildren {
     constructor(array) {
         super()
         this._values = array.map(n => new AnimatedValue(n))
@@ -53,5 +53,3 @@ class AnimatedArray extends AnimatedWithChildren {
             if (this._values[i] instanceof Animated) this._values[i].__removeChild(this)
     }
 }
-
-export default AnimatedArray

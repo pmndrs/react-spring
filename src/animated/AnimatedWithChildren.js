@@ -1,6 +1,6 @@
 import Animated from './Animated'
 
-class AnimatedWithChildren extends Animated {
+export default class extends Animated {
     constructor() {
         super()
         this._children = []
@@ -25,5 +25,3 @@ class AnimatedWithChildren extends Animated {
         return this._children
     }
 }
-
-export default AnimatedWithChildren

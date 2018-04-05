@@ -33,25 +33,20 @@ function findAnimatedStyles(node, styles) {
     else node.__getChildren().forEach(child => findAnimatedStyles(child, styles))
 }
 
-function _flush(rootNode) {
-    var animatedStyles = new Set()
-    findAnimatedStyles(rootNode, animatedStyles)
-    animatedStyles.forEach(animatedStyle => animatedStyle.update())
-}
-
 /**
  * Standard value for driving animations.  One `Animated.Value` can drive
  * multiple properties in a synchronized fashion, but can only be driven by one
  * mechanism at a time.  Using a new mechanism (e.g. starting a new animation,
  * or calling `setValue`) will stop any previous ones.
  */
-class AnimatedValue extends AnimatedWithChildren {
+export default class extends AnimatedWithChildren {
     constructor(value) {
         super()
         this._value = value
         this._offset = 0
         this._animation = null
         this._listeners = {}
+        this._animatedStyles = new Set()
     }
 
     __detach() {
@@ -60,6 +55,18 @@ class AnimatedValue extends AnimatedWithChildren {
 
     __getValue() {
         return this._value + this._offset
+    }
+
+    _flush() {
+        if (this._animatedStyles.size === 0) findAnimatedStyles(this, this._animatedStyles)
+        this._animatedStyles.forEach(animatedStyle => animatedStyle.update())
+    }
+
+    _updateValue(value) {
+        this._value = value
+        this._flush()
+        for (var key in this._listeners)
+            this._listeners[key]({ value: this.__getValue() })
     }
 
     /**
@@ -71,6 +78,7 @@ class AnimatedValue extends AnimatedWithChildren {
             this._animation.stop()
             this._animation = null
         }
+        this._animatedStyles.clear()
         this._updateValue(value)
     }
 
@@ -141,6 +149,7 @@ class AnimatedValue extends AnimatedWithChildren {
         var previousAnimation = this._animation
         this._animation && this._animation.stop()
         this._animation = animation
+        this._animatedStyles.clear()
         animation.start(
             this._value,
             value => this._updateValue(value),
@@ -168,13 +177,4 @@ class AnimatedValue extends AnimatedWithChildren {
         this.stopTracking()
         this._tracking = tracking
     }
-
-    _updateValue(value) {
-        this._value = value
-        _flush(this)
-        for (var key in this._listeners)
-            this._listeners[key]({ value: this.__getValue() })
-    }
 }
-
-export default AnimatedValue

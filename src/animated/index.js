@@ -3,6 +3,7 @@ import AnimatedValue from './AnimatedValue'
 import AnimatedArray from './AnimatedArray'
 import Animation from './Animation'
 import AnimatedTemplate from './AnimatedTemplate'
+import AnimatedInterpolate from './AnimatedInterpolate'
 import AnimatedTracking from './AnimatedTracking'
 import SpringAnimation from './SpringAnimation'
 import createAnimatedComponent from './createAnimatedComponent'
@@ -16,7 +17,7 @@ import AnimatedProps from './AnimatedProps'
 const maybeVectorAnim = (array, { tension, friction, toValue }, anim) => {
     // { tension, friction, toValue: [...]}
     if (array instanceof AnimatedArray)
-        return parallel(array.values.map((v, i) => anim(v, { tension, friction, toValue: toValue[i] })), {
+        return parallel(array._values.map((v, i) => anim(v, { tension, friction, toValue: toValue[i] })), {
             stopTogether: false,
         })
     return null
@@ -83,6 +84,9 @@ const exports = {
     spring,
     template: function template(strings, ...values) {
         return new AnimatedTemplate(strings, values)
+    },
+    interpolate: function(values, callback) {
+        return new AnimatedInterpolate(values, callback)
     },
     createAnimatedComponent,
     inject: {

@@ -8,6 +8,7 @@ var linear = t => t
  */
 class Interpolation {
     static create(config) {
+        if (typeof config === 'function') return input => config(input)
         if (config.outputRange && typeof config.outputRange[0] === 'string') {
             return createInterpolationFromStringOutputRange(config)
         }

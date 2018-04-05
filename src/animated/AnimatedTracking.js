@@ -1,7 +1,7 @@
 import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 
-class AnimatedTracking extends Animated {
+export default class extends Animated {
     constructor(value, parent, animationClass, animationConfig, callback) {
         super()
         this._value = value
@@ -34,5 +34,3 @@ class AnimatedTracking extends Animated {
         )
     }
 }
-
-export default AnimatedTracking

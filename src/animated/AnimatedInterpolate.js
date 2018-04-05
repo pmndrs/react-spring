@@ -2,22 +2,14 @@ import Animated from './Animated'
 import AnimatedWithChildren from './AnimatedWithChildren'
 
 export default class extends AnimatedWithChildren {
-    constructor(strings, values) {
+    constructor(values, callback) {
         super()
-        this._strings = strings
-        this._values = values
-    }
-
-    __transformValue(value) {
-        if (value instanceof Animated) return value.__getValue()
-        else return value
+        this._values = Array.isArray(values) ? values : [values]
+        this._callback = callback
     }
 
     __getValue() {
-        let value = this._strings[0]
-        for (let i = 0; i < this._values.length; ++i)
-            value += this.__transformValue(this._values[i]) + this._strings[1 + i]
-        return value
+        return this._callback(...this._values.map(value => value.__getValue()))
     }
 
     __attach() {

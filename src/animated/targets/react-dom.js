@@ -86,13 +86,9 @@ function dangerousStyleValue(name, value, isCustomProperty) {
 
     if (isEmpty) return ''
 
-    if (
-        !isCustomProperty &&
-        typeof value === 'number' &&
-        value !== 0 &&
-        !(isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name])
-    ) return value + 'px' 
-    
+    if (!isCustomProperty && typeof value === 'number' && value !== 0 && !(isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name]))
+        return value + 'px'
+
     // Presumes implicit 'px' suffix for unitless numbers
     return ('' + value).trim()
 }
@@ -110,12 +106,12 @@ function setValueForStyles(node, styles) {
 }
 
 function setValueForAttributes(node, props) {
-    let attributes = node.attributes,
-        attribute
+    let attribute, value
     for (let name in props) {
         if (name !== 'style') {
-            attribute = attributes.getNamedItem(name)
-            if (attribute) attribute.value = props[name]
+            value = props[name]
+            attribute = node.getAttribute(name)
+            if (attribute) node.setAttribute(name, value)
         }
     }
 }

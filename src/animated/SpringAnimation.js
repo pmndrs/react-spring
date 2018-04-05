@@ -4,11 +4,9 @@ import RequestAnimationFrame from './injectable/RequestAnimationFrame'
 import CancelAnimationFrame from './injectable/CancelAnimationFrame'
 import SpringConfig from './SpringConfig'
 
-function withDefault(value, defaultValue) {
-    return (value === undefined || value === null) ? defaultValue : value
-}
+const withDefault = (value, defaultValue) => value === undefined || value === null ? defaultValue : value
 
-class SpringAnimation extends Animation {
+export default class SpringAnimation extends Animation {
     constructor(config) {
         super()
         this._overshootClamping = withDefault(config.overshootClamping, false)
@@ -71,7 +69,7 @@ class SpringAnimation extends Animation {
         for (var i = 0; i < numSteps; ++i) {
             // Velocity is based on seconds instead of milliseconds
             var step = TIMESTEP_MSEC / 1000
-            
+
             // This is using RK4. A good blog post to understand how it works:
             // http://gafferongames.com/game-physics/integration-basics/
             var aVelocity = velocity
@@ -133,5 +131,3 @@ class SpringAnimation extends Animation {
         this.__debouncedOnEnd({ finished: false })
     }
 }
-
-export default SpringAnimation

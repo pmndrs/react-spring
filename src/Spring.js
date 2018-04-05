@@ -2,8 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Animated from './animated/targets/react-dom'
 
-const template = Animated.template
-const animated = Animated.elements
 const config = {
     default: { tension: 170, friction: 26 },
     gentle: { tension: 120, friction: 14 },
@@ -12,7 +10,7 @@ const config = {
     slow: { tension: 280, friction: 60 },
 }
 
-export { config, template, animated }
+export { config }
 
 export default class Spring extends React.PureComponent {
     static propTypes = {
@@ -21,11 +19,13 @@ export default class Spring extends React.PureComponent {
         config: PropTypes.object,
         native: PropTypes.bool,
         onRest: PropTypes.func,
+        onUpdate: PropTypes.func,
         children: PropTypes.func,
         render: PropTypes.func,
+        reset: PropTypes.bool,
         immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
     }
-    static defaultProps = { from: {}, to: {}, config: config.default, native: false, immediate: false }
+    static defaultProps = { from: {}, to: {}, config: config.default, native: false, immediate: false, reset: false }
 
     constructor(props) {
         super()
@@ -34,14 +34,14 @@ export default class Spring extends React.PureComponent {
         this.update(props, false)
     }
 
-    update({ from, to, config, attach, immediate }, start = false) {
+    update({ from, to, config, attach, immediate, reset, onUpdate }, start = false) {
         const allProps = Object.entries({ ...from, ...to })
         const defaultAnimationValue = this.defaultAnimation._value
 
         this.interpolators = {}
         this.defaultAnimation.setValue(0)
         this.animations = allProps.reduce((acc, [name, value], i) => {
-            const entry = this.animations[name] || (this.animations[name] = {})
+            const entry = (reset === false && this.animations[name]) || (this.animations[name] = {})
 
             let isNumber = typeof value === 'number'
             let isArray = !isNumber && Array.isArray(value)
@@ -85,7 +85,10 @@ export default class Spring extends React.PureComponent {
         oldPropsAnimated && oldPropsAnimated.__detach()
     }
 
-    callback = () => !this.props.native && this.forceUpdate()
+    callback = () => {
+        if (this.props.onUpdate) this.props.onUpdate(this.propsAnimated.__getValue())
+        !this.props.native && this.forceUpdate()
+    }
     onRest = props => props.finished && this.props.onRest && this.props.onRest()
 
     componentWillReceiveProps(props) {

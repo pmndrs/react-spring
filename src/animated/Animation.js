@@ -1,7 +1,7 @@
 // Important note: start() and stop() will only be called at most once.
 // Once an animation has been stopped or finished its course, it will
 // not be reused.
-class Animation {
+export default class {
     start(fromValue, onUpdate, onEnd, previousAnimation) {}
 
     stop() {} 
@@ -13,5 +13,3 @@ class Animation {
         onEnd && onEnd(result)
     }
 }
-
-export default Animation

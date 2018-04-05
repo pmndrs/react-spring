@@ -3,7 +3,7 @@ import AnimatedWithChildren from './AnimatedWithChildren'
 import Interpolation from './Interpolation'
 import guid from './guid'
 
-class AnimatedInterpolation extends AnimatedWithChildren {
+export default class AnimatedInterpolation extends AnimatedWithChildren {
     constructor(parent, interpolation) {
         super()
         this._parent = parent
@@ -19,11 +19,7 @@ class AnimatedInterpolation extends AnimatedWithChildren {
     addListener(callback) {
         if (!this._parentListener) {
             this._parentListener = this._parent.addListener(() => {
-                for (const key in this._listeners) {
-                    this._listeners[key]({
-                        value: this.__getValue(),
-                    })
-                }
+                for (const key in this._listeners) this._listeners[key]({ value: this.__getValue() })
             })
         }
         const id = guid()
@@ -48,5 +44,3 @@ class AnimatedInterpolation extends AnimatedWithChildren {
         this._parentListener = this._parent.removeListener(this._parentListener)
     }
 }
-
-export default AnimatedInterpolation

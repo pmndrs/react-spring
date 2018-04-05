@@ -2,7 +2,7 @@ import Animated from './Animated'
 import AnimatedWithChildren from './AnimatedWithChildren'
 import FlattenStyle from './injectable/FlattenStyle'
 
-class AnimatedStyle extends AnimatedWithChildren {
+export default class extends AnimatedWithChildren {
     constructor(style) {
         super()
         style = FlattenStyle.current(style) || {}
@@ -43,5 +43,3 @@ class AnimatedStyle extends AnimatedWithChildren {
         }
     }
 }
-
-export default AnimatedStyle
