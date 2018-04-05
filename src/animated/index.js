@@ -8,7 +8,6 @@ import AnimatedTracking from './AnimatedTracking'
 import SpringAnimation from './SpringAnimation'
 import createAnimatedComponent from './createAnimatedComponent'
 import ApplyAnimatedValues from './injectable/ApplyAnimatedValues'
-import InteractionManager from './injectable/InteractionManager'
 import FlattenStyle from './injectable/FlattenStyle'
 import RequestAnimationFrame from './injectable/RequestAnimationFrame'
 import CancelAnimationFrame from './injectable/CancelAnimationFrame'
@@ -17,9 +16,7 @@ import AnimatedProps from './AnimatedProps'
 const maybeVectorAnim = (array, { tension, friction, toValue }, anim) => {
     // { tension, friction, toValue: [...]}
     if (array instanceof AnimatedArray)
-        return parallel(array._values.map((v, i) => anim(v, { tension, friction, toValue: toValue[i] })), {
-            stopTogether: false,
-        })
+        return parallel(array._values.map((v, i) => anim(v, { tension, friction, toValue: toValue[i] })), { stopTogether: false })
     return null
 }
 
@@ -30,11 +27,9 @@ var spring = function(value, config) {
                 var singleValue = value
                 var singleConfig = config
                 singleValue.stopTracking()
-                if (config.toValue instanceof Animated) {
+                if (config.toValue instanceof Animated)
                     singleValue.track(new AnimatedTracking(singleValue, config.toValue, SpringAnimation, singleConfig, callback))
-                } else {
-                    singleValue.animate(new SpringAnimation(singleConfig), callback)
-                }
+                else singleValue.animate(new SpringAnimation(singleConfig), callback)
             },
             stop: function() {
                 value.stopAnimation()
@@ -49,18 +44,14 @@ var parallel = (animations, config) => {
     const stopTogether = !(config && config.stopTogether === false)
     const result = {
         start(callback) {
-            if (doneCount === animations.length) {
-                callback && callback({ finished: true })
-                return
-            }
+            if (doneCount === animations.length) return callback && callback({ finished: true })
             animations.forEach((animation, idx) => {
                 const cb = endResult => {
                     hasEnded[idx] = true
                     doneCount++
                     if (doneCount === animations.length) {
                         doneCount = 0
-                        callback && callback(endResult)
-                        return
+                        return callback && callback(endResult)
                     }
                     if (!endResult.finished && stopTogether) result.stop()
                 }
@@ -91,7 +82,6 @@ const exports = {
     createAnimatedComponent,
     inject: {
         ApplyAnimatedValues: ApplyAnimatedValues.inject,
-        InteractionManager: InteractionManager.inject,
         FlattenStyle: FlattenStyle.inject,
         RequestAnimationFrame: RequestAnimationFrame.inject,
         CancelAnimationFrame: CancelAnimationFrame.inject,

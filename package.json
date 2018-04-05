@@ -1,6 +1,6 @@
 {
     "name": "react-spring",
-    "version": "3.2.0-beta.8",
+    "version": "3.2.0-beta.10",
     "description": "Animate React with ease",
     "main": "dist/react-spring",
     "module": "dist/react-spring.es",
@@ -38,7 +38,6 @@
         "babel-core": "7.0.0-bridge.0",
         "babel-jest": "22.4.0",
         "babel-plugin-annotate-pure-calls": "0.3.0-beta.0",
-        "babel-plugin-transform-flow-strip-types": "^6.22.0",
         "babel-plugin-transform-react-remove-prop-types": "0.4.13",
         "react": "16.2.0",
         "react-dom": "16.2.0",

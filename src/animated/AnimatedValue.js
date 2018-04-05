@@ -1,5 +1,4 @@
 import AnimatedWithChildren from './AnimatedWithChildren'
-import InteractionManager from './injectable/InteractionManager'
 import AnimatedInterpolation from './AnimatedInterpolation'
 import Interpolation from './Interpolation'
 import Animation from './Animation'
@@ -42,7 +41,6 @@ export default class extends AnimatedWithChildren {
     constructor(value) {
         super()
         this._value = value
-        this._offset = 0
         this._animation = null
         this._animatedStyles = new Set()
     }
@@ -52,7 +50,7 @@ export default class extends AnimatedWithChildren {
     }
 
     __getValue() {
-        return this._value + this._offset
+        return this._value
     }
 
     _flush() {
@@ -76,24 +74,6 @@ export default class extends AnimatedWithChildren {
         }
         this._animatedStyles.clear()
         this._updateValue(value)
-    }
-
-    /**
-     * Sets an offset that is applied on top of whatever value is set, whether via
-     * `setValue`, an animation, or `Animated.event`.  Useful for compensating
-     * things like the start of a pan gesture.
-     */
-    setOffset(offset) {
-        this._offset = offset
-    }
-
-    /**
-     * Merges the offset value into the base value and resets the offset to zero.
-     * The final output of the value is unchanged.
-     */
-    flattenOffset() {
-        this._value += this._offset
-        this._offset = 0
     }
 
     /**
@@ -121,8 +101,6 @@ export default class extends AnimatedWithChildren {
      * class.
      */
     animate(animation, callback) {
-        var handle = null
-        if (animation.__isInteraction) handle = InteractionManager.current.createInteractionHandle()
         var previousAnimation = this._animation
         this._animation && this._animation.stop()
         this._animation = animation
@@ -132,7 +110,6 @@ export default class extends AnimatedWithChildren {
             value => this._updateValue(value),
             result => {
                 this._animation = null
-                if (handle !== null) InteractionManager.current.clearInteractionHandle(handle)
                 callback && callback(result)
             },
             previousAnimation,

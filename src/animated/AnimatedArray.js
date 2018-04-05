@@ -12,14 +12,6 @@ export default class extends AnimatedWithChildren {
         values.forEach((n, i) => this._values[i].setValue(n))
     }
 
-    setOffset(values) {
-        values.forEach((n, i) => this._values[i].setOffset(n))
-    }
-
-    flattenOffset() {
-        this._values.forEach(v => v.flattenOffset())
-    }
-
     __getValue() {
         return this._values.map(v => v.__getValue())
     }

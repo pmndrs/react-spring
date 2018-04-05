@@ -16,7 +16,7 @@ export default {
         babel({
             babelrc: false,
             presets: presets(),
-            plugins: ['transform-flow-strip-types', ['transform-react-remove-prop-types', { mode: 'unsafe-wrap' }], 'annotate-pure-calls'],
+            plugins: ['transform-react-remove-prop-types', 'annotate-pure-calls'],
         }),
         resolve(),
         commonjs(),
