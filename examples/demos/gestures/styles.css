@@ -17,7 +17,7 @@
     pointer-events: auto;
     transform-origin: 50% 50% 0px;
     border-radius: 4px;
-    color: white;
+    color: #777777;
     line-height: 96px;
     padding-left: 32px;
     padding-right: 32px;
@@ -30,7 +30,7 @@
 }
 
 .fg {
-    background-color: #373737;
+    background-color: #dfdfdf;
     position: absolute;
     height: 100%;
     width: 100%;
