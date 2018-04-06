@@ -9,13 +9,14 @@ import Parallax from 'demos/parallax/'
 import Scroll from 'demos/scroll/'
 import Gestures from 'demos/gestures/'
 import Sunburst from 'demos/sunburst/'
+import Tree from 'demos/tree/'
 import 'index.css'
 
 const App = () => (
     <div className="app-container">
         <Scroll />
         <Parallax />
-        <Spring />
+        <Tree />
         <NativeSpring />
         <Transitions />
         <Reveals />

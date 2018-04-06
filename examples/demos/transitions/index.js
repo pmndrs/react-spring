@@ -8,7 +8,7 @@ const defaultStyles = {
     color: 'white',
     display: 'flex',
     justifyContent: 'center',
-    fontSize: '4em',
+    fontSize: '2em',
 }
 
 export default class extends React.PureComponent {
@@ -37,9 +37,9 @@ export default class extends React.PureComponent {
                 <Transition
                     native
                     keys={this.state.items}
-                    from={{ opacity: 0, height: 0 }}
-                    enter={{ opacity: 1, height: 100 }}
-                    leave={{ opacity: 0, height: 0 }}>
+                    from={{ height: 0 }}
+                    enter={{ height: 50 }}
+                    leave={{ height: 0 }}>
                     {this.state.items.map(item => styles => <animated.li style={{ ...defaultStyles, ...styles }}>{item}</animated.li>)}
                 </Transition>
             </ul>

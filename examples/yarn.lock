@@ -798,6 +798,19 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
 
+"@vx/curve@0.0.153":
+  version "0.0.153"
+  resolved "https://registry.yarnpkg.com/@vx/curve/-/curve-0.0.153.tgz#6829c3454f9ec16b7e6925aecbad5a1e3c8b3169"
+  dependencies:
+    d3-shape "^1.0.6"
+
+"@vx/gradient@^0.0.153":
+  version "0.0.153"
+  resolved "https://registry.yarnpkg.com/@vx/gradient/-/gradient-0.0.153.tgz#029b192638b5f165dab0a26d1811f2b54ed6590e"
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.5.7"
+
 "@vx/group@0.0.153", "@vx/group@^0.0.153":
   version "0.0.153"
   resolved "https://registry.yarnpkg.com/@vx/group/-/group-0.0.153.tgz#4ec2ce37cf31b0f0b3d46dd8ee6b0eaf7e763bc6"
@@ -812,12 +825,28 @@
     classnames "^2.2.5"
     d3-hierarchy "^1.1.4"
 
+"@vx/point@0.0.153":
+  version "0.0.153"
+  resolved "https://registry.yarnpkg.com/@vx/point/-/point-0.0.153.tgz#c0623f72804026a5afe7e1602bb27cd7b0847afc"
+
 "@vx/responsive@^0.0.158":
   version "0.0.158"
   resolved "https://registry.yarnpkg.com/@vx/responsive/-/responsive-0.0.158.tgz#8fdcc9fff149565095e1a834015d26452fad295f"
   dependencies:
     lodash "^4.0.8"
     resize-observer-polyfill "1.5.0"
+
+"@vx/shape@^0.0.158":
+  version "0.0.158"
+  resolved "https://registry.yarnpkg.com/@vx/shape/-/shape-0.0.158.tgz#700582c7574b523d6ba1d9b9bd784d7bbb2e37fb"
+  dependencies:
+    "@vx/curve" "0.0.153"
+    "@vx/group" "0.0.153"
+    "@vx/point" "0.0.153"
+    classnames "^2.2.5"
+    d3-path "^1.0.5"
+    d3-shape "^1.2.0"
+    prop-types "^15.5.10"
 
 abbrev@1:
   version "1.1.1"
@@ -2560,7 +2589,7 @@ d3-interpolate@1, d3-interpolate@^1.1.6:
   dependencies:
     d3-color "1"
 
-d3-path@1:
+d3-path@1, d3-path@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.5.tgz#241eb1849bd9e9e8021c0d0a799f8a0e8e441764"
 
@@ -2582,7 +2611,7 @@ d3-scale@^2.0.0:
     d3-time "1"
     d3-time-format "2"
 
-d3-shape@^1.2.0:
+d3-shape@^1.0.6, d3-shape@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.2.0.tgz#45d01538f064bafd05ea3d6d2cb748fd8c41f777"
   dependencies:
@@ -5642,7 +5671,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.6.0, prop-types@^15.6.1:
+prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:

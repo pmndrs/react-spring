@@ -13,7 +13,7 @@
 }
 
 .number {
-    font-size: 350px;
+    font-size: 300px;
     color: #373c4c;
 }
 
@@ -27,7 +27,7 @@
     display: flex;
     justify-content: center!important;
     align-items: center;
-    font-size: 70px;
+    font-size: 50px;
     color: white;
 }
 

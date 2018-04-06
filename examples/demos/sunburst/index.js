@@ -22,6 +22,10 @@ class Example extends React.Component {
         this.yScale.domain(yDomain).range(yRange)
     }
 
+    componentWillReceiveProps(props) {
+        this.setState(state => ({ yRange: [state.yRange[0], props.width / 2] }))
+    }
+
     xScale = scaleLinear()
     yScale = scaleSqrt()
     arc = d3arc()
@@ -78,7 +82,7 @@ const App = () => (
         {size =>
             size.ref && (
                 <div className="sunburst-main">
-                    <Example root={root} width={Math.round(size.width * 0.75)} height={Math.round(size.width * 0.75)} />
+                    <Example root={root} width={size.width * 0.7} height={size.width * 0.7} />
                 </div>
             )
         }

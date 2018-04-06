@@ -44,9 +44,11 @@
         "react-dom": "16.x.x"
     },
     "dependencies": {
+        "@vx/gradient": "^0.0.153",
         "@vx/group": "^0.0.153",
         "@vx/hierarchy": "^0.0.153",
         "@vx/responsive": "^0.0.158",
+        "@vx/shape": "^0.0.158",
         "clamp": "^1.0.1",
         "classnames": "^2.2.5",
         "d3-hierarchy": "^1.1.5",
