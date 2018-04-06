@@ -1,0 +1,47 @@
+.gestures-main {
+    background-color: #676767;
+    color: #fff;
+    width: 100%;
+    height: 100%;
+    font: 28px/1em 'Helvetica';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.item {
+    position: relative;
+    width: 320px;
+    height: 90px;
+    pointer-events: auto;
+    transform-origin: 50% 50% 0px;
+    border-radius: 4px;
+    color: #afafaf;
+    line-height: 96px;
+    padding-left: 32px;
+    padding-right: 32px;
+    font-size: 20px;
+    font-weight: 400;
+    box-sizing: border-box;
+    display: grid;
+    align-items: center;
+    text-align: center;
+}
+
+.fg {
+    background-color: #373737;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border-radius: 4px;
+}
+
+.bubble {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #dfdfdf;
+}

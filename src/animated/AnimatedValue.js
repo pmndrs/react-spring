@@ -3,6 +3,8 @@ import AnimatedInterpolation from './AnimatedInterpolation'
 import Interpolation from './Interpolation'
 import Animation from './Animation'
 
+var _uniqueId = 0
+
 /**
  * Animated works by building a directed acyclic graph of dependencies
  * transparently when you render your Animated components.
@@ -43,6 +45,7 @@ export default class extends AnimatedWithChildren {
         this._value = value
         this._animation = null
         this._animatedStyles = new Set()
+        this._listeners = {}
     }
 
     __detach() {
@@ -61,6 +64,8 @@ export default class extends AnimatedWithChildren {
     _updateValue(value) {
         this._value = value
         this._flush()
+        for (var key in this._listeners)
+            this._listeners[key]({ value: this.__getValue() })
     }
 
     /**
@@ -114,6 +119,25 @@ export default class extends AnimatedWithChildren {
             },
             previousAnimation,
         )
+    }
+
+    /**
+     * Adds an asynchronous listener to the value so you can observe updates from
+     * animations.  This is useful because there is no way to
+     * synchronously read the value because it might be driven natively.
+     */
+    addListener(callback) {
+        var id = String(_uniqueId++)
+        this._listeners[id] = callback
+        return id
+    }
+
+    removeListener(id) {
+        delete this._listeners[id]
+    }
+
+    removeAllListeners() {
+        this._listeners = {}
     }
 
     /**

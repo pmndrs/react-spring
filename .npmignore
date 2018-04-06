@@ -1,6 +1,7 @@
-/node_modules/
+node_modules/
 /coverage/
 /assets/
+/examples/
 Thumbs.db
 ehthumbs.db
 Desktop.ini

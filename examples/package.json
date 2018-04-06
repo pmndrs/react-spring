@@ -1,0 +1,59 @@
+{
+    "name": "react-spring-examples",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "jsnext:main": "index.js",
+    "scripts": {
+        "start": "webpack-dev-server --progress --colors"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/drcmda/react-springy-parallax.git"
+    },
+    "keywords": [
+        "parallax",
+        "spring"
+    ],
+    "author": "Paul Henschel",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/drcmda/react-springy-parallax/issues"
+    },
+    "homepage": "https://github.com/drcmda/react-springy-parallax#readme",
+    "devDependencies": {
+        "@babel/cli": "7.0.0-beta.44",
+        "@babel/core": "7.0.0-beta.44",
+        "@babel/preset-env": "7.0.0-beta.44",
+        "@babel/preset-react": "7.0.0-beta.44",
+        "@babel/preset-stage-0": "7.0.0-beta.44",
+        "babel-loader": "^8.0.0-beta.0",
+        "css-loader": "^0.28.11",
+        "html-webpack-plugin": "^3.2.0",
+        "prop-types": "^15.6.1",
+        "react": "^16.3.1",
+        "react-dom": "^16.3.1",
+        "style-loader": "^0.20.3",
+        "webpack": "^4.5.0",
+        "webpack-cli": "^2.0.14",
+        "webpack-dev-server": "^3.1.1"
+    },
+    "peerDependencies": {
+        "prop-types": "15.x.x",
+        "react": "16.x.x",
+        "react-dom": "16.x.x"
+    },
+    "dependencies": {
+        "@vx/group": "^0.0.153",
+        "@vx/hierarchy": "^0.0.153",
+        "@vx/responsive": "^0.0.158",
+        "clamp": "^1.0.1",
+        "classnames": "^2.2.5",
+        "d3-hierarchy": "^1.1.5",
+        "d3-interpolate": "^1.1.6",
+        "d3-scale": "^2.0.0",
+        "d3-scale-chromatic": "^1.2.0",
+        "d3-shape": "^1.2.0",
+        "react-with-gesture": "^1.0.8"
+    }
+}

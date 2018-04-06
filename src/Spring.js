@@ -22,7 +22,7 @@ export default class Spring extends React.PureComponent {
         config: PropTypes.object,
         native: PropTypes.bool,
         onRest: PropTypes.func,
-        onUpdate: PropTypes.func,
+        onFrame: PropTypes.func,
         children: PropTypes.func,
         render: PropTypes.func,
         reset: PropTypes.bool,
@@ -37,7 +37,7 @@ export default class Spring extends React.PureComponent {
         this.update(props, false)
     }
 
-    update({ from, to, config, attach, immediate, reset, onUpdate }, start = false) {
+    update({ from, to, config, attach, immediate, reset, onFrame }, start = false) {
         const allProps = Object.entries({ ...from, ...to })
         const defaultAnimationValue = this.defaultAnimation._value
 
@@ -89,7 +89,7 @@ export default class Spring extends React.PureComponent {
     }
 
     callback = () => {
-        if (this.props.onUpdate) this.props.onUpdate(this.propsAnimated.__getValue())
+        if (this.props.onFrame) this.props.onFrame(this.propsAnimated.__getValue())
         !this.props.native && this.forceUpdate()
     }
     onRest = props => props.finished && this.props.onRest && this.props.onRest()

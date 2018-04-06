@@ -4,21 +4,21 @@ import RequestAnimationFrame from './injectable/RequestAnimationFrame'
 import CancelAnimationFrame from './injectable/CancelAnimationFrame'
 import SpringConfig from './SpringConfig'
 
-const withDefault = (value, defaultValue) => (value === undefined || value === null ? defaultValue : value)
+const withDefault = (value, defaultValue) => value === undefined || value === null ? defaultValue : value
 
 export default class SpringAnimation extends Animation {
     constructor(config) {
         super()
         this._overshootClamping = withDefault(config.overshootClamping, false)
-        this._restDisplacementThreshold = withDefault(config.restDisplacementThreshold, 0.0001)
-        this._restSpeedThreshold = withDefault(config.restSpeedThreshold, 0.0001)
-        this._initialVelocity = withDefault(config.velocity, 0)
+        this._restDisplacementThreshold = withDefault(config.restDisplacementThreshold, 0.001)
+        this._restSpeedThreshold = withDefault(config.restSpeedThreshold, 0.001)
+        this._initialVelocity = config.velocity
         this._lastVelocity = withDefault(config.velocity, 0)
         this._toValue = config.toValue
+        this.__isInteraction = config.isInteraction !== undefined ? config.isInteraction : true
         var springConfig = SpringConfig.fromOrigamiTensionAndFriction(withDefault(config.tension, 40), withDefault(config.friction, 7))
         this._tension = springConfig.tension
         this._friction = springConfig.friction
-        this._mass = withDefault(config.mass, 1);
     }
 
     start(fromValue, onUpdate, onEnd, previousAnimation) {
@@ -28,7 +28,6 @@ export default class SpringAnimation extends Animation {
         this._onUpdate = onUpdate
         this.__onEnd = onEnd
         this._lastTime = Date.now()
-        this._frameTime = 0.0
 
         if (previousAnimation instanceof SpringAnimation) {
             var internalState = previousAnimation.getInternalState()
@@ -46,47 +45,53 @@ export default class SpringAnimation extends Animation {
         return { lastPosition: this._lastPosition, lastVelocity: this._lastVelocity, lastTime: this._lastTime }
     }
 
-    onUpdate = () => {
+    onUpdate() {
+        var position = this._lastPosition
+        var velocity = this._lastVelocity
+        var tempPosition = this._lastPosition
+        var tempVelocity = this._lastVelocity
+
         // If for some reason we lost a lot of frames (e.g. process large payload or
         // stopped in the debugger), we only advance by 4 frames worth of
         // computation and will continue on the next frame. It's better to have it
         // running at faster speed than jumping to the end.
-        const MAX_STEPS = 64
-        let now = Date.now()
-        if (now > this._lastTime + MAX_STEPS) {
-            now = this._lastTime + MAX_STEPS
-        }
+        var MAX_STEPS = 64
+        var now = Date.now()
 
-        const deltaTime = (now - this._lastTime) / 1000
-        this._frameTime += deltaTime
+        if (now > this._lastTime + MAX_STEPS) now = this._lastTime + MAX_STEPS
 
-        const c = this._friction
-        const m = this._mass
-        const k = this._tension
-        const v0 = -this._initialVelocity
+        // We are using a fixed time step and a maximum number of iterations.
+        // The following post provides a lot of thoughts into how to build this
+        // loop: http://gafferongames.com/game-physics/fix-your-timestep/
+        var TIMESTEP_MSEC = 1
+        var numSteps = Math.floor((now - this._lastTime) / TIMESTEP_MSEC)
 
-        const zeta = c / (2 * Math.sqrt(k * m)) // damping ratio
-        const omega0 = Math.sqrt(k / m) // undamped angular frequency of the oscillator (rad/ms)
-        const omega1 = omega0 * Math.sqrt(1.0 - zeta * zeta) // exponential decay
-        const x0 = this._toValue - this._startPosition // calculate the oscillation from x0 = 1 to x = 0
+        for (var i = 0; i < numSteps; ++i) {
+            // Velocity is based on seconds instead of milliseconds
+            var step = TIMESTEP_MSEC / 1000
 
-        let position = 0.0
-        let velocity = 0.0
-        const t = this._frameTime
-        if (zeta < 1) {
-            // Under damped
-            const envelope = Math.exp(-zeta * omega0 * t)
-            position = this._toValue - envelope * ((v0 + zeta * omega0 * x0) / omega1 * Math.sin(omega1 * t) + x0 * Math.cos(omega1 * t))
-            // This looks crazy -- it's actually just the derivative of the
-            // oscillation function
-            velocity =
-                zeta * omega0 * envelope * (Math.sin(omega1 * t) * (v0 + zeta * omega0 * x0) / omega1 + x0 * Math.cos(omega1 * t)) -
-                envelope * (Math.cos(omega1 * t) * (v0 + zeta * omega0 * x0) - omega1 * x0 * Math.sin(omega1 * t))
-        } else {
-            // Critically damped
-            const envelope = Math.exp(-omega0 * t)
-            position = this._toValue - envelope * (x0 + (v0 + omega0 * x0) * t)
-            velocity = envelope * (v0 * (t * omega0 - 1) + t * x0 * (omega0 * omega0))
+            // This is using RK4. A good blog post to understand how it works:
+            // http://gafferongames.com/game-physics/integration-basics/
+            var aVelocity = velocity
+            var aAcceleration = this._tension * (this._toValue - tempPosition) - this._friction * tempVelocity
+            var tempPosition = position + aVelocity * step / 2
+            var tempVelocity = velocity + aAcceleration * step / 2
+            var bVelocity = tempVelocity
+            var bAcceleration = this._tension * (this._toValue - tempPosition) - this._friction * tempVelocity
+            tempPosition = position + bVelocity * step / 2
+            tempVelocity = velocity + bAcceleration * step / 2
+            var cVelocity = tempVelocity
+            var cAcceleration = this._tension * (this._toValue - tempPosition) - this._friction * tempVelocity
+            tempPosition = position + cVelocity * step / 2
+            tempVelocity = velocity + cAcceleration * step / 2
+            var dVelocity = tempVelocity
+            var dAcceleration = this._tension * (this._toValue - tempPosition) - this._friction * tempVelocity
+            tempPosition = position + cVelocity * step / 2
+            tempVelocity = velocity + cAcceleration * step / 2
+            var dxdt = (aVelocity + 2 * (bVelocity + cVelocity) + dVelocity) / 6
+            var dvdt = (aAcceleration + 2 * (bAcceleration + cAcceleration) + dAcceleration) / 6
+            position += dxdt * step
+            velocity += dvdt * step
         }
 
         this._lastTime = now
@@ -99,26 +104,25 @@ export default class SpringAnimation extends Animation {
         if (!this.__active) return
 
         // Conditions for stopping the spring animation
-        let isOvershooting = false
-        if (this._overshootClamping && this._stiffness !== 0) {
-            isOvershooting = this._startPosition < this._toValue ? position > this._toValue : position < this._toValue
-        }
-        const isVelocity = Math.abs(velocity) <= this._restSpeedThreshold
-        let isDisplacement = true
-        if (this._stiffness !== 0) {
-            isDisplacement = Math.abs(this._toValue - position) <= this._restDisplacementThreshold
+        var isOvershooting = false
+        if (this._overshootClamping && this._tension !== 0) {
+            if (this._startPosition < this._toValue) {
+                isOvershooting = position > this._toValue
+            } else {
+                isOvershooting = position < this._toValue
+            }
         }
 
+        var isVelocity = Math.abs(velocity) <= this._restSpeedThreshold
+        var isDisplacement = true
+        if (this._tension !== 0) isDisplacement = Math.abs(this._toValue - position) <= this._restDisplacementThreshold
         if (isOvershooting || (isVelocity && isDisplacement)) {
-            if (this._stiffness !== 0) {
-                // Ensure that we end up with a round value
-                this._lastPosition = this._toValue
-                this._lastVelocity = 0
-                this._onUpdate(this._toValue)
-            }
-            return this.__debouncedOnEnd({ finished: true })
+            // Ensure that we end up with a round value
+            if (this._tension !== 0) this._onUpdate(this._toValue)
+            this.__debouncedOnEnd({ finished: true })
+            return
         }
-        this._animationFrame = RequestAnimationFrame.current(this.onUpdate)
+        this._animationFrame = RequestAnimationFrame.current(this.onUpdate.bind(this))
     }
 
     stop() {
