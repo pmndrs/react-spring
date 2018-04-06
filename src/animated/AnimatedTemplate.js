@@ -1,7 +1,7 @@
 import Animated from './Animated'
 import AnimatedWithChildren from './AnimatedWithChildren'
 
-export default class extends AnimatedWithChildren {
+export default class AnimatedTemplate extends AnimatedWithChildren {
     constructor(strings, values) {
         super()
         this._strings = strings

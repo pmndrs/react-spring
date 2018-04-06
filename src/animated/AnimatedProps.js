@@ -1,7 +1,7 @@
 import Animated from './Animated'
 import AnimatedStyle from './AnimatedStyle'
 
-export default class extends Animated {
+export default class AnimatedProps extends Animated {
     constructor(props, callback) {
         super()
         if (props.style) {

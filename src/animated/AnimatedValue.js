@@ -39,7 +39,7 @@ function findAnimatedStyles(node, styles) {
  * mechanism at a time.  Using a new mechanism (e.g. starting a new animation,
  * or calling `setValue`) will stop any previous ones.
  */
-export default class extends AnimatedWithChildren {
+export default class AnimatedValue extends AnimatedWithChildren {
     constructor(value) {
         super()
         this._value = value
@@ -57,15 +57,14 @@ export default class extends AnimatedWithChildren {
     }
 
     _flush() {
-        if (this._animatedStyles.size === 0) findAnimatedStyles(this, this._animatedStyles)
+        if (this._animatedStyles.size === 0 || this._tracked) findAnimatedStyles(this, this._animatedStyles)
         this._animatedStyles.forEach(animatedStyle => animatedStyle.update())
     }
 
     _updateValue(value) {
         this._value = value
         this._flush()
-        for (var key in this._listeners)
-            this._listeners[key]({ value: this.__getValue() })
+        for (var key in this._listeners) this._listeners[key]({ value: this.__getValue() })
     }
 
     /**

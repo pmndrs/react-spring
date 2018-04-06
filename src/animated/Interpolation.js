@@ -6,7 +6,7 @@ var linear = t => t
  * Very handy helper to map input ranges to output ranges with an easing
  * function and custom behavior outside of the ranges.
  */
-class Interpolation {
+export default class Interpolation {
     static create(config) {
         if (typeof config === 'function') return input => config(input)
         if (config.outputRange && typeof config.outputRange[0] === 'string') {
@@ -177,5 +177,3 @@ function findRange(input, inputRange) {
     for (var i = 1; i < inputRange.length - 1; ++i) if (inputRange[i] >= input) break
     return i - 1
 }
-
-export default Interpolation

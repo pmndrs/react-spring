@@ -2,7 +2,7 @@ import Animated from './Animated'
 import AnimatedWithChildren from './AnimatedWithChildren'
 import FlattenStyle from './injectable/FlattenStyle'
 
-export default class extends AnimatedWithChildren {
+export default class AnimatedStyle extends AnimatedWithChildren {
     constructor(style) {
         super()
         style = FlattenStyle.current(style) || {}

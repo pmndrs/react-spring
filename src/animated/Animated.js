@@ -1,4 +1,4 @@
-class Animated {
+export default class Animated {
     __attach() {}
     __detach() {}
     __getValue() {}
@@ -11,5 +11,3 @@ class Animated {
         return []
     }
 }
-
-export default Animated

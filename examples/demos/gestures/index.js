@@ -18,7 +18,7 @@ export default class extends React.Component {
                         <div className="item" style={{ backgroundColor: xDelta < 0 ? '#FF1C68' : '#14D790' }}>
                             <div className="bubble" style={{ transform: `scale(${scale})`, justifySelf: xDelta < 0 ? 'end' : 'start' }} />
                             <div className="fg" style={{ transform: `translate3d(${x}px,0,0)` }}>
-                                Slide me ...
+                                Slide me
                             </div>
                         </div>
                     )}

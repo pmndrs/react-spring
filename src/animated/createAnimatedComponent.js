@@ -4,7 +4,7 @@ import ApplyAnimatedValues from './injectable/ApplyAnimatedValues'
 
 const refName = 'node'
 
-export default function(Component) {
+export default function createAnimatedComponent(Component) {
     return class AnimatedComponent extends React.Component {
         static propTypes = {
             style(props, propName, componentName) {

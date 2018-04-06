@@ -1,7 +1,7 @@
 import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 
-export default class extends Animated {
+export default class AnimatedTracking extends Animated {
     constructor(value, parent, animationClass, animationConfig, callback) {
         super()
         this._value = value
@@ -10,6 +10,8 @@ export default class extends Animated {
         this._animationConfig = animationConfig
         this._callback = callback
         this.__attach()
+
+        this._hey = 1
     }
 
     __getValue() {

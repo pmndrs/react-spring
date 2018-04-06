@@ -2,7 +2,7 @@ import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 import AnimatedWithChildren from './AnimatedWithChildren'
 
-export default class extends AnimatedWithChildren {
+export default class AnimatedArray extends AnimatedWithChildren {
     constructor(array) {
         super()
         this._values = array.map(n => new AnimatedValue(n))
