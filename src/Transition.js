@@ -12,6 +12,7 @@ export default class Transition extends React.PureComponent {
         from: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         enter: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         keys: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])),
             PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
@@ -25,7 +26,7 @@ export default class Transition extends React.PureComponent {
 
     constructor(props) {
         super()
-        let { children, render, keys, from, enter, leave, accessor } = props
+        let { children, render, keys, from, enter, leave, update, accessor } = props
         children = render || children
         if (!Array.isArray(children)) {
             children = [children]
@@ -38,13 +39,14 @@ export default class Transition extends React.PureComponent {
                 key: keys[i],
                 to: callOrRefer(enter, keys[i]),
                 from: callOrRefer(from, keys[i]),
+                update: callOrRefer(update, keys[i]),
             })),
         }
     }
 
     componentWillReceiveProps(props) {
         let { transitions, transitionsKeys } = this.state
-        let { children, render, keys, from, enter, leave, accessor } = props
+        let { children, render, keys, from, enter, leave, update, accessor } = props
         children = render || children
         if (!Array.isArray(children)) {
             children = [children]
@@ -58,6 +60,7 @@ export default class Transition extends React.PureComponent {
         let currentSet = new Set(transitionKeysAccess)
         let added = keysAccess.filter(item => !currentSet.has(item))
         let deleted = transitionKeysAccess.filter(item => !nextSet.has(item))
+        let rest = keysAccess.filter(item => currentSet.has(item))
 
         // Update child functions
         transitions = transitions.map(transition => {
@@ -65,6 +68,8 @@ export default class Transition extends React.PureComponent {
                 const index = keysAccess.indexOf(accessor(transition.key))
                 const updatedChild = children[index]
                 if (updatedChild) transition.children = updatedChild
+                if (update && rest.indexOf(accessor(transition.key)) !== -1)
+                    transition.to = callOrRefer(update, keys[index]) || transition.to
             }
             return transition
         })
