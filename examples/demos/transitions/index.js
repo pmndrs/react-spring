@@ -35,7 +35,7 @@ export default class extends React.PureComponent {
 
     render() {
         return (
-            <ul style={{ backgroundColor: '#70C1B3', overflow: 'hidden', cursor: 'pointer' }} onClick={() => this.componentDidMount()}>
+            <ul style={{ backgroundColor: '#70C1B3', overflow: 'hidden', cursor: 'pointer'}} onClick={() => this.componentDidMount()}>
                 <Transition native keys={this.state.items} from={{ height: 0 }} enter={{ height: 50 }} leave={{ height: 0 }}>
                     {this.state.items.map(item => styles => <animated.li style={{ ...defaultStyles, ...styles }}>{item}</animated.li>)}
                 </Transition>

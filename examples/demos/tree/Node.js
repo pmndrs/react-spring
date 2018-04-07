@@ -5,7 +5,7 @@ function Node({ node, onClick }) {
     const height = 20
     return (
         <Fragment>
-            {node.depth === 0 && <circle r={12} fill="url('#lg')" onClick={onClick} style={{ zIndex: 1000 }}/>}
+            {node.depth === 0 && <circle r={20} fill="url('#lg')" onClick={onClick} />}
             {node.depth !== 0 && (
                 <rect
                     height={height}

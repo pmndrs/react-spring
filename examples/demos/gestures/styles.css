@@ -1,5 +1,5 @@
 .gestures-main {
-    background-color: #676767;
+    background-color: hotpink;
     color: #fff;
     width: 100%;
     height: 100%;
@@ -21,7 +21,7 @@
     transform-origin: 50% 50% 0px;
     border-radius: 4px;
     color: white;
-    line-height: 96px;
+    line-height: 90px;
     padding-left: 32px;
     padding-right: 32px;
     box-sizing: border-box;

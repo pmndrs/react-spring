@@ -59,8 +59,8 @@ class Example extends React.Component {
                                         <animated.path
                                             className="path"
                                             d={t.interpolate(() => this.arc(node))}
-                                            stroke="#14D790"
-                                            strokeWidth="6"
+                                            stroke="#373737"
+                                            strokeWidth="2"
                                             fill={color((node.children ? node.data : node.parent.data).name)}
                                             fillRule="evenodd"
                                             onClick={() => this.handleClick(node)}
@@ -82,7 +82,7 @@ const App = () => (
         {size =>
             size.ref && (
                 <div className="sunburst-main">
-                    <Example root={root} width={size.width * 0.7} height={size.width * 0.7} />
+                    <Example root={root} width={size.width * 0.5} height={size.width * 0.5} />
                 </div>
             )
         }

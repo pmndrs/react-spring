@@ -31,6 +31,7 @@ export default class extends React.Component {
     toggle = () => this.setState(state => ({ toggle: !state.toggle }))
     render() {
         return (
+            <div style={{ gridRow: 'span 2' }}>
             <ParentSize>
                 {({ width, height }) => {
                     const xScale = scaleTime({ range: [0, width], domain: extent(data, x) })
@@ -50,6 +51,7 @@ export default class extends React.Component {
                     )
                 }}
             </ParentSize>
+            </div>
         )
     }
 }

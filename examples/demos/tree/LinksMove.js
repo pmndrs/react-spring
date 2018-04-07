@@ -23,20 +23,18 @@ function Links({ links, linkType, layout, orientation, stepPercent }) {
                         ty: collapsedParent.data.y0,
                     }
                 }}>
-                {links.map(link => styles => {
-                    return (
-                        <Link
-                            data={{ source: { x: styles.sx, y: styles.sy }, target: { x: styles.tx, y: styles.ty } }}
-                            linkType={linkType}
-                            layout={layout}
-                            orientation={orientation}
-                            stepPercent={stepPercent}
-                            stroke="#374469"
-                            strokeWidth="1"
-                            fill="none"
-                        />
-                    )
-                })}
+                {links.map(link => styles => (
+                    <Link
+                        data={{ source: { x: styles.sx, y: styles.sy }, target: { x: styles.tx, y: styles.ty } }}
+                        linkType={linkType}
+                        layout={layout}
+                        orientation={orientation}
+                        stepPercent={stepPercent}
+                        stroke="#374469"
+                        strokeWidth="1"
+                        fill="none"
+                    />
+                ))}
             </Transition>
         </Group>
     )

@@ -10,7 +10,7 @@ import './styles.css'
 export default class extends React.Component {
     render() {
         const { xDelta, down, children } = this.props
-        const to = { scale: clamp(Math.abs(down ? xDelta : 0) / 150, 0.5, 1.2), x: down ? xDelta : 0 }
+        const to = { scale: clamp(Math.abs(down ? xDelta : 0) / 150, 0.5, 1), x: down ? xDelta : 0 }
         return (
             <div className="gestures-main">
                 <Spring to={to} immediate={down && ['x']}>

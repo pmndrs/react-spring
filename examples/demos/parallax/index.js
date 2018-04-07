@@ -34,7 +34,7 @@ export default class extends React.Component {
     scroll = to => this.refs.parallax.scrollTo(to)
     render() {
         return (
-            <div style={{ gridColumn: 'span 2', background: '#dfdfdf' }}>
+            <div style={{ gridColumn: 'span 2', gridRow: 'span 2', background: '#dfdfdf' }}>
                 <Parallax className="container" ref="parallax" pages={3} horizontal scrolling={true}>
                     <Page
                         offset={0}
