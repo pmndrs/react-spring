@@ -825,6 +825,12 @@
     classnames "^2.2.5"
     d3-hierarchy "^1.1.4"
 
+"@vx/mock-data@^0.0.153":
+  version "0.0.153"
+  resolved "https://registry.yarnpkg.com/@vx/mock-data/-/mock-data-0.0.153.tgz#e4c9194011db6789abcbc620f2c022bf0a3e463d"
+  dependencies:
+    d3-random "^1.0.3"
+
 "@vx/point@0.0.153":
   version "0.0.153"
   resolved "https://registry.yarnpkg.com/@vx/point/-/point-0.0.153.tgz#c0623f72804026a5afe7e1602bb27cd7b0847afc"
@@ -835,6 +841,12 @@
   dependencies:
     lodash "^4.0.8"
     resize-observer-polyfill "1.5.0"
+
+"@vx/scale@^0.0.153":
+  version "0.0.153"
+  resolved "https://registry.yarnpkg.com/@vx/scale/-/scale-0.0.153.tgz#0e515c459b18c34f9b7111c0cb8295208774bba0"
+  dependencies:
+    d3-scale "^1.0.5"
 
 "@vx/shape@^0.0.158":
   version "0.0.158"
@@ -2563,7 +2575,7 @@ cyclist@~0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
 
-d3-array@^1.2.0:
+d3-array@^1.2.0, d3-array@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.1.tgz#d1ca33de2f6ac31efadb8e050a021d7e2396d5dc"
 
@@ -2593,12 +2605,28 @@ d3-path@1, d3-path@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.5.tgz#241eb1849bd9e9e8021c0d0a799f8a0e8e441764"
 
+d3-random@^1.0.3:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/d3-random/-/d3-random-1.1.0.tgz#6642e506c6fa3a648595d2b2469788a8d12529d3"
+
 d3-scale-chromatic@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/d3-scale-chromatic/-/d3-scale-chromatic-1.2.0.tgz#25820d059c0eccc33e85f77561f37382a817ab58"
   dependencies:
     d3-color "1"
     d3-interpolate "1"
+
+d3-scale@^1.0.5:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-1.0.7.tgz#fa90324b3ea8a776422bd0472afab0b252a0945d"
+  dependencies:
+    d3-array "^1.2.0"
+    d3-collection "1"
+    d3-color "1"
+    d3-format "1"
+    d3-interpolate "1"
+    d3-time "1"
+    d3-time-format "2"
 
 d3-scale@^2.0.0:
   version "2.0.0"

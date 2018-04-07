@@ -11,6 +11,7 @@ const defaultStyles = {
     justifyContent: 'center',
     alignItems: 'center',
     color: 'white',
+    fontFamily: "'Kanit', sans-serif",
     fontWeight: 800,
     fontSize: '16em',
 }

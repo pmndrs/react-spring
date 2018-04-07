@@ -10,18 +10,20 @@ import Scroll from './demos/scroll/'
 import Gestures from './demos/gestures/'
 import Sunburst from './demos/sunburst/'
 import Tree from './demos/tree/'
+import Areas from './demos/areas/'
 import './index.css'
 
 const App = () => (
     <div className="app-container">
         <Scroll />
         <Parallax />
-        <Tree />
+        <Reveals />
         <NativeSpring />
         <Transitions />
-        <Reveals />
         <Trails />
+        <Areas />
         <Sunburst />
+        <Tree />
         <Gestures style={{ gridColumn: 'span 2' }}/>
     </div>
 )

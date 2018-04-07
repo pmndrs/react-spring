@@ -59,8 +59,8 @@ class Example extends React.Component {
                                         <animated.path
                                             className="path"
                                             d={t.interpolate(() => this.arc(node))}
-                                            stroke="#575757"
-                                            strokeWidth="1"
+                                            stroke="#14D790"
+                                            strokeWidth="6"
                                             fill={color((node.children ? node.data : node.parent.data).name)}
                                             fillRule="evenodd"
                                             onClick={() => this.handleClick(node)}

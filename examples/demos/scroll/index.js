@@ -13,7 +13,7 @@ const Gray = ({ children }) => <span style={{ color: '#909090' }}>{children}</sp
 export default class extends React.Component {
     render() {
         return (
-            <div style={{ background: '#253237', gridRow: 'span 2' }}>
+            <div style={{ background: '#253237', gridRow: 'span 1' }}>
             <Parallax ref={ref => (this.parallax = ref)} pages={3}>
                 <Parallax.Layer offset={1} speed={1} style={{ backgroundColor: '#805E73' }} />
                 <Parallax.Layer offset={2} speed={1} style={{ backgroundColor: '#87BCDE' }} />
