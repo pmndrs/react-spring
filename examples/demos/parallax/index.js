@@ -35,7 +35,7 @@ export default class extends React.Component {
     render() {
         return (
             <div style={{ gridColumn: 'span 2', background: '#dfdfdf' }}>
-                <Parallax className="container" ref="parallax" pages={3} horizontal scrolling={false}>
+                <Parallax className="container" ref="parallax" pages={3} horizontal scrolling={true}>
                     <Page
                         offset={0}
                         gradient="pink"
