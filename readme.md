@@ -32,16 +32,24 @@ react-spring inherits react-motions api (and simplifies it), has lots of primiti
 # Overview 🔭
 
 <p align="middle">
-  <img src="assets/spring.gif" width="430" />
-  <img src="assets/transition.gif" width="430" /> 
+  <img src="assets/spring.gif" width="285" />
+  <img src="assets/transitions.gif" width="285" /> 
+  <img src="assets/trails.gif" width="285" /> 
 </p>
 <p align="middle">
-  <img src="assets/reveal.gif" width="430" />
-  <img src="assets/trail.gif" width="430" />
+  <img src="assets/tree.gif" width="285" />
+  <img src="assets/sunburst.gif" width="285" /> 
+  <img src="assets/areas.gif" width="285" /> 
 </p>
 <p align="middle">
-  <img src="assets/scroll.gif" width="430" height="222.88" /> 
-  <img src="assets/parallax.gif" width="430" /> 
+  <img src="assets/gestures.gif" width="285" />
+  <img src="assets/reveals.gif" width="285" /> 
+  <img src="assets/morph.gif" width="285" /> 
+</p>
+<p align="middle">
+  <img src="assets/vertical.gif" width="285" />
+  <img src="assets/horizontal.gif" width="285" /> 
+  <img src="assets/dragndrop.gif" width="285" /> 
 </p>
 
 ```jsx
