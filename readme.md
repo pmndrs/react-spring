@@ -180,7 +180,7 @@ import { Spring, animated, interpolate } from 'react-spring'
 <animated.svg 
     style={{ 
         transform: interpolate([x, y], (x, y) => `translate(${x}px, ${y}px)`), 
-        color: time.interpolate({ inputRange: [0, 1], outputRange: ['red', rgba(1, 50, 210, 0.5)] })
+        color: time.interpolate({ inputRange: [0, 1], outputRange: ['red', 'rgba(1, 50, 210, 0.5)'] })
     }}>
     <g><animated.path d={time.interpolate(customSvgInterpolator)} /></g>
 </animated.svg>
