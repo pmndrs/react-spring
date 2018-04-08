@@ -158,7 +158,7 @@ Just be aware of the following conditions:
 
 1.  It only animates element styles and attributes, the values you receive _are opaque objects, not regular values_
 2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
-3.  If you need to interpolate styles use the `template` string literal
+3.  If you need to interpolate styles use the `template` string literal or `interpolate`
 
 ```jsx
 import { Spring, animated, template } from 'react-spring'
@@ -177,7 +177,11 @@ You have several interpolation options, not just `template`. `interpolate` can b
 ```jsx
 import { Spring, animated, interpolate } from 'react-spring'
 
-<animated.svg style={{ transform: interpolate([x, y], (x, y) => `translate(${x}px, ${y}px)`), color: time.interpolate({ inputRange: [0, 1], outputRange: ['red', rgba(1, 50, 210, 0.5)] }) }}>
+<animated.svg 
+    style={{ 
+        transform: interpolate([x, y], (x, y) => `translate(${x}px, ${y}px)`), 
+        color: time.interpolate({ inputRange: [0, 1], outputRange: ['red', rgba(1, 50, 210, 0.5)] })
+    }}>
     <g><animated.path d={time.interpolate(customSvgInterpolator)} /></g>
 </animated.svg>
 ```
