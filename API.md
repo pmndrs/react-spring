@@ -33,12 +33,16 @@ class Spring extends React.PureComponent {
         to: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         // Callback when the animation comes to a still-stand
         onRest: PropTypes.func,
+        // Frame by frame callback, first argument passed is the animated value
+        onFrame: PropTypes.func,
         // Takes a function that receives interpolated styles
         children: PropTypes.func,
         // Same as children, but takes precedence if present
         render: PropTypes.func,
         // Prevents animation if true, you can also pass individual keys
         immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
+        // When true it literally resets: from -> to
+        reset: PropTypes.bool,
     }
     static defaultProps = { from: {}, to: {}, config: config.default, native: false, immediate: false }
 }
@@ -56,16 +60,25 @@ class Transition extends React.PureComponent {
         native: PropTypes.bool,
         config: PropTypes.object,
         // Base styles
-        from: PropTypes.object,
+        from: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         // Animated styles when the component is mounted
-        enter: PropTypes.object,
+        enter: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         // Unmpount styles
-        leave: PropTypes.object,
+        leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        // 
+        update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         // A collectiomn of unique keys that must match with the childrens order
         // Can be omitted if children/render aren't an array
+        // Can be a function, which then acts as a key-accessor which is useful when you use the items prop
         keys: PropTypes.oneOfType([
+            PropTypes.func,
             PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
             PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        ]),
+        // Optional. Let items refer to the actual data and from/enter/leaver/update can return per-object styles
+        items: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object])),
+            PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
         ]),
         children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
         render: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),

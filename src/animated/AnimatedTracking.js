@@ -1,5 +1,4 @@
 import Animated from './Animated'
-import AnimatedValue from './AnimatedValue'
 
 export default class AnimatedTracking extends Animated {
     constructor(value, parent, animationClass, animationConfig, callback) {

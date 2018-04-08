@@ -5,26 +5,27 @@
     npm install react-spring
 
 # Table of Contents 👇
-* [Installation](#installation-)
-* [Why](#why-)
-* [Overview](#overview-)
-* [API Overview](#api-overview-)
-    * [Springs and Interpolation](#springs-and-interpolation)
-    * [Render Props](#render-props)
-    * [Native rendering](#native-rendering-demo) 
-    * [Transitions](#transitions) 
-    * [Parallax and page transitions](#parallax-and-page-transitions) 
-* [License](#license-)
+
+*   [Installation](#installation-)
+*   [Why](#why-)
+*   [Overview](#overview-)
+*   [API Overview](#api-overview-)
+    *   [Springs and Interpolation](#springs-and-interpolation)
+    *   [Render Props](#render-props)
+    *   [Native rendering](#native-rendering-demo)
+    *   [Transitions](#transitions)
+    *   [Parallax and page transitions](#parallax-and-page-transitions)
+*   [License](#license-)
 
 # Why 🤔
 
 react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similar in that they are spring-physics based, they have their pros and cons and could definitively benefit from one another:
 
-|                | Declarative | Primitives | Interpolations     | Performance | 
-|----------------|-------------|----------------|----------------|-------------|
-| React-motion   | ✅ | ✅ | ❌ | ❌
-| Animated       | ❌ | ❌ | ✅ | ✅
-| React-spring   | ✅ | ✅ | ✅ | ✅
+|                | Declarative | Primitives | Interpolations | Performance |
+| -------------- | ----------- | ---------- | -------------- | ----------- |
+| React-motion   | ✅          | ✅         | ❌             | ❌          |
+| Animated       | ❌          | ❌         | ✅             | ✅          |
+| React-spring   | ✅          | ✅         | ✅             | ✅          |
 
 react-spring inherits react-motions api (and simplifies it), has lots of primitives (springs, trails, transitions, reveals, parallax), can interpolate mostly everything (colors, gradients, percentages, degrees, svg-paths, arrays, etc.) and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
@@ -76,10 +77,7 @@ A `Spring` will move data from one state to another. It remembers the current st
 Given a single child instead of a list you can reveal components with it.
 
 ```jsx
-<Transition
-    from={{ opacity: 0 }} 
-    enter={{ opacity: 1 }} 
-    leave={{ opacity: 0 }}>
+<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
     {toggle ? ComponentA : ComponentB}
 </Transition>
 ```
@@ -100,8 +98,12 @@ Given a single child instead of a list you can reveal components with it.
 
 ```jsx
 <Parallax pages={2}>
-    <Parallax.Layer offset={0} speed={0.2}>first Page</Parallax.Layer>
-    <Parallax.Layer offset={1} speed={0.5}>second Page</Parallax.Layer>
+    <Parallax.Layer offset={0} speed={0.2}>
+        first Page
+    </Parallax.Layer>
+    <Parallax.Layer offset={1} speed={0.5}>
+        second Page
+    </Parallax.Layer>
 </Parallax>
 ```
 
@@ -127,6 +129,8 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
 }}>
 ```
 
+A couple of extra props you might be interested in are `onRest`, which fires once the animations stops, `onFrame`, which fires on every frame and gives you the animation value, `reset`, which literally resets the spring so that it goes through `from` to `to` again, `immediate` which can enforce values to spring to their to-values immediatelly (can be `true` for a zero-time spring or an array where you can pass the key-names individually).
+
 ### Render props
 
 Don't like the way render props wrap your code?
@@ -142,7 +146,6 @@ const Header = ({ children, bold, ...styles }) => (
 <Spring render={Header} to={{ color: 'fuchsia' }} bold>
     hello there
 </Spring>
-
 ```
 
 Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, in this example `bold`, but it also includes `children` if you use `render` to refer to the render-child.
@@ -153,7 +156,7 @@ By default we'll render the receiving component every frame as it gives you more
 
 Just be aware of the following conditions:
 
-1.  It only animates element styles and attributes, the values you receive *are opaque objects, not regular values*
+1.  It only animates element styles and attributes, the values you receive _are opaque objects, not regular values_
 2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
 3.  If you need to interpolate styles use the `template` string literal
 
@@ -167,6 +170,16 @@ import { Spring, animated, template } from 'react-spring'
         </animated.svg>
     )}
 </Spring>
+```
+
+You have several interpolation options, not just `template`. `interpolate` can be called on the value itself or as a stand-alone function which can read multiple values. It accepts either a function which receives the animation value(/s), or a range.
+
+```jsx
+import { Spring, animated, interpolate } from 'react-spring'
+
+<animated.svg style={{ transform: interpolate([x, y], (x, y) => `translate(${x}px, ${y}px)`), color: time.interpolate({ inputRange: [0, 1], outputRange: ['red', rgba(1, 50, 210, 0.5)] }) }}>
+    <g><animated.path d={time.interpolate(customSvgInterpolator)} /></g>
+</animated.svg>
 ```
 
 ### Transitions
@@ -190,11 +203,22 @@ import { Transition } from 'react-spring'
 You can use this prototype for two-state reveals, simply render a single child that you can switch out for another. You don't have to pass keys for this one.
 
 ```jsx
-<Transition
-    from={{ opacity: 0 }} 
-    enter={{ opacity: 1 }} 
-    leave={{ opacity: 0 }}>
+<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
     {toggle ? ComponentA : ComponentB}
+</Transition>
+```
+
+For more complex animations you can return per-object styles individually. Let Transition know the actual data by passing it raw to `items`, either pass your keys like always or give it an accessor. And for more control, there's `update` which fires for nodes that are neither entering nor leaving.
+
+```jsx
+<Transition
+    items={items}
+    keys={item => item.key}
+    from={item => ({ opacity: 0 })}
+    enter={item => ({ opacity: 1 })}
+    update={item => ({ opacity: 0.5 })}
+    leave={item => ({ opacity: 0 })}>
+    {items.map(item => styles => <li style={styles}>{item.text}</li>)}
 </Transition>
 ```
 
@@ -230,8 +254,8 @@ import { Parallax } from 'react-spring'
 
 # Links 🔗
 
-
 [API](https://github.com/drcmda/react-spring/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md)
 
 # License ⚖
+
 ### [MIT](https://github.com/drcmda/react-spring/blob/master/LICENSE)
