@@ -12,7 +12,7 @@ export default class extends React.Component {
         const { xDelta, down, children } = this.props
         const to = { scale: clamp(Math.abs(down ? xDelta : 0) / 150, 0.5, 1), x: down ? xDelta : 0 }
         return (
-            <div className="gestures-main">
+            <div className="gestures-main" style={{ gridColumn: 'span 2' }}>
                 <Spring to={to} immediate={down && ['x']}>
                     {({ x, scale }) => (
                         <div className="item" style={{ backgroundColor: xDelta < 0 ? '#FF1C68' : '#14D790' }}>

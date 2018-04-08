@@ -1,35 +1,28 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Spring from './demos/spring/'
-import NativeSpring from './demos/nativespring/'
-import Transitions from './demos/transitions/'
-import Reveals from './demos/reveals/'
-import Trails from './demos/trails/'
-import Parallax from './demos/parallax/'
-import Scroll from './demos/scroll/'
-import Gestures from './demos/gestures/'
-import Sunburst from './demos/sunburst/'
-import Tree from './demos/tree/'
-import Areas from './demos/areas/'
-import Morph from './demos/morph/'
+import Loadable from 'react-loadable'
 import './index.css'
 
-const App = () => (
-    <div className="app-container">
-        <Scroll />
-        <Parallax />
-        
-        <NativeSpring />
-        <Transitions />
-        <Areas />
-        <Trails />
-        <Reveals />
-        
-        <Sunburst />
-        <Gestures style={{ gridColumn: 'span 2' }}/>
-        <Tree />
-        <Morph />
-    </div>
+const components = [
+    'scroll',
+    'parallax',
+    'nativespring',
+    'transitions',
+    'areas',
+    'trails',
+    'reveals',
+    'sunburst',
+    'gestures',
+    'tree',
+    'morph',
+].map(path =>
+    Loadable({
+        loader: () => import('./demos/' + path),
+        loading: () => <div />,
+    }),
 )
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(
+    <div className="app-container">{components.map((Component, i) => <Component key={i} />)}</div>,
+    document.getElementById('root'),
+)
