@@ -18,7 +18,7 @@
 
 # What is it? 🤔
 
-A set of simple, spring-physics based primitives that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another.
+A set of simple, spring-physics based primitives that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
 
 # Why do we need yet another? 🧐
 
