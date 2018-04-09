@@ -6,8 +6,8 @@
 
 # Table of Contents 👇
 
-*   [Installation](#installation-)
-*   [Why](#why-)
+*   [What is it?](#what-is-it-)
+*   [Why do we need yet another?](#why-do-we-need-yet-another-)
 *   [Overview](#overview-)
 *   [API Overview](#api-overview-)
     *   [Springs and Interpolation](#springs-and-interpolation)
