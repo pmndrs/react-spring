@@ -12,7 +12,7 @@
 *   [API Overview](#api-overview-)
     *   [Springs and basic interpolation](#springs-and-basic-interpolation)
     *   [Render props](#render-props)
-    *   [Native rendering and interpolation](#native-rendering-demo)
+    *   [Native rendering and interpolation](#native-rendering-and-interpolation)
     *   [Transitions](#transitions)
     *   [Parallax and page transitions](#parallax-and-page-transitions)
 
