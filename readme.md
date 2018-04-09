@@ -10,9 +10,9 @@
 *   [Why do we need yet another?](#why-do-we-need-yet-another-)
 *   [Overview](#overview-)
 *   [API Overview](#api-overview-)
-    *   [Springs and Interpolation](#springs-and-interpolation)
-    *   [Render Props](#render-props)
-    *   [Native rendering](#native-rendering-demo)
+    *   [Springs and basic interpolation](#springs-and-basic-interpolation)
+    *   [Render props](#render-props)
+    *   [Native rendering and interpolation](#native-rendering-demo)
     *   [Transitions](#transitions)
     *   [Parallax and page transitions](#parallax-and-page-transitions)
 
@@ -140,7 +140,7 @@ import { Parallax } from 'react-spring'
 
 For a raw documentation of all possible properties look [here](https://github.com/drcmda/react-spring/blob/master/API.md).
 
-### Springs and interpolation
+### Springs and basic interpolation
 
 You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
 
@@ -177,7 +177,7 @@ const Header = ({ children, bold, ...styles }) => (
 
 Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recognize will be spread over the receiving component, in this example `bold`, but it also includes `children` if you use `render` to refer to the render-child.
 
-### Native rendering ([Demo](https://codesandbox.io/embed/882njxpz29))
+### Native rendering and interpolation ([Demo](https://codesandbox.io/embed/882njxpz29))
 
 By default we'll render the receiving component every frame as it gives you more freedom to animate. In situations where that becomes expensive add the `native` flag and animations will now be applied directly to the dom. The flag is available for all primitives (Spring, Transition & Trail, Parallax is native by design).
 
