@@ -25,4 +25,12 @@ const components = [
 ReactDOM.render(
     <div className="app-container">{components.map((Component, i) => <Component key={i} />)}</div>,
     document.getElementById('root'),
+
+    <Keyframes items={items} keys={items} script={stage}>
+        {this.state.items.map(item => styles => (
+            <div key={item} style={{ position: 'relative', overflow: 'hidden', ...styles }}>
+                {item}
+            </div>
+        ))}
+    </Keyframes>,
 )

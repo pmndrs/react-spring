@@ -21,17 +21,28 @@ module.exports = mode => {
                         options: {
                             babelrc: false,
                             presets: [
-                                ['@babel/preset-env', { modules: false, loose: true, useBuiltIns: 'usage', targets: { chrome: 61 } }],
+                                [
+                                    '@babel/preset-env',
+                                    {
+                                        modules: false,
+                                        loose: true,
+                                        ...(mode.production
+                                            ? { useBuiltIns: 'usage', targets: { chrome: 61 } }
+                                            : { useBuiltIns: false, targets: { browsers: 'last 2 Chrome versions' } }),
+                                    },
+                                ],
                                 '@babel/preset-stage-0',
                                 '@babel/preset-react',
                             ],
-                            plugins: [
-                                [
-                                    '@babel/transform-runtime',
-                                    { helpers: true, polyfill: false, regenerator: false, moduleName: '@babel/runtime' },
-                                ],
-                                'babel-plugin-lodash',
-                            ],
+                            plugins: mode.production
+                                ? [
+                                      [
+                                          '@babel/transform-runtime',
+                                          { helpers: true, polyfill: false, regenerator: false, moduleName: '@babel/runtime' },
+                                      ],
+                                      'babel-plugin-lodash',
+                                  ]
+                                : [],
                         },
                     },
                 },
@@ -41,6 +52,7 @@ module.exports = mode => {
             modules: [path.resolve('./'), 'node_modules'],
             extensions: ['.js', '.jsx'],
             alias: {
+                'react-spring': path.resolve('../src'),
                 lodash: path.resolve(__dirname, 'node_modules/lodash-es'),
             },
         },

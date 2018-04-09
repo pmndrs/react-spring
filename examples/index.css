@@ -1,3 +1,7 @@
+* {    
+    box-sizing: border-box;
+}
+
 ::-webkit-scrollbar {
     width: 0px;
     height: 10px;

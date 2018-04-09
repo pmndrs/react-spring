@@ -59,6 +59,7 @@
         "d3-scale": "^2.0.0",
         "d3-scale-chromatic": "^1.2.0",
         "d3-shape": "^1.2.0",
+        "delay": "^2.0.0",
         "flubber": "^0.4.2",
         "lodash-es": "^4.17.8",
         "nervjs": "^1.2.17",

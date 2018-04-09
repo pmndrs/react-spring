@@ -49,6 +49,7 @@ export default class Transition extends React.PureComponent {
     componentWillReceiveProps(props) {
         let { transitions, transitionKeys } = this.state
         let { children, render, keys, items, from, enter, leave, update } = props
+
         children = render || children
         if (typeof keys === 'function') keys = items.map(keys)
         if (!Array.isArray(children)) {
@@ -118,11 +119,13 @@ export default class Transition extends React.PureComponent {
         // Push new state
         this.setState({ transitions: ordered, transitionKeys })
     }
-
+    getValues() {
+        return undefined
+    }
     render() {
-        const { render, from, enter, leave, native, config, keys, items, onFrame, ...extra } = this.props
+        const { render, from, enter, leave, native, config, keys, items, onFrame, onRest, ...extra } = this.props
         const props = { native, config, ...extra }
-        return this.state.transitions.map(({ key, item, children, ...rest }) => (
+        return this.state.transitions.map(({ key, item, children, ...rest }, i) => (
             <Spring
                 key={key}
                 {...rest}

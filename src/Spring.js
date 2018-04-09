@@ -23,7 +23,7 @@ export default class Spring extends React.PureComponent {
         native: PropTypes.bool,
         onRest: PropTypes.func,
         onFrame: PropTypes.func,
-        children: PropTypes.func,
+        children: PropTypes.oneOfType([PropTypes.func, PropTypes.arrayOf(PropTypes.func)]),
         render: PropTypes.func,
         reset: PropTypes.bool,
         immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
@@ -37,7 +37,7 @@ export default class Spring extends React.PureComponent {
         this.update(props, false)
     }
 
-    update({ from, to, config, attach, immediate, reset, onFrame }, start = false) {
+    update({ from, to, config, attach, immediate, reset, onFrame, onRest }, start = false) {
         const allProps = Object.entries({ ...from, ...to })
         const defaultAnimationValue = this.defaultAnimation._value
 
@@ -45,7 +45,6 @@ export default class Spring extends React.PureComponent {
         this.defaultAnimation.setValue(0)
         this.animations = allProps.reduce((acc, [name, value], i) => {
             const entry = (reset === false && this.animations[name]) || (this.animations[name] = {})
-
             let isNumber = typeof value === 'number'
             let isArray = !isNumber && Array.isArray(value)
             let fromValue = from[name] !== undefined ? from[name] : value
@@ -75,9 +74,18 @@ export default class Spring extends React.PureComponent {
             }
 
             if (immediate && (immediate === true || immediate.indexOf(name) !== -1)) entry.animation.setValue(toValue)
-            entry.start = () => Animated.spring(entry.animation, { toValue, ...config }).start(i === 0 && this.onRest)
+
+            entry.stopped = false
+            entry.start = () => {
+                Animated.spring(entry.animation, { toValue, ...config }).start(props => {
+                    if (props.finished) {
+                        this.animations[name].stopped = true
+                        if (Object.values(this.animations).every(animation => animation.stopped))
+                            onRest && onRest({ ...this.props.from, ...this.props.to })
+                    }
+                })
+            }
             entry.stop = () => entry.animation.stopAnimation()
-            start && entry.start()
 
             this.interpolators[name] = entry.interpolation
             return { ...acc, [name]: entry }
@@ -86,29 +94,35 @@ export default class Spring extends React.PureComponent {
         var oldPropsAnimated = this.propsAnimated
         this.propsAnimated = new Animated.AnimatedProps(this.interpolators, this.callback)
         oldPropsAnimated && oldPropsAnimated.__detach()
+
+        if (start) Object.values(this.animations).forEach(animation => animation.start())
     }
 
-    callback = () => {
+    callback = v => {
         if (this.props.onFrame) this.props.onFrame(this.propsAnimated.__getValue())
         !this.props.native && this.forceUpdate()
     }
-    onRest = props => props.finished && this.props.onRest && this.props.onRest()
 
     componentWillReceiveProps(props) {
         this.update(props, true)
     }
 
     componentDidMount() {
-        Object.values(this.animations).forEach(({ start }) => start())
+        Object.values(this.animations).forEach(animation => animation.start())
     }
 
     componentWillUnmount() {
-        Object.values(this.animations).forEach(({ stop }) => stop())
+        Object.values(this.animations).forEach(animation => animation.stop())
+    }
+
+    getValues() {
+        return this.propsAnimated.__getValue()
     }
 
     render() {
         const { children, render, from, to, config, native, ...extra } = this.props
-        let animatedProps = native ? this.interpolators : this.propsAnimated.__getValue()
-        return render ? render({ ...animatedProps, ...extra, children }) : children({ ...animatedProps, ...extra })
+        let animatedProps = { ...(native ? this.interpolators : this.propsAnimated.__getValue()), ...extra }
+        if (render) return render({ ...animatedProps, children })
+        else return Array.isArray(children) ? children.map(child => child(animatedProps)) : children(animatedProps)
     }
 }

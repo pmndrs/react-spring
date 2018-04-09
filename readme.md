@@ -52,7 +52,7 @@ react-spring builds upon animated's foundation, casting its imperative side out,
 <p align="middle">
   <img src="assets/vertical.gif" width="285" />
   <img src="assets/horizontal.gif" width="285" /> 
-  <img src="assets/dragndrop.gif" width="285" /> 
+  <img src="assets/keyframes-trail.gif" width="285" /> 
 </p>
 
 #### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
@@ -132,6 +132,23 @@ import { Parallax } from 'react-spring'
         second Page
     </Parallax.Layer>
 </Parallax>
+```
+
+#### Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
+
+<img src="assets/keyframes-trail.gif" width="285" />
+
+`Keyframes` allows you to orchestrate animations in a script. Theretically you can even switch primitives, for instance going from a Spring, to a Trail, to a Transition. It tries its best to remember the last state so that animations are additive. The API is still experiemental and only available under the @beta tag.
+
+```jsx
+import { Keyframes, Spring } from 'react-spring'
+
+<Keyframes script={async next => {
+    await next(Spring, { from: { opacity: 0 }, to: { opacity: 1 } })
+    await next(Spring, { from: { opacity: 0 }, to: { opacity: 0 } })
+}}>
+    {styles => <div style={styles}>Hello</div>}
+</Keyframes>
 ```
 
 #### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Gestures](https://codesandbox.io/embed/jzn14k0ppy) | [Routing](https://codesandbox.io/embed/xo0lrqw2nz) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag/n/drop](https://codesandbox.io/embed/l9zqz0m18z) | [SVG morphing](https://codesandbox.io/embed/lwpkp46om)
