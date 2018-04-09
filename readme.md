@@ -138,7 +138,7 @@ import { Parallax } from 'react-spring'
 
 <img src="assets/keyframes-trail.gif" width="285" />
 
-`Keyframes` orchestrates animations in a script that you provider. Theoretically you can even switch between primitives, for instance going from a Spring, to a Trail, to a Transition. It tries its best to remember the last state so that animations are additive. Animation can be awaited and return current props. The API is still experiemental and only available under the `@beta` tag.
+`Keyframes` orchestrates animations in a script that you provide. Theoretically you can even switch between primitives, for instance going from a Spring, to a Trail, to a Transition. It tries its best to remember the last state so that animations are additive. Animation can be awaited and return current props. The API is still experiemental and only available under the `@beta` tag.
 
 ```jsx
 import { Keyframes, Spring } from 'react-spring'
