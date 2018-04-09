@@ -57,11 +57,11 @@ react-spring builds upon animated's foundation, casting its imperative side out,
 
 #### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
-<img src="assets/spring.gif" width="285" />
-
 ```jsx
 import { Spring } from 'react-spring'
 ```
+
+<img src="assets/spring.gif" width="285" />
 
 A `Spring` will move data from one state to another. It remembers the current state, value changes are always fluid.
 
@@ -73,11 +73,11 @@ A `Spring` will move data from one state to another. It remembers the current st
 
 #### Mount/unmount Transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
 
-<img src="assets/transitions.gif" width="285" />
-
 ```jsx
 import { Transition } from 'react-spring'
 ```
+
+<img src="assets/transitions.gif" width="285" />
 
 `Transition` watches elements as they mount and unmount, it helps you to animate these changes.
 
@@ -93,11 +93,11 @@ import { Transition } from 'react-spring'
 
 #### 2-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
 
-<img src="assets/reveals.gif" width="285" />
-
 ```jsx
 import { Transition } from 'react-spring'
 ```
+
+<img src="assets/reveals.gif" width="285" />
 
 Given a single child instead of a list you can reveal components with it.
 
@@ -109,11 +109,11 @@ Given a single child instead of a list you can reveal components with it.
 
 #### Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
-<img src="assets/trails.gif" width="285" />
-
 ```jsx
 import { Trail } from 'react-spring'
 ```
+
+<img src="assets/trails.gif" width="285" />
 
 `Trail` animates the first child of a list of elements, the rest follow the spring of their previous sibling.
 
@@ -125,11 +125,11 @@ import { Trail } from 'react-spring'
 
 #### Parallax and page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
-<img src="assets/horizontal.gif" width="285" />
-
 ```jsx
 import { Parallax } from 'react-spring'
 ```
+
+<img src="assets/horizontal.gif" width="285" />
 
 `Parallax` allows you to declaratively create page/scroll-based animations.
 
