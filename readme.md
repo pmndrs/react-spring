@@ -145,7 +145,7 @@ import { Keyframes, Spring } from 'react-spring'
 
 <Keyframes script={async next => {
     await next(Spring, { from: { opacity: 0 }, to: { opacity: 1 } })
-    await next(Spring, { from: { opacity: 0 }, to: { opacity: 0 } })
+    await next(Spring, { to: { opacity: 0 } })
 }}>
     {styles => <div style={styles}>Hello</div>}
 </Keyframes>
