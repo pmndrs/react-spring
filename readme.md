@@ -15,11 +15,14 @@
     *   [Native rendering](#native-rendering-demo)
     *   [Transitions](#transitions)
     *   [Parallax and page transitions](#parallax-and-page-transitions)
-*   [License](#license-)
 
-# Why 🤔
+# What is it? 🤔
 
-react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similar in that they are spring-physics based, they have their pros and cons and could definitively benefit from one another:
+A set of simple, spring-physics based primitives that should cover most of your UI related animation needs. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another.
+
+# Why do we need yet another? 🧐
+
+react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
 
 |                | Declarative | Primitives | Interpolations | Performance |
 | -------------- | ----------- | ---------- | -------------- | ----------- |
@@ -27,7 +30,7 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 | Animated       | ❌          | ❌         | ✅             | ✅          |
 | React-spring   | ✅          | ✅         | ✅             | ✅          |
 
-react-spring inherits react-motions api (and simplifies it), has lots of primitives (springs, trails, transitions, reveals, parallax), can interpolate mostly everything (colors, gradients, percentages, degrees, svg-paths, arrays, etc.) and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
+react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lenghts to simplify it. It has lots of useful primitives (springs, trails, transitions, reveals, parallax), can interpolate mostly everything (colors, gradients, percentages, degrees, svg-paths, arrays, etc.) and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
 # Overview 🔭
 
@@ -266,8 +269,4 @@ import { Parallax } from 'react-spring'
 
 # Links 🔗
 
-[API](https://github.com/drcmda/react-spring/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md)
-
-# License ⚖
-
-### [MIT](https://github.com/drcmda/react-spring/blob/master/LICENSE)
+[API](https://github.com/drcmda/react-spring/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md) | [MIT](https://github.com/drcmda/react-spring/blob/master/LICENSE)
