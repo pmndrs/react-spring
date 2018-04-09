@@ -138,7 +138,7 @@ import { Parallax } from 'react-spring'
 
 <img src="assets/keyframes-trail.gif" width="285" />
 
-`Keyframes` allows you to orchestrate animations in a script. Theretically you can even switch primitives, for instance going from a Spring, to a Trail, to a Transition. It tries its best to remember the last state so that animations are additive. The API is still experiemental and only available under the @beta tag.
+`Keyframes` allows you to orchestrate animations in a script. Theretically you can even switch primitives, for instance going from a Spring, to a Trail, to a Transition. It tries its best to remember the last state so that animations are additive. The API is still experiemental and only available under the `@beta` tag.
 
 ```jsx
 import { Keyframes, Spring } from 'react-spring'
