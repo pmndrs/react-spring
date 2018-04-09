@@ -61,6 +61,8 @@ import { Spring, Transition, Trail, Parallax } from 'react-spring'
 
 #### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
+<img src="assets/spring.gif" width="285" />
+
 A `Spring` will move data from one state to another. It remembers the current state, value changes are always fluid.
 
 ```jsx
@@ -70,6 +72,8 @@ A `Spring` will move data from one state to another. It remembers the current st
 ```
 
 #### Mount/unmount Transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
+
+<img src="assets/transitions.gif" width="285" />
 
 `Transition` watches elements as they mount and unmount, it helps you to animate these changes.
 
@@ -85,6 +89,8 @@ A `Spring` will move data from one state to another. It remembers the current st
 
 #### 2-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
 
+<img src="assets/reveals.gif" width="285" />
+
 Given a single child instead of a list you can reveal components with it.
 
 ```jsx
@@ -95,6 +101,8 @@ Given a single child instead of a list you can reveal components with it.
 
 #### Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
+<img src="assets/trails.gif" width="285" />
+
 `Trail` animates the first child of a list of elements, the rest follow the spring of their previous sibling.
 
 ```jsx
@@ -104,6 +112,8 @@ Given a single child instead of a list you can reveal components with it.
 ```
 
 #### Parallax and page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
+
+<img src="assets/horizontal.gif" width="285" />
 
 `Parallax` allows you to declaratively create page/scroll-based animations.
 
