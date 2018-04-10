@@ -162,7 +162,7 @@ For a raw documentation of all possible properties look [here](https://github.co
 You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
 
 ```jsx
-<spring to={{
+<Spring to={{
     scale: toggle ? 1 : 2,
     start: toggle ? '#abc' : 'rgb(10,20,30)',
     end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
