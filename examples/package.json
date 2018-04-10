@@ -64,7 +64,7 @@
         "lodash-es": "^4.17.8",
         "nervjs": "^1.2.17",
         "react-loadable": "^5.3.1",
-        "react-spring": "^3.2.0-beta.12",
+        "react-spring": "^4.0.1-beta.1",
         "react-with-gesture": "^1.0.9"
     }
 }
