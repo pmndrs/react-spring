@@ -30,7 +30,7 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 | Animated       | ❌          | ❌         | ✅             | ✅          |
 | React-spring   | ✅          | ✅         | ✅             | ✅          |
 
-react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lenghts to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
+react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
 # Overview 🔭
 
