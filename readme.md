@@ -18,7 +18,7 @@
 
 # What is it? 🤔
 
-A set of simple, spring-physics based primitives that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
+A set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
 
 # Why do we need yet another? 🧐
 
@@ -30,7 +30,7 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 | Animated       | ❌          | ❌         | ✅             | ✅          |
 | React-spring   | ✅          | ✅         | ✅             | ✅          |
 
-react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lenghts to simplify it. It has lots of useful primitives (springs, trails, transitions, reveals, parallax), can interpolate mostly everything (colors, gradients, percentages, degrees, svg-paths, arrays, etc.) and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
+react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
 # Overview 🔭
 
@@ -138,20 +138,20 @@ import { Parallax } from 'react-spring'
 
 <img src="assets/keyframes-trail.gif" width="285" />
 
-`Keyframes` allows you to orchestrate animations in a script. Theretically you can even switch primitives, for instance going from a Spring, to a Trail, to a Transition. It tries its best to remember the last state so that animations are additive. The API is still experiemental and only available under the @beta tag.
+`Keyframes` orchestrates animations in a script that you provide. Theoretically you can even switch between primitives, for instance going from a Spring, to a Trail, to a Transition. It tries its best to remember the last state so that animations are additive. Animation can be awaited and return current props. The API is still experiemental and only available under the `@beta` tag.
 
 ```jsx
 import { Keyframes, Spring } from 'react-spring'
 
 <Keyframes script={async next => {
     await next(Spring, { from: { opacity: 0 }, to: { opacity: 1 } })
-    await next(Spring, { from: { opacity: 0 }, to: { opacity: 0 } })
+    await next(Spring, { to: { opacity: 0 } })
 }}>
     {styles => <div style={styles}>Hello</div>}
 </Keyframes>
 ```
 
-#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Gestures](https://codesandbox.io/embed/jzn14k0ppy) | [Routing](https://codesandbox.io/embed/xo0lrqw2nz) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn) | [Drag/n/drop](https://codesandbox.io/embed/l9zqz0m18z) | [SVG morphing](https://codesandbox.io/embed/lwpkp46om)
+#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Gestures](https://codesandbox.io/embed/jzn14k0ppy) | [Routing](https://codesandbox.io/embed/xo0lrqw2nz) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Trees](https://codesandbox.io/s/9jrjqvq954) | [Sunburst](https://codesandbox.io/embed/nww6yxo0jl) | [Drag](https://codesandbox.io/embed/l9zqz0m18z) | [Morphing](https://codesandbox.io/embed/lwpkp46om) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn)
 
 # API overview 📖
 
@@ -162,7 +162,7 @@ For a raw documentation of all possible properties look [here](https://github.co
 You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
 
 ```jsx
-<spring to={{
+<Spring to={{
     scale: toggle ? 1 : 2,
     start: toggle ? '#abc' : 'rgb(10,20,30)',
     end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
