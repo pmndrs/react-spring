@@ -36,7 +36,7 @@ class Spring extends React.PureComponent {
         // Frame by frame callback, first argument passed is the animated value
         onFrame: PropTypes.func,
         // Takes a function that receives interpolated styles
-        children: PropTypes.func,
+        children: PropTypes.oneOfType([PropTypes.func, PropTypes.arrayOf(PropTypes.func)]),
         // Same as children, but takes precedence if present
         render: PropTypes.func,
         // Prevents animation if true, you can also pass individual keys
@@ -65,7 +65,7 @@ class Transition extends React.PureComponent {
         enter: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         // Unmpount styles
         leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-        // 
+        //
         update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         // A collectiomn of unique keys that must match with the childrens order
         // Can be omitted if children/render aren't an array
@@ -146,6 +146,20 @@ class Parallax extends React.PureComponent {
             offset: 0,
             speed: 0,
         }
+    }
+}
+```
+
+# Keyframes
+
+```jsx
+export default class Keyframes extends React.Component {
+    static propTypes = {
+        // Callback which receives a function that that takes two arguments:
+        //     script={async next => {
+        //         next(primitive, props)
+        //     }}
+        script: PropTypes.func,
     }
 }
 ```

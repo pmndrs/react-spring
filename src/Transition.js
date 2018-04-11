@@ -110,10 +110,9 @@ export default class Transition extends React.PureComponent {
 
         // Re-order list
         let ordered = keys.map(key => transitions.find(child => child.key === key))
-        deleted.forEach(key => {
-            let index = transitions.findIndex(child => child.key === key)
-            let child = transitions.find(child => child.key === key)
-            if (child) ordered = [...ordered.slice(0, index), child, ...ordered.slice(index)]
+        transitions.forEach((transition, index) => {
+            if (transition.destroy && !ordered.find(t => t.key === transition.key))
+                ordered = [...ordered.slice(0, index), transition, ...ordered.slice(index)]
         })
 
         // Push new state

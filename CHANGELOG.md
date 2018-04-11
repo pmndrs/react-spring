@@ -1,3 +1,7 @@
+## 4.0.2
+
+Keyframe api, various bugfixes
+
 ## 3.1.0
 
 Breaking changes:
