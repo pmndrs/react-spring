@@ -1,4 +1,3 @@
-import Animated from './animated/targets/react-dom'
 import Spring, { config, template, animated, interpolate } from './Spring'
 import Transition from './Transition'
 import Trail from './Trail'

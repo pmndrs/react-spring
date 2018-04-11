@@ -1,5 +1,4 @@
 import Animation from './Animation'
-import AnimatedValue from './AnimatedValue'
 import RequestAnimationFrame from './injectable/RequestAnimationFrame'
 import CancelAnimationFrame from './injectable/CancelAnimationFrame'
 import SpringConfig from './SpringConfig'
