@@ -3,6 +3,10 @@ import PropTypes from 'prop-types'
 import Animated from './animated/targets/react-dom'
 import { config, animated, template } from './Spring'
 
+function getScrollType(horizontal) {
+  return horizontal ? 'scrollLeft' : 'scrollTop'
+}
+
 export default class Parallax extends React.PureComponent {
     static propTypes = {
         pages: PropTypes.number.isRequired,
@@ -39,16 +43,17 @@ export default class Parallax extends React.PureComponent {
         if (!this.busy) {
             this.busy = true
             this.scrollerRaf()
-            this.current = event.target[horizontal ? 'scrollLeft' : 'scrollTop']
+            this.current = event.target[getScrollType(horizontal)]
         }
     }
 
     update = () => {
         const { scrolling, horizontal } = this.props
+        const scrollType = getScrollType(horizontal)
         if (!this.refs.container) return
         this.space = this.refs.container[horizontal ? 'clientWidth' : 'clientHeight']
-        if (scrolling) this.current = this.refs.container[horizontal ? 'scrollLeft' : 'scrollTop']
-        else this.refs.container[horizontal ? 'scrollLeft' : 'scrollTop'] = this.current = this.offset * this.space
+        if (scrolling) this.current = this.refs.container[scrollType]
+        else this.refs.container[scrollType] = this.current = this.offset * this.space
         if (this.refs.content) this.refs.content.style[horizontal ? 'width' : 'height'] = `${this.space * this.props.pages}px`
         this.layers.forEach(layer => {
             layer.setHeight(this.space, true)
@@ -66,11 +71,12 @@ export default class Parallax extends React.PureComponent {
 
     scrollTo(offset) {
         const { horizontal, config } = this.props
+        const scrollType = getScrollType(horizontal)
         this.scrollStop()
         this.offset = offset
         const target = this.refs.container
-        this.animatedScroll = new Animated.Value(target[horizontal ? 'scrollLeft' : 'scrollTop'])
-        this.animatedScroll.addListener(({ value }) => (target[horizontal ? 'scrollLeft' : 'scrollTop'] = value))
+        this.animatedScroll = new Animated.Value(target[scrollType])
+        this.animatedScroll.addListener(({ value }) => (target[scrollType] = value))
         Animated.spring(this.animatedScroll, { toValue: offset * this.space, ...config }).start()
     }
 
