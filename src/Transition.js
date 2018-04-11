@@ -31,7 +31,7 @@ export default class Transition extends React.PureComponent {
     constructor(props) {
         super()
         let { children, render, keys, items, from, enter, leave, update } = props
-        children = render || children
+        children = render || children || (() => null)
         if (typeof keys === 'function') keys = items.map(keys)
         if (!Array.isArray(children)) {
             children = [children]
@@ -50,7 +50,7 @@ export default class Transition extends React.PureComponent {
         let { transitions, transitionKeys } = this.state
         let { children, render, keys, items, from, enter, leave, update } = props
 
-        children = render || children
+        children = render || children || (() => null)
         if (typeof keys === 'function') keys = items.map(keys)
         if (!Array.isArray(children)) {
             children = [children]
