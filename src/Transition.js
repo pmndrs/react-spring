@@ -5,7 +5,13 @@ import Spring, { config } from './Spring'
 
 const ref = (object, key) => (typeof object === 'function' ? object(key) : object)
 
-export default class Transition extends React.PureComponent {
+function shallowDiffers(a, b) {
+    for (let i in a) if (!(i in b)) return true
+    for (let i in b) if (a[i] !== b[i]) return true
+    return false
+}
+
+export default class Transition extends React.Component {
     static propTypes = {
         native: PropTypes.bool,
         config: PropTypes.object,
@@ -46,11 +52,15 @@ export default class Transition extends React.PureComponent {
         }
     }
 
+    shouldComponentUpdate(nextProps) {
+        return shallowDiffers(nextProps, this.props)
+    }
+
     componentWillReceiveProps(props) {
         let { transitions, transitionKeys } = this.state
         let { children, render, keys, items, from, enter, leave, update } = props
 
-        children = render || children || (() => null)
+        children = render || children || (() => null)
         if (typeof keys === 'function') keys = items.map(keys)
         if (!Array.isArray(children)) {
             children = [children]

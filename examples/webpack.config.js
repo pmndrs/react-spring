@@ -52,8 +52,8 @@ module.exports = mode => {
             modules: [path.resolve('./'), 'node_modules'],
             extensions: ['.js', '.jsx'],
             alias: {
-                //'react': path.resolve('node_modules/react'),
-                //'react-spring': path.resolve('../src'),
+                'react': path.resolve('node_modules/react'),
+                'react-spring': path.resolve('../src'),
                 lodash: path.resolve(__dirname, 'node_modules/lodash-es'),
             },
         },
