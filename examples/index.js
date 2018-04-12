@@ -11,6 +11,7 @@ const components = [
     'areas',
     'trails',
     'reveals',
+    'timing',
     'sunburst',
     'gestures',
     'tree',

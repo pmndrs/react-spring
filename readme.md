@@ -39,6 +39,11 @@
   <img src="assets/horizontal.gif" width="285" /> 
   <img src="assets/keyframes-trail.gif" width="285" /> 
 </p>
+<p align="middle">
+  <img src="assets/dragndrop.gif" width="285" />
+  <img src="assets/stream.gif" width="285" /> 
+  <img src="assets/time.gif" width="285" /> 
+</p>
 
 A set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
 
@@ -137,6 +142,18 @@ import { Parallax } from 'react-spring'
 </Parallax>
 ```
 
+#### Time/Duration based implementations ([Demo](https://codesandbox.io/embed/q9lozyymr9))
+
+<img src="assets/time.gif" width="285" />
+
+You'll find varying easing implementations under [/dist/addons](https://github.com/drcmda/react-spring/tree/master/src/addons). For now there's a time-based animation as well common easings, and IOS'es harmonic oscillator spring.
+
+```jsx
+import { TimingAnimation, Easing } from 'react-spring/dist/addons'
+
+<Spring impl={TimingAnimation} config={{ duration: 1000, easing.linear }} ...>
+```
+
 #### Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
 
 <img src="assets/keyframes-trail.gif" width="285" />
@@ -163,6 +180,7 @@ import { Keyframes, Spring } from 'react-spring'
 * Trails/Staggered motion: https://codesandbox.io/embed/vvmv6x01l5
 * Horizontal paged parallax: https://codesandbox.io/embed/548lqnmk6l
 * Vertical scrolled parallax: https://codesandbox.io/embed/0oonqxnpjl
+* Time/duration https://codesandbox.io/embed/q9lozyymr9
 * Keyframes/single script: https://codesandbox.io/embed/j1w4355593
 * Keyframes/multiple scripts: https://codesandbox.io/embed/zl35mrkqmm
 * SVG morphing/custom interpolaters: https://codesandbox.io/embed/lwpkp46om
