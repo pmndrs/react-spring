@@ -19,22 +19,6 @@
 
 # What is it? 🤔
 
-A set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
-
-# Why do we need yet another? 🧐
-
-react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
-
-|                | Declarative | Primitives | Interpolations | Performance |
-| -------------- | ----------- | ---------- | -------------- | ----------- |
-| React-motion   | ✅          | ✅         | ❌             | ❌          |
-| Animated       | ❌          | ❌         | ✅             | ✅          |
-| React-spring   | ✅          | ✅         | ✅             | ✅          |
-
-react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
-
-# Overview 🔭
-
 <p align="middle">
   <img src="assets/spring.gif" width="285" />
   <img src="assets/transitions.gif" width="285" /> 
@@ -55,6 +39,22 @@ react-spring builds upon animated's foundation, casting its imperative side out,
   <img src="assets/horizontal.gif" width="285" /> 
   <img src="assets/keyframes-trail.gif" width="285" /> 
 </p>
+
+A set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
+
+# Why do we need yet another? 🧐
+
+react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
+
+|                | Declarative | Primitives | Interpolations | Performance |
+| -------------- | ----------- | ---------- | -------------- | ----------- |
+| React-motion   | ✅          | ✅         | ❌             | ❌          |
+| Animated       | ❌          | ❌         | ✅             | ✅          |
+| React-spring   | ✅          | ✅         | ✅             | ✅          |
+
+react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
+
+# Overview 🔭
 
 #### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
