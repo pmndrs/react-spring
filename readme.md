@@ -9,6 +9,7 @@
 *   [What is it?](#what-is-it-)
 *   [Why do we need yet another?](#why-do-we-need-yet-another-)
 *   [Overview](#overview-)
+*   [Example collection](#example-collection-)
 *   [API Overview](#api-overview-)
     *   [Springs and basic interpolation](#springs-and-basic-interpolation)
     *   [Render props](#render-props)
@@ -17,22 +18,6 @@
     *   [Parallax and page transitions](#parallax-and-page-transitions)
 
 # What is it? 🤔
-
-A set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
-
-# Why do we need yet another? 🧐
-
-react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
-
-|                | Declarative | Primitives | Interpolations | Performance |
-| -------------- | ----------- | ---------- | -------------- | ----------- |
-| React-motion   | ✅          | ✅         | ❌             | ❌          |
-| Animated       | ❌          | ❌         | ✅             | ✅          |
-| React-spring   | ✅          | ✅         | ✅             | ✅          |
-
-react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
-
-# Overview 🔭
 
 <p align="middle">
   <img src="assets/spring.gif" width="285" />
@@ -54,6 +39,24 @@ react-spring builds upon animated's foundation, casting its imperative side out,
   <img src="assets/horizontal.gif" width="285" /> 
   <img src="assets/keyframes-trail.gif" width="285" /> 
 </p>
+
+A set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
+
+# Why do we need yet another? 🧐
+
+react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
+
+|                | Declarative | Primitives | Interpolations | Performance |
+| -------------- | ----------- | ---------- | -------------- | ----------- |
+| React-motion   | ✅          | ✅         | ❌             | ❌          |
+| Animated       | ❌          | ❌         | ✅             | ✅          |
+| React-spring   | ✅          | ✅         | ✅             | ✅          |
+
+react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
+
+For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
+
+# Overview 🔭
 
 #### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
@@ -151,7 +154,26 @@ import { Keyframes, Spring } from 'react-spring'
 </Keyframes>
 ```
 
-#### Additional demos: [Vertical scroll](https://codesandbox.io/embed/0oonqxnpjl) | [Gestures](https://codesandbox.io/embed/jzn14k0ppy) | [Routing](https://codesandbox.io/embed/xo0lrqw2nz) | [Graphs](https://codesandbox.io/embed/j3x61vjz5v) | [Trees](https://codesandbox.io/s/9jrjqvq954) | [Sunburst](https://codesandbox.io/embed/nww6yxo0jl) | [Drag](https://codesandbox.io/embed/l9zqz0m18z) | [Morphing](https://codesandbox.io/embed/lwpkp46om) | [TodoMVC](https://codesandbox.io/embed/2pk8l7n7kn)
+# Example collection ⚡️
+
+* Springs and interpolation: https://codesandbox.io/embed/oln44nx8xq
+* Native springs: https://codesandbox.io/embed/882njxpz29
+* Mount/Unmount transitions: https://codesandbox.io/embed/j150ykxrv
+* Reveals: https://codesandbox.io/embed/yj52v5689
+* Trails/Staggered motion: https://codesandbox.io/embed/vvmv6x01l5
+* Horizontal paged parallax: https://codesandbox.io/embed/548lqnmk6l
+* Vertical scrolled parallax: https://codesandbox.io/embed/0oonqxnpjl
+* Keyframes/single script: https://codesandbox.io/embed/j1w4355593
+* Keyframes/multiple scripts: https://codesandbox.io/embed/zl35mrkqmm
+* SVG morphing/custom interpolaters: https://codesandbox.io/embed/lwpkp46om
+* D3 stream graps: https://codesandbox.io/embed/py3p5p11m7
+* D3 area graphs: https://codesandbox.io/embed/j3x61vjz5v
+* D3 sunbursts: https://codesandbox.io/embed/nww6yxo0jl
+* D3 trees: https://codesandbox.io/embed/9jrjqvq954
+* Routing: https://codesandbox.io/embed/mjnwrk1o3p
+* Horizontal gestures / occlude: https://codesandbox.io/embed/jzn14k0ppy
+* Vertical gestures / drag-n-drop: https://codesandbox.io/embed/l9zqz0m18z
+* Animated TodoMVC: https://codesandbox.io/embed/2pk8l7n7kn
 
 # API overview 📖
 
