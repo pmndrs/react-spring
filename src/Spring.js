@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Animated from './animated/targets/react-dom'
+import SpringAnimation from './animated/SpringAnimation'
 
 const animated = Animated.elements
 const template = Animated.template
@@ -28,8 +29,18 @@ export default class Spring extends React.PureComponent {
         reset: PropTypes.bool,
         delay: PropTypes.number,
         immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
+        impl: PropTypes.func,
     }
-    static defaultProps = { from: {}, to: {}, config: config.default, native: false, immediate: false, reset: false, delay: 0 }
+    static defaultProps = {
+        from: {},
+        to: {},
+        config: config.default,
+        native: false,
+        immediate: false,
+        reset: false,
+        delay: 0,
+        impl: SpringAnimation,
+    }
 
     constructor(props) {
         super()
@@ -38,7 +49,7 @@ export default class Spring extends React.PureComponent {
         this._updateProps(props, false)
     }
 
-    _updateProps({ from, to, config, attach, immediate, reset, delay, onFrame, onRest }, start = false) {
+    _updateProps({ impl, from, to, config, attach, immediate, reset, delay, onFrame, onRest }, start = false) {
         const allProps = Object.entries({ ...from, ...to })
         const defaultAnimationValue = this._defaultAnimation._value
 
@@ -78,7 +89,7 @@ export default class Spring extends React.PureComponent {
 
             entry.stopped = false
             entry.start = () => {
-                Animated.spring(entry.animation, { toValue, ...config }).start(props => {
+                Animated.controller(entry.animation, { toValue, ...config }, impl).start(props => {
                     if (props.finished) {
                         this._animations[name].stopped = true
                         if (Object.values(this._animations).every(animation => animation.stopped))

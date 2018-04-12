@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Animated from './animated/targets/react-dom'
+import SpringAnimation from './animated/SpringAnimation'
 import { config, animated, template } from './Spring'
 
 function getScrollType(horizontal) {
@@ -13,11 +14,13 @@ export default class Parallax extends React.PureComponent {
         config: PropTypes.object,
         scrolling: PropTypes.bool,
         horizontal: PropTypes.bool,
+        impl: PropTypes.func,
     }
     static defaultProps = {
         config: config.slow,
         scrolling: true,
         horizontal: false,
+        impl: SpringAnimation,
     }
     static childContextTypes = { parallax: PropTypes.object }
 
@@ -70,14 +73,14 @@ export default class Parallax extends React.PureComponent {
     scrollStop = event => this.animatedScroll && this.animatedScroll.stopAnimation()
 
     scrollTo(offset) {
-        const { horizontal, config } = this.props
+        const { horizontal, config, impl } = this.props
         const scrollType = getScrollType(horizontal)
         this.scrollStop()
         this.offset = offset
         const target = this.refs.container
         this.animatedScroll = new Animated.Value(target[scrollType])
         this.animatedScroll.addListener(({ value }) => (target[scrollType] = value))
-        Animated.spring(this.animatedScroll, { toValue: offset * this.space, ...config }).start()
+        Animated.controller(this.animatedScroll, { toValue: offset * this.space, ...config }, impl).start()
     }
 
     getChildContext() {
@@ -181,18 +184,18 @@ export default class Parallax extends React.PureComponent {
         }
 
         setPosition(height, scrollTop, immediate = false) {
-            const config = this.context.parallax.props.config
+            const { config, impl } = this.context.parallax.props
             const targetScroll = Math.floor(this.props.offset) * height
             const offset = height * this.props.offset + targetScroll * this.props.speed
             const toValue = parseFloat(-(scrollTop * this.props.speed) + offset)
-            if (!immediate) Animated.spring(this.animatedTranslate, { toValue, ...config }).start()
+            if (!immediate) Animated.controller(this.animatedTranslate, { toValue, ...config }, impl).start()
             else this.animatedTranslate.setValue(toValue)
         }
 
         setHeight(height, immediate = false) {
-            const config = this.context.parallax.props.config
+            const { config, impl } = this.context.parallax.props
             const toValue = parseFloat(height * this.props.factor)
-            if (!immediate) Animated.spring(this.animatedSpace, { toValue, ...config }).start()
+            if (!immediate) Animated.controller(this.animatedSpace, { toValue, ...config }, impl).start()
             else this.animatedSpace.setValue(toValue)
         }
 

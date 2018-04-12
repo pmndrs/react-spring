@@ -8,28 +8,25 @@ import AnimatedTracking from './AnimatedTracking'
 import SpringAnimation from './SpringAnimation'
 import createAnimatedComponent from './createAnimatedComponent'
 import ApplyAnimatedValues from './injectable/ApplyAnimatedValues'
-import FlattenStyle from './injectable/FlattenStyle'
-import RequestAnimationFrame from './injectable/RequestAnimationFrame'
-import CancelAnimationFrame from './injectable/CancelAnimationFrame'
 import AnimatedProps from './AnimatedProps'
 
-const maybeVectorAnim = (array, { tension, friction, toValue }, anim) => {
+const maybeVectorAnim = (array, { tension, friction, toValue }, anim, impl) => {
     // { tension, friction, toValue: [...]}
     if (array instanceof AnimatedArray)
-        return parallel(array._values.map((v, i) => anim(v, { tension, friction, toValue: toValue[i] })), { stopTogether: false })
+        return parallel(array._values.map((v, i) => anim(v, { tension, friction, toValue: toValue[i] }, impl)), { stopTogether: false })
     return null
 }
 
-var spring = function(value, config) {
+var controller = function(value, config, impl) {
     return (
-        maybeVectorAnim(value, config, spring) || {
+        maybeVectorAnim(value, config, controller, impl) || {
             start: function(callback) {
                 var singleValue = value
                 var singleConfig = config
                 singleValue.stopTracking()
                 if (config.toValue instanceof Animated)
-                    singleValue.track(new AnimatedTracking(singleValue, config.toValue, SpringAnimation, singleConfig, callback))
-                else singleValue.animate(new SpringAnimation(singleConfig), callback)
+                    singleValue.track(new AnimatedTracking(singleValue, config.toValue, impl, singleConfig, callback))
+                else singleValue.animate(new impl(singleConfig), callback)
             },
             stop: function() {
                 value.stopAnimation()
@@ -72,7 +69,7 @@ var parallel = (animations, config) => {
 const exports = {
     Value: AnimatedValue,
     Array: AnimatedArray,
-    spring,
+    controller,
     template: function template(strings, ...values) {
         return new AnimatedTemplate(strings, values)
     },
@@ -82,9 +79,6 @@ const exports = {
     createAnimatedComponent,
     inject: {
         ApplyAnimatedValues: ApplyAnimatedValues.inject,
-        FlattenStyle: FlattenStyle.inject,
-        RequestAnimationFrame: RequestAnimationFrame.inject,
-        CancelAnimationFrame: CancelAnimationFrame.inject,
     },
     ApplyAnimatedValues,
     AnimatedProps,

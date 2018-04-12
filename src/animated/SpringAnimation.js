@@ -1,6 +1,4 @@
 import Animation from './Animation'
-import RequestAnimationFrame from './injectable/RequestAnimationFrame'
-import CancelAnimationFrame from './injectable/CancelAnimationFrame'
 import SpringConfig from './SpringConfig'
 
 const withDefault = (value, defaultValue) => value === undefined || value === null ? defaultValue : value
@@ -44,7 +42,7 @@ export default class SpringAnimation extends Animation {
         return { lastPosition: this._lastPosition, lastVelocity: this._lastVelocity, lastTime: this._lastTime }
     }
 
-    onUpdate() {
+    onUpdate = () => {
         var position = this._lastPosition
         var velocity = this._lastVelocity
         var tempPosition = this._lastPosition
@@ -121,12 +119,12 @@ export default class SpringAnimation extends Animation {
             this.__debouncedOnEnd({ finished: true })
             return
         }
-        this._animationFrame = RequestAnimationFrame.current(this.onUpdate.bind(this))
+        this._animationFrame = requestAnimationFrame(this.onUpdate)
     }
 
     stop() {
         this.__active = false
-        CancelAnimationFrame.current(this._animationFrame)
+        cancelAnimationFrame(this._animationFrame)
         this.__debouncedOnEnd({ finished: false })
     }
 }
