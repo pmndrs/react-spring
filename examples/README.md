@@ -1,4 +1,4 @@
-    git clone https://github.com/drcmda/react-spring
+    git clone --depth=1 https://github.com/drcmda/react-spring
     cd react-spring/examples
     npm install
     npm start
