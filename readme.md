@@ -54,6 +54,8 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 
 react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
+For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
+
 # Overview 🔭
 
 #### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
