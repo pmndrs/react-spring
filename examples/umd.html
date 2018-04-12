@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello World</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/prop-types@15.6/prop-types.min.js"></script>
+  <script src="../dist/react-spring.umd.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+      ReactDOM.render(
+        <ReactSpring.Spring config={{ tension: 0, friction: 100 }} from={{ opacity: 0 }} to={{ opacity: 1 }}>
+            {props => <h1 style={props}>Hello, world!</h1>}
+        </ReactSpring.Spring>,
+        document.getElementById('root')
+      )
+
+    </script>
+</body>
+
+</html>

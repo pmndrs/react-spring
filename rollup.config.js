@@ -8,9 +8,12 @@ function presets(modules = false, loose = true) {
     return [['@babel/preset-env', { loose, modules }], ['@babel/preset-stage-2', { loose }], '@babel/preset-react']
 }
 
-export default {
+export default [{
     input: 'src/index.js',
-    output: [{ file: `${pkg.main}.js`, format: 'cjs' }, { file: `${pkg.module}.js`, format: 'es' }],
+    output: [
+        { file: `${pkg.main}.js`, format: 'cjs' },
+        { file: `${pkg.module}.js`, format: 'es' },
+    ],
     external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
     plugins: [
         babel({
@@ -22,4 +25,21 @@ export default {
         commonjs(),
         uglify(),
     ],
-}
+},
+{
+    input: 'src/index.js',
+    output: [
+        { file: `${pkg.main}.umd.js`, format: 'umd', name: 'ReactSpring' },
+    ],
+    external: [...Object.keys(pkg.peerDependencies || {})],
+    plugins: [
+        babel({
+            babelrc: false,
+            presets: presets(),
+            plugins: ['transform-react-remove-prop-types', 'annotate-pure-calls'],
+        }),
+        resolve(),
+        commonjs(),
+        uglify(),
+    ],
+}]
