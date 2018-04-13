@@ -1,4 +1,4 @@
-import { Animation } from 'react-spring'
+import Animation from '../animated/Animation'
 import Easing from './Easing'
 
 const easeInOut = Easing.inOut(Easing.ease)

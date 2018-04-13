@@ -1,4 +1,4 @@
-import { Animation } from 'react-spring'
+import Animation from '../animated/Animation'
 
 const withDefault = (value, defaultValue) => (value === undefined || value === null ? defaultValue : value)
 const tensionFromOrigamiValue = oValue => (oValue - 30) * 3.62 + 194

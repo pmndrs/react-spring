@@ -40,13 +40,13 @@ export default [
     {
         input: 'src/addons/index.js',
         output: [{ file: `dist/addons.cjs.js`, format: 'cjs' }, { file: `dist/addons.js`, format: 'es' }],
-        external: ['react-spring', ...Object.keys(pkg.peerDependencies || {})],
+        external: [...Object.keys(pkg.peerDependencies || {})],
         plugins,
     },
     {
         input: 'src/addons/index.js',
-        output: { file: `dist/addons.umd.js`, format: 'umd', name: 'ReactSpringAddons', globals: { 'react-spring': 'ReactSpring' } },
-        external: ['react-spring', ...Object.keys(pkg.peerDependencies || {})],
+        output: { file: `dist/addons.umd.js`, format: 'umd', name: 'ReactSpringAddons' },
+        external: [...Object.keys(pkg.peerDependencies || {})],
         plugins,
     },
 ]
