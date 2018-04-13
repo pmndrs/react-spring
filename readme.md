@@ -151,7 +151,7 @@ You'll find varying implementations under [/dist/addons](https://github.com/drcm
 ```jsx
 import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 
-<Spring impl={TimingAnimation} config={{ delay: 200, duration: 1000, easing.linear }} ...>
+<Spring impl={TimingAnimation} config={{ delay: 200, duration: 1000, Easing.linear }} ...>
 ```
 
 #### Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
@@ -238,6 +238,8 @@ Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recogn
 ![img](assets/without-native.jpeg) | ![img](assets/with-native.jpeg)
 ---|---
 <sub>Most libraries animate by having React recalculate the component-tree. Here it attempts to animate a component consisting of ~300 sub-components, plowing through the frame budget and causing jank.</sub> | <sub>React-spring with the `native` property renders the component *only once*, from then on the animation will be applied directly to the dom in a requestAnimationFrame-loop, similar to how gsap and d3 do it.</sub>
+
+---
 
 By default we'll render every frame (like in the image on the left) as it gives you more freedom (for instance this is the only way that you can animate React-component props). In situations where that becomes expensive use the `native` flag. The flag is available for all primitives (Spring, Transition & Trail, Keyframes, Parallax is native by design). **Try doing this in all situations where you can**, the benefits are worth it. Especially if your animated component consists of large subtrees, routes, etc.
 
