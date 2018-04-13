@@ -237,7 +237,7 @@ Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recogn
 
 ![img](assets/without-native.jpeg) | ![img](assets/with-native.jpeg)
 ---|---
-<sub>Most libraries animate by having React recalculate the component-tree. Here it attempts to animate a component consisting of ~300 sub-components, plowing through the frame budget and causing jank.</sub> | <sub>React-spring with the `native` property renders the component *only once*, from then on the animation will be applied directly to the dom in a requestAnimationFrame-loop, similar to how gsap and d3 do it.</sub>
+<sub>Libraries animate by having React recalculate the component-tree on every frame. Here it attempts to animate a component consisting of ~300 sub-components, plowing through the frame budget and causing jank.</sub> | <sub>React-spring with the `native` property renders the component *only once*, from then on the animation will be applied directly to the dom in a requestAnimationFrame-loop, similar to how gsap and d3 do it.</sub>
 
 ---
 
