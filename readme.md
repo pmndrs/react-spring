@@ -252,18 +252,22 @@ Just be aware of the following conditions:
 ```jsx
 import { Spring, animated, interpolate } from 'react-spring'
 
-<animated.div 
-    style={{
-        // Use plain animated values like always, ...
-        borderRadius: radius,
-        // For interpolations, either call "interpolate" on the value itself, it accepts a function
-        background: time.interpolate(t => 'rgba(0, 0, 0, ${t})'),
-        // ... or supply a range clamp
-        color: time.interpolate({ range: [0, 1], output: ['red', 'rgba(1, 50, 210, 0.5)'] }),
-        // Or use the interpolate helper, which can take multiple values, it accepts a function
-        transform: interpolate([x, y], (x, y) => `translate(${x}px, ${y}px)`),
-    }}>
-</animated.div>
+<Spring native from={{ radius: 0, time: 0, x: 0, y: 0 }} to={{ radius: 10, time: 1, x: 10, y: 20 }}>
+    {({ radius, time, x, y }) => (
+        <animated.div 
+            style={{
+                // Use plain animated values like always, ...
+                borderRadius: radius,
+                // For interpolations, either call "interpolate" on the value itself, it accepts a function
+                background: time.interpolate(t => 'rgba(0, 0, 0, ${t})'),
+                // ... or supply a range clamp
+                color: time.interpolate({ range: [0, 1], output: ['red', 'rgba(1, 50, 210, 0.5)'] }),
+                // Or use the interpolate helper, which can take multiple values, it accepts a function
+                transform: interpolate([x, y], (x, y) => `translate(${x}px, ${y}px)`),
+            }}>
+        </animated.div>
+    )}
+</Spring>
 ```
 
 ### Transitions
