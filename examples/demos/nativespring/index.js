@@ -1,5 +1,5 @@
 import React from 'react'
-import { Spring, animated, template } from 'react-spring'
+import { Spring, animated, interpolate } from 'react-spring'
 
 const TRIANGLE = 'M20,380 L380,380 L380,380 L200,20 L20,380 Z'
 const RECTANGLE = 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
@@ -11,7 +11,7 @@ const styles = {
 const Content = ({ toggle, backgroundColor, fill, rotate, scale, shape }) => (
     <animated.div style={{ ...styles.container, backgroundColor }}>
         <animated.svg
-            style={{ ...styles.shape, fill, transform: template`rotate3d(0,1,0,${rotate}) scale(${scale})` }}
+            style={{ ...styles.shape, fill, transform: interpolate([rotate, scale], (r, s) => `rotate3d(0,1,0,${r}) scale(${s})`) }}
             version="1.1"
             viewBox="0 0 400 400">
             <g style={{ cursor: 'pointer' }} fillRule="evenodd" onClick={toggle}>

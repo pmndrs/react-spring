@@ -1,5 +1,5 @@
 import React from 'react'
-import { Transition, animated, template } from 'react-spring'
+import { Transition, animated, interpolate } from 'react-spring'
 import Node from './Node'
 import { findCollapsedParent, getTopLeft } from './utils'
 
@@ -58,7 +58,7 @@ function Nodes({ nodes, layout, orientation, onNodeClick }) {
                         width={40}
                         height={20}
                         opacity={styles.opacity}
-                        transform={template`translate(${styles.left}, ${styles.top})`}
+                        transform={interpolate([styles.left, styles.top], (l, t) => `translate(${l}, ${t})`)}
                         key={keyAccessor(node)}>
                         <Node node={node} layout={layout} orientation={orientation} onClick={() => onNodeClick(node)} key={key} />
                     </animated.g>

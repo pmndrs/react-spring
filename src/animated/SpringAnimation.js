@@ -1,7 +1,12 @@
 import Animation from './Animation'
-import SpringConfig from './SpringConfig'
 
 const withDefault = (value, defaultValue) => value === undefined || value === null ? defaultValue : value
+const tensionFromOrigamiValue = oValue => (oValue - 30) * 3.62 + 194
+const frictionFromOrigamiValue = oValue => (oValue - 8) * 3 + 25
+const fromOrigamiTensionAndFriction = (tension, friction) => ({
+    tension: tensionFromOrigamiValue(tension),
+    friction: frictionFromOrigamiValue(friction),
+})
 
 export default class SpringAnimation extends Animation {
     constructor(config) {
@@ -13,9 +18,10 @@ export default class SpringAnimation extends Animation {
         this._lastVelocity = withDefault(config.velocity, 0)
         this._toValue = config.toValue
         this.__isInteraction = config.isInteraction !== undefined ? config.isInteraction : true
-        var springConfig = SpringConfig.fromOrigamiTensionAndFriction(withDefault(config.tension, 40), withDefault(config.friction, 7))
+        var springConfig = fromOrigamiTensionAndFriction(withDefault(config.tension, 40), withDefault(config.friction, 7))
         this._tension = springConfig.tension
         this._friction = springConfig.friction
+        this._delay = config.delay !== undefined ? config.delay : 0
     }
 
     start(fromValue, onUpdate, onEnd, previousAnimation) {
@@ -35,7 +41,8 @@ export default class SpringAnimation extends Animation {
 
         if (this._initialVelocity !== undefined && this._initialVelocity !== null) this._lastVelocity = this._initialVelocity
 
-        this.onUpdate()
+        if (this._delay) this._timeout = setTimeout(this.onUpdate, this._delay)
+        else this.onUpdate()
     }
 
     getInternalState() {
@@ -124,6 +131,7 @@ export default class SpringAnimation extends Animation {
 
     stop() {
         this.__active = false
+        clearTimeout(this._timeout)
         cancelAnimationFrame(this._animationFrame)
         this.__debouncedOnEnd({ finished: false })
     }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trail, animated, template } from 'react-spring'
+import { Trail, animated } from 'react-spring'
 import './styles.css'
 
 export default class extends React.PureComponent {
@@ -18,7 +18,7 @@ export default class extends React.PureComponent {
                         <animated.div
                             className="box"
                             onClick={this.toggle}
-                            style={{ opacity, transform: template`translate3d(${x}%,0,0)` }}
+                            style={{ opacity, transform: x.interpolate(x => `translate3d(${x}%,0,0)`) }}
                         />
                     ))}
                 </Trail>

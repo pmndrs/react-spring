@@ -142,16 +142,16 @@ import { Parallax } from 'react-spring'
 </Parallax>
 ```
 
-#### Time/Duration based implementations ([Demo](https://codesandbox.io/embed/q9lozyymr9))
+#### Time/duration-based implementations and addons ([Demo](https://codesandbox.io/embed/q9lozyymr9))
 
 <img src="assets/time.gif" width="285" />
 
-You'll find varying easing implementations under [/dist/addons](https://github.com/drcmda/react-spring/tree/master/src/addons). For now there's a time-based animation as well common easings, and IOS'es harmonic oscillator spring.
+You'll find varying implementations under [/dist/addons](https://github.com/drcmda/react-spring/tree/master/src/addons). For now there's a time-based animation as well common [easings](https://github.com/drcmda/react-spring/blob/master/src/addons/Easing.js), and IOS'es harmonic oscillator spring. All primitives understand the `impl` property which you can use to switch implementations.
 
 ```jsx
 import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 
-<Spring impl={TimingAnimation} config={{ duration: 1000, easing.linear }} ...>
+<Spring impl={TimingAnimation} config={{ delay: 200, duration: 1000, easing.linear }} ...>
 ```
 
 #### Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
@@ -236,38 +236,35 @@ Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recogn
 
 ### Native rendering and interpolation ([Demo](https://codesandbox.io/embed/882njxpz29))
 
-By default we'll render the receiving component every frame as it gives you more freedom to animate. In situations where that becomes expensive add the `native` flag and animations will now be applied directly to the dom. The flag is available for all primitives (Spring, Transition & Trail, Parallax is native by design).
+| Other animation libs               | React-spring |
+| -------------- | ----------- |
+| ![](assets/without-native.jpeg)   | ![](assets/with-native.jpeg)          |
+| <sub>Most libraries render animations by having React recalculate the component-tree 60 times per second. Here it attempts to do that to a component consisting of ~300 sub-components, plowing through the browsers frame budget and causing jank.</sub> | <sub>React-spring with the `native` property set to `true` renders the component *only once*, from then on the animation will be applied directly to the dom in a requestAnimationFrame-loop, similar to how gsap and d3 do it.</sub> |
+
+By default we'll render every frame (like in the image on the left) as it gives you more freedom (for instance this is the only way that you can animate React-component props). In situations where that becomes expensive use the `native` flag. The flag is available for all primitives (Spring, Transition & Trail, Keyframes, Parallax is native by design). **Try doing this in all situations where you can**, the benefits are worth it. Especially if your animated component consists of large subtrees, routes, etc.
 
 Just be aware of the following conditions:
 
-1.  It only animates element styles and attributes, the values you receive _are opaque objects, not regular values_
-2.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
-3.  If you need to interpolate styles use the `template` string literal or `interpolate`
-
-```jsx
-import { Spring, animated, template } from 'react-spring'
-
-<Spring native to={{ path, rotate, scale }}>
-    {({ rotate, scale, path }) => (
-        <animated.svg style={{ transform: template`rotate(${rotate}) scale(${scale})` }}>
-            <g><animated.path d={path} /></g>
-        </animated.svg>
-    )}
-</Spring>
-```
-
-You have several interpolation options, not just `template`. `interpolate` can be called on the value itself or as a stand-alone function which can read multiple values. It accepts either a function which receives the animation value(/s), or a range.
+1.  `native` only animates styles and attributes
+2.  The values you receive _are opaque objects, not regular values_
+3.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
+4.  If you need to interpolate styles use `interpolate`
 
 ```jsx
 import { Spring, animated, interpolate } from 'react-spring'
 
-<animated.svg 
-    style={{ 
-        transform: interpolate([x, y], (x, y) => `translate(${x}px, ${y}px)`), 
-        color: time.interpolate({ inputRange: [0, 1], outputRange: ['red', 'rgba(1, 50, 210, 0.5)'] })
+<animated.div 
+    style={{
+        // Use plain animated values like always, ...
+        borderRadius: radius,
+        // For interpolations, either call "interpolate" on the value itself, it accepts a function
+        background: time.interpolate(t => 'rgba(0, 0, 0, ${t})'),
+        // ... or supply a range clamp
+        color: time.interpolate({ range: [0, 1], output: ['red', 'rgba(1, 50, 210, 0.5)'] }),
+        // Or use the interpolate helper, which can take multiple values, it accepts a function
+        transform: interpolate([x, y], (x, y) => `translate(${x}px, ${y}px)`),
     }}>
-    <g><animated.path d={time.interpolate(customSvgInterpolator)} /></g>
-</animated.svg>
+</animated.div>
 ```
 
 ### Transitions

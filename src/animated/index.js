@@ -74,7 +74,7 @@ const exports = {
         return new AnimatedTemplate(strings, values)
     },
     interpolate: function(parents, config) {
-        return new AnimatedInterpolation(values, config)
+        return new AnimatedInterpolation(parents, config)
     },
     createAnimatedComponent,
     inject: {

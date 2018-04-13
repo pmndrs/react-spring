@@ -1,8 +1,12 @@
-import Animation from '../animated/Animation'
-import AnimatedValue from '../animated/AnimatedValue'
-import OscillatorConfig from './OscillatorConfig'
+import { Animation } from 'react-spring'
 
 const withDefault = (value, defaultValue) => (value === undefined || value === null ? defaultValue : value)
+const tensionFromOrigamiValue = oValue => (oValue - 30) * 3.62 + 194
+const frictionFromOrigamiValue = oValue => (oValue - 8) * 3 + 25
+const fromOrigamiTensionAndFriction = (tension, friction) => ({
+    tension: tensionFromOrigamiValue(tension),
+    friction: frictionFromOrigamiValue(friction),
+})
 
 export default class OscillatorAnimation extends Animation {
     constructor(config) {
@@ -13,11 +17,11 @@ export default class OscillatorAnimation extends Animation {
         this._initialVelocity = withDefault(config.velocity, 0)
         this._lastVelocity = withDefault(config.velocity, 0)
         this._toValue = config.toValue
-        console.log(config)
-        var springConfig = OscillatorConfig.fromOrigamiTensionAndFriction(withDefault(config.tension, 40), withDefault(config.friction, 7))
+        var springConfig = fromOrigamiTensionAndFriction(withDefault(config.tension, 40), withDefault(config.friction, 7))
         this._tension = springConfig.tension
         this._friction = springConfig.friction
         this._mass = withDefault(config.mass, 1)
+        this._delay = config.delay !== undefined ? config.delay : 0
     }
 
     start(fromValue, onUpdate, onEnd, previousAnimation) {
@@ -38,7 +42,8 @@ export default class OscillatorAnimation extends Animation {
 
         if (this._initialVelocity !== undefined && this._initialVelocity !== null) this._lastVelocity = this._initialVelocity
 
-        this.onUpdate()
+        if (this._delay) this._timeout = setTimeout(this.onUpdate, this._delay)
+        else this.onUpdate()
     }
 
     getInternalState() {
@@ -63,8 +68,6 @@ export default class OscillatorAnimation extends Animation {
         const m = this._mass
         const k = this._tension
         const v0 = -this._initialVelocity
-
-        //console.log(c,m,k,v0)
 
         const zeta = c / (2 * Math.sqrt(k * m)) // damping ratio
         const omega0 = Math.sqrt(k / m) // undamped angular frequency of the oscillator (rad/ms)
@@ -124,6 +127,7 @@ export default class OscillatorAnimation extends Animation {
 
     stop() {
         this.__active = false
+        clearTimeout(this._timeout)
         cancelAnimationFrame(this._animationFrame)
         this.__debouncedOnEnd({ finished: false })
     }

@@ -8,65 +8,45 @@ function presets(modules = false, loose = true) {
     return [['@babel/preset-env', { loose, modules }], ['@babel/preset-stage-2', { loose }], '@babel/preset-react']
 }
 
+const plugins = [
+    babel({
+        babelrc: false,
+        presets: presets(),
+        plugins: ['transform-react-remove-prop-types', 'annotate-pure-calls'],
+    }),
+    resolve(),
+    commonjs(),
+    uglify({
+        compress: true,
+        mangle: {
+            toplevel: true,
+        },
+    }),
+]
+
 export default [
     {
         input: 'src/index.js',
         output: [{ file: `${pkg.main}.js`, format: 'cjs' }, { file: `${pkg.module}.js`, format: 'es' }],
         external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
-        plugins: [
-            babel({
-                babelrc: false,
-                presets: presets(),
-                plugins: ['transform-react-remove-prop-types', 'annotate-pure-calls'],
-            }),
-            resolve(),
-            commonjs(),
-            uglify(),
-        ],
+        plugins,
     },
     {
         input: 'src/index.js',
         output: [{ file: `${pkg.main}.umd.js`, format: 'umd', name: 'ReactSpring' }],
         external: [...Object.keys(pkg.peerDependencies || {})],
-        plugins: [
-            babel({
-                babelrc: false,
-                presets: presets(),
-                plugins: ['transform-react-remove-prop-types', 'annotate-pure-calls'],
-            }),
-            resolve(),
-            commonjs(),
-            uglify(),
-        ],
+        plugins,
     },
     {
         input: 'src/addons/index.js',
         output: [{ file: `dist/addons.cjs.js`, format: 'cjs' }, { file: `dist/addons.js`, format: 'es' }],
-        external: [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
-        plugins: [
-            babel({
-                babelrc: false,
-                presets: presets(),
-                plugins: ['transform-react-remove-prop-types', 'annotate-pure-calls'],
-            }),
-            resolve(),
-            commonjs(),
-            uglify(),
-        ],
+        external: ['react-spring', ...Object.keys(pkg.peerDependencies || {})],
+        plugins,
     },
     {
-        input: 'src/index.js',
-        output: [{ file: `dist/addons.umd.js`, format: 'umd', name: 'ReactSpringAddons' }],
-        external: [...Object.keys(pkg.peerDependencies || {})],
-        plugins: [
-            babel({
-                babelrc: false,
-                presets: presets(),
-                plugins: ['transform-react-remove-prop-types', 'annotate-pure-calls'],
-            }),
-            resolve(),
-            commonjs(),
-            uglify(),
-        ],
+        input: 'src/addons/index.js',
+        output: { file: `dist/addons.umd.js`, format: 'umd', name: 'ReactSpringAddons', globals: { 'react-spring': 'ReactSpring' } },
+        external: ['react-spring', ...Object.keys(pkg.peerDependencies || {})],
+        plugins,
     },
 ]

@@ -27,7 +27,6 @@ export default class Spring extends React.PureComponent {
         children: PropTypes.oneOfType([PropTypes.func, PropTypes.arrayOf(PropTypes.func)]),
         render: PropTypes.func,
         reset: PropTypes.bool,
-        delay: PropTypes.number,
         immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.arrayOf(PropTypes.string)]),
         impl: PropTypes.func,
     }
@@ -38,7 +37,6 @@ export default class Spring extends React.PureComponent {
         native: false,
         immediate: false,
         reset: false,
-        delay: 0,
         impl: SpringAnimation,
     }
 
@@ -49,7 +47,7 @@ export default class Spring extends React.PureComponent {
         this._updateProps(props, false)
     }
 
-    _updateProps({ impl, from, to, config, attach, immediate, reset, delay, onFrame, onRest }, start = false) {
+    _updateProps({ impl, from, to, config, attach, immediate, reset, onFrame, onRest }, start = false) {
         const allProps = Object.entries({ ...from, ...to })
         const defaultAnimationValue = this._defaultAnimation._value
 
@@ -88,22 +86,28 @@ export default class Spring extends React.PureComponent {
             if (immediate && (immediate === true || immediate.indexOf(name) !== -1)) entry.animation.setValue(toValue)
 
             entry.stopped = false
-            entry.start = () => {
+            entry.start = cb => {
                 Animated.controller(entry.animation, { toValue, ...config }, impl).start(props => {
                     if (props.finished) {
                         this._animations[name].stopped = true
-                        if (Object.values(this._animations).every(animation => animation.stopped))
-                            onRest && onRest({ ...this.props.from, ...this.props.to })
+                        if (Object.values(this._animations).every(animation => animation.stopped)) {
+                            const current = { ...this.props.from, ...this.props.to }
+                            onRest && onRest(current)
+                            cb && cb(current)
+                        }
                     }
                 })
             }
-            entry.stop = () => entry.animation.stopAnimation()
+            entry.stop = () => {
+                entry.stopped = true
+                entry.animation.stopAnimation()
+            }
 
             this._interpolators[name] = entry.interpolation
             return { ...acc, [name]: entry }
         }, {})
 
-        if (start) this.start({ delay })
+        if (start) this.start()
 
         var oldPropsAnimated = this._propsAnimated
         this._propsAnimated = new Animated.AnimatedProps(this._interpolators, this.callback)
@@ -111,23 +115,10 @@ export default class Spring extends React.PureComponent {
     }
 
     start(props = this.props) {
-        return new Promise(res => {
-            const f = () => {
-                Object.values(this._animations).forEach(animation => animation.start())
-                this._delay = undefined
-            }
-            if (props.delay > 0) {
-                if (this._delay) clearTimeout(this._delay)
-                this._delay = setTimeout(f, props.delay)
-            } else f()
-        })
+        return new Promise(res => Object.values(this._animations).forEach(animation => animation.start(res)))
     }
 
     stop() {
-        if (this._delay) {
-            clearTimeout(this._delay)
-            this._delay = undefined
-        }
         Object.values(this._animations).forEach(animation => animation.stop())
     }
 

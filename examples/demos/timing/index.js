@@ -9,6 +9,7 @@ export default class App extends React.PureComponent {
         const Content = ({ radians, color }) =>
             this.state.items.map((_, i) => (
                 <animated.svg
+                    key={i}
                     style={{
                         width: 50,
                         height: 50,

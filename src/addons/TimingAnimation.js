@@ -1,5 +1,4 @@
-import Animation from '../animated/Animation'
-import AnimatedValue from '../animated/AnimatedValue'
+import { Animation } from 'react-spring'
 import Easing from './Easing'
 
 const easeInOut = Easing.inOut(Easing.ease)
@@ -28,11 +27,8 @@ let TimingAnimation = class TimingAnimation extends Animation {
             }
         }
 
-        if (this._delay) {
-            this._timeout = setTimeout(start, this._delay)
-        } else {
-            start()
-        }
+        if (this._delay) this._timeout = setTimeout(start, this._delay)
+        else start()
     }
 
     onUpdate = () => {
