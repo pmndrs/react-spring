@@ -18,7 +18,7 @@ const getBabelOptions = ({ useESModules }) => ({
       '@babel/transform-runtime',
       { polyfill: false, useBuiltIns: true, useESModules },
     ],
-    'transform-react-remove-prop-types',
+    ['transform-react-remove-prop-types', { removeImport: true }],
   ],
 })
 
