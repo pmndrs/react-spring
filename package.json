@@ -29,20 +29,19 @@
     },
     "homepage": "https://github.com/drcmda/react-spring#readme",
     "devDependencies": {
-        "@babel/core": "7.0.0-beta.40",
-        "@babel/plugin-transform-runtime": "7.0.0-beta.40",
-        "@babel/preset-env": "7.0.0-beta.40",
-        "@babel/preset-react": "7.0.0-beta.40",
-        "@babel/preset-stage-2": "7.0.0-beta.40",
+        "@babel/core": "7.0.0-beta.44",
+        "@babel/plugin-transform-runtime": "7.0.0-beta.44",
+        "@babel/preset-env": "7.0.0-beta.44",
+        "@babel/preset-react": "7.0.0-beta.44",
+        "@babel/preset-stage-2": "7.0.0-beta.44",
         "babel-core": "7.0.0-bridge.0",
         "babel-jest": "22.4.0",
-        "babel-plugin-annotate-pure-calls": "0.3.0-beta.0",
         "babel-plugin-transform-react-remove-prop-types": "0.4.13",
         "react": "16.2.0",
         "react-dom": "16.2.0",
         "rimraf": "2.6.2",
         "rollup": "0.56.5",
-        "rollup-plugin-babel": "4.0.0-beta.2",
+        "rollup-plugin-babel": "^4.0.0-beta.4",
         "rollup-plugin-commonjs": "^9.0.0",
         "rollup-plugin-node-resolve": "^3.2.0",
         "rollup-plugin-size-snapshot": "^0.3.1",
@@ -50,8 +49,7 @@
     },
     "peerDependencies": {
         "prop-types": "15.x.x",
-        "react": ">= 16.0.0",
-        "react-dom": ">= 16.0.0"
+        "react": ">= 16.0.0"
     },
     "dependencies": {
         "normalize-css-color": "^1.0.2"
