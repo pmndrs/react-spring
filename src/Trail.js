@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Spring, { config } from './Spring'
+import Spring, { config as springConfig } from './Spring'
 
 export default class Trail extends React.PureComponent {
     static propTypes = {
@@ -12,12 +12,23 @@ export default class Trail extends React.PureComponent {
         children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
         render: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.func), PropTypes.func]),
     }
-    static defaultProps = { from: {}, to: {}, native: false, config: config.default }
+
     getValues() {
         return this.instance && this.instance.getValues()
     }
+
     render() {
-        const { children, render, from, to, native, config, keys, onRest, ...extra } = this.props
+        const {
+            children,
+            render,
+            from = {},
+            to = {},
+            native = false,
+            config = springConfig.default,
+            keys,
+            onRest,
+            ...extra
+        } = this.props
         const animations = new Set()
         const hook = (index, animation) => {
             animations.add(animation)
