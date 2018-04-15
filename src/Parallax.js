@@ -203,8 +203,8 @@ export default class Parallax extends React.PureComponent {
             const { style, children, offset, speed, factor, className, ...props } = this.props
             const horizontal = this.context.parallax.props.horizontal
             const translate3d = this.animatedTranslate.interpolate({
-                inputRange: [0, 1],
-                outputRange: horizontal
+                range: [0, 1],
+                output: horizontal
                     ? ['translate3d(0px,0,0)', 'translate3d(1px,0,0)']
                     : ['translate3d(0,0px,0)', 'translate3d(0,1px,0)'],
             })

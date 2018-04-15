@@ -35,8 +35,10 @@ export default function createAnimatedComponent(Component) {
             // need to re-render it. In this case, we have a fallback that uses
             // forceUpdate.
             var callback = () => {
-                const didUpdate = ApplyAnimatedValues.current(this.refs['node'], this._propsAnimated.__getAnimatedValue(), this)
-                if (didUpdate === false) this.forceUpdate()
+                if (this.refs['node']) {
+                    const didUpdate = ApplyAnimatedValues.current(this.refs['node'], this._propsAnimated.__getAnimatedValue(), this)
+                    if (didUpdate === false) this.forceUpdate()
+                }
             }
 
             this._propsAnimated = new AnimatedProps(nextProps, callback)

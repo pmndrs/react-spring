@@ -56,7 +56,8 @@ export default class AnimatedValue extends AnimatedWithChildren {
     }
 
     _flush() {
-        if (this._animatedStyles.size === 0 || this._tracked) findAnimatedStyles(this, this._animatedStyles)
+        //if (this._animatedStyles.size === 0 || this._tracked) this._update()
+        findAnimatedStyles(this, this._animatedStyles)
         this._animatedStyles.forEach(animatedStyle => animatedStyle.update())
     }
 
