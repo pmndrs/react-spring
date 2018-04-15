@@ -1,4 +1,4 @@
-import Animated from '../'
+import Animated from '../index.js'
 
 const isUnitlessNumber = {
     animationIterationCount: true,
