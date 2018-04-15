@@ -16,6 +16,9 @@ const plugins = [
     }),
     resolve(),
     commonjs(),
+]
+
+const compress = [
     uglify({
         compress: true,
         mangle: {
@@ -35,7 +38,7 @@ export default [
         input: 'src/index.js',
         output: [{ file: `${pkg.main}.umd.js`, format: 'umd', name: 'ReactSpring' }],
         external: [...Object.keys(pkg.peerDependencies || {})],
-        plugins,
+        plugins: [...plugins, ...compress],
     },
     {
         input: 'src/addons/index.js',
@@ -47,6 +50,6 @@ export default [
         input: 'src/addons/index.js',
         output: { file: `dist/addons.umd.js`, format: 'umd', name: 'ReactSpringAddons' },
         external: [...Object.keys(pkg.peerDependencies || {})],
-        plugins,
+        plugins: [...plugins, ...compress],
     },
 ]
