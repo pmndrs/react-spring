@@ -115,7 +115,7 @@ export default class AnimatedValue extends AnimatedWithChildren {
                 this._animation = null
                 callback && callback(result)
             },
-            previousAnimation,
+            previousAnimation
         )
     }
 

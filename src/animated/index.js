@@ -13,7 +13,9 @@ import AnimatedProps from './AnimatedProps'
 const maybeVectorAnim = (array, { tension, friction, toValue }, anim, impl) => {
     // { tension, friction, toValue: [...]}
     if (array instanceof AnimatedArray)
-        return parallel(array._values.map((v, i) => anim(v, { tension, friction, toValue: toValue[i] }, impl)), { stopTogether: false })
+        return parallel(array._values.map((v, i) => anim(v, { tension, friction, toValue: toValue[i] }, impl)), {
+            stopTogether: false,
+        })
     return null
 }
 

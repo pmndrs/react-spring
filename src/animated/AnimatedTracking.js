@@ -31,7 +31,7 @@ export default class AnimatedTracking extends Animated {
                 ...this._animationConfig,
                 toValue: this._animationConfig.toValue.__getValue(),
             }),
-            this._callback,
+            this._callback
         )
     }
 }

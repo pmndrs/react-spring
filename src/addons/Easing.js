@@ -85,7 +85,8 @@ function _bezier(mX1, mY1, mX2, mY2) {
 
         --currentSample // Interpolate to provide an initial guess for t
 
-        const dist = (aX - sampleValues[currentSample]) / (sampleValues[currentSample + 1] - sampleValues[currentSample])
+        const dist =
+            (aX - sampleValues[currentSample]) / (sampleValues[currentSample + 1] - sampleValues[currentSample])
         const guessForT = intervalStart + dist * kSampleStepSize
         const initialSlope = getSlope(guessForT, mX1, mX2)
 

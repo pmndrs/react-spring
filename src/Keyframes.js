@@ -10,7 +10,8 @@ export default class Keyframes extends React.Component {
     next = (primitive, props) => {
         return new Promise(resolve => {
             const current = this.instance && this.instance.getValues()
-            const from = typeof props.from === 'function'  ? props.from : { ...this.state.props.from, ...current, ...props.from }
+            const from =
+                typeof props.from === 'function' ? props.from : { ...this.state.props.from, ...current, ...props.from }
             this.setState(state => ({ primitive, props: { ...props, from }, resolve }))
         })
     }

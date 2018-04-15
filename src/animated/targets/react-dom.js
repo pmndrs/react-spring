@@ -86,7 +86,12 @@ function dangerousStyleValue(name, value, isCustomProperty) {
 
     if (isEmpty) return ''
 
-    if (!isCustomProperty && typeof value === 'number' && value !== 0 && !(isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name]))
+    if (
+        !isCustomProperty &&
+        typeof value === 'number' &&
+        value !== 0 &&
+        !(isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name])
+    )
         return value + 'px'
 
     // Presumes implicit 'px' suffix for unitless numbers
@@ -266,7 +271,7 @@ const elements = [
         ...acc,
         [element]: Animated.createAnimatedComponent(element),
     }),
-    {},
+    {}
 )
 
 const exports = {

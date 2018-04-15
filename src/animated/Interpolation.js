@@ -41,7 +41,7 @@ export default class Interpolation {
                 outputRange[range + 1],
                 easing,
                 extrapolateLeft,
-                extrapolateRight,
+                extrapolateRight
             )
         }
     }
@@ -49,7 +49,7 @@ export default class Interpolation {
 
 function interpolate(input, inputMin, inputMax, outputMin, outputMax, easing, extrapolateLeft, extrapolateRight) {
     var result = input
-    
+
     // Extrapolate
     if (result < inputMin) {
         if (extrapolateLeft === 'identity') {

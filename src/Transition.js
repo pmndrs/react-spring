@@ -47,7 +47,14 @@ export default class Transition extends React.Component {
             transitionKeys: keys,
             transitions: children.map((child, i) => {
                 const arg = items ? items[i] : keys[i]
-                return { children: child, key: keys[i], item: arg, to: ref(enter, arg), from: ref(from, arg), update: ref(update, arg) }
+                return {
+                    children: child,
+                    key: keys[i],
+                    item: arg,
+                    to: ref(enter, arg),
+                    from: ref(from, arg),
+                    update: ref(update, arg),
+                }
             }),
         }
     }
@@ -92,7 +99,13 @@ export default class Transition extends React.Component {
                 const index = keys.indexOf(key)
                 const child = children[index]
                 const arg = items ? items[index] : keys[index]
-                const addedChild = { children: child, key: keys[index], item: arg, to: ref(enter, arg), from: ref(from, arg) }
+                const addedChild = {
+                    children: child,
+                    key: keys[index],
+                    item: arg,
+                    to: ref(enter, arg),
+                    from: ref(from, arg),
+                }
                 transitions = [...transitions.slice(0, index), addedChild, ...transitions.slice(index)]
             })
         }
@@ -108,7 +121,10 @@ export default class Transition extends React.Component {
                         key: oldChild.key,
                         to: ref(leave, oldChild.item),
                         from: ref(from, oldChild.item),
-                        onRest: () => this.setState(state => ({ transitions: state.transitions.filter(child => child !== leavingChild) })),
+                        onRest: () =>
+                            this.setState(state => ({
+                                transitions: state.transitions.filter(child => child !== leavingChild),
+                            })),
                     }
                     transitions = transitions.map(child => (child === oldChild ? leavingChild : child))
                 }

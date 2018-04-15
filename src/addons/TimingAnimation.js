@@ -34,11 +34,17 @@ let TimingAnimation = class TimingAnimation extends Animation {
     onUpdate = () => {
         const now = Date.now()
         if (now >= this._startTime + this._duration) {
-            this._onUpdate(this._duration === 0 ? this._toValue : this._fromValue + this._easing(1) * (this._toValue - this._fromValue))
+            this._onUpdate(
+                this._duration === 0
+                    ? this._toValue
+                    : this._fromValue + this._easing(1) * (this._toValue - this._fromValue)
+            )
             this.__debouncedOnEnd({ finished: true })
             return
         }
-        this._onUpdate(this._fromValue + this._easing((now - this._startTime) / this._duration) * (this._toValue - this._fromValue))
+        this._onUpdate(
+            this._fromValue + this._easing((now - this._startTime) / this._duration) * (this._toValue - this._fromValue)
+        )
         if (this.__active) this._animationFrame = requestAnimationFrame(this.onUpdate)
     }
 

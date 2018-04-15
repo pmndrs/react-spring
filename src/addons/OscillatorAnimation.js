@@ -17,7 +17,10 @@ export default class OscillatorAnimation extends Animation {
         this._initialVelocity = withDefault(config.velocity, 0)
         this._lastVelocity = withDefault(config.velocity, 0)
         this._toValue = config.toValue
-        var springConfig = fromOrigamiTensionAndFriction(withDefault(config.tension, 40), withDefault(config.friction, 7))
+        var springConfig = fromOrigamiTensionAndFriction(
+            withDefault(config.tension, 40),
+            withDefault(config.friction, 7)
+        )
         this._tension = springConfig.tension
         this._friction = springConfig.friction
         this._mass = withDefault(config.mass, 1)
@@ -40,7 +43,8 @@ export default class OscillatorAnimation extends Animation {
             this._lastTime = internalState.lastTime
         }
 
-        if (this._initialVelocity !== undefined && this._initialVelocity !== null) this._lastVelocity = this._initialVelocity
+        if (this._initialVelocity !== undefined && this._initialVelocity !== null)
+            this._lastVelocity = this._initialVelocity
 
         if (this._delay) this._timeout = setTimeout(this.onUpdate, this._delay)
         else this.onUpdate()
@@ -80,11 +84,16 @@ export default class OscillatorAnimation extends Animation {
         if (zeta < 1) {
             // Under damped
             const envelope = Math.exp(-zeta * omega0 * t)
-            position = this._toValue - envelope * ((v0 + zeta * omega0 * x0) / omega1 * Math.sin(omega1 * t) + x0 * Math.cos(omega1 * t))
+            position =
+                this._toValue -
+                envelope * ((v0 + zeta * omega0 * x0) / omega1 * Math.sin(omega1 * t) + x0 * Math.cos(omega1 * t))
             // This looks crazy -- it's actually just the derivative of the
             // oscillation function
             velocity =
-                zeta * omega0 * envelope * (Math.sin(omega1 * t) * (v0 + zeta * omega0 * x0) / omega1 + x0 * Math.cos(omega1 * t)) -
+                zeta *
+                    omega0 *
+                    envelope *
+                    (Math.sin(omega1 * t) * (v0 + zeta * omega0 * x0) / omega1 + x0 * Math.cos(omega1 * t)) -
                 envelope * (Math.cos(omega1 * t) * (v0 + zeta * omega0 * x0) - omega1 * x0 * Math.sin(omega1 * t))
         } else {
             // Critically damped

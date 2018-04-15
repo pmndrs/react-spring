@@ -5,7 +5,7 @@ import SpringAnimation from './animated/SpringAnimation'
 import { config, animated, template } from './Spring'
 
 function getScrollType(horizontal) {
-  return horizontal ? 'scrollLeft' : 'scrollTop'
+    return horizontal ? 'scrollLeft' : 'scrollTop'
 }
 
 export default class Parallax extends React.PureComponent {
@@ -57,7 +57,8 @@ export default class Parallax extends React.PureComponent {
         this.space = this.refs.container[horizontal ? 'clientWidth' : 'clientHeight']
         if (scrolling) this.current = this.refs.container[scrollType]
         else this.refs.container[scrollType] = this.current = this.offset * this.space
-        if (this.refs.content) this.refs.content.style[horizontal ? 'width' : 'height'] = `${this.space * this.props.pages}px`
+        if (this.refs.content)
+            this.refs.content.style[horizontal ? 'width' : 'height'] = `${this.space * this.props.pages}px`
         this.layers.forEach(layer => {
             layer.setHeight(this.space, true)
             layer.setPosition(this.space, this.current, true)
