@@ -4,6 +4,11 @@
     "description": "Animate React with ease",
     "main": "dist/react-spring",
     "module": "dist/react-spring.es",
+    "files": [
+      "dist",
+      "src",
+      "API.md"
+    ],
     "sideEffects": false,
     "scripts": {
         "prebuild": "rimraf dist",
