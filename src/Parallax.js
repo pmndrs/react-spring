@@ -55,15 +55,12 @@ export default class Parallax extends React.PureComponent {
   update = () => {
     const { scrolling, horizontal } = this.props
     const scrollType = getScrollType(horizontal)
-    if (!this.refs.container) return
-    this.space = this.refs.container[
-      horizontal ? 'clientWidth' : 'clientHeight'
-    ]
-    if (scrolling) this.current = this.refs.container[scrollType]
-    else
-      this.refs.container[scrollType] = this.current = this.offset * this.space
-    if (this.refs.content)
-      this.refs.content.style[horizontal ? 'width' : 'height'] = `${this.space *
+    if (!this.container) return
+    this.space = this.container[horizontal ? 'clientWidth' : 'clientHeight']
+    if (scrolling) this.current = this.container[scrollType]
+    else this.container[scrollType] = this.current = this.offset * this.space
+    if (this.content)
+      this.content.style[horizontal ? 'width' : 'height'] = `${this.space *
         this.props.pages}px`
     this.layers.forEach(layer => {
       layer.setHeight(this.space, true)
@@ -85,7 +82,7 @@ export default class Parallax extends React.PureComponent {
     const scrollType = getScrollType(horizontal)
     this.scrollStop()
     this.offset = offset
-    const target = this.refs.container
+    const target = this.container
     this.animatedScroll = new Animated.Value(target[scrollType])
     this.animatedScroll.addListener(({ value }) => (target[scrollType] = value))
     Animated.controller(
@@ -126,7 +123,7 @@ export default class Parallax extends React.PureComponent {
     const overflow = scrolling ? 'scroll' : 'hidden'
     return (
       <div
-        ref="container"
+        ref={node => (this.container = node)}
         onScroll={this.onScroll}
         onWheel={scrolling ? this.scrollStop : null}
         onTouchStart={scrolling ? this.scrollStop : null}
@@ -147,7 +144,7 @@ export default class Parallax extends React.PureComponent {
       >
         {this.state.ready && (
           <div
-            ref="content"
+            ref={node => this.node}
             style={{
               position: 'absolute',
               [horizontal ? 'height' : 'width']: '100%',
@@ -254,7 +251,6 @@ export default class Parallax extends React.PureComponent {
       return (
         <animated.div
           {...props}
-          ref="layer"
           className={className}
           style={{
             position: 'absolute',
