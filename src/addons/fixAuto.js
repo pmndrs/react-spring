@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Value } from 'react-spring'
 
-export default function fixAuto(spring, props) {
+export default function fixAuto(props) {
     return new Promise(res => {
         const { native, children, from, to, ...extra } = props
 

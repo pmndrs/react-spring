@@ -50,16 +50,19 @@ export default class Spring extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.updateProps(this.props)
+        this.updatePropsAsync(this.props)
     }
 
     componentWillReceiveProps(props) {
-        this.updateProps(props)
+        this.updatePropsAsync(props)
     }
 
-    async updateProps({ inject, ...props }) {
-        const { impl, from, to, config, attach, immediate, reset, onFrame, onRest } = inject ? await inject(this, props) : props
+    updatePropsAsync(props) {
+        return props.inject ? props.inject(props).then(props => this.updateProps(props)) : this.updateProps(props)
+    }
 
+    updateProps(props) {
+        const { impl, from, to, config, attach, immediate, reset, onFrame, onRest, inject } = props
         const allProps = Object.entries({ ...from, ...to })
         const defaultAnimationValue = this.defaultAnimation._value
 
@@ -124,7 +127,7 @@ export default class Spring extends React.PureComponent {
         this.animatedProps = new Animated.AnimatedProps(this.interpolators, this.callback)
         oldAnimatedProps && oldAnimatedProps.__detach()
 
-        this.forceUpdate()
+        if (inject) this.forceUpdate()
         this.start()
     }
 
