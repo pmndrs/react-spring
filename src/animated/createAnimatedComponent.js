@@ -2,8 +2,6 @@ import React from 'react'
 import AnimatedProps from './AnimatedProps'
 import ApplyAnimatedValues from './injectable/ApplyAnimatedValues'
 
-const refName = 'node'
-
 export default function createAnimatedComponent(Component) {
   return class AnimatedComponent extends React.Component {
     static propTypes = {
@@ -17,11 +15,7 @@ export default function createAnimatedComponent(Component) {
     }
 
     setNativeProps(props) {
-      var didUpdate = ApplyAnimatedValues.current(
-        this.refs['node'],
-        props,
-        this
-      )
+      var didUpdate = ApplyAnimatedValues.current(this.node, props, this)
       if (didUpdate === false) this.forceUpdate()
     }
 
@@ -40,7 +34,7 @@ export default function createAnimatedComponent(Component) {
       // forceUpdate.
       var callback = () => {
         const didUpdate = ApplyAnimatedValues.current(
-          this.refs['node'],
+          this.node,
           this._propsAnimated.__getAnimatedValue(),
           this
         )
@@ -70,7 +64,7 @@ export default function createAnimatedComponent(Component) {
         <Component
           {...other}
           style={ApplyAnimatedValues.transformStyles(style)}
-          ref="node"
+          ref={node => (this.node = node)}
         />
       )
     }

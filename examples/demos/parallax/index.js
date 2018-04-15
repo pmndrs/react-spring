@@ -31,7 +31,7 @@ const Page = ({ offset, caption, first, second, gradient, onClick }) => (
 )
 
 export default class extends React.Component {
-  scroll = to => this.refs.parallax.scrollTo(to)
+  scroll = to => this.parallax.scrollTo(to)
   render() {
     return (
       <div
@@ -43,7 +43,7 @@ export default class extends React.Component {
       >
         <Parallax
           className="container"
-          ref="parallax"
+          ref={node => (this.parallax = node)}
           pages={3}
           horizontal
           scrolling={false}
