@@ -6,4 +6,16 @@ import Trail from './Trail'
 import Parallax from './Parallax'
 import Keyframes from './Keyframes'
 
-export { Spring, Keyframes, Transition, Trail, Parallax, config, template, animated, interpolate, Animation, Value }
+export {
+  Spring,
+  Keyframes,
+  Transition,
+  Trail,
+  Parallax,
+  config,
+  template,
+  animated,
+  interpolate,
+  Animation,
+  Value,
+}
