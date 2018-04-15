@@ -2,6 +2,7 @@ import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import uglify from 'rollup-plugin-uglify'
+import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 import pkg from './package.json'
 
 function presets(modules = false, loose = true) {
@@ -16,6 +17,7 @@ const plugins = [
     }),
     resolve(),
     commonjs(),
+    sizeSnapshot()
 ]
 
 const compress = [
@@ -27,6 +29,8 @@ const compress = [
     }),
 ]
 
+const globals = { 'react': 'React', 'prop-types': 'PropTypes' }
+
 export default [
     {
         input: 'src/index.js',
@@ -36,7 +40,7 @@ export default [
     },
     {
         input: 'src/index.js',
-        output: [{ file: `${pkg.main}.umd.js`, format: 'umd', name: 'ReactSpring' }],
+        output: [{ file: `${pkg.main}.umd.js`, format: 'umd', name: 'ReactSpring', globals }],
         external: [...Object.keys(pkg.peerDependencies || {})],
         plugins: [...plugins, ...compress],
     },
@@ -48,7 +52,7 @@ export default [
     },
     {
         input: 'src/addons/index.js',
-        output: { file: `dist/addons.umd.js`, format: 'umd', name: 'ReactSpringAddons' },
+        output: { file: `dist/addons.umd.js`, format: 'umd', name: 'ReactSpringAddons', globals },
         external: [...Object.keys(pkg.peerDependencies || {})],
         plugins: [...plugins, ...compress],
     },
