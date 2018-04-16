@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Animated from './animated/targets/react-dom'
-import Spring, { config } from './Spring'
+import Spring, { config as springConfig } from './Spring'
 
 const ref = (object, key) =>
   typeof object === 'function' ? object(key) : object
@@ -51,17 +51,18 @@ export default class Transition extends React.Component {
     ]),
   }
 
-  static defaultProps = {
-    from: {},
-    enter: {},
-    leave: {},
-    native: false,
-    config: config.default,
-  }
-
   constructor(props) {
     super()
-    let { children, render, keys, items, from, enter, leave, update } = props
+    let {
+      children,
+      render,
+      keys,
+      items,
+      from = {},
+      enter = {},
+      leave = {},
+      update,
+    } = props
     children = render || children || (() => null)
     if (typeof keys === 'function') keys = items.map(keys)
     if (!Array.isArray(children)) {
@@ -90,7 +91,16 @@ export default class Transition extends React.Component {
 
   componentWillReceiveProps(props) {
     let { transitions, transitionKeys } = this.state
-    let { children, render, keys, items, from, enter, leave, update } = props
+    let {
+      children,
+      render,
+      keys,
+      items,
+      from = {},
+      enter = {},
+      leave = {},
+      update,
+    } = props
 
     children = render || children || (() => null)
     if (typeof keys === 'function') keys = items.map(keys)
@@ -192,11 +202,11 @@ export default class Transition extends React.Component {
   render() {
     const {
       render,
-      from,
-      enter,
-      leave,
-      native,
-      config,
+      from = {},
+      enter = {},
+      leave = {},
+      native = false,
+      config = springConfig.default,
       keys,
       items,
       onFrame,
