@@ -177,16 +177,32 @@ export default class Spring extends React.PureComponent {
     return this._propsAnimated.__getValue()
   }
 
+  getForwardProps() {
+    const {
+      to,
+      fom,
+      config,
+      native,
+      onRest,
+      onFrame,
+      children,
+      render,
+      reset,
+      immediate,
+      impl,
+      ...forward
+    } = this.props
+    return forward
+  }
+
   render() {
-    const { children, render, from, to, config, native, ...extra } = this.props
+    const { native, children, render } = this.props
     let animatedProps = {
       ...(native ? this._interpolators : this._propsAnimated.__getValue()),
-      ...extra,
+      ...this.getForwardProps(),
     }
-    if (render) return render({ ...animatedProps, children })
-    else
-      return Array.isArray(children)
-        ? children.map(child => child(animatedProps))
-        : children(animatedProps)
+    return render
+      ? render({ ...animatedProps, children })
+      : children(animatedProps)
   }
 }
