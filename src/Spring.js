@@ -199,7 +199,7 @@ export default class Spring extends React.PureComponent {
   getForwardProps() {
     const {
       to,
-      fom,
+      from,
       config,
       native,
       onRest,
