@@ -37,8 +37,7 @@ function Links({ links, linkType, layout, orientation, stepPercent }) {
             tx: collapsedParent.data.x0,
             ty: collapsedParent.data.y0,
           }
-        }}
-      >
+        }}>
         {links.map(link => styles => (
           <Link
             data={{

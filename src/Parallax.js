@@ -108,8 +108,7 @@ export class ParallaxLayer extends React.PureComponent {
           MsTransform: translate3d,
           transform: translate3d,
           ...style,
-        }}
-      >
+        }}>
         {children}
       </animated.div>
     )
@@ -257,8 +256,7 @@ export default class Parallax extends React.PureComponent {
           transform: 'translate3d(0,0,0)',
           ...style,
         }}
-        className={className}
-      >
+        className={className}>
         {this.state.ready && (
           <div
             ref={node => (this.content = node)}
@@ -271,8 +269,7 @@ export default class Parallax extends React.PureComponent {
               overflow: 'hidden',
               [horizontal ? 'width' : 'height']: this.space * pages,
               ...innerStyle,
-            }}
-          >
+            }}>
             <Provider value={this}>{children}</Provider>
           </div>
         )}

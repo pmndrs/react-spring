@@ -52,8 +52,7 @@ function Nodes({ nodes, layout, orientation, onNodeClick }) {
           left: topLeft.left,
           opacity: 0,
         }
-      }}
-    >
+      }}>
       {nodes.map(node => styles => {
         const key = keyAccessor(node)
         return (
@@ -72,8 +71,7 @@ function Nodes({ nodes, layout, orientation, onNodeClick }) {
               [styles.left, styles.top],
               (l, t) => `translate(${l}, ${t})`
             )}
-            key={keyAccessor(node)}
-          >
+            key={keyAccessor(node)}>
             <Node
               node={node}
               layout={layout}

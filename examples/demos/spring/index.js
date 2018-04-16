@@ -28,22 +28,19 @@ const Content = ({
     style={{
       ...styles.container,
       background: `linear-gradient(to bottom, ${start} ${stop}, ${end} 100%)`,
-    }}
-  >
+    }}>
     <svg
       style={{
         ...styles.shape,
         transform: `scale3d(${scale}, ${scale}, ${scale}) rotate(${rotation})`,
       }}
       version="1.1"
-      viewBox="0 0 400 400"
-    >
+      viewBox="0 0 400 400">
       <g
         style={{ cursor: 'pointer' }}
         fill={color}
         fillRule="evenodd"
-        onClick={toggle}
-      >
+        onClick={toggle}>
         <path id="path-1" d={shape} />
       </g>
     </svg>

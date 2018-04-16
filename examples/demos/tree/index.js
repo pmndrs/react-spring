@@ -14,8 +14,7 @@ const TreeExample = () => (
             alignItems: 'center',
             height: '100%',
             background: '#272b4d',
-          }}
-        >
+          }}>
           <Tree
             data={data}
             width={size.width * 0.9}

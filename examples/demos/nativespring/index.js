@@ -26,8 +26,7 @@ const Content = ({ toggle, backgroundColor, fill, rotate, scale, shape }) => (
         ),
       }}
       version="1.1"
-      viewBox="0 0 400 400"
-    >
+      viewBox="0 0 400 400">
       <g style={{ cursor: 'pointer' }} fillRule="evenodd" onClick={toggle}>
         <animated.path id="path-1" d={shape} />
       </g>

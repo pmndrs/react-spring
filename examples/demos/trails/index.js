@@ -13,8 +13,7 @@ export default class TrailsExample extends React.PureComponent {
           native
           from={{ opacity: 0, x: -100 }}
           to={{ opacity: toggle ? 1 : 0.25, x: toggle ? 0 : 100 }}
-          keys={items}
-        >
+          keys={items}>
           {items.map(item => ({ x, opacity }) => (
             <animated.div
               className="box"

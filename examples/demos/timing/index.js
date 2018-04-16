@@ -19,8 +19,7 @@ export default class TimingExample extends React.PureComponent {
                 `translate3d(0, ${50 * Math.sin(r + i * 2 * Math.PI / 5)}px, 0)`
             ),
           }}
-          viewBox="0 0 400 400"
-        >
+          viewBox="0 0 400 400">
           <animated.g fill={color} fillRule="evenodd">
             <path id="path-1" d="M20,380 L380,380 L380,380 L200,20 L20,380 Z" />
           </animated.g>
@@ -35,8 +34,7 @@ export default class TimingExample extends React.PureComponent {
           justifyContent: 'center',
           alignItems: 'center',
           background: 'palevioletred',
-        }}
-      >
+        }}>
         <Keyframes
           reset
           native
@@ -50,8 +48,7 @@ export default class TimingExample extends React.PureComponent {
                 to: { radians: 2 * Math.PI },
               })
             }
-          }}
-        >
+          }}>
           {Content}
         </Keyframes>
       </div>

@@ -46,8 +46,7 @@ export default class extends React.Component {
             left={margin.left}
             root={root}
             size={[sizeWidth, sizeHeight]}
-            separation={(a, b) => (a.parent == b.parent ? 1 : 0.5) / a.depth}
-          >
+            separation={(a, b) => (a.parent == b.parent ? 1 : 0.5) / a.depth}>
             {({ data }) => (
               <Group top={origin.y} left={origin.x}>
                 <Links

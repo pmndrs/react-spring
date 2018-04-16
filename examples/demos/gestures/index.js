@@ -20,8 +20,7 @@ export default class GesturesExample extends React.Component {
           {({ x, scale }) => (
             <animated.div
               className="item"
-              style={{ backgroundColor: xDelta < 0 ? '#FF1C68' : '#14D790' }}
-            >
+              style={{ backgroundColor: xDelta < 0 ? '#FF1C68' : '#14D790' }}>
               <animated.div
                 className="bubble"
                 style={{
@@ -33,8 +32,7 @@ export default class GesturesExample extends React.Component {
                 className="fg"
                 style={{
                   transform: x.interpolate(x => `translate3d(${x}px,0,0)`),
-                }}
-              >
+                }}>
                 Slide me
               </animated.div>
             </animated.div>

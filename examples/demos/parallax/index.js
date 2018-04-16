@@ -39,15 +39,13 @@ export default class extends React.Component {
           gridColumn: 'span 2',
           gridRow: 'span 2',
           background: '#dfdfdf',
-        }}
-      >
+        }}>
         <Parallax
           className="container"
           ref={node => (this.parallax = node)}
           pages={3}
           horizontal
-          scrolling={false}
-        >
+          scrolling={false}>
           <Page
             offset={0}
             gradient="pink"

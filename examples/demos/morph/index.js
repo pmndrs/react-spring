@@ -34,8 +34,7 @@ export default class MorphExample extends React.Component {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-        }}
-      >
+        }}>
         <Spring reset native from={{ t: 0 }} to={{ t: 1 }}>
           {({ t }) => (
             <svg version="1.1" width="50%" viewBox="0 0 22 22">
@@ -44,8 +43,7 @@ export default class MorphExample extends React.Component {
                 style={{ cursor: 'pointer' }}
                 fill="url(#gradientPR)"
                 fillRule="evenodd"
-                onClick={this.toggle}
-              >
+                onClick={this.toggle}>
                 <animated.path
                   id="path-1"
                   d={t.interpolate(t => (current = interpolator(t)))}

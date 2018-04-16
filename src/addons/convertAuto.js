@@ -39,8 +39,7 @@ export default function fixAuto(props) {
             )
             res({ ...props, to: newToProps })
           }
-        }}
-      >
+        }}>
         {result}
       </div>,
       portal

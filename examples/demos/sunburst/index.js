@@ -76,8 +76,7 @@ class Example extends React.Component {
             reset
             from={{ t: 0 }}
             to={{ t: 1 }}
-            onFrame={({ t }) => this.handleUpdate(t, xd, yd, yr)}
-          >
+            onFrame={({ t }) => this.handleUpdate(t, xd, yd, yr)}>
             {({ t }) => (
               <Group top={height / 2} left={width / 2}>
                 {root

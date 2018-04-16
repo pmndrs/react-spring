@@ -17,15 +17,13 @@ const defaultStyles = {
 }
 const A = styles => (
   <animated.div
-    style={{ ...defaultStyles, ...styles, backgroundColor: '#B2DBBF' }}
-  >
+    style={{ ...defaultStyles, ...styles, backgroundColor: '#B2DBBF' }}>
     A
   </animated.div>
 )
 const B = styles => (
   <animated.div
-    style={{ ...defaultStyles, ...styles, backgroundColor: '#14D790' }}
-  >
+    style={{ ...defaultStyles, ...styles, backgroundColor: '#14D790' }}>
     B
   </animated.div>
 )
@@ -41,8 +39,7 @@ export default class RevealsExample extends React.PureComponent {
           from={{ opacity: 0 }}
           enter={{ opacity: 1 }}
           leave={{ opacity: 0 }}
-          config={{ tension: 5, friction: 10 }}
-        >
+          config={{ tension: 5, friction: 10 }}>
           {this.state.toggled ? A : B}
         </Transition>
       </div>

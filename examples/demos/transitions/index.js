@@ -54,15 +54,13 @@ export default class TransitionsExample extends React.PureComponent {
           overflow: 'hidden',
           cursor: 'pointer',
         }}
-        onClick={() => this.componentDidMount()}
-      >
+        onClick={() => this.componentDidMount()}>
         <Transition
           native
           keys={this.state.items}
           from={{ height: 0 }}
           enter={{ height: 50 }}
-          leave={{ height: 0 }}
-        >
+          leave={{ height: 0 }}>
           {this.state.items.map(item => styles => (
             <animated.li style={{ ...defaultStyles, ...styles }}>
               {item}

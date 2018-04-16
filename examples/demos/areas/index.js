@@ -75,13 +75,11 @@ export default class AreasExample extends React.Component {
                   cursor: 'pointer',
                   background: '#FF1C68',
                 }}
-                onClick={this.toggle}
-              >
+                onClick={this.toggle}>
                 <svg
                   style={{ position: 'absolute', bottom: 0 }}
                   width={width}
-                  height={height / 2}
-                >
+                  height={height / 2}>
                   <GradientPurpleTeal id="gradient" />
                   <g>
                     <Spring to={{ interpolate }} {...extra} children={Graph} />
