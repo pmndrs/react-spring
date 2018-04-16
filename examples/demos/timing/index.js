@@ -2,7 +2,7 @@ import React from 'react'
 import { Spring, Keyframes, animated } from 'react-spring'
 import { TimingAnimation, Easing } from '../../../src/addons'
 
-export default class App extends React.PureComponent {
+export default class TimingExample extends React.PureComponent {
   state = { items: ['item1', 'item2', 'item3'] }
 
   render() {

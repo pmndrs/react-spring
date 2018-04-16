@@ -35,7 +35,7 @@ const Content = ({ toggle, backgroundColor, fill, rotate, scale, shape }) => (
   </animated.div>
 )
 
-export default class extends React.Component {
+export default class NativeSpringExample extends React.Component {
   state = { toggle: true }
   toggle = () => this.setState(state => ({ toggle: !state.toggle }))
   render() {

@@ -47,7 +47,7 @@ const Graph = ({ interpolate, data, xScale, yScale }) => (
   />
 )
 
-export default class extends React.Component {
+export default class AreasExample extends React.Component {
   state = { toggle: true }
   toggle = () => this.setState(state => ({ toggle: !state.toggle }))
   render() {

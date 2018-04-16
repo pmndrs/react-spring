@@ -11,7 +11,130 @@ function getScrollType(horizontal) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
 }
 
+export class ParallaxLayer extends React.PureComponent {
+  static propTypes = {
+    factor: PropTypes.number,
+    offset: PropTypes.number,
+    speed: PropTypes.number,
+  }
+
+  static defaultProps = {
+    factor: 1,
+    offset: 0,
+    speed: 0,
+  }
+
+  componentDidMount() {
+    const parent = this.parent
+    if (parent) {
+      parent.layers = parent.layers.concat(this)
+      parent.update()
+    }
+  }
+
+  componentWillUnmount() {
+    const parent = this.parent
+    if (parent) {
+      parent.layers = parent.layers.filter(layer => layer !== this)
+      parent.update()
+    }
+  }
+
+  setPosition(height, scrollTop, immediate = false) {
+    const { config, impl } = this.parent.props
+    const targetScroll = Math.floor(this.props.offset) * height
+    const offset = height * this.props.offset + targetScroll * this.props.speed
+    const toValue = parseFloat(-(scrollTop * this.props.speed) + offset)
+    if (!immediate)
+      Animated.controller(
+        this.animatedTranslate,
+        { toValue, ...config },
+        impl
+      ).start()
+    else this.animatedTranslate.setValue(toValue)
+  }
+
+  setHeight(height, immediate = false) {
+    const { config, impl } = this.parent.props
+    const toValue = parseFloat(height * this.props.factor)
+    if (!immediate)
+      Animated.controller(
+        this.animatedSpace,
+        { toValue, ...config },
+        impl
+      ).start()
+    else this.animatedSpace.setValue(toValue)
+  }
+
+  initialize() {
+    const props = this.props
+    const parent = this.parent
+    const targetScroll = Math.floor(props.offset) * parent.space
+    const offset = parent.space * props.offset + targetScroll * props.speed
+    const toValue = parseFloat(-(parent.current * props.speed) + offset)
+    this.animatedTranslate = new Animated.Value(toValue)
+    this.animatedSpace = new Animated.Value(parent.space * props.factor)
+  }
+
+  renderLayer() {
+    const {
+      style,
+      children,
+      offset,
+      speed,
+      factor,
+      className,
+      ...props
+    } = this.props
+    const horizontal = this.parent.props.horizontal
+    const translate3d = this.animatedTranslate.interpolate({
+      inputRange: [0, 1],
+      outputRange: horizontal
+        ? ['translate3d(0px,0,0)', 'translate3d(1px,0,0)']
+        : ['translate3d(0,0px,0)', 'translate3d(0,1px,0)'],
+    })
+    return (
+      <animated.div
+        {...props}
+        className={className}
+        style={{
+          position: 'absolute',
+          backgroundSize: 'auto',
+          backgroundRepeat: 'no-repeat',
+          willChange: 'transform',
+          [horizontal ? 'height' : 'width']: '100%',
+          [horizontal ? 'width' : 'height']: this.animatedSpace,
+          WebkitTransform: translate3d,
+          MsTransform: translate3d,
+          transform: translate3d,
+          ...style,
+        }}
+      >
+        {children}
+      </animated.div>
+    )
+  }
+
+  render() {
+    return (
+      <Consumer>
+        {parent => {
+          if (parent && !this.parent) {
+            this.parent = parent
+            this.initialize()
+          }
+
+          return this.renderLayer()
+        }}
+      </Consumer>
+    )
+  }
+}
+
 export default class Parallax extends React.PureComponent {
+  // TODO keep until major release
+  static Layer = ParallaxLayer
+
   static propTypes = {
     pages: PropTypes.number.isRequired,
     config: PropTypes.object,
@@ -155,126 +278,5 @@ export default class Parallax extends React.PureComponent {
         )}
       </div>
     )
-  }
-
-  static Layer = class extends React.PureComponent {
-    static propTypes = {
-      factor: PropTypes.number,
-      offset: PropTypes.number,
-      speed: PropTypes.number,
-    }
-
-    static defaultProps = {
-      factor: 1,
-      offset: 0,
-      speed: 0,
-    }
-
-    componentDidMount() {
-      const parent = this.parent
-      if (parent) {
-        parent.layers = parent.layers.concat(this)
-        parent.update()
-      }
-    }
-
-    componentWillUnmount() {
-      const parent = this.parent
-      if (parent) {
-        parent.layers = parent.layers.filter(layer => layer !== this)
-        parent.update()
-      }
-    }
-
-    setPosition(height, scrollTop, immediate = false) {
-      const { config, impl } = this.parent.props
-      const targetScroll = Math.floor(this.props.offset) * height
-      const offset =
-        height * this.props.offset + targetScroll * this.props.speed
-      const toValue = parseFloat(-(scrollTop * this.props.speed) + offset)
-      if (!immediate)
-        Animated.controller(
-          this.animatedTranslate,
-          { toValue, ...config },
-          impl
-        ).start()
-      else this.animatedTranslate.setValue(toValue)
-    }
-
-    setHeight(height, immediate = false) {
-      const { config, impl } = this.parent.props
-      const toValue = parseFloat(height * this.props.factor)
-      if (!immediate)
-        Animated.controller(
-          this.animatedSpace,
-          { toValue, ...config },
-          impl
-        ).start()
-      else this.animatedSpace.setValue(toValue)
-    }
-
-    initialize() {
-      const props = this.props
-      const parent = this.parent
-      const targetScroll = Math.floor(props.offset) * parent.space
-      const offset = parent.space * props.offset + targetScroll * props.speed
-      const toValue = parseFloat(-(parent.current * props.speed) + offset)
-      this.animatedTranslate = new Animated.Value(toValue)
-      this.animatedSpace = new Animated.Value(parent.space * props.factor)
-    }
-
-    renderLayers() {
-      const {
-        style,
-        children,
-        offset,
-        speed,
-        factor,
-        className,
-        ...props
-      } = this.props
-      const horizontal = this.parent.props.horizontal
-      const translate3d = this.animatedTranslate.interpolate({
-        inputRange: [0, 1],
-        outputRange: horizontal
-          ? ['translate3d(0px,0,0)', 'translate3d(1px,0,0)']
-          : ['translate3d(0,0px,0)', 'translate3d(0,1px,0)'],
-      })
-      return (
-        <animated.div
-          {...props}
-          className={className}
-          style={{
-            position: 'absolute',
-            backgroundSize: 'auto',
-            backgroundRepeat: 'no-repeat',
-            willChange: 'transform',
-            [horizontal ? 'height' : 'width']: '100%',
-            [horizontal ? 'width' : 'height']: this.animatedSpace,
-            WebkitTransform: translate3d,
-            MsTransform: translate3d,
-            transform: translate3d,
-            ...style,
-          }}
-        >
-          {children}
-        </animated.div>
-      )
-    }
-
-    render() {
-      return (
-        <Consumer>
-          {parent => {
-            if (parent && !this.parent) {
-              this.parent = parent
-              this.initialize()
-            }
-
-            return this.renderLayers()
-          }}
-        </Consumer>
-      )
-    }
   }
 }

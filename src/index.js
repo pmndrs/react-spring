@@ -3,7 +3,7 @@ import Value from './animated/AnimatedValue'
 import Spring, { config, template, animated, interpolate } from './Spring'
 import Transition from './Transition'
 import Trail from './Trail'
-import Parallax from './Parallax'
+import Parallax, { ParallaxLayer } from './Parallax'
 import Keyframes from './Keyframes'
 
 export {
@@ -12,6 +12,7 @@ export {
   Transition,
   Trail,
   Parallax,
+  ParallaxLayer,
   config,
   template,
   animated,

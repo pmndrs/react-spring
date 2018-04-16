@@ -30,7 +30,7 @@ const B = styles => (
   </animated.div>
 )
 
-export default class extends React.PureComponent {
+export default class RevealsExample extends React.PureComponent {
   state = { toggled: true }
   toggle = e => this.setState(state => ({ toggled: !state.toggled }))
   render() {

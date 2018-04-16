@@ -13,7 +13,7 @@ const paths = [
 
 let current = paths[0]
 
-export default class extends React.Component {
+export default class MorphExample extends React.Component {
   state = { path: 0 }
   toggle = () => {
     let path = this.state.path + 1

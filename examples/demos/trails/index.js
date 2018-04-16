@@ -2,7 +2,7 @@ import React from 'react'
 import { Trail, animated } from 'react-spring'
 import './styles.css'
 
-export default class extends React.PureComponent {
+export default class TrailsExample extends React.PureComponent {
   state = { toggle: true, items: ['item1', 'item2', 'item3', 'item4', 'item5'] }
   toggle = () => this.setState(state => ({ toggle: !state.toggle }))
   render() {

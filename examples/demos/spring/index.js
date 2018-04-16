@@ -50,7 +50,7 @@ const Content = ({
   </div>
 )
 
-export default class extends React.Component {
+export default class SpringExample extends React.Component {
   state = { toggle: true }
   toggle = () => this.setState(state => ({ toggle: !state.toggle }))
   render() {
