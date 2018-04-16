@@ -8,6 +8,7 @@ const defaultStyles = {
   color: 'white',
   display: 'flex',
   justifyContent: 'center',
+  alignItems: 'center',
   fontSize: '2em',
   fontFamily: "'Kanit', sans-serif",
   textTransform: 'uppercase',
