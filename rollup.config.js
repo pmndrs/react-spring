@@ -7,6 +7,7 @@ import pkg from './package.json'
 
 const getBabelOptions = ({ useESModules }) => ({
   babelrc: false,
+  exclude: '**/node_modules/**',
   runtimeHelpers: true,
   presets: [
     ['@babel/preset-env', { loose: true, modules: false }],
@@ -37,10 +38,6 @@ const plugins = [
   }),
 ]
 
-const peers = [...Object.keys(pkg.peerDependencies || {})]
-
-const globals = { react: 'React', 'prop-types': 'PropTypes' }
-
 export default [
   {
     input: './src/index.js',
@@ -62,9 +59,12 @@ export default [
       file: `${pkg.main}.umd.js`,
       format: 'umd',
       name: 'ReactSpring',
-      globals,
+      globals: {
+        react: 'React',
+        'prop-types': 'PropTypes',
+      },
     },
-    external: peers,
+    external: ['react', 'prop-types'],
     plugins,
   },
 
@@ -88,9 +88,13 @@ export default [
       file: `dist/addons.umd.js`,
       format: 'umd',
       name: 'ReactSpringAddons',
-      globals,
+      globals: {
+        react: 'React',
+        'react-dom': 'ReactDOM',
+        'react-spring': 'ReactSpring',
+      },
     },
-    external: peers,
+    external: ['react', 'react-dom', 'react-spring'],
     plugins,
   },
 ]
