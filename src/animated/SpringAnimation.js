@@ -49,7 +49,6 @@ export default class SpringAnimation extends Animation {
 
     if (this._initialVelocity !== undefined && this._initialVelocity !== null)
       this._lastVelocity = this._initialVelocity
-
     if (this._delay) this._timeout = setTimeout(this.onUpdate, this._delay)
     else this.onUpdate()
   }

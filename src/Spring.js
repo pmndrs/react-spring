@@ -35,6 +35,7 @@ export default class Spring extends React.PureComponent {
       PropTypes.arrayOf(PropTypes.string),
     ]),
     impl: PropTypes.func,
+    inject: PropTypes.func,
   }
 
   static defaultProps = {
@@ -47,26 +48,51 @@ export default class Spring extends React.PureComponent {
     impl: SpringAnimation,
   }
 
-  constructor(props) {
-    super()
-    this._defaultAnimation = new Animated.Value(0)
-    this._animations = {}
-    this._updateProps(props, false)
+  state = { props: undefined }
+  defaultAnimation = new Animated.Value(0)
+  animations = {}
+
+  componentWillUnmount() {
+    this.stop()
   }
 
-  _updateProps(
-    { impl, from, to, config, attach, immediate, reset, onFrame, onRest },
-    start = false
-  ) {
-    const allProps = Object.entries({ ...from, ...to })
-    const defaultAnimationValue = this._defaultAnimation._value
+  componentWillMount() {
+    this.updatePropsAsync(this.props)
+  }
 
-    this._interpolators = {}
-    this._defaultAnimation.setValue(0)
-    this._animations = allProps.reduce((acc, [name, value], i) => {
+  componentWillReceiveProps(props) {
+    this.updatePropsAsync(props)
+  }
+
+  updatePropsAsync(props) {
+    return props.inject
+      ? props.inject(props).then(props => this.updateProps(props))
+      : this.updateProps(props)
+  }
+
+  updateProps(props) {
+    const {
+      impl,
+      from,
+      to,
+      config,
+      attach,
+      immediate,
+      reset,
+      onFrame,
+      onRest,
+      inject,
+    } = props
+    const allProps = Object.entries({ ...from, ...to })
+    const defaultAnimationValue = this.defaultAnimation._value
+
+    this.defaultAnimation.setValue(0)
+    this.interpolators = {}
+    this.animations = allProps.reduce((acc, [name, value], i) => {
       const entry =
-        (reset === false && this._animations[name]) ||
-        (this._animations[name] = {})
+        (reset === false && this.animations[name]) ||
+        (this.animations[name] = {})
+
       let isNumber = typeof value === 'number'
       let isArray = !isNumber && Array.isArray(value)
       let fromValue = from[name] !== undefined ? from[name] : value
@@ -75,11 +101,11 @@ export default class Spring extends React.PureComponent {
       if (isNumber && attach) {
         // Attach value to target animation
         const target = attach(this)
-        const targetAnimation = target && target._animations[name]
+        const targetAnimation = target && target.animations[name]
         if (targetAnimation) toValue = targetAnimation.animation
       }
 
-      if (isNumber) {
+      if (isNumber || toValue === 'auto') {
         // Create animated value
         entry.animation = entry.interpolation =
           entry.animation || new Animated.Value(fromValue)
@@ -92,10 +118,10 @@ export default class Spring extends React.PureComponent {
         const previous =
           entry.interpolation &&
           entry.interpolation._interpolation(defaultAnimationValue)
-        entry.animation = this._defaultAnimation
-        entry.interpolation = this._defaultAnimation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [previous !== undefined ? previous : fromValue, value],
+        entry.animation = this.defaultAnimation
+        entry.interpolation = this.defaultAnimation.interpolate({
+          range: [0, 1],
+          output: [previous !== undefined ? previous : fromValue, value],
         })
       }
 
@@ -110,9 +136,9 @@ export default class Spring extends React.PureComponent {
           impl
         ).start(props => {
           if (props.finished) {
-            this._animations[name].stopped = true
+            this.animations[name].stopped = true
             if (
-              Object.values(this._animations).every(
+              Object.values(this.animations).every(
                 animation => animation.stopped
               )
             ) {
@@ -128,53 +154,46 @@ export default class Spring extends React.PureComponent {
         entry.animation.stopAnimation()
       }
 
-      this._interpolators[name] = entry.interpolation
+      this.interpolators[name] = entry.interpolation
       return { ...acc, [name]: entry }
     }, {})
 
-    if (start) this.start()
-
-    var oldPropsAnimated = this._propsAnimated
-    this._propsAnimated = new Animated.AnimatedProps(
-      this._interpolators,
+    const oldAnimatedProps = this.animatedProps
+    this.animatedProps = new Animated.AnimatedProps(
+      this.interpolators,
       this.callback
     )
-    oldPropsAnimated && oldPropsAnimated.__detach()
+    oldAnimatedProps && oldAnimatedProps.__detach()
+
+    if (inject) this.forceUpdate()
+    this.start()
   }
 
-  start(props = this.props) {
+  start() {
     return new Promise(res =>
-      Object.values(this._animations).forEach(animation => animation.start(res))
+      this.getAnimations().forEach(animation => animation.start(res))
     )
   }
 
   stop() {
-    Object.values(this._animations).forEach(animation => animation.stop())
-  }
-
-  update(props) {
-    this._updateProps({ ...this.props, ...props }, true)
+    this.getAnimations().forEach(animation => animation.stop())
   }
 
   callback = () => {
-    if (this.props.onFrame) this.props.onFrame(this._propsAnimated.__getValue())
+    if (this.props.onFrame) this.props.onFrame(this.animatedProps.__getValue())
     !this.props.native && this.forceUpdate()
   }
 
-  componentWillReceiveProps(props) {
-    this._updateProps(props, true)
-  }
-
-  componentDidMount() {
-    this.start()
-  }
-
-  componentWillUnmount() {
-    this.stop()
+  getAnimations() {
+    return Object.values(this.animations)
   }
 
   getValues() {
-    return this._propsAnimated.__getValue()
+    return this.animatedProps ? this.animatedProps.__getValue() : {}
+  }
+
+  getAnimatedValues() {
+    return this.props.native ? this.interpolators : this.getValues()
   }
 
   getForwardProps() {
@@ -196,13 +215,16 @@ export default class Spring extends React.PureComponent {
   }
 
   render() {
-    const { native, children, render } = this.props
-    let animatedProps = {
-      ...(native ? this._interpolators : this._propsAnimated.__getValue()),
-      ...this.getForwardProps(),
-    }
-    return render
-      ? render({ ...animatedProps, children })
-      : children(animatedProps)
+    const { children, render } = this.props
+    const values = this.getAnimatedValues()
+    if (values && Object.keys(values).length) {
+      const animatedProps = {
+        ...this.getAnimatedValues(),
+        ...this.getForwardProps(),
+      }
+      return render
+        ? render({ ...animatedProps, children })
+        : children(animatedProps)
+    } else return null
   }
 }

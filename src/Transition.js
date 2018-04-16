@@ -6,13 +6,7 @@ import Spring, { config as springConfig } from './Spring'
 const ref = (object, key) =>
   typeof object === 'function' ? object(key) : object
 
-function shallowDiffers(a, b) {
-  for (let i in a) if (!(i in b)) return true
-  for (let i in b) if (a[i] !== b[i]) return true
-  return false
-}
-
-export default class Transition extends React.Component {
+export default class Transition extends React.PureComponent {
   static propTypes = {
     native: PropTypes.bool,
     config: PropTypes.object,
@@ -83,10 +77,6 @@ export default class Transition extends React.Component {
         }
       }),
     }
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return shallowDiffers(nextProps, this.props)
   }
 
   componentWillReceiveProps(props) {

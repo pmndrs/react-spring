@@ -7,7 +7,7 @@ import { scaleLinear, scaleSqrt, scaleOrdinal } from 'd3-scale'
 import { schemeCategory10 as scheme } from 'd3-scale-chromatic'
 import { interpolate as d3interpolate } from 'd3-interpolate'
 import { Spring, animated } from 'react-spring'
-import Partition from './partition'
+import Partition from './Partition'
 import data from './data'
 import './styles.css'
 
