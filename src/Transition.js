@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Animated from './animated/targets/react-dom'
 import Spring, { config as springConfig } from './Spring'
 
 const ref = (object, key) =>
