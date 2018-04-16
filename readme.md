@@ -6,43 +6,43 @@
 
 # Table of Contents 👇
 
-*   [What is it?](#what-is-it-)
-*   [Why do we need yet another?](#why-do-we-need-yet-another-)
-*   [Overview](#overview-)
-*   [Example collection](#example-collection-)
-*   [API Overview](#api-overview-)
-    *   [Springs and basic interpolation](#springs-and-basic-interpolation)
-    *   [Render props](#render-props)
-    *   [Native rendering and interpolation](#native-rendering-and-interpolation-demo)
-    *   [Transitions](#transitions)
-    *   [Parallax and page transitions](#parallax-and-page-transitions)
+* [What is it?](#what-is-it-)
+* [Why do we need yet another?](#why-do-we-need-yet-another-)
+* [Overview](#overview-)
+* [Example collection](#example-collection-)
+* [API Overview](#api-overview-)
+  * [Springs and basic interpolation](#springs-and-basic-interpolation)
+  * [Render props](#render-props)
+  * [Native rendering and interpolation](#native-rendering-and-interpolation-demo)
+  * [Transitions](#transitions)
+  * [Parallax and page transitions](#parallax-and-page-transitions)
 
 # What is it? 🤔
 
 <p align="middle">
   <img src="assets/spring.gif" width="285" />
-  <img src="assets/transitions.gif" width="285" /> 
-  <img src="assets/trails.gif" width="285" /> 
+  <img src="assets/transitions.gif" width="285" />
+  <img src="assets/trails.gif" width="285" />
 </p>
 <p align="middle">
   <img src="assets/tree.gif" width="285" />
-  <img src="assets/sunburst.gif" width="285" /> 
-  <img src="assets/areas.gif" width="285" /> 
+  <img src="assets/sunburst.gif" width="285" />
+  <img src="assets/areas.gif" width="285" />
 </p>
 <p align="middle">
   <img src="assets/gestures.gif" width="285" />
-  <img src="assets/reveals.gif" width="285" /> 
-  <img src="assets/morph.gif" width="285" /> 
+  <img src="assets/reveals.gif" width="285" />
+  <img src="assets/morph.gif" width="285" />
 </p>
 <p align="middle">
   <img src="assets/vertical.gif" width="285" />
-  <img src="assets/horizontal.gif" width="285" /> 
-  <img src="assets/keyframes-trail.gif" width="285" /> 
+  <img src="assets/horizontal.gif" width="285" />
+  <img src="assets/keyframes-trail.gif" width="285" />
 </p>
 <p align="middle">
   <img src="assets/dragndrop.gif" width="285" />
-  <img src="assets/stream.gif" width="285" /> 
-  <img src="assets/time.gif" width="285" /> 
+  <img src="assets/stream.gif" width="285" />
+  <img src="assets/time.gif" width="285" />
 </p>
 
 A set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
@@ -130,15 +130,15 @@ import { Trail } from 'react-spring'
 `Parallax` allows you to declaratively create page/scroll-based animations.
 
 ```jsx
-import { Parallax } from 'react-spring'
+import { Parallax, ParallaxLayer } from 'react-spring'
 
 <Parallax pages={2}>
-    <Parallax.Layer offset={0} speed={0.2}>
+    <ParallaxLayer offset={0} speed={0.2}>
         first Page
-    </Parallax.Layer>
-    <Parallax.Layer offset={1} speed={0.5}>
+    </ParallaxLayer>
+    <ParallaxLayer offset={1} speed={0.5}>
         second Page
-    </Parallax.Layer>
+    </ParallaxLayer>
 </Parallax>
 ```
 
@@ -235,9 +235,9 @@ Et voilà! `Header` animates on prop changes! Props that `Spring` doesn't recogn
 
 ### Native rendering and interpolation ([Demo](https://codesandbox.io/embed/882njxpz29))
 
-![img](assets/without-native.jpeg) | ![img](assets/with-native.jpeg)
----|---
-<sub>Libraries animate by having React recalculate the component-tree on every frame. Here it attempts to animate a component consisting of ~300 sub-components, plowing through the frame budget and causing jank.</sub> | <sub>React-spring with the `native` property renders the component *only once*, from then on the animation will be applied directly to the dom in a requestAnimationFrame-loop, similar to how gsap and d3 do it.</sub>
+| ![img](assets/without-native.jpeg)                                                                                                                                                                                        | ![img](assets/with-native.jpeg)                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <sub>Libraries animate by having React recalculate the component-tree on every frame. Here it attempts to animate a component consisting of ~300 sub-components, plowing through the frame budget and causing jank.</sub> | <sub>React-spring with the `native` property renders the component _only once_, from then on the animation will be applied directly to the dom in a requestAnimationFrame-loop, similar to how gsap and d3 do it.</sub> |
 
 ---
 
@@ -255,7 +255,7 @@ import { Spring, animated, interpolate } from 'react-spring'
 
 <Spring native from={{ radius: 0, time: 0, x: 0, y: 0 }} to={{ radius: 10, time: 1, x: 10, y: 20 }}>
     {({ radius, time, x, y }) => (
-        <animated.div 
+        <animated.div
             style={{
                 // Use plain animated values like always, ...
                 borderRadius: radius,
@@ -293,7 +293,7 @@ You can use this prototype for two-state reveals, simply render a single child t
 
 ```jsx
 <Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-    {toggle ? ComponentA : ComponentB}
+  {toggle ? ComponentA : ComponentB}
 </Transition>
 ```
 
@@ -301,13 +301,14 @@ For more complex animations you can return per-object styles individually. Let T
 
 ```jsx
 <Transition
-    items={items}
-    keys={item => item.key}
-    from={item => ({ opacity: 0 })}
-    enter={item => ({ opacity: 1 })}
-    update={item => ({ opacity: 0.5 })}
-    leave={item => ({ opacity: 0 })}>
-    {items.map(item => styles => <li style={styles}>{item.text}</li>)}
+  items={items}
+  keys={item => item.key}
+  from={item => ({ opacity: 0 })}
+  enter={item => ({ opacity: 1 })}
+  update={item => ({ opacity: 0.5 })}
+  leave={item => ({ opacity: 0 })}
+>
+  {items.map(item => styles => <li style={styles}>{item.text}</li>)}
 </Transition>
 ```
 
@@ -327,17 +328,17 @@ import { Trail } from 'react-spring'
 
 `Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and speeds.
 
-`Parallax.pages` determines the total space of the inner content where each page takes 100% of the visible container. `Layer.offset` determines where the layer will be at when scrolled to (0=start, 1=1st page, ...). `Layer.speed` shifts the layer in accordance to its offset, values can be positive or negative.
+`Parallax.pages` determines the total space of the inner content where each page takes 100% of the visible container. `ParallaxLayer.offset` determines where the layer will be at when scrolled to (0=start, 1=1st page, ...). `ParallaxLayer.speed` shifts the layer in accordance to its offset, values can be positive or negative.
 
 ```jsx
-import { Parallax } from 'react-spring'
+import { Parallax, ParallaxLayer } from 'react-spring'
 
 <Parallax pages={3} scrolling={false} horizontal ref={ref => this.parallax = ref}>
-    <Parallax.Layer offset={0} speed={0.5}>
+    <ParallaxLayer offset={0} speed={0.5}>
         <span onClick={() => this.parallax.scrollTo(1)}>
             Layers can contain anything
         </span>
-    </Parallax.Layer>
+    </ParallaxLayer>
 </Parallax>
 ```
 

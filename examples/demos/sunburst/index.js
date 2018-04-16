@@ -106,7 +106,7 @@ class Example extends React.Component {
 }
 
 const root = hierarchy(data).sum(d => d.size)
-const App = () => (
+const SunburstExample = () => (
   <ParentSize>
     {size =>
       size.ref && (
@@ -122,4 +122,4 @@ const App = () => (
   </ParentSize>
 )
 
-export default App
+export default SunburstExample

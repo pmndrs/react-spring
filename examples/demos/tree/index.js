@@ -3,7 +3,7 @@ import { ParentSize } from '@vx/responsive'
 import Tree from './Tree'
 import data from './data'
 
-const App = () => (
+const TreeExample = () => (
   <ParentSize>
     {size =>
       size.ref && (
@@ -27,4 +27,4 @@ const App = () => (
   </ParentSize>
 )
 
-export default App
+export default TreeExample

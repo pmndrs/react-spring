@@ -13,7 +13,7 @@ const defaultStyles = {
   textTransform: 'uppercase',
 }
 
-export default class extends React.PureComponent {
+export default class TransitionsExample extends React.PureComponent {
   state = { items: [] }
 
   componentDidMount() {

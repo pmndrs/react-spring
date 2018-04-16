@@ -7,7 +7,7 @@ import clamp from 'clamp'
 import './styles.css'
 
 @withGesture // https://github.com/drcmda/react-with-gesture
-export default class extends React.Component {
+export default class GesturesExample extends React.Component {
   render() {
     const { xDelta, down, children } = this.props
     const to = {

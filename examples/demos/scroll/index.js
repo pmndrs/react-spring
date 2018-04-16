@@ -1,5 +1,5 @@
 import React from 'react'
-import { Parallax } from 'react-spring'
+import { Parallax, ParallaxLayer } from 'react-spring'
 
 // Little helpers ...
 const url = (name, wrap = false) =>
@@ -27,23 +27,23 @@ const Gray = ({ children }) => (
   <span style={{ color: '#909090' }}>{children}</span>
 )
 
-export default class extends React.Component {
+export default class ScrollExample extends React.Component {
   render() {
     return (
       <div style={{ background: '#253237' }}>
         <Parallax ref={ref => (this.parallax = ref)} pages={3}>
-          <Parallax.Layer
+          <ParallaxLayer
             offset={1}
             speed={1}
             style={{ backgroundColor: '#805E73' }}
           />
-          <Parallax.Layer
+          <ParallaxLayer
             offset={2}
             speed={1}
             style={{ backgroundColor: '#87BCDE' }}
           />
 
-          <Parallax.Layer
+          <ParallaxLayer
             offset={0}
             speed={0}
             factor={3}
@@ -53,7 +53,7 @@ export default class extends React.Component {
             }}
           />
 
-          <Parallax.Layer
+          <ParallaxLayer
             offset={1.3}
             speed={-0.3}
             style={{ pointerEvents: 'none' }}
@@ -62,9 +62,9 @@ export default class extends React.Component {
               src={url('satellite4')}
               style={{ width: '15%', marginLeft: '70%' }}
             />
-          </Parallax.Layer>
+          </ParallaxLayer>
 
-          <Parallax.Layer offset={1} speed={0.8} style={{ opacity: 0.1 }}>
+          <ParallaxLayer offset={1} speed={0.8} style={{ opacity: 0.1 }}>
             <img
               src={url('cloud')}
               style={{ display: 'block', width: '20%', marginLeft: '55%' }}
@@ -73,9 +73,9 @@ export default class extends React.Component {
               src={url('cloud')}
               style={{ display: 'block', width: '10%', marginLeft: '15%' }}
             />
-          </Parallax.Layer>
+          </ParallaxLayer>
 
-          <Parallax.Layer offset={1.75} speed={0.5} style={{ opacity: 0.1 }}>
+          <ParallaxLayer offset={1.75} speed={0.5} style={{ opacity: 0.1 }}>
             <img
               src={url('cloud')}
               style={{ display: 'block', width: '20%', marginLeft: '70%' }}
@@ -84,9 +84,9 @@ export default class extends React.Component {
               src={url('cloud')}
               style={{ display: 'block', width: '20%', marginLeft: '40%' }}
             />
-          </Parallax.Layer>
+          </ParallaxLayer>
 
-          <Parallax.Layer offset={1} speed={0.2} style={{ opacity: 0.2 }}>
+          <ParallaxLayer offset={1} speed={0.2} style={{ opacity: 0.2 }}>
             <img
               src={url('cloud')}
               style={{ display: 'block', width: '10%', marginLeft: '10%' }}
@@ -95,9 +95,9 @@ export default class extends React.Component {
               src={url('cloud')}
               style={{ display: 'block', width: '20%', marginLeft: '75%' }}
             />
-          </Parallax.Layer>
+          </ParallaxLayer>
 
-          <Parallax.Layer offset={1.6} speed={-0.1} style={{ opacity: 0.4 }}>
+          <ParallaxLayer offset={1.6} speed={-0.1} style={{ opacity: 0.4 }}>
             <img
               src={url('cloud')}
               style={{ display: 'block', width: '20%', marginLeft: '60%' }}
@@ -110,9 +110,9 @@ export default class extends React.Component {
               src={url('cloud')}
               style={{ display: 'block', width: '10%', marginLeft: '80%' }}
             />
-          </Parallax.Layer>
+          </ParallaxLayer>
 
-          <Parallax.Layer offset={2.6} speed={0.4} style={{ opacity: 0.6 }}>
+          <ParallaxLayer offset={2.6} speed={0.4} style={{ opacity: 0.6 }}>
             <img
               src={url('cloud')}
               style={{ display: 'block', width: '20%', marginLeft: '5%' }}
@@ -121,9 +121,9 @@ export default class extends React.Component {
               src={url('cloud')}
               style={{ display: 'block', width: '15%', marginLeft: '75%' }}
             />
-          </Parallax.Layer>
+          </ParallaxLayer>
 
-          <Parallax.Layer
+          <ParallaxLayer
             offset={2.5}
             speed={-0.4}
             style={{
@@ -134,9 +134,9 @@ export default class extends React.Component {
             }}
           >
             <img src={url('earth')} style={{ width: '60%' }} />
-          </Parallax.Layer>
+          </ParallaxLayer>
 
-          <Parallax.Layer
+          <ParallaxLayer
             offset={2}
             speed={-0.3}
             style={{
@@ -146,7 +146,7 @@ export default class extends React.Component {
             }}
           />
 
-          <Parallax.Layer
+          <ParallaxLayer
             offset={0}
             speed={0.1}
             onClick={() => this.parallax.scrollTo(1)}
@@ -157,9 +157,9 @@ export default class extends React.Component {
             }}
           >
             <img src={url('server')} style={{ width: '20%' }} />
-          </Parallax.Layer>
+          </ParallaxLayer>
 
-          <Parallax.Layer
+          <ParallaxLayer
             offset={1}
             speed={0.1}
             onClick={() => this.parallax.scrollTo(2)}
@@ -170,9 +170,9 @@ export default class extends React.Component {
             }}
           >
             <img src={url('bash')} style={{ width: '40%' }} />
-          </Parallax.Layer>
+          </ParallaxLayer>
 
-          <Parallax.Layer
+          <ParallaxLayer
             offset={2}
             speed={-0}
             style={{
@@ -183,7 +183,7 @@ export default class extends React.Component {
             onClick={() => this.parallax.scrollTo(0)}
           >
             <img src={url('clients-main')} style={{ width: '40%' }} />
-          </Parallax.Layer>
+          </ParallaxLayer>
         </Parallax>
       </div>
     )
