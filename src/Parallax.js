@@ -1,8 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import createContext from 'create-react-context'
 import Animated from './animated/targets/react-dom'
 import SpringAnimation from './animated/SpringAnimation'
 import { config, animated, template } from './Spring'
+
+const { Provider, Consumer } = createContext(null)
 
 function getScrollType(horizontal) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
@@ -24,17 +27,12 @@ export default class Parallax extends React.PureComponent {
     impl: SpringAnimation,
   }
 
-  static childContextTypes = { parallax: PropTypes.object }
-
-  constructor(props) {
-    super(props)
-    this.state = { ready: false }
-    this.layers = []
-    this.space = 0
-    this.current = 0
-    this.offset = 0
-    this.busy = false
-  }
+  state = { ready: false }
+  layers = []
+  space = 0
+  current = 0
+  offset = 0
+  busy = false
 
   moveItems = () => {
     this.layers.forEach(layer => layer.setPosition(this.space, this.current))
@@ -92,10 +90,6 @@ export default class Parallax extends React.PureComponent {
     ).start()
   }
 
-  getChildContext() {
-    return { parallax: this }
-  }
-
   componentDidMount() {
     window.addEventListener('resize', this.updateRaf, false)
     this.update()
@@ -144,7 +138,7 @@ export default class Parallax extends React.PureComponent {
       >
         {this.state.ready && (
           <div
-            ref={node => this.node}
+            ref={node => (this.content = node)}
             style={{
               position: 'absolute',
               [horizontal ? 'height' : 'width']: '100%',
@@ -156,7 +150,7 @@ export default class Parallax extends React.PureComponent {
               ...innerStyle,
             }}
           >
-            {children}
+            <Provider value={this}>{children}</Provider>
           </div>
         )}
       </div>
@@ -164,8 +158,6 @@ export default class Parallax extends React.PureComponent {
   }
 
   static Layer = class extends React.PureComponent {
-    static contextTypes = { parallax: PropTypes.object }
-
     static propTypes = {
       factor: PropTypes.number,
       offset: PropTypes.number,
@@ -178,18 +170,8 @@ export default class Parallax extends React.PureComponent {
       speed: 0,
     }
 
-    constructor(props, context) {
-      super(props, context)
-      const parallax = context.parallax
-      const targetScroll = Math.floor(props.offset) * parallax.space
-      const offset = parallax.space * props.offset + targetScroll * props.speed
-      const toValue = parseFloat(-(parallax.current * props.speed) + offset)
-      this.animatedTranslate = new Animated.Value(toValue)
-      this.animatedSpace = new Animated.Value(parallax.space * props.factor)
-    }
-
     componentDidMount() {
-      const parent = this.context.parallax
+      const parent = this.parent
       if (parent) {
         parent.layers = parent.layers.concat(this)
         parent.update()
@@ -197,7 +179,7 @@ export default class Parallax extends React.PureComponent {
     }
 
     componentWillUnmount() {
-      const parent = this.context.parallax
+      const parent = this.parent
       if (parent) {
         parent.layers = parent.layers.filter(layer => layer !== this)
         parent.update()
@@ -205,7 +187,7 @@ export default class Parallax extends React.PureComponent {
     }
 
     setPosition(height, scrollTop, immediate = false) {
-      const { config, impl } = this.context.parallax.props
+      const { config, impl } = this.parent.props
       const targetScroll = Math.floor(this.props.offset) * height
       const offset =
         height * this.props.offset + targetScroll * this.props.speed
@@ -220,7 +202,7 @@ export default class Parallax extends React.PureComponent {
     }
 
     setHeight(height, immediate = false) {
-      const { config, impl } = this.context.parallax.props
+      const { config, impl } = this.parent.props
       const toValue = parseFloat(height * this.props.factor)
       if (!immediate)
         Animated.controller(
@@ -231,7 +213,17 @@ export default class Parallax extends React.PureComponent {
       else this.animatedSpace.setValue(toValue)
     }
 
-    render() {
+    initialize() {
+      const props = this.props
+      const parent = this.parent
+      const targetScroll = Math.floor(props.offset) * parent.space
+      const offset = parent.space * props.offset + targetScroll * props.speed
+      const toValue = parseFloat(-(parent.current * props.speed) + offset)
+      this.animatedTranslate = new Animated.Value(toValue)
+      this.animatedSpace = new Animated.Value(parent.space * props.factor)
+    }
+
+    renderLayers() {
       const {
         style,
         children,
@@ -241,7 +233,7 @@ export default class Parallax extends React.PureComponent {
         className,
         ...props
       } = this.props
-      const horizontal = this.context.parallax.props.horizontal
+      const horizontal = this.parent.props.horizontal
       const translate3d = this.animatedTranslate.interpolate({
         inputRange: [0, 1],
         outputRange: horizontal
@@ -267,6 +259,21 @@ export default class Parallax extends React.PureComponent {
         >
           {children}
         </animated.div>
+      )
+    }
+
+    render() {
+      return (
+        <Consumer>
+          {parent => {
+            if (parent && !this.parent) {
+              this.parent = parent
+              this.initialize()
+            }
+
+            return this.renderLayers()
+          }}
+        </Consumer>
       )
     }
   }
