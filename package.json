@@ -20,7 +20,8 @@
   "prettier": {
     "semi": false,
     "trailingComma": "es5",
-    "singleQuote": true
+    "singleQuote": true,
+    "jsxBracketSameLine": true
   },
   "lint-staged": {
     "*.{js,md}": [

@@ -1,30 +1,30 @@
 {
   "dist/react-spring.es.js": {
-    "bundled": 65434,
-    "minified": 30507,
-    "gzipped": 8744,
+    "bundled": 66034,
+    "minified": 30740,
+    "gzipped": 8790,
     "treeshaked": {
-      "rollup": 23047,
-      "webpack": 24019
+      "rollup": 23461,
+      "webpack": 24433
     }
   },
   "dist/react-spring.umd.js": {
-    "bundled": 86906,
-    "minified": 37688,
-    "gzipped": 12536
+    "bundled": 87506,
+    "minified": 37941,
+    "gzipped": 12605
   },
   "dist/addons.js": {
-    "bundled": 14595,
-    "minified": 6741,
-    "gzipped": 2258,
+    "bundled": 16553,
+    "minified": 7770,
+    "gzipped": 2688,
     "treeshaked": {
-      "rollup": 2036,
-      "webpack": 2628
+      "rollup": 2212,
+      "webpack": 2969
     }
   },
   "dist/addons.umd.js": {
-    "bundled": 15154,
-    "minified": 6131,
-    "gzipped": 2181
+    "bundled": 643042,
+    "minified": 265777,
+    "gzipped": 83604
   }
 }
