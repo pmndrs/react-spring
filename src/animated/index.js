@@ -82,22 +82,21 @@ var parallel = (animations, config) => {
   return result
 }
 
-const exports = {
-  Value: AnimatedValue,
-  Array: AnimatedArray,
+export const template = (strings, ...values) =>
+  new AnimatedTemplate(strings, values)
+
+export const interpolate = (parents, config) =>
+  new AnimatedInterpolation(parents, config)
+
+export const inject = {
+  ApplyAnimatedValues: ApplyAnimatedValues.inject,
+}
+
+export {
+  AnimatedValue,
+  AnimatedArray,
   controller,
-  template: function template(strings, ...values) {
-    return new AnimatedTemplate(strings, values)
-  },
-  interpolate: function(parents, config) {
-    return new AnimatedInterpolation(parents, config)
-  },
   createAnimatedComponent,
-  inject: {
-    ApplyAnimatedValues: ApplyAnimatedValues.inject,
-  },
   ApplyAnimatedValues,
   AnimatedProps,
 }
-
-export default exports

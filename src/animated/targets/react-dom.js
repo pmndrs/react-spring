@@ -1,4 +1,4 @@
-import Animated from '../index.js'
+import { inject, createAnimatedComponent } from '../index.js'
 
 const isUnitlessNumber = {
   animationIterationCount: true,
@@ -134,8 +134,9 @@ function ApplyAnimatedValues(instance, props) {
   } else return false
 }
 
-Animated.inject.ApplyAnimatedValues(ApplyAnimatedValues, mapStyle)
-const elements = [
+inject.ApplyAnimatedValues(ApplyAnimatedValues, mapStyle)
+
+export const elements = [
   'a',
   'abbr',
   'address',
@@ -273,14 +274,7 @@ const elements = [
 ].reduce(
   (acc, element) => ({
     ...acc,
-    [element]: Animated.createAnimatedComponent(element),
+    [element]: createAnimatedComponent(element),
   }),
   {}
 )
-
-const exports = {
-  ...Animated,
-  elements,
-}
-
-export default exports
