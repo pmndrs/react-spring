@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import createContext from 'create-react-context'
 import { controller, AnimatedValue, template } from './animated/index.js'
-import { elements as animated } from './animated/targets/react-dom/'
+import { elements as animated } from './animated/targets/react-dom/index.js'
 import SpringAnimation from './animated/SpringAnimation'
 import { config } from './Spring'
 
