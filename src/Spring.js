@@ -82,6 +82,7 @@ export default class Spring extends React.PureComponent {
       config,
       attach,
       immediate,
+      hold,
       reset,
       onFrame,
       onRest,
@@ -99,6 +100,7 @@ export default class Spring extends React.PureComponent {
       let isNumber = typeof value === 'number'
       let isArray = !isNumber && Array.isArray(value)
       let fromValue = from[name] !== undefined ? from[name] : value
+      let fromAnimated = fromValue instanceof AnimatedValue
       let toValue = isNumber || isArray ? value : 1
 
       if (isNumber && attach) {
@@ -108,7 +110,10 @@ export default class Spring extends React.PureComponent {
         if (targetAnimation) toValue = targetAnimation.animation
       }
 
-      if (isNumber || toValue === 'auto') {
+      if (fromAnimated) {
+        // Use provided animated value
+        entry.animation = entry.interpolation = fromValue
+      } else if (isNumber || toValue === 'auto') {
         // Create animated value
         entry.animation = entry.interpolation =
           entry.animation || new AnimatedValue(fromValue)
@@ -133,21 +138,23 @@ export default class Spring extends React.PureComponent {
 
       entry.stopped = false
       entry.start = cb => {
-        AnimatedController(entry.animation, { toValue, ...config }, impl).start(
-          props => {
-            if (props.finished) {
-              this.animations[name].stopped = true
-              if (
-                Object.values(this.animations).every(
-                  animation => animation.stopped
-                )
-              ) {
-                const current = { ...this.props.from, ...this.props.to }
-                onRest && onRest(current)
-                cb && cb(current)
-              }
-            }
+        const onFinish = () => {
+          this.animations[name].stopped = true
+          if (
+            Object.values(this.animations).every(animation => animation.stopped)
+          ) {
+            const current = { ...this.props.from, ...this.props.to }
+            onRest && onRest(current)
+            cb && cb(current)
           }
+        }
+
+        // Skip held animations
+        if (hold && (hold === true || hold.indexOf(name) !== -1))
+          return onFinish()
+
+        AnimatedController(entry.animation, { toValue, ...config }, impl).start(
+          props => props.finished && onFinish()
         )
       }
       entry.stop = () => {
