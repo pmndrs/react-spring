@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Value } from 'react-spring'
+import AnimatedValue from '../../AnimatedValue'
 
 const check = value => value === 'auto'
 const convert = (acc, [name, value]) => ({ ...acc, [name]: new Value(value) })
