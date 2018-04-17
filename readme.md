@@ -175,6 +175,7 @@ import { Keyframes, Spring } from 'react-spring'
 
 * Springs and interpolation: https://codesandbox.io/embed/oln44nx8xq
 * Native springs: https://codesandbox.io/embed/882njxpz29
+* Animating 'auto': https://codesandbox.io/embed/pmjomxn60
 * Mount/Unmount transitions: https://codesandbox.io/embed/j150ykxrv
 * Reveals: https://codesandbox.io/embed/yj52v5689
 * Trails/Staggered motion: https://codesandbox.io/embed/vvmv6x01l5
