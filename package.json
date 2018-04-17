@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "4.1.6",
+  "version": "4.1.7",
   "description": "Animate React with ease",
   "main": "dist/react-spring",
   "module": "dist/react-spring.es",
