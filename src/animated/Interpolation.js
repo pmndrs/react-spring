@@ -1,4 +1,4 @@
-import normalizeColor from 'normalize-css-color'
+import normalizeColor from '../normalize-css-color/index.js'
 
 var linear = t => t
 
@@ -118,17 +118,30 @@ function colorToRgba(input) {
 
 var stringShapeRegex = /[0-9\.-]+/g
 
+// Covers rgb, rgba, hsl, hsla
+// Taken from https://gist.github.com/olmokramer/82ccce673f86db7cda5e
+var colorRegex = /(#[\d\w]+|\w+\((?:\d+%?(?:,\s)*){3}(?:\d*\.?\d+)?\))/
+// Covers color names (transparent, blue, etc.)
+var colorNamesRegex = new RegExp(
+  `(${Object.keys(normalizeColor.colorNames).join('|')})`,
+  'g'
+)
+
 /**
  * Supports string shapes by extracting numbers so new values can be computed,
  * and recombines those values into new strings of the same shape.  Supports
  * things like:
  *
- *   rgba(123, 42, 99, 0.36) // colors
- *   -45deg                  // values with units
+ *   rgba(123, 42, 99, 0.36)           // colors
+ *   0 2px 2px 0px rgba(0, 0, 0, 0.12) // box shadows
+ *   -45deg                            // values with units
  */
 function createInterpolationFromStringOutputRange(config) {
   var outputRange = config.output
-  outputRange = outputRange.map(colorToRgba)
+  // Replace colors with rgba
+  outputRange = outputRange
+    .map(rangeValue => rangeValue.replace(colorRegex, colorToRgba))
+    .map(rangeValue => rangeValue.replace(colorNamesRegex, colorToRgba))
 
   // ->
   // [
@@ -160,17 +173,24 @@ function createInterpolationFromStringOutputRange(config) {
       return Interpolation.create({ ...config, output: outputRanges[i] })
     })
 
-  // rgba requires that the r,g,b are integers.... so we want to round them, but we *dont* want to
-  // round the opacity (4th column).
-  const shouldRound = /^rgb/.test(outputRange[0])
   return input => {
-    var i = 0 // 'rgba(0, 100, 200, 0)'
-    // ->
-    // 'rgba(${interpolations[0](input)}, ${interpolations[1](input)}, ...'
-    return outputRange[0].replace(stringShapeRegex, () => {
-      const val = interpolations[i++](input)
-      return String(shouldRound && i < 4 ? Math.round(val) : val)
-    })
+    var i = 0
+    return (
+      outputRange[0]
+        // 'rgba(0, 100, 200, 0)'
+        // ->
+        // 'rgba(${interpolations[0](input)}, ${interpolations[1](input)}, ...'
+        .replace(stringShapeRegex, () => interpolations[i++](input))
+        // rgba requires that the r,g,b are integers.... so we want to round them, but we *dont* want to
+        // round the opacity (4th column).
+        .replace(
+          /rgba\(([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+)\)/gi,
+          (_, p1, p2, p3, p4) =>
+            `rgba(${Math.round(p1)}, ${Math.round(p2)}, ${Math.round(
+              p3
+            )}, ${p4})`
+        )
+    )
   }
 }
 
