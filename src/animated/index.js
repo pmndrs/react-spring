@@ -7,7 +7,6 @@ import AnimatedInterpolation from './AnimatedInterpolation'
 import AnimatedTracking from './AnimatedTracking'
 import SpringAnimation from './SpringAnimation'
 import createAnimatedComponent from './createAnimatedComponent'
-import ApplyAnimatedValues from './injectable/ApplyAnimatedValues'
 import AnimatedProps from './AnimatedProps'
 
 const maybeVectorAnim = (array, { tension, friction, toValue }, anim, impl) => {
@@ -88,15 +87,4 @@ export const template = (strings, ...values) =>
 export const interpolate = (parents, config) =>
   new AnimatedInterpolation(parents, config)
 
-export const inject = {
-  ApplyAnimatedValues: ApplyAnimatedValues.inject,
-}
-
-export {
-  AnimatedValue,
-  AnimatedArray,
-  controller,
-  createAnimatedComponent,
-  ApplyAnimatedValues,
-  AnimatedProps,
-}
+export { AnimatedValue, AnimatedArray, controller, AnimatedProps }

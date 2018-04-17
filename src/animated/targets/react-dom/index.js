@@ -1,4 +1,6 @@
-import { inject, createAnimatedComponent } from '../index.js'
+import createAnimatedComponent from '../../createAnimatedComponent'
+import Globals from '../../Globals'
+import fixAuto from './fix-auto'
 
 const isUnitlessNumber = {
   animationIterationCount: true,
@@ -58,7 +60,7 @@ function prefixKey(prefix, key) {
  * Support style names that may come passed in prefixed by adding permutations
  * of vendor prefixes.
  */
-var prefixes = ['Webkit', 'ms', 'Moz', 'O']
+var prefixes = ['Webkit', 'Ms', 'Moz', 'O']
 
 // Using Object.keys here, or else the vanilla for-in loop makes IE8 go into an
 // infinite loop, because it iterates over the newly added props too.
@@ -67,10 +69,6 @@ Object.keys(isUnitlessNumber).forEach(function(prop) {
     isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop]
   })
 })
-
-function mapStyle(style) {
-  return style
-}
 
 function dangerousStyleValue(name, value, isCustomProperty) {
   // Note that we've removed escapeTextForBrowser() calls here since the
@@ -125,16 +123,15 @@ function setValueForAttributes(node, props) {
   }
 }
 
-function ApplyAnimatedValues(instance, props) {
+Globals.injectBugfixes(fixAuto)
+Globals.injectApplyAnimatedValues((instance, props) => {
   if (instance.setNativeProps) {
     instance.setNativeProps(props)
   } else if (instance.nodeType && instance.setAttribute !== undefined) {
     setValueForStyles(instance, props.style)
     setValueForAttributes(instance, props)
   } else return false
-}
-
-inject.ApplyAnimatedValues(ApplyAnimatedValues, mapStyle)
+}, style => style)
 
 export const elements = [
   'a',

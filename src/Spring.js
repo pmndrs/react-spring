@@ -8,8 +8,8 @@ import {
   AnimatedArray,
   AnimatedProps,
 } from './animated/index.js'
-import { elements as animated } from './animated/targets/react-dom'
 import SpringAnimation from './animated/SpringAnimation'
+import Globals from './animated/Globals'
 
 export const config = {
   default: { tension: 170, friction: 26 },
@@ -49,6 +49,7 @@ export default class Spring extends React.PureComponent {
     immediate: false,
     reset: false,
     impl: SpringAnimation,
+    inject: Globals.Bugfixes,
   }
 
   state = { props: undefined }
@@ -68,12 +69,15 @@ export default class Spring extends React.PureComponent {
   }
 
   updatePropsAsync(props) {
-    return props.inject
-      ? props.inject(props).then(props => this.updateProps(props))
-      : this.updateProps(props)
+    if (props.inject) {
+      props = props.inject(this, props)
+      // This is in order to not waste time, if it isn't a promise, don't stall
+      if (props.then) return props.then(props => this.updateProps(props, true))
+    }
+    this.updateProps(props)
   }
 
-  updateProps(props) {
+  updateProps(props, force = false) {
     const {
       impl,
       from,
@@ -84,7 +88,6 @@ export default class Spring extends React.PureComponent {
       reset,
       onFrame,
       onRest,
-      inject,
     } = props
     const allProps = Object.entries({ ...from, ...to })
     const defaultAnimationValue = this.defaultAnimation._value
@@ -163,7 +166,7 @@ export default class Spring extends React.PureComponent {
     this.animatedProps = new AnimatedProps(this.interpolators, this.callback)
     oldAnimatedProps && oldAnimatedProps.__detach()
 
-    if (inject) this.forceUpdate()
+    if (force) this.forceUpdate()
     this.start()
   }
 
@@ -194,7 +197,7 @@ export default class Spring extends React.PureComponent {
     return this.props.native ? this.interpolators : this.getValues()
   }
 
-  getForwardProps() {
+  getForwardProps(props = this.props) {
     const {
       to,
       from,
@@ -208,7 +211,7 @@ export default class Spring extends React.PureComponent {
       immediate,
       impl,
       ...forward
-    } = this.props
+    } = props
     return forward
   }
 

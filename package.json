@@ -21,7 +21,9 @@
     "semi": false,
     "trailingComma": "es5",
     "singleQuote": true,
-    "jsxBracketSameLine": true
+    "jsxBracketSameLine": true,
+    "tabWidth": 2,
+    "printWidth": 80
   },
   "lint-staged": {
     "*.{js,md}": [
