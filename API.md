@@ -79,7 +79,7 @@ class Transition extends React.PureComponent {
     leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     //
     update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-    // A collectiomn of unique keys that must match with the childrens order
+    // A collection of unique keys that must match with the childrens order
     // Can be omitted if children/render aren't an array
     // Can be a function, which then acts as a key-accessor which is useful when you use the items prop
     keys: PropTypes.oneOfType([
