@@ -175,6 +175,7 @@ import { Keyframes, Spring } from 'react-spring'
 
 * Springs and interpolation: https://codesandbox.io/embed/oln44nx8xq
 * Native springs: https://codesandbox.io/embed/882njxpz29
+* Animating 'auto': https://codesandbox.io/embed/pmjomxn60
 * Mount/Unmount transitions: https://codesandbox.io/embed/j150ykxrv
 * Reveals: https://codesandbox.io/embed/yj52v5689
 * Trails/Staggered motion: https://codesandbox.io/embed/vvmv6x01l5
@@ -184,10 +185,10 @@ import { Keyframes, Spring } from 'react-spring'
 * Keyframes/single script: https://codesandbox.io/embed/j1w4355593
 * Keyframes/multiple scripts: https://codesandbox.io/embed/zl35mrkqmm
 * SVG morphing/custom interpolaters: https://codesandbox.io/embed/lwpkp46om
-* D3 stream graps: https://codesandbox.io/embed/py3p5p11m7
-* D3 area graphs: https://codesandbox.io/embed/j3x61vjz5v
-* D3 sunbursts: https://codesandbox.io/embed/nww6yxo0jl
-* D3 trees: https://codesandbox.io/embed/9jrjqvq954
+* VX/D3 stream graps: https://codesandbox.io/embed/py3p5p11m7
+* VX/D3 area graphs: https://codesandbox.io/embed/j3x61vjz5v
+* VX/D3 sunbursts: https://codesandbox.io/embed/nww6yxo0jl
+* VX/D3 trees: https://codesandbox.io/embed/9jrjqvq954
 * Routing: https://codesandbox.io/embed/mjnwrk1o3p
 * Horizontal gestures / occlude: https://codesandbox.io/embed/jzn14k0ppy
 * Vertical gestures / drag-n-drop: https://codesandbox.io/embed/l9zqz0m18z
