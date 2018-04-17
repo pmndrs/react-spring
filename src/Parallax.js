@@ -2,10 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import createContext from 'create-react-context'
 import { controller, AnimatedValue, template } from './animated/index.js'
-import { elements as animated } from './animated/targets/react-dom/index.js'
+import createAnimatedComponent from './animated/createAnimatedComponent'
 import SpringAnimation from './animated/SpringAnimation'
 import { config } from './Spring'
 
+const AnimatedDiv = createAnimatedComponent('div')
 const { Provider, Consumer } = createContext(null)
 
 function getScrollType(horizontal) {
@@ -87,7 +88,7 @@ export class ParallaxLayer extends React.PureComponent {
         : ['translate3d(0,0px,0)', 'translate3d(0,1px,0)'],
     })
     return (
-      <animated.div
+      <AnimatedDiv
         {...props}
         className={className}
         style={{
@@ -103,7 +104,7 @@ export class ParallaxLayer extends React.PureComponent {
           ...style,
         }}>
         {children}
-      </animated.div>
+      </AnimatedDiv>
     )
   }
 
