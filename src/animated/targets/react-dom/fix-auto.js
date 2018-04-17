@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom'
 import AnimatedValue from '../../AnimatedValue'
 
 const check = value => value === 'auto'
-const convert = (acc, [name, value]) => ({ ...acc, [name]: new Value(value) })
+const convert = (acc, [name, value]) => ({
+  ...acc,
+  [name]: new AnimatedValue(value),
+})
 const overwrite = (width, height) => (acc, [name, value]) => ({
   ...acc,
   [name]: value === 'auto' ? (name === 'height' ? height : width) : value,
