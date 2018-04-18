@@ -209,6 +209,7 @@ export default class Transition extends React.PureComponent {
         {...rest}
         {...props}
         onFrame={onFrame && (values => onFrame(item, values))}
+        onRest={onRest && (values => onRest(item, values))}
         render={render && children}
         children={render ? this.props.children : children}
       />
