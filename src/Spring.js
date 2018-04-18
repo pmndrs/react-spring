@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { interpolate } from './animated/AnimatedInterpolation'
 import AnimatedController from './animated/AnimatedController'
 import AnimatedValue from './animated/AnimatedValue'
 import AnimatedArray from './animated/AnimatedArray'

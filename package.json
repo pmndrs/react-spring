@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "4.1.8-beta.1",
+  "version": "4.1.8",
   "description": "Animate React with ease",
   "main": "dist/react-spring",
   "module": "dist/react-spring.es",
@@ -72,7 +72,8 @@
   },
   "peerDependencies": {
     "prop-types": "15.x.x",
-    "react": ">= 16.0.0"
+    "react": ">= 16.0.0",
+    "react-dom": ">= 16.0.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.44",
