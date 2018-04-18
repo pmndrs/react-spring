@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import createContext from 'create-react-context'
-import { controller, AnimatedValue, template } from './animated/index.js'
+import AnimatedController from './animated/AnimatedController'
+import AnimatedValue from './animated/AnimatedValue'
 import createAnimatedComponent from './animated/createAnimatedComponent'
 import SpringAnimation from './animated/SpringAnimation'
 import { config } from './Spring'
@@ -48,7 +49,11 @@ export class ParallaxLayer extends React.PureComponent {
     const offset = height * this.props.offset + targetScroll * this.props.speed
     const toValue = parseFloat(-(scrollTop * this.props.speed) + offset)
     if (!immediate)
-      controller(this.animatedTranslate, { toValue, ...config }, impl).start()
+      AnimatedController(
+        this.animatedTranslate,
+        { toValue, ...config },
+        impl
+      ).start()
     else this.animatedTranslate.setValue(toValue)
   }
 
@@ -56,7 +61,11 @@ export class ParallaxLayer extends React.PureComponent {
     const { config, impl } = this.parent.props
     const toValue = parseFloat(height * this.props.factor)
     if (!immediate)
-      controller(this.animatedSpace, { toValue, ...config }, impl).start()
+      AnimatedController(
+        this.animatedSpace,
+        { toValue, ...config },
+        impl
+      ).start()
     else this.animatedSpace.setValue(toValue)
   }
 
@@ -199,7 +208,7 @@ export default class Parallax extends React.PureComponent {
     const target = this.container
     this.animatedScroll = new AnimatedValue(target[scrollType])
     this.animatedScroll.addListener(({ value }) => (target[scrollType] = value))
-    controller(
+    AnimatedController(
       this.animatedScroll,
       { toValue: offset * this.space, ...config },
       impl

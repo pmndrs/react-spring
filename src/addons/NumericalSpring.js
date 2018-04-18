@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { interpolate } from './animated/AnimatedInterpolation'
-import AnimatedController from './animated/AnimatedController'
-import AnimatedValue from './animated/AnimatedValue'
-import AnimatedArray from './animated/AnimatedArray'
-import AnimatedProps from './animated/AnimatedProps'
-import SpringAnimation from './animated/SpringAnimation'
-import Globals from './animated/Globals'
+import { interpolate } from '../animated/AnimatedInterpolation'
+import AnimatedController from '../animated/AnimatedController'
+import AnimatedValue from '../animated/AnimatedValue'
+import AnimatedArray from '../animated/AnimatedArray'
+import AnimatedProps from '../animated/AnimatedProps'
+import SpringAnimation from '../animated/SpringAnimation'
 
 export const config = {
   default: { tension: 170, friction: 26 },
@@ -46,11 +45,9 @@ export default class Spring extends React.PureComponent {
     immediate: false,
     reset: false,
     impl: SpringAnimation,
-    inject: Globals.Bugfixes,
   }
 
   state = { props: undefined }
-  defaultAnimation = new AnimatedValue(0)
   animations = {}
 
   componentWillUnmount() {
@@ -87,9 +84,7 @@ export default class Spring extends React.PureComponent {
       onRest,
     } = props
     const allProps = Object.entries({ ...from, ...to })
-    const defaultAnimationValue = this.defaultAnimation._value
 
-    this.defaultAnimation.setValue(0)
     this.interpolators = {}
     this.animations = allProps.reduce((acc, [name, value], i) => {
       const entry =
@@ -101,47 +96,22 @@ export default class Spring extends React.PureComponent {
       let fromValue = from[name] !== undefined ? from[name] : value
       let toValue = isNumber || isArray ? value : 1
 
-      if (isNumber && attach) {
-        // Attach value to target animation
-        const target = attach(this)
-        const targetAnimation = target && target.animations[name]
-        if (targetAnimation) toValue = targetAnimation.animation
-      }
-
-      if (isNumber || toValue === 'auto') {
-        // Create animated value
-        entry.animation = entry.interpolation =
-          entry.animation || new AnimatedValue(fromValue)
-      } else if (isArray) {
-        // Create animated array
-        entry.animation = entry.interpolation =
-          entry.animation || new AnimatedArray(fromValue)
-      } else {
-        // Deal with interpolations
-        const previous =
-          entry.interpolation &&
-          entry.interpolation._interpolation(defaultAnimationValue)
-        entry.animation = this.defaultAnimation
-        entry.interpolation = this.defaultAnimation.interpolate({
-          range: [0, 1],
-          output: [previous !== undefined ? previous : fromValue, value],
-        })
-      }
+      // Create animated value
+      entry.animation =
+        entry.animation || isNumber
+          ? new AnimatedValue(fromValue)
+          : new AnimatedArray(fromValue)
 
       if (immediate && (immediate === true || immediate.indexOf(name) !== -1))
         entry.animation.setValue(toValue)
 
       entry.stopped = false
       entry.start = cb => {
-        AnimatedController(entry.animation, { toValue, ...config }, impl).start(
+        controller(entry.animation, { toValue, ...config }, impl).start(
           props => {
             if (props.finished) {
               this.animations[name].stopped = true
-              if (
-                Object.values(this.animations).every(
-                  animation => animation.stopped
-                )
-              ) {
+              if (Object.values(this.animations).every(a => a.stopped)) {
                 const current = { ...this.props.from, ...this.props.to }
                 onRest && onRest(current)
                 cb && cb(current)
@@ -155,7 +125,7 @@ export default class Spring extends React.PureComponent {
         entry.animation.stopAnimation()
       }
 
-      this.interpolators[name] = entry.interpolation
+      this.interpolators[name] = entry.animation
       return { ...acc, [name]: entry }
     }, {})
 
@@ -168,13 +138,11 @@ export default class Spring extends React.PureComponent {
   }
 
   start() {
-    return new Promise(res =>
-      this.getAnimations().forEach(animation => animation.start(res))
-    )
+    return new Promise(res => this.getAnimations().forEach(a => a.start(res)))
   }
 
   stop() {
-    this.getAnimations().forEach(animation => animation.stop())
+    this.getAnimations().forEach(a => a.stop())
   }
 
   callback = () => {
@@ -227,3 +195,5 @@ export default class Spring extends React.PureComponent {
     } else return null
   }
 }
+
+export { interpolate, controller }

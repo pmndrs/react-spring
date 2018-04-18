@@ -1,4 +1,5 @@
 import createAnimatedComponent from '../../createAnimatedComponent'
+import Interpolation from '../Interpolation'
 import Globals from '../../Globals'
 import fixAuto from './fix-auto'
 
@@ -123,6 +124,7 @@ function setValueForAttributes(node, props) {
   }
 }
 
+Globals.injectInterpolation(Interpolation)
 Globals.injectBugfixes(fixAuto)
 Globals.injectApplyAnimatedValues((instance, props) => {
   if (instance.setNativeProps) {

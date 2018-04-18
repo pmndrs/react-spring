@@ -1,6 +1,6 @@
 import Animation from './animated/Animation'
 import Value from './animated/AnimatedValue'
-import { template, interpolate } from './animated/index.js'
+import { interpolate } from './animated/AnimatedInterpolation'
 import { elements as animated } from './animated/targets/react-dom/index.js'
 import Spring, { config } from './Spring'
 import Transition from './Transition'
@@ -16,7 +16,6 @@ export {
   Parallax,
   ParallaxLayer,
   config,
-  template,
   animated,
   interpolate,
   Animation,

@@ -1,6 +1,5 @@
 import AnimatedWithChildren from './AnimatedWithChildren'
 import AnimatedInterpolation from './AnimatedInterpolation'
-import Interpolation from './Interpolation'
 
 var _uniqueId = 0
 

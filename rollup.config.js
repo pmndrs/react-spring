@@ -38,6 +38,15 @@ const plugins = [
   }),
 ]
 
+const globals = {
+  react: 'React',
+  'react-dom': 'ReactDOM',
+  'prop-types': 'PropTypes',
+  'react-spring': 'ReactSpring',
+}
+
+const external = ['react', 'react-dom', 'prop-types', 'react-spring']
+
 export default [
   {
     input: './src/index.js',
@@ -59,20 +68,36 @@ export default [
       file: `${pkg.main}.umd.js`,
       format: 'umd',
       name: 'ReactSpring',
-      globals: {
-        react: 'React',
-        'prop-types': 'PropTypes',
-      },
+      globals,
     },
-    external: ['react', 'prop-types'],
+    external,
     plugins,
   },
 
   {
-    input: './src/addons/index.js',
-    output: { file: `dist/addons.cjs.js`, format: 'cjs' },
+    input: './src/addons/NumericalSpring.js',
+    output: { file: 'dist/NumericalSpring.cjs.js', format: 'cjs' },
     external: isExternal,
-    plugins: [babel(getBabelOptions({ useESModules: false }))],
+    plugins: [babel(getBabelOptions({ useESModules: false })), sizeSnapshot()],
+  },
+
+  {
+    input: './src/addons/NumericalSpring.js',
+    output: { file: 'dist/NumericalSpring.js', format: 'es' },
+    external: isExternal,
+    plugins: [babel(getBabelOptions({ useESModules: true })), sizeSnapshot()],
+  },
+
+  {
+    input: './src/addons/NumericalSpring.js',
+    output: {
+      file: 'dist/NumericalSpring.umd.js',
+      format: 'umd',
+      name: 'ReactSpringNumerical',
+      globals,
+    },
+    external,
+    plugins,
   },
 
   {
@@ -84,17 +109,20 @@ export default [
 
   {
     input: './src/addons/index.js',
+    output: { file: `dist/addons.cjs.js`, format: 'cjs' },
+    external: isExternal,
+    plugins: [babel(getBabelOptions({ useESModules: false }))],
+  },
+
+  {
+    input: './src/addons/index.js',
     output: {
       file: `dist/addons.umd.js`,
       format: 'umd',
       name: 'ReactSpringAddons',
-      globals: {
-        react: 'React',
-        'react-dom': 'ReactDOM',
-        'react-spring': 'ReactSpring',
-      },
+      globals,
     },
-    external: ['react', 'react-dom', 'react-spring'],
+    external,
     plugins,
   },
 ]
