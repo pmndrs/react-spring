@@ -1,6 +1,6 @@
 import Animated from './Animated'
 import AnimatedWithChildren from './AnimatedWithChildren'
-import Globals from './Globals'
+import * as Globals from './Globals'
 
 export default class AnimatedInterpolation extends AnimatedWithChildren {
   constructor(parents, config) {

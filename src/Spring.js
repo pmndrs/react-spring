@@ -5,7 +5,7 @@ import AnimatedValue from './animated/AnimatedValue'
 import AnimatedArray from './animated/AnimatedArray'
 import AnimatedProps from './animated/AnimatedProps'
 import SpringAnimation from './animated/SpringAnimation'
-import Globals from './animated/Globals'
+import * as Globals from './animated/Globals'
 
 export const config = {
   default: { tension: 170, friction: 26 },

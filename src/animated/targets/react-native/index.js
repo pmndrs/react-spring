@@ -1,6 +1,6 @@
 import createAnimatedComponent from '../../createAnimatedComponent'
 import Interpolation from '../Interpolation'
-import Globals from '../../Globals'
+import * as Globals from '../../Globals'
 
 Globals.injectInterpolation(Interpolation)
 Globals.injectApplyAnimatedValues(
