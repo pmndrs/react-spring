@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { interpolate } from '../animated/AnimatedInterpolation'
+import createAnimatedComponent from '../animated/createAnimatedComponent'
 import AnimatedController from '../animated/AnimatedController'
 import AnimatedValue from '../animated/AnimatedValue'
 import AnimatedArray from '../animated/AnimatedArray'
@@ -96,11 +97,15 @@ export default class Spring extends React.PureComponent {
       let fromValue = from[name] !== undefined ? from[name] : value
       let toValue = isNumber || isArray ? value : 1
 
-      // Create animated value
-      entry.animation =
-        entry.animation || isNumber
-          ? new AnimatedValue(fromValue)
-          : new AnimatedArray(fromValue)
+      if (isNumber) {
+        // Create animated value
+        entry.animation = entry.interpolation =
+          entry.animation || new AnimatedValue(fromValue)
+      } else if (isArray) {
+        // Create animated array
+        entry.animation = entry.interpolation =
+          entry.animation || new AnimatedArray(fromValue)
+      }
 
       if (immediate && (immediate === true || immediate.indexOf(name) !== -1))
         entry.animation.setValue(toValue)
@@ -111,7 +116,11 @@ export default class Spring extends React.PureComponent {
           props => {
             if (props.finished) {
               this.animations[name].stopped = true
-              if (Object.values(this.animations).every(a => a.stopped)) {
+              if (
+                Object.values(this.animations).every(
+                  animation => animation.stopped
+                )
+              ) {
                 const current = { ...this.props.from, ...this.props.to }
                 onRest && onRest(current)
                 cb && cb(current)
@@ -125,7 +134,7 @@ export default class Spring extends React.PureComponent {
         entry.animation.stopAnimation()
       }
 
-      this.interpolators[name] = entry.animation
+      this.interpolators[name] = entry.interpolation
       return { ...acc, [name]: entry }
     }, {})
 
@@ -196,4 +205,4 @@ export default class Spring extends React.PureComponent {
   }
 }
 
-export { interpolate, controller }
+export { interpolate, createAnimatedComponent }

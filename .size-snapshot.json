@@ -14,23 +14,23 @@
     "gzipped": 12704
   },
   "dist/NumericalSpring.cjs.js": {
-    "bundled": 29782,
-    "minified": 14002,
-    "gzipped": 3817
+    "bundled": 33038,
+    "minified": 15134,
+    "gzipped": 4050
   },
   "dist/NumericalSpring.js": {
-    "bundled": 29451,
-    "minified": 13744,
-    "gzipped": 3744,
+    "bundled": 32678,
+    "minified": 14852,
+    "gzipped": 3978,
     "treeshaked": {
-      "rollup": 12223,
-      "webpack": 13014
+      "rollup": 12340,
+      "webpack": 13170
     }
   },
   "dist/NumericalSpring.umd.js": {
-    "bundled": 31663,
-    "minified": 13500,
-    "gzipped": 3985
+    "bundled": 35452,
+    "minified": 14723,
+    "gzipped": 4282
   },
   "dist/addons.js": {
     "bundled": 14595,
