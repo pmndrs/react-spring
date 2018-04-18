@@ -3,14 +3,29 @@ import ReactDOM from 'react-dom'
 import Loadable from 'react-loadable'
 import './styles.css'
 
-import Spring from '../src/addons/NumericalSpring'
+const components = [
+  'scroll',
+  'parallax',
+  'nativespring',
+  'transitions',
+  'areas',
+  'trails',
+  'reveals',
+  'timing',
+  'sunburst',
+  'gestures',
+  'tree',
+  'morph',
+].map(path =>
+  Loadable({
+    loader: () => import('./demos/' + path),
+    loading: () => <div />,
+  })
+)
 
 ReactDOM.render(
-  <Spring
-    config={{ tension: 0, friction: 100 }}
-    from={{ opacity: 0 }}
-    to={{ opacity: 1 }}>
-    {props => <h1 style={props}>Hello, world!</h1>}
-  </Spring>,
+  <div className="app-container">
+    {components.map((Component, i) => <Component key={i} />)}
+  </div>,
   document.getElementById('root')
 )

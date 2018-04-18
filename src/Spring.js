@@ -214,6 +214,7 @@ export default class Spring extends React.PureComponent {
       immediate,
       impl,
       inject,
+      hold,
       ...forward
     } = props
     return forward

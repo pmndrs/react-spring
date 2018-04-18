@@ -14,8 +14,8 @@ function getScrollType(horizontal) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
 }
 
-const START_TRANSLATE_3D = 'translate3d(0px, 0, 0px)'
-const START_TRANSLATE = 'translate(0, 0)'
+const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
+const START_TRANSLATE = 'translate(0px,0px)'
 
 export class ParallaxLayer extends React.PureComponent {
   static propTypes = {
@@ -128,7 +128,6 @@ export class ParallaxLayer extends React.PureComponent {
             this.parent = parent
             this.initialize()
           }
-
           return this.renderLayer()
         }}
       </Consumer>
