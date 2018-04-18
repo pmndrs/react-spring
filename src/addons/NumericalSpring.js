@@ -107,7 +107,7 @@ export default class Spring extends React.PureComponent {
 
       entry.stopped = false
       entry.start = cb => {
-        controller(entry.animation, { toValue, ...config }, impl).start(
+        AnimatedController(entry.animation, { toValue, ...config }, impl).start(
           props => {
             if (props.finished) {
               this.animations[name].stopped = true
