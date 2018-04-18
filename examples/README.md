@@ -7,7 +7,7 @@
 
 Demo will be live at http://localhost:8080
 
-# Example collection ⚡️
+# Codesandboxes ⚡️
 
 * Springs and interpolation: https://codesandbox.io/embed/oln44nx8xq
 * Native springs: https://codesandbox.io/embed/882njxpz29
