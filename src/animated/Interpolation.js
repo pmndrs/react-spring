@@ -1,4 +1,4 @@
-import normalizeColor from '../normalize-css-color/index.js'
+import { normalizeColor, colorNames } from '../normalize-css-color/index.js'
 
 var linear = t => t
 
@@ -122,10 +122,7 @@ var stringShapeRegex = /[0-9\.-]+/g
 // Taken from https://gist.github.com/olmokramer/82ccce673f86db7cda5e
 var colorRegex = /(#[\d\w]+|\w+\((?:\d+%?(?:,\s)*){3}(?:\d*\.?\d+)?\))/
 // Covers color names (transparent, blue, etc.)
-var colorNamesRegex = new RegExp(
-  `(${Object.keys(normalizeColor.colorNames).join('|')})`,
-  'g'
-)
+var colorNamesRegex = new RegExp(`(${Object.keys(colorNames).join('|')})`, 'g')
 
 /**
  * Supports string shapes by extracting numbers so new values can be computed,
