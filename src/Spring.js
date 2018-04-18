@@ -224,10 +224,7 @@ export default class Spring extends React.PureComponent {
     const { children, render } = this.props
     const values = this.getAnimatedValues()
     if (values && Object.keys(values).length) {
-      const animatedProps = {
-        ...this.getAnimatedValues(),
-        ...this.getForwardProps(),
-      }
+      const animatedProps = { ...values, ...this.getForwardProps() }
       return render
         ? render({ ...animatedProps, children })
         : children(animatedProps)

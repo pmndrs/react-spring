@@ -64,10 +64,5 @@ function createConfig(entry, out, name) {
 
 export default [
   ...createConfig('index', 'react-spring', 'ReactSpring'),
-  ...createConfig(
-    'addons/NumericalSpring',
-    'react-spring-numerical',
-    'ReactSpringNumerical'
-  ),
   ...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
 ]
