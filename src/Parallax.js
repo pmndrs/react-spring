@@ -14,6 +14,9 @@ function getScrollType(horizontal) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
 }
 
+const START_TRANSLATE_3D = 'translate3d(0px, 0, 0px)'
+const START_TRANSLATE = 'translate(0, 0)'
+
 export class ParallaxLayer extends React.PureComponent {
   static propTypes = {
     factor: PropTypes.number,
@@ -93,8 +96,8 @@ export class ParallaxLayer extends React.PureComponent {
     const translate3d = this.animatedTranslate.interpolate({
       range: [0, 1],
       output: horizontal
-        ? ['translate3d(0px,0,0)', 'translate3d(1px,0,0)']
-        : ['translate3d(0,0px,0)', 'translate3d(0,1px,0)'],
+        ? [START_TRANSLATE_3D, 'translate3d(1px,0,0)']
+        : [START_TRANSLATE_3D, 'translate3d(0,1px,0)'],
     })
     return (
       <AnimatedDiv
@@ -254,9 +257,9 @@ export default class Parallax extends React.PureComponent {
           overflowY: horizontal ? 'hidden' : overflow,
           overflowX: horizontal ? overflow : 'hidden',
           WebkitOverflowScrolling: 'touch',
-          WebkitTransform: 'translate(0,0)',
-          MsTransform: 'translate(0,0)',
-          transform: 'translate3d(0,0,0)',
+          WebkitTransform: START_TRANSLATE,
+          MsTransform: START_TRANSLATE,
+          transform: START_TRANSLATE_3D,
           ...style,
         }}
         className={className}>
@@ -266,9 +269,9 @@ export default class Parallax extends React.PureComponent {
             style={{
               position: 'absolute',
               [horizontal ? 'height' : 'width']: '100%',
-              WebkitTransform: 'translate(0,0)',
-              MsTransform: 'translate(0,0)',
-              transform: 'translate3d(0,0,0)',
+              WebkitTransform: START_TRANSLATE,
+              MsTransform: START_TRANSLATE,
+              transform: START_TRANSLATE_3D,
               overflow: 'hidden',
               [horizontal ? 'width' : 'height']: this.space * pages,
               ...innerStyle,
