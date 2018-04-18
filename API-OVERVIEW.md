@@ -1,3 +1,12 @@
+
+# Table of Contents 👇
+
+* [Springs and basic interpolation](#springs-and-basic-interpolation)
+* [Render props](#render-props)
+* [Native rendering and interpolation](#native-rendering-and-interpolation-demo)
+* [Transitions](#transitions)
+* [Parallax and page transitions](#parallax-and-page-transitions)
+
 # API overview 📖
 
 For a raw documentation of all possible properties look [here](https://github.com/drcmda/react-spring/blob/master/API.md).
