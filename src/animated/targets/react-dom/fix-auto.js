@@ -31,7 +31,7 @@ export default function fixAuto(spring, props) {
       : { ...from, ...to, ...forward }
 
     // Render to-state vdom to portal
-    ReactDOM.render(
+    ReactDOM.createPortal(
       <div
         ref={ref => {
           if (ref) {
