@@ -2,8 +2,8 @@
   "name": "react-spring",
   "version": "4.1.8",
   "description": "Animate React with ease",
-  "main": "dist/react-spring",
-  "module": "dist/react-spring.es",
+  "main": "dist/react-spring.cjs.js",
+  "module": "dist/react-spring.es.js",
   "files": [
     "dist",
     "src",
