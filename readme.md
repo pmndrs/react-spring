@@ -9,9 +9,7 @@
 * [What is it?](#what-is-it-)
 * [Why do we need yet another?](#why-do-we-need-yet-another-)
 * [Overview](#overview-)
-* [**Examples**](https://github.com/drcmda/react-spring/blob/master/examples/README.md)
-* [API Overview](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md)
-* [API Detailed](https://github.com/drcmda/react-spring/blob/master/API.md)
+* [Links](#links-)
 
 # What is it? 🤔
 
@@ -169,4 +167,4 @@ import { Keyframes, Spring } from 'react-spring'
 
 # Links 🔗
 
-[API](https://github.com/drcmda/react-spring/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md) | [MIT](https://github.com/drcmda/react-spring/blob/master/LICENSE)
+[**Examples and Codesandboxes**](https://github.com/drcmda/react-spring/blob/master/examples/README.md) | [API Overview](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md) | [Full API reference](https://github.com/drcmda/react-spring/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md) | [MIT](https://github.com/drcmda/react-spring/blob/master/LICENSE)
