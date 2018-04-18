@@ -167,4 +167,16 @@ import { Keyframes, Spring } from 'react-spring'
 
 # Links 🔗
 
-[**Examples and Codesandboxes**](https://github.com/drcmda/react-spring/blob/master/examples) | [API Overview](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md) | [Full API reference](https://github.com/drcmda/react-spring/blob/master/API.md) | [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md) | [MIT](https://github.com/drcmda/react-spring/blob/master/LICENSE)
+#### [Examples and Codesandboxes](https://github.com/drcmda/react-spring/blob/master/examples)
+
+Click for a combined example repository you can install as well as a collection of code-sandboxes to toy around with online.
+
+#### [API Overview](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md)
+
+If you ever plan to use this library, this should be a must-read. It will go a little deeper into the primitives and how "native" rendering can make a large performance impact (to the better of course).
+
+#### [Full API reference](https://github.com/drcmda/react-spring/blob/master/API.md)
+
+For annotated prop-types, good for finding out about all the obscure props that i don't want to bore you with (but which might come in handy, you never know).
+
+[Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md) | [LICENSE](https://github.com/drcmda/react-spring/blob/master/LICENSE)
