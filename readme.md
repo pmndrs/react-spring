@@ -229,7 +229,7 @@ Click for a combined example repository you can install as well as a collection 
 
 #### [API Overview](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md)
 
-If you ever plan to use this library, this should be a must-read. It will go a little deeper into the primitives and how "native" rendering can make a large performance impact (to the better of course).
+If you ever plan to use this library, this should be a must-read. It will go a little deeper into the primitives and how "native" rendering can make a large performance impact (for the better of course).
 
 #### [Full API reference](https://github.com/drcmda/react-spring/blob/master/API.md)
 
