@@ -1,15 +1,21 @@
-const Globals = {
-  ApplyAnimatedValues: undefined,
-  Bugfixes: undefined,
-  Interpolation: class Interpolation {
-    static create(config) {
-      return (...args) => config(...args)
-    }
-  },
-  injectApplyAnimatedValues: (fn, transform) =>
-    (Globals.ApplyAnimatedValues = { fn, transform }),
-  injectBugfixes: fn => (Globals.Bugfixes = fn),
-  injectInterpolation: cls => (Globals.Interpolation = cls),
+export class Interpolation {
+  static create(config) {
+    return (...args) => config(...args)
+  }
 }
 
-export default Globals
+export let Bugfixes = undefined
+
+export let ApplyAnimatedValues = undefined
+
+export const injectApplyAnimatedValues = (fn, transform) => {
+  ApplyAnimatedValues = { fn, transform }
+}
+
+export const injectBugfixes = fn => {
+  Bugfixes = fn
+}
+
+export const injectInterpolation = cls => {
+  Interpolation = cls
+}

@@ -4987,21 +4987,6 @@ neo-async@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.5.0.tgz#76b1c823130cca26acfbaccc8fbaf0a2fa33b18f"
 
-nerv-shared@1.2.15:
-  version "1.2.15"
-  resolved "https://registry.yarnpkg.com/nerv-shared/-/nerv-shared-1.2.15.tgz#9e7c7f3e32447fe8ae40efdd2ddc85b395797e77"
-
-nerv-utils@1.2.15:
-  version "1.2.15"
-  resolved "https://registry.yarnpkg.com/nerv-utils/-/nerv-utils-1.2.15.tgz#e6db2dc4f9ee1b7a4030920c19ebdd6ea9d86ae9"
-
-nervjs@^1.2.17:
-  version "1.2.17"
-  resolved "https://registry.yarnpkg.com/nervjs/-/nervjs-1.2.17.tgz#cf3b02bc82cccc092257ab0f684ce3a6309b53ef"
-  dependencies:
-    nerv-shared "1.2.15"
-    nerv-utils "1.2.15"
-
 nice-try@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.4.tgz#d93962f6c52f2c1558c0fbda6d512819f1efe1c4"

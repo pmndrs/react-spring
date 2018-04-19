@@ -1,6 +1,6 @@
 import React from 'react'
 import AnimatedProps from './AnimatedProps'
-import Globals from './Globals'
+import * as Globals from './Globals'
 
 export default function createAnimatedComponent(Component) {
   return class AnimatedComponent extends React.Component {

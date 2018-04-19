@@ -1,6 +1,6 @@
 import createAnimatedComponent from '../../createAnimatedComponent'
 import Interpolation from '../Interpolation'
-import Globals from '../../Globals'
+import * as Globals from '../../Globals'
 import fixAuto from './fix-auto'
 
 const isUnitlessNumber = {
