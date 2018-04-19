@@ -1,4 +1,4 @@
-export default function normalizeColor(color) {
+export function normalizeColor(color) {
   var match
 
   if (typeof color === 'number') {
@@ -10,7 +10,7 @@ export default function normalizeColor(color) {
   if ((match = matchers.hex6.exec(color)))
     return parseInt(match[1] + 'ff', 16) >>> 0
 
-  if (names.hasOwnProperty(color)) return names[color]
+  if (colorNames.hasOwnProperty(color)) return colorNames[color]
 
   if ((match = matchers.rgb.exec(color))) {
     return (
@@ -166,7 +166,7 @@ function parsePercentage(str) {
   return int / 100
 }
 
-var names = {
+export const colorNames = {
   transparent: 0x00000000,
 
   // http://www.w3.org/TR/css3-color/#svg-color
@@ -320,5 +320,3 @@ var names = {
   yellow: 0xffff00ff,
   yellowgreen: 0x9acd32ff,
 }
-
-normalizeColor.colorNames = names

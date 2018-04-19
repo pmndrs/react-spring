@@ -9,6 +9,7 @@
 * [What is it?](#what-is-it-)
 * [Why do we need yet another?](#why-do-we-need-yet-another-)
 * [Overview](#overview-)
+* [Render props, interpolation and native rendering](#render-props-interpolation-and-native-rendering-)
 * [Links](#links-)
 
 # What is it? 🤔
@@ -165,6 +166,57 @@ import { Keyframes, Spring } from 'react-spring'
 </Keyframes>
 ```
 
+# Render props, interpolation and native rendering 🚀
+
+### Render props
+
+The Api is driven by render props ([though we do expose imperative Api as well](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#imperative-api)). By principle we offer both `render` and `children` as well as prop forwardwing (unrecognized props will be spread over the receiving component).
+
+```jsx
+const Header = ({ children, bold, ...styles }) => (
+    <h1 style={styles}>
+        {bold ? <b>{children}</b> : children}
+    </h1>
+)
+
+<Spring render={Header} to={{ color: 'fuchsia' }} bold={this.state.bold}>
+    hello there
+</Spring>
+```
+
+### Interpolation
+
+You can interpolate almost everything, from numbers, colors (names, rgb, rgba, hsl, hsla), paths (as long as the number of points match, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om)), percentages, units, arrays and string patterns:
+
+```jsx
+<Spring to={{
+    scale: toggle ? 1 : 2,
+    start: toggle ? '#abc' : 'rgb(10,20,30)',
+    end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
+    stop: toggle ? '0%' : '50%',
+    rotate: toggle ? '0deg' : '45deg',
+    shadow: toggle ? '0 2px 2px 0px rgba(0, 0, 0, 0.12)' : '0 20px 20px 0px rgba(0, 0, 0, 0.5)',
+    path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z',
+    vector: toggle ? [1,2,50,100] : [20,30,1,-100],
+}}>
+```
+
+### Native rendering
+
+| ![img](assets/without-native.jpeg)                                                                                                                                                                                        | ![img](assets/with-native.jpeg)                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <sub>Libraries animate by having React recalculate the component-tree on every frame. Here it attempts to animate a component consisting of ~300 sub-components, plowing through the frame budget and causing jank.</sub> | <sub>React-spring with the `native` property renders the component _only once_, from then on the animation will be applied directly to the dom in a requestAnimationFrame-loop, similar to how gsap and d3 do it.</sub> |
+
+```jsx
+import { Spring, animated } from 'react-spring'
+
+<Spring native from={{ opacity: 0 }} to={{ opacity: 1 }}>
+    {styles => <animated.div style={styles}>i will fade in</animated.div>}
+</Spring>
+```
+
+More about native rendering and interpolation [here](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#native-rendering-and-interpolation-demo).
+
 # Links 🔗
 
 #### [Examples and Codesandboxes](https://github.com/drcmda/react-spring/blob/master/examples)
@@ -173,7 +225,7 @@ Click for a combined example repository you can install as well as a collection 
 
 #### [API Overview](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md)
 
-If you ever plan to use this library, this should be a must-read. It will go a little deeper into the primitives and how "native" rendering can make a large performance impact (to the better of course).
+If you ever plan to use this library, this should be a must-read. It will go a little deeper into the primitives and how "native" rendering can make a large performance impact (for the better of course).
 
 #### [Full API reference](https://github.com/drcmda/react-spring/blob/master/API.md)
 
