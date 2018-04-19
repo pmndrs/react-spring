@@ -145,7 +145,7 @@ You'll find varying implementations under [/dist/addons](https://github.com/drcm
 ```jsx
 import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 
-<Spring impl={TimingAnimation} config={{ delay: 200, duration: 1000, Easing.linear }} ...>
+<Spring impl={TimingAnimation} config={{ delay: 200, duration: 1000, easing: Easing.linear }} ...>
 ```
 
 #### Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
