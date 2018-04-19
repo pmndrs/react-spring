@@ -4,10 +4,12 @@
   "description": "Animate React with ease",
   "main": "dist/react-spring.cjs.js",
   "module": "dist/react-spring.es.js",
+  "typings": "index.d.ts",
   "files": [
     "dist",
     "src",
-    "API.md"
+    "API.md",
+    "index.d.ts"
   ],
   "sideEffects": false,
   "scripts": {
