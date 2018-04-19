@@ -1,4 +1,11 @@
-## 4.0.2
+## 4.2.0
+
+* Exposed imperative Value animations: https://codesandbox.io/embed/3x350m0541
+* Exposed createAnimatedValue: https://github.com/drcmda/react-spring/pull/63#issuecomment-382845475
+* hold property: https://github.com/drcmda/react-spring/pull/48
+* Various bugfixes
+
+## 4.0.2
 
 Keyframe api, various bugfixes
 
