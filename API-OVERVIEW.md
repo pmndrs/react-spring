@@ -3,7 +3,7 @@
 
 * [Springs and basic interpolation](#springs-and-basic-interpolation)
 * [Render props](#render-props)
-* [Native rendering and interpolation](#native-rendering-and-interpolation)
+* [Native rendering and interpolation](#native-rendering-and-interpolation-demo)
 * [Imperative Api](#imperative-api)
 * [Transitions](#transitions)
 * [Parallax and page transitions](#parallax-and-page-transitions)
@@ -98,7 +98,7 @@ const App = ({ children }) => {
   const hover = () => spring(animation, { to: '#c23369' }).start()
   const unhover = () => spring(animation, { to: '#28d79f' }).start()
   return (
-    <animated.div 
+    <animated.div
       style={{ background: animation }}
       onMouseOver={hover}
       onMouseOut={unhover} />

@@ -219,7 +219,7 @@ import { Spring, animated } from 'react-spring'
 </Spring>
 ```
 
-More about native rendering and interpolation [here](https://github.com/drcmda/react-spring/edit/master/API-OVERVIEW.md#native-rendering-and-interpolation).
+More about native rendering and interpolation [here](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#native-rendering-and-interpolation-demo).
 
 # Links 🔗
 
