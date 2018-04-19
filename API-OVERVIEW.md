@@ -3,7 +3,8 @@
 
 * [Springs and basic interpolation](#springs-and-basic-interpolation)
 * [Render props](#render-props)
-* [Native rendering and interpolation](#native-rendering-and-interpolation-demo)
+* [Native rendering and interpolation](#native-rendering-and-interpolation)
+* [Imperative Api](#imperative-api)
 * [Transitions](#transitions)
 * [Parallax and page transitions](#parallax-and-page-transitions)
 
@@ -83,6 +84,26 @@ import { Spring, animated, interpolate } from 'react-spring'
         </animated.div>
     )}
 </Spring>
+```
+
+### Imperative Api
+
+If it's necessary you can control your animations imperatively.
+
+```jsx
+import { AnimatedValue, animated, interpolate, controller as spring } from 'react-spring'
+
+const App = ({ children }) => {
+  const animation = new AnimatedValue('#28d79f')
+  const hover = () => spring(animation, { to: '#c23369' }).start()
+  const unhover = () => spring(animation, { to: '#28d79f' }).start()
+  return (
+    <animated.div 
+      style={{ background: animation }}
+      onMouseOver={hover}
+      onMouseOut={unhover} />
+  )
+}
 ```
 
 ### Transitions
