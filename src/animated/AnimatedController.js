@@ -1,13 +1,14 @@
 import Animated from './Animated'
 import AnimatedArray from './AnimatedArray'
 import AnimatedTracking from './AnimatedTracking'
+import SpringAnimation from './SpringAnimation'
 
-function maybeVectorAnim(array, { tension, friction, toValue }, anim, impl) {
-  // { tension, friction, toValue: [...]}
+function maybeVectorAnim(array, { tension, friction, to }, anim, impl) {
+  // { tension, friction, to: [...]}
   if (array instanceof AnimatedArray)
     return parallel(
       array._values.map((v, i) =>
-        anim(v, { tension, friction, toValue: toValue[i] }, impl)
+        anim(v, { tension, friction, to: to[i] }, impl)
       ),
       { stopTogether: false }
     )
@@ -46,18 +47,18 @@ function parallel(animations, config) {
   return result
 }
 
-export default function controller(value, config, impl) {
+export default function controller(value, config, impl = SpringAnimation) {
   return (
     maybeVectorAnim(value, config, controller, impl) || {
       start: function(callback) {
         var singleValue = value
         var singleConfig = config
         singleValue.stopTracking()
-        if (config.toValue instanceof Animated)
+        if (config.to instanceof Animated)
           singleValue.track(
             new AnimatedTracking(
               singleValue,
-              config.toValue,
+              config.to,
               impl,
               singleConfig,
               callback

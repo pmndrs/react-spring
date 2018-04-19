@@ -29,7 +29,7 @@ export default class AnimatedTracking extends Animated {
     this._value.animate(
       new this._animationClass({
         ...this._animationConfig,
-        toValue: this._animationConfig.toValue.__getValue(),
+        to: this._animationConfig.to.__getValue(),
       }),
       this._callback
     )

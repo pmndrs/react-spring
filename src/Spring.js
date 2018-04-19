@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import AnimatedController from './animated/AnimatedController'
+import controller from './animated/AnimatedController'
 import AnimatedValue from './animated/AnimatedValue'
 import AnimatedArray from './animated/AnimatedArray'
 import AnimatedProps from './animated/AnimatedProps'
@@ -49,7 +49,6 @@ export default class Spring extends React.PureComponent {
   }
 
   state = { props: undefined }
-  defaultAnimation = new AnimatedValue(0)
   animations = {}
 
   componentWillUnmount() {
@@ -87,9 +86,7 @@ export default class Spring extends React.PureComponent {
       onRest,
     } = props
     const allProps = Object.entries({ ...from, ...to })
-    const defaultAnimationValue = this.defaultAnimation._value
 
-    this.defaultAnimation.setValue(0)
     this.interpolators = {}
     this.animations = allProps.reduce((acc, [name, value], i) => {
       const entry =
@@ -124,9 +121,9 @@ export default class Spring extends React.PureComponent {
         // Deal with interpolations
         const previous =
           entry.interpolation &&
-          entry.interpolation._interpolation(defaultAnimationValue)
-        entry.animation = this.defaultAnimation
-        entry.interpolation = this.defaultAnimation.interpolate({
+          entry.interpolation._interpolation(entry.animation._value)
+        entry.animation = new AnimatedValue(0)
+        entry.interpolation = entry.animation.interpolate({
           range: [0, 1],
           output: [previous !== undefined ? previous : fromValue, value],
         })
@@ -152,7 +149,7 @@ export default class Spring extends React.PureComponent {
         if (hold && (hold === true || hold.indexOf(name) !== -1))
           return onFinish()
 
-        AnimatedController(entry.animation, { toValue, ...config }, impl).start(
+        controller(entry.animation, { to: toValue, ...config }, impl).start(
           props => props.finished && onFinish()
         )
       }

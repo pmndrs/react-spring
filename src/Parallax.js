@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import createContext from 'create-react-context'
-import AnimatedController from './animated/AnimatedController'
+import controller from './animated/AnimatedController'
 import AnimatedValue from './animated/AnimatedValue'
 import createAnimatedComponent from './animated/createAnimatedComponent'
 import SpringAnimation from './animated/SpringAnimation'
@@ -50,26 +50,18 @@ export class ParallaxLayer extends React.PureComponent {
     const { config, impl } = this.parent.props
     const targetScroll = Math.floor(this.props.offset) * height
     const offset = height * this.props.offset + targetScroll * this.props.speed
-    const toValue = parseFloat(-(scrollTop * this.props.speed) + offset)
+    const to = parseFloat(-(scrollTop * this.props.speed) + offset)
     if (!immediate)
-      AnimatedController(
-        this.animatedTranslate,
-        { toValue, ...config },
-        impl
-      ).start()
-    else this.animatedTranslate.setValue(toValue)
+      controller(this.animatedTranslate, { to, ...config }, impl).start()
+    else this.animatedTranslate.setValue(to)
   }
 
   setHeight(height, immediate = false) {
     const { config, impl } = this.parent.props
-    const toValue = parseFloat(height * this.props.factor)
+    const to = parseFloat(height * this.props.factor)
     if (!immediate)
-      AnimatedController(
-        this.animatedSpace,
-        { toValue, ...config },
-        impl
-      ).start()
-    else this.animatedSpace.setValue(toValue)
+      controller(this.animatedSpace, { to, ...config }, impl).start()
+    else this.animatedSpace.setValue(to)
   }
 
   initialize() {
@@ -77,8 +69,8 @@ export class ParallaxLayer extends React.PureComponent {
     const parent = this.parent
     const targetScroll = Math.floor(props.offset) * parent.space
     const offset = parent.space * props.offset + targetScroll * props.speed
-    const toValue = parseFloat(-(parent.current * props.speed) + offset)
-    this.animatedTranslate = new AnimatedValue(toValue)
+    const to = parseFloat(-(parent.current * props.speed) + offset)
+    this.animatedTranslate = new AnimatedValue(to)
     this.animatedSpace = new AnimatedValue(parent.space * props.factor)
   }
 
@@ -210,9 +202,9 @@ export default class Parallax extends React.PureComponent {
     const target = this.container
     this.animatedScroll = new AnimatedValue(target[scrollType])
     this.animatedScroll.addListener(({ value }) => (target[scrollType] = value))
-    AnimatedController(
+    controller(
       this.animatedScroll,
-      { toValue: offset * this.space, ...config },
+      { to: offset * this.space, ...config },
       impl
     ).start()
   }

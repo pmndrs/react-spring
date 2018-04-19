@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Spring, { config as springConfig } from './Spring'
 
+const empty = () => null
 const ref = (object, key) =>
   typeof object === 'function' ? object(key) : object
 
@@ -56,7 +57,7 @@ export default class Transition extends React.PureComponent {
       leave = {},
       update,
     } = props
-    children = render || children || (() => null)
+    children = render || children || empty
     if (typeof keys === 'function') keys = items.map(keys)
     if (!Array.isArray(children)) {
       children = [children]
@@ -91,7 +92,7 @@ export default class Transition extends React.PureComponent {
       update,
     } = props
 
-    children = render || children || (() => null)
+    children = render || children || empty
     if (typeof keys === 'function') keys = items.map(keys)
     if (!Array.isArray(children)) {
       children = [children]
@@ -206,10 +207,10 @@ export default class Transition extends React.PureComponent {
     return this.state.transitions.map(({ key, item, children, ...rest }, i) => (
       <Spring
         key={key}
+        onRest={onRest && (values => onRest(item, values))}
+        onFrame={onFrame && (values => onFrame(item, values))}
         {...rest}
         {...props}
-        onFrame={onFrame && (values => onFrame(item, values))}
-        onRest={onRest && (values => onRest(item, values))}
         render={render && children}
         children={render ? this.props.children : children}
       />

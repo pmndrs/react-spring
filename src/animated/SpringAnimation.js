@@ -15,14 +15,12 @@ export default class SpringAnimation extends Animation {
     this._overshootClamping = withDefault(config.overshootClamping, false)
     this._restDisplacementThreshold = withDefault(
       config.restDisplacementThreshold,
-      0.001
+      0.0001
     )
-    this._restSpeedThreshold = withDefault(config.restSpeedThreshold, 0.001)
+    this._restSpeedThreshold = withDefault(config.restSpeedThreshold, 0.0001)
     this._initialVelocity = config.velocity
     this._lastVelocity = withDefault(config.velocity, 0)
-    this._toValue = config.toValue
-    this.__isInteraction =
-      config.isInteraction !== undefined ? config.isInteraction : true
+    this._to = config.to
     var springConfig = fromOrigamiTensionAndFriction(
       withDefault(config.tension, 40),
       withDefault(config.friction, 7)
@@ -90,25 +88,25 @@ export default class SpringAnimation extends Animation {
       // http://gafferongames.com/game-physics/integration-basics/
       var aVelocity = velocity
       var aAcceleration =
-        this._tension * (this._toValue - tempPosition) -
+        this._tension * (this._to - tempPosition) -
         this._friction * tempVelocity
       var tempPosition = position + aVelocity * step / 2
       var tempVelocity = velocity + aAcceleration * step / 2
       var bVelocity = tempVelocity
       var bAcceleration =
-        this._tension * (this._toValue - tempPosition) -
+        this._tension * (this._to - tempPosition) -
         this._friction * tempVelocity
       tempPosition = position + bVelocity * step / 2
       tempVelocity = velocity + bAcceleration * step / 2
       var cVelocity = tempVelocity
       var cAcceleration =
-        this._tension * (this._toValue - tempPosition) -
+        this._tension * (this._to - tempPosition) -
         this._friction * tempVelocity
       tempPosition = position + cVelocity * step / 2
       tempVelocity = velocity + cAcceleration * step / 2
       var dVelocity = tempVelocity
       var dAcceleration =
-        this._tension * (this._toValue - tempPosition) -
+        this._tension * (this._to - tempPosition) -
         this._friction * tempVelocity
       tempPosition = position + cVelocity * step / 2
       tempVelocity = velocity + cAcceleration * step / 2
@@ -132,10 +130,10 @@ export default class SpringAnimation extends Animation {
     // Conditions for stopping the spring animation
     var isOvershooting = false
     if (this._overshootClamping && this._tension !== 0) {
-      if (this._startPosition < this._toValue) {
-        isOvershooting = position > this._toValue
+      if (this._startPosition < this._to) {
+        isOvershooting = position > this._to
       } else {
-        isOvershooting = position < this._toValue
+        isOvershooting = position < this._to
       }
     }
 
@@ -143,10 +141,10 @@ export default class SpringAnimation extends Animation {
     var isDisplacement = true
     if (this._tension !== 0)
       isDisplacement =
-        Math.abs(this._toValue - position) <= this._restDisplacementThreshold
+        Math.abs(this._to - position) <= this._restDisplacementThreshold
     if (isOvershooting || (isVelocity && isDisplacement)) {
       // Ensure that we end up with a round value
-      if (this._tension !== 0) this._onUpdate(this._toValue)
+      if (this._tension !== 0) this._onUpdate(this._to)
       this.__debouncedOnEnd({ finished: true })
       return
     }
