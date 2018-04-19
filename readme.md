@@ -170,7 +170,7 @@ import { Keyframes, Spring } from 'react-spring'
 
 ### Render props
 
-The Api is driven by render props ([though we do expose imperative Api as well](https://github.com/drcmda/react-spring/edit/master/API-OVERVIEW.md#imperative-api)). By principle we offer both `render` and `children` as well as prop forwardwing (unrecognized props will be spread over the receiving component).
+The Api is driven by render props ([though we do expose imperative Api as well](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#imperative-api)). By principle we offer both `render` and `children` as well as prop forwardwing (unrecognized props will be spread over the receiving component).
 
 ```jsx
 const Header = ({ children, bold, ...styles }) => (
@@ -219,7 +219,7 @@ import { Spring, animated } from 'react-spring'
 </Spring>
 ```
 
-More about native rendering and interpolation [here](https://github.com/drcmda/react-spring/edit/master/API-OVERVIEW.md#native-rendering-and-interpolation).
+More about native rendering and interpolation [here](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#native-rendering-and-interpolation-demo).
 
 # Links 🔗
 
