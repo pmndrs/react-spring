@@ -65,9 +65,8 @@ export default class Spring extends React.PureComponent {
 
   updatePropsAsync(props) {
     if (props.inject) {
-      props = props.inject(this, props)
-      // This is in order to not waste time, if it isn't a promise, don't stall
-      if (props.then) return props.then(props => this.updateProps(props, true))
+      this.inject = props.inject(this, props)
+      if (this.inject) return
     }
     this.updateProps(props)
   }
@@ -239,6 +238,12 @@ export default class Spring extends React.PureComponent {
   }
 
   render() {
+    if (this.inject) {
+      const content = this.inject
+      this.inject = undefined
+      return content
+    }
+
     const { children, render } = this.props
     const values = this.getAnimatedValues()
     if (values && Object.keys(values).length) {

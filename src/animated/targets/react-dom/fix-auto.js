@@ -16,41 +16,48 @@ export default function fixAuto(spring, props) {
   const { native, children, from, to } = props
 
   // Dry-route props back if nothing's using 'auto' in there
-  if (![...Object.values(from), ...Object.values(to)].some(check)) return props
+  if (![...Object.values(from), ...Object.values(to)].some(check)) return
 
-  return new Promise(res => {
-    const forward = spring.getForwardProps(props)
-    const allProps = Object.entries({ ...from, ...to })
-    const portal = document.createElement('div')
-    portal.style.cssText = 'position:static;visibility:hidden;'
-    document.body.appendChild(portal)
+  const forward = spring.getForwardProps(props)
+  const allProps = Object.entries({ ...from, ...to })
+  const portal = document.createElement('div')
+  portal.style.cssText = 'position:static;visibility:hidden;'
+  document.body.appendChild(portal)
 
-    // Collect to-state props
-    const componentProps = native
-      ? allProps.reduce(convert, forward)
-      : { ...from, ...to, ...forward }
+  // Collect to-state props
+  const componentProps = native
+    ? allProps.reduce(convert, forward)
+    : { ...from, ...to, ...forward }
 
-    // Render to-state vdom to portal
-    ReactDOM.render(
-      <div
-        ref={ref => {
-          if (ref) {
-            // Once it's rendered out, fetch bounds
-            const height = ref.clientHeight
-            const width = ref.clientWidth
+  // Render to-state vdom to portal
+  return ReactDOM.createPortal(
+    <div
+      ref={ref => {
+        if (ref) {
+          // Once it's rendered out, fetch bounds
+          const height = ref.clientHeight
+          const width = ref.clientWidth
 
-            // Remove portal and resolve promise with updated props
-            document.body.removeChild(portal)
-            res({
-              ...props,
-              from: Object.entries(from).reduce(overwrite(width, height), from),
-              to: Object.entries(to).reduce(overwrite(width, height), to),
-            })
-          }
-        }}>
-        {children(componentProps)}
-      </div>,
-      portal
-    )
-  })
+          // Remove portal and resolve promise with updated props
+          document.body.removeChild(portal)
+          // Defer to next frame, or else the springs updateToken is canceled
+          requestAnimationFrame(() =>
+            spring.updateProps(
+              {
+                ...props,
+                from: Object.entries(from).reduce(
+                  overwrite(width, height),
+                  from
+                ),
+                to: Object.entries(to).reduce(overwrite(width, height), to),
+              },
+              true
+            )
+          )
+        }
+      }}>
+      {children(componentProps)}
+    </div>,
+    portal
+  )
 }

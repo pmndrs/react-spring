@@ -1,29 +1,43 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Loadable from 'react-loadable'
+import { Spring, animated } from 'react-spring'
 import './styles.css'
 
-const components = [
-  'scroll',
-  'parallax',
-  'nativespring',
-  'transitions',
-  'areas',
-  'trails',
-  'reveals',
-  'timing',
-  'sunburst',
-  'gestures',
-  'tree',
-  'morph',
-].map(path =>
-  Loadable({
-    loader: () => import('./demos/' + path),
-    loading: () => <div />,
-  })
-)
+const LOREM = `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
+              text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has
+              survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was
+              popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+              publishing software like Aldus PageMaker including versions of Lorem Ipsum.`
 
-ReactDOM.render(
-  <div>{components.map((Component, i) => <Component key={i} />)}</div>,
-  document.getElementById('root')
-)
+class App extends React.Component {
+  state = { toggle: true, text: [LOREM] }
+  onToggle = () => this.setState(state => ({ toggle: !state.toggle }))
+  onAddText = () => this.setState(state => ({ text: [...state.text, LOREM] }))
+  onRemoveText = () => this.setState(state => ({ text: state.text.slice(1) }))
+  render() {
+    const { toggle, text } = this.state
+    return (
+      <React.Fragment>
+        <button onClick={this.onToggle}>Toggle</button>
+        <button onClick={this.onAddText}>Add text</button>
+        <button onClick={this.onRemoveText}>Remove text</button>
+        <div className="content">
+          <Spring
+            native
+            from={{ height: 0 }}
+            to={{ height: toggle ? 'auto' : 0 }}>
+            {props => (
+              <animated.div
+                className="item"
+                style={{ background: 'red', overflow: 'hidden', ...props }}>
+                {text.map((t, i) => <p key={i}>{t}</p>)}
+              </animated.div>
+            )}
+          </Spring>
+        </div>
+      </React.Fragment>
+    )
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
