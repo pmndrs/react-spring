@@ -225,8 +225,8 @@ export default class Spring extends React.PureComponent {
 
   componentDidUpdate() {
     // Animation has to start *after* render, since at that point the scene
-    // graph should be established. So we do it here, unfortunatelly, non-native
-    // animations call forceUpdate, so we're causing a loop. updateToken prevents
+    // graph should be established, so we do it here. Unfortunatelly, non-native
+    // animations call forceUpdate, so it's causing a loop. updateToken prevents
     // that as it gets set only on prop changes.
     if (this.updateToken) {
       this.updateToken = false

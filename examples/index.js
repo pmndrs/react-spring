@@ -24,8 +24,6 @@ const components = [
 )
 
 ReactDOM.render(
-  <div className="app-container">
-    {components.map((Component, i) => <Component key={i} />)}
-  </div>,
+  <div>{components.map((Component, i) => <Component key={i} />)}</div>,
   document.getElementById('root')
 )
