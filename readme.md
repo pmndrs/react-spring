@@ -15,29 +15,29 @@
 # What is it? 🤔
 
 <p align="middle">
-  <img src="assets/spring.gif" width="285" />
-  <img src="assets/transitions.gif" width="285" />
-  <img src="assets/trails.gif" width="285" />
+  <a href="https://codesandbox.io/embed/oln44nx8xq"><img src="assets/spring.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/j150ykxrv"><img src="assets/transitions.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/vvmv6x01l5"><img src="assets/trails.gif" width="285" /></a>
 </p>
 <p align="middle">
-  <img src="assets/tree.gif" width="285" />
-  <img src="assets/sunburst.gif" width="285" />
-  <img src="assets/areas.gif" width="285" />
+  <a href="https://codesandbox.io/embed/9jrjqvq954"><img src="assets/tree.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/nww6yxo0jl"><img src="assets/sunburst.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/j3x61vjz5v"><img src="assets/areas.gif" width="285" /></a>
 </p>
 <p align="middle">
-  <img src="assets/gestures.gif" width="285" />
-  <img src="assets/reveals.gif" width="285" />
-  <img src="assets/morph.gif" width="285" />
+  <a href="https://codesandbox.io/embed/jzn14k0ppy"><img src="assets/gestures.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/yj52v5689"><img src="assets/reveals.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/lwpkp46om"><img src="assets/morph.gif" width="285" /></a>
 </p>
 <p align="middle">
-  <img src="assets/vertical.gif" width="285" />
-  <img src="assets/horizontal.gif" width="285" />
-  <img src="assets/keyframes-trail.gif" width="285" />
+  <a href="https://codesandbox.io/embed/0oonqxnpjl"><img src="assets/vertical.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/548lqnmk6l"><img src="assets/horizontal.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/zl35mrkqmm"><img src="assets/keyframes-trail.gif" width="285" /></a>
 </p>
 <p align="middle">
-  <img src="assets/dragndrop.gif" width="285" />
-  <img src="assets/stream.gif" width="285" />
-  <img src="assets/time.gif" width="285" />
+  <a href="https://codesandbox.io/embed/l9zqz0m18z"><img src="assets/dragndrop.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/py3p5p11m7"><img src="assets/stream.gif" width="285" /></a>
+  <a href="https://codesandbox.io/embed/q9lozyymr9"><img src="assets/time.gif" width="285" /></a>
 </p>
 
 A set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
