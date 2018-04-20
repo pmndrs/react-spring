@@ -5,7 +5,7 @@ const easeInOut = Easing.inOut(Easing.ease)
 let TimingAnimation = class TimingAnimation extends Animation {
   constructor(config) {
     super()
-    this._toValue = config.toValue
+    this._to = config.to
     this._easing = config.easing !== undefined ? config.easing : easeInOut
     this._duration = config.duration !== undefined ? config.duration : 500
     this._delay = config.delay !== undefined ? config.delay : 0
@@ -19,7 +19,7 @@ let TimingAnimation = class TimingAnimation extends Animation {
 
     const start = () => {
       if (this._duration === 0) {
-        this._onUpdate(this._toValue)
+        this._onUpdate(this._to)
         this.__debouncedOnEnd({ finished: true })
       } else {
         this._startTime = Date.now()
@@ -36,9 +36,8 @@ let TimingAnimation = class TimingAnimation extends Animation {
     if (now >= this._startTime + this._duration) {
       this._onUpdate(
         this._duration === 0
-          ? this._toValue
-          : this._fromValue +
-            this._easing(1) * (this._toValue - this._fromValue)
+          ? this._to
+          : this._fromValue + this._easing(1) * (this._to - this._fromValue)
       )
       this.__debouncedOnEnd({ finished: true })
       return
@@ -46,7 +45,7 @@ let TimingAnimation = class TimingAnimation extends Animation {
     this._onUpdate(
       this._fromValue +
         this._easing((now - this._startTime) / this._duration) *
-          (this._toValue - this._fromValue)
+          (this._to - this._fromValue)
     )
     if (this.__active)
       this._animationFrame = requestAnimationFrame(this.onUpdate)

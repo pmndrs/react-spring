@@ -166,8 +166,8 @@ export default class Spring extends React.PureComponent {
     this.animatedProps = new AnimatedProps(this.interpolators, this.callback)
     oldAnimatedProps && oldAnimatedProps.__detach()
 
+    this.updateToken = true
     if (force) this.forceUpdate()
-    this.start()
   }
 
   start() {
@@ -178,6 +178,12 @@ export default class Spring extends React.PureComponent {
 
   stop() {
     this.getAnimations().forEach(animation => animation.stop())
+  }
+
+  flush() {
+    this.getAnimations().forEach(
+      ({ interpolation }) => interpolation._update && interpolation._update()
+    )
   }
 
   callback = () => {
@@ -215,6 +221,21 @@ export default class Spring extends React.PureComponent {
       ...forward
     } = props
     return forward
+  }
+
+  componentDidUpdate() {
+    // Animation has to start *after* render, since at that point the scene
+    // graph should be established. So we do it here, unfortunatelly, non-native
+    // animations call forceUpdate, so we're causing a loop. updateToken prevents
+    // that as it gets set only on prop changes.
+    if (this.updateToken) {
+      this.updateToken = false
+      this.start()
+    }
+  }
+
+  componentDidMount() {
+    this.start()
   }
 
   render() {

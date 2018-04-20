@@ -20,7 +20,7 @@ export default class OscillatorAnimation extends Animation {
     this._restSpeedThreshold = withDefault(config.restSpeedThreshold, 0.0001)
     this._initialVelocity = withDefault(config.velocity, 0)
     this._lastVelocity = withDefault(config.velocity, 0)
-    this._toValue = config.toValue
+    this._to = config.to
     var springConfig = fromOrigamiTensionAndFriction(
       withDefault(config.tension, 40),
       withDefault(config.friction, 7)
@@ -84,7 +84,7 @@ export default class OscillatorAnimation extends Animation {
     const zeta = c / (2 * Math.sqrt(k * m)) // damping ratio
     const omega0 = Math.sqrt(k / m) // undamped angular frequency of the oscillator (rad/ms)
     const omega1 = omega0 * Math.sqrt(1.0 - zeta * zeta) // exponential decay
-    const x0 = this._toValue - this._startPosition // calculate the oscillation from x0 = 1 to x = 0
+    const x0 = this._to - this._startPosition // calculate the oscillation from x0 = 1 to x = 0
 
     let position = 0.0
     let velocity = 0.0
@@ -93,7 +93,7 @@ export default class OscillatorAnimation extends Animation {
       // Under damped
       const envelope = Math.exp(-zeta * omega0 * t)
       position =
-        this._toValue -
+        this._to -
         envelope *
           ((v0 + zeta * omega0 * x0) / omega1 * Math.sin(omega1 * t) +
             x0 * Math.cos(omega1 * t))
@@ -111,7 +111,7 @@ export default class OscillatorAnimation extends Animation {
     } else {
       // Critically damped
       const envelope = Math.exp(-omega0 * t)
-      position = this._toValue - envelope * (x0 + (v0 + omega0 * x0) * t)
+      position = this._to - envelope * (x0 + (v0 + omega0 * x0) * t)
       velocity = envelope * (v0 * (t * omega0 - 1) + t * x0 * (omega0 * omega0))
     }
 
@@ -128,23 +128,23 @@ export default class OscillatorAnimation extends Animation {
     let isOvershooting = false
     if (this._overshootClamping && this._stiffness !== 0) {
       isOvershooting =
-        this._startPosition < this._toValue
-          ? position > this._toValue
-          : position < this._toValue
+        this._startPosition < this._to
+          ? position > this._to
+          : position < this._to
     }
     const isVelocity = Math.abs(velocity) <= this._restSpeedThreshold
     let isDisplacement = true
     if (this._stiffness !== 0) {
       isDisplacement =
-        Math.abs(this._toValue - position) <= this._restDisplacementThreshold
+        Math.abs(this._to - position) <= this._restDisplacementThreshold
     }
 
     if (isOvershooting || (isVelocity && isDisplacement)) {
       if (this._stiffness !== 0) {
         // Ensure that we end up with a round value
-        this._lastPosition = this._toValue
+        this._lastPosition = this._to
         this._lastVelocity = 0
-        this._onUpdate(this._toValue)
+        this._onUpdate(this._to)
       }
       return this.__debouncedOnEnd({ finished: true })
     }

@@ -25,6 +25,14 @@ export default class Trail extends React.PureComponent {
     return this.instance && this.instance.getValues()
   }
 
+  componentDidMount() {
+    this.instance && this.instance.flush()
+  }
+
+  componentDidUpdate() {
+    this.instance && this.instance.flush()
+  }
+
   render() {
     const {
       children,
