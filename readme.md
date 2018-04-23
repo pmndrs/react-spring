@@ -104,13 +104,7 @@ import { Transition } from 'react-spring'
 </Transition>
 ```
 
-If you need to toggle a single child, that is also possible:
-
-```jsx
-<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-    {toggle && Component}
-</Transition>
-```
+If you need to toggle a single child, that is also possible: `{toggle && Component}`
 
 #### Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
