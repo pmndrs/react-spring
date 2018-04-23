@@ -94,7 +94,7 @@ import { Transition } from 'react-spring'
 
 <img src="assets/reveals.gif" width="285" />
 
-Given a single child instead of a list you can reveal components with it.
+Given a single child instead of a list you can toggle between two components.
 
 ```jsx
 import { Transition } from 'react-spring'
@@ -104,7 +104,7 @@ import { Transition } from 'react-spring'
 </Transition>
 ```
 
-If you need to track a single child, that is also possible:
+If you need to toggle a single child, that is also possible:
 
 ```jsx
 <Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
