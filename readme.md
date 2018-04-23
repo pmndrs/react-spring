@@ -90,7 +90,7 @@ import { Transition } from 'react-spring'
 </Transition>
 ```
 
-#### 2-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
+#### 2-state and 1-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
 
 <img src="assets/reveals.gif" width="285" />
 
@@ -101,6 +101,14 @@ import { Transition } from 'react-spring'
 
 <Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
     {toggle ? ComponentA : ComponentB}
+</Transition>
+```
+
+If you need to track a single child, that is also possible:
+
+```jsx
+<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
+    {toggle && Component}
 </Transition>
 ```
 
