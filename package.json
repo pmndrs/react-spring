@@ -78,7 +78,6 @@
     "react-dom": ">= 16.0.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.44",
-    "create-react-context": "^0.2.2"
+    "@babel/runtime": "^7.0.0-beta.44"
   }
 }

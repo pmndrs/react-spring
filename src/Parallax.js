@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import createContext from 'create-react-context'
 import controller from './animated/AnimatedController'
 import AnimatedValue from './animated/AnimatedValue'
 import createAnimatedComponent from './animated/createAnimatedComponent'
@@ -8,7 +7,7 @@ import SpringAnimation from './animated/SpringAnimation'
 import { config } from './Spring'
 
 const AnimatedDiv = createAnimatedComponent('div')
-const { Provider, Consumer } = createContext(null)
+const { Provider, Consumer } = React.createContext(null)
 
 function getScrollType(horizontal) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
