@@ -15,11 +15,12 @@ export const config = {
   slow: { tension: 280, friction: 60 },
 }
 
+const callProp = (p, n) => (typeof p === 'function' ? p(n) : p)
+
 export default class Spring extends React.PureComponent {
   static propTypes = {
     to: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     from: PropTypes.object,
-    config: PropTypes.object,
     native: PropTypes.bool,
     onRest: PropTypes.func,
     onFrame: PropTypes.func,
@@ -29,10 +30,9 @@ export default class Spring extends React.PureComponent {
     ]),
     render: PropTypes.func,
     reset: PropTypes.bool,
-    immediate: PropTypes.oneOfType([
-      PropTypes.bool,
-      PropTypes.arrayOf(PropTypes.string),
-    ]),
+    config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+    hold: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     impl: PropTypes.func,
     inject: PropTypes.func,
   }
@@ -43,6 +43,7 @@ export default class Spring extends React.PureComponent {
     config: config.default,
     native: false,
     immediate: false,
+    hold: false,
     reset: false,
     impl: SpringAnimation,
     inject: Globals.Bugfixes,
@@ -128,8 +129,7 @@ export default class Spring extends React.PureComponent {
         })
       }
 
-      if (immediate && (immediate === true || immediate.indexOf(name) !== -1))
-        entry.animation.setValue(toValue)
+      if (callProp(immediate, name)) entry.animation.setValue(toValue)
 
       entry.stopped = false
       entry.start = cb => {
@@ -145,12 +145,13 @@ export default class Spring extends React.PureComponent {
         }
 
         // Skip held animations
-        if (hold && (hold === true || hold.indexOf(name) !== -1))
-          return onFinish()
+        if (callProp(hold, name)) return onFinish()
 
-        controller(entry.animation, { to: toValue, ...config }, impl).start(
-          props => props.finished && onFinish()
-        )
+        controller(
+          entry.animation,
+          { to: toValue, ...callProp(config, name) },
+          impl
+        ).start(props => props.finished && onFinish())
       }
       entry.stop = () => {
         entry.stopped = true

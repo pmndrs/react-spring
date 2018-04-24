@@ -27,7 +27,7 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
 }}>
 ```
 
-A couple of extra props you might be interested in are `onRest`, which fires once the animations stops, `onFrame`, which fires on every frame and gives you the animation value, `reset`, which literally resets the spring so that it goes through `from` to `to` again, `immediate` which can enforce values to spring to their to-values immediately (can be `true` for a zero-time spring or an array where you can pass the key-names individually).
+A couple of extra props you might be interested in are `onRest`, which fires once the animations stops, `onFrame`, which fires on every frame and gives you the animation value, `reset`, which literally resets the spring so that it goes through `from` to `to` again, `immediate` which can enforce values to spring to their to-values immediately (can be `true` for a zero-time spring or a function which receives the key names and returns `true` or `false` individually).
 
 ### Render props
 

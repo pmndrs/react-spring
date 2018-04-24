@@ -16,7 +16,7 @@ export default class GesturesExample extends React.Component {
     }
     return (
       <div className="gestures-main" style={{ gridColumn: 'span 2' }}>
-        <Spring native to={to} immediate={down && ['x']}>
+        <Spring native to={to} immediate={n => down && n === 'x'}>
           {({ x, scale }) => (
             <animated.div
               className="item"

@@ -23,8 +23,6 @@ import { Spring } from 'react-spring'
 ```jsx
 class Spring extends React.PureComponent {
   static propTypes = {
-    // Spring config ({ tension, friction })
-    config: PropTypes.object,
     // Will skip rendering the component if true and write to the dom directly
     native: PropTypes.bool,
     // Base styles, optional
@@ -43,10 +41,11 @@ class Spring extends React.PureComponent {
     // Same as children, but takes precedence if present
     render: PropTypes.func,
     // Prevents animation if true, you can also pass individual keys
-    immediate: PropTypes.oneOfType([
-      PropTypes.bool,
-      PropTypes.arrayOf(PropTypes.string),
-    ]),
+    immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+    // Won't start animations, so they can be controlled from outside
+    hold: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+    // Spring config ({ tension, friction } or a function receiving a name)
+    config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     // When true it literally resets: from -> to
     reset: PropTypes.bool,
   }
