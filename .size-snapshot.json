@@ -1,17 +1,17 @@
 {
   "dist/react-spring.es.js": {
-    "bundled": 75049,
-    "minified": 36233,
-    "gzipped": 11210,
+    "bundled": 74997,
+    "minified": 36222,
+    "gzipped": 11204,
     "treeshaked": {
       "rollup": 28321,
       "webpack": 29287
     }
   },
   "dist/react-spring.umd.js": {
-    "bundled": 78107,
-    "minified": 33831,
-    "gzipped": 11256
+    "bundled": 78055,
+    "minified": 33820,
+    "gzipped": 11248
   },
   "dist/addons.es.js": {
     "bundled": 14510,
