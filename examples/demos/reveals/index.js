@@ -38,7 +38,7 @@ export default class RevealsExample extends React.PureComponent {
           native
           from={{ opacity: 0 }}
           enter={{ opacity: 1 }}
-          leave={{ opacity: 0 }}
+          leave={{ opacity: 0, pointerEvents: 'none' }}
           config={{ tension: 5, friction: 10 }}>
           {this.state.toggled ? A : B}
         </Transition>
