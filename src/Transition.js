@@ -91,15 +91,14 @@ export default class Transition extends React.PureComponent {
       const key = isTransition ? transition.key : transition
       const keyIndex = keys.indexOf(key)
       const item = items ? items[keyIndex] : key
-      const hasBeenDeleted = !!deleted.find(k => k === key)
 
       if (isTransition) {
         // A transition already exists
-        if (hasBeenDeleted) {
+        if (deleted.find(k => k === key)) {
           // The transition was removed, re-key it and animate it out
           transition.key = transition.key + '_'
           transition.destroyed = true
-          transition.to = ref(leave, transition.item)
+          transition.to = ref(leave, item)
           transition.from = this.springs[key].getValues()
           transition.onRest = () =>
             this.setState(state => ({
