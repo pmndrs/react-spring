@@ -87,6 +87,11 @@ export default class Spring extends React.PureComponent {
     } = props
     const allProps = Object.entries({ ...from, ...to })
 
+    // Transition is allowed to destroy springs, this prevents springs from ever
+    // updating further, they'll just animate out function no more ...
+    if (this.destroyed && props.destroyed) return
+    this.destroyed = props.destroyed
+
     this.interpolators = {}
     this.animations = allProps.reduce((acc, [name, value], i) => {
       const entry =
@@ -132,26 +137,23 @@ export default class Spring extends React.PureComponent {
       if (callProp(immediate, name)) entry.animation.setValue(toValue)
 
       entry.stopped = false
-      entry.start = cb => {
-        const onFinish = () => {
-          this.animations[name].stopped = true
-          if (
-            Object.values(this.animations).every(animation => animation.stopped)
-          ) {
-            const current = { ...this.props.from, ...this.props.to }
-            onRest && onRest(current)
-            cb && cb(current)
-          }
+      entry.onFinish = cb => {
+        this.animations[name].stopped = true
+        if (Object.values(this.animations).every(a => a.stopped)) {
+          const current = { ...this.props.from, ...this.props.to }
+          onRest && onRest(current)
+          cb && typeof cb === 'function' && cb(current)
         }
-
+      }
+      entry.start = cb => {
         // Skip held animations
-        if (callProp(hold, name)) return onFinish()
+        if (callProp(hold, name)) return entry.onFinish(cb)
 
         controller(
           entry.animation,
           { to: toValue, ...callProp(config, name) },
           impl
-        ).start(props => props.finished && onFinish())
+        ).start(props => props.finished && entry.onFinish(cb))
       }
       entry.stop = () => {
         entry.stopped = true
@@ -171,9 +173,11 @@ export default class Spring extends React.PureComponent {
   }
 
   start() {
-    return new Promise(res =>
-      this.getAnimations().forEach(animation => animation.start(res))
-    )
+    //console.log(this.props.test, "start", this)
+    let resolve,
+      promise = new Promise(r => (resolve = r))
+    this.getAnimations().forEach(animation => animation.start(resolve))
+    return promise
   }
 
   stop() {
