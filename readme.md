@@ -90,11 +90,11 @@ import { Transition } from 'react-spring'
 </Transition>
 ```
 
-#### 2-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
+#### 2-state and 1-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
 
 <img src="assets/reveals.gif" width="285" />
 
-Given a single child instead of a list you can reveal components with it.
+Given a single child instead of a list you can toggle between two components.
 
 ```jsx
 import { Transition } from 'react-spring'
@@ -103,6 +103,8 @@ import { Transition } from 'react-spring'
     {toggle ? ComponentA : ComponentB}
 </Transition>
 ```
+
+If you need to toggle a single child, that is also possible: `{toggle && Component}`
 
 #### Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 

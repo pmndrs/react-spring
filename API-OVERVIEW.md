@@ -129,14 +129,6 @@ import { Transition } from 'react-spring'
 </ul>
 ```
 
-You can use this prototype for two-state reveals, simply render a single child that you can switch out for another. You don't have to pass keys for this one.
-
-```jsx
-<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-  {toggle ? ComponentA : ComponentB}
-</Transition>
-```
-
 For more complex animations you can return per-object styles individually. Let Transition know the actual data by passing it raw to `items`, either pass your keys like always or give it an accessor. And for more control, there's `update` which fires for nodes that are neither entering nor leaving.
 
 ```jsx
@@ -150,6 +142,24 @@ For more complex animations you can return per-object styles individually. Let T
   {items.map(item => styles => <li style={styles}>{item.text}</li>)}
 </Transition>
 ```
+
+You can use this prototype for two-state reveals, simply render a single child that you can switch out for another. You don't have to pass keys for this one.
+
+```jsx
+<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
+  {toggle ? ComponentA : ComponentB}
+</Transition>
+```
+
+If you need to track a single child, that is also possible:
+
+```jsx
+<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
+    {toggle && Component}
+</Transition>
+```
+
+**Important:** Since you do not provide keys in these two scenarios you **must** move you component out instead of creating it inside the render function. If you create your function instead of referring to it, then React will treat it as a new child, it will start unmounting/mounting even if your state remains the same. That will cause duplicated keys which will confuse both Transition and React.  
 
 ### Trails/Staggered transitions
 
