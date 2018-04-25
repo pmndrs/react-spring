@@ -55,6 +55,7 @@ class Spring extends React.PureComponent {
     config: config.default,
     native: false,
     immediate: false,
+    hold: false,
   }
 }
 ```
