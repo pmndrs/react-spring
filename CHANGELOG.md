@@ -3,7 +3,7 @@
 Breaking changes:
 
 * Parallax doesn't rely on create-react-context any longer, depends on React 16.3.2 (only affects Parallax)
-* config, immediate and hold accept functions or their individual values. immediate will not accept accept an array any longer, if you want to set a individual property immediately without animating it, do this: `immediate={name => name === 'x'}`. config and hold can do the same, meaning you can give properties different config settings for instance.
+* config, immediate and hold can now also accept functions. immediate will not accept an array any longer, if you want to set a individual property immediately without animating it, do this: `immediate={name => name === 'x'}`. config and hold can do the same, meaning you can give properties different settings.
 * Transition bugfix (#67)
 
 ## 4.2.0
