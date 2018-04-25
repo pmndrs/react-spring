@@ -45,6 +45,11 @@ export default class SpringAnimation extends Animation {
       this._lastTime = internalState.lastTime
     }
 
+    if (typeof fromValue === 'string') {
+      this._onUpdate(fromValue)
+      return this.__debouncedOnEnd({ finished: true })
+    }
+
     if (this._initialVelocity !== undefined && this._initialVelocity !== null)
       this._lastVelocity = this._initialVelocity
     if (this._delay) this._timeout = setTimeout(this.onUpdate, this._delay)
@@ -145,8 +150,7 @@ export default class SpringAnimation extends Animation {
     if (isOvershooting || (isVelocity && isDisplacement)) {
       // Ensure that we end up with a round value
       if (this._tension !== 0) this._onUpdate(this._to)
-      this.__debouncedOnEnd({ finished: true })
-      return
+      return this.__debouncedOnEnd({ finished: true })
     }
     this._animationFrame = requestAnimationFrame(this.onUpdate)
   }

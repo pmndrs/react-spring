@@ -73,6 +73,11 @@ export default class Spring extends React.PureComponent {
   }
 
   updateProps(props, force = false) {
+    // Springs can be destroyed, the "destroyed" flag prevents them from ever
+    // updating further, they'll just animate out and function no more ...
+    if (this.destroyed && props.destroyed) return
+    this.destroyed = props.destroyed
+
     const {
       impl,
       from,
@@ -87,11 +92,6 @@ export default class Spring extends React.PureComponent {
     } = props
     const allProps = Object.entries({ ...from, ...to })
 
-    // Transition is allowed to destroy springs, this prevents springs from ever
-    // updating further, they'll just animate out function no more ...
-    if (this.destroyed && props.destroyed) return
-    this.destroyed = props.destroyed
-
     this.interpolators = {}
     this.animations = allProps.reduce((acc, [name, value], i) => {
       const entry =
@@ -99,7 +99,8 @@ export default class Spring extends React.PureComponent {
         (this.animations[name] = {})
 
       let isNumber = typeof value === 'number'
-      let isArray = !isNumber && Array.isArray(value)
+      let isString = typeof value === 'string' && !/\d/.test(value)
+      let isArray = !isNumber && !isString && Array.isArray(value)
       let fromValue = from[name] !== undefined ? from[name] : value
       let fromAnimated = fromValue instanceof AnimatedValue
       let toValue = isNumber || isArray ? value : 1
@@ -114,7 +115,7 @@ export default class Spring extends React.PureComponent {
       if (fromAnimated) {
         // Use provided animated value
         entry.animation = entry.interpolation = fromValue
-      } else if (isNumber || toValue === 'auto') {
+      } else if (isNumber || isString) {
         // Create animated value
         entry.animation = entry.interpolation =
           entry.animation || new AnimatedValue(fromValue)
