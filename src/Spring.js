@@ -140,7 +140,7 @@ export default class Spring extends React.PureComponent {
       entry.stopped = false
       entry.onFinish = cb => {
         this.animations[name].stopped = true
-        if (Object.values(this.animations).every(a => a.stopped)) {
+        if (this.getAnimations().every(a => a.stopped)) {
           const current = { ...this.props.from, ...this.props.to }
           onRest && onRest(current)
           cb && typeof cb === 'function' && cb(current)
@@ -197,7 +197,7 @@ export default class Spring extends React.PureComponent {
   }
 
   getAnimations() {
-    return Object.values(this.animations)
+    return Object.keys(this.animations).map(key => this.animations[key])
   }
 
   getValues() {

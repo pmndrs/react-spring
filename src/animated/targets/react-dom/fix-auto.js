@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import AnimatedValue from '../../AnimatedValue'
 
+const getValues = object => Object.keys(object).map(k => object[k])
 const check = value => value === 'auto'
 const convert = (acc, [name, value]) => ({
   ...acc,
@@ -16,7 +17,7 @@ export default function fixAuto(spring, props) {
   const { native, children, from, to } = props
 
   // Dry-route props back if nothing's using 'auto' in there
-  if (![...Object.values(from), ...Object.values(to)].some(check)) return
+  if (![...getValues(from), ...getValues(to)].some(check)) return
 
   const forward = spring.getForwardProps(props)
   const allProps = Object.entries({ ...from, ...to })

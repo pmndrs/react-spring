@@ -11,7 +11,7 @@ const getBabelOptions = ({ useESModules }) => ({
   runtimeHelpers: true,
   presets: [
     ['@babel/preset-env', { loose: true, modules: false }],
-    ['@babel/preset-stage-2', { loose: true }],
+    ['@babel/preset-stage-2', { loose: true, decoratorsLegacy: true }],
     '@babel/preset-react',
   ],
   plugins: [

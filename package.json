@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "Animate React with ease",
   "main": "dist/react-spring.cjs.js",
   "module": "dist/react-spring.es.js",
@@ -51,23 +51,23 @@
   },
   "homepage": "https://github.com/drcmda/react-spring#readme",
   "devDependencies": {
-    "@babel/core": "7.0.0-beta.44",
-    "@babel/plugin-transform-runtime": "^7.0.0-beta.44",
-    "@babel/preset-env": "7.0.0-beta.44",
-    "@babel/preset-react": "7.0.0-beta.44",
-    "@babel/preset-stage-2": "7.0.0-beta.44",
+    "@babel/core": "7.0.0-beta.46",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.46",
+    "@babel/preset-env": "7.0.0-beta.46",
+    "@babel/preset-react": "7.0.0-beta.46",
+    "@babel/preset-stage-2": "7.0.0-beta.46",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "22.4.0",
+    "babel-jest": "23.0.0-beta.2",
     "babel-plugin-transform-react-remove-prop-types": "0.4.13",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.0.4",
-    "prettier": "^1.12.0",
+    "husky": "^1.0.0-rc.2",
+    "lint-staged": "^7.0.5",
+    "prettier": "^1.12.1",
     "rimraf": "2.6.2",
-    "rollup": "0.56.5",
+    "rollup": "0.58.2",
     "rollup-plugin-babel": "^4.0.0-beta.4",
-    "rollup-plugin-commonjs": "^9.0.0",
-    "rollup-plugin-node-resolve": "^3.2.0",
-    "rollup-plugin-size-snapshot": "^0.3.1",
+    "rollup-plugin-commonjs": "^9.1.2",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-size-snapshot": "^0.4.0",
     "rollup-plugin-uglify": "^3.0.0"
   },
   "peerDependencies": {
@@ -76,6 +76,6 @@
     "react-dom": ">= 16.3.2"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.44"
+    "@babel/runtime": "^7.0.0-beta.46"
   }
 }
