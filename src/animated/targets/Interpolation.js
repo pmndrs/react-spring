@@ -15,7 +15,7 @@ export default class Interpolation {
     var inputRange = config.range
     var easing = config.easing || linear
     var extrapolateLeft = 'extend'
-    var filter = config.filter
+    var map = config.map
 
     if (config.extrapolateLeft !== undefined) {
       extrapolateLeft = config.extrapolateLeft
@@ -42,7 +42,7 @@ export default class Interpolation {
         easing,
         extrapolateLeft,
         extrapolateRight,
-        filter
+        map
       )
     }
   }
@@ -57,9 +57,9 @@ function interpolate(
   easing,
   extrapolateLeft,
   extrapolateRight,
-  filter
+  map
 ) {
-  var result = filter ? filter(input) : input
+  var result = map ? map(input) : input
 
   // Extrapolate
   if (result < inputMin) {

@@ -3,28 +3,31 @@
 import React from 'react'
 import { withGesture } from 'react-with-gesture'
 import { Spring, animated } from 'react-spring'
-import clamp from 'clamp'
 import './styles.css'
 
 @withGesture // https://github.com/drcmda/react-with-gesture
 export default class GesturesExample extends React.Component {
   render() {
     const { xDelta, down, children } = this.props
-    const to = {
-      scale: clamp(Math.abs(down ? xDelta : 0) / 150, 0.5, 1),
-      x: down ? xDelta : 0,
-    }
+    const to = { x: down ? xDelta : 0 }
     return (
       <div className="gestures-main" style={{ gridColumn: 'span 2' }}>
         <Spring native to={to} immediate={n => down && n === 'x'}>
-          {({ x, scale }) => (
+          {({ x }) => (
             <animated.div
               className="item"
               style={{ backgroundColor: xDelta < 0 ? '#FF1C68' : '#14D790' }}>
               <animated.div
                 className="bubble"
                 style={{
-                  transform: scale.interpolate(s => `scale(${s})`),
+                  transform: x
+                    .interpolate({
+                      map: Math.abs,
+                      range: [50, 300],
+                      output: [0.5, 1],
+                      extrapolate: 'clamp',
+                    })
+                    .interpolate(x => `scale(${x})`),
                   justifySelf: xDelta < 0 ? 'end' : 'start',
                 }}
               />

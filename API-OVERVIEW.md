@@ -85,6 +85,29 @@ import { Spring, animated, interpolate } from 'react-spring'
 </Spring>
 ```
 
+##### More complex interpolations, chaining, clamping and ranges
+
+In cases where you need to clamp or extrapolate, the `interpolate` function can take several properties that might be of interest to you. Specifically `range`, `output`, `filter`, `extrapolate`, `extrapolateLeft` and `extrapolateRight`. You can also chain results and interpolate further.
+
+```jsx
+<animated.div
+  style={{
+    transform: x
+      .interpolate({
+        // Map can route the input value through a custom filter
+        // In this case we convert absolute values; helpful for delta-offsets for instance
+        map: Math.abs,
+        // Range and Output map input values to output values
+        range: [50, 300],
+        output: [0.5, 1],
+        // Can be "extend" (default) or "clamp", clamp cut's off
+        extrapolate: 'clamp',
+      })
+      .interpolate(x => `scale(${x})`), // interpolates the result of the above
+  }}
+/>
+```
+
 ### Imperative Api
 
 If it's necessary you can control your animations imperatively.
@@ -155,11 +178,11 @@ If you need to track a single child, that is also possible:
 
 ```jsx
 <Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-    {toggle && Component}
+  {toggle && Component}
 </Transition>
 ```
 
-**Important:** Since you do not provide keys in these two scenarios you **must** move you component out instead of creating it inside the render function. If you create your function instead of referring to it, then React will treat it as a new child, it will start unmounting/mounting even if your state remains the same. That will cause duplicated keys which will confuse both Transition and React.  
+**Important:** Since you do not provide keys in these two scenarios you **must** move you component out instead of creating it inside the render function. If you create your function instead of referring to it, then React will treat it as a new child, it will start unmounting/mounting even if your state remains the same. That will cause duplicated keys which will confuse both Transition and React.
 
 ### Trails/Staggered transitions
 
