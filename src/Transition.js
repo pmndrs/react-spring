@@ -3,8 +3,20 @@ import PropTypes from 'prop-types'
 import Spring, { config as springConfig } from './Spring'
 
 const empty = () => null
-const ref = (object, key) =>
+
+const ref = (object = {}, key) =>
   typeof object === 'function' ? object(key) : object
+
+const get = props => {
+  let { keys, children, render, items, ...rest } = props
+  children = render || children || empty
+  keys = typeof keys === 'function' ? items.map(keys) : keys
+  if (!Array.isArray(children)) {
+    children = [children]
+    keys = keys ? [keys] : children
+  }
+  return { keys, children, items, ...rest }
+}
 
 export default class Transition extends React.PureComponent {
   static propTypes = {
@@ -54,23 +66,8 @@ export default class Transition extends React.PureComponent {
 
   componentWillReceiveProps(props) {
     let { transitions } = this.state
-    let {
-      children,
-      render,
-      keys,
-      items,
-      from = {},
-      enter = {},
-      leave = {},
-      update,
-    } = props
-
-    children = render || children || empty
-    if (typeof keys === 'function') keys = items.map(keys)
-    if (!Array.isArray(children)) {
-      children = [children]
-      keys = keys ? [keys] : children
-    }
+    const { keys, children, items, from, enter, leave, update } = get(props)
+    const { keys: _keys, children: _children, items: _items } = get(this.props)
 
     // Compare next keys with current keys
     let allKeys = transitions.map(t => t.key)
@@ -97,8 +94,11 @@ export default class Transition extends React.PureComponent {
         if (deleted.find(k => k === key)) {
           // The transition was removed, re-key it and animate it out
           transition.key = transition.key + '_'
-          transition.destroyed = true
-          transition.to = ref(leave, item)
+          if (!transition.destroyed) {
+            const _item = _items ? _items[_keys.indexOf(key)] : key
+            transition.to = ref(leave, _item)
+            transition.destroyed = true
+          }
           transition.from = this.springs[key].getValues()
           transition.onRest = () =>
             this.setState(state => ({
