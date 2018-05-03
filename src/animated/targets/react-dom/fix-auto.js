@@ -29,6 +29,7 @@ export default function fixAuto(spring, props) {
 
   return (
     <div
+      style={{ visibility: 'hidden', position: 'absolute' }}
       ref={ref => {
         if (ref) {
           // Once it's rendered out, fetch bounds
