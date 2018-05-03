@@ -21,26 +21,26 @@ export default function fixAuto(spring, props) {
 
   const forward = spring.getForwardProps(props)
   const allProps = Object.entries({ ...from, ...to })
-  const portal = document.createElement('div')
-  portal.style.cssText = 'position:static;visibility:hidden;'
-  document.body.appendChild(portal)
 
   // Collect to-state props
   const componentProps = native
     ? allProps.reduce(convert, forward)
     : { ...from, ...to, ...forward }
 
-  // Render to-state vdom to portal
-  return ReactDOM.createPortal(
+  // Setting height and scroll properties so that the measuring div will be
+  // invisible and avoid a flash of unmeasured content
+  const measuringDivStyle = { overflowY: 'auto', height: 0 };
+
+  return (
     <div
+      style={measuringDivStyle}
       ref={ref => {
         if (ref) {
-          // Once it's rendered out, fetch bounds
-          const height = ref.clientHeight
+          // Once it's rendered out, fetch bounds. Infer total content height
+          // from the available scroll height of the 0-sized measuring div
+          const height = ref.scrollHeight
           const width = ref.clientWidth
 
-          // Remove portal and resolve promise with updated props
-          document.body.removeChild(portal)
           // Defer to next frame, or else the springs updateToken is canceled
           requestAnimationFrame(() =>
             spring.updateProps(
@@ -58,7 +58,6 @@ export default function fixAuto(spring, props) {
         }
       }}>
       {children(componentProps)}
-    </div>,
-    portal
+    </div>
   )
 }
