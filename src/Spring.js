@@ -5,7 +5,7 @@ import AnimatedValue from './animated/AnimatedValue'
 import AnimatedArray from './animated/AnimatedArray'
 import AnimatedProps from './animated/AnimatedProps'
 import SpringAnimation from './animated/SpringAnimation'
-import { colorNames } from './normalize-css-color'
+import { colorNames } from './normalize-css-color/index'
 import * as Globals from './animated/Globals'
 
 export const config = {

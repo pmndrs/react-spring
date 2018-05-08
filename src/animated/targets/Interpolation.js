@@ -119,7 +119,7 @@ function colorToRgba(input) {
   return `rgba(${r}, ${g}, ${b}, ${a})`
 }
 
-var stringShapeRegex = /[0-9\.-]+/g
+var stringShapeRegex = /([0-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
 
 // Covers rgb, rgba, hsl, hsla
 // Taken from https://gist.github.com/olmokramer/82ccce673f86db7cda5e
