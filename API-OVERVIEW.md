@@ -64,6 +64,8 @@ Just be aware of the following conditions:
 3.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
 4.  If you need to interpolate styles use `interpolate`
 
+##### Single or multiple value interpolation
+
 ```jsx
 import { Spring, animated, interpolate } from 'react-spring'
 

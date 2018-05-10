@@ -21,17 +21,13 @@ export default function fixAuto(spring, props) {
 
   const forward = spring.getForwardProps(props)
   const allProps = Object.entries({ ...from, ...to })
-  const portal = document.createElement('div')
-  portal.style.cssText = 'position:static;visibility:hidden;'
-  document.body.appendChild(portal)
 
   // Collect to-state props
   const componentProps = native
     ? allProps.reduce(convert, forward)
     : { ...from, ...to, ...forward }
 
-  // Render to-state vdom to portal
-  return ReactDOM.createPortal(
+  return (
     <div
       ref={ref => {
         if (ref) {
@@ -39,8 +35,6 @@ export default function fixAuto(spring, props) {
           const height = ref.clientHeight
           const width = ref.clientWidth
 
-          // Remove portal and resolve promise with updated props
-          document.body.removeChild(portal)
           // Defer to next frame, or else the springs updateToken is canceled
           requestAnimationFrame(() =>
             spring.updateProps(
@@ -58,7 +52,6 @@ export default function fixAuto(spring, props) {
         }
       }}>
       {children(componentProps)}
-    </div>,
-    portal
+    </div>
   )
 }
