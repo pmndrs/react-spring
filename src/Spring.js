@@ -17,6 +17,10 @@ export const config = {
 }
 
 const callProp = (p, n) => (typeof p === 'function' ? p(n) : p)
+const convert = (acc, [name, value]) => ({
+  ...acc,
+  [name]: new AnimatedValue(value),
+})
 
 export default class Spring extends React.PureComponent {
   static propTypes = {
@@ -28,6 +32,7 @@ export default class Spring extends React.PureComponent {
     children: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.arrayOf(PropTypes.func),
+      PropTypes.node,
     ]),
     render: PropTypes.func,
     reset: PropTypes.bool,
@@ -68,6 +73,7 @@ export default class Spring extends React.PureComponent {
   updatePropsAsync(props) {
     if (props.inject) {
       this.inject = props.inject(this, props)
+      this.didInject = !!this.inject
       if (this.inject) return
     }
     this.updateProps(props)
@@ -90,6 +96,8 @@ export default class Spring extends React.PureComponent {
       reset,
       onFrame,
       onRest,
+      inject,
+      native,
     } = props
     const allProps = Object.entries({ ...from, ...to })
 
@@ -146,6 +154,13 @@ export default class Spring extends React.PureComponent {
           const current = { ...this.props.from, ...this.props.to }
           onRest && onRest(current)
           cb && typeof cb === 'function' && cb(current)
+
+          if (this.didInject) {
+            // Restore the original values for injected props
+            const componentProps = this.convertValues(this.props)
+            this.inject = this.renderChildren(this.props, componentProps)
+            this.forceUpdate()
+          }
         }
       }
       entry.start = cb => {
@@ -210,6 +225,15 @@ export default class Spring extends React.PureComponent {
     return this.props.native ? this.interpolators : this.getValues()
   }
 
+  convertValues(props) {
+    const { from, to, native, children, render } = props
+    const forward = this.getForwardProps(props)
+    const allProps = Object.entries({ ...from, ...to })
+    return native
+      ? allProps.reduce(convert, forward)
+      : { ...from, ...to, ...forward }
+  }
+
   getForwardProps(props = this.props) {
     const {
       to,
@@ -245,6 +269,12 @@ export default class Spring extends React.PureComponent {
     this.start()
   }
 
+  renderChildren(props, componentProps) {
+    return props.render
+      ? props.render({ ...componentProps, children: props.children })
+      : props.children(componentProps)
+  }
+
   render() {
     if (this.inject) {
       const content = this.inject
@@ -254,11 +284,11 @@ export default class Spring extends React.PureComponent {
 
     const { children, render } = this.props
     const values = this.getAnimatedValues()
-    if (values && Object.keys(values).length) {
-      const animatedProps = { ...values, ...this.getForwardProps() }
-      return render
-        ? render({ ...animatedProps, children })
-        : children(animatedProps)
-    } else return null
+    return values && Object.keys(values).length
+      ? this.renderChildren(this.props, {
+          ...values,
+          ...this.getForwardProps(),
+        })
+      : null
   }
 }
