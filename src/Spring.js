@@ -191,7 +191,6 @@ export default class Spring extends React.PureComponent {
   }
 
   start() {
-    //console.log(this.props.test, "start", this)
     let resolve,
       promise = new Promise(r => (resolve = r))
     this.getAnimations().forEach(animation => animation.start(resolve))

@@ -18,7 +18,6 @@ export default function fixAuto(spring, props) {
 
   // Dry-route props back if nothing's using 'auto' in there
   if (![...getValues(from), ...getValues(to)].some(check)) return
-
   // Fetch render v-dom
   const element = spring.renderChildren(props, spring.convertValues(props))
 
@@ -28,21 +27,26 @@ export default function fixAuto(spring, props) {
       {...element.props}
       ref={ref => {
         if (ref) {
-          // Once it's rendered out, fetch bounds
-          const cs = getComputedStyle(ref.node)
-          const paddingX =
-            parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
-          const paddingY =
-            parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
-          const borderX =
-            parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth)
-          const borderY =
-            parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth)
-          // Element width and height minus padding and border
-          const w = ref.node.offsetWidth - paddingX - borderX
-          const h = ref.node.offsetHeight - paddingY - borderY
-          const o = overwrite(w, h)
+          // Once it's rendered out, fetch bounds (minus padding/margin/borders)
+          let width, height
+          let cs = getComputedStyle(ref.node)
+          if (cs.boxSizing === 'border-box') {
+            width = ref.node.clientWidth
+            height = ref.node.clientHeight
+          } else {
+            const paddingX =
+              parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+            const paddingY =
+              parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+            const borderX =
+              parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth)
+            const borderY =
+              parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth)
+            width = ref.node.offsetWidth - paddingX - borderX
+            height = ref.node.offsetHeight - paddingY - borderY
+          }
           // Defer to next frame, or else the springs updateToken is canceled
+          const o = overwrite(width, height)
           requestAnimationFrame(() =>
             spring.updateProps(
               {
