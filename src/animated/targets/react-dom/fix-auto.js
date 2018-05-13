@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import AnimatedValue from '../../AnimatedValue'
 
 const getValues = object => Object.keys(object).map(k => object[k])
@@ -46,13 +45,13 @@ export default function fixAuto(spring, props) {
             height = ref.node.offsetHeight - paddingY - borderY
           }
           // Defer to next frame, or else the springs updateToken is canceled
-          const o = overwrite(width, height)
+          const convert = overwrite(width, height)
           requestAnimationFrame(() =>
             spring.updateProps(
               {
                 ...props,
-                from: Object.entries(from).reduce(o, from),
-                to: Object.entries(to).reduce(o, to),
+                from: Object.entries(from).reduce(convert, from),
+                to: Object.entries(to).reduce(convert, to),
               },
               true
             )
