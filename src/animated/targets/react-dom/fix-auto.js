@@ -29,7 +29,19 @@ export default function fixAuto(spring, props) {
       ref={ref => {
         if (ref) {
           // Once it's rendered out, fetch bounds
-          const o = overwrite(ref.node.clientWidth, ref.node.clientHeight)
+          const cs = getComputedStyle(ref.node)
+          const paddingX =
+            parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+          const paddingY =
+            parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+          const borderX =
+            parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth)
+          const borderY =
+            parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth)
+          // Element width and height minus padding and border
+          const w = ref.node.offsetWidth - paddingX - borderX
+          const h = ref.node.offsetHeight - paddingY - borderY
+          const o = overwrite(w, h)
           // Defer to next frame, or else the springs updateToken is canceled
           requestAnimationFrame(() =>
             spring.updateProps(
