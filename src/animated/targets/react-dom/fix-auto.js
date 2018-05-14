@@ -19,11 +19,13 @@ export default function fixAuto(spring, props) {
   if (![...getValues(from), ...getValues(to)].some(check)) return
   // Fetch render v-dom
   const element = spring.renderChildren(props, spring.convertValues(props))
+  const elementStyles = element.props.style
 
   // Return v.dom with injected ref
   return (
     <element.type
       {...element.props}
+      style={{ ...elementStyles, position: 'absolute', visibility: 'hidden' }}
       ref={ref => {
         if (ref) {
           // Once it's rendered out, fetch bounds (minus padding/margin/borders)
@@ -53,6 +55,7 @@ export default function fixAuto(spring, props) {
                 from: Object.entries(from).reduce(convert, from),
                 to: Object.entries(to).reduce(convert, to),
               },
+              true,
               true
             )
           )

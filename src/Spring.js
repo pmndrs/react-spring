@@ -73,13 +73,12 @@ export default class Spring extends React.PureComponent {
   updatePropsAsync(props) {
     if (props.inject) {
       this.inject = props.inject(this, props)
-      this.didInject = !!this.inject
       if (this.inject) return
     }
     this.updateProps(props)
   }
 
-  updateProps(props, force = false) {
+  updateProps(props, force = false, didInject = false) {
     // Springs can be destroyed, the "destroyed" flag prevents them from ever
     // updating further, they'll just animate out and function no more ...
     if (this.destroyed && props.destroyed) return
@@ -155,7 +154,8 @@ export default class Spring extends React.PureComponent {
           onRest && onRest(current)
           cb && typeof cb === 'function' && cb(current)
 
-          if (this.didInject) {
+          if (didInject) {
+            console.log('inject done')
             // Restore the original values for injected props
             const componentProps = this.convertValues(this.props)
             this.inject = this.renderChildren(this.props, componentProps)
