@@ -29,11 +29,12 @@ export default function fixAuto(spring, props) {
       ref={ref => {
         if (ref) {
           // Once it's rendered out, fetch bounds (minus padding/margin/borders)
+          let node = ref.node || ref
           let width, height
-          let cs = getComputedStyle(ref.node)
+          let cs = getComputedStyle(node)
           if (cs.boxSizing === 'border-box') {
-            width = ref.node.clientWidth
-            height = ref.node.clientHeight
+            width = node.clientWidth
+            height = node.clientHeight
           } else {
             const paddingX =
               parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
@@ -43,8 +44,8 @@ export default function fixAuto(spring, props) {
               parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth)
             const borderY =
               parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth)
-            width = ref.node.offsetWidth - paddingX - borderX
-            height = ref.node.offsetHeight - paddingY - borderY
+            width = node.offsetWidth - paddingX - borderX
+            height = node.offsetHeight - paddingY - borderY
           }
           // Defer to next frame, or else the springs updateToken is canceled
           const convert = overwrite(width, height)
