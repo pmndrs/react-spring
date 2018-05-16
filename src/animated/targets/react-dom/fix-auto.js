@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import AnimatedValue from '../../AnimatedValue'
 
 const getValues = object => Object.keys(object).map(k => object[k])
@@ -29,7 +30,7 @@ export default function fixAuto(spring, props) {
       ref={ref => {
         if (ref) {
           // Once it's rendered out, fetch bounds (minus padding/margin/borders)
-          let node = ref.node || ref
+          let node = ReactDOM.findDOMNode(ref)
           let width, height
           let cs = getComputedStyle(node)
           if (cs.boxSizing === 'border-box') {

@@ -155,7 +155,6 @@ export default class Spring extends React.PureComponent {
           cb && typeof cb === 'function' && cb(current)
 
           if (didInject) {
-            console.log('inject done')
             // Restore the original values for injected props
             const componentProps = this.convertValues(this.props)
             this.inject = this.renderChildren(this.props, componentProps)

@@ -29,9 +29,19 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
 
 A couple of extra props you might be interested in are `onRest`, which fires once the animations stops, `onFrame`, which fires on every frame and gives you the animation value, `reset`, which literally resets the spring so that it goes through `from` to `to` again, `immediate` which can enforce values to spring to their to-values immediately (can be `true` for a zero-time spring or a function which receives the key names and returns `true` or `false` individually).
 
+##### Animating 'auto'
+
+react-spring is one of the few libs that understands and animates `auto`, so you can use it in your configs, like so:
+
+```jsx
+<Spring from={{ height: 0 }} to={{ height: 'auto' }}>
+```
+
+But keep in mind that in order to do this we have to measure out a snapshot of the view as it appears with height/width set to `auto` before being able to start animating it. This comes with a couple of caveats. We can't just render it once where it's at, or else it will create a small flicker as it pushes other elements away and creates paint-cycles. We set it to `position: absolute` or `visibility: hidden`, which retains the box model, but browsers being browsers, it can have differences. If you notice that the measured bounds are wrong, give your element a few hints, like `width: 100%` or whatever it needs to maintain bounds when set to absolute.
+
 ### Render props
 
-Don't like the way render props wrap your code?
+Don't like the way render props wrap your code and create nested structures? By default we support both `render` and `children`, so you can create higher-order components like so:
 
 ```jsx
 const Header = ({ children, bold, ...styles }) => (
