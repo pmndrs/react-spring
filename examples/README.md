@@ -24,6 +24,7 @@ Demo will be live at http://localhost:8080
 * Imperative Api: https://codesandbox.io/embed/3x350m0541
 * Animating 'auto': https://codesandbox.io/embed/pmjomxn60
 * SVG morphing/custom interpolaters: https://codesandbox.io/embed/lwpkp46om
+* Morphing polygons: https://codesandbox.io/embed/9jj8py13l4
 * VX/D3 stream graps: https://codesandbox.io/embed/py3p5p11m7
 * VX/D3 area graphs: https://codesandbox.io/embed/j3x61vjz5v
 * VX/D3 sunbursts: https://codesandbox.io/embed/nww6yxo0jl
