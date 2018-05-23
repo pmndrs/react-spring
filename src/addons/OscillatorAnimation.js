@@ -28,7 +28,6 @@ export default class OscillatorAnimation extends Animation {
     this._tension = springConfig.tension
     this._friction = springConfig.friction
     this._mass = withDefault(config.mass, 1)
-    this._delay = config.delay !== undefined ? config.delay : 0
   }
 
   start(fromValue, onUpdate, onEnd, previousAnimation) {
@@ -50,8 +49,7 @@ export default class OscillatorAnimation extends Animation {
     if (this._initialVelocity !== undefined && this._initialVelocity !== null)
       this._lastVelocity = this._initialVelocity
 
-    if (this._delay) this._timeout = setTimeout(this.onUpdate, this._delay)
-    else this.onUpdate()
+    this.onUpdate()
   }
 
   getInternalState() {

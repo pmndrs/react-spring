@@ -1,10 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Spring from './Spring'
+import Trail from './Trail'
+import Transition from './Transition'
 
 export default class Keyframes extends React.Component {
   static propTypes = { script: PropTypes.func }
 
-  state = { primitive: undefined, props: {}, resolve: () => null }
+  state = { primitive: undefined, props: {}, oldProps: {}, resolve: () => null }
 
   componentDidMount() {
     if (this.props.script) this.props.script(this.next)
@@ -12,29 +15,52 @@ export default class Keyframes extends React.Component {
 
   next = (primitive, props) => {
     return new Promise(resolve => {
-      const current = this.instance && this.instance.getValues()
-      const from =
-        typeof props.from === 'function'
-          ? props.from
-          : { ...this.state.props.from, ...current, ...props.from }
       this.setState(state => ({
         primitive,
-        props: { ...props, from },
+        props,
+        oldProps: { ...this.state.props },
         resolve,
       }))
     })
   }
 
-  render() {
-    const { primitive: Component, props, resolve } = this.state
-    const { script, ...rest } = this.props
-    return Component ? (
-      <Component
-        ref={ref => (this.instance = ref)}
-        {...rest}
-        {...props}
-        onRest={resolve}
-      />
-    ) : null
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { states, state, primitive } = nextProps
+    if (states && state && primitive)
+      return {
+        primitive,
+        props: states[state],
+        oldProps: { ...prevState.props },
+      }
+    return null
   }
+
+  render() {
+    const { primitive: Component, props, oldProps, resolve } = this.state
+    const { script, from: ownFrom, ...rest } = this.props
+    if (Component) {
+      const current = this.instance && this.instance.getValues()
+      const from =
+        typeof props.from === 'function'
+          ? props.from
+          : { ...oldProps.from, ...current, ...props.from }
+      return (
+        <Component
+          ref={ref => (this.instance = ref)}
+          {...rest}
+          {...props}
+          from={{ ...from, ...ownFrom }}
+          onRest={resolve}
+        />
+      )
+    } else return null
+  }
+
+  static Spring = states => createFactory(Spring, states)
+  static Trail = states => createFactory(Trail, states)
+  static Transition = states => createFactory(Transition, states)
 }
+
+const createFactory = (p, s) => props => (
+  <Keyframes primitive={p} states={s} {...props} />
+)

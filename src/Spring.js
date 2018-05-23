@@ -190,9 +190,17 @@ export default class Spring extends React.PureComponent {
   }
 
   start() {
+    let fn = () =>
+      this.getAnimations().forEach(animation => animation.start(resolve))
     let resolve,
       promise = new Promise(r => (resolve = r))
-    this.getAnimations().forEach(animation => animation.start(resolve))
+
+    if (this.props.delay) {
+      if (this.timeout) clearTimeout(this.timeout)
+      return (this.timeout = setTimeout(() => fn(), this.props.delay))
+    }
+
+    fn()
     return promise
   }
 
