@@ -155,12 +155,12 @@ import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 
 <img src="assets/keyframes-trail.gif" width="285" />
 
-`Keyframes` allows you to create a animation primitive that reacts to predefined, named slots. Each slot can return raw-properties, arrays or async functions with side-effects. The resulting primitive can receive properties like `native` or `from`, etc.
+`Keyframes` allow you to create animation primitives that react to predefined animations. Each slot can return raw-properties, arrays, or async functions with side-effects. The resulting primitive can receive properties like `native` or `from`, etc.
 
 ```jsx
 import { Keyframes } from 'react-spring'
 
-// Cou can create keyframes for springs, trails and transitions
+// You can create keyframes for springs, trails and transitions
 const Container = Keyframes.Spring({
     // Single props
     show: { to: { opacity: 1 } },
