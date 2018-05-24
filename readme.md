@@ -155,17 +155,29 @@ import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 
 <img src="assets/keyframes-trail.gif" width="285" />
 
-`Keyframes` orchestrates animations in a script that you provide. Theoretically you can even switch between primitives, for instance going from a Spring, to a Trail, to a Transition. It tries its best to remember the last state so that animations are additive. Animation can be awaited and return current props. Be warned: the keyframe API is still highly experiemental and can be subject to changes.
+`Keyframes` allows you to create a animation primitive that reacts to predefined, named slots. Each slot can return raw-properties, arrays or async functions with side-effects. The resulting primitive can receive properties like `native` or `from`, etc.
 
 ```jsx
-import { Keyframes, Spring } from 'react-spring'
+import { Keyframes } from 'react-spring'
 
-<Keyframes script={async next => {
-    await next(Spring, { from: { opacity: 0 }, to: { opacity: 1 } })
-    await next(Spring, { to: { opacity: 0 } })
-}}>
+// Cou can create keyframes for springs, trails and transitions
+const Container = Keyframes.Spring({
+    // Single props
+    show: { to: { opacity: 1 } },
+    // Array-chans
+    showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
+    // Functions
+    wiggle: async call => {
+        await call({ to: { x: 100 }, config: config.wobbly })
+        await delay(1000)
+        await call({ to: { x: 0 }, config: config.gentle })
+    }
+})
+
+// Container
+<Container state="show">
     {styles => <div style={styles}>Hello</div>}
-</Keyframes>
+</Container>
 ```
 
 # Render props, interpolation and native rendering 🚀

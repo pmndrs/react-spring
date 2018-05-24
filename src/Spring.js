@@ -114,7 +114,7 @@ export default class Spring extends React.PureComponent {
       let fromAnimated = fromValue instanceof AnimatedValue
       let toValue = isNumber || isArray ? value : 1
 
-      if (isNumber && attach) {
+      if (/*isNumber &&*/ attach) {
         // Attach value to target animation
         const target = attach(this)
         const targetAnimation = target && target.animations[name]

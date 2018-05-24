@@ -42,6 +42,7 @@ export default class Trail extends React.PureComponent {
       native = false,
       config = springConfig.default,
       keys,
+      delay,
       onRest,
       ...extra
     } = this.props
@@ -51,16 +52,18 @@ export default class Trail extends React.PureComponent {
       if (index === 0) return undefined
       else return Array.from(animations)[index - 1]
     }
-    const props = { ...extra, native, config, from, to }
+    const props = { ...extra, native, from, config, to }
     const target = render || children
     return target.map((child, i) => {
       const attachedHook = animation => hook(i, animation)
+      const firstDelay = i === 0 && delay
       return (
         <Spring
           ref={ref => i === 0 && (this.instance = ref)}
           onRest={i === 0 ? onRest : null}
           key={keys[i]}
           {...props}
+          delay={firstDelay}
           attach={attachedHook}
           render={render && child}
           children={render ? children : child}

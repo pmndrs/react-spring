@@ -5,12 +5,14 @@ import Trail from './Trail'
 import Transition from './Transition'
 
 export default class Keyframes extends React.Component {
-  static propTypes = { script: PropTypes.func }
+  static propTypes = { script: PropTypes.func, state: PropTypes.string }
 
+  guid = 0
   state = { primitive: undefined, props: {}, oldProps: {}, resolve: () => null }
 
   componentDidMount() {
     if (this.props.script) this.props.script(this.next)
+    this.UNSAFE_componentWillReceiveProps(this.props)
   }
 
   next = (primitive, props) => {
@@ -24,15 +26,21 @@ export default class Keyframes extends React.Component {
     })
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { states, state, primitive } = nextProps
-    if (states && state && primitive)
-      return {
-        primitive,
-        props: states[state],
-        oldProps: { ...prevState.props },
+  async UNSAFE_componentWillReceiveProps(props) {
+    const { states, state, primitive } = props
+    const localId = ++this.guid
+    if (states && state && primitive) {
+      const slots = states[state]
+      if (Array.isArray(slots)) {
+        for (let slot of slots) {
+          localId === this.guid && (await this.next(primitive, slot))
+        }
+      } else if (typeof slots === 'function') {
+        slots(props => localId === this.guid && this.next(primitive, props))
+      } else {
+        this.next(primitive, states[state])
       }
-    return null
+    }
   }
 
   render() {
