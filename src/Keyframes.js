@@ -26,14 +26,15 @@ export default class Keyframes extends React.Component {
     })
   }
 
-  async UNSAFE_componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     const { states, state, primitive } = props
     const localId = ++this.guid
     if (states && state && primitive) {
       const slots = states[state]
       if (Array.isArray(slots)) {
-        for (let slot of slots) {
-          localId === this.guid && (await this.next(primitive, slot))
+        let q = Promise.resolve()
+        for (let s of slots) {
+          q = q.then(() => localId === this.guid && this.next(primitive, s))
         }
       } else if (typeof slots === 'function') {
         slots(props => localId === this.guid && this.next(primitive, props))
