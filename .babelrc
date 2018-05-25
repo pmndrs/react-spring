@@ -1,0 +1,10 @@
+{
+  presets: [
+    ['@babel/preset-env', { loose: true, modules: false }],
+    ['@babel/preset-stage-3', { loose: true }],
+    '@babel/preset-react'
+  ],
+  plugins: [
+    ['transform-react-remove-prop-types', { removeImport: true }]
+  ]
+}

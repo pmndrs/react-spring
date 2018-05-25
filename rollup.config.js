@@ -4,7 +4,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import { uglify } from 'rollup-plugin-uglify'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 
-const isExternal = id => !id.startsWith('.') && !id.startsWith('/')
+const external = id => !id.startsWith('.') && !id.startsWith('/')
 
 const globals = {
   react: 'React',
@@ -14,20 +14,13 @@ const globals = {
 }
 
 const getBabelOptions = ({ useESModules }) => ({
-  babelrc: false,
   exclude: '**/node_modules/**',
   runtimeHelpers: true,
-  presets: [
-    ['@babel/preset-env', { loose: true, modules: false }],
-    ['@babel/preset-stage-2', { loose: true, decoratorsLegacy: true }],
-    '@babel/preset-react',
-  ],
   plugins: [
     [
       '@babel/transform-runtime',
-      { polyfill: false, useBuiltIns: true, useESModules },
+      { regenerator: false, polyfill: false, useBuiltIns: true, useESModules },
     ],
-    ['transform-react-remove-prop-types', { removeImport: true }],
   ],
 })
 
@@ -36,13 +29,13 @@ function createConfig(entry, out, name) {
     {
       input: `./src/${entry}.js`,
       output: { file: `dist/${out}.esm.js`, format: 'esm' },
-      external: isExternal,
+      external,
       plugins: [babel(getBabelOptions({ useESModules: true })), sizeSnapshot()],
     },
     {
       input: `./src/${entry}.js`,
       output: { file: `dist/${out}.cjs.js`, format: 'cjs' },
-      external: isExternal,
+      external,
       plugins: [babel(getBabelOptions({ useESModules: false }))],
     },
     {
@@ -50,11 +43,11 @@ function createConfig(entry, out, name) {
       output: { file: `dist/${out}.umd.js`, format: 'umd', name, globals },
       external: Object.keys(globals),
       plugins: [
-        babel(getBabelOptions({ useESModules: false })),
         resolve(),
-        commonjs(),
+        babel(getBabelOptions({ useESModules: true })),
+        commonjs({ include: '**/node_modules/**' }),
         sizeSnapshot(),
-        uglify({ compress: true, mangle: { toplevel: true } }),
+        uglify(),
       ],
     },
   ]
