@@ -9,6 +9,7 @@ const external = id => !id.startsWith('.') && !id.startsWith('/')
 const globals = {
   react: 'React',
   'react-dom': 'ReactDOM',
+  'react-native': 'react-native',
   'prop-types': 'PropTypes',
   'react-spring': 'ReactSpring',
 }
@@ -55,5 +56,6 @@ function createConfig(entry, out, name) {
 
 export default [
   ...createConfig('index', 'react-spring', 'ReactSpring'),
+  ...createConfig('native', 'react-spring-native', 'ReactSpringNative'),
   ...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
 ]

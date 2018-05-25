@@ -26,5 +26,19 @@
     "bundled": 15531,
     "minified": 5829,
     "gzipped": 2122
+  },
+  "dist/react-spring-native.esm.js": {
+    "bundled": 62647,
+    "minified": 29347,
+    "gzipped": 9006,
+    "treeshaked": {
+      "rollup": 26114,
+      "webpack": 27008
+    }
+  },
+  "dist/react-spring-native.umd.js": {
+    "bundled": 68135,
+    "minified": 27112,
+    "gzipped": 9021
   }
 }
