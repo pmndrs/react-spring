@@ -23,9 +23,9 @@
     }
   },
   "dist/addons.umd.js": {
-    "bundled": 15573,
-    "minified": 5778,
-    "gzipped": 2118
+    "bundled": 15720,
+    "minified": 5853,
+    "gzipped": 2141
   },
   "dist/react-spring-native.esm.js": {
     "bundled": 62647,
@@ -88,9 +88,9 @@
     }
   },
   "dist/dom.umd.js": {
-    "bundled": 86373,
-    "minified": 35435,
-    "gzipped": 11870
+    "bundled": 86575,
+    "minified": 35498,
+    "gzipped": 11882
   },
   "dist/universal.js": {
     "bundled": 62425,

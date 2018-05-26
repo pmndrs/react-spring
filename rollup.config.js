@@ -9,7 +9,6 @@ const external = id => !id.startsWith('.') && !id.startsWith('/')
 const globals = {
   react: 'React',
   'react-dom': 'ReactDOM',
-  'react-native': 'react-native',
   'prop-types': 'PropTypes',
   'react-spring': 'ReactSpring',
 }
@@ -31,7 +30,9 @@ function createConfig(entry, out, name) {
       input: `./src/${entry}.js`,
       output: { file: `dist/${out}.js`, format: 'esm' },
       external,
-      plugins: [babel(getBabelOptions({ useESModules: true })), sizeSnapshot()],
+      plugins: [
+        babel(getBabelOptions({ useESModules: true })) /*sizeSnapshot()*/,
+      ],
     },
     {
       input: `./src/${entry}.js`,
