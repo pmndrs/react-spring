@@ -249,7 +249,7 @@ const AnimatedView = animated(View)
 </Spring>
 ```
 
-Some react targets do not support "request/cancelAnimationFrame." If that is the case you can [`import { Globals } from 'react/dist/universal'` and inject a fallback](https://github.com/drcmda/react-spring/blob/master/src/animated/Globals.js), for instance setTimeout/clearTimeout.
+Some react targets do not support "request/cancelAnimationFrame." If that is the case you can `import { Globals } from 'react/dist/universal'` and [inject a fallback](https://github.com/drcmda/react-spring/blob/master/src/animated/Globals.js), for instance setTimeout/clearTimeout.
 
 # Links 🔗
 
