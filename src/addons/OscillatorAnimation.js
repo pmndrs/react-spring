@@ -1,4 +1,5 @@
 import Animation from '../animated/Animation'
+import * as Globals from '../animated/Globals'
 
 const withDefault = (value, defaultValue) =>
   value === undefined || value === null ? defaultValue : value
@@ -146,13 +147,13 @@ export default class OscillatorAnimation extends Animation {
       }
       return this.__debouncedOnEnd({ finished: true })
     }
-    this._animationFrame = requestAnimationFrame(this.onUpdate)
+    this._animationFrame = Globals.requestFrame(this.onUpdate)
   }
 
   stop() {
     this.__active = false
     clearTimeout(this._timeout)
-    cancelAnimationFrame(this._animationFrame)
+    Globals.cancelFrame(this._animationFrame)
     this.__debouncedOnEnd({ finished: false })
   }
 }

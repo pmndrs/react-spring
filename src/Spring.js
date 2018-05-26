@@ -52,7 +52,7 @@ export default class Spring extends React.PureComponent {
     hold: false,
     reset: false,
     impl: SpringAnimation,
-    inject: Globals.Bugfixes,
+    inject: Globals.bugfixes,
   }
 
   state = { props: undefined }

@@ -39,23 +39,32 @@ function createConfig(entry, out, name) {
       external,
       plugins: [babel(getBabelOptions({ useESModules: false }))],
     },
-    {
-      input: `./src/${entry}.js`,
-      output: { file: `dist/${out}.umd.js`, format: 'umd', name, globals },
-      external: Object.keys(globals),
-      plugins: [
-        resolve(),
-        babel(getBabelOptions({ useESModules: true })),
-        commonjs({ include: '**/node_modules/**' }),
-        sizeSnapshot(),
-        uglify(),
-      ],
-    },
+    ...(name
+      ? [
+          {
+            input: `./src/${entry}.js`,
+            output: {
+              file: `dist/${out}.umd.js`,
+              format: 'umd',
+              name,
+              globals,
+            },
+            external: Object.keys(globals),
+            plugins: [
+              resolve(),
+              babel(getBabelOptions({ useESModules: true })),
+              commonjs({ include: '**/node_modules/**' }),
+              sizeSnapshot(),
+              uglify(),
+            ],
+          },
+        ]
+      : []),
   ]
 }
 
 export default [
-  ...createConfig('index', 'index', 'ReactSpring'),
-  ...createConfig('native', 'native', 'ReactSpringNative'),
+  ...createConfig('dom', 'dom', 'ReactSpring'),
+  ...createConfig('universal', 'universal'),
   ...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
 ]

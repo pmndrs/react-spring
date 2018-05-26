@@ -23,9 +23,9 @@
     }
   },
   "dist/addons.umd.js": {
-    "bundled": 15531,
-    "minified": 5829,
-    "gzipped": 2122
+    "bundled": 15573,
+    "minified": 5778,
+    "gzipped": 2118
   },
   "dist/react-spring-native.esm.js": {
     "bundled": 62647,
@@ -70,12 +70,35 @@
     "gzipped": 9021
   },
   "dist/addons.js": {
-    "bundled": 14232,
-    "minified": 6468,
-    "gzipped": 2217,
+    "bundled": 14270,
+    "minified": 6491,
+    "gzipped": 2229,
     "treeshaked": {
-      "rollup": 2036,
-      "webpack": 2628
+      "rollup": 2079,
+      "webpack": 2671
+    }
+  },
+  "dist/dom.js": {
+    "bundled": 79991,
+    "minified": 38564,
+    "gzipped": 11986,
+    "treeshaked": {
+      "rollup": 34262,
+      "webpack": 35250
+    }
+  },
+  "dist/dom.umd.js": {
+    "bundled": 86373,
+    "minified": 35435,
+    "gzipped": 11870
+  },
+  "dist/universal.js": {
+    "bundled": 62425,
+    "minified": 29203,
+    "gzipped": 8968,
+    "treeshaked": {
+      "rollup": 25133,
+      "webpack": 25997
     }
   }
 }

@@ -2,8 +2,8 @@
   "name": "react-spring",
   "version": "5.2.1",
   "description": "Animate React with ease",
-  "main": "dist/react-spring.cjs.js",
-  "module": "dist/react-spring.esm.js",
+  "main": "dist/dom.cjs.js",
+  "module": "dist/dom.js",
   "typings": "index.d.ts",
   "files": [
     "dist",

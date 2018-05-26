@@ -1,4 +1,5 @@
 import Animation from './Animation'
+import * as Globals from './Globals'
 
 const withDefault = (value, defaultValue) =>
   value === undefined || value === null ? defaultValue : value
@@ -150,13 +151,13 @@ export default class SpringAnimation extends Animation {
       if (this._tension !== 0) this._onUpdate(this._to)
       return this.__debouncedOnEnd({ finished: true })
     }
-    this._animationFrame = requestAnimationFrame(this.onUpdate)
+    this._animationFrame = Globals.requestFrame(this.onUpdate)
   }
 
   stop() {
     this.__active = false
     clearTimeout(this._timeout)
-    cancelAnimationFrame(this._animationFrame)
+    Globals.cancelFrame(this._animationFrame)
     this.__debouncedOnEnd({ finished: false })
   }
 }

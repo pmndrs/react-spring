@@ -1,4 +1,5 @@
 import Animation from '../animated/Animation'
+import * as Globals from '../animated/Globals'
 import Easing from './Easing'
 
 const easeInOut = Easing.inOut(Easing.ease)
@@ -22,7 +23,7 @@ let TimingAnimation = class TimingAnimation extends Animation {
         this.__debouncedOnEnd({ finished: true })
       } else {
         this._startTime = Date.now()
-        this._animationFrame = requestAnimationFrame(this.onUpdate)
+        this._animationFrame = Globals.requestFrame(this.onUpdate)
       }
     }
 
@@ -46,13 +47,13 @@ let TimingAnimation = class TimingAnimation extends Animation {
           (this._to - this._fromValue)
     )
     if (this.__active)
-      this._animationFrame = requestAnimationFrame(this.onUpdate)
+      this._animationFrame = Globals.requestFrame(this.onUpdate)
   }
 
   stop() {
     this.__active = false
     clearTimeout(this._timeout)
-    cancelAnimationFrame(this._animationFrame)
+    Globals.cancelFrame(this._animationFrame)
     this.__debouncedOnEnd({ finished: false })
   }
 }

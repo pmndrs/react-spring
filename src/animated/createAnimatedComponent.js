@@ -15,7 +15,7 @@ export default function createAnimatedComponent(Component) {
     }
 
     setNativeProps(props) {
-      var didUpdate = Globals.ApplyAnimatedValues.fn(this.node, props, this)
+      var didUpdate = Globals.applyAnimatedValues.fn(this.node, props, this)
       if (didUpdate === false) this.forceUpdate()
     }
 
@@ -34,7 +34,7 @@ export default function createAnimatedComponent(Component) {
       // forceUpdate.
       var callback = () => {
         if (this.node) {
-          const didUpdate = Globals.ApplyAnimatedValues.fn(
+          const didUpdate = Globals.applyAnimatedValues.fn(
             this.node,
             this._propsAnimated.__getAnimatedValue(),
             this
@@ -65,7 +65,7 @@ export default function createAnimatedComponent(Component) {
       return (
         <Component
           {...other}
-          style={Globals.ApplyAnimatedValues.transform(style)}
+          style={Globals.applyAnimatedValues.transform(style)}
           ref={node => (this.node = node)}
         />
       )

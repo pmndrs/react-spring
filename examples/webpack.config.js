@@ -64,7 +64,7 @@ module.exports = mode => {
         react: path.resolve('node_modules/react'),
         'react-dom': path.resolve('node_modules/react-dom'),
         'prop-types': path.resolve('node_modules/prop-types'),
-        'react-spring': path.resolve('../src'),
+        'react-spring': path.resolve('../src/dom'),
         lodash: path.resolve(__dirname, 'node_modules/lodash-es'),
       },
     },
