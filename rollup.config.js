@@ -29,7 +29,7 @@ function createConfig(entry, out, name) {
   return [
     {
       input: `./src/${entry}.js`,
-      output: { file: `dist/${out}.esm.js`, format: 'esm' },
+      output: { file: `dist/${out}.js`, format: 'esm' },
       external,
       plugins: [babel(getBabelOptions({ useESModules: true })), sizeSnapshot()],
     },
@@ -55,7 +55,7 @@ function createConfig(entry, out, name) {
 }
 
 export default [
-  ...createConfig('index', 'react-spring', 'ReactSpring'),
-  ...createConfig('native', 'react-spring-native', 'ReactSpringNative'),
+  ...createConfig('index', 'index', 'ReactSpring'),
+  ...createConfig('native', 'native', 'ReactSpringNative'),
   ...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
 ]

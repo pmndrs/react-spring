@@ -158,7 +158,7 @@ import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 `Keyframes` allow you to create animation primitives that react to predefined animations. Each slot can return raw-properties, arrays, or async functions with side-effects. The resulting primitive can receive properties like `native` or `from`, etc.
 
 ```jsx
-import { Keyframes } from 'react-spring'
+import { Keyframes, config } from 'react-spring'
 
 // You can create keyframes for springs, trails and transitions
 const Container = Keyframes.Spring({
@@ -174,7 +174,6 @@ const Container = Keyframes.Spring({
     }
 })
 
-// Container
 <Container state="show">
     {styles => <div style={styles}>Hello</div>}
 </Container>
@@ -200,7 +199,7 @@ const Header = ({ children, bold, ...styles }) => (
 
 ### Interpolation
 
-You can interpolate almost everything, from numbers, colors (names, rgb, rgba, hsl, hsla), paths (as long as the number of points match, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om)), percentages, units, arrays and string patterns:
+You can interpolate almost everything, from numbers, colors (names, rgb, rgba, hsl, hsla), paths (as long as the number of points match, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om)), percentages, units, arrays and string patterns. Even `auto` is valid.
 
 ```jsx
 <Spring to={{
@@ -212,6 +211,7 @@ You can interpolate almost everything, from numbers, colors (names, rgb, rgba, h
     shadow: toggle ? '0 2px 2px 0px rgba(0, 0, 0, 0.12)' : '0 20px 20px 0px rgba(0, 0, 0, 0.5)',
     path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z',
     vector: toggle ? [1,2,50,100] : [20,30,1,-100],
+    height: toggle ? 'auto' : 0,
 }}>
 ```
 
