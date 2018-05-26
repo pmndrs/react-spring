@@ -10,7 +10,7 @@
 * [Why do we need yet another?](#why-do-we-need-yet-another-)
 * [Overview](#overview-)
 * [Render props, interpolation and native rendering](#render-props-interpolation-and-native-rendering-)
-* [React-dom, react-native and other targets](#react-dom,-react-native-and-other-targets-)
+* [React-dom, react-native and other targets](#react-dom-react-native-and-other-targets-)
 * [Links](#links-)
 
 # What is it? 🤔
@@ -55,7 +55,7 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 
 react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
-This library works on the web and [on any other react platform](#react-dom,-react-native-and-other-targets-), including react-native.
+This library works on the web and [on any other react platform](#react-dom-react-native-and-other-targets-), including react-native.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
