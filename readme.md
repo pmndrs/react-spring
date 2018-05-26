@@ -182,8 +182,6 @@ const Container = Keyframes.Spring({
 </Container>
 ```
 
-You can use the `universal` export to animate virtually all react targets, react-blessed, react-vr, react-tv, etc. Just be aware of some caveat: Some targets may not support "request/cancelAnimationFrame." If that is the case you can [import `Globals` and inject a fallback](https://github.com/drcmda/react-spring/blob/master/src/animated/Globals.js).
-
 # Render props, interpolation and native rendering 🚀
 
 ### Render props
@@ -238,7 +236,7 @@ More about native rendering and interpolation [here](https://github.com/drcmda/r
 
 # React-dom, react-native and other targets 🎒
 
-The default export points (all of the above) points to react-dom. If you want to animate other targets, for instance react-native or whatever renderer you are using, refer to `/dist/universal`. You can still use the `native` keyword and create your own animated components by calling into `animated`.
+The default export points to react-dom. If you want to animate other targets, for instance react-native or whatever renderer you are using, refer to `/dist/universal`. You can still use the `native` keyword and create your own animated-components by calling into `animated`.
 
 ```jsx
 import { Spring, animated } from 'react-spring/dist/universal'
@@ -250,6 +248,8 @@ const AnimatedView = animated(View)
     {styles => <AnimatedView style={styles} />}
 </Spring>
 ```
+
+Some react targets do not support "request/cancelAnimationFrame." If that is the case you can [`import { Globals } from 'react/dist/universal'` and inject a fallback](https://github.com/drcmda/react-spring/blob/master/src/animated/Globals.js), for instance setTimeout/clearTimeout.
 
 # Links 🔗
 
