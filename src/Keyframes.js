@@ -12,7 +12,7 @@ export default class Keyframes extends React.Component {
 
   componentDidMount() {
     if (this.props.script) this.props.script(this.next)
-    this.UNSAFE_componentWillReceiveProps(this.props)
+    this.componentDidUpdate({})
   }
 
   next = (primitive, props) => {
@@ -26,20 +26,26 @@ export default class Keyframes extends React.Component {
     })
   }
 
-  UNSAFE_componentWillReceiveProps(props) {
-    const { states, state, primitive } = props
-    const localId = ++this.guid
-    if (states && state && primitive) {
-      const slots = states[state]
-      if (Array.isArray(slots)) {
-        let q = Promise.resolve()
-        for (let s of slots) {
-          q = q.then(() => localId === this.guid && this.next(primitive, s))
+  shouldComponentUpdate(prevProps, prevState) {
+    return prevProps.state !== this.props.state || prevState !== this.state
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.state !== this.props.state) {
+      const { states, state, primitive } = this.props
+      if (states && state && primitive) {
+        const localId = ++this.guid
+        const slots = states[state]
+        if (Array.isArray(slots)) {
+          let q = Promise.resolve()
+          for (let s of slots) {
+            q = q.then(() => localId === this.guid && this.next(primitive, s))
+          }
+        } else if (typeof slots === 'function') {
+          slots(props => localId === this.guid && this.next(primitive, props))
+        } else {
+          this.next(primitive, states[state])
         }
-      } else if (typeof slots === 'function') {
-        slots(props => localId === this.guid && this.next(primitive, props))
-      } else {
-        this.next(primitive, states[state])
       }
     }
   }

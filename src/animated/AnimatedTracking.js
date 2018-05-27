@@ -9,8 +9,6 @@ export default class AnimatedTracking extends Animated {
     this._animationConfig = animationConfig
     this._callback = callback
     this.__attach()
-
-    this._hey = 1
   }
 
   __getValue() {
@@ -25,7 +23,7 @@ export default class AnimatedTracking extends Animated {
     this._parent.__removeChild(this)
   }
 
-  update() {
+  update = throttle(() => {
     this._value.animate(
       new this._animationClass({
         ...this._animationConfig,
@@ -33,5 +31,16 @@ export default class AnimatedTracking extends Animated {
       }),
       this._callback
     )
+  }, 1000 / 30)
+}
+
+function throttle(callback, limit) {
+  var wait = false
+  return function() {
+    if (!wait) {
+      callback.call()
+      wait = true
+      setTimeout(() => (wait = false), limit)
+    }
   }
 }
