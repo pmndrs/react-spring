@@ -65,7 +65,7 @@ function createConfig(entry, out, name) {
 }
 
 export default [
-  ...createConfig('targets/web/index', 'dom', 'ReactSpring'),
+  ...createConfig('targets/web/index', 'web', 'ReactSpring'),
   ...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
   ...createConfig('targets/native/index', 'native'),
   ...createConfig('targets/universal/index', 'universal'),

@@ -13,7 +13,7 @@ import { Spring, ... } from 'react-spring'
 // React-native
 import { Spring, ... } from 'react-spring/dist/native'
 
-// And other target or platform
+// Any other target or platform
 import { Spring, ... } from 'react-spring/dist/universal'
 ```
 
