@@ -20,7 +20,7 @@ import { Spring, ... } from 'react-spring/dist/universal'
 * [What is it?](#what-is-it-)
 * [Why do we need yet another?](#why-do-we-need-yet-another-)
 * [Overview](#overview-)
-* [Render props, interpolation and native rendering](#render-props-interpolation-and-native-rendering-)
+* [Interpolation, render props and native rendering](#interpolation-render-props-and-native-rendering-)
 * [React-native and other targets](#react-native-and-other-targets-)
 * [Links](#links-)
 
@@ -191,23 +191,7 @@ const Container = Keyframes.Spring({
 </Container>
 ```
 
-# Render props, interpolation and native rendering 🚀
-
-### Render props
-
-The Api is driven by render props ([though we do expose imperative Api as well](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#imperative-api)). By principle we offer both `render` and `children` as well as prop forwardwing (unrecognized props will be spread over the receiving component).
-
-```jsx
-const Header = ({ children, bold, ...styles }) => (
-    <h1 style={styles}>
-        {bold ? <b>{children}</b> : children}
-    </h1>
-)
-
-<Spring render={Header} to={{ color: 'fuchsia' }} bold={this.state.bold}>
-    hello there
-</Spring>
-```
+# Interpolation, render props and native rendering 🚀
 
 ### Interpolation
 
@@ -225,6 +209,22 @@ You can interpolate almost everything, from numbers, colors (names, rgb, rgba, h
     vector: toggle ? [1,2,50,100] : [20,30,1,-100],
     height: toggle ? 'auto' : 0,
 }}>
+```
+
+### Render props
+
+The Api is driven by render props ([though we do expose imperative Api as well](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#imperative-api)). We offer both `render` and `children` as well as prop forwardwing (unrecognized props will be spread over the receiving component).
+
+```jsx
+const Header = ({ children, bold, ...styles }) => (
+    <h1 style={styles}>
+        {bold ? <b>{children}</b> : children}
+    </h1>
+)
+
+<Spring render={Header} to={{ color: 'fuchsia' }} bold={this.state.bold}>
+    hello there
+</Spring>
 ```
 
 ### Native rendering
