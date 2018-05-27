@@ -1,104 +1,12 @@
 {
-  "dist/react-spring.esm.js": {
-    "bundled": 79666,
-    "minified": 38287,
-    "gzipped": 11900,
-    "treeshaked": {
-      "rollup": 34233,
-      "webpack": 35219
-    }
-  },
-  "dist/react-spring.umd.js": {
-    "bundled": 86065,
-    "minified": 35305,
-    "gzipped": 11804
-  },
-  "dist/addons.esm.js": {
-    "bundled": 14232,
-    "minified": 6468,
-    "gzipped": 2217,
-    "treeshaked": {
-      "rollup": 2036,
-      "webpack": 2628
-    }
+  "dist/dom.umd.js": {
+    "bundled": 86825,
+    "minified": 35401,
+    "gzipped": 11857
   },
   "dist/addons.umd.js": {
     "bundled": 15720,
     "minified": 5853,
     "gzipped": 2141
-  },
-  "dist/react-spring-native.esm.js": {
-    "bundled": 62647,
-    "minified": 29347,
-    "gzipped": 9006,
-    "treeshaked": {
-      "rollup": 26114,
-      "webpack": 27008
-    }
-  },
-  "dist/react-spring-native.umd.js": {
-    "bundled": 68135,
-    "minified": 27112,
-    "gzipped": 9021
-  },
-  "dist/index.js": {
-    "bundled": 79666,
-    "minified": 38287,
-    "gzipped": 11900,
-    "treeshaked": {
-      "rollup": 34233,
-      "webpack": 35219
-    }
-  },
-  "dist/index.umd.js": {
-    "bundled": 86065,
-    "minified": 35305,
-    "gzipped": 11804
-  },
-  "dist/native.js": {
-    "bundled": 62647,
-    "minified": 29347,
-    "gzipped": 9006,
-    "treeshaked": {
-      "rollup": 26114,
-      "webpack": 27008
-    }
-  },
-  "dist/native.umd.js": {
-    "bundled": 68135,
-    "minified": 27112,
-    "gzipped": 9021
-  },
-  "dist/addons.js": {
-    "bundled": 14270,
-    "minified": 6491,
-    "gzipped": 2229,
-    "treeshaked": {
-      "rollup": 2079,
-      "webpack": 2671
-    }
-  },
-  "dist/dom.js": {
-    "bundled": 79991,
-    "minified": 38564,
-    "gzipped": 11986,
-    "treeshaked": {
-      "rollup": 34262,
-      "webpack": 35250
-    }
-  },
-  "dist/dom.umd.js": {
-    "bundled": 86575,
-    "minified": 35498,
-    "gzipped": 11882
-  },
-  "dist/universal.js": {
-    "bundled": 62425,
-    "minified": 29203,
-    "gzipped": 8968,
-    "treeshaked": {
-      "rollup": 25133,
-      "webpack": 25997
-    }
   }
 }

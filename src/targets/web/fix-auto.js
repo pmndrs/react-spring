@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AnimatedValue from '../../AnimatedValue'
+import AnimatedValue from '../../animated/AnimatedValue'
 
 const getValues = object => Object.keys(object).map(k => object[k])
 const check = value => value === 'auto'

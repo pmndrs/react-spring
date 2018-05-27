@@ -5,7 +5,6 @@ import AnimatedValue from './animated/AnimatedValue'
 import AnimatedArray from './animated/AnimatedArray'
 import AnimatedProps from './animated/AnimatedProps'
 import SpringAnimation from './animated/SpringAnimation'
-import { colorNames } from './normalize-css-color/index'
 import * as Globals from './animated/Globals'
 
 export const config = {
@@ -108,7 +107,9 @@ export default class Spring extends React.PureComponent {
 
       let isNumber = typeof value === 'number'
       let isString =
-        typeof value === 'string' && !/\d/.test(value) && !colorNames[value]
+        typeof value === 'string' &&
+        !/\d/.test(value) &&
+        !Globals.colorNames[value]
       let isArray = !isNumber && !isString && Array.isArray(value)
       let fromValue = from[name] !== undefined ? from[name] : value
       let fromAnimated = fromValue instanceof AnimatedValue

@@ -1,16 +1,11 @@
-import { normalizeColor, colorNames } from '../../normalize-css-color/index.js'
+const linear = t => t
 
-var linear = t => t
-
-/**
- * Very handy helper to map input ranges to output ranges with an easing
- * function and custom behavior outside of the ranges.
- */
 export default class Interpolation {
   static create(config) {
     if (typeof config === 'function') return (...args) => config(...args)
     if (config.output && typeof config.output[0] === 'string')
       return createInterpolationFromStringOutputRange(config)
+
     var outputRange = config.output
     var inputRange = config.range
     var easing = config.easing || linear
@@ -24,7 +19,6 @@ export default class Interpolation {
     }
 
     var extrapolateRight = 'extend'
-
     if (config.extrapolateRight !== undefined) {
       extrapolateRight = config.extrapolateRight
     } else if (config.extrapolate !== undefined) {
@@ -108,68 +102,24 @@ function interpolate(
   return result
 }
 
-function colorToRgba(input) {
-  var int32Color = normalizeColor(input)
-  if (int32Color === null) return input
-  int32Color = int32Color || 0 // $FlowIssue
-  var r = (int32Color & 0xff000000) >>> 24
-  var g = (int32Color & 0x00ff0000) >>> 16
-  var b = (int32Color & 0x0000ff00) >>> 8
-  var a = (int32Color & 0x000000ff) / 255
-  return `rgba(${r}, ${g}, ${b}, ${a})`
-}
-
 // Problem: https://github.com/animatedjs/animated/pull/102
 // Solution: https://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly/658662
 var stringShapeRegex = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
 
-// Covers rgb, rgba, hsl, hsla
-// Taken from https://gist.github.com/olmokramer/82ccce673f86db7cda5e
-var colorRegex = /(#[\d\w]+|\w+\((?:\d+%?(?:,\s)*){3}(?:\d*\.?\d+)?\))/
-// Covers color names (transparent, blue, etc.)
-var colorNamesRegex = new RegExp(`(${Object.keys(colorNames).join('|')})`, 'g')
-
 /**
  * Supports string shapes by extracting numbers so new values can be computed,
- * and recombines those values into new strings of the same shape.  Supports
- * things like:
- *
- *   rgba(123, 42, 99, 0.36)           // colors
- *   0 2px 2px 0px rgba(0, 0, 0, 0.12) // box shadows
- *   -45deg                            // values with units
+ * and recombines those values into new strings of the same shape.
  */
 function createInterpolationFromStringOutputRange(config) {
-  var outputRange = config.output
-  // Replace colors with rgba
-  outputRange = outputRange
-    .map(rangeValue => rangeValue.replace(colorRegex, colorToRgba))
-    .map(rangeValue => rangeValue.replace(colorNamesRegex, colorToRgba))
-
-  // ->
-  // [
-  //   [0, 50],
-  //   [100, 150],
-  //   [200, 250],
-  //   [0, 0.5],
-  // ]
-
-  /* $FlowFixMe(>=0.18.0): `outputRange[0].match()` can return `null`. Need to
-   * guard against this possibility.
-   */
-  var outputRanges = outputRange[0].match(stringShapeRegex).map(() => [])
+  const outputRange = config.output
+  const outputRanges = outputRange[0].match(stringShapeRegex).map(() => [])
   outputRange.forEach(value => {
-    /* $FlowFixMe(>=0.18.0): `value.match()` can return `null`. Need to guard
-     * against this possibility.
-     */
     value
       .match(stringShapeRegex)
       .forEach((number, i) => outputRanges[i].push(+number))
   })
 
-  /* $FlowFixMe(>=0.18.0): `outputRange[0].match()` can return `null`. Need to
-     * guard against this possibility.
-     */
-  var interpolations = outputRange[0]
+  const interpolations = outputRange[0]
     .match(stringShapeRegex)
     .map((value, i) => {
       return Interpolation.create({ ...config, output: outputRanges[i] })
@@ -177,21 +127,8 @@ function createInterpolationFromStringOutputRange(config) {
 
   return input => {
     var i = 0
-    return (
-      outputRange[0]
-        // 'rgba(0, 100, 200, 0)'
-        // ->
-        // 'rgba(${interpolations[0](input)}, ${interpolations[1](input)}, ...'
-        .replace(stringShapeRegex, () => interpolations[i++](input))
-        // rgba requires that the r,g,b are integers.... so we want to round them, but we *dont* want to
-        // round the opacity (4th column).
-        .replace(
-          /rgba\(([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+)\)/gi,
-          (_, p1, p2, p3, p4) =>
-            `rgba(${Math.round(p1)}, ${Math.round(p2)}, ${Math.round(
-              p3
-            )}, ${p4})`
-        )
+    return outputRange[0].replace(stringShapeRegex, () =>
+      interpolations[i++](input)
     )
   }
 }

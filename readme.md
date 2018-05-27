@@ -4,13 +4,26 @@
 
     npm install react-spring
 
+# How to use
+
+```jsx
+// React-dom
+import { Spring, ... } from 'react-spring'
+
+// React-native
+import { Spring, ... } from 'react-spring/dist/native'
+
+// And other target or platform
+import { Spring, ... } from 'react-spring/dist/universal'
+```
+
 # Table of Contents 👇
 
 * [What is it?](#what-is-it-)
 * [Why do we need yet another?](#why-do-we-need-yet-another-)
 * [Overview](#overview-)
 * [Render props, interpolation and native rendering](#render-props-interpolation-and-native-rendering-)
-* [React-dom, react-native and other targets](#react-dom-react-native-and-other-targets-)
+* [React-native and other targets](#react-native-and-other-targets-)
 * [Links](#links-)
 
 # What is it? 🤔
@@ -54,8 +67,6 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 | React-spring   | ✅          | ✅         | ✅             | ✅          |
 
 react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
-
-This library works on the web and [on any other react platform](#react-dom-react-native-and-other-targets-), including react-native.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
@@ -234,12 +245,14 @@ import { Spring, animated } from 'react-spring'
 
 More about native rendering and interpolation [here](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#native-rendering-and-interpolation-demo).
 
-# React-dom, react-native and other targets 🎒
+# React-native and other targets 🎒
 
-The default export points to react-dom. If you want to animate other targets, for instance react-native or whatever renderer you are using, refer to `/dist/universal`. You can still use the `native` keyword and create your own animated-components by calling into `animated`.
+The default export points to react-dom. If you want to animate react-native refer to `/dist/native`, and `/dist/universal` for any other target. Each target defines platform specific constants (colors, units, etc.). The universal target is the least specific.
+
+In react-native you can still use the `native` keyword for more performance, create your own animated-components by calling into the `animated` function.
 
 ```jsx
-import { Spring, animated } from 'react-spring/dist/universal'
+import { Spring, animated } from 'react-spring/dist/native'
 import { View } from 'react-native'
 
 const AnimatedView = animated(View)
@@ -248,8 +261,6 @@ const AnimatedView = animated(View)
     {styles => <AnimatedView style={styles} />}
 </Spring>
 ```
-
-Some react targets do not support "request/cancelAnimationFrame." If that is the case you can `import { Globals } from 'react/dist/universal'` and [inject a fallback](https://github.com/drcmda/react-spring/blob/master/src/animated/Globals.js), for instance setTimeout/clearTimeout.
 
 # Links 🔗
 

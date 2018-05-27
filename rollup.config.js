@@ -31,7 +31,7 @@ function createConfig(entry, out, name) {
       output: { file: `dist/${out}.js`, format: 'esm' },
       external,
       plugins: [
-        babel(getBabelOptions({ useESModules: true })) /*sizeSnapshot()*/,
+        babel(getBabelOptions({ useESModules: true })) /*, sizeSnapshot()*/,
       ],
     },
     {
@@ -65,7 +65,8 @@ function createConfig(entry, out, name) {
 }
 
 export default [
-  ...createConfig('dom', 'dom', 'ReactSpring'),
-  ...createConfig('universal', 'universal'),
+  ...createConfig('targets/web/index', 'dom', 'ReactSpring'),
   ...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
+  ...createConfig('targets/native/index', 'native'),
+  ...createConfig('targets/universal/index', 'universal'),
 ]
