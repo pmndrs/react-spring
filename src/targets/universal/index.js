@@ -9,8 +9,9 @@ import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
 import Interpolation from './Interpolation'
 
+// Render 30/fps by defaulr
+Globals.injectFrame(cb => setTimeout(cb, 1000 / 30), r => clearTimeout(r))
 Globals.injectInterpolation(Interpolation)
-Globals.injectFrame(cb => setTimeout(cb, 1), r => clearTimeout(r))
 Globals.injectApplyAnimatedValues(() => false, style => style)
 
 export {
