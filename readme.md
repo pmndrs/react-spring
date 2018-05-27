@@ -4,8 +4,6 @@
 
     npm install react-spring
 
-# How to use
-
 ```jsx
 // React-dom
 import { Spring, ... } from 'react-spring'
