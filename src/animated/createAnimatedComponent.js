@@ -61,14 +61,8 @@ export default function createAnimatedComponent(Component) {
     }
 
     render() {
-      const { style, ...other } = this._propsAnimated.__getValue()
-      return (
-        <Component
-          {...other}
-          style={Globals.applyAnimatedValues.transform(style)}
-          ref={node => (this.node = node)}
-        />
-      )
+      const props = this._propsAnimated.__getValue()
+      return <Component {...props} ref={node => (this.node = node)} />
     }
   }
 }

@@ -11,13 +11,14 @@ import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
 import Interpolation from '../web/Interpolation'
 import { colorNames } from '../web/constants'
+import AnimatedTransform from './AnimatedTransform'
 
 Globals.injectInterpolation(Interpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectApplyAnimatedValues(
   (instance, props) =>
     instance.setNativeProps ? instance.setNativeProps(props) : false,
-  style => style
+  style => ({ ...style, transform: new AnimatedTransform(style.transform) })
 )
 
 export {
