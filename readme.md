@@ -228,7 +228,7 @@ You can interpolate almost everything, from numbers, colors (names, rgb, rgba, h
 
 # Render props ⛑
 
-The Api is driven by render props ([though we do expose imperative Api as well](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#imperative-api)). We offer both `render` and `children` as well as prop forwardwing (unrecognized props will be spread over the receiving component).
+The Api is driven by render props ([though we do expose imperative Api as well](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#imperative-api)). We offer both `render` and `children` as well as prop forwardwing (unrecognized props will be spread over the receiving component). You can use it like always (all the above examples), or in various patterns, for instance higher-order-render-props:
 
 ```jsx
 const Header = ({ children, bold, ...styles }) => (
