@@ -1,7 +1,5 @@
 [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring)
 
-# Installation 🖥
-
     npm install react-spring
 
 ```jsx
