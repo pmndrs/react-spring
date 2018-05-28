@@ -194,8 +194,6 @@ If you need to track a single child, that is also possible:
 </Transition>
 ```
 
-**Important:** Since you do not provide keys in these two scenarios you **must** move you component out instead of creating it inside the render function. If you create your function instead of referring to it, then React will treat it as a new child, it will start unmounting/mounting even if your state remains the same. That will cause duplicated keys which will confuse both Transition and React.
-
 ### Trails/Staggered transitions
 
 `Trail` animates the first child of the list you pass, the others will follow in a trailing motion. The api is similar to `Transition` though it will assume your list is fixed.
