@@ -19,10 +19,10 @@ import { Spring, ... } from 'react-spring/dist/universal'
 
 * [What is it?](#what-is-it-)
 * [Why do we need yet another?](#why-do-we-need-yet-another-)
+* [Links](#links-)
 * [Overview](#overview-)
 * [Interpolation, render props and native rendering](#interpolation-render-props-and-native-rendering-)
 * [React-native and other targets](#react-native-and-other-targets-)
-* [Links](#links-)
 
 # What is it? 🤔
 
@@ -67,6 +67,21 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
+
+
+# Links 🔗
+
+#### [Examples and Codesandboxes](https://github.com/drcmda/react-spring/blob/master/examples)
+
+Click for a combined example repository you can install as well as a collection of code-sandboxes to toy around with online.
+
+#### [API Overview](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md)
+
+If you ever plan to use this library, this should be a must-read. It will go a little deeper into the primitives and how `native` rendering can make a large performance impact.
+
+#### [Full API reference](https://github.com/drcmda/react-spring/blob/master/API.md)
+
+For annotated prop-types, good for finding out about all the obscure props that i don't want to bore you with (but which might come in handy, you never know).
 
 # Overview 🔭
 
@@ -260,18 +275,6 @@ const AnimatedView = animated(View)
 </Spring>
 ```
 
-# Links 🔗
-
-#### [Examples and Codesandboxes](https://github.com/drcmda/react-spring/blob/master/examples)
-
-Click for a combined example repository you can install as well as a collection of code-sandboxes to toy around with online.
-
-#### [API Overview](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md)
-
-If you ever plan to use this library, this should be a must-read. It will go a little deeper into the primitives and how "native" rendering can make a large performance impact (for the better of course).
-
-#### [Full API reference](https://github.com/drcmda/react-spring/blob/master/API.md)
-
-For annotated prop-types, good for finding out about all the obscure props that i don't want to bore you with (but which might come in handy, you never know).
+---
 
 [Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md) | [LICENSE](https://github.com/drcmda/react-spring/blob/master/LICENSE)
