@@ -108,6 +108,7 @@ export default class Spring extends React.PureComponent {
       let isNumber = typeof value === 'number'
       let isString =
         typeof value === 'string' &&
+        !value.startsWith('#') &&
         !/\d/.test(value) &&
         !Globals.colorNames[value]
       let isArray = !isNumber && !isString && Array.isArray(value)
