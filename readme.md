@@ -21,7 +21,9 @@ import { Spring, ... } from 'react-spring/dist/universal'
 * [Why do we need yet another?](#why-do-we-need-yet-another-)
 * [Links](#links-)
 * [Overview](#overview-)
-* [Interpolation, render props and native rendering](#interpolation-render-props-and-native-rendering-)
+* [Interpolation](#interpolation-render-props-and-native-rendering-)
+* [Render props](#render-props-)
+* [Native rendering](#native-rendering-)
 * [React-native and other targets](#react-native-and-other-targets-)
 
 # What is it? 🤔
@@ -206,9 +208,7 @@ const Container = Keyframes.Spring({
 </Container>
 ```
 
-# Interpolation, render props and native rendering 🚀
-
-### Interpolation
+# Interpolation 🎛
 
 You can interpolate almost everything, from numbers, colors (names, rgb, rgba, hsl, hsla), paths (as long as the number of points match, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om)), percentages, units, arrays and string patterns. Even `auto` is valid.
 
@@ -226,7 +226,7 @@ You can interpolate almost everything, from numbers, colors (names, rgb, rgba, h
 }}>
 ```
 
-### Render props
+# Render props ⛑
 
 The Api is driven by render props ([though we do expose imperative Api as well](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#imperative-api)). We offer both `render` and `children` as well as prop forwardwing (unrecognized props will be spread over the receiving component).
 
@@ -242,7 +242,7 @@ const Header = ({ children, bold, ...styles }) => (
 </Spring>
 ```
 
-### Native rendering
+# Native rendering 🚀
 
 | ![img](assets/without-native.jpeg)                                                                                                                                                                                        | ![img](assets/with-native.jpeg)                                                                                                                                                                                         |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
