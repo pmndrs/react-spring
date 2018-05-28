@@ -119,12 +119,6 @@ function colorToRgba(input) {
 // Solution: https://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly/658662
 var stringShapeRegex = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
 
-// Covers rgb, rgba, hsl, hsla
-// Taken from https://gist.github.com/olmokramer/82ccce673f86db7cda5e
-var colorRegex = /(#[\d\w]+|\w+\((?:\d+%?(?:,\s)*){3}(?:\d*\.?\d+)?\))/
-// Covers color names (transparent, blue, etc.)
-var colorNamesRegex = new RegExp(`(${Object.keys(colorNames).join('|')})`, 'g')
-
 /**
  * Supports string shapes by extracting numbers so new values can be computed,
  * and recombines those values into new strings of the same shape.  Supports
@@ -135,11 +129,7 @@ var colorNamesRegex = new RegExp(`(${Object.keys(colorNames).join('|')})`, 'g')
  *   -45deg                            // values with units
  */
 function createInterpolationFromStringOutputRange(config) {
-  var outputRange = config.output
-  // Replace colors with rgba
-  outputRange = outputRange
-    .map(rangeValue => rangeValue.replace(colorRegex, colorToRgba))
-    .map(rangeValue => rangeValue.replace(colorNamesRegex, colorToRgba))
+  var outputRange = config.output.map(colorToRgba)
 
   // ->
   // [
