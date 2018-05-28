@@ -182,7 +182,7 @@ import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 
 <img src="assets/keyframes-trail.gif" width="285" />
 
-`Keyframes` allow you to create animation primitives that react to predefined animations. Each slot can return raw-properties, arrays, or async functions with side-effects. The resulting primitive can receive properties like `native` or `from`, etc.
+`Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots. The resulting primitive behaves like the primitive it stems from, it can receive all generic properties like `native` or `from`, etc. You make it animate by passing the `state` props, which receives the named slot.
 
 ```jsx
 import { Keyframes, config } from 'react-spring'
@@ -191,9 +191,9 @@ import { Keyframes, config } from 'react-spring'
 const Container = Keyframes.Spring({
     // Single props
     show: { to: { opacity: 1 } },
-    // Array-chans
+    // Chained animations (arrays)
     showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
-    // Functions
+    // Functions with side-effects
     wiggle: async call => {
         await call({ to: { x: 100 }, config: config.wobbly })
         await delay(1000)
