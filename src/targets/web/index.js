@@ -207,8 +207,7 @@ Object.keys(isUnitlessNumber).forEach(function(prop) {
 })
 
 function dangerousStyleValue(name, value, isCustomProperty) {
-  var isEmpty = value == null || typeof value === 'boolean' || value === ''
-  if (isEmpty) return ''
+  if (value == null || typeof value === 'boolean' || value === '') return ''
   if (
     !isCustomProperty &&
     typeof value === 'number' &&
@@ -220,42 +219,32 @@ function dangerousStyleValue(name, value, isCustomProperty) {
   return ('' + value).trim()
 }
 
-function setValueForStyles(node, styles) {
-  let style = node.style
-  for (let styleName in styles) {
-    if (!styles.hasOwnProperty(styleName)) continue
-    var isCustomProperty = styleName.indexOf('--') === 0
-    var styleValue = dangerousStyleValue(
-      styleName,
-      styles[styleName],
-      isCustomProperty
-    )
-    if (styleName === 'float') styleName = 'cssFloat'
-    if (isCustomProperty) style.setProperty(styleName, styleValue)
-    else style[styleName] = styleValue
-  }
-}
-
-function setValueForAttributes(node, props) {
-  let attribute, value
-  for (let name in props) {
-    if (name !== 'style') {
-      value = props[name]
-      attribute = node.getAttribute(name)
-      if (attribute) node.setAttribute(name, value)
-    }
-  }
-}
-
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectBugfixes(fixAuto)
 Globals.injectApplyAnimatedValues((instance, props) => {
-  if (instance.setNativeProps) {
-    instance.setNativeProps(props)
-  } else if (instance.nodeType && instance.setAttribute !== undefined) {
-    setValueForStyles(instance, props.style)
-    setValueForAttributes(instance, props)
+  if (instance.nodeType && instance.setAttribute !== undefined) {
+    const { style, ...attributes } = props
+
+    // Set styles ...
+    for (let styleName in style) {
+      if (!style.hasOwnProperty(styleName)) continue
+      var isCustomProperty = styleName.indexOf('--') === 0
+      var styleValue = dangerousStyleValue(
+        styleName,
+        style[styleName],
+        isCustomProperty
+      )
+      if (styleName === 'float') styleName = 'cssFloat'
+      if (isCustomProperty) instance.style.setProperty(styleName, styleValue)
+      else instance.style[styleName] = styleValue
+    }
+
+    // Set attributes ...
+    for (let name in attributes) {
+      if (instance.getAttribute(name))
+        instance.setAttribute(name, attributes[name])
+    }
   } else return false
 }, style => style)
 
