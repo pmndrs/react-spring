@@ -9,11 +9,11 @@ import Spring, { config } from '../../Spring'
 import Transition from '../../Transition'
 import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
-import Interpolation from '../web/Interpolation'
-import { colorNames } from '../web/constants'
+import createInterpolation from '../shared/interpolation'
+import colorNames from '../shared/colors'
 import AnimatedTransform from './AnimatedTransform'
 
-Globals.injectInterpolation(Interpolation)
+Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectApplyAnimatedValues(
   (instance, props) =>

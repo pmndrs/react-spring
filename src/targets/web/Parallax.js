@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import controller from './animated/AnimatedController'
-import AnimatedValue from './animated/AnimatedValue'
-import createAnimatedComponent from './animated/createAnimatedComponent'
-import SpringAnimation from './animated/SpringAnimation'
-import { config } from './Spring'
+import controller from '../../animated/AnimatedController'
+import AnimatedValue from '../../animated/AnimatedValue'
+import createAnimatedComponent from '../../animated/createAnimatedComponent'
+import SpringAnimation from '../../animated/SpringAnimation'
+import { config } from '../../Spring'
 
 const AnimatedDiv = createAnimatedComponent('div')
 const { Provider, Consumer } = React.createContext(null)

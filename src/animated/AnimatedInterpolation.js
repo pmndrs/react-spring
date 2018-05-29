@@ -1,12 +1,12 @@
 import Animated from './Animated'
 import AnimatedWithChildren from './AnimatedWithChildren'
-import * as Globals from './Globals'
+import Interpolation from './Interpolation'
 
 export default class AnimatedInterpolation extends AnimatedWithChildren {
   constructor(parents, config) {
     super()
     this._parents = Array.isArray(parents) ? parents : [parents]
-    this._interpolation = Globals.Interpolation.create(config)
+    this._interpolation = Interpolation.create(config)
   }
 
   __getValue() {

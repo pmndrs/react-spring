@@ -1,11 +1,16 @@
+import * as Globals from './Globals'
+
 const linear = t => t
 
 export default class Interpolation {
   static create(config) {
     if (typeof config === 'function') return (...args) => config(...args)
-    if (config.output && typeof config.output[0] === 'string')
-      return createInterpolationFromStringOutputRange(config)
-
+    if (
+      Globals.interpolation &&
+      config.output &&
+      typeof config.output[0] === 'string'
+    )
+      return Globals.interpolation(config)
     var outputRange = config.output
     var inputRange = config.range
     var easing = config.easing || linear
@@ -100,37 +105,6 @@ function interpolate(
     result = result * (outputMax - outputMin) + outputMin
   }
   return result
-}
-
-// Problem: https://github.com/animatedjs/animated/pull/102
-// Solution: https://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly/658662
-var stringShapeRegex = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
-
-/**
- * Supports string shapes by extracting numbers so new values can be computed,
- * and recombines those values into new strings of the same shape.
- */
-function createInterpolationFromStringOutputRange(config) {
-  const outputRange = config.output
-  const outputRanges = outputRange[0].match(stringShapeRegex).map(() => [])
-  outputRange.forEach(value => {
-    value
-      .match(stringShapeRegex)
-      .forEach((number, i) => outputRanges[i].push(+number))
-  })
-
-  const interpolations = outputRange[0]
-    .match(stringShapeRegex)
-    .map((value, i) => {
-      return Interpolation.create({ ...config, output: outputRanges[i] })
-    })
-
-  return input => {
-    var i = 0
-    return outputRange[0].replace(stringShapeRegex, () =>
-      interpolations[i++](input)
-    )
-  }
 }
 
 function findRange(input, inputRange) {

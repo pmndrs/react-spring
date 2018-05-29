@@ -32,14 +32,15 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import { colorNames } from './constants'
+import colorNames from './colors'
 
-export function normalizeColor(color) {
-  var match
+export default function normalizeColor(color) {
+  let match
 
   if (typeof color === 'number') {
-    if (color >>> 0 === color && color >= 0 && color <= 0xffffffff) return color
-    return null
+    return color >>> 0 === color && color >= 0 && color <= 0xffffffff
+      ? color
+      : null
   }
 
   // Ordered based on occurrences on Facebook codebase
@@ -84,9 +85,7 @@ export function normalizeColor(color) {
   }
 
   // https://drafts.csswg.org/css-color-4/#hex-notation
-  if ((match = matchers.hex8.exec(color))) {
-    return parseInt(match[1], 16) >>> 0
-  }
+  if ((match = matchers.hex8.exec(color))) return parseInt(match[1], 16) >>> 0
 
   if ((match = matchers.hex4.exec(color))) {
     return (
@@ -140,11 +139,11 @@ function hue2rgb(p, q, t) {
 }
 
 function hslToRgb(h, s, l) {
-  var q = l < 0.5 ? l * (1 + s) : l + s - l * s
-  var p = 2 * l - q
-  var r = hue2rgb(p, q, h + 1 / 3)
-  var g = hue2rgb(p, q, h)
-  var b = hue2rgb(p, q, h - 1 / 3)
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+  const p = 2 * l - q
+  const r = hue2rgb(p, q, h + 1 / 3)
+  const g = hue2rgb(p, q, h)
+  const b = hue2rgb(p, q, h - 1 / 3)
   return (
     (Math.round(r * 255) << 24) |
     (Math.round(g * 255) << 16) |
@@ -153,8 +152,8 @@ function hslToRgb(h, s, l) {
 }
 
 // var INTEGER = '[-+]?\\d+';
-var NUMBER = '[-+]?\\d*\\.?\\d+'
-var PERCENTAGE = NUMBER + '%'
+const NUMBER = '[-+]?\\d*\\.?\\d+'
+const PERCENTAGE = NUMBER + '%'
 
 function toArray(arrayLike) {
   return Array.prototype.slice.call(arrayLike, 0)
@@ -176,19 +175,19 @@ var matchers = {
 }
 
 function parse255(str) {
-  var int = parseInt(str, 10)
+  const int = parseInt(str, 10)
   if (int < 0) return 0
   if (int > 255) return 255
   return int
 }
 
 function parse360(str) {
-  var int = parseFloat(str)
+  const int = parseFloat(str)
   return ((int % 360 + 360) % 360) / 360
 }
 
 function parse1(str) {
-  var num = parseFloat(str)
+  const num = parseFloat(str)
   if (num < 0) return 0
   if (num > 1) return 255
   return Math.round(num * 255)
@@ -196,7 +195,7 @@ function parse1(str) {
 
 function parsePercentage(str) {
   // parseFloat conveniently ignores the final %
-  var int = parseFloat(str, 10)
+  const int = parseFloat(str, 10)
   if (int < 0) return 0
   if (int > 100) return 1
   return int / 100
