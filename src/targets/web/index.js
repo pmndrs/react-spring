@@ -1,3 +1,4 @@
+import './globals'
 import * as Globals from '../../animated/Globals'
 import Animation from '../../animated/Animation'
 import AnimatedValue from '../../animated/AnimatedValue'
@@ -9,55 +10,7 @@ import Spring, { config } from '../../Spring'
 import Transition from '../../Transition'
 import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
-import fixAuto from './fix-auto'
 import Parallax, { ParallaxLayer } from './Parallax'
-import colorNames from '../shared/colors'
-import createInterpolation from '../shared/interpolation'
-
-const isUnitlessNumber = {
-  animationIterationCount: true,
-  borderImageOutset: true,
-  borderImageSlice: true,
-  borderImageWidth: true,
-  boxFlex: true,
-  boxFlexGroup: true,
-  boxOrdinalGroup: true,
-  columnCount: true,
-  columns: true,
-  flex: true,
-  flexGrow: true,
-  flexPositive: true,
-  flexShrink: true,
-  flexNegative: true,
-  flexOrder: true,
-  gridRow: true,
-  gridRowEnd: true,
-  gridRowSpan: true,
-  gridRowStart: true,
-  gridColumn: true,
-  gridColumnEnd: true,
-  gridColumnSpan: true,
-  gridColumnStart: true,
-  fontWeight: true,
-  lineClamp: true,
-  lineHeight: true,
-  opacity: true,
-  order: true,
-  orphans: true,
-  tabSize: true,
-  widows: true,
-  zIndex: true,
-  zoom: true,
-  // SVG-related properties
-  fillOpacity: true,
-  floodOpacity: true,
-  stopOpacity: true,
-  strokeDasharray: true,
-  strokeDashoffset: true,
-  strokeMiterlimit: true,
-  strokeOpacity: true,
-  strokeWidth: true,
-}
 
 const domElements = [
   'a',
@@ -173,7 +126,8 @@ const domElements = [
   'ul',
   'var',
   'video',
-  'wbr', // SVG
+  'wbr',
+  // SVG
   'circle',
   'clipPath',
   'defs',
@@ -195,58 +149,6 @@ const domElements = [
   'text',
   'tspan',
 ]
-
-const prefixKey = (prefix, key) =>
-  prefix + key.charAt(0).toUpperCase() + key.substring(1)
-const prefixes = ['Webkit', 'Ms', 'Moz', 'O']
-
-Object.keys(isUnitlessNumber).forEach(function(prop) {
-  prefixes.forEach(function(prefix) {
-    isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop]
-  })
-})
-
-function dangerousStyleValue(name, value, isCustomProperty) {
-  if (value == null || typeof value === 'boolean' || value === '') return ''
-  if (
-    !isCustomProperty &&
-    typeof value === 'number' &&
-    value !== 0 &&
-    !(isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name])
-  )
-    return value + 'px'
-  // Presumes implicit 'px' suffix for unitless numbers
-  return ('' + value).trim()
-}
-
-Globals.injectInterpolation(createInterpolation)
-Globals.injectColorNames(colorNames)
-Globals.injectBugfixes(fixAuto)
-Globals.injectApplyAnimatedValues((instance, props) => {
-  if (instance.nodeType && instance.setAttribute !== undefined) {
-    const { style, ...attributes } = props
-
-    // Set styles ...
-    for (let styleName in style) {
-      if (!style.hasOwnProperty(styleName)) continue
-      var isCustomProperty = styleName.indexOf('--') === 0
-      var styleValue = dangerousStyleValue(
-        styleName,
-        style[styleName],
-        isCustomProperty
-      )
-      if (styleName === 'float') styleName = 'cssFloat'
-      if (isCustomProperty) instance.style.setProperty(styleName, styleValue)
-      else instance.style[styleName] = styleValue
-    }
-
-    // Set attributes ...
-    for (let name in attributes) {
-      if (instance.getAttribute(name))
-        instance.setAttribute(name, attributes[name])
-    }
-  } else return false
-}, style => style)
 
 const elements = domElements.reduce(
   (acc, element) => ({ ...acc, [element]: animated(element) }),

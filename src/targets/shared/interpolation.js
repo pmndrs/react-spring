@@ -23,7 +23,6 @@ const stringShapeRegex = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
  * things like:
  *
  *   rgba(123, 42, 99, 0.36)           // colors
- *   0 2px 2px 0px rgba(0, 0, 0, 0.12) // box shadows
  *   -45deg                            // values with units
  */
 export default function createInterpolation(config) {
@@ -37,43 +36,23 @@ export default function createInterpolation(config) {
   //   [0, 0.5],
   // ]
 
-  /* $FlowFixMe(>=0.18.0): `outputRange[0].match()` can return `null`. Need to
-     * guard against this possibility.
-     */
   const outputRanges = outputRange[0].match(stringShapeRegex).map(() => [])
   outputRange.forEach(value => {
-    /* $FlowFixMe(>=0.18.0): `value.match()` can return `null`. Need to guard
-       * against this possibility.
-       */
     value
       .match(stringShapeRegex)
       .forEach((number, i) => outputRanges[i].push(+number))
   })
-
-  /* $FlowFixMe(>=0.18.0): `outputRange[0].match()` can return `null`. Need to
-       * guard against this possibility.
-       */
   const interpolations = outputRange[0]
     .match(stringShapeRegex)
     .map((value, i) => {
       return Interpolation.create({ ...config, output: outputRanges[i] })
     })
-
+  const shouldRound = /^rgb/.test(outputRange[0])
   return input => {
     let i = 0
-    return (
-      outputRange[0]
-        // 'rgba(0, 100, 200, 0)'
-        // ->
-        // 'rgba(${interpolations[0](input)}, ${interpolations[1](input)}, ...'
-        .replace(stringShapeRegex, () => interpolations[i++](input))
-        // rgba requires that the r,g,b are integers.... so we want to round them, but we *dont* want to
-        // round the opacity (4th column).
-        .replace(
-          /rgba\(([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+)\)/gi,
-          (_, r, g, b, a) =>
-            `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${a})`
-        )
-    )
+    return outputRange[0].replace(stringShapeRegex, () => {
+      const val = interpolations[i++](input)
+      return String(shouldRound && i < 4 ? Math.round(val) : val)
+    })
   }
 }

@@ -22,11 +22,9 @@ function createInterpolation(config) {
   })
   const interpolations = outputRange[0]
     .match(stringShapeRegex)
-    .map((value, i) => {
-      return Interpolation.create({ ...config, output: outputRanges[i] })
-    })
+    .map((_, i) => Interpolation.create({ ...config, output: outputRanges[i] }))
   return input => {
-    var i = 0
+    let i = 0
     return outputRange[0].replace(stringShapeRegex, () =>
       interpolations[i++](input)
     )
