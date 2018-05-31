@@ -82,7 +82,7 @@ declare module 'react-spring' {
 
   export class Spring<
     S extends object,
-    DS extends object,
+    DS extends object
   > extends PureComponent<SpringProps<S, DS>> {}
 
   export function interpolate(
