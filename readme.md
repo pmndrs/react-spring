@@ -254,7 +254,7 @@ import { Spring, animated } from 'react-spring'
 </Spring>
 ```
 
-More about native rendering and interpolation [here](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#native-rendering-and-interpolation-demo).
+Native rendering comes with a few caveats you should know about before using it, more about that [here](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#native-rendering-and-interpolation-demo). Try going native in all situations where you can, the benefits are worth it!
 
 # React-native and other targets 🎒
 
