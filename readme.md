@@ -173,7 +173,7 @@ import { Parallax, ParallaxLayer } from 'react-spring'
 You'll find varying implementations under [/dist/addons](https://github.com/drcmda/react-spring/tree/master/src/addons). For now there's a time-based animation as well common [easings](https://github.com/drcmda/react-spring/blob/master/src/addons/Easing.js), and IOS'es harmonic oscillator spring. All primitives understand the `impl` property which you can use to switch implementations.
 
 ```jsx
-import { TimingAnimation, Easing } from 'react-spring/dist/addons'
+import { TimingAnimation, Easing } from 'react-spring/dist/addons.cjs'
 
 <Spring impl={TimingAnimation} config={{ duration: 1000, easing: Easing.linear }} ...>
 ```
