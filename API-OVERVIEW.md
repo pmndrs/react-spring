@@ -37,7 +37,7 @@ react-spring is one of the few libs that understands and animates `auto`, so you
 <Spring from={{ height: 0 }} to={{ height: 'auto' }}>
 ```
 
-But keep in mind that in order to do this we have to measure out a snapshot of the view as it appears with height/width set to `auto` before being able to start animating it. This comes with a couple of caveats. We can't just render it once where it's at, or else it will create a small flicker as it pushes other elements away and creates paint-cycles. We set it to `position: absolute` or `visibility: hidden`, which retains the box model, but browsers being browsers, it can have differences. If you notice that the measured bounds are wrong, give your element a few hints, like `width: 100%` or whatever it needs to maintain bounds when set to absolute.
+But keep in mind that in order to do this we have to measure out a snapshot set to `height/width: auto` before we can start animating it. If you notice that the measured bounds are wrong, give your view more context, for instance set the display attribute of the parent container to either `absolute` or `relative` so that the view retains bounds.
 
 ### Render props
 
