@@ -7,6 +7,12 @@ import AnimatedProps from './animated/AnimatedProps'
 import SpringAnimation from './animated/SpringAnimation'
 import * as Globals from './animated/Globals'
 
+function shallowDiff(a, b) {
+  for (let i in a) if (!(i in b)) return true
+  for (let i in b) if (a[i] !== b[i]) return true
+  return false
+}
+
 export const config = {
   default: { tension: 170, friction: 26 },
   gentle: { tension: 120, friction: 14 },
@@ -21,7 +27,7 @@ const convert = (acc, [name, value]) => ({
   [name]: new AnimatedValue(value),
 })
 
-export default class Spring extends React.PureComponent {
+export default class Spring extends React.Component {
   static propTypes = {
     to: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     from: PropTypes.object,
@@ -37,7 +43,6 @@ export default class Spring extends React.PureComponent {
     reset: PropTypes.bool,
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    hold: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     impl: PropTypes.func,
     inject: PropTypes.func,
   }
@@ -48,7 +53,6 @@ export default class Spring extends React.PureComponent {
     config: config.default,
     native: false,
     immediate: false,
-    hold: false,
     reset: false,
     impl: SpringAnimation,
     inject: Globals.bugfixes,
@@ -65,8 +69,9 @@ export default class Spring extends React.PureComponent {
     this.updatePropsAsync(this.props)
   }
 
-  componentWillReceiveProps(props) {
-    this.updatePropsAsync(props)
+  componentWillUpdate(props) {
+    if (props.reset || shallowDiff(props.to, this.props.to))
+      this.updatePropsAsync(props)
   }
 
   updatePropsAsync(props) {
@@ -90,7 +95,6 @@ export default class Spring extends React.PureComponent {
       config,
       attach,
       immediate,
-      hold,
       reset,
       onFrame,
       onRest,
@@ -149,11 +153,12 @@ export default class Spring extends React.PureComponent {
       if (callProp(immediate, name)) entry.animation.setValue(toValue)
 
       entry.stopped = false
+
       entry.onFinish = cb => {
         this.animations[name].stopped = true
         if (this.getAnimations().every(a => a.stopped)) {
           const current = { ...this.props.from, ...this.props.to }
-          onRest && onRest(current)
+          if (onRest) onRest(current)
           cb && typeof cb === 'function' && cb(current)
 
           if (didInject) {
@@ -164,16 +169,16 @@ export default class Spring extends React.PureComponent {
           }
         }
       }
-      entry.start = cb => {
-        // Skip held animations
-        if (callProp(hold, name)) return entry.onFinish(cb)
 
+      entry.start = cb => {
+        if (entry.animation.__getValue() === toValue) return
         controller(
           entry.animation,
           { to: toValue, ...callProp(config, name) },
           impl
         ).start(props => props.finished && entry.onFinish(cb))
       }
+
       entry.stop = () => {
         entry.stopped = true
         entry.animation.stopAnimation()
@@ -256,7 +261,6 @@ export default class Spring extends React.PureComponent {
       immediate,
       impl,
       inject,
-      hold,
       ...forward
     } = props
     return forward

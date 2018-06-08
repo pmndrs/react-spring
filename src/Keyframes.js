@@ -4,7 +4,7 @@ import Spring from './Spring'
 import Trail from './Trail'
 import Transition from './Transition'
 
-export default class Keyframes extends React.Component {
+export default class Keyframes extends React.PureComponent {
   static propTypes = { script: PropTypes.func, state: PropTypes.string }
 
   guid = 0
@@ -24,10 +24,6 @@ export default class Keyframes extends React.Component {
         resolve,
       }))
     })
-  }
-
-  shouldComponentUpdate(prevProps, prevState) {
-    return prevProps.state !== this.props.state || prevState !== this.state
   }
 
   componentDidUpdate(prevProps) {
