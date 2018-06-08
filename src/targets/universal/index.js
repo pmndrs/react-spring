@@ -4,6 +4,7 @@ import AnimatedValue from '../../animated/AnimatedValue'
 import SpringAnimation from '../../animated/SpringAnimation'
 import controller from '../../animated/AnimatedController'
 import Interpolation from '../../animated/Interpolation'
+import animated from '../../animated/createAnimatedComponent'
 import Spring, { config } from '../../Spring'
 import Transition from '../../Transition'
 import Trail from '../../Trail'
@@ -45,6 +46,7 @@ export {
   SpringAnimation,
   AnimatedValue,
   config,
+  animated,
   controller,
   Globals,
 }

@@ -33,4 +33,5 @@ export {
   controller,
   interpolate,
   animated,
+  Globals,
 }

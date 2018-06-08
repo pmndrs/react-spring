@@ -177,4 +177,5 @@ export {
   interpolate,
   // deprecated
   createAnimatedComponent,
+  Globals,
 }
