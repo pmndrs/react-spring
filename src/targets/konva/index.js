@@ -20,6 +20,39 @@ Globals.injectApplyAnimatedValues((instance, props) => {
   } else return false
 }, style => style)
 
+const konvaElements = [
+  'Layer',
+  'FastLayer',
+  'Group',
+  'Label',
+  'Rect',
+  'Circle',
+  'Ellipse',
+  'Wedge',
+  'Line',
+  'Sprite',
+  'Image',
+  'Text',
+  'TextPath',
+  'Star',
+  'Ring',
+  'Arc',
+  'Tag',
+  'Path',
+  'RegularPolygon',
+  'Arrow',
+  'Shape',
+  'Transformer',
+]
+
+Object.assign(
+  animated,
+  konvaElements.reduce(
+    (acc, element) => ({ ...acc, [element]: animated(element) }),
+    {}
+  )
+)
+
 export {
   Spring,
   Keyframes,
