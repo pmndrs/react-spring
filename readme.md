@@ -18,7 +18,7 @@ import { Spring, ... } from 'react-spring/dist/universal'
 * [What is it?](#what-is-it-)
 * [Why do we need yet another?](#why-do-we-need-yet-another-)
 * [Links](#links-)
-* [Overview](#overview-)
+* [Basic overview](#basic-overview-)
 * [Interpolation](#interpolation-render-props-and-native-rendering-)
 * [Render props](#render-props-)
 * [Native rendering](#native-rendering-)
@@ -64,7 +64,7 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 | Animated       | ❌          | ❌         | ✅             | ✅          |
 | React-spring   | ✅          | ✅         | ✅             | ✅          |
 
-react-spring builds upon animated's foundation, casting its imperative side out, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
+react-spring builds upon animated's foundation, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
@@ -83,7 +83,7 @@ If you ever plan to use this library, this should be a must-read. It will go a l
 
 For annotated prop-types, good for finding out about all the obscure props that i don't want to bore you with (but which might come in handy, you never know).
 
-# Overview 🔭
+# Basic overview 🔭
 
 #### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
@@ -147,6 +147,34 @@ import { Trail } from 'react-spring'
 </Trail>
 ```
 
+#### Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
+
+<img src="assets/keyframes-trail.gif" width="285" />
+
+`Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots. The resulting primitive behaves like the primitive it stems from, it can receive all generic properties like `native` or `from`, etc. You make it animate by passing the `state` props, which receives the named slot.
+
+```jsx
+import { Keyframes, config } from 'react-spring'
+
+// You can create keyframes for springs, trails and transitions
+const Container = Keyframes.Spring({
+    // Single props
+    show: { to: { opacity: 1 } },
+    // Chained animations (arrays)
+    showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
+    // Functions with side-effects
+    wiggle: async call => {
+        await call({ to: { x: 100 }, config: config.wobbly })
+        await delay(1000)
+        await call({ to: { x: 0 }, config: config.gentle })
+    }
+})
+
+<Container state="show">
+    {styles => <div style={styles}>Hello</div>}
+</Container>
+```
+
 #### Parallax and page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
 <img src="assets/horizontal.gif" width="285" />
@@ -176,34 +204,6 @@ You'll find varying implementations under [/dist/addons](https://github.com/drcm
 import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 
 <Spring impl={TimingAnimation} config={{ duration: 1000, easing: Easing.linear }} ...>
-```
-
-#### Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
-
-<img src="assets/keyframes-trail.gif" width="285" />
-
-`Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots. The resulting primitive behaves like the primitive it stems from, it can receive all generic properties like `native` or `from`, etc. You make it animate by passing the `state` props, which receives the named slot.
-
-```jsx
-import { Keyframes, config } from 'react-spring'
-
-// You can create keyframes for springs, trails and transitions
-const Container = Keyframes.Spring({
-    // Single props
-    show: { to: { opacity: 1 } },
-    // Chained animations (arrays)
-    showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
-    // Functions with side-effects
-    wiggle: async call => {
-        await call({ to: { x: 100 }, config: config.wobbly })
-        await delay(1000)
-        await call({ to: { x: 0 }, config: config.gentle })
-    }
-})
-
-<Container state="show">
-    {styles => <div style={styles}>Hello</div>}
-</Container>
 ```
 
 # Interpolation 🎛
