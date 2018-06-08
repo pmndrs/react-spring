@@ -69,4 +69,5 @@ export default [
   ...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
   ...createConfig('targets/native/index', 'native'),
   ...createConfig('targets/universal/index', 'universal'),
+  ...createConfig('targets/konva/index', 'konva'),
 ]
