@@ -57,17 +57,15 @@ export default class Transition extends React.PureComponent {
     ]),
   }
 
-  springs = []
-  state = { transitions: [] }
-
-  componentDidMount() {
-    this.componentWillReceiveProps(this.props)
+  constructor(prevProps) {
+    super()
+    this.springs = []
+    this.state = { transitions: [], prevProps }
   }
 
-  componentWillReceiveProps(props) {
-    let { transitions } = this.state
+  static getDerivedStateFromProps(props, { transitions, prevProps }) {
     const { keys, children, items, from, enter, leave, update } = get(props)
-    const { keys: _keys, children: _children, items: _items } = get(this.props)
+    const { keys: _keys, children: _children, items: _items } = get(prevProps)
 
     // Compare next keys with current keys
     let allKeys = transitions.map(t => t.key)
@@ -93,17 +91,13 @@ export default class Transition extends React.PureComponent {
         // A transition already exists
         if (deleted.find(k => k === key)) {
           // The transition was removed, re-key it and animate it out
+          transition.prevKey = transition.key
           transition.key = transition.key + '_'
           if (!transition.destroyed) {
             const _item = _items ? _items[_keys.indexOf(key)] : key
             transition.to = ref(leave, _item)
             transition.destroyed = true
           }
-          transition.from = this.springs[key].getValues()
-          transition.onRest = () =>
-            this.setState(state => ({
-              transitions: state.transitions.filter(t => t !== transition),
-            }))
         } else {
           // Transition remains untouched, update children and call hook
           transition.children = children[keyIndex] || transition.children
@@ -130,8 +124,7 @@ export default class Transition extends React.PureComponent {
         ordered = [...ordered.slice(0, i), t, ...ordered.slice(i)]
     })
 
-    // Push new state
-    this.setState({ transitions: ordered })
+    return { transitions: ordered, prevProps: props }
   }
 
   getValues() {
@@ -153,17 +146,28 @@ export default class Transition extends React.PureComponent {
       ...extra
     } = this.props
     const props = { native, config, ...extra }
-    return this.state.transitions.map(({ key, item, children, ...rest }, i) => (
-      <Spring
-        ref={r => (r ? (this.springs[key] = r) : delete this.springs[key])}
-        key={key}
-        onRest={onRest && (values => onRest(item, values))}
-        onFrame={onFrame && (values => onFrame(item, values))}
-        {...rest}
-        {...props}
-        render={render && children}
-        children={render ? this.props.children : children}
-      />
-    ))
+    return this.state.transitions.map((transition, i) => {
+      const { prevKey, key, item, children, from, ...rest } = transition
+      return (
+        <Spring
+          ref={r => (r ? (this.springs[key] = r) : delete this.springs[key])}
+          key={key}
+          onRest={
+            rest.destroyed
+              ? () =>
+                  this.setState(s => ({
+                    transitions: s.transitions.filter(t => t !== transition),
+                  }))
+              : onRest && (values => onRest(item, values))
+          }
+          onFrame={onFrame && (values => onFrame(item, values))}
+          {...rest}
+          {...props}
+          from={rest.destroyed ? this.springs[prevKey].getValues() : from}
+          render={render && children}
+          children={render ? this.props.children : children}
+        />
+      )
+    })
   }
 }
