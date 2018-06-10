@@ -37,7 +37,7 @@ react-spring is one of the few libs that understands and animates `auto`, so you
 <Spring from={{ height: 0 }} to={{ height: 'auto' }}>
 ```
 
-But keep in mind that in order to do this we have to measure out a snapshot set to `height/width: auto` before we can start animating it. If you notice that the measured bounds are wrong, give your view more context, for instance set the display attribute of the parent container (the element that contains your spring) to either `absolute` or `relative` so that the view (the element that's inside your spring) retains bounds.
+But keep in mind that in order to do this we have to measure out a snapshot set to `height/width: auto` before we can start animating it. If you notice that the measured bounds are wrong, give your view more context, for instance set the `position` attribute of the parent container (the element that contains your spring) to either `absolute` or `relative` so that the view (the element that's inside your spring) retains bounds.
 
 ### Render props
 
