@@ -86,34 +86,37 @@ export default class Transition extends React.PureComponent {
       const key = isTransition ? transition.key : transition
       const keyIndex = keys.indexOf(key)
       const item = items ? items[keyIndex] : key
-
       if (isTransition) {
         // A transition already exists
         if (deleted.find(k => k === key)) {
           // The transition was removed, re-key it and animate it out
-          transition.prevKey = transition.key
-          transition.key = transition.key + '_'
-          if (!transition.destroyed) {
-            const _item = _items ? _items[_keys.indexOf(key)] : key
-            transition.to = ref(leave, _item)
-            transition.destroyed = true
+          return {
+            ...transition,
+            destroyed: true,
+            prevKey: transition.key,
+            key: transition.key + '_',
+            to: !transition.destroyed
+              ? ref(leave, _items ? _items[_keys.indexOf(key)] : key)
+              : transition.to,
           }
-        } else {
-          // Transition remains untouched, update children and call hook
-          transition.children = children[keyIndex] || transition.children
-          if (update && rest.indexOf(transition.key) !== -1)
-            transition.to = ref(update, item) || transition.to
         }
-        return transition
-      } else {
-        // Map added key into transition
+        // Transition remains untouched, update children and call hook
         return {
-          children: children[keyIndex],
-          key,
-          item,
-          to: ref(enter, item),
-          from: ref(from, item),
+          ...transition,
+          children: children[keyIndex] || transition.children,
+          to:
+            update && rest.indexOf(transition.key) !== -1
+              ? ref(update, item) || transition.to
+              : transition.to,
         }
+      }
+      // Map added key into transition
+      return {
+        children: children[keyIndex],
+        key,
+        item,
+        to: ref(enter, item),
+        from: ref(from, item),
       }
     })
 
