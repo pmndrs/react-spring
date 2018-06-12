@@ -48,7 +48,7 @@ export default class Keyframes extends React.PureComponent {
 
   render() {
     const { primitive: Component, props, oldProps, resolve } = this.state
-    const { script, from: ownFrom, ...rest } = this.props
+    const { script, from: ownFrom, onRest, ...rest } = this.props
     if (Component) {
       const current = this.instance && this.instance.getValues()
       const from =
@@ -61,7 +61,10 @@ export default class Keyframes extends React.PureComponent {
           {...rest}
           {...props}
           from={{ ...from, ...ownFrom }}
-          onRest={resolve}
+          onRest={args => {
+            resolve(args)
+            if (onRest) onRest(args)
+          }}
         />
       )
     } else return null
