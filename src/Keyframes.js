@@ -70,11 +70,11 @@ export default class Keyframes extends React.PureComponent {
     } else return null
   }
 
-  static Spring = states => createFactory(Spring, states)
-  static Trail = states => createFactory(Trail, states)
-  static Transition = states => createFactory(Transition, states)
-}
+  static create = p => s => props => (
+    <Keyframes primitive={p} states={s} {...props} />
+  )
 
-const createFactory = (p, s) => props => (
-  <Keyframes primitive={p} states={s} {...props} />
-)
+  static Spring = Keyframes.create(Spring)
+  static Trail = Keyframes.create(Trail)
+  static Transition = Keyframes.create(Transition)
+}
