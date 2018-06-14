@@ -212,11 +212,15 @@ class ParallaxLayer extends React.PureComponent {
 
 ```jsx
 export default class Keyframes extends React.Component {
+  static create = p => s => props => (
+    <Keyframes primitive={p} states={s} {...props} />
+  )
+  
   // Factory functions, take an object with named slots.
   // A slot can be raw-props, an array of props, or an async function
-  static Spring = states => createFactory(Spring, states)
-  static Trail = states => createFactory(Trail, states)
-  static Transition = states => createFactory(Transition, states)
+  static Spring = Keyframes.create(Spring)
+  static Trail = Keyframes.create(Trail)
+  static Transition = Keyframes.create(Transition)
   // Names slot
   state: PropTypes.string,
   static propTypes = {
