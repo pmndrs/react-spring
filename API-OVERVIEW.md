@@ -86,7 +86,7 @@ import { Spring, animated, interpolate } from 'react-spring'
                 // Use plain animated values like always, ...
                 borderRadius: radius,
                 // For interpolations, call "interpolate" on the value itself, it accepts a function
-                background: time.interpolate(t => 'rgba(0, 0, 0, ${t})'),
+                background: time.interpolate(t => `rgba(0, 0, 0, ${t})`),
                 // ... or supply a range clamp
                 color: time.interpolate({ range: [0, 1], output: ['red', 'rgba(1, 50, 210, 0.5)'] }),
                 // Or use generic interpolate, which takes multiple values, it accepts a function
