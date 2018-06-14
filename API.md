@@ -3,7 +3,7 @@
 ```jsx
 import { config } from 'react-spring'
 
-<Spring config={config.default}
+<Spring config={config.default} />
 ```
 
 ```jsx
