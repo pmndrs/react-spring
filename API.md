@@ -2,6 +2,8 @@
 
 ```jsx
 import { config } from 'react-spring'
+
+<Spring config={condig.default}
 ```
 
 ```jsx
@@ -13,6 +15,11 @@ import { config } from 'react-spring'
     slow: { tension: 280, friction: 60 },
 */
 ```
+
+- tension, controls the initial plus force of the spring when let loose (default: 170)
+- friction, controls the opposition or antagonistic minus force (default: 26)
+- restSpeedThreshold, precision (default: 0.0001)
+- restDisplacementThreshold, displacement precision (default: 0.0001)
 
 # Spring
 
