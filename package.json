@@ -5,19 +5,18 @@
   "main": "dist/web.cjs.js",
   "module": "dist/web.js",
   "typings": "index.d.ts",
-  "files": [
-    "dist",
-    "src",
-    "API.md",
-    "index.d.ts"
-  ],
+  "files": ["dist", "src", "API.md", "index.d.ts"],
   "sideEffects": false,
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "rollup -c",
     "prepare": "npm run build",
-    "test": "test",
-    "precommit": "lint-staged"
+    "test": "test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "prettier": {
     "semi": false,
@@ -28,22 +27,13 @@
     "printWidth": 80
   },
   "lint-staged": {
-    "*.{js,md}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{js,md}": ["prettier --write", "git add"]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drcmda/react-spring.git"
   },
-  "keywords": [
-    "react",
-    "motion",
-    "animated",
-    "animation",
-    "spring"
-  ],
+  "keywords": ["react", "motion", "animated", "animation", "spring"],
   "author": "Paul Henschel",
   "license": "ISC",
   "bugs": {
@@ -86,17 +76,10 @@
     "@babel/runtime": "7.0.0-beta.49"
   },
   "jest": {
-    "setupFiles": [
-      "./tests/jest.setup.js"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "jest"
-    ],
+    "setupFiles": ["./tests/jest.setup.js"],
+    "testPathIgnorePatterns": ["/node_modules/", "jest"],
     "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.jsx?$",
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
+    "snapshotSerializers": ["enzyme-to-json/serializer"],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true
   }
