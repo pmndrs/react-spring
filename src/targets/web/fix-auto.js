@@ -38,13 +38,15 @@ export default function fixAuto(spring, props) {
             height = node.clientHeight
           } else {
             const paddingX =
-              parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+              parseFloat(cs.paddingLeft || 0) + parseFloat(cs.paddingRight || 0)
             const paddingY =
-              parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+              parseFloat(cs.paddingTop || 0) + parseFloat(cs.paddingBottom || 0)
             const borderX =
-              parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth)
+              parseFloat(cs.borderLeftWidth || 0) +
+              parseFloat(cs.borderRightWidth || 0)
             const borderY =
-              parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth)
+              parseFloat(cs.borderTopWidth || 0) +
+              parseFloat(cs.borderBottomWidth || 0)
             width = node.offsetWidth - paddingX - borderX
             height = node.offsetHeight - paddingY - borderY
           }

@@ -16,7 +16,7 @@
     "prebuild": "rimraf dist",
     "build": "rollup -c",
     "prepare": "npm run build",
-    "test": "echo will do",
+    "test": "test",
     "precommit": "lint-staged"
   },
   "prettier": {
@@ -57,11 +57,18 @@
     "@babel/preset-react": "7.0.0-beta.49",
     "@babel/preset-stage-3": "^7.0.0-beta.49",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "23.0.0",
+    "babel-jest": "^23.0.1",
     "babel-plugin-transform-react-remove-prop-types": "0.4.13",
+    "delay": "^3.0.0",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "enzyme-to-json": "^3.3.4",
     "husky": "^1.0.0-rc.7",
+    "jest": "^23.1.0",
     "lint-staged": "^7.1.2",
     "prettier": "^1.12.1",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
     "rimraf": "2.6.2",
     "rollup": "0.59.3",
     "rollup-plugin-babel": "^4.0.0-beta.4",
@@ -77,5 +84,20 @@
   },
   "dependencies": {
     "@babel/runtime": "7.0.0-beta.49"
+  },
+  "jest": {
+    "setupFiles": [
+      "./tests/jest.setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "jest"
+    ],
+    "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.jsx?$",
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   }
 }
