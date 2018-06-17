@@ -5,13 +5,18 @@
   "main": "dist/web.cjs.js",
   "module": "dist/web.js",
   "typings": "index.d.ts",
-  "files": ["dist", "src", "API.md", "index.d.ts"],
+  "files": [
+    "dist",
+    "src",
+    "API.md",
+    "index.d.ts"
+  ],
   "sideEffects": false,
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "rollup -c",
     "prepare": "npm run build",
-    "test": "test"
+    "test": "jest"
   },
   "husky": {
     "hooks": {
@@ -27,13 +32,22 @@
     "printWidth": 80
   },
   "lint-staged": {
-    "*.{js,md}": ["prettier --write", "git add"]
+    "*.{js,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drcmda/react-spring.git"
   },
-  "keywords": ["react", "motion", "animated", "animation", "spring"],
+  "keywords": [
+    "react",
+    "motion",
+    "animated",
+    "animation",
+    "spring"
+  ],
   "author": "Paul Henschel",
   "license": "ISC",
   "bugs": {
@@ -58,6 +72,7 @@
     "prettier": "^1.12.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-test-renderer": "^16.4.1",
     "rimraf": "2.6.2",
     "rollup": "0.59.3",
     "rollup-plugin-babel": "^4.0.0-beta.4",
@@ -75,10 +90,17 @@
     "@babel/runtime": "7.0.0-beta.49"
   },
   "jest": {
-    "setupFiles": ["./tests/jest.setup.js"],
-    "testPathIgnorePatterns": ["/node_modules/", "jest"],
+    "setupFiles": [
+      "./tests/jest.setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "jest"
+    ],
     "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.jsx?$",
-    "snapshotSerializers": ["enzyme-to-json/serializer"],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true
   }

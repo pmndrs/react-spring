@@ -13,7 +13,7 @@ const get = props => {
   keys = typeof keys === 'function' ? items.map(keys) : keys
   if (!Array.isArray(children)) {
     children = [children]
-    keys = keys ? [keys] : children
+    keys = keys ? [keys] : children.map(c => c.toString())
   }
   return { keys, children, items, ...rest }
 }
@@ -93,7 +93,7 @@ export default class Transition extends React.PureComponent {
           return {
             ...transition,
             destroyed: true,
-            prevKey: transition.key,
+            prevKey: key,
             key: transition.key + '_',
             to: !transition.destroyed
               ? ref(leave, _items ? _items[_keys.indexOf(key)] : key)
@@ -153,14 +153,17 @@ export default class Transition extends React.PureComponent {
       const { prevKey, key, item, children, from, ...rest } = transition
       return (
         <Spring
-          ref={r => (r ? (this.springs[key] = r) : delete this.springs[key])}
+          ref={r => r && (this.springs[key] = r)}
           key={key}
           onRest={
             rest.destroyed
               ? () =>
-                  this.setState(s => ({
-                    transitions: s.transitions.filter(t => t !== transition),
-                  }))
+                  this.setState(
+                    ({ transitions }) => ({
+                      transitions: transitions.filter(t => t !== transition),
+                    }),
+                    () => delete this.springs[key]
+                  )
               : onRest && (values => onRest(item, values))
           }
           onFrame={onFrame && (values => onFrame(item, values))}

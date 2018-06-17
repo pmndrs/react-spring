@@ -1,16 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { mount } from 'enzyme'
-import { Spring, animated } from './../src/targets/web/index'
+import { Spring, animated, Globals } from './../src/targets/web/index'
 
-const testSpring = (props, result) =>
+const springImpl = (props, result) =>
   new Promise(resolve => {
     let tree = mount(
       <Spring
         {...props}
         onRest={() =>
-          process.nextTick(() => {
-            tree = tree.update()
+          setImmediate(() => {
+            props.native &&
+              tree
+                .find(animated.div)
+                .instance()
+                .forceUpdate()
+            tree.update()
             result = result || props.to
             expect(tree.find('div').get(0).props.style).toMatchObject(result)
             tree.unmount()
@@ -24,7 +29,23 @@ const testSpring = (props, result) =>
     )
   })
 
-test('numbers', async () => {
-  await testSpring({ from: { opacity: 0 }, to: { opacity: 1 } })
-  //await testSpring({ native: true, from: { opacity: 0 }, to: { opacity: 1 } })
-})
+const testSpring = (props, result) =>
+  Promise.all([
+    springImpl(props, result),
+    springImpl({ native: true, ...props }, result),
+  ])
+
+test('numbers', async () =>
+  testSpring({
+    from: { width: '0%', opacity: 0 },
+    to: { width: '100%', opacity: 1 },
+  }))
+
+test('auto', async () =>
+  testSpring({ from: { width: 100 }, to: { width: 'auto' } }))
+
+test('colors', async () =>
+  testSpring(
+    { from: { color: 'green' }, to: { color: '#ff0000' } },
+    { color: 'rgba(255, 0, 0, 1)' }
+  ))
