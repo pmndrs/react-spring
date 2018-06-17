@@ -277,6 +277,7 @@ export default class Spring extends React.Component {
   }
 
   componentDidMount() {
+    this.updateToken = false
     this.start()
   }
 
