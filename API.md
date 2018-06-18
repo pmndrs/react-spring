@@ -86,7 +86,7 @@ class Transition extends React.PureComponent {
     from: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     // Animated styles when the component is mounted
     enter: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-    // Unmpount styles
+    // Unmount styles
     leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     //
     update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
