@@ -18,6 +18,8 @@ import { config } from 'react-spring'
 
 - tension, controls the initial plus force of the spring when let loose (default: 170)
 - friction, controls the opposition or antagonistic minus force (default: 26)
+- velocity, controls the initial velocity of the object attached to the spring (default: 0)
+- overshootClamping, controls if the spring should be clamped and not bounce (default: false)
 - restSpeedThreshold, precision (default: 0.0001)
 - restDisplacementThreshold, displacement precision (default: 0.0001)
 
@@ -51,8 +53,10 @@ class Spring extends React.PureComponent {
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     // Won't start animations, so they can be controlled from outside
     hold: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    // Spring config ({ tension, friction } or a function receiving a name)
+    // Spring config ({ tension, friction, ... } or a function receiving a name)
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    // Animation start delay, optional
+    delay: PropTypes.number,
     // When true it literally resets: from -> to
     reset: PropTypes.bool,
   }
