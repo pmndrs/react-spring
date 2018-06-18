@@ -51,8 +51,12 @@ class Spring extends React.PureComponent {
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     // Won't start animations, so they can be controlled from outside
     hold: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    // Spring config ({ tension, friction } or a function receiving a name)
+    // Spring configuration
+    // Can be a object with the fields tension, friction, velocity, overshootClamping, restDisplacementThreshold, and restSpeedThreshold
+    // Can be a function receiving a name
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    // Animation start delay, optional
+    delay: PropTypes.number,
     // When true it literally resets: from -> to
     reset: PropTypes.bool,
   }
@@ -60,6 +64,7 @@ class Spring extends React.PureComponent {
     from: {},
     to: {},
     config: config.default,
+    delay: 0,
     native: false,
     immediate: false,
     hold: false,
