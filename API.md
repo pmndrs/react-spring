@@ -64,7 +64,6 @@ class Spring extends React.PureComponent {
     from: {},
     to: {},
     config: config.default,
-    delay: 0,
     native: false,
     immediate: false,
     hold: false,
