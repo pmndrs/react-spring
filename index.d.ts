@@ -28,6 +28,10 @@ declare module 'react-spring' {
      */
     to: DS;
     /**
+     * Callback when the animation starts to animate
+     */
+    onStart?: () => void;
+    /**
      * Callback when the animation comes to a still-stand
      */
     onRest?: () => void;

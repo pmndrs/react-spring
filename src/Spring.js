@@ -32,6 +32,7 @@ export default class Spring extends React.Component {
     to: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     from: PropTypes.object,
     native: PropTypes.bool,
+    onStart: PropTypes.func,
     onRest: PropTypes.func,
     onFrame: PropTypes.func,
     children: PropTypes.oneOfType([
@@ -97,6 +98,7 @@ export default class Spring extends React.Component {
       immediate,
       reset,
       onFrame,
+      onStart,
       onRest,
       inject,
       native,
@@ -172,6 +174,7 @@ export default class Spring extends React.Component {
 
       entry.start = cb => {
         if (entry.animation.__getValue() === toValue) return entry.onFinish(cb)
+        if (onStart) onStart()
         controller(
           entry.animation,
           { to: toValue, ...callProp(config, name) },
