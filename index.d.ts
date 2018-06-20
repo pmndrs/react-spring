@@ -6,6 +6,10 @@ declare module 'react-spring' {
     friction: number;
   };
 
+  type SpringRendererFunc<S extends object, DS extends object = {}> = (
+    params: DS & S
+  ) => ReactNode
+
   type SpringProps<S extends object, DS extends object = {}> = {
     /**
      * Spring config ({ tension, friction })
@@ -38,13 +42,11 @@ declare module 'react-spring' {
     /**
      * Takes a function that receives interpolated styles
      */
-    children?: ((
-      params: DS & S,
-    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
+    children?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
     /**
      * Same as children, but takes precedence if present
      */
-    render?: (params: DS & S) => ReactNode;
+    render?: SpringRendererFunc<S, DS>;
     /**
      * Prevents animation if true, you can also pass individual keys
      * @default false
@@ -140,13 +142,9 @@ declare module 'react-spring' {
      */
     items?: Array<TransitionItemProps> | TransitionItemProps;
 
-    children?: ((
-      params: DS & S,
-    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
+    children?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
 
-    render?: ((
-      params: DS & S,
-    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
+    render?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
   };
 
   export class Transition<
@@ -163,13 +161,9 @@ declare module 'react-spring' {
 
     to?: DS;
 
-    children: ((
-      params: DS & S,
-    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
+    children: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
 
-    render: ((
-      params: DS & S,
-    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
+    render: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
   };
 
   export class Trail<
