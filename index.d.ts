@@ -38,9 +38,9 @@ declare module 'react-spring' {
     /**
      * Takes a function that receives interpolated styles
      */
-    children?: (
+    children?: ((
       params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
     /**
      * Same as children, but takes precedence if present
      */
@@ -140,13 +140,13 @@ declare module 'react-spring' {
      */
     items?: Array<TransitionItemProps> | TransitionItemProps;
 
-    children?: (
+    children?: ((
       params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
 
-    render?: (
+    render?: ((
       params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
   };
 
   export class Transition<
@@ -163,13 +163,13 @@ declare module 'react-spring' {
 
     to?: DS;
 
-    children: (
+    children: ((
       params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
 
-    render: (
+    render: ((
       params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    ) => ReactNode) | Array<(params: DS & S) => ReactNode>;
   };
 
   export class Trail<
