@@ -32,6 +32,7 @@ export default class Spring extends React.Component {
     to: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     from: PropTypes.object,
     native: PropTypes.bool,
+    onStart: PropTypes.func,
     onRest: PropTypes.func,
     onFrame: PropTypes.func,
     children: PropTypes.oneOfType([
@@ -197,6 +198,8 @@ export default class Spring extends React.Component {
   }
 
   start() {
+    const { onStart } = this.props
+
     let fn = () =>
       this.getAnimations().forEach(animation => animation.start(resolve))
     let resolve,
@@ -205,6 +208,8 @@ export default class Spring extends React.Component {
       if (this.timeout) clearTimeout(this.timeout)
       return (this.timeout = setTimeout(() => fn(), this.props.delay))
     }
+
+    if (onStart) onStart()
 
     fn()
     return promise

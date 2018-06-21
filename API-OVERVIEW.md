@@ -27,6 +27,8 @@ You can interpolate almost everything, from numbers, colors, svg-paths, percenta
 }}>
 ```
 
+The `from` prop denotes initial values and `to` end-state values the spring will animate towards. Once the spring starts animating `from` plays no role any longer, it will from now on remember its current values and animate from there if you update `to`.
+
 A couple of extra props you might be interested in are `onRest`, which fires once the animations stops, `onFrame`, which fires on every frame and gives you the animation value, `reset`, which literally resets the spring so that it goes through `from` to `to` again, `immediate` which can enforce values to spring to their to-values immediately (can be `true` for a zero-time spring or a function which receives the key names and returns `true` or `false` individually).
 
 ##### Animating 'auto'

@@ -1,17 +1,12 @@
 {
-  "dist/dom.umd.js": {
-    "bundled": 86825,
-    "minified": 35401,
-    "gzipped": 11857
-  },
   "dist/addons.umd.js": {
     "bundled": 15720,
     "minified": 5853,
     "gzipped": 2141
   },
   "dist/web.umd.js": {
-    "bundled": 86602,
-    "minified": 35758,
-    "gzipped": 12088
+    "bundled": 86673,
+    "minified": 35786,
+    "gzipped": 12097
   }
 }
