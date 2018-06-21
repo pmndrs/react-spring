@@ -4,7 +4,7 @@ import Spring from './Spring'
 import Trail from './Trail'
 import Transition from './Transition'
 
-export default class Keyframes extends React.PureComponent {
+class Keyframes extends React.PureComponent {
   static propTypes = { script: PropTypes.func, state: PropTypes.string }
 
   guid = 0
@@ -73,8 +73,10 @@ export default class Keyframes extends React.PureComponent {
   static create = p => s => props => (
     <Keyframes primitive={p} states={s} {...props} />
   )
-
-  static Spring = Keyframes.create(Spring)
-  static Trail = Keyframes.create(Trail)
-  static Transition = Keyframes.create(Transition)
 }
+
+Keyframes.Spring = Keyframes.create(Spring)
+Keyframes.Trail = Keyframes.create(Trail)
+Keyframes.Transition = Keyframes.create(Transition)
+
+export default Keyframes
