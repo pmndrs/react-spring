@@ -38,6 +38,8 @@ class Spring extends React.PureComponent {
     from: PropTypes.object,
     // Animates to ...
     to: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    // Callback when the animation starts to animate
+    onStart: PropTypes.func,
     // Callback when the animation comes to a still-stand
     onRest: PropTypes.func,
     // Frame by frame callback, first argument passed is the animated value
