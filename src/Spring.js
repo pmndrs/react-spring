@@ -98,7 +98,6 @@ export default class Spring extends React.Component {
       immediate,
       reset,
       onFrame,
-      onStart,
       onRest,
       inject,
       native,
@@ -174,7 +173,6 @@ export default class Spring extends React.Component {
 
       entry.start = cb => {
         if (entry.animation.__getValue() === toValue) return entry.onFinish(cb)
-        if (onStart) onStart()
         controller(
           entry.animation,
           { to: toValue, ...callProp(config, name) },
@@ -200,6 +198,8 @@ export default class Spring extends React.Component {
   }
 
   start() {
+    const { onStart } = this.props
+
     let fn = () =>
       this.getAnimations().forEach(animation => animation.start(resolve))
     let resolve,
@@ -208,6 +208,8 @@ export default class Spring extends React.Component {
       if (this.timeout) clearTimeout(this.timeout)
       return (this.timeout = setTimeout(() => fn(), this.props.delay))
     }
+
+    if (onStart) onStart()
 
     fn()
     return promise
