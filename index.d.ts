@@ -135,7 +135,7 @@ declare module 'react-spring' {
      * Can be a function, which then acts as a key-accessor which is useful when you use the items prop
      * @default {}
      */
-    keys?: ((params: any) => TransitionKeyProps) | Array<TransitionKeyProps> | TransitionKeyProps;
+    keys?: ((params: TransitionItemProps) => TransitionKeyProps) | Array<TransitionKeyProps> | TransitionKeyProps;
     /**
      * Optional. Let items refer to the actual data and from/enter/leaver/update can return per-object styles
      * @default {}
