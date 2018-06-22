@@ -8,7 +8,7 @@ declare module 'react-spring' {
 
   type SpringRendererFunc<S extends object, DS extends object = {}> = (
     params: DS & S
-  ) => ReactNode
+  ) => ReactNode;
 
   type SpringProps<S extends object, DS extends object = {}> = {
     /**
