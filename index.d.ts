@@ -6,6 +6,10 @@ declare module 'react-spring' {
     friction: number;
   };
 
+  type SpringRendererFunc<S extends object, DS extends object = {}> = (
+    params: DS & S
+  ) => ReactNode;
+
   type SpringProps<S extends object, DS extends object = {}> = {
     /**
      * Spring config ({ tension, friction })
@@ -42,13 +46,11 @@ declare module 'react-spring' {
     /**
      * Takes a function that receives interpolated styles
      */
-    children?: (
-      params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    children?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
     /**
      * Same as children, but takes precedence if present
      */
-    render?: (params: DS & S) => ReactNode;
+    render?: SpringRendererFunc<S, DS>;
     /**
      * Prevents animation if true, you can also pass individual keys
      * @default false
@@ -137,20 +139,16 @@ declare module 'react-spring' {
      * Can be a function, which then acts as a key-accessor which is useful when you use the items prop
      * @default {}
      */
-    keys?: ((params: any) => TransitionKeyProps) | Array<TransitionKeyProps> | TransitionKeyProps;
+    keys?: ((params: TransitionItemProps) => TransitionKeyProps) | Array<TransitionKeyProps> | TransitionKeyProps;
     /**
      * Optional. Let items refer to the actual data and from/enter/leaver/update can return per-object styles
      * @default {}
      */
     items?: Array<TransitionItemProps> | TransitionItemProps;
 
-    children?: (
-      params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    children?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
 
-    render?: (
-      params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    render?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
   };
 
   export class Transition<
@@ -167,13 +165,9 @@ declare module 'react-spring' {
 
     to?: DS;
 
-    children: (
-      params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    children: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
 
-    render: (
-      params: DS & S,
-    ) => ReactNode | Array<(params: DS & S) => ReactNode>;
+    render: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
   };
 
   export class Trail<
