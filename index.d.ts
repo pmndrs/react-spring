@@ -156,6 +156,9 @@ declare module 'react-spring' {
     DS extends object,
   > extends PureComponent<TransitionProps<S, DS>> {}
 
+  type TrailKeyProps = string | number;
+  type TrailKeyItemProps = string | number | object;
+
   type TrailProps<S extends object, DS extends object = {}> = {
     native?: boolean;
 
@@ -165,9 +168,11 @@ declare module 'react-spring' {
 
     to?: DS;
 
-    children: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
+    keys?: ((params: TrailKeyItemProps) => TrailKeyProps) | Array<TrailKeyProps> | TrailKeyProps;
 
-    render: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
+    children?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
+
+    render?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>;
   };
 
   export class Trail<
