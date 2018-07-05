@@ -1,9 +1,20 @@
+import { SpringEasing, SpringEasingFunc } from 'react-spring'
+
 declare module 'react-spring' {
   import { Component, PureComponent, ReactNode, ComponentClass } from 'react';
 
+  export type SpringEasingFunc = (t: number) => number;
+
   export type SpringConfig = {
-    tension: number;
-    friction: number;
+    tension?: number;
+    friction?: number;
+    velocity?: number;
+    overshootClamping?: number;
+    restSpeedThreshold?: number;
+    restDisplacementThreshold?: number
+
+    duration?: number;
+    easing?: SpringEasingFunc;
   };
 
   type SpringRendererFunc<S extends object, DS extends object = {}> = (
