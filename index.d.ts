@@ -1,5 +1,3 @@
-import { SpringEasing, SpringEasingFunc } from 'react-spring'
-
 declare module 'react-spring' {
   import { Component, PureComponent, ReactNode, ComponentClass } from 'react';
 
