@@ -121,8 +121,9 @@ export default class Spring extends React.Component {
       let fromAnimated = fromValue instanceof AnimatedValue
       let toValue = isNumber || isArray ? value : 1
 
-      if (/*isNumber &&*/ attach) {
+      if (isNumber && attach) {
         // Attach value to target animation
+        // Only numbers can be attached to, interpolations are not adaptive!
         const target = attach(this)
         const targetAnimation = target && target.animations[name]
         if (targetAnimation) toValue = targetAnimation.animation
