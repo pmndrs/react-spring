@@ -5,8 +5,8 @@
     "gzipped": 2141
   },
   "dist/web.umd.js": {
-    "bundled": 86469,
-    "minified": 35624,
-    "gzipped": 12028
+    "bundled": 86527,
+    "minified": 35627,
+    "gzipped": 12031
   }
 }

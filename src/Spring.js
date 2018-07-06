@@ -121,12 +121,11 @@ export default class Spring extends React.Component {
       let fromAnimated = fromValue instanceof AnimatedValue
       let toValue = isNumber || isArray ? value : 1
 
-      if (isNumber && attach) {
+      if (attach) {
         // Attach value to target animation
-        // Only numbers can be attached to, interpolations are not adaptive!
         const target = attach(this)
-        const targetAnimation = target && target.animations[name]
-        if (targetAnimation) toValue = targetAnimation.animation
+        const attachedAnimation = target && target.animations[name]
+        if (attachedAnimation) toValue = attachedAnimation.animation
       }
 
       if (fromAnimated) {
@@ -145,6 +144,7 @@ export default class Spring extends React.Component {
         const previous =
           entry.interpolation &&
           entry.interpolation._interpolation(entry.animation._value)
+
         entry.animation = new AnimatedValue(0)
         entry.interpolation = entry.animation.interpolate({
           range: [0, 1],
@@ -222,7 +222,7 @@ export default class Spring extends React.Component {
 
   flush() {
     this.getAnimations().forEach(
-      ({ interpolation }) => interpolation._update && interpolation._update()
+      ({ animation }) => animation._update && animation._update()
     )
   }
 

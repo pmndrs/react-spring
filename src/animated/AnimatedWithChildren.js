@@ -8,7 +8,6 @@ export default class AnimatedWithChildren extends Animated {
   }
 
   __addChild(child) {
-    if (child instanceof AnimatedTracking) this._tracked = true
     if (this._children.length === 0) this.__attach()
     this._children.push(child)
   }
