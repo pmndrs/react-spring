@@ -211,7 +211,9 @@ import { Trail } from 'react-spring'
 
 ### Keyframes
 
-`Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots. The resulting primitive behaves like the primitive it stems from, it can receive all generic properties like `native` or `from`, etc. You make it animate by passing the `state` props, which receives the named slot.
+`Keyframes` allows you to chain, compose and orchestrate animations by creating predefined slots which you then execute by passing the `state` prop.
+
+The resulting primitive can receive all the generic properties you would normally give your springs, like `native`, `from`, and so on.
 
 ```jsx
 import { Keyframes, config } from 'react-spring'
@@ -235,7 +237,7 @@ const Container = Keyframes.Spring({
 </Container>
 ```
 
-Keyframes can also be used for manual scripting by giving it a function instead of an object consisting of slots (good for loops and such):
+Keyframes can also be used for manual, low-level scripting by giving it a function instead of an object consisting of slots (good for loops and such):
 
 ```jsx
 import { Keyframes, config } from 'react-spring'
@@ -262,6 +264,12 @@ If you need to access the components own properties, you can (it works on all fu
 const Container = Keyframes.Spring(async (next, ownProps) => {
   // ...
 })
+```
+
+If you have made [your own animation primitive](https://github.com/drcmda/react-spring/issues/97#issuecomment-392380139) and want to drive it through keyframes, that is also doable:
+
+```jsx
+const Container = Keyframes.create(MyOwnPrimitive)({ ... })
 ```
 
 ### Parallax and page transitions
