@@ -5,6 +5,7 @@
 - [Native rendering and interpolation](#native-rendering-and-interpolation-demo)
 - [Imperative Api](#imperative-api)
 - [Transitions](#transitions)
+- [Keyframes](#keyframes)
 - [Parallax and page transitions](#parallax-and-page-transitions)
 
 # API overview 📖
