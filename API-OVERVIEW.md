@@ -1,11 +1,11 @@
 # Table of Contents 👇
 
-* [Springs and basic interpolation](#springs-and-basic-interpolation)
-* [Render props](#render-props)
-* [Native rendering and interpolation](#native-rendering-and-interpolation-demo)
-* [Imperative Api](#imperative-api)
-* [Transitions](#transitions)
-* [Parallax and page transitions](#parallax-and-page-transitions)
+- [Springs and basic interpolation](#springs-and-basic-interpolation)
+- [Render props](#render-props)
+- [Native rendering and interpolation](#native-rendering-and-interpolation-demo)
+- [Imperative Api](#imperative-api)
+- [Transitions](#transitions)
+- [Parallax and page transitions](#parallax-and-page-transitions)
 
 # API overview 📖
 
@@ -206,6 +206,61 @@ import { Trail } from 'react-spring'
 <Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
     {items.map(item => styles => <div style={styles}>{item.text}</div>)}
 </Trail>
+```
+
+### Keyframes
+
+`Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots. The resulting primitive behaves like the primitive it stems from, it can receive all generic properties like `native` or `from`, etc. You make it animate by passing the `state` props, which receives the named slot.
+
+```jsx
+import { Keyframes, config } from 'react-spring'
+
+// You can create keyframes for springs, trails and transitions
+const Container = Keyframes.Spring({
+    // Single props
+    show: { to: { opacity: 1 } },
+    // Chained animations (arrays)
+    showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
+    // Functions with side-effects
+    wiggle: async next => {
+        await next({ to: { x: 100 }, config: config.wobbly })
+        await delay(1000)
+        await next({ to: { x: 0 }, config: config.gentle })
+    }
+})
+
+<Container state="show">
+    {styles => <div style={styles}>Hello</div>}
+</Container>
+```
+
+Keyframes can also be used for manual scripting by giving it a function instead of an object consisting of slots (good for loops and such):
+
+```jsx
+import { Keyframes, config } from 'react-spring'
+
+// Will fade children in and out in a loop
+const Container = Keyframes.Spring(async next => {
+  while (true) {
+    await next({
+      reset: true,
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+    })
+  }
+})
+
+<Container>
+    {styles => <div style={styles}>Hello</div>}
+</Container>
+```
+
+If you need to access the components own properties, you can (it works on all functions):
+
+```jsx
+const Container = Keyframes.Spring(async (next, ownProps) => {
+  // ...
+})
 ```
 
 ### Parallax and page transitions

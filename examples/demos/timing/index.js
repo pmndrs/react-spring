@@ -1,6 +1,15 @@
 import React from 'react'
-import { Spring, Keyframes, animated } from 'react-spring'
+import { Keyframes, animated } from 'react-spring'
 import { TimingAnimation, Easing } from '../../../src/addons'
+
+const Container = Keyframes.Spring(async next => {
+  while (true) {
+    await next({
+      from: { radians: 0, color: '#247BA0' },
+      to: { radians: 2 * Math.PI },
+    })
+  }
+})
 
 export default class TimingExample extends React.PureComponent {
   state = { items: ['item1', 'item2', 'item3'] }
@@ -16,7 +25,8 @@ export default class TimingExample extends React.PureComponent {
             willChange: 'transform',
             transform: radians.interpolate(
               r =>
-                `translate3d(0, ${50 * Math.sin(r + i * 2 * Math.PI / 5)}px, 0)`
+                `translate3d(0, ${50 *
+                  Math.sin(r + (i * 2 * Math.PI) / 5)}px, 0)`
             ),
           }}
           viewBox="0 0 400 400">
@@ -35,22 +45,14 @@ export default class TimingExample extends React.PureComponent {
           alignItems: 'center',
           background: 'palevioletred',
         }}>
-        <Keyframes
+        <Container
           reset
           native
           keys={items}
           impl={TimingAnimation}
-          config={{ duration: 2000, easing: Easing.linear }}
-          script={async next => {
-            while (true) {
-              await next(Spring, {
-                from: { radians: 0, color: '#247BA0' },
-                to: { radians: 2 * Math.PI },
-              })
-            }
-          }}>
+          config={{ duration: 2000, easing: Easing.linear }}>
           {Content}
-        </Keyframes>
+        </Container>
       </div>
     )
   }

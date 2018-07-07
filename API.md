@@ -16,12 +16,12 @@ import { config } from 'react-spring'
 */
 ```
 
-* tension, controls the initial plus force of the spring when let loose (default: 170)
-* friction, controls the opposition or antagonistic minus force (default: 26)
-* velocity, controls the initial velocity of the object attached to the spring (default: 0)
-* overshootClamping, controls if the spring should be clamped and not bounce (default: false)
-* restSpeedThreshold, precision (default: 0.0001)
-* restDisplacementThreshold, displacement precision (default: 0.0001)
+- tension, controls the initial plus force of the spring when let loose (default: 170)
+- friction, controls the opposition or antagonistic minus force (default: 26)
+- velocity, controls the initial velocity of the object attached to the spring (default: 0)
+- overshootClamping, controls if the spring should be clamped and not bounce (default: false)
+- restSpeedThreshold, precision (default: 0.0001)
+- restDisplacementThreshold, displacement precision (default: 0.0001)
 
 # Spring
 
@@ -218,23 +218,22 @@ class ParallaxLayer extends React.PureComponent {
 
 ```jsx
 export default class Keyframes extends React.Component {
-  static create = p => s => props => (
-    <Keyframes primitive={p} states={s} {...props} />
-  )
+  static create = primitive => states => {
+    if (typeof states === 'function') states = { [DEFAULT]: states }
+    return props => (
+      <Keyframes primitive={primitive} states={states} {...props} />
+    )
+  }
 
   // Factory functions, take an object with named slots.
   // A slot can be raw-props, an array of props, or an async function
   static Spring = Keyframes.create(Spring)
   static Trail = Keyframes.create(Trail)
   static Transition = Keyframes.create(Transition)
-  // Names slot
-  state: PropTypes.string,
+
   static propTypes = {
-    // deprecated: callback which receives a function that that takes two arguments:
-    //     script={async next => {
-    //         next(primitive, props)
-    //     }}
-    script: PropTypes.func,
+    // Name of the current slot
+    state: PropTypes.string,
   }
 }
 ```
