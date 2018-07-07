@@ -4,14 +4,16 @@ import Spring from './Spring'
 import Trail from './Trail'
 import Transition from './Transition'
 
+const DEFAULT = '__default'
+
 class Keyframes extends React.PureComponent {
-  static propTypes = { script: PropTypes.func, state: PropTypes.string }
+  static propTypes = { state: PropTypes.string }
+  static defaultProps = { state: DEFAULT }
 
   guid = 0
   state = { primitive: undefined, props: {}, oldProps: {}, resolve: () => null }
 
   componentDidMount() {
-    if (this.props.script) this.props.script(this.next)
     this.componentDidUpdate({})
   }
 
@@ -32,15 +34,20 @@ class Keyframes extends React.PureComponent {
       if (states && state && primitive) {
         const localId = ++this.guid
         const slots = states[state]
-        if (Array.isArray(slots)) {
-          let q = Promise.resolve()
-          for (let s of slots) {
-            q = q.then(() => localId === this.guid && this.next(primitive, s))
+        if (slots) {
+          if (Array.isArray(slots)) {
+            let q = Promise.resolve()
+            for (let s of slots) {
+              q = q.then(() => localId === this.guid && this.next(primitive, s))
+            }
+          } else if (typeof slots === 'function') {
+            slots(
+              props => localId === this.guid && this.next(primitive, props),
+              this.props
+            )
+          } else {
+            this.next(primitive, states[state])
           }
-        } else if (typeof slots === 'function') {
-          slots(props => localId === this.guid && this.next(primitive, props))
-        } else {
-          this.next(primitive, states[state])
         }
       }
     }
@@ -48,7 +55,7 @@ class Keyframes extends React.PureComponent {
 
   render() {
     const { primitive: Component, props, oldProps, resolve } = this.state
-    const { script, from: ownFrom, onRest, ...rest } = this.props
+    const { from: ownFrom, onRest, ...rest } = this.props
     if (Component) {
       const current = this.instance && this.instance.getValues()
       const from =
@@ -70,9 +77,12 @@ class Keyframes extends React.PureComponent {
     } else return null
   }
 
-  static create = p => s => props => (
-    <Keyframes primitive={p} states={s} {...props} />
-  )
+  static create = primitive => states => {
+    if (typeof states === 'function') states = { [DEFAULT]: states }
+    return props => (
+      <Keyframes primitive={primitive} states={states} {...props} />
+    )
+  }
 }
 
 Keyframes.Spring = Keyframes.create(Spring)
