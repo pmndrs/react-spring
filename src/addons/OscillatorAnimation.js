@@ -1,13 +1,24 @@
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
+ * @author https://github.com/skevy
+ */
+
 import Animation from '../animated/Animation'
 import * as Globals from '../animated/Globals'
 
 const withDefault = (value, defaultValue) =>
   value === undefined || value === null ? defaultValue : value
-const tensionFromOrigamiValue = oValue => (oValue - 30) * 3.62 + 194
-const frictionFromOrigamiValue = oValue => (oValue - 8) * 3 + 25
+const stiffnessFromOrigamiValue = oValue => (oValue - 30) * 3.62 + 194
+const dampingFromOrigamiValue = oValue => (oValue - 8) * 3 + 25
 const fromOrigamiTensionAndFriction = (tension, friction) => ({
-  tension: tensionFromOrigamiValue(tension),
-  friction: frictionFromOrigamiValue(friction),
+  stiffness: stiffnessFromOrigamiValue(tension),
+  damping: dampingFromOrigamiValue(friction),
 })
 
 export default class OscillatorAnimation extends Animation {
@@ -26,8 +37,8 @@ export default class OscillatorAnimation extends Animation {
       withDefault(config.tension, 40),
       withDefault(config.friction, 7)
     )
-    this._tension = springConfig.tension
-    this._friction = springConfig.friction
+    this._stiffness = springConfig.stiffness
+    this._damping = springConfig.damping
     this._mass = withDefault(config.mass, 1)
   }
 
@@ -44,6 +55,7 @@ export default class OscillatorAnimation extends Animation {
       var internalState = previousAnimation.getInternalState()
       this._lastPosition = internalState.lastPosition
       this._lastVelocity = internalState.lastVelocity
+      this._initialVelocity = this._lastVelocity
       this._lastTime = internalState.lastTime
     }
 
@@ -75,9 +87,9 @@ export default class OscillatorAnimation extends Animation {
     const deltaTime = (now - this._lastTime) / 1000
     this._frameTime += deltaTime
 
-    const c = this._friction
+    const c = this._damping
     const m = this._mass
-    const k = this._tension
+    const k = this._stiffness
     const v0 = -this._initialVelocity
 
     const zeta = c / (2 * Math.sqrt(k * m)) // damping ratio
@@ -94,7 +106,7 @@ export default class OscillatorAnimation extends Animation {
       position =
         this._to -
         envelope *
-          ((v0 + zeta * omega0 * x0) / omega1 * Math.sin(omega1 * t) +
+          (((v0 + zeta * omega0 * x0) / omega1) * Math.sin(omega1 * t) +
             x0 * Math.cos(omega1 * t))
       // This looks crazy -- it's actually just the derivative of the
       // oscillation function
@@ -102,7 +114,7 @@ export default class OscillatorAnimation extends Animation {
         zeta *
           omega0 *
           envelope *
-          (Math.sin(omega1 * t) * (v0 + zeta * omega0 * x0) / omega1 +
+          ((Math.sin(omega1 * t) * (v0 + zeta * omega0 * x0)) / omega1 +
             x0 * Math.cos(omega1 * t)) -
         envelope *
           (Math.cos(omega1 * t) * (v0 + zeta * omega0 * x0) -

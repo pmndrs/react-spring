@@ -1,3 +1,13 @@
+/**
+ * Copyright (c) 2015-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
+ * @format
+ */
+
 const NEWTON_ITERATIONS = 4
 const NEWTON_MIN_SLOPE = 0.001
 const SUBDIVISION_PRECISION = 0.0000001
@@ -162,7 +172,7 @@ class Easing {
   }
 
   static sin(t) {
-    return 1 - Math.cos(t * Math.PI / 2)
+    return 1 - Math.cos((t * Math.PI) / 2)
   }
 
   static circle(t) {
@@ -185,7 +195,7 @@ class Easing {
 
   static elastic(bounciness = 1) {
     const p = bounciness * Math.PI
-    return t => 1 - Math.cos(t * Math.PI / 2) ** 3 * Math.cos(t * p)
+    return t => 1 - Math.cos((t * Math.PI) / 2) ** 3 * Math.cos(t * p)
   }
 
   static back(s) {
