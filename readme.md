@@ -19,7 +19,7 @@ import { Spring, ... } from 'react-spring/dist/universal'
 * [Why do we need yet another?](#why-do-we-need-yet-another-)
 * [Links](#links-)
 * [Basic overview](#basic-overview-)
-* [Interpolation](#interpolation-render-props-and-native-rendering-)
+* [Interpolation](#interpolation-)
 * [Render props](#render-props-)
 * [Native rendering](#native-rendering-)
 * [React-native and other targets](#react-native-and-other-targets-)
