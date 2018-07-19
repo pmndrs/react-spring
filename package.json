@@ -17,7 +17,8 @@
     "build": "rollup -c",
     "prepare": "npm run build",
     "test": "jest",
-    "test:ts": "tsc --noEmit"
+    "test:ts": "tsc --noEmit",
+    "postinstall": "opencollective postinstall"
   },
   "husky": {
     "hooks": {
@@ -90,7 +91,8 @@
     "react-dom": ">= 16.3.2"
   },
   "dependencies": {
-    "@babel/runtime": "7.0.0-beta.51"
+    "@babel/runtime": "7.0.0-beta.51",
+    "opencollective": "^1.0.3"
   },
   "jest": {
     "setupFiles": [
@@ -106,5 +108,9 @@
     ],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-spring"
   }
 }
