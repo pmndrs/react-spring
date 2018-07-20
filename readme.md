@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) ![react version](https://badgen.now.sh/badge/react/16/green) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring)
+[![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors) [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) ![react version](https://badgen.now.sh/badge/react/16/green) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring)
 
     npm install react-spring
 
@@ -273,6 +273,18 @@ const AnimatedView = animated(View)
     {styles => <AnimatedView style={styles} />}
 </Spring>
 ```
+
+# Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute]](CONTRIBUTING.md).
+<a href="graphs/contributors"><img src="https://opencollective.com/react-spring/contributors.svg?width=890" /></a>
+
+
+# Backers
+
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/react-spring#backer)]
+
+<a href="https://opencollective.com/react-spring#backers" target="_blank"><img src="https://opencollective.com/react-spring/backers.svg?width=890"></a>
 
 ---
 
