@@ -4,8 +4,8 @@ import Spring, { config as springConfig } from './Spring'
 
 const empty = () => null
 
-const ref = (object = {}, key) =>
-  typeof object === 'function' ? object(key) : object
+const ref = (object, key, defaultValue) =>
+  typeof object === 'function' ? object(key) : object || defaultValue
 
 const get = props => {
   let { keys, children, render, items, ...rest } = props
@@ -17,6 +17,8 @@ const get = props => {
   }
   return { keys, children, items, ...rest }
 }
+
+let guid = 0
 
 export default class Transition extends React.PureComponent {
   static propTypes = {
@@ -58,76 +60,69 @@ export default class Transition extends React.PureComponent {
   }
 
   constructor(prevProps) {
-    super()
+    super(prevProps)
     this.springs = []
-    this.state = { transitions: [], prevProps }
+    this.state = { transitions: [], current: {}, deleted: [], prevProps }
   }
 
-  static getDerivedStateFromProps(props, { transitions, prevProps }) {
+  static getDerivedStateFromProps(props, { prevProps, ...state }) {
     const { keys, children, items, from, enter, leave, update } = get(props)
     const { keys: _keys, children: _children, items: _items } = get(prevProps)
+    const current = { ...state.current }
+    const deleted = [...state.deleted]
 
     // Compare next keys with current keys
-    let allKeys = transitions.map(t => t.key)
+    let currentKeys = Object.keys(current)
+    let currentSet = new Set(currentKeys)
     let nextSet = new Set(keys)
-    let currentSet = new Set(allKeys)
     let added = keys.filter(item => !currentSet.has(item))
-    let deleted = allKeys.filter(item => !nextSet.has(item))
-    let rest = keys.filter(item => currentSet.has(item))
+    let removed = currentKeys.filter(item => !nextSet.has(item))
+    let updated = keys.filter(item => currentSet.has(item))
 
-    // Insert new keys into the transition collection
     added.forEach(key => {
-      const i = keys.indexOf(key)
-      transitions = [...transitions.slice(0, i), key, ...transitions.slice(i)]
-    })
-
-    transitions = transitions.map(transition => {
-      const isTransition = typeof transition === 'object'
-      const key = isTransition ? transition.key : transition
       const keyIndex = keys.indexOf(key)
       const item = items ? items[keyIndex] : key
-      if (isTransition) {
-        // A transition already exists
-        if (deleted.find(k => k === key)) {
-          // The transition was removed, re-key it and animate it out
-          return {
-            ...transition,
-            destroyed: true,
-            prevKey: key,
-            key: transition.key + '_',
-            to: !transition.destroyed
-              ? ref(leave, _items ? _items[_keys.indexOf(key)] : key)
-              : transition.to,
-          }
-        }
-        // Transition remains untouched, update children and call hook
-        return {
-          ...transition,
-          children: children[keyIndex] || transition.children,
-          to:
-            update && rest.indexOf(transition.key) !== -1
-              ? ref(update, item) || transition.to
-              : transition.to,
-        }
-      }
-      // Map added key into transition
-      return {
+      current[key] = {
         children: children[keyIndex],
-        key,
+        key: guid++,
         item,
         to: ref(enter, item),
         from: ref(from, item),
       }
     })
 
-    // Re-order list
-    let ordered = keys.map(key => transitions.find(child => child.key === key))
-    transitions.forEach((t, i) => {
-      if (t.destroyed)
-        ordered = [...ordered.slice(0, i), t, ...ordered.slice(i)]
+    removed.forEach(key => {
+      const keyIndex = _keys.indexOf(key)
+      deleted.push({
+        destroyed: true,
+        lastIndex: keyIndex,
+        ...current[key],
+        to: ref(leave, _items ? _items[keyIndex] : key),
+      })
+      delete current[key]
     })
 
-    return { transitions: ordered, prevProps: props }
+    updated.forEach(key => {
+      const keyIndex = keys.indexOf(key)
+      const item = items ? items[keyIndex] : key
+      current[key] = {
+        ...current[key],
+        children: children[keyIndex],
+        to: ref(update, item, current[key].to),
+      }
+    })
+
+    let transitions = keys.map(key => current[key])
+    deleted.forEach(
+      ({ lastIndex, ...transition }) =>
+        (transitions = [
+          ...transitions.slice(0, lastIndex),
+          transition,
+          ...transitions.slice(lastIndex),
+        ])
+    )
+
+    return { transitions, current, deleted, prevProps: props }
   }
 
   getValues() {
@@ -150,7 +145,7 @@ export default class Transition extends React.PureComponent {
     } = this.props
     const props = { native, config, ...extra }
     return this.state.transitions.map((transition, i) => {
-      const { prevKey, key, item, children, from, ...rest } = transition
+      const { key, item, children, from, ...rest } = transition
       return (
         <Spring
           ref={r => r && (this.springs[key] = r)}
@@ -159,8 +154,8 @@ export default class Transition extends React.PureComponent {
             rest.destroyed
               ? () =>
                   this.setState(
-                    ({ transitions }) => ({
-                      transitions: transitions.filter(t => t !== transition),
+                    ({ deleted }) => ({
+                      deleted: deleted.filter(t => t.key !== transition.key),
                     }),
                     () => delete this.springs[key]
                   )
@@ -169,7 +164,7 @@ export default class Transition extends React.PureComponent {
           onFrame={onFrame && (values => onFrame(item, values))}
           {...rest}
           {...props}
-          from={rest.destroyed ? this.springs[prevKey].getValues() : from}
+          from={rest.destroyed ? this.springs[key].getValues() : from}
           render={render && children}
           children={render ? this.props.children : children}
         />

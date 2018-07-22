@@ -17,35 +17,32 @@ const defaultStyles = {
 export default class TransitionsExample extends React.PureComponent {
   state = { items: [] }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.t1 && clearTimeout(this.t1)
     this.t2 && clearTimeout(this.t2)
     this.t3 && clearTimeout(this.t3)
     this.t4 && clearTimeout(this.t4)
+    this.t5 && clearTimeout(this.t5)
 
     this.setState({ items: [] })
-    // new item
-    this.t1 = setTimeout(
-      () => this.setState({ items: ['item1', 'item2', 'item3'] }),
-      1000
-    )
-    // new item in between
-    this.t2 = setTimeout(
-      () =>
-        this.setState({ items: ['item1', 'item2', 'item5', 'item3', 'item4'] }),
-      2000
-    )
-    // deleted items
-    this.t3 = setTimeout(
-      () => this.setState({ items: ['item1', 'item3', 'item4'] }),
-      3000
-    )
-    // scrambled order
-    this.t4 = setTimeout(
-      () => this.setState({ items: ['item4', 'item2', 'item3', 'item1'] }),
-      4000
-    )
+    // new items: 1, 2, 3
+    this.t1 = await this.animate('1', '2', '3')
+    // new item in between: 4
+    this.t2 = await this.animate('1', '2', '4', '3')
+    // deleted item: 2
+    this.t3 = await this.animate('1', /*'2',*/ '3', '4')
+    // scrambled order + re-entering item: 2
+    this.t4 = await this.animate('4', /*'2',*/ '1', '2', '3')
+    this.t5 = await this.animate('4', /*'2',*/ '1', /*'2',*/ '3')
   }
+
+  animate = (...items) =>
+    new Promise(res => {
+      const handle = setTimeout(
+        () => this.setState({ items }, () => res(handle)),
+        1000
+      )
+    })
 
   render() {
     return (

@@ -1,46 +1,33 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Transition, animated } from 'react-spring'
+import './styles.css'
 
-const defaultStyles = {
-  cursor: 'pointer',
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  color: 'white',
-  fontFamily: "'Kanit', sans-serif",
-  fontWeight: 800,
-  fontSize: '16em',
-}
-const A = styles => (
-  <animated.div
-    style={{ ...defaultStyles, ...styles, backgroundColor: '#B2DBBF' }}>
-    A
-  </animated.div>
-)
-const B = styles => (
-  <animated.div
-    style={{ ...defaultStyles, ...styles, backgroundColor: '#14D790' }}>
-    B
-  </animated.div>
-)
+const pages = [
+  style => (
+    <animated.div style={{ ...style, background: '#F3FFBD' }}>A</animated.div>
+  ),
+  style => (
+    <animated.div style={{ ...style, background: '#B2DBBF' }}>B</animated.div>
+  ),
+  style => (
+    <animated.div style={{ ...style, background: '#12DBBF' }}>C</animated.div>
+  ),
+]
 
-export default class RevealsExample extends React.PureComponent {
-  state = { toggled: true }
-  toggle = e => this.setState(state => ({ toggled: !state.toggled }))
+export default class App extends React.PureComponent {
+  state = { index: 0 }
+  toggle = e =>
+    this.setState(state => ({ index: state.index === 2 ? 0 : state.index + 1 }))
   render() {
     return (
-      <div onClick={this.toggle}>
+      <div className="main" onClick={this.toggle}>
         <Transition
           native
-          from={{ opacity: 0 }}
-          enter={{ opacity: 1 }}
-          leave={{ opacity: 0, pointerEvents: 'none' }}
-          config={{ tension: 5, friction: 10 }}>
-          {this.state.toggled ? A : B}
+          from={{ opacity: 0, transform: 'translate3d(100%,0,0)' }}
+          enter={{ opacity: 1, transform: 'translate3d(0%,0,0)' }}
+          leave={{ opacity: 0, transform: 'translate3d(-50%,0,0)' }}>
+          {pages[this.state.index]}
         </Transition>
       </div>
     )
