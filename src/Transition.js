@@ -67,7 +67,7 @@ export default class Transition extends React.PureComponent {
 
   static getDerivedStateFromProps(props, { prevProps, ...state }) {
     const { keys, children, items, from, enter, leave, update } = get(props)
-    const { keys: _keys, children: _children, items: _items } = get(prevProps)
+    const { keys: _keys, items: _items } = get(prevProps)
     const current = { ...state.current }
     const deleted = [...state.deleted]
 
@@ -114,12 +114,8 @@ export default class Transition extends React.PureComponent {
 
     let transitions = keys.map(key => current[key])
     deleted.forEach(
-      ({ lastIndex, ...transition }) =>
-        (transitions = [
-          ...transitions.slice(0, lastIndex),
-          transition,
-          ...transitions.slice(lastIndex),
-        ])
+      ({ lastIndex: i, ...t }) =>
+        (transitions = [...transitions.slice(0, i), t, ...transitions.slice(i)])
     )
 
     return { transitions, current, deleted, prevProps: props }
@@ -148,14 +144,14 @@ export default class Transition extends React.PureComponent {
       const { key, item, children, from, ...rest } = transition
       return (
         <Spring
-          ref={r => r && (this.springs[key] = r)}
+          ref={r => r && (this.springs[key] = r.getValues())}
           key={key}
           onRest={
             rest.destroyed
               ? () =>
                   this.setState(
                     ({ deleted }) => ({
-                      deleted: deleted.filter(t => t.key !== transition.key),
+                      deleted: deleted.filter(t => t.key !== key),
                     }),
                     () => delete this.springs[key]
                   )
@@ -164,7 +160,7 @@ export default class Transition extends React.PureComponent {
           onFrame={onFrame && (values => onFrame(item, values))}
           {...rest}
           {...props}
-          from={rest.destroyed ? this.springs[key].getValues() : from}
+          from={rest.destroyed ? this.springs[key] || from : from}
           render={render && children}
           children={render ? this.props.children : children}
         />
