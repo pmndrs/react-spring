@@ -15,14 +15,14 @@ import { Spring, ... } from 'react-spring/dist/universal'
 
 # Table of Contents 👇
 
-* [What is it?](#what-is-it-)
-* [Why do we need yet another?](#why-do-we-need-yet-another-)
-* [Links](#links-)
-* [Basic overview](#basic-overview-)
-* [Interpolation](#interpolation-)
-* [Render props](#render-props-)
-* [Native rendering](#native-rendering-)
-* [React-native and other targets](#react-native-and-other-targets-)
+- [What is it?](#what-is-it-)
+- [Why do we need yet another?](#why-do-we-need-yet-another-)
+- [Links](#links-)
+- [Basic overview](#basic-overview-)
+- [Interpolation](#interpolation-)
+- [Render props](#render-props-)
+- [Native rendering](#native-rendering-)
+- [React-native and other targets](#react-native-and-other-targets-)
 
 # What is it? 🤔
 
@@ -67,7 +67,6 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 react-spring builds upon animated's foundation, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
-
 
 # Links 🔗
 
@@ -127,11 +126,22 @@ Given a single child instead of a list you can toggle between two components.
 import { Transition } from 'react-spring'
 
 <Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-    {toggle ? ComponentA : ComponentB}
+    {toggle
+        ? styles => <ComponentA style={styles} />
+        : styles => <ComponentB style={styles} />
+    }
 </Transition>
 ```
 
-If you need to toggle a single child, that is also possible: `{toggle && Component}`
+If you need to toggle a single child, that is also possible.
+
+```jsx
+import { Transition } from 'react-spring'
+
+<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
+    {visible && (styles => <SingleComponent style={styles} />)}
+</Transition>
+```
 
 #### Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
@@ -278,7 +288,6 @@ const AnimatedView = animated(View)
 
 This project exists thanks to all the people who contribute. [[Contribute]](CONTRIBUTING.md).
 <a href="graphs/contributors"><img src="https://opencollective.com/react-spring/contributors.svg?width=890" /></a>
-
 
 # Backers
 

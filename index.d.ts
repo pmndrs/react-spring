@@ -162,9 +162,15 @@ interface TransitionProps<S extends object, DS extends object = {}> {
    */
   items?: Array<TransitionItemProps> | TransitionItemProps
 
-  children?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>
+  children?:
+    | SpringRendererFunc<S, DS>
+    | Array<SpringRendererFunc<S, DS>>
+    | boolean
 
-  render?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>
+  render?:
+    | SpringRendererFunc<S, DS>
+    | Array<SpringRendererFunc<S, DS>>
+    | boolean
 }
 
 export class Transition<
