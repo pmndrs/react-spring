@@ -12,7 +12,7 @@ export interface SpringConfig {
   tension?: number
   friction?: number
   velocity?: number
-  overshootClamping?: number
+  overshootClamping?: boolean
   restSpeedThreshold?: number
   restDisplacementThreshold?: number
 
