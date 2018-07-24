@@ -231,7 +231,7 @@ export class ParallaxLayer<
 > extends PureComponent<ParallaxLayerProps<S, DS> & S> {}
 
 interface KeyframesProps<S extends object, DS extends object = {}> {
-  state: string
+  state?: string
 }
 
 export class Keyframes<S extends object, DS extends object> extends PureComponent<
