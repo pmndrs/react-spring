@@ -105,7 +105,7 @@ export const config: {
 }
 
 export class Spring<S extends object, DS extends object> extends PureComponent<
-  SpringProps<S, DS>
+  SpringProps<S, DS> & S
 > {}
 
 export function interpolate(
@@ -117,10 +117,10 @@ export const animated: {
   [Tag in keyof JSX.IntrinsicElements]: ComponentClass<
     JSX.IntrinsicElements[Tag]
   >
-}
+};
 
-type TransitionKeyProps = string | number
-type TransitionItemProps = string | number | object
+type TransitionKeyProps = string | number;
+type TransitionItemProps = string | number | object;
 
 interface TransitionProps<S extends object, DS extends object = {}> {
   /**
@@ -174,7 +174,7 @@ interface TransitionProps<S extends object, DS extends object = {}> {
 export class Transition<
   S extends object,
   DS extends object
-> extends PureComponent<TransitionProps<S, DS>> {}
+> extends PureComponent<TransitionProps<S, DS> & S> {}
 
 type TrailKeyProps = string | number
 type TrailKeyItemProps = string | number | object
@@ -199,7 +199,7 @@ interface TrailProps<S extends object, DS extends object = {}> {
 }
 
 export class Trail<S extends object, DS extends object> extends PureComponent<
-  TrailProps<S, DS>
+  TrailProps<S, DS> & S
 > {}
 
 interface ParallaxProps<S extends object, DS extends object = {}> {
@@ -215,7 +215,7 @@ interface ParallaxProps<S extends object, DS extends object = {}> {
 export class Parallax<
   S extends object,
   DS extends object
-> extends PureComponent<ParallaxProps<S, DS>> {}
+> extends PureComponent<ParallaxProps<S, DS> & S> {}
 
 interface ParallaxLayerProps<S extends object, DS extends object = {}> {
   factor?: number
@@ -228,25 +228,25 @@ interface ParallaxLayerProps<S extends object, DS extends object = {}> {
 export class ParallaxLayer<
   S extends object,
   DS extends object
-> extends PureComponent<ParallaxLayerProps<S, DS>> {}
+> extends PureComponent<ParallaxLayerProps<S, DS> & S> {}
 
 interface KeyframesProps<S extends object, DS extends object = {}> {
-  state?: string
+  state: string
 }
 
-export class Keyframes<S extends object, DS extends object> extends Component<
-  KeyframesProps<S, DS>
+export class Keyframes<S extends object, DS extends object> extends PureComponent<
+  KeyframesProps<S, DS> & S
 > {
   static create<S extends object, DS extends object>(
     primitive: ComponentType
   ): (states: object) => (props: object) => Keyframes<S, DS>
   static Spring<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S, DS>
+  ): (props: object) => Keyframes<S, DS> | Spring<S,DS>
   static Trail<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S, DS>
+  ): (props: object) => Keyframes<S, DS> | Trail<S,DS>
   static Transition<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S, DS>
+  ): (props: object) => Keyframes<S, DS> | Transition<S,DS>
 }
