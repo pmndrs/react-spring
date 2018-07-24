@@ -117,10 +117,10 @@ export const animated: {
   [Tag in keyof JSX.IntrinsicElements]: ComponentClass<
     JSX.IntrinsicElements[Tag]
   >
-};
+}
 
-type TransitionKeyProps = string | number;
-type TransitionItemProps = string | number | object;
+type TransitionKeyProps = string | number
+type TransitionItemProps = string | number | object
 
 interface TransitionProps<S extends object, DS extends object = {}> {
   /**
