@@ -242,11 +242,11 @@ export class Keyframes<S extends object, DS extends object> extends PureComponen
   ): (states: object) => (props: object) => Keyframes<S, DS>
   static Spring<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S, DS> | Spring<S,DS>
+  ): (props: object) => Keyframes<S, DS> 
   static Trail<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S, DS> | Trail<S,DS>
+  ): (props: object) => Keyframes<S, DS>
   static Transition<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S, DS> | Transition<S,DS>
+  ): (props: object) => Keyframes<S, DS> 
 }
