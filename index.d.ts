@@ -85,6 +85,10 @@ interface SpringProps<S extends object, DS extends object = {}> {
    * @default undefined
    */
   inject?: any
+  /**
+   * Animation start delay, optional
+   */
+  delay?: number
 }
 
 export const config: {
@@ -227,7 +231,7 @@ export class ParallaxLayer<
 > extends PureComponent<ParallaxLayerProps<S, DS>> {}
 
 interface KeyframesProps<S extends object, DS extends object = {}> {
-  state: string
+  state?: string
 }
 
 export class Keyframes<S extends object, DS extends object> extends Component<
