@@ -13,8 +13,12 @@ const get = props => {
   keys = typeof keys === 'function' ? items.map(keys) : keys
   if (!Array.isArray(children)) {
     children = [children]
-    keys = keys ? [keys] : children.map(c => c.toString())
+    keys = keys !== void 0 ? [keys] : children.map(c => c.toString())
   }
+   
+  // Make sure numeric keys are interpreted as Strings (5 !== "5")
+  keys = keys.map(k => String(k))
+  
   return { keys, children, items, ...rest }
 }
 
