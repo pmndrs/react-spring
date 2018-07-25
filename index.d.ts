@@ -242,7 +242,7 @@ export class Keyframes<S extends object, DS extends object> extends PureComponen
   ): (states: object) => (props: object) => Keyframes<S, DS>
   static Spring<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S | Pick<SpringProps<S,DS>, Exclude<keyof SpringProps<S,DS>, {to:DS}>>, DS>
+  ): (props: object) => Keyframes<S | Pick<SpringProps<S,DS>, Exclude<keyof SpringProps<S,DS>, "to">>, DS>
   static Trail<S extends object, DS extends object>(
     states: object
   ): (props: object) => Keyframes<S | TrailProps<S,DS>, DS> 
