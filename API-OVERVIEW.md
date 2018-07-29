@@ -265,10 +265,13 @@ const Container = Keyframes.Spring([
 ])
 ```
 
-`Spring` and `Trail` also have a `.to` shortcut to make it even leaner:
+`Spring` and `Trail` also have a `.to` shortcut to make it even leaner. It will try to interpolate animatable props, but you can still use regular Spring-props like delay, immediate and so on, just be aware that they are reserved.
 
 ```jsx
-const Container = Keyframes.Spring.to([{ scale: 1.5 }, { scale: 1 }])
+const Container = Keyframes.Spring.to([
+  { immediate: true, delay: 500, scale: 1.5 },
+  { scale: 1 },
+])
 ```
 
 If you have made [your own animation primitive](https://github.com/drcmda/react-spring/issues/97#issuecomment-392380139) and want to drive it through keyframes, that is also doable:

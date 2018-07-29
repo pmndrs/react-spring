@@ -18,18 +18,25 @@ class Keyframes extends React.PureComponent {
   }
 
   next = (primitive, props) => {
+    this.running = true
     return new Promise(resolve => {
-      this.setState(state => ({
-        primitive,
-        props,
-        oldProps: { ...this.state.props },
-        resolve,
-      }))
+      this.setState(
+        state => ({
+          primitive,
+          props,
+          oldProps: { ...this.state.props },
+          resolve,
+        }),
+        () => (this.running = false)
+      )
     })
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.state !== this.props.state) {
+    if (
+      prevProps.state !== this.props.state ||
+      (this.props.reset && !this.running)
+    ) {
       const { states, filter: f, state, primitive } = this.props
       if (states && state && primitive) {
         const localId = ++this.guid
@@ -93,10 +100,19 @@ class Keyframes extends React.PureComponent {
   }
 }
 
+const interpolateTo = props => {
+  const forward = Spring.getForwardProps(props)
+  const rest = Object.keys(props).reduce(
+    (acc, key) => (forward[key] ? acc : { ...acc, [key]: props[key] }),
+    {}
+  )
+  return { to: forward, ...rest }
+}
+
 Keyframes.Spring = Keyframes.create(Spring)
-Keyframes.Spring.to = states => Keyframes.Spring(states, to => ({ to }))
+Keyframes.Spring.to = states => Keyframes.Spring(states, interpolateTo)
 Keyframes.Trail = Keyframes.create(Trail)
-Keyframes.Trail.to = states => Keyframes.Trail(states, to => ({ to }))
+Keyframes.Trail.to = states => Keyframes.Trail(states, interpolateTo)
 Keyframes.Transition = Keyframes.create(Transition)
 
 export default Keyframes

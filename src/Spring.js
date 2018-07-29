@@ -46,6 +46,7 @@ export default class Spring extends React.Component {
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     impl: PropTypes.func,
     inject: PropTypes.func,
+    delay: PropTypes.number,
   }
 
   static defaultProps = {
@@ -245,14 +246,14 @@ export default class Spring extends React.Component {
 
   convertValues(props) {
     const { from, to, native, children, render } = props
-    const forward = this.getForwardProps(props)
+    const forward = Spring.getForwardProps(props)
     const allProps = Object.entries({ ...from, ...to })
     return native
       ? allProps.reduce(convert, forward)
       : { ...from, ...to, ...forward }
   }
 
-  getForwardProps(props = this.props) {
+  static getForwardProps(props) {
     const {
       to,
       from,
@@ -266,6 +267,7 @@ export default class Spring extends React.Component {
       immediate,
       impl,
       inject,
+      delay,
       ...forward
     } = props
     return forward
@@ -305,7 +307,7 @@ export default class Spring extends React.Component {
     return values && Object.keys(values).length
       ? this.renderChildren(this.props, {
           ...values,
-          ...this.getForwardProps(),
+          ...Spring.getForwardProps(this.props),
         })
       : null
   }
