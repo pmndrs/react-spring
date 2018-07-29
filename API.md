@@ -53,8 +53,6 @@ class Spring extends React.PureComponent {
     render: PropTypes.func,
     // Prevents animation if true, you can also pass individual keys
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    // Won't start animations, so they can be controlled from outside
-    hold: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     // Spring config ({ tension, friction, ... } or a function receiving a name)
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     // Animation start delay, optional
