@@ -78,7 +78,8 @@ class Keyframes extends React.PureComponent {
   }
 
   static create = primitive => states => {
-    if (typeof states === 'function') states = { [DEFAULT]: states }
+    if (typeof states === 'function' || Array.isArray(states))
+      states = { [DEFAULT]: states }
     return props => (
       <Keyframes primitive={primitive} states={states} {...props} />
     )
