@@ -85,6 +85,10 @@ interface SpringProps<S extends object, DS extends object = {}> {
    * @default undefined
    */
   inject?: any
+  /**
+   * Animation start delay, optional
+   */
+  delay?: number
 }
 
 export const config: {
@@ -101,7 +105,7 @@ export const config: {
 }
 
 export class Spring<S extends object, DS extends object> extends PureComponent<
-  SpringProps<S, DS>
+  SpringProps<S, DS> & S
 > {}
 
 export function interpolate(
@@ -162,15 +166,21 @@ interface TransitionProps<S extends object, DS extends object = {}> {
    */
   items?: Array<TransitionItemProps> | TransitionItemProps
 
-  children?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>
+  children?:
+    | SpringRendererFunc<S, DS>
+    | Array<SpringRendererFunc<S, DS>>
+    | boolean
 
-  render?: SpringRendererFunc<S, DS> | Array<SpringRendererFunc<S, DS>>
+  render?:
+    | SpringRendererFunc<S, DS>
+    | Array<SpringRendererFunc<S, DS>>
+    | boolean
 }
 
 export class Transition<
   S extends object,
   DS extends object
-> extends PureComponent<TransitionProps<S, DS>> {}
+> extends PureComponent<TransitionProps<S, DS> & S> {}
 
 type TrailKeyProps = string | number
 type TrailKeyItemProps = string | number | object
@@ -195,7 +205,7 @@ interface TrailProps<S extends object, DS extends object = {}> {
 }
 
 export class Trail<S extends object, DS extends object> extends PureComponent<
-  TrailProps<S, DS>
+  TrailProps<S, DS> & S
 > {}
 
 interface ParallaxProps<S extends object, DS extends object = {}> {
@@ -211,7 +221,7 @@ interface ParallaxProps<S extends object, DS extends object = {}> {
 export class Parallax<
   S extends object,
   DS extends object
-> extends PureComponent<ParallaxProps<S, DS>> {}
+> extends PureComponent<ParallaxProps<S, DS> & S> {}
 
 interface ParallaxLayerProps<S extends object, DS extends object = {}> {
   factor?: number
@@ -224,25 +234,25 @@ interface ParallaxLayerProps<S extends object, DS extends object = {}> {
 export class ParallaxLayer<
   S extends object,
   DS extends object
-> extends PureComponent<ParallaxLayerProps<S, DS>> {}
+> extends PureComponent<ParallaxLayerProps<S, DS> & S> {}
 
 interface KeyframesProps<S extends object, DS extends object = {}> {
-  state: string
+  state?: string
 }
 
-export class Keyframes<S extends object, DS extends object> extends Component<
-  KeyframesProps<S, DS>
+export class Keyframes<S extends object, DS extends object> extends PureComponent<
+  KeyframesProps<S, DS> & S
 > {
   static create<S extends object, DS extends object>(
     primitive: ComponentType
   ): (states: object) => (props: object) => Keyframes<S, DS>
   static Spring<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S, DS>
+  ): (props: object) => Keyframes<S | Pick<SpringProps<S,DS>, Exclude<keyof SpringProps<S,DS>, "to">>, DS>
   static Trail<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S, DS>
+  ): (props: object) => Keyframes<S | Pick<TrailProps<S,DS>, Exclude<keyof TrailProps<S,DS>, "to">>, DS> 
   static Transition<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S, DS>
+  ): (props: object) => Keyframes<S | Pick<TransitionProps<S,DS>, Exclude<keyof TransitionProps<S,DS>, "to">>, DS> 
 }

@@ -1,11 +1,11 @@
 {
   "dist/addons.umd.js": {
-    "bundled": 16003,
+    "bundled": 16024,
     "minified": 5898,
     "gzipped": 2150
   },
   "dist/web.umd.js": {
-    "bundled": 86075,
+    "bundled": 86161,
     "minified": 35541,
     "gzipped": 12021
   }
