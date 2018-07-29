@@ -30,7 +30,7 @@ class Keyframes extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     if (prevProps.state !== this.props.state) {
-      const { states, state, primitive } = this.props
+      const { states, filter: f, state, primitive } = this.props
       if (states && state && primitive) {
         const localId = ++this.guid
         const slots = states[state]
@@ -38,15 +38,17 @@ class Keyframes extends React.PureComponent {
           if (Array.isArray(slots)) {
             let q = Promise.resolve()
             for (let s of slots) {
-              q = q.then(() => localId === this.guid && this.next(primitive, s))
+              q = q.then(
+                () => localId === this.guid && this.next(primitive, f(s))
+              )
             }
           } else if (typeof slots === 'function') {
             slots(
-              props => localId === this.guid && this.next(primitive, props),
+              props => localId === this.guid && this.next(primitive, f(props)),
               this.props
             )
           } else {
-            this.next(primitive, states[state])
+            this.next(primitive, f(states[state]))
           }
         }
       }
@@ -77,17 +79,24 @@ class Keyframes extends React.PureComponent {
     } else return null
   }
 
-  static create = primitive => states => {
+  static create = primitive => (states, filter = states => states) => {
     if (typeof states === 'function' || Array.isArray(states))
       states = { [DEFAULT]: states }
     return props => (
-      <Keyframes primitive={primitive} states={states} {...props} />
+      <Keyframes
+        primitive={primitive}
+        states={states}
+        filter={filter}
+        {...props}
+      />
     )
   }
 }
 
 Keyframes.Spring = Keyframes.create(Spring)
+Keyframes.Spring.to = states => Keyframes.Spring(states, to => ({ to }))
 Keyframes.Trail = Keyframes.create(Trail)
+Keyframes.Trail.to = states => Keyframes.Trail(states, to => ({ to }))
 Keyframes.Transition = Keyframes.create(Transition)
 
 export default Keyframes

@@ -211,7 +211,7 @@ import { Trail } from 'react-spring'
 
 ### Keyframes
 
-`Keyframes` allows you to chain, compose and orchestrate animations by creating predefined slots which you then execute by passing the `state` prop.
+`Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots which you then execute by passing the `state` prop.
 
 The resulting primitive can receive all the generic properties you would normally give your springs, like `native`, `from`, and so on.
 
@@ -224,8 +224,8 @@ const Container = Keyframes.Spring({
     show: { to: { opacity: 1 } },
     // Chained animations (arrays)
     showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
-    // Functions with side-effects
-    wiggle: async next => {
+    // Functions with side-effects with access to component props
+    wiggle: async (next, ownProps) => {
         await next({ to: { x: 100 }, config: config.wobbly })
         await delay(1000)
         await next({ to: { x: 0 }, config: config.gentle })
@@ -237,11 +237,9 @@ const Container = Keyframes.Spring({
 </Container>
 ```
 
-Keyframes can also be used for manual, low-level scripting by giving it a function instead of an object consisting of slots (good for loops and such):
+There is a shortcut for low-level scripting by giving it a function instead of an object consisting of slots (good for loops and such). In this case the state prop can be omitted.
 
 ```jsx
-import { Keyframes, config } from 'react-spring'
-
 // Will fade children in and out in a loop
 const Container = Keyframes.Spring(async next => {
   while (true) {
@@ -258,12 +256,19 @@ const Container = Keyframes.Spring(async next => {
 </Container>
 ```
 
-If you need to access the components own properties, you can (it works on all functions):
+And another for arrays:
 
 ```jsx
-const Container = Keyframes.Spring(async (next, ownProps) => {
-  // ...
-})
+const Container = Keyframes.Spring([
+  { to: { scale: 1.5 } },
+  { to: { scale: 1 } },
+])
+```
+
+`Spring` and `Trail` also have a `.to` shortcut to make it even leaner:
+
+```jsx
+const Container = Keyframes.Spring.to([{ scale: 1.5 }, { scale: 1 }])
 ```
 
 If you have made [your own animation primitive](https://github.com/drcmda/react-spring/issues/97#issuecomment-392380139) and want to drive it through keyframes, that is also doable:
