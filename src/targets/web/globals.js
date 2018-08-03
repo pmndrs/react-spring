@@ -3,8 +3,6 @@ import colorNames from '../shared/colors'
 import createInterpolation from '../shared/interpolation'
 import fixAuto from './fix-auto'
 
-alert('hey there')
-
 const isUnitlessNumber = {
   animationIterationCount: true,
   borderImageOutset: true,
