@@ -268,6 +268,7 @@ export default class Spring extends React.Component {
       impl,
       inject,
       delay,
+      attach,
       ...forward
     } = props
     return forward
