@@ -63,7 +63,7 @@ export default class Trail extends React.PureComponent {
           onRest={i === 0 ? onRest : null}
           key={keys[i]}
           {...props}
-          delay={firstDelay}
+          delay={firstDelay || undefined}
           attach={attachedHook}
           render={render && child}
           children={render ? children : child}

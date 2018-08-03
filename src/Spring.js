@@ -61,27 +61,26 @@ export default class Spring extends React.Component {
   }
 
   state = { props: undefined }
-  animations = {}
 
   componentWillUnmount() {
     this.stop()
   }
 
   componentWillMount() {
-    this.updatePropsAsync(this.props)
+    this.animations = {}
+    this.mounting = true
+    this.inject = this.props.inject && this.props.inject(this, this.props)
+    if (this.inject) return
+    this.updateProps(this.props)
   }
 
   componentWillUpdate(props) {
-    if (props.reset || shallowDiff(props.to, this.props.to))
-      this.updatePropsAsync(props)
-  }
-
-  updatePropsAsync(props) {
-    if (props.inject) {
+    if (props.inject && props.children !== this.props.children) {
       this.inject = props.inject(this, props)
       if (this.inject) return
     }
-    this.updateProps(props)
+    if (props.reset || shallowDiff(props.to, this.props.to))
+      this.updateProps(props)
   }
 
   updateProps(props, force = false, didInject = false) {
@@ -161,7 +160,7 @@ export default class Spring extends React.Component {
         this.animations[name].stopped = true
         if (this.getAnimations().every(a => a.stopped)) {
           const current = { ...this.props.from, ...this.props.to }
-          if (onRest) onRest(current)
+          if (onRest && !this.mounting) onRest(current)
           cb && typeof cb === 'function' && cb(current)
 
           if (didInject) {
@@ -200,8 +199,6 @@ export default class Spring extends React.Component {
   }
 
   start() {
-    const { onStart } = this.props
-
     let fn = () =>
       this.getAnimations().forEach(animation => animation.start(resolve))
     let resolve,
@@ -211,7 +208,7 @@ export default class Spring extends React.Component {
       return (this.timeout = setTimeout(() => fn(), this.props.delay))
     }
 
-    if (onStart) onStart()
+    if (this.props.onStart) this.props.onStart()
 
     fn()
     return promise
@@ -288,6 +285,7 @@ export default class Spring extends React.Component {
   componentDidMount() {
     this.updateToken = false
     this.start()
+    this.mounting = false
   }
 
   renderChildren(props, componentProps) {

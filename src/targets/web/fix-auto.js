@@ -20,6 +20,8 @@ export default function fixAuto(spring, props) {
   if (![...getValues(from), ...getValues(to)].some(check)) return
   // Fetch render v-dom
   const element = spring.renderChildren(props, spring.convertValues(props))
+  // A spring can return undefined/null, check against that (#153)
+  if (!element) return
   const elementStyles = element.props.style
 
   // Return v.dom with injected ref
