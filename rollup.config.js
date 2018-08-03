@@ -1,10 +1,12 @@
+import path from 'path'
 import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import { uglify } from 'rollup-plugin-uglify'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 
-const external = id => !id.startsWith('.') && !id.startsWith('/')
+const root = process.platform === 'win32' ? path.resolve('/') : '/'
+const external = id => !id.startsWith('.') && !id.startsWith(root)
 
 const globals = {
   react: 'React',
