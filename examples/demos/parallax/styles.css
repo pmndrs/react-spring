@@ -23,19 +23,6 @@
     transform: translate3d(-35%, 0, 0);
 }
 
-.header {
-    display: flex;
-    justify-content: center!important;
-    align-items: center;
-    font-size: 50px;
-    color: white;
-}
-
-.stripe {
-    height: 2px;
-    width: auto;
-}
-
 .slopeBegin {
     background-color: #20232f;
     clip-path: polygon(20% 0, 70% 0, 50% 100%, 0% 100%);

@@ -8,7 +8,13 @@ export default class TrailsExample extends React.PureComponent {
   render() {
     const { toggle, items } = this.state
     return (
-      <div style={{ backgroundColor: '#247BA0' }}>
+      <div
+        style={{
+          backgroundColor: '#247BA0',
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+        }}>
         <Trail
           native
           from={{ opacity: 0, x: -100 }}

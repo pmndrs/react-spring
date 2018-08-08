@@ -5,7 +5,7 @@
     height: 100%;
     font-weight: 600;
     font-family: 'Kanit', sans-serif;
-    font-size: 30px;
+    font-size: 20px;
     text-transform: uppercase;
     display: flex;
     align-items: center;
@@ -13,15 +13,15 @@
     overflow: hidden;
 }
 
-.item {
+.gestures-item {
     position: relative;
-    width: 320px;
-    height: 90px;
+    width: 180px;
+    height: 70px;
     pointer-events: auto;
     transform-origin: 50% 50% 0px;
     border-radius: 4px;
     color: white;
-    line-height: 90px;
+    line-height: 70px;
     padding-left: 32px;
     padding-right: 32px;
     box-sizing: border-box;

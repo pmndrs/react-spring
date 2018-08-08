@@ -60,162 +60,192 @@ export default class Spring extends React.Component {
     inject: Globals.bugfixes,
   }
 
-  state = { props: undefined }
+  constructor(props) {
+    super(props)
+    this.state = {
+      animations: {},
+      interpolators: {},
+      dry: false,
+      skipRender: false,
+      update: false,
+      self: this,
+    }
+    // setState shouldn't cause gDSFP to create interpolators ever
+    const oldSetState = this.setState.bind(this)
+    this.update = (arg, skipRender = true, cb) => {
+      return oldSetState(
+        state => ({
+          ...(typeof arg === 'function' ? arg(state) : arg),
+          dry: true,
+          skipRender,
+        }),
+        cb
+      )
+    }
+  }
+
+  componentDidMount() {
+    // componentDidUpdate isn't called on mount, we call it here to start animating
+    this.componentDidUpdate()
+  }
 
   componentWillUnmount() {
-    this.stop()
+    // Stop all ongoing animtions
+    this.stopAnimations()
   }
 
-  componentWillMount() {
-    this.animations = {}
-    this.mounting = true
-    this.inject = this.props.inject && this.props.inject(this, this.props)
-    if (this.inject) return
-    this.updateProps(this.props)
+  shouldComponentUpdate(_, nextState) {
+    // Do not render component on dry setState (internal state mgmnt)
+    return !nextState.skipRender
   }
 
-  componentWillUpdate(props) {
-    if (props.inject && props.children !== this.props.children) {
-      this.inject = props.inject(this, props)
-      if (this.inject) return
+  componentDidUpdate() {
+    const { delay, onStart } = this.props
+    const { update, animations } = this.state
+
+    // Animation has to start *after* render, since at that point the scene
+    // graph should be established, so we do it here. Unfortunatelly, non-native
+    // animations call forceUpdate, so it's causing a loop. updateToken prevents
+    // that as it gets set only on prop changes.
+    if (update) {
+      if (delay) {
+        if (this.timeout) clearTimeout(this.timeout)
+        return (this.timeout = setTimeout(this.startAnimations, delay))
+      }
+      if (onStart) onStart()
+      this.startAnimations()
+      this.update({ update: false })
     }
-    if (props.reset || shallowDiff(props.to, this.props.to))
-      this.updateProps(props)
   }
 
-  updateProps(props, force = false, didInject = false) {
-    // Springs can be destroyed, the "destroyed" flag prevents them from ever
-    // updating further, they'll just animate out and function no more ...
-    if (this.destroyed && props.destroyed) return
-    this.destroyed = props.destroyed
+  static getDerivedStateFromProps(
+    { from, to, attach, immediate, reset },
+    { dry, skipRender, animations, interpolators, self, to: lastTo }
+  ) {
+    // dry state-updates should update state without creating interpolators
+    if (dry && !shallowDiff(to, lastTo))
+      return { dry: false, update: false, skipRender }
 
-    const {
-      impl,
-      from,
-      to,
-      config,
-      attach,
-      immediate,
-      reset,
-      onFrame,
-      onRest,
-      inject,
-      native,
-    } = props
+    const target = attach && attach(self)
     const allProps = Object.entries({ ...from, ...to })
 
-    this.interpolators = {}
-    this.animations = allProps.reduce((acc, [name, value], i) => {
-      const entry =
-        (reset === false && this.animations[name]) ||
-        (this.animations[name] = {})
-
-      let isNumber = typeof value === 'number'
-      let isString =
+    animations = allProps.reduce((acc, [name, value], i) => {
+      const entry = (reset === false && acc[name]) || { stopped: true }
+      const isNumber = typeof value === 'number'
+      const isString =
         typeof value === 'string' &&
         !value.startsWith('#') &&
         !/\d/.test(value) &&
         !Globals.colorNames[value]
-      let isArray = !isNumber && !isString && Array.isArray(value)
-      let fromValue = from[name] !== undefined ? from[name] : value
-      let fromAnimated = fromValue instanceof AnimatedValue
+      const isArray = !isNumber && !isString && Array.isArray(value)
+      const fromValue = from[name] !== undefined ? from[name] : value
+      const fromAnimated = fromValue instanceof AnimatedValue
       let toValue = isNumber || isArray ? value : 1
 
-      if (attach) {
+      if (target) {
         // Attach value to target animation
-        const target = attach(this)
-        const attachedAnimation = target && target.animations[name]
+        const attachedAnimation = target.state.animations[name]
         if (attachedAnimation) toValue = attachedAnimation.animation
       }
 
+      let animation, interpolation
       if (fromAnimated) {
         // Use provided animated value
-        entry.animation = entry.interpolation = fromValue
+        animation = interpolation = fromValue
       } else if (isNumber || isString) {
         // Create animated value
-        entry.animation = entry.interpolation =
+        animation = interpolation =
           entry.animation || new AnimatedValue(fromValue)
       } else if (isArray) {
         // Create animated array
-        entry.animation = entry.interpolation =
+        animation = interpolation =
           entry.animation || new AnimatedArray(fromValue)
       } else {
         // Deal with interpolations
         const previous =
           entry.interpolation &&
           entry.interpolation._interpolation(entry.animation._value)
-
-        entry.animation = new AnimatedValue(0)
-        entry.interpolation = entry.animation.interpolate({
+        animation = new AnimatedValue(0)
+        interpolation = animation.interpolate({
           range: [0, 1],
           output: [previous !== undefined ? previous : fromValue, value],
         })
       }
 
-      if (callProp(immediate, name)) entry.animation.setValue(toValue)
+      // Set immediate values
+      if (callProp(immediate, name)) animation.setValue(toValue)
 
-      entry.stopped = false
+      // Save interpolators
+      interpolators = { ...interpolators, [name]: interpolation }
 
-      entry.onFinish = cb => {
-        this.animations[name].stopped = true
-        if (this.getAnimations().every(a => a.stopped)) {
-          const current = { ...this.props.from, ...this.props.to }
-          if (onRest && !this.mounting) onRest(current)
-          cb && typeof cb === 'function' && cb(current)
-
-          if (didInject) {
-            // Restore the original values for injected props
-            const componentProps = this.convertValues(this.props)
-            this.inject = this.renderChildren(this.props, componentProps)
-            this.forceUpdate()
-          }
-        }
+      return {
+        ...acc,
+        [name]: {
+          ...entry,
+          name,
+          animation,
+          interpolation,
+          toValue,
+          stopped: false,
+        },
       }
+    }, animations)
 
-      entry.start = cb => {
-        if (entry.animation.__getValue() === toValue) return entry.onFinish(cb)
-        controller(
-          entry.animation,
-          { to: toValue, ...callProp(config, name) },
-          impl
-        ).start(props => props.finished && entry.onFinish(cb))
-      }
-
-      entry.stop = () => {
-        entry.stopped = true
-        entry.animation.stopAnimation()
-      }
-
-      this.interpolators[name] = entry.interpolation
-      return { ...acc, [name]: entry }
-    }, {})
-
-    const oldAnimatedProps = this.animatedProps
-    this.animatedProps = new AnimatedProps(this.interpolators, this.callback)
-    oldAnimatedProps && oldAnimatedProps.__detach()
-
-    this.updateToken = true
-    if (force) this.forceUpdate()
+    return { animations, interpolators, update: true, skipRender: false, to }
   }
 
-  start() {
-    let fn = () =>
-      this.getAnimations().forEach(animation => animation.start(resolve))
-    let resolve,
-      promise = new Promise(r => (resolve = r))
-    if (this.props.delay) {
-      if (this.timeout) clearTimeout(this.timeout)
-      return (this.timeout = setTimeout(() => fn(), this.props.delay))
+  startAnimations = () =>
+    Object.keys(this.state.animations).forEach(this.animationStart)
+
+  stopAnimations = () =>
+    this.getAnimations().forEach(({ animation }) => animation.stopAnimation())
+
+  animationOnFinish = (name, cb) => {
+    const { onRest } = this.props
+    const { animation, toValue: to } = this.state.animations[name]
+
+    this.animationStop(name)
+    if (this.getAnimations().every(a => a.stopped)) {
+      const current = { ...this.props.from, ...this.props.to }
+      if (onRest) onRest(current)
+      cb && typeof cb === 'function' && cb(current)
+
+      /*if (didInject) {
+        // Restore the original values for injected props
+        const componentProps = this.convertValues(this.props)
+        this.inject = this.renderChildren(this.props, componentProps)
+        //this.forceUpdate()
+        this.setState({ force: true })
+      }*/
     }
-
-    if (this.props.onStart) this.props.onStart()
-
-    fn()
-    return promise
   }
 
-  stop() {
-    this.getAnimations().forEach(animation => animation.stop())
+  animationStart = (name, cb) => {
+    const { config, impl } = this.props
+    const { animation, toValue: to } = this.state.animations[name]
+    // TODO: figure out why this is needed ...
+    if (!to.__getValue && animation.__getValue() === to)
+      return this.animationOnFinish(name, cb)
+    controller(animation, { to, ...callProp(config, name) }, impl).start(
+      !to.__getValue &&
+        (props => props.finished && this.animationOnFinish(name, cb))
+    )
+  }
+
+  animationStop = name => {
+    const { animation } = this.state.animations[name]
+    this.update(state => ({
+      ...state,
+      animations: {
+        ...state.animations,
+        [name]: { ...state.animations[name], stopped: true },
+      },
+    }))
+  }
+
+  callback = () => {
+    if (this.props.onFrame) this.props.onFrame(this.animatedProps.__getValue())
+    if (!this.props.native) this.update({}, false)
   }
 
   flush() {
@@ -224,13 +254,10 @@ export default class Spring extends React.Component {
     )
   }
 
-  callback = () => {
-    if (this.props.onFrame) this.props.onFrame(this.animatedProps.__getValue())
-    !this.props.native && this.forceUpdate()
-  }
-
   getAnimations() {
-    return Object.keys(this.animations).map(key => this.animations[key])
+    return Object.keys(this.state.animations).map(
+      key => this.state.animations[key]
+    )
   }
 
   getValues() {
@@ -238,7 +265,7 @@ export default class Spring extends React.Component {
   }
 
   getAnimatedValues() {
-    return this.props.native ? this.interpolators : this.getValues()
+    return this.props.native ? this.state.interpolators : this.getValues()
   }
 
   convertValues(props) {
@@ -271,23 +298,6 @@ export default class Spring extends React.Component {
     return forward
   }
 
-  componentDidUpdate() {
-    // Animation has to start *after* render, since at that point the scene
-    // graph should be established, so we do it here. Unfortunatelly, non-native
-    // animations call forceUpdate, so it's causing a loop. updateToken prevents
-    // that as it gets set only on prop changes.
-    if (this.updateToken) {
-      this.updateToken = false
-      this.start()
-    }
-  }
-
-  componentDidMount() {
-    this.updateToken = false
-    this.start()
-    this.mounting = false
-  }
-
   renderChildren(props, componentProps) {
     return props.render
       ? props.render({ ...componentProps, children: props.children })
@@ -295,13 +305,21 @@ export default class Spring extends React.Component {
   }
 
   render() {
-    if (this.inject) {
+    const { children, render } = this.props
+    const { update, interpolators } = this.state
+
+    if (update) {
+      const oldAnimatedProps = this.animatedProps
+      this.animatedProps = new AnimatedProps(interpolators, this.callback)
+      oldAnimatedProps && oldAnimatedProps.__detach()
+    }
+
+    /*if (this.inject) {
       const content = this.inject
       this.inject = undefined
       return content
-    }
+    }*/
 
-    const { children, render } = this.props
     const values = this.getAnimatedValues()
     return values && Object.keys(values).length
       ? this.renderChildren(this.props, {

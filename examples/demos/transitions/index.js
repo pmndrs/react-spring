@@ -51,6 +51,8 @@ export default class TransitionsExample extends React.PureComponent {
           backgroundColor: '#70C1B3',
           overflow: 'hidden',
           cursor: 'pointer',
+          margin: 0,
+          padding: 0,
         }}
         onClick={() => this.componentDidMount()}>
         <Transition

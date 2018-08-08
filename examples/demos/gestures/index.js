@@ -11,11 +11,11 @@ export default class GesturesExample extends React.Component {
     const { xDelta, down, children } = this.props
     const to = { x: down ? xDelta : 0 }
     return (
-      <div className="gestures-main" style={{ gridColumn: 'span 2' }}>
+      <div className="gestures-main">
         <Spring native to={to} immediate={n => down && n === 'x'}>
           {({ x }) => (
             <animated.div
-              className="item"
+              className="gestures-item"
               style={{ backgroundColor: xDelta < 0 ? '#FF1C68' : '#14D790' }}>
               <animated.div
                 className="bubble"

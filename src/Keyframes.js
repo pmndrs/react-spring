@@ -11,18 +11,17 @@ class Keyframes extends React.PureComponent {
   static defaultProps = { state: DEFAULT }
 
   guid = 0
-  state = { primitive: undefined, props: {}, oldProps: {}, resolve: () => null }
+  state = { props: {}, oldProps: {}, resolve: () => null }
 
   componentDidMount() {
     this.componentDidUpdate({})
   }
 
-  next = (primitive, props) => {
+  next = props => {
     this.running = true
     return new Promise(resolve => {
       this.setState(
         state => ({
-          primitive,
           props,
           oldProps: { ...this.state.props },
           resolve,
@@ -37,25 +36,23 @@ class Keyframes extends React.PureComponent {
       prevProps.state !== this.props.state ||
       (this.props.reset && !this.running)
     ) {
-      const { states, filter: f, state, primitive } = this.props
-      if (states && state && primitive) {
+      const { states, filter: f, state } = this.props
+      if (states && state) {
         const localId = ++this.guid
         const slots = states[state]
         if (slots) {
           if (Array.isArray(slots)) {
             let q = Promise.resolve()
             for (let s of slots) {
-              q = q.then(
-                () => localId === this.guid && this.next(primitive, f(s))
-              )
+              q = q.then(() => localId === this.guid && this.next(f(s)))
             }
           } else if (typeof slots === 'function') {
             slots(
-              props => localId === this.guid && this.next(primitive, f(props)),
+              props => localId === this.guid && this.next(f(props)),
               this.props
             )
           } else {
-            this.next(primitive, f(states[state]))
+            this.next(f(states[state]))
           }
         }
       }
@@ -63,27 +60,27 @@ class Keyframes extends React.PureComponent {
   }
 
   render() {
-    const { primitive: Component, props, oldProps, resolve } = this.state
-    const { from: ownFrom, onRest, ...rest } = this.props
-    if (Component) {
-      const current = this.instance && this.instance.getValues()
-      const from =
-        typeof props.from === 'function'
-          ? props.from
-          : { ...oldProps.from, ...current, ...props.from }
-      return (
-        <Component
-          ref={ref => (this.instance = ref)}
-          {...rest}
-          {...props}
-          from={{ ...from, ...ownFrom }}
-          onRest={args => {
-            resolve(args)
-            if (onRest) onRest(args)
-          }}
-        />
-      )
-    } else return null
+    const { props, oldProps, resolve } = this.state
+    const { primitive: Component, from: ownFrom, onRest, ...rest } = this.props
+
+    const current = this.instance && this.instance.getValues()
+    const from =
+      typeof props.from === 'function'
+        ? props.from
+        : { ...oldProps.from, ...current, ...props.from }
+
+    return props ? (
+      <Component
+        ref={ref => (this.instance = ref)}
+        {...rest}
+        {...props}
+        from={{ ...from, ...ownFrom }}
+        onRest={args => {
+          resolve(args)
+          if (onRest) onRest(args)
+        }}
+      />
+    ) : null
   }
 
   static create = primitive => (states, filter = states => states) => {

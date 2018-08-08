@@ -1,0 +1,21 @@
+.treeview-main {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #373737;
+  overflow: hidden;
+  font-family: 'Monospaced Number', 'Chinese Quote', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.treeview > .toggle {
+  pointer-events: all;
+  cursor: pointer;
+}
+.treeview > .toggle:hover {
+  color: #63b1de;
+  fill: #63b1de;
+}

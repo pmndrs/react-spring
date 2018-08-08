@@ -52,6 +52,7 @@ export default class NativeSpringExample extends React.Component {
         }}
         toggle={this.toggle}
         children={Content}
+        onRest={() => console.log('done')}
       />
     )
   }

@@ -18,15 +18,6 @@ const Page = ({ offset, caption, first, second, gradient, onClick }) => (
     <ParallaxLayer className="text number" offset={offset} speed={0.3}>
       <span>0{offset + 1}</span>
     </ParallaxLayer>
-
-    <ParallaxLayer className="text header" offset={offset} speed={0.4}>
-      <span>
-        <p style={{ fontSize: 20 }}>{caption}</p>
-        <div className={`stripe ${gradient}`} />
-        <p>{first}</p>
-        <p>{second}</p>
-      </span>
-    </ParallaxLayer>
   </React.Fragment>
 )
 
@@ -34,12 +25,7 @@ export default class extends React.Component {
   scroll = to => this.parallax.scrollTo(to)
   render() {
     return (
-      <div
-        style={{
-          gridColumn: 'span 2',
-          gridRow: 'span 2',
-          background: '#dfdfdf',
-        }}>
+      <div style={{ background: '#dfdfdf' }}>
         <Parallax
           className="container"
           ref={node => (this.parallax = node)}

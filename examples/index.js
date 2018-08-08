@@ -6,16 +6,23 @@ import './styles.css'
 const components = [
   'scroll',
   'parallax',
-  'nativespring',
   'transitions',
+  'nativespring',
   'areas',
   'trails',
   'reveals',
-  'timing',
-  'sunburst',
   'gestures',
+  'timing',
+  'spring',
   'tree',
+  'grid',
   'morph',
+  'sunburst',
+  'onrest',
+  'treeview',
+  'keyframes',
+  'script',
+  'auto',
 ].map(path =>
   Loadable({
     loader: () => import('./demos/' + path),
@@ -23,9 +30,16 @@ const components = [
   })
 )
 
+const DEBUG = false
+const DebugComponent = components[16]
+
 ReactDOM.render(
-  <div className="app-container">
-    {components.map((Component, i) => <Component key={i} />)}
-  </div>,
+  DEBUG ? (
+    <DebugComponent />
+  ) : (
+    <div className="app-container">
+      {components.map((Component, i) => <Component key={i} />)}
+    </div>
+  ),
   document.getElementById('root')
 )

@@ -1,0 +1,131 @@
+    .cell {
+    position: relative;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: #777777;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 10px 60px -10px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.5s;
+    font-size: 10px;
+    line-height: 10px;
+  }
+  
+  .default {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .cell:hover {
+    box-shadow: 0px 20px 60px -10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .shuffle {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    padding: 0px 20px 0px 20px;
+    width: auto;
+    height: auto;
+    background: white;
+    border: solid 2px #ffaad4;
+    border-radius: 7px;
+    color: #ffaad4;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 100;
+    line-height: 45px;
+  }
+  
+  .shuffle:hover {
+    background: #f9f9f9;
+  }
+  
+  .details {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: #ffffffa0;
+    color: white;
+    padding: 20px;
+    font-weight: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  
+  .details h1 {
+    color: #ca6a9a;
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    max-width: 50px;
+  }
+  
+  .details p {
+    color: #777777;
+    font-size: 14px;
+    line-height: 14px;
+    margin: 0;
+    padding-top: 6px;
+  }
+  
+  .circle {
+    position: absolute;
+    top: calc(50% - 50px);
+    left: calc(50% - 50px);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    box-shadow: 0px 20px 60px -10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .close {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 20px;
+    color: #777777;
+  }
+  
+  .main {
+    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+    helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .header {
+    padding: 30px 70px 30px 70px;
+    height: auto;
+    display: flex;
+  }
+  
+  .grid {
+    flex: 1;
+  }
+  
+  .ant-btn-primary {
+    background-color: #ca6a9a !important;
+    border-color: #ca6a9a !important;
+  }
