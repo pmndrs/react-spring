@@ -30,8 +30,8 @@ const components = [
   })
 )
 
-const DEBUG = false
-const DebugComponent = components[16]
+const DEBUG = true
+const DebugComponent = components[15]
 
 ReactDOM.render(
   DEBUG ? (

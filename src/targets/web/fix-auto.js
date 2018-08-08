@@ -52,18 +52,18 @@ export default function fixAuto(spring, props) {
             width = node.offsetWidth - paddingX - borderX
             height = node.offsetHeight - paddingY - borderY
           }
+
           // Defer to next frame, or else the springs updateToken is canceled
           const convert = overwrite(width, height)
-          requestAnimationFrame(() =>
-            spring.updateProps(
-              {
+          spring.update(
+            {
+              override: {
                 ...props,
                 from: Object.entries(from).reduce(convert, from),
                 to: Object.entries(to).reduce(convert, to),
               },
-              true,
-              true
-            )
+            },
+            false
           )
         }
       }}

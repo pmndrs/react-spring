@@ -8,6 +8,7 @@ import SpringAnimation from './animated/SpringAnimation'
 import * as Globals from './animated/Globals'
 
 function shallowDiff(a, b) {
+  if (!!a !== !!b) return false
   for (let i in a) if (!(i in b)) return true
   for (let i in b) if (a[i] !== b[i]) return true
   return false
@@ -65,6 +66,7 @@ export default class Spring extends React.Component {
     this.state = {
       animations: {},
       interpolators: {},
+      last: {},
       dry: false,
       skipRender: false,
       update: false,
@@ -118,13 +120,33 @@ export default class Spring extends React.Component {
     }
   }
 
-  static getDerivedStateFromProps(
-    { from, to, attach, immediate, reset },
-    { dry, skipRender, animations, interpolators, self, to: lastTo }
-  ) {
-    // dry state-updates should update state without creating interpolators
-    if (dry && !shallowDiff(to, lastTo))
-      return { dry: false, update: false, skipRender }
+  static getDerivedStateFromProps(props, state) {
+    let {
+      dry,
+      skipRender,
+      animations,
+      interpolators,
+      self,
+      last,
+      override,
+      tempFrame,
+    } = state
+    let { from, to, attach, immediate, reset, inject, children } =
+      override || props
+
+    // Dry state-updates should update state without creating interpolators
+    if (dry && !override && !shallowDiff(to, last.to))
+      return {
+        dry: false,
+        update: false,
+        skipRender,
+        injectFrame: tempFrame,
+        tempFrame: undefined,
+      }
+
+    // Handle injected frames
+    const frame = inject && !override && inject(self, props)
+    if (frame) return { injectFrame: frame, skipRender: false }
 
     const target = attach && attach(self)
     const allProps = Object.entries({ ...from, ...to })
@@ -191,7 +213,16 @@ export default class Spring extends React.Component {
       }
     }, animations)
 
-    return { animations, interpolators, update: true, skipRender: false, to }
+    return {
+      animations,
+      interpolators,
+      update: true,
+      skipRender: false,
+      injectFrame: undefined,
+      tempFrame: undefined,
+      override: undefined,
+      last: props,
+    }
   }
 
   startAnimations = () =>
@@ -209,14 +240,12 @@ export default class Spring extends React.Component {
       const current = { ...this.props.from, ...this.props.to }
       if (onRest) onRest(current)
       cb && typeof cb === 'function' && cb(current)
-
-      /*if (didInject) {
-        // Restore the original values for injected props
-        const componentProps = this.convertValues(this.props)
-        this.inject = this.renderChildren(this.props, componentProps)
-        //this.forceUpdate()
-        this.setState({ force: true })
-      }*/
+      // Restore end-state
+      const componentProps = this.convertValues(this.props)
+      this.update(
+        { tempFrame: this.renderChildren(this.props, componentProps) },
+        false
+      )
     }
   }
 
@@ -306,7 +335,7 @@ export default class Spring extends React.Component {
 
   render() {
     const { children, render } = this.props
-    const { update, interpolators } = this.state
+    const { update, interpolators, injectFrame } = this.state
 
     if (update) {
       const oldAnimatedProps = this.animatedProps
@@ -314,11 +343,8 @@ export default class Spring extends React.Component {
       oldAnimatedProps && oldAnimatedProps.__detach()
     }
 
-    /*if (this.inject) {
-      const content = this.inject
-      this.inject = undefined
-      return content
-    }*/
+    // If an inject plugin has overtaken content (for a single frame)
+    if (injectFrame) return injectFrame
 
     const values = this.getAnimatedValues()
     return values && Object.keys(values).length
