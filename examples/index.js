@@ -23,6 +23,7 @@ const components = [
   'keyframes',
   'script',
   'auto',
+  'router',
 ].map(path =>
   Loadable({
     loader: () => import('./demos/' + path),
@@ -30,8 +31,8 @@ const components = [
   })
 )
 
-const DEBUG = true
-const DebugComponent = components[15]
+const DEBUG = false
+const DebugComponent = components[5]
 
 ReactDOM.render(
   DEBUG ? (

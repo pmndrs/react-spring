@@ -11,11 +11,11 @@ const Content = Keyframes.Spring(async next => {
     })
     await next({
       from: { left: '0%' },
-      to: { left: '50%', background: 'seagreen' },
+      to: { left: '70%', background: 'seagreen' },
     })
     next({
       from: { top: '0%' },
-      to: { top: '50%', background: 'plum' },
+      to: { top: '40%', background: 'plum' },
       config: { tension: 10, friction: 0 },
     })
     await delay(2000) // don't wait for the animation above to finish, go to the next one in 2s
@@ -39,6 +39,7 @@ export default class App extends React.Component {
           height: '100%',
           overflow: 'hidden',
           background: 'aquamarine',
+          padding: 10,
         }}>
         <Content native>
           {props => (

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Spring from './Spring'
 import Trail from './Trail'
 import Transition from './Transition'
+import { getForwardProps } from './targets/shared/helpers'
 
 const DEFAULT = '__default'
 
@@ -98,7 +99,7 @@ class Keyframes extends React.PureComponent {
 }
 
 const interpolateTo = props => {
-  const forward = Spring.getForwardProps(props)
+  const forward = getForwardProps(props)
   const rest = Object.keys(props).reduce(
     (acc, key) => (forward[key] ? acc : { ...acc, [key]: props[key] }),
     {}

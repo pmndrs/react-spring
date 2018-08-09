@@ -6,13 +6,14 @@ import AnimatedArray from './animated/AnimatedArray'
 import AnimatedProps from './animated/AnimatedProps'
 import SpringAnimation from './animated/SpringAnimation'
 import * as Globals from './animated/Globals'
-
-function shallowDiff(a, b) {
-  if (!!a !== !!b) return false
-  for (let i in a) if (!(i in b)) return true
-  for (let i in b) if (a[i] !== b[i]) return true
-  return false
-}
+import {
+  renderChildren,
+  getForwardProps,
+  convertValues,
+  callProp,
+  shallowDiff,
+  getValues,
+} from './targets/shared/helpers'
 
 export const config = {
   default: { tension: 170, friction: 26 },
@@ -21,12 +22,6 @@ export const config = {
   stiff: { tension: 210, friction: 20 },
   slow: { tension: 280, friction: 60 },
 }
-
-const callProp = (p, n) => (typeof p === 'function' ? p(n) : p)
-const convert = (acc, [name, value]) => ({
-  ...acc,
-  [name]: new AnimatedValue(value),
-})
 
 export default class Spring extends React.Component {
   static propTypes = {
@@ -63,26 +58,28 @@ export default class Spring extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      animations: {},
-      interpolators: {},
-      last: {},
-      dry: false,
-      skipRender: false,
-      update: false,
-      self: this,
-    }
-    // setState shouldn't cause gDSFP to create interpolators ever
     const oldSetState = this.setState.bind(this)
-    this.update = (arg, skipRender = true, cb) => {
-      return oldSetState(
-        state => ({
-          ...(typeof arg === 'function' ? arg(state) : arg),
-          dry: true,
-          skipRender,
-        }),
-        cb
-      )
+
+    this.state = {
+      // Animation look-up
+      animations: {},
+      // Interpolator fast acccess
+      interpolators: {},
+      // Last props
+      last: {},
+      // Dry => local setState calls that shouldn't cause rendering
+      dry: false,
+      // For setState calls that need to render
+      skipRender: false,
+      // Tells the render function that animation props have changed
+      update: false,
+
+      // Function that updates state without causing render passes
+      updateState: (arg, skipRender = true, cb) =>
+        oldSetState(
+          state => ({ ...callProp(arg, state), dry: true, skipRender }),
+          cb
+        ),
     }
   }
 
@@ -103,7 +100,7 @@ export default class Spring extends React.Component {
 
   componentDidUpdate() {
     const { delay, onStart } = this.props
-    const { update, animations } = this.state
+    const { update, updateState, animations } = this.state
 
     // Animation has to start *after* render, since at that point the scene
     // graph should be established, so we do it here. Unfortunatelly, non-native
@@ -116,7 +113,7 @@ export default class Spring extends React.Component {
       }
       if (onStart) onStart()
       this.startAnimations()
-      this.update({ update: false })
+      updateState({ update: false })
     }
   }
 
@@ -126,31 +123,35 @@ export default class Spring extends React.Component {
       skipRender,
       animations,
       interpolators,
-      self,
       last,
       override,
       tempFrame,
+      updateState,
     } = state
     let { from, to, attach, immediate, reset, inject, children } =
       override || props
 
-    // Dry state-updates should update state without creating interpolators
-    if (dry && !override && !shallowDiff(to, last.to))
-      return {
-        dry: false,
-        update: false,
-        skipRender,
-        injectFrame: tempFrame,
-        tempFrame: undefined,
-      }
+    let defaults = {
+      dry: false,
+      update: false,
+      skipRender: false,
+      injectFrame: undefined,
+      tempFrame: undefined,
+      override: undefined,
+    }
 
-    // Handle injected frames
-    const frame = inject && !override && inject(self, props)
+    // Dry state-updates should update state without animation changes and rendering
+    if (dry && !override && !shallowDiff(to, last.to))
+      return { ...defaults, skipRender, injectFrame: tempFrame }
+
+    // Handle injected frames, for instance targets/web/fix-auto
+    const frame = inject && !override && inject(props, updateState)
     if (frame) return { injectFrame: frame, skipRender: false }
 
-    const target = attach && attach(self)
-    const allProps = Object.entries({ ...from, ...to })
+    // Attachment handling, trailed springs can "attach" themselves to a previous spring
+    const target = attach && attach(() => animations)
 
+    const allProps = Object.entries({ ...from, ...to })
     animations = allProps.reduce((acc, [name, value], i) => {
       const entry = (reset === false && acc[name]) || { stopped: true }
       const isNumber = typeof value === 'number'
@@ -166,7 +167,7 @@ export default class Spring extends React.Component {
 
       if (target) {
         // Attach value to target animation
-        const attachedAnimation = target.state.animations[name]
+        const attachedAnimation = target()[name]
         if (attachedAnimation) toValue = attachedAnimation.animation
       }
 
@@ -213,37 +214,29 @@ export default class Spring extends React.Component {
       }
     }, animations)
 
-    return {
-      animations,
-      interpolators,
-      update: true,
-      skipRender: false,
-      injectFrame: undefined,
-      tempFrame: undefined,
-      override: undefined,
-      last: props,
-    }
+    return { ...defaults, animations, interpolators, update: true, last: props }
   }
 
   startAnimations = () =>
     Object.keys(this.state.animations).forEach(this.animationStart)
 
   stopAnimations = () =>
-    this.getAnimations().forEach(({ animation }) => animation.stopAnimation())
+    getValues(this.state.animations).forEach(({ animation }) =>
+      animation.stopAnimation()
+    )
 
   animationOnFinish = (name, cb) => {
-    const { onRest } = this.props
     const { animation, toValue: to } = this.state.animations[name]
 
     this.animationStop(name)
-    if (this.getAnimations().every(a => a.stopped)) {
+    if (getValues(this.state.animations).every(a => a.stopped)) {
       const current = { ...this.props.from, ...this.props.to }
-      if (onRest) onRest(current)
+      if (this.props.onRest) this.props.onRest(current)
       cb && typeof cb === 'function' && cb(current)
       // Restore end-state
-      const componentProps = this.convertValues(this.props)
-      this.update(
-        { tempFrame: this.renderChildren(this.props, componentProps) },
+      const componentProps = convertValues(this.props)
+      this.state.updateState(
+        { tempFrame: renderChildren(this.props, componentProps) },
         false
       )
     }
@@ -263,7 +256,7 @@ export default class Spring extends React.Component {
 
   animationStop = name => {
     const { animation } = this.state.animations[name]
-    this.update(state => ({
+    this.state.updateState(state => ({
       ...state,
       animations: {
         ...state.animations,
@@ -274,18 +267,12 @@ export default class Spring extends React.Component {
 
   callback = () => {
     if (this.props.onFrame) this.props.onFrame(this.animatedProps.__getValue())
-    if (!this.props.native) this.update({}, false)
+    if (!this.props.native) this.state.updateState({}, false)
   }
 
   flush() {
-    this.getAnimations().forEach(
+    getValues(this.state.animations).forEach(
       ({ animation }) => animation._update && animation._update()
-    )
-  }
-
-  getAnimations() {
-    return Object.keys(this.state.animations).map(
-      key => this.state.animations[key]
     )
   }
 
@@ -295,42 +282,6 @@ export default class Spring extends React.Component {
 
   getAnimatedValues() {
     return this.props.native ? this.state.interpolators : this.getValues()
-  }
-
-  convertValues(props) {
-    const { from, to, native, children, render } = props
-    const forward = Spring.getForwardProps(props)
-    const allProps = Object.entries({ ...from, ...to })
-    return native
-      ? allProps.reduce(convert, forward)
-      : { ...from, ...to, ...forward }
-  }
-
-  static getForwardProps(props) {
-    const {
-      to,
-      from,
-      config,
-      native,
-      onRest,
-      onFrame,
-      children,
-      render,
-      reset,
-      immediate,
-      impl,
-      inject,
-      delay,
-      attach,
-      ...forward
-    } = props
-    return forward
-  }
-
-  renderChildren(props, componentProps) {
-    return props.render
-      ? props.render({ ...componentProps, children: props.children })
-      : props.children(componentProps)
   }
 
   render() {
@@ -348,9 +299,9 @@ export default class Spring extends React.Component {
 
     const values = this.getAnimatedValues()
     return values && Object.keys(values).length
-      ? this.renderChildren(this.props, {
+      ? renderChildren(this.props, {
           ...values,
-          ...Spring.getForwardProps(this.props),
+          ...getForwardProps(this.props),
         })
       : null
   }

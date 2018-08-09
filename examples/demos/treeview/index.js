@@ -5,15 +5,15 @@ import './styles.css'
 
 const treeStyles = {
   position: 'absolute',
-  top: 40,
-  left: 40,
+  top: 20,
+  left: 20,
   color: 'white',
   fill: 'white',
   width: '100%',
 }
 
 const typeStyles = {
-  fontSize: '2em',
+  fontSize: '1em',
   verticalAlign: 'middle',
 }
 

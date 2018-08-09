@@ -59,7 +59,7 @@ export default class SpringExample extends React.Component {
           color: toggle ? '#247BA0' : '#70C1B3',
           start: toggle ? '#B2DBBF' : '#B2DBBF',
           end: toggle ? '#247BA0' : '#F3FFBD',
-          scale: toggle ? 0.3 : 0.6,
+          scale: toggle ? 0.3 : 0.4,
           shape: toggle ? TRIANGLE : RECTANGLE,
           stop: toggle ? '0%' : '50%',
           rotation: toggle ? '0deg' : '45deg',

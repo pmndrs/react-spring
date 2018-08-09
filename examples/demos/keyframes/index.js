@@ -77,7 +77,11 @@ export default class App extends React.Component {
     const icon = this.state.open ? 'fold' : 'unfold'
     return (
       <div style={{ background: 'lightblue', width: '100%', height: '100%' }}>
-        <Icon type={`menu-${icon}`} className="toggle" onClick={this.toggle} />
+        <Icon
+          type={`menu-${icon}`}
+          className="sidebar-toggle"
+          onClick={this.toggle}
+        />
         <Sidebar native state={state}>
           {({ x }) => (
             <animated.div
