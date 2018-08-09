@@ -76,6 +76,7 @@ export default class Spring extends React.Component {
 
       // Function that updates state without causing render passes
       updateState: (arg, skipRender = true, cb) =>
+        this.mounted &&
         oldSetState(
           state => ({ ...callProp(arg, state), dry: true, skipRender }),
           cb
@@ -86,10 +87,12 @@ export default class Spring extends React.Component {
   componentDidMount() {
     // componentDidUpdate isn't called on mount, we call it here to start animating
     this.componentDidUpdate()
+    this.mounted = true
   }
 
   componentWillUnmount() {
     // Stop all ongoing animtions
+    this.mounted = false
     this.stopAnimations()
   }
 
@@ -226,8 +229,8 @@ export default class Spring extends React.Component {
     )
 
   animationOnFinish = (name, cb) => {
+    if (!this.mounted) return
     const { animation, toValue: to } = this.state.animations[name]
-
     this.animationStop(name)
     if (getValues(this.state.animations).every(a => a.stopped)) {
       const current = { ...this.props.from, ...this.props.to }
