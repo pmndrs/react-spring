@@ -69,5 +69,5 @@ test('auto', async () =>
 test('colors', async () =>
   testSpring(
     { from: { color: 'green' }, to: { color: '#ff0000' } },
-    { color: 'rgba(255, 0, 0, 1)' }
+    { color: '#ff0000' }
   ))
