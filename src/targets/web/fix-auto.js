@@ -32,40 +32,44 @@ export default function fixAuto(props, updateState) {
       style={{ ...elementStyles, position: 'absolute', visibility: 'hidden' }}
       ref={ref => {
         if (ref) {
-          // Once it's rendered out, fetch bounds (minus padding/margin/borders)
-          let node = ReactDOM.findDOMNode(ref)
-          let width, height
-          let cs = getComputedStyle(node)
-          if (cs.boxSizing === 'border-box') {
-            width = node.clientWidth
-            height = node.clientHeight
-          } else {
-            const paddingX =
-              parseFloat(cs.paddingLeft || 0) + parseFloat(cs.paddingRight || 0)
-            const paddingY =
-              parseFloat(cs.paddingTop || 0) + parseFloat(cs.paddingBottom || 0)
-            const borderX =
-              parseFloat(cs.borderLeftWidth || 0) +
-              parseFloat(cs.borderRightWidth || 0)
-            const borderY =
-              parseFloat(cs.borderTopWidth || 0) +
-              parseFloat(cs.borderBottomWidth || 0)
-            width = node.offsetWidth - paddingX - borderX
-            height = node.offsetHeight - paddingY - borderY
-          }
+          requestAnimationFrame(() => {
+            // Once it's rendered out, fetch bounds (minus padding/margin/borders)
+            let node = ReactDOM.findDOMNode(ref)
+            let width, height
+            let cs = getComputedStyle(node)
+            if (cs.boxSizing === 'border-box') {
+              width = node.offsetWidth
+              height = node.offsetHeight
+            } else {
+              const paddingX =
+                parseFloat(cs.paddingLeft || 0) +
+                parseFloat(cs.paddingRight || 0)
+              const paddingY =
+                parseFloat(cs.paddingTop || 0) +
+                parseFloat(cs.paddingBottom || 0)
+              const borderX =
+                parseFloat(cs.borderLeftWidth || 0) +
+                parseFloat(cs.borderRightWidth || 0)
+              const borderY =
+                parseFloat(cs.borderTopWidth || 0) +
+                parseFloat(cs.borderBottomWidth || 0)
+              width = node.offsetWidth - paddingX - borderX
+              height = node.offsetHeight - paddingY - borderY
+            }
 
-          // Defer to next frame, or else the springs updateToken is canceled
-          const convert = overwrite(width, height)
-          updateState(
-            {
-              override: {
-                ...props,
-                from: Object.entries(from).reduce(convert, from),
-                to: Object.entries(to).reduce(convert, to),
+            // Defer to next frame, or else the springs updateToken is canceled
+            const convert = overwrite(width, height)
+            updateState(
+              {
+                override: {
+                  ...props,
+                  from: Object.entries(from).reduce(convert, from),
+                  to: Object.entries(to).reduce(convert, to),
+                },
               },
-            },
-            false
-          )
+              false
+            )
+          })
         }
       }}
     />
