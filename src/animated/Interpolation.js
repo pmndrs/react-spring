@@ -4,7 +4,7 @@ const linear = t => t
 
 export default class Interpolation {
   static create(config) {
-    if (typeof config === 'function') return (...args) => config(...args)
+    if (typeof config === 'function') return config
     if (
       Globals.interpolation &&
       config.output &&

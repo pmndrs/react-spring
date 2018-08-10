@@ -266,12 +266,10 @@ export default class Spring extends React.Component {
       (this.props.force && !this.forcingUpdate)
 
     // Handle injected frames, for instance targets/web/fix-auto
-    if (inject && propsChanged && !this.forcingUpdate) {
+    if (inject && propsChanged && !this.injectProps) {
       const frame = inject(this.props, injectProps => {
         // The inject frame has rendered, now let's update animations...
-        this.updateAnimations(injectProps)
-        this.didInject = true
-        // and cause a new render
+        this.injectProps = injectProps
         this.forceUpdate()
       })
       // Render out injected frame
@@ -279,11 +277,15 @@ export default class Spring extends React.Component {
     }
 
     // Update animations (memoized)
-    if (propsChanged) this.updateAnimations(this.props)
+    //if (propsChanged) this.updateAnimations(this.props)
+    if (this.injectProps) {
+      this.updateAnimations(this.injectProps)
+      this.didInject = true
+      this.injectProps = undefined
+    } else if (propsChanged) this.updateAnimations(this.props)
 
     // Render
     const values = this.getAnimatedValues()
-
     return values && Object.keys(values).length
       ? renderChildren(this.props, {
           ...values,

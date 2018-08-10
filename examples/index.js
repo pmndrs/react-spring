@@ -36,7 +36,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['auto']
+const DebugComponent = components['bug']
 
 ReactDOM.render(
   DEBUG ? (
