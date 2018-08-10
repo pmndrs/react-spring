@@ -1,12 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import AnimatedValue from '../../animated/AnimatedValue'
-import {
-  renderChildren,
-  convertValues,
-  convertToAnimatedValue,
-  getValues,
-} from '../shared/helpers'
+import { renderChildren, convertValues, getValues } from '../shared/helpers'
 
 const check = value => value === 'auto'
 const overwrite = (width, height) => (acc, [name, value]) => ({
@@ -14,8 +8,8 @@ const overwrite = (width, height) => (acc, [name, value]) => ({
   [name]: value === 'auto' ? (~name.indexOf('height') ? height : width) : value,
 })
 
-export default function fixAuto(props, updateState) {
-  const { native, children, render, from, to } = props
+export default function fixAuto(props, callback) {
+  const { from, to } = props
 
   // Dry-route props back if nothing's using 'auto' in there
   if (![...getValues(from), ...getValues(to)].some(check)) return
@@ -59,16 +53,11 @@ export default function fixAuto(props, updateState) {
 
             // Defer to next frame, or else the springs updateToken is canceled
             const convert = overwrite(width, height)
-            updateState(
-              {
-                override: {
-                  ...props,
-                  from: Object.entries(from).reduce(convert, from),
-                  to: Object.entries(to).reduce(convert, to),
-                },
-              },
-              false
-            )
+            callback({
+              ...props,
+              from: Object.entries(from).reduce(convert, from),
+              to: Object.entries(to).reduce(convert, to),
+            })
           })
         }
       }}

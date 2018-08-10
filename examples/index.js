@@ -24,22 +24,26 @@ const components = [
   'script',
   'auto',
   'router',
-].map(path =>
-  Loadable({
-    loader: () => import('./demos/' + path),
-    loading: () => <div />,
-  })
+].reduce(
+  (acc, path) => ({
+    ...acc,
+    [path]: Loadable({
+      loader: () => import('./demos/' + path),
+      loading: () => <div />,
+    }),
+  }),
+  {}
 )
 
 const DEBUG = false
-const DebugComponent = components[5]
+const DebugComponent = components['auto']
 
 ReactDOM.render(
   DEBUG ? (
     <DebugComponent />
   ) : (
     <div className="app-container">
-      {components.map((Component, i) => <Component key={i} />)}
+      {Object.values(components).map((Component, i) => <Component key={i} />)}
     </div>
   ),
   document.getElementById('root')

@@ -1,10 +1,9 @@
 import AnimatedValue from '../../animated/AnimatedValue'
 
-export function shallowDiff(a, b) {
-  if (!!a !== !!b) return false
-  for (let i in a) if (!(i in b)) return true
-  for (let i in b) if (a[i] !== b[i]) return true
-  return false
+export function shallowEqual(a, b) {
+  for (let i in a) if (!(i in b)) return false
+  for (let i in b) if (a[i] !== b[i]) return false
+  return true
 }
 
 export function callProp(arg, state) {
@@ -37,9 +36,10 @@ export function getForwardProps(props) {
 }
 
 export function renderChildren(props, componentProps) {
+  const forward = { ...componentProps, ...getForwardProps(props) }
   return props.render
-    ? props.render({ ...componentProps, children: props.children })
-    : props.children(componentProps)
+    ? props.render({ ...forward, children: props.children })
+    : props.children(forward)
 }
 
 export function convertToAnimatedValue(acc, [name, value]) {
@@ -50,10 +50,9 @@ export function convertToAnimatedValue(acc, [name, value]) {
 }
 
 export function convertValues(props) {
-  const { from, to, native, children, render } = props
-  const forward = getForwardProps(props)
+  const { from, to, native } = props
   const allProps = Object.entries({ ...from, ...to })
   return native
-    ? allProps.reduce(convertToAnimatedValue, forward)
-    : { ...from, ...to, ...forward }
+    ? allProps.reduce(convertToAnimatedValue, {})
+    : { ...from, ...to }
 }

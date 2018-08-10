@@ -59,6 +59,10 @@ class Spring extends React.PureComponent {
     delay: PropTypes.number,
     // When true it literally resets: from -> to
     reset: PropTypes.bool,
+    // Escape hatch for cases where you supply the same values, but need spring to
+    // animate anyway, this can be useful for animating "auto" for instance, where "auto"
+    // remains unchanged, but children change (which normally wouldn't trigger an animation update)
+    reset: PropTypes.bool,
   }
   static defaultProps = {
     from: {},
@@ -66,7 +70,10 @@ class Spring extends React.PureComponent {
     config: config.default,
     native: false,
     immediate: false,
-    hold: false,
+    reset: false,
+    force: false,
+    impl: SpringAnimation,
+    inject: Globals.bugfixes,
   }
 }
 ```

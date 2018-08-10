@@ -11,20 +11,22 @@ const paths = [
   'M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z',
 ]
 
-let current = paths[0]
+const interpolators = []
+for (let i = 0; i < paths.length; i++) {
+  interpolators.push(
+    interpolate(paths[i], paths[i + 1] || paths[0], { maxSegmentLength: 0.1 })
+  )
+}
 
-export default class MorphExample extends React.Component {
-  state = { path: 0 }
-  toggle = () => {
-    let path = this.state.path + 1
-    if (path > paths.length - 1) path = 0
-    this.setState(state => ({ path }))
-  }
+export default class App extends React.Component {
+  state = { interpolators, index: 0 }
+  goNext = () =>
+    this.setState(({ index, interpolators }) => ({
+      index: index + 1 >= interpolators.length ? 0 : index + 1,
+    }))
   render() {
-    const { path } = this.state
-    const interpolator = interpolate(current, paths[path + 1] || paths[0], {
-      maxSegmentLength: 0.1,
-    })
+    const { interpolators, index } = this.state
+    const interpolator = interpolators[index]
     return (
       <div
         style={{
@@ -35,23 +37,19 @@ export default class MorphExample extends React.Component {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Spring reset native from={{ t: 0 }} to={{ t: 1 }}>
-          {({ t }) => (
-            <svg version="1.1" width="50%" viewBox="0 0 22 22">
-              <Gradient id="gradientPR" />
-              <g
-                style={{ cursor: 'pointer' }}
-                fill="url(#gradientPR)"
-                fillRule="evenodd"
-                onClick={this.toggle}>
-                <animated.path
-                  id="path-1"
-                  d={t.interpolate(t => (current = interpolator(t)))}
-                />
-              </g>
-            </svg>
-          )}
-        </Spring>
+        <svg width="180" viewBox="0 0 22 22">
+          <Gradient id="gradient-morph" />
+          <g fill="url(#gradient-morph)">
+            <Spring
+              reset
+              native
+              from={{ t: 0 }}
+              to={{ t: 1 }}
+              onRest={this.goNext}>
+              {({ t }) => <animated.path d={t.interpolate(interpolator)} />}
+            </Spring>
+          </g>
+        </svg>
       </div>
     )
   }

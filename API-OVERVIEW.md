@@ -40,7 +40,24 @@ react-spring is one of the few libs that understands and animates `auto`, so you
 <Spring from={{ height: 0 }} to={{ height: 'auto' }}>
 ```
 
-But keep in mind that in order to do this we have to measure out a snapshot set to `height/width: auto` before we can start animating it. If you notice that the measured bounds are wrong, give your view more context, for instance set the `position` attribute of the parent container (the element that contains your spring) to either `absolute` or `relative` so that the view (the element that's inside your spring) retains bounds.
+Keep in mind that in order to do this we have to measure out a snapshot set to `height/width: auto` before we can start animating it. There are some things you should watch out for:
+
+1.  **Wrong width/height**. If you notice that the measured bounds are wrong, give your view more context, for instance set the `position` attribute of the parent container (the element that contains your spring) to either `absolute` or `relative` so that the view (the element that's inside your spring) retains bounds.
+
+2.  **Contents change but won't animate**. If you set your spring to `auto` and later change contents (children), it doesn't update its animations since the values are essentially the same. In these rare cases you have to use the `force` prop, which forces the spring to animate regardless, which will then pass through another measurement.
+
+```jsx
+<Spring force from={{ height: 0 }} to={{ height: 'auto' }}>
+```
+
+3.  **Nested auto-springs eat into their animations**. If you nest springs and click one open and close another, the measurements will conflict for a moment. There is no real solution here. Something you can do is make sure springs animate with less precision.
+
+```jsx
+<Spring
+  from={{ height: 0 }}
+  to={{ height: 'auto' }}
+  config={{ ...config.stiff, restSpeedThreshold: 1, restDisplacementThreshold: 0.1 }}>
+```
 
 ### Render props
 

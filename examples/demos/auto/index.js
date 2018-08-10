@@ -1,8 +1,9 @@
 import React from 'react'
-import { Spring, animated } from 'react-spring'
+import { Spring, animated, config } from 'react-spring'
 import './styles.css'
 
 const LOREM = `Hello world`
+let count = 0
 
 export default class App extends React.Component {
   state = { toggle: true, text: [LOREM] }
@@ -21,7 +22,13 @@ export default class App extends React.Component {
         <div className="content">
           <Spring
             native
-            from={{ height: 0 }}
+            force
+            config={{
+              ...config.stiff,
+              restSpeedThreshold: 1,
+              restDisplacementThreshold: 0.1,
+            }}
+            from={{ height: toggle ? 0 : 'auto' }}
             to={{ height: toggle ? 'auto' : 0 }}>
             {props => (
               <animated.div className="item" style={props}>
