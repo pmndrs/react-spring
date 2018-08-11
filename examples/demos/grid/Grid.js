@@ -3,53 +3,69 @@ import PropTypes from 'prop-types'
 import Measure from 'react-measure'
 import { Transition, animated, interpolate } from 'react-spring'
 
+const styles = {
+  outer: { position: 'relative', width: '100%', height: '100%' },
+  inner: {
+    position: 'relative',
+    width: '100%',
+    overflow: 'hidden',
+    minHeight: '100%',
+  },
+  cell: {
+    position: 'absolute',
+    willChange: 'transform, width, height, opacity',
+  },
+}
+
 export default class Grid extends React.Component {
   static propTypes = {
+    data: PropTypes.array,
+    keys: PropTypes.func,
     occupySpace: PropTypes.bool,
     columns: PropTypes.number,
     margin: PropTypes.number,
-    data: PropTypes.array,
-    keys: PropTypes.func,
-    heights: PropTypes.func,
+    heights: PropTypes.oneOfType([PropTypes.func, PropTypes.number]),
+    lockScroll: PropTypes.bool,
+    closeDelay: PropTypes.number,
   }
   static defaultProps = {
     occupySpace: true,
     columns: 3,
     margin: 0,
+    heights: 400,
+    lockScroll: false,
+    closeDelay: 0,
   }
-  state = { width: 0, height: 0, active: undefined, lastActive: undefined }
-  preventScroll = e => {
+  state = { width: 0, height: 0, open: undefined, lastOpen: undefined }
+  scrollOut = e => {
     if (!this.props.lockScroll) {
-      this.state.active && this.onClick(undefined)
+      this.state.open && this.toggle(undefined)
       this.clicked = false
     }
   }
-  onClick = key =>
+  toggle = key =>
     this.setState(
       state => ({
-        lastActive: state.active,
-        active: state.active === key ? undefined : key,
+        lastOpen: state.open,
+        open: state.open === key ? undefined : key,
       }),
       () => (this.clicked = true)
     )
-  resizeOuter = props =>
+  resize = (width, height, props) =>
     this.setState({
-      widthOuter: props.client.width,
-      heightOuter: props.client.height,
+      [width]: props.client.width,
+      [height]: props.client.height,
     })
-  resizeInner = props =>
-    this.setState({
-      width: props.client.width,
-      height: props.client.height,
-    })
+  resizeOuter = props => this.resize('widthOuter', 'heightOuter', props)
+  resizeInner = props => this.resize('width', 'height', props)
   update = ({ key, x, y, width, height }) => {
-    const active = this.state.active === key
+    const open = this.state.open === key
     return {
-      opacity: this.state.active && !active ? 0 : 1,
-      x: active ? this.outerRef.scrollLeft : x,
-      y: active ? this.outerRef.scrollTop : y,
-      width: active ? this.state.width : width,
-      height: active ? this.state.heightOuter : height,
+      opacity: this.state.open && !open ? 0 : 1,
+      x: open ? this.outerRef.scrollLeft : x,
+      y: open ? this.outerRef.scrollTop : y,
+      width: open ? this.state.width : width,
+      height: open ? this.state.heightOuter : height,
     }
   }
 
@@ -68,11 +84,11 @@ export default class Grid extends React.Component {
       data,
       keys,
       heights,
-      inactiveDelay,
+      closeDelay,
       lockScroll,
       ...rest
     } = this.props
-    let { lastActive, active } = this.state
+    let { lastOpen, open, width } = this.state
     let column = 0
     let columnHeights = new Array(columns).fill(0)
 
@@ -80,8 +96,8 @@ export default class Grid extends React.Component {
       let index = occupySpace
         ? columnHeights.indexOf(Math.min(...columnHeights))
         : column++ % columns
-      let width = this.state.width / columns - margin / (1 - 1 / (columns + 1))
-      let left = width * index
+      let cellWidth = width / columns - margin / (1 - 1 / (columns + 1))
+      let left = cellWidth * index
       let offset = (index + 1) * margin
       let top = columnHeights[index] + margin
       let height = typeof heights === 'function' ? heights(child) : heights
@@ -89,12 +105,14 @@ export default class Grid extends React.Component {
       return {
         x: margin ? left + offset : left,
         y: top,
-        width,
+        width: cellWidth,
         height,
         key: keys(child),
         object: child,
       }
     })
+    const overflow = lockScroll ? (open ? 'hidden' : 'auto') : 'auto'
+    const height = Math.max(...columnHeights) + margin
     return (
       <Measure
         client
@@ -103,32 +121,20 @@ export default class Grid extends React.Component {
         {({ measureRef }) => (
           <div
             ref={measureRef}
-            style={{
-              position: 'relative',
-              width: '100%',
-              height: '100%',
-              ...this.props.style,
-              overflow: lockScroll ? (active ? 'hidden' : 'auto') : 'auto',
-            }}
+            style={{ ...styles.outer, ...this.props.style, overflow }}
             {...rest}
-            onScroll={this.preventScroll}
-            onWheel={this.preventScroll}
-            onTouchMove={this.preventScroll}>
+            onScroll={this.scrollOut}
+            onWheel={this.scrollOut}
+            onTouchMove={this.scrollOut}>
             <Measure
               client
               innerRef={r => (this.innerRef = r)}
               onResize={this.resizeInner}>
               {({ measureRef }) => (
-                <div
-                  ref={measureRef}
-                  style={{
-                    position: 'relative',
-                    width: '100%',
-                    height: Math.max(...columnHeights) + margin,
-                  }}>
+                <div ref={measureRef} style={{ ...styles.inner, height }}>
                   <Transition
                     native
-                    delay={this.clicked && !active ? inactiveDelay : 0}
+                    delay={this.clicked && !open ? closeDelay : 0}
                     items={displayData}
                     keys={d => d.key}
                     from={{ opacity: 0 }}
@@ -138,31 +144,25 @@ export default class Grid extends React.Component {
                     impl={impl}
                     config={config}>
                     {displayData.map(
-                      (child, i) => ({ opacity, x, y, width, height }) => {
-                        const key = child.key
-                        return (
-                          <animated.div
-                            style={{
-                              opacity,
-                              width: width,
-                              height: height,
-                              position: 'absolute',
-                              willChange: 'transform, width, height, opacity',
-                              zIndex:
-                                lastActive === key || active === key ? 1000 : i,
-                              transform: interpolate(
-                                [x, y],
-                                (x, y) => `translate3d(${x}px,${y}px, 0)`
-                              ),
-                            }}
-                            children={children(
-                              child.object,
-                              active === key,
-                              () => this.onClick(key)
-                            )}
-                          />
-                        )
-                      }
+                      (c, i) => ({ opacity, x, y, width, height }) => (
+                        <animated.div
+                          style={{
+                            ...styles.cell,
+                            opacity,
+                            width,
+                            height,
+                            zIndex:
+                              lastOpen === c.key || open === c.key ? 1000 : i,
+                            transform: interpolate(
+                              [x, y],
+                              (x, y) => `translate3d(${x}px,${y}px, 0)`
+                            ),
+                          }}
+                          children={children(c.object, open === c.key, () =>
+                            this.toggle(c.key)
+                          )}
+                        />
+                      )
                     )}
                   </Transition>
                 </div>

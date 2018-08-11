@@ -7,6 +7,7 @@ import AnimatedArray from './animated/AnimatedArray'
 import AnimatedProps from './animated/AnimatedProps'
 import SpringAnimation from './animated/SpringAnimation'
 import * as Globals from './animated/Globals'
+import { config } from './targets/shared/constants'
 import {
   renderChildren,
   convertValues,
@@ -14,14 +15,6 @@ import {
   shallowEqual,
   getValues,
 } from './targets/shared/helpers'
-
-export const config = {
-  default: { tension: 170, friction: 26 },
-  gentle: { tension: 120, friction: 14 },
-  wobbly: { tension: 180, friction: 12 },
-  stiff: { tension: 210, friction: 20 },
-  slow: { tension: 280, friction: 60 },
-}
 
 export default class Spring extends React.Component {
   static propTypes = {
@@ -63,8 +56,11 @@ export default class Spring extends React.Component {
   animations = {}
   interpolators = {}
   lastChildren = { children: undefined, render: undefined }
+  tick = 0
+  updateTick = memoize(() => this.tick++, shallowEqual)
 
   forceUpdate() {
+    // Pretty nasty hack in order to tell appart own-renders from outside renders
     this.forcingUpdate = true
     super.forceUpdate()
   }
@@ -78,73 +74,81 @@ export default class Spring extends React.Component {
   componentWillUnmount() {
     // Stop all ongoing animtions
     this.mounted = false
-    this.stopAnimations()
+    this.stop()
   }
 
-  startAnimations = () => {
-    if (this.props.onStart) this.props.onStart()
-    Object.keys(this.animations).forEach(this.animationStart)
+  didPropsChange() {
+    // The following is a memoized test against props that could alter the animation
+    const oldTick = this.tick
+    const { attach, from, to, immediate, onFrame, native, reset } = this.props
+    if (reset || (this.props.force && !this.forcingUpdate)) return true
+    this.updateTick(from, to, {
+      attach,
+      immediate,
+      onFrame,
+      native,
+      reset,
+    })
+    return oldTick !== this.tick
   }
 
-  stopAnimations = () =>
-    getValues(this.animations).forEach(({ animation }) =>
-      animation.stopAnimation()
-    )
+  render() {
+    // Check if props have changed
+    const propsChanged = this.didPropsChange()
 
-  animationOnFinish = (name, cb) => {
-    if (!this.mounted) return
-    const { animation, toValue: to } = this.animations[name]
-    this.animations[name].stopped = true
-    if (getValues(this.animations).every(a => a.stopped)) {
-      const current = { ...this.props.from, ...this.props.to }
-      if (this.props.onRest) this.props.onRest(current)
-      cb && typeof cb === 'function' && cb(current)
-
-      // Restore end-state
-      if (this.didInject) {
-        this.afterInject = convertValues(this.props)
-        this.didInject = false
+    // Handle injected frames, for instance targets/web/fix-auto
+    // An inject will return an intermediary React node which measures itself out
+    // .. and returns a callback when the values sought after are ready, usually "auto".
+    if (this.props.inject && propsChanged && !this.injectProps) {
+      const frame = this.props.inject(this.props, injectProps => {
+        // The inject frame has rendered, now let's update animations...
+        this.injectProps = injectProps
         this.forceUpdate()
-      }
+      })
+      // Render out injected frame
+      if (frame) return frame
     }
+
+    // Update animations, this turns from/to props into AnimatedValues
+    // An update can occur on injected props, or when own-props have changed.
+    if (this.injectProps) {
+      this.updateAnimations(this.injectProps)
+      this.injectProps = undefined
+      // didInject is needed, because there will be a 3rd stage, where the original values
+      // .. will be restored after the animation is finished. When someone animates towards
+      // .. "auto", the end-result should be "auto", not "1999px", which would block nested
+      // .. height/width changes.
+      this.didInject = true
+    } else if (propsChanged) this.updateAnimations(this.props)
+
+    // Render out raw values or AnimationsValues depending on "native"
+    const values = this.getAnimatedValues()
+    return values && Object.keys(values).length
+      ? renderChildren(this.props, {
+          ...values,
+          ...this.afterInject,
+        })
+      : null
   }
 
-  animationStart = (name, cb) => {
-    const { config, impl } = this.props
-    const { animation, toValue: to } = this.animations[name]
-    // TODO: figure out why this is needed ...
-    if (!to.__getValue && animation.__getValue() === to)
-      return this.animationOnFinish(name, cb)
-    controller(animation, { to, ...callProp(config, name) }, impl).start(
-      !to.__getValue &&
-        (props => props.finished && this.animationOnFinish(name, cb))
-    )
+  componentDidUpdate() {
+    // The animation has to start *after* render, since at that point the scene
+    // .. graph should be established, so we do it here. Unfortunatelly, non-native
+    // .. animations as well as "auto" injects call forceUpdate, so it's causing a loop.
+    // .. didUpdate prevents that as it gets set only on prop changes.
+    if (this.didUpdate) {
+      if (this.props.delay) {
+        if (this.timeout) clearTimeout(this.timeout)
+        this.timeout = setTimeout(this.start, this.props.delay)
+      } else this.start()
+    }
+    this.forcingUpdate = this.didUpdate = false
   }
 
-  flush() {
-    getValues(this.animations).forEach(
-      ({ animation }) => animation._update && animation._update()
-    )
-  }
+  updateAnimations({ from, to, attach, reset, immediate, onFrame, native }) {
+    // This function will turn own-props into AnimatedValues, it tries to re-use
+    // .. exsting animations as best as it can by detecting the changes made
 
-  getValues() {
-    return this.animatedProps ? this.animatedProps.__getValue() : {}
-  }
-
-  getAnimatedValues() {
-    return this.props.native ? this.interpolators : this.getValues()
-  }
-
-  updateAnimations({
-    text,
-    from,
-    to,
-    attach,
-    reset,
-    immediate,
-    onFrame,
-    native,
-  }) {
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
     const target = attach && attach(this)
 
@@ -220,77 +224,60 @@ export default class Spring extends React.Component {
     })
     oldAnimatedProps && oldAnimatedProps.__detach()
 
-    // Flag an update that occured, componentDidUpdate will start the animation later
+    // Flag an update that occured, componentDidUpdate will start the animation later on
     this.didUpdate = true
     this.afterInject = undefined
     this.didInject = false
   }
 
-  componentDidUpdate() {
-    const { delay } = this.props
-
-    // Animation has to start *after* render, since at that point the scene
-    // graph should be established, so we do it here. Unfortunatelly, non-native
-    // animations call forceUpdate, so it's causing a loop. updateToken prevents
-    // that as it gets set only on prop changes.
-    if (this.didUpdate) {
-      if (delay) {
-        if (this.timeout) clearTimeout(this.timeout)
-        this.timeout = setTimeout(this.startAnimations, delay)
-      } else this.startAnimations()
-    }
-
-    this.forcingUpdate = this.didUpdate = false
-  }
-
-  // The following is a memoized test against props that could alter the animation
-  __tick = 0
-  __increaseUpdateTick = memoize(() => this.__tick++, shallowEqual)
-  didPropsChange() {
-    const oldTick = this.__tick
-    const { attach, from, to, immediate, onFrame, native } = this.props
-    this.__increaseUpdateTick(from, to, {
-      attach,
-      immediate,
-      onFrame,
-      native,
+  start = () => {
+    const { config, impl } = this.props
+    if (this.props.onStart) this.props.onStart()
+    Object.keys(this.animations).forEach(name => {
+      const { animation, toValue: to } = this.animations[name]
+      // TODO: figure out why this is needed ...
+      if (!to.__getValue && animation.__getValue() === to)
+        return this.finishAnimation(name)
+      controller(animation, { to, ...callProp(config, name) }, impl).start(
+        !to.__getValue &&
+          (props => props.finished && this.finishAnimation(name))
+      )
     })
-    return oldTick !== this.__tick
   }
 
-  render() {
-    const { inject, reset } = this.props
-    const propsChanged =
-      this.didPropsChange() ||
-      reset ||
-      (this.props.force && !this.forcingUpdate)
+  stop = () =>
+    getValues(this.animations).forEach(({ animation }) =>
+      animation.stopAnimation()
+    )
 
-    // Handle injected frames, for instance targets/web/fix-auto
-    if (inject && propsChanged && !this.injectProps) {
-      const frame = inject(this.props, injectProps => {
-        // The inject frame has rendered, now let's update animations...
-        this.injectProps = injectProps
+  finishAnimation = name => {
+    if (!this.mounted) return
+    const { animation, toValue: to } = this.animations[name]
+    this.animations[name].stopped = true
+    if (getValues(this.animations).every(a => a.stopped)) {
+      const current = { ...this.props.from, ...this.props.to }
+      if (this.props.onRest) this.props.onRest(current)
+
+      // Restore end-state
+      if (this.didInject) {
+        this.afterInject = convertValues(this.props)
+        this.didInject = false
         this.forceUpdate()
-      })
-      // Render out injected frame
-      if (frame) return frame
+      }
     }
+  }
 
-    // Update animations (memoized)
-    //if (propsChanged) this.updateAnimations(this.props)
-    if (this.injectProps) {
-      this.updateAnimations(this.injectProps)
-      this.didInject = true
-      this.injectProps = undefined
-    } else if (propsChanged) this.updateAnimations(this.props)
+  flush() {
+    getValues(this.animations).forEach(
+      ({ animation }) => animation._update && animation._update()
+    )
+  }
 
-    // Render
-    const values = this.getAnimatedValues()
-    return values && Object.keys(values).length
-      ? renderChildren(this.props, {
-          ...values,
-          ...this.afterInject,
-        })
-      : null
+  getValues() {
+    return this.animatedProps ? this.animatedProps.__getValue() : {}
+  }
+
+  getAnimatedValues() {
+    return this.props.native ? this.interpolators : this.getValues()
   }
 }

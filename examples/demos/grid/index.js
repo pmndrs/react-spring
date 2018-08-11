@@ -16,7 +16,7 @@ class Cell extends Component {
         className="cell"
         style={{ backgroundImage: css, cursor: !active ? 'pointer' : 'auto' }}
         onClick={!active ? toggle : undefined}>
-        <Fade show={active} delay={active ? 400 : 0}>
+        <Fade show={active} delay={active ? 500 : 0}>
           <div className="details">
             <Slug delay={600}>
               <div className="circle" style={{ background: css }} />
@@ -66,7 +66,7 @@ export default class App extends Component {
         // Removes the possibility to scroll away from a maximized element
         lockScroll={false}
         // Delay when active elements (blown up) are minimized again
-        inactiveDelay={500}
+        closeDelay={500}
         // Regular react-spring configs
         config={config.slow}>
         {(data, active, toggle) => (
