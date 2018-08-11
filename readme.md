@@ -286,7 +286,7 @@ const AnimatedView = animated(View)
 
 # Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute]](CONTRIBUTING.md).
+This project exists thanks to all the people who contribute.
 <a href="graphs/contributors"><img src="https://opencollective.com/react-spring/contributors.svg?width=890" /></a>
 
 # Backers
@@ -297,4 +297,4 @@ Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com
 
 ---
 
-[Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md) | [LICENSE](https://github.com/drcmda/react-spring/blob/master/LICENSE)
+[LICENSE](https://github.com/drcmda/react-spring/blob/master/LICENSE)
