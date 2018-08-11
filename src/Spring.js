@@ -78,7 +78,6 @@ export default class Spring extends React.Component {
   static getDerivedStateFromProps(props, { changed, dry, tick, updateTick }) {
     // The following is a memoized test against props that could alter the animation
     const { attach, from, to, immediate, onFrame, native, reset, force } = props
-    //if (!dry) {
     const newTick = updateTick(tick, from, to, {
       attach,
       immediate,
@@ -88,7 +87,6 @@ export default class Spring extends React.Component {
     })
     changed = tick !== newTick || reset || (force && !dry)
     tick = newTick
-    //}
     return { changed, tick, dry: false }
   }
 
@@ -215,6 +213,7 @@ export default class Spring extends React.Component {
     }, this.animations)
 
     // Update animated props (which from now on will take care of the animation)
+    // TODO: perhaps this isn't needed if animations/interpolators didn't change ...
     const oldAnimatedProps = this.animatedProps
     this.animatedProps = new AnimatedProps(this.interpolators, () => {
       // This gets called on every animation frame ...
