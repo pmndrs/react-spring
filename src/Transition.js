@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Spring, { config as springConfig } from './Spring'
+import Spring from './Spring'
+import { config as springConfig } from './targets/shared/constants'
 
 const empty = () => null
 
@@ -15,10 +16,10 @@ const get = props => {
     children = [children]
     keys = keys !== void 0 ? [keys] : children.map(c => c.toString())
   }
-   
+
   // Make sure numeric keys are interpreted as Strings (5 !== "5")
   keys = keys.map(k => String(k))
-  
+
   return { keys, children, items, ...rest }
 }
 
@@ -136,14 +137,13 @@ export default class Transition extends React.PureComponent {
       enter = {},
       leave = {},
       native = false,
-      config = springConfig.default,
       keys,
       items,
       onFrame,
       onRest,
       ...extra
     } = this.props
-    const props = { native, config, ...extra }
+    const props = { native, ...extra }
     return this.state.transitions.map((transition, i) => {
       const { key, item, children, from, ...rest } = transition
       return (

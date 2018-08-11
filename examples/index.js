@@ -35,8 +35,8 @@ const components = [
   {}
 )
 
-const DEBUG = true
-const DebugComponent = components['grid']
+const DEBUG = false
+const DebugComponent = components['auto']
 
 ReactDOM.render(
   DEBUG ? (

@@ -51,19 +51,17 @@ export default class Spring extends React.Component {
     inject: Globals.bugfixes,
   }
 
+  state = {
+    changed: false,
+    dry: false,
+    tick: 0,
+    updateTick: memoize((tick, ...args) => tick + 1, shallowEqual),
+  }
+
   didUpdate = false
   didInject = false
   animations = {}
   interpolators = {}
-  lastChildren = { children: undefined, render: undefined }
-  tick = 0
-  updateTick = memoize(() => this.tick++, shallowEqual)
-
-  forceUpdate() {
-    // Pretty nasty hack in order to tell appart own-renders from outside renders
-    this.forcingUpdate = true
-    super.forceUpdate()
-  }
 
   componentDidMount() {
     // componentDidUpdate isn't called on mount, we call it here to start animating
@@ -77,24 +75,25 @@ export default class Spring extends React.Component {
     this.stop()
   }
 
-  didPropsChange() {
+  static getDerivedStateFromProps(props, { changed, dry, tick, updateTick }) {
     // The following is a memoized test against props that could alter the animation
-    const oldTick = this.tick
-    const { attach, from, to, immediate, onFrame, native, reset } = this.props
-    if (reset || (this.props.force && !this.forcingUpdate)) return true
-    this.updateTick(from, to, {
+    const { attach, from, to, immediate, onFrame, native, reset, force } = props
+    //if (!dry) {
+    const newTick = updateTick(tick, from, to, {
       attach,
       immediate,
       onFrame,
       native,
       reset,
     })
-    return oldTick !== this.tick
+    changed = tick !== newTick || reset || (force && !dry)
+    tick = newTick
+    //}
+    return { changed, tick, dry: false }
   }
 
   render() {
-    // Check if props have changed
-    const propsChanged = this.didPropsChange()
+    const propsChanged = this.state.changed
 
     // Handle injected frames, for instance targets/web/fix-auto
     // An inject will return an intermediary React node which measures itself out
@@ -103,7 +102,7 @@ export default class Spring extends React.Component {
       const frame = this.props.inject(this.props, injectProps => {
         // The inject frame has rendered, now let's update animations...
         this.injectProps = injectProps
-        this.forceUpdate()
+        this.setState({ dry: true })
       })
       // Render out injected frame
       if (frame) return frame
@@ -142,7 +141,7 @@ export default class Spring extends React.Component {
         this.timeout = setTimeout(this.start, this.props.delay)
       } else this.start()
     }
-    this.forcingUpdate = this.didUpdate = false
+    this.didUpdate = false
   }
 
   updateAnimations({ from, to, attach, reset, immediate, onFrame, native }) {
@@ -220,7 +219,7 @@ export default class Spring extends React.Component {
     this.animatedProps = new AnimatedProps(this.interpolators, () => {
       // This gets called on every animation frame ...
       if (onFrame) onFrame(this.animatedProps.__getValue())
-      if (!native) this.forceUpdate()
+      if (!native) this.setState({ dry: true })
     })
     oldAnimatedProps && oldAnimatedProps.__detach()
 
@@ -262,7 +261,7 @@ export default class Spring extends React.Component {
       if (this.didInject) {
         this.afterInject = convertValues(this.props)
         this.didInject = false
-        this.forceUpdate()
+        this.setState({ dry: true })
       }
     }
   }

@@ -4,6 +4,7 @@ import Spring from './Spring'
 import Trail from './Trail'
 import Transition from './Transition'
 import { getForwardProps } from './targets/shared/helpers'
+import { config as springConfig } from './targets/shared/constants'
 
 const DEFAULT = '__default'
 

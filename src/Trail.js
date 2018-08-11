@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Spring, { config as springConfig } from './Spring'
+import Spring from './Spring'
+import { config as springConfig } from './targets/shared/constants'
 
 export default class Trail extends React.PureComponent {
   static propTypes = {
@@ -40,7 +41,6 @@ export default class Trail extends React.PureComponent {
       from = {},
       to = {},
       native = false,
-      config = springConfig.default,
       keys,
       delay,
       onRest,
@@ -52,7 +52,7 @@ export default class Trail extends React.PureComponent {
       if (index === 0) return undefined
       else return Array.from(animations)[index - 1]
     }
-    const props = { ...extra, native, from, config, to }
+    const props = { ...extra, native, from, to }
     const target = render || children
     return target.map((child, i) => {
       const attachedHook = animation => hook(i, animation)
