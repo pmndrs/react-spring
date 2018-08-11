@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import memoize from 'memoize-one'
 import controller from './animated/AnimatedController'
 import AnimatedValue from './animated/AnimatedValue'
 import AnimatedArray from './animated/AnimatedArray'
@@ -52,10 +51,9 @@ export default class Spring extends React.Component {
   }
 
   state = {
+    lastProps: { from: {}, to: {} },
     changed: false,
     dry: false,
-    tick: 0,
-    updateTick: memoize((tick, ...args) => tick + 1, shallowEqual),
   }
 
   didUpdate = false
@@ -75,19 +73,15 @@ export default class Spring extends React.Component {
     this.stop()
   }
 
-  static getDerivedStateFromProps(props, { changed, dry, tick, updateTick }) {
-    // The following is a memoized test against props that could alter the animation
-    const { attach, from, to, immediate, onFrame, native, reset, force } = props
-    const newTick = updateTick(tick, from, to, {
-      attach,
-      immediate,
-      onFrame,
-      native,
-      reset,
-    })
-    changed = tick !== newTick || reset || (force && !dry)
-    tick = newTick
-    return { changed, tick, dry: false }
+  static getDerivedStateFromProps(props, { changed, dry, lastProps }) {
+    // The following is a test against props that could alter the animation
+    const { from, to, reset, force } = props
+    changed =
+      !shallowEqual(to, lastProps.to) ||
+      !shallowEqual(from, lastProps.from) ||
+      reset ||
+      (force && !dry)
+    return { changed, lastProps: props, dry: false }
   }
 
   render() {
