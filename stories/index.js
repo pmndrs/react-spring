@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react'
 
 import { Spring } from '../src/targets/web'
 
-const fadeIn = (
+export const fadeIn = (
   <Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
     {styles => (
       <div
