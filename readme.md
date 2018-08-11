@@ -297,4 +297,4 @@ Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com
 
 ---
 
-[Changelog](https://github.com/drcmda/react-spring/blob/master/CHANGELOG.md) | [LICENSE](https://github.com/drcmda/react-spring/blob/master/LICENSE)
+[LICENSE](https://github.com/drcmda/react-spring/blob/master/LICENSE)
