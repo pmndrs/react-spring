@@ -118,7 +118,7 @@ export default class Spring extends React.Component {
       this.didInject = true
     } else if (propsChanged) this.updateAnimations(this.props)
 
-    // Render out raw values or AnimationsValues depending on "native"
+    // Render out raw values or AnimatedValues depending on "native"
     const values = this.getAnimatedValues()
     return values && Object.keys(values).length
       ? renderChildren(this.props, {
@@ -147,9 +147,10 @@ export default class Spring extends React.Component {
     // .. exsting animations as best as it can by detecting the changes made
 
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
-    const target = attach && attach(this)
+    let target = attach && attach(this)
 
-    const allProps = Object.entries({ ...from, ...to })
+    let animationsChanged = false
+    let allProps = Object.entries({ ...from, ...to })
     this.animations = allProps.reduce((acc, [name, value], i) => {
       const entry = (reset === false && acc[name]) || { stopped: true }
       const isNumber = typeof value === 'number'
@@ -169,6 +170,7 @@ export default class Spring extends React.Component {
         if (attachedAnimation) toValue = attachedAnimation.animation
       }
 
+      let old = entry.animation
       let animation, interpolation
       if (fromAnimated) {
         // Use provided animated value
@@ -186,12 +188,22 @@ export default class Spring extends React.Component {
         const previous =
           entry.interpolation &&
           entry.interpolation._interpolation(entry.animation._value)
-        animation = new AnimatedValue(0)
-        interpolation = animation.interpolate({
+
+        if (entry.animation) {
+          animation = entry.animation
+          animation.setValue(0)
+        } else animation = new AnimatedValue(0)
+
+        const config = {
           range: [0, 1],
           output: [previous !== undefined ? previous : fromValue, value],
-        })
+        }
+        if (entry.interpolation)
+          interpolation = entry.interpolation.__update(config)
+        else interpolation = animation.interpolate(config)
       }
+
+      if (old !== animation) animationsChanged = true
 
       // Set immediate values
       if (callProp(immediate, name)) animation.setValue(toValue)
@@ -213,14 +225,15 @@ export default class Spring extends React.Component {
     }, this.animations)
 
     // Update animated props (which from now on will take care of the animation)
-    // TODO: perhaps this isn't needed if animations/interpolators didn't change ...
-    const oldAnimatedProps = this.animatedProps
-    this.animatedProps = new AnimatedProps(this.interpolators, () => {
-      // This gets called on every animation frame ...
-      if (onFrame) onFrame(this.animatedProps.__getValue())
-      if (!native) this.setState({ dry: true })
-    })
-    oldAnimatedProps && oldAnimatedProps.__detach()
+    if (animationsChanged) {
+      const oldAnimatedProps = this.animatedProps
+      this.animatedProps = new AnimatedProps(this.interpolators, () => {
+        // This gets called on every animation frame ...
+        if (onFrame) onFrame(this.animatedProps.__getValue())
+        if (!native) this.setState({ dry: true })
+      })
+      oldAnimatedProps && oldAnimatedProps.__detach()
+    }
 
     // Flag an update that occured, componentDidUpdate will start the animation later on
     this.didUpdate = true

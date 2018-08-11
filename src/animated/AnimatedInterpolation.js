@@ -27,6 +27,11 @@ export default class AnimatedInterpolation extends AnimatedWithChildren {
         this._parents[i].__removeChild(this)
   }
 
+  __update(config) {
+    this._interpolation = Interpolation.create(config)
+    return this
+  }
+
   interpolate(config) {
     return new AnimatedInterpolation(this, config)
   }

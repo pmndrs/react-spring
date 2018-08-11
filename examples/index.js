@@ -36,7 +36,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['auto']
+const DebugComponent = components['nativespring']
 
 ReactDOM.render(
   DEBUG ? (
