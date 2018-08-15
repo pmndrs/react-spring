@@ -139,7 +139,7 @@ If you need to toggle a single child, that is also possible.
 import { Transition } from 'react-spring'
 
 <Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-    {visible && styles => <div style={styles}>Single Component</div>}
+    {visible && (styles => <div style={styles}>Single Component</div>)}
 </Transition>
 ```
 
