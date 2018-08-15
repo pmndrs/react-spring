@@ -62,7 +62,7 @@ class Spring extends React.PureComponent {
     // Escape hatch for cases where you supply the same values, but need spring to
     // animate anyway, this can be useful for animating "auto" for instance, where "auto"
     // remains unchanged, but children change (which normally wouldn't trigger an animation update)
-    reset: PropTypes.bool,
+    force: PropTypes.bool,
   }
   static defaultProps = {
     from: {},
