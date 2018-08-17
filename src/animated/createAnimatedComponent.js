@@ -3,7 +3,7 @@ import AnimatedProps from './AnimatedProps'
 import * as Globals from './Globals'
 
 export default function createAnimatedComponent(Component) {
-  return class AnimatedComponent extends React.Component {
+  class AnimatedComponent extends React.Component {
     static propTypes = {
       style(props, propName, componentName) {
         if (!Component.propTypes) return
@@ -61,8 +61,21 @@ export default function createAnimatedComponent(Component) {
     }
 
     render() {
-      const props = this._propsAnimated.__getValue()
-      return <Component {...props} ref={node => (this.node = node)} />
+      const { forwardedRef, ...rest } = this._propsAnimated.__getValue()
+      return (
+        <Component
+          {...rest}
+          ref={node => {
+            this.node = node
+            if (forwardedRef) {
+              forwardedRef(node)
+            }
+          }}
+        />
+      )
     }
   }
+  return React.forwardRef((props, ref) => {
+    return <AnimatedComponent {...props} forwardedRef={ref} />
+  })
 }

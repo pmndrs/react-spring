@@ -8,6 +8,8 @@ let tree
 class Test extends React.Component {
   count = 0
   state = { resolve: undefined, props: {}, result: undefined }
+  ref = null
+
   render() {
     let { resolve, props, result } = this.state
     return resolve ? (
@@ -36,12 +38,15 @@ class Test extends React.Component {
             tree.update()
             result = result || props.to
             expect(tree.find('div').get(0).props.style).toMatchObject(result)
+            console.log(this.ref)
             resolve()
           })
         }>
         {props.native
-          ? styles => <animated.div style={styles} />
-          : styles => <div style={styles} />}
+          ? styles => (
+              <animated.div style={styles} ref={node => (this.ref = node)} />
+            )
+          : styles => <div style={styles} ref={node => (this.ref = node)} />}
       </Spring>
     ) : null
   }
