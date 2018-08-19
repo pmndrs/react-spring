@@ -36,14 +36,16 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['bug']
+const DebugComponent = components['transitions']
 
 ReactDOM.render(
   DEBUG ? (
     <DebugComponent />
   ) : (
     <div className="app-container">
-      {Object.values(components).map((Component, i) => <Component key={i} />)}
+      {Object.values(components).map((Component, i) => (
+        <Component key={i} />
+      ))}
     </div>
   ),
   document.getElementById('root')

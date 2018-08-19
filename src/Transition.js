@@ -88,6 +88,7 @@ export default class Transition extends React.PureComponent {
       const keyIndex = keys.indexOf(key)
       const item = items ? items[keyIndex] : key
       current[key] = {
+        originalKey: key,
         children: children[keyIndex],
         key: guid++,
         item,
@@ -100,7 +101,7 @@ export default class Transition extends React.PureComponent {
       const keyIndex = _keys.indexOf(key)
       deleted.push({
         destroyed: true,
-        lastIndex: keyIndex,
+        lastSibling: _keys[Math.max(0, keyIndex - 1)],
         ...current[key],
         to: ref(leave, _items ? _items[keyIndex] : key),
       })
@@ -118,10 +119,11 @@ export default class Transition extends React.PureComponent {
     })
 
     let transitions = keys.map(key => current[key])
-    deleted.forEach(
-      ({ lastIndex: i, ...t }) =>
-        (transitions = [...transitions.slice(0, i), t, ...transitions.slice(i)])
-    )
+    deleted.forEach(({ lastSibling: s, ...t }) => {
+      // Find last known sibling, left aligned
+      let i = Math.max(0, transitions.findIndex(t => t.originalKey === s) + 1)
+      transitions = [...transitions.slice(0, i), t, ...transitions.slice(i)]
+    })
 
     return { transitions, current, deleted, prevProps: props }
   }
