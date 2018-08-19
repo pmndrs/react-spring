@@ -31,6 +31,7 @@ export function getForwardProps(props) {
     inject,
     delay,
     attach,
+    destroyed,
     ...forward
   } = props
   return forward
