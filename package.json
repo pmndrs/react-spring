@@ -74,8 +74,8 @@
     "husky": "^1.0.0-rc.12",
     "jest": "^23.3.0",
     "lint-staged": "^7.2.0",
+    "mock-raf": "^1.0.0",
     "prettier": "^1.13.7",
-    "raf-stub": "^2.0.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-test-renderer": "^16.4.1",
@@ -86,6 +86,7 @@
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-size-snapshot": "^0.6.0",
     "rollup-plugin-uglify": "^4.0.0",
+    "sinon": "^6.1.5",
     "slash": "^2.0.0",
     "typescript": "^2.9.2"
   },
@@ -106,7 +107,7 @@
       "/node_modules/",
       "jest"
     ],
-    "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.jsx?$",
+    "testRegex": "test.js$",
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
