@@ -139,7 +139,7 @@ If you need to toggle a single child, that is also possible.
 import { Transition } from 'react-spring'
 
 <Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-    {visible && styles => <div style={styles}>Single Component</div>}
+    {visible && (styles => <div style={styles}>Single Component</div>)}
 </Transition>
 ```
 
@@ -284,17 +284,19 @@ const AnimatedView = animated(View)
 </Spring>
 ```
 
-# Contributors
+## Contributors
 
 This project exists thanks to all the people who contribute.
 <a href="graphs/contributors"><img src="https://opencollective.com/react-spring/contributors.svg?width=890" /></a>
 
-# Backers
+## Backers
 
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/react-spring#backer)]
 
 <a href="https://opencollective.com/react-spring#backers" target="_blank"><img src="https://opencollective.com/react-spring/backers.svg?width=890"></a>
 
----
+## Sponsors
 
-[LICENSE](https://github.com/drcmda/react-spring/blob/master/LICENSE)
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/react-spring#sponsor)]
+
+<a href="https://opencollective.com/react-spring/sponsor/0/website" target="_blank"><img src="https://opencollective.com/react-spring/sponsor/0/avatar.svg"></a>
