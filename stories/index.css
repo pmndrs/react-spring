@@ -5,3 +5,10 @@
   top: 0;
   left: 0;
 }
+
+.block {
+  margin: 20px;
+  width: 200px;
+  height: 200px;
+  background-color: red;
+}
