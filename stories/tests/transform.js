@@ -7,7 +7,7 @@ export const moveRight = (
   <Spring from={{ left: 0 }} to={{ left: 200 }}>
     {animatedStyle => (
       <div
-        className="block"
+        className="block bg-blue"
         style={{ position: 'absolute', ...animatedStyle }}
       />
     )}
