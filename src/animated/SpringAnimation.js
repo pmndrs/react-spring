@@ -36,7 +36,7 @@ export default class SpringAnimation extends Animation {
     this._lastPosition = this._startPosition
     this._onUpdate = onUpdate
     this.__onEnd = onEnd
-    this._lastTime = Date.now()
+    this._lastTime = Globals.now()
 
     if (previousAnimation instanceof SpringAnimation) {
       var internalState = previousAnimation.getInternalState()
@@ -74,7 +74,7 @@ export default class SpringAnimation extends Animation {
     // computation and will continue on the next frame. It's better to have it
     // running at faster speed than jumping to the end.
     var MAX_STEPS = 64
-    var now = Date.now()
+    var now = Globals.now()
 
     if (now > this._lastTime + MAX_STEPS) now = this._lastTime + MAX_STEPS
 
@@ -94,26 +94,26 @@ export default class SpringAnimation extends Animation {
       var aAcceleration =
         this._tension * (this._to - tempPosition) -
         this._friction * tempVelocity
-      var tempPosition = position + aVelocity * step / 2
-      var tempVelocity = velocity + aAcceleration * step / 2
+      var tempPosition = position + (aVelocity * step) / 2
+      var tempVelocity = velocity + (aAcceleration * step) / 2
       var bVelocity = tempVelocity
       var bAcceleration =
         this._tension * (this._to - tempPosition) -
         this._friction * tempVelocity
-      tempPosition = position + bVelocity * step / 2
-      tempVelocity = velocity + bAcceleration * step / 2
+      tempPosition = position + (bVelocity * step) / 2
+      tempVelocity = velocity + (bAcceleration * step) / 2
       var cVelocity = tempVelocity
       var cAcceleration =
         this._tension * (this._to - tempPosition) -
         this._friction * tempVelocity
-      tempPosition = position + cVelocity * step / 2
-      tempVelocity = velocity + cAcceleration * step / 2
+      tempPosition = position + (cVelocity * step) / 2
+      tempVelocity = velocity + (cAcceleration * step) / 2
       var dVelocity = tempVelocity
       var dAcceleration =
         this._tension * (this._to - tempPosition) -
         this._friction * tempVelocity
-      tempPosition = position + cVelocity * step / 2
-      tempVelocity = velocity + cAcceleration * step / 2
+      tempPosition = position + (cVelocity * step) / 2
+      tempVelocity = velocity + (cAcceleration * step) / 2
       var dxdt = (aVelocity + 2 * (bVelocity + cVelocity) + dVelocity) / 6
       var dvdt =
         (aAcceleration + 2 * (bAcceleration + cAcceleration) + dAcceleration) /

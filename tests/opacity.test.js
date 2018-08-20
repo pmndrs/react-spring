@@ -1,8 +1,8 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import sinon from 'sinon'
 import createMockRaf from 'mock-raf'
 import { fadeIn } from '../stories/tests/opacity'
+import { Globals } from '../src/targets/web'
 
 test('sanity', () => {
   expect(2 + 2).toBe(4)
@@ -11,13 +11,16 @@ test('sanity', () => {
 test('fade in', () => {
   const mockRaf = createMockRaf()
 
-  sinon.stub(window, 'requestAnimationFrame').callsFake(mockRaf.raf)
+  Globals.injectFrame(mockRaf.raf, mockRaf.cancel)
+  Globals.injectNow(mockRaf.now)
 
   const wrapper = mount(fadeIn)
 
   const box = wrapper.childAt(0)
 
   console.log(box.html())
-  mockRaf.step({ count: 60 })
+
+  mockRaf.step({ count: 10 })
+
   console.log(box.html())
 })
