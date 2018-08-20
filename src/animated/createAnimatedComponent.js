@@ -61,21 +61,19 @@ export default function createAnimatedComponent(Component) {
     }
 
     render() {
-      const { forwardedRef, ...rest } = this._propsAnimated.__getValue()
+      const { forwardRef, ...rest } = this._propsAnimated.__getValue()
       return (
         <Component
           {...rest}
           ref={node => {
             this.node = node
-            if (forwardedRef) {
-              forwardedRef(node)
-            }
+            if (forwardRef) forwardRef(node)
           }}
         />
       )
     }
   }
-  return React.forwardRef((props, ref) => {
-    return <AnimatedComponent {...props} forwardedRef={ref} />
-  })
+  return React.forwardRef((props, ref) => (
+    <AnimatedComponent {...props} forwardRef={ref} />
+  ))
 }

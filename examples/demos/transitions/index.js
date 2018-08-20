@@ -25,6 +25,7 @@ export default class TransitionsExample extends React.PureComponent {
     this.t5 && clearTimeout(this.t5)
 
     this.setState({ items: [] })
+
     // new items: 1, 2, 3
     this.t1 = await this.animate('1', '2', '3')
     // new item in between: 4
