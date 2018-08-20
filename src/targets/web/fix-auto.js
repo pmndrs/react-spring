@@ -12,7 +12,7 @@ export default function fixAuto(props, callback) {
   const { from, to } = props
 
   // Dry-route props back if nothing's using 'auto' in there
-  if (![...getValues(from), ...getValues(to)].some(check)) return
+  if (!(getValues(from).some(check) || getValues(to).some(check))) return
   // Fetch render v-dom
   const element = renderChildren(props, convertValues(props))
   // A spring can return undefined/null, check against that (#153)
