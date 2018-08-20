@@ -157,10 +157,19 @@ const elements = domElements.reduce(
 )
 
 Object.assign(animated, elements)
-const createAnimatedComponent = comp =>
-  console.warn(
-    'createAnimatedComponent is deprecated, use animated(comp) instead'
-  ) || animated(comp)
+
+let warned = false
+
+const createAnimatedComponent = comp => {
+  if (process.env.NODE_ENV !== 'production' && !warned) {
+    warned = true
+    console.warn(
+      'createAnimatedComponent is deprecated, use animated(comp) instead'
+    )
+  }
+
+  return animated(comp)
+}
 
 export {
   Spring,
