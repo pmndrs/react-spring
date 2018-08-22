@@ -155,12 +155,12 @@ function hslToRgb(h, s, l) {
 const NUMBER = '[-+]?\\d*\\.?\\d+'
 const PERCENTAGE = NUMBER + '%'
 
-function toArray(arrayLike) {
-  return Array.prototype.slice.call(arrayLike, 0)
-}
-
 function call() {
-  return '\\(\\s*(' + toArray(arguments).join(')\\s*,\\s*(') + ')\\s*\\)'
+  return (
+    '\\(\\s*(' +
+    Array.prototype.slice.call(arguments).join(')\\s*,\\s*(') +
+    ')\\s*\\)'
+  )
 }
 
 var matchers = {
@@ -183,7 +183,7 @@ function parse255(str) {
 
 function parse360(str) {
   const int = parseFloat(str)
-  return ((int % 360 + 360) % 360) / 360
+  return (((int % 360) + 360) % 360) / 360
 }
 
 function parse1(str) {
