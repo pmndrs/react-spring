@@ -95,7 +95,7 @@ class Transition extends React.PureComponent {
     enter: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     // Unmount styles
     leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-    //
+    // fires for nodes that are neither entering nor leaving
     update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     // A collection of unique keys that must match with the childrens order
     // Can be omitted if children/render aren't an array
