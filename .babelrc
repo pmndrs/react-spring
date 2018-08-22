@@ -4,7 +4,10 @@
     ["@babel/preset-stage-3", { "loose": true }],
     "@babel/preset-react"
   ],
-  "plugins": [["transform-react-remove-prop-types", { "removeImport": true }]],
+  "plugins": [
+    ["transform-react-remove-prop-types", { "removeImport": true }],
+    "codegen"
+  ],
   "env": {
     "test": {
       "presets": [
