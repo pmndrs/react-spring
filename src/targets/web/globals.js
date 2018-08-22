@@ -74,28 +74,34 @@ function dangerousStyleValue(name, value, isCustomProperty) {
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectBugfixes(fixAuto)
-Globals.injectApplyAnimatedValues((instance, props) => {
-  if (instance.nodeType && instance.setAttribute !== undefined) {
-    const { style, ...attributes } = props
+Globals.injectApplyAnimatedValues(
+  (instance, props) => {
+    if (instance.nodeType && instance.setAttribute !== undefined) {
+      const { style, children, ...attributes } = props
 
-    // Set styles ...
-    for (let styleName in style) {
-      if (!style.hasOwnProperty(styleName)) continue
-      var isCustomProperty = styleName.indexOf('--') === 0
-      var styleValue = dangerousStyleValue(
-        styleName,
-        style[styleName],
-        isCustomProperty
-      )
-      if (styleName === 'float') styleName = 'cssFloat'
-      if (isCustomProperty) instance.style.setProperty(styleName, styleValue)
-      else instance.style[styleName] = styleValue
-    }
+      // Set innerText, if children is an animatable value
+      if (children) instance.innerText = children
 
-    // Set attributes ...
-    for (let name in attributes) {
-      if (instance.getAttribute(name))
-        instance.setAttribute(name, attributes[name])
-    }
-  } else return false
-}, style => style)
+      // Set styles ...
+      for (let styleName in style) {
+        if (!style.hasOwnProperty(styleName)) continue
+        var isCustomProperty = styleName.indexOf('--') === 0
+        var styleValue = dangerousStyleValue(
+          styleName,
+          style[styleName],
+          isCustomProperty
+        )
+        if (styleName === 'float') styleName = 'cssFloat'
+        if (isCustomProperty) instance.style.setProperty(styleName, styleValue)
+        else instance.style[styleName] = styleValue
+      }
+
+      // Set attributes ...
+      for (let name in attributes) {
+        if (instance.getAttribute(name))
+          instance.setAttribute(name, attributes[name])
+      }
+    } else return false
+  },
+  style => style
+)
