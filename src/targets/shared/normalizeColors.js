@@ -195,7 +195,7 @@ function parse1(str) {
 
 function parsePercentage(str) {
   // parseFloat conveniently ignores the final %
-  const int = parseFloat(str, 10)
+  const int = parseFloat(str)
   if (int < 0) return 0
   if (int > 100) return 1
   return int / 100
