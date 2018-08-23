@@ -18,12 +18,7 @@ const globals = {
 const getBabelOptions = ({ useESModules }) => ({
   exclude: '**/node_modules/**',
   runtimeHelpers: true,
-  plugins: [
-    [
-      '@babel/transform-runtime',
-      { regenerator: false, polyfill: false, useBuiltIns: true, useESModules },
-    ],
-  ],
+  plugins: [['@babel/transform-runtime', { regenerator: false, useESModules }]],
 })
 
 function createConfig(entry, out, name) {
