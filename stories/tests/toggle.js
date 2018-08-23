@@ -9,7 +9,7 @@ export const Toggler = ({ toggle }) => (
     from={{ opacity: 0 }}
     enter={{ opacity: 1 }}
     leave={{ opacity: 0 }}>
-    {toggle
+    {!toggle
       ? styles => (
           <div className="fixed bg-red" style={styles}>
             Component A

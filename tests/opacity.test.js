@@ -1,12 +1,9 @@
 import React from 'react'
-import { mount } from 'enzyme'
-import createMockRaf from 'mock-raf'
-import { fadeIn } from '../stories/tests/opacity'
-import { Globals } from '../src/targets/web'
+import { render, cleanup } from 'react-testing-library'
 
-test('sanity', () => {
-  expect(2 + 2).toBe(4)
-})
+import createMockRaf from 'mock-raf'
+import { FadeIn } from '../stories/tests/opacity'
+import { Globals } from '../src/targets/web'
 
 test('fade in', () => {
   const mockRaf = createMockRaf()
@@ -14,13 +11,19 @@ test('fade in', () => {
   Globals.injectFrame(mockRaf.raf, mockRaf.cancel)
   Globals.injectNow(mockRaf.now)
 
-  const wrapper = mount(fadeIn)
+  const { container, getByText, debug } = render(<FadeIn />)
 
-  const box = wrapper.childAt(0)
+  const box = getByText('test')
 
-  console.log(box.html())
+  expect(parseFloat(box.style.opacity)).toBe(0)
 
   mockRaf.step({ count: 10 })
 
-  console.log(box.html())
+  expect(parseFloat(box.style.opacity)).toBeCloseTo(0.73)
+
+  mockRaf.step({ count: 50 })
+
+  expect(parseFloat(box.style.opacity)).toBeCloseTo(1)
+
+  cleanup()
 })
