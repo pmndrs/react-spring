@@ -66,6 +66,8 @@
     "@babel/plugin-transform-runtime": "^7.0.0-rc.2",
     "@babel/preset-env": "^7.0.0-rc.2",
     "@babel/preset-react": "^7.0.0-rc.2",
+    "@storybook/addon-knobs": "^3.4.10",
+    "@storybook/react": "^3.4.10",
     "@types/react": "^16.4.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.4.2",
