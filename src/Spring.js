@@ -17,24 +17,41 @@ import {
 
 export default class Spring extends React.Component {
   static propTypes = {
-    to: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    /** Base styles, optional */
     from: PropTypes.object,
+    /** Animates to ... */
+    to: PropTypes.object,
+    /** Will skip rendering the component if true and write to the dom directly */
     native: PropTypes.bool,
+    /** Callback when the animation starts to animate */
     onStart: PropTypes.func,
+    /** Callback when the animation comes to a still-stand */
     onRest: PropTypes.func,
+    /** Frame by frame callback, first argument passed is the animated value */
     onFrame: PropTypes.func,
+    /** Takes a function that receives interpolated styles */
     children: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.arrayOf(PropTypes.func),
       PropTypes.node,
     ]),
+    /** Same as children, but takes precedence if present */
     render: PropTypes.func,
+    /** When true it literally resets: from -> to */
     reset: PropTypes.bool,
+    /** Escape hatch for cases where you supply the same values, but need spring to
+        animate anyway, this can be useful for animating "auto" for instance, where "auto"
+        remains unchanged, but children change (which normally wouldn't trigger an animation update) */
     force: PropTypes.bool,
+    /** Spring config ({ tension, friction, ... } or a function receiving a name) */
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    /** Prevents animation if true, you can also pass individual keys */
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+    /** Spring implementation */
     impl: PropTypes.func,
+    /** Hooks, mostly used for middleware (like fix-auto) */
     inject: PropTypes.func,
+    /** Delay before the animation starts */
     delay: PropTypes.number,
   }
 

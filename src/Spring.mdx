@@ -1,0 +1,40 @@
+---
+name: Spring
+---
+
+import { Playground, PropsTable } from 'docz'
+import { Spring } from './targets/web'
+
+# Spring
+
+`Spring` will move data from one state to another. It remembers the current state, value changes are always fluid.
+
+```jsx
+import { Spring } from 'react-spring'
+```
+
+## Basic usage
+
+<Playground>
+  <Spring from={{ opacity: 0, color: 'black' }} to={{ opacity: 1, color: '#ea567c' }}>
+    {props => <div style={props}>hi there</div>}
+  </Spring>
+</Playground>
+
+You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
+
+```jsx
+<Spring to={{
+    scale: toggle ? 1 : 2,
+    start: toggle ? '#abc' : 'rgb(10,20,30)',
+    end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
+    stop: toggle ? '0%' : '50%',
+    rotate: toggle ? '0deg' : '45deg',
+    path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z',
+    vector: toggle ? [1,2,50,100] : [20,30,1,-100],
+}}>
+```
+
+## Props
+
+<PropsTable of={Spring} />
