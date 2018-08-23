@@ -51,7 +51,7 @@
     "spring"
   ],
   "author": "Paul Henschel",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/drcmda/react-spring/issues"
   },
