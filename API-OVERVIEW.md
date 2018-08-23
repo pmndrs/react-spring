@@ -89,7 +89,7 @@ By default we'll render every frame (like in the image on the left) as it gives 
 
 Just be aware of the following conditions:
 
-1.  `native` only animates styles and attributes
+1.  `native` only animates styles, attributes and children (as innerText)
 2.  The values you receive _are opaque objects, not regular values_
 3.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
 4.  If you need to interpolate styles use `interpolate`

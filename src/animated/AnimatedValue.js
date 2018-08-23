@@ -63,11 +63,10 @@ export default class AnimatedValue extends AnimatedWithChildren {
     this._animatedStyles.forEach(animatedStyle => animatedStyle.update())
   }
 
-  _updateValue(value) {
+  _updateValue = value => {
     this._value = value
     this._flush()
-    for (var key in this._listeners)
-      this._listeners[key]({ value: this.__getValue() })
+    for (let key in this._listeners) this._listeners[key]({ value })
   }
 
   /**
@@ -114,7 +113,7 @@ export default class AnimatedValue extends AnimatedWithChildren {
     this._animatedStyles.clear()
     animation.start(
       this._value,
-      value => this._updateValue(value),
+      this._updateValue,
       result => {
         this._animation = null
         callback && callback(result)

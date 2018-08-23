@@ -33,6 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 import colorNames from './colors'
+import * as matchers from './colorMatchers'
 
 export default function normalizeColor(color) {
   let match
@@ -151,29 +152,6 @@ function hslToRgb(h, s, l) {
   )
 }
 
-// var INTEGER = '[-+]?\\d+';
-const NUMBER = '[-+]?\\d*\\.?\\d+'
-const PERCENTAGE = NUMBER + '%'
-
-function toArray(arrayLike) {
-  return Array.prototype.slice.call(arrayLike, 0)
-}
-
-function call() {
-  return '\\(\\s*(' + toArray(arguments).join(')\\s*,\\s*(') + ')\\s*\\)'
-}
-
-var matchers = {
-  rgb: new RegExp('rgb' + call(NUMBER, NUMBER, NUMBER)),
-  rgba: new RegExp('rgba' + call(NUMBER, NUMBER, NUMBER, NUMBER)),
-  hsl: new RegExp('hsl' + call(NUMBER, PERCENTAGE, PERCENTAGE)),
-  hsla: new RegExp('hsla' + call(NUMBER, PERCENTAGE, PERCENTAGE, NUMBER)),
-  hex3: /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
-  hex4: /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
-  hex6: /^#([0-9a-fA-F]{6})$/,
-  hex8: /^#([0-9a-fA-F]{8})$/,
-}
-
 function parse255(str) {
   const int = parseInt(str, 10)
   if (int < 0) return 0
@@ -183,7 +161,7 @@ function parse255(str) {
 
 function parse360(str) {
   const int = parseFloat(str)
-  return ((int % 360 + 360) % 360) / 360
+  return (((int % 360) + 360) % 360) / 360
 }
 
 function parse1(str) {
@@ -195,7 +173,7 @@ function parse1(str) {
 
 function parsePercentage(str) {
   // parseFloat conveniently ignores the final %
-  const int = parseFloat(str, 10)
+  const int = parseFloat(str)
   if (int < 0) return 0
   if (int > 100) return 1
   return int / 100
