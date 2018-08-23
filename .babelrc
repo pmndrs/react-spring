@@ -9,10 +9,8 @@
   ],
   "env": {
     "test": {
-      "presets": [
-        ["@babel/preset-env", { "loose": true, "modules": "commonjs" }],
-        ["@babel/preset-stage-3", { "loose": true }],
-        "@babel/preset-react"
+      "plugins": [
+        "@babel/transform-modules-commonjs"
       ]
     }
   }
