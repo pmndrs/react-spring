@@ -74,9 +74,6 @@
     "babel-plugin-transform-react-remove-prop-types": "0.4.15",
     "docz": "^0.10.3",
     "docz-theme-default": "^0.10.3",
-    "enzyme": "^3.4.4",
-    "enzyme-adapter-react-16": "^1.2.0",
-    "enzyme-to-json": "^3.3.4",
     "husky": "^1.0.0-rc.13",
     "jest": "^23.5.0",
     "lint-staged": "^7.2.2",
@@ -105,17 +102,11 @@
     "@babel/runtime": "7.0.0-rc.2"
   },
   "jest": {
-    "setupFiles": [
-      "./tests/jest.setup.js"
-    ],
     "testPathIgnorePatterns": [
       "/node_modules/",
       "jest"
     ],
     "testRegex": "test.js$",
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
     "coverageDirectory": "./coverage/",
     "collectCoverage": true
   },

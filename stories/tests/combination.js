@@ -1,20 +1,24 @@
 import React from 'react'
 import { testStories } from '../index'
 
-import { Spring } from '../../src/targets/web'
+import { Spring, animated } from '../../src/targets/web'
 
-testStories.add('combination', () => (
+export const ColorAndHeight = () => (
   <Spring
+    native={true}
     from={{ color: 'green', height: '100px' }}
-    to={{ color: 'blue', height: '500px' }}>
+    to={{ color: '#ff00ff', height: '500px' }}>
     {({ color, height }) => (
-      <div
-        className="block bg-red"
-        style={{ backgroundColor: color, height }}
-      />
+      <animated.div
+        className="block"
+        style={{ backgroundColor: color, height }}>
+        test
+      </animated.div>
     )}
   </Spring>
-))
+)
+
+testStories.add('combination', () => <ColorAndHeight />)
 
 testStories.add('combination #2', () => (
   <Spring
