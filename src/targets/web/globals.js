@@ -3,7 +3,7 @@ import colorNames from '../shared/colors'
 import createInterpolation from '../shared/interpolation'
 import fixAuto from './fix-auto'
 
-const isUnitlessNumber = {
+let isUnitlessNumber = {
   animationIterationCount: true,
   borderImageOutset: true,
   borderImageSlice: true,
@@ -52,11 +52,10 @@ const prefixKey = (prefix, key) =>
   prefix + key.charAt(0).toUpperCase() + key.substring(1)
 const prefixes = ['Webkit', 'Ms', 'Moz', 'O']
 
-Object.keys(isUnitlessNumber).forEach(prop =>
-  prefixes.forEach(
-    pre => (isUnitlessNumber[prefixKey(pre, prop)] = isUnitlessNumber[prop])
-  )
-)
+isUnitlessNumber = Object.keys(isUnitlessNumber).reduce((acc, prop) => {
+  prefixes.forEach(prefix => (acc[prefixKey(prefix, prop)] = acc[prop]))
+  return acc
+}, isUnitlessNumber)
 
 function dangerousStyleValue(name, value, isCustomProperty) {
   if (value == null || typeof value === 'boolean' || value === '') return ''
