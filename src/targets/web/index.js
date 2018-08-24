@@ -151,12 +151,10 @@ const domElements = [
   'tspan',
 ]
 
-const elements = domElements.reduce(
-  (acc, element) => ({ ...acc, [element]: animated(element) }),
-  {}
-)
-
-Object.assign(animated, elements)
+const extendedAnimated = domElements.reduce((acc, element) => {
+  acc[element] = animated(element)
+  return acc
+}, animated)
 
 let warned = false
 
@@ -182,7 +180,7 @@ export {
   SpringAnimation,
   AnimatedValue,
   config,
-  animated,
+  extendedAnimated as animated,
   controller,
   interpolate,
   // deprecated
