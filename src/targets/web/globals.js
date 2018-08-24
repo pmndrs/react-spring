@@ -79,8 +79,8 @@ Globals.injectApplyAnimatedValues(
     if (instance.nodeType && instance.setAttribute !== undefined) {
       const { style, children, ...attributes } = props
 
-      // Set innerText, if children is an animatable value
-      if (children) instance.innerText = children
+      // Set textContent, if children is an animatable value
+      if (children) instance.textContent = children
 
       // Set styles ...
       for (let styleName in style) {

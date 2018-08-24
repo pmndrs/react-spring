@@ -1,6 +1,5 @@
 export default {
   title: 'react-spring',
-  src: './src/',
   htmlContext: {
     head: {
       links: [
@@ -13,7 +12,6 @@ export default {
   },
   themeConfig: {
     codemirrorTheme: 'dracula',
-    //mode: 'dark',
     colors: {
       primary: '#ea567c',
       sidebarBg: 'white',

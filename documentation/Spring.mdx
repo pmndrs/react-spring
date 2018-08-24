@@ -3,7 +3,7 @@ name: Spring
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Spring } from './targets/web'
+import { Spring, config } from '../src/targets/web'
 
 # Spring
 
@@ -15,8 +15,8 @@ import { Spring } from 'react-spring'
 
 ## Basic usage
 
-<Playground>
-  <Spring from={{ opacity: 0, color: 'black' }} to={{ opacity: 1, color: '#ea567c' }}>
+<Playground style={{ overflow: 'hidden' }}>
+  <Spring from={{ opacity: 0, color: 'black', transform: 'translate3d(100%,0,0)' }} to={{ opacity: 1, color: '#ea567c', transform: 'translate3d(0%,0,0)' }} config={config.slow}>
     {props => <div style={props}>hi there</div>}
   </Spring>
 </Playground>
