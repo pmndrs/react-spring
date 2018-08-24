@@ -3,7 +3,11 @@ const NUMBER = '[-+]?\\d*\\.?\\d+'
 const PERCENTAGE = NUMBER + '%'
 
 function call() {
-  return '\\(\\s*(' + Array.prototype.slice.call(arguments).join(')\\s*,\\s*(') + ')\\s*\\)'
+  return (
+    '\\(\\s*(' +
+    Array.prototype.slice.call(arguments).join(')\\s*,\\s*(') +
+    ')\\s*\\)'
+  )
 }
 
 export const rgb = new RegExp('rgb' + call(NUMBER, NUMBER, NUMBER))

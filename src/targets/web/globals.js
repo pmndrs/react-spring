@@ -3,7 +3,7 @@ import colorNames from '../shared/colors'
 import createInterpolation from '../shared/interpolation'
 import fixAuto from './fix-auto'
 
-const isUnitlessNumber = {
+let isUnitlessNumber = {
   animationIterationCount: true,
   borderImageOutset: true,
   borderImageSlice: true,
@@ -52,11 +52,10 @@ const prefixKey = (prefix, key) =>
   prefix + key.charAt(0).toUpperCase() + key.substring(1)
 const prefixes = ['Webkit', 'Ms', 'Moz', 'O']
 
-Object.keys(isUnitlessNumber).forEach(prop =>
-  prefixes.forEach(
-    pre => (isUnitlessNumber[prefixKey(pre, prop)] = isUnitlessNumber[prop])
-  )
-)
+isUnitlessNumber = Object.keys(isUnitlessNumber).reduce((acc, prop) => {
+  prefixes.forEach(prefix => (acc[prefixKey(prefix, prop)] = acc[prop]))
+  return acc
+}, isUnitlessNumber)
 
 function dangerousStyleValue(name, value, isCustomProperty) {
   if (value == null || typeof value === 'boolean' || value === '') return ''
@@ -74,28 +73,34 @@ function dangerousStyleValue(name, value, isCustomProperty) {
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectBugfixes(fixAuto)
-Globals.injectApplyAnimatedValues((instance, props) => {
-  if (instance.nodeType && instance.setAttribute !== undefined) {
-    const { style, ...attributes } = props
+Globals.injectApplyAnimatedValues(
+  (instance, props) => {
+    if (instance.nodeType && instance.setAttribute !== undefined) {
+      const { style, children, ...attributes } = props
 
-    // Set styles ...
-    for (let styleName in style) {
-      if (!style.hasOwnProperty(styleName)) continue
-      var isCustomProperty = styleName.indexOf('--') === 0
-      var styleValue = dangerousStyleValue(
-        styleName,
-        style[styleName],
-        isCustomProperty
-      )
-      if (styleName === 'float') styleName = 'cssFloat'
-      if (isCustomProperty) instance.style.setProperty(styleName, styleValue)
-      else instance.style[styleName] = styleValue
-    }
+      // Set innerText, if children is an animatable value
+      if (children) instance.innerText = children
 
-    // Set attributes ...
-    for (let name in attributes) {
-      if (instance.getAttribute(name))
-        instance.setAttribute(name, attributes[name])
-    }
-  } else return false
-}, style => style)
+      // Set styles ...
+      for (let styleName in style) {
+        if (!style.hasOwnProperty(styleName)) continue
+        var isCustomProperty = styleName.indexOf('--') === 0
+        var styleValue = dangerousStyleValue(
+          styleName,
+          style[styleName],
+          isCustomProperty
+        )
+        if (styleName === 'float') styleName = 'cssFloat'
+        if (isCustomProperty) instance.style.setProperty(styleName, styleValue)
+        else instance.style[styleName] = styleValue
+      }
+
+      // Set attributes ...
+      for (let name in attributes) {
+        if (instance.getAttribute(name))
+          instance.setAttribute(name, attributes[name])
+      }
+    } else return false
+  },
+  style => style
+)
