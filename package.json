@@ -59,13 +59,13 @@
   },
   "homepage": "https://github.com/drcmda/react-spring#readme",
   "devDependencies": {
-    "@babel/core": "^7.0.0-rc.2",
-    "@babel/plugin-proposal-class-properties": "^7.0.0-rc.2",
-    "@babel/plugin-transform-modules-commonjs": "^7.0.0-rc.2",
-    "@babel/plugin-transform-runtime": "^7.0.0-rc.2",
-    "@babel/preset-env": "^7.0.0-rc.2",
-    "@babel/preset-react": "^7.0.0-rc.2",
-    "@types/react": "^16.4.6",
+    "@babel/core": "^7.0.0-rc.3",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-rc.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.0.0-rc.3",
+    "@babel/plugin-transform-runtime": "^7.0.0-rc.3",
+    "@babel/preset-env": "^7.0.0-rc.3",
+    "@babel/preset-react": "^7.0.0-rc.3",
+    "@types/react": "^16.4.11",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.4.2",
     "babel-plugin-transform-react-remove-prop-types": "0.4.15",
@@ -78,8 +78,8 @@
     "jest": "^23.5.0",
     "lint-staged": "^7.2.2",
     "prettier": "^1.14.2",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
     "react-test-renderer": "^16.4.2",
     "rimraf": "2.6.2",
     "rollup": "0.64.1",
@@ -89,7 +89,7 @@
     "rollup-plugin-size-snapshot": "^0.6.1",
     "rollup-plugin-uglify": "^4.0.0",
     "slash": "^2.0.0",
-    "typescript": "^2.9.2"
+    "typescript": "^3.0.1"
   },
   "peerDependencies": {
     "prop-types": "15.x.x",
@@ -97,7 +97,7 @@
     "react-dom": ">= 16.4.0"
   },
   "dependencies": {
-    "@babel/runtime": "7.0.0-rc.2"
+    "@babel/runtime": "7.0.0-rc.3"
   },
   "jest": {
     "setupFiles": [
