@@ -8,3 +8,4 @@ $RECYCLE.BIN/
 .DS_Store
 .vscode
 .docz/
+package-lock.json
