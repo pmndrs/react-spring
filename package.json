@@ -17,8 +17,10 @@
     "build": "rollup -c",
     "prepare": "npm run build",
     "test": "jest",
+    "test:dev": "jest --watch --no-coverage",
     "test:ts": "tsc --noEmit",
     "postinstall": "node -e \"console.log('\\u001b[35m\\u001b[1mEnjoy react-spring? You can now donate to our open collective:\\u001b[22m\\u001b[39m\\n > \\u001b[34mhttps://opencollective.com/react-spring/donate\\u001b[0m')\"",
+    "storybook": "start-storybook -p 9001 -c .storybook",
     "docz": "docz dev",
     "docz:build": "docz build"
   },
@@ -65,22 +67,23 @@
     "@babel/plugin-transform-runtime": "^7.0.0-rc.3",
     "@babel/preset-env": "^7.0.0-rc.3",
     "@babel/preset-react": "^7.0.0-rc.3",
+    "@storybook/addon-knobs": "^3.4.10",
+    "@storybook/react": "^3.4.10",
     "@types/react": "^16.4.11",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.4.2",
     "babel-plugin-transform-react-remove-prop-types": "0.4.15",
     "docz": "^0.10.3",
     "docz-theme-default": "^0.10.3",
-    "enzyme": "^3.4.4",
-    "enzyme-adapter-react-16": "^1.2.0",
-    "enzyme-to-json": "^3.3.4",
     "husky": "^1.0.0-rc.13",
     "jest": "^23.5.0",
     "lint-staged": "^7.2.2",
+    "mock-raf": "^1.0.0",
     "prettier": "^1.14.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-test-renderer": "^16.4.2",
+    "react-testing-library": "^5.0.0",
     "rimraf": "2.6.2",
     "rollup": "0.64.1",
     "rollup-plugin-babel": "^4.0.0-beta.8",
@@ -100,17 +103,11 @@
     "@babel/runtime": "7.0.0-rc.3"
   },
   "jest": {
-    "setupFiles": [
-      "./tests/jest.setup.js"
-    ],
     "testPathIgnorePatterns": [
       "/node_modules/",
       "jest"
     ],
-    "testRegex": "(/tests/.*|(\\.|/)(test|spec))\\.jsx?$",
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
+    "testRegex": "test.js$",
     "coverageDirectory": "./coverage/",
     "collectCoverage": true
   },

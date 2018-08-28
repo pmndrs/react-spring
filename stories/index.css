@@ -1,0 +1,30 @@
+#root {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  left: 0;
+}
+
+.block {
+  margin: 20px;
+  width: 200px;
+  height: 200px;
+}
+
+.fixed {
+  position: absolute;
+  width: 500px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-red {
+  background-color: red;
+}
+
+.bg-blue {
+  background-color: blue;
+}
