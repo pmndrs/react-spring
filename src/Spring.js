@@ -21,6 +21,18 @@ export default class Spring extends React.Component {
     from: PropTypes.object,
     /** Animates to ... */
     to: PropTypes.object,
+    /** Takes a function that receives interpolated styles */
+    children: PropTypes.func,
+    /** Same as children, but takes precedence if present */
+    render: PropTypes.func,
+    /** Prevents animation if true, you can also pass individual keys */
+    immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+    /** Delay before the animation starts */
+    delay: PropTypes.number,
+    /** When true it literally resets: from -> to */
+    reset: PropTypes.bool,
+    /** Spring config ({ tension, friction, ... } or a function receiving a name) */
+    config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Will skip rendering the component if true and write to the dom directly */
     native: PropTypes.bool,
     /** Callback when the animation starts to animate */
@@ -29,30 +41,14 @@ export default class Spring extends React.Component {
     onRest: PropTypes.func,
     /** Frame by frame callback, first argument passed is the animated value */
     onFrame: PropTypes.func,
-    /** Takes a function that receives interpolated styles */
-    children: PropTypes.oneOfType([
-      PropTypes.func,
-      PropTypes.arrayOf(PropTypes.func),
-      PropTypes.node,
-    ]),
-    /** Same as children, but takes precedence if present */
-    render: PropTypes.func,
-    /** When true it literally resets: from -> to */
-    reset: PropTypes.bool,
-    /** Escape hatch for cases where you supply the same values, but need spring to
+    /** The implementation is fully exchangeable, look into addons for some alternatives (duration based, harmonic oscillator, etc) */
+    impl: PropTypes.func,
+    /** Escape hatch: For cases where you supply the same values, but need spring to
         animate anyway, this can be useful for animating "auto" for instance, where "auto"
         remains unchanged, but children change (which normally wouldn't trigger an animation update) */
     force: PropTypes.bool,
-    /** Spring config ({ tension, friction, ... } or a function receiving a name) */
-    config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-    /** Prevents animation if true, you can also pass individual keys */
-    immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    /** Spring implementation */
-    impl: PropTypes.func,
-    /** Hooks, mostly used for middleware (like fix-auto) */
+    /** Internal: Hooks, mostly used for middleware (like fix-auto) */
     inject: PropTypes.func,
-    /** Delay before the animation starts */
-    delay: PropTypes.number,
   }
 
   static defaultProps = {
@@ -69,8 +65,8 @@ export default class Spring extends React.Component {
 
   state = {
     lastProps: { from: {}, to: {} },
-    changed: false,
-    dry: false,
+    propsChanged: false,
+    internal: false,
   }
 
   didUpdate = false
@@ -90,19 +86,19 @@ export default class Spring extends React.Component {
     this.stop()
   }
 
-  static getDerivedStateFromProps(props, { changed, dry, lastProps }) {
+  static getDerivedStateFromProps(props, { internal, lastProps }) {
     // The following is a test against props that could alter the animation
     const { from, to, reset, force } = props
-    changed =
+    const propsChanged =
       !shallowEqual(to, lastProps.to) ||
       !shallowEqual(from, lastProps.from) ||
-      reset ||
-      (force && !dry)
-    return { changed, lastProps: props, dry: false }
+      (reset && !internal) ||
+      (force && !internal)
+    return { propsChanged, lastProps: props, internal: false }
   }
 
   render() {
-    const propsChanged = this.state.changed
+    const propsChanged = this.state.propsChanged
 
     // Handle injected frames, for instance targets/web/fix-auto
     // An inject will return an intermediary React node which measures itself out
@@ -111,7 +107,7 @@ export default class Spring extends React.Component {
       const frame = this.props.inject(this.props, injectProps => {
         // The inject frame has rendered, now let's update animations...
         this.injectProps = injectProps
-        this.setState({ dry: true })
+        this.setState({ internal: true })
       })
       // Render out injected frame
       if (frame) return frame
@@ -241,7 +237,7 @@ export default class Spring extends React.Component {
       this.animatedProps = new AnimatedProps(this.interpolators, () => {
         // This gets called on every animation frame ...
         if (onFrame) onFrame(this.animatedProps.__getValue())
-        if (!native) this.setState({ dry: true })
+        if (!native) this.setState({ internal: true })
       })
       oldAnimatedProps && oldAnimatedProps.__detach()
     }
@@ -284,7 +280,7 @@ export default class Spring extends React.Component {
       if (this.didInject) {
         this.afterInject = convertValues(this.props)
         this.didInject = false
-        this.setState({ dry: true })
+        this.setState({ internal: true })
       }
     }
   }

@@ -7,33 +7,49 @@ import { Spring, config } from '../src/targets/web'
 
 # Spring
 
-`Spring` will move data from one state to another. It remembers the current state, value changes are always fluid.
-
-```jsx
-import { Spring } from 'react-spring'
-```
+`import { Spring, config } from 'react-spring'`
 
 ## Basic usage
 
+`Spring` will move data from one state to another.
+
 <Playground style={{ overflow: 'hidden' }}>
-  <Spring from={{ opacity: 0, color: 'black', transform: 'translate3d(100%,0,0)' }} to={{ opacity: 1, color: '#ea567c', transform: 'translate3d(0%,0,0)' }} config={config.slow}>
-    {props => <div style={props}>hi there</div>}
+  <Spring from={{ number: 0 }} to={{ number: 100 }}>
+    {props => <div>{props.number}</div>}
   </Spring>
 </Playground>
 
-You can interpolate almost everything, from numbers, colors, svg-paths, percentages, arrays to string patterns:
+## Interpolation
 
-```jsx
-<Spring to={{
-    scale: toggle ? 1 : 2,
-    start: toggle ? '#abc' : 'rgb(10,20,30)',
-    end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
-    stop: toggle ? '0%' : '50%',
-    rotate: toggle ? '0deg' : '45deg',
-    path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z',
-    vector: toggle ? [1,2,50,100] : [20,30,1,-100],
-}}>
-```
+It doesn't just handle numbers, it can interpolate pretty much everything: 
+
+* colors (names, rgb, rgba, hsl, hsla)
+* absolute lenghts (cm, mm, in, px, pt, pc)
+* relative lengths (em, ex, ch, rem, vw, vh, vmin, vmax, %)
+* angles (deg, rad, grad, turn)
+* flex and grid units (fr, etc)
+* all HTML attributes
+* SVG paths (as long as the number of points matches, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om))
+* arrays
+* string patterns (`transform`, `border`, `boxShadow`, etc)
+* [`auto` is valid](https://codesandbox.io/embed/pmjomxn60)
+* non-animatable string values (`visibility`, `pointerEvents`, etc) 
+
+<Playground style={{  }}>
+  <Spring
+    from={{
+      display: 'inline-block',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      width: 0,
+      background: '#000',
+      transform: 'translate3d(100px,0,0) scale(2) rotate(90deg)',
+    }}
+    to={{ width: 'auto', background: '#ea567c', transform: 'translate3d(0px,0,0) scale(1) rotate(0deg)' }}
+    config={config.molasses}>
+    {props => <div style={props}>hi there</div>}
+  </Spring>
+</Playground>
 
 ## Props
 

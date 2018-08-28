@@ -11,10 +11,12 @@ export default {
     },
   },
   themeConfig: {
+    //mode: 'dark',
     codemirrorTheme: 'dracula',
     colors: {
       primary: '#ea567c',
       sidebarBg: 'white',
+      //sidebarText: 'white'
     },
     styles: {
       body: {
