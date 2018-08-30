@@ -2,10 +2,6 @@
 
     npm install react-spring
 
-```jsx
-import { Spring, ... } from 'react-spring'
-```
-
 # Table of Contents 👇
 
 - [What is it?](#what-is-it-)
