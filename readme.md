@@ -287,7 +287,7 @@ const AnimatedView = animated(View)
 
 # Funding
 
-If you like this project, consider helping out, either by contributing, [opencollective](https://opencollective.com/react-spring) or [Patreon](https://www.patreon.com/0xca0a).
+If you like this project, consider helping out, all contributions are welcome as well as donations to [opencollective](https://opencollective.com/react-spring) or [Patreon](https://www.patreon.com/0xca0a).
 
 ## Contributors
 
