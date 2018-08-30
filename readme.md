@@ -3,14 +3,7 @@
     npm install react-spring
 
 ```jsx
-// React-dom
 import { Spring, ... } from 'react-spring'
-
-// React-native
-import { Spring, ... } from 'react-spring/dist/native'
-
-// Any other target or platform
-import { Spring, ... } from 'react-spring/dist/universal'
 ```
 
 # Table of Contents 👇
@@ -270,12 +263,19 @@ Native rendering comes with a few caveats you should know about before using it,
 
 # React-native and other targets 🎒
 
+```jsx
+// React-native
+import { Spring, animated, ... } from 'react-spring/dist/native'
+
+// Any other target or platform
+import { Spring, animated, ... } from 'react-spring/dist/universal'
+```
+
 The default export points to react-dom. If you want to animate react-native refer to `/dist/native`, and `/dist/universal` for any other target. Each target defines platform specific constants (colors, units, etc.). The universal target is the least specific.
 
 In react-native you can still use the `native` keyword for more performance, create your own animated-components by calling into the `animated` function.
 
 ```jsx
-import { Spring, animated } from 'react-spring/dist/native'
 import { View } from 'react-native'
 
 const AnimatedView = animated(View)
