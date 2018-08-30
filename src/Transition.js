@@ -66,7 +66,8 @@ export default class Transition extends React.PureComponent {
 
   constructor(prevProps) {
     super(prevProps)
-    this.springs = []
+    // TODO: make springs a set
+    this.springs = {}
     this.state = { transitions: [], current: {}, deleted: [], prevProps }
   }
 
