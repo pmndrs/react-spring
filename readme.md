@@ -23,6 +23,7 @@ import { Spring, ... } from 'react-spring/dist/universal'
 - [Render props](#render-props-)
 - [Native rendering](#native-rendering-)
 - [React-native and other targets](#react-native-and-other-targets-)
+- [Funding](#funding)
 
 # What is it? 🤔
 
