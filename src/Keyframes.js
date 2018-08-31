@@ -16,20 +16,26 @@ class Keyframes extends React.PureComponent {
   state = { props: {}, oldProps: {}, resolve: () => null }
 
   componentDidMount() {
+    this.mounted = true
     this.componentDidUpdate({})
+  }
+
+  componentWillUnmount() {
+    this.mounted = false
   }
 
   next = props => {
     this.running = true
     return new Promise(resolve => {
-      this.setState(
-        state => ({
-          props,
-          oldProps: { ...this.state.props },
-          resolve,
-        }),
-        () => (this.running = false)
-      )
+      this.mounted &&
+        this.setState(
+          state => ({
+            props,
+            oldProps: { ...this.state.props },
+            resolve,
+          }),
+          () => (this.running = false)
+        )
     })
   }
 

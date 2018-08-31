@@ -64,6 +64,14 @@ export default class Transition extends React.PureComponent {
     ]),
   }
 
+  componentDidMount() {
+    this.mounted = true
+  }
+
+  componentWillUnmount() {
+    this.mounted = false
+  }
+
   constructor(prevProps) {
     super(prevProps)
     // TODO: make springs a set
@@ -156,6 +164,7 @@ export default class Transition extends React.PureComponent {
           onRest={
             rest.destroyed
               ? () =>
+                  this.mounted &&
                   this.setState(
                     ({ deleted }) => ({
                       deleted: deleted.filter(t => t.key !== key),
