@@ -27,9 +27,7 @@ function createConfig(entry, out, name) {
       input: `./src/${entry}.js`,
       output: { file: `dist/${out}.js`, format: 'esm' },
       external,
-      plugins: [
-        babel(getBabelOptions({ useESModules: true })) /*, sizeSnapshot()*/,
-      ],
+      plugins: [babel(getBabelOptions({ useESModules: true })), sizeSnapshot()],
     },
     {
       input: `./src/${entry}.js`,
