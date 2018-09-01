@@ -36,7 +36,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['transitions']
+const DebugComponent = components['treeview']
 
 ReactDOM.render(
   DEBUG ? (

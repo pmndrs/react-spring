@@ -15,7 +15,7 @@ export default function createAnimatedComponent(Component) {
     }
 
     setNativeProps(props) {
-      var didUpdate = Globals.applyAnimatedValues.fn(this.node, props, this)
+      const didUpdate = Globals.applyAnimatedValues.fn(this.node, props, this)
       if (didUpdate === false) this.forceUpdate()
     }
 
@@ -23,8 +23,8 @@ export default function createAnimatedComponent(Component) {
       this.attachProps(this.props)
     }
 
-    attachProps(nextProps) {
-      var oldPropsAnimated = this._propsAnimated
+    attachProps({ forwardRef, ...nextProps }) {
+      const oldPropsAnimated = this._propsAnimated
 
       // The system is best designed when setNativeProps is implemented. It is
       // able to avoid re-rendering and directly set the attributes that
@@ -32,7 +32,7 @@ export default function createAnimatedComponent(Component) {
       // native components. If you want to animate a composite component, you
       // need to re-render it. In this case, we have a fallback that uses
       // forceUpdate.
-      var callback = () => {
+      const callback = () => {
         if (this.node) {
           const didUpdate = Globals.applyAnimatedValues.fn(
             this.node,
@@ -61,10 +61,11 @@ export default function createAnimatedComponent(Component) {
     }
 
     render() {
-      const { forwardRef, ...rest } = this._propsAnimated.__getValue()
+      const forwardRef = this.props.forwardRef
+      const animatedProps = this._propsAnimated.__getValue()
       return (
         <Component
-          {...rest}
+          {...animatedProps}
           ref={node => {
             this.node = node
             if (forwardRef) forwardRef(node)

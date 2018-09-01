@@ -22,7 +22,11 @@ export default class Spring extends React.Component {
     /** Animates to ... */
     to: PropTypes.object,
     /** Takes a function that receives interpolated styles */
-    children: PropTypes.func,
+    children: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.arrayOf(PropTypes.func),
+      PropTypes.node,
+    ]),
     /** Same as children, but takes precedence if present */
     render: PropTypes.func,
     /** Prevents animation if true, you can also pass individual keys */
@@ -71,6 +75,7 @@ export default class Spring extends React.Component {
 
   didUpdate = false
   didInject = false
+  updating = false
   animations = {}
   interpolators = {}
 
@@ -153,6 +158,9 @@ export default class Spring extends React.Component {
     // This function will turn own-props into AnimatedValues, it tries to re-use
     // .. exsting animations as best as it can by detecting the changes made
 
+    // We can potentially cause setState, but we're inside render, the flag prevents that
+    this.updating = true
+
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
     let target = attach && attach(this)
 
@@ -169,7 +177,7 @@ export default class Spring extends React.Component {
       const isArray = !isNumber && !isString && Array.isArray(value)
       const fromValue = from[name] !== undefined ? from[name] : value
       const fromAnimated = fromValue instanceof AnimatedValue
-      let toValue = isNumber || isArray ? value : 1
+      let toValue = isNumber || isArray ? value : isString ? value : 1
 
       if (target) {
         // Attach value to target animation
@@ -237,7 +245,7 @@ export default class Spring extends React.Component {
       this.animatedProps = new AnimatedProps(this.interpolators, () => {
         // This gets called on every animation frame ...
         if (onFrame) onFrame(this.animatedProps.__getValue())
-        if (!native) this.setState({ internal: true })
+        if (!native && !this.updating) this.setState({ internal: true })
       })
       oldAnimatedProps && oldAnimatedProps.__detach()
     }
@@ -246,6 +254,7 @@ export default class Spring extends React.Component {
     this.didUpdate = true
     this.afterInject = undefined
     this.didInject = false
+    this.updating = false
   }
 
   start = () => {

@@ -45,8 +45,8 @@ export default class SpringAnimation extends Animation {
       this._lastTime = internalState.lastTime
     }
 
-    if (typeof fromValue === 'string') {
-      this._onUpdate(fromValue)
+    if (typeof this._to === 'string') {
+      this._onUpdate(this._to)
       return this.__debouncedOnEnd({ finished: true })
     }
 
