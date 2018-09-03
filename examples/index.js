@@ -36,7 +36,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['treeview']
+const DebugComponent = components['bugs/onrest']
 
 ReactDOM.render(
   DEBUG ? (

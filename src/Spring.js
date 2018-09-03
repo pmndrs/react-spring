@@ -278,13 +278,12 @@ export default class Spring extends React.Component {
     )
 
   finishAnimation = name => {
-    if (!this.mounted) return
     const { animation, toValue: to } = this.animations[name]
     this.animations[name].stopped = true
+    if (!this.mounted) return
     if (getValues(this.animations).every(a => a.stopped)) {
       const current = { ...this.props.from, ...this.props.to }
       if (this.props.onRest) this.props.onRest(current)
-
       // Restore end-state
       if (this.didInject) {
         this.afterInject = convertValues(this.props)
