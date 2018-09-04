@@ -34,13 +34,16 @@ export default class AnimatedTracking extends Animated {
   }, 1000 / 30)
 }
 
-function throttle(callback, limit) {
-  var wait = false
+function throttle(func, wait) {
+  let timeout = null
+  let previous = 0
+  let later = () => func((previous = Date.now()), (timeout = null))
   return function() {
-    if (!wait) {
-      callback.call()
-      wait = true
-      setTimeout(() => (wait = false), limit)
-    }
+    let now = Date.now()
+    let remaining = wait - (now - previous)
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) void (clearTimeout(timeout), (timeout = null))
+      func((previous = now))
+    } else if (!timeout) timeout = setTimeout(later, remaining)
   }
 }
