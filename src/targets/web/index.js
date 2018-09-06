@@ -165,7 +165,6 @@ const createAnimatedComponent = comp => {
       'createAnimatedComponent is deprecated, use animated(comp) instead'
     )
   }
-
   return animated(comp)
 }
 

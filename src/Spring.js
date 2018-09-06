@@ -15,6 +15,13 @@ import {
   getValues,
 } from './targets/shared/helpers'
 
+const v = React.version.split('.')
+if (process.env.NODE_ENV !== 'production' && (v[0] < 16 || v[1] < 4)) {
+  console.warn(
+    'Please consider upgrading to react/react-dom 16.4.x or higher! Older React versions break getDerivedStateFromProps, see https://github.com/facebook/react/issues/12898'
+  )
+}
+
 export default class Spring extends React.Component {
   static propTypes = {
     /** Base styles, optional */
@@ -143,7 +150,7 @@ export default class Spring extends React.Component {
   componentDidUpdate() {
     // The animation has to start *after* render, since at that point the scene
     // .. graph should be established, so we do it here. Unfortunatelly, non-native
-    // .. animations as well as "auto" injects call forceUpdate, so it's causing a loop.
+    // .. animations as well as "auto"-injects call forceUpdate, so it's causing a loop.
     // .. didUpdate prevents that as it gets set only on prop changes.
     if (this.didUpdate) {
       if (this.props.delay) {

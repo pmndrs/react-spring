@@ -55,8 +55,9 @@ export default class Transition extends React.PureComponent {
       ]),
     ]),
     children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.func),
       PropTypes.func,
+      PropTypes.arrayOf(PropTypes.func),
+      PropTypes.node,
     ]),
     render: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.func),

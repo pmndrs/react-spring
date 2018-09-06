@@ -38,6 +38,11 @@ export default class SpringAnimation extends Animation {
     this.__onEnd = onEnd
     this._lastTime = Globals.now()
 
+    if (typeof fromValue === 'string' || typeof this._to === 'string') {
+      this._onUpdate(this._to)
+      return this.__debouncedOnEnd({ finished: true })
+    }
+
     if (previousAnimation instanceof SpringAnimation) {
       var internalState = previousAnimation.getInternalState()
       this._lastPosition = internalState.lastPosition
@@ -45,13 +50,9 @@ export default class SpringAnimation extends Animation {
       this._lastTime = internalState.lastTime
     }
 
-    if (typeof this._to === 'string') {
-      this._onUpdate(this._to)
-      return this.__debouncedOnEnd({ finished: true })
-    }
-
     if (this._initialVelocity !== undefined && this._initialVelocity !== null)
       this._lastVelocity = this._initialVelocity
+
     this.onUpdate()
   }
 
