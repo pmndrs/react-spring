@@ -1,17 +1,31 @@
 ---
 name: Spring
+route: /
 ---
 
 import { Playground, PropsTable } from 'docz'
+//import { Spring, config } from '../dist/web' 
 import { Spring, config } from '../src/targets/web'
 
 # Spring
 
-`import { Spring, config } from 'react-spring'`
+```jsx
+import { Spring } from 'react-spring'
 
-## Basic usage
+<Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
+  {styles => <div style={styles}>i will fade in</div>}
+</Spring>
+```
 
-`Spring` will move data from one state to another.
+## Basics
+
+A `Spring` moves data `from` one state `to` another. From that point on it remembers its current state and should you update `to` it will animate accordingly.
+
+It will forward the interpolated values as render-props, think of them not as "styles," you can most certainly use them as such, but you can do with them whatever you like, be it driving styles, attributes or component props. This makes for a powerful but very simple API that is versatile enough to build your own needs around it.
+
+Springs are physics based and animate adaptively, you do not have to [worry about durations and easings](https://www.youtube.com/watch?v=1tavDv5hXpo&feature=youtu.be&t=6m17s), which get complex and illogical quickly. With a spring your results will always look fluid.
+
+The playground below is live, play around a little, click the refresh button to restart the animation.
 
 <Playground style={{ overflow: 'hidden' }}>
   <Spring from={{ number: 0 }} to={{ number: 100 }}>
@@ -19,9 +33,54 @@ import { Spring, config } from '../src/targets/web'
   </Spring>
 </Playground>
 
+## Props
+
+<PropsTable of={Spring} />
+
+## Config
+
+Spring are configurable, there are a couple of presets.
+
+```jsx
+import { config } from 'react-spring'
+
+<Spring config={config.default} />
+````
+
+| Property                  | Value |
+| ------------------------- | ------- |
+| config.default             | { tension: 170, friction: 14 }
+| config.wobbly              | { tension: 180, friction: 12 }
+| config.stiff               | { tension: 210, friction: 20 }
+| config.slow                | { tension: 280, friction: 60 }
+| config.molasses            | { tension: 280, friction: 120 }
+
+You can of course set configs for yourself, or finetune your spring. 
+
+```jsx
+<Spring config={{ tension: 0, friction: 2, restDisplacementThreshold: 0.1 }} />
+````
+
+| Property                  | Default | Description       |
+| ------------------------- | ----------- | ------------- |
+| overshootClamping         | false       | false, when true, stops the spring once it overshoots its boundaries
+| restDisplacementThreshold | 0.0001      | precision
+| restSpeedThreshold        | 0.0001      | precision
+| velocity                  | 0           | initial velocity
+| tension                   | 170         | energetic load
+| friction                  | 26          | resistence
+
+It is also possible to set configs key by key.
+
+```jsx
+<Spring
+  to={{ width: 10, color: 'red' }}
+  config={key => key === 'width' ? config.slow : config.wobbly />
+```
+
 ## Interpolation
 
-It doesn't just handle numbers, it can interpolate pretty much everything: 
+`Spring` doesn't just handle numbers, it can interpolate pretty much everything: 
 
 * colors (names, rgb, rgba, hsl, hsla)
 * absolute lenghts (cm, mm, in, px, pt, pc)
@@ -32,25 +91,30 @@ It doesn't just handle numbers, it can interpolate pretty much everything:
 * SVG paths (as long as the number of points matches, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om))
 * arrays
 * string patterns (`transform`, `border`, `boxShadow`, etc)
-* [`auto` is valid](https://codesandbox.io/embed/pmjomxn60)
+* `auto` is valid
 * non-animatable string values (`visibility`, `pointerEvents`, etc) 
 
-<Playground style={{  }}>
+<Playground style={{ height: 290 }}>
   <Spring
     from={{
       display: 'inline-block',
-      whiteSpace: 'nowrap',
       overflow: 'hidden',
-      width: 0,
-      background: '#000',
-      transform: 'translate3d(100px,0,0) scale(2) rotate(90deg)',
+      width: 50,
+      opacity: 0,
+      padding: 0,
+      background: 'linear-gradient(to right, #009fff, #ec2f4b)',
+      transform: 'perspective(600px) translate3d(400px,0,0) scale(2) rotateX(90deg)',
+      boxShadow: '0px 100px 150px -10px teal',
+      border: '0px solid teal',
+      shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
     }}
-    to={{ width: 'auto', background: '#ea567c', transform: 'translate3d(0px,0,0) scale(1) rotate(0deg)' }}
-    config={config.molasses}>
-    {props => <div style={props}>hi there</div>}
+    to={{ width: 'auto', opacity: 1, padding: 50, background: 'linear-gradient(to right, #30e8bf, #ff8235)', transform: 'perspective(600px) translate3d(0px,0,0) scale(1) rotateX(0deg)', boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.5)', border: '50px solid rgb(0,0,0)', shape: 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' }} config={{ tension: 10, friction: 50 }}>
+    {props => (
+      <div style={props}>
+        <svg style={{ width: 80 }} version="1.1" viewBox="0 0 400 400">
+          <path d={props.shape} />
+        </svg>
+      </div>
+    )}
   </Spring>
 </Playground>
-
-## Props
-
-<PropsTable of={Spring} />

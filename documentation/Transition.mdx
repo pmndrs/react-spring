@@ -1,0 +1,100 @@
+---
+name: Transition
+route: /transition
+---
+
+import { Playground, PropsTable } from 'docz'
+//import { Transition, config } from '../dist/web' 
+import { Transition, config } from '../src/targets/web'
+import { Provider, Consumer } from './context'
+
+# Transition
+
+```jsx
+import { Transition } from 'react-spring'
+
+<Transition
+  keys={items.map(item => item.key)}
+  from={{ opacity: 0, height: 0 }}
+  enter={{ opacity: 1, height: 30 }}
+  leave={{ opacity: 0, height: 0 }}>
+  {items.map(item => styles => <li style={styles}>{item.text}</li>)}
+</Transition>
+```
+
+## Basics
+
+A `Transition` watches elements as they mount and unmount or otherwise change, it helps you to animate these changes. It also preserves leaving elements in their very last state, so you can safely animate them out before they vanish. For this reason you should always think of `Transition` as a stack, it is never just one element. Consider this when you need elements to fade in and out on top of one another, which calls for `position: absolute`, unless you want a stack or a list where elements push away other elements.
+
+The following immitates a list that is dropping and gaining items.
+
+<Playground style={{ overflow: 'hidden', height: 100 }}>
+  <Provider value={set => {
+    setTimeout(() => set({ items: ['Apples', 'Bananas'] }), 1500)
+    setTimeout(() => set({ items: ['Oranges'] }), 3000)
+    return { items: ['Apples', 'Oranges', 'Bananas'] }
+  }}>
+    <Consumer>
+      {({ items }) => (
+      <Transition
+        keys={items}
+        from={{ overflow: 'hidden', height: 0 }}
+        enter={{ height: 30, background: '#28d79f' }}
+        leave={{ height: 0, background: '#c23369' }}
+        update={{ background: '#28b4d7' }}
+        config={config.molasses}>
+        {items.map(item => props => <div style={props}>{item}</div>)}
+      </Transition>
+    )}
+    </Consumer>
+  </Provider>
+</Playground>
+
+## Props
+
+Other than the props listed here `Transition` can take all the props that `Spring` accepts (config, native, immediate, onRest, etc).
+
+<PropsTable of={Transition} />
+
+## 2-state and 1-state Reveals
+
+Given a single child instead of a list you can toggle between two components. If you want these two on top of one another make sure to position them absolutely.
+
+```jsx
+<Transition
+  from={{ position: 'absolute', opacity: 0 }}
+  enter={{ opacity: 1 }}
+  leave={{ opacity: 0 }}>
+  {toggle
+    ? styles => <div style={styles}>Component A</div>
+    : styles => <div style={styles}>Component B</div>
+  }
+</Transition>
+```
+
+If you need to toggle a single child, that is also possible.
+
+```jsx
+<Transition
+  from={{ position: 'absolute', opacity: 0 }}
+  enter={{ opacity: 1 }} 
+  leave={{ opacity: 0 }}>
+  {visible && (styles => <div style={styles}>Single Component</div>)}
+</Transition>
+```
+
+## Individual Transitions
+
+For more complex transitions you can return per-item values individually. Let `Transition` know the actual data by passing it raw to `items`, either pass your keys like always or give it an accessor. This allows you to set values individually since all value props accept functions. And for more control, there's `update` which fires for nodes that are neither entering nor leaving, use it to update present items.
+
+```jsx
+<Transition
+  items={items}
+  keys={item => item.key}
+  from={item => ({ opacity: 0 })}
+  enter={item => ({ opacity: 1 })}
+  update={item => ({ opacity: 0.5 })}
+  leave={item => ({ opacity: 0 })}>
+  {items.map(item => styles => <li style={styles}>{item.text}</li>)}
+</Transition>
+```

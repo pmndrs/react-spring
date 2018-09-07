@@ -24,7 +24,7 @@ if (process.env.NODE_ENV !== 'production' && (v[0] < 16 || v[1] < 4)) {
 
 export default class Spring extends React.Component {
   static propTypes = {
-    /** Base styles, optional */
+    /** Base values, optional */
     from: PropTypes.object,
     /** Animates to ... */
     to: PropTypes.object,
@@ -36,13 +36,13 @@ export default class Spring extends React.Component {
     ]),
     /** Same as children, but takes precedence if present */
     render: PropTypes.func,
-    /** Prevents animation if true, you can also pass individual keys */
+    /** Prevents animation if true, or for individual keys: fn(key => true/false) */
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     /** Delay before the animation starts */
     delay: PropTypes.number,
-    /** When true it literally resets: from -> to */
+    /** When true the spring starts from scratch (from -> to) */
     reset: PropTypes.bool,
-    /** Spring config ({ tension, friction, ... } or a function receiving a name) */
+    /** Spring config, or for individual keys: fn(key => config) */
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Will skip rendering the component if true and write to the dom directly */
     native: PropTypes.bool,
@@ -52,14 +52,12 @@ export default class Spring extends React.Component {
     onRest: PropTypes.func,
     /** Frame by frame callback, first argument passed is the animated value */
     onFrame: PropTypes.func,
-    /** The implementation is fully exchangeable, look into addons for some alternatives (duration based, harmonic oscillator, etc) */
+    /** The spring implementation is fully exchangeable (see addons) */
     impl: PropTypes.func,
-    /** Escape hatch: For cases where you supply the same values, but need spring to
-        animate anyway, this can be useful for animating "auto" for instance, where "auto"
-        remains unchanged, but children change (which normally wouldn't trigger an animation update) */
+    /** Escape hatch for cases where you supply the same values, but need spring to render anyway (see gotchas:auto) */
     force: PropTypes.bool,
-    /** Internal: Hooks, mostly used for middleware (like fix-auto) */
-    inject: PropTypes.func,
+    // Internal: Hooks, mostly used for middleware (like fix-auto)
+    // inject: PropTypes.func,
   }
 
   static defaultProps = {

@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 import Loadable from 'react-loadable'
 import './styles.css'
 
+console.log(React.version)
+
 const components = [
   'scroll',
   'parallax',
@@ -35,8 +37,8 @@ const components = [
   {}
 )
 
-const DEBUG = false
-const DebugComponent = components['bugs/onrest']
+const DEBUG = true
+const DebugComponent = components['nativespring']
 
 ReactDOM.render(
   DEBUG ? (

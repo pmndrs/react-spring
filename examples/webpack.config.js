@@ -35,7 +35,6 @@ module.exports = mode => {
                         }),
                   },
                 ],
-                '@babel/preset-stage-0',
                 '@babel/preset-react',
               ],
               plugins: mode.production
@@ -51,7 +50,11 @@ module.exports = mode => {
                     ],
                     'babel-plugin-lodash',
                   ]
-                : [],
+                : [
+                    '@babel/plugin-syntax-dynamic-import',
+                    ['@babel/plugin-proposal-decorators', { legacy: true }],
+                    ['@babel/proposal-class-properties', { loose: true }],
+                  ],
             },
           },
         },

@@ -16,10 +16,8 @@ const get = props => {
     children = [children]
     keys = keys !== void 0 ? [keys] : children.map(c => c.toString())
   }
-
   // Make sure numeric keys are interpreted as Strings (5 !== "5")
   keys = keys.map(k => String(k))
-
   return { keys, children, items, ...rest }
 }
 
@@ -27,12 +25,15 @@ let guid = 0
 
 export default class Transition extends React.PureComponent {
   static propTypes = {
-    native: PropTypes.bool,
-    config: PropTypes.object,
+    /** Base values, optional, or: item => values */
     from: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    /** Values that apply to new elements, or: fitem => values */
     enter: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    /** Values that apply to leaving elements, or: item => values */
     leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    /** Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values */
     update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    /** Item keys (the same keys you'd hand over to react in a list). If you specify items, keys can be an accessor function (item => item.key) */
     keys: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.arrayOf(
@@ -40,6 +41,7 @@ export default class Transition extends React.PureComponent {
       ),
       PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     ]),
+    /** Optional: An array of items to be displayed, use this if you need access to the actual items when distributing values as functions (see above) */
     items: PropTypes.oneOfType([
       PropTypes.arrayOf(
         PropTypes.oneOfType([
@@ -54,11 +56,13 @@ export default class Transition extends React.PureComponent {
         PropTypes.object,
       ]),
     ]),
+    /** An array of functions (props => view), or a single function, or undefined */
     children: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.arrayOf(PropTypes.func),
       PropTypes.node,
     ]),
+    /** Same as children, but takes precedence if present */
     render: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.func),
       PropTypes.func,
@@ -113,7 +117,10 @@ export default class Transition extends React.PureComponent {
         destroyed: true,
         lastSibling: _keys[Math.max(0, keyIndex - 1)],
         ...current[key],
-        to: ref(leave, _items ? _items[keyIndex] : key),
+        to: {
+          ...current[key].to,
+          ...ref(leave, _items ? _items[keyIndex] : key),
+        },
       })
       delete current[key]
     })
@@ -124,7 +131,7 @@ export default class Transition extends React.PureComponent {
       current[key] = {
         ...current[key],
         children: children[keyIndex],
-        to: ref(update, item, current[key].to),
+        to: { ...current[key].to, ...ref(update, item) },
       }
     })
 

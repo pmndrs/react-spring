@@ -278,6 +278,13 @@
     "@babel/helper-replace-supers" "^7.0.0"
     "@babel/plugin-syntax-class-properties" "^7.0.0"
 
+"@babel/plugin-proposal-do-expressions@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-do-expressions/-/plugin-proposal-do-expressions-7.0.0.tgz#4fe2f29c56a4b18d292caab0dfcb8119c89cc8d8"
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.0.0"
+    "@babel/plugin-syntax-do-expressions" "^7.0.0"
+
 "@babel/plugin-proposal-json-strings@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-json-strings/-/plugin-proposal-json-strings-7.0.0.tgz#3b4d7b5cf51e1f2e70f52351d28d44fc2970d01e"
@@ -316,6 +323,12 @@
 "@babel/plugin-syntax-class-properties@^7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-class-properties/-/plugin-syntax-class-properties-7.0.0.tgz#e051af5d300cbfbcec4a7476e37a803489881634"
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.0.0"
+
+"@babel/plugin-syntax-do-expressions@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-do-expressions/-/plugin-syntax-do-expressions-7.0.0.tgz#069119d1d2fd2c13a3203b172619af5f95b6f696"
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0"
 
@@ -1952,7 +1965,7 @@ babel-loader@^7.1.4:
     loader-utils "^1.0.2"
     mkdirp "^0.5.1"
 
-babel-loader@^8.0.0:
+babel-loader@^8.0.2:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/babel-loader/-/babel-loader-8.0.2.tgz#2079b8ec1628284a929241da3d90f5b3de2a5ae5"
   dependencies:
@@ -2083,12 +2096,12 @@ babel-plugin-react-docgen@^1.9.0:
     lodash "^4.17.0"
     react-docgen "^3.0.0-beta11"
 
-babel-plugin-react-docgen@^2.0.0-babel7.0:
-  version "2.0.0-babel7.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-react-docgen/-/babel-plugin-react-docgen-2.0.0-babel7.0.tgz#ea63443c11426edf81023679181403336b745850"
+babel-plugin-react-docgen@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-react-docgen/-/babel-plugin-react-docgen-2.0.0.tgz#039d90f5a1a37131c8cc3015017eecafa8d78882"
   dependencies:
     lodash "^4.17.10"
-    react-docgen "^3.0.0-rc.0"
+    react-docgen "^3.0.0-rc.1"
 
 babel-plugin-syntax-async-functions@^6.8.0:
   version "6.13.0"
@@ -2513,9 +2526,9 @@ babel-polyfill@^6.23.0, babel-polyfill@^6.26.0:
     core-js "^2.5.0"
     regenerator-runtime "^0.10.5"
 
-babel-preset-docz@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/babel-preset-docz/-/babel-preset-docz-0.11.0.tgz#8af829a37b2af69a0bf1b63cf6cd9f3d5ea90bdd"
+babel-preset-docz@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/babel-preset-docz/-/babel-preset-docz-0.11.1.tgz#0ddc9e9592aaa1e431c3a710714433024d7af796"
   dependencies:
     "@babel/core" "7.0.0"
     "@babel/plugin-proposal-class-properties" "7.0.0"
@@ -2529,7 +2542,7 @@ babel-preset-docz@^0.11.0:
     "@babel/preset-react" "7.0.0"
     "@babel/preset-typescript" "7.0.0"
     babel-plugin-macros "^2.4.0"
-    babel-plugin-react-docgen "^2.0.0-babel7.0"
+    babel-plugin-react-docgen "^2.0.0"
     babel-plugin-transform-dynamic-import "^2.0.0"
     babel-plugin-transform-react-remove-prop-types "^0.4.15"
 
@@ -4014,9 +4027,9 @@ doctrine@^2.0.0:
   dependencies:
     esutils "^2.0.2"
 
-docz-core@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/docz-core/-/docz-core-0.11.0.tgz#a819f7002cf661f9001f017f295c6efd9b17bd29"
+docz-core@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/docz-core/-/docz-core-0.11.1.tgz#2f8478132be0434cd2e1366f0662a8173a6bb9f5"
   dependencies:
     "@babel/core" "7.0.0"
     "@babel/polyfill" "7.0.0"
@@ -4026,8 +4039,8 @@ docz-core@^0.11.0:
     "@mdx-js/mdxast" "^0.15.0"
     "@sindresorhus/slugify" "^0.3.0"
     art-template "^4.13.0"
-    babel-loader "^8.0.0"
-    babel-preset-docz "^0.11.0"
+    babel-loader "^8.0.2"
+    babel-preset-docz "^0.11.1"
     babylon "^6.18.0"
     cache-loader "^1.2.2"
     chalk "^2.4.1"
@@ -4054,13 +4067,13 @@ docz-core@^0.11.0:
     koa-mount "^3.0.0"
     koa-range "^0.3.0"
     koa-static "^5.0.0"
-    load-cfg "^0.11.0"
+    load-cfg "^0.11.1"
     lodash.get "^4.4.2"
     mini-html-webpack-plugin "^0.2.3"
     prettier "^1.14.2"
     react-dev-utils "^5.0.2"
     react-docgen-typescript-loader "^3.0.0-rc.0"
-    react-hot-loader "4.3.5"
+    react-hot-loader "4.3.6"
     rehype-autolink-headings "^2.0.3"
     rehype-docz "^0.11.0"
     rehype-slug "^2.0.1"
@@ -4079,8 +4092,8 @@ docz-core@^0.11.0:
     unist-util-is "^2.1.2"
     unist-util-visit "^1.4.0"
     url-loader "^1.1.1"
-    webpack "^4.17.1"
-    webpack-chain "^4.9.0"
+    webpack "^4.17.2"
+    webpack-chain "^4.10.0"
     webpack-hot-client "^4.1.1"
     webpack-manifest-plugin "^2.0.3"
     webpack-serve "^2.0.2"
@@ -4090,13 +4103,13 @@ docz-core@^0.11.0:
     ws "^6.0.0"
     yargs "^12.0.1"
 
-docz-theme-default@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/docz-theme-default/-/docz-theme-default-0.11.0.tgz#d3ca00124c78d418c20bf36bd9ce06e11b5e805e"
+docz-theme-default@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/docz-theme-default/-/docz-theme-default-0.11.1.tgz#ca2e4661b2ffac8dea0e9672668eea12285f0e6b"
   dependencies:
     codemirror "^5.40.0"
     copy-text-to-clipboard "^1.0.4"
-    docz "^0.11.0"
+    docz "^0.11.1"
     emotion "^9.2.8"
     emotion-theming "^9.2.6"
     facepaint "^1.2.1"
@@ -4107,20 +4120,21 @@ docz-theme-default@^0.11.0:
     pretty "^2.0.0"
     prop-types "15.6.2"
     re-resizable "^4.8.1"
-    react "^16.4.2"
+    react "^16.5.0"
     react-codemirror2 "^5.1.0"
-    react-dom "^16.4.2"
+    react-dom "^16.5.0"
     react-emotion "^9.2.8"
-    react-feather "^1.1.1"
+    react-feather "^1.1.3"
     react-lightweight-tooltip "^1.0.0"
     react-live "^1.11.0"
     react-perfect-scrollbar "^1.2.0"
     react-powerplug "^1.0.0-rc.1"
+    react-sizes "^1.0.4"
     webfontloader "^1.6.28"
 
-docz@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/docz/-/docz-0.11.0.tgz#a3d5c98833a3274b774ef6ed6b1225574b2b82f4"
+docz@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/docz/-/docz-0.11.1.tgz#bbf93d4468b68cc4fb58d10b6a21fd3ee469bcf0"
   dependencies:
     "@mdx-js/tag" "^0.15.0"
     "@sindresorhus/slugify" "^0.3.0"
@@ -4128,12 +4142,12 @@ docz@^0.11.0:
     capitalize "^1.0.0"
     create-react-context "^0.2.3"
     deepmerge "^2.1.1"
-    docz-core "^0.11.0"
-    docz-theme-default "^0.11.0"
+    docz-core "^0.11.1"
+    docz-theme-default "^0.11.1"
     prop-types "^15.6.2"
-    react "^16.4.2"
+    react "^16.5.0"
     react-copy-write "^0.8.0"
-    react-dom "^16.4.2"
+    react-dom "^16.5.0"
     react-imported-component "^4.6.2"
     react-router "^4.3.1"
     react-router-dom "^4.3.1"
@@ -4504,9 +4518,9 @@ eslint-scope@^4.0.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-esm@^3.0.80:
-  version "3.0.81"
-  resolved "https://registry.yarnpkg.com/esm/-/esm-3.0.81.tgz#3d78df013960b6d30bb5a5adfafe5d9da654b9d2"
+esm@^3.0.82:
+  version "3.0.82"
+  resolved "https://registry.yarnpkg.com/esm/-/esm-3.0.82.tgz#e8c4363a14e30936bedf49a44bf962e2c91866ff"
 
 esprima@^2.6.0:
   version "2.7.3"
@@ -5628,9 +5642,20 @@ ignore@^3.3.5:
   version "3.3.10"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.10.tgz#0a97fb876986e8081c631160f8f9f389157f0043"
 
+immer-wieder@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/immer-wieder/-/immer-wieder-1.1.5.tgz#ed577ba1f3478e49566688418e7644a84c33f2dd"
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    immer "^1.5.0"
+
 immer@^1.2.1:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.5.0.tgz#1ed9b1b653643fe9276bbc36377613523ea32a39"
+
+immer@^1.5.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-1.6.0.tgz#4e41801272d64bff12d4b58ada0276bb2f4ead81"
 
 immutable@^3.8.1:
   version "3.8.2"
@@ -6867,12 +6892,12 @@ listr@^0.14.1:
     rxjs "^6.1.0"
     strip-ansi "^3.0.1"
 
-load-cfg@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/load-cfg/-/load-cfg-0.11.0.tgz#11c188fc7da6f81295e2e57ecd6ddc702279a7c6"
+load-cfg@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/load-cfg/-/load-cfg-0.11.1.tgz#c317f00cfa573f89caca6956d5c10bf7c45b76d9"
   dependencies:
     deepmerge "^2.1.1"
-    esm "^3.0.80"
+    esm "^3.0.82"
     find-up "^3.0.0"
     fs-extra "^7.0.0"
 
@@ -8840,7 +8865,7 @@ react-docgen-typescript@^1.6.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/react-docgen-typescript/-/react-docgen-typescript-1.7.0.tgz#53fce38758a60a246bb3601601b1291500441fa9"
 
-react-docgen@^3.0.0-beta11, react-docgen@^3.0.0-rc.0:
+react-docgen@^3.0.0-beta11, react-docgen@^3.0.0-rc.1:
   version "3.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/react-docgen/-/react-docgen-3.0.0-rc.1.tgz#a4e33dba1454459294276afdec87ef3958167eb0"
   dependencies:
@@ -8852,7 +8877,7 @@ react-docgen@^3.0.0-beta11, react-docgen@^3.0.0-rc.0:
     node-dir "^0.1.10"
     recast "^0.15.0"
 
-react-dom@^16.3.1, react-dom@^16.4.2:
+react-dom@^16.3.1:
   version "16.4.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.4.2.tgz#4afed569689f2c561d2b8da0b819669c38a0bda4"
   dependencies:
@@ -8860,6 +8885,15 @@ react-dom@^16.3.1, react-dom@^16.4.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+react-dom@^16.5.0:
+  version "16.5.0"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.0.tgz#57704e5718669374b182a17ea79a6d24922cb27d"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    schedule "^0.3.0"
 
 react-emotion@^9.2.8:
   version "9.2.8"
@@ -8872,9 +8906,9 @@ react-error-overlay@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-4.0.1.tgz#417addb0814a90f3a7082eacba7cee588d00da89"
 
-react-feather@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-1.1.1.tgz#dd59143af457601e68f2cd3bf32c0d94d30f89e7"
+react-feather@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-1.1.3.tgz#f0c0ae701265393d81d883e1ce903cae34290475"
 
 react-fuzzy@^0.5.2:
   version "0.5.2"
@@ -8885,9 +8919,9 @@ react-fuzzy@^0.5.2:
     fuse.js "^3.0.1"
     prop-types "^15.5.9"
 
-react-hot-loader@4.3.5:
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.5.tgz#d8659839d8072d4b78938a776f29f5f1d2a40170"
+react-hot-loader@4.3.6:
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/react-hot-loader/-/react-hot-loader-4.3.6.tgz#26e1491f08daf2bad99d141b1927c9faadef2fb4"
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -8930,9 +8964,9 @@ react-inspector@^2.2.2:
     babel-runtime "^6.26.0"
     is-dom "^1.0.9"
 
-react-is@^16.4.2:
-  version "16.4.2"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.4.2.tgz#84891b56c2b6d9efdee577cc83501dfc5ecead88"
+react-is@^16.5.0:
+  version "16.5.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.0.tgz#2ec7c192709698591efe13722fab3ef56144ba55"
 
 react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -9010,6 +9044,13 @@ react-router@^4.3.1:
     prop-types "^15.6.1"
     warning "^4.0.1"
 
+react-sizes@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-sizes/-/react-sizes-1.0.4.tgz#7f09beddf972afe6f8662a0ffe446baac35f6bc5"
+  dependencies:
+    lodash.throttle "^4.1.1"
+    prop-types "^15.6.0"
+
 react-split-pane@^0.1.77:
   version "0.1.82"
   resolved "https://registry.yarnpkg.com/react-split-pane/-/react-split-pane-0.1.82.tgz#42fbb9fd4823f05e037de0dab3cd6cf9bf0cf4ea"
@@ -9025,14 +9066,14 @@ react-style-proptype@^3.0.0:
   dependencies:
     prop-types "^15.5.4"
 
-react-test-renderer@^16.4.2:
-  version "16.4.2"
-  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.4.2.tgz#4e03eca9359bb3210d4373f7547d1364218ef74e"
+react-test-renderer@^16.5.0:
+  version "16.5.0"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.5.0.tgz#1aeca0edc4f27f63265dcaed80ba82e11e762f56"
   dependencies:
-    fbjs "^0.8.16"
     object-assign "^4.1.1"
-    prop-types "^15.6.0"
-    react-is "^16.4.2"
+    prop-types "^15.6.2"
+    react-is "^16.5.0"
+    schedule "^0.3.0"
 
 react-testing-library@^5.0.1:
   version "5.0.1"
@@ -9067,7 +9108,7 @@ react-treebeard@^2.1.0:
     shallowequal "^0.2.2"
     velocity-react "^1.3.1"
 
-react@^16.3.1, react@^16.4.2:
+react@^16.3.1:
   version "16.4.2"
   resolved "https://registry.yarnpkg.com/react/-/react-16.4.2.tgz#2cd90154e3a9d9dd8da2991149fdca3c260e129f"
   dependencies:
@@ -9075,6 +9116,15 @@ react@^16.3.1, react@^16.4.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+react@^16.5.0:
+  version "16.5.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.5.0.tgz#f2c1e754bf9751a549d9c6d9aca41905beb56575"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    schedule "^0.3.0"
 
 reactcss@^1.2.0:
   version "1.2.3"
@@ -9795,6 +9845,12 @@ sax@^1.2.4, sax@~1.2.1:
 scan-directory@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/scan-directory/-/scan-directory-1.0.0.tgz#46b6769dbd893d9bd7490ae9dcc43811a38b7fbb"
+
+schedule@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.3.0.tgz#1be2ab2fc2e768536269ce7326efb478d6c045e8"
+  dependencies:
+    object-assign "^4.1.1"
 
 schema-utils@^0.3.0:
   version "0.3.0"
@@ -11163,9 +11219,9 @@ webidl-conversions@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
 
-webpack-chain@^4.9.0:
-  version "4.9.0"
-  resolved "https://registry.yarnpkg.com/webpack-chain/-/webpack-chain-4.9.0.tgz#2f0794d34d79a7cc5db1416f497b76ad33df30ee"
+webpack-chain@^4.10.0:
+  version "4.10.0"
+  resolved "https://registry.yarnpkg.com/webpack-chain/-/webpack-chain-4.10.0.tgz#90c4bd0375b438036343ab2bf8cfc1fc50876255"
   dependencies:
     deepmerge "^1.5.2"
     javascript-stringify "^1.6.0"
@@ -11294,6 +11350,13 @@ webpack-sources@^1.0.1, webpack-sources@^1.1.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
+webpack-sources@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.2.0.tgz#18181e0d013fce096faf6f8e6d41eeffffdceac2"
+  dependencies:
+    source-list-map "^2.0.0"
+    source-map "~0.6.1"
+
 webpack@^3.11.0:
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-3.12.0.tgz#3f9e34360370602fcf639e97939db486f4ec0d74"
@@ -11321,7 +11384,7 @@ webpack@^3.11.0:
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
 
-webpack@^4.16.0, webpack@^4.17.1:
+webpack@^4.16.0:
   version "4.17.1"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.17.1.tgz#0f026e3d823f3fc604f811ed3ea8f0d9b267fb1e"
   dependencies:
@@ -11350,6 +11413,36 @@ webpack@^4.16.0, webpack@^4.17.1:
     uglifyjs-webpack-plugin "^1.2.4"
     watchpack "^1.5.0"
     webpack-sources "^1.0.1"
+
+webpack@^4.17.2:
+  version "4.17.2"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.17.2.tgz#49feb20205bd15f0a5f1fe0a12097d5d9931878d"
+  dependencies:
+    "@webassemblyjs/ast" "1.5.13"
+    "@webassemblyjs/helper-module-context" "1.5.13"
+    "@webassemblyjs/wasm-edit" "1.5.13"
+    "@webassemblyjs/wasm-opt" "1.5.13"
+    "@webassemblyjs/wasm-parser" "1.5.13"
+    acorn "^5.6.2"
+    acorn-dynamic-import "^3.0.0"
+    ajv "^6.1.0"
+    ajv-keywords "^3.1.0"
+    chrome-trace-event "^1.0.0"
+    enhanced-resolve "^4.1.0"
+    eslint-scope "^4.0.0"
+    json-parse-better-errors "^1.0.2"
+    loader-runner "^2.3.0"
+    loader-utils "^1.1.0"
+    memory-fs "~0.4.1"
+    micromatch "^3.1.8"
+    mkdirp "~0.5.0"
+    neo-async "^2.5.0"
+    node-libs-browser "^2.0.0"
+    schema-utils "^0.4.4"
+    tapable "^1.0.0"
+    uglifyjs-webpack-plugin "^1.2.4"
+    watchpack "^1.5.0"
+    webpack-sources "^1.2.0"
 
 webpackbar@^2.6.3:
   version "2.6.3"

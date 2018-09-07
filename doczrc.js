@@ -1,4 +1,5 @@
 export default {
+  protocol: 'http',
   title: 'react-spring',
   htmlContext: {
     head: {
