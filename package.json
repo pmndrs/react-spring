@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "5.7.0",
+  "version": "5.7.1",
   "description": "Animate React with ease",
   "main": "dist/web.cjs.js",
   "module": "dist/web.js",
