@@ -6,7 +6,7 @@ route: /transition
 import { Playground, PropsTable } from 'docz'
 //import { Transition, config } from '../dist/web' 
 import { Transition, config } from '../src/targets/web'
-import { Provider, Consumer } from './context'
+import { List } from 'react-powerplug'
 
 # Transition
 
@@ -29,25 +29,23 @@ A `Transition` watches elements as they mount and unmount or otherwise change, i
 The following immitates a list that is dropping and gaining items.
 
 <Playground style={{ overflow: 'hidden', height: 100 }}>
-  <Provider value={set => {
-    setTimeout(() => set({ items: ['Apples', 'Bananas'] }), 1500)
-    setTimeout(() => set({ items: ['Oranges'] }), 3000)
-    return { items: ['Apples', 'Oranges', 'Bananas'] }
-  }}>
-    <Consumer>
-      {({ items }) => (
+  <List initial={['Apples', 'Oranges', 'Bananas']}>
+    {({ list, push, pull }) => (
+
+      // I'd like to call setTimeouts on startup, removing an item on the first,
+      // adding items on the second, can't do it here coz it would cause a loop
+
       <Transition
-        keys={items}
+        keys={list}
         from={{ overflow: 'hidden', height: 0 }}
         enter={{ height: 30, background: '#28d79f' }}
         leave={{ height: 0, background: '#c23369' }}
         update={{ background: '#28b4d7' }}
         config={config.molasses}>
-        {items.map(item => props => <div style={props}>{item}</div>)}
+        {list.map(item => props => <div style={props}>{item}</div>)}
       </Transition>
     )}
-    </Consumer>
-  </Provider>
+  </List>
 </Playground>
 
 ## Props

@@ -1,0 +1,96 @@
+---
+name: Native rendering
+route: /native
+---
+
+import { Playground, PropsTable } from 'docz'
+//import { Spring, config } from '../dist/web' 
+import { Spring, animated, interpolate } from '../src/targets/web'
+
+# Native rendering
+
+    import { animated, interpolate } from 'react-spring'
+
+One of the strengths of react-spring is that it can apply animations "natively" without relying on React to render updates frame by frame like most React animation libraries do. The difference may not be apparent in simple situations, but try a nested chart or routes and the difference will be quite drastic.
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr auto', gridGap: 20, fontSize: '0.8em', marginBottom: 40, marginTop: 40 }}>
+  <img src={require('../assets/without-native.jpeg')} style={{ width: '100%' }} />
+  <img src={require('../assets/with-native.jpeg')} style={{ width: '100%' }} />
+  <div>Libraries animate by having React recalculate the component-tree on every frame. Here it attempts to animate a component consisting of ~300 sub-components, plowing through the frame budget and causing jank.</div>
+  <div>React-spring with the "native" property renders the component <i>only once</i>, from then on the animation will be applied directly to the dom in a requestAnimationFrame-loop, similar to how gsap and d3 do it.</div>
+</div>
+
+By default we'll render every frame (like in the image on the left) as it gives you more freedom (for instance this is the only way that you can animate React-component props). In situations where that becomes expensive use the `native` flag. The flag is available for all primitives (Spring, Transition & Trail, Keyframes, Parallax is native by design). **Try doing this in all situations where you can**, the benefits are worth it. Especially if your animated component consists of large subtrees, routes, etc.
+
+Just be aware of the following conditions:
+
+1.  `native` only animates styles, attributes and children (as textContent)
+2.  The values you receive _are opaque objects, not regular values_
+3.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
+4.  If you use styled-components or custom componemts do: `animated(component)`
+5.  If you need to interpolate styles use `interpolate`
+
+## Simple example
+
+<Playground style={{ overflow: 'hidden' }}>
+  <Spring native from={{ display: 'inline-block', padding: 10, background: 'black' }} to={{ background: 'hotpink' }}>
+    {props => console.log('open your browsers console, it will only render once') || <animated.div style={props}>hello</animated.div>}
+  </Spring>
+</Playground>
+
+## Interpolation
+
+<Playground style={{ overflow: 'hidden', height: 80 }}>
+<Spring native from={{ r: 0, o: 0, xy: [0, 0] }} to={{ r: 10, o: 1, xy: [10, 20] }}>
+  {({ r, o, xy }) => (
+    <animated.div
+      style={{
+        display: 'inline-block',
+        // Use plain animated values like always, ...
+        borderRadius: r,
+        padding: r,
+        opacity: o,
+        // Unless you need to interpolate them
+        background: o.interpolate(t => 'rgba(210, 57, 77, ' + t + ')'),
+        // If you need to interpolate multiple values, use 'interpolate'
+        transform: interpolate(xy, (x, y) => 'translate(' + x + 'px, ' + y + 'px)'),
+      }}>
+      {r.interpolate(n => n.toFixed(2))}
+    </animated.div>
+  )}
+</Spring>
+</Playground>
+
+## Chaining, clamping and ranges
+
+In cases where you need to clamp or extrapolate, the `interpolate` function can take several properties that might be of interest to you.
+
+| Value            | default  | Description |
+| ---------------- | -------- | ----------- |
+| extrapolateLeft  | extend   | Left extrapolate. Can be: identity/clamp/extend
+| extrapolateRight | extend   | Right extrapolate. Can be: identity/clamp/extend
+| extrapolate      | extend   | Shortcut to set left and right-extrapolate
+| range            | undefined | Array of input ranges
+| output           | undefined | Array of mapped output ranges
+| map              | undefined | Value filter applied to input value
+
+<Playground>
+    <Spring native from={{ x: -1 }} to={{ x: 1 }}>
+  {({ x }) => (
+<animated.div
+  style={{
+    transformOrigin: 'left',
+    transform: x
+      .interpolate({
+        // Range and Output map input values to output values
+        range: [-1, 0, 1],
+        output: [2, 1, 2],
+      })
+      // interpolates the result of the above
+      .interpolate(x => 'scale(' + x + ')'),
+  }}>
+  hello
+  </animated.div>
+  )}
+  </Spring>
+</Playground>

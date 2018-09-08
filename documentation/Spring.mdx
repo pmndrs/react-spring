@@ -27,9 +27,9 @@ Springs are physics based and animate adaptively, you do not have to [worry abou
 
 The playground below is live, play around a little, click the refresh button to restart the animation.
 
-<Playground style={{ overflow: 'hidden' }}>
-  <Spring from={{ number: 0 }} to={{ number: 100 }}>
-    {props => <div>{props.number}</div>}
+<Playground style={{ overflow: 'hidden', height: 200 }}>
+  <Spring from={{ fontSize: 10, number: 0 }} to={{ fontSize: 120, number: 100 }}>
+    {({ fontSize, number }) => <div style={{ fontSize }}>{number.toFixed(2)}</div>}
   </Spring>
 </Playground>
 
@@ -92,28 +92,42 @@ It is also possible to set configs key by key.
 * arrays
 * string patterns (`transform`, `border`, `boxShadow`, etc)
 * `auto` is valid
-* non-animatable string values (`visibility`, `pointerEvents`, etc) 
+* non-animatable string values (`visibility`, `pointerEvents`, etc)
 
-<Playground style={{ height: 290 }}>
+Of course the only properties that the browser can animate relatively cheap are [composite propertys](https://www.html5rocks.com/en/tutorials/speed/high-performance-animations/) (opacity, transform), so you might want to watch out for that.
+
+<Playground style={{ height: 200 }}>
   <Spring
     from={{
-      display: 'inline-block',
-      overflow: 'hidden',
-      width: 50,
-      opacity: 0,
+      width: 100,
       padding: 0,
-      background: 'linear-gradient(to right, #009fff, #ec2f4b)',
+      background: 'linear-gradient(to right, #30e8bf, #ff8235)',
       transform: 'perspective(600px) translate3d(400px,0,0) scale(2) rotateX(90deg)',
-      boxShadow: '0px 100px 150px -10px teal',
-      border: '0px solid teal',
-      shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z'
+      boxShadow: '0px 100px 150px -10px #2D3747',
+      borderBottom: '0px solid white',
+      shape: 'M20,380 L380,380 L380,380 L200,20 L20,380 Z',
+      textShadow: '0px 5px 0px white'
     }}
-    to={{ width: 'auto', opacity: 1, padding: 50, background: 'linear-gradient(to right, #30e8bf, #ff8235)', transform: 'perspective(600px) translate3d(0px,0,0) scale(1) rotateX(0deg)', boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.5)', border: '50px solid rgb(0,0,0)', shape: 'M20,380 L380,380 L380,380 L200,20 L20,380 Z' }} config={{ tension: 10, friction: 50 }}>
-    {props => (
-      <div style={props}>
-        <svg style={{ width: 80 }} version="1.1" viewBox="0 0 400 400">
-          <path d={props.shape} />
+    to={{ 
+      width: 'auto', 
+      padding: 20, 
+      background: 'linear-gradient(to right, #009fff, #ec2f4b)', 
+      transform: 'perspective(600px) translate3d(0px,0,0) scale(1) rotateX(0deg)', 
+      boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.4)', 
+      borderBottom: '10px solid #2D3747', 
+      shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z', 
+      textShadow: '0px 5px 15px rgba(255,255,255,0.5)' 
+    }} config={{ tension: 10, friction: 50 }}>
+    {({ width, padding, background, transform, boxShadow, borderBottom, textShadow, shape }) => (
+      <div style={{ display: 'inline-block',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      fontSize: '4em',
+      fontWeight: 800, width, padding, background, transform, boxShadow, textShadow }}>
+        <svg style={{ display: 'inline', width: 50 }} viewBox="0 0 400 400">
+          <path d={shape} fill="#2D3747"/>
         </svg>
+        <span style={{ borderBottom }}>😅</span>
       </div>
     )}
   </Spring>
