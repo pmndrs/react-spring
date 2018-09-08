@@ -33,6 +33,8 @@ export default class Transition extends React.PureComponent {
     leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values */
     update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    /** Calls back once a transition is about to wrap up */
+    onDestroyed: PropTypes.func,
     /** Item keys (the same keys you'd hand over to react in a list). If you specify items, keys can be an accessor function (item => item.key) */
     keys: PropTypes.oneOfType([
       PropTypes.func,
@@ -168,6 +170,18 @@ export default class Transition extends React.PureComponent {
     return undefined
   }
 
+  destroyItem = (item, key) => values => {
+    const { onRest, onDestroyed } = this.props
+    if (this.mounted) {
+      onDestroyed && onDestroyed(item)
+      this.setState(
+        ({ deleted }) => ({ deleted: deleted.filter(t => t.key !== key) }),
+        () => delete this.springs[key]
+      )
+      onRest && onRest(item, values)
+    }
+  }
+
   render() {
     const {
       render,
@@ -176,6 +190,7 @@ export default class Transition extends React.PureComponent {
       enter = {},
       leave = {},
       native = false,
+      onDestroyed,
       keys,
       items,
       onFrame,
@@ -192,14 +207,7 @@ export default class Transition extends React.PureComponent {
           key={key}
           onRest={
             rest.destroyed
-              ? () =>
-                  this.mounted &&
-                  this.setState(
-                    ({ deleted }) => ({
-                      deleted: deleted.filter(t => t.key !== key),
-                    }),
-                    () => delete this.springs[key]
-                  )
+              ? this.destroyItem(item, key)
               : onRest && (values => onRest(item, values))
           }
           onFrame={onFrame && (values => onFrame(item, values))}

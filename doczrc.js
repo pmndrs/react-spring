@@ -30,4 +30,9 @@ export default {
       },
     },
   },
+  /*modifyBabelRc: config => {
+    console.log(config)
+    config.plugins.push('react-docgen')
+    return config
+  },*/
 }
