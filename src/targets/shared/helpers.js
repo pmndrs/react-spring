@@ -6,8 +6,8 @@ export function shallowEqual(a, b) {
   return true
 }
 
-export function callProp(arg, state) {
-  return typeof arg === 'function' ? arg(state) : arg
+export function callProp(obj, state, arg) {
+  return typeof obj === 'function' ? obj(state, arg) : obj
 }
 
 export function getValues(object) {

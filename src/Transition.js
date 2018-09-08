@@ -2,11 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Spring from './Spring'
 import { config as springConfig } from './targets/shared/constants'
+import { callProp } from './targets/shared/helpers'
 
 const empty = () => null
-
-const ref = (object, key, defaultValue) =>
-  typeof object === 'function' ? object(key) : object || defaultValue
 
 const get = props => {
   let { keys, children, render, items, ...rest } = props
@@ -25,7 +23,9 @@ let guid = 0
 
 export default class Transition extends React.PureComponent {
   static propTypes = {
-    /** Base values, optional, or: item => values */
+    /** First render base values (initial from -> enter), if present overrides "from", can be "null" to skip first mounting transition, or: item => values */
+    initial: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    /** Base values (from -> enter), or: item => values */
     from: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Values that apply to new elements, or: fitem => values */
     enter: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -81,11 +81,19 @@ export default class Transition extends React.PureComponent {
     super(prevProps)
     // TODO: make springs a set
     this.springs = {}
-    this.state = { transitions: [], current: {}, deleted: [], prevProps }
+    this.state = {
+      first: true,
+      transitions: [],
+      current: {},
+      deleted: [],
+      prevProps,
+    }
   }
 
-  static getDerivedStateFromProps(props, { prevProps, ...state }) {
-    const { keys, children, items, from, enter, leave, update } = get(props)
+  static getDerivedStateFromProps(props, { first, prevProps, ...state }) {
+    const { keys, children, items, initial, from, enter, leave, update } = get(
+      props
+    )
     const { keys: _keys, items: _items } = get(prevProps)
     const current = { ...state.current }
     const deleted = [...state.deleted]
@@ -106,8 +114,13 @@ export default class Transition extends React.PureComponent {
         children: children[keyIndex],
         key: guid++,
         item,
-        to: ref(enter, item),
-        from: ref(from, item),
+        from: {
+          ...callProp(
+            first ? (typeof initial !== 'undefined' ? initial : from) : from,
+            item
+          ),
+        },
+        to: callProp(enter, item),
       }
     })
 
@@ -119,7 +132,7 @@ export default class Transition extends React.PureComponent {
         ...current[key],
         to: {
           ...current[key].to,
-          ...ref(leave, _items ? _items[keyIndex] : key),
+          ...callProp(leave, _items ? _items[keyIndex] : key),
         },
       })
       delete current[key]
@@ -131,7 +144,7 @@ export default class Transition extends React.PureComponent {
       current[key] = {
         ...current[key],
         children: children[keyIndex],
-        to: { ...current[key].to, ...ref(update, item) },
+        to: { ...current[key].to, ...callProp(update, item) },
       }
     })
 
@@ -142,7 +155,13 @@ export default class Transition extends React.PureComponent {
       transitions = [...transitions.slice(0, i), t, ...transitions.slice(i)]
     })
 
-    return { transitions, current, deleted, prevProps: props }
+    return {
+      first: first && added.length === 0,
+      transitions,
+      current,
+      deleted,
+      prevProps: props,
+    }
   }
 
   getValues() {
@@ -152,6 +171,7 @@ export default class Transition extends React.PureComponent {
   render() {
     const {
       render,
+      initial,
       from = {},
       enter = {},
       leave = {},
@@ -162,7 +182,8 @@ export default class Transition extends React.PureComponent {
       onRest,
       ...extra
     } = this.props
-    const props = { native, ...extra }
+
+    const props = { native, initial, ...extra }
     return this.state.transitions.map((transition, i) => {
       const { key, item, children, from, ...rest } = transition
       return (

@@ -59,6 +59,7 @@ export default class TransitionsExample extends React.PureComponent {
         <Transition
           native
           keys={this.state.items}
+          initial={null}
           from={{ height: 0 }}
           enter={{ height: 50 }}
           leave={{ height: 0 }}>
