@@ -1,0 +1,36 @@
+---
+name: Imperative
+route: /imperative
+---
+
+import { Playground, PropsTable } from 'docz'
+import { Keyframes, config } from '../src/targets/web'
+
+# Imperative API
+
+```jsx
+import {
+  AnimatedValue,
+  animated,
+  interpolate,
+  controller as spring,
+} from 'react-spring'
+```
+## Basics
+
+If it's necessary you can control your animations imperatively.
+
+```jsx
+const App = ({ children }) => {
+  const animation = new AnimatedValue('#28d79f')
+  const hover = () => spring(animation, { to: '#c23369' }).start()
+  const unhover = () => spring(animation, { to: '#28d79f' }).start()
+  return (
+    <animated.div
+      style={{ background: animation }}
+      onMouseOver={hover}
+      onMouseOut={unhover}
+    />
+  )
+}
+```

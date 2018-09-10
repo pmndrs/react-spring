@@ -1,0 +1,88 @@
+---
+name: Keyframes
+route: /keyframes
+---
+
+import { Playground, PropsTable } from 'docz'
+import { Keyframes, config } from '../src/targets/web'
+
+# Keyframes
+
+```jsx
+import { Keyframes } from 'react-spring'
+```
+
+## Basics
+
+`Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots which you then execute by passing the state prop.
+
+The resulting primitive can receive all the generic properties you would normally give your springs, like native, from, and so on.
+
+```jsx
+// You can create keyframes for springs, trails and transitions
+const Container = Keyframes.Spring({
+  // Single props
+  show: { to: { opacity: 1 } },
+  // Chained animations (arrays)
+  showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
+  // Functions with side-effects with access to component props
+  wiggle: async (next, ownProps) => {
+    await next({ to: { x: 100 }, config: config.wobbly })
+    await delay(1000)
+    await next({ to: { x: 0 }, config: config.gentle })
+  }
+})
+
+<Container state="show">
+  {styles => <div style={styles}>Hello</div>}
+</Container>
+```
+
+There is a shortcut for low-level scripting by giving it a function instead of an object consisting of slots (good for loops and such). In this case the state prop can be omitted.
+
+```jsx
+// Will fade children in and out in a loop
+const Container = Keyframes.Spring(async next => {
+  while (true) {
+    await next({
+      reset: true,
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+    })
+  }
+})
+
+<Container>
+  {styles => <div style={styles}>Hello</div>}
+</Container>
+```
+
+And another for arrays:
+
+```jsx
+const Container = Keyframes.Spring([
+  { to: { scale: 1.5 } },
+  { to: { scale: 1 } },
+])
+```
+
+`Spring` and `Trail` also have a .to shortcut to make it even leaner. It will try to interpolate animatable props, but you can still use regular Spring-props like delay, immediate and so on, just be aware that they are reserved.
+
+```jsx
+const Container = Keyframes.Spring.to([
+  { immediate: true, delay: 500, scale: 1.5 },
+  { scale: 1 },
+])
+```
+
+If you have made your own animation primitive and want to drive it through keyframes, that is also doable:
+
+```jsx
+const Container = Keyframes.create(MyOwnPrimitive)({ ... })
+```
+
+## Props
+
+Other than the props listed here `Keyframes` can take all the props that `Spring` accepts (config, native, immediate, onRest, etc).
+
+<PropsTable of={Keyframes} />

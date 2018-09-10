@@ -58,19 +58,9 @@ react-spring builds upon animated's foundation, making it leaner and more flexib
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
-# Links 🔗
+# API Reference and examples 🔗
 
-#### [Examples and Codesandboxes](https://github.com/drcmda/react-spring/blob/master/examples)
-
-Click for a combined example repository you can install as well as a collection of code-sandboxes to toy around with online.
-
-#### [API Overview](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md)
-
-If you ever plan to use this library, this should be a must-read. It will go a little deeper into the primitives and how `native` rendering can make a large performance impact.
-
-#### [Full API reference](https://github.com/drcmda/react-spring/blob/master/API.md)
-
-For annotated prop-types, good for finding out about all the obscure props that i don't want to bore you with (but which might come in handy, you never know).
+http://react-spring.surge.sh/
 
 # Basic overview 🔭
 
@@ -225,22 +215,6 @@ You can interpolate almost everything, from numbers, colors (names, rgb, rgba, h
 }}>
 ```
 
-# Render props ⛑
-
-The Api is driven by render props. We offer both `render` and `children` as well as prop forwarding (unrecognized props will be spread over the receiving component). You can use it like always (all the above examples), or in various patterns, for instance higher-order-render-props:
-
-```jsx
-const Header = ({ children, bold, ...styles }) => (
-    <h1 style={styles}>
-        {bold ? <b>{children}</b> : children}
-    </h1>
-)
-
-<Spring render={Header} to={{ color: this.state.color }} bold={this.state.bold}>
-    hello there
-</Spring>
-```
-
 # Native rendering 🚀
 
 | ![img](assets/without-native.jpeg)                                                                                                                                                                                        | ![img](assets/with-native.jpeg)                                                                                                                                                                                         |
@@ -256,30 +230,6 @@ import { Spring, animated } from 'react-spring'
 ```
 
 Native rendering comes with a few caveats you should know about before using it, more about that [here](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#native-rendering-and-interpolation-demo). Try going native in all situations where you can, the benefits are worth it!
-
-# React-native and other targets 🎒
-
-```jsx
-// React-native
-import { Spring, animated, ... } from 'react-spring/dist/native'
-
-// Any other target or platform
-import { Spring, animated, ... } from 'react-spring/dist/universal'
-```
-
-The default export points to react-dom. If you want to animate react-native refer to `/dist/native`, and `/dist/universal` for any other target. Each target defines platform specific constants (colors, units, etc.). The universal target is the least specific.
-
-In react-native you can still use the `native` keyword for more performance, create your own animated-components by calling into the `animated` function.
-
-```jsx
-import { View } from 'react-native'
-
-const AnimatedView = animated(View)
-
-<Spring native from={{ opacity: 0 }} to={{ opacity: 1 }}>
-    {styles => <AnimatedView style={styles} />}
-</Spring>
-```
 
 # Funding
 

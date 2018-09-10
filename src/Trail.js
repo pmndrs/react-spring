@@ -5,17 +5,20 @@ import { config as springConfig } from './targets/shared/constants'
 
 export default class Trail extends React.PureComponent {
   static propTypes = {
-    native: PropTypes.bool,
-    config: PropTypes.object,
+    /** Base values, optional */
     from: PropTypes.object,
+    /** Animates to ... */
     to: PropTypes.object,
+    /** Item keys (the same keys you'd hand over to react in a list). If you specify items, keys can be an accessor function (item => item.key) */
     keys: PropTypes.arrayOf(
       PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     ),
+    /** An array of functions (props => view) */
     children: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.func),
       PropTypes.func,
     ]),
+    /** Same as children, but takes precedence if present */
     render: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.func),
       PropTypes.func,

@@ -9,7 +9,10 @@ import { config as springConfig } from './targets/shared/constants'
 const DEFAULT = '__default'
 
 class Keyframes extends React.PureComponent {
-  static propTypes = { state: PropTypes.string }
+  static propTypes = {
+    /** Name of the active slot */
+    state: PropTypes.string,
+  }
   static defaultProps = { state: DEFAULT }
 
   guid = 0

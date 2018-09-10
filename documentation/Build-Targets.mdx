@@ -1,0 +1,28 @@
+---
+name: Build targets
+route: /targets
+---
+
+# Build targets
+
+```jsx
+// React-native
+import { Spring, animated, ... } from 'react-spring/dist/native'
+
+// Any other target or platform
+import { Spring, animated, ... } from 'react-spring/dist/universal'
+```
+
+The default export points to react-dom. If you want to animate react-native refer to /dist/native, and /dist/universal for any other target. Each target defines platform specific constants (colors, units, etc.). The universal target is the least specific.
+
+In react-native you can still use the native keyword for more performance, create your own animated-components by calling into the animated function.
+
+```jsx
+import { View } from 'react-native'
+
+const AnimatedView = animated(View)
+
+<Spring native from={{ opacity: 0 }} to={{ opacity: 1 }}>
+  {styles => <AnimatedView style={styles} />}
+</Spring>
+```

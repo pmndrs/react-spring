@@ -4,7 +4,41 @@ route: /trail
 ---
 
 import { Playground, PropsTable } from 'docz'
-//import { Transition, config } from '../dist/web' 
-import { Transition, config } from '../src/targets/web'
+import { Trail, config } from '../src/targets/web'
+import { Provider, Consumer } from './'
 
 # Trail
+
+```jsx
+import { Trail } from 'react-spring'
+
+<Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
+  {items.map(item => styles => <div style={styles}>{item.text}</div>)}
+</Trail>
+```
+
+## Basics
+
+A `Trail` animates the first child of a list of elements, the rest follow the spring of their previous sibling.
+
+<Playground style={{ overflow: 'hidden', height: 100 }}>
+  <Provider value={set => ({ list: ['Apples', 'Oranges', 'Bananas'] })}>
+    <Consumer>
+      {({list}) => (
+        <Trail
+          keys={list}
+          from={{ opacity: 0, transform: 'translate3d(0px,0,0)' }}
+          to={{ opacity: 1, transform: 'translate3d(100px,0,0)' }}
+          config={config.molasses}>
+          {list.map(item => props => <div style={props}>{item}</div>)}
+        </Trail>
+      )}
+    </Consumer>
+  </Provider>
+</Playground>
+
+## Props
+
+Other than the props listed here `Trail` can take all the props that `Spring` accepts (config, native, immediate, onRest, etc).
+
+<PropsTable of={Trail} />

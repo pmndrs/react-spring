@@ -18,8 +18,11 @@ const START_TRANSLATE = 'translate(0px,0px)'
 
 export class ParallaxLayer extends React.PureComponent {
   static propTypes = {
+    /** Size of a page, (1=100%, 1.5=1 and 1/5, ...) */
     factor: PropTypes.number,
+    /** Determines where the layer will be at when scrolled to (0=start, 1=1st page, ...) */
     offset: PropTypes.number,
+    /** shifts the layer in accordance to its offset, values can be positive or negative */
     speed: PropTypes.number,
   }
 
@@ -131,10 +134,15 @@ export default class Parallax extends React.PureComponent {
   static Layer = ParallaxLayer
 
   static propTypes = {
+    /** Determines the total space of the inner content where each page takes 100% of the visible container */
     pages: PropTypes.number.isRequired,
+    /** Spring config (optional) */
     config: PropTypes.object,
+    /** Allow content to be scrolled, or not */
     scrolling: PropTypes.bool,
+    /** Scrolls horizontally or vertically */
     horizontal: PropTypes.bool,
+    /** Spring implementation (optional) */
     impl: PropTypes.func,
   }
 

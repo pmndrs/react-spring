@@ -4,3 +4,48 @@ route: /gotchas
 ---
 
 # Gotchas
+
+## Render props
+
+Don't like the way render props wrap your code and create nested structures? By default we support both render and children, so you can create higher-order components like so:
+
+```jsx
+const Header = ({ children, bold, ...styles }) => (
+  <h1 style={styles}>
+    {bold ? <b>{children}</b> : children}
+  </h1>
+)
+
+<Spring render={Header} to={{ color: 'fuchsia' }} bold>
+  hello there
+</Spring>
+```
+
+Et voilà! Header animates on prop changes! Props that Spring doesn't recognize will be spread over the receiving component, in this example bold, but it also includes children if you use render to refer to the render-child.
+
+## Animating "auto"
+
+react-spring is one of the few libs that understands and animates auto, so you can use it in your configs, like so:
+
+```jsx
+<Spring from={{ height: 0 }} to={{ height: 'auto' }}>
+```
+
+Keep in mind that in order to do this we have to measure out a snapshot set to height/width: auto before we can start animating it. There are some things you should watch out for:
+
+1. Wrong width/height. If you notice that the measured bounds are wrong, give your view more context, for instance set the position attribute of the parent container (the element that contains your spring) to either absolute or relative so that the view (the element that's inside your spring) retains bounds.
+
+2. Contents change but won't animate. If you set your spring to auto and later add or remove contents (children), it doesn't animate since it's essentially going from "auto" to "auto". In these rare cases you can use the force prop, which forces the spring to animate regardless of whether props are the same or not.
+
+```jsx
+<Spring force from={{ height: 0 }} to={{ height: 'auto' }}>
+  {items.map(id => <Item key={id} />)}
+```
+
+3. Nested auto-springs eat into their animations. If you nest springs and click one open and close another, the measurements will conflict for a moment. There is no real solution here. Something you can do to help it is make sure springs animate with less precision so that they will complete faster.
+
+```jsx
+<Spring
+  from={{ height: 0 }} to={{ height: 'auto' }}
+  config={{ ...config.default, restSpeedThreshold: 1, restDisplacementThreshold: 0.1 }}>
+```
