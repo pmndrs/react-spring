@@ -91,6 +91,7 @@
     "react-powerplug": "^1.0.0-rc.1",
     "react-test-renderer": "^16.5.0",
     "react-testing-library": "^5.0.1",
+    "react-twitter-widgets": "^1.7.1",
     "rimraf": "2.6.2",
     "rollup": "0.65.2",
     "rollup-plugin-babel": "^4.0.3",

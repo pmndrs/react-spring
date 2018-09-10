@@ -6,6 +6,7 @@
 
 - [What is it?](#what-is-it-)
 - [Why do we need yet another?](#why-do-we-need-yet-another-)
+- [Testimonies](#testimonies-)
 - [API reference and examples](#links-)
 - [Basic overview](#basic-overview-)
 - [Interpolation](#interpolation-)
@@ -58,9 +59,17 @@ react-spring builds upon animated's foundation, making it leaner and more flexib
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
-# API Reference and examples 🔗
+# Testimonies 👍
 
-You'll find a full docs, live playgrounds, prop descriptions and so forth here: http://react-spring.surge.sh/
+<p align="middle">
+  <img src="assets/testimonies.jpg" />
+</p>
+
+# API Reference and examples 📚
+
+You'll find a full docs, live playgrounds, prop descriptions and so forth here:
+
+<h3><a href="http://react-spring.surge.sh/">http://react-spring.surge.sh/</a></h3>
 
 # Basic overview 🔭
 
@@ -74,7 +83,7 @@ A `Spring` will move data from one state to another. It remembers the current st
 import { Spring } from 'react-spring'
 
 <Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
-    {styles => <div style={styles}>i will fade in</div>}
+  {styles => <div style={styles}>i will fade in</div>}
 </Spring>
 ```
 
@@ -88,11 +97,11 @@ import { Spring } from 'react-spring'
 import { Transition } from 'react-spring'
 
 <Transition
-    keys={items.map(item => item.key)}
-    from={{ opacity: 0, height: 0 }}
-    enter={{ opacity: 1, height: 20 }}
-    leave={{ opacity: 0, height: 0, pointerEvents: 'none' }}>
-    {items.map(item => styles => <li style={styles}>{item.text}</li>)}
+  keys={items.map(item => item.key)}
+  from={{ opacity: 0, height: 0 }}
+  enter={{ opacity: 1, height: 20 }}
+  leave={{ opacity: 0, height: 0, pointerEvents: 'none' }}>
+  {items.map(item => styles => <li style={styles}>{item.text}</li>)}
 </Transition>
 ```
 
@@ -106,10 +115,10 @@ Given a single child instead of a list you can toggle between two components.
 import { Transition } from 'react-spring'
 
 <Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-    {toggle
-        ? styles => <div style={styles}>Component A</div>
-        : styles => <div style={styles}>Component B</div>
-    }
+  {toggle
+    ? styles => <div style={styles}>Component A</div>
+    : styles => <div style={styles}>Component B</div>
+  }
 </Transition>
 ```
 
@@ -119,7 +128,7 @@ If you need to toggle a single child, that is also possible.
 import { Transition } from 'react-spring'
 
 <Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-    {visible && (styles => <div style={styles}>Single Component</div>)}
+  {visible && (styles => <div style={styles}>Single Component</div>)}
 </Transition>
 ```
 
@@ -133,7 +142,7 @@ import { Transition } from 'react-spring'
 import { Trail } from 'react-spring'
 
 <Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
-    {items.map(item => styles => <div style={styles}>{item.text}</div>)}
+  {items.map(item => styles => <div style={styles}>{item.text}</div>)}
 </Trail>
 ```
 
@@ -148,20 +157,20 @@ import { Keyframes, config } from 'react-spring'
 
 // You can create keyframes for springs, trails and transitions
 const Container = Keyframes.Spring({
-    // Single props
-    show: { to: { opacity: 1 } },
-    // Chained animations (arrays)
-    showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
-    // Functions with side-effects
-    wiggle: async call => {
-        await call({ to: { x: 100 }, config: config.wobbly })
-        await delay(1000)
-        await call({ to: { x: 0 }, config: config.gentle })
-    }
+  // Single props
+  show: { to: { opacity: 1 } },
+  // Chained animations (arrays)
+  showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
+  // Functions with side-effects
+  wiggle: async call => {
+    await call({ to: { x: 100 }, config: config.wobbly })
+    await delay(1000)
+    await call({ to: { x: 0 }, config: config.gentle })
+  }
 })
 
 <Container state="show">
-    {styles => <div style={styles}>Hello</div>}
+  {styles => <div style={styles}>Hello</div>}
 </Container>
 ```
 
@@ -175,12 +184,12 @@ const Container = Keyframes.Spring({
 import { Parallax, ParallaxLayer } from 'react-spring'
 
 <Parallax pages={2}>
-    <ParallaxLayer offset={0} speed={0.2}>
-        first Page
-    </ParallaxLayer>
-    <ParallaxLayer offset={1} speed={0.5}>
-        second Page
-    </ParallaxLayer>
+  <ParallaxLayer offset={0} speed={0.2}>
+    first Page
+  </ParallaxLayer>
+  <ParallaxLayer offset={1} speed={0.5}>
+    second Page
+  </ParallaxLayer>
 </Parallax>
 ```
 
@@ -214,17 +223,17 @@ We don't handle just numbers, you can interpolate almost everything:
 
 ```jsx
 <Spring
-    to={{
-        width: 'auto',
-        padding: 20,
-        width: '80%',
-        background: 'linear-gradient(to right, #009fff, #ec2f4b)',
-        transform: 'perspective(600px) translate3d(0px,0,0) scale(1) rotateX(0deg)',
-        boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.4)',
-        borderBottom: '10px solid #2D3747',
-        shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
-        textShadow: '0px 5px 15px rgba(255,255,255,0.5)'
-    }}>
+  to={{
+    width: 'auto',
+    padding: 20,
+    width: '80%',
+    background: 'linear-gradient(to right, #009fff, #ec2f4b)',
+    transform: 'perspective(600px) translate3d(0px,0,0) scale(1) rotateX(0deg)',
+    boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.4)',
+    borderBottom: '10px solid #2D3747',
+    shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
+    textShadow: '0px 5px 15px rgba(255,255,255,0.5)'
+}}>
 ```
 
 # Native rendering 🚀
@@ -237,7 +246,7 @@ We don't handle just numbers, you can interpolate almost everything:
 import { Spring, animated } from 'react-spring'
 
 <Spring native from={{ opacity: 0 }} to={{ opacity: 1 }}>
-    {styles => <animated.div style={styles}>i will fade in</animated.div>}
+  {styles => <animated.div style={styles}>i will fade in</animated.div>}
 </Spring>
 ```
 
