@@ -6,7 +6,7 @@
 
 - [What is it?](#what-is-it-)
 - [Why do we need yet another?](#why-do-we-need-yet-another-)
-- [Links](#links-)
+- [API reference and examples](#links-)
 - [Basic overview](#basic-overview-)
 - [Interpolation](#interpolation-)
 - [Render props](#render-props-)
@@ -60,7 +60,7 @@ For a more detailed explanation read [Why React needed yet another animation lib
 
 # API Reference and examples 🔗
 
-http://react-spring.surge.sh/
+You'll find a full docs, live playgrounds, prop descriptions and so forth here: http://react-spring.surge.sh/
 
 # Basic overview 🔭
 
@@ -198,21 +198,33 @@ import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 
 # Interpolation 🎛
 
-You can interpolate almost everything, from numbers, colors (names, rgb, rgba, hsl, hsla), paths (as long as the number of points match, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om)), percentages, units, arrays and string patterns. You can also set non-animatable string values and even `auto` is valid.
+We don't handle just numbers, you can interpolate almost everything:
+
+- colors (names, rgb, rgba, hsl, hsla)
+- absolute lenghts (cm, mm, in, px, pt, pc)
+- relative lengths (em, ex, ch, rem, vw, vh, vmin, vmax, %)
+- angles (deg, rad, grad, turn)
+- flex and grid units (fr, etc)
+- all HTML attributes
+- SVG paths (as long as the number of points matches, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om))
+- arrays
+- string patterns (`transform`, `border`, `boxShadow`, etc)
+- `auto` is valid
+- non-animatable string values (`visibility`, `pointerEvents`, etc)
 
 ```jsx
-<Spring to={{
-    scale: toggle ? 1 : 2,
-    start: toggle ? '#abc' : 'rgb(10,20,30)',
-    end: toggle ? 'seagreen' : 'rgba(0,0,0,0.5)',
-    stop: toggle ? '0%' : '50%',
-    rotate: toggle ? '0deg' : '45deg',
-    shadow: toggle ? '0 2px 2px 0px rgba(0, 0, 0, 0.12)' : '0 20px 20px 0px rgba(0, 0, 0, 0.5)',
-    path: toggle ? 'M20,380 L380,380 L380,380 Z' : 'M20,20 L20,380 L380,380 Z',
-    vector: toggle ? [1,2,50,100] : [20,30,1,-100],
-    pointerEvents: toggle ? 'all' : 'none',
-    height: toggle ? 'auto' : 0,
-}}>
+<Spring
+    to={{
+        width: 'auto',
+        padding: 20,
+        width: '80%',
+        background: 'linear-gradient(to right, #009fff, #ec2f4b)',
+        transform: 'perspective(600px) translate3d(0px,0,0) scale(1) rotateX(0deg)',
+        boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.4)',
+        borderBottom: '10px solid #2D3747',
+        shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
+        textShadow: '0px 5px 15px rgba(255,255,255,0.5)'
+    }}>
 ```
 
 # Native rendering 🚀
