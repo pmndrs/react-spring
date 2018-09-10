@@ -7,7 +7,7 @@
 - [What is it?](#what-is-it-)
 - [Why do we need yet another?](#why-do-we-need-yet-another-)
 - [Testimonies](#testimonies-)
-- [API reference and examples](#links-)
+- [API reference and examples](#api-reference-and-examples-)
 - [Basic overview](#basic-overview-)
 - [Interpolation](#interpolation-)
 - [Render props](#render-props-)
@@ -202,7 +202,7 @@ You'll find varying implementations under [/dist/addons](https://github.com/drcm
 ```jsx
 import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 
-<Spring impl={TimingAnimation} config={{ duration: 1000, easing: Easing.linear }} ...>
+<Spring impl={TimingAnimation} config={{ duration: 1000, easing: Easing.linear }} >
 ```
 
 # Interpolation 🎛
@@ -232,8 +232,7 @@ We don't handle just numbers, you can interpolate almost everything:
     boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.4)',
     borderBottom: '10px solid #2D3747',
     shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
-    textShadow: '0px 5px 15px rgba(255,255,255,0.5)'
-}}>
+    textShadow: '0px 5px 15px rgba(255,255,255,0.5)' }}>
 ```
 
 # Native rendering 🚀
@@ -254,7 +253,7 @@ Native rendering comes with a few caveats you should know about before using it,
 
 # Funding
 
-If you like this project, consider helping out, all contributions are welcome as well as donations to [opencollective](https://opencollective.com/react-spring) or [Patreon](https://www.patreon.com/0xca0a).
+If you like this project, consider helping out, all contributions are welcome as well as donations to [opencollective](https://opencollective.com/react-spring) or [Patreon](https://www.patreon.com/0xca0a). You can make one off donations in crypto to 36fuguTPxGCNnYZSRdgdh6Ea94brCAjMbH (BTC).
 
 ## Contributors
 
@@ -263,13 +262,13 @@ This project exists thanks to all the people who contribute.
 
 ## Backers
 
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/react-spring#backer)]
+Thank you to all our backers! 🙏
 
 <a href="https://opencollective.com/react-spring#backers" target="_blank"><img src="https://opencollective.com/react-spring/backers.svg?width=890"></a>
 
 ## Sponsors
 
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/react-spring#sponsor)]
+Support this project by [becoming a sponsor](https://opencollective.com/react-spring#sponsor). Your logo will show up here with a link to your website.
 
 <a href="https://opencollective.com/react-spring/sponsor/0/website" target="_blank"><img src="https://opencollective.com/react-spring/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/react-spring/sponsor/1/website" target="_blank"><img src="https://opencollective.com/react-spring/sponsor/1/avatar.svg"></a>
