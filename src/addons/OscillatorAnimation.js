@@ -130,11 +130,6 @@ export default class OscillatorAnimation extends Animation {
     this._lastPosition = position
     this._lastVelocity = velocity
 
-    this._onUpdate(position)
-
-    // a listener might have stopped us in _onUpdate
-    if (!this.__active) return
-
     // Conditions for stopping the spring animation
     let isOvershooting = false
     if (this._overshootClamping && this._stiffness !== 0) {
@@ -143,6 +138,12 @@ export default class OscillatorAnimation extends Animation {
           ? position > this._to
           : position < this._to
     }
+
+    this._onUpdate(isOvershooting ? this._to : position)
+
+    // a listener might have stopped us in _onUpdate
+    if (!this.__active) return
+
     const isVelocity = Math.abs(velocity) <= this._restSpeedThreshold
     let isDisplacement = true
     if (this._stiffness !== 0) {

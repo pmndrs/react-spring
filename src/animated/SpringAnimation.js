@@ -127,11 +127,6 @@ export default class SpringAnimation extends Animation {
     this._lastPosition = position
     this._lastVelocity = velocity
 
-    this._onUpdate(position)
-
-    // a listener might have stopped us in _onUpdate
-    if (!this.__active) return
-
     // Conditions for stopping the spring animation
     var isOvershooting = false
     if (this._overshootClamping && this._tension !== 0) {
@@ -141,6 +136,11 @@ export default class SpringAnimation extends Animation {
         isOvershooting = position < this._to
       }
     }
+
+    this._onUpdate(isOvershooting ? this._to : position)
+
+    // a listener might have stopped us in _onUpdate
+    if (!this.__active) return
 
     var isVelocity = Math.abs(velocity) <= this._restSpeedThreshold
     var isDisplacement = true
