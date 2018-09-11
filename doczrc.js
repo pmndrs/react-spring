@@ -1,3 +1,6 @@
+const path = require('path')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
 export default {
   protocol: 'http',
   title: 'react-spring',
@@ -12,12 +15,10 @@ export default {
     },
   },
   themeConfig: {
-    //mode: 'dark',
     codemirrorTheme: 'dracula',
     colors: {
       primary: '#ea567c',
       sidebarBg: 'white',
-      //sidebarText: 'white'
     },
     styles: {
       body: {
@@ -30,13 +31,16 @@ export default {
       },
     },
   },
-  /*modifyBabelRc: config => {
-    console.log(config)
-    config.plugins.push('react-docgen')
-    return config
-  },*/
   modifyBundlerConfig: (config, dev, args) => {
-    //console.log(config, dev, args)
-    return { ...config, mode: 'development' }
+    return {
+      ...config,
+      module: {
+        ...config.module,
+        rules: [
+          ...config.module.rules,
+          { test: () => true, sideEffects: true },
+        ],
+      },
+    }
   },
 }

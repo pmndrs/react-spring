@@ -156,18 +156,6 @@ const extendedAnimated = domElements.reduce((acc, element) => {
   return acc
 }, animated)
 
-let warned = false
-
-const createAnimatedComponent = comp => {
-  if (process.env.NODE_ENV !== 'production' && !warned) {
-    warned = true
-    console.warn(
-      'createAnimatedComponent is deprecated, use animated(comp) instead'
-    )
-  }
-  return animated(comp)
-}
-
 export {
   Spring,
   Keyframes,
