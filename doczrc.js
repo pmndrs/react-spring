@@ -36,7 +36,7 @@ export default {
     return config
   },*/
   modifyBundlerConfig: (config, dev, args) => {
-    console.log(config, dev, args)
+    //console.log(config, dev, args)
     return { ...config, mode: 'development' }
   },
 }

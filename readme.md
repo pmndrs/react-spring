@@ -2,20 +2,20 @@
 
     npm install react-spring
 
-# Table of Contents 👇
+# Table of Contents
 
-- [What is it?](#what-is-it-)
-- [Why do we need yet another?](#why-do-we-need-yet-another-)
-- [Testimonies](#testimonies-)
-- [API reference and examples](#api-reference-and-examples-)
-- [Basic overview](#basic-overview-)
-- [Interpolation](#interpolation-)
-- [Render props](#render-props-)
-- [Native rendering](#native-rendering-)
-- [React-native and other targets](#react-native-and-other-targets-)
+- [What is it?](#what-is-it)
+- [Why do we need yet another?](#why-do-we-need-yet-another)
+- [What others say](#what-others-say)
+- [API reference and examples](#api-reference-and-examples)
+- [Basic overview](#basic-overview)
+- [Interpolation](#interpolation)
+- [Render props](#render-props)
+- [Native rendering](#native-rendering)
+- [React-native and other targets](#react-native-and-other-targets)
 - [Funding](#funding)
 
-# What is it? 🤔
+# What is it?
 
 <p align="middle">
   <a href="https://codesandbox.io/embed/oln44nx8xq"><img src="assets/spring.gif" width="285" /></a>
@@ -45,7 +45,7 @@
 
 A set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
 
-# Why do we need yet another? 🧐
+# Why do we need yet another?
 
 react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
 
@@ -59,21 +59,21 @@ react-spring builds upon animated's foundation, making it leaner and more flexib
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
-# Testimonies 👍
+# What others say
 
 <p align="middle">
   <img src="assets/testimonies.jpg" />
 </p>
 
-# API Reference and examples 📚
+# API Reference and examples
 
 You'll find a full docs, live playgrounds, prop descriptions and so forth here:
 
 <h3><a href="http://react-spring.surge.sh/">http://react-spring.surge.sh/</a></h3>
 
-# Basic overview 🔭
+# Basic overview
 
-#### Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
+## Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
 
 <img src="assets/spring.gif" width="285" />
 
@@ -87,7 +87,7 @@ import { Spring } from 'react-spring'
 </Spring>
 ```
 
-#### Mount/unmount Transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
+## Mount/unmount Transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
 
 <img src="assets/transitions.gif" width="285" />
 
@@ -105,7 +105,7 @@ import { Transition } from 'react-spring'
 </Transition>
 ```
 
-#### 2-state and 1-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
+## 2-state and 1-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
 
 <img src="assets/reveals.gif" width="285" />
 
@@ -132,7 +132,7 @@ import { Transition } from 'react-spring'
 </Transition>
 ```
 
-#### Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
+## Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
 
 <img src="assets/trails.gif" width="285" />
 
@@ -146,7 +146,7 @@ import { Trail } from 'react-spring'
 </Trail>
 ```
 
-#### Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
+## Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
 
 <img src="assets/keyframes-trail.gif" width="285" />
 
@@ -174,7 +174,7 @@ const Container = Keyframes.Spring({
 </Container>
 ```
 
-#### Parallax and page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
+## Parallax and page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
 
 <img src="assets/horizontal.gif" width="285" />
 
@@ -193,7 +193,7 @@ import { Parallax, ParallaxLayer } from 'react-spring'
 </Parallax>
 ```
 
-#### Time/duration-based implementations and addons ([Demo](https://codesandbox.io/embed/q9lozyymr9))
+## Time/duration-based implementations and addons ([Demo](https://codesandbox.io/embed/q9lozyymr9))
 
 <img src="assets/time.gif" width="285" />
 
@@ -205,7 +205,7 @@ import { TimingAnimation, Easing } from 'react-spring/dist/addons'
 <Spring impl={TimingAnimation} config={{ duration: 1000, easing: Easing.linear }} >
 ```
 
-# Interpolation 🎛
+# Interpolation
 
 We don't handle just numbers, you can interpolate almost everything:
 
@@ -235,7 +235,7 @@ We don't handle just numbers, you can interpolate almost everything:
     textShadow: '0px 5px 15px rgba(255,255,255,0.5)' }}>
 ```
 
-# Native rendering 🚀
+# Native rendering
 
 | ![img](assets/without-native.jpeg)                                                                                                                                                                                        | ![img](assets/with-native.jpeg)                                                                                                                                                                                         |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
