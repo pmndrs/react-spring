@@ -170,7 +170,5 @@ export {
   extendedAnimated as animated,
   controller,
   interpolate,
-  // deprecated
-  createAnimatedComponent,
   Globals,
 }
