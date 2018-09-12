@@ -266,6 +266,10 @@ Thank you to all our backers! 🙏
 
 <a href="https://opencollective.com/react-spring#backers" target="_blank"><img src="https://opencollective.com/react-spring/backers.svg?width=890"></a>
 
+## Gold sponsors
+
+<a href="https://aragon.org/"><img width="300" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"></a>
+
 ## Sponsors
 
 Support this project by [becoming a sponsor](https://opencollective.com/react-spring#sponsor). Your logo will show up here with a link to your website.
