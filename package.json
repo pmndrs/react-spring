@@ -4,6 +4,7 @@
   "description": "Animate React with ease",
   "main": "dist/web.cjs.js",
   "module": "dist/web.js",
+  "react-native": "dist/native.js",
   "typings": "index.d.ts",
   "files": [
     "dist",
