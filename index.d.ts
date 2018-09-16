@@ -102,6 +102,8 @@ export const config: {
   stiff: SpringConfig
   /** slow: { tension: 280, friction: 60 } */
   slow: SpringConfig
+  /** molasses: { tension: 280, friction: 120 } */
+  molasses: SpringConfig
 }
 
 export class Spring<S extends object, DS extends object> extends PureComponent<
