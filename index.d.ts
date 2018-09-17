@@ -52,7 +52,7 @@ interface SpringProps<S extends object, DS extends object = {}> {
   /**
    * Callback when the animation comes to a still-stand
    */
-  onRest?: () => void
+  onRest?: (ds: DS) => void
   /**
    * Frame by frame callback, first argument passed is the animated value
    */
