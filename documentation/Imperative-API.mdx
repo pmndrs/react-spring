@@ -5,7 +5,11 @@ order: 2
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Keyframes, config } from '../src/targets/web'
+import { Provider, Consumer } from './'
+import {   AnimatedValue,
+  animated,
+  interpolate,
+  controller as spring, } from '../src/targets/web'
 
 # Imperative API
 
@@ -19,19 +23,28 @@ import {
 ```
 ## Basics
 
-If it's necessary you can control your animations imperatively.
+While react-spring has its main focus on declarative animation you can stll control your animations imperatively if you need to. In principle this is almost the same way react-native handles animation using the `animated` library. You create an animated value, then cause it to tween with a controller. You put the animated value into your styles, where it is applied. Be sure to read the [native performance](/native) section before attempting to use this.
 
-```jsx
-const App = ({ children }) => {
-  const animation = new AnimatedValue('#28d79f')
-  const hover = () => spring(animation, { to: '#c23369' }).start()
-  const unhover = () => spring(animation, { to: '#28d79f' }).start()
-  return (
-    <animated.div
-      style={{ background: animation }}
-      onMouseOver={hover}
-      onMouseOut={unhover}
-    />
-  )
-}
-```
+<Playground style={{ overflow: 'hidden', height: 200, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+  <Consumer>
+    {() => {
+      const animation = new AnimatedValue(1)
+      const hover = () => spring(animation, { to: 2, tension: 200, friction: 30 }).start()
+      const unhover = () => spring(animation, { to: 1, tension: 0, friction: 1 }).start()
+      return (
+        <animated.div
+          style={{
+          display: 'inline-block',
+          padding: 30,
+          backgroundColor: animation.interpolate({ range: [1, 2], output: ['#28d79f', '#c23369'] }),
+          transform: interpolate(
+            [animation, animation.interpolate({ range: [1, 2], output: ['0deg', '45deg'] })],
+            (s, r) => 'scale(' + s + ') rotate3d(0,0,1,' + r + ')'
+          )}}
+          onMouseOver={hover}
+          onMouseOut={unhover}>
+          Hover me 😱
+        </animated.div>
+    )}}
+  </Consumer>
+</Playground>

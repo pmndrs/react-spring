@@ -28,6 +28,7 @@ export default class SpringAnimation extends Animation {
     )
     this._tension = springConfig.tension
     this._friction = springConfig.friction
+    this._delay = withDefault(config.delay, 0)
   }
 
   start(fromValue, onUpdate, onEnd, previousAnimation) {
@@ -36,9 +37,25 @@ export default class SpringAnimation extends Animation {
     this._lastPosition = this._startPosition
     this._onUpdate = onUpdate
     this.__onEnd = onEnd
-    this._lastTime = Globals.now()
 
-    if (typeof fromValue === 'string' || typeof this._to === 'string') {
+    if (this._delay > 0) {
+      if (this._timer) {
+        clearTimeout(this._timer)
+        this._timer = undefined
+      }
+      this._timer = setTimeout(
+        () => this.startAnimation(previousAnimation),
+        this._delay
+      )
+    } else this.startAnimation(previousAnimation)
+  }
+
+  startAnimation(previousAnimation) {
+    this._lastTime = Globals.now()
+    if (
+      typeof this._startPosition === 'string' ||
+      typeof this._to === 'string'
+    ) {
       this._onUpdate(this._to)
       return this.__debouncedOnEnd({ finished: true })
     }
@@ -158,6 +175,7 @@ export default class SpringAnimation extends Animation {
   stop() {
     this.__active = false
     clearTimeout(this._timeout)
+    this._timeout = undefined
     Globals.cancelFrame(this._animationFrame)
     this.__debouncedOnEnd({ finished: false })
   }

@@ -33,6 +33,8 @@ export default class Transition extends React.PureComponent {
     leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values */
     update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    /** Trailing delay in ms (config.delay takes precedence if present)  */
+    delay: PropTypes.number,
     /** Calls back once a transition is about to wrap up */
     onDestroyed: PropTypes.func,
     /** Item keys (the same keys you'd hand over to react in a list). If you specify items, keys can be an accessor function (item => item.key) */
@@ -93,9 +95,17 @@ export default class Transition extends React.PureComponent {
   }
 
   static getDerivedStateFromProps(props, { first, prevProps, ...state }) {
-    const { keys, children, items, initial, from, enter, leave, update } = get(
-      props
-    )
+    const {
+      keys,
+      children,
+      items,
+      initial,
+      from,
+      enter,
+      leave,
+      update,
+      delay,
+    } = get(props)
     const { keys: _keys, items: _items } = get(prevProps)
     const current = { ...state.current }
     const deleted = [...state.deleted]
@@ -107,6 +117,7 @@ export default class Transition extends React.PureComponent {
     let added = keys.filter(item => !currentSet.has(item))
     let removed = currentKeys.filter(item => !nextSet.has(item))
     let updated = keys.filter(item => currentSet.has(item))
+    let trail = 0
 
     added.forEach(key => {
       const keyIndex = keys.indexOf(key)
@@ -123,6 +134,7 @@ export default class Transition extends React.PureComponent {
           ),
         },
         to: callProp(enter, item),
+        delay: (trail = trail + delay),
       }
     })
 
@@ -132,6 +144,7 @@ export default class Transition extends React.PureComponent {
         destroyed: true,
         lastSibling: _keys[Math.max(0, keyIndex - 1)],
         ...current[key],
+        delay: (trail = trail + delay),
         to: {
           ...current[key].to,
           ...callProp(leave, _items ? _items[keyIndex] : key),
@@ -145,6 +158,7 @@ export default class Transition extends React.PureComponent {
       const item = items ? items[keyIndex] : key
       current[key] = {
         ...current[key],
+        delay: 0,
         children: children[keyIndex],
         to: { ...current[key].to, ...callProp(update, item) },
       }
@@ -195,12 +209,13 @@ export default class Transition extends React.PureComponent {
       items,
       onFrame,
       onRest,
+      delay,
       ...extra
     } = this.props
 
     const props = { native, initial, ...extra }
     return this.state.transitions.map((transition, i) => {
-      const { key, item, children, from, ...rest } = transition
+      const { key, item, children, from, delay, ...rest } = transition
       return (
         <Spring
           ref={r => r && (this.springs[key] = r.getValues())}
@@ -211,6 +226,7 @@ export default class Transition extends React.PureComponent {
               : onRest && (values => onRest(item, values))
           }
           onFrame={onFrame && (values => onFrame(item, values))}
+          delay={delay}
           {...rest}
           {...props}
           from={rest.destroyed ? this.springs[key] || from : from}

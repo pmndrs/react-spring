@@ -5,6 +5,7 @@ order: 4
 ---
 
 import { Playground, PropsTable } from 'docz'
+import { Provider, Consumer } from './'
 import { Keyframes, config } from '../src/targets/web'
 
 # Keyframes
@@ -18,6 +19,8 @@ import { Keyframes } from 'react-spring'
 `Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots which you then execute by passing the state prop.
 
 The resulting primitive can receive all the generic properties you would normally give your springs, like native, from, and so on.
+
+First, you define a Keyframe-object.
 
 ```jsx
 // You can create keyframes for springs, trails and transitions
@@ -33,13 +36,17 @@ const Container = Keyframes.Spring({
     await next({ to: { x: 0 }, config: config.gentle })
   }
 })
+```
 
+Now use it anywhere you want, set the named slot you want to animate.
+
+```jsx
 <Container state="show">
   {styles => <div style={styles}>Hello</div>}
 </Container>
 ```
 
-There is a shortcut for low-level scripting by giving it a function instead of an object consisting of slots (good for loops and such). In this case the state prop can be omitted.
+There is a shortcut for low-level scripting by giving it a function instead of an object consisting of slots (good for loops and such). In this case the `state` prop on the resulting primitive can be omitted.
 
 ```jsx
 // Will fade children in and out in a loop
@@ -52,13 +59,9 @@ const Container = Keyframes.Spring(async next => {
     })
   }
 })
-
-<Container>
-  {styles => <div style={styles}>Hello</div>}
-</Container>
 ```
 
-And another for arrays:
+And another shortcut for arrays:
 
 ```jsx
 const Container = Keyframes.Spring([

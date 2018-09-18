@@ -1,7 +1,7 @@
 {
   "name": "react-spring",
   "version": "5.7.2",
-  "description": "Animate React with ease",
+  "description": "A set of spring-physics based animation primitives",
   "main": "dist/web.cjs.js",
   "module": "dist/web.js",
   "typings": "index.d.ts",

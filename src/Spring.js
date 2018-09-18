@@ -38,7 +38,7 @@ export default class Spring extends React.Component {
     render: PropTypes.func,
     /** Prevents animation if true, or for individual keys: fn(key => true/false) */
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    /** Delay before the animation starts */
+    /** Delay in ms before the animation starts (config.delay takes precedence if present) */
     delay: PropTypes.number,
     /** When true the spring starts from scratch (from -> to) */
     reset: PropTypes.bool,
@@ -150,12 +150,7 @@ export default class Spring extends React.Component {
     // .. graph should be established, so we do it here. Unfortunatelly, non-native
     // .. animations as well as "auto"-injects call forceUpdate, so it's causing a loop.
     // .. didUpdate prevents that as it gets set only on prop changes.
-    if (this.didUpdate) {
-      if (this.props.delay) {
-        if (this.timeout) clearTimeout(this.timeout)
-        this.timeout = setTimeout(this.start, this.props.delay)
-      } else this.start()
-    }
+    if (this.didUpdate) this.start()
     this.didUpdate = false
   }
 
@@ -263,14 +258,18 @@ export default class Spring extends React.Component {
   }
 
   start = () => {
-    const { config, impl } = this.props
+    const { config, delay, impl } = this.props
     if (this.props.onStart) this.props.onStart()
     Object.keys(this.animations).forEach(name => {
       const { animation, toValue: to } = this.animations[name]
       // TODO: figure out why this is needed ...
       if (!to.__getValue && animation.__getValue() === to)
         return this.finishAnimation(name)
-      controller(animation, { to, ...callProp(config, name) }, impl).start(
+      controller(
+        animation,
+        { to, delay, ...callProp(config, name) },
+        impl
+      ).start(
         !to.__getValue &&
           (props => props.finished && this.finishAnimation(name))
       )
