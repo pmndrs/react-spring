@@ -34,3 +34,4 @@ Demo will be live at http://localhost:8080
 - Vertical gestures / drag-n-drop: https://codesandbox.io/embed/l9zqz0m18z
 - Animated TodoMVC: https://codesandbox.io/embed/2pk8l7n7kn
 - Styled components: https://codesandbox.io/embed/3ywn817xqq
+- Whatsapp-like chat: https://codesandbox.io/embed/o546k35lk5
