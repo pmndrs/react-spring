@@ -59,10 +59,11 @@ export default class TransitionsExample extends React.PureComponent {
         <Transition
           native
           keys={this.state.items}
-          initial={null}
+          //initial={null}
           from={{ height: 0 }}
           enter={{ height: 50 }}
           leave={{ height: 0 }}
+          delay={200}
           onDestroyed={item => console.log(item, 'destroyed')}>
           {this.state.items.map(item => styles => (
             <animated.li style={{ ...defaultStyles, ...styles }}>

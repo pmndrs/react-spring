@@ -3,13 +3,10 @@ import AnimatedArray from './AnimatedArray'
 import AnimatedTracking from './AnimatedTracking'
 import SpringAnimation from './SpringAnimation'
 
-function maybeVectorAnim(array, { tension, friction, to }, anim, impl) {
-  // { tension, friction, to: [...]}
+function maybeVectorAnim(array, { to, ...rest }, anim, impl) {
   if (array instanceof AnimatedArray)
     return parallel(
-      array._values.map((v, i) =>
-        anim(v, { tension, friction, to: to[i] }, impl)
-      ),
+      array._values.map((v, i) => anim(v, { ...rest, to: to[i] }, impl)),
       { stopTogether: false }
     )
   return null

@@ -33,7 +33,7 @@ export default class Transition extends React.PureComponent {
     leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values */
     update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-    /** Trailing delay in ms (config.delay takes precedence if present)  */
+    /** Trailing delay in ms (config.delay takes precedence if present) */
     delay: PropTypes.number,
     /** Calls back once a transition is about to wrap up */
     onDestroyed: PropTypes.func,
