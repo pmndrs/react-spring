@@ -69,7 +69,7 @@ For a more detailed explanation read [Why React needed yet another animation lib
 # Used by
 
 <p align="middle">
-  <a href="https://nextjs.org/"><img width="150" src="assets/projects/next.png"></a>
+  <a href="https://nextjs.org/"><img width="285" src="assets/projects/next.png"></a>
   <a href="https://codesandbox.io/"><img width="285" src="assets/projects/csb.png"></a>
   <a href="https://aragon.org/"><img width="285" src="assets/projects/aragon.png"></a>
 </p>
