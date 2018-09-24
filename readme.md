@@ -69,9 +69,9 @@ For a more detailed explanation read [Why React needed yet another animation lib
 # Used by
 
 <p align="middle">
-  <a href="https://aragon.org/"><img width="285" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"></a>
-  <a href="https://codesandbox.io/"><img width="285" src="assets/projects/csb.png"></a>
   <a href="https://nextjs.org/"><img width="150" src="https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png"></a>
+  <a href="https://codesandbox.io/"><img width="285" src="assets/projects/csb.png"></a>
+  <a href="https://aragon.org/"><img width="285" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"></a>
   <a href="https://carmel.io/"><img width="100" src="https://raw.githubusercontent.com/fluidtrends/carmel/master/assets/carmel-logo.png"></a>
 </p>
 
