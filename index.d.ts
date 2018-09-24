@@ -126,6 +126,10 @@ type TransitionItemProps = string | number | object
 
 interface TransitionProps<S extends object, DS extends object = {}> {
   /**
+   * First render base values (initial from -> enter), if present overrides "from", can be "null" to skip first mounting transition, or: item => values
+   */
+  initial?: DS | null,
+  /**
    * Will skip rendering the component if true and write to the dom directly
    * @default false
    */
