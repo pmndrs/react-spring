@@ -1,0 +1,34 @@
+---
+name: Addons
+route: /addons
+order: -1
+---
+
+import { Playground, PropsTable } from 'docz'
+import { Parallax, ParallaxLayer, config } from '../src/targets/web'
+
+# Parallax
+
+```jsx
+import { Parallax, ParallaxLayer } from 'react-spring'
+```
+
+## Basics
+
+`Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and speeds.
+
+```jsx
+<Parallax pages={3} scrolling={false} horizontal ref={ref => this.parallax = ref}>
+  <ParallaxLayer offset={0} speed={0.5}>
+    <span onClick={() => this.parallax.scrollTo(1)}>
+      Layers can contain anything
+    </span>
+  </ParallaxLayer>
+</Parallax>
+```
+
+## Props
+
+<PropsTable of={Parallax} />
+
+<PropsTable of={ParallaxLayer} />

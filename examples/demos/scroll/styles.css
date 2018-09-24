@@ -1,0 +1,23 @@
+.c {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.c {
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eceaea;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888585;
+}

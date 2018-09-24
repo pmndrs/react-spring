@@ -12,6 +12,7 @@ export default function fixAuto(props, callback) {
   const { from, to } = props
 
   // Dry-route props back if nothing's using 'auto' in there
+  // TODO: deal with "null"
   if (!(getValues(to).some(check) || getValues(from).some(check))) return
   // Fetch render v-dom
   const element = renderChildren(props, convertValues(props))

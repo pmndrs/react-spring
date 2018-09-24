@@ -1,18 +1,18 @@
 {
   "dist/addons.umd.js": {
-    "bundled": 5851,
-    "minified": 5810,
-    "gzipped": 2110
+    "bundled": 6006,
+    "minified": 5987,
+    "gzipped": 2147
   },
   "dist/web.umd.js": {
-    "bundled": 37012,
-    "minified": 36956,
-    "gzipped": 12729
+    "bundled": 37216,
+    "minified": 37160,
+    "gzipped": 12798
   },
   "dist/addons.js": {
-    "bundled": 14679,
-    "minified": 6585,
-    "gzipped": 2244,
+    "bundled": 14885,
+    "minified": 6740,
+    "gzipped": 2271,
     "treeshaked": {
       "rollup": {
         "code": 2028,
@@ -24,58 +24,58 @@
     }
   },
   "dist/web.js": {
-    "bundled": 86006,
-    "minified": 40934,
-    "gzipped": 12958,
+    "bundled": 86459,
+    "minified": 41185,
+    "gzipped": 13037,
     "treeshaked": {
       "rollup": {
-        "code": 35624,
+        "code": 35826,
         "import_statements": 223
       },
       "webpack": {
-        "code": 37057
+        "code": 37264
       }
     }
   },
   "dist/native.js": {
-    "bundled": 71964,
-    "minified": 32926,
-    "gzipped": 10213,
+    "bundled": 72181,
+    "minified": 33084,
+    "gzipped": 10273,
     "treeshaked": {
       "rollup": {
-        "code": 27238,
+        "code": 27286,
         "import_statements": 198
       },
       "webpack": {
-        "code": 28569
+        "code": 28617
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 59423,
-    "minified": 26390,
-    "gzipped": 7544,
+    "bundled": 59640,
+    "minified": 26548,
+    "gzipped": 7608,
     "treeshaked": {
       "rollup": {
-        "code": 21405,
+        "code": 21453,
         "import_statements": 198
       },
       "webpack": {
-        "code": 22697
+        "code": 22745
       }
     }
   },
   "dist/konva.js": {
-    "bundled": 70602,
-    "minified": 32347,
-    "gzipped": 10240,
+    "bundled": 70819,
+    "minified": 32505,
+    "gzipped": 10305,
     "treeshaked": {
       "rollup": {
-        "code": 27680,
+        "code": 27792,
         "import_statements": 198
       },
       "webpack": {
-        "code": 29034
+        "code": 29148
       }
     }
   }

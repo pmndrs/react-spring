@@ -76,7 +76,10 @@ Globals.injectBugfixes(fixAuto)
 Globals.injectApplyAnimatedValues(
   (instance, props) => {
     if (instance.nodeType && instance.setAttribute !== undefined) {
-      const { style, children, ...attributes } = props
+      const { style, children, scrollTop, scrollLeft, ...attributes } = props
+
+      if (scrollTop) instance.scrollTop = scrollTop
+      if (scrollLeft) instance.scrollLeft = scrollLeft
 
       // Set textContent, if children is an animatable value
       if (children) instance.textContent = children

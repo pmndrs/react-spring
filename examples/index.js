@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom'
 import Loadable from 'react-loadable'
 import './styles.css'
 
-console.log(React.version)
-
 const components = [
-  'scroll',
+  'parallaxvert',
   'parallax',
   'transitions',
   'nativespring',
@@ -26,6 +24,7 @@ const components = [
   'script',
   'auto',
   'router',
+  'scroll',
 ].reduce(
   (acc, path) => ({
     ...acc,
@@ -37,7 +36,7 @@ const components = [
   {}
 )
 
-const DEBUG = false
+const DEBUG = true
 const DebugComponent = components['transitions']
 
 ReactDOM.render(

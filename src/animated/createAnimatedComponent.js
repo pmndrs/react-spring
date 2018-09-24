@@ -62,7 +62,11 @@ export default function createAnimatedComponent(Component) {
 
     render() {
       const forwardRef = this.props.forwardRef
-      const animatedProps = this._propsAnimated.__getValue()
+      const {
+        scrollTop,
+        scrollLeft,
+        ...animatedProps
+      } = this._propsAnimated.__getValue()
       return (
         <Component
           {...animatedProps}

@@ -7,6 +7,7 @@
 - [What is it?](#what-is-it)
 - [Why do we need yet another?](#why-do-we-need-yet-another)
 - [What others say](#what-others-say)
+- [Used by](#used-by)
 - [API reference and examples](#api-reference-and-examples)
 - [Basic overview](#basic-overview)
 - [Interpolation](#interpolation)
@@ -64,6 +65,12 @@ For a more detailed explanation read [Why React needed yet another animation lib
 <p align="middle">
   <img src="assets/testimonies.jpg" />
 </p>
+
+# Used by
+
+<a href="https://aragon.org/"><img width="200" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"></a><a href="https://codesandbox.io/"><img width="200" src="assets/projects/csb.png"></a><a href="https://nextjs.org/"><img width="100" src="https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png"></a>
+
+And [many others](https://github.com/drcmda/react-spring/network/dependents) ...
 
 # API Reference and examples
 

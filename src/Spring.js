@@ -277,8 +277,8 @@ export default class Spring extends React.Component {
   }
 
   stop = () =>
-    getValues(this.animations).forEach(({ animation }) =>
-      animation.stopAnimation()
+    getValues(this.animations).forEach(
+      ({ animation }) => console.log(animation) || animation.stopAnimation()
     )
 
   finishAnimation = name => {

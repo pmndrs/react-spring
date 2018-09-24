@@ -134,7 +134,6 @@ export default class Grid extends React.Component {
                 <div ref={measureRef} style={{ ...styles.inner, height }}>
                   <Transition
                     native
-                    delay={this.clicked && !open ? closeDelay : 0}
                     items={displayData}
                     keys={d => d.key}
                     from={{ opacity: 0 }}
@@ -142,7 +141,10 @@ export default class Grid extends React.Component {
                     enter={this.update}
                     update={this.update}
                     impl={impl}
-                    config={config}>
+                    config={{
+                      ...config,
+                      delay: this.clicked && !open ? closeDelay : 0,
+                    }}>
                     {displayData.map(
                       (c, i) => ({ opacity, x, y, width, height }) => (
                         <animated.div
