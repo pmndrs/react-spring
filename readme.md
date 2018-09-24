@@ -68,7 +68,7 @@ For a more detailed explanation read [Why React needed yet another animation lib
 
 # Used by
 
-<a href="https://aragon.org/"><img width="200" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"></a><a href="https://codesandbox.io/"><img width="200" src="assets/projects/csb.png"></a><a href="https://nextjs.org/"><img width="100" src="https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png"></a>
+<a href="https://aragon.org/"><img width="200" style="margin: 20px" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"></a><a href="https://codesandbox.io/"><img width="200" style="margin: 20px" src="assets/projects/csb.png"></a><a href="https://nextjs.org/"><img width="100" style="margin: 20px" src="https://cloud.githubusercontent.com/assets/13041/19686250/971bf7f8-9ac0-11e6-975c-188defd82df1.png"></a>
 
 And [many others](https://github.com/drcmda/react-spring/network/dependents) ...
 
