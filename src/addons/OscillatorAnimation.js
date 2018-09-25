@@ -9,8 +9,7 @@
  * @author https://github.com/skevy
  */
 
-import Animation from '../animated/Animation'
-import * as Globals from '../animated/Globals'
+import { Animation, Globals } from 'react-spring'
 
 const withDefault = (value, defaultValue) =>
   value === undefined || value === null ? defaultValue : value

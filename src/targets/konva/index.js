@@ -12,13 +12,17 @@ import Transition from '../../Transition'
 import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
 
+Globals.injectDefaultElement('Group')
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
-Globals.injectApplyAnimatedValues((instance, props) => {
-  if (instance.nodeType) {
-    instance._applyProps(instance, props)
-  } else return false
-}, style => style)
+Globals.injectApplyAnimatedValues(
+  (instance, props) => {
+    if (instance.nodeType) {
+      instance._applyProps(instance, props)
+    } else return false
+  },
+  style => style
+)
 
 const konvaElements = [
   'Layer',

@@ -12,6 +12,13 @@ export default {
           href: 'https://codemirror.net/theme/dracula.css',
         },
       ],
+      raw: `
+      <style>
+        .scrollbar-container {
+          max-height: unset!important;
+        }
+      </style>
+      `,
     },
   },
   themeConfig: {

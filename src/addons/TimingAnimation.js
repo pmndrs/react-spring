@@ -8,8 +8,7 @@
  * @format
  */
 
-import Animation from '../animated/Animation'
-import * as Globals from '../animated/Globals'
+import { Animation, Globals } from 'react-spring'
 import Easing from './Easing'
 
 const easeInOut = Easing.inOut(Easing.ease)

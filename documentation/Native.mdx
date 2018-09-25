@@ -6,6 +6,7 @@ order: 1
 
 import { Playground, PropsTable } from 'docz'
 import { Spring, animated, interpolate } from '../src/targets/web'
+import { Provider, Consumer } from './'
 
 # Native rendering
 
@@ -29,6 +30,12 @@ Just be aware of the following conditions:
 3.  Receiving elements must be `animated.[elementName]`, for instance `div` becomes `animated.div`
 4.  If you use styled-components or custom componemts do: `animated(component)`
 5.  If you need to interpolate styles use `interpolate`
+
+To summarize the benefits:
+
+* Your application will be faster, the difference *really* can be night and day
+* You get quite powerful interpolation and keyframing tools (see below)
+* You get to animate `scrollTop` and `scrollLeft` out of the box (which React can't normally handle)
 
 ## Simple example
 
@@ -93,4 +100,51 @@ In cases where you need to clamp or extrapolate, the `interpolate` function can 
   </animated.div>
   )}
   </Spring>
+</Playground>
+
+## Animating scroll position
+
+`scrollTop` and `scrollLeft` aren't regular dom attributes and React generally doesn't allow you to set them because it can't possibly keep track of it, so their values can't be deterministic. React-spring on the other hand renders async outside of React anyway (if you animate natively), so we do allow you to set scroll position. Just be aware of the common pitfalls:
+
+1. Hijacking scroll is bad, think twice before doing it
+2. To really make it fluid you should remember last scroll position and use reset springs
+3. User interaction should stop automatic scroll
+
+<Playground style={{ margin: 0, padding: 0, height: 200 }}>
+  <Provider value={set => {
+      let el = undefined
+      let spring = undefined
+      return {
+        y: 0,
+        setEl: ref => el = ref,
+        setSpring: ref => spring = ref,
+        setY: () => set({ y: Math.round(Math.random() * 400) }),
+        stop: () => spring.stop(),
+        getTop: () => el ? el.scrollTop : 0
+      }
+    }}>
+    <Consumer>
+      {({ y, getTop, setEl, setSpring, setY, stop }) => (
+        <Spring native reset from={{ y: getTop() }} to={{ y }} ref={setSpring}>
+          {props => (
+            <animated.div
+              style={{ height: '100%', overflow: 'auto' }}
+              ref={setEl}
+              onClick={setY}
+              onWheel={stop}
+              scrollTop={props.y}>
+              <div style={{ height: 100, background: 'crimson' }} />
+              <div style={{ height: 100, background: 'teal' }} />
+              <div style={{ height: 100, background: 'coral' }} />
+              <div style={{ height: 100, background: 'hotpink' }} />
+              <div style={{ height: 100, background: 'skyblue' }} />
+              <div style={{ height: 100, background: 'salmon' }} />
+              <div style={{ height: 100, background: 'seagreen' }} />
+              <div style={{ height: 100, background: 'peachpuff' }} />
+            </animated.div>
+          )}
+        </Spring>
+      )}
+    </Consumer>
+  </Provider>
 </Playground>

@@ -13,7 +13,9 @@ import Keyframes from '../../Keyframes'
 import createInterpolation from '../shared/interpolation'
 import colorNames from '../shared/colors'
 import AnimatedTransform from './AnimatedTransform'
+import { View } from 'react-native'
 
+Globals.injectDefaultElement(View)
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectApplyAnimatedValues(

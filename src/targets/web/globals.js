@@ -70,6 +70,7 @@ function dangerousStyleValue(name, value, isCustomProperty) {
   return ('' + value).trim()
 }
 
+Globals.injectDefaultElement('div')
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectBugfixes(fixAuto)

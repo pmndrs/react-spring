@@ -231,6 +231,7 @@ We don't handle just numbers, you can interpolate almost everything:
 - string patterns (`transform`, `border`, `boxShadow`, etc)
 - `auto` is valid
 - non-animatable string values (`visibility`, `pointerEvents`, etc)
+- `scrollTop`/`scrollLeft` (native only, since these aren't actual dom properties)
 
 ```jsx
 <Spring

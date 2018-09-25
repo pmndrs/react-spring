@@ -36,8 +36,8 @@ const components = [
   {}
 )
 
-const DEBUG = true
-const DebugComponent = components['transitions']
+const DEBUG = false
+const DebugComponent = components['timing']
 
 ReactDOM.render(
   DEBUG ? (
