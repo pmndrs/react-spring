@@ -33,7 +33,7 @@ export default {
           '-apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif',
       },
       h1: {
-        fontSize: '6em',
+        fontSize: '4em',
         fontWeight: 800,
       },
     },

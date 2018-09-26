@@ -18,6 +18,7 @@ let TimingAnimation = class TimingAnimation extends Animation {
     this._to = config.to
     this._easing = config.easing !== undefined ? config.easing : easeInOut
     this._duration = config.duration !== undefined ? config.duration : 500
+    this._delay = config.delay !== undefined ? config.delay : 0
   }
 
   start(fromValue, onUpdate, onEnd) {

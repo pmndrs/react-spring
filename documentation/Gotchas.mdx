@@ -4,7 +4,27 @@ route: /gotchas
 order: 0
 ---
 
+import { Tweet } from 'react-twitter-widgets'
+
 # Gotchas
+
+## Why are duration and easing hidden away as addons?
+
+<p>
+  <div style={{ float: "right", margin: '-10px 0px 30px 30px' }}>
+  <Tweet tweetId='566736015188963328' options={{ conversation: 'none', width: '350' }}/>
+</div>
+<a href="https://www.youtube.com/watch?v=1tavDv5hXpo&feature=youtu.be&t=6m17s">Here's a good explanation</a> and it is worth it watching it until the first demo that starts at 9:40, there you can see how springs adapt without curves and durations.
+
+In short, durations and easings are the number one reason UI animation is hard (and usually looks bad). This is why our focus is on physics first and foremost, where duration mathematically doesn't exist since springs are adaptive, or in other words, they work with energetic load and momentum instead of hardcoded values.
+</p>
+
+<p>
+<img style={{ width: 340, float: 'left', margin: '10px 30px 30px 0px' }} src="https://www.wikihow.com/images/thumb/5/51/Do-Cool-Tricks-With-a-Slinky-Step-5-Version-4.jpg/aid283122-v4-728px-Do-Cool-Tricks-With-a-Slinky-Step-5-Version-4.jpg.webp" />
+Think of it like this, if you cause an animation and abort somewhere near the middle, a spring will fluidly move back according to the energy it spent getting there as if you would actually pull back a physical spring mid-momentum, whereas in a duration-based animation it would stop abruptly and naively move back taking the hard-coded time it would have spent getting to end-state using the same curve.
+
+It can be odd in the beginning thinking of animation not in terms of time, but once you let go things will start to make sense and creating fluid interfaces will be easier than ever.
+</p>
 
 ## Render props
 
