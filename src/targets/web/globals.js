@@ -101,8 +101,9 @@ Globals.injectApplyAnimatedValues(
 
       // Set attributes ...
       for (let name in attributes) {
-        if (instance.getAttribute(name))
-          instance.setAttribute(name, attributes[name])
+        let dashCase = name.replace(/([A-Z])/g, $1 => '-' + $1.toLowerCase())
+        if (typeof instance.getAttribute(dashCase) !== 'undefined')
+          instance.setAttribute(dashCase, attributes[name])
       }
     } else return false
   },

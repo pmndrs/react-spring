@@ -24,7 +24,8 @@ const components = [
   'script',
   'auto',
   'router',
-  'scroll',
+  //'scroll',
+  //'dashoffset'
 ].reduce(
   (acc, path) => ({
     ...acc,
@@ -37,7 +38,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['timing']
+const DebugComponent = components['dashoffset']
 
 ReactDOM.render(
   DEBUG ? (
