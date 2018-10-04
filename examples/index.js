@@ -38,8 +38,8 @@ const components = [
   {}
 )
 
-const DEBUG = true
-const DebugComponent = components['auto']
+const DEBUG = false
+const DebugComponent = components['transitiongroup']
 
 ReactDOM.render(
   DEBUG ? (

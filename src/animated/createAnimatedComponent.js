@@ -60,17 +60,6 @@ export default function createAnimatedComponent(Component) {
       this.attachProps(nextProps)
     }
 
-    setRef = node => {
-      this.node = node
-      const forwardRef = this.props.forwardRef
-      if (forwardRef) {
-        // If it's a function, assume it's a ref callback
-        if (typeof forwardRef === 'function') forwardRef(node)
-        // If it's an object and has a 'current' property, assume it's a ref object
-        else if (typeof forwardRef === 'object') forwardRef.current = node
-      }
-    }
-
     render() {
       const forwardRef = this.props.forwardRef
       const {
@@ -78,7 +67,21 @@ export default function createAnimatedComponent(Component) {
         scrollLeft,
         ...animatedProps
       } = this._propsAnimated.__getValue()
-      return <Component {...animatedProps} ref={this.setRef} />
+      return (
+        <Component
+          {...animatedProps}
+          ref={node => {
+            this.node = node
+            const forwardRef = this.props.forwardRef
+            if (forwardRef) {
+              // If it's a function, assume it's a ref callback
+              if (typeof forwardRef === 'function') forwardRef(node)
+              // If it's an object and has a 'current' property, assume it's a ref object
+              else if (typeof forwardRef === 'object') forwardRef.current = node
+            }
+          }}
+        />
+      )
     }
   }
   return React.forwardRef((props, ref) => (

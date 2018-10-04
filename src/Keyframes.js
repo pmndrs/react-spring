@@ -122,7 +122,8 @@ class Keyframes extends React.PureComponent {
 const interpolateTo = props => {
   const forward = getForwardProps(props)
   const rest = Object.keys(props).reduce(
-    (acc, key) => (forward[key] ? acc : { ...acc, [key]: props[key] }),
+    (acc, key) =>
+      typeof forward[key] !== 'undefined' ? acc : { ...acc, [key]: props[key] },
     {}
   )
   return { to: forward, ...rest }
