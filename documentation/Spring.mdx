@@ -5,83 +5,286 @@ order: 7
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Spring, config } from '../src/targets/web'
+import { Spring, animated, config } from '../src/targets/web'
+import { AnimatedMeter, RewindSpringProvider, RewindSpring } from './'
+import { UnControlled as CodeMirror } from 'react-codemirror2'
+import { Helmet } from 'react-helmet'
+
+<Helmet>
+  <style type="text/css">{`
+    .CodeMirror {
+      font-size: 14px;
+      height: 100%;
+    }
+    .CodeMirror pre {
+      line-height: 1.8!important;
+    }
+    .CodeMirror-line {
+      padding: 0 10px!important;
+    }
+    .CodeMirror-lines {
+      padding: 10px 0!important;
+    }
+    .CodeMirror-linenumber {
+      padding: 0 7px 0 5px!important;
+    }
+    .code-table {
+      display: flex;
+    }
+    .code-table > div {
+      flex: 1;
+    }
+    .code-table > div:last-child {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fb467b;
+      font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
+    segoe ui, arial, sans-serif;
+      font-size: 4em;
+      font-weight: 600;
+      color: white;
+    }
+    .highlight {
+      background: #f4e6e9;
+      color: #947679;
+      margin: 0 3px;
+      padding: 4px 6px;
+      border-radius: 3px;
+    }
+    .grommetux-meter {
+      height: 70px;
+    }
+    .grommetux-meter__graphic {
+      fill: transparent;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 15px;
+      width: 70px;
+      height: 70px;
+    }
+    .grommetux-meter__tracks {
+      stroke: rgba(255,255,255,0.1);
+    }
+    .grommetux-meter__values {
+      stroke: white;
+    }
+    code {
+      background: #f4f6f9;
+      color: #7D899C;
+      margin: 0 3px;
+      padding: 4px 6px;
+      border-radius: 3px;
+      font-family: "Source Code Pro",monospace;
+      font-size: 14px;
+    }
+  `}</style>
+</Helmet>
 
 # Spring
 
+You begin by importing `Spring`.
+
 ```jsx
 import { Spring } from 'react-spring'
-
-<Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
-  {styles => <div style={styles}>i will fade in</div>}
-</Spring>
 ```
 
-## Basics
+<RewindSpringProvider>
+<p>
+  Now, the primary task of a <code>Spring</code> is to move data <code>from</code> one state <code>to</code> another. <span className="highlight">Do not think of these values as "styles"</span> per se, although you can most certainly use them as such.
+</p>
 
-A `Spring` moves data `from` one state `to` another. From that point on it remembers its current state and should you update `to` it will animate accordingly.
+<div className="code-table">
+  <CodeMirror
+    value={
+`<Spring
+  from={{ opacity: 0 }}
+  to={{ opacity: 1 }}>
+  {props => <div style={props}>✌️</div>}
+</Spring>`}
+    options={{
+      mode: 'jsx',
+      theme: 'dracula',
+      lineNumbers: true,
+      readOnly: true,
+      showCursorWhenSelecting: false,
+      cursorHeight: 0
+    }}
+  />
+  <div>
+    <RewindSpring>
+      {x => <animated.div style={{ opacity: x }}>✌️</animated.div>}
+    </RewindSpring>
+  </div>
+</div>
 
-It will forward the interpolated values as render-props, think of them not as "styles," you can most certainly use them as such, but you can do with them whatever you like, be it driving styles, attributes or component props. This makes for a powerful but very simple API that is versatile enough to build your own needs around it.
+<p>
+  Do with them whatever you like, animate <span className="highlight">attributes</span> for instance, 
+</p>
 
-Springs are physics based and animate adaptively, you do not have to [worry about durations and easings](https://www.youtube.com/watch?v=1tavDv5hXpo&feature=youtu.be&t=6m17s), which get complex and illogical quickly. With a spring your results will always look fluid.
+<div className="code-table">
+  <CodeMirror
+    value={
+`<Spring
+  from={{ x: 100 }}
+  to={{ x: 0 }}>
+  {props => (
+    <svg strokeDashoffset={props.x}>
+      <path d="..." />
+    </svg>
+  )}
+</Spring>`}
+    options={{
+      mode: 'jsx',
+      theme: 'dracula',
+      lineNumbers: true,
+      readOnly: true,
+      showCursorWhenSelecting: false,
+      cursorHeight: 0
+    }}
+  />
+  <div>
+    <RewindSpring>
+      {x => (
+        <animated.svg
+          style={{ width: 100, height: 100, opacity: x }}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray={100}
+          strokeDashoffset={x.interpolate(x => (1-x) * 100)}
+        >
+          <title>task-checklist-check</title>
+          <path
+            pathLength="100"
+            className="a"
+            d="M10,23.5H1.5a1,1,0,0,1-1-1V3.5a1,1,0,0,1,1-1h2"
+          />
+          <path
+            pathLength="100"
+            className="a"
+            d="M15.5,2.5h2a1,1,0,0,1,1,1v6"
+          />
+          <path
+            pathLength="100"
+            className="a"
+            d="M11.5,2.5a2,2,0,0,0-4,0h-2v3h8v-3Z"
+          />
+          <path
+            pathLength="100"
+            className="a"
+            d="M16.5,9.5V5a.5.5,0,0,0-.5-.5H13.5"
+          />
+          <path
+            pathLength="100"
+            className="a"
+            d="M5.5,4.5H3a.5.5,0,0,0-.5.5V21a.5.5,0,0,0,.5.5h7"
+          />
+          <line
+            pathLength="100"
+            className="a"
+            x1="5.5"
+            y1="8.499"
+            x2="13.5"
+            y2="8.499"
+          />
+          <line
+            pathLength="100"
+            className="a"
+            x1="5.5"
+            y1="11.499"
+            x2="11.5"
+            y2="11.499"
+          />
+          <line
+            pathLength="100"
+            className="a"
+            x1="5.5"
+            y1="14.499"
+            x2="9.5"
+            y2="14.499"
+          />
+          <circle pathLength="100" className="a" cx="17.5" cy="17.499" r="6" />
+          <path
+            pathLength="100"
+            className="a"
+            d="M20.174,15.755l-2.905,3.874a.75.75,0,0,1-1.13.08l-1.5-1.5"
+          />
+        </animated.svg>
+      )}
+    </RewindSpring>
+  </div>
+</div>
 
-The playground below is live, play around a little, click the refresh button to restart the animation.
+<p>
+  or <span className="highlight">innerText</span>,
+</p>
 
-<Playground style={{ overflow: 'hidden', height: 200 }}>
-  <Spring from={{ fontSize: 10, number: 0 }} to={{ fontSize: 120, number: 100 }}>
-    {({ fontSize, number }) => <div style={{ fontSize }}>{number.toFixed(2)}</div>}
-  </Spring>
-</Playground>
+<div className="code-table">
+  <CodeMirror
+    value={
+`<Spring
+  from={{ number: 0 }}
+  to={{ number: 1 }}>
+  {props => <div>{props.number}</div>}
+</Spring>`}
+    options={{
+      mode: 'jsx',
+      theme: 'dracula',
+      lineNumbers: true,
+      readOnly: true,
+      showCursorWhenSelecting: false,
+      cursorHeight: 0
+    }}
+  />
+  <div>
+    <RewindSpring>
+      {x => <animated.div style={{ fontFamily: 'monospace'}}>{x.interpolate(n => n.toFixed(2))}</animated.div>}
+    </RewindSpring>
+  </div>
+</div>
 
-## Props
+<p>
+  or generic <span className="highlight">React-component props</span>.
+</p>
 
-<PropsTable of={Spring} />
+<div className="code-table">
+  <CodeMirror
+    value={
+`<Spring
+  from={{ value: 0 }}
+  to={{ value: 100 }}>
+  {props => <Donut value={props.value} />}
+</Spring>`}
+    options={{
+      mode: 'jsx',
+      theme: 'dracula',
+      lineNumbers: true,
+      readOnly: true,
+      showCursorWhenSelecting: false,
+      cursorHeight: 0
+    }}
+  />
+  <div>
+    <RewindSpring>
+      {x => <AnimatedMeter type="circle" value={x.interpolate(x => x * 100)} />}
+    </RewindSpring>
+  </div>
+</div>
+</RewindSpringProvider>
 
-## Config
-
-Spring are configurable, there are a couple of presets.
-
-```jsx
-import { config } from 'react-spring'
-
-<Spring config={config.default} />
-````
-
-| Property                  | Value |
-| ------------------------- | ------- |
-| config.default             | { tension: 170, friction: 14 }
-| config.wobbly              | { tension: 180, friction: 12 }
-| config.stiff               | { tension: 210, friction: 20 }
-| config.slow                | { tension: 280, friction: 60 }
-| config.molasses            | { tension: 280, friction: 120 }
-
-You can of course set configs for yourself, or finetune your spring. 
-
-```jsx
-<Spring config={{ tension: 0, friction: 2, restDisplacementThreshold: 0.1 }} />
-````
-
-| Property                  | Default | Description       |
-| ------------------------- | ----------- | ------------- |
-| overshootClamping         | false       | false, when true, stops the spring once it overshoots its boundaries
-| restDisplacementThreshold | 0.0001      | precision
-| restSpeedThreshold        | 0.0001      | precision
-| velocity                  | 0           | initial velocity
-| tension                   | 170         | energetic load
-| friction                  | 26          | resistence
-| delay                     | 0           | delay
-
-It is also possible to set configs key by key.
-
-```jsx
-<Spring
-  to={{ width: 10, color: 'red' }}
-  config={key => key === 'width' ? config.slow : config.wobbly />
-```
+<p>
+  Springs are <span className="highlight">physics based</span> and animate adaptively, you do not have to worry about durations and easings, which get complex and illogical quickly. More about that <a href="/gotchas">here</a>.
+</p>
 
 ## Interpolation
 
-`Spring` doesn't just handle numbers, it can interpolate pretty much everything: 
+<p>
+  <code>Spring</code> doesn't just handle numbers, it can <span className="highlight">interpolate pretty much everything</span>.
+</p> 
 
 * colors (names, rgb, rgba, hsl, hsla)
 * absolute lenghts (cm, mm, in, px, pt, pc)
@@ -94,8 +297,11 @@ It is also possible to set configs key by key.
 * string patterns (`transform`, `border`, `boxShadow`, etc)
 * `auto` is valid
 * non-animatable string values (`visibility`, `pointerEvents`, etc)
+* `scrollTop`/`scrollLeft` ([native only](/native), since these aren't actual dom properties)
 
 Of course the only properties that the browser can animate relatively cheap are [composite propertys](https://www.html5rocks.com/en/tutorials/speed/high-performance-animations/) (opacity, transform), so you might want to watch out for that.
+
+The following playground is live.
 
 <Playground style={{ height: 200 }}>
   <Spring
@@ -133,3 +339,49 @@ Of course the only properties that the browser can animate relatively cheap are 
     )}
   </Spring>
 </Playground>
+
+## Config
+
+Spring are configurable, there are a couple of presets.
+
+```jsx
+import { Spring, config } from 'react-spring'
+
+<Spring config={config.default} />
+````
+
+| Property                  | Value |
+| ------------------------- | ------- |
+| config.default             | { tension: 170, friction: 14 }
+| config.wobbly              | { tension: 180, friction: 12 }
+| config.stiff               | { tension: 210, friction: 20 }
+| config.slow                | { tension: 280, friction: 60 }
+| config.molasses            | { tension: 280, friction: 120 }
+
+You can of course set configs for yourself, or finetune your spring. 
+
+```jsx
+<Spring config={{ tension: 0, friction: 2, restDisplacementThreshold: 0.1 }} />
+````
+
+| Property                  | Default | Description       |
+| ------------------------- | ----------- | ------------- |
+| overshootClamping         | false       | false, when true, stops the spring once it overshoots its boundaries
+| restDisplacementThreshold | 0.0001      | precision
+| restSpeedThreshold        | 0.0001      | precision
+| velocity                  | 0           | initial velocity
+| tension                   | 170         | energetic load
+| friction                  | 26          | resistence
+| delay                     | 0           | delay
+
+It is also possible to set configs key by key.
+
+```jsx
+<Spring
+  to={{ width: 10, color: 'red' }}
+  config={key => key === 'width' ? config.slow : config.wobbly />
+```
+
+## Props
+
+<PropsTable of={Spring} />

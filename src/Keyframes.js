@@ -72,7 +72,18 @@ class Keyframes extends React.PureComponent {
 
   render() {
     const { props, oldProps, resolve } = this.state
-    const { primitive: Component, from: ownFrom, onRest, ...rest } = this.props
+
+    if (!props || Object.keys(props).length === 0) return null
+
+    const {
+      state,
+      filter,
+      states,
+      primitive: Component,
+      from: ownFrom,
+      onRest,
+      ...rest
+    } = this.props
 
     const current = this.instance && this.instance.getValues()
     const from =
@@ -80,7 +91,7 @@ class Keyframes extends React.PureComponent {
         ? props.from
         : { ...oldProps.from, ...current, ...props.from }
 
-    return props ? (
+    return (
       <Component
         ref={ref => (this.instance = ref)}
         {...rest}
@@ -91,7 +102,7 @@ class Keyframes extends React.PureComponent {
           if (onRest) onRest(args)
         }}
       />
-    ) : null
+    )
   }
 
   static create = primitive => (states, filter = states => states) => {

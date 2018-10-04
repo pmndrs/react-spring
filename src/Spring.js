@@ -42,6 +42,8 @@ export default class Spring extends React.Component {
     delay: PropTypes.number,
     /** When true the spring starts from scratch (from -> to) */
     reset: PropTypes.bool,
+    /** When true "from" and "to" are switched, this will only make sense in combination with the "reset" flag */
+    reverse: PropTypes.bool,
     /** Spring config, or for individual keys: fn(key => config) */
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Will skip rendering the component if true and write to the dom directly */
@@ -83,6 +85,7 @@ export default class Spring extends React.Component {
   updating = false
   animations = {}
   interpolators = {}
+  mergedProps = {}
 
   componentDidMount() {
     // componentDidUpdate isn't called on mount, we call it here to start animating
@@ -154,18 +157,32 @@ export default class Spring extends React.Component {
     this.didUpdate = false
   }
 
-  updateAnimations({ from, to, attach, reset, immediate, onFrame, native }) {
+  updateAnimations({
+    from,
+    to,
+    reverse,
+    attach,
+    reset,
+    immediate,
+    onFrame,
+    native,
+  }) {
     // This function will turn own-props into AnimatedValues, it tries to re-use
     // .. exsting animations as best as it can by detecting the changes made
 
     // We can potentially cause setState, but we're inside render, the flag prevents that
     this.updating = true
 
+    // Reverse values when requested
+    if (reverse) {
+      ;[from, to] = [to, from]
+    }
+
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
     let target = attach && attach(this)
-
     let animationsChanged = false
-    let allProps = Object.entries({ ...from, ...to })
+    this.mergedProps = { ...from, ...this.mergedProps, ...to }
+    let allProps = Object.entries(this.mergedProps)
     this.animations = allProps.reduce((acc, [name, value], i) => {
       const entry = (reset === false && acc[name]) || { stopped: true }
       const isNumber = typeof value === 'number'

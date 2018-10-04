@@ -25,6 +25,7 @@ export function getForwardProps(props) {
     children,
     render,
     reset,
+    reverse,
     force,
     immediate,
     impl,
