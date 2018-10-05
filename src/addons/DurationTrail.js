@@ -24,15 +24,18 @@ export default class DurationTrail extends React.Component {
       onRest,
       ...props
     } = this.props
-    return children.map((child, i) => (
-      <Spring
-        ref={ref => i === 0 && (this.instance = ref)}
-        key={keys[i]}
-        {...props}
-        delay={delay + (reverse ? children.length - i : i) * ms}
-        onRest={i === (reverse ? 0 : children.length - 1) ? onRest : null}
-        children={child}
-      />
-    ))
+    if (children && children.length) {
+      return children.map((child, i) => (
+        <Spring
+          ref={ref => i === 0 && (this.instance = ref)}
+          key={keys[i]}
+          {...props}
+          delay={delay + (reverse ? children.length - i : i) * ms}
+          onRest={i === (reverse ? 0 : children.length - 1) ? onRest : null}
+          children={child}
+        />
+      ))
+    }
+    return null
   }
 }
