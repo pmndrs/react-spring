@@ -116,10 +116,12 @@ export function interpolate(
 ): any
 
 export const animated: {
+  <P>(comp: ComponentType<P>): ComponentType<P>;
+} & {
   [Tag in keyof JSX.IntrinsicElements]: ComponentClass<
     JSX.IntrinsicElements[Tag]
   >
-}
+};
 
 type TransitionKeyProps = string | number
 type TransitionItemProps = string | number | object
