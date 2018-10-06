@@ -1,5 +1,4 @@
 import Animated from './Animated'
-import AnimatedTracking from './AnimatedTracking'
 
 export default class AnimatedWithChildren extends Animated {
   constructor() {

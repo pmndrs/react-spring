@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import controller from '../../animated/AnimatedController'
 import AnimatedValue from '../../animated/AnimatedValue'
 import createAnimatedComponent from '../../animated/createAnimatedComponent'
-import SpringAnimation from '../../animated/SpringAnimation'
+import AnimationController from '../../animated/AnimationController'
+import springImpl from '../../impl/spring'
 import { config } from '../shared/constants'
 
 const AnimatedDiv = createAnimatedComponent('div')
@@ -49,20 +49,24 @@ export class ParallaxLayer extends React.PureComponent {
   }
 
   setPosition(height, scrollTop, immediate = false) {
-    const { config, impl } = this.parent.props
+    const { config } = this.parent.props
     const targetScroll = Math.floor(this.props.offset) * height
     const offset = height * this.props.offset + targetScroll * this.props.speed
     const to = parseFloat(-(scrollTop * this.props.speed) + offset)
     if (!immediate)
-      controller(this.animatedTranslate, { to, ...config }, impl).start()
+      this.animatedTranslateImpl
+        .set({ value: this.animatedTranslate, to, ...config })
+        .start()
     else this.animatedTranslate.setValue(to)
   }
 
   setHeight(height, immediate = false) {
-    const { config, impl } = this.parent.props
+    const { config } = this.parent.props
     const to = parseFloat(height * this.props.factor)
     if (!immediate)
-      controller(this.animatedSpace, { to, ...config }, impl).start()
+      this.animatedSpaceImpl
+        .set({ value: this.animatedSpace, to, ...config })
+        .start()
     else this.animatedSpace.setValue(to)
   }
 
@@ -72,8 +76,10 @@ export class ParallaxLayer extends React.PureComponent {
     const targetScroll = Math.floor(props.offset) * parent.space
     const offset = parent.space * props.offset + targetScroll * props.speed
     const to = parseFloat(-(parent.current * props.speed) + offset)
-    this.animatedTranslate = new AnimatedValue(to)
     this.animatedSpace = new AnimatedValue(parent.space * props.factor)
+    this.animatedSpaceImpl = new AnimationController(parent.props.impl)
+    this.animatedTranslate = new AnimatedValue(to)
+    this.animatedTranslateImpl = new AnimationController(parent.props.impl)
   }
 
   renderLayer() {
@@ -143,22 +149,27 @@ export default class Parallax extends React.PureComponent {
     /** Scrolls horizontally or vertically */
     horizontal: PropTypes.bool,
     /** Spring implementation (optional) */
-    impl: PropTypes.func,
+    impl: PropTypes.object,
   }
 
   static defaultProps = {
     config: config.slow,
     scrolling: true,
     horizontal: false,
-    impl: SpringAnimation,
+    impl: springImpl,
   }
 
-  state = { ready: false }
-  layers = []
-  space = 0
-  current = 0
-  offset = 0
-  busy = false
+  constructor(props) {
+    super()
+    this.state = { ready: false }
+    this.layers = []
+    this.space = 0
+    this.current = 0
+    this.offset = 0
+    this.busy = false
+    this.animatedScroll = new AnimatedValue(0)
+    this.animatedScrollImpl = new AnimationController(props.impl)
+  }
 
   moveItems = () => {
     this.layers.forEach(layer => layer.setPosition(this.space, this.current))
@@ -198,22 +209,18 @@ export default class Parallax extends React.PureComponent {
     setTimeout(this.update, 150)
   }
 
-  scrollStop = event =>
-    this.animatedScroll && this.animatedScroll.stopAnimation()
+  scrollStop = event => this.animatedScrollImpl.stop()
 
   scrollTo(offset) {
-    const { horizontal, config, impl } = this.props
+    const { horizontal, config } = this.props
     const scrollType = getScrollType(horizontal)
     this.scrollStop()
     this.offset = offset
     const target = this.container
-    this.animatedScroll = new AnimatedValue(target[scrollType])
     this.animatedScroll.addListener(({ value }) => (target[scrollType] = value))
-    controller(
-      this.animatedScroll,
-      { to: offset * this.space, ...config },
-      impl
-    ).start()
+    this.animatedScrollImpl
+      .set({ value: this.animatedScroll, to: offset * this.space, ...config })
+      .start()
   }
 
   componentDidMount() {

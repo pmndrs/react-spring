@@ -1,5 +1,9 @@
 import AnimatedValue from '../../animated/AnimatedValue'
 
+export function withDefault(value, defaultValue) {
+  return value === undefined || value === null ? defaultValue : value
+}
+
 export function shallowEqual(a, b) {
   for (let i in a) if (!(i in b)) return false
   for (let i in b) if (a[i] !== b[i]) return false

@@ -41,13 +41,13 @@ export default class AnimatedValue extends AnimatedWithChildren {
   constructor(value) {
     super()
     this._value = value
-    this._animation = null
     this._animatedStyles = new Set()
     this._listeners = {}
+    this._done = false
   }
 
   __detach() {
-    this.stopAnimation()
+    this._detached = true
   }
 
   __getValue() {
@@ -74,24 +74,8 @@ export default class AnimatedValue extends AnimatedWithChildren {
    * and update all the bound properties.
    */
   setValue(value) {
-    if (this._animation) {
-      this._animation.stop()
-      this._animation = null
-    }
     this._animatedStyles.clear()
     this._updateValue(value)
-  }
-
-  /**
-   * Stops any running animation or tracking.  `callback` is invoked with the
-   * final value after stopping the animation, which is useful for updating
-   * state to match the animation position with layout.
-   */
-  stopAnimation(callback) {
-    this.stopTracking()
-    this._animation && this._animation.stop()
-    this._animation = null
-    callback && callback(this.__getValue())
   }
 
   /**
@@ -100,26 +84,6 @@ export default class AnimatedValue extends AnimatedWithChildren {
    */
   interpolate(config) {
     return new AnimatedInterpolation(this, config)
-  }
-
-  /**
-   * Typically only used internally, but could be used by a custom Animation
-   * class.
-   */
-  animate(animation, callback) {
-    var previousAnimation = this._animation
-    this._animation && this._animation.stop()
-    this._animation = animation
-    this._animatedStyles.clear()
-    animation.start(
-      this._value,
-      this._updateValue,
-      result => {
-        this._animation = null
-        callback && callback(result)
-      },
-      previousAnimation
-    )
   }
 
   /**
@@ -139,21 +103,5 @@ export default class AnimatedValue extends AnimatedWithChildren {
 
   removeAllListeners() {
     this._listeners = {}
-  }
-
-  /**
-   * Typically only used internally.
-   */
-  stopTracking() {
-    this._tracking && this._tracking.__detach()
-    this._tracking = null
-  }
-
-  /**
-   * Typically only used internally.
-   */
-  track(tracking) {
-    this.stopTracking()
-    this._tracking = tracking
   }
 }

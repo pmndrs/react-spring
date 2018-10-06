@@ -1,6 +1,6 @@
 import React from 'react'
 import { Keyframes, animated } from 'react-spring'
-import { TimingAnimation, Easing } from '../../../src/addons'
+//import { TimingAnimation, Easing } from '../../../src/addons'
 
 const Container = Keyframes.Spring(async next => {
   while (true) {
@@ -49,8 +49,8 @@ export default class TimingExample extends React.PureComponent {
           reset
           native
           keys={items}
-          impl={TimingAnimation}
-          config={{ duration: 2000, easing: Easing.linear }}>
+          //impl={TimingAnimation}
+          config={{ duration: 2000 /*, easing: Easing.linear*/ }}>
           {Content}
         </Container>
       </div>

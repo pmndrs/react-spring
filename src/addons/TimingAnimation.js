@@ -11,7 +11,6 @@
 import { Animation, Globals } from 'react-spring'
 import Easing from './Easing'
 
-const easeInOut = Easing.inOut(Easing.ease)
 let TimingAnimation = class TimingAnimation extends Animation {
   constructor(config) {
     super()

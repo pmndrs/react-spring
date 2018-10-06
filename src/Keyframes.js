@@ -129,6 +129,7 @@ const interpolateTo = props => {
   return { to: forward, ...rest }
 }
 
+Keyframes.interpolateTo = interpolateTo
 Keyframes.Spring = Keyframes.create(Spring)
 Keyframes.Spring.to = states => Keyframes.Spring(states, interpolateTo)
 Keyframes.Trail = Keyframes.create(Trail)

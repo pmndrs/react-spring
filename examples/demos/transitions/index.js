@@ -4,7 +4,6 @@ import { Transition, animated } from 'react-spring'
 const defaultStyles = {
   overflow: 'hidden',
   width: '100%',
-  backgroundColor: '#FF1C68',
   color: 'white',
   display: 'flex',
   justifyContent: 'center',
@@ -15,7 +14,7 @@ const defaultStyles = {
 }
 
 export default class TransitionsExample extends React.PureComponent {
-  state = { items: [] }
+  state = { items: ['1', '2', '3'] }
 
   async componentDidMount() {
     this.t1 && clearTimeout(this.t1)
@@ -58,12 +57,11 @@ export default class TransitionsExample extends React.PureComponent {
         onClick={() => this.componentDidMount()}>
         <Transition
           keys={this.state.items}
-          initial={null}
-          from={{ height: 0 }}
-          enter={{ height: 50 }}
-          leave={{ height: 0 }}
-          delay={200}
-          onDestroyed={item => console.log(item, 'destroyed')}>
+          //initial={null}
+          from={{ height: 0, opacity: 0 }}
+          enter={{ height: 50, opacity: 1 }}
+          leave={{ height: 0, opacity: 0 }}
+          delay={600}>
           {this.state.items.map(item => styles => (
             <animated.li style={{ ...defaultStyles, ...styles }}>
               {item}

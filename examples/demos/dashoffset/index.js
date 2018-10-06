@@ -1,6 +1,5 @@
 import React from 'react'
 import { Spring, animated } from 'react-spring'
-import { TimingAnimation } from '../../../src/addons'
 import { GradientPinkRed as Gradient } from '@vx/gradient'
 
 export default class App extends React.Component {
@@ -20,7 +19,6 @@ export default class App extends React.Component {
             reset
             from={{ dash: offset }}
             to={{ dash: 0 }}
-            impl={TimingAnimation}
             config={{ duration: 5000 }}>
             {props => (
               <animated.path

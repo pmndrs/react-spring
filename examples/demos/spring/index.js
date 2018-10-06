@@ -23,6 +23,7 @@ const Content = ({
   end,
   stop,
   rotation,
+  coords,
 }) => (
   <div
     style={{
@@ -32,7 +33,9 @@ const Content = ({
     <svg
       style={{
         ...styles.shape,
-        transform: `scale3d(${scale}, ${scale}, ${scale}) rotate(${rotation})`,
+        transform: `scale3d(${scale}, ${scale}, ${scale}) rotate(${rotation}) translate3d(${
+          coords[0]
+        }px,${coords[1]}px,0)`,
       }}
       version="1.1"
       viewBox="0 0 400 400">
@@ -56,6 +59,7 @@ export default class SpringExample extends React.Component {
       <Spring
         from={{ color: 'black' }}
         to={{
+          coords: toggle ? [0, 0] : [50, 50],
           color: toggle ? '#247BA0' : '#70C1B3',
           start: toggle ? '#B2DBBF' : '#B2DBBF',
           end: toggle ? '#247BA0' : '#F3FFBD',

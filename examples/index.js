@@ -25,20 +25,23 @@ const components = [
   'auto',
   'router',
   //'scroll',
-  //'dashoffset'
-  //'transitiongroup'
+  //'dashoffset',
+  'transitiongroup',
 ].reduce(
   (acc, path) => ({
     ...acc,
     [path]: Loadable({
       loader: () => import('./demos/' + path),
-      loading: () => <div />,
+      loading: props => {
+        if (props.error) console.error(props.error)
+        return <div />
+      },
     }),
   }),
   {}
 )
 
-const DEBUG = false
+const DEBUG = true
 const DebugComponent = components['transitiongroup']
 
 ReactDOM.render(

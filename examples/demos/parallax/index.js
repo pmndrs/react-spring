@@ -11,7 +11,7 @@ const Page = ({ offset, caption, first, second, gradient, onClick }) => (
       <div className="slopeBegin" />
     </ParallaxLayer>
 
-    <ParallaxLayer offset={offset} speed={-0.2} onClick={onClick}>
+    <ParallaxLayer offset={offset} speed={0.6} onClick={onClick}>
       <div className={`slopeEnd ${gradient}`} />
     </ParallaxLayer>
 

@@ -31,7 +31,12 @@ export default class App extends React.Component {
             {(onRest, renders) => (
               <Spring
                 to={{ progress: update % 2 }}
-                config={{ tension: 80, friction: 10 }}
+                config={{
+                  tension: 100,
+                  friction: 16,
+                  restSpeedThreshold: 0.01,
+                  restDisplacementThreshold: 0.01,
+                }}
                 onRest={onRest}>
                 {props => <Anim {...props} />}
               </Spring>

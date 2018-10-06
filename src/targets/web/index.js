@@ -1,9 +1,7 @@
 import './globals'
 import * as Globals from '../../animated/Globals'
-import Animation from '../../animated/Animation'
 import AnimatedValue from '../../animated/AnimatedValue'
-import SpringAnimation from '../../animated/SpringAnimation'
-import controller from '../../animated/AnimatedController'
+import AnimationController from '../../animated/AnimationController'
 import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
 import { config } from '../shared/constants'
@@ -163,12 +161,10 @@ export {
   Trail,
   Parallax,
   ParallaxLayer,
-  Animation,
-  SpringAnimation,
+  AnimationController,
   AnimatedValue,
   config,
   extendedAnimated as animated,
-  controller,
   interpolate,
   Globals,
 }
