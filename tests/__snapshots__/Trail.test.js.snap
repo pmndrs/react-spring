@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Trail smoke/regression tests 1`] = `
+ShallowWrapper {
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Trail
+    keys={
+      Array [
+        0,
+        1,
+      ]
+    }
+  >
+    <fakeChild />
+    <fakeChild />
+  </Trail>,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateError": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": "0",
+    "nodeType": "class",
+    "props": Object {
+      "attach": [Function],
+      "children": <fakeChild />,
+      "config": Object {
+        "friction": 26,
+        "tension": 170,
+      },
+      "delay": undefined,
+      "force": false,
+      "from": Object {},
+      "immediate": false,
+      "impl": [Function],
+      "inject": undefined,
+      "native": false,
+      "onRest": undefined,
+      "render": undefined,
+      "reset": false,
+      "to": Object {},
+    },
+    "ref": [Function],
+    "rendered": Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "host",
+      "props": Object {},
+      "ref": null,
+      "rendered": null,
+      "type": "fakeChild",
+    },
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": "0",
+      "nodeType": "class",
+      "props": Object {
+        "attach": [Function],
+        "children": <fakeChild />,
+        "config": Object {
+          "friction": 26,
+          "tension": 170,
+        },
+        "delay": undefined,
+        "force": false,
+        "from": Object {},
+        "immediate": false,
+        "impl": [Function],
+        "inject": undefined,
+        "native": false,
+        "onRest": undefined,
+        "render": undefined,
+        "reset": false,
+        "to": Object {},
+      },
+      "ref": [Function],
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {},
+        "ref": null,
+        "rendered": null,
+        "type": "fakeChild",
+      },
+      "type": [Function],
+    },
+    Object {
+      "instance": null,
+      "key": "1",
+      "nodeType": "class",
+      "props": Object {
+        "attach": [Function],
+        "children": <fakeChild />,
+        "config": Object {
+          "friction": 26,
+          "tension": 170,
+        },
+        "delay": undefined,
+        "force": false,
+        "from": Object {},
+        "immediate": false,
+        "impl": [Function],
+        "inject": undefined,
+        "native": false,
+        "onRest": null,
+        "render": undefined,
+        "reset": false,
+        "to": Object {},
+      },
+      "ref": [Function],
+      "rendered": Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "host",
+        "props": Object {},
+        "ref": null,
+        "rendered": null,
+        "type": "fakeChild",
+      },
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+        "lifecycles": Object {
+          "componentDidUpdate": Object {
+            "onSetState": true,
+          },
+          "getDerivedStateFromProps": true,
+          "getSnapshotBeforeUpdate": true,
+          "setState": Object {
+            "skipsComponentDidUpdateOnNullish": true,
+          },
+        },
+      },
+    },
+    "attachTo": undefined,
+    "hydrateIn": undefined,
+  },
+}
+`;
