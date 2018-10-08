@@ -24,11 +24,13 @@ const Content = ({
   stop,
   rotation,
   coords,
+  ...rest
 }) => (
   <div
     style={{
       ...styles.container,
       background: `linear-gradient(to bottom, ${start} ${stop}, ${end} 100%)`,
+      ...rest,
     }}>
     <svg
       style={{

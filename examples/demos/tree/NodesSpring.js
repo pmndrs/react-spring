@@ -53,7 +53,7 @@ function Nodes({ nodes, layout, orientation, onNodeClick }) {
           opacity: 0,
         }
       }}>
-      {nodes.map(node => styles => {
+      {node => styles => {
         const key = keyAccessor(node)
         return (
           <animated.g
@@ -81,7 +81,7 @@ function Nodes({ nodes, layout, orientation, onNodeClick }) {
             />
           </animated.g>
         )
-      })}
+      }}
     </Transition>
   )
 }

@@ -38,7 +38,7 @@ function Links({ links, linkType, layout, orientation, stepPercent }) {
             ty: collapsedParent.data.y0,
           }
         }}>
-        {links.map(link => styles => (
+        {link => styles => (
           <Link
             data={{
               source: { x: styles.sx, y: styles.sy },
@@ -52,7 +52,7 @@ function Links({ links, linkType, layout, orientation, stepPercent }) {
             strokeWidth="1"
             fill="none"
           />
-        ))}
+        )}
       </Transition>
     </Group>
   )

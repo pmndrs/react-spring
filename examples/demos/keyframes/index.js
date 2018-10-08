@@ -91,10 +91,11 @@ export default class App extends React.Component {
               }}>
               <Content
                 native
+                items={items}
                 keys={items.map((_, i) => i)}
-                config={{ tension: 200, friction: 20 }}
-                state={state}>
-                {items.map((item, i) => ({ x, ...props }) => (
+                state={state}
+                config={{ tension: 200, friction: 20 }}>
+                {(item, i) => ({ x, ...props }) => (
                   <animated.div
                     style={{
                       transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
@@ -104,7 +105,7 @@ export default class App extends React.Component {
                       {item}
                     </Form.Item>
                   </animated.div>
-                ))}
+                )}
               </Content>
             </animated.div>
           )}

@@ -1,22 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Spring from './Spring'
-import { config as springConfig } from './targets/shared/constants'
-import { callProp } from './targets/shared/helpers'
+import Keyframes from './Keyframes'
+import { config as springConfig } from './shared/constants'
+import { callProp, toArray } from './shared/helpers'
 
 const empty = () => null
 
 const get = props => {
-  let { keys, children, render, items, ...rest } = props
-  children = render || children || empty
-  keys = typeof keys === 'function' ? items.map(keys) : keys
-  if (!Array.isArray(children)) {
-    children = [children]
-    keys = keys !== void 0 ? [keys] : children.map(c => c.toString())
-  }
+  let { items, keys, ...rest } = props
+  items = toArray(items !== void 0 ? items : empty)
+  keys = typeof keys === 'function' ? items.map(keys) : toArray(keys)
   // Make sure numeric keys are interpreted as Strings (5 !== "5")
-  keys = keys.map(k => String(k))
-  return { keys, children, items, ...rest }
+  return { items, keys: keys.map(key => String(key)), ...rest }
 }
 
 let guid = 0
@@ -28,13 +24,25 @@ export default class Transition extends React.PureComponent {
     /** Base values (from -> enter), or: item => values */
     from: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Values that apply to new elements, or: fitem => values */
-    enter: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    enter: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.array,
+      PropTypes.func,
+    ]),
     /** Values that apply to leaving elements, or: item => values */
-    leave: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+    leave: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.array,
+      PropTypes.func,
+    ]),
     /** Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values */
-    update: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-    /** Trailing delay in ms (config.delay takes precedence if present) */
-    delay: PropTypes.number,
+    update: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.array,
+      PropTypes.func,
+    ]),
+    /** Trailing delay in ms */
+    trail: PropTypes.number,
 
     // TODO: Trailing oder, for instance: ['enter', 'leave', 'update']
     // order: PropTypes.arrayOf(PropTypes.string),
@@ -44,40 +52,14 @@ export default class Transition extends React.PureComponent {
     /** Calls back once a transition is about to wrap up */
     onDestroyed: PropTypes.func,
     /** Item keys (the same keys you'd hand over to react in a list). If you specify items, keys can be an accessor function (item => item.key) */
-    keys: PropTypes.oneOfType([
-      PropTypes.func,
-      PropTypes.arrayOf(
-        PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-      ),
-      PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    ]),
-    /** Optional: An array of items to be displayed, use this if you need access to the actual items when distributing values as functions (see above) */
-    items: PropTypes.oneOfType([
-      PropTypes.arrayOf(
-        PropTypes.oneOfType([
-          PropTypes.string,
-          PropTypes.number,
-          PropTypes.object,
-        ])
-      ),
-      PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-        PropTypes.object,
-      ]),
-    ]),
-    /** An array of functions (props => view), or a single function, or undefined */
-    children: PropTypes.oneOfType([
-      PropTypes.func,
-      PropTypes.arrayOf(PropTypes.func),
-      PropTypes.node,
-    ]),
-    /** Same as children, but takes precedence if present */
-    render: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.func),
-      PropTypes.func,
-    ]),
+    keys: PropTypes.oneOfType([PropTypes.func, PropTypes.array, PropTypes.any]),
+    /** An array of items to be displayed, use this if you need access to the actual items when distributing values as functions (see above) */
+    items: PropTypes.oneOfType([PropTypes.array, PropTypes.any]).isRequired,
+    /** An array of functions (props => view) */
+    children: PropTypes.func.isRequired,
   }
+
+  static defaultProps = { keys: item => item }
 
   componentDidMount() {
     this.mounted = true
@@ -101,15 +83,14 @@ export default class Transition extends React.PureComponent {
 
   static getDerivedStateFromProps(props, { first, prevProps, ...state }) {
     const {
-      keys,
-      children,
       items,
+      keys,
       initial,
       from,
       enter,
       leave,
       update,
-      delay = 0,
+      trail = 0,
       config,
     } = get(props)
     const { keys: _keys, items: _items } = get(prevProps)
@@ -121,53 +102,57 @@ export default class Transition extends React.PureComponent {
     let currentSet = new Set(currentKeys)
     let nextSet = new Set(keys)
     let added = keys.filter(item => !currentSet.has(item))
-    let removed = currentKeys.filter(item => !nextSet.has(item))
+    let removed = state.transitions
+      .filter(item => !item.destroyed && !nextSet.has(item.originalKey))
+      .map(i => i.originalKey)
     let updated = keys.filter(item => currentSet.has(item))
-    let trail = 0
+    let delay = 0
 
     added.forEach(key => {
       const keyIndex = keys.indexOf(key)
-      const item = items ? items[keyIndex] : key
+      const item = items[keyIndex]
+      const state = 'enter'
       current[key] = {
+        state,
         originalKey: key,
         key: guid++,
         item,
-        delay: (trail = trail + delay),
-        children: children[keyIndex],
-        config: callProp(config, item, 'enter'),
-        from: {
-          ...callProp(
-            first ? (typeof initial !== 'undefined' ? initial : from) : from,
-            item
-          ),
-        },
+        trail: (delay = delay + trail),
+        config: callProp(config, item, state),
+        from: callProp(
+          first ? (typeof initial !== 'undefined' ? initial : from) : from,
+          item
+        ),
         to: callProp(enter, item),
       }
     })
 
     removed.forEach(key => {
       const keyIndex = _keys.indexOf(key)
-      const item = _items ? _items[keyIndex] : key
+      const item = _items[keyIndex]
+      const state = 'leave'
       deleted.push({
         ...current[key],
+        state,
         destroyed: true,
         lastSibling: _keys[Math.max(0, keyIndex - 1)],
-        delay: (trail = trail + delay),
-        config: callProp(config, item, 'leave'),
-        to: { ...current[key].to, ...callProp(leave, item) },
+        trail: (delay = delay + trail),
+        config: callProp(config, item, state),
+        to: callProp(leave, item),
       })
       delete current[key]
     })
 
     updated.forEach(key => {
       const keyIndex = keys.indexOf(key)
-      const item = items ? items[keyIndex] : key
+      const item = items[keyIndex]
+      const state = 'update'
       current[key] = {
         ...current[key],
-        delay: (trail = trail + delay),
-        children: children[keyIndex],
-        config: callProp(config, item, 'update'),
-        to: { ...current[key].to, ...callProp(update, item) },
+        state,
+        trail: (delay = delay + trail),
+        config: callProp(config, item, state),
+        to: callProp(update, item),
       }
     })
 
@@ -205,42 +190,45 @@ export default class Transition extends React.PureComponent {
 
   render() {
     const {
-      render,
       initial,
       from = {},
       enter = {},
       leave = {},
+      update = {},
       onDestroyed,
       keys,
       items,
       onFrame,
       onRest,
-      delay,
+      trail,
       config,
+      children,
       ...extra
     } = this.props
     return this.state.transitions.map(
-      ({ key, item, children, from, to, delay, config, destroyed }, i) => {
-        return (
-          <Spring
-            ref={r => r && (this.springs[key] = r.getValues())}
-            key={key}
-            onRest={
-              destroyed
-                ? this.destroyItem(item, key)
-                : onRest && (values => onRest(item, values))
-            }
-            onFrame={onFrame && (values => onFrame(item, values))}
-            delay={delay}
-            config={config}
-            {...extra}
-            from={destroyed ? this.springs[key] || from : from}
-            to={to}
-            render={render && children}
-            children={render ? this.props.children : children}
-          />
-        )
-      }
+      ({ state, key, item, from, to, trail, config, destroyed }, i) => (
+        <Keyframes
+          primitive={Spring}
+          state={state}
+          filter={Keyframes.interpolateTo}
+          states={{ [state]: to }}
+          ref={r => r && (this.springs[key] = r.getValues())}
+          key={key}
+          onRest={
+            destroyed
+              ? this.destroyItem(item, key)
+              : onRest && (values => onRest(item, values))
+          }
+          onFrame={onFrame && (values => onFrame(item, values))}
+          config={{ delay: trail, ...config }}
+          {...extra}
+          from={destroyed ? this.springs[key] || from : from}
+          children={props => {
+            const child = children(item, i, state)
+            return child ? child(props) : null
+          }}
+        />
+      )
     )
   }
 }

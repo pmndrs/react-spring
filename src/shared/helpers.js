@@ -1,7 +1,11 @@
-import AnimatedValue from '../../animated/AnimatedValue'
+import AnimatedValue from '../animated/AnimatedValue'
 
 export function withDefault(value, defaultValue) {
   return value === undefined || value === null ? defaultValue : value
+}
+
+export function toArray(a) {
+  return Array.isArray(a) ? a : [a]
 }
 
 export function shallowEqual(a, b) {

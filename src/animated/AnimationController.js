@@ -2,7 +2,7 @@ import Animated from './Animated'
 import AnimatedArray from './AnimatedArray'
 import * as Globals from './Globals'
 import springImpl from '../impl/spring'
-import { withDefault } from '../targets/shared/helpers'
+import { withDefault } from '../shared/helpers'
 
 export default class AnimationController {
   constructor(impl = springImpl) {
@@ -47,10 +47,6 @@ export default class AnimationController {
         let val = value._value
         value._done = false
         value._animatedStyles.clear()
-        if (typeof val === 'string' || typeof to === 'string') {
-          value._updateValue(to)
-          value._done = true
-        }
         return { value, to, startPos: val, lastPos: val, ...rest }
       }),
     }))
@@ -63,6 +59,7 @@ export default class AnimationController {
   update = () => {
     let now = Globals.now()
     let isDone = true
+    let noChange = true
 
     // Run through all the configs, each representing a to-prop
     for (let iConfig = 0; iConfig < this.configs.length; iConfig++) {
@@ -77,17 +74,26 @@ export default class AnimationController {
       // A prop could be an AnimatedValue or an AnimatedArray
       for (let iAnim = 0; iAnim < config.animations.length; iAnim++) {
         const anim = config.animations[iAnim]
+        const from = anim.startPos
+        const to = anim.to
 
         // If an animation is done, skip, until all of them conclude
         if (anim.value._done) continue
 
+        // Break animation when string values are involved or start/end value match
+        if (from === to || typeof from === 'string' || typeof to === 'string') {
+          anim.value._updateValue(to)
+          anim.value._done = true
+          continue
+        } else noChange = false
+
         let isTrailing = anim.to instanceof Animated
-        let to = isTrailing ? anim.to.__getValue() : anim.to
+        let interpTo = isTrailing ? anim.to.__getValue() : anim.to
         let [pos, endOfAnimation] = this.impl.update(
           config,
           anim,
           anim.startPos,
-          to,
+          interpTo,
           anim.lastPos,
           now,
           this.startTime,
@@ -104,7 +110,7 @@ export default class AnimationController {
 
         if (endOfAnimation) {
           // Ensure that we end up with a round value
-          if (anim.value._value !== to) anim.value._updateValue(to)
+          if (anim.value._value !== interpTo) anim.value._updateValue(interpTo)
           anim.value._done = true
         } else {
           anim.value._updateValue(anim.lastPos)
@@ -113,7 +119,7 @@ export default class AnimationController {
       }
     }
 
-    if (isDone) return this.__debouncedOnEnd({ finished: true })
+    if (isDone) return this.__debouncedOnEnd({ finished: true, noChange })
 
     this.lastTime = now
     this._animationFrame = Globals.requestFrame(this.update)

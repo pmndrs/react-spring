@@ -17,10 +17,10 @@ export default class TrailsExample extends React.PureComponent {
         }}>
         <Trail
           native
+          items={items}
           from={{ opacity: 0, x: -100 }}
-          to={{ opacity: toggle ? 1 : 0.25, x: toggle ? 0 : 100 }}
-          keys={items}>
-          {items.map(item => ({ x, opacity }) => (
+          to={{ opacity: toggle ? 1 : 0.25, x: toggle ? 0 : 100 }}>
+          {item => ({ x, opacity }) => (
             <animated.div
               className="box"
               onClick={this.toggle}
@@ -29,7 +29,7 @@ export default class TrailsExample extends React.PureComponent {
                 transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
               }}
             />
-          ))}
+          )}
         </Trail>
       </div>
     )

@@ -34,8 +34,6 @@ export default class App extends React.Component {
                 config={{
                   tension: 100,
                   friction: 16,
-                  restSpeedThreshold: 0.01,
-                  restDisplacementThreshold: 0.01,
                 }}
                 onRest={onRest}>
                 {props => <Anim {...props} />}

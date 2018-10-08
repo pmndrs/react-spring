@@ -8,7 +8,7 @@
   dependencies:
     "@babel/highlight" "^7.0.0"
 
-"@babel/core@7.1.0", "@babel/core@^7.1.0":
+"@babel/core@7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.1.0.tgz#08958f1371179f62df6966d8a614003d11faeb04"
   dependencies:
@@ -27,7 +27,7 @@
     semver "^5.4.1"
     source-map "^0.5.0"
 
-"@babel/core@^7.0.1":
+"@babel/core@^7.0.1", "@babel/core@^7.1.2":
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.1.2.tgz#f8d2a9ceb6832887329a7b60f9d035791400ba4e"
   dependencies:
@@ -700,6 +700,12 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
+"@babel/runtime@^7.1.2":
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.1.2.tgz#81c89935f4647706fc54541145e6b4ecfef4b8e3"
+  dependencies:
+    regenerator-runtime "^0.12.0"
+
 "@babel/template@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.1.0.tgz#58cc9572e1bfe24fe1537fdf99d839d53e517e22"
@@ -1130,9 +1136,16 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16.4.14":
+"@types/react@*":
   version "16.4.14"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.14.tgz#47c604c8e46ed674bbdf4aabf82b34b9041c6a04"
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
+"@types/react@^16.4.16":
+  version "16.4.16"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.4.16.tgz#99f91b1200ae8c2062030402006d3b3c3a177043"
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -4462,12 +4475,12 @@ dom-serializer@0:
     domelementtype "~1.1.1"
     entities "~1.1.1"
 
-dom-testing-library@^3.1.0:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/dom-testing-library/-/dom-testing-library-3.5.1.tgz#980cabd123ae7744ec430b669ad1ddcd1f8cbb9e"
+dom-testing-library@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/dom-testing-library/-/dom-testing-library-3.8.1.tgz#8607ef2e911f14f594028d14bc9f44fd32446078"
   dependencies:
     mutationobserver-shim "^0.3.2"
-    pretty-format "^22.4.3"
+    pretty-format "^23.6.0"
     wait-for-expect "^1.0.0"
 
 dom-walk@^0.1.0:
@@ -5994,9 +6007,9 @@ humanize-string@^1.0.2:
   dependencies:
     decamelize "^1.0.0"
 
-husky@^1.0.0-rc.15:
-  version "1.0.0-rc.15"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-1.0.0-rc.15.tgz#f1545d15c7f34d5db19e40b70df07ac9a362673d"
+husky@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-1.1.1.tgz#7179043184f68a4d1ffc975cbd1c6132ef1fd7b3"
   dependencies:
     cosmiconfig "^5.0.6"
     execa "^0.9.0"
@@ -9209,13 +9222,6 @@ pretty-error@^2.0.2:
     renderkid "^2.0.1"
     utila "~0.4"
 
-pretty-format@^22.4.3:
-  version "22.4.3"
-  resolved "http://registry.npmjs.org/pretty-format/-/pretty-format-22.4.3.tgz#f873d780839a9c02e9664c8a082e9ee79eaac16f"
-  dependencies:
-    ansi-regex "^3.0.0"
-    ansi-styles "^3.2.0"
-
 pretty-format@^23.6.0:
   version "23.6.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-23.6.0.tgz#5eaac8eeb6b33b987b7fe6097ea6a8a146ab5760"
@@ -9753,11 +9759,11 @@ react-test-renderer@^16.5.2:
     react-is "^16.5.2"
     schedule "^0.5.0"
 
-react-testing-library@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-5.1.0.tgz#ae208d9e3b7faae233409d205e287b304ec8ffdc"
+react-testing-library@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-5.2.0.tgz#d7af9b0e6d1b653287d8c06cd0eab9e6d5d645ba"
   dependencies:
-    dom-testing-library "^3.1.0"
+    dom-testing-library "^3.8.1"
     wait-for-expect "^1.0.0"
 
 react-textarea-autosize@^5.2.1:
@@ -10447,9 +10453,9 @@ rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.3.0:
     estree-walker "^0.5.2"
     micromatch "^2.3.11"
 
-rollup@0.66.2:
-  version "0.66.2"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.66.2.tgz#77acdb9f4093f5f035ce75480577c40a81ea7999"
+rollup@0.66.4:
+  version "0.66.4"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.66.4.tgz#8067b9638af82873b7fd644af9c3d72108ca4bab"
   dependencies:
     "@types/estree" "0.0.39"
     "@types/node" "*"
@@ -11537,9 +11543,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.0.3.tgz#4853b3e275ecdaa27f78fda46dc273a7eb7fc1c8"
+typescript@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.1.tgz#3362ba9dd1e482ebb2355b02dfe8bcd19a2c7c96"
 
 ua-parser-js@^0.7.18:
   version "0.7.18"

@@ -9,6 +9,6 @@
   color: white;
   display: flex;
   justify-content: center;
-  font-size: 4em;
-  line-height: 2.25em;
+  align-items: center;
+  font-size: 1.5em;
 }

@@ -1,4 +1,4 @@
-import { withDefault } from '../targets/shared/helpers'
+import { withDefault } from '../shared/helpers'
 
 export default {
   setGlobalConfig(config) {

@@ -63,7 +63,7 @@
   },
   "homepage": "https://github.com/drcmda/react-spring#readme",
   "devDependencies": {
-    "@babel/core": "^7.1.0",
+    "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-do-expressions": "^7.0.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
@@ -75,7 +75,7 @@
     "@babel/preset-react": "^7.0.0",
     "@storybook/addon-knobs": "^3.4.11",
     "@storybook/react": "^3.4.11",
-    "@types/react": "^16.4.14",
+    "@types/react": "^16.4.16",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "babel-plugin-react-docgen": "^2.0.0",
@@ -83,7 +83,7 @@
     "docz": "^0.12.5",
     "docz-theme-default": "^0.12.5",
     "grommet": "^1.11.0",
-    "husky": "^1.0.0-rc.15",
+    "husky": "^1.1.1",
     "immer-wieder": "^1.1.5",
     "jest": "^23.6.0",
     "lint-staged": "^7.3.0",
@@ -94,17 +94,17 @@
     "react-dom": "^16.5.2",
     "react-helmet": "^5.2.0",
     "react-test-renderer": "^16.5.2",
-    "react-testing-library": "^5.1.0",
+    "react-testing-library": "^5.2.0",
     "react-transition-group": "^2.5.0",
     "react-twitter-widgets": "^1.7.1",
     "rimraf": "2.6.2",
-    "rollup": "0.66.2",
+    "rollup": "0.66.4",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.1.8",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-size-snapshot": "^0.7.0",
     "rollup-plugin-uglify": "^6.0.0",
-    "typescript": "^3.0.3"
+    "typescript": "^3.1.1"
   },
   "peerDependencies": {
     "prop-types": "15.x.x",
@@ -112,7 +112,7 @@
     "react-dom": ">= 16.4.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0"
+    "@babel/runtime": "^7.1.2"
   },
   "jest": {
     "testPathIgnorePatterns": [

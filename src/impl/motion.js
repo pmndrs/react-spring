@@ -1,4 +1,4 @@
-import { withDefault } from '../targets/shared/helpers'
+import { withDefault } from '../shared/helpers'
 
 const tensionFromOrigamiValue = oValue => (oValue - 30) * 3.62 + 194
 const frictionFromOrigamiValue = oValue => (oValue - 8) * 3 + 25

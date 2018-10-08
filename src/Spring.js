@@ -7,14 +7,14 @@ import AnimationController from './animated/AnimationController'
 import springImpl from './impl/motion'
 import timingImpl from './impl/timing'
 import * as Globals from './animated/Globals'
-import { config } from './targets/shared/constants'
+import { config } from './shared/constants'
 import {
   renderChildren,
   convertValues,
   callProp,
   shallowEqual,
   getValues,
-} from './targets/shared/helpers'
+} from './shared/helpers'
 
 const v = React.version.split('.')
 if (process.env.NODE_ENV !== 'production' && (v[0] < 16 || v[1] < 4)) {
@@ -29,6 +29,8 @@ export default class Spring extends React.Component {
     from: PropTypes.object,
     /** Animates to ... */
     to: PropTypes.object,
+    /** Props it can optionally apply after the animation is concluded ... */
+    after: PropTypes.object,
     /** Takes a function that receives interpolated styles */
     children: PropTypes.oneOfType([
       PropTypes.func,
@@ -84,6 +86,7 @@ export default class Spring extends React.Component {
   didUpdate = false
   didInject = false
   updating = false
+  finished = true
   animations = {}
   interpolators = {}
   mergedProps = {}
@@ -140,12 +143,10 @@ export default class Spring extends React.Component {
     } else if (propsChanged) this.updateAnimations(this.props)
 
     // Render out raw values or AnimatedValues depending on "native"
-    const values = this.getAnimatedValues()
+    let values = { ...this.getAnimatedValues(), ...this.afterInject }
+    if (this.finished) values = { ...values, ...this.props.after }
     return values && Object.keys(values).length
-      ? renderChildren(this.props, {
-          ...values,
-          ...this.afterInject,
-        })
+      ? renderChildren(this.props, values)
       : null
   }
 
@@ -282,6 +283,8 @@ export default class Spring extends React.Component {
   }
 
   start = () => {
+    this.finished = false
+    let wasMounted = this.mounted
     let { config, delay, impl } = this.props
     if (this.props.onStart) this.props.onStart()
 
@@ -301,23 +304,28 @@ export default class Spring extends React.Component {
           })
         )
       )
-      .start(this.finishAnimation)
+      .start(props => this.finishAnimation({ ...props, wasMounted }))
   }
 
   stop = () => {
     this.controller && this.controller.stop()
     this.controller = undefined
+    this.finished = true
   }
 
-  finishAnimation = ({ finished }) => {
+  finishAnimation = ({ finished, noChange, wasMounted }) => {
+    this.finished = true
     if (this.mounted && finished) {
-      if (this.props.onRest) this.props.onRest(this.mergedProps)
+      // Only call onRest if either we *were* mounted, or when there wer changes
+      if (this.props.onRest && (wasMounted || !noChange))
+        this.props.onRest(this.mergedProps)
       // Restore end-state
-      if (this.didInject) {
-        this.afterInject = convertValues(this.props)
-        this.didInject = false
+      if (this.didInject) this.afterInject = convertValues(this.props)
+
+      // If we have an inject or values to apply after the animation we ping here
+      if (this.mounted && (this.didInject || this.props.after))
         this.setState({ internal: true })
-      }
+      this.didInject = false
     }
   }
 

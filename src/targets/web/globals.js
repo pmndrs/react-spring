@@ -1,6 +1,6 @@
 import * as Globals from '../../animated/Globals'
-import colorNames from '../shared/colors'
-import createInterpolation from '../shared/interpolation'
+import colorNames from '../../shared/colors'
+import createInterpolation from '../../shared/interpolation'
 import fixAuto from './fix-auto'
 
 let isUnitlessNumber = {

@@ -23,16 +23,14 @@ export default class App extends React.Component {
           <Spring
             native
             force
-            config={{
-              ...config.stiff,
-              restSpeedThreshold: 1,
-              restDisplacementThreshold: 0.1,
-            }}
+            config={{ ...config.stiff, precision: 0.1 }}
             from={{ height: toggle ? 0 : 'auto' }}
             to={{ height: toggle ? 'auto' : 0 }}>
             {props => (
               <animated.div className="item" style={props}>
-                {text.map((t, i) => <p key={i}>{t}</p>)}
+                {text.map((t, i) => (
+                  <p key={i}>{t}</p>
+                ))}
               </animated.div>
             )}
           </Spring>

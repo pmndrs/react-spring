@@ -23,12 +23,13 @@ const App = () => (
             <Transition
               native
               config={{ tension: 1, friction: 10 }}
-              keys={location.pathname.split('/').filter(a => a)[0]}
+              items={location}
+              keys={location.pathname.split('/')[1]}
               from={{ transform: 'translateY(100px)', opacity: 0 }}
               enter={{ transform: 'translateY(0px)', opacity: 1 }}
               leave={{ transform: 'translateY(100px)', opacity: 0 }}>
-              {style => (
-                <Switch location={location}>
+              {(loc, i, state) => style => (
+                <Switch location={state === 'update' ? location : loc}>
                   <Route
                     path="/red"
                     render={props => Red({ ...props, style })}
@@ -68,12 +69,13 @@ const Red = ({ style }) => (
           <Transition
             native
             config={config.slow}
+            items={location}
             keys={location.pathname}
             from={{ transform: 'translateY(100px)', opacity: 0 }}
             enter={{ transform: 'translateY(0px)', opacity: 1 }}
             leave={{ transform: 'translateY(100px)', opacity: 0 }}>
-            {style => (
-              <Switch location={location}>
+            {(loc, i, state) => style => (
+              <Switch location={loc}>
                 <Route
                   exact
                   path="/red/ultra"
@@ -110,12 +112,13 @@ const Green = ({ style }) => (
           <Transition
             native
             config={config.slow}
+            items={location}
             keys={location.pathname}
             from={{ transform: 'translateY(100px)', opacity: 0 }}
             enter={{ transform: 'translateY(0px)', opacity: 1 }}
             leave={{ transform: 'translateY(100px)', opacity: 0 }}>
-            {style => (
-              <Switch location={location}>
+            {loc => style => (
+              <Switch location={loc}>
                 <Route
                   exact
                   path="/green/ultra"

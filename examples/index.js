@@ -24,9 +24,10 @@ const components = [
   'script',
   'auto',
   'router',
-  //'scroll',
-  //'dashoffset',
+  'scroll',
+  'dashoffset',
   'transitiongroup',
+  'chat',
 ].reduce(
   (acc, path) => ({
     ...acc,
@@ -41,7 +42,7 @@ const components = [
   {}
 )
 
-const DEBUG = true
+const DEBUG = false
 const DebugComponent = components['transitiongroup']
 
 ReactDOM.render(

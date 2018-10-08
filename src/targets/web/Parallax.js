@@ -4,7 +4,7 @@ import AnimatedValue from '../../animated/AnimatedValue'
 import createAnimatedComponent from '../../animated/createAnimatedComponent'
 import AnimationController from '../../animated/AnimationController'
 import springImpl from '../../impl/spring'
-import { config } from '../shared/constants'
+import { config } from '../../shared/constants'
 
 const AnimatedDiv = createAnimatedComponent('div')
 const { Provider, Consumer } = React.createContext(null)

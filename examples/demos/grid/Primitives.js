@@ -26,10 +26,11 @@ export class Slug extends React.PureComponent {
         native
         config={config.slow}
         {...rest}
-        keys={React.Children.map(children, (_, i) => i)}
+        items={result}
+        keys={result.map((_, i) => i)}
         from={from}
         to={to}
-        children={result}
+        children={child => child}
       />
     )
   }
@@ -64,12 +65,12 @@ export class Fade extends React.PureComponent {
       <Transition
         native
         config={config.slow}
-        keys={show.toString()}
+        items={show}
         {...rest}
         from={from}
         enter={enter}
         leave={leave}
-        children={show ? result : undefined}
+        children={show => show && result}
       />
     )
   }

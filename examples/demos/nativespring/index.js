@@ -48,7 +48,7 @@ export default class NativeSpringExample extends React.Component {
         from={{ fill: 'black' }}
         to={{
           fill: toggle ? '#247BA0' : '#70C1B3',
-          backgroundColor: toggle ? '#B2DBBF' : '#F3FFBD',
+          backgroundColor: toggle ? '#A29B7F' : '#F3FFBD',
           rotate: toggle ? '0deg' : '180deg',
           scale: toggle ? 0.3 : 0.7,
           shape: toggle ? TRIANGLE : RECTANGLE,

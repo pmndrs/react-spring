@@ -145,26 +145,24 @@ export default class Grid extends React.Component {
                       ...config,
                       delay: this.clicked && !open ? closeDelay : 0,
                     }}>
-                    {displayData.map(
-                      (c, i) => ({ opacity, x, y, width, height }) => (
-                        <animated.div
-                          style={{
-                            ...styles.cell,
-                            opacity,
-                            width,
-                            height,
-                            zIndex:
-                              lastOpen === c.key || open === c.key ? 1000 : i,
-                            transform: interpolate(
-                              [x, y],
-                              (x, y) => `translate3d(${x}px,${y}px, 0)`
-                            ),
-                          }}
-                          children={children(c.object, open === c.key, () =>
-                            this.toggle(c.key)
-                          )}
-                        />
-                      )
+                    {(c, i) => ({ opacity, x, y, width, height }) => (
+                      <animated.div
+                        style={{
+                          ...styles.cell,
+                          opacity,
+                          width,
+                          height,
+                          zIndex:
+                            lastOpen === c.key || open === c.key ? 1000 : i,
+                          transform: interpolate(
+                            [x, y],
+                            (x, y) => `translate3d(${x}px,${y}px, 0)`
+                          ),
+                        }}
+                        children={children(c.object, open === c.key, () =>
+                          this.toggle(c.key)
+                        )}
+                      />
                     )}
                   </Transition>
                 </div>

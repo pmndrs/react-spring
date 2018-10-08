@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { renderChildren, convertValues, getValues } from '../shared/helpers'
+import { renderChildren, convertValues, getValues } from '../../shared/helpers'
 
 const check = value => value === 'auto'
 const overwrite = (width, height) => (acc, [name, value]) => ({
