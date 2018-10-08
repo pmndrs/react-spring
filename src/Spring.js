@@ -4,7 +4,7 @@ import AnimatedValue from './animated/AnimatedValue'
 import AnimatedArray from './animated/AnimatedArray'
 import AnimatedProps from './animated/AnimatedProps'
 import AnimationController from './animated/AnimationController'
-import springImpl from './impl/motion'
+import springImpl from './impl/see'
 import timingImpl from './impl/timing'
 import * as Globals from './animated/Globals'
 import { config } from './shared/constants'
@@ -37,12 +37,8 @@ export default class Spring extends React.Component {
       PropTypes.arrayOf(PropTypes.func),
       PropTypes.node,
     ]),
-    /** Same as children, but takes precedence if present */
-    render: PropTypes.func,
     /** Prevents animation if true, or for individual keys: fn(key => true/false) */
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
-    /** Delay in ms before the animation starts (config.delay takes precedence if present) */
-    delay: PropTypes.number,
     /** When true the spring starts from scratch (from -> to) */
     reset: PropTypes.bool,
     /** When true "from" and "to" are switched, this will only make sense in combination with the "reset" flag */
@@ -285,7 +281,7 @@ export default class Spring extends React.Component {
   start = () => {
     this.finished = false
     let wasMounted = this.mounted
-    let { config, delay, impl } = this.props
+    let { config, impl } = this.props
     if (this.props.onStart) this.props.onStart()
 
     // If impl isn't set, decide between spring-physics or duration-based
@@ -299,7 +295,6 @@ export default class Spring extends React.Component {
           ([name, { animation: value, toValue: to }]) => ({
             value,
             to,
-            delay,
             ...callProp(config, name),
           })
         )

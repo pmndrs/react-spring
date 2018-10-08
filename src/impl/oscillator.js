@@ -1,3 +1,14 @@
+/**
+ * Harmonic Oscillator
+ *
+ * Copyright (c) 2015-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @author https://github.com/skevy (Adam Miskiewicz)
+ */
+
 import { withDefault } from '../shared/helpers'
 
 const stiffnessFromOrigamiValue = oValue => (oValue - 30) * 3.62 + 194

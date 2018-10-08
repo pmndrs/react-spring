@@ -1,3 +1,7 @@
+/**
+ * Duration based easing
+ */
+
 import { withDefault } from '../shared/helpers'
 
 export default {

@@ -1,3 +1,7 @@
+/**
+ * Semi Explicit Euler
+ */
+
 import { withDefault } from '../shared/helpers'
 
 const tensionFromOrigamiValue = oValue => (oValue - 30) * 3.62 + 194

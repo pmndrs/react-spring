@@ -1,8 +1,8 @@
 import Animated from './Animated'
 import AnimatedArray from './AnimatedArray'
 import * as Globals from './Globals'
-import springImpl from '../impl/spring'
-import { withDefault } from '../shared/helpers'
+import springImpl from '../impl/see'
+import { withDefault, toArray } from '../shared/helpers'
 
 export default class AnimationController {
   constructor(impl = springImpl) {
@@ -13,8 +13,7 @@ export default class AnimationController {
     // Stop all ongoing animations
     this.stop()
     // Enforce arrays
-    if (!Array.isArray(configs)) configs = [configs]
-
+    config = toArray(config)
     // Build configuration
     this.configs = configs.map(config => {
       let to = config.to
