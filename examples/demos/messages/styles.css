@@ -1,0 +1,67 @@
+.main {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+    helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  background: #272727;
+}
+
+.main > button {
+  border: none;
+  border-radius: 7px;
+  padding: 10px 15px;
+  margin: 20px;
+  background: crimson;
+  color: white;
+  font-size: 14px;
+}
+
+.container {
+  width: 400px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.msg {
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  width: 400px;
+}
+
+.content {
+  color: #bfbfbf;
+  background: black;
+  margin: 10px;
+  padding: 25px;
+  font-size: 1em;
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  grid-gap: 10px;
+}
+
+.content > p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.content > button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: #272727;
+  color: #9f9f9f;
+  font-size: 14px;
+}
+
+.life {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: auto;
+  background: crimson;
+  height: 4px;
+}

@@ -15,7 +15,7 @@ class KeyframesImpl extends React.PureComponent {
   static defaultProps = { state: DEFAULT }
 
   guid = 0
-  state = { props: {}, oldProps: {}, resolve: () => null, last: true }
+  state = { props: {}, oldProps: {}, resolve: () => null, last: true, index: 0 }
 
   componentDidMount() {
     this.mounted = true
@@ -26,7 +26,7 @@ class KeyframesImpl extends React.PureComponent {
     this.mounted = false
   }
 
-  next = (props, last = true) => {
+  next = (props, last = true, index = 0) => {
     this.running = true
     return new Promise(resolve => {
       this.mounted &&
@@ -36,6 +36,7 @@ class KeyframesImpl extends React.PureComponent {
             oldProps: { ...this.state.props },
             resolve,
             last,
+            index,
           }),
           () => (this.running = false)
         )
@@ -56,16 +57,22 @@ class KeyframesImpl extends React.PureComponent {
           if (Array.isArray(slots)) {
             let q = Promise.resolve()
             for (let i = 0; i < slots.length; i++) {
-              let s = slots[i]
+              let index = i
+              let slot = slots[index]
+              let last = index === slots.length - 1
               q = q.then(
-                () =>
-                  localId === this.guid &&
-                  this.next(f(s), i === slots.length - 1)
+                () => localId === this.guid && this.next(f(slot), last, index)
               )
             }
           } else if (typeof slots === 'function') {
+            let index = 0
             slots(
-              props => localId === this.guid && this.next(f(props)),
+              // next
+              (props, last = false) =>
+                localId === this.guid && this.next(f(props), last, index++),
+              // cancel
+              () => this.instance && this.instance.stop(),
+              // ownprops
               this.props
             )
           } else {
@@ -77,14 +84,15 @@ class KeyframesImpl extends React.PureComponent {
   }
 
   render() {
-    const { props, oldProps, resolve, last } = this.state
+    const { props, oldProps, resolve, last, index } = this.state
 
     if (!props || Object.keys(props).length === 0) return null
 
-    const {
+    let {
       state,
       filter,
       states,
+      config,
       primitive: Component,
       from: ownFrom,
       onRest,
@@ -97,9 +105,13 @@ class KeyframesImpl extends React.PureComponent {
         ? props.from
         : { ...oldProps.from, ...current, ...props.from }
 
+    // Arrayed configs need an index to process
+    if (Array.isArray(config)) config = config[index]
+
     return (
       <Component
         ref={ref => (this.instance = ref)}
+        config={config}
         {...rest}
         {...props}
         from={{ ...from, ...ownFrom }}
@@ -133,7 +145,7 @@ Keyframes.interpolateTo = props => {
   const forward = getForwardProps(props)
   const rest = Object.keys(props).reduce(
     (acc, key) =>
-      typeof forward[key] !== 'undefined' ? acc : { ...acc, [key]: props[key] },
+      forward[key] !== void 0 ? acc : { ...acc, [key]: props[key] },
     {}
   )
   return { to: forward, ...rest }

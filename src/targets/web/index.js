@@ -9,7 +9,6 @@ import Spring from '../../Spring'
 import Transition from '../../Transition'
 import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
-import Parallax, { ParallaxLayer } from './Parallax'
 
 const domElements = [
   'a',
@@ -159,8 +158,6 @@ export {
   Keyframes,
   Transition,
   Trail,
-  Parallax,
-  ParallaxLayer,
   AnimationController,
   AnimatedValue,
   config,

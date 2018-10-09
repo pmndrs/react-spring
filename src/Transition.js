@@ -120,7 +120,7 @@ export default class Transition extends React.PureComponent {
         trail: (delay = delay + trail),
         config: callProp(config, item, state),
         from: callProp(
-          first ? (typeof initial !== 'undefined' ? initial : from) : from,
+          first ? (initial !== void 0 ? initial : from) : from,
           item
         ),
         to: callProp(enter, item),
@@ -135,7 +135,8 @@ export default class Transition extends React.PureComponent {
         ...current[key],
         state,
         destroyed: true,
-        lastSibling: _keys[Math.max(0, keyIndex - 1)],
+        left: _keys[Math.max(0, keyIndex - 1)],
+        right: _keys[Math.min(_keys.length, keyIndex + 1)],
         trail: (delay = delay + trail),
         config: callProp(config, item, state),
         to: callProp(leave, item),
@@ -156,16 +157,26 @@ export default class Transition extends React.PureComponent {
       }
     })
 
-    let transitions = keys.map(key => current[key])
-    deleted.forEach(({ lastSibling: s, ...t }) => {
-      // Find last known sibling, left aligned
-      let i = Math.max(0, transitions.findIndex(t => t.originalKey === s) + 1)
-      transitions = [...transitions.slice(0, i), t, ...transitions.slice(i)]
+    // This tries to restore order for deleted items by finding their last known siblings
+    let out = keys.map(key => current[key])
+    deleted.forEach(({ left, right, ...transition }) => {
+      let pos
+      // Was it the element on the left, if yes, move there ...
+      if ((pos = out.findIndex(t => t.originalKey === left)) !== -1) pos += 1
+      // Or how about the element on the right ...
+      if (pos === -1) pos = out.findIndex(t => t.originalKey === right)
+      // Maybe we'll find it in the list of deleted items
+      if (pos === -1) pos = deleted.findIndex(t => t.originalKey === left)
+      // Checking right side as well
+      if (pos === -1) pos = deleted.findIndex(t => t.originalKey === right)
+      // And if nothing else helps, move it to the start ¯\_(ツ)_/¯
+      pos = Math.max(0, pos)
+      out = [...out.slice(0, pos), transition, ...out.slice(pos)]
     })
 
     return {
       first: first && added.length === 0,
-      transitions,
+      transitions: out,
       current,
       deleted,
       prevProps: props,
@@ -176,7 +187,7 @@ export default class Transition extends React.PureComponent {
     return undefined
   }
 
-  destroyItem = (item, key) => values => {
+  destroyItem = (item, key, state) => values => {
     const { onRest, onDestroyed } = this.props
     if (this.mounted) {
       onDestroyed && onDestroyed(item)
@@ -184,7 +195,7 @@ export default class Transition extends React.PureComponent {
         ({ deleted }) => ({ deleted: deleted.filter(t => t.key !== key) }),
         () => delete this.springs[key]
       )
-      onRest && onRest(item, values)
+      onRest && onRest(item, state, values)
     }
   }
 
@@ -200,6 +211,7 @@ export default class Transition extends React.PureComponent {
       items,
       onFrame,
       onRest,
+      onStart,
       trail,
       config,
       children,
@@ -216,15 +228,17 @@ export default class Transition extends React.PureComponent {
           key={key}
           onRest={
             destroyed
-              ? this.destroyItem(item, key)
-              : onRest && (values => onRest(item, values))
+              ? this.destroyItem(item, key, state)
+              : onRest && (values => onRest(item, state, values))
           }
-          onFrame={onFrame && (values => onFrame(item, values))}
-          config={{ delay: trail, ...config }}
+          onStart={onStart && (() => onStart(item, state))}
+          onFrame={onFrame && (values => onFrame(item, state, values))}
+          delay={trail}
+          config={config}
           {...extra}
           from={destroyed ? this.springs[key] || from : from}
           children={props => {
-            const child = children(item, i, state)
+            const child = children(item, state, i)
             return child ? child(props) : null
           }}
         />

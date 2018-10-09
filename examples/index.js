@@ -4,8 +4,8 @@ import Loadable from 'react-loadable'
 import './styles.css'
 
 const components = [
-  'parallaxvert',
-  'parallax',
+  //'parallaxvert',
+  //'parallax',
   'transitions',
   'nativespring',
   'areas',
@@ -28,6 +28,7 @@ const components = [
   'dashoffset',
   'transitiongroup',
   'chat',
+  'messages',
 ].reduce(
   (acc, path) => ({
     ...acc,
@@ -42,8 +43,8 @@ const components = [
   {}
 )
 
-const DEBUG = false
-const DebugComponent = components['transitiongroup']
+const DEBUG = true
+const DebugComponent = components['messages']
 
 ReactDOM.render(
   DEBUG ? (

@@ -9,11 +9,12 @@ export default class AnimationController {
     this.impl = impl
   }
 
-  set(configs) {
+  set(configs, impl) {
+    if (impl) this.impl = impl
     // Stop all ongoing animations
     this.stop()
     // Enforce arrays
-    config = toArray(config)
+    configs = toArray(configs)
     // Build configuration
     this.configs = configs.map(config => {
       let to = config.to
@@ -124,11 +125,11 @@ export default class AnimationController {
     this._animationFrame = Globals.requestFrame(this.update)
   }
 
-  stop() {
+  stop(finished = false) {
     if (!this.configs) return
     Globals.cancelFrame(this._animationFrame)
     this.__active = false
-    this.__debouncedOnEnd({ finished: false })
+    this.__debouncedOnEnd({ finished })
     return this
   }
 

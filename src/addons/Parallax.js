@@ -1,12 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import AnimatedValue from '../../animated/AnimatedValue'
-import createAnimatedComponent from '../../animated/createAnimatedComponent'
-import AnimationController from '../../animated/AnimationController'
+import AnimatedValue from '../animated/AnimatedValue'
+import createAnimatedComponent from '../animated/createAnimatedComponent'
+import AnimationController from '../animated/AnimationController'
 import springImpl from '../../impl/spring'
-import { config } from '../../shared/constants'
+import { config } from '../shared/constants'
 
-const AnimatedDiv = createAnimatedComponent('div')
+const El = Globals.defaultElement
+const AnimatedDiv = animated(El)
 const { Provider, Consumer } = React.createContext(null)
 
 function getScrollType(horizontal) {
@@ -249,7 +250,7 @@ export default class Parallax extends React.PureComponent {
     } = this.props
     const overflow = scrolling ? 'scroll' : 'hidden'
     return (
-      <div
+      <El
         ref={node => (this.container = node)}
         onScroll={this.onScroll}
         onWheel={scrolling ? this.scrollStop : null}
@@ -269,7 +270,7 @@ export default class Parallax extends React.PureComponent {
         }}
         className={className}>
         {this.state.ready && (
-          <div
+          <El
             ref={node => (this.content = node)}
             style={{
               position: 'absolute',
@@ -282,9 +283,9 @@ export default class Parallax extends React.PureComponent {
               ...innerStyle,
             }}>
             <Provider value={this}>{children}</Provider>
-          </div>
+          </El>
         )}
-      </div>
+      </El>
     )
   }
 }

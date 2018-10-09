@@ -37,6 +37,8 @@ export default class Spring extends React.Component {
       PropTypes.arrayOf(PropTypes.func),
       PropTypes.node,
     ]),
+    /** Delay in ms before the animation starts (config.delay takes precedence if present) */
+    delay: PropTypes.number,
     /** Prevents animation if true, or for individual keys: fn(key => true/false) */
     immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     /** When true the spring starts from scratch (from -> to) */
@@ -79,6 +81,7 @@ export default class Spring extends React.Component {
     internal: false,
   }
 
+  controller = new AnimationController()
   didUpdate = false
   didInject = false
   updating = false
@@ -281,31 +284,26 @@ export default class Spring extends React.Component {
   start = () => {
     this.finished = false
     let wasMounted = this.mounted
-    let { config, impl } = this.props
+    let { config, impl, delay } = this.props
     if (this.props.onStart) this.props.onStart()
 
-    // If impl isn't set, decide between spring-physics or duration-based
-    if (!impl)
-      impl = typeof config.duration === 'undefined' ? springImpl : timingImpl
-
-    if (!this.controller) this.controller = new AnimationController(impl)
     this.controller
       .set(
         Object.entries(this.animations).map(
           ([name, { animation: value, toValue: to }]) => ({
             value,
             to,
+            delay,
             ...callProp(config, name),
           })
-        )
+        ),
+        impl ? impl : config.duration === void 0 ? springImpl : timingImpl
       )
       .start(props => this.finishAnimation({ ...props, wasMounted }))
   }
 
   stop = () => {
-    this.controller && this.controller.stop()
-    this.controller = undefined
-    this.finished = true
+    this.controller.stop(true)
   }
 
   finishAnimation = ({ finished, noChange, wasMounted }) => {
