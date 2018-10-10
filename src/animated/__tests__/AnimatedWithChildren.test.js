@@ -1,5 +1,5 @@
-import Animated from './../../src/animated/Animated'
-import AnimatedWithChildren from './../../src/animated/AnimatedWithChildren'
+import Animated from './../Animated'
+import AnimatedWithChildren from './../AnimatedWithChildren'
 
 let TestedClass = new AnimatedWithChildren()
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import Transition from '../src/Transition'
+import Transition from '../Transition'
 
 const fakeChild = item => props => {
   ;<div>fake</div>

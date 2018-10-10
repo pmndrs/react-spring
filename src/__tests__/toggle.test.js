@@ -1,9 +1,9 @@
 import React from 'react'
 import { render, cleanup } from 'react-testing-library'
 
-import { Globals } from '../src/targets/web'
+import { Globals } from '../targets/web'
 import createMockRaf from 'mock-raf'
-import { Toggler } from '../stories/tests/toggle'
+import { Toggler } from '../../stories/tests/toggle'
 
 test('toggle', () => {
   const mockRaf = createMockRaf()
