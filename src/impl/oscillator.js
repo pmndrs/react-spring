@@ -26,11 +26,7 @@ export default {
     )
     return {
       overshootClamping: withDefault(config.overshootClamping, false),
-      restDisplacementThreshold: withDefault(
-        config.restDisplacementThreshold,
-        0.0001
-      ),
-      restSpeedThreshold: withDefault(config.restSpeedThreshold, 0.0001),
+      precision: withDefault(config.precision, 0.001),
       initialVelocity: withDefault(config.velocity, 0),
       stiffness: springConfig.stiffness,
       damping: springConfig.damping,
@@ -96,11 +92,10 @@ export default {
     if (config.overshootClamping && config.stiffness !== 0)
       isOvershooting = from < to ? position > to : position < to
 
-    const isVelocity = Math.abs(velocity) <= config.restSpeedThreshold
+    const isVelocity = Math.abs(velocity) <= config.precision
     let isDisplacement = true
     if (config.stiffness !== 0)
-      isDisplacement =
-        Math.abs(to - position) <= config.restDisplacementThreshold
+      isDisplacement = Math.abs(to - position) <= config.precision
 
     return [position, isOvershooting || (isVelocity && isDisplacement)]
   },

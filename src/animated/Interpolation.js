@@ -12,7 +12,7 @@ export default class Interpolation {
     )
       return Globals.interpolation(config)
     var outputRange = config.output
-    var inputRange = config.range
+    var inputRange = config.range || [0, 1]
     var easing = config.easing || linear
     var extrapolateLeft = 'extend'
     var map = config.map

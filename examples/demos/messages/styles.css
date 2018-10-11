@@ -1,22 +1,44 @@
-.main {
-  height: 100%;
+.msg-main {
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
     helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  height: 100%;
   background: #272727;
 }
 
-.main > button {
-  border: none;
-  border-radius: 7px;
-  padding: 10px 15px;
-  margin: 20px;
-  background: crimson;
-  color: white;
-  font-size: 14px;
+.msg-main button {
+  cursor: pointer;
 }
 
-.container {
-  width: 400px;
+.msg-main button:hover {
+  background: indianred !important;
+}
+
+.msg-main button:focus {
+  outline: 0;
+}
+
+.msg-main > button {
+  border: none;
+  border-radius: 5px;
+  height: 30px;
+  padding: 5px 10px;
+  margin: 10px;
+  background: #373737;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.msg-main > button > svg {
+  margin-right: 5px;
+  stroke: rgba(0, 0, 0, 0.5) !important;
+}
+
+.msg-container {
+  width: 220px;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -28,40 +50,51 @@
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
-  width: 400px;
+  width: 220px;
 }
 
-.content {
-  color: #bfbfbf;
+.msg-content {
+  color: #afafaf;
   background: black;
-  margin: 10px;
-  padding: 25px;
-  font-size: 1em;
+  margin: 5px;
+  padding: 10px;
+  font-size: 10px;
   display: grid;
-  grid-template-columns: 30px 1fr auto;
+  grid-template-columns: auto 1fr auto;
   grid-gap: 10px;
 }
 
-.content > p {
+.msg-content > p {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.content > button {
-  width: 30px;
-  height: 30px;
-  border: none;
-  border-radius: 50%;
-  background: #272727;
-  color: #9f9f9f;
-  font-size: 14px;
+.msg-content > span {
+  font-size: 1.3em;
 }
 
-.life {
+.msg-content > button {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: #373737;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.msg-content > button > svg {
+  transform: scale(2);
+}
+
+.msg-life {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  bottom: 5px;
+  left: 5px;
   width: auto;
-  background: crimson;
+  background: indianred;
   height: 4px;
 }

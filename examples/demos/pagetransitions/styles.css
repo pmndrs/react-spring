@@ -1,16 +1,14 @@
-.reveals-main {
+.main > div {
+  cursor: pointer;
+  position: absolute;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   display: flex;
-  align-items: center;
   justify-content: center;
-  cursor: pointer;
-}
-.reveals-main > div {
+  align-items: center;
+  color: white;
   font-family: Kanit, sans-serif;
   font-weight: 800;
-  font-size: 4em;
+  font-size: 10em;
   will-change: transform, opacity;
-  overflow: hidden;
 }

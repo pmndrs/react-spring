@@ -15,7 +15,7 @@ let generateMsg = () => ({
 
 export default class MessageHub extends React.PureComponent {
   state = { items: [] }
-  cancel = []
+  cancelMap = new WeakMap()
   add = () =>
     this.setState(state => ({ items: [...state.items, generateMsg()] }))
   remove = item =>
@@ -24,18 +24,18 @@ export default class MessageHub extends React.PureComponent {
     }))
   config = (item, state) =>
     state === 'leave' ? [{ duration: 4000 }, spring, spring] : spring
+  cancel = item => this.cancelMap.has(item) && this.cancelMap.get(item)()
   leave = item => async (next, cancel) => {
-    this.cancel[item.key] = cancel
+    this.cancelMap.set(item, cancel)
     await next({ to: { life: 0 } })
     await next({ to: { opacity: 0 } })
     await next({ to: { height: 0 } }, true) // Inform Keyframes that is is the last frame
-    delete this.cancel[item.key]
   }
   render() {
     return (
-      <div className="main">
-        <button onClick={this.add} children="add message" />
-        <div className="container">
+      <div className="msg-main">
+        <button onClick={this.add}>Add message</button>
+        <div className="msg-container">
           <Transition
             native
             items={this.state.items}
@@ -47,19 +47,16 @@ export default class MessageHub extends React.PureComponent {
             config={this.config}>
             {item => ({ life, ...props }) => (
               <animated.div style={props} className="msg">
-                <div className="content">
+                <div className="msg-content">
                   <animated.div
                     style={{
-                      right: life.interpolate(l => `calc(${l * 100}% + 10px)`),
+                      right: life.interpolate(l => `calc(${l * 100}% + 5px)`),
                     }}
-                    className="life"
+                    className="msg-life"
                   />
                   <span>{item.icn}</span>
                   <p>{item.msg}</p>
-                  <button
-                    children="x"
-                    onClick={() => this.cancel[item.key]()}
-                  />
+                  <button onClick={() => this.cancel(item)} />
                 </div>
               </animated.div>
             )}

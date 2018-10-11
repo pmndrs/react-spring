@@ -102,17 +102,18 @@ import { Spring } from 'react-spring'
 
 <img src="assets/transitions.gif" width="285" />
 
-`Transition` watches elements as they mount and unmount, it helps you to animate these changes.
+`Transition` watches elements as they mount and unmount and helps you to animate these changes. You feed it an array of `items` and a key accessor (which defaults to `item => item`).
 
 ```jsx
 import { Transition } from 'react-spring'
 
 <Transition
-  keys={items.map(item => item.key)}
+  items={items}
+  keys={item => item.key}
   from={{ opacity: 0, height: 0 }}
   enter={{ opacity: 1, height: 20 }}
   leave={{ opacity: 0, height: 0, pointerEvents: 'none' }}>
-  {items.map(item => styles => <li style={styles}>{item.text}</li>)}
+  {item => styles => <li style={styles}>{item.text}</li>}
 </Transition>
 ```
 
@@ -123,12 +124,15 @@ import { Transition } from 'react-spring'
 Given a single child instead of a list you can toggle between two components.
 
 ```jsx
-import { Transition } from 'react-spring'
-
-<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-  {toggle
-    ? styles => <div style={styles}>Component A</div>
-    : styles => <div style={styles}>Component B</div>
+<Transition
+  items={toggle}
+  from={{ opacity: 0 }}
+  enter={{ opacity: 1 }}
+  leave={{ opacity: 0 }}>
+  {toggle =>
+    toggle
+      ? props => <div style={props}>Component A</div>
+      : props => <div style={props}>Component B</div>
   }
 </Transition>
 ```
@@ -136,10 +140,12 @@ import { Transition } from 'react-spring'
 If you need to toggle a single child, that is also possible.
 
 ```jsx
-import { Transition } from 'react-spring'
-
-<Transition from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
-  {visible && (styles => <div style={styles}>Single Component</div>)}
+<Transition
+  items={show}
+  from={{ opacity: 0 }}
+  enter={{ opacity: 1 }}
+  leave={{ opacity: 0 }}>
+  {show => show && (props => <div style={props}>Single Component</div>)}
 </Transition>
 ```
 
@@ -152,8 +158,8 @@ import { Transition } from 'react-spring'
 ```jsx
 import { Trail } from 'react-spring'
 
-<Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
-  {items.map(item => styles => <div style={styles}>{item.text}</div>)}
+<Trail items={items} keys={item => item.key} from={{ opacity: 0 }} to={{ opacity: 1 }}>
+  {item => styles => <div style={styles}>{item.text}</div>}
 </Trail>
 ```
 

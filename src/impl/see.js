@@ -19,7 +19,7 @@ export default {
     )
     return {
       overshootClamping: withDefault(config.overshootClamping, false),
-      precision: withDefault(config.precision, 0.01),
+      precision: withDefault(config.precision, 0.001),
       tension: springConfig.tension,
       friction: springConfig.friction,
       mass: withDefault(config.mass, 1),

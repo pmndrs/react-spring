@@ -4,7 +4,7 @@ import { Spring, animated, config } from '../src/targets/web'
 import Meter from 'grommet/components/Meter'
 
 const AnimatedMeter = animated(Meter)
-const { Provider, Consumer } = createContext()
+const { Provider, Consumer } = React.createContext()
 
 class RewindSpringProvider extends React.Component {
   constructor() {
@@ -13,6 +13,7 @@ class RewindSpringProvider extends React.Component {
   }
   render() {
     const { flip } = this.state
+    const { children, ...props } = this.props
     return (
       <Spring
         native
@@ -20,32 +21,37 @@ class RewindSpringProvider extends React.Component {
         reverse={flip}
         from={{ progress: '0%', x: 0 }}
         to={{ progress: '100%', x: 1 }}
-        config={{ delay: 750, ...config.slow }}
+        delay={750}
+        config={config.slow}
+        {...props}
         onRest={() => this.setState(state => ({ flip: !state.flip }))}>
-        {props => <Provider key={new Date()} value={props} {...this.props} />}
+        {props => <Provider value={props} children={children} />}
       </Spring>
     )
   }
 }
 
 const RewindSpring = ({ children }) => (
-  <Consumer>
-    {({ progress, x }) => (
-      <>
-        {children(x)}
-        <animated.div
-          style={{
-            position: 'absolute',
-            left: 0,
-            bottom: 0,
-            height: 10,
-            width: progress,
-            background: '#ffcf00',
-          }}
-        />
-      </>
-    )}
-  </Consumer>
+  <div style={{ overflow: 'hidden' }}>
+    <Consumer>
+      {({ progress, x }) => (
+        <React.Fragment>
+          {children(x)}
+          <animated.div
+            style={{
+              position: 'absolute',
+              zIndex: 1000,
+              left: 0,
+              bottom: 0,
+              height: 10,
+              width: progress,
+              background: '#ffcf00',
+            }}
+          />
+        </React.Fragment>
+      )}
+    </Consumer>
+  </div>
 )
 
 export { AnimatedMeter, Provider, Consumer, RewindSpringProvider, RewindSpring }

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Spring from './Spring'
 import Trail from './Trail'
-import { getForwardProps, shallowEqual } from './shared/helpers'
+import { getForwardProps, shallowEqual, handleRef } from './shared/helpers'
 import { config as springConfig } from './shared/constants'
 
 const DEFAULT = '__default'
@@ -15,7 +15,13 @@ class KeyframesImpl extends React.PureComponent {
   static defaultProps = { state: DEFAULT }
 
   guid = 0
-  state = { props: {}, oldProps: {}, resolve: () => null, last: true, index: 0 }
+  state = {
+    props: {},
+    oldProps: {},
+    resolve: () => null,
+    last: true,
+    index: 0,
+  }
 
   componentDidMount() {
     this.mounted = true
@@ -96,6 +102,7 @@ class KeyframesImpl extends React.PureComponent {
       primitive: Component,
       from: ownFrom,
       onRest,
+      forwardRef,
       ...rest
     } = this.props
 
@@ -110,7 +117,7 @@ class KeyframesImpl extends React.PureComponent {
 
     return (
       <Component
-        ref={ref => (this.instance = ref)}
+        ref={ref => (this.instance = handleRef(ref, forwardRef))}
         config={config}
         {...rest}
         {...props}

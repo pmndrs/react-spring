@@ -1,5 +1,6 @@
 import React from 'react'
 import AnimatedProps from './AnimatedProps'
+import { handleRef } from '../shared/helpers'
 import * as Globals from './Globals'
 
 export default function createAnimatedComponent(Component) {
@@ -70,16 +71,7 @@ export default function createAnimatedComponent(Component) {
       return (
         <Component
           {...animatedProps}
-          ref={node => {
-            this.node = node
-            const forwardRef = this.props.forwardRef
-            if (forwardRef) {
-              // If it's a function, assume it's a ref callback
-              if (typeof forwardRef === 'function') forwardRef(node)
-              // If it's an object and has a 'current' property, assume it's a ref object
-              else if (typeof forwardRef === 'object') forwardRef.current = node
-            }
-          }}
+          ref={node => (this.node = handleRef(node, this.props.forwardRef))}
         />
       )
     }

@@ -28,7 +28,7 @@ const App = () => (
               from={{ transform: 'translateY(100px)', opacity: 0 }}
               enter={{ transform: 'translateY(0px)', opacity: 1 }}
               leave={{ transform: 'translateY(100px)', opacity: 0 }}>
-              {(loc, i, state) => style => (
+              {(loc, state) => style => (
                 <Switch location={state === 'update' ? location : loc}>
                   <Route
                     path="/red"
@@ -74,7 +74,7 @@ const Red = ({ style }) => (
             from={{ transform: 'translateY(100px)', opacity: 0 }}
             enter={{ transform: 'translateY(0px)', opacity: 1 }}
             leave={{ transform: 'translateY(100px)', opacity: 0 }}>
-            {(loc, i, state) => style => (
+            {(loc, state) => style => (
               <Switch location={loc}>
                 <Route
                   exact

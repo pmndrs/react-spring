@@ -26,11 +26,7 @@ export default {
     )
     return {
       overshootClamping: withDefault(config.overshootClamping, false),
-      restDisplacementThreshold: withDefault(
-        config.restDisplacementThreshold,
-        0.0001
-      ),
-      restSpeedThreshold: withDefault(config.restSpeedThreshold, 0.0001),
+      precision: withDefault(config.precision, 0.001),
       initialVelocity: config.velocity,
       tension: springConfig.tension,
       friction: springConfig.friction,
@@ -102,11 +98,9 @@ export default {
           : position < to
         : false
 
-    let isVelocity = Math.abs(velocity) <= config.restSpeedThreshold
+    let isVelocity = Math.abs(velocity) <= config.precision
     let isDisplacement =
-      config.tension !== 0
-        ? Math.abs(to - position) <= config.restDisplacementThreshold
-        : true
+      config.tension !== 0 ? Math.abs(to - position) <= config.precision : true
 
     let endOfAnimation = isOvershooting || (isVelocity && isDisplacement)
 

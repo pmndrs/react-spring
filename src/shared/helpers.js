@@ -67,3 +67,14 @@ export function convertValues(props) {
     ? allProps.reduce(convertToAnimatedValue, {})
     : { ...from, ...to }
 }
+
+export function handleRef(ref, forward) {
+  if (forward) {
+    // If it's a function, assume it's a ref callback
+    if (typeof forward === 'function') forward(ref)
+    else if (typeof forward === 'object')
+      // If it's an object and has a 'current' property, assume it's a ref object
+      forward.current = ref
+  }
+  return ref
+}

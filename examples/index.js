@@ -10,6 +10,7 @@ const components = [
   'nativespring',
   'areas',
   'trails',
+  'pagetransitions',
   'reveals',
   'gestures',
   'timing',
@@ -44,7 +45,7 @@ const components = [
 )
 
 const DEBUG = true
-const DebugComponent = components['messages']
+const DebugComponent = components['reveals']
 
 ReactDOM.render(
   DEBUG ? (
