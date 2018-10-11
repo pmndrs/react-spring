@@ -124,11 +124,7 @@ import { Transition } from 'react-spring'
 Given a single child instead of a list you can toggle between two components.
 
 ```jsx
-<Transition
-  items={toggle}
-  from={{ opacity: 0 }}
-  enter={{ opacity: 1 }}
-  leave={{ opacity: 0 }}>
+<Transition items={toggle} from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
   {toggle =>
     toggle
       ? props => <div style={props}>Component A</div>
@@ -140,11 +136,7 @@ Given a single child instead of a list you can toggle between two components.
 If you need to toggle a single child, that is also possible.
 
 ```jsx
-<Transition
-  items={show}
-  from={{ opacity: 0 }}
-  enter={{ opacity: 1 }}
-  leave={{ opacity: 0 }}>
+<Transition items={show} from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
   {show => show && (props => <div style={props}>Single Component</div>)}
 </Transition>
 ```

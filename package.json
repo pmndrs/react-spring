@@ -40,7 +40,7 @@
     "printWidth": 80
   },
   "lint-staged": {
-    "*.{js,md}": [
+    "*.{js}": [
       "prettier --write",
       "git add"
     ]
