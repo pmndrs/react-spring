@@ -9221,10 +9221,6 @@ prettier@^1.14.3:
   version "1.14.3"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.3.tgz#90238dd4c0684b7edce5f83b0fb7328e48bd0895"
 
-prettier@^1.4.0-beta:
-  version "1.4.0-beta"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.4.0-beta.tgz#24b8d15b792ae3aa56526023c6844459c0952c13"
-
 pretty-error@^2.0.2:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/pretty-error/-/pretty-error-2.1.1.tgz#5f4f87c8f91e5ae3f3ba87ab4cf5e03b1a17f1a3"
