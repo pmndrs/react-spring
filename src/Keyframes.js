@@ -16,21 +16,28 @@ class Keyframes extends React.PureComponent {
   static defaultProps = { state: DEFAULT }
 
   guid = 0
-  state = { props: {}, oldProps: {}, resolve: () => null }
+  state = { props: {}, oldProps: {}, resolve: () => null, mounted: false }
 
   componentDidMount() {
-    this.mounted = true
+    this.handleMountStatus(true)
     this.componentDidUpdate({})
   }
 
+  handleMountStatus = mounted => {
+    this.setState({
+      mounted,
+    })
+  }
+
   componentWillUnmount() {
-    this.mounted = false
+    this.handleMountStatus(false)
   }
 
   next = props => {
+    const { mounted } = this.state
     this.running = true
     return new Promise(resolve => {
-      this.mounted &&
+      mounted &&
         this.setState(
           state => ({
             props,
@@ -104,19 +111,6 @@ class Keyframes extends React.PureComponent {
       />
     )
   }
-
-  static create = primitive => (states, filter = states => states) => {
-    if (typeof states === 'function' || Array.isArray(states))
-      states = { [DEFAULT]: states }
-    return props => (
-      <Keyframes
-        primitive={primitive}
-        states={states}
-        filter={filter}
-        {...props}
-      />
-    )
-  }
 }
 
 const interpolateTo = props => {
@@ -129,10 +123,23 @@ const interpolateTo = props => {
   return { to: forward, ...rest }
 }
 
-Keyframes.Spring = Keyframes.create(Spring)
+export const create = primitive => (states, filter = states => states) => {
+  if (typeof states === 'function' || Array.isArray(states))
+    states = { [DEFAULT]: states }
+  return props => (
+    <Keyframes
+      primitive={primitive}
+      states={states}
+      filter={filter}
+      {...props}
+    />
+  )
+}
+
+Keyframes.Spring = create(Spring)
 Keyframes.Spring.to = states => Keyframes.Spring(states, interpolateTo)
-Keyframes.Trail = Keyframes.create(Trail)
+Keyframes.Trail = create(Trail)
 Keyframes.Trail.to = states => Keyframes.Trail(states, interpolateTo)
-Keyframes.Transition = Keyframes.create(Transition)
+Keyframes.Transition = create(Transition)
 
 export default Keyframes
