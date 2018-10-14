@@ -4,6 +4,7 @@ import {
   ReactNode,
   ComponentClass,
   ComponentType,
+  Ref
 } from 'react'
 
 export type SpringEasingFunc = (t: number) => number
@@ -224,12 +225,16 @@ interface ParallaxProps<S extends object, DS extends object = {}> {
   scrolling?: boolean
 
   horizontal?: boolean
+
+  ref?: Ref<Parallax>
 }
 
 export class Parallax<
-  S extends object,
-  DS extends object
-> extends PureComponent<ParallaxProps<S, DS> & S> {}
+  S extends object = {},
+  DS extends object = {}
+> extends PureComponent<ParallaxProps<S, DS> & S> {
+  scrollTo: (offset: number) => void
+}
 
 interface ParallaxLayerProps<S extends object, DS extends object = {}> {
   factor?: number
