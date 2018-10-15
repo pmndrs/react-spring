@@ -11,6 +11,7 @@ export default class AnimationController {
 
   set(configs, impl) {
     if (impl) this.impl = impl
+    const setConf = this.impl.setValueConfig
     // Stop all ongoing animations
     this.stop()
     // Enforce arrays
@@ -19,11 +20,13 @@ export default class AnimationController {
     this.configs = configs.map(config => {
       let to = config.to
       let value = config.value
-      let vConfig = this.impl.setValueConfig(config)
-      let animations =
-        value instanceof AnimatedArray
-          ? value._values.map((value, i) => ({ value, to: to[i], ...vConfig }))
-          : [{ value, to, ...vConfig }]
+      let animations = (value instanceof AnimatedArray
+        ? value._values.map((value, i) => ({ value, to: to[i] }))
+        : [{ value, to }]
+      ).map(animation => ({
+        ...animation,
+        ...setConf(config, animation.value),
+      }))
       return {
         ...this.impl.setGlobalConfig(config),
         delay: withDefault(config.delay, 0),
@@ -33,21 +36,20 @@ export default class AnimationController {
     return this
   }
 
-  start(onEnd) {
+  start(onEnd, reset = true) {
     this.__active = true
     this.__onEnd = onEnd
-    const now = Globals.now()
-    this.startTime = now
-    this.lastTime = now
+    this.startTime = Globals.now()
+    this.lastTime = !this.lastTime ? this.startTime : this.lastTime
 
     // Prepare configs and values
     this.configs = this.configs.map(config => ({
       ...config,
       animations: config.animations.map(({ value, to, ...rest }) => {
-        let val = value._value
+        let lastPos = value._value
         value._done = false
-        value._animatedStyles.clear()
-        return { value, to, startPos: val, lastPos: val, ...rest }
+        if (reset) value._animatedStyles.clear()
+        return { value, to, startPos: value._value, lastPos, ...rest }
       }),
     }))
 
@@ -127,6 +129,14 @@ export default class AnimationController {
 
   stop(finished = false) {
     if (!this.configs) return
+
+    // Store current animation variables
+    this.configs.forEach(config =>
+      config.animations.forEach(
+        ({ value, to, ...rest }) => (value._cache = rest)
+      )
+    )
+
     Globals.cancelFrame(this._animationFrame)
     this.__active = false
     this.__debouncedOnEnd({ finished })

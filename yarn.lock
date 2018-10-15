@@ -9552,6 +9552,14 @@ react-docgen@^3.0.0-beta11, react-docgen@^3.0.0-rc.1:
     node-dir "^0.1.10"
     recast "^0.15.0"
 
+react-dom@../react-future/react-dom:
+  version "16.6.0-alpha.8af6728"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.10.0-alpha.8af6728"
+
 react-dom@^16.5.2:
   version "16.5.2"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.5.2.tgz#b69ee47aa20bab5327b2b9d7c1fe2a30f2cfa9d7"
@@ -9825,6 +9833,14 @@ react-twitter-widgets@^1.7.1:
     lodash "^4.17.4"
     prop-types "^15.3.0"
     scriptjs "^2.5.8"
+
+react@../react-future/react:
+  version "16.6.0-alpha.8af6728"
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.10.0-alpha.8af6728"
 
 react@^16.5.2:
   version "16.5.2"
@@ -10560,6 +10576,13 @@ schedule@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.5.0.tgz#c128fffa0b402488b08b55ae74bb9df55cc29cc8"
   dependencies:
+    object-assign "^4.1.1"
+
+scheduler@^0.10.0-alpha.8af6728:
+  version "0.10.0-alpha.f47a958"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.10.0-alpha.f47a958.tgz#0063a5c21aad2038111c316e417e9702d1ca7007"
+  dependencies:
+    loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
 schema-utils@^0.3.0:

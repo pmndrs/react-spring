@@ -4818,6 +4818,9 @@ react-spring@^5.6.15:
   dependencies:
     "@babel/runtime" "^7.0.0"
 
+react-use-setstate@../../react-use-setstate:
+  version "1.0.0"
+
 react-with-gesture@^1.0.10:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/react-with-gesture/-/react-with-gesture-1.0.10.tgz#f5e60b848598db587f3d02f5b8d9856bf26dbb59"

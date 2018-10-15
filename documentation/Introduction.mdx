@@ -5,12 +5,15 @@ order: 1000
 ---
 
 import { Tweet } from 'react-twitter-widgets'
+import { animated, config } from '../src/targets/web'
+import { RewindSpringProvider, RewindSpring } from './'
+import CodeMirror from './resources/Codemirror'
 
 # Introduction
 
 react-spring is a set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
 
-Our goal is to bridge Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default) with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
+Our goal is to bridge Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default) with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites. For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
 |                | Declarative | Primitives | Interpolations | Performance |
 | -------------- | ----------- | ---------- | -------------- | ----------- |
@@ -18,13 +21,120 @@ Our goal is to bridge Christopher Chedeau's [animated](https://github.com/animat
 | Animated       | ❌          | ❌         | ✅             | ✅          |
 | React-spring   | ✅          | ✅         | ✅             | ✅          |
 
-react-spring builds upon animated's foundation, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
+Here's a nice introduction made by Level Up Tutorials Scott Tolinsky.
 
-For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/b3G7l7fHRP8?rel=0" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
 
-Click on the image below for a nice introduction made by Level Up Tutorials/Scott Tolinsky.
+## Installation
 
-<iframe width="100%" height="515" src="https://www.youtube.com/embed/b3G7l7fHRP8?rel=0" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe>
+    npm install react-spring
+
+## Overview
+
+<RewindSpringProvider>
+  <p>
+    A <code>Spring</code> moves data from one state to another.
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`import { Spring } from 'react-spring'
+    
+<Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
+  {props => <div style={props}>hello</div>}
+</Spring>`}/>
+    <RewindSpring>
+      {x => <animated.div style={{ opacity: x }}>hello</animated.div>}
+    </RewindSpring>
+  </div>
+
+  <p>
+    A <code>Transition</code> animates component lifecycles. It takes a <span className="highlight">list of items</span> and their <span className="highlight">keys</span>. Whenever the list changes, items are added, removed, reordered or updated, it will help you to animate these changes.
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`import { Transition } from 'react-spring'
+  
+const items = [
+  { key: 0, text: 'h'}, { key: 1, text: 'e'},
+  { key: 2, text: 'l'}, { key: 3, text: 'l'},
+  { key: 4, text: 'o'},
+]
+  
+<Transition
+  items={items} keys={item => item.key}
+  from={{ opacity: 0, width: 0 }}
+  enter={{ opacity: 1, width: 'auto' }}
+  leave={{ opacity: 0, width: 0 }}>
+  {item => props =>
+    <div style={props}>{item.text}</div>
+  }
+</Transition>`}/>
+    <RewindSpring>
+      {x => <animated.div style={{ opacity: x }}>hello</animated.div>}
+    </RewindSpring>
+  </div>
+
+  <p>
+    It can also take a <span className="highlight">single item</span>, which can be anything. You can use it to toggle between components.
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`<Transition
+  items={toggle}
+  from={{ position: 'absolute', opacity: 0 }}
+  enter={{ opacity: 1 }}
+  leave={{ opacity: 0 }}>
+  {toggle =>
+    toggle
+      ? props => <div style={props}>yes</div>
+      : props => <div style={props}>no</div>
+  }
+</Transition>`}/>
+    <RewindSpring>
+      {x => <animated.div style={{ opacity: x }}>yes</animated.div>}
+    </RewindSpring>
+  </div>
+
+  <p>
+    It also comes in handy for single-component mount/unmount reveals.
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`<Transition
+  items={show}
+  from={{ opacity: 0 }}
+  enter={{ opacity: 1 }}
+  leave={{ opacity: 0 }}>
+  {show =>
+    show && (props => <div style={props}>hello</div>)
+  }
+</Transition>`}/>
+    <RewindSpring>
+      {x => <animated.div style={{ opacity: x }}>hello</animated.div>}
+    </RewindSpring>
+  </div>
+
+  <p>
+    A <code>Trail</code> animates the first child of a list of elements, the rest follow the spring of their previous sibling.
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`import { Trail } from 'react-spring'
+  
+<Trail
+  items={items} keys={item => item.key}
+  from={{ transform: 'translate3d(0,40px,0)' }}
+  to={{ transform: 'translate3d(0,0px,0)' }}
+  {item => props =>
+    <span style={props}>{item.text}</span>
+  }
+</Trail>`}/>
+    <RewindSpring>
+      {x => <animated.div style={{ opacity: x }}>hello</animated.div>}
+    </RewindSpring>
+  </div>
+
+</RewindSpringProvider>
 
 ## What others say
 
@@ -52,14 +162,6 @@ Click on the image below for a nice introduction made by Level Up Tutorials/Scot
 </p>
 
 And [many others](https://github.com/drcmda/react-spring/network/dependents) ...
-
-## Installation
-
-    npm install react-spring
-
-```jsx
-import { Spring } from 'react-spring'
-```
 
 ## Build targets other than the DOM
 

@@ -36,7 +36,10 @@ export default {
         .code-table {
           display: flex;
         }
-        .code-table > div {
+        .code-table > div:first-of-type {
+          flex: 1.5;
+        }
+        .code-table > div:last-of-type {
           flex: 1;
         }
         .code-table > div:last-child {
@@ -44,7 +47,7 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: #fb467b;
+          background: #f4f6f9;
           font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
         segoe ui, arial, sans-serif;
           font-size: 4em;
@@ -70,10 +73,10 @@ export default {
           height: 70px;
         }
         .grommetux-meter__tracks {
-          stroke: rgba(255,255,255,0.1);
+          stroke: white;
         }
         .grommetux-meter__values {
-          stroke: white;
+          stroke: #b7b7b7;
         }
         code {
           background: #f4f6f9;
@@ -89,6 +92,7 @@ export default {
     },
   },
   themeConfig: {
+    //mode: 'dark',
     codemirrorTheme: 'dracula',
     colors: {
       primary: '#ea567c',

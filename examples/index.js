@@ -6,7 +6,7 @@ import './styles.css'
 const components = [
   //'parallaxvert',
   //'parallax',
-  'transitions',
+  /*'transitions',
   'nativespring',
   'areas',
   'trails',
@@ -29,7 +29,8 @@ const components = [
   'dashoffset',
   'transitiongroup',
   'chat',
-  'messages',
+  'messages',*/
+  'hooks',
 ].reduce(
   (acc, path) => ({
     ...acc,
@@ -45,7 +46,7 @@ const components = [
 )
 
 const DEBUG = true
-const DebugComponent = components['reveals']
+const DebugComponent = components['hooks']
 
 ReactDOM.render(
   DEBUG ? (

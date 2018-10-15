@@ -21,8 +21,8 @@ class RewindSpringProvider extends React.Component {
         reverse={flip}
         from={{ progress: '0%', x: 0 }}
         to={{ progress: '100%', x: 1 }}
-        delay={750}
-        config={config.slow}
+        delay={200}
+        config={config.molasses}
         {...props}
         onRest={() => this.setState(state => ({ flip: !state.flip }))}>
         {props => <Provider value={props} children={children} />}
@@ -31,23 +31,25 @@ class RewindSpringProvider extends React.Component {
   }
 }
 
-const RewindSpring = ({ children }) => (
-  <div style={{ overflow: 'hidden' }}>
+const RewindSpring = ({ children, style, hideProgress }) => (
+  <div style={{ overflow: 'hidden', background: '#f4f6f9', color: '#b7b7b7', ...style }}>
     <Consumer>
       {({ progress, x }) => (
         <React.Fragment>
           {children(x)}
-          <animated.div
-            style={{
-              position: 'absolute',
-              zIndex: 1000,
-              left: 0,
-              bottom: 0,
-              height: 10,
-              width: progress,
-              background: '#ffcf00',
-            }}
-          />
+          {!hideProgress && (
+            <animated.div
+              style={{
+                position: 'absolute',
+                zIndex: 1000,
+                left: 0,
+                bottom: 0,
+                height: 10,
+                width: progress,
+                background: '#ffcf00',
+              }}
+            />
+          )}
         </React.Fragment>
       )}
     </Consumer>

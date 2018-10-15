@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Spring from './Spring'
 import Keyframes from './Keyframes'
 import { config as springConfig } from './shared/constants'
-import { callProp, toArray } from './shared/helpers'
+import { callProp, toArray, interpolateTo } from './shared/helpers'
 
 let guid = 0
 let empty = () => null
@@ -226,7 +226,7 @@ export default class Transition extends React.PureComponent {
           reset={reset && state === 'enter'}
           primitive={Spring}
           state={state}
-          filter={Keyframes.interpolateTo}
+          filter={interpolateTo}
           states={{ [state]: to }}
           key={key}
           onRest={

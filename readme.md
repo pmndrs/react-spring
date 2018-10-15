@@ -102,7 +102,7 @@ import { Spring } from 'react-spring'
 
 <img src="assets/transitions.gif" width="285" />
 
-`Transition` watches elements as they mount and unmount and helps you to animate these changes. You feed it an array of `items` and a key accessor (which defaults to `item => item`).
+`Transition` watches elements as they mount and unmount and helps you to animate these changes. You feed it an array of `items` and a key accessor (which defaults to `item => item`). You receive an item as the only render-child and return a functional component which catches the animated values.
 
 ```jsx
 import { Transition } from 'react-spring'
@@ -124,7 +124,7 @@ import { Transition } from 'react-spring'
 Given a single child instead of a list you can toggle between two components.
 
 ```jsx
-<Transition items={toggle} from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
+<Transition items={toggle} from={...} enter={...} leave={...}>
   {toggle =>
     toggle
       ? props => <div style={props}>Component A</div>
@@ -136,7 +136,7 @@ Given a single child instead of a list you can toggle between two components.
 If you need to toggle a single child, that is also possible.
 
 ```jsx
-<Transition items={show} from={{ opacity: 0 }} enter={{ opacity: 1 }} leave={{ opacity: 0 }}>
+<Transition items={show} from={...} enter={...} leave={...}>
   {show => show && (props => <div style={props}>Single Component</div>)}
 </Transition>
 ```

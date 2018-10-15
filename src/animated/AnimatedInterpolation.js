@@ -42,4 +42,4 @@ export default class AnimatedInterpolation extends AnimatedWithChildren {
 }
 
 export const interpolate = (parents, config) =>
-  new AnimatedInterpolation(parents, config)
+  parents && new AnimatedInterpolation(parents, config)

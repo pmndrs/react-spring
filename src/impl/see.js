@@ -25,8 +25,8 @@ export default {
       mass: withDefault(config.mass, 1),
     }
   },
-  setValueConfig(config) {
-    let lastVel = withDefault(config.velocity, 0)
+  setValueConfig(config, value) {
+    let lastVel = withDefault(config.velocity, value._cache.lastVel || 0)
     return { lastVel }
   },
   update(config, anim, from, to, pos, now, startTime, lastTime) {

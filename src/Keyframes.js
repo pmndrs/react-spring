@@ -2,7 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Spring from './Spring'
 import Trail from './Trail'
-import { getForwardProps, shallowEqual, handleRef } from './shared/helpers'
+import {
+  getForwardProps,
+  interpolateTo,
+  shallowEqual,
+  handleRef,
+} from './shared/helpers'
 import { config as springConfig } from './shared/constants'
 
 const DEFAULT = '__default'
@@ -110,7 +115,7 @@ class KeyframesImpl extends React.PureComponent {
     const from =
       typeof props.from === 'function'
         ? props.from
-        : { ...oldProps.from, ...current, ...props.from }
+        : { ...oldProps.from, ...props.from }
 
     // Arrayed configs need an index to process
     if (Array.isArray(config)) config = config[index]
@@ -148,19 +153,10 @@ Keyframes.create = primitive => (states, filter = states => states) => {
   )
 }
 
-Keyframes.interpolateTo = props => {
-  const forward = getForwardProps(props)
-  const rest = Object.keys(props).reduce(
-    (acc, key) =>
-      forward[key] !== void 0 ? acc : { ...acc, [key]: props[key] },
-    {}
-  )
-  return { to: forward, ...rest }
-}
-
-Keyframes.Spring = Keyframes.create(Spring)
-Keyframes.Spring.to = states => Keyframes.Spring(states, interpolateTo)
-Keyframes.Trail = Keyframes.create(Trail)
-Keyframes.Trail.to = states => Keyframes.Trail(states, interpolateTo)
+// TODO: remove .to
+Keyframes.Spring = states => Keyframes.create(Spring)(states, interpolateTo)
+Keyframes.Spring.to = states => Keyframes.create(Spring)(states, interpolateTo)
+Keyframes.Trail = states => Keyframes.create(Trail)(states, interpolateTo)
+Keyframes.Trail.to = states => Keyframes.create(Trail)(states, interpolateTo)
 
 export default Keyframes

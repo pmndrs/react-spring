@@ -9,9 +9,11 @@ export function toArray(a) {
 }
 
 export function shallowEqual(a, b) {
-  for (let i in a) if (!(i in b)) return false
-  for (let i in b) if (a[i] !== b[i]) return false
-  return true
+  if (typeof a === 'string') return a === b
+  let i
+  for (i in a) if (!(i in b)) return false
+  for (i in b) if (a[i] !== b[i]) return false
+  return i === void 0 ? a === b : true
 }
 
 export function callProp(obj, state, ...args) {
@@ -44,6 +46,15 @@ export function getForwardProps(props) {
     ...forward
   } = props
   return forward
+}
+
+export function interpolateTo(props) {
+  const forward = getForwardProps(props)
+  const rest = Object.keys(props).reduce(
+    (a, k) => (forward[k] !== void 0 ? a : { ...a, [k]: props[k] }),
+    {}
+  )
+  return { to: forward, ...rest }
 }
 
 export function renderChildren(props, componentProps) {

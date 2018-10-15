@@ -5,7 +5,10 @@ import AnimatedWithChildren from './AnimatedWithChildren'
 export default class AnimatedArray extends AnimatedWithChildren {
   constructor(array) {
     super()
-    this._values = array.map(n => new AnimatedValue(n))
+    this._values =
+      array instanceof AnimatedArray
+        ? array._values
+        : array.map(n => new AnimatedValue(n))
   }
 
   setValue(values) {

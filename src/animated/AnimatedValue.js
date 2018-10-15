@@ -43,6 +43,7 @@ export default class AnimatedValue extends AnimatedWithChildren {
     this._value = value
     this._animatedStyles = new Set()
     this._listeners = {}
+    this._cache = {}
     this._done = false
   }
 

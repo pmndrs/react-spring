@@ -70,6 +70,7 @@ function dangerousStyleValue(name, value, isCustomProperty) {
   return ('' + value).trim()
 }
 
+const attributeCache = {}
 Globals.injectDefaultElement('div')
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
@@ -101,7 +102,13 @@ Globals.injectApplyAnimatedValues(
 
       // Set attributes ...
       for (let name in attributes) {
-        let dashCase = name.replace(/([A-Z])/g, $1 => '-' + $1.toLowerCase())
+        // Attributes are written in dash case
+        const dashCase =
+          attributeCache[name] ||
+          (attributeCache[name] = name.replace(
+            /([A-Z])/g,
+            n => '-' + n.toLowerCase()
+          ))
         if (typeof instance.getAttribute(dashCase) !== 'undefined')
           instance.setAttribute(dashCase, attributes[name])
       }
