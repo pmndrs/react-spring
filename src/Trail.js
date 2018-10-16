@@ -16,9 +16,21 @@ export default class Trail extends React.PureComponent {
     items: PropTypes.oneOfType([PropTypes.array, PropTypes.any]).isRequired,
     /** An array of functions (props => view) */
     children: PropTypes.func.isRequired,
+    /** When true the trailing order is switched, it will then trail bottom to top */
+    reverse: PropTypes.bool,
   }
 
   static defaultProps = { keys: item => item }
+
+  first = true
+  instances = new Set()
+  hook = (instance, index, length, reverse) => {
+    // Add instance to set
+    this.instances.add(instance)
+    // Return undefined on the first index and from then on the previous instance
+    if (reverse ? index === length - 1 : index === 0) return undefined
+    else return Array.from(this.instances)[reverse ? index + 1 : index - 1]
+  }
 
   render() {
     const {
@@ -26,37 +38,36 @@ export default class Trail extends React.PureComponent {
       children,
       render,
       from = {},
+      initial,
       to = {},
-      native = false,
+      native,
+      reverse,
       keys,
       delay,
       onRest,
       ...extra
     } = this.props
-    const animations = new Set()
-    const hook = (index, animation) => {
-      animations.add(animation)
-      if (index === 0) return undefined
-      else return Array.from(animations)[index - 1]
-    }
-    const props = { ...extra, native, from, to }
-    return toArray(items).map((item, i) => {
-      const attachedHook = animation => hook(i, animation)
-      const firstDelay = i === 0 && delay
-      return (
-        <Spring
-          ref={ref => i === 0 && (this.instance = ref)}
-          onRest={i === 0 ? onRest : null}
-          key={typeof keys === 'function' ? keys(item) : toArray(keys)[i]}
-          {...props}
-          delay={firstDelay || undefined}
-          attach={attachedHook}
-          children={props => {
-            const child = children(item, i)
-            return child ? child(props) : null
-          }}
-        />
-      )
-    })
+
+    const props = { ...extra, native, to }
+    const array = toArray(items)
+    return toArray(array).map((item, i) => (
+      <Spring
+        onRest={i === 0 ? onRest : null}
+        key={typeof keys === 'function' ? keys(item) : toArray(keys)[i]}
+        from={this.first && initial !== void 0 ? initial || {} : from}
+        {...props}
+        delay={(i === 0 && delay) || undefined}
+        attach={instance => this.hook(instance, i, array.length, reverse)}
+        children={props => {
+          const child = children(item, i)
+          return child ? child(props) : null
+        }}
+      />
+    ))
+  }
+
+  componentDidUpdate(prevProps) {
+    this.first = false
+    if (prevProps.items !== this.props.items) this.instances.clear()
   }
 }

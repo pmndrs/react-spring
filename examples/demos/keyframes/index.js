@@ -16,15 +16,15 @@ const fast = {
 const Sidebar = Keyframes.Spring({
   // Slots can take arrays/chains,
   peek: [
-    { x: 0, from: { x: -100 }, delay: 500, config: fast },
-    { x: -100, delay: 800, config: config.slow },
+    { x: 0, from: { x: -100 }, delay: 500 },
+    { x: -100, delay: 800 },
   ],
   // single items,
-  open: { x: 0, config: config.default },
+  open: { x: 0 },
   // or async functions with side-effects
   close: async call => {
     await delay(400)
-    await call({ x: -100, config: config.gentle })
+    await call({ x: -100 })
   },
 })
 
@@ -93,8 +93,8 @@ export default class App extends React.Component {
                 native
                 items={items}
                 keys={items.map((_, i) => i)}
-                state={state}
-                config={{ tension: 200, friction: 20 }}>
+                reverse={!this.state.open}
+                state={state}>
                 {(item, i) => ({ x, ...props }) => (
                   <animated.div
                     style={{

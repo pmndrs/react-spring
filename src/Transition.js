@@ -122,7 +122,7 @@ export default class Transition extends React.PureComponent {
         trail: (delay = delay + trail),
         config: callProp(config, item, state),
         from: callProp(
-          first ? (initial !== void 0 ? initial : from) : from,
+          first ? (initial !== void 0 ? initial || {} : from) : from,
           item
         ),
         to: callProp(enter, item),

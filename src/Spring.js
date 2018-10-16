@@ -247,7 +247,7 @@ function createConfigs(animations, { delay, config = {}, impl }) {
   ]
 }
 
-function effect({ onStart, onRest, ...props }, state, setState) {
+function effect({ onStart, onRest, ...props }, state, forceUpdate) {
   const result = updateValues(interpolateTo(props), state)
   if (result.changed) {
     if (onStart) onStart()
@@ -257,21 +257,31 @@ function effect({ onStart, onRest, ...props }, state, setState) {
         ({ finished }) => finished && onRest && onRest(state.merged),
         result.changed
       )
-    setState({ ...state, ...result, first: false })
+    if (result.isTrailing) forceUpdate()
+    return { ...state, ...result }
   }
-  return result.interpolators
+  return state
 }
 
 export function useSpring(props) {
-  const [state, setState] = React.useState({
-    first: true,
+  const [, forceUpdate] = React.useState(false)
+  const state = React.useRef({
+    mounted: false,
+    controller: new AnimationController(),
     merged: {},
     animations: {},
     interpolators: {},
-    controller: new AnimationController(),
   })
-  React.useEffect(() => effect(props, state, setState))
-  return state.first ? effect(props, state, setState) : state.interpolators
+
+  if (!state.current.mounted) {
+    state.current.mounted = true
+    state.current = effect(props, state.current, forceUpdate)
+  }
+
+  React.useEffect(() => {
+    state.current = effect(props, state.current, forceUpdate)
+  })
+  return state.current.interpolators
 }
 
 // This function will turn own-props into AnimatedValues, it tries to re-use
@@ -283,6 +293,7 @@ function updateValues(props, store) {
   if (reverse) {
     ;[from, to] = [to, from]
   }
+  let isTrailing = false
   let changed = false
   // Attachment handling, trailed springs can "attach" themselves to a previous spring
   let target = attach && attach(store)
@@ -310,11 +321,15 @@ function updateValues(props, store) {
     if (target) {
       // Attach value to target animation
       const attachedAnimation = target.animations[name]
-      if (attachedAnimation) toValue = attachedAnimation.animation
+      if (attachedAnimation) {
+        toValue = attachedAnimation.animation
+        changed = true
+      }
     }
 
     let animation, interpolation
     if (fromAnimated) {
+      isTrailing = true
       // Use provided animated value
       animation = interpolation =
         entry.animation || new fromValue.constructor(fromValue.__getValue())
@@ -351,9 +366,14 @@ function updateValues(props, store) {
       else interpolation = animation.interpolate(config)
     }
 
-    // If anything changed, flag it
-    if (entry.animation !== animation || !shallowEqual(entry.toValue, toValue))
-      changed = true
+    // If anything has changed flag it
+    const isAnimated =
+      entry.toValue instanceof Animated || toValue instanceof Animated
+    if (!isAnimated && !changed) {
+      const isEqual =
+        entry.animation !== animation || !shallowEqual(entry.toValue, toValue)
+      if (isEqual) changed = true
+    }
 
     // Set immediate values
     if (callProp(immediate, name)) animation.setValue(toValue)
@@ -374,5 +394,6 @@ function updateValues(props, store) {
         )
       : store.interpolators,
     changed,
+    isTrailing,
   }
 }

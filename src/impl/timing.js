@@ -16,8 +16,10 @@ export default {
   },
   update(config, anim, from, to, pos, now, startTime, lastTime) {
     return [
-      from + config.easing((now - startTime) / config.duration) * (to - from),
-      now >= startTime + config.duration,
+      from +
+        config.easing((now - startTime - config.delay) / config.duration) *
+          (to - from),
+      now >= startTime + config.delay + config.duration,
     ]
   },
 }
