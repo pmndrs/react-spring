@@ -152,10 +152,7 @@ Keyframes.create = primitive => (states, filter = states => states) => {
   )
 }
 
-// TODO: remove .to
 Keyframes.Spring = states => Keyframes.create(Spring)(states, interpolateTo)
-Keyframes.Spring.to = states => Keyframes.create(Spring)(states, interpolateTo)
 Keyframes.Trail = states => Keyframes.create(Trail)(states, interpolateTo)
-Keyframes.Trail.to = states => Keyframes.create(Trail)(states, interpolateTo)
 
 export default Keyframes

@@ -16,6 +16,7 @@ import {
   callProp,
   shallowEqual,
   getValues,
+  toArray,
 } from './shared/helpers'
 
 const v = React.version.split('.')
@@ -318,7 +319,7 @@ function updateValues(props, store) {
       animation = interpolation =
         entry.animation || new fromValue.constructor(fromValue.__getValue())
       // If we're animating towards another AnimatedValue, see if it's done
-      if (toValue && toArray(toValue.__getValue()).some(value => !value._done))
+      if (toValue && toArray(toValue._values).some(value => !value._done))
         changed = true
       // Replace toValue with the numeric content
       toValue = toValue.__getValue()

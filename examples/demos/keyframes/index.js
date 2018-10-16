@@ -16,26 +16,26 @@ const fast = {
 const Sidebar = Keyframes.Spring({
   // Slots can take arrays/chains,
   peek: [
-    { delay: 500, from: { x: -100 }, to: { x: 0 }, config: fast },
-    { delay: 800, to: { x: -100 }, config: config.slow },
+    { x: 0, from: { x: -100 }, delay: 500, config: fast },
+    { x: -100, delay: 800, config: config.slow },
   ],
   // single items,
-  open: { to: { x: 0 }, config: config.default },
+  open: { x: 0, config: config.default },
   // or async functions with side-effects
   close: async call => {
     await delay(400)
-    await call({ to: { x: -100 }, config: config.gentle })
+    await call({ x: -100, config: config.gentle })
   },
 })
 
 // Creates a keyframed trail
 const Content = Keyframes.Trail({
   peek: [
-    { delay: 600, from: { x: -100, opacity: 0 }, to: { x: 0, opacity: 1 } },
-    { to: { x: -100, opacity: 0 } },
+    { x: 0, opacity: 1, from: { x: -100, opacity: 0 }, delay: 600 },
+    { x: -100, opacity: 0 },
   ],
-  open: { delay: 100, to: { x: 0, opacity: 1 } },
-  close: { to: { x: -100, opacity: 0 } },
+  open: { x: 0, opacity: 1, delay: 100 },
+  close: { x: -100, opacity: 0 },
 })
 
 const items = [

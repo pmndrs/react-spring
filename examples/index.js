@@ -29,7 +29,7 @@ const components = [
   'dashoffset',
   'transitiongroup',
   'chat',
-  'messages'
+  'messages',
 ].reduce(
   (acc, path) => ({
     ...acc,
@@ -45,7 +45,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['treeview']
+const DebugComponent = components['hooks']
 
 ReactDOM.render(
   DEBUG ? (

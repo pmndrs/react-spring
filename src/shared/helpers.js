@@ -30,6 +30,7 @@ export function getForwardProps(props) {
     from,
     config,
     native,
+    onStart,
     onRest,
     onFrame,
     children,
