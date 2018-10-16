@@ -20,18 +20,6 @@ export default class Trail extends React.PureComponent {
 
   static defaultProps = { keys: item => item }
 
-  getValues() {
-    return this.instance && this.instance.getValues()
-  }
-
-  componentDidMount() {
-    this.instance && this.instance.flush()
-  }
-
-  componentDidUpdate() {
-    this.instance && this.instance.flush()
-  }
-
   render() {
     const {
       items,

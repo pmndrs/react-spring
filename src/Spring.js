@@ -140,6 +140,7 @@ export default class Spring extends React.Component {
 
     // We can potentially cause setState, but we're inside render, the flag prevents that
     this.updating = true
+    this.didInject = false
 
     // Update animations, this turns from/to props into AnimatedValues
     // An update can occur on injected props, or when own-props have changed.
@@ -159,6 +160,7 @@ export default class Spring extends React.Component {
       this.changed = result.changed
       this.animations = result.animations
       this.interpolators = result.interpolators
+      this.merged = result.merged
       // Update animated props (which from now on will take care of the animation)
       if (result.changed) {
         const oldAnimatedProps = this.animatedProps
@@ -173,7 +175,6 @@ export default class Spring extends React.Component {
       // Flag an update that occured, componentDidUpdate will start the animation later on
       this.didUpdate = true
       this.afterInject = undefined
-      this.didInject = false
     }
 
     this.updating = false
@@ -200,36 +201,21 @@ export default class Spring extends React.Component {
   start = () => {
     this.finished = false
     let wasMounted = this.mounted
-    let { config, impl, delay, onStart } = this.props
-    if (onStart) onStart()
+    if (this.props.onStart) this.props.onStart()
     this.controller
-      .set(
-        Object.entries(this.animations).map(
-          ([name, { animation: value, toValue: to }]) => ({
-            value,
-            to,
-            delay,
-            ...callProp(config, name),
-          })
-        ),
-        impl ? impl : config.duration === void 0 ? springImpl : timingImpl
-      )
-      .start(
-        props => this.finishAnimation({ ...props, wasMounted }),
-        this.changed
-      )
+      .set(...createConfigs(this.animations, this.props))
+      .start(props => this.finish({ ...props, wasMounted }), this.changed)
   }
 
-  stop = () => {
-    this.controller.stop(true)
-  }
+  stop = () => this.controller.stop(true)
 
-  finishAnimation = ({ finished, noChange, wasMounted }) => {
+  finish = ({ finished, noChange, wasMounted }) => {
     this.finished = true
     if (this.mounted && finished) {
       // Only call onRest if either we *were* mounted, or when there wer changes
       if (this.props.onRest && (wasMounted || !noChange))
         this.props.onRest(this.merged)
+
       // Restore end-state
       if (this.didInject) this.afterInject = convertValues(this.props)
 
@@ -240,39 +226,32 @@ export default class Spring extends React.Component {
     }
   }
 
-  flush() {
-    getValues(this.animations).forEach(
-      ({ animation }) => animation._update && animation._update()
-    )
-  }
+  getValues = () => (this.animatedProps ? this.animatedProps.__getValue() : {})
 
-  getValues() {
-    return this.animatedProps ? this.animatedProps.__getValue() : {}
-  }
-
-  getAnimatedValues() {
-    return this.props.native ? this.interpolators : this.getValues()
-  }
+  getAnimatedValues = () =>
+    this.props.native ? this.interpolators : this.getValues()
 }
 
-function effect(props, state, setState) {
-  const result = updateValues(interpolateTo(props), state)
+function createConfigs(animations, { delay, config = {}, impl }) {
+  return [
+    Object.entries(animations).map(
+      ([name, { animation: value, toValue: to }]) => ({
+        value,
+        to,
+        delay,
+        ...callProp(config, name),
+      })
+    ),
+    impl ? impl : config.duration === void 0 ? springImpl : timingImpl,
+  ]
+}
 
+function effect({ onStart, onRest, ...props }, state, setState) {
+  const result = updateValues(interpolateTo(props), state)
   if (result.changed) {
-    let { config = {}, impl, delay, onStart, onRest } = props
     if (onStart) onStart()
     state.controller
-      .set(
-        Object.entries(result.animations).map(
-          ([name, { animation: value, toValue: to }]) => ({
-            value,
-            to,
-            delay,
-            ...callProp(config, name),
-          })
-        ),
-        impl ? impl : config.duration === void 0 ? springImpl : timingImpl
-      )
+      .set(...createConfigs(result.animations, props))
       .start(
         ({ finished }) => finished && onRest && onRest(state.merged),
         result.changed
@@ -290,30 +269,22 @@ export function useSpring(props) {
     interpolators: {},
     controller: new AnimationController(),
   })
-
-  React.useEffect(() => {
-    effect(props, state, setState)
-  })
-
+  React.useEffect(() => effect(props, state, setState))
   return state.first ? effect(props, state, setState) : state.interpolators
 }
 
 // This function will turn own-props into AnimatedValues, it tries to re-use
 // .. exsting animations as best as it can by detecting the changes made
 // TODO: maybe this should be part of AnimationController?
-function updateValues(
-  { from = {}, to, reverse, attach, reset, immediate },
-  store
-) {
+function updateValues(props, store) {
+  let { from = {}, to = {}, reverse, attach, reset, immediate } = props
   // Reverse values when requested
   if (reverse) {
     ;[from, to] = [to, from]
   }
-
+  let changed = false
   // Attachment handling, trailed springs can "attach" themselves to a previous spring
   let target = attach && attach(store)
-  let changed = false
-
   // Reset merged props when necessary
   let extra = reset ? {} : store.merged
   // This will collect all props that were ever set
@@ -341,13 +312,15 @@ function updateValues(
       if (attachedAnimation) toValue = attachedAnimation.animation
     }
 
-    let oldAnim = entry.animation
-    let oldTo = entry.toValue
     let animation, interpolation
     if (fromAnimated) {
       // Use provided animated value
       animation = interpolation =
         entry.animation || new fromValue.constructor(fromValue.__getValue())
+      // If we're animating towards another AnimatedValue, see if it's done
+      if (toValue && toArray(toValue.__getValue()).some(value => !value._done))
+        changed = true
+      // Replace toValue with the numeric content
       toValue = toValue.__getValue()
     } else if (isNumber || isString) {
       // Create animated value
@@ -378,20 +351,15 @@ function updateValues(
     }
 
     // If anything changed, flag it
-    if (oldAnim !== animation || !shallowEqual(oldTo, toValue)) changed = true
+    if (entry.animation !== animation || !shallowEqual(entry.toValue, toValue))
+      changed = true
 
     // Set immediate values
     if (callProp(immediate, name)) animation.setValue(toValue)
 
     return {
       ...acc,
-      [name]: {
-        ...entry,
-        name,
-        animation,
-        interpolation,
-        toValue,
-      },
+      [name]: { ...entry, name, animation, interpolation, toValue },
     }
   }, store.animations)
 

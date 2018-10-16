@@ -8,11 +8,11 @@
 
 .b1, .b2, .b3 {
   position: absolute;
-  will-change: transform, height, width;
+  will-change: transform;
   border-radius: 50%;
   background: lightcoral;
   box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
-  opacity: 0.75;
+  opacity: 0.8;
 }
 
 .b1 {

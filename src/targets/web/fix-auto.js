@@ -23,7 +23,7 @@ export default function fixAuto(props, callback) {
   // Return v.dom with injected ref
   return (
     <element.type
-      key={element.key}
+      key={element.key ? element.key : undefined}
       {...element.props}
       style={{ ...elementStyles, position: 'absolute', visibility: 'hidden' }}
       ref={ref => {

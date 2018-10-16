@@ -111,7 +111,6 @@ class KeyframesImpl extends React.PureComponent {
       ...rest
     } = this.props
 
-    const current = this.instance && this.instance.getValues()
     const from =
       typeof props.from === 'function'
         ? props.from

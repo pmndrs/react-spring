@@ -184,11 +184,7 @@ export default class Transition extends React.PureComponent {
       prevProps: props,
     }
   }
-
-  getValues() {
-    return undefined
-  }
-
+  
   destroyItem = (item, key, state) => values => {
     const { onRest, onDestroyed } = this.props
     if (this.mounted) {

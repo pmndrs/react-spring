@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Tree from 'react-animated-tree'
+import Tree from './Tree'
 import './styles.css'
 
 const treeStyles = {
