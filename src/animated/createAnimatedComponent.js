@@ -17,7 +17,7 @@ export default function createAnimatedComponent(Component) {
     }
 
     componentWillUnmount() {
-      this._propsAnimated && this._propsAnimated.__detach()
+      this.propsAnimated && this.propsAnimated.detach()
     }
 
     setNativeProps(props) {
@@ -33,9 +33,10 @@ export default function createAnimatedComponent(Component) {
     // forceUpdate.
     callback = () => {
       if (this.node) {
+        //debugger
         const didUpdate = Globals.applyAnimatedValues.fn(
           this.node,
-          this._propsAnimated.__getAnimatedValue(),
+          this.propsAnimated.getValue(),
           this
         )
         if (didUpdate === false) this.forceUpdate()
@@ -43,8 +44,8 @@ export default function createAnimatedComponent(Component) {
     }
 
     attachProps({ forwardRef, ...nextProps }) {
-      const oldPropsAnimated = this._propsAnimated
-      this._propsAnimated = new AnimatedProps(nextProps, this.callback)
+      const oldPropsAnimated = this.propsAnimated
+      this.propsAnimated = new AnimatedProps(nextProps, this.callback)
       // When you call detach, it removes the element from the parent list
       // of children. If it goes to 0, then the parent also detaches itself
       // and so on.
@@ -53,13 +54,16 @@ export default function createAnimatedComponent(Component) {
       // This way the intermediate state isn't to go to 0 and trigger
       // this expensive recursive detaching to then re-attach everything on
       // the very next operation.
-      oldPropsAnimated && oldPropsAnimated.__detach()
+      oldPropsAnimated && oldPropsAnimated.detach()
     }
 
     shouldComponentUpdate(props) {
       const { style, ...nextProps } = props
-      const { style: currentStyle, ...currentProps } = this.props 
-      if (!shallowEqual(currentProps, nextProps) || !shallowEqual(currentStyle, style)) {
+      const { style: currentStyle, ...currentProps } = this.props
+      if (
+        !shallowEqual(currentProps, nextProps) ||
+        !shallowEqual(currentStyle, style)
+      ) {
         this.attachProps(props)
         return true
       }
@@ -72,7 +76,7 @@ export default function createAnimatedComponent(Component) {
         scrollTop,
         scrollLeft,
         ...animatedProps
-      } = this._propsAnimated.__getValue()
+      } = this.propsAnimated.getValue()
       return (
         <Component
           {...animatedProps}

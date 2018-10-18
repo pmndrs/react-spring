@@ -17,9 +17,9 @@ export default class TrailsExample extends React.PureComponent {
         }}>
         <Trail
           native
-          reverse={toggle}
+          //reverse={toggle}
+          //initial={null}
           items={items}
-          initial={null}
           from={{ opacity: 0, x: -100 }}
           to={{ opacity: toggle ? 1 : 0.25, x: toggle ? 0 : 100 }}>
           {item => ({ x, opacity }) => (

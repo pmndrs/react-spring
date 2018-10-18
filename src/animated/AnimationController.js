@@ -1,152 +1,334 @@
 import Animated from './Animated'
+import AnimatedValue from './AnimatedValue'
 import AnimatedArray from './AnimatedArray'
+import AnimatedProps from './AnimatedProps'
 import * as Globals from './Globals'
-import springImpl from '../impl/see'
-import { withDefault, toArray } from '../shared/helpers'
+import {
+  withDefault,
+  toArray,
+  getValues,
+  callProp,
+  shallowEqual,
+} from '../shared/helpers'
 
 export default class AnimationController {
-  constructor(impl = springImpl) {
-    this.impl = impl
+  active = false
+  props = {}
+  hasChanged = false
+  merged = {}
+  animations = {}
+  interpolations = {}
+  configs = []
+  frame = undefined
+  animatedProps = undefined
+  startTime = undefined
+  lastTime = undefined
+
+  update(props) {
+    this.props = props
+    let {
+      from = {},
+      to = {},
+      reverse,
+      attach,
+      reset,
+      immediate,
+      config,
+      delay,
+      native,
+      onFrame,
+    } = props
+
+    // Reverse values when requested
+    if (reverse) {
+      ;[from, to] = [to, from]
+    }
+    this.hasChanged = false
+    // Attachment handling, trailed springs can "attach" themselves to a previous spring
+    let target = attach && attach(this)
+    // Reset merged props when necessary
+    let extra = reset ? {} : this.merged
+    // This will collect all props that were ever set
+    this.merged = { ...from, ...extra, ...to }
+    // Reduces input { name: value } pairs into animated values
+    this.animations = Object.entries(this.merged).reduce(
+      (acc, [name, value], i) => {
+        // Issue cached entries, except on reset
+        const entry = (!reset && acc[name]) || {}
+
+        /**
+         * Allowed input
+         *
+         *  { name: value }             pairs
+         *  { name: AnimatedValue() }   animated values
+         *  { name: [1,2,3] }           plain numeric arrays
+         *  { name: AnimatedArray() }   animated arrays
+         *
+         * Plain values can be:
+         *
+         *  123                         Numbers
+         *  "hello"                     Strings
+         *  "#3d4d5d" ...               Colors (rga, rgba, hex, plain names)
+         *  "something 12 something"    Interpolation patterns with numbers in them
+         *
+         * Additionally, springs are allowed to "attach" to another AnimationController, fetching the
+         * values from there, if present.
+         */
+
+        // Attach allows a spring to fetch its values elsewhere
+        if (target && target.animations[name])
+          value = attachedAnimation.animation
+
+        // Figure out what the value is supposed to be
+        let isArray, isString, isNumber, isInterpolation
+        let isAnimated = value instanceof Animated
+        if (!isAnimated) {
+          isArray = Array.isArray(value)
+          isNumber = typeof value === 'number'
+          isString =
+            typeof value === 'string' &&
+            !value.startsWith('#') &&
+            !/\d/.test(value) &&
+            !Globals.colorNames[value]
+          isInterpolation = !isNumber && !isString && !isArray
+        }
+
+        // Carry actual values (including animated) in order to change detect
+        const changes = isAnimated ? value.getAnimatedValue() : value
+
+        // Detect changes, animated values will be checked in the raf-loop
+        if (isAnimated || !shallowEqual(entry.changes, changes)) {
+          this.hasChanged = true
+
+          let parent, interpolation
+          from = from[name] !== void 0 ? from[name] : value
+          config = callProp(config, name)
+
+          /*if (isAnimated) {
+            isTrailing = true
+            // Use provided animated value
+            animation = interpolation =
+              entry.animation || new value.constructor(_from.getValue())
+            // If we're animating towards another AnimatedValue, see if it's done
+            //if (_to && toArray(_to._values).some(value => !value._done))
+            hasChanged = true
+            // Replace toValue with the numeric content
+            _to = _to.getValue()
+          } else */
+
+          if (isAnimated) {
+            debugger
+          } else if (isNumber || isString) {
+            parent = interpolation = entry.parent || new AnimatedValue(from)
+          } else if (isArray) {
+            parent = interpolation = entry.parent || new AnimatedArray(from)
+          } else if (isInterpolation) {
+            // Deal with interpolations
+            const prev =
+              entry.interpolation &&
+              entry.interpolation.interpolate(entry.parent.value)
+            // Interpolations are not addaptive, start with 0
+            if (entry.parent) {
+              parent = entry.parent
+              parent.setValue(0)
+            } else parent = new AnimatedValue(0)
+            // Map from-to on a scale between 0-1
+            const range = { output: [prev !== void 0 ? prev : from, value] }
+            if (entry.interpolation)
+              interpolation = entry.interpolation.updateConfig(range)
+            else interpolation = parent.interpolate(range)
+            // And stop at 1
+            value = 1
+          } else return entry
+
+          // Map output values to an array so reading out is easier later on
+          const animatedValues = toArray(parent.getAnimatedValue())
+          const fromValues = toArray(parent.getValue())
+          const toValues = toArray(isAnimated ? value.getValue() : value)
+
+          // Set immediate values
+          if (callProp(immediate, name)) parent.setValue(value)
+          // Reset animated values
+          animatedValues.forEach(value => value.reset(this.active))
+
+          return {
+            ...acc,
+            [name]: {
+              ...entry,
+              parent, // The animated object on which the update-cb is called
+              interpolation, // The parents interpolation, if any. If not it refers to the parent
+              animatedValues, // An array of all animated values taking part in this op
+              fromValues, // Raw/numerical start-state values
+              toValues, // Raw/numerical/end-state values
+              changes,
+              delay,
+              initialVelocity: withDefault(config.velocity, 0),
+              clamp: withDefault(config.clamp, false),
+              precision: withDefault(config.precision, 0.01),
+              tension: withDefault(config.tension, 170),
+              friction: withDefault(config.friction, 26),
+              mass: withDefault(config.mass, 1),
+              duration: withDefault(config.duration, 0),
+              easing: withDefault(config.easing, t => t),
+            },
+          }
+        } else return entry
+      },
+      this.animations
+    )
+
+    if (this.hasChanged) {
+      this.configs = getValues(this.animations)
+      this.interpolations = Object.entries(this.animations).reduce(
+        (acc, [name, { interpolation }]) => ({ ...acc, [name]: interpolation }),
+        {}
+      )
+      const oldAnimatedProps = this.animatedProps
+      this.animatedProps = new AnimatedProps(this.interpolations, () => {
+        // This gets called on every animation frame ...
+        if (onFrame) onFrame(this.animatedProps.getValue())
+        if (!native && this.onUpdate) this.onUpdate()
+      })
+      oldAnimatedProps && oldAnimatedProps.detach()
+    }
   }
 
-  set(configs, impl) {
-    if (impl) this.impl = impl
-    const setConf = this.impl.setValueConfig
-    // Stop all ongoing animations
-    this.stop()
-    // Enforce arrays
-    configs = toArray(configs)
-    // Build configuration
-    this.configs = configs.map(config => {
-      let to = config.to
-      let value = config.value
-      let animations = (value instanceof AnimatedArray
-        ? value._values.map((value, i) => ({ value, to: to[i] }))
-        : [{ value, to }]
-      ).map(animation => ({
-        ...animation,
-        ...setConf(config, animation.value),
-      }))
-      return {
-        ...this.impl.setGlobalConfig(config),
-        delay: withDefault(config.delay, 0),
-        animations,
-      }
-    })
-    return this
-  }
-
-  start(onEnd, reset = true) {
-    this.__active = true
-    this.__onEnd = onEnd
+  start(onEnd, onUpdate) {
     this.startTime = Globals.now()
-    this.lastTime = !this.lastTime ? this.startTime : this.lastTime
+    if (this.active) this.stop()
 
-    // Prepare configs and values
-    this.configs = this.configs.map(config => ({
-      ...config,
-      animations: config.animations.map(({ value, to, ...rest }) => {
-        let lastPos = value._value
-        value._done = false
-        if (reset) value._animatedStyles.clear()
-        return { value, to, startPos: value._value, lastPos, ...rest }
-      }),
-    }))
+    this.active = true
+    this.onEnd = onEnd
+    this.onUpdate = onUpdate
 
+    if (this.props.onStart) this.props.onStart()
     // Start RAF loop
-    this._animationFrame = Globals.requestFrame(this.update)
-    return this
+    this.frame = Globals.requestFrame(this.raf)
   }
 
-  update = () => {
+  stop(finished = false) {
+    this.active = false
+    Globals.cancelFrame(this.frame)
+    this.debouncedOnEnd({ finished })
+  }
+
+  debouncedOnEnd(result) {
+    this.active = false
+    const onEnd = this.onEnd
+    this.onEnd = null
+    onEnd && onEnd(result)
+  }
+
+  getRawValues = () => (this.animatedProps ? this.animatedProps.getValue() : {})
+
+  getValues = () =>
+    this.props.native ? this.interpolations : this.getRawValues()
+
+  raf = () => {
     let now = Globals.now()
     let isDone = true
     let noChange = true
 
-    // Run through all the configs, each representing a to-prop
-    for (let iConfig = 0; iConfig < this.configs.length; iConfig++) {
-      let config = this.configs[iConfig]
+    for (let a = 0; a < this.configs.length; a++) {
+      const config = this.configs[a]
+      const {
+        parent, // The animated object on which the update-cb is called
+        interpolation, // The parents interpolation, if any. If not it refers to the parent
+        animatedValues, // An array of all animated values taking part in this op
+        fromValues, // Raw/numerical start-state values
+        toValues, // Raw/numerical/end-state values
+
+        delay,
+        tension,
+        friction,
+        precision,
+        mass,
+        clamp,
+        duration,
+        easing,
+        initialVelocity,
+      } = config
 
       // Doing delay here instead of setTimeout is one async worry less
-      if (config.delay && now - this.startTime < config.delay) {
+      if (delay && now - this.startTime < delay) {
         isDone = false
         continue
       }
 
-      // A prop could be an AnimatedValue or an AnimatedArray
-      for (let iAnim = 0; iAnim < config.animations.length; iAnim++) {
-        const anim = config.animations[iAnim]
-        const from = anim.startPos
-        const to = anim.to
+      for (let b = 0; b < config.animatedValues.length; b++) {
+        let animation = config.animatedValues[b]
+        let position = animation.lastPosition
+        let from = config.fromValues[b]
+        let to = config.toValues[b]
 
         // If an animation is done, skip, until all of them conclude
-        if (anim.value._done) continue
+        if (animation.done) continue
 
-        // Break animation when string values are involved or start/end value match
-        if (from === to || typeof from === 'string' || typeof to === 'string') {
-          anim.value._updateValue(to)
-          anim.value._done = true
+        // Break animation when string values are involved
+        if (typeof from === 'string' || typeof to === 'string') {
+          animation.updateValue(to)
+          animation.done = true
           continue
         } else noChange = false
 
-        let isTrailing = anim.to instanceof Animated
-        let interpTo = isTrailing ? anim.to.__getValue() : anim.to
-        let [pos, endOfAnimation] = this.impl.update(
-          config,
-          anim,
-          anim.startPos,
-          interpTo,
-          anim.lastPos,
-          now,
-          this.startTime,
-          this.lastTime
-        )
+        let endOfAnimation
+        if (duration) {
+          position =
+            from +
+            easing((now - this.startTime - delay) / duration) * (to - from)
+          endOfAnimation = now >= this.startTime + delay + duration
+        } else {
+          let lastTime =
+            animation.lastTime !== void 0 ? animation.lastTime : now
+          let velocity =
+            animation.lastVelocity !== void 0
+              ? animation.lastVelocity
+              : initialVelocity
 
-        anim.lastPos = pos
+          // If we lost a lot of frames just jump to the end.
+          if (now > lastTime + 64) now = lastTime + 64
+          // http://gafferongames.com/game-physics/fix-your-timestep/
+          const numSteps = Math.floor(now - lastTime)
+          for (let i = 0; i < numSteps; ++i) {
+            const force = -tension * (position - to)
+            const damping = -friction * velocity
+            const acceleration = (force + damping) / mass
+            velocity = velocity + (acceleration * 1) / 1000
+            position = position + (velocity * 1) / 1000
+          }
+
+          // Conditions for stopping the spring animation
+          const isOvershooting =
+            clamp && tension !== 0
+              ? from < to
+                ? position > to
+                : position < to
+              : false
+          const isVelocity = Math.abs(velocity) <= precision
+          const isDisplacement =
+            tension !== 0 ? Math.abs(to - position) <= precision : true
+          endOfAnimation = isOvershooting || (isVelocity && isDisplacement)
+
+          animation.lastVelocity = velocity
+          animation.lastTime = now
+        }
 
         // Trails aren't done until their parents conclude
-        if (isTrailing && !anim.to._done) endOfAnimation = false
-
-        // a listener might have stopped us in _onUpdate
-        if (!this.__active) return
+        //if (isTrailing /*&& !anim.to._done*/) endOfAnimation = false
 
         if (endOfAnimation) {
           // Ensure that we end up with a round value
-          if (anim.value._value !== interpTo) anim.value._updateValue(interpTo)
-          anim.value._done = true
-        } else {
-          anim.value._updateValue(anim.lastPos)
-          isDone = false
-        }
+          if (animation.value !== to) position = to
+          animation.done = true
+        } else isDone = false
+
+        //debugger
+        animation.updateValue(position)
+        animation.lastPosition = position
       }
     }
 
-    if (isDone) return this.__debouncedOnEnd({ finished: true, noChange })
-
-    this.lastTime = now
-    this._animationFrame = Globals.requestFrame(this.update)
-  }
-
-  stop(finished = false) {
-    if (!this.configs) return
-
-    // Store current animation variables
-    this.configs.forEach(config =>
-      config.animations.forEach(
-        ({ value, to, ...rest }) => (value._cache = rest)
-      )
-    )
-
-    Globals.cancelFrame(this._animationFrame)
-    this.__active = false
-    this.__debouncedOnEnd({ finished })
-    return this
-  }
-
-  __debouncedOnEnd(result) {
-    const onEnd = this.__onEnd
-    this.__onEnd = null
-    this.__active = false
-    onEnd && onEnd(result)
+    if (isDone) return this.debouncedOnEnd({ finished: true, noChange })
+    this.frame = Globals.requestFrame(this.raf)
   }
 }

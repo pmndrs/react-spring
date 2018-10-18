@@ -1,8 +1,6 @@
 import AnimatedWithChildren from './AnimatedWithChildren'
 import AnimatedInterpolation from './AnimatedInterpolation'
 
-var _uniqueId = 0
-
 /**
  * Animated works by building a directed acyclic graph of dependencies
  * transparently when you render your Animated components.
@@ -28,7 +26,7 @@ var _uniqueId = 0
 
 function findAnimatedStyles(node, styles) {
   if (typeof node.update === 'function') styles.add(node)
-  else node.__getChildren().forEach(child => findAnimatedStyles(child, styles))
+  else node.getChildren().forEach(child => findAnimatedStyles(child, styles))
 }
 
 /**
@@ -40,69 +38,37 @@ function findAnimatedStyles(node, styles) {
 export default class AnimatedValue extends AnimatedWithChildren {
   constructor(value) {
     super()
-    this._value = value
-    this._animatedStyles = new Set()
-    this._listeners = {}
-    this._cache = {}
-    this._done = false
+    this.value = value
+    this.animatedStyles = new Set()
+    this.done = false
+    this.startPosition = value
+    this.lastPosition = value
+    this.lastVelocity = undefined
+    this.lastTime = undefined
   }
 
-  __detach() {
-    this._detached = true
+  flush() {
+    if (this.animatedStyles.size === 0) this.updateStyles()
+    this.animatedStyles.forEach(animatedStyle => animatedStyle.update())
   }
 
-  __getValue() {
-    return this._value
-  }
-
-  _update() {
-    findAnimatedStyles(this, this._animatedStyles)
-  }
-
-  _flush() {
-    if (this._animatedStyles.size === 0) this._update()
-    this._animatedStyles.forEach(animatedStyle => animatedStyle.update())
-  }
-
-  _updateValue = value => {
-    this._value = value
-    this._flush()
-    for (let key in this._listeners) this._listeners[key]({ value })
-  }
-
-  /**
-   * Directly set the value.  This will stop any animations running on the value
-   * and update all the bound properties.
-   */
   setValue(value) {
-    this._animatedStyles.clear()
-    this._updateValue(value)
+    this.animatedStyles.clear()
+    this.updateValue(value)
   }
 
-  /**
-   * Interpolates the value before updating the property, e.g. mapping 0-1 to
-   * 0-10.
-   */
-  interpolate(config) {
-    return new AnimatedInterpolation(this, config)
+  reset(active = false) {
+    this.startPosition = this.value
+    this.lastPosition = this.value
+    this.lastVelocity = this.active ? this.lastVelocity : undefined
+    this.lastTime = this.active ? this.lastTime : undefined
+    this.done = false
+    this.animatedStyles.clear()
   }
 
-  /**
-   * Adds an asynchronous listener to the value so you can observe updates from
-   * animations.  This is useful because there is no way to
-   * synchronously read the value because it might be driven natively.
-   */
-  addListener(callback) {
-    var id = String(_uniqueId++)
-    this._listeners[id] = callback
-    return id
-  }
-
-  removeListener(id) {
-    delete this._listeners[id]
-  }
-
-  removeAllListeners() {
-    this._listeners = {}
-  }
+  getValue = () => this.value
+  getAnimatedValue = () => this
+  updateStyles = () => findAnimatedStyles(this, this.animatedStyles)
+  updateValue = value => this.flush(this.value = value)
+  interpolate = config => new AnimatedInterpolation(this, config)
 }

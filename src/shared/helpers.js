@@ -5,7 +5,7 @@ export function withDefault(value, defaultValue) {
 }
 
 export function toArray(a) {
-  return Array.isArray(a) ? a : [a]
+  return a !== void 0 ? (Array.isArray(a) ? a : [a]) : []
 }
 
 export function shallowEqual(a, b) {

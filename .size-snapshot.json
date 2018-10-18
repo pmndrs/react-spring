@@ -5,9 +5,9 @@
     "gzipped": 3046
   },
   "dist/web.umd.js": {
-    "bundled": 84135,
-    "minified": 32799,
-    "gzipped": 11695
+    "bundled": 80853,
+    "minified": 31778,
+    "gzipped": 11619
   },
   "dist/addons.js": {
     "bundled": 19560,
@@ -24,16 +24,16 @@
     }
   },
   "dist/web.js": {
-    "bundled": 78314,
-    "minified": 36326,
-    "gzipped": 11926,
+    "bundled": 75186,
+    "minified": 35980,
+    "gzipped": 11760,
     "treeshaked": {
       "rollup": {
-        "code": 30468,
-        "import_statements": 223
+        "code": 29384,
+        "import_statements": 343
       },
       "webpack": {
-        "code": 31871
+        "code": 30911
       }
     }
   },

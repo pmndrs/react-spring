@@ -135,6 +135,9 @@ class KeyframesImpl extends React.PureComponent {
   }
 }
 
+// TODO: AnimatedController has a change detection, please check if that affects in any way
+// how Keyframes.next handles promises. If two calls with the same values don't call oRest then
+// that would be a serious bug
 const Keyframes = React.forwardRef((props, ref) => (
   <KeyframesImpl {...props} forwardRef={ref} />
 ))
