@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import * as Globals from './animated/Globals'
 import Spring from './Spring'
 import Trail from './Trail'
 import {
@@ -82,7 +83,10 @@ class KeyframesImpl extends React.PureComponent {
               (props, last = false) =>
                 localId === this.guid && this.next(f(props), last, index++),
               // cancel
-              () => this.instance && this.instance.stop(),
+              () =>
+                Globals.requestFrame(
+                  () => this.instance && this.instance.stop()
+                ),
               // ownprops
               this.props
             )
@@ -112,7 +116,7 @@ class KeyframesImpl extends React.PureComponent {
 
     // Arrayed configs need an index to process
     if (Array.isArray(config)) config = config[index]
-    
+
     return (
       <Component
         ref={ref => (this.instance = handleRef(ref, forwardRef))}

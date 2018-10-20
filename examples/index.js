@@ -29,7 +29,7 @@ const components = [
   'dashoffset',
   'transitiongroup',
   'chat',
-  'messages', // broken
+  'messages',
   'hooks',
 ].reduce(
   (acc, path) => ({

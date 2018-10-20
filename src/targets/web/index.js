@@ -1,8 +1,6 @@
 import React from 'react'
 import './globals'
 import * as Globals from '../../animated/Globals'
-import AnimatedValue from '../../animated/AnimatedValue'
-import AnimatedArray from '../../animated/AnimatedArray'
 import AnimationController from '../../animated/AnimationController'
 import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
@@ -11,7 +9,6 @@ import Spring, { useSpring } from '../../Spring'
 import Transition from '../../Transition'
 import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
-import { callProp } from '../../shared/helpers'
 
 const domElements = [
   'a',
@@ -162,8 +159,6 @@ export {
   Transition,
   Trail,
   AnimationController,
-  AnimatedValue,
-  AnimatedArray,
   config,
   extendedAnimated as animated,
   interpolate,

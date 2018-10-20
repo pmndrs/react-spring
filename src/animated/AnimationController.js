@@ -202,6 +202,8 @@ export default class AnimationController {
   }
 
   stop(finished = false) {
+    // Reset collected changes since the animation has been stopped cold turkey
+    if (finished) getValues(this.animations).forEach(a => a.changes = undefined)
     this.isActive = false
     Globals.cancelFrame(this.frame)
     this.debouncedOnEnd({ finished })

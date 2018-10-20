@@ -2,16 +2,13 @@ import Animated from './Animated'
 import AnimatedArray from './AnimatedArray'
 import { AnimatedArrayWithChildren } from './AnimatedWithChildren'
 import Interpolation from './Interpolation'
+import { toArray } from '../shared/helpers'
 
 export default class AnimatedInterpolation extends AnimatedArrayWithChildren {
   constructor(parents, config) {
     super()
     this.payload =
-      parent instanceof AnimatedArray
-        ? parents.payload
-        : Array.isArray(parents)
-          ? parents
-          : [parents]
+      parents instanceof AnimatedArray ? parents.payload : toArray(parents)
     this.interpolation = Interpolation.create(config)
   }
 
