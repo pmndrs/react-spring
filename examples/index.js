@@ -16,7 +16,7 @@ const components = [
   'timing',
   'spring',
   'tree',
-  'grid',
+  'grid', // broken
   'morph',
   'sunburst',
   'onrest',
@@ -29,7 +29,7 @@ const components = [
   'dashoffset',
   'transitiongroup',
   'chat',
-  'messages',
+  'messages', // broken
   'hooks',
 ].reduce(
   (acc, path) => ({
@@ -46,7 +46,7 @@ const components = [
 )
 
 const DEBUG = true
-const DebugComponent = components['reveals']
+const DebugComponent = components['messages']
 
 ReactDOM.render(
   DEBUG ? (

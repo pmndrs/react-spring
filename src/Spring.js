@@ -137,7 +137,6 @@ export default class Spring extends React.Component {
     // An update can occur on injected props, or when own-props have changed.
     if (this.injectProps) {
       this.controller.update(this.injectProps)
-      this.injectProps = undefined
       // didInject is needed, because there will be a 3rd stage, where the original values
       // .. will be restored after the animation is finished. When someone animates towards
       // .. "auto", the end-result should be "auto", not "1999px", which would block nested
@@ -149,6 +148,7 @@ export default class Spring extends React.Component {
       // Flag an update that occured, componentDidUpdate will start the animation later on
       this.didUpdate = true
       this.afterInject = undefined
+      this.injectProps = undefined
     }
 
     this.updating = false
@@ -202,7 +202,6 @@ export default class Spring extends React.Component {
 }
 
 export function useSpring(props) {
-  const [, forceUpdate] = React.useState(false)
   const state = React.useRef({
     mounted: false,
     controller: new AnimationController(),
@@ -222,6 +221,5 @@ export function useSpring(props) {
         props.onRest(state.current.controller.merged)
     )
   })
-  //console.log(state.current)
   return state.current.controller.interpolations
 }

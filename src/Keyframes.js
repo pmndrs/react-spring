@@ -105,27 +105,20 @@ class KeyframesImpl extends React.PureComponent {
       states,
       config,
       primitive: Component,
-      from: ownFrom,
       onRest,
       forwardRef,
       ...rest
     } = this.props
 
-    const from =
-      typeof props.from === 'function'
-        ? props.from
-        : { ...oldProps.from, ...props.from }
-
     // Arrayed configs need an index to process
     if (Array.isArray(config)) config = config[index]
-
+    
     return (
       <Component
         ref={ref => (this.instance = handleRef(ref, forwardRef))}
         config={config}
         {...rest}
         {...props}
-        from={{ ...from, ...ownFrom }}
         onRest={args => {
           resolve(args)
           if (onRest && last) onRest(args)

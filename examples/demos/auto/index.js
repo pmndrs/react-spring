@@ -23,7 +23,7 @@ export default class App extends React.Component {
           <Spring
             native
             force
-            config={{ ...config.stiff, precision: 0.1 }}
+            config={{ tension: 2000, friction: 100, precision: 1 }}
             from={{ height: toggle ? 0 : 'auto' }}
             to={{ height: toggle ? 'auto' : 0 }}>
             {props => (

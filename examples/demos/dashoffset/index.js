@@ -10,6 +10,7 @@ export default class App extends React.Component {
   }
   render() {
     const { offset } = this.state
+    console.log(offset)
     return (
       <div
         style={{
@@ -32,7 +33,7 @@ export default class App extends React.Component {
               reset
               from={{ dash: offset }}
               to={{ dash: 0 }}
-              config={{ duration: 3000 }}>
+              config={{ delay: 1000, duration: 3000 }}>
               {props => (
                 <animated.path
                   ref={this.path}

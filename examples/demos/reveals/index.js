@@ -11,13 +11,23 @@ export default class App extends React.PureComponent {
       <div className="reveals-main" onClick={this.toggle}>
         <Transition
           native
-          unique
           items={this.state.show}
-          from={{ opacity: 0 }}
-          enter={{ opacity: 1 }}
-          leave={{ opacity: 0 }}>
+          from={{ position: 'absolute', opacity: 0, coords: [40, 40] }}
+          enter={{ opacity: 1, coords: [0, 0] }}
+          leave={{ opacity: 0, coords: [-40, -40] }}>
           {show =>
-            show && (props => <animated.div style={props}>hello</animated.div>)
+            show &&
+            (({ coords, ...props }) => (
+              <animated.div
+                style={{
+                  ...props,
+                  transform: coords.interpolate(
+                    (x, y) => `translate3d(${x}px,${y}px,0)`
+                  ),
+                }}>
+                hello
+              </animated.div>
+            ))
           }
         </Transition>
       </div>

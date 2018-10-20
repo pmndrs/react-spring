@@ -3,7 +3,31 @@
   height: 100%;
   background: lightblue;
   overflow: hidden;
-  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hooks-main > svg {
+  display: none;
+}
+
+.hooks-main > p {
+  z-index: 1000;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
+  segoe ui, arial, sans-serif;
+  font-weight: 100;
+  font-size: 10em;
+  color: rgba(255,255,255,0.7);
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  text-align: left;
+  line-height: 0.7em;
+}
+
+.hooks-main > p > span:last-of-type {
+  font-weight: 600;
 }
 
 .b1, .b2, .b3 {
@@ -12,22 +36,22 @@
   border-radius: 50%;
   background: lightcoral;
   box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 .b1 {
-  width: 200px;
-  height: 200px;
+  width: 170px;
+  height: 170px;
 }
 
 .b2 {
-  width: 300px;
-  height: 300px;
+  width: 350px;
+  height: 350px;
 }
 
 .b3 {
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
 }
 
 .b1::after, .b2::after, .b3::after {
@@ -38,7 +62,7 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.8);
 }
 
 .b2::after {
@@ -49,14 +73,16 @@
 }
 
 .b3::after {
-  top: 20px;
-  left: 20px;
+  top: 50px;
+  left: 50px;
   width: 50px;
   height: 50px;
 }
 
 .hooks-filter {
+  position: absolute;
   width: 100%;
   height: 100%;
   filter: url('#goo');
+  overflow: hidden;
 }

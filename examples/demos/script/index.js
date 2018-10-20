@@ -1,5 +1,5 @@
 import React from 'react'
-import { Keyframes, animated } from 'react-spring'
+import { Keyframes, animated, config } from 'react-spring'
 import delay from 'delay'
 
 const Content = Keyframes.Spring(async next => {
@@ -21,14 +21,13 @@ const Content = Keyframes.Spring(async next => {
       from: { top: '0%' },
       top: '40%',
       background: 'plum',
-      config: { tension: 10, friction: 0 },
+      config: config.wobbly,
     })
     await delay(2000) // don't wait for the animation above to finish, go to the next one in 2s
     await next({ left: '0%', background: 'hotpink' })
     await next({
       top: '0%',
       background: 'teal',
-      config: { tension: 500, friction: 5 },
     })
     await next({
       opacity: 0,

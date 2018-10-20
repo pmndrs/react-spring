@@ -1,5 +1,5 @@
 import React from 'react'
-import { Transition, config, animated } from 'react-spring'
+import { Transition, animated } from 'react-spring'
 import {
   HashRouter as Router,
   Switch,
@@ -22,7 +22,6 @@ const App = () => (
           <div className="content">
             <Transition
               native
-              config={{ tension: 1, friction: 10 }}
               items={location}
               keys={location.pathname.split('/')[1]}
               from={{ transform: 'translateY(100px)', opacity: 0 }}
@@ -68,7 +67,7 @@ const Red = ({ style }) => (
         <div>
           <Transition
             native
-            config={config.slow}
+  
             items={location}
             keys={location.pathname}
             from={{ transform: 'translateY(100px)', opacity: 0 }}
@@ -111,7 +110,6 @@ const Green = ({ style }) => (
         <div>
           <Transition
             native
-            config={config.slow}
             items={location}
             keys={location.pathname}
             from={{ transform: 'translateY(100px)', opacity: 0 }}

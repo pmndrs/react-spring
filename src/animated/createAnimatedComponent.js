@@ -33,10 +33,9 @@ export default function createAnimatedComponent(Component) {
     // forceUpdate.
     callback = () => {
       if (this.node) {
-        //debugger
         const didUpdate = Globals.applyAnimatedValues.fn(
           this.node,
-          this.propsAnimated.getValue(),
+          this.propsAnimated.getAnimatedValue(),
           this
         )
         if (didUpdate === false) this.forceUpdate()

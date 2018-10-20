@@ -9,6 +9,7 @@ export function toArray(a) {
 }
 
 export function shallowEqual(a, b) {
+  if (typeof a !== typeof b) return false
   if (typeof a === 'string') return a === b
   let i
   for (i in a) if (!(i in b)) return false

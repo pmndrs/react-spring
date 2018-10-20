@@ -29,13 +29,7 @@ export default class App extends React.Component {
           }}>
           <SpringCounter name="react-spring">
             {(onRest, renders) => (
-              <Spring
-                to={{ progress: update % 2 }}
-                config={{
-                  tension: 100,
-                  friction: 16,
-                }}
-                onRest={onRest}>
+              <Spring to={{ progress: update % 2 }} onRest={onRest}>
                 {props => <Anim {...props} />}
               </Spring>
             )}
@@ -43,12 +37,7 @@ export default class App extends React.Component {
           <SpringCounter name="react-motion">
             {onRest => (
               <Motion
-                style={{
-                  progress: motionSpring(update % 2, {
-                    stiffness: 100,
-                    damping: 16,
-                  }),
-                }}
+                style={{ progress: motionSpring(update % 2) }}
                 onRest={onRest}>
                 {props => <Anim {...props} />}
               </Motion>

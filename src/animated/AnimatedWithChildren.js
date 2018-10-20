@@ -23,6 +23,13 @@ export default class AnimatedWithChildren extends Animated {
   }
 
   getChildren = () => this.children
+
+  // This function returns the animated value the object holds, even if it points to itself,
+  // while an object like AnimatedArray will points to its children
+  getPayload = (index = undefined) =>
+    index !== void 0 && this.payload
+      ? this.payload[index]
+      : this.payload || this
 }
 
 export class AnimatedArrayWithChildren extends AnimatedWithChildren {

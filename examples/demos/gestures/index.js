@@ -4,6 +4,7 @@ import React from 'react'
 import { withGesture } from 'react-with-gesture'
 import { Spring, animated } from 'react-spring'
 import './styles.css'
+import AnimatedValue from '../../../src/animated/AnimatedValue'
 
 @withGesture // https://github.com/drcmda/react-with-gesture
 export default class GesturesExample extends React.Component {

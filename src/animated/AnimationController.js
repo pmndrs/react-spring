@@ -12,9 +12,9 @@ import {
 } from '../shared/helpers'
 
 export default class AnimationController {
-  active = false
-  props = {}
+  isActive = false
   hasChanged = false
+  props = {}
   merged = {}
   animations = {}
   interpolations = {}
@@ -29,12 +29,12 @@ export default class AnimationController {
     let {
       from = {},
       to = {},
+      delay = 0,
       reverse,
       attach,
       reset,
       immediate,
       config,
-      delay,
       native,
       onFrame,
     } = props
@@ -76,8 +76,9 @@ export default class AnimationController {
          */
 
         // Attach allows a spring to fetch its values elsewhere
-        if (target && target.animations[name])
-          value = attachedAnimation.animation
+        if (target && target.animations[name]) {
+          value = target.animations[name].parent
+        }
 
         // Figure out what the value is supposed to be
         let isArray, isString, isNumber, isInterpolation
@@ -94,62 +95,56 @@ export default class AnimationController {
         }
 
         // Carry actual values (including animated) in order to change detect
-        const changes = isAnimated ? value.getAnimatedValue() : value
+        const changes = isAnimated ? value.getPayload() : value
 
         // Detect changes, animated values will be checked in the raf-loop
         if (isAnimated || !shallowEqual(entry.changes, changes)) {
           this.hasChanged = true
 
           let parent, interpolation
-          from = from[name] !== void 0 ? from[name] : value
-          config = callProp(config, name)
-
-          /*if (isAnimated) {
-            isTrailing = true
-            // Use provided animated value
-            animation = interpolation =
-              entry.animation || new value.constructor(_from.getValue())
-            // If we're animating towards another AnimatedValue, see if it's done
-            //if (_to && toArray(_to._values).some(value => !value._done))
-            hasChanged = true
-            // Replace toValue with the numeric content
-            _to = _to.getValue()
-          } else */
+          let _from = from[name] !== void 0 ? from[name] : value
+          let _config = callProp(config, name)
 
           if (isAnimated) {
-            debugger
+            parent = interpolation =
+              entry.parent || new value.constructor(value.getValue())
           } else if (isNumber || isString) {
-            parent = interpolation = entry.parent || new AnimatedValue(from)
+            parent = interpolation = entry.parent || new AnimatedValue(_from)
           } else if (isArray) {
-            parent = interpolation = entry.parent || new AnimatedArray(from)
+            parent = interpolation = entry.parent || new AnimatedArray(_from)
           } else if (isInterpolation) {
             // Deal with interpolations
             const prev =
               entry.interpolation &&
-              entry.interpolation.interpolate(entry.parent.value)
+              entry.interpolation.interpolation(entry.parent.value)
             // Interpolations are not addaptive, start with 0
             if (entry.parent) {
               parent = entry.parent
-              parent.setValue(0)
+              parent.value = 0
             } else parent = new AnimatedValue(0)
             // Map from-to on a scale between 0-1
-            const range = { output: [prev !== void 0 ? prev : from, value] }
-            if (entry.interpolation)
-              interpolation = entry.interpolation.updateConfig(range)
-            else interpolation = parent.interpolate(range)
+            const range = { range: [0, 1], output: [prev !== void 0 ? prev : _from, value] }
+
+            if (entry.interpolation) {
+              interpolation = entry.interpolation
+              entry.interpolation.updateConfig(range)
+            } else interpolation = parent.interpolate(range)
+
             // And stop at 1
             value = 1
-          } else return entry
+          } else return acc
+
+          parent.track = isAnimated ? value : undefined
 
           // Map output values to an array so reading out is easier later on
-          const animatedValues = toArray(parent.getAnimatedValue())
+          const animatedValues = toArray(parent.getPayload())
           const fromValues = toArray(parent.getValue())
           const toValues = toArray(isAnimated ? value.getValue() : value)
 
           // Set immediate values
-          if (callProp(immediate, name)) parent.setValue(value)
+          if (callProp(immediate, name)) parent.value = value
           // Reset animated values
-          animatedValues.forEach(value => value.reset(this.active))
+          animatedValues.forEach(value => value.prepare(this))
 
           return {
             ...acc,
@@ -161,18 +156,18 @@ export default class AnimationController {
               fromValues, // Raw/numerical start-state values
               toValues, // Raw/numerical/end-state values
               changes,
-              delay,
-              initialVelocity: withDefault(config.velocity, 0),
-              clamp: withDefault(config.clamp, false),
-              precision: withDefault(config.precision, 0.01),
-              tension: withDefault(config.tension, 170),
-              friction: withDefault(config.friction, 26),
-              mass: withDefault(config.mass, 1),
-              duration: withDefault(config.duration, 0),
-              easing: withDefault(config.easing, t => t),
+              delay: withDefault(_config.delay, delay || 0),
+              initialVelocity: withDefault(_config.velocity, 0),
+              clamp: withDefault(_config.clamp, false),
+              precision: withDefault(_config.precision, 0.01),
+              tension: withDefault(_config.tension, 170),
+              friction: withDefault(_config.friction, 26),
+              mass: withDefault(_config.mass, 1),
+              duration: withDefault(_config.duration, 0),
+              easing: withDefault(_config.easing, t => t),
             },
           }
-        } else return entry
+        } else return acc
       },
       this.animations
     )
@@ -195,9 +190,9 @@ export default class AnimationController {
 
   start(onEnd, onUpdate) {
     this.startTime = Globals.now()
-    if (this.active) this.stop()
+    if (this.isActive) this.stop()
 
-    this.active = true
+    this.isActive = true
     this.onEnd = onEnd
     this.onUpdate = onUpdate
 
@@ -207,13 +202,13 @@ export default class AnimationController {
   }
 
   stop(finished = false) {
-    this.active = false
+    this.isActive = false
     Globals.cancelFrame(this.frame)
     this.debouncedOnEnd({ finished })
   }
 
   debouncedOnEnd(result) {
-    this.active = false
+    this.isActive = false
     const onEnd = this.onEnd
     this.onEnd = null
     onEnd && onEnd(result)
@@ -237,7 +232,6 @@ export default class AnimationController {
         animatedValues, // An array of all animated values taking part in this op
         fromValues, // Raw/numerical start-state values
         toValues, // Raw/numerical/end-state values
-
         delay,
         tension,
         friction,
@@ -259,7 +253,8 @@ export default class AnimationController {
         let animation = config.animatedValues[b]
         let position = animation.lastPosition
         let from = config.fromValues[b]
-        let to = config.toValues[b]
+        let tracked = parent.track && parent.track.getPayload(b)
+        let to = tracked ? tracked.getValue() : config.toValues[b]
 
         // If an animation is done, skip, until all of them conclude
         if (animation.done) continue
@@ -286,7 +281,7 @@ export default class AnimationController {
               : initialVelocity
 
           // If we lost a lot of frames just jump to the end.
-          if (now > lastTime + 64) now = lastTime + 64
+          if (now > lastTime + 64) lastTime = now
           // http://gafferongames.com/game-physics/fix-your-timestep/
           const numSteps = Math.floor(now - lastTime)
           for (let i = 0; i < numSteps; ++i) {
@@ -314,7 +309,7 @@ export default class AnimationController {
         }
 
         // Trails aren't done until their parents conclude
-        //if (isTrailing /*&& !anim.to._done*/) endOfAnimation = false
+        if (parent.track && !tracked.done) endOfAnimation = false
 
         if (endOfAnimation) {
           // Ensure that we end up with a round value
@@ -322,7 +317,6 @@ export default class AnimationController {
           animation.done = true
         } else isDone = false
 
-        //debugger
         animation.updateValue(position)
         animation.lastPosition = position
       }
