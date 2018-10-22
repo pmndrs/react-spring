@@ -10,6 +10,7 @@ function Links({ links, linkType, layout, orientation, stepPercent }) {
     <Group>
       <Transition
         items={links}
+        unique
         keys={d => `${d.source.data.name}_${d.target.data.name}`}
         from={({ source, target }) => ({
           sx: source.data.x0,

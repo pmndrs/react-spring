@@ -9,9 +9,9 @@ export default class App extends React.PureComponent {
     // Add 😅 🚀 🎉
     setTimeout(() => this.setState({ items: ['😅', '🚀', '🎉'] }), 0)
     // Remove 🚀
-    setTimeout(() => this.setState({ items: ['😅', '🎉'] }), 1500)
+    setTimeout(() => this.setState({ items: ['😅', '🎉'] }), 2500)
     // Add ✨
-    setTimeout(() => this.setState({ items: ['😅', '✨', '🎉'] }), 3000)
+    setTimeout(() => this.setState({ items: ['😅', '✨', '🎉'] }), 5000)
   }
 
   render() {
@@ -28,8 +28,7 @@ export default class App extends React.PureComponent {
             { transform: 'scale(1)', opacity: 0.5 },
             { opacity: 0 },
             { height: 0 },
-          ]}
-          config={{ ...config.stiff, precision: 0.01 }}>
+          ]}>
           {item => props => (
             <animated.div
               style={props}

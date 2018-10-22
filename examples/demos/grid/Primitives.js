@@ -24,7 +24,6 @@ export class Slug extends React.PureComponent {
     return (
       <Trail
         native
-        config={config.slow}
         {...rest}
         items={result}
         keys={result.map((_, i) => i)}
@@ -64,7 +63,6 @@ export class Fade extends React.PureComponent {
     return (
       <Transition
         native
-        config={config.slow}
         items={show}
         {...rest}
         from={from}

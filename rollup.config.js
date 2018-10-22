@@ -60,9 +60,9 @@ function createConfig(entry, out, name) {
 }
 
 export default [
-  //...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
+  ...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
   ...createConfig('targets/web/index', 'web', 'ReactSpring'),
-  /*...createConfig('targets/native/index', 'native'),
+  ...createConfig('targets/native/index', 'native'),
   ...createConfig('targets/universal/index', 'universal'),
-  ...createConfig('targets/konva/index', 'konva'),*/
+  ...createConfig('targets/konva/index', 'konva'),
 ]

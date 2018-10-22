@@ -18,6 +18,7 @@ function addItem(state) {
   return { items }
 }
 
+let count = 0
 export default class App extends React.PureComponent {
   state = { items: [] }
 
@@ -26,8 +27,8 @@ export default class App extends React.PureComponent {
 
   addItems = () =>
     setTimeout(
-      () => void (this.setState(addItem), this.addItems()),
-      this.state.items.length ? Math.random() * 3000 : 0
+      () => void (this.setState(addItem), count++ < 10 && this.addItems()),
+      this.state.items.length ? Math.random() * 1000 : 0
     )
 
   componentDidMount() {

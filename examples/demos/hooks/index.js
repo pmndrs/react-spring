@@ -25,12 +25,7 @@ export default function Goo() {
   return (
     <React.unstable_ConcurrentMode>
       <div class="hooks-main">
-        <p>
-          <span>react</span>
-          <span></span>
-          <span>spring</span>
-          <span>6</span>
-        </p>
+
         <div class="hooks-filter">
           <anim.div class="b1" style={{ transform: pos3.interpolate(trans) }} />
           <anim.div class="b2" style={{ transform: pos2.interpolate(trans) }} />

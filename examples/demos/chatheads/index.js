@@ -13,12 +13,12 @@ export default class Demo extends React.Component {
   render() {
     return (
       <div className="demo1">
-        <Trail items={this.items} to={this.state}>
+        <Trail native items={this.items} to={this.state}>
           {items => ({ x, y }) => (
-            <div
+            <animated.div
               className="demo1-ball"
-              style={{ transform: `translate3d(${x - 25}px, ${y - 25}px, 0)` }}
-              //style={{ transform: interpolate([x,y], (x,y) => `translate3d(${x - 25}px, ${y - 25}px, 0)`) }}
+              //style={{ transform: `translate3d(${x - 25}px, ${y - 25}px, 0)` }}
+              style={{ transform: interpolate([x,y], (x,y) => `translate3d(${x - 25}px, ${y - 25}px, 0)`) }}
             />
           )}
         </Trail>

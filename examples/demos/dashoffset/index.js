@@ -1,6 +1,9 @@
 import React from 'react'
 import { Spring, animated } from 'react-spring'
 import { GradientPinkRed as Gradient } from '@vx/gradient'
+import * as easings from 'd3-ease'
+
+console.log(easings)
 
 export default class App extends React.Component {
   state = { offset: 0 }
@@ -10,7 +13,6 @@ export default class App extends React.Component {
   }
   render() {
     const { offset } = this.state
-    console.log(offset)
     return (
       <div
         style={{
@@ -33,7 +35,7 @@ export default class App extends React.Component {
               reset
               from={{ dash: offset }}
               to={{ dash: 0 }}
-              config={{ delay: 1000, duration: 3000 }}>
+              config={{ delay: 1000, duration: 3000, easing: easings.easeCubic }}>
               {props => (
                 <animated.path
                   ref={this.path}

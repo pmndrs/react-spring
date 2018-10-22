@@ -1,4 +1,3 @@
-import Easing from './Easing'
-import { Fade, Slug } from './Effects'
+import { Parallax, ParallaxLayer } from './Parallax'
 
-export { Easing, Fade, Slug }
+export { Parallax, ParallaxLayer }

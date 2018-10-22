@@ -2,7 +2,7 @@
 // https://dribbble.com/shots/4138489-Screeners
 
 import React from 'react'
-import { Parallax, ParallaxLayer } from 'react-spring'
+import { Parallax, ParallaxLayer } from '../../../src/addons/index'
 import './styles.css'
 
 const Page = ({ offset, caption, first, second, gradient, onClick }) => (

@@ -5,7 +5,7 @@ import AnimationController from '../../animated/AnimationController'
 import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
 import { config } from '../../shared/constants'
-import Spring, { useSpring } from '../../Spring'
+import Spring from '../../Spring'
 import Transition from '../../Transition'
 import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
@@ -163,5 +163,4 @@ export {
   extendedAnimated as animated,
   interpolate,
   Globals,
-  useSpring,
 }

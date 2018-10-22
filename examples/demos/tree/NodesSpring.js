@@ -9,6 +9,7 @@ function Nodes({ nodes, layout, orientation, onNodeClick }) {
   return (
     <Transition
       native
+      unique
       items={nodes}
       keys={keyAccessor}
       config={{ tension: 1000, friction: 130, mass: 5 }}

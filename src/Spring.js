@@ -200,26 +200,3 @@ export default class Spring extends React.Component {
     }
   }
 }
-
-export function useSpring(props) {
-  const state = React.useRef({
-    mounted: false,
-    controller: new AnimationController(),
-  })
-
-  if (!state.current.mounted) {
-    state.current.mounted = true
-    state.current.controller.update(interpolateTo(props))
-  }
-
-  React.useEffect(() => {
-    state.current.controller.update(interpolateTo(props))
-    state.current.controller.start(
-      ({ finished }) =>
-        finished &&
-        props.onRest &&
-        props.onRest(state.current.controller.merged)
-    )
-  })
-  return state.current.controller.interpolations
-}

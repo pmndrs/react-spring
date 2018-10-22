@@ -1,5 +1,5 @@
 import React from 'react'
-import { Parallax, ParallaxLayer } from 'react-spring'
+import { Parallax, ParallaxLayer } from '../../../src/addons/index'
 
 // Little helpers ...
 const url = (name, wrap = false) =>
@@ -30,7 +30,7 @@ const Gray = ({ children }) => (
 export default class ScrollExample extends React.Component {
   render() {
     return (
-      <div style={{ background: '#253237' }}>
+      <div style={{ width: '100%', height: '100%', background: '#253237' }}>
         <Parallax ref={ref => (this.parallax = ref)} pages={3}>
           <ParallaxLayer
             offset={1}
