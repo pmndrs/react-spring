@@ -11,6 +11,29 @@ import {
   shallowEqual,
 } from '../shared/helpers'
 
+let now,
+isDone,
+noChange,
+configIdx,
+valIdx,
+config,
+animation,
+position,
+from,
+tracked,
+to,
+endOfAnimation,
+lastTime,
+velocity,
+numSteps,
+force,
+damping,
+acceleration,
+stepIdx,
+isOvershooting,
+isVelocity,
+isDisplacement
+
 export default class AnimationController {
   isActive = false
   hasChanged = false
@@ -214,6 +237,11 @@ export default class AnimationController {
   }
 
   stop(finished = false) {
+    config = undefined
+    animation = undefined
+    from = undefined
+    tracked = undefined
+    to = undefined
     // Reset collected changes since the animation has been stopped cold turkey
     if (finished)
       getValues(this.animations).forEach(a => (a.changes = undefined))
@@ -233,28 +261,9 @@ export default class AnimationController {
     this.props.native ? this.interpolations : this.animatedProps
 
   raf = () => {
-    let now = Globals.now(),
-      isDone = true,
-      noChange = true,
-      configIdx,
-      valIdx,
-      config,
-      animation,
-      position,
-      from,
-      tracked,
-      to,
-      endOfAnimation,
-      lastTime,
-      velocity,
-      numSteps,
-      force,
-      damping,
-      acceleration,
-      stepIdx,
-      isOvershooting,
-      isVelocity,
-      isDisplacement
+    now = Globals.now()
+    isDone = true
+    noChange = true
 
     for (configIdx = 0; configIdx < this.configs.length; configIdx++) {
       config = this.configs[configIdx]

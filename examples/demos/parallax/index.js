@@ -5,7 +5,7 @@ import React from 'react'
 import { Parallax, ParallaxLayer } from '../../../src/addons/index'
 import './styles.css'
 
-const Page = ({ offset, caption, first, second, gradient, onClick }) => (
+const Page = ({ offset, gradient, onClick }) => (
   <React.Fragment>
     <ParallaxLayer offset={offset} speed={0.2} onClick={onClick}>
       <div className="slopeBegin" />
@@ -32,30 +32,9 @@ export default class extends React.Component {
           pages={3}
           horizontal
           scrolling={false}>
-          <Page
-            offset={0}
-            gradient="pink"
-            caption="who we are"
-            first="Lorem ipsum"
-            second="dolor sit"
-            onClick={() => this.scroll(1)}
-          />
-          <Page
-            offset={1}
-            gradient="teal"
-            caption="what we do"
-            first="consectetur"
-            second="adipiscing elit"
-            onClick={() => this.scroll(2)}
-          />
-          <Page
-            offset={2}
-            gradient="tomato"
-            caption="what we want"
-            first="Morbi quis"
-            second="est dignissim"
-            onClick={() => this.scroll(0)}
-          />
+          <Page offset={0} gradient="pink" onClick={() => this.scroll(1)} />
+          <Page offset={1} gradient="teal" onClick={() => this.scroll(2)} />
+          <Page offset={2} gradient="tomato" onClick={() => this.scroll(0)} />
         </Parallax>
       </div>
     )

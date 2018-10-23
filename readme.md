@@ -84,135 +84,35 @@ You'll find a full docs, live playgrounds, prop descriptions and so forth here:
 
 # Basic overview
 
-## Springs ([Demo](https://codesandbox.io/embed/oln44nx8xq))
+A `Spring` moves data from one state to another. `from` is the optional initial state, `to` is where the spring will shift values towards. You can update `to` any time, mid-animation or not, and it will smoothly adapt.
 
-<img src="assets/spring.gif" width="285" />
+<p align="middle">
+  <img src="assets/front/spring.gif">
+</p>
 
-A `Spring` will move data from one state to another. It remembers the current state, value changes are always fluid.
+A `Transition` animates component lifecycles. It takes a **list of items** of any type, and their **keys**. Whenever items are added, removed, reordered or updated, it will help you to animate these changes.
 
-```jsx
-import { Spring } from 'react-spring'
+<p align="middle">
+  <img src="assets/front/transition.gif">
+</p>
 
-<Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
-  {styles => <div style={styles}>i will fade in</div>}
-</Spring>
-```
+It can also take a **single item**, which can be anything. You can use it to toggle between components.
 
-## Mount/unmount Transitions ([Demo](https://codesandbox.io/embed/j150ykxrv))
+<p align="middle">
+  <img src="assets/front/switch.gif">
+</p>
 
-<img src="assets/transitions.gif" width="285" />
+It also comes in handy for single-component mount/unmount reveals. Unmounting elements will vanish from the dom once their animation concludes.
 
-`Transition` watches elements as they mount and unmount and helps you to animate these changes. You feed it an array of `items` and a key accessor (which defaults to `item => item`). You receive an item as the only render-child and return a functional component which catches the animated values.
+<p align="middle">
+  <img src="assets/front/reveal.gif">
+</p>
 
-```jsx
-import { Transition } from 'react-spring'
+A `Trail` animates the first item of a list of elements, the rest follow the spring of their previous sibling.
 
-<Transition
-  items={items}
-  keys={item => item.key}
-  from={{ opacity: 0, height: 0 }}
-  enter={{ opacity: 1, height: 20 }}
-  leave={{ opacity: 0, height: 0, pointerEvents: 'none' }}>
-  {item => styles => <li style={styles}>{item.text}</li>}
-</Transition>
-```
-
-## 2-state and 1-state Reveals ([Demo](https://codesandbox.io/embed/yj52v5689))
-
-<img src="assets/reveals.gif" width="285" />
-
-Given a single child instead of a list you can toggle between two components.
-
-```jsx
-<Transition items={toggle} from={...} enter={...} leave={...}>
-  {toggle =>
-    toggle
-      ? props => <div style={props}>Component A</div>
-      : props => <div style={props}>Component B</div>
-  }
-</Transition>
-```
-
-If you need to toggle a single child, that is also possible.
-
-```jsx
-<Transition items={show} from={...} enter={...} leave={...}>
-  {show => show && (props => <div style={props}>Single Component</div>)}
-</Transition>
-```
-
-## Trails and staggered animations ([Demo](https://codesandbox.io/embed/vvmv6x01l5))
-
-<img src="assets/trails.gif" width="285" />
-
-`Trail` animates the first child of a list of elements, the rest follow the spring of their previous sibling.
-
-```jsx
-import { Trail } from 'react-spring'
-
-<Trail items={items} keys={item => item.key} from={{ opacity: 0 }} to={{ opacity: 1 }}>
-  {item => styles => <div style={styles}>{item.text}</div>}
-</Trail>
-```
-
-## Keyframes ([Demo](https://codesandbox.io/embed/zl35mrkqmm))
-
-<img src="assets/keyframes-trail.gif" width="285" />
-
-`Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots. The resulting primitive behaves like the primitive it stems from, it can receive all generic properties like `native` or `from`, etc. You make it animate by passing the `state` props, which receives the named slot.
-
-```jsx
-import { Keyframes, config } from 'react-spring'
-
-// You can create keyframes for springs, trails and transitions
-const Container = Keyframes.Spring({
-  // Single props
-  show: { to: { opacity: 1 } },
-  // Chained animations (arrays)
-  showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
-  // Functions with side-effects
-  wiggle: async call => {
-    await call({ to: { x: 100 }, config: config.wobbly })
-    await delay(1000)
-    await call({ to: { x: 0 }, config: config.gentle })
-  }
-})
-
-<Container state="show">
-  {styles => <div style={styles}>Hello</div>}
-</Container>
-```
-
-## Parallax and page transitions ([Demo](https://codesandbox.io/embed/548lqnmk6l))
-
-<img src="assets/horizontal.gif" width="285" />
-
-`Parallax` allows you to declaratively create page/scroll-based animations.
-
-```jsx
-import { Parallax, ParallaxLayer } from 'react-spring'
-
-<Parallax pages={2}>
-  <ParallaxLayer offset={0} speed={0.2}>
-    first Page
-  </ParallaxLayer>
-  <ParallaxLayer offset={1} speed={0.5}>
-    second Page
-  </ParallaxLayer>
-</Parallax>
-```
-
-## Time/duration-based implementations and addons ([Demo](https://codesandbox.io/embed/q9lozyymr9))
-
-<img src="assets/time.gif" width="285" />
-
-You'll find varying implementations under [/dist/addons](https://github.com/drcmda/react-spring/tree/master/src/addons). For now there's a time-based animation as well common [easings](https://github.com/drcmda/react-spring/blob/master/src/addons/Easing.js), and IOS'es harmonic oscillator spring. All primitives understand the `impl` property which you can use to switch implementations.
-
-```jsx
-import { TimingAnimation, Easing } from 'react-spring/dist/addons'
-
-<Spring impl={TimingAnimation} config={{ duration: 1000, easing: Easing.linear }} >
-```
+<p align="middle">
+  <img src="assets/front/trail.gif">
+</p>
 
 # Interpolation
 

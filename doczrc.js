@@ -1,6 +1,8 @@
 const path = require('path')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
+console.log(path.resolve('./src/targets/web'))
+
 export default {
   protocol: 'http',
   title: 'react-spring',
@@ -119,6 +121,13 @@ export default {
           { test: () => true, sideEffects: true },
         ],
       },
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve.alias,
+          'react-spring': path.resolve('./src/targets/web')
+        }
+      }
     }
   },
 }
