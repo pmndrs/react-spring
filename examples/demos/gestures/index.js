@@ -28,7 +28,10 @@ export default class GesturesExample extends React.Component {
                       output: [0.5, 1],
                       extrapolate: 'clamp',
                     })
-                    .interpolate(x => `scale(${x})`),
+                    .interpolate(x => {
+                      console.log(x)
+                      return `scale(${x})`
+                    }),
                   justifySelf: xDelta < 0 ? 'end' : 'start',
                 }}
               />

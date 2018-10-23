@@ -59,13 +59,6 @@ export function interpolateTo(props) {
   return { to: forward, ...rest }
 }
 
-export function renderChildren(props, componentProps) {
-  const forward = { ...componentProps, ...getForwardProps(props) }
-  return props.render
-    ? props.render({ ...forward, children: props.children })
-    : props.children(forward)
-}
-
 export function convertToAnimatedValue(acc, [name, value]) {
   return {
     ...acc,

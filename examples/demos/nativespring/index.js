@@ -14,26 +14,6 @@ const styles = {
   shape: { width: 300, height: 300, willChange: 'transform' },
 }
 
-const Content = ({ toggle, backgroundColor, fill, rotate, scale, shape }) => (
-  <animated.div style={{ ...styles.container, backgroundColor }}>
-    <animated.svg
-      style={{
-        ...styles.shape,
-        fill,
-        transform: interpolate(
-          [rotate, scale],
-          (r, s) => `rotate3d(0,1,0,${r}) scale(${s})`
-        ),
-      }}
-      version="1.1"
-      viewBox="0 0 400 400">
-      <g style={{ cursor: 'pointer' }} fillRule="evenodd" onClick={toggle}>
-        <animated.path id="path-1" d={shape} />
-      </g>
-    </animated.svg>
-  </animated.div>
-)
-
 export default class NativeSpringExample extends React.Component {
   state = { toggle: true }
   toggle = () => this.setState(state => ({ toggle: !state.toggle }))
@@ -54,9 +34,30 @@ export default class NativeSpringExample extends React.Component {
           shape: toggle ? TRIANGLE : RECTANGLE,
         }}
         toggle={this.toggle}
-        children={Content}
-        onRest={() => console.log('done')}
-      />
+        onRest={() => console.log('done')}>
+        {({ toggle, backgroundColor, fill, rotate, scale, shape }) => (
+          <animated.div style={{ ...styles.container, backgroundColor }}>
+            <animated.svg
+              style={{
+                ...styles.shape,
+                fill,
+                transform: interpolate(
+                  [rotate, scale],
+                  (r, s) => `rotate3d(0,1,0,${r}) scale(${s})`
+                ),
+              }}
+              version="1.1"
+              viewBox="0 0 400 400">
+              <g
+                style={{ cursor: 'pointer' }}
+                fillRule="evenodd"
+                onClick={this.toggle}>
+                <animated.path id="path-1" d={shape} />
+              </g>
+            </animated.svg>
+          </animated.div>
+        )}
+      </Spring>
     )
   }
 }

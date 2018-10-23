@@ -9,7 +9,6 @@ import * as Globals from './animated/Globals'
 import { config } from './shared/constants'
 import {
   interpolateTo,
-  renderChildren,
   convertValues,
   callProp,
   shallowEqual,
@@ -109,7 +108,7 @@ export default class Spring extends React.Component {
   }
 
   render() {
-    const { native, onFrame } = this.props
+    const { native, onFrame, children } = this.props
     const propsChanged = this.state.propsChanged
 
     // Inject phase -----------------------------------------------------------
@@ -158,9 +157,7 @@ export default class Spring extends React.Component {
     // Render out raw values or AnimatedValues depending on "native"
     let values = { ...this.controller.getValues(), ...this.afterInject }
     if (this.finished) values = { ...values, ...this.props.after }
-    return values && Object.keys(values).length
-      ? renderChildren(this.props, values)
-      : null
+    return values && Object.keys(values).length ? children(values) : null
   }
 
   componentDidUpdate() {

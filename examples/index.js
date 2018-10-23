@@ -45,8 +45,8 @@ const components = [
   {}
 )
 
-const DEBUG = false
-const DebugComponent = components['onrest']
+const DEBUG = true
+const DebugComponent = components['gestures']
 
 ReactDOM.render(
   DEBUG ? (
