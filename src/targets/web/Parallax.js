@@ -24,12 +24,15 @@ export class ParallaxLayer extends React.PureComponent {
     offset: PropTypes.number,
     /** shifts the layer in accordance to its offset, values can be positive or negative */
     speed: PropTypes.number,
+    /** ParallaxLayer position change hook */
+    onPositionChange: PropTypes.func
   }
 
   static defaultProps = {
     factor: 1,
     offset: 0,
     speed: 0,
+    onPositionChange: function(to, height) {}
   }
 
   componentDidMount() {
@@ -56,6 +59,7 @@ export class ParallaxLayer extends React.PureComponent {
     if (!immediate)
       controller(this.animatedTranslate, { to, ...config }, impl).start()
     else this.animatedTranslate.setValue(to)
+    this.props.onPositionChange(to, height)
   }
 
   setHeight(height, immediate = false) {

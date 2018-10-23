@@ -209,12 +209,15 @@ class ParallaxLayer extends React.PureComponent {
     offset: PropTypes.number,
     // Speed (and direction) it scrolls there, can be positive or negative
     speed: PropTypes.number,
+    // ParallaxLayer position change hook
+    onPositionChange: PropTypes.func
   }
 
   static defaultProps = {
     factor: 1,
     offset: 0,
     speed: 0,
+    onPositionChange: function(to, height) {},
   }
 }
 ```
