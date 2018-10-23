@@ -4,7 +4,6 @@ import React from 'react'
 import { withGesture } from 'react-with-gesture'
 import { Spring, animated } from 'react-spring'
 import './styles.css'
-import AnimatedValue from '../../../src/animated/AnimatedValue'
 
 @withGesture // https://github.com/drcmda/react-with-gesture
 export default class GesturesExample extends React.Component {
@@ -28,10 +27,7 @@ export default class GesturesExample extends React.Component {
                       output: [0.5, 1],
                       extrapolate: 'clamp',
                     })
-                    .interpolate(x => {
-                      console.log(x)
-                      return `scale(${x})`
-                    }),
+                    .interpolate(x => `scale(${x})`),
                   justifySelf: xDelta < 0 ? 'end' : 'start',
                 }}
               />

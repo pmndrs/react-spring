@@ -6,7 +6,8 @@ export default class AnimatedInterpolation extends AnimatedArrayWithChildren {
   constructor(parents, config) {
     super()
     this.payload =
-      parents instanceof AnimatedArrayWithChildren
+      // AnimatedArrays should unfold, except AnimatedInterpolation which is taken as is
+      parents instanceof AnimatedArrayWithChildren && !parents.updateConfig
         ? parents.payload
         : Array.isArray(parents)
           ? parents
