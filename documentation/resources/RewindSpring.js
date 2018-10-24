@@ -1,6 +1,5 @@
 import React from 'react'
-import createContext from 'immer-wieder'
-import { Spring, animated, config } from '../src/targets/web'
+import { Spring, animated, config } from '../../src/targets/web'
 import Meter from 'grommet/components/Meter'
 
 const AnimatedMeter = animated(Meter)

@@ -4,39 +4,65 @@ route: /trail
 order: 5
 ---
 
-import { Playground, PropsTable } from 'docz'
-import { Trail, config } from '../src/targets/web'
-import { Provider, Consumer } from './'
+import { PropsTable } from 'docz'
+import { Trail, config, animated } from '../src/targets/web'
+import { RewindSpringProvider, RewindSpring } from './resources/RewindSpring.js'
+import CodeMirror from './resources/Codemirror'
 
 # Trail
 
+You begin by importing `Trail`.
+
 ```jsx
 import { Trail } from 'react-spring'
-
-<Trail from={{ opacity: 0 }} to={{ opacity: 1 }} keys={items.map(item => item.key)}>
-  {items.map(item => styles => <div style={styles}>{item.text}</div>)}
-</Trail>
 ```
 
-## Basics
+<RewindSpringProvider>
+  <p>
+    A <code>Trail</code> animates the first item of a list of elements, the rest follow the spring of their previous sibling. It takes a <span className="highlight">list of items</span> of any type, and their <span className="highlight">keys</span>. The latter defaults to <code>item => item</code>, which, if your items are self-sufficient as a key is often good enough.
+  </p>
+  <p>
+    You provide a single function-child that receives one of those items individually. This function should return a regular functional component: <code>props => view</code>.
+  </p>
+  <p>
+    TLDR, items in, keys if necessary, present the item that comes out and apply the animated props you receive.
+  </p>
 
-A `Trail` animates the first child of a list of elements, the rest follow the spring of their previous sibling.
-
-<Playground style={{ overflow: 'hidden', height: 100 }}>
-  <Provider value={set => ({ list: ['Apples', 'Oranges', 'Bananas'] })}>
-    <Consumer>
-      {({list}) => (
-        <Trail
-          keys={list}
-          from={{ opacity: 0, transform: 'translate3d(0px,0,0)' }}
-          to={{ opacity: 1, transform: 'translate3d(100px,0,0)' }}
-          config={config.molasses}>
-          {list.map(item => props => <div style={props}>{item}</div>)}
-        </Trail>
+  <div className="code-table">
+    <CodeMirror value={`const items = [...]
+  
+<Trail
+  items={items} keys={item => item.key}
+  from={{ transform: 'translate3d(0,-40px,0)' }}
+  to={{ transform: 'translate3d(0,0px,0)' }}
+  {item => props =>
+    <span style={props}>{item.text}</span>
+  }
+</Trail>`}/>
+    <RewindSpring>
+      {x => (
+        <>
+          <animated.div style={{ opacity: x.interpolate({ range: [0.0,1.0], output: [0,1] }), transform: x.interpolate({ range: [0.0,1.0], output: [-40,0], extrapolate: 'clamp' }).interpolate(x => `translate3d(0,${x}px,0)`) }}>h</animated.div>
+          <animated.div style={{ opacity: x.interpolate({ range: [0.2,1.0], output: [0,1] }), transform: x.interpolate({ range: [0.2,1.0], output: [-40,0], extrapolate: 'clamp' }).interpolate(x => `translate3d(0,${x}px,0)`) }}>e</animated.div>
+          <animated.div style={{ opacity: x.interpolate({ range: [0.4,1.0], output: [0,1] }), transform: x.interpolate({ range: [0.4,1.0], output: [-40,0], extrapolate: 'clamp' }).interpolate(x => `translate3d(0,${x}px,0)`) }}>l</animated.div>
+          <animated.div style={{ opacity: x.interpolate({ range: [0.6,1.0], output: [0,1] }), transform: x.interpolate({ range: [0.6,1.0], output: [-40,0], extrapolate: 'clamp' }).interpolate(x => `translate3d(0,${x}px,0)`) }}>l</animated.div>
+          <animated.div style={{ opacity: x.interpolate({ range: [0.8,1.0], output: [0,1] }), transform: x.interpolate({ range: [0.8,1.0], output: [-40,0], extrapolate: 'clamp' }).interpolate(x => `translate3d(0,${x}px,0)`) }}>o</animated.div>
+        </>
       )}
-    </Consumer>
-  </Provider>
-</Playground>
+    </RewindSpring>
+  </div>
+</RewindSpringProvider>
+
+## Multistage transitions
+
+<p>
+  Transition actually inherits from <a href="/keyframes">Keyframes</a>, so its slots (<code>initial</code>, <code>from</code>, <code>enter</code>, <code>leave</code> and <code>update</code> can take the same types that Keyframe slots can take, namely: objects, functions, object-arrays. This gives you the ability to handle complex multistage, chained or scripted animations.
+</p>
+
+<iframe
+  src="https://codesandbox.io/embed/q7v9jrqj5q?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FDemo.js"
+  style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
+  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
 
 ## Props
 

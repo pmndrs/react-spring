@@ -4,98 +4,117 @@ route: /transition
 order: 6
 ---
 
-import { Playground, PropsTable } from 'docz'
-import { Transition, config } from '../src/targets/web'
-import { Provider, Consumer } from './'
+import { PropsTable } from 'docz'
+import { Transition, config, animated } from '../src/targets/web'
+import { RewindSpringProvider, RewindSpring } from './resources/RewindSpring.js'
+import CodeMirror from './resources/Codemirror'
 
 # Transition
 
+You begin by importing `Transition`.
+
 ```jsx
 import { Transition } from 'react-spring'
-
-<Transition
-  keys={items.map(item => item.key)}
-  from={{ opacity: 0, height: 0 }}
-  enter={{ opacity: 1, height: 30 }}
-  leave={{ opacity: 0, height: 0 }}>
-  {items.map(item => styles => <li style={styles}>{item.text}</li>)}
-</Transition>
 ```
 
-## Basics
+<RewindSpringProvider>
+  <p>
+    A <code>Transition</code> animates component lifecycles as components mount, unmount or otherwise change. It takes a <span className="highlight">list of items</span> of any type, and their <span className="highlight">keys</span>. The latter defaults to <code>item => item</code>, which, if your items are self-sufficient as a key is often good enough. Whenever items are added, removed, reordered or updated, it will help you to animate these changes.
+  </p>
+  <p>
+    You provide a single function-child that receives one of those items individually, and optionally its transition state (enter/leave/update), followed by its index: <code>(item, state, index) => ...</code>. This function should return a regular functional component: <code>props => view</code>.
+  </p>
+  <p>
+    <span className="highlight">You should always rely on the item that comes out below</span> instead of reading from scope, since you could be rendering an item that has already been deleted but can fade-out out inside Transition nonetheless. This is especially important for routes.
+  </p>
+  <p>
+    TLDR, items in, keys if necessary, present the item that comes out and apply the animated props you receive.
+  </p>
 
-A `Transition` watches elements as they mount and unmount or otherwise change, it helps you to animate these changes. It also preserves leaving elements in their very last state, so you can safely animate them out before they vanish. For this reason you should always think of `Transition` as a stack, it is never just one element. Consider this when you need elements to fade in and out on top of one another, which calls for `position: absolute`, unless you want a stack or a list where elements push away other elements.
-
-The following immitates a list that is dropping and gaining items.
-
-<Playground style={{ overflow: 'hidden', height: 100 }}>
-  <Provider value={set => {
-    setTimeout(() => set({list: ['Apples', 'Bananas']}), 1500)
-    setTimeout(() => set({list: ['Apples', 'Oranges', 'Bananas']}), 3000)
-    setTimeout(() => set({list: ['Kiwis']}), 4500)
-    return {list: ['Apples', 'Oranges', 'Bananas']}
-    }}>
-    <Consumer>
-      {({list}) => (
-        <Transition
-          keys={list}
-          from={{ overflow: 'hidden', height: 0 }}
-          enter={{ height: 30, background: '#28d79f' }}
-          leave={{ height: 0, background: '#c23369' }}
-          update={{ background: '#28b4d7' }}
-          config={config.molasses}>
-          {list.map(item => props => <div style={props}>{item}</div>)}
-        </Transition>
+  <div className="code-table">
+    <CodeMirror value={`const items = [...]
+  
+<Transition
+  items={items} keys={item => item.key}
+  from={{ transform: 'translate3d(0,-40px,0)' }}
+  enter={{ transform: 'translate3d(0,0px,0)' }}
+  leave={{ transform: 'translate3d(0,-40px,0)' }}>
+  {item => props =>
+    <div style={props}>{item.text}</div>
+  }
+</Transition>`}/>
+    <RewindSpring>
+      {x => (
+        <>
+          <animated.div style={{ opacity: x.interpolate({ range: [0.75,1.0], output: [0,1] }), transform: x.interpolate({ range: [0.75,1.0], output: [-40,0], extrapolate: 'clamp' }).interpolate(x => `translate3d(0,${x}px,0)`) }}>1</animated.div>
+          <animated.div style={{ opacity: x.interpolate({ range: [0.25,0.5], output: [0,1] }), transform: x.interpolate({ range: [0.25,0.5], output: [-40,0], extrapolate: 'clamp' }).interpolate(x => `translate3d(0,${x}px,0)`) }}>2</animated.div>
+          <animated.div style={{ opacity: x.interpolate({ range: [0.0,0.25], output: [0,1] }), transform: x.interpolate({ range: [0.0,0.25], output: [-40,0], extrapolate: 'clamp' }).interpolate(x => `translate3d(0,${x}px,0)`) }}>3</animated.div>
+          <animated.div style={{ opacity: x.interpolate({ range: [0.5,0.75], output: [0,1] }), transform: x.interpolate({ range: [0.5,0.75], output: [-40,0], extrapolate: 'clamp' }).interpolate(x => `translate3d(0,${x}px,0)`) }}>4</animated.div>
+        </>
       )}
-    </Consumer>
-  </Provider>
-</Playground>
+    </RewindSpring>
+  </div>
+
+  <p>
+    It can also take a <span className="highlight">single item</span>, which can be anything. You can use it to toggle between components.
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`<Transition
+  items={toggle}
+  from={{ position: 'absolute', opacity: 0 }}
+  enter={{ opacity: 1 }}
+  leave={{ opacity: 0 }}>
+  {toggle =>
+    toggle
+      ? props => <div style={props}>😄</div>
+      : props => <div style={props}>🤪</div>
+  }
+</Transition>`}/>
+    <RewindSpring>
+      {x => (
+        <>
+          <animated.div style={{ position: 'absolute', opacity: x.interpolate({ range: [0.0,1.0], output: [0,1] }) }}>😄</animated.div>
+          <animated.div style={{ position: 'absolute', opacity: x.interpolate({ range: [1.0,0.0], output: [0,1] }) }}>🤪</animated.div>
+        </>
+      )}
+    </RewindSpring>
+  </div>
+
+  <p>
+    It also comes in handy for single-component mount/unmount reveals.
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`<Transition
+  items={show}
+  from={{ opacity: 0 }}
+  enter={{ opacity: 1 }}
+  leave={{ opacity: 0 }}>
+  {show =>
+    show && (props => <div style={props}>✌️</div>)
+  }
+</Transition>`}/>
+    <RewindSpring>
+      {x => <animated.div style={{ opacity: x }}>✌️</animated.div>}
+    </RewindSpring>
+  </div>
+
+</RewindSpringProvider>
+
+## Multistage transitions
+
+<p>
+  Transition actually inherits from <a href="/keyframes">Keyframes</a>, so its slots (<code>initial</code>, <code>from</code>, <code>enter</code>, <code>leave</code> and <code>update</code> can take the same types that Keyframe slots can take, namely: objects, functions, object-arrays. This gives you the ability to handle complex multistage, chained or scripted animations.
+</p>
+
+<iframe
+  src="https://codesandbox.io/embed/986only79r?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FMessageHub.js"
+  style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
+  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
 
 ## Props
 
 Other than the props listed here `Transition` can take all the props that `Spring` accepts (config, native, immediate, onRest, etc).
 
 <PropsTable of={Transition} />
-
-## 2-state and 1-state Reveals
-
-Given a single child instead of a list you can toggle between two components. If you want these two on top of one another make sure to position them absolutely.
-
-```jsx
-<Transition
-  from={{ position: 'absolute', opacity: 0 }}
-  enter={{ opacity: 1 }}
-  leave={{ opacity: 0 }}>
-  {toggle
-    ? styles => <div style={styles}>Component A</div>
-    : styles => <div style={styles}>Component B</div>
-  }
-</Transition>
-```
-
-If you need to toggle a single child, that is also possible.
-
-```jsx
-<Transition
-  from={{ position: 'absolute', opacity: 0 }}
-  enter={{ opacity: 1 }} 
-  leave={{ opacity: 0 }}>
-  {visible && (styles => <div style={styles}>Single Component</div>)}
-</Transition>
-```
-
-## Individual Transitions
-
-For more complex transitions you can return per-item values individually. Let `Transition` know the actual data by passing it raw to `items`, either pass your keys like always or give it an accessor. This allows you to set values individually since all value props accept functions. And for more control, there's `update` which fires for nodes that are neither entering nor leaving, use it to update present items.
-
-```jsx
-<Transition
-  items={items}
-  keys={item => item.key}
-  from={item => ({ opacity: 0 })}
-  enter={item => ({ opacity: 1 })}
-  update={item => ({ opacity: 0.5 })}
-  leave={item => ({ opacity: 0 })}>
-  {items.map(item => styles => <li style={styles}>{item.text}</li>)}
-</Transition>
-```

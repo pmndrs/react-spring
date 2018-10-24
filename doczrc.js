@@ -24,7 +24,7 @@ export default {
           height: 100%!important;
         }
         .CodeMirror pre {
-          line-height: 1.8!important;
+          line-height: 20.8px!important;
         }
         .CodeMirror-line {
           padding: 0 10px!important;

@@ -17,7 +17,7 @@ let get = props => {
 
 export default class Transition extends React.PureComponent {
   static propTypes = {
-    /** First render base values (initial from -> enter), if present overrides "from", can be "null" to skip first mounting transition, or: item => values */
+    /** First-render initial values, if present overrides "from" on the first render pass. It can be "null" to skip first mounting transition. Otherwise it can take an object or a function (item => object) */
     initial: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Base values (from -> enter), or: item => values */
     from: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
@@ -49,11 +49,11 @@ export default class Transition extends React.PureComponent {
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Calls back once a transition is about to wrap up */
     onDestroyed: PropTypes.func,
-    /** Item keys (the same keys you'd hand over to react in a list). If you specify items, keys can be an accessor function (item => item.key) */
+    /** The same keys you would normally hand over to React in a list. Keys can be specified as a key-accessor function, an array of keys, or a single value */
     keys: PropTypes.oneOfType([PropTypes.func, PropTypes.array, PropTypes.any]),
-    /** An array of items to be displayed, use this if you need access to the actual items when distributing values as functions (see above) */
+    /** An array of items to be displayed, this is used by Transition as the primary means of detecting changes. */
     items: PropTypes.oneOfType([PropTypes.array, PropTypes.any]).isRequired,
-    /** An array of functions (props => view) */
+    /** A single function-child that receives the individual item and return a functional component (item => props => view) */
     children: PropTypes.func.isRequired,
   }
 

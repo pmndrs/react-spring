@@ -8,7 +8,7 @@ import { Tweet } from 'react-twitter-widgets'
 
 # Gotchas
 
-## Why are duration and easing hidden away as addons?
+## Why the focus on spring physics instead of durations?
 
 <p>
   <div style={{ float: "right", margin: '-10px 0px 30px 30px' }}>
@@ -25,24 +25,6 @@ Think of it like this, if you cause an animation and abort somewhere near the mi
 
 It can be odd in the beginning thinking of animation not in terms of time, but once you let go things will start to make sense and creating fluid interfaces will be easier than ever.
 </p>
-
-## Render props
-
-Don't like the way render props wrap your code and create nested structures? By default we support both render and children, so you can create higher-order components like so:
-
-```jsx
-const Header = ({ children, bold, ...styles }) => (
-  <h1 style={styles}>
-    {bold ? <b>{children}</b> : children}
-  </h1>
-)
-
-<Spring render={Header} to={{ color: 'fuchsia' }} bold>
-  hello there
-</Spring>
-```
-
-Et voilà! Header animates on prop changes! Props that Spring doesn't recognize will be spread over the receiving component, in this example bold, but it also includes children if you use render to refer to the render-child.
 
 ## Animating "auto"
 

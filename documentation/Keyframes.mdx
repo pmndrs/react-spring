@@ -5,7 +5,6 @@ order: 4
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Provider, Consumer } from './'
 import { Keyframes, config } from '../src/targets/web'
 
 # Keyframes
@@ -14,31 +13,29 @@ import { Keyframes, config } from '../src/targets/web'
 import { Keyframes } from 'react-spring'
 ```
 
-## Basics
-
 `Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots which you then execute by passing the state prop.
 
-The resulting primitive can receive all the generic properties you would normally give your springs, like native, from, and so on.
+The resulting primitive can receive all the generic properties you would normally give your springs, like native, from, and so on. By default all unknown props are interpolate as `to`.
 
 First, you define a Keyframe-object.
 
 ```jsx
-// You can create keyframes for springs, trails and transitions
+// You can create keyframes for springs and trails
 const Container = Keyframes.Spring({
   // Single props
-  show: { to: { opacity: 1 } },
+  show: { opacity: 1 },
   // Chained animations (arrays)
-  showAndHide: [ { to: { opacity: 1 } }, { to: { opacity: 0 } }],
+  showAndHide: [ { opacity: 1 }, { opacity: 0 }],
   // Functions with side-effects with access to component props
-  wiggle: async (next, ownProps) => {
-    await next({ to: { x: 100 }, config: config.wobbly })
+  wiggle: async (next, cancel, ownProps) => {
+    await next({ x: 100, config: config.wobbly })
     await delay(1000)
-    await next({ to: { x: 0 }, config: config.gentle })
+    await next({ x: 0, config: config.gentle })
   }
 })
 ```
 
-Now use it anywhere you want, set the named slot you want to animate.
+Now use it anywhere you want, set the named slot you want to animate towards.
 
 ```jsx
 <Container state="show">
@@ -55,7 +52,7 @@ const Container = Keyframes.Spring(async next => {
     await next({
       reset: true,
       from: { opacity: 0 },
-      to: { opacity: 1 },
+      opacity: 1,
     })
   }
 })
@@ -65,25 +62,17 @@ And another shortcut for arrays:
 
 ```jsx
 const Container = Keyframes.Spring([
-  { to: { scale: 1.5 } },
-  { to: { scale: 1 } },
-])
-```
-
-`Spring` and `Trail` also have a .to shortcut to make it even leaner. It will try to interpolate animatable props, but you can still use regular Spring-props like delay, immediate and so on, just be aware that they are reserved.
-
-```jsx
-const Container = Keyframes.Spring.to([
-  { immediate: true, delay: 500, scale: 1.5 },
+  { scale: 1.5 },
   { scale: 1 },
 ])
 ```
 
-If you have made your own animation primitive and want to drive it through keyframes, that is also doable:
+## Demo
 
-```jsx
-const Container = Keyframes.create(MyOwnPrimitive)({ ... })
-```
+<iframe
+  src="https://codesandbox.io/embed/vjmmp7xl10?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FDemo.js"
+  style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
+  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
 
 ## Props
 
