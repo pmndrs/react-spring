@@ -9,11 +9,6 @@
 - [What others say](#what-others-say)
 - [Used by](#used-by)
 - [API reference and examples](#api-reference-and-examples)
-- [Basic overview](#basic-overview)
-- [Interpolation](#interpolation)
-- [Render props](#render-props)
-- [Native rendering](#native-rendering)
-- [React-native and other targets](#react-native-and-other-targets)
 - [Funding](#funding)
 
 # What is it?
@@ -81,85 +76,6 @@ And [many others](https://github.com/drcmda/react-spring/network/dependents) ...
 You'll find a full docs, live playgrounds, prop descriptions and so forth here:
 
 <h3><a href="http://react-spring.surge.sh/">http://react-spring.surge.sh/</a></h3>
-
-# Basic overview
-
-A `Spring` moves data from one state to another. `from` is the optional initial state, `to` is where the spring will shift values towards. You can update `to` any time, mid-animation or not, and it will smoothly adapt.
-
-<p align="middle">
-  <img src="assets/front/spring.gif">
-</p>
-
-A `Transition` animates component lifecycles. It takes a **list of items** of any type, and their **keys**. Whenever items are added, removed, reordered or updated, it will help you to animate these changes.
-
-<p align="middle">
-  <img src="assets/front/transition.gif">
-</p>
-
-It can also take a **single item**, which can be anything. You can use it to toggle between components.
-
-<p align="middle">
-  <img src="assets/front/switch.gif">
-</p>
-
-It also comes in handy for single-component mount/unmount reveals. Unmounting elements will vanish from the dom once their animation concludes.
-
-<p align="middle">
-  <img src="assets/front/reveal.gif">
-</p>
-
-A `Trail` animates the first item of a list of elements, the rest follow the spring of their previous sibling.
-
-<p align="middle">
-  <img src="assets/front/trail.gif">
-</p>
-
-# Interpolation
-
-We don't handle just numbers, you can interpolate almost everything:
-
-- colors (names, rgb, rgba, hsl, hsla)
-- absolute lenghts (cm, mm, in, px, pt, pc)
-- relative lengths (em, ex, ch, rem, vw, vh, vmin, vmax, %)
-- angles (deg, rad, grad, turn)
-- flex and grid units (fr, etc)
-- all HTML attributes
-- SVG paths (as long as the number of points matches, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om))
-- arrays
-- string patterns (`transform`, `border`, `boxShadow`, etc)
-- `auto` is valid
-- non-animatable string values (`visibility`, `pointerEvents`, etc)
-- `scrollTop`/`scrollLeft` (native only, since these aren't actual dom properties)
-
-```jsx
-<Spring
-  to={{
-    width: 'auto',
-    padding: 20,
-    width: '80%',
-    background: 'linear-gradient(to right, #009fff, #ec2f4b)',
-    transform: 'perspective(600px) translate3d(0px,0,0) scale(1) rotateX(0deg)',
-    boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.4)',
-    borderBottom: '10px solid #2D3747',
-    shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
-    textShadow: '0px 5px 15px rgba(255,255,255,0.5)' }}>
-```
-
-# Native rendering
-
-| ![img](assets/without-native.jpeg)                                                                                                                                                                                        | ![img](assets/with-native.jpeg)                                                                                                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <sub>Most libs animate by having React recalculate the component-tree on every frame. Here it attempts to animate a component consisting of ~300 sub-components, plowing through the frame budget and causing jank.</sub> | <sub>React-spring with the `native` property renders the component _only once_, from then on the animation will be applied directly to the dom in a requestAnimationFrame-loop, similar to how gsap and d3 do it.</sub> |
-
-```jsx
-import { Spring, animated } from 'react-spring'
-
-<Spring native from={{ opacity: 0 }} to={{ opacity: 1 }}>
-  {styles => <animated.div style={styles}>i will fade in</animated.div>}
-</Spring>
-```
-
-Native rendering comes with a few caveats you should know about before using it, more about that [here](https://github.com/drcmda/react-spring/blob/master/API-OVERVIEW.md#native-rendering-and-interpolation-demo). Try going native in all situations where you can, the benefits are worth it!
 
 # Funding
 
