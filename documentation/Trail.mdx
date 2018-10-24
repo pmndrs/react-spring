@@ -35,6 +35,7 @@ import { Trail } from 'react-spring'
   items={items} keys={item => item.key}
   from={{ transform: 'translate3d(0,-40px,0)' }}
   to={{ transform: 'translate3d(0,0px,0)' }}
+>
   {item => props =>
     <span style={props}>{item.text}</span>
   }
