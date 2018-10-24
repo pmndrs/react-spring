@@ -10,11 +10,6 @@
 - [What others say](#what-others-say)
 - [Used by](#used-by)
 - [API reference and examples](#api-reference-and-examples)
-- [Basic overview](#basic-overview)
-- [Interpolation](#interpolation)
-- [Render props](#render-props)
-- [Native rendering](#native-rendering)
-- [React-native and other targets](#react-native-and-other-targets)
 - [Funding](#funding)
 
 # What is it?
