@@ -4,6 +4,7 @@ import {
   ReactNode,
   ComponentClass,
   ComponentType,
+  Ref
 } from 'react'
 
 export type SpringEasingFunc = (t: number) => number
@@ -52,7 +53,7 @@ interface SpringProps<S extends object, DS extends object = {}> {
   /**
    * Callback when the animation comes to a still-stand
    */
-  onRest?: () => void
+  onRest?: (ds: DS) => void
   /**
    * Frame by frame callback, first argument passed is the animated value
    */
@@ -116,6 +117,8 @@ export function interpolate(
 ): any
 
 export const animated: {
+  <P>(comp: ComponentType<P>): ComponentType<P>;
+} & {
   [Tag in keyof JSX.IntrinsicElements]: ComponentClass<
     JSX.IntrinsicElements[Tag]
   >
@@ -222,12 +225,16 @@ interface ParallaxProps<S extends object, DS extends object = {}> {
   scrolling?: boolean
 
   horizontal?: boolean
+
+  ref?: Ref<Parallax>
 }
 
 export class Parallax<
-  S extends object,
-  DS extends object
-> extends PureComponent<ParallaxProps<S, DS> & S> {}
+  S extends object = {},
+  DS extends object = {}
+> extends PureComponent<ParallaxProps<S, DS> & S> {
+  scrollTo: (offset: number) => void
+}
 
 interface ParallaxLayerProps<S extends object, DS extends object = {}> {
   factor?: number

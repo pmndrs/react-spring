@@ -6,6 +6,10 @@ import { toArray } from './shared/helpers'
 
 export default class Trail extends React.PureComponent {
   static propTypes = {
+    /** Item keys (the same keys you'd hand over to react in a list). If you specify items, keys can be an accessor function (item => item.key) */
+    keys: PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ).isRequired,
     /** Base values, optional */
     from: PropTypes.object,
     /** Animates to ... */

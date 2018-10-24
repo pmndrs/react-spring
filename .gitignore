@@ -9,3 +9,4 @@ $RECYCLE.BIN/
 .vscode
 .docz/
 package-lock.json
+coverage/
