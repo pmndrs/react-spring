@@ -4,7 +4,6 @@ import { Transition, animated } from 'react-spring'
 const defaultStyles = {
   overflow: 'hidden',
   width: '100%',
-  backgroundColor: '#FF1C68',
   color: 'white',
   display: 'flex',
   justifyContent: 'center',
@@ -21,33 +20,22 @@ export default class TransitionsExample extends React.PureComponent {
     this.t1 && clearTimeout(this.t1)
     this.t2 && clearTimeout(this.t2)
     this.t3 && clearTimeout(this.t3)
-    this.t4 && clearTimeout(this.t4)
-    this.t5 && clearTimeout(this.t5)
 
-    this.setState({ items: [] })
-
-    // new items: 1, 2, 3
-    this.t1 = await this.animate('1', '2', '3')
-    // new item in between: 4
-    this.t2 = await this.animate('1', '2', '4', '3')
-    // deleted item: 2
-    this.t3 = await this.animate('1', /*'2',*/ '3', '4')
-    // scrambled order + re-entering item: 2
-    this.t4 = await this.animate('4', /*'2',*/ '1', '2', '3')
-    this.t5 = await this.animate('4', /*'2',*/ '1', /*'2',*/ '3')
+    this.setState({ items: ['Apples', 'Oranges', 'Bananas'] })
+    this.t1 = setTimeout(
+      () => this.setState({ items: ['Apples', 'Bananas'] }),
+      1500
+    )
+    this.t2 = setTimeout(
+      () => this.setState({ items: ['Apples', 'Oranges', 'Bananas'] }),
+      3000
+    )
+    this.t3 = setTimeout(() => this.setState({ items: ['Kiwis'] }), 4500)
   }
-
-  animate = (...items) =>
-    new Promise(res => {
-      const handle = setTimeout(
-        () => this.setState({ items }, () => res(handle)),
-        1000
-      )
-    })
 
   render() {
     return (
-      <ul
+      <div
         style={{
           backgroundColor: '#70C1B3',
           overflow: 'hidden',
@@ -57,20 +45,20 @@ export default class TransitionsExample extends React.PureComponent {
         }}
         onClick={() => this.componentDidMount()}>
         <Transition
-          keys={this.state.items}
-          initial={null}
-          from={{ height: 0 }}
-          enter={{ height: 50 }}
-          leave={{ height: 0 }}
-          delay={200}
-          onDestroyed={item => console.log(item, 'destroyed')}>
-          {this.state.items.map(item => styles => (
-            <animated.li style={{ ...defaultStyles, ...styles }}>
+          items={this.state.items}
+          //initial={null}
+          from={{ overflow: 'hidden', height: 0, opacity: 0 }}
+          enter={{ height: 50, opacity: 1, background: '#28d79f' }}
+          leave={{ height: 0, opacity: 0, background: '#c23369' }}
+          update={{ background: '#28b4d7' }}
+          trail={200}>
+          {item => styles => (
+            <animated.div style={{ ...defaultStyles, ...styles }}>
               {item}
-            </animated.li>
-          ))}
+            </animated.div>
+          )}
         </Transition>
-      </ul>
+      </div>
     )
   }
 }

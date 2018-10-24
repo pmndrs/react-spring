@@ -5,6 +5,8 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
 const webpack = require('webpack')
 
+console.log(path.resolve('../node_modules/react'))
+
 module.exports = mode => {
   return {
     mode,
@@ -15,7 +17,7 @@ module.exports = mode => {
         { test: /\.css$/, use: ['style-loader', 'css-loader'] },
         {
           test: /\.jsx?$/,
-          sideEffects: false,
+          sideEffects: true,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
@@ -64,8 +66,8 @@ module.exports = mode => {
       modules: [path.resolve('./'), 'node_modules'],
       extensions: ['.js', '.jsx'],
       alias: {
-        react: path.resolve('node_modules/react'),
-        'react-dom': path.resolve('node_modules/react-dom'),
+        react: path.resolve('../node_modules/react'),
+        'react-dom': path.resolve('../node_modules/react-dom'),
         'prop-types': path.resolve('node_modules/prop-types'),
         'react-spring': path.resolve('../src/targets/web/index'),
         lodash: path.resolve(__dirname, 'node_modules/lodash-es'),

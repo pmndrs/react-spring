@@ -33,20 +33,6 @@ const data = [
 const x = d => d.date
 const y = d => d.value
 
-const Graph = ({ interpolate, data, xScale, yScale }) => (
-  <AreaClosed
-    data={data.map((d, i) => ({ ...d, value: interpolate[i] }))}
-    xScale={xScale}
-    yScale={yScale}
-    x={x}
-    y={y}
-    strokeWidth={2}
-    stroke={'url(#gradient)'}
-    fill={'url(#gradient)'}
-    curve={curveBasis}
-  />
-)
-
 export default class AreasExample extends React.Component {
   state = { toggle: true }
   toggle = () => this.setState(state => ({ toggle: !state.toggle }))
@@ -66,7 +52,7 @@ export default class AreasExample extends React.Component {
               nice: true,
             })
             const interpolate = data.map(d => Math.random() * yMax)
-            const extra = { data, xScale, yScale }
+            console.log(interpolate)
             return (
               <div
                 style={{
@@ -82,7 +68,24 @@ export default class AreasExample extends React.Component {
                   height={height / 2}>
                   <GradientPurpleTeal id="gradient" />
                   <g>
-                    <Spring to={{ interpolate }} {...extra} children={Graph} />
+                    <Spring to={{ interpolate }}>
+                      {props => (
+                        <AreaClosed
+                          data={data.map((d, i) => ({
+                            ...d,
+                            value: props.interpolate[i],
+                          }))}
+                          xScale={xScale}
+                          yScale={yScale}
+                          x={x}
+                          y={y}
+                          strokeWidth={2}
+                          stroke={'url(#gradient)'}
+                          fill={'url(#gradient)'}
+                          curve={curveBasis}
+                        />
+                      )}
+                    </Spring>
                   </g>
                 </svg>
               </div>

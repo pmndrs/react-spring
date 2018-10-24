@@ -1,22 +1,19 @@
 import React, { Component } from 'react'
 import { Stage, Layer } from 'react-konva'
 import { Keyframes, animated } from '../../../../src/targets/konva'
-import { TimingAnimation, Easing } from '../../../../src/addons'
 
 const Animation = Keyframes.Spring(async next => {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     await next({
       native: true,
-      impl: TimingAnimation,
-      config: { duration: 2000, easing: Easing.linear },
+      config: { duration: 2000 },
       from: { dash: [0, 0, 0, 0, 20, 0, 0, 10] },
       to: { dash: [0, 0, 0, 10, 20, 0, 0, 0] },
     })
     await next({
       native: true,
-      impl: TimingAnimation,
-      config: { duration: 500, easing: Easing.linear },
+      config: { duration: 500 },
       to: { dash: [20, 0, 0, 10, 0, 0, 0, 0] },
     })
     await next({

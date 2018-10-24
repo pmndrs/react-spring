@@ -1,4 +1,4 @@
-import Interpolation from '../../animated/Interpolation'
+import Interpolation from '../animated/Interpolation'
 import normalizeColor from './normalizeColors'
 import colors from './colors'
 

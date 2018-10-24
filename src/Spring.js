@@ -1,19 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import controller from './animated/AnimatedController'
+import Animated from './animated/Animated'
 import AnimatedValue from './animated/AnimatedValue'
 import AnimatedArray from './animated/AnimatedArray'
 import AnimatedProps from './animated/AnimatedProps'
-import SpringAnimation from './animated/SpringAnimation'
+import AnimationController from './animated/AnimationController'
 import * as Globals from './animated/Globals'
-import { config } from './targets/shared/constants'
+import { config } from './shared/constants'
 import {
-  renderChildren,
+  interpolateTo,
   convertValues,
   callProp,
   shallowEqual,
   getValues,
-} from './targets/shared/helpers'
+  toArray,
+} from './shared/helpers'
 
 const v = React.version.split('.')
 if (process.env.NODE_ENV !== 'production' && (v[0] < 16 || v[1] < 4)) {
@@ -28,18 +29,18 @@ export default class Spring extends React.Component {
     from: PropTypes.object,
     /** Animates to ... */
     to: PropTypes.object,
+    /** Props it can optionally apply after the animation is concluded ... */
+    after: PropTypes.object,
     /** Takes a function that receives interpolated styles */
     children: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.arrayOf(PropTypes.func),
       PropTypes.node,
     ]),
-    /** Same as children, but takes precedence if present */
-    render: PropTypes.func,
-    /** Prevents animation if true, or for individual keys: fn(key => true/false) */
-    immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     /** Delay in ms before the animation starts (config.delay takes precedence if present) */
     delay: PropTypes.number,
+    /** Prevents animation if true, or for individual keys: fn(key => true/false) */
+    immediate: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     /** When true the spring starts from scratch (from -> to) */
     reset: PropTypes.bool,
     /** When true "from" and "to" are switched, this will only make sense in combination with the "reset" flag */
@@ -54,8 +55,6 @@ export default class Spring extends React.Component {
     onRest: PropTypes.func,
     /** Frame by frame callback, first argument passed is the animated value */
     onFrame: PropTypes.func,
-    /** The spring implementation is fully exchangeable (see addons) */
-    impl: PropTypes.func,
     /** Escape hatch for cases where you supply the same values, but need spring to render anyway (see gotchas:auto) */
     force: PropTypes.bool,
     // Internal: Hooks, mostly used for middleware (like fix-auto)
@@ -70,7 +69,6 @@ export default class Spring extends React.Component {
     immediate: false,
     reset: false,
     force: false,
-    impl: SpringAnimation,
     inject: Globals.bugfixes,
   }
 
@@ -80,12 +78,11 @@ export default class Spring extends React.Component {
     internal: false,
   }
 
+  controller = new AnimationController()
   didUpdate = false
   didInject = false
   updating = false
-  animations = {}
-  interpolators = {}
-  mergedProps = {}
+  finished = true
 
   componentDidMount() {
     // componentDidUpdate isn't called on mount, we call it here to start animating
@@ -111,7 +108,10 @@ export default class Spring extends React.Component {
   }
 
   render() {
+    const { native, onFrame, children } = this.props
     const propsChanged = this.state.propsChanged
+
+    // Inject phase -----------------------------------------------------------
 
     // Handle injected frames, for instance targets/web/fix-auto
     // An inject will return an intermediary React node which measures itself out
@@ -126,26 +126,38 @@ export default class Spring extends React.Component {
       if (frame) return frame
     }
 
+    // Update phase -----------------------------------------------------------
+
+    // We can potentially cause setState, but we're inside render, the flag prevents that
+    this.updating = true
+    this.didInject = false
+
     // Update animations, this turns from/to props into AnimatedValues
     // An update can occur on injected props, or when own-props have changed.
     if (this.injectProps) {
-      this.updateAnimations(this.injectProps)
-      this.injectProps = undefined
+      this.controller.update(this.injectProps)
       // didInject is needed, because there will be a 3rd stage, where the original values
       // .. will be restored after the animation is finished. When someone animates towards
       // .. "auto", the end-result should be "auto", not "1999px", which would block nested
       // .. height/width changes.
       this.didInject = true
-    } else if (propsChanged) this.updateAnimations(this.props)
+    } else if (propsChanged) this.controller.update(this.props)
+
+    if (this.injectProps || propsChanged) {
+      // Flag an update that occured, componentDidUpdate will start the animation later on
+      this.didUpdate = true
+      this.afterInject = undefined
+      this.injectProps = undefined
+    }
+
+    this.updating = false
+
+    // Render phase -----------------------------------------------------------
 
     // Render out raw values or AnimatedValues depending on "native"
-    const values = this.getAnimatedValues()
-    return values && Object.keys(values).length
-      ? renderChildren(this.props, {
-          ...values,
-          ...this.afterInject,
-        })
-      : null
+    let values = { ...this.controller.getValues(), ...this.afterInject }
+    if (this.finished) values = { ...values, ...this.props.after }
+    return values && Object.keys(values).length ? children(values) : null
   }
 
   componentDidUpdate() {
@@ -157,174 +169,31 @@ export default class Spring extends React.Component {
     this.didUpdate = false
   }
 
-  updateAnimations({
-    from,
-    to,
-    reverse,
-    attach,
-    reset,
-    immediate,
-    onFrame,
-    native,
-  }) {
-    // This function will turn own-props into AnimatedValues, it tries to re-use
-    // .. exsting animations as best as it can by detecting the changes made
-
-    // We can potentially cause setState, but we're inside render, the flag prevents that
-    this.updating = true
-
-    // Reverse values when requested
-    if (reverse) {
-      ;[from, to] = [to, from]
-    }
-
-    // Attachment handling, trailed springs can "attach" themselves to a previous spring
-    let target = attach && attach(this)
-    let animationsChanged = false
-    this.mergedProps = { ...from, ...this.mergedProps, ...to }
-    let allProps = Object.entries(this.mergedProps)
-    this.animations = allProps.reduce((acc, [name, value], i) => {
-      const entry = (reset === false && acc[name]) || { stopped: true }
-      const isNumber = typeof value === 'number'
-      const isString =
-        typeof value === 'string' &&
-        !value.startsWith('#') &&
-        !/\d/.test(value) &&
-        !Globals.colorNames[value]
-      const isArray = !isNumber && !isString && Array.isArray(value)
-      const fromValue = from[name] !== undefined ? from[name] : value
-      const fromAnimated = fromValue instanceof AnimatedValue
-      let toValue = isNumber || isArray ? value : isString ? value : 1
-
-      if (target) {
-        // Attach value to target animation
-        const attachedAnimation = target.animations[name]
-        if (attachedAnimation) toValue = attachedAnimation.animation
-      }
-
-      let old = entry.animation
-      let animation, interpolation
-      if (fromAnimated) {
-        // Use provided animated value
-        animation = interpolation = fromValue
-      } else if (isNumber || isString) {
-        // Create animated value
-        animation = interpolation =
-          entry.animation || new AnimatedValue(fromValue)
-      } else if (isArray) {
-        // Create animated array
-        animation = interpolation =
-          entry.animation || new AnimatedArray(fromValue)
-      } else {
-        // Deal with interpolations
-        const previous =
-          entry.interpolation &&
-          entry.interpolation._interpolation(entry.animation._value)
-
-        if (entry.animation) {
-          animation = entry.animation
-          animation.setValue(0)
-        } else animation = new AnimatedValue(0)
-
-        const config = {
-          range: [0, 1],
-          output: [previous !== undefined ? previous : fromValue, value],
-        }
-        if (entry.interpolation)
-          interpolation = entry.interpolation.__update(config)
-        else interpolation = animation.interpolate(config)
-      }
-
-      if (old !== animation) animationsChanged = true
-
-      // Set immediate values
-      if (callProp(immediate, name)) animation.setValue(toValue)
-
-      // Save interpolators
-      this.interpolators = { ...this.interpolators, [name]: interpolation }
-
-      return {
-        ...acc,
-        [name]: {
-          ...entry,
-          name,
-          animation,
-          interpolation,
-          toValue,
-          stopped: false,
-        },
-      }
-    }, this.animations)
-
-    // Update animated props (which from now on will take care of the animation)
-    if (animationsChanged) {
-      const oldAnimatedProps = this.animatedProps
-      this.animatedProps = new AnimatedProps(this.interpolators, () => {
-        // This gets called on every animation frame ...
-        if (onFrame) onFrame(this.animatedProps.__getValue())
-        if (!native && !this.updating) this.setState({ internal: true })
-      })
-      oldAnimatedProps && oldAnimatedProps.__detach()
-    }
-
-    // Flag an update that occured, componentDidUpdate will start the animation later on
-    this.didUpdate = true
-    this.afterInject = undefined
-    this.didInject = false
-    this.updating = false
-  }
-
   start = () => {
-    const { config, delay, impl } = this.props
-    if (this.props.onStart) this.props.onStart()
-    Object.keys(this.animations).forEach(name => {
-      const { animation, toValue: to } = this.animations[name]
-      // TODO: figure out why this is needed ...
-      if (!to.__getValue && animation.__getValue() === to)
-        return this.finishAnimation(name)
-      controller(
-        animation,
-        { to, delay, ...callProp(config, name) },
-        impl
-      ).start(
-        !to.__getValue &&
-          (props => props.finished && this.finishAnimation(name))
-      )
-    })
+    this.finished = false
+    let wasMounted = this.mounted
+    this.controller.start(
+      props => this.finish({ ...props, wasMounted }),
+      this.update
+    )
   }
 
-  stop = () =>
-    getValues(this.animations).forEach(({ animation }) =>
-      animation.stopAnimation()
-    )
+  stop = () => this.controller.stop(true)
+  update = () => !this.updating && this.setState({ internal: true })
+  finish = ({ finished, noChange, wasMounted }) => {
+    this.finished = true
+    if (this.mounted && finished) {
+      // Only call onRest if either we *were* mounted, or when there wer changes
+      if (this.props.onRest && (wasMounted || !noChange))
+        this.props.onRest(this.controller.merged)
 
-  finishAnimation = name => {
-    const { animation, toValue: to } = this.animations[name]
-    this.animations[name].stopped = true
-    if (!this.mounted) return
-    if (getValues(this.animations).every(a => a.stopped)) {
-      const current = { ...this.props.from, ...this.props.to }
-      if (this.props.onRest) this.props.onRest(current)
       // Restore end-state
-      if (this.didInject) {
-        this.afterInject = convertValues(this.props)
-        this.didInject = false
+      if (this.didInject) this.afterInject = convertValues(this.props)
+
+      // If we have an inject or values to apply after the animation we ping here
+      if (this.mounted && (this.didInject || this.props.after))
         this.setState({ internal: true })
-      }
+      this.didInject = false
     }
-  }
-
-  flush() {
-    getValues(this.animations).forEach(
-      ({ animation }) => animation._update && animation._update()
-    )
-  }
-
-  getValues() {
-    return this.animatedProps ? this.animatedProps.__getValue() : {}
-  }
-
-  getAnimatedValues() {
-    return this.props.native ? this.interpolators : this.getValues()
   }
 }

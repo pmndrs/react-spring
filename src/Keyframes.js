@@ -1,14 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import * as Globals from './animated/Globals'
 import Spring from './Spring'
 import Trail from './Trail'
-import Transition from './Transition'
-import { getForwardProps } from './targets/shared/helpers'
-import { config as springConfig } from './targets/shared/constants'
+import {
+  getForwardProps,
+  interpolateTo,
+  shallowEqual,
+  handleRef,
+} from './shared/helpers'
+import { config as springConfig } from './shared/constants'
 
 const DEFAULT = '__default'
 
-class Keyframes extends React.PureComponent {
+class KeyframesImpl extends React.PureComponent {
   static propTypes = {
     /** Name of the active slot */
     state: PropTypes.string,
@@ -16,7 +21,13 @@ class Keyframes extends React.PureComponent {
   static defaultProps = { state: DEFAULT }
 
   guid = 0
-  state = { props: {}, oldProps: {}, resolve: () => null }
+  state = {
+    props: {},
+    oldProps: {},
+    resolve: () => null,
+    last: true,
+    index: 0,
+  }
 
   componentDidMount() {
     this.mounted = true
@@ -27,7 +38,7 @@ class Keyframes extends React.PureComponent {
     this.mounted = false
   }
 
-  next = props => {
+  next = (props, last = true, index = 0) => {
     this.running = true
     return new Promise(resolve => {
       this.mounted &&
@@ -36,30 +47,47 @@ class Keyframes extends React.PureComponent {
             props,
             oldProps: { ...this.state.props },
             resolve,
+            last,
+            index,
           }),
           () => (this.running = false)
         )
     })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(previous) {
+    const { states, filter: f, state } = this.props
     if (
-      prevProps.state !== this.props.state ||
-      (this.props.reset && !this.running)
+      previous.state !== this.props.state ||
+      (this.props.reset && !this.running) ||
+      !shallowEqual(states[state], previous.states[previous.state])
     ) {
-      const { states, filter: f, state } = this.props
-      if (states && state) {
+      if (states && state && states[state]) {
         const localId = ++this.guid
         const slots = states[state]
         if (slots) {
           if (Array.isArray(slots)) {
             let q = Promise.resolve()
-            for (let s of slots) {
-              q = q.then(() => localId === this.guid && this.next(f(s)))
+            for (let i = 0; i < slots.length; i++) {
+              let index = i
+              let slot = slots[index]
+              let last = index === slots.length - 1
+              q = q.then(
+                () => localId === this.guid && this.next(f(slot), last, index)
+              )
             }
           } else if (typeof slots === 'function') {
+            let index = 0
             slots(
-              props => localId === this.guid && this.next(f(props)),
+              // next
+              (props, last = false) =>
+                localId === this.guid && this.next(f(props), last, index++),
+              // cancel
+              () =>
+                Globals.requestFrame(
+                  () => this.instance && this.instance.stop()
+                ),
+              // ownprops
               this.props
             )
           } else {
@@ -71,68 +99,60 @@ class Keyframes extends React.PureComponent {
   }
 
   render() {
-    const { props, oldProps, resolve } = this.state
+    const { props, oldProps, resolve, last, index } = this.state
 
     if (!props || Object.keys(props).length === 0) return null
 
-    const {
+    let {
       state,
       filter,
       states,
+      config,
       primitive: Component,
-      from: ownFrom,
       onRest,
+      forwardRef,
       ...rest
     } = this.props
 
-    const current = this.instance && this.instance.getValues()
-    const from =
-      typeof props.from === 'function'
-        ? props.from
-        : { ...oldProps.from, ...current, ...props.from }
+    // Arrayed configs need an index to process
+    if (Array.isArray(config)) config = config[index]
 
     return (
       <Component
-        ref={ref => (this.instance = ref)}
+        ref={ref => (this.instance = handleRef(ref, forwardRef))}
+        config={config}
         {...rest}
         {...props}
-        from={{ ...from, ...ownFrom }}
         onRest={args => {
           resolve(args)
-          if (onRest) onRest(args)
+          if (onRest && last) onRest(args)
         }}
       />
     )
   }
-
-  static create = primitive => (states, filter = states => states) => {
-    if (typeof states === 'function' || Array.isArray(states))
-      states = { [DEFAULT]: states }
-    return props => (
-      <Keyframes
-        primitive={primitive}
-        states={states}
-        filter={filter}
-        {...props}
-      />
-    )
-  }
 }
 
-const interpolateTo = props => {
-  const forward = getForwardProps(props)
-  const rest = Object.keys(props).reduce(
-    (acc, key) =>
-      typeof forward[key] !== 'undefined' ? acc : { ...acc, [key]: props[key] },
-    {}
+// TODO: AnimatedController has a change detection, please check if that affects in any way
+// how Keyframes.next handles promises. If two calls with the same values don't call oRest then
+// that would be a serious bug
+const Keyframes = React.forwardRef((props, ref) => (
+  <KeyframesImpl {...props} forwardRef={ref} />
+))
+
+Keyframes.create = primitive => (states, filter = states => states) => {
+  if (typeof states === 'function' || Array.isArray(states))
+    states = { [DEFAULT]: states }
+  return props => (
+    <KeyframesImpl
+      primitive={primitive}
+      states={states}
+      filter={filter}
+      {...props}
+    />
   )
-  return { to: forward, ...rest }
 }
 
-Keyframes.Spring = Keyframes.create(Spring)
-Keyframes.Spring.to = states => Keyframes.Spring(states, interpolateTo)
-Keyframes.Trail = Keyframes.create(Trail)
-Keyframes.Trail.to = states => Keyframes.Trail(states, interpolateTo)
-Keyframes.Transition = Keyframes.create(Transition)
+Keyframes.Spring = states => Keyframes.create(Spring)(states, interpolateTo)
+Keyframes.Trail = states => Keyframes.create(Trail)(states, interpolateTo)
 
 export default Keyframes

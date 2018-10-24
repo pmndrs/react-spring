@@ -1,23 +1,41 @@
+.dashoffset-main {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .c {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
-}
-
-.c {
+  user-select: none;
+  background: peachpuff;
   overflow: auto;
+  opacity: 0.6;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+.b {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 5px solid white;
+  background: lavender;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-::-webkit-scrollbar-track {
-  background: #eceaea;
+.b::after {
+  content: 'Scroll';
+  font-size: 1.2em;
+  font-weight: 100;
+  color: rgb(106, 86, 112);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #888585;
+.b:hover {
+  background: rgb(217, 203, 218);
 }

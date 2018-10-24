@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Spring } from 'react-spring'
+import { Spring, animated } from 'react-spring'
 import { Motion, spring as motionSpring } from 'react-motion'
 import './style.css'
 
@@ -29,25 +29,42 @@ export default class App extends React.Component {
           }}>
           <SpringCounter name="react-spring">
             {(onRest, renders) => (
-              <Spring
-                to={{ progress: update % 2 }}
-                config={{ tension: 80, friction: 10 }}
-                onRest={onRest}>
-                {props => <Anim {...props} />}
+              <Spring native to={{ progress: update % 2 }} onRest={onRest}>
+                {props => (
+                  <div style={{ width: '100%' }}>
+                    <animated.div
+                      style={{
+                        width: '15px',
+                        height: '15px',
+                        background: '#FFF',
+                        borderRadius: '50%',
+                        //transform: `translateX(${80 * props.progress}px)`,
+                        transform: props.progress.interpolate(x => `translateX(${80 * x}px)`),
+                      }}
+                    />
+                  </div>
+                )}
               </Spring>
             )}
           </SpringCounter>
           <SpringCounter name="react-motion">
             {onRest => (
               <Motion
-                style={{
-                  progress: motionSpring(update % 2, {
-                    stiffness: 100,
-                    damping: 16,
-                  }),
-                }}
+                style={{ progress: motionSpring(update % 2) }}
                 onRest={onRest}>
-                {props => <Anim {...props} />}
+                {props => (
+                  <div style={{ width: '100%' }}>
+                    <div
+                      style={{
+                        width: '15px',
+                        height: '15px',
+                        background: '#FFF',
+                        borderRadius: '50%',
+                        transform: `translateX(${80 * props.progress}px)`,
+                      }}
+                    />
+                  </div>
+                )}
               </Motion>
             )}
           </SpringCounter>
@@ -112,17 +129,3 @@ class SpringCounter extends React.Component {
     )
   }
 }
-
-const Anim = ({ progress }) => (
-  <div style={{ width: '100%' }}>
-    <div
-      style={{
-        width: '15px',
-        height: '15px',
-        background: '#FFF',
-        borderRadius: '50%',
-        transform: `translateX(${80 * progress}px)`,
-      }}
-    />
-  </div>
-)

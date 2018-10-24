@@ -1,5 +1,5 @@
 import React from 'react'
-import { Transition, config, animated } from 'react-spring'
+import { Transition, animated } from 'react-spring'
 import {
   HashRouter as Router,
   Switch,
@@ -22,13 +22,13 @@ const App = () => (
           <div className="content">
             <Transition
               native
-              config={{ tension: 1, friction: 10 }}
-              keys={location.pathname.split('/').filter(a => a)[0]}
+              items={location}
+              keys={location.pathname.split('/')[1]}
               from={{ transform: 'translateY(100px)', opacity: 0 }}
               enter={{ transform: 'translateY(0px)', opacity: 1 }}
               leave={{ transform: 'translateY(100px)', opacity: 0 }}>
-              {style => (
-                <Switch location={location}>
+              {(loc, state) => style => (
+                <Switch location={state === 'update' ? location : loc}>
                   <Route
                     path="/red"
                     render={props => Red({ ...props, style })}
@@ -67,13 +67,14 @@ const Red = ({ style }) => (
         <div>
           <Transition
             native
-            config={config.slow}
+  
+            items={location}
             keys={location.pathname}
             from={{ transform: 'translateY(100px)', opacity: 0 }}
             enter={{ transform: 'translateY(0px)', opacity: 1 }}
             leave={{ transform: 'translateY(100px)', opacity: 0 }}>
-            {style => (
-              <Switch location={location}>
+            {(loc, state) => style => (
+              <Switch location={loc}>
                 <Route
                   exact
                   path="/red/ultra"
@@ -109,13 +110,13 @@ const Green = ({ style }) => (
         <div>
           <Transition
             native
-            config={config.slow}
+            items={location}
             keys={location.pathname}
             from={{ transform: 'translateY(100px)', opacity: 0 }}
             enter={{ transform: 'translateY(0px)', opacity: 1 }}
             leave={{ transform: 'translateY(100px)', opacity: 0 }}>
-            {style => (
-              <Switch location={location}>
+            {loc => style => (
+              <Switch location={loc}>
                 <Route
                   exact
                   path="/green/ultra"

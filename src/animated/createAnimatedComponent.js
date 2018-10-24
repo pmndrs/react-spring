@@ -1,5 +1,6 @@
 import React from 'react'
 import AnimatedProps from './AnimatedProps'
+import { handleRef, shallowEqual } from '../shared/helpers'
 import * as Globals from './Globals'
 
 export default function createAnimatedComponent(Component) {
@@ -10,8 +11,13 @@ export default function createAnimatedComponent(Component) {
       },
     }
 
+    constructor(props) {
+      super()
+      this.attachProps(props)
+    }
+
     componentWillUnmount() {
-      this._propsAnimated && this._propsAnimated.__detach()
+      this.propsAnimated && this.propsAnimated.detach()
     }
 
     setNativeProps(props) {
@@ -19,32 +25,26 @@ export default function createAnimatedComponent(Component) {
       if (didUpdate === false) this.forceUpdate()
     }
 
-    componentWillMount() {
-      this.attachProps(this.props)
+    // The system is best designed when setNativeProps is implemented. It is
+    // able to avoid re-rendering and directly set the attributes that
+    // changed. However, setNativeProps can only be implemented on leaf
+    // native components. If you want to animate a composite component, you
+    // need to re-render it. In this case, we have a fallback that uses
+    // forceUpdate.
+    callback = () => {
+      if (this.node) {
+        const didUpdate = Globals.applyAnimatedValues.fn(
+          this.node,
+          this.propsAnimated.getAnimatedValue(),
+          this
+        )
+        if (didUpdate === false) this.forceUpdate()
+      }
     }
 
     attachProps({ forwardRef, ...nextProps }) {
-      const oldPropsAnimated = this._propsAnimated
-
-      // The system is best designed when setNativeProps is implemented. It is
-      // able to avoid re-rendering and directly set the attributes that
-      // changed. However, setNativeProps can only be implemented on leaf
-      // native components. If you want to animate a composite component, you
-      // need to re-render it. In this case, we have a fallback that uses
-      // forceUpdate.
-      const callback = () => {
-        if (this.node) {
-          const didUpdate = Globals.applyAnimatedValues.fn(
-            this.node,
-            this._propsAnimated.__getAnimatedValue(),
-            this
-          )
-          if (didUpdate === false) this.forceUpdate()
-        }
-      }
-
-      this._propsAnimated = new AnimatedProps(nextProps, callback)
-
+      const oldPropsAnimated = this.propsAnimated
+      this.propsAnimated = new AnimatedProps(nextProps, this.callback)
       // When you call detach, it removes the element from the parent list
       // of children. If it goes to 0, then the parent also detaches itself
       // and so on.
@@ -53,11 +53,20 @@ export default function createAnimatedComponent(Component) {
       // This way the intermediate state isn't to go to 0 and trigger
       // this expensive recursive detaching to then re-attach everything on
       // the very next operation.
-      oldPropsAnimated && oldPropsAnimated.__detach()
+      oldPropsAnimated && oldPropsAnimated.detach()
     }
 
-    componentWillReceiveProps(nextProps) {
-      this.attachProps(nextProps)
+    shouldComponentUpdate(props) {
+      const { style, ...nextProps } = props
+      const { style: currentStyle, ...currentProps } = this.props
+      if (
+        !shallowEqual(currentProps, nextProps) ||
+        !shallowEqual(currentStyle, style)
+      ) {
+        this.attachProps(props)
+        return true
+      }
+      return false
     }
 
     render() {
@@ -66,20 +75,11 @@ export default function createAnimatedComponent(Component) {
         scrollTop,
         scrollLeft,
         ...animatedProps
-      } = this._propsAnimated.__getValue()
+      } = this.propsAnimated.getValue()
       return (
         <Component
           {...animatedProps}
-          ref={node => {
-            this.node = node
-            const forwardRef = this.props.forwardRef
-            if (forwardRef) {
-              // If it's a function, assume it's a ref callback
-              if (typeof forwardRef === 'function') forwardRef(node)
-              // If it's an object and has a 'current' property, assume it's a ref object
-              else if (typeof forwardRef === 'object') forwardRef.current = node
-            }
-          }}
+          ref={node => (this.node = handleRef(node, this.props.forwardRef))}
         />
       )
     }

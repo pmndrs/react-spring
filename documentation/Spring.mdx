@@ -4,83 +4,10 @@ route: /spring
 order: 7
 ---
 
-import { Playground, PropsTable } from 'docz'
+import { PropsTable } from 'docz'
 import { Spring, animated, config } from '../src/targets/web'
-import { AnimatedMeter, RewindSpringProvider, RewindSpring } from './'
-import { UnControlled as CodeMirror } from 'react-codemirror2'
-import { Helmet } from 'react-helmet'
-
-<Helmet>
-  <style type="text/css">{`
-    .CodeMirror {
-      font-size: 14px;
-      height: 100%;
-    }
-    .CodeMirror pre {
-      line-height: 1.8!important;
-    }
-    .CodeMirror-line {
-      padding: 0 10px!important;
-    }
-    .CodeMirror-lines {
-      padding: 10px 0!important;
-    }
-    .CodeMirror-linenumber {
-      padding: 0 7px 0 5px!important;
-    }
-    .code-table {
-      display: flex;
-    }
-    .code-table > div {
-      flex: 1;
-    }
-    .code-table > div:last-child {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fb467b;
-      font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
-    segoe ui, arial, sans-serif;
-      font-size: 4em;
-      font-weight: 600;
-      color: white;
-    }
-    .highlight {
-      background: #f4e6e9;
-      color: #947679;
-      margin: 0 3px;
-      padding: 4px 6px;
-      border-radius: 3px;
-    }
-    .grommetux-meter {
-      height: 70px;
-    }
-    .grommetux-meter__graphic {
-      fill: transparent;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-width: 15px;
-      width: 70px;
-      height: 70px;
-    }
-    .grommetux-meter__tracks {
-      stroke: rgba(255,255,255,0.1);
-    }
-    .grommetux-meter__values {
-      stroke: white;
-    }
-    code {
-      background: #f4f6f9;
-      color: #7D899C;
-      margin: 0 3px;
-      padding: 4px 6px;
-      border-radius: 3px;
-      font-family: "Source Code Pro",monospace;
-      font-size: 14px;
-    }
-  `}</style>
-</Helmet>
+import { AnimatedMeter, RewindSpringProvider, RewindSpring } from './resources/RewindSpring.js'
+import CodeMirror from './resources/Codemirror'
 
 # Spring
 
@@ -91,42 +18,27 @@ import { Spring } from 'react-spring'
 ```
 
 <RewindSpringProvider>
-<p>
-  Now, the primary task of a <code>Spring</code> is to move data <code>from</code> one state <code>to</code> another. <span className="highlight">Do not think of these values as "styles"</span> per se, although you can most certainly use them as such.
-</p>
+  <p>
+    Now, the primary task of a <code>Spring</code> is to move data <code>from</code> one state <code>to</code> another. <span className="highlight">Do not think of these values as "styles"</span> per se, although you can most certainly use them as such.
+  </p>
 
-<div className="code-table">
-  <CodeMirror
-    value={
-`<Spring
+  <div className="code-table">
+    <CodeMirror value={`<Spring
   from={{ opacity: 0 }}
   to={{ opacity: 1 }}>
-  {props => <div style={props}>✌️</div>}
-</Spring>`}
-    options={{
-      mode: 'jsx',
-      theme: 'dracula',
-      lineNumbers: true,
-      readOnly: true,
-      showCursorWhenSelecting: false,
-      cursorHeight: 0
-    }}
-  />
-  <div>
+  {props => <div style={props}>hello</div>}
+</Spring>`}/>
     <RewindSpring>
-      {x => <animated.div style={{ opacity: x }}>✌️</animated.div>}
+      {x => <animated.div style={{ opacity: x }}>hello</animated.div>}
     </RewindSpring>
   </div>
-</div>
 
-<p>
-  Do with them whatever you like, animate <span className="highlight">attributes</span> for instance, 
-</p>
+  <p>
+    Do with them whatever you like, animate <span className="highlight">attributes</span> for instance, 
+  </p>
 
-<div className="code-table">
-  <CodeMirror
-    value={
-`<Spring
+  <div className="code-table">
+    <CodeMirror value={`<Spring
   from={{ x: 100 }}
   to={{ x: 0 }}>
   {props => (
@@ -134,146 +46,56 @@ import { Spring } from 'react-spring'
       <path d="..." />
     </svg>
   )}
-</Spring>`}
-    options={{
-      mode: 'jsx',
-      theme: 'dracula',
-      lineNumbers: true,
-      readOnly: true,
-      showCursorWhenSelecting: false,
-      cursorHeight: 0
-    }}
-  />
-  <div>
+</Spring>`}/>
     <RewindSpring>
       {x => (
         <animated.svg
-          style={{ width: 100, height: 100, opacity: x }}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
+          style={{ width: 120, height: 120, opacity: x.interpolate({ range: [0,0.05,1], output: [0,1,1] }) }}
+          viewBox="-10 -10 404 404"
+          strokeWidth="10"
+          fill="white"
+          stroke="#b7b7b7"
           strokeLinecap="round"
           strokeLinejoin="round"
-          strokeDasharray={100}
-          strokeDashoffset={x.interpolate(x => (1-x) * 100)}
-        >
-          <title>task-checklist-check</title>
-          <path
-            pathLength="100"
-            className="a"
-            d="M10,23.5H1.5a1,1,0,0,1-1-1V3.5a1,1,0,0,1,1-1h2"
-          />
-          <path
-            pathLength="100"
-            className="a"
-            d="M15.5,2.5h2a1,1,0,0,1,1,1v6"
-          />
-          <path
-            pathLength="100"
-            className="a"
-            d="M11.5,2.5a2,2,0,0,0-4,0h-2v3h8v-3Z"
-          />
-          <path
-            pathLength="100"
-            className="a"
-            d="M16.5,9.5V5a.5.5,0,0,0-.5-.5H13.5"
-          />
-          <path
-            pathLength="100"
-            className="a"
-            d="M5.5,4.5H3a.5.5,0,0,0-.5.5V21a.5.5,0,0,0,.5.5h7"
-          />
-          <line
-            pathLength="100"
-            className="a"
-            x1="5.5"
-            y1="8.499"
-            x2="13.5"
-            y2="8.499"
-          />
-          <line
-            pathLength="100"
-            className="a"
-            x1="5.5"
-            y1="11.499"
-            x2="11.5"
-            y2="11.499"
-          />
-          <line
-            pathLength="100"
-            className="a"
-            x1="5.5"
-            y1="14.499"
-            x2="9.5"
-            y2="14.499"
-          />
-          <circle pathLength="100" className="a" cx="17.5" cy="17.499" r="6" />
-          <path
-            pathLength="100"
-            className="a"
-            d="M20.174,15.755l-2.905,3.874a.75.75,0,0,1-1.13.08l-1.5-1.5"
-          />
+          strokeDasharray={1200} strokeDashoffset={x.interpolate(x => (1-x) * 1200)}>
+          <path d="m7.015625 243.40625c2.015625 7.554688 4.640625 15.105469 8.039063 23.136719 1 2.335937 2.082031 4.664062 3.34375 7.402343l.847656 1.765626c.824218 1.722656 1.65625 3.464843 2.539062 5.167968.894532 1.746094 1.847656 3.449219 2.824219 5.167969l1.046875 1.875c17.183594 29.839844 42.222656 54.582031 72.65625 71.6875l.800781.429687c1.710938.929688 3.429688 1.855469 5.214844 2.785157l6.359375 3.105469c1.199219.597656 2.425781 1.183593 2.921875 1.359374 2.015625.917969 4.132813 1.832032 6.085937 2.597657 4.898438 1.976562 9.945313 3.800781 15 5.433593l.976563.296876c2.335937.703124 4.632813 1.382812 6.976563 1.949218 1.296874.363282 2.65625.691406 4.175781 1.042969 2.265625.589844 4.632812 1.167969 6.175781 1.414063 2.535156.5625 5.070312 1.03125 7.089844 1.328124 2 .359376 4.09375.648438 5.628906.832032.800781.136718 1.59375.25 2.441406.320312 1.832032.289063 3.601563.472656 5.414063.648438 2.816406.253906 5.625.433594 8.503906.601562 3.25.15625 6.585937.246094 9.921875.246094s6.671875-.089844 9.984375-.273438c2.816406-.167968 5.625-.335937 8.496094-.597656 1.757812-.167968 3.511719-.34375 5.328125-.640625.792968-.054687 1.449218-.152343 1.910156-.230469 2.097656-.273437 4.183594-.554687 5.664062-.832031 2.539063-.378906 5.074219-.851562 6.890626-1.273437 2.261718-.390625 4.628906-.96875 7.160156-1.617188 1.292968-.304687 2.628906-.625 3.917968-.984375 2.351563-.566406 4.679688-1.261719 7.710938-2.175781 5.21875-1.589844 10.425781-3.472656 15.097656-5.445312 2.105469-.824219 4.214844-1.738282 5.511719-2.355469 1.214844-.484375 2.441406-1.070313 3.0625-1.398438l7.167969-3.496093c1.707031-.886719 3.355468-1.785157 4.992187-2.671876l1.035157-.558593c30.191406-16.976563 55.230468-41.722657 72.535156-71.769531l.925781-1.664063c.96875-1.71875 1.921875-3.414063 2.824219-5.167969.882812-1.695312 1.722656-3.441406 2.539062-5.167968l1.039063-2.167969c1.078125-2.335938 2.160156-4.664063 3.183593-7.0625 3.367188-7.96875 5.992188-15.511719 8.015626-23.121094.671874-2.535156 1.351562-5.167969 1.9375-7.664063 3.367187-14.152343 5.070312-28.847656 5.070312-43.664062 0-105.871094-86.136719-192-192-192s-192 86.128906-192 192c0 14.816406 1.703125 29.511719 5.0625 43.65625.59375 2.535156 1.273438 5.160156 1.953125 7.75zm184.984375-211.40625c88.222656 0 160 71.777344 160 160 0 12.328125-1.414062 24.542969-4.214844 36.34375-.527344 2.257812-1.136718 4.59375-1.722656 6.808594-1.621094 6.105468-3.773438 12.261718-6.519531 18.785156-.878907 2.046875-1.832031 4.09375-2.734375 6.046875l-.914063 1.902344c-.6875 1.425781-1.375 2.875-2.101562 4.28125-.738281 1.417969-1.503907 2.800781-2.296875 4.191406l-.878906 1.578125c-14.3125 24.855469-35.183594 45.476562-60.144532 59.503906l-.808594.4375c-1.574218.847656-3.160156 1.707032-4.800781 2.5625l-5.863281 2.847656c-.390625.191407-.777344.40625-1.871094.871094-1.503906.679688-3.074218 1.367188-5.015625 2.136719-4.042969 1.703125-8.203125 3.207031-13.035156 4.679687-1.820313.542969-3.589844 1.09375-5.429687 1.519532l-.90625.238281c-.839844.25-1.726563.449219-2.582032.648437l-1.097656.257813c-1.40625.367187-2.878906.75-5.007812 1.136719-1.789063.398437-3.566407.726562-5.878907 1.078125-1.480469.273437-3.03125.464843-4.566406.664062l-2.394531.296875c-1.292969.238282-2.527344.335938-3.710938.449219-2.472656.222656-4.9375.375-7.34375.511719-5.34375.292968-11.03125.292968-16.25 0-2.46875-.144532-4.933594-.296875-7.351562-.511719-1.230469-.121094-2.46875-.21875-3.765625-.457031l-2.136719-.257813-.257812-.03125c-1.535157-.199219-3.09375-.390625-5.09375-.75-1.792969-.265625-3.570313-.601562-6.082032-1.136719-1.40625-.25-2.878906-.625-4.285156-1l-1.097656-.257812c-.855469-.199219-1.742188-.398438-2.582032-.648438l-.90625-.238281c-1.832031-.425781-3.609374-.976562-5.839843-1.648437-4.351563-1.398438-8.632813-2.953125-12.992188-4.703125-1.566406-.617188-3.144531-1.304688-5.351562-2.289063-.390625-.160156-.777344-.367187-1.742188-.839844l-5.289062-2.574218c-1.640625-.847656-3.214844-1.707032-4.800781-2.5625l-.566407-.3125c-25.183593-14.160156-46.066406-34.78125-60.257812-59.421875l-1-1.792969c-.792969-1.390625-1.558594-2.777344-2.296875-4.191406-.726563-1.410156-1.414063-2.847656-2.101563-4.28125l-.867187-1.808594c-.941406-2.046875-1.894532-4.09375-2.75-6.078125-2.785156-6.585937-4.929688-12.746094-6.542969-18.800781-.59375-2.261719-1.191406-4.597656-1.738281-6.902344-2.800782-11.738281-4.214844-23.953125-4.214844-36.28125 0-88.222656 71.777344-160 160-160zm0 0"/>
+          <path d="m192 320c61.761719 0 112-50.238281 112-112v-16h-224v16c0 61.761719 50.238281 112 112 112zm78.390625-96c-7.429687 36.472656-39.757813 64-78.390625 64s-70.960938-27.527344-78.390625-64zm0 0"/>
+          <path d="m120 168h32v-24h24v-32h-24v-24h-32v24h-24v32h24zm0 0"/>
+          <path d="m232 168h32v-24h24v-32h-24v-24h-32v24h-24v32h24zm0 0"/>
         </animated.svg>
       )}
     </RewindSpring>
   </div>
-</div>
 
-<p>
-  or <span className="highlight">innerText</span>,
-</p>
+  <p>
+    or <span className="highlight">innerText</span>,
+  </p>
 
-<div className="code-table">
-  <CodeMirror
-    value={
-`<Spring
+  <div className="code-table">
+    <CodeMirror value={`<Spring
   from={{ number: 0 }}
   to={{ number: 1 }}>
   {props => <div>{props.number}</div>}
-</Spring>`}
-    options={{
-      mode: 'jsx',
-      theme: 'dracula',
-      lineNumbers: true,
-      readOnly: true,
-      showCursorWhenSelecting: false,
-      cursorHeight: 0
-    }}
-  />
-  <div>
+</Spring>`}/>
     <RewindSpring>
-      {x => <animated.div style={{ fontFamily: 'monospace'}}>{x.interpolate(n => n.toFixed(2))}</animated.div>}
+      {x => <animated.div style={{ fontFamily: 'monospace' }}>{x.interpolate(n => n.toFixed(2))}</animated.div>}
     </RewindSpring>
   </div>
-</div>
 
-<p>
-  or generic <span className="highlight">React-component props</span>.
-</p>
+  <p>
+    or generic <span className="highlight">React-component props</span>.
+  </p>
 
-<div className="code-table">
-  <CodeMirror
-    value={
-`<Spring
+  <div className="code-table">
+    <CodeMirror value={`<Spring
   from={{ value: 0 }}
   to={{ value: 100 }}>
   {props => <Donut value={props.value} />}
-</Spring>`}
-    options={{
-      mode: 'jsx',
-      theme: 'dracula',
-      lineNumbers: true,
-      readOnly: true,
-      showCursorWhenSelecting: false,
-      cursorHeight: 0
-    }}
-  />
-  <div>
+</Spring>`}/>
     <RewindSpring>
       {x => <AnimatedMeter type="circle" value={x.interpolate(x => x * 100)} />}
     </RewindSpring>
   </div>
-</div>
 </RewindSpringProvider>
 
 <p>
@@ -286,7 +108,7 @@ import { Spring } from 'react-spring'
   <code>Spring</code> doesn't just handle numbers, it can <span className="highlight">interpolate pretty much everything</span>.
 </p> 
 
-* colors (names, rgb, rgba, hsl, hsla)
+* colors (names, rgb, rgba, hsl, hsla, gradients)
 * absolute lenghts (cm, mm, in, px, pt, pc)
 * relative lengths (em, ex, ch, rem, vw, vh, vmin, vmax, %)
 * angles (deg, rad, grad, turn)
@@ -299,46 +121,35 @@ import { Spring } from 'react-spring'
 * non-animatable string values (`visibility`, `pointerEvents`, etc)
 * `scrollTop`/`scrollLeft` ([native only](/native), since these aren't actual dom properties)
 
+<CodeMirror value={`<Spring
+  from={{
+    width: 100,
+    padding: 0,
+    background:
+      'linear-gradient(to right, #30e8bf, #ff8235)',
+    transform:
+      'translate3d(400px,0,0) scale(2) rotateX(90deg)',
+    boxShadow: '0px 100px 150px -10px #2D3747',
+    borderBottom: '0px solid white',
+    shape: 'M20,380 L380,380 L380,380 L200,20 L20,380 Z',
+    textShadow: '0px 5px 0px white'
+  }}
+  to={{ 
+    width: 'auto', 
+    padding: 20, 
+    background:
+      'linear-gradient(to right, #009fff, #ec2f4b)', 
+    transform: 
+      'translate3d(0px,0,0) scale(1) rotateX(0deg)', 
+    boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.4)', 
+    borderBottom: '10px solid #2D3747', 
+    shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z', 
+    textShadow: '0px 5px 15px rgba(255,255,255,0.5)' 
+  }}>
+  {props => ...}
+</Spring>`}/>
+
 Of course the only properties that the browser can animate relatively cheap are [composite propertys](https://www.html5rocks.com/en/tutorials/speed/high-performance-animations/) (opacity, transform), so you might want to watch out for that.
-
-The following playground is live.
-
-<Playground style={{ height: 200 }}>
-  <Spring
-    from={{
-      width: 100,
-      padding: 0,
-      background: 'linear-gradient(to right, #30e8bf, #ff8235)',
-      transform: 'perspective(600px) translate3d(400px,0,0) scale(2) rotateX(90deg)',
-      boxShadow: '0px 100px 150px -10px #2D3747',
-      borderBottom: '0px solid white',
-      shape: 'M20,380 L380,380 L380,380 L200,20 L20,380 Z',
-      textShadow: '0px 5px 0px white'
-    }}
-    to={{ 
-      width: 'auto', 
-      padding: 20, 
-      background: 'linear-gradient(to right, #009fff, #ec2f4b)', 
-      transform: 'perspective(600px) translate3d(0px,0,0) scale(1) rotateX(0deg)', 
-      boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.4)', 
-      borderBottom: '10px solid #2D3747', 
-      shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z', 
-      textShadow: '0px 5px 15px rgba(255,255,255,0.5)' 
-    }} config={{ tension: 10, friction: 50 }}>
-    {({ width, padding, background, transform, boxShadow, borderBottom, textShadow, shape }) => (
-      <div style={{ display: 'inline-block',
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      fontSize: '4em',
-      fontWeight: 800, width, padding, background, transform, boxShadow, textShadow }}>
-        <svg style={{ display: 'inline', width: 50 }} viewBox="0 0 400 400">
-          <path d={shape} fill="#2D3747"/>
-        </svg>
-        <span style={{ borderBottom }}>😅</span>
-      </div>
-    )}
-  </Spring>
-</Playground>
 
 ## Config
 
@@ -352,7 +163,8 @@ import { Spring, config } from 'react-spring'
 
 | Property                  | Value |
 | ------------------------- | ------- |
-| config.default             | { tension: 170, friction: 14 }
+| config.default             | { tension: 170, friction: 26 }
+| config.gentle              | { tension: 120, friction: 14 }
 | config.wobbly              | { tension: 180, friction: 12 }
 | config.stiff               | { tension: 210, friction: 20 }
 | config.slow                | { tension: 280, friction: 60 }
@@ -361,18 +173,20 @@ import { Spring, config } from 'react-spring'
 You can of course set configs for yourself, or finetune your spring. 
 
 ```jsx
-<Spring config={{ tension: 0, friction: 2, restDisplacementThreshold: 0.1 }} />
+<Spring config={{ tension: 0, friction: 2, precision: 0.1 }} />
 ````
 
 | Property                  | Default | Description       |
 | ------------------------- | ----------- | ------------- |
-| overshootClamping         | false       | false, when true, stops the spring once it overshoots its boundaries
-| restDisplacementThreshold | 0.0001      | precision
-| restSpeedThreshold        | 0.0001      | precision
+| mass                      | 1           | spring mass
+| tension                   | 170         | spring energetic load
+| friction                  | 26          | spring resistence
+| clamp                     | false       | false, when true, stops the spring once it overshoots its boundaries
+| precision                 | 0.01        | precision
 | velocity                  | 0           | initial velocity
-| tension                   | 170         | energetic load
-| friction                  | 26          | resistence
 | delay                     | 0           | delay
+| duration                  | undefined    | if > than 0 will switch to a duration-based animation instead of spring physics
+| easing                    | t => t      | linear by default, you can use any easing you want, for instance d3-ease
 
 It is also possible to set configs key by key.
 

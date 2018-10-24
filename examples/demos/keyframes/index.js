@@ -16,26 +16,26 @@ const fast = {
 const Sidebar = Keyframes.Spring({
   // Slots can take arrays/chains,
   peek: [
-    { delay: 500, from: { x: -100 }, to: { x: 0 }, config: fast },
-    { delay: 800, to: { x: -100 }, config: config.slow },
+    { x: 0, from: { x: -100 }, delay: 500 },
+    { x: -100, delay: 800 },
   ],
   // single items,
-  open: { to: { x: 0 }, config: config.default },
+  open: { x: 0 },
   // or async functions with side-effects
   close: async call => {
     await delay(400)
-    await call({ to: { x: -100 }, config: config.gentle })
+    await call({ x: -100 })
   },
 })
 
 // Creates a keyframed trail
 const Content = Keyframes.Trail({
   peek: [
-    { delay: 600, from: { x: -100, opacity: 0 }, to: { x: 0, opacity: 1 } },
-    { to: { x: -100, opacity: 0 } },
+    { x: 0, opacity: 1, from: { x: -100, opacity: 0 }, delay: 600 },
+    { x: -100, opacity: 0 },
   ],
-  open: { delay: 100, to: { x: 0, opacity: 1 } },
-  close: { to: { x: -100, opacity: 0 } },
+  open: { x: 0, opacity: 1, delay: 100 },
+  close: { x: -100, opacity: 0 },
 })
 
 const items = [
@@ -91,10 +91,11 @@ export default class App extends React.Component {
               }}>
               <Content
                 native
+                items={items}
                 keys={items.map((_, i) => i)}
-                config={{ tension: 200, friction: 20 }}
+                reverse={!this.state.open}
                 state={state}>
-                {items.map((item, i) => ({ x, ...props }) => (
+                {(item, i) => ({ x, ...props }) => (
                   <animated.div
                     style={{
                       transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
@@ -104,7 +105,7 @@ export default class App extends React.Component {
                       {item}
                     </Form.Item>
                   </animated.div>
-                ))}
+                )}
               </Content>
             </animated.div>
           )}

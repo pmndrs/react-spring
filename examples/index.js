@@ -10,6 +10,7 @@ const components = [
   'nativespring',
   'areas',
   'trails',
+  'pagetransitions',
   'reveals',
   'gestures',
   'timing',
@@ -24,22 +25,28 @@ const components = [
   'script',
   'auto',
   'router',
-  //'scroll',
-  //'dashoffset'
-  //'transitiongroup'
+  'scroll',
+  'dashoffset',
+  'transitiongroup',
+  'chat',
+  'messages',
+
 ].reduce(
   (acc, path) => ({
     ...acc,
     [path]: Loadable({
       loader: () => import('./demos/' + path),
-      loading: () => <div />,
+      loading: props => {
+        if (props.error) console.error(props.error)
+        return <div />
+      },
     }),
   }),
   {}
 )
 
-const DEBUG = false
-const DebugComponent = components['transitiongroup']
+const DEBUG = true
+const DebugComponent = components['onrest']
 
 ReactDOM.render(
   DEBUG ? (

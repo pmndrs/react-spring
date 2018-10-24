@@ -9,6 +9,7 @@ function Nodes({ nodes, layout, orientation, onNodeClick }) {
   return (
     <Transition
       native
+      unique
       items={nodes}
       keys={keyAccessor}
       config={{ tension: 1000, friction: 130, mass: 5 }}
@@ -53,7 +54,7 @@ function Nodes({ nodes, layout, orientation, onNodeClick }) {
           opacity: 0,
         }
       }}>
-      {nodes.map(node => styles => {
+      {node => styles => {
         const key = keyAccessor(node)
         return (
           <animated.g
@@ -81,7 +82,7 @@ function Nodes({ nodes, layout, orientation, onNodeClick }) {
             />
           </animated.g>
         )
-      })}
+      }}
     </Transition>
   )
 }

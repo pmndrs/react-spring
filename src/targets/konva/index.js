@@ -1,12 +1,8 @@
 import * as Globals from '../../animated/Globals'
-import Animation from '../../animated/Animation'
-import AnimatedValue from '../../animated/AnimatedValue'
-import SpringAnimation from '../../animated/SpringAnimation'
-import controller from '../../animated/AnimatedController'
+import AnimationController from '../../animated/AnimationController'
+import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
-import createInterpolation from '../shared/interpolation'
-import colorNames from '../shared/colors'
-import { config } from '../shared/constants'
+import { config } from '../../shared/constants'
 import Spring from '../../Spring'
 import Transition from '../../Transition'
 import Trail from '../../Trail'
@@ -62,11 +58,9 @@ export {
   Keyframes,
   Transition,
   Trail,
-  Animation,
-  SpringAnimation,
-  AnimatedValue,
+  AnimationController,
   config,
   animated,
-  controller,
+  interpolate,
   Globals,
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { renderChildren, convertValues, getValues } from '../shared/helpers'
+import { convertValues, getValues } from '../../shared/helpers'
 
 const check = value => value === 'auto'
 const overwrite = (width, height) => (acc, [name, value]) => ({
@@ -9,13 +9,13 @@ const overwrite = (width, height) => (acc, [name, value]) => ({
 })
 
 export default function fixAuto(props, callback) {
-  const { from, to } = props
+  const { from, to, children } = props
 
   // Dry-route props back if nothing's using 'auto' in there
   // TODO: deal with "null"
   if (!(getValues(to).some(check) || getValues(from).some(check))) return
   // Fetch render v-dom
-  const element = renderChildren(props, convertValues(props))
+  const element = children(convertValues(props))
   // A spring can return undefined/null, check against that (#153)
   if (!element) return
   const elementStyles = element.props.style
@@ -23,7 +23,7 @@ export default function fixAuto(props, callback) {
   // Return v.dom with injected ref
   return (
     <element.type
-      key={element.key}
+      key={element.key ? element.key : undefined}
       {...element.props}
       style={{ ...elementStyles, position: 'absolute', visibility: 'hidden' }}
       ref={ref => {
