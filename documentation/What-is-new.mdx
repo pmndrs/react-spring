@@ -1,0 +1,50 @@
+---
+name: What is new in 6.0
+route: /6x
+order: 500
+---
+
+# React-spring 6.0
+
+* ⚡️ React strict-mode compliant and ready for async rendering
+* 🚀 New spring engine (from rk4 to see), lots of internal changes making it faster and leaner
+* ✨ Simpler and more intuitive api
+
+## configs
+
+* ⏰ Duration is built in and as easy as going `config={{ duration: 1000, easing: ... }}` 
+* ⌛️ Delays can be driven per config `config={{ delay: 1000, ... }}`
+* ✨ Simpler property names (mass, tension, friction, delay, precision, clamp, velocity, duration, easing)
+* 🎩 Spring config props are 1:1 compatible with react-motions and the presets finally do what they say
+
+## Springs
+
+* ⏮ Springs can run `reverse`, which switches `from` and `to`
+* 🚬 The `after` prop makes it easier to apply static values at the end of an animation
+* 🐉 Springs can animate scrollTop/Left
+
+## Transitions
+
+* 🎉 Multistage transitions are finally possible. `Transition` inherits from `Keyframes` now, which allows it to receive the same values that you can use in slots, meaning you can chain or even script transitions
+* ⭐️ The `unique` prop prevents two children with the same key to co-exist, which was an often asked for suggestion. If it is true, a fading-out item will vanish when an item with the same key comes in again, as opposed to forming a stack (which is still the default)
+* ✖️ The `reset` prop, in combination with `unique` forces an incoming item to always start from scratch instead of adapting the fading-out item to take start-position
+* 🐌 Transitions can trail using teh `trail` prop which takes a duration in ms
+* ✨ Simpler api. Previously you could optionally pass `items` and you would have to map over children yourself. `items` and `keys` are Transitions sole source of truth now. You give a single function child instead of mapping
+* 🎮 Transition behaves more like Reacts TransitionGroup in that it can give you way more contextual information than before, you even have access to the state your output component is in (enter/leave/update)
+
+## Trails
+
+* ✨ Simpler api. Same as Transitions
+* ⏮ The `reverse` prop can move a trail bottom-up instead of the default top-down which is more natural for items swinging in and out
+
+## Keyframes
+
+* ✨ Simpler api. You don't have to write `to: {...}` any longer since everything is interpolated to it
+
+## Parallax
+
+* 🤷‍ Parallax always felt off since it's not as generic as the others. It has been moved to `react-spring/dist/addons` and could mark the start of convenience components or effects that don't belong anywhere else
+
+# Upgrading from 5.0 to 6.0
+
+The changes made are mostly features, the api changes are slight and looking at the front page here will tell you immediately what to do. You will probably have to adapt your Transitions and Trail, Keyframes are backwards compatible. If you have used timings off `dist/addons` before, duration is now inbuilt (see above). A noticeable change also concerns spring config props, where before we would be closer to how the animated library interprets tension and friction we are now 1:1 compatible with react-motion.
