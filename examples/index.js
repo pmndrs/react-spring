@@ -30,6 +30,7 @@ const components = [
   'transitiongroup',
   'chat',
   'messages',
+  'hooks'
 
 ].reduce(
   (acc, path) => ({
@@ -46,7 +47,7 @@ const components = [
 )
 
 const DEBUG = true
-const DebugComponent = components['onrest']
+const DebugComponent = components['hooks']
 
 ReactDOM.render(
   DEBUG ? (

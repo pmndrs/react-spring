@@ -34,8 +34,7 @@ import { Trail } from 'react-spring'
 <Trail
   items={items} keys={item => item.key}
   from={{ transform: 'translate3d(0,-40px,0)' }}
-  to={{ transform: 'translate3d(0,0px,0)' }}
->
+  to={{ transform: 'translate3d(0,0px,0)' }}>
   {item => props =>
     <span style={props}>{item.text}</span>
   }
@@ -59,6 +58,8 @@ import { Trail } from 'react-spring'
 <p>
   Transition actually inherits from <a href="/keyframes">Keyframes</a>, so its slots (<code>initial</code>, <code>from</code>, <code>enter</code>, <code>leave</code> and <code>update</code> can take the same types that Keyframe slots can take, namely: objects, functions, object-arrays. This gives you the ability to handle complex multistage, chained or scripted animations.
 </p>
+
+<br />
 
 <iframe
   src="https://codesandbox.io/embed/q7v9jrqj5q?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FDemo.js"

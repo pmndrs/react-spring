@@ -1,9 +1,9 @@
 import * as Globals from '../../animated/Globals'
-import AnimationController from '../../animated/AnimationController'
+import Controller from '../../animated/Controller'
 import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
 import { config } from '../../shared/constants'
-import Spring from '../../Spring'
+import Spring, { useSpring } from '../../Spring'
 import Transition from '../../Transition'
 import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
@@ -58,9 +58,10 @@ export {
   Keyframes,
   Transition,
   Trail,
-  AnimationController,
+  Controller,
   config,
   animated,
   interpolate,
   Globals,
+  useSpring
 }

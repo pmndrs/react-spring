@@ -11,7 +11,9 @@ import CodeMirror from './resources/Codemirror'
 
 # Introduction
 
-react-spring is a set of simple, spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
+<p>
+  <span className="highlight">react-spring is a set of simple, spring-physics based primitives</span> (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
+</p>
 
 Our goal is to bridge Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default) with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites. For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
@@ -134,7 +136,7 @@ const items = [...]
 <Trail
   items={items} keys={item => item.key}
   from={{ transform: 'translate3d(0,-40px,0)' }}
-  to={{ transform: 'translate3d(0,0px,0)' }}
+  to={{ transform: 'translate3d(0,0px,0)' }}>
   {item => props =>
     <span style={props}>{item.text}</span>
   }

@@ -45,6 +45,9 @@ export function getForwardProps(props) {
     delay,
     attach,
     destroyed,
+    track,
+    interpolateTo,
+    autoStart,
     ...forward
   } = props
   return forward

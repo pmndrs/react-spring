@@ -31,7 +31,7 @@ class RewindSpringProvider extends React.Component {
 }
 
 const RewindSpring = ({ children, style, hideProgress }) => (
-  <div style={{ overflow: 'hidden', background: '#f4f6f9', color: '#b7b7b7', ...style }}>
+  <div style={{ overflow: 'hidden', background: 'rgb(18, 22, 32)', color: '#CED4DE', ...style }}>
     <Consumer>
       {({ progress, x }) => (
         <React.Fragment>
@@ -45,7 +45,7 @@ const RewindSpring = ({ children, style, hideProgress }) => (
                 bottom: 0,
                 height: 10,
                 width: progress,
-                background: '#ffcf00',
+                background: '#474747',
               }}
             />
           )}

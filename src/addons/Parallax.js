@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { AnimationController, config, Globals, animated } from 'react-spring'
+import { Controller, config, Globals, animated } from 'react-spring'
 
 const El = Globals.defaultElement
 const AnimatedDiv = animated(El)
@@ -50,13 +50,13 @@ export class ParallaxLayer extends React.PureComponent {
     const targetScroll = Math.floor(this.props.offset) * height
     const offset = height * this.props.offset + targetScroll * this.props.speed
     const to = parseFloat(-(scrollTop * this.props.speed) + offset)
-    this.controller.update({ to: { translate: to }, config, immediate }, true)
+    this.controller.update({ translate: to, config, immediate })
   }
 
   setHeight(height, immediate = false) {
     const { config } = this.parent.props
     const to = parseFloat(height * this.props.factor)
-    this.controller.update({ to: { space: to }, config, immediate }, true)
+    this.controller.update({ space: to, config, immediate })
   }
 
   initialize() {
@@ -65,12 +65,9 @@ export class ParallaxLayer extends React.PureComponent {
     const targetScroll = Math.floor(props.offset) * parent.space
     const offset = parent.space * props.offset + targetScroll * props.speed
     const to = parseFloat(-(parent.current * props.speed) + offset)
-    this.controller = new AnimationController()
-    this.controller.update({
-      to: {
-        space: parent.space * props.factor,
-        translate: to,
-      },
+    this.controller = new Controller({
+      space: parent.space * props.factor,
+      translate: to,
     })
   }
 
@@ -156,8 +153,7 @@ export class Parallax extends React.PureComponent {
     this.current = 0
     this.offset = 0
     this.busy = false
-    this.controller = new AnimationController()
-    this.controller.update({ to: { scroll: 0 } })
+    this.controller = new Controller({ scroll: 0 })
   }
 
   moveItems = () => {
@@ -207,14 +203,11 @@ export class Parallax extends React.PureComponent {
     this.offset = offset
     const target = this.container
 
-    this.controller.update(
-      {
-        to: { scroll: offset * this.space },
-        config,
-        onFrame: ({ scroll }) => (target[scrollType] = scroll),
-      },
-      true
-    )
+    this.controller.update({
+      scroll: offset * this.space,
+      config,
+      onFrame: ({ scroll }) => (target[scrollType] = scroll),
+    })
   }
 
   componentDidMount() {

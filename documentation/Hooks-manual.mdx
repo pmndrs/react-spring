@@ -1,0 +1,96 @@
+---
+name: React hooks/manual API
+route: /manual
+order: 1
+---
+
+import { PropsTable } from 'docz'
+import { Spring, animated, config } from '../src/targets/web'
+import { AnimatedMeter, RewindSpringProvider, RewindSpring } from './resources/RewindSpring.js'
+import CodeMirror from './resources/Codemirror'
+
+# Hooks, manual api
+
+<p>
+  <span className="highlight">React-spring offers multiple ways to animate</span>, the one which you'll probably use most is the declarative and render-prop driven way that is front and center. But there is a second, imperative way which you can either use raw or with the help of Reacts new "hooks" feature in class-less component architecture.
+</p>
+
+## Hooks
+
+The React team has recently [unveiled hooks](https://conf.reactjs.org/). This feature allows you to create fully capable functional components that can store permanent data and cause effects using inversion of control. React-spring exports a hook called `useSpring`.
+
+```jsx
+import { useSpring, animated } from 'react-spring'
+```
+
+You can use this hook to define and update data. The data you pass in consists of the same props you would normally give a spring, with the distinction that unknown values are interpolated to `to` by default, similar to how [Keyframes](/keyframes) roll.
+
+```jsx
+function ClasslessComponent() {
+  [props] = useSpring({ opacity: 1, from: { opacity: 0 } })
+  return <animated.div style={props}>i will fade in</animated.div>
+}
+```
+
+You can update spring data simply by overwriting the hook, it will remember previous values and animate adaptively. React will render once every time you change props, but the animation itself will be dealt with outside of React. `useSpring` is [native](/perf) by default.
+
+```jsx
+function ClasslessComponent({ opacity }) {
+  [props] = useSpring({ opacity, from: { opacity: 0 } })
+  return <animated.div style={props}>i will fade in</animated.div>
+}
+```
+
+There is another way to update your spring outside of React, it returns an updater similar to `useState`. This will be extremely useful whenever you don't want React to influence rendering, for instance on input events. If you would store events using `useState` the component would basically refresh on every mouse-move, and that has a performance cost depending on how large your view is. You can probably work around that in async-React but the `set` updater makes that straight forward, it simply informs your animated values.
+
+```jsx
+function ClasslessComponent() {
+  [props, set] = useSpring({ pos: [0, 0] })
+  useEffect(() => {
+    const handler = ({ clientX, clientY }) => set({ pos: [clientX, clientY] })
+    window.addEventListener('mousemove', handler)
+    return () => window.removeEventListener('mousemove', handler)
+  }, [])
+  return (
+    <animated.div
+      style={{ 
+        transform: props.pos.interpolate((x,y) => `translate3d(${x}px,${x}px,0)`) 
+      }}>
+      i will move with your mouse
+    </animated.div>
+  )
+}
+```
+
+You can also create natural trails by tying your hooks together:
+
+```jsx
+const [{ pos1 }, set] = useSpring({ pos1: [0, 0] })
+const [{ pos2 }] = useSpring({ pos2: pos1 })
+const [{ pos3 }] = useSpring({ pos3: pos2 })
+```
+
+Whenever you update the first spring, either by overwrite it or by calling `set`, the others will naturally follow.
+
+## Controller
+
+The `Controller` is react-springs heart, all primitives use it internally (including hooks). If you dislike render-props, and maybe hooks are too radical for you, then you perhaps this is what you are looking for as it gives you manual control without inversion of control. The api is very similar to the useSpring hook.
+
+```jsx
+import { Controller, animated } from 'react-spring'
+
+class Test extends React.Component {
+  state = { show: true }
+  animations = new Controller({ opacity: 0 })
+  toggle = this.setState(state => ({ show: !show }))
+  render() {
+    const props = this.animations.update({ opacity: this.state.show ? 1 : 0 })
+    return (
+      <>
+        <button onClick={this.toggle}>click</button>
+        <animated.div style={props}>I will fade</animated.div>
+      </>
+    )
+  }
+}
+```
