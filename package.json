@@ -80,6 +80,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "babel-plugin-react-docgen": "^2.0.0",
+    "babel-plugin-transform-es2017-object-entries": "0.0.5",
     "babel-plugin-transform-react-remove-prop-types": "0.4.19",
     "docz": "^0.12.5",
     "docz-theme-default": "^0.12.5",
