@@ -1,12 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { AnimationController, animated } from 'react-spring'
+import { Controller, animated } from 'react-spring'
 import './styles.css'
 
 export default class Demo extends React.Component {
   constructor() {
     super()
-    this.animations = new AnimationController({ blob1: [0, 0] })
+    this.animations = new Controller({ blob1: [0, 0] })
     this.animations.update({ blob2: this.animations.getValues().blob1 })
     this.animations.update({ blob3: this.animations.getValues().blob2 })
   }

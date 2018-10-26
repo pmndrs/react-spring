@@ -47,7 +47,7 @@ const components = [
   {}
 )
 
-const DEBUG = true
+const DEBUG = false
 const DebugComponent = components['reveals']
 
 ReactDOM.render(

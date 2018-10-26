@@ -40,19 +40,15 @@ export default class Trail extends React.PureComponent {
     const {
       items,
       children,
-      render,
       from = {},
       initial,
-      to = {},
-      native,
       reverse,
       keys,
       delay,
       onRest,
-      ...extra
+      ...props
     } = this.props
 
-    const props = { ...extra, native, to }
     const array = toArray(items)
     return toArray(array).map((item, i) => (
       <Spring

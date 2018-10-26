@@ -8,8 +8,7 @@ export default class AnimatedProps extends AnimatedObjectWithChildren {
     super()
     if (props.style) props = { ...props, style: new AnimatedStyle(props.style) }
     this.payload = props
-    this.callback = callback
+    this.update = callback
     this.attach()
   }
-  update = () => this.callback()
 }

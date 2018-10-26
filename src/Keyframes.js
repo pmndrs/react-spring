@@ -3,12 +3,7 @@ import PropTypes from 'prop-types'
 import * as Globals from './animated/Globals'
 import Spring from './Spring'
 import Trail from './Trail'
-import {
-  getForwardProps,
-  interpolateTo,
-  shallowEqual,
-  handleRef,
-} from './shared/helpers'
+import { interpolateTo, shallowEqual, handleRef } from './shared/helpers'
 import { config as springConfig } from './shared/constants'
 
 const DEFAULT = '__default'
@@ -132,9 +127,6 @@ class KeyframesImpl extends React.PureComponent {
   }
 }
 
-// TODO: AnimatedController has a change detection, please check if that affects in any way
-// how Keyframes.next handles promises. If two calls with the same values don't call oRest then
-// that would be a serious bug
 const Keyframes = React.forwardRef((props, ref) => (
   <KeyframesImpl {...props} forwardRef={ref} />
 ))

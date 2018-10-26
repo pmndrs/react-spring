@@ -35,7 +35,6 @@ export function getForwardProps(props) {
     onRest,
     onFrame,
     children,
-    render,
     reset,
     reverse,
     force,

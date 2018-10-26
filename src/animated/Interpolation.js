@@ -9,29 +9,28 @@ export default class Interpolation {
       typeof config.output[0] === 'string'
     )
       return Globals.interpolation(config)
-    else if (Array.isArray(config)) config = { range: config, output: arg }
+    else if (Array.isArray(config))
+      return Interpolation.create({ range: config, output: arg })
 
-    var outputRange = config.output
-    var inputRange = config.range || [0, 1]
-    var easing = config.easing || (t => t)
-    var extrapolateLeft = 'extend'
-    var map = config.map
+    let outputRange = config.output
+    let inputRange = config.range || [0, 1]
+    let easing = config.easing || (t => t)
+    let extrapolateLeft = 'extend'
+    let map = config.map
 
-    if (config.extrapolateLeft !== undefined) {
+    if (config.extrapolateLeft !== undefined)
       extrapolateLeft = config.extrapolateLeft
-    } else if (config.extrapolate !== undefined) {
+    else if (config.extrapolate !== undefined)
       extrapolateLeft = config.extrapolate
-    }
 
-    var extrapolateRight = 'extend'
-    if (config.extrapolateRight !== undefined) {
+    let extrapolateRight = 'extend'
+    if (config.extrapolateRight !== undefined)
       extrapolateRight = config.extrapolateRight
-    } else if (config.extrapolate !== undefined) {
+    else if (config.extrapolate !== undefined)
       extrapolateRight = config.extrapolate
-    }
 
     return input => {
-      var range = findRange(input, inputRange)
+      let range = findRange(input, inputRange)
       return interpolate(
         input,
         inputRange[range],
@@ -58,52 +57,28 @@ function interpolate(
   extrapolateRight,
   map
 ) {
-  var result = map ? map(input) : input
-
+  let result = map ? map(input) : input
   // Extrapolate
   if (result < inputMin) {
-    if (extrapolateLeft === 'identity') {
-      return result
-    } else if (extrapolateLeft === 'clamp') {
-      result = inputMin
-    } else if (extrapolateLeft === 'extend') {
-      // noop
-    }
+    if (extrapolateLeft === 'identity') return result
+    else if (extrapolateLeft === 'clamp') result = inputMin
   }
-
   if (result > inputMax) {
-    if (extrapolateRight === 'identity') {
-      return result
-    } else if (extrapolateRight === 'clamp') {
-      result = inputMax
-    } else if (extrapolateRight === 'extend') {
-      // noop
-    }
+    if (extrapolateRight === 'identity') return result
+    else if (extrapolateRight === 'clamp') result = inputMax
   }
-
   if (outputMin === outputMax) return outputMin
-  if (inputMin === inputMax) {
-    if (input <= inputMin) return outputMin
-    return outputMax
-  } // Input Range
-
-  if (inputMin === -Infinity) {
-    result = -result
-  } else if (inputMax === Infinity) {
-    result = result - inputMin
-  } else {
-    result = (result - inputMin) / (inputMax - inputMin)
-  } // Easing
-
-  result = easing(result) // Output Range
-
-  if (outputMin === -Infinity) {
-    result = -result
-  } else if (outputMax === Infinity) {
-    result = result + outputMin
-  } else {
-    result = result * (outputMax - outputMin) + outputMin
-  }
+  if (inputMin === inputMax) return input <= inputMin ? outputMin : outputMax
+  // Input Range
+  if (inputMin === -Infinity) result = -result
+  else if (inputMax === Infinity) result = result - inputMin
+  else result = (result - inputMin) / (inputMax - inputMin)
+  // Easing
+  result = easing(result)
+  // Output Range
+  if (outputMin === -Infinity) result = -result
+  else if (outputMax === Infinity) result = result + outputMin
+  else result = result * (outputMax - outputMin) + outputMin
   return result
 }
 

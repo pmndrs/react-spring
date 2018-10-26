@@ -1,19 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Animated from './animated/Animated'
-import AnimatedValue from './animated/AnimatedValue'
-import AnimatedArray from './animated/AnimatedArray'
-import AnimatedProps from './animated/AnimatedProps'
 import Controller from './animated/Controller'
 import * as Globals from './animated/Globals'
 import { config } from './shared/constants'
-import {
-  convertValues,
-  callProp,
-  shallowEqual,
-  getValues,
-  toArray,
-} from './shared/helpers'
+import { convertValues, shallowEqual, getValues } from './shared/helpers'
 
 const v = React.version.split('.')
 if (process.env.NODE_ENV !== 'production' && (v[0] < 16 || v[1] < 4)) {
