@@ -190,7 +190,9 @@ In cases where you need to clamp or extrapolate, each animated value can `interp
   style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
   sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
 
-## Props
+## animatedValue.interpolate()
+
+`interpolate` either takes an object of the following shape:
 
 | Value            | default  | Description |
 | ---------------- | -------- | ----------- |
@@ -200,3 +202,7 @@ In cases where you need to clamp or extrapolate, each animated value can `interp
 | range            | [0,1]    | Array of input ranges
 | output           | undefined | Array of mapped output ranges
 | map              | undefined | Value filter applied to input value
+
+A range shortcut: `val.interpolate([...inputRange], [...outputRange])`
+
+Or a function: `val.interpolate(v => ...)`

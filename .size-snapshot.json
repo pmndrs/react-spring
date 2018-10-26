@@ -19,63 +19,63 @@
     "gzipped": 1992
   },
   "dist/web.js": {
-    "bundled": 79323,
-    "minified": 37560,
-    "gzipped": 12282,
+    "bundled": 79425,
+    "minified": 37574,
+    "gzipped": 12285,
     "treeshaked": {
       "rollup": {
-        "code": 30931,
+        "code": 30941,
         "import_statements": 287
       },
       "webpack": {
-        "code": 32387
+        "code": 32397
       }
     }
   },
   "dist/web.umd.js": {
-    "bundled": 85047,
-    "minified": 33051,
+    "bundled": 85153,
+    "minified": 33061,
     "gzipped": 12022
   },
   "dist/native.js": {
-    "bundled": 74388,
-    "minified": 34516,
-    "gzipped": 10844,
+    "bundled": 74490,
+    "minified": 34530,
+    "gzipped": 10848,
     "treeshaked": {
       "rollup": {
-        "code": 25930,
+        "code": 25939,
         "import_statements": 298
       },
       "webpack": {
-        "code": 27310
+        "code": 27319
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 61925,
-    "minified": 28024,
-    "gzipped": 8162,
+    "bundled": 62027,
+    "minified": 28038,
+    "gzipped": 8161,
     "treeshaked": {
       "rollup": {
-        "code": 20001,
+        "code": 20010,
         "import_statements": 262
       },
       "webpack": {
-        "code": 21332
+        "code": 21341
       }
     }
   },
   "dist/konva.js": {
-    "bundled": 61535,
-    "minified": 27912,
+    "bundled": 61637,
+    "minified": 27926,
     "gzipped": 8168,
     "treeshaked": {
       "rollup": {
-        "code": 22064,
+        "code": 22073,
         "import_statements": 262
       },
       "webpack": {
-        "code": 23430
+        "code": 23439
       }
     }
   }

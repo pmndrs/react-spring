@@ -23,12 +23,16 @@ The React team has recently [unveiled hooks](https://conf.reactjs.org/). This fe
 import { useSpring, animated } from 'react-spring'
 ```
 
-You can use this hook to define and update data. The data you pass in consists of the same props you would normally give a spring, with the distinction that unknown values are interpolated to `to` by default, similar to how [Keyframes](/keyframes) roll.
+You can use this hook to define and update data. The data you pass in consists of the same props you would normally give a spring, with the distinction that unknown values are interpolated to `to` by default, similar to how [Keyframes](/keyframes) roll. You can drop in everything, just like the a Springs `to` props it understands numbers, percentages, strings, colors and so on. See [/spring#interpolation](/spring#interpolation).
 
 ```jsx
 function ClasslessComponent() {
-  [props] = useSpring({ opacity: 1, from: { opacity: 0 } })
-  return <animated.div style={props}>i will fade in</animated.div>
+  [props] = useSpring({ 
+    opacity: 1, 
+    color: 'blue', 
+    from: { opacity: 0, color: 'rgba(21,45,60,0.1)' } 
+  })
+  return <animated.div style={props}>i will fade in and shift my color</animated.div>
 }
 ```
 
