@@ -125,7 +125,7 @@ export const animated: {
 }
 
 type TransitionKeyProps = string | number
-type TransitionItemProps = string | number | object
+type TransitionItemProps = boolean | string | number | object
 
 interface TransitionProps<S extends object, DS extends object = {}> {
   /**
@@ -264,8 +264,8 @@ export class Keyframes<S extends object, DS extends object> extends PureComponen
   ): (props: object) => Keyframes<S | Pick<SpringProps<S,DS>, Exclude<keyof SpringProps<S,DS>, "to">>, DS>
   static Trail<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S | Pick<TrailProps<S,DS>, Exclude<keyof TrailProps<S,DS>, "to">>, DS> 
+  ): (props: object) => Keyframes<S | Pick<TrailProps<S,DS>, Exclude<keyof TrailProps<S,DS>, "to">>, DS>
   static Transition<S extends object, DS extends object>(
     states: object
-  ): (props: object) => Keyframes<S | Pick<TransitionProps<S,DS>, Exclude<keyof TransitionProps<S,DS>, "to">>, DS> 
+  ): (props: object) => Keyframes<S | Pick<TransitionProps<S,DS>, Exclude<keyof TransitionProps<S,DS>, "to">>, DS>
 }
