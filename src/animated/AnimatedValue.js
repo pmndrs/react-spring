@@ -70,5 +70,5 @@ export default class AnimatedValue extends AnimatedWithChildren {
   getValue = () => this.value
   updateStyles = () => findAnimatedStyles(this, this.animatedStyles)
   updateValue = value => this.flush((this.value = value))
-  interpolate = config => new AnimatedInterpolation(this, config)
+  interpolate = (config, arg) => new AnimatedInterpolation(this, config, arg)
 }

@@ -4,11 +4,10 @@ import Animated from './animated/Animated'
 import AnimatedValue from './animated/AnimatedValue'
 import AnimatedArray from './animated/AnimatedArray'
 import AnimatedProps from './animated/AnimatedProps'
-import AnimationController from './animated/AnimationController'
+import Controller from './animated/Controller'
 import * as Globals from './animated/Globals'
 import { config } from './shared/constants'
 import {
-  interpolateTo,
   convertValues,
   callProp,
   shallowEqual,
@@ -78,7 +77,7 @@ export default class Spring extends React.Component {
     internal: false,
   }
 
-  controller = new AnimationController()
+  controller = new Controller(null, null)
   didUpdate = false
   didInject = false
   updating = false
@@ -196,4 +195,19 @@ export default class Spring extends React.Component {
       this.didInject = false
     }
   }
+}
+
+export function useSpring(props) {
+  const state = React.useRef({
+    controller: new Controller(props),
+    finished: ({ finished }) =>
+      finished && props.onRest && props.onRest(state.current.controller.merged),
+  })
+  React.useEffect(() => {
+    state.current.controller.update(props, state.current.finished)
+  })
+  return [
+    state.current.controller.interpolations,
+    props => state.current.controller.update(props, state.current.finished),
+  ]
 }

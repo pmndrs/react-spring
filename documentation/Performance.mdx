@@ -1,7 +1,7 @@
 ---
-name: Native rendering
-route: /native
-order: 1
+name: Better performance ⚡️
+route: /perf
+order: 2
 ---
 
 import { PropsTable } from 'docz'
@@ -9,7 +9,7 @@ import { Spring, animated, config, interpolate } from '../src/targets/web'
 import { AnimatedMeter, RewindSpringProvider, RewindSpring } from './resources/RewindSpring.js'
 import CodeMirror from './resources/Codemirror'
 
-# Native rendering
+# Better performance ⚡️
 
     import { animated, interpolate } from 'react-spring'
 
@@ -75,8 +75,8 @@ Just be aware of the following conditions:
           style={{ width: 120, height: 120, opacity: x.interpolate({ range: [0,0.05,1], output: [0,1,1] }) }}
           viewBox="-10 -10 404 404"
           strokeWidth="10"
-          fill="white"
-          stroke="#b7b7b7"
+          fill="#272727"
+          stroke="#CED4DE"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={1200} strokeDashoffset={x.interpolate(x => (1-x) * 1200)}>
@@ -153,18 +153,20 @@ In cases where you need to clamp or extrapolate, each animated value can `interp
     <animated.div
       style={{
         // If you can, use plain animated values like always, ...
+        // You would do that in all cases where values "just fit"
         color,
-        opacity: o,
         // Unless you need to interpolate them
         background: o.interpolate(o => `rgba(210, 57, 77, ${o})`),
         // Which works with arrays as well
         transform: xyz.interpolate((x, y, z) => `translate3d(${x}px, ${y}px, ${z}px)`),
         // If you want to combine multiple values use the "interpolate" helper
-        border: interpolate([o, color], (o, c) => `${o * 10}px solid ${color}`)
-        // You can also form ranges, even chain multiple interpolations ...
+        border: interpolate([o, color], (o, c) => `${o * 10}px solid ${c}`)
+        // You can also form ranges, even chain multiple interpolations
         padding:
-          o.interpolate({ range: [0, 0.5, 1], output: [0, 0, 10]})
+          o.interpolate({ range: [0, 0.5, 1], output: [0, 0, 10] })
            .interpolate(o => `${o}%`),
+        // There's also a shortcut for plain, optionless ranges ...
+        opacity: o.interpolate([0.1, 0.2. 0.6, 1], [1, 0.1, 0.5, 1]),
       }}>
       {
         // Finally, this is how you interpolate innerText
@@ -180,6 +182,8 @@ In cases where you need to clamp or extrapolate, each animated value can `interp
 <p>
   Interplations are also a good way in order to emulate css-keyframes since you can form a range that interpolates a number of stops, mapping it to a specific output.
 </p>
+
+<br />
 
 <iframe
   src="https://codesandbox.io/embed/8nnwo7k08j?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FDemo.js"

@@ -57,8 +57,8 @@ export default {
           color: white;
         }
         .highlight {
-          background: #f4e6e9;
-          color: #947679;
+          background: #ea567c;
+          color: #CED4DE;
           margin: 0 3px;
           padding: 4px 6px;
           border-radius: 3px;
@@ -75,14 +75,14 @@ export default {
           height: 70px;
         }
         .grommetux-meter__tracks {
-          stroke: white;
+          stroke: #272727;
         }
         .grommetux-meter__values {
-          stroke: #b7b7b7;
+          stroke: #CED4DE;
         }
         code {
-          background: #f4f6f9;
-          color: #7D899C;
+          background: #7D899C;
+          color: #EEF1F5;
           margin: 0 3px;
           padding: 4px 6px;
           border-radius: 3px;
@@ -94,11 +94,11 @@ export default {
     },
   },
   themeConfig: {
-    //mode: 'dark',
+    mode: 'dark',
     codemirrorTheme: 'dracula',
     colors: {
       primary: '#ea567c',
-      sidebarBg: 'white',
+      //sidebarBg: 'white',
     },
     styles: {
       body: {

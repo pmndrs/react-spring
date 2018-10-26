@@ -4,6 +4,7 @@ import AnimatedArray from './AnimatedArray'
 import AnimatedProps from './AnimatedProps'
 import * as Globals from './Globals'
 import {
+  interpolateTo,
   withDefault,
   toArray,
   getValues,
@@ -12,40 +13,48 @@ import {
 } from '../shared/helpers'
 
 let now,
-isDone,
-noChange,
-configIdx,
-valIdx,
-config,
-animation,
-position,
-from,
-tracked,
-to,
-endOfAnimation,
-lastTime,
-velocity,
-numSteps,
-force,
-damping,
-acceleration,
-stepIdx,
-isOvershooting,
-isVelocity,
-isDisplacement
+  isDone,
+  noChange,
+  configIdx,
+  valIdx,
+  config,
+  animation,
+  position,
+  from,
+  tracked,
+  to,
+  endOfAnimation,
+  lastTime,
+  velocity,
+  numSteps,
+  force,
+  damping,
+  acceleration,
+  stepIdx,
+  isOvershooting,
+  isVelocity,
+  isDisplacement
 
-export default class AnimationController {
-  isActive = false
-  hasChanged = false
-  props = {}
-  merged = {}
-  animations = {}
-  interpolations = {}
-  animatedProps = {}
-  configs = []
-  frame = undefined
-  startTime = undefined
-  lastTime = undefined
+export default class Controller {
+  constructor(
+    props,
+    config = { native: true, track: true, interpolateTo: true, autoStart: true }
+  ) {
+    this.dependents = new Set()
+    this.isActive = false
+    this.hasChanged = false
+    this.props = {}
+    this.merged = {}
+    this.animations = {}
+    this.interpolations = {}
+    this.animatedProps = {}
+    this.configs = []
+    this.frame = undefined
+    this.startTime = undefined
+    this.lastTime = undefined
+
+    this.update({ ...props, ...config })
+  }
 
   /**
    * props: to: { ... }
@@ -66,7 +75,7 @@ export default class AnimationController {
    * values from there, if present.
    */
   update(props, ...start) {
-    this.props = props
+    this.props = { ...this.props, ...props }
     let {
       from = {},
       to = {},
@@ -78,7 +87,9 @@ export default class AnimationController {
       immediate,
       native,
       onFrame,
-    } = props
+      track,
+      autoStart,
+    } = this.props.interpolateTo ? interpolateTo(this.props) : this.props
 
     // Reverse values when requested
     if (reverse) {
@@ -133,6 +144,7 @@ export default class AnimationController {
             // We end up here if the value we're shifting to is an animated value or array
             parent = entry.parent || new value.constructor(value.getValue())
             interpolation = entry.interpolation || parent
+
             // In the next step we're going to check if that value is interpolated
             if (_entry && _entry.interpolation.calc) {
               const config = {
@@ -172,6 +184,8 @@ export default class AnimationController {
             value = 1
           }
 
+          parent.controller = this
+          if (isAnimated && value.controller !== this) value.controller.dependents.add(this)
           parent.track = isAnimated ? value : undefined
 
           // Map output values to an array so reading out is easier later on
@@ -220,7 +234,9 @@ export default class AnimationController {
         this.animatedProps[key] = this.animations[key].interpolation.getValue()
       }
     }
-    if (start.length) this.start(...start)
+    if (autoStart || start.length) this.start(...start)
+
+    return this.getValues()
   }
 
   start(onEnd, onUpdate) {
@@ -234,6 +250,11 @@ export default class AnimationController {
     if (this.props.onStart) this.props.onStart()
     // Start RAF loop
     this.frame = Globals.requestFrame(this.raf)
+
+    // Call dependent controllers
+    if (this.props.track)
+      for (let controller of this.dependents)
+        controller.update({ ...controller.props, ...controller.merged }, true)
   }
 
   stop(finished = false) {

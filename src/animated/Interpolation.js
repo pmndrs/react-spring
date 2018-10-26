@@ -1,19 +1,19 @@
 import * as Globals from './Globals'
 
-const linear = t => t
-
 export default class Interpolation {
-  static create(config) {
+  static create(config, arg) {
     if (typeof config === 'function') return config
-    if (
+    else if (
       Globals.interpolation &&
       config.output &&
       typeof config.output[0] === 'string'
     )
       return Globals.interpolation(config)
+    else if (Array.isArray(config)) config = { range: config, output: arg }
+
     var outputRange = config.output
     var inputRange = config.range || [0, 1]
-    var easing = config.easing || linear
+    var easing = config.easing || (t => t)
     var extrapolateLeft = 'extend'
     var map = config.map
 

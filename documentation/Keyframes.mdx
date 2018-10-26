@@ -4,7 +4,7 @@ route: /keyframes
 order: 4
 ---
 
-import { Playground, PropsTable } from 'docz'
+import { PropsTable } from 'docz'
 import { Keyframes, config } from '../src/targets/web'
 
 # Keyframes
@@ -25,7 +25,7 @@ const Container = Keyframes.Spring({
   // Single props
   show: { opacity: 1 },
   // Chained animations (arrays)
-  showAndHide: [ { opacity: 1 }, { opacity: 0 }],
+  showAndHide: [{ opacity: 1 }, { opacity: 0 }],
   // Functions with side-effects with access to component props
   wiggle: async (next, cancel, ownProps) => {
     await next({ x: 100, config: config.wobbly })
@@ -38,7 +38,7 @@ const Container = Keyframes.Spring({
 Now use it anywhere you want, set the named slot you want to animate towards.
 
 ```jsx
-<Container state="show">
+<Container state="showAndHide">
   {styles => <div style={styles}>Hello</div>}
 </Container>
 ```
@@ -47,27 +47,19 @@ There is a shortcut for low-level scripting by giving it a function instead of a
 
 ```jsx
 // Will fade children in and out in a loop
-const Container = Keyframes.Spring(async next => {
-  while (true) {
-    await next({
-      reset: true,
-      from: { opacity: 0 },
-      opacity: 1,
-    })
-  }
-})
+const Script = Keyframes.Spring(async next =>
+  while (true)
+    await next({ opacity: 1, from: { opacity: 0 }, reset: true })
+)
 ```
 
 And another shortcut for arrays:
 
 ```jsx
-const Container = Keyframes.Spring([
-  { scale: 1.5 },
-  { scale: 1 },
-])
+const Chain = Keyframes.Spring([{ scale: 1.5 }, { scale: 1 }])
 ```
 
-## Demo
+<br />
 
 <iframe
   src="https://codesandbox.io/embed/vjmmp7xl10?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FDemo.js"

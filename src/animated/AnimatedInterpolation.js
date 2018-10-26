@@ -3,7 +3,7 @@ import { AnimatedArrayWithChildren } from './AnimatedWithChildren'
 import Interpolation from './Interpolation'
 
 export default class AnimatedInterpolation extends AnimatedArrayWithChildren {
-  constructor(parents, config) {
+  constructor(parents, config, arg) {
     super()
     this.payload =
       // AnimatedArrays should unfold, except AnimatedInterpolation which is taken as is
@@ -12,13 +12,14 @@ export default class AnimatedInterpolation extends AnimatedArrayWithChildren {
         : Array.isArray(parents)
           ? parents
           : [parents]
-    this.calc = Interpolation.create(config)
+    this.calc = Interpolation.create(config, arg)
   }
 
   getValue = () => this.calc(...this.payload.map(value => value.getValue()))
-  updateConfig = config => (this.calc = Interpolation.create(config))
-  interpolate = config => new AnimatedInterpolation(this, config)
+  updateConfig = (config, arg) =>
+    (this.calc = Interpolation.create(config, arg))
+  interpolate = (config, arg) => new AnimatedInterpolation(this, config, arg)
 }
 
-export const interpolate = (parents, config) =>
-  parents && new AnimatedInterpolation(parents, config)
+export const interpolate = (parents, config, arg) =>
+  parents && new AnimatedInterpolation(parents, config, arg)
