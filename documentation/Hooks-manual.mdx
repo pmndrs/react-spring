@@ -27,7 +27,7 @@ You can use this hook to define and update data. The data you pass in consists o
 
 ```jsx
 function ClasslessComponent() {
-  [props] = useSpring({ 
+  const [props] = useSpring({ 
     opacity: 1, 
     color: 'blue', 
     from: { opacity: 0, color: 'rgba(21,45,60,0.1)' } 
@@ -50,7 +50,7 @@ You can update spring data simply by overwriting the hook, it will remember prev
 
 ```jsx
 function ClasslessComponent({ opacity }) {
-  [props] = useSpring({ opacity, from: { opacity: 0 } })
+  const [props] = useSpring({ opacity, from: { opacity: 0 } })
   return <animated.div style={props}>i will fade in</animated.div>
 }
 ```
@@ -59,7 +59,7 @@ There is another way to update your spring outside of React, it returns an updat
 
 ```jsx
 function ClasslessComponent() {
-  [props, set] = useSpring({ pos: [0, 0] })
+  const [props, set] = useSpring({ pos: [0, 0] })
   useEffect(() => {
     const handler = ({ clientX, clientY }) => set({ pos: [clientX, clientY] })
     window.addEventListener('mousemove', handler)
