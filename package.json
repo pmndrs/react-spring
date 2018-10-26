@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "6.1.1",
+  "version": "6.1.2",
   "description": "A set of spring-physics based animation primitives",
   "main": "dist/web.cjs.js",
   "module": "dist/web.js",
