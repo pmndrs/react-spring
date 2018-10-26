@@ -12,9 +12,9 @@ export default class App extends React.PureComponent {
         <Transition
           native
           items={this.state.show}
-          from={{ position: 'absolute', opacity: 0, coords: [40, 40] }}
-          enter={{ opacity: 1, coords: [0, 0] }}
-          leave={{ opacity: 0, coords: [-40, -40] }}>
+          from={{ position: 'absolute', opacity: 0, coords: [40, 40], color: 'red' }}
+          enter={{ opacity: 1, coords: [0, 0], color: 'green' }}
+          leave={{ opacity: 0, coords: [-40, -40], color: 'blue' }}>
           {show =>
             show &&
             (({ coords, ...props }) => (

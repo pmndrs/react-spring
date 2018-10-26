@@ -48,7 +48,7 @@ const components = [
 )
 
 const DEBUG = true
-const DebugComponent = components['csskeyframes']
+const DebugComponent = components['reveals']
 
 ReactDOM.render(
   DEBUG ? (

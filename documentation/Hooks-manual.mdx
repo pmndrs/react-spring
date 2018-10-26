@@ -12,12 +12,12 @@ import CodeMirror from './resources/Codemirror'
 # Hooks, manual api
 
 <p>
-  <span className="highlight">React-spring offers multiple ways to animate</span>, the one which you'll probably use most is the declarative and render-prop driven way that is front and center. But there is a second, imperative way which you can either use raw or with the help of Reacts new "hooks" feature which establishes a class-less component architecture (currently in alpha, and you'll need both react@next and react-dom@next to use it).
+  <span className="highlight">React-spring offers multiple ways to animate</span>, the one which you'll probably use most is the declarative and render-prop driven way which is front and center. But there is a second, imperative way which you can either use raw or with the help of Reacts new "hooks" feature which establishes a class-less component architecture (currently in alpha, and you'll need both react@next and react-dom@next to use it).
 </p>
 
 ## Hooks
 
-The React team has recently [unveiled hooks](https://conf.reactjs.org/). This feature allows you to create fully capable functional components that can store permanent data and cause effects using inversion of control. React-spring exports a hook called `useSpring`.
+The React team has recently [unveiled hooks](https://conf.reactjs.org/). This feature allows you to create fully capable functional components that can store permanent data and cause effects. React-spring exports a hook called `useSpring`.
 
 ```jsx
 import { useSpring, animated } from 'react-spring'
@@ -89,7 +89,7 @@ const [{ pos3 }] = useSpring({ pos3: pos2 })
 
 ## Controller
 
-The `Controller` is react-springs heart, all primitives use it internally (including hooks). If you dislike render-props, and maybe hooks are too radical for you, then you perhaps this is what you are looking for as it gives you manual control without inversion of control. The api is very similar to the useSpring hook.
+The `Controller` is react-springs heart, all primitives use it internally (including hooks). If you dislike render-props, and maybe hooks are too radical for you, then perhaps this is what you are looking for as it gives you full manual control without having to worry about loose-end animation handles. The api is very similar to the useSpring hook.
 
 ```jsx
 import { Controller, animated } from 'react-spring'

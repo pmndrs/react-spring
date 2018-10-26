@@ -185,16 +185,18 @@ export default class Controller {
           }
 
           parent.controller = this
-          if (isAnimated && value.controller !== this) value.controller.dependents.add(this)
+          if (isAnimated && value.controller !== this)
+            value.controller.dependents.add(this)
           parent.track = isAnimated ? value : undefined
+
+          // Set immediate values
+          //if (callProp(immediate, name)) parent.value = value
 
           // Map output values to an array so reading out is easier later on
           const animatedValues = toArray(parent.getPayload())
           const fromValues = toArray(parent.getValue())
           const toValues = toArray(isAnimated ? value.getValue() : value)
 
-          // Set immediate values
-          if (callProp(immediate, name)) parent.value = value
           // Reset animated values
           animatedValues.forEach(value => value.prepare(this))
 
@@ -209,6 +211,7 @@ export default class Controller {
               fromValues, // Raw/numerical start-state values
               toValues, // Raw/numerical/end-state values
               changes,
+              immediate: callProp(immediate, name),
               delay: withDefault(_config.delay, delay || 0),
               initialVelocity: withDefault(_config.velocity, 0),
               clamp: withDefault(_config.clamp, false),
@@ -305,8 +308,8 @@ export default class Controller {
         // If an animation is done, skip, until all of them conclude
         if (animation.done) continue
 
-        // Break animation when string values are involved
-        if (typeof from === 'string' || typeof to === 'string') {
+        // Break animation when animation is immediate or string values are involved
+        if (config.immediate || typeof from === 'string' || typeof to === 'string') {
           animation.updateValue(to)
           animation.done = true
           continue
