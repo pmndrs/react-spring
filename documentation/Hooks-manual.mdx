@@ -32,6 +32,16 @@ function ClasslessComponent() {
 }
 ```
 
+<br />
+<iframe
+  src="https://codesandbox.io/embed/426pvonqj0?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1"
+  style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
+  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
+<p>
+
+</p>
+<br />
+
 You can update spring data simply by overwriting the hook, it will remember previous values and animate adaptively. React will render once every time you change props, but the animation itself will be dealt with outside of React. `useSpring` is [native](/perf) by default.
 
 ```jsx
@@ -62,7 +72,7 @@ function ClasslessComponent() {
 }
 ```
 
-You can also create natural trails by tying your hooks together:
+You can also create natural trails by tying your hooks together, Whenever you update the first spring, either by overwrite it or by calling `set`, the others will naturally follow:
 
 ```jsx
 const [{ pos1 }, set] = useSpring({ pos1: [0, 0] })
@@ -70,7 +80,12 @@ const [{ pos2 }] = useSpring({ pos2: pos1 })
 const [{ pos3 }] = useSpring({ pos3: pos2 })
 ```
 
-Whenever you update the first spring, either by overwrite it or by calling `set`, the others will naturally follow.
+<br />
+
+<iframe
+  src="https://codesandbox.io/embed/ppxnl191zx?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&preview=preview"
+  style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
+  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
 
 ## Controller
 

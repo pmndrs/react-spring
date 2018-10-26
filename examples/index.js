@@ -30,7 +30,8 @@ const components = [
   'transitiongroup',
   'chat',
   'messages',
-  'hooks'
+  'hooks',
+  'csskeyframes'
 
 ].reduce(
   (acc, path) => ({
@@ -47,7 +48,7 @@ const components = [
 )
 
 const DEBUG = true
-const DebugComponent = components['hooks']
+const DebugComponent = components['csskeyframes']
 
 ReactDOM.render(
   DEBUG ? (
