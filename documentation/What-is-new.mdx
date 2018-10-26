@@ -30,7 +30,7 @@ https://medium.com/@drcmda/react-spring-6-0-is-out-of-beta-533ad6c8b4a
 * 🎉 Multistage transitions are finally possible. `Transition` inherits from `Keyframes` now, which allows it to receive the same values that you can use in slots, meaning you can chain or even script transitions
 * ⭐️ The `unique` prop prevents two children with the same key to co-exist, which was an often asked for suggestion. If it is true, a fading-out item will vanish when an item with the same key comes in again, as opposed to forming a stack (which is still the default)
 * ✖️ The `reset` prop, in combination with `unique` forces an incoming item to always start from scratch instead of adapting the fading-out item to take start-position
-* 🐌 Transitions can trail using teh `trail` prop which takes a duration in ms
+* 🐌 Transitions can trail using the `trail` prop which takes a duration in ms
 * ✨ Simpler api. Previously you could optionally pass `items` and you would have to map over children yourself. `items` and `keys` are Transitions sole source of truth now. You give a single function child instead of mapping
 * 🎮 Transition behaves more like Reacts TransitionGroup in that it can give you way more contextual information than before, you even have access to the state your output component is in (enter/leave/update)
 
