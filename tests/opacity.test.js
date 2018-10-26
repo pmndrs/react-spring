@@ -19,7 +19,7 @@ test('fade in', () => {
 
   mockRaf.step({ count: 10 })
 
-  expect(parseFloat(box.style.opacity)).toBeCloseTo(0.73)
+  expect(parseFloat(box.style.opacity)).toBeCloseTo(0.56)
 
   mockRaf.step({ count: 50 })
 

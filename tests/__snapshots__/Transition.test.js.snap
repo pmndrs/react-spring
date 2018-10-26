@@ -3,7 +3,11 @@
 exports[`Transition smoke/regression tests 1`] = `
 ShallowWrapper {
   Symbol(enzyme.__root__): [Circular],
-  Symbol(enzyme.__unrendered__): <Transition>
+  Symbol(enzyme.__unrendered__): <Transition
+    keys={[Function]}
+    reset={false}
+    unique={false}
+  >
     <fakeChild />
   </Transition>,
   Symbol(enzyme.__renderer__): Object {
@@ -17,73 +21,63 @@ ShallowWrapper {
   Symbol(enzyme.__node__): Object {
     "instance": null,
     "key": "0",
-    "nodeType": "class",
+    "nodeType": "function",
     "props": Object {
-      "children": <fakeChild />,
-      "config": Object {
-        "friction": 26,
-        "tension": 170,
-      },
+      "children": [Function],
+      "config": undefined,
       "delay": 0,
-      "force": false,
-      "from": Object {},
-      "immediate": false,
-      "impl": [Function],
-      "inject": undefined,
-      "native": false,
+      "filter": [Function],
+      "from": undefined,
       "onFrame": undefined,
       "onRest": undefined,
-      "render": undefined,
+      "onStart": undefined,
+      "primitive": [Function],
       "reset": false,
-      "to": Object {},
+      "state": "enter",
+      "states": Object {
+        "enter": undefined,
+      },
     },
-    "ref": [Function],
-    "rendered": Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {},
-      "ref": null,
-      "rendered": null,
-      "type": "fakeChild",
+    "ref": null,
+    "rendered": [Function],
+    "type": Object {
+      "$$typeof": Symbol(react.forward_ref),
+      "Spring": [Function],
+      "Trail": [Function],
+      "create": [Function],
+      "render": [Function],
     },
-    "type": [Function],
   },
   Symbol(enzyme.__nodes__): Array [
     Object {
       "instance": null,
       "key": "0",
-      "nodeType": "class",
+      "nodeType": "function",
       "props": Object {
-        "children": <fakeChild />,
-        "config": Object {
-          "friction": 26,
-          "tension": 170,
-        },
+        "children": [Function],
+        "config": undefined,
         "delay": 0,
-        "force": false,
-        "from": Object {},
-        "immediate": false,
-        "impl": [Function],
-        "inject": undefined,
-        "native": false,
+        "filter": [Function],
+        "from": undefined,
         "onFrame": undefined,
         "onRest": undefined,
-        "render": undefined,
+        "onStart": undefined,
+        "primitive": [Function],
         "reset": false,
-        "to": Object {},
+        "state": "enter",
+        "states": Object {
+          "enter": undefined,
+        },
       },
-      "ref": [Function],
-      "rendered": Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "host",
-        "props": Object {},
-        "ref": null,
-        "rendered": null,
-        "type": "fakeChild",
+      "ref": null,
+      "rendered": [Function],
+      "type": Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "Spring": [Function],
+        "Trail": [Function],
+        "create": [Function],
+        "render": [Function],
       },
-      "type": [Function],
     },
   ],
   Symbol(enzyme.__options__): Object {
@@ -102,8 +96,6 @@ ShallowWrapper {
         },
       },
     },
-    "attachTo": undefined,
-    "hydrateIn": undefined,
   },
 }
 `;

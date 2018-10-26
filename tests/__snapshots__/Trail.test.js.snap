@@ -12,7 +12,6 @@ ShallowWrapper {
     }
   >
     <fakeChild />
-    <fakeChild />
   </Trail>,
   Symbol(enzyme.__renderer__): Object {
     "batchedUpdates": [Function],
@@ -22,113 +21,8 @@ ShallowWrapper {
     "simulateEvent": [Function],
     "unmount": [Function],
   },
-  Symbol(enzyme.__node__): Object {
-    "instance": null,
-    "key": "0",
-    "nodeType": "class",
-    "props": Object {
-      "attach": [Function],
-      "children": <fakeChild />,
-      "config": Object {
-        "friction": 26,
-        "tension": 170,
-      },
-      "delay": undefined,
-      "force": false,
-      "from": Object {},
-      "immediate": false,
-      "impl": [Function],
-      "inject": undefined,
-      "native": false,
-      "onRest": undefined,
-      "render": undefined,
-      "reset": false,
-      "to": Object {},
-    },
-    "ref": [Function],
-    "rendered": Object {
-      "instance": null,
-      "key": undefined,
-      "nodeType": "host",
-      "props": Object {},
-      "ref": null,
-      "rendered": null,
-      "type": "fakeChild",
-    },
-    "type": [Function],
-  },
-  Symbol(enzyme.__nodes__): Array [
-    Object {
-      "instance": null,
-      "key": "0",
-      "nodeType": "class",
-      "props": Object {
-        "attach": [Function],
-        "children": <fakeChild />,
-        "config": Object {
-          "friction": 26,
-          "tension": 170,
-        },
-        "delay": undefined,
-        "force": false,
-        "from": Object {},
-        "immediate": false,
-        "impl": [Function],
-        "inject": undefined,
-        "native": false,
-        "onRest": undefined,
-        "render": undefined,
-        "reset": false,
-        "to": Object {},
-      },
-      "ref": [Function],
-      "rendered": Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "host",
-        "props": Object {},
-        "ref": null,
-        "rendered": null,
-        "type": "fakeChild",
-      },
-      "type": [Function],
-    },
-    Object {
-      "instance": null,
-      "key": "1",
-      "nodeType": "class",
-      "props": Object {
-        "attach": [Function],
-        "children": <fakeChild />,
-        "config": Object {
-          "friction": 26,
-          "tension": 170,
-        },
-        "delay": undefined,
-        "force": false,
-        "from": Object {},
-        "immediate": false,
-        "impl": [Function],
-        "inject": undefined,
-        "native": false,
-        "onRest": null,
-        "render": undefined,
-        "reset": false,
-        "to": Object {},
-      },
-      "ref": [Function],
-      "rendered": Object {
-        "instance": null,
-        "key": undefined,
-        "nodeType": "host",
-        "props": Object {},
-        "ref": null,
-        "rendered": null,
-        "type": "fakeChild",
-      },
-      "type": [Function],
-    },
-  ],
+  Symbol(enzyme.__node__): undefined,
+  Symbol(enzyme.__nodes__): Array [],
   Symbol(enzyme.__options__): Object {
     "adapter": ReactSixteenAdapter {
       "options": Object {
@@ -145,8 +39,6 @@ ShallowWrapper {
         },
       },
     },
-    "attachTo": undefined,
-    "hydrateIn": undefined,
   },
 }
 `;

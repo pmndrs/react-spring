@@ -115,7 +115,9 @@
     "react-dom": ">= 16.4.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2"
+    "@babel/runtime": "^7.1.2",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0"
   },
   "jest": {
     "testPathIgnorePatterns": [

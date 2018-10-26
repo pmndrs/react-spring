@@ -13,7 +13,6 @@ ShallowWrapper {
     force={false}
     from={Object {}}
     immediate={false}
-    impl={[Function]}
     native={false}
     reset={false}
     to={Object {}}
@@ -46,8 +45,6 @@ ShallowWrapper {
         },
       },
     },
-    "attachTo": undefined,
-    "hydrateIn": undefined,
   },
 }
 `;

@@ -32,11 +32,11 @@ test('toggle', () => {
   mockRaf.step({ count: 10 })
 
   // Expect box1 to have low opacity
-  expect(parseFloat(box1.style.opacity)).toBeCloseTo(0.27)
+  expect(parseFloat(box1.style.opacity)).toBeCloseTo(0.43598713658796656)
 
   // Expect box2 to have appeared
   const box2 = getByText('Component B')
-  expect(parseFloat(box2.style.opacity)).toBeCloseTo(0.73)
+  expect(parseFloat(box2.style.opacity)).toBeCloseTo(0.5640128634120333)
 
   mockRaf.step({ count: 100 })
 

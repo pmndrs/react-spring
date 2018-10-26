@@ -14,8 +14,5 @@ describe('Keyframes', () => {
 
     const trail = shallow(<Keyframes.Trail />)
     expect(trail).toMatchSnapshot()
-
-    const transition = shallow(<Keyframes.Transition />)
-    expect(transition).toMatchSnapshot()
   })
 })

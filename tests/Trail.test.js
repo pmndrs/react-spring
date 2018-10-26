@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Trail from '../src/Trail'
 
-const fakeChild = () => {
+const fakeChild = item => props => {
   ;<div>fake</div>
 }
 
@@ -11,7 +11,6 @@ describe('Trail', () => {
   it('smoke/regression tests', () => {
     const wrapper = shallow(
       <Trail keys={[0, 1]}>
-        <fakeChild />
         <fakeChild />
       </Trail>
     )

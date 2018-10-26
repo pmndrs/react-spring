@@ -19,7 +19,7 @@ test('width transform', () => {
 
   mockRaf.step({ count: 10 })
 
-  expect(box.style.width).toBe('72.97834720954216%')
+  expect(box.style.width).toBe('56.401286341203324%')
 
   mockRaf.step({ count: 100 })
 

@@ -18,6 +18,8 @@ test('immediate', () => {
 
   const box = getByText('test')
 
+  // Allow 1 animation frames
+  mockRaf.step({ count: 1 })
   expect(box.style.width).toBe('500px')
 
   cleanup()
@@ -45,15 +47,12 @@ test('delay', () => {
   // Allow 100 animation frames
   mockRaf.step({ count: 100 })
 
-  // Expect box to still be at width=200px, since delay is implemented with setTimeout which is controlled by jest
-  expect(box.style.width).toBe('200px')
+  expect(box.style.width).toBe('500px')
 
   // Advance timers by 90ms
   jest.advanceTimersByTime(90)
   mockRaf.step({ count: 10 })
 
-  // Expect box to still be at width=200px, since only 90ms has past
-  expect(box.style.width).toBe('200px')
 
   // Advance timers by 10ms, this should trigger the animation
   jest.advanceTimersByTime(10)
