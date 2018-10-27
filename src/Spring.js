@@ -188,10 +188,10 @@ export default class Spring extends React.Component {
 }
 
 export function useSpring({ onRest, ...props }) {
-  const { ctrl, finished } = React.useRef({
+  const { ctrl, onHalt } = React.useRef({
     ctrl: new Controller(props),
-    finished: ({ finished }) => finished && onRest && onRest(ctrl.merged),
+    onHalt: ({ finished }) => finished && onRest && onRest(ctrl.merged),
   })
-  React.useEffect(() => void ctrl.update(props, finished))
-  return [ctrl.interpolations, props => ctrl.update(props, finished)]
+  React.useEffect(() => void ctrl.update(props, onHalt))
+  return [ctrl.getValues(), props => ctrl.update(props, onHalt)]
 }
