@@ -178,7 +178,7 @@ export class Transition<
 > extends PureComponent<TransitionProps<S, DS> & S> {}
 
 type TrailKeyProps = string | number
-type TrailKeyItemProps = string | number | object
+type TrailKeyItemProps = boolean | string | number | object
 
 interface TrailProps<S extends object, DS extends object = {}> {
   native?: boolean
