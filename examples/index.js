@@ -45,7 +45,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['reveals']
+const DebugComponent = components['hooks']
 
 ReactDOM.render(
   DEBUG ? (
