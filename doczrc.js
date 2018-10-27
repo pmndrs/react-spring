@@ -89,6 +89,11 @@ export default {
           font-family: "Source Code Pro",monospace;
           font-size: 14px;
         }
+        a, a:visited, a:active {
+          color: rgb(31, 182, 255);
+          text-decoration: none;
+          cursor: pointer;
+        }
       </style>
       `,
     },

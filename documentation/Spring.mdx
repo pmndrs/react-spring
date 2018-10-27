@@ -11,17 +11,23 @@ import CodeMirror from './resources/Codemirror'
 
 # Spring
 
-You begin by importing `Spring`.
-
 ```jsx
 import { Spring } from 'react-spring'
 ```
 
 <RewindSpringProvider>
   <p>
-    Now, the primary task of a <code>Spring</code> is to move data <code>from</code> one state <code>to</code> another. <span className="highlight">Do not think of these values as "styles"</span> per se, although you can most certainly use them as such.
+    The primary task of a <code>Spring</code> is to move data from one state to another. The optional from-prop only plays a role when the component renders first, use the to-prop to update the spring with new values.
   </p>
-
+  <p>
+    <span className="highlight">Springs are accumulative</span>, they remember <i>all the values</i> you ever pass.
+  </p>
+  <p>
+    <span className="highlight">Springs are physics based</span>, you will never have to break your head about <a href="/gotchas">durations and curves</a> again.
+  </p>
+  <p>
+    <span className="highlight">Do not think of the values you pass as "styles"</span> per se, although you can most certainly use them as such.
+  </p>
   <div className="code-table">
     <CodeMirror value={`<Spring
   from={{ opacity: 0 }}
@@ -98,14 +104,10 @@ import { Spring } from 'react-spring'
   </div>
 </RewindSpringProvider>
 
-<p>
-  Springs are <span className="highlight">physics based</span> and animate adaptively, you do not have to worry about durations and easings, which get complex and illogical quickly. More about that <a href="/gotchas">here</a>.
-</p>
-
 ## Interpolation
 
 <p>
-  <code>Spring</code> doesn't just handle numbers, it can <span className="highlight">interpolate pretty much everything</span>.
+  <span className="highlight">Springs interpolate pretty much everything</span>, they don't just handle numbers.
 </p> 
 
 * colors (names, rgb, rgba, hsl, hsla, gradients)
@@ -116,11 +118,12 @@ import { Spring } from 'react-spring'
 * all HTML attributes
 * SVG paths (as long as the number of points matches, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om))
 * arrays
-* string patterns (`transform`, `border`, `boxShadow`, etc)
-* `auto` is valid
-* non-animatable string values (`visibility`, `pointerEvents`, etc)
-* `scrollTop`/`scrollLeft` ([native only](/native), since these aren't actual dom properties)
+* string patterns (transform, border, boxShadow, etc)
+* auto is valid
+* non-animatable string values (visibility, pointerEvents, etc)
+* scrollTop/scrollLeft ([native only](/native), since these aren't actual dom properties)
 
+<br />
 <CodeMirror value={`<Spring
   from={{
     width: 100,
@@ -148,12 +151,15 @@ import { Spring } from 'react-spring'
   }}>
   {props => ...}
 </Spring>`}/>
+<br />
 
 Of course the only properties that the browser can animate relatively cheaply are [composite properties](https://www.html5rocks.com/en/tutorials/speed/high-performance-animations/) (opacity, transform), so you might want to watch out for that.
 
 ## Config
 
-Spring are configurable, there are a couple of presets.
+<p>
+  <span className="highlight">Spring are configurable</span>, delays, tension, friction, resets, everything can be tuned. There are also a couple of generic presets that will cover some common ground.
+</p>
 
 ```jsx
 import { Spring, config } from 'react-spring'
@@ -170,7 +176,7 @@ import { Spring, config } from 'react-spring'
 | config.slow                | { tension: 280, friction: 60 }
 | config.molasses            | { tension: 280, friction: 120 }
 
-You can of course set configs for yourself, or finetune your spring. 
+You can of course set configs for yourself. 
 
 ```jsx
 <Spring config={{ tension: 0, friction: 2, precision: 0.1 }} />

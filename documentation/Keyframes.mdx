@@ -6,6 +6,7 @@ order: 4
 
 import { PropsTable } from 'docz'
 import { Keyframes, config } from '../src/targets/web'
+import KeyframesMock from './resources/Keyframes'
 
 # Keyframes
 
@@ -13,11 +14,23 @@ import { Keyframes, config } from '../src/targets/web'
 import { Keyframes } from 'react-spring'
 ```
 
-`Keyframes` allow you to chain, compose and orchestrate animations by creating predefined slots which you then execute by passing the state prop.
+<p>
+  <code>Keyframes</code> allow you to chain, compose and orchestrate animations.
+</p>
+<p>
+  <span className="highlight">Keyframes is a factory that extends either spings or trails.</span> You start by defining one or many named-slots in which you place the properties you want to animate. By default all unknown props are interpolate as "to". You can use <i>all</i> spring props otherwise: from, config, reset, etc. It creates a component that bears a speacial "state" prop, which receives the name of one of the slots. It will execute it and run its animations.
+</p>
+<p>
+  A slot can take:
 
-The resulting primitive can receive all the generic properties you would normally give your springs, like native, from, and so on. By default all unknown props are interpolate as `to`.
+  <ul>
+    <li>An object consisting of preperties</li>
+    <li>An array of objects, which then forms a chained animation</li>
+    <li>A function that allows you to script or form loops</li>
+  </ul>
+</p>
 
-First, you define a Keyframe-object.
+TLDR, first, you define a Keyframe-object with named-slots.
 
 ```jsx
 // You can create keyframes for springs and trails
@@ -35,7 +48,7 @@ const Container = Keyframes.Spring({
 })
 ```
 
-Now use it anywhere you want, set the named slot you want to animate towards.
+Now use it anywhere you want, set the named-slot of your choice to animate towards.
 
 ```jsx
 <Container state="showAndHide">
@@ -43,7 +56,7 @@ Now use it anywhere you want, set the named slot you want to animate towards.
 </Container>
 ```
 
-There is a shortcut for low-level scripting by giving it a function instead of an object consisting of slots (good for loops and such). In this case the `state` prop on the resulting primitive can be omitted.
+There is a shortcut for low-level scripting by giving it a function instead of an object consisting of slots (good for loops and such). In this case the state-prop on the resulting primitive can be omitted.
 
 ```jsx
 // Will fade children in and out in a loop
@@ -68,6 +81,8 @@ const Chain = Keyframes.Spring([{ scale: 1.5 }, { scale: 1 }])
 
 ## Props
 
-Other than the props listed here `Keyframes` can take all the props that `Spring` accepts (config, native, immediate, onRest, etc).
+<p>
+  <span className="highlight">The resulting component accepts <i>all</i> spring properties</span>: native, from, immediate, onRest, and so on.
+</p>
 
-<PropsTable of={Keyframes} />
+<PropsTable of={KeyframesMock} />

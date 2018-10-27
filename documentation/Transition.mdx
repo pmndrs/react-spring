@@ -11,21 +11,24 @@ import CodeMirror from './resources/Codemirror'
 
 # Transition
 
-You begin by importing `Transition`.
-
 ```jsx
 import { Transition } from 'react-spring'
 ```
 
 <RewindSpringProvider>
   <p>
-    A <code>Transition</code> animates component lifecycles as components mount, unmount or otherwise change. It takes a <span className="highlight">list of items</span> of any type, and their <span className="highlight">keys</span>. The latter defaults to <code>item => item</code>, which, if your items are self-sufficient as a key is often good enough. Whenever items are added, removed, reordered or updated, it will help you to animate these changes.
+    A <code>Transition</code> animates component lifecycles as components mount, unmount or otherwise change.
+  </p>
+  <p><span className="highlight">It takes a list of items of any type, and their keys</span>. The latter defaults to <code>item => item</code>, which, if your items are self-sufficient as a key is often good enough. Whenever items are added, removed, reordered or updated, it will help you to animate these changes.
   </p>
   <p>
-    You provide a single function-child that receives one of those items individually, and optionally its transition state (enter/leave/update), followed by its index: <code>(item, state, index) => ...</code>. This function should return a regular functional component: <code>props => view</code>.
+     <span className="highlight">You provide a single function-child</span> that receives an item and additionally its transition state (enter/leave/update), followed by its index. The full signature looks like:
   </p>
+
+  <CodeMirror value={`(item, state, index) => props => ReactNode`}/>
+  
   <p>
-    <span className="highlight">You should always rely on the item that comes out below</span> instead of reading from scope, since you could be rendering an item that has already been deleted but can fade-out out inside Transition nonetheless. This is especially important for routes.
+    <span className="highlight">You should always rely on the item that you receive</span> instead of reading from scope, since you could be rendering an item that has already been deleted, but is retained inside Transition until its fade-out is complete. This is especially important for routes.
   </p>
   <p>
     TLDR, items in, keys if necessary, present the item that comes out and apply the animated props you receive.
@@ -56,7 +59,7 @@ import { Transition } from 'react-spring'
   </div>
 
   <p>
-    It can also take a <span className="highlight">single item</span>, which can be anything. You can use it to toggle between components.
+    <span className="highlight">Transitions can also take a single item</span>, which can be anything. You can use it to toggle between components.
   </p>
 
   <div className="code-table">
@@ -82,7 +85,7 @@ import { Transition } from 'react-spring'
   </div>
 
   <p>
-    It also comes in handy for single-component mount/unmount reveals.
+    It also comes in handy for <span className="highlight">single-component mount/unmount reveals</span>.
   </p>
 
   <div className="code-table">
@@ -104,17 +107,30 @@ import { Transition } from 'react-spring'
 
 ## Multistage transitions
 
-Transition actually inherits from [Keyframes](/keyframes), so its slots (`initial`, `from`, `enter`, `leave` and `update` can take the same types that Keyframe slots can take, namely: objects, functions, object-arrays. This gives you the ability to handle complex multistage, chained or scripted animations.
+<p>
+  <span className="highlight">Transitions inherit from <a href="/keyframes">Keyframes</a></span>, so its slots (initial, from, enter, leave and update) can take the same types that Keyframe slots can take, namely: objects, functions, object-arrays. This gives you the ability to handle complex multistage, chained or scripted animations.
+</p>
 
 <br/>
 
 <iframe
-  src="https://codesandbox.io/embed/986only79r?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FMessageHub.js"
+  src="https://codesandbox.io/embed/jjkj3x9o55?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1"
+  style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
+  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
+
+<p>
+</p>
+<br />
+
+<iframe
+  src="https://codesandbox.io/embed/rw1ymrlpvq?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FMessageHub.js"
   style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
   sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
 
 ## Props
 
-Other than the props listed here `Transition` can take all the props that `Spring` accepts (config, native, immediate, onRest, etc).
+<p>
+  <span className="highlight">Transition accepts <i>all</i> spring properties</span>: native, from, immediate, onRest, and so on.
+</p>
 
 <PropsTable of={Transition} />

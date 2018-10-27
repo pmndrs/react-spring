@@ -11,19 +11,21 @@ import CodeMirror from './resources/Codemirror'
 
 # Trail
 
-You begin by importing `Trail`.
-
 ```jsx
 import { Trail } from 'react-spring'
 ```
 
 <RewindSpringProvider>
   <p>
-    A <code>Trail</code> animates the first item of a list of elements, the rest follow the spring of their previous sibling. It takes a <span className="highlight">list of items</span> of any type, and their <span className="highlight">keys</span>. The latter defaults to <code>item => item</code>, which, if your items are self-sufficient as a key is often good enough.
+    A <code>Trail</code> animates the first item of a list of elements, the rest form a natural trail and follow their previous sibling.
+  </p>
+  <p><span className="highlight">It takes a list of items of any type, and their keys</span>. The latter defaults to <code>item => item</code>, which, if your items are self-sufficient as a key is often good enough.
   </p>
   <p>
-    You provide a single function-child that receives one of those items individually. This function should return a regular functional component: <code>props => view</code>.
+     <span className="highlight">You provide a single function-child</span> that receives an item and additionally its index. The full signature looks like:
   </p>
+
+  <CodeMirror value={`(item, index) => props => ReactNode`}/>
   <p>
     TLDR, items in, keys if necessary, present the item that comes out and apply the animated props you receive.
   </p>
@@ -62,6 +64,8 @@ import { Trail } from 'react-spring'
 
 ## Props
 
-Other than the props listed here `Trail` can take all the props that `Spring` accepts (config, native, immediate, onRest, etc).
+<p>
+  <span className="highlight">Trail accepts <i>all</i> spring properties</span>: native, from, immediate, onRest, and so on.
+</p>
 
 <PropsTable of={Trail} />

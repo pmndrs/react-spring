@@ -24,6 +24,16 @@ Think of it like this, if you cause an animation and abort somewhere near the mi
 
 It can be odd in the beginning thinking of animation not in terms of time, but once you let go things will start to make sense and creating fluid interfaces will be easier than ever.
 
+### "But, ... i **want** to use durations" 😤
+
+You still can.
+
+```jsx
+import * as easings from 'd3-ease'
+
+<Spring ... config={{ duration: 3000, easing: easings.easeCubic }}>
+```
+
 ## Animating "auto"
 
 react-spring is one of the few libs that understands and animates auto, so you can use it in your configs, like so:
