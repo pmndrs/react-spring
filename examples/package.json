@@ -78,7 +78,6 @@
         "react-router": "^4.3.1",
         "react-router-dom": "^4.3.1",
         "react-spring": "^5.6.15",
-        "react-use-setstate": "../../react-use-setstate",
         "react-with-gesture": "^1.0.10",
         "styled-components": "^3.4.5"
     }

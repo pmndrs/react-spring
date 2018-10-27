@@ -30,9 +30,6 @@ const components = [
   'transitiongroup',
   'chat',
   'messages',
-  'hooks',
-  'csskeyframes'
-
 ].reduce(
   (acc, path) => ({
     ...acc,
