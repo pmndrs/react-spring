@@ -2,7 +2,9 @@
 
     npm install react-spring
 
-react-spring takes inspiration from Christopher Chedeau's [animated](https://github.com/animatedjs/animated) and Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
+react-spring is a spring physics based animation library for React.
+
+It takes inspiration from Christopher Chedeau's [animated](https://github.com/animatedjs/animated) and Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
 
 |                | Declarative | Primitives | Interpolations | Performance |
 | -------------- | ----------- | ---------- | -------------- | ----------- |
@@ -10,7 +12,7 @@ react-spring takes inspiration from Christopher Chedeau's [animated](https://git
 | Animated       | ❌          | ❌         | ✅             | ✅          |
 | React-spring   | ✅          | ✅         | ✅             | ✅          |
 
-react-spring builds upon animated's foundation while inheriting react-motions declarative api and goes to great lengths to simplify it. It has lots of useful animation primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame through React.
+react-spring builds upon animated's foundation while inheriting react-motions declarative api, going to great lengths to simplify it. It has lots of useful animation primitives, can interpolate mostly everything and last but not least, can efficiently animate by committing directly to the dom instead of re-rendering a component frame-by-frame through React.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
