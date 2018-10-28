@@ -1,51 +1,8 @@
 <span class="badge-patreon"><a href="https://www.patreon.com/0xca0a" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span> [![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors) [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) ![react version](https://badgen.now.sh/badge/react/16/green) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring)
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
     npm install react-spring
 
-# Table of Contents
-
-- [What is it?](#what-is-it)
-- [Why do we need yet another?](#why-do-we-need-yet-another)
-- [API reference and examples](#api-reference-and-examples)
-- [Overview](#overview)
-- [What others say](#what-others-say)
-- [Used by](#used-by)
-- [Funding](#funding)
-
-# What is it?
-
-<p align="middle">
-  <a href="https://codesandbox.io/embed/oln44nx8xq"><img src="assets/spring.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/j150ykxrv"><img src="assets/transitions.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/vvmv6x01l5"><img src="assets/trails.gif" width="285" /></a>
-</p>
-<p align="middle">
-  <a href="https://codesandbox.io/embed/9jrjqvq954"><img src="assets/tree.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/nww6yxo0jl"><img src="assets/sunburst.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/j3x61vjz5v"><img src="assets/areas.gif" width="285" /></a>
-</p>
-<p align="middle">
-  <a href="https://codesandbox.io/embed/jzn14k0ppy"><img src="assets/gestures.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/yj52v5689"><img src="assets/reveals.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/lwpkp46om"><img src="assets/morph.gif" width="285" /></a>
-</p>
-<p align="middle">
-  <a href="https://codesandbox.io/embed/0oonqxnpjl"><img src="assets/vertical.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/548lqnmk6l"><img src="assets/horizontal.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/zl35mrkqmm"><img src="assets/keyframes-trail.gif" width="285" /></a>
-</p>
-<p align="middle">
-  <a href="https://codesandbox.io/embed/l9zqz0m18z"><img src="assets/dragndrop.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/py3p5p11m7"><img src="assets/stream.gif" width="285" /></a>
-  <a href="https://codesandbox.io/embed/q9lozyymr9"><img src="assets/time.gif" width="285" /></a>
-</p>
-
-A set of spring-physics based primitives (as in building blocks) that should cover most of your UI related animation needs once plain CSS can't cope any longer. Forget easings, durations, timeouts and so on as you fluidly move data from one state to another. This isn't meant to solve each and every problem but rather to give you tools flexible enough to confidently cast ideas into moving interfaces.
-
-# Why do we need yet another?
-
-react-spring is a cooked down fork of Christopher Chedeau's [animated](https://github.com/animatedjs/animated) (which is used in react-native by default). It is trying to bridge it with Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
+react-spring takes inspiration from Christopher Chedeau's [animated](https://github.com/animatedjs/animated) and Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
 
 |                | Declarative | Primitives | Interpolations | Performance |
 | -------------- | ----------- | ---------- | -------------- | ----------- |
@@ -53,39 +10,11 @@ react-spring is a cooked down fork of Christopher Chedeau's [animated](https://g
 | Animated       | ❌          | ❌         | ✅             | ✅          |
 | React-spring   | ✅          | ✅         | ✅             | ✅          |
 
-react-spring builds upon animated's foundation, making it leaner and more flexible. It inherits react-motions declarative api and goes to great lengths to simplify it. It has lots of useful primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame.
+react-spring builds upon animated's foundation while inheriting react-motions declarative api and goes to great lengths to simplify it. It has lots of useful animation primitives, can interpolate mostly everything and last but not least, can animate by committing directly to the dom instead of re-rendering a component frame-by-frame through React.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
-# API Reference and examples
-
-You'll find a full docs, live playgrounds, prop descriptions and so forth here:
-
-<h3><a href="http://react-spring.surge.sh/">http://react-spring.surge.sh/</a></h3>
-
-# Overview
-
-A `Spring` moves data from one state to another. `from` is the optional initial state, `to` is where the spring will shift values towards. You can update `to` any time and it will smoothly adapt.
-
-[![spring](assets/front/spring.gif)](http://react-spring.surge.sh/spring)
-
-A `Transition` animates component lifecycles. It takes a list of items of any type, and their keys. Whenever items are added, removed, reordered or updated, it will help you to animate these changes.
-
-[![transition](assets/front/transition.gif)](http://react-spring.surge.sh/transition)
-
-It can also take a single item, which can be anything. You can use it to toggle between components.
-
-[![switch](assets/front/switch.gif)](http://react-spring.surge.sh/transition)
-
-It also comes in handy for single-component mount/unmount reveals.
-
-[![reveal](assets/front/reveal.gif)](http://react-spring.surge.sh/transition)
-
-A `Trail` animates the first item of a list of elements, the rest follow the spring of their previous sibling.
-
-[![trail](assets/front/trail.gif)](http://react-spring.surge.sh/trail)
-
-This is only a small selection of what react-spring can do.
+Full documentation and examples here: [react-spring.surge.sh](http://react-spring.surge.sh/)
 
 # What others say
 
