@@ -7,9 +7,10 @@
 
 - [What is it?](#what-is-it)
 - [Why do we need yet another?](#why-do-we-need-yet-another)
+- [API reference and examples](#api-reference-and-examples)
+- [Overview](#overview)
 - [What others say](#what-others-say)
 - [Used by](#used-by)
-- [API reference and examples](#api-reference-and-examples)
 - [Funding](#funding)
 
 # What is it?
@@ -56,6 +57,36 @@ react-spring builds upon animated's foundation, making it leaner and more flexib
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
+# API Reference and examples
+
+You'll find a full docs, live playgrounds, prop descriptions and so forth here:
+
+<h3><a href="http://react-spring.surge.sh/">http://react-spring.surge.sh/</a></h3>
+
+# Overview
+
+A `Spring` moves data from one state to another. `from` is the optional initial state, `to` is where the spring will shift values towards. You can update `to` any time and it will smoothly adapt.
+
+[![spring](assets/front/spring.gif)](http://react-spring.surge.sh/spring)
+
+A `Transition` animates component lifecycles. It takes a list of items of any type, and their keys. Whenever items are added, removed, reordered or updated, it will help you to animate these changes.
+
+[![transition](assets/front/transition.gif)](http://react-spring.surge.sh/transition)
+
+It can also take a single item, which can be anything. You can use it to toggle between components.
+
+[![switch](assets/front/switch.gif)](http://react-spring.surge.sh/transition)
+
+It also comes in handy for single-component mount/unmount reveals.
+
+[![reveal](assets/front/reveal.gif)](http://react-spring.surge.sh/transition)
+
+A `Trail` animates the first item of a list of elements, the rest follow the spring of their previous sibling.
+
+[![trail](assets/front/trail.gif)](http://react-spring.surge.sh/trail)
+
+This is only a small selection of what react-spring can do.
+
 # What others say
 
 <p align="middle">
@@ -71,12 +102,6 @@ For a more detailed explanation read [Why React needed yet another animation lib
 </p>
 
 And [many others](https://github.com/drcmda/react-spring/network/dependents) ...
-
-# API Reference and examples
-
-You'll find a full docs, live playgrounds, prop descriptions and so forth here:
-
-<h3><a href="http://react-spring.surge.sh/">http://react-spring.surge.sh/</a></h3>
 
 # Funding
 

@@ -6,10 +6,9 @@ import { config as springConfig } from './shared/constants'
 import { callProp, toArray, interpolateTo } from './shared/helpers'
 
 let guid = 0
-let empty = () => null
 let get = props => {
   let { items, keys, ...rest } = props
-  items = toArray(items !== void 0 ? items : empty)
+  items = toArray(items !== void 0 ? items : null)
   keys = typeof keys === 'function' ? items.map(keys) : toArray(keys)
   // Make sure numeric keys are interpreted as Strings (5 !== "5")
   return { items, keys: keys.map(key => String(key)), ...rest }
