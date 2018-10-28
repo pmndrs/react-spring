@@ -45,7 +45,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['hooks']
+const DebugComponent = components['bugs/konva']
 
 ReactDOM.render(
   DEBUG ? (

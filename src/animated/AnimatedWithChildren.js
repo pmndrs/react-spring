@@ -34,6 +34,7 @@ export default class AnimatedWithChildren extends Animated {
 
 export class AnimatedArrayWithChildren extends AnimatedWithChildren {
   payload = []
+  getAnimatedValue = () => this.getValue()
   attach = () =>
     this.payload.forEach(p => p instanceof Animated && p.addChild(this))
   detach = () =>

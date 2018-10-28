@@ -36,7 +36,7 @@ export default class Spring extends React.Component {
     reverse: PropTypes.bool,
     /** Spring config, or for individual keys: fn(key => config) */
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-    /** Will skip rendering the component if true and write to the dom directly */
+    /** If true skips rendering the component 60 times per second and animates outside of React, which can be extremely efficient. Consult the "better performance" section to learn about native rendering */
     native: PropTypes.bool,
     /** Callback when the animation starts to animate */
     onStart: PropTypes.func,
@@ -188,7 +188,9 @@ export default class Spring extends React.Component {
 }
 
 export function useSpring({ onRest, ...props }) {
-  const { ctrl, onHalt } = React.useRef({
+  const {
+    current: { ctrl, onHalt },
+  } = React.useRef({
     ctrl: new Controller(props),
     onHalt: ({ finished }) => finished && onRest && onRest(ctrl.merged),
   })

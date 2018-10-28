@@ -16,6 +16,5 @@ export default class AnimatedArray extends AnimatedArrayWithChildren {
     values.length === this.payload.length &&
     values.forEach((v, i) => this.payload[i].setValue(v))
   getValue = () => this.payload.map(v => v.getValue())
-  getAnimatedValue = () => this.payload
   interpolate = (config, arg) => new AnimatedInterpolation(this, config, arg)
 }

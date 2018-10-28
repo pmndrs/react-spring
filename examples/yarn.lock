@@ -1686,7 +1686,7 @@ core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
 
-core-js@^2.4.0, core-js@^2.5.6, core-js@^2.5.7:
+core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.6, core-js@^2.5.7:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
 
@@ -2453,6 +2453,10 @@ faye-websocket@~0.11.0:
   dependencies:
     websocket-driver ">=0.5.1"
 
+fbjs-css-vars@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/fbjs-css-vars/-/fbjs-css-vars-1.0.1.tgz#836d876e887d702f45610f5ebd2fbeef649527fc"
+
 fbjs@^0.8.0, fbjs@^0.8.16:
   version "0.8.16"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
@@ -2465,11 +2469,24 @@ fbjs@^0.8.0, fbjs@^0.8.16:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.9"
 
-fbjs@^0.8.15, fbjs@^0.8.17, fbjs@^0.8.5, fbjs@^0.8.9:
+fbjs@^0.8.15, fbjs@^0.8.5, fbjs@^0.8.9:
   version "0.8.17"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   dependencies:
     core-js "^1.0.0"
+    isomorphic-fetch "^2.1.1"
+    loose-envify "^1.0.0"
+    object-assign "^4.1.0"
+    promise "^7.1.1"
+    setimmediate "^1.0.5"
+    ua-parser-js "^0.7.18"
+
+fbjs@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-1.0.0.tgz#52c215e0883a3c86af2a7a776ed51525ae8e0a5a"
+  dependencies:
+    core-js "^2.4.1"
+    fbjs-css-vars "^1.0.0"
     isomorphic-fetch "^2.1.1"
     loose-envify "^1.0.0"
     object-assign "^4.1.0"
@@ -3304,9 +3321,9 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.2.tgz#01146b36a6218e64e58f3a8d66de5d7fc6f6d051"
 
-konva@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/konva/-/konva-2.3.0.tgz#d6ff0f85838f4fb5da34d148b79eeb6c6e14ed9c"
+konva@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/konva/-/konva-2.5.0.tgz#0ed90c8aa2edae4114d41ab86f5ebe1f5030ff40"
 
 lcid@^1.0.0:
   version "1.0.0"
@@ -4726,12 +4743,12 @@ react-is@^16.3.1:
   version "16.4.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.4.2.tgz#84891b56c2b6d9efdee577cc83501dfc5ecead88"
 
-react-konva@^1.7.15:
-  version "1.7.15"
-  resolved "https://registry.yarnpkg.com/react-konva/-/react-konva-1.7.15.tgz#a3fdf9c78e5a120371160a8bb545506173e2b515"
+react-konva@^16.6.0:
+  version "16.6.0"
+  resolved "https://registry.yarnpkg.com/react-konva/-/react-konva-16.6.0.tgz#939d6348744fec95c9a4505dd678172b079b905e"
   dependencies:
-    fbjs "^0.8.17"
-    react-reconciler "^0.13.0"
+    fbjs "^1.0.0"
+    react-reconciler "^0.16.0"
 
 react-lazy-load@^3.0.12:
   version "3.0.13"
@@ -4768,14 +4785,14 @@ react-motion@^0.5.2:
     prop-types "^15.5.8"
     raf "^3.1.0"
 
-react-reconciler@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/react-reconciler/-/react-reconciler-0.13.0.tgz#89a5ff1403d03fee2b8760d515b133ff3d87a044"
+react-reconciler@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/react-reconciler/-/react-reconciler-0.16.0.tgz#80bf491f2999f6829fac7752a43ba4304a7a4694"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    schedule "^0.3.0"
+    scheduler "^0.10.0"
 
 react-router-dom@^4.3.1:
   version "4.3.1"
@@ -4821,9 +4838,6 @@ react-spring@^5.6.15:
   resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-5.6.15.tgz#ee8bae27765675c1de0c56b0fc2625759e432004"
   dependencies:
     "@babel/runtime" "^7.0.0"
-
-react-use-setstate@../../react-use-setstate:
-  version "1.0.0"
 
 react-with-gesture@^1.0.10:
   version "1.0.10"
@@ -5100,6 +5114,13 @@ schedule@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/schedule/-/schedule-0.3.0.tgz#1be2ab2fc2e768536269ce7326efb478d6c045e8"
   dependencies:
+    object-assign "^4.1.1"
+
+scheduler@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.10.0.tgz#7988de90fe7edccc774ea175a783e69c40c521e1"
+  dependencies:
+    loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
 schema-utils@^0.4.4, schema-utils@^0.4.5:
