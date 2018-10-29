@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import Spring from '../src/Spring'
+import Spring from '../Spring'
 
 const fakeChild = () => <div>fake</div>
 

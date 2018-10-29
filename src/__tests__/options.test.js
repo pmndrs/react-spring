@@ -2,7 +2,7 @@ import React from 'react'
 import { render, cleanup } from 'react-testing-library'
 
 import createMockRaf from 'mock-raf'
-import { Spring, Globals } from '../src/targets/web'
+import { Spring, Globals } from '../targets/web'
 
 test('immediate', () => {
   const mockRaf = createMockRaf()

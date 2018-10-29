@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import Trail from '../src/Trail'
+import Trail from '../Trail'
 
 const fakeChild = item => props => {
   ;<div>fake</div>
