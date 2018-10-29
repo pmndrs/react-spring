@@ -83,6 +83,8 @@
     "babel-plugin-transform-react-remove-prop-types": "0.4.19",
     "docz": "^0.12.5",
     "docz-theme-default": "^0.12.5",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
     "grommet": "^1.11.0",
     "husky": "^1.1.2",
     "immer-wieder": "^1.1.5",
@@ -115,9 +117,7 @@
     "react-dom": ">= 16.4.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.6.0"
+    "@babel/runtime": "^7.1.2"
   },
   "jest": {
     "testPathIgnorePatterns": [
@@ -130,14 +130,15 @@
     "coverageReporters": [
       "json",
       "html",
-      "text"
+      "text",
+      "text-summary"
     ],
     "collectCoverageFrom": [
       "src/**/*.js",
       "!**/*.stories.js",
       "!test/"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/tests/setupTests.js"
+    "setupTestFrameworkScriptFile": "<rootDir>/setupTests.js"
   },
   "collective": {
     "type": "opencollective",

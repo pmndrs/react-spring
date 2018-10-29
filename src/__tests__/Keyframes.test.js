@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import Keyframes from '../src/Keyframes'
+import Keyframes from '../Keyframes'
 
 const fakeChild = () => {
   ;<div>fake</div>

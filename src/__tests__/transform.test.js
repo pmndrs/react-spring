@@ -2,8 +2,8 @@ import React from 'react'
 import { render, cleanup } from 'react-testing-library'
 
 import createMockRaf from 'mock-raf'
-import { Width } from '../stories/tests/transform'
-import { Globals } from '../src/targets/web'
+import { Width } from '../../stories/tests/transform'
+import { Globals } from '../targets/web'
 
 test('width transform', () => {
   const mockRaf = createMockRaf()

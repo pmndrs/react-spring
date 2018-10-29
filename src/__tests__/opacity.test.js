@@ -2,8 +2,8 @@ import React from 'react'
 import { render, cleanup } from 'react-testing-library'
 
 import createMockRaf from 'mock-raf'
-import { FadeIn } from '../stories/tests/opacity'
-import { Globals } from '../src/targets/web'
+import { FadeIn } from '../../stories/tests/opacity'
+import { Globals } from '../targets/web'
 
 test('fade in', () => {
   const mockRaf = createMockRaf()
