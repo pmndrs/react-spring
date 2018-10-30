@@ -70,7 +70,6 @@ export default class Spring extends React.Component {
   controller = new Controller(null, null)
   didUpdate = false
   didInject = false
-  updating = false
   finished = true
 
   componentDidMount() {
@@ -118,7 +117,6 @@ export default class Spring extends React.Component {
     // Update phase -----------------------------------------------------------
 
     // We can potentially cause setState, but we're inside render, the flag prevents that
-    this.updating = true
     this.didInject = false
 
     // Update animations, this turns from/to props into AnimatedValues
@@ -139,13 +137,12 @@ export default class Spring extends React.Component {
       this.injectProps = undefined
     }
 
-    this.updating = false
-
     // Render phase -----------------------------------------------------------
 
     // Render out raw values or AnimatedValues depending on "native"
     let values = { ...this.controller.getValues(), ...this.afterInject }
     if (this.finished) values = { ...values, ...this.props.after }
+    console.log(propsChanged, values)
     return values && Object.keys(values).length ? children(values) : null
   }
 
@@ -168,7 +165,7 @@ export default class Spring extends React.Component {
   }
 
   stop = () => this.controller.stop(true)
-  update = () => !this.updating && this.setState({ internal: true })
+  update = () => this.setState({ internal: true })
   finish = ({ finished, noChange, wasMounted }) => {
     this.finished = true
     if (this.mounted && finished) {

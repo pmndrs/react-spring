@@ -1,4 +1,5 @@
 import AnimatedValue from '../animated/AnimatedValue'
+import AnimatedArray from '../animated/AnimatedArray'
 
 export function withDefault(value, defaultValue) {
   return value === undefined || value === null ? defaultValue : value
@@ -64,7 +65,7 @@ export function interpolateTo(props) {
 export function convertToAnimatedValue(acc, [name, value]) {
   return {
     ...acc,
-    [name]: new AnimatedValue(value),
+    [name]: new (Array.isArray(value) ? AnimatedArray : AnimatedValue)(value),
   }
 }
 

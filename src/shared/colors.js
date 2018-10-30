@@ -1,7 +1,6 @@
+// http://www.w3.org/TR/css3-color/#svg-color
 const colors = {
   transparent: 0x00000000,
-
-  // http://www.w3.org/TR/css3-color/#svg-color
   aliceblue: 0xf0f8ffff,
   antiquewhite: 0xfaebd7ff,
   aqua: 0x00ffffff,
