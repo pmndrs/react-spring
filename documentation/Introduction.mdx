@@ -156,33 +156,6 @@ const items = [...]
 
 </RewindSpringProvider>
 
-## Build targets other than the DOM
-
-```jsx
-// The default export is valid for react-native as well
-import { Spring } from 'react-spring'
-
-// react-konva
-import { Spring } from 'react-spring/dist/konva'
-
-// Any other target or platform
-import { Spring } from 'react-spring/dist/universal'
-```
-
-The default export points to react-dom when running in web and to react-native when running in react-native. If you want to animate any other target refer to /dist/universal. Each target defines platform specific constants (colors, units, etc.). The universal target is the least specific.
-
-In react-native you can still use the native keyword for more performance, create your own animated-components by calling into the animated function.
-
-```jsx
-import { View } from 'react-native'
-
-const AnimatedView = animated(View)
-
-<Spring native from={{ opacity: 0 }} to={{ opacity: 1 }}>
-  {styles => <AnimatedView style={styles} />}
-</Spring>
-```
-
 ## What others say
 
 <div style={{ display: "grid",

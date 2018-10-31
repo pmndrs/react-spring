@@ -169,13 +169,11 @@ export default class Spring extends React.Component {
   finish = ({ finished, noChange, wasMounted }) => {
     this.finished = true
     if (this.mounted && finished) {
-      // Only call onRest if either we *were* mounted, or when there wer changes
+      // Only call onRest if either we *were* mounted, or when there were changes
       if (this.props.onRest && (wasMounted || !noChange))
         this.props.onRest(this.controller.merged)
-
       // Restore end-state
       if (this.didInject) this.afterInject = convertValues(this.props)
-
       // If we have an inject or values to apply after the animation we ping here
       if (this.mounted && (this.didInject || this.props.after))
         this.setState({ internal: true })
@@ -185,12 +183,10 @@ export default class Spring extends React.Component {
 }
 
 export function useSpring({ onRest, ...props }) {
-  const {
-    current: { ctrl, onHalt },
-  } = React.useRef({
+  const [{ ctrl, onHalt }] = React.useState(() => ({
     ctrl: new Controller(props),
     onHalt: ({ finished }) => finished && onRest && onRest(ctrl.merged),
-  })
+  }))
   React.useEffect(() => void ctrl.update(props, onHalt))
   return [ctrl.getValues(), props => ctrl.update(props, onHalt)]
 }
