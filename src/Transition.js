@@ -151,6 +151,7 @@ export default class Transition extends React.PureComponent {
       const state = 'update'
       current[key] = {
         ...current[key],
+        item,
         state,
         trail: (delay = delay + trail),
         config: callProp(config, item, state),
