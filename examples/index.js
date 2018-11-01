@@ -17,6 +17,7 @@ const components = [
   'spring',
   'tree',
   'grid',
+  'list',
   'morph',
   'sunburst',
   'onrest',
@@ -45,7 +46,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['bugs/auto-force']
+const DebugComponent = components['list']
 
 ReactDOM.render(
   DEBUG ? (

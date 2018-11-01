@@ -13,6 +13,14 @@ export default {
           rel: 'stylesheet',
           href: 'https://codemirror.net/theme/dracula.css',
         },
+        {
+          rel: 'stylesheet',
+          href: 'https://codemirror.net/theme/neo.css',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://codemirror.net/theme/mdn-like.css',
+        },
       ],
       raw: `
       <style>
@@ -58,7 +66,7 @@ export default {
         }
         .highlight {
           background: #ea567c;
-          color: #CED4DE;
+          color: white;
           margin: 0 3px;
           padding: 4px 6px;
           border-radius: 3px;
@@ -82,7 +90,7 @@ export default {
         }
         code {
           background: #7D899C;
-          color: #EEF1F5;
+          color: white;
           margin: 0 3px;
           padding: 4px 6px;
           border-radius: 3px;
@@ -99,11 +107,11 @@ export default {
     },
   },
   themeConfig: {
-    mode: 'dark',
-    codemirrorTheme: 'dracula',
+    //mode: 'dark',
+    codemirrorTheme: 'mdn-like',
     colors: {
       primary: '#ea567c',
-      //sidebarBg: 'white',
+      sidebarBg: 'white',
     },
     styles: {
       body: {
