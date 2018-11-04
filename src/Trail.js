@@ -18,7 +18,7 @@ export default class Trail extends React.PureComponent {
     keys: PropTypes.oneOfType([PropTypes.func, PropTypes.array, PropTypes.any]),
     /** An array of items to be displayed, use this if you need access to the actual items when distributing values as functions (see above) */
     items: PropTypes.oneOfType([PropTypes.array, PropTypes.any]).isRequired,
-    /** An array of functions (props => view) */
+    /** A single function-child that receives the individual item and return a functional component (item, index) => props => view) */
     children: PropTypes.func.isRequired,
     /** When true the trailing order is switched, it will then trail bottom to top */
     reverse: PropTypes.bool,
