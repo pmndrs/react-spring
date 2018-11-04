@@ -11,9 +11,7 @@ import CodeMirror from './resources/Codemirror'
 
 # Spring
 
-```jsx
-import { Spring } from 'react-spring'
-```
+<CodeMirror value="import { Spring } from 'react-spring'" />
 
 <RewindSpringProvider>
   <p>
@@ -59,8 +57,8 @@ import { Spring } from 'react-spring'
           style={{ width: 120, height: 120, opacity: x.interpolate({ range: [0,0.05,1], output: [0,1,1] }) }}
           viewBox="-10 -10 404 404"
           strokeWidth="10"
-          fill="#272727"
-          stroke="#CED4DE"
+          fill="white"
+          stroke="rgb(45, 55, 71)"
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={1200} strokeDashoffset={x.interpolate(x => (1-x) * 1200)}>

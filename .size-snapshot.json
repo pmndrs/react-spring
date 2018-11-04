@@ -1,81 +1,81 @@
 {
   "dist/addons.js": {
-    "bundled": 9445,
-    "minified": 5183,
-    "gzipped": 1799,
+    "bundled": 9443,
+    "minified": 5181,
+    "gzipped": 1800,
     "treeshaked": {
       "rollup": {
-        "code": 4709,
+        "code": 4695,
         "import_statements": 279
       },
       "webpack": {
-        "code": 5867
+        "code": 5869
       }
     }
   },
   "dist/addons.umd.js": {
-    "bundled": 11230,
-    "minified": 5322,
-    "gzipped": 1992
+    "bundled": 11252,
+    "minified": 5324,
+    "gzipped": 1990
   },
   "dist/web.js": {
-    "bundled": 78697,
-    "minified": 37362,
-    "gzipped": 12246,
+    "bundled": 78758,
+    "minified": 37424,
+    "gzipped": 12255,
     "treeshaked": {
       "rollup": {
-        "code": 30768,
+        "code": 30830,
         "import_statements": 287
       },
       "webpack": {
-        "code": 32220
+        "code": 32282
       }
     }
   },
   "dist/web.umd.js": {
-    "bundled": 84339,
-    "minified": 32831,
-    "gzipped": 11983
+    "bundled": 84408,
+    "minified": 32893,
+    "gzipped": 11992
   },
   "dist/native.js": {
-    "bundled": 73762,
-    "minified": 34318,
-    "gzipped": 10812,
+    "bundled": 73823,
+    "minified": 34380,
+    "gzipped": 10823,
     "treeshaked": {
       "rollup": {
-        "code": 25805,
+        "code": 25867,
         "import_statements": 298
       },
       "webpack": {
-        "code": 27183
+        "code": 27245
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 61301,
-    "minified": 27826,
-    "gzipped": 8136,
+    "bundled": 61362,
+    "minified": 27888,
+    "gzipped": 8147,
     "treeshaked": {
       "rollup": {
-        "code": 19876,
+        "code": 19938,
         "import_statements": 262
       },
       "webpack": {
-        "code": 21205
+        "code": 21267
       }
     }
   },
   "dist/konva.js": {
-    "bundled": 72512,
-    "minified": 33807,
-    "gzipped": 10859,
+    "bundled": 72573,
+    "minified": 33869,
+    "gzipped": 10870,
     "treeshaked": {
       "rollup": {
-        "code": 27429,
+        "code": 27491,
         "import_statements": 262
       },
       "webpack": {
-        "code": 28816
+        "code": 28878
       }
     }
   }

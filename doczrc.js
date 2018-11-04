@@ -24,6 +24,21 @@ export default {
       ],
       raw: `
       <style>
+        #root > div > div:first-of-type {
+          width: 380px;
+          min-width: 380px;
+        }
+        #root > div > div > div:first-of-type {
+          padding: 50px;
+          width: 380px;
+          min-width: 380px;
+        }
+        .cm-s-mdn-like.CodeMirror {
+          background-image: none;
+        }
+        .cm-s-mdn-like .CodeMirror-gutters {
+          border-left: 6px solid rgba(205,212,223,0.65);
+        }
         .scrollbar-container {
           max-height: unset!important;
         }
@@ -83,10 +98,10 @@ export default {
           height: 70px;
         }
         .grommetux-meter__tracks {
-          stroke: #272727;
+          stroke: white;
         }
         .grommetux-meter__values {
-          stroke: #CED4DE;
+          stroke: rgb(45, 55, 71);
         }
         code {
           background: #7D899C;
@@ -111,7 +126,7 @@ export default {
     codemirrorTheme: 'mdn-like',
     colors: {
       primary: '#ea567c',
-      sidebarBg: 'white',
+      sidebarBg: '#f4f6f9',
     },
     styles: {
       body: {

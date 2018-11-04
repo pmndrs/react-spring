@@ -161,7 +161,7 @@ export class Parallax extends React.PureComponent {
     this.busy = false
   }
 
-  scrollerRaf = () => requestAnimationFrame(this.moveItems)
+  scrollerRaf = () => Globals.requestFrame(this.moveItems)
 
   onScroll = event => {
     const { horizontal } = this.props
@@ -189,7 +189,7 @@ export class Parallax extends React.PureComponent {
   }
 
   updateRaf = () => {
-    requestAnimationFrame(this.update)
+    Globals.requestFrame(this.update)
     // Some browsers don't fire on maximize
     setTimeout(this.update, 150)
   }
