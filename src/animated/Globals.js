@@ -1,8 +1,10 @@
 export let bugfixes = undefined
 export let applyAnimatedValues = undefined
 export let colorNames = []
-export let requestFrame = cb => global.requestAnimationFrame(cb)
-export let cancelFrame = cb => global.cancelAnimationFrame(cb)
+export let requestFrame = cb =>
+  typeof window !== 'undefined' && window.requestAnimationFrame(cb)
+export let cancelFrame = cb =>
+  typeof window !== 'undefined' && window.cancelAnimationFrame(cb)
 export let interpolation = undefined
 export let now = () => Date.now()
 export let defaultElement = undefined

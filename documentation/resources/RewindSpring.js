@@ -45,7 +45,7 @@ const RewindSpring = ({ children, style, hideProgress }) => (
                 bottom: 0,
                 height: 10,
                 width: progress,
-                background: 'rgb(205,212,223)',
+                background: '#ffd500',
               }}
             />
           )}

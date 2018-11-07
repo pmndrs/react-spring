@@ -5,39 +5,35 @@ console.log(path.resolve('./src/targets/web'))
 
 export default {
   protocol: 'http',
-  title: 'react-spring',
+  title: '✌️ react-spring',
   htmlContext: {
     head: {
       links: [
         {
           rel: 'stylesheet',
           href: 'https://codemirror.net/theme/dracula.css',
-        },
-        {
-          rel: 'stylesheet',
-          href: 'https://codemirror.net/theme/neo.css',
-        },
-        {
-          rel: 'stylesheet',
-          href: 'https://codemirror.net/theme/mdn-like.css',
-        },
+        }
       ],
       raw: `
       <style>
         #root > div > div:first-of-type {
-          width: 380px;
-          min-width: 380px;
+          width: 350px;
+          min-width: 350px;
         }
-        #root > div > div > div:first-of-type {
-          padding: 50px;
-          width: 380px;
-          min-width: 380px;
+        #root > div > div:first-of-type > div:first-of-type {
+          padding: 30px;
+          width: 350px;
+          min-width: 350px;
         }
-        .cm-s-mdn-like.CodeMirror {
-          background-image: none;
+        #root > div > div:first-of-type > div:first-of-type > div:last-of-type {
+          display: none;
         }
-        .cm-s-mdn-like .CodeMirror-gutters {
-          border-left: 6px solid rgba(205,212,223,0.65);
+        #root > div > div:first-of-type > div:first-of-type > div:nth-child(2):before {
+          background: transparent;
+        }
+        #root > div > div:first-of-type > div:first-of-type > div:nth-child(2) h1 {
+          font-size: 2.5em;
+          font-weight: 100;
         }
         .scrollbar-container {
           max-height: unset!important;
@@ -104,8 +100,8 @@ export default {
           stroke: rgb(45, 55, 71);
         }
         code {
-          background: #7D899C;
-          color: white;
+          background: #f4f6f9;
+          color: #7D899C;
           margin: 0 3px;
           padding: 4px 6px;
           border-radius: 3px;
@@ -123,10 +119,10 @@ export default {
   },
   themeConfig: {
     //mode: 'dark',
-    codemirrorTheme: 'mdn-like',
+    codemirrorTheme: 'dracula',
     colors: {
       primary: '#ea567c',
-      sidebarBg: '#f4f6f9',
+      sidebarBg: 'white',
     },
     styles: {
       body: {
