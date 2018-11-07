@@ -76,7 +76,7 @@ function ClasslessComponent() {
 }
 ```
 
-You can also create natural trails by tying your hooks together, Whenever you update the first spring, either by overwrite it or by calling `set`, the others will naturally follow:
+You can also create natural trails by tying your hooks together. Whenever you update the first spring, either by overwriting it or by calling `set`, the others will naturally follow:
 
 ```jsx
 const [{ pos1 }, set] = useSpring({ pos1: [0, 0] })
