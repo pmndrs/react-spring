@@ -2,8 +2,6 @@
   <img src="assets/front/logo.png" width="700" />
 </p>
 
-<br/>
-
 <p align="middle">
   <img src="assets/spring.gif" width="285" />
   <img src="assets/transitions.gif" width="285" />
