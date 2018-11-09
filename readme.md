@@ -4,6 +4,32 @@
 
 react-spring is a spring physics based animation library for React.
 
+<p align="middle">
+  <img src="assets/spring.gif" width="285" />
+  <img src="assets/transitions.gif" width="285" />
+  <img src="assets/trails.gif" width="285" />
+</p>
+<p align="middle">
+  <img src="assets/tree.gif" width="285" />
+  <img src="assets/sunburst.gif" width="285" />
+  <img src="assets/areas.gif" width="285" />
+</p>
+<p align="middle">
+  <img src="assets/gestures.gif" width="285" />
+  <img src="assets/reveals.gif" width="285" />
+  <img src="assets/morph.gif" width="285" />
+</p>
+<p align="middle">
+  <img src="assets/vertical.gif" width="285" />
+  <img src="assets/horizontal.gif" width="285" />
+  <img src="assets/keyframes-trail.gif" width="285" />
+</p>
+<p align="middle">
+  <img src="assets/dragndrop.gif" width="285" />
+  <img src="assets/stream.gif" width="285" />
+  <img src="assets/time.gif" width="285" />
+</p>
+
 It takes inspiration from Christopher Chedeau's [animated](https://github.com/animatedjs/animated) and Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
 
 |                | Declarative | Primitives | Interpolations | Performance |
