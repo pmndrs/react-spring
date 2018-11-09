@@ -1,8 +1,6 @@
-<span class="badge-patreon"><a href="https://www.patreon.com/0xca0a" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span> [![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors) [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring)
-
-<br/>
-
-<img src="assets/front/logo.png" width="600" />
+<p align="center">
+  <img src="assets/front/logo.png" width="700" />
+</p>
 
 <br/>
 
@@ -32,21 +30,13 @@
   <img src="assets/time.gif" width="285" />
 </p>
 
-<br/>
+<br />
+
+ [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring) <span class="badge-patreon"><a href="https://www.patreon.com/0xca0a" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span> [![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors)
 
     npm install react-spring
 
-react-spring is a spring physics based animation library for React.
-
-It takes inspiration from Christopher Chedeau's [animated](https://github.com/animatedjs/animated) and Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). Although both are similarily spring-physics based they are still polar opposites.
-
-|                | Declarative | Primitives | Interpolations | Performance |
-| -------------- | ----------- | ---------- | -------------- | ----------- |
-| React-motion   | ✅          | ✅         | ❌             | ❌          |
-| Animated       | ❌          | ❌         | ✅             | ✅          |
-| React-spring   | ✅          | ✅         | ✅             | ✅          |
-
-react-spring builds upon animated's foundation while inheriting react-motions declarative api, going to great lengths to simplify it. It has lots of useful animation primitives, can interpolate mostly everything and last but not least, can efficiently animate by committing directly to the dom instead of re-rendering a component frame-by-frame through React.
+React-spring is a spring physics based animation library for React.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
@@ -70,7 +60,7 @@ And [many others](https://github.com/drcmda/react-spring/network/dependents) ...
 
 # Funding
 
-If you like this project, consider helping out, all contributions are welcome as well as donations to [opencollective](https://opencollective.com/react-spring) or [Patreon](https://www.patreon.com/0xca0a). You can make one off donations in crypto to 36fuguTPxGCNnYZSRdgdh6Ea94brCAjMbH (BTC).
+If you like this project, consider helping out, ... all contributions are welcome as well as donations to [Opencollective](https://opencollective.com/react-spring) or [Patreon](https://www.patreon.com/0xca0a). You can make one off donations in crypto to 36fuguTPxGCNnYZSRdgdh6Ea94brCAjMbH (BTC).
 
 ## Contributors
 
