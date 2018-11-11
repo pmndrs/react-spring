@@ -113,6 +113,8 @@ export const animated: {
 
 type TransitionKeyProps = string | number
 
+type State = "enter" | "update" | "leave"
+
 interface TransitionProps<
   TItem,
   TInit extends object = {},
@@ -167,11 +169,13 @@ interface TransitionProps<
    */
   items: TItem[] | TItem
   /**
-   * A single function-child that receives the individual item and return a functional component (item => props => view)
+   * A single function-child that receives the individual item and return a functional component ((item, state, index) => props => view)
    */
   children?: (
-    item: TItem
-  ) => SpringRendererFunc<TInit & TFrom & TEnter & TLeave & TUpdate>
+    item: TItem,
+    state: State,
+    index: number
+  ) => boolean | null | SpringRendererFunc<TInit & TFrom & TEnter & TLeave & TUpdate>
 }
 
 export class Transition<
