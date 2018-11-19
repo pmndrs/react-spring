@@ -55,7 +55,7 @@ interface SpringProps<DS extends object = {}> {
   /**
    * Frame by frame callback, first argument passed is the animated value
    */
-  onFrame?: () => void
+  onFrame?: (ds: DS) => void
   /**
    * Takes a function that receives interpolated styles
    */
@@ -79,6 +79,18 @@ interface SpringProps<DS extends object = {}> {
    * Animation start delay, optional
    */
   delay?: number
+  /**
+   * Inject props after animation is ended
+   */
+  after?: Partial<DS>
+  /**
+   * reverse the animation
+   */
+  reverse?: boolean
+  /**
+   * Escape hatch to force the spring to render
+   */
+  force?: boolean
 }
 
 export const config: {
