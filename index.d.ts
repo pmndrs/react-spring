@@ -5,6 +5,7 @@ import {
   ComponentClass,
   ComponentType,
   Ref,
+  ForwardRefExoticComponent,
 } from 'react'
 
 export type SpringEasingFunc = (t: number) => number
@@ -104,9 +105,9 @@ export function interpolate(
 ): any
 
 export const animated: {
-  <P>(comp: ComponentType<P>): ComponentType<P>
+  <P>(comp: ComponentType<P>): ForwardRefExoticComponent<P>
 } & {
-  [Tag in keyof JSX.IntrinsicElements]: ComponentClass<
+  [Tag in keyof JSX.IntrinsicElements]: ForwardRefExoticComponent<
     JSX.IntrinsicElements[Tag]
   >
 }
