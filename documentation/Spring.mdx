@@ -109,7 +109,7 @@ import CodeMirror from './resources/Codemirror'
 </p> 
 
 * colors (names, rgb, rgba, hsl, hsla, gradients)
-* absolute lenghts (cm, mm, in, px, pt, pc)
+* absolute lengths (cm, mm, in, px, pt, pc)
 * relative lengths (em, ex, ch, rem, vw, vh, vmin, vmax, %)
 * angles (deg, rad, grad, turn)
 * flex and grid units (fr, etc)
@@ -119,7 +119,7 @@ import CodeMirror from './resources/Codemirror'
 * string patterns (transform, border, boxShadow, etc)
 * auto is valid
 * non-animatable string values (visibility, pointerEvents, etc)
-* scrollTop/scrollLeft ([native only](/native), since these aren't actual dom properties)
+* scrollTop/scrollLeft ([native only](/perf), since these aren't actual dom properties)
 
 <br />
 <CodeMirror value={`<Spring
@@ -185,7 +185,7 @@ You can of course set configs for yourself.
 | mass                      | 1           | spring mass
 | tension                   | 170         | spring energetic load
 | friction                  | 26          | spring resistence
-| clamp                     | false       | false, when true, stops the spring once it overshoots its boundaries
+| clamp                     | false       | when true, stops the spring once it overshoots its boundaries
 | precision                 | 0.01        | precision
 | velocity                  | 0           | initial velocity
 | delay                     | 0           | delay

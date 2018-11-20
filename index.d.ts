@@ -5,6 +5,7 @@ import {
   ComponentClass,
   ComponentType,
   Ref,
+  ForwardRefExoticComponent,
 } from 'react'
 
 export type SpringEasingFunc = (t: number) => number
@@ -55,7 +56,7 @@ interface SpringProps<DS extends object = {}> {
   /**
    * Frame by frame callback, first argument passed is the animated value
    */
-  onFrame?: () => void
+  onFrame?: (ds: DS) => void
   /**
    * Takes a function that receives interpolated styles
    */
@@ -79,6 +80,18 @@ interface SpringProps<DS extends object = {}> {
    * Animation start delay, optional
    */
   delay?: number
+  /**
+   * Inject props after animation is ended
+   */
+  after?: Partial<DS>
+  /**
+   * reverse the animation
+   */
+  reverse?: boolean
+  /**
+   * Escape hatch to force the spring to render
+   */
+  force?: boolean
 }
 
 export const config: {
@@ -104,14 +117,16 @@ export function interpolate(
 ): any
 
 export const animated: {
-  <P>(comp: ComponentType<P>): ComponentType<P>
+  <P>(comp: ComponentType<P>): ForwardRefExoticComponent<P>
 } & {
-  [Tag in keyof JSX.IntrinsicElements]: ComponentClass<
+  [Tag in keyof JSX.IntrinsicElements]: ForwardRefExoticComponent<
     JSX.IntrinsicElements[Tag]
   >
 }
 
 type TransitionKeyProps = string | number
+
+type State = "enter" | "update" | "leave"
 
 interface TransitionProps<
   TItem,
@@ -167,11 +182,13 @@ interface TransitionProps<
    */
   items: TItem[] | TItem
   /**
-   * A single function-child that receives the individual item and return a functional component (item => props => view)
+   * A single function-child that receives the individual item and return a functional component ((item, state, index) => props => view)
    */
   children?: (
-    item: TItem
-  ) => SpringRendererFunc<TInit & TFrom & TEnter & TLeave & TUpdate>
+    item: TItem,
+    state: State,
+    index: number
+  ) => boolean | null | SpringRendererFunc<TInit & TFrom & TEnter & TLeave & TUpdate>
 }
 
 export class Transition<
