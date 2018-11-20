@@ -190,7 +190,7 @@ export default class Controller {
           parent.track = isAnimated ? value : undefined
 
           // Set immediate values
-          //if (callProp(immediate, name)) parent.value = value
+          if (callProp(immediate, name)) parent.value = value
 
           // Map output values to an array so reading out is easier later on
           const animatedValues = toArray(parent.getPayload())
