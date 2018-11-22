@@ -59,3 +59,13 @@ Keep in mind that in order to do this we have to measure out a snapshot set to h
 <Spring
   from={{ height: 0 }} to={{ height: 'auto' }} config={{ ...config.default, precision: 1 }}>
 ```
+
+## Browser Support
+react-spring requires the following polyfills below for Internet Explorer.
+```javascript
+String.prototype.startsWith
+Object.entries
+Array.prototype.includes
+Array.prototype.findIndex
+Set
+```
