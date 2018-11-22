@@ -117,7 +117,7 @@
     "react-dom": ">= 16.4.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.2"
+    "@babel/runtime": "^7.0.0"
   },
   "jest": {
     "testPathIgnorePatterns": [
