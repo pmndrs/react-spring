@@ -126,7 +126,7 @@ export const animated: {
 
 type TransitionKeyProps = string | number
 
-type State = "enter" | "update" | "leave"
+type State = 'enter' | 'update' | 'leave'
 
 interface TransitionProps<
   TItem,
@@ -188,7 +188,28 @@ interface TransitionProps<
     item: TItem,
     state: State,
     index: number
-  ) => boolean | null | SpringRendererFunc<TInit & TFrom & TEnter & TLeave & TUpdate>
+  ) =>
+    | boolean
+    | null
+    | SpringRendererFunc<TInit & TFrom & TEnter & TLeave & TUpdate>
+  /**
+   * Calls back once a transition is about to wrap up
+   */
+  onDestroyed?: () => void
+  /**
+   * Useful in combination with "unique", when true it forces incoming items that already exist to restart instead of adapting to their current values
+   * @default false
+   */
+  reset?: boolean
+  /**
+   * Trailing delay in ms
+   */
+  trail?: number
+  /**
+   * When true enforces that an item can only occur once instead of allowing two or more items with the same key to co-exist in a stack
+   * @default false
+   */
+  unique?: boolean
 }
 
 export class Transition<
