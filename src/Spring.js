@@ -115,22 +115,19 @@ export default class Spring extends React.Component {
     }
 
     // Update phase -----------------------------------------------------------
-
-    // We can potentially cause setState, but we're inside render, the flag prevents that
-    this.didInject = false
-
-    // Update animations, this turns from/to props into AnimatedValues
-    // An update can occur on injected props, or when own-props have changed.
-    if (this.injectProps) {
-      this.controller.update(this.injectProps)
-      // didInject is needed, because there will be a 3rd stage, where the original values
-      // .. will be restored after the animation is finished. When someone animates towards
-      // .. "auto", the end-result should be "auto", not "1999px", which would block nested
-      // .. height/width changes.
-      this.didInject = true
-    } else if (propsChanged) this.controller.update(this.props)
-
     if (this.injectProps || propsChanged) {
+      // We can potentially cause setState, but we're inside render, the flag prevents that
+      this.didInject = false
+      // Update animations, this turns from/to props into AnimatedValues
+      // An update can occur on injected props, or when own-props have changed.
+      if (this.injectProps) {
+        this.controller.update(this.injectProps)
+        // didInject is needed, because there will be a 3rd stage, where the original values
+        // .. will be restored after the animation is finished. When someone animates towards
+        // .. "auto", the end-result should be "auto", not "1999px", which would block nested
+        // .. height/width changes.
+        this.didInject = true
+      } else if (propsChanged) this.controller.update(this.props)
       // Flag an update that occured, componentDidUpdate will start the animation later on
       this.didUpdate = true
       this.afterInject = undefined
@@ -172,7 +169,10 @@ export default class Spring extends React.Component {
       if (this.props.onRest && (wasMounted || !noChange))
         this.props.onRest(this.controller.merged)
       // Restore end-state
-      if (this.didInject) this.afterInject = convertValues(this.props)
+      if (this.didInject) {
+        this.afterInject = convertValues(this.props)
+        this.setState({ internal: true })
+      }
       // If we have an inject or values to apply after the animation we ping here
       if (this.mounted && (this.didInject || this.props.after))
         this.setState({ internal: true })

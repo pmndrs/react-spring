@@ -12,22 +12,11 @@ export default class App extends React.PureComponent {
         <Transition
           native
           items={this.state.show}
-          from={{ position: 'absolute', opacity: 0, coords: [40, 40], color: 'red' }}
-          enter={{ opacity: 1, coords: [0, 0], color: 'green' }}
-          leave={{ opacity: 0, coords: [-40, -40], color: 'blue' }}>
+          from={{ position: 'absolute', overflow: 'hidden', height: 0 }}
+          enter={[{ height: 'auto' }]}
+          leave={{ height: 0 }}>
           {show =>
-            show &&
-            (({ coords, ...props }) => (
-              <animated.div
-                style={{
-                  ...props,
-                  transform: coords.interpolate(
-                    (x, y) => `translate3d(${x}px,${y}px,0)`
-                  ),
-                }}>
-                hello
-              </animated.div>
-            ))
+            show && (props => <animated.div style={props}>hello</animated.div>)
           }
         </Transition>
       </div>

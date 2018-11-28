@@ -46,7 +46,7 @@ const components = [
 )
 
 const DEBUG = false
-const DebugComponent = components['list']
+const DebugComponent = components['transitiongroup']
 
 ReactDOM.render(
   DEBUG ? (

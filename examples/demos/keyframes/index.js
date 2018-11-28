@@ -20,11 +20,11 @@ const Sidebar = Keyframes.Spring({
     { x: -100, delay: 800 },
   ],
   // single items,
-  open: { x: 0 },
+  open: { delay: 0, x: 0 },
   // or async functions with side-effects
   close: async call => {
     await delay(400)
-    await call({ x: -100 })
+    await call({ delay: 0, x: -100 })
   },
 })
 
@@ -32,10 +32,10 @@ const Sidebar = Keyframes.Spring({
 const Content = Keyframes.Trail({
   peek: [
     { x: 0, opacity: 1, from: { x: -100, opacity: 0 }, delay: 600 },
-    { x: -100, opacity: 0 },
+    { x: -100, opacity: 0, delay: 0 },
   ],
   open: { x: 0, opacity: 1, delay: 100 },
-  close: { x: -100, opacity: 0 },
+  close: { x: -100, opacity: 0, delay: 0 },
 })
 
 const items = [
