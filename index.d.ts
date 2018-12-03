@@ -168,6 +168,10 @@ interface TransitionProps<
    */
   leave?: TLeave
   /**
+   * Callback when the animation starts to animate
+   */
+  onStart?: () => void
+  /**
    * Callback when the animation comes to a still-stand
    */
   onRest?: (ds: DS) => void
