@@ -135,6 +135,8 @@ interface TransitionProps<
   TEnter extends object = {},
   TLeave extends object = {},
   TUpdate extends object = {}
+  SpringProps extends object = {},
+  DS extends object = {},
 > {
   /**
    * First-render initial values, if present overrides "from" on the first render pass. It can be "null" to skip first mounting transition. Otherwise it can take an object or a function (item => object)
@@ -165,6 +167,11 @@ interface TransitionProps<
    * @default {}
    */
   leave?: TLeave
+  /**
+   * Callback when the animation comes to a still-stand
+   */
+  onRest?: (ds: DS) => void
+  
   /**
    * Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values
    */
