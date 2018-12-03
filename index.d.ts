@@ -134,7 +134,7 @@ interface TransitionProps<
   TFrom extends object = {},
   TEnter extends object = {},
   TLeave extends object = {},
-  TUpdate extends object = {}
+  TUpdate extends object = {},
   SpringProps extends object = {},
   DS extends object = {},
 > {
