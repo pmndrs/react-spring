@@ -5,13 +5,6 @@ import './styles.css'
 
 function TestTransition() {
   const [items, setState] = useState([])
-
-  useEffect(() => {
-    setState(['😅', '🚀', '🎉'])
-    setTimeout(() => setState(['😅', '🎉']), 2500)
-    setTimeout(() => setState(['😅', '✨', '🎉']), 5000)
-  }, [])
-
   const transitions = useTransition({
     items,
     from: { opacity: 0, height: 0, transform: 'scale(1)' },
@@ -22,6 +15,12 @@ function TestTransition() {
       { height: 0 },
     ],
   })
+
+  useEffect(() => {
+    setState(['😅', '🚀', '🎉'])
+    setTimeout(() => setState(['😅', '🎉']), 2500)
+    setTimeout(() => setState(['😅', '✨', '🎉']), 5000)
+  }, [])
 
   return (
     <div class="container">

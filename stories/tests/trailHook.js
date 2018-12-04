@@ -4,10 +4,9 @@ import { testStories } from '../index'
 import range from 'lodash/range'
 import './styles.css'
 
-function TestTransition() {
+function TestTrail() {
   const [toggle, setToggle] = useState(false)
   const [items, setState] = useState(range(5))
-
   const trail = useTrail({
     items,
     from: { opacity: 0, x: -100 },
@@ -32,4 +31,4 @@ function TestTransition() {
   )
 }
 
-testStories.add('Trail Hook', () => <TestTransition />)
+testStories.add('Trail Hook', () => <TestTrail />)
