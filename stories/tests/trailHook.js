@@ -1,11 +1,11 @@
 import React from 'react'
 import { testStories } from '../index'
 import { animated } from '../../src/targets/web'
-import { useTrail } from '../../src/addons/TrailHook'
+import { useTrail } from '../../src/targets/web/hooks'
 import {
   useSpringKeyframes,
   useTrailKeyframes
-} from '../../src/addons/KeyframesHook'
+} from '../../src/targets/web/hooks.js'
 
 function rand (frm, to) {
   return ~~(Math.random() * (to - frm)) + frm
