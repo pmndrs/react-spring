@@ -78,5 +78,24 @@
         "code": 28916
       }
     }
+  },
+  "dist/hooks.js": {
+    "bundled": 71898,
+    "minified": 34880,
+    "gzipped": 11437,
+    "treeshaked": {
+      "rollup": {
+        "code": 16248,
+        "import_statements": 287
+      },
+      "webpack": {
+        "code": 17938
+      }
+    }
+  },
+  "dist/hooks.umd.js": {
+    "bundled": 77232,
+    "minified": 30249,
+    "gzipped": 11110
   }
 }

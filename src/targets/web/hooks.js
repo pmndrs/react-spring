@@ -1,14 +1,12 @@
 import React from 'react'
 import './globals'
 import * as Globals from '../../animated/Globals'
-import Controller from '../../animated/Controller'
 import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
 import { config } from '../../shared/constants'
-import Spring from '../../Spring'
-import Transition from '../../Transition'
-import Trail from '../../Trail'
-import Keyframes from '../../Keyframes'
+import { useTrail } from '../../hooks/TrailHook'
+import { useTransition } from '../../hooks/TransitionHook'
+import { useSpringKeyframes, useTrailKeyframes } from '../../hooks/KeyframesHook'
 
 const domElements = [
   'a',
@@ -154,13 +152,12 @@ const extendedAnimated = domElements.reduce((acc, element) => {
 }, animated)
 
 export {
-  Spring,
-  Keyframes,
-  Transition,
-  Trail,
-  Controller,
   config,
   extendedAnimated as animated,
   interpolate,
   Globals,
+  useTrail,
+  useTransition,
+  useSpringKeyframes,
+  useTrailKeyframes
 }
