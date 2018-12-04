@@ -222,7 +222,7 @@ export function useTransition (props) {
 
   return state.transitions.map(({item, state, originalKey, key}) => ({
     item,
-    key: originalKey,
+    key,
     state,
     props: instances.current.get(key) &&
       instances.current.get(key).ctrl.getValues()
