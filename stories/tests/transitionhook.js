@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTransition } from '../../src/addons'
+import { useTransition } from '../../src/targets/web/hooks'
 import { animated } from '../../src/targets/web'
 import { testStories } from '../index'
 
