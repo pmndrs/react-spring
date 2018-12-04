@@ -5,7 +5,7 @@ import animated from '../../animated/createAnimatedComponent'
 import createInterpolation from '../../shared/interpolation'
 import colorNames from '../../shared/colors'
 import { config } from '../../shared/constants'
-import Spring, { useSpring } from '../../Spring'
+import Spring from '../../Spring'
 import Transition from '../../Transition'
 import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
@@ -65,5 +65,4 @@ export {
   animated,
   interpolate,
   Globals,
-  useSpring
 }
