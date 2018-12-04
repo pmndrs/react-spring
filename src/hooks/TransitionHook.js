@@ -109,21 +109,18 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
 
 const removeDeleted = (function () {
   let deleted = []
-  const debounceUpdateState = debounce((state, setState) => {
+  const debounceUpdateState = debounce(({current: state}, setState) => {
     setState({
       ...state,
       deleted: state.deleted.filter(
-        item => deleted.indexOf(item.originalKey) === -1
-      ),
-      transitions: state.transitions.filter(
         item => deleted.indexOf(item.originalKey) === -1
       )
     })
     deleted = []
   }, 200)
-  return function (key, state, setState) {
+  return function (key, stateRef, setState) {
     deleted.push(key)
-    debounceUpdateState(state, setState)
+    debounceUpdateState(stateRef, setState)
   }
 })()
 
@@ -151,9 +148,13 @@ export function useTransition (props) {
     prevProps: null
   })
 
+  // keep current state in a mutable ref so
+  // promise callback will always have access to latest state
+  const stateRef = React.useRef(state)
+  stateRef.current = state;
   const memoizedDiffInItemsCalc = React.useMemo(
     () => calculateDiffInItems(state, props),
-    [props.items]
+    [props.items, state.deleted]
   )
 
   // add new keys to the map
@@ -206,7 +207,7 @@ export function useTransition (props) {
               resolve.current && resolve.current()
               if (last.current && mounted.current && finished) {
                 destroyed && onDestroyed && onDestroyed(item)
-                destroyed && removeDeleted(originalKey, state, setState)
+                destroyed && removeDeleted(originalKey, stateRef, setState)
                 onRest && onRest(item, slot, ctrl.merged)
               }
             })
@@ -218,7 +219,7 @@ export function useTransition (props) {
     [state.transitions]
   )
 
-  return state.transitions.map(({item, state, originalKey, key}) => ({
+  return state.transitions.map(({item, state, key}) => ({
     item,
     key,
     state,
