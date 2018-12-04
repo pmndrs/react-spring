@@ -6,7 +6,6 @@ export function useTrail({
   reverse,
   delay,
   onKeyframesHalt = () => null,
-  updatePropsOnRerender = true,
   onRest,
   ...props
 }) {
@@ -51,9 +50,7 @@ export function useTrail({
 
   React.useLayoutEffect(() => {
     prevItems.current = items
-    if (updatePropsOnRerender) {
-      update(props)
-    }
+    update(props)
   })
 
   return array.map((item, idx) => ({
