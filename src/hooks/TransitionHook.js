@@ -143,7 +143,6 @@ export function useTransition (props) {
 
   const instances = React.useRef(new Map([]))
   const mounted = React.useRef(false)
-  const guidKeys = React.useRef([])
   const activeSlots = React.useRef({})
   const [state, setState] = React.useState({
     deleted: [],
@@ -195,9 +194,8 @@ export function useTransition (props) {
   React.useEffect(
     () => {
       const { transitions } = state
-
       for (let i = 0; i < transitions.length; i++) {
-        const { state: slot, key, item, destroyed } = transitions[i]
+        const { state: slot, key, originalKey, item, destroyed } = transitions[i]
         const { ctrl, resolve, last } = instances.current.get(key)
 
         if (slot !== activeSlots.current[key] && props[slot]) {
@@ -208,7 +206,7 @@ export function useTransition (props) {
               resolve.current && resolve.current()
               if (last.current && mounted.current && finished) {
                 destroyed && onDestroyed && onDestroyed(item)
-                destroyed && removeDeleted(key, state, setState)
+                destroyed && removeDeleted(originalKey, state, setState)
                 onRest && onRest(item, slot, ctrl.merged)
               }
             })
