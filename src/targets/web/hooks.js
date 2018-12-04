@@ -4,6 +4,7 @@ import * as Globals from '../../animated/Globals'
 import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
 import { config } from '../../shared/constants'
+import { useSpring } from '../../hooks/SpringHook'
 import { useTrail } from '../../hooks/TrailHook'
 import { useTransition } from '../../hooks/TransitionHook'
 import { useSpringKeyframes, useTrailKeyframes } from '../../hooks/KeyframesHook'
@@ -156,6 +157,7 @@ export {
   extendedAnimated as animated,
   interpolate,
   Globals,
+  useSpring,
   useTrail,
   useTransition,
   useSpringKeyframes,

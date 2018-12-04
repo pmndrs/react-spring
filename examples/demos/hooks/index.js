@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
-import { useSpring, animated as anim } from 'react-spring'
+import { useSpring, animated as anim } from 'react-spring/hooks'
 import './styles.css'
 
 const fast = { tension: 1200, friction: 40 }
