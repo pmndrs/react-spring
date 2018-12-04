@@ -1,0 +1,19 @@
+.container {
+  background-color: #70C1B3;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  overflow: hidden;
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  font-family: Kanit, sans-serif;
+  text-transform: uppercase;
+}

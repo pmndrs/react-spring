@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useTransition } from '../../src/targets/web/hooks'
-import { animated } from '../../src/targets/web'
+import { useTransition, animated } from '../../src/targets/web/hooks'
 import { testStories } from '../index'
-import { transitions } from 'polished'
-import styled from 'styled-components'
+import './styles.css'
 
 function TestTransition() {
   const [items, setState] = useState([])
@@ -23,34 +21,14 @@ function TestTransition() {
   })
 
   return (
-    <Container>
+    <div class="container">
       {transitions.map(({ item, props, key }) => (
-        <Item key={key} style={props}>
+        <animated.div class="item" key={key} style={props}>
           {item}
-        </Item>
+        </animated.div>
       ))}
-    </Container>
+    </div>
   )
 }
-
-const Container = styled.div`
-  background-color: #70C1B3;
-  overflow: hidden;
-  cursor: pointer;
-  margin: 0;
-  padding: 0;
-`
-
-const Item = styled(animated.div)`
-  overflow: hidden;
-  width: 100%;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2em;
-  font-family: Kanit, sans-serif;
-  text-transform: uppercase;
-`
 
 testStories.add('Transitions Hook', () => <TestTransition />)
