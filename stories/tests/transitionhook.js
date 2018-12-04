@@ -7,17 +7,20 @@ function TestTransition() {
   const [items, setState] = useState([])
 
   useEffect(() => {
-    setState(['Apples', 'Oranges', 'Bananas'])
-    setTimeout(() => setState(['Apples', 'Bananas']), 1500)
-    setTimeout(() => setState(['Apples', 'Oranges', 'Bananas']), 3000)
-    setTimeout(() => setState(['Kiwis']), 4500)
+    setState(['😅', '🚀', '🎉'])
+    setTimeout(() => setState(['😅', '🎉']), 2500)
+    setTimeout(() => setState(['😅', '✨', '🎉']), 5000)
   }, [])
 
   const transitions = useTransition({
     items,
-    from: { height: 0, opacity: 0 },
-    enter: { height: 50, opacity: 1, background: '#28d79f' },
-    leave: { height: 0, opacity: 0, background: '#c23369' },
+    from: { opacity: 0, height: 0, transform: 'scale(1)' },
+    enter: [{ opacity: 1, height: 50 }, { transform: 'scale(1.25)' }],
+    leave: [
+      { transform: 'scale(1)', opacity: 0.5 },
+      { opacity: 0 },
+      { height: 0 },
+    ],
   })
 
   return (
