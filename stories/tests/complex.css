@@ -1,0 +1,82 @@
+
+/* transitions styles  */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#complex {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+}
+
+
+#complex {
+  overflow: auto;
+  padding: 45px;
+  display: flex;
+  justify-content: center;
+}
+
+.main-list {
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
+    segoe ui, arial, sans-serif;
+  position: relative;
+  width: 75ch !important;
+  height: 100%;
+}
+
+.cell {
+  position: relative;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  text-transform: uppercase;
+  font-size: 10px;
+  line-height: 10px;
+  padding: 15px;
+}
+
+.details {
+  position: relative;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: #ffffffa0;
+  color: white;
+  font-weight: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0px 10px 25px -10px rgba(0, 0, 0, 0.2);
+}
+
+.details h1 {
+  position: relative;
+  color: #ffffffaf;
+  font-size: 45px;
+  line-height: 45px;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  max-width: 300px;
+}
+
+.details p {
+  position: relative;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+  line-height: 14px;
+  margin: 0;
+  padding-top: 6px;
+}

@@ -1,8 +1,10 @@
 import React from 'react'
+import * as Globals from '../animated/Globals'
 import { useSpring } from './SpringHook'
 import { useTrail } from './TrailHook'
+import { callProp } from '../shared/helpers'
 
-export function parseKeyframedUpdate (slots, f, setNext) {
+export function parseKeyframedUpdate (slots, f, setNext, cancel) {
   if (Array.isArray(slots)) {
     let q = Promise.resolve()
     for (let i = 0; i < slots.length; i++) {
@@ -11,7 +13,10 @@ export function parseKeyframedUpdate (slots, f, setNext) {
       q = q.then(() => setNext(f(slot), last))
     }
   } else if (typeof slots === 'function') {
-    slots((animatedProps, last = false) => setNext(f(animatedProps), last))
+    slots(
+      (animatedProps, last = false) => setNext(f(animatedProps), last),
+      (finished = false) => Globals.requestFrame(() => cancel && cancel(finished))
+    )
   } else {
     const last = true
     setNext(f(slots), last)
@@ -51,7 +56,7 @@ export function useSpringKeyframes (
   const lastRef = React.useRef(true)
   const mounted = React.useRef(false)
 
-  const [styles, setSpring] = useSpring({
+  const [styles, setSpring, cancelSpring] = useSpring({
     ...initialProps,
     ...props,
     onKeyframesHalt: onKeyframesHalt(resolverRef, lastRef, mounted, onRest),
@@ -68,13 +73,13 @@ export function useSpringKeyframes (
     () => {
       if (mounted.current) {
         const slots = states[state]
-        parseKeyframedUpdate(slots, filter, setNextKeyFrame)
+        parseKeyframedUpdate(slots, filter, setNextKeyFrame, cancelSpring)
       }
     },
     [state]
   )
 
-  return [styles, setSpring]
+  return styles
 }
 
 export function useTrailKeyframes (
@@ -85,7 +90,7 @@ export function useTrailKeyframes (
   const lastRef = React.useRef(true)
   const mounted = React.useRef(false)
 
-  const [items, setTrail] = useTrail({
+  const [items, setTrail, cancelTrail] = useTrail({
     ...props,
     ...initialProps,
     onKeyframesHalt: onKeyframesHalt(resolverRef, lastRef, mounted, onRest),
@@ -103,11 +108,11 @@ export function useTrailKeyframes (
     () => {
       if (mounted.current) {
         const slots = states[state]
-        parseKeyframedUpdate(slots, filter, setNextKeyFrame)
+        parseKeyframedUpdate(slots, filter, setNextKeyFrame, cancelTrail)
       }
     },
     [state]
   )
 
-  return [items, setTrail]
+  return items
 }
