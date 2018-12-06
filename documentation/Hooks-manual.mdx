@@ -101,7 +101,7 @@ import { Controller, animated } from 'react-spring'
 class Test extends React.Component {
   state = { show: true }
   animations = new Controller({ opacity: 0 })
-  toggle = this.setState(state => ({ show: !show }))
+  toggle = () => this.setState(state => ({ show: !show }))
   render() {
     const props = this.animations.update({ opacity: this.state.show ? 1 : 0 })
     return (
