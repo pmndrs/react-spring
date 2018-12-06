@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Component } from 'react'
 import { useTransition, animated } from '../../src/targets/web/hooks'
 import { testStories } from '../index'
+import shuffle from 'lodash/shuffle'
 import './styles.css'
 
-function TestTransition() {
+function TestTransition () {
   const [items, setState] = useState([])
   const transitions = useTransition({
     items,
@@ -12,8 +13,8 @@ function TestTransition() {
     leave: [
       { transform: 'scale(1)', opacity: 0.5 },
       { opacity: 0 },
-      { height: 0 },
-    ],
+      { height: 0 }
+    ]
   })
 
   useEffect(() => {
@@ -23,13 +24,13 @@ function TestTransition() {
   }, [])
 
   return (
-    <div class="container">
-      {transitions.map(({ item, props, key }) => (
-        <animated.div class="item" key={key} style={props}>
-          {item}
-        </animated.div>
-      ))}
-    </div>
+      <div class='container'>
+        {transitions.map(({ item, props, key }) => (
+          <animated.div class='item' key={key} style={props}>
+            {item}
+          </animated.div>
+        ))}
+      </div>
   )
 }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import Controller from '../animated/Controller'
 import { toArray } from '../shared/helpers'
-export function useTrail({
+export function useTrail ({
   items,
   reverse,
   delay,
@@ -17,8 +17,8 @@ export function useTrail({
 
   const onHalt = onRest
     ? ctrl => ({ finished }) => {
-        finished && mounted.current && onRest(ctrl.merged)
-      }
+      finished && mounted.current && onRest(ctrl.merged)
+    }
     : onKeyframesHalt
 
   if (prevItems.current !== items) {
@@ -54,10 +54,18 @@ export function useTrail({
     if (updatePropsOnRerender) update(props)
   })
 
-  return array.map((item, idx) => ({
-    item,
-    props: instances.current
-      .get(reverse ? instances.current.size - (idx + 1) : idx)
-      .getValues(),
-  }))
+  return [
+    array.map((item, idx) => ({
+      item,
+      props: instances.current
+        .get(reverse ? instances.current.size - (idx + 1) : idx)
+        .getValues()
+    })),
+    props => update(props),
+    (finished = false) => {
+      for (let [idx, ctrl] of instances.current.entries()) {
+        ctrl.stop(finished)
+      }
+    }
+  ]
 }
