@@ -7,43 +7,43 @@ export default class AnimatedTransform extends AnimatedWithChildren {
     this._transforms = transforms
   }
 
-  __getValue() {
+  getValue() {
     return this._transforms.map(transform => {
       var result = {}
       for (var key in transform) {
         var value = transform[key]
-        result[key] = value instanceof Animated ? value.__getValue() : value
+        result[key] = value instanceof Animated ? value.getValue() : value
       }
       return result
     })
   }
 
-  __getAnimatedValue() {
+  getAnimatedValue() {
     return this._transforms.map(transform => {
       var result = {}
       for (var key in transform) {
         var value = transform[key]
         result[key] =
-          value instanceof Animated ? value.__getAnimatedValue() : value
+          value instanceof Animated ? value.getAnimatedValue() : value
       }
       return result
     })
   }
 
-  __attach() {
+  attach() {
     this._transforms.forEach(transform => {
       for (var key in transform) {
         var value = transform[key]
-        if (value instanceof Animated) value.__addChild(this)
+        if (value instanceof Animated) value.addChild(this)
       }
     })
   }
 
-  __detach() {
+  detach() {
     this._transforms.forEach(transform => {
       for (var key in transform) {
         var value = transform[key]
-        if (value instanceof Animated) value.__removeChild(this)
+        if (value instanceof Animated) value.removeChild(this)
       }
     })
   }
