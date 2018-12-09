@@ -1,35 +1,27 @@
 import React from 'react'
 import Controller from '../animated/Controller'
 
-export function useSpring ({
+export function useSpring({
   onRest,
   onKeyframesHalt = () => null,
   updatePropsOnRerender = true,
   ...props
 }) {
   const [ctrl] = React.useState(new Controller(props))
-
   const onHalt = onRest
-    ? ({ finished }) => {
-      finished && onRest(ctrl.merged)
-    }
+    ? ({ finished }) => finished && onRest(ctrl.merged)
     : onKeyframesHalt(ctrl)
-
   const update = React.useCallback(
     // resolve and last are passed to the update function from the keyframes controller
-    animProps => {
-      ctrl.update(animProps, onHalt)
-    },
+    animProps => ctrl.update(animProps, onHalt),
     [onRest, onKeyframesHalt]
   )
 
-  React.useEffect(() => {
-    if (updatePropsOnRerender) update(props)
-  })
+  React.useEffect(() => updatePropsOnRerender && update(props))
 
   return [
     ctrl.getValues(),
     props => update(props),
-    (finished = false) => ctrl.stop(finished)
+    (finished = false) => ctrl.stop(finished),
   ]
 }

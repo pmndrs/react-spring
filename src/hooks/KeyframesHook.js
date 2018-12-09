@@ -48,6 +48,28 @@ export function setNext(
   }
 }
 
+/**
+ * TODO: possible API draft
+ * 
+ * Functional, no slot name needed
+ *  const props = useKeyframes.Spring(async next => { ... })
+ * 
+ * Arrays, no slot name needed
+ *  const props = useKeyframes.Spring([{ ... }, { ... }])
+ * 
+ * Named slots, slot name mandatory
+ *  const props = useKeyframes.Spring({
+ *    arrays: [{ ... }, { ... }],
+ *    functions: async next => { ... }
+ *    values: { ... }
+ *  }, slotName)
+ * 
+ * Using it
+ *  return (
+ *    <animated.div style={props}>{content}</animated.div>
+ *  )
+ */
+
 const useKeyframes = useImpl => (
   { onRest, state, states, filter = states => states, ...props },
   initialProps
