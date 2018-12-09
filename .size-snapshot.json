@@ -19,70 +19,70 @@
     "gzipped": 1990
   },
   "dist/web.js": {
-    "bundled": 79257,
-    "minified": 37767,
-    "gzipped": 12335,
+    "bundled": 79286,
+    "minified": 37783,
+    "gzipped": 12337,
     "treeshaked": {
       "rollup": {
-        "code": 30966,
+        "code": 30992,
         "import_statements": 287
       },
       "webpack": {
-        "code": 32389
+        "code": 32415
       }
     }
   },
   "dist/web.umd.js": {
-    "bundled": 84923,
-    "minified": 33093,
-    "gzipped": 12041
+    "bundled": 84952,
+    "minified": 33119,
+    "gzipped": 12042
   },
   "dist/native.js": {
-    "bundled": 74863,
-    "minified": 35015,
-    "gzipped": 10856,
+    "bundled": 74716,
+    "minified": 34965,
+    "gzipped": 10842,
     "treeshaked": {
       "rollup": {
-        "code": 27435,
+        "code": 27415,
         "import_statements": 298
       },
       "webpack": {
-        "code": 28837
+        "code": 28817
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 60581,
-    "minified": 27567,
-    "gzipped": 8041,
+    "bundled": 60610,
+    "minified": 27583,
+    "gzipped": 8042,
     "treeshaked": {
       "rollup": {
-        "code": 19976,
+        "code": 20002,
         "import_statements": 262
       },
       "webpack": {
-        "code": 21305
+        "code": 21331
       }
     }
   },
   "dist/konva.js": {
-    "bundled": 72350,
-    "minified": 33854,
-    "gzipped": 10816,
+    "bundled": 71821,
+    "minified": 33564,
+    "gzipped": 10759,
     "treeshaked": {
       "rollup": {
-        "code": 27598,
+        "code": 27398,
         "import_statements": 262
       },
       "webpack": {
-        "code": 28989
+        "code": 28785
       }
     }
   },
   "dist/hooks.js": {
-    "bundled": 75522,
-    "minified": 35702,
-    "gzipped": 11664,
+    "bundled": 75517,
+    "minified": 35696,
+    "gzipped": 11667,
     "treeshaked": {
       "rollup": {
         "code": 16316,
@@ -94,8 +94,8 @@
     }
   },
   "dist/hooks.umd.js": {
-    "bundled": 81086,
-    "minified": 30896,
-    "gzipped": 11314
+    "bundled": 81081,
+    "minified": 30900,
+    "gzipped": 11315
   }
 }
