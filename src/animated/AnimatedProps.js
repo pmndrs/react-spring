@@ -1,5 +1,4 @@
 import Animated from './Animated'
-import AnimatedStyle from './AnimatedStyle'
 import { AnimatedObjectWithChildren } from './AnimatedWithChildren'
 import { getValues } from '../shared/helpers'
 import * as Globals from './Globals'

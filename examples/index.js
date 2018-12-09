@@ -4,7 +4,7 @@ import Loadable from 'react-loadable'
 import './styles.css'
 
 const components = [
-  /*'parallaxvert',
+  'parallaxvert',
   'parallax',
   'transitions',
   'nativespring',
@@ -30,8 +30,7 @@ const components = [
   'dashoffset',
   'transitiongroup',
   'chat',
-  'messages',*/
-  'hooks'
+  'messages',
   
 ].reduce(
   (acc, path) => ({
@@ -47,7 +46,7 @@ const components = [
   {}
 )
 
-const DEBUG = true
+const DEBUG = false
 const DebugComponent = components['hooks']
 
 ReactDOM.render(

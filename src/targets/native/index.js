@@ -22,8 +22,10 @@ Globals.injectApplyAnimatedValues(
     instance.setNativeProps ? instance.setNativeProps(props) : false,
   style => ({ ...style, transform: new AnimatedTransform(style.transform) })
 )
-Globals.injectCreateAnimatedStyle(
-  (styles) => Array.isArray(styles) ? new AnimatedReactNativeStyle(styles) : new AnimatedStyle(styles)
+Globals.injectCreateAnimatedStyle(styles =>
+  Array.isArray(styles)
+    ? new AnimatedReactNativeStyle(styles)
+    : new AnimatedStyle(styles)
 )
 
 export {

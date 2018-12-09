@@ -1,4 +1,5 @@
 import * as Globals from '../../animated/Globals'
+import AnimatedStyle from '../../animated/AnimatedStyle'
 import colorNames from '../../shared/colors'
 import createInterpolation from '../../shared/interpolation'
 import fixAuto from './fix-auto'
@@ -71,6 +72,7 @@ function dangerousStyleValue(name, value, isCustomProperty) {
 }
 
 const attributeCache = {}
+Globals.injectCreateAnimatedStyle(style => new AnimatedStyle(style))
 Globals.injectDefaultElement('div')
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)

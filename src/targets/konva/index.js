@@ -1,4 +1,5 @@
 import * as Globals from '../../animated/Globals'
+import AnimatedStyle from '../../animated/AnimatedStyle'
 import Controller from '../../animated/Controller'
 import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
@@ -11,6 +12,7 @@ import Trail from '../../Trail'
 import Keyframes from '../../Keyframes'
 
 Globals.injectDefaultElement('Group')
+Globals.injectCreateAnimatedStyle(style => new AnimatedStyle(style))
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectApplyAnimatedValues(

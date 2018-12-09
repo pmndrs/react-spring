@@ -1,5 +1,3 @@
-import AnimatedStyle from './AnimatedStyle'
-
 export let bugfixes = undefined
 export let applyAnimatedValues = undefined
 export let colorNames = []
@@ -10,8 +8,7 @@ export let cancelFrame = cb =>
 export let interpolation = undefined
 export let now = () => Date.now()
 export let defaultElement = undefined
-export let createAnimatedStyle = style =>
-  new AnimatedStyle(style)
+export let createAnimatedStyle = undefined
 
 export const injectApplyAnimatedValues = (fn, transform) =>
   (applyAnimatedValues = { fn, transform })
