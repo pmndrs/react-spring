@@ -161,7 +161,7 @@ export default class Spring extends React.Component {
   }
 
   stop = () => this.controller.stop(true)
-  update = () => this.setState({ internal: true })
+  update = () => this.mounted && this.setState({ internal: true })
   finish = ({ finished, noChange, wasMounted }) => {
     this.finished = true
     if (this.mounted && finished) {
@@ -169,7 +169,7 @@ export default class Spring extends React.Component {
       if (this.props.onRest && (wasMounted || !noChange))
         this.props.onRest(this.controller.merged)
       // Restore end-state
-      if (this.didInject) {
+      if (this.mounted && this.didInject) {
         this.afterInject = convertValues(this.props)
         this.setState({ internal: true })
       }
@@ -181,11 +181,11 @@ export default class Spring extends React.Component {
   }
 }
 
-export function useSpring({ onRest, ...props }) {	
-  const [{ ctrl, onHalt }] = React.useState(() => ({	
-    ctrl: new Controller(props),	
-    onHalt: ({ finished }) => finished && onRest && onRest(ctrl.merged),	
-  }))	
-  React.useEffect(() => void ctrl.update(props, onHalt))	
-  return [ctrl.getValues(), props => ctrl.update(props, onHalt)]	
+export function useSpring({ onRest, ...props }) {
+  const [{ ctrl, onHalt }] = React.useState(() => ({
+    ctrl: new Controller(props),
+    onHalt: ({ finished }) => finished && onRest && onRest(ctrl.merged),
+  }))
+  React.useEffect(() => void ctrl.update(props, onHalt))
+  return [ctrl.getValues(), props => ctrl.update(props, onHalt)]
 }
