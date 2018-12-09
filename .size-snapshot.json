@@ -19,9 +19,9 @@
     "gzipped": 1990
   },
   "dist/web.js": {
-    "bundled": 78895,
-    "minified": 37496,
-    "gzipped": 12279,
+    "bundled": 78206,
+    "minified": 37165,
+    "gzipped": 12177,
     "treeshaked": {
       "rollup": {
         "code": 30895,
@@ -33,28 +33,28 @@
     }
   },
   "dist/web.umd.js": {
-    "bundled": 84543,
-    "minified": 32959,
-    "gzipped": 12008
+    "bundled": 83788,
+    "minified": 32679,
+    "gzipped": 11907
   },
   "dist/native.js": {
-    "bundled": 73927,
-    "minified": 34425,
-    "gzipped": 10837,
+    "bundled": 73214,
+    "minified": 34078,
+    "gzipped": 10727,
     "treeshaked": {
       "rollup": {
-        "code": 25905,
+        "code": 25889,
         "import_statements": 298
       },
       "webpack": {
-        "code": 27283
+        "code": 27267
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 61466,
-    "minified": 27933,
-    "gzipped": 8162,
+    "bundled": 60777,
+    "minified": 27602,
+    "gzipped": 8062,
     "treeshaked": {
       "rollup": {
         "code": 19976,
@@ -66,9 +66,9 @@
     }
   },
   "dist/konva.js": {
-    "bundled": 72677,
-    "minified": 33914,
-    "gzipped": 10883,
+    "bundled": 71988,
+    "minified": 33583,
+    "gzipped": 10778,
     "treeshaked": {
       "rollup": {
         "code": 27529,
@@ -80,22 +80,22 @@
     }
   },
   "dist/hooks.js": {
-    "bundled": 71898,
-    "minified": 34880,
-    "gzipped": 11437,
+    "bundled": 75160,
+    "minified": 35431,
+    "gzipped": 11603,
     "treeshaked": {
       "rollup": {
         "code": 16248,
         "import_statements": 287
       },
       "webpack": {
-        "code": 17938
+        "code": 17871
       }
     }
   },
   "dist/hooks.umd.js": {
-    "bundled": 77232,
-    "minified": 30249,
-    "gzipped": 11110
+    "bundled": 80706,
+    "minified": 30756,
+    "gzipped": 11270
   }
 }
