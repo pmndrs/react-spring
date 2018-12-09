@@ -1,14 +1,10 @@
 import AnimatedWithChildren from '../../animated/AnimatedWithChildren'
 import AnimatedStyle from '../../animated/AnimatedStyle'
 
-export default class AnimatedReactNativeStyle extends AnimatedWithChildren {
-  constructor(styles = []) {
+export default class AnimatedStyles extends AnimatedWithChildren {
+  constructor(styles) {
     super()
-    this.payload = styles.map(style =>
-      Array.isArray(style)
-        ? new AnimatedReactNativeStyle(style)
-        : new AnimatedStyle(style)
-    )
+    this.payload = styles.map(style => new AnimatedStyle(style))
   }
 
   getValue() {
