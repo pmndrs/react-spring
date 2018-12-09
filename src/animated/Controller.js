@@ -219,7 +219,7 @@ export default class Controller {
               tension: withDefault(_config.tension, 170),
               friction: withDefault(_config.friction, 26),
               mass: withDefault(_config.mass, 1),
-              duration: withDefault(_config.duration, 0),
+              duration: _config.duration,
               easing: withDefault(_config.easing, t => t),
             },
           }
@@ -309,13 +309,17 @@ export default class Controller {
         if (animation.done) continue
 
         // Break animation when animation is immediate or string values are involved
-        if (config.immediate || typeof from === 'string' || typeof to === 'string') {
+        if (
+          config.immediate ||
+          typeof from === 'string' ||
+          typeof to === 'string'
+        ) {
           animation.updateValue(to)
           animation.done = true
           continue
         } else noChange = false
 
-        if (config.duration) {
+        if (config.duration !== void 0) {
           position =
             from +
             config.easing(
