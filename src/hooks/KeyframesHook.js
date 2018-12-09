@@ -4,7 +4,7 @@ import { useSpring } from './SpringHook'
 import { useTrail } from './TrailHook'
 import { callProp } from '../shared/helpers'
 
-export function parseKeyframedUpdate (slots, f, setNext, cancel) {
+export function parseKeyframedUpdate(slots, f, setNext, cancel) {
   if (Array.isArray(slots)) {
     let q = Promise.resolve()
     for (let i = 0; i < slots.length; i++) {
@@ -15,7 +15,8 @@ export function parseKeyframedUpdate (slots, f, setNext, cancel) {
   } else if (typeof slots === 'function') {
     slots(
       (animatedProps, last = false) => setNext(f(animatedProps), last),
-      (finished = false) => Globals.requestFrame(() => cancel && cancel(finished))
+      (finished = false) =>
+        Globals.requestFrame(() => cancel && cancel(finished))
     )
   } else {
     const last = true
@@ -23,9 +24,9 @@ export function parseKeyframedUpdate (slots, f, setNext, cancel) {
   }
 }
 
-export function onKeyframesHalt (resolverRef, lastRef, mounted, onRest) {
-  return function (ctrl) {
-    return function ({ finished }) {
+export function onKeyframesHalt(resolverRef, lastRef, mounted, onRest) {
+  return function(ctrl) {
+    return function({ finished }) {
       resolverRef.current && resolverRef.current()
       const merged = ctrl && ctrl.merged
       finished && lastRef.current && mounted.current && onRest && onRest(merged)
@@ -33,12 +34,12 @@ export function onKeyframesHalt (resolverRef, lastRef, mounted, onRest) {
   }
 }
 
-export function setNext (
+export function setNext(
   resolverRef = { current: null },
   lastRef = { current: null },
   updater
 ) {
-  return function (animatedProps, last) {
+  return function(animatedProps, last) {
     return new Promise(resolve => {
       resolverRef.current = resolve
       lastRef.current = last
@@ -47,72 +48,38 @@ export function setNext (
   }
 }
 
-// pass props and initial Value
-export function useSpringKeyframes (
+const useKeyframes = useImpl => (
   { onRest, state, states, filter = states => states, ...props },
   initialProps
-) {
+) => {
   const resolverRef = React.useRef(null)
   const lastRef = React.useRef(true)
   const mounted = React.useRef(false)
-
-  const [styles, setSpring, cancelSpring] = useSpring({
+  const [props, set, cancel] = useImpl({
     ...initialProps,
     ...props,
     onKeyframesHalt: onKeyframesHalt(resolverRef, lastRef, mounted, onRest),
-    updatePropsOnRerender: false
+    updatePropsOnRerender: false,
   })
 
-  const setNextKeyFrame = setNext(resolverRef, lastRef, setSpring)
+  const setNextKeyFrame = setNext(resolverRef, lastRef, set)
   React.useEffect(() => {
     mounted.current = true
-    return () => void (mounted.current = false)
+    return () => (mounted.current = false)
   }, [])
 
   React.useEffect(
-    () => {
-      if (mounted.current) {
-        const slots = states[state]
-        parseKeyframedUpdate(slots, filter, setNextKeyFrame, cancelSpring)
-      }
-    },
+    () =>
+      void (
+        mounted.current &&
+        parseKeyframedUpdate(states[state], filter, setNextKeyFrame, cancel)
+      ),
     [state]
   )
-
-  return styles
+  return props
 }
 
-export function useTrailKeyframes (
-  { onRest, state, states, filter = states => states, ...props },
-  initialProps
-) {
-  const resolverRef = React.useRef(null)
-  const lastRef = React.useRef(true)
-  const mounted = React.useRef(false)
-
-  const [items, setTrail, cancelTrail] = useTrail({
-    ...props,
-    ...initialProps,
-    onKeyframesHalt: onKeyframesHalt(resolverRef, lastRef, mounted, onRest),
-    updatePropsOnRerender: false
-  })
-
-  const setNextKeyFrame = setNext(resolverRef, lastRef, setTrail)
-
-  React.useEffect(() => {
-    mounted.current = true
-    return () => void (mounted.current = false)
-  })
-
-  React.useEffect(
-    () => {
-      if (mounted.current) {
-        const slots = states[state]
-        parseKeyframedUpdate(slots, filter, setNextKeyFrame, cancelTrail)
-      }
-    },
-    [state]
-  )
-
-  return items
+export const useKeyframes = {
+  Spring: useKeyframes(useSpring),
+  Trail: useKeyFrames(useTrail),
 }

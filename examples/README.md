@@ -39,3 +39,18 @@ Demo will be live at http://localhost:8080
 - Animating scrollTop/Left: https://codesandbox.io/embed/zlr555494x
 - Animating the canvas via react-konva: https://codesandbox.io/embed/4z2vx0l86x
 - ReactTransitionGroup: https://codesandbox.io/embed/mmvk3p3xw8
+
+
+- Goo (useSpring): https://codesandbox.io/embed/8zx4ppk01l
+- 3d card (useSpring): https://codesandbox.io/embed/rj998k4vmm
+- Gesture slider (useSpring): https://codesandbox.io/embed/zrj66y8714
+- Mouse parallax (useSpring): https://codesandbox.io/embed/r5x34869vq
+- Scroll animations (useSpring): https://codesandbox.io/embed/py912w5k6m
+- Trails (useTrail): https://codesandbox.io/embed/zn2q57vn13
+- Multistage transitions (useTransition): https://codesandbox.io/embed/vqpqx5vrl0
+- List re-ordering/flip (useTransition): https://codesandbox.io/embed/1wqpz5mzqj
+- Notification-hub (useTransition): https://codesandbox.io/embed/7mqy09jyq
+
+
+
+
