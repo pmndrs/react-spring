@@ -89,7 +89,7 @@ export function setNext (
  *  )
  */
 
-const KeyframesImpl = useImpl => (
+const useKeyframesImpl = useImpl => (
   props,
   state = '__default',
   initialProps = null
@@ -167,6 +167,6 @@ const KeyframesImpl = useImpl => (
 }
 
 export const useKeyframes = {
-  Spring: KeyframesImpl(useSpring),
-  Trail: KeyframesImpl(useTrail)
+  Spring: useKeyframesImpl(useSpring),
+  Trail: useKeyframesImpl(useTrail),
 }
