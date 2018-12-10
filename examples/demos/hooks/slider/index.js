@@ -29,17 +29,17 @@ export default function Slider({ children }) {
     <div className="slider-main">
       <animated.div
         {...handlers}
-        className="item"
+        className="slider-item"
         style={{ background: bg, transform: pers }}>
         <animated.div
-          className="av"
+          className="slider-av"
           style={{
             transform: avSize,
             justifySelf: xDelta < 0 ? 'end' : 'start',
           }}
         />
         <animated.div
-          className="fg"
+          className="slider-fg"
           style={{
             transform: interpolate(
               [x, y, size],

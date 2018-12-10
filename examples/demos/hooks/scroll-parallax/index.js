@@ -1,9 +1,13 @@
-import React, { useCallback } from 'react'
+import React, { useRef, useCallback } from 'react'
 import { useSpring, animated as a, interpolate } from 'react-spring/hooks'
 import lorem from 'lorem-ipsum'
 import './styles.css' // Icon made by Freepik from www.flaticon.com
+import { removeExt } from 'upath';
+
+const calc = (x, y, r) => [x - r.left / 2, y - r.top / 2]
 
 export default function App() {
+  const ref = useRef(null)
   const [{ st, xy }, set] = useSpring({ st: 0, xy: [0, 0] })
   const interpBg = xy.interpolate(
     (x, y) =>
@@ -34,19 +38,18 @@ export default function App() {
       `translate(${xy[0] / 18 + 188},${xy[1] / 20 + 230 + o / 1.7}) scale(0.8)`
   )
   const interpHair = st.interpolate(o => `translate(79,${o / 4})`)
-  const onMove = useCallback(
-    ({ clientX: x, clientY: y }) =>
-      set({ xy: [x - window.innerWidth / 2, y - window.innerHeight / 2] }),
-    []
-  )
   const onScroll = useCallback(e => set({ st: e.target.scrollTop / 30 }), [])
   return (
     <div
+    ref={ref}
       className="scroll-parallax-container"
-      onMouseMove={onMove}
-      onScroll={onScroll}>
+      onScroll={onScroll}
+      onMouseMove={e => {
+        const rect = ref.current.getBoundingClientRect()
+        set({ xy: [e.clientX - rect.left - rect.width / 2, e.clientY - rect.top - rect.height / 2] })
+      }}>
       <div style={{ height: '100%', overflow: 'auto' }}>
-        <div style={{ height: '700%', overflow: 'hidden' }}>
+        <div style={{ height: '2000%', overflow: 'hidden' }}>
           {lorem({ count: 200 })}
         </div>
       </div>

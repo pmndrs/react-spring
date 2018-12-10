@@ -5,9 +5,10 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 3em;
+  font-size: 2.5em;
   font-weight: 800;
   text-transform: uppercase;
-  padding-left: 80px;
+  padding-left: 50px;
   will-change: transform, opacity, height;
+  white-space: nowrap;
 }

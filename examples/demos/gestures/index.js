@@ -17,7 +17,7 @@ class GesturesExample extends React.Component {
               className="gestures-item"
               style={{ backgroundColor: xDelta < 0 ? '#FF1C68' : '#14D790' }}>
               <animated.div
-                className="bubble"
+                className="gestures-bubble"
                 style={{
                   transform: x
                     .interpolate({
@@ -31,7 +31,7 @@ class GesturesExample extends React.Component {
                 }}
               />
               <animated.div
-                className="fg"
+                className="gestures-fg"
                 style={{
                   transform: x.interpolate(x => `translate3d(${x}px,0,0)`),
                 }}>

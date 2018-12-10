@@ -9,7 +9,7 @@
   background: linear-gradient(to top, #90a2b2 0%, #b0c0ce 100%);
 }
 
-.item {
+.slider-item {
   position: relative;
   width: 300px;
   height: 100px;
@@ -25,7 +25,7 @@
   box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
-.fg {
+.slider-fg {
   cursor: -webkit-grab;
   background-color: #272727;
   color: rgba(255, 255, 255, 0.8);
@@ -43,16 +43,16 @@
   transition: box-shadow 0.75s;
 }
 
-.fg:active {
+.slider-fg:active {
   cursor: -webkit-grabbing;
   box-shadow: 0px 60px 50px -5px rgba(0, 0, 0, 0.4);
 }
 
-.fg > * {
+.slider-fg > * {
   pointer-events: none;
 }
 
-.av {
+.slider-av {
   width: 60px;
   height: 60px;
   border-radius: 50%;

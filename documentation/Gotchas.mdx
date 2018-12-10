@@ -60,6 +60,29 @@ Keep in mind that in order to do this we have to measure out a snapshot set to h
   from={{ height: 0 }} to={{ height: 'auto' }} config={{ ...config.default, precision: 1 }}>
 ```
 
+## Manual API
+
+The `Controller` is react-springs heart, all primitives use it internally (including hooks). If you dislike render-props, and maybe hooks are too radical for you, then perhaps this is what you are looking for as it gives you full manual control without having to worry about loose-end animation handles. The api is very similar to the useSpring hook.
+
+```jsx
+import { Controller, animated } from 'react-spring'
+
+class Test extends React.Component {
+  state = { show: true }
+  animations = new Controller({ opacity: 0 })
+  toggle = () => this.setState(state => ({ show: !show }))
+  render() {
+    const props = this.animations.update({ opacity: this.state.show ? 1 : 0 })
+    return (
+      <>
+        <button onClick={this.toggle}>click</button>
+        <animated.div style={props}>I will fade</animated.div>
+      </>
+    )
+  }
+}
+```
+
 ## Browser Support
 react-spring requires the following polyfills below for Internet Explorer.
 ```javascript
