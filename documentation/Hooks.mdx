@@ -30,64 +30,58 @@ import {
 } from 'react-spring/hooks'
 ```
 
-### useSpring
+## useSpring
 
 The `useSpring` hook does the same thing a regular `<Spring />` component would do. You give it data and it returns animated-props, which you can then distribute among your views. You can update data either by overwriting it, or by calling `set` which updates the spring without causing a render pass (which is great for iteractive input, mouse events, etc).
 
 ```jsx
-function App() {
-  const [props, set] = useSpring({ opacity: 1 })
-  return <animated.div style={props}>i will fade in</animated.div>
-}
+const [props, set] = useSpring({ opacity: 1, from: { opacity: 0 } })
+return <animated.div style={props}>i will fade in</animated.div>
 ```
 
-### useTrail
+## useTrail
 
 The `useTrail` hook replaces `<Trail />`. The api is the same as `useSpring`, with the distinction that you pass items, just like you would with a regular `<Trail />` component. You get a collection back, which contains your items and animated props. You can update it by overwriting it or by calling the `set` function.
 
 ```jsx
-function App() {
-  const [items] = useState(['A', 'B', 'C'])
-  const [trail, set] = useTrail({ items, opacity: 1 })
-  return trail.map(({ item, props }) => (
-    <animated.div key={item} style={props}>
-      {item}
-    </animated.div>
-  ))
-}
+const [items] = useState(['A', 'B', 'C'])
+const [trail, set] = useTrail({ items, opacity: 1 })
+return trail.map(({ item, props }) => (
+  <animated.div key={item} style={props}>
+    {item}
+  </animated.div>
+))
 ```
 
-### useTransition
+## useTransition
 
 The `useTransition` hook replaces `<Transition />`. You give it data and it returns animated-props, which you can then distribute among your views. You can update data either by overwriting it, or by calling `set` which updates the spring without causing a render pass (which is great for iteractive input, mouse events, etc).
 
 ```jsx
-function App() {
-  const [items] = useState(['A', 'B', 'C'])
-  const transitions = useTransition({
-    items,
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-  })
-  return transitions.map(({ item, key, props }) => (
-    <animated.div key={key} style={props}>
-      {item}
-    </animated.div>
-  ))
-}
+const [items] = useState(['A', 'B', 'C'])
+const transitions = useTransition({
+  items,
+  from: { opacity: 0 },
+  enter: { opacity: 1 },
+  leave: { opacity: 0 },
+})
+return transitions.map(({ item, key, props }) => (
+  <animated.div key={key} style={props}>
+    {item}
+  </animated.div>
+))
 ```
 
-### useKeyframes
+## useKeyframes
 
 The `useKeyframes` replaces the `Keyframes` factory. It has almost the same API. You give it named slots (or a function, or an array). You toggle these slots by passing the name of the slot you want to run as the second argument. If you do not use slots (when you either declare a function or an array as the first argument) you don't need the second argument.
 
 You can use also trail keyframes by using `useKeyframes.trail`
 
 ```jsx
-function App() {
-  const [state, set] = useState("show")
-  const props = useKeyframes.spring({
+const [state, set] = useState('show')
+const props = useKeyframes.spring(
+  {
     // Single props
     show: { opacity: 1 },
     // Chained animations (arrays)
@@ -98,16 +92,13 @@ function App() {
       await delay(1000)
       await next({ x: 0 })
     },
-  }, state)
-  return (
-    <animated.div style={props}>
-      content
-    </animated.div>
-  )
-}
+  },
+  state
+)
+return <animated.div style={props}>content</animated.div>
 ```
 
-## Demos
+# Demos
 
 <DemoGrid padding={0}>
   {examples.map(data => (

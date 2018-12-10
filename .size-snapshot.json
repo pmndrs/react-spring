@@ -19,9 +19,9 @@
     "gzipped": 1990
   },
   "dist/web.js": {
-    "bundled": 79286,
-    "minified": 37783,
-    "gzipped": 12337,
+    "bundled": 78597,
+    "minified": 37452,
+    "gzipped": 12236,
     "treeshaked": {
       "rollup": {
         "code": 30992,
@@ -33,9 +33,9 @@
     }
   },
   "dist/web.umd.js": {
-    "bundled": 84952,
-    "minified": 33119,
-    "gzipped": 12042
+    "bundled": 84197,
+    "minified": 32839,
+    "gzipped": 11944
   },
   "dist/native.js": {
     "bundled": 74716,
