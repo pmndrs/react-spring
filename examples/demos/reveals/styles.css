@@ -8,7 +8,6 @@
   cursor: pointer;
 }
 .reveals-main > div {
-  font-family: Kanit, sans-serif;
   font-weight: 800;
   font-size: 4em;
   will-change: transform, opacity;

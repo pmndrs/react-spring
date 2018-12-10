@@ -38,61 +38,58 @@ export default class AreasExample extends React.Component {
   toggle = () => this.setState(state => ({ toggle: !state.toggle }))
   render() {
     return (
-      <div>
-        <ParentSize>
-          {({ width, height }) => {
-            const xScale = scaleTime({
-              range: [0, width],
-              domain: extent(data, x),
-            })
-            const yMax = max(data, y)
-            const yScale = scaleLinear({
-              range: [height / 2, 0],
-              domain: [0, yMax],
-              nice: true,
-            })
-            const interpolate = data.map(d => Math.random() * yMax)
-            console.log(interpolate)
-            return (
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  cursor: 'pointer',
-                  background: '#FF1C68',
-                }}
-                onClick={this.toggle}>
-                <svg
-                  style={{ position: 'absolute', bottom: 0 }}
-                  width={width}
-                  height={height / 2}>
-                  <GradientPurpleTeal id="gradient" />
-                  <g>
-                    <Spring to={{ interpolate }}>
-                      {props => (
-                        <AreaClosed
-                          data={data.map((d, i) => ({
-                            ...d,
-                            value: props.interpolate[i],
-                          }))}
-                          xScale={xScale}
-                          yScale={yScale}
-                          x={x}
-                          y={y}
-                          strokeWidth={2}
-                          stroke={'url(#gradient)'}
-                          fill={'url(#gradient)'}
-                          curve={curveBasis}
-                        />
-                      )}
-                    </Spring>
-                  </g>
-                </svg>
-              </div>
-            )
-          }}
-        </ParentSize>
-      </div>
+      <ParentSize>
+        {({ width, height }) => {
+          const xScale = scaleTime({
+            range: [0, width],
+            domain: extent(data, x),
+          })
+          const yMax = max(data, y)
+          const yScale = scaleLinear({
+            range: [height / 2, 0],
+            domain: [0, yMax],
+            nice: true,
+          })
+          const interpolate = data.map(d => Math.random() * yMax)
+          return (
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                cursor: 'pointer',
+                background: '#FF1C68',
+              }}
+              onClick={this.toggle}>
+              <svg
+                style={{ position: 'absolute', bottom: 0 }}
+                width={width}
+                height={height / 2}>
+                <GradientPurpleTeal id="gradient" />
+                <g>
+                  <Spring to={{ interpolate }}>
+                    {props => (
+                      <AreaClosed
+                        data={data.map((d, i) => ({
+                          ...d,
+                          value: props.interpolate[i],
+                        }))}
+                        xScale={xScale}
+                        yScale={yScale}
+                        x={x}
+                        y={y}
+                        strokeWidth={2}
+                        stroke={'url(#gradient)'}
+                        fill={'url(#gradient)'}
+                        curve={curveBasis}
+                      />
+                    )}
+                  </Spring>
+                </g>
+              </svg>
+            </div>
+          )
+        }}
+      </ParentSize>
     )
   }
 }

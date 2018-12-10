@@ -5,8 +5,7 @@ import { withGesture } from 'react-with-gesture'
 import { Spring, animated } from 'react-spring'
 import './styles.css'
 
-@withGesture // https://github.com/drcmda/react-with-gesture
-export default class GesturesExample extends React.Component {
+class GesturesExample extends React.Component {
   render() {
     const { xDelta, down, children } = this.props
     const to = { x: down ? xDelta : 0 }
@@ -45,3 +44,6 @@ export default class GesturesExample extends React.Component {
     )
   }
 }
+
+// https://github.com/drcmda/react-with-gesture
+export default withGesture(GesturesExample)

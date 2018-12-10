@@ -1,54 +1,24 @@
-* {    
-    box-sizing: border-box;
-}
-
-::-webkit-scrollbar {
-    width: 0px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #eceaea;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #c3c2c2;
+* {
+  box-sizing: border-box;
 }
 
 html,
 body,
 #root {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: white;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-ul {
-    padding: 0;
-    margin: 0;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+    helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
 }
-
-.app-container {
-    display: grid;
-    height: 100%;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(auto-fit, minmax(0, 1fr) );
-    min-height: 0;
-    min-height: 0;
-}
-
-.app-container > * {
-    position: relative;
-    overflow: hidden;
-    min-height: 0;
-    min-height: 0;
-}
-  

@@ -4,6 +4,10 @@ route: /examples
 order: 0
 ---
 
+import DemoGrid from '../examples/components/DemoGrid'
+import Demo from '../examples/components/Demo'
+import examples from '../examples/components/examples'
+
 # Examples
 
     git clone --depth=1 https://github.com/drcmda/react-spring
@@ -13,31 +17,15 @@ order: 0
     npm install
     npm start
 
-## Codesandboxes
+## Demos
 
-<div style={{
-  display: 'grid',
-  gridTemplateColumns: 'auto auto',
-  gridGap: 20,
-}}>
-<span>hello</span>
-<span>world</span>
-<iframe
-  src="https://codesandbox.io/embed/vjmmp7xl10?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FDemo.js&runonclick=1"
-  style={{ width: '100%', height: 300, border: 0, borderRadius: 4, overflow: 'hidden' }}
-  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
-<iframe
-  src="https://codesandbox.io/embed/vjmmp7xl10?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FDemo.js&runonclick=1"
-  style={{ width: '100%', height: 300, border: 0, borderRadius: 4, overflow: 'hidden' }}
-  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
-<span>hello</span>
-<span>world</span>
-<iframe
-  src="https://codesandbox.io/embed/vjmmp7xl10?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FDemo.js&runonclick=1"
-  style={{ width: '100%', height: 300, border: 0, borderRadius: 4, overflow: 'hidden' }}
-  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
-<iframe
-  src="https://codesandbox.io/embed/vjmmp7xl10?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&module=%2Fsrc%2FDemo.js&runonclick=1"
-  style={{ width: '100%', height: 300, border: 0, borderRadius: 4, overflow: 'hidden' }}
-  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
-</div>
+<DemoGrid padding={0}>
+  {examples.map(data => (
+    <Demo
+      key={data.name}
+      {...data}
+      link={`https://github.com/drcmda/react-spring/tree/master/examples/demos/${data.name}`}
+      import={import('../examples/demos/' + data.name)}
+    />
+  ))}
+</DemoGrid>

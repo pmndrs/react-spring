@@ -1,7 +1,6 @@
 const path = require('path')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-
-console.log(path.resolve('./src/targets/web'))
+const css = require('docz-plugin-css').css
 
 export default {
   protocol: 'http',
@@ -12,7 +11,7 @@ export default {
         {
           rel: 'stylesheet',
           href: 'https://codemirror.net/theme/dracula.css',
-        }
+        },
       ],
       raw: `
       <style>
@@ -135,6 +134,7 @@ export default {
       },
     },
   },
+  plugins: [css()],
   modifyBundlerConfig: (config, dev, args) => {
     return {
       ...config,
@@ -149,9 +149,9 @@ export default {
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          'react-spring': path.resolve('./src/targets/web')
-        }
-      }
+          'react-spring': path.resolve('./src/targets/web'),
+        },
+      },
     }
   },
 }

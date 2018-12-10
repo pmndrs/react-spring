@@ -79,6 +79,7 @@
     "babel-plugin-transform-react-remove-prop-types": "0.4.19",
     "copyfiles": "^2.1.0",
     "docz": "^0.12.5",
+    "docz-plugin-css": "^0.11.0",
     "docz-theme-default": "^0.12.5",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
