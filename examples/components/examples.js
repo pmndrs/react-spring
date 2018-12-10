@@ -2,163 +2,163 @@ export default [
   {
     name: 'parallaxvert',
     title: 'Vertical Parallax',
-    description: 'Using addons/parallax to create vertical parallax layers.',
     link: '#',
+    tags: ['parallax']
   },
   {
     name: 'parallax',
     title: 'Horizontal Parallax',
-    description: 'Using addons/parallax to create horizontal parallax layers.',
     link: '#',
+    tags: ['parallax']
   },
   {
     name: 'transitions',
     title: 'Transitions',
-    description: 'Using transitions.',
     link: '#',
+    tags: ['transitions']
   },
   {
     name: 'nativespring',
     title: 'Native springs',
-    description: 'Using the native flag for faster performance.',
     link: '#',
+    tags: ['native', 'springs']
   },
   {
     name: 'areas',
     title: 'D3 areas',
-    description: 'Using VX and D3.',
     link: '#',
+    tags: ['vx', 'd3', 'transitions']
   },
   {
     name: 'trails',
     title: 'Trails',
-    description: 'Using trails and the reverse flag.',
     link: '#',
+    tags: ['trails']
   },
   {
     name: 'pagetransitions',
     title: 'Simple Page transitions',
-    description: 'Switching between pages using transitions.',
     link: '#',
+    tags: ['transitions']
   },
   {
     name: 'reveals',
     title: 'Simple reveals',
-    description: 'Toggling objects using transitions.',
     link: '#',
+    tags: ['transitions']
   },
   {
     name: 'gestures',
     title: 'Gestures',
-    description: 'Combining springs and gestures.',
     link: '#',
+    tags: ['springs', 'gestures']
   },
   {
     name: 'timing',
     title: 'Scripted keyframes',
-    description: 'Using functions to script animations.',
     link: '#',
+    tags: ['keyframes']
   },
   {
     name: 'spring',
     title: 'Simple spring',
-    description: 'Basic animations using spring.',
     link: '#',
+    tags: ['springs']
   },
   {
     name: 'tree',
     title: 'D3 Tree view',
-    description: 'Using VX and transitions.',
     link: '#',
+    tags: ['d3', 'vx', 'transitions']
   },
   {
     name: 'grid',
     title: 'Grid view',
-    description: 'Using transitions and trails',
     link: '#',
+    tags: ['transitions', 'trails']
   },
   {
     name: 'list',
     title: 'List re-ordering',
-    description: 'Using transitions.',
     link: '#',
+    tags: ['transitions']
   },
   {
     name: 'morph',
     title: 'SVG morphing',
-    description: 'Using flubber and springs.',
     link: '#',
+    tags: ['flubber', 'svg', 'springs']
   },
   {
     name: 'sunburst',
     title: 'D3 sunburst',
-    description: 'Using VX and springs',
     link: '#',
+    tags: ['d3', 'vx', 'springs']
   },
   {
     name: 'onrest',
     title: 'Onrest',
-    description: 'Using onRest in react-spring.',
     link: '#',
+    tags: ['springs']
   },
   {
     name: 'treeview',
     title: 'Tree view',
-    description: 'Collapsable tree views using springs',
     link: '#',
+    tags: ['springs']
   },
   {
     name: 'keyframes',
     title: 'Panel Keyframes',
-    description: 'Using keyframes.',
     link: '#',
+    tags: ['keyframes', 'springs', 'trails']
   },
   {
     name: 'script',
     title: 'Scripted keyframes',
-    description: 'Using functional keyframes to controll animations.',
     link: '#',
+    tags: ['keyframes']
   },
   {
     name: 'auto',
     title: 'Auto',
-    description: 'Animating height: auto using springs.',
     link: '#',
+    tags: ['springs', 'auto']
   },
   {
     name: 'router',
     title: 'react-router',
-    description: 'Using react-router and transitions.',
     link: '#',
+    tags: ['react-router', 'transitions']
   },
   {
     name: 'scroll',
     title: 'animating scroll',
-    description: 'Animating scrollTop/left using springs.',
     link: '#',
+    tags: ['springs', 'scroll']
   },
   {
     name: 'dashoffset',
     title: 'SVG dashOffset',
-    description: 'Animate dash using springs.',
     link: '#',
+    tags: ['SVG', 'springs']
   },
   {
     name: 'transitiongroup',
     title: 'Multistage transitions',
-    description: 'Using transitions.',
     link: '#',
+    tags: ['transitions']
   },
   {
     name: 'chat',
     title: 'Chat',
-    description: 'Whatsapp-like chat-bubbles using transitions.',
     link: '#',
+    tags: ['transitions']
   },
   {
     name: 'messages',
     title: 'Notifications',
-    description: 'Basic notification-hub using springs.',
     link: '#',
+    tags: ['transitions']
   },
 ]

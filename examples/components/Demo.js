@@ -15,15 +15,25 @@ export default class Demo extends React.Component {
   }
 
   render() {
-    const { title, description, link } = this.props
+    const { title, description, tags, link } = this.props
     return (
       <Container>
         <Header>
           <h1>{title}</h1>
           <p>
-            Source: <a target="_blank" href={link}>{link.slice(link.lastIndexOf('/'))}</a>
+            Source:{' '}
+            <a target="_blank" href={link}>
+              {link.slice(link.lastIndexOf('/'))}
+            </a>
           </p>
-          <p>{description}</p>
+          {description && <p>{description}</p>}
+          {tags && (
+            <p>
+              {tags.map(tag => (
+                <Tag>{tag}</Tag>
+              ))}
+            </p>
+          )}
         </Header>
         <Content>
           <div>
@@ -34,6 +44,16 @@ export default class Demo extends React.Component {
     )
   }
 }
+
+const Tag = styled('span')`
+  padding: 5px;
+  background: #9f9f9f;
+  border-radius: 5px;
+  margin-right: 5px;
+  text-transform: uppercase;
+  font-size: 0.6em;
+  color: white;
+`
 
 const Container = styled('div')`
   position: relative;
