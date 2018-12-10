@@ -89,6 +89,17 @@ export function setNext (
  *  )
  */
 
+/**
+ *
+ * @param {(useSpring | useTrail)} useImpl
+ * @param {Object} props
+ * @param {Array=} props.items // only needed when using Trail primitive
+ * @param {Object} props.states
+ * @param {Function} props.filter
+ * @param {SpringProps} ...props
+ * @param {String} state
+ * @param {SpringProps} initialProps
+ */
 const useKeyframesImpl = useImpl => (
   props,
   state = '__default',
