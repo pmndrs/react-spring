@@ -27,7 +27,7 @@ export default function App() {
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <div className="list-reorder" style={{ height }}>
+      <div className="list-reorder" style={{ height: height + 15 }}>
         {transitions.map(({ item, props: { y, ...rest }, key }, index) => (
           <animated.div
             key={key}

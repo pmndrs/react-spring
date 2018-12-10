@@ -12,7 +12,7 @@ export default function Card() {
   const ref = useRef(null)
   const [props, set] = useSpring({
     xy: [0, 0],
-    config: { mass: 10, tension: 550, friction: 140 },
+    config: { mass: 5, tension: 550, friction: 100 },
   })
   return (
     <div

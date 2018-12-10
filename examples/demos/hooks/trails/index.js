@@ -7,18 +7,33 @@ import './styles.css'
 export default function Trail() {
   const [toggle, setToggle] = useState(true)
   const [items] = useState(['🍎', '🍊', '🥝', '🍌', '🍒'])
-  const [trail] = useTrail({ items, opacity: toggle ? 1 : 0.25, x: toggle ? 0 : 100, from: { opacity: 0, x: -100 } })
+  const [trail] = useTrail({
+    items,
+    opacity: toggle ? 1 : 0.25,
+    x: toggle ? 0 : 100,
+    from: { opacity: 0, x: -100 },
+  })
 
-  return trail.map(({ item, props }) => (
-    <animated.div
-      className="trails-box"
-      key={item}
-      onClick={() => setToggle(!toggle)}
+  return (
+    <div
       style={{
-        opacity: props.opacity,
-        transform: props.x.interpolate(x => `translate3d(${x}%,0,0)`),
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
       }}>
-      {item}
-    </animated.div>
-  ))
+      {trail.map(({ item, props }) => (
+        <animated.div
+          className="trails-box"
+          key={item}
+          onClick={() => setToggle(!toggle)}
+          style={{
+            opacity: props.opacity,
+            transform: props.x.interpolate(x => `translate3d(${x}%,0,0)`),
+          }}>
+          {item}
+        </animated.div>
+      ))}
+    </div>
+  )
 }
