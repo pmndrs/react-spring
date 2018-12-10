@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom'
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import lorem from 'lorem-ipsum'
 import { X } from 'react-feather'
 import { useTransition } from 'react-spring/hooks'
@@ -55,7 +55,10 @@ function MessageHub({
             <Life style={{ right: life }} />
             <p>{item.msg}</p>
             <Button
-              onClick={() => cancelMap.has(item) && cancelMap.get(item)()}>
+              onClick={e => {
+                e.stopPropagation()
+                cancelMap.has(item) && cancelMap.get(item)()
+              }}>
               <X size={18} />
             </Button>
           </Content>
@@ -66,14 +69,19 @@ function MessageHub({
 }
 
 export default function App() {
+  const ref = useRef(null)
+  useEffect(() => void ref.current('Click window to create messages!'), [])
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
-      <MessageHub>
-        {add => {
-          add(lorem())
-          setInterval(() => add(lorem()), 2500)
-        }}
-      </MessageHub>
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        cursor: 'pointer',
+      }}
+      onClick={() => ref.current(lorem())}>
+      <MessageHub children={add => (ref.current = add)} />
     </div>
   )
 }

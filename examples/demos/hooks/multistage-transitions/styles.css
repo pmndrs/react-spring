@@ -11,4 +11,5 @@
   padding-left: 50px;
   will-change: transform, opacity, height;
   white-space: nowrap;
+  cursor: pointer;
 }
