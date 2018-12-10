@@ -47,18 +47,9 @@
 .list-reorder-details h1 {
   position: relative;
   color: #ffffff;
-  font-size: 20px;
-  line-height: 20px;
+  font-size: 3.5em;
+  line-height: 40px;
   font-weight: 600;
   margin: 0;
   padding: 0;
-}
-
-.list-reorder-details p {
-  position: relative;
-  color: rgba(0, 0, 0, 0.5);
-  font-size: 14px;
-  line-height: 14px;
-  margin: 0;
-  padding-top: 6px;
 }

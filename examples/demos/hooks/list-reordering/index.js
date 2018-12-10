@@ -40,7 +40,6 @@ export default function App() {
                 className="list-reorder-details"
                 style={{ backgroundImage: item.css }}>
                 <h1>{item.name}</h1>
-                <p>{item.description}</p>
               </div>
             </div>
           </animated.div>

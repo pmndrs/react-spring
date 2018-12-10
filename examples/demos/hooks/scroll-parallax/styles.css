@@ -4,12 +4,10 @@
   height: 100%;
   overflow: scroll;
   text-align: justify;
-  background: white;
   color: lightpink;
   font-size: 1.5em;
   line-height: 0.9em;
   font-weight: 800;
-  background: rgb(217, 247, 255);
 }
 
 .scroll-parallax-container-svg {

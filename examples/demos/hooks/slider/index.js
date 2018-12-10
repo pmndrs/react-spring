@@ -9,14 +9,12 @@ export default function Slider({ children }) {
   // See: https://github.com/drcmda/react-with-gesture
   // Gives access to: down, x, y, xDelta, yDelta, xInitial, yInitial
   const [handlers, { xDelta, down }] = useGesture()
-  const [{ x, y, bg, pers, size }] = useSpring({
+  const [{ x, bg, size }] = useSpring({
     x: down ? xDelta : 0,
-    y: down ? -30 : 0,
-    pers: `perspective(800px) rotateX(${down ? 45 : 0}deg)`,
     bg: `linear-gradient(120deg, ${
       xDelta < 0 ? '#f093fb 0%, #f5576c' : '#96fbc4 0%, #f9f586'
     } 100%)`,
-    size: down ? 1.15 : 1,
+    size: down ? 1.1 : 1,
     immediate: name => down && name === 'x',
   })
   const avSize = x.interpolate({
@@ -30,7 +28,7 @@ export default function Slider({ children }) {
       <animated.div
         {...handlers}
         className="slider-item"
-        style={{ background: bg, transform: pers }}>
+        style={{ background: bg }}>
         <animated.div
           className="slider-av"
           style={{
@@ -42,11 +40,11 @@ export default function Slider({ children }) {
           className="slider-fg"
           style={{
             transform: interpolate(
-              [x, y, size],
-              (x, y, s) => `translate3d(${x}px,${y}px,0) scale(${s})`
+              [x, size],
+              (x, s) => `translate3d(${x}px,0,0) scale(${s})`
             ),
           }}>
-          <i>Slide</i>
+          Slide
         </animated.div>
       </animated.div>
     </div>

@@ -38,14 +38,13 @@
   border-radius: 5px;
   box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.2);
   font-size: 3em;
-
-  font-weight: 800;
+  font-weight: 400;
   transition: box-shadow 0.75s;
 }
 
 .slider-fg:active {
   cursor: -webkit-grabbing;
-  box-shadow: 0px 60px 50px -5px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 15px 30px -5px rgba(0, 0, 0, 0.4);
 }
 
 .slider-fg > * {
