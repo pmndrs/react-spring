@@ -25,7 +25,7 @@ export function parseKeyframedUpdate(slots, config, f, setNext, cancel) {
     slots(
       (animatedProps, last = false) => {
         const props = {
-          config: Array.isArray(config) ? config[index++] : config,
+          config: config && Array.isArray(config) ? config[index++] : config,
           ...f(animatedProps),
         }
         return setNext(props, last)
@@ -33,9 +33,13 @@ export function parseKeyframedUpdate(slots, config, f, setNext, cancel) {
       (finished = true) => cancel && cancel(finished)
     )
   } else {
-    const last = true
-    const config = Array.isArray(config) ? config[0] : config
-    setNext({config, ...f(slots)}, last)
+    setNext(
+      {
+        config: config && Array.isArray(config) ? config[0] : config,
+        ...f(slots),
+      },
+      true
+    )
   }
 }
 

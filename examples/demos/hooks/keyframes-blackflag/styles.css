@@ -6,31 +6,13 @@
   align-items: center;
   justify-content: center;
   background: white;
-  font-family: 'Black Han Sans', sans-serif;
+  font-weight: 800;
   color: black;
 }
 
-.script-bf-main::before {
-  content: 'BLACK';
-  position: absolute;
-  top: calc(50% - 200px);
-  left: calc(50% - 10px);
-  transform: translate3d(-50%, -50%, 0);
-  font-size: 6.5em;
-}
-
-.script-bf-main::after {
-  content: 'FLAG';
-  position: absolute;
-  bottom: calc(50% - 220px);
-  right: calc(50% - 60px);
-  transform: translate3d(50%, 50%, 0);
-  font-size: 6.5em;
-}
-
 .script-bf-box {
-  width: 100px;
-  height: 300px;
+  width: 50px;
+  height: 180px;
   background: black;
   margin: 5px;
   will-change: transform;
