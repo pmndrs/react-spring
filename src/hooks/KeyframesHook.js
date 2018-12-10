@@ -170,6 +170,6 @@ const useKeyframesImpl = useImpl => (
 }
 
 export const useKeyframes = {
-  Spring: useKeyframesImpl(useSpring),
-  Trail: useKeyframesImpl(useTrail),
+  spring: useKeyframesImpl(useSpring),
+  trail: useKeyframesImpl(useTrail),
 }

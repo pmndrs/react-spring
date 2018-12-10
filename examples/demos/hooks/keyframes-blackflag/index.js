@@ -8,7 +8,7 @@ const interp = i => r =>
   `translate3d(0, ${15 * Math.sin(r + (i * 2 * Math.PI) / 1.6)}px, 0)`
 
 export default function App() {
-  const props = useKeyframes.Spring(async next => {
+  const props = useKeyframes.spring(async next => {
     while (1)
       await next({
         radians: 2 * Math.PI,

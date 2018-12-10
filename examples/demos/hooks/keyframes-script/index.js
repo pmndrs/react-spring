@@ -3,7 +3,7 @@ import { useKeyframes, animated } from 'react-spring/hooks'
 import './styles.css'
 
 export default function App () {
-  const props = useKeyframes.Spring(async next => {
+  const props = useKeyframes.spring(async next => {
     await next({
       from: { left: '0%', top: '0%', width: '0%', height: '0%' },
       width: '100%',
