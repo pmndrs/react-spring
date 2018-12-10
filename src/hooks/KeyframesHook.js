@@ -25,7 +25,8 @@ export function parseKeyframedUpdate (slots, config, f, setNext, cancel) {
     )
   } else {
     const last = true
-    setNext(f(slots), last)
+    const config = Array.isArray(config) ? config[0] : config
+    setNext({config, ...f(slots)}, last)
   }
 }
 
