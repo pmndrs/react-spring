@@ -21,7 +21,7 @@ export default class Demo extends React.Component {
         <Header>
           <h1>{title}</h1>
           <p>
-            Source:{' '}
+            {link.includes('codesandbox.io') ? 'Codesandbox' : 'Source'}:{' '}
             <a target="_blank" href={link}>
               {link.slice(link.lastIndexOf('/'))}
             </a>

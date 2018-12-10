@@ -3,14 +3,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import lorem from 'lorem-ipsum'
 import { X } from 'react-feather'
 import { useTransition } from 'react-spring/hooks'
-import {
-  GlobalStyle,
-  Container,
-  Message,
-  Button,
-  Content,
-  Life,
-} from './styles.js'
+import { Main, Container, Message, Button, Content, Life } from './styles.js'
 
 let id = 0
 
@@ -70,18 +63,10 @@ function MessageHub({
 
 export default function App() {
   const ref = useRef(null)
-  useEffect(() => void ref.current('Click window to create messages!'), [])
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        overflow: 'hidden',
-        cursor: 'pointer',
-      }}
-      onClick={() => ref.current(lorem())}>
+    <Main onClick={() => ref.current(lorem())}>
+      Click here<br/>to create notifications
       <MessageHub children={add => (ref.current = add)} />
-    </div>
+    </Main>
   )
 }

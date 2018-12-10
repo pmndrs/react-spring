@@ -1,6 +1,18 @@
 import styled, { createGlobalStyle } from 'styled-components'
 import { animated } from 'react-spring/hooks'
 
+export const Main = styled('div')`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #bfbfbf;
+`
+
 export const Container = styled('div')`
   position: absolute;
   z-index: 1000;
@@ -13,7 +25,8 @@ export const Container = styled('div')`
   display: flex;
   flex-direction: ${props => (props.top ? 'column-reverse' : 'column')};
   pointer-events: none;
-  align-items: ${props => (props.position === 'center' ? 'center' : `flex-${props.position || 'end'}`)};
+  align-items: ${props =>
+    props.position === 'center' ? 'center' : `flex-${props.position || 'end'}`};
   @media (max-width: 680px) {
     align-items: center;
   }
@@ -38,7 +51,8 @@ export const Content = styled('div')`
   padding: 10px 18px;
   font-size: 12px;
   display: grid;
-  grid-template-columns: ${props => (props.canClose === false ? '1fr' : '1fr auto')};
+  grid-template-columns: ${props =>
+    props.canClose === false ? '1fr' : '1fr auto'};
   grid-gap: 10px;
   overflow: hidden;
   height: auto;

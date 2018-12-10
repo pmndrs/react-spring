@@ -61,7 +61,7 @@ export default [
   },
   {
     name: 'hooks/keyframes-blackflag',
-    title: 'Keyframes bla',
+    title: 'Keyframes duration',
     link: 'https://codesandbox.io/embed/1wqpz5mzqj',
     tags: ['useKeyframes']
   },

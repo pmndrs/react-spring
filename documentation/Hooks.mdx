@@ -114,9 +114,6 @@ function App() {
     <Demo
       key={data.name}
       {...data}
-      link={`https://github.com/drcmda/react-spring/tree/master/examples/demos/${
-        data.name
-      }`}
       import={import('../examples/demos/' + data.name)}
     />
   ))}
