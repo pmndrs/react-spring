@@ -70,8 +70,8 @@ export function setNext(
  *  )
  */
 
-const useKeyframes = useImpl => (
-  { onRest, state, states, filter = states => states, ...props },
+const useKeyframesImpl = useImpl => (
+  { onRest, state, states, filter = states => states, ...rest },
   initialProps
 ) => {
   const resolverRef = React.useRef(null)
@@ -79,7 +79,7 @@ const useKeyframes = useImpl => (
   const mounted = React.useRef(false)
   const [props, set, cancel] = useImpl({
     ...initialProps,
-    ...props,
+    ...rest,
     onKeyframesHalt: onKeyframesHalt(resolverRef, lastRef, mounted, onRest),
     updatePropsOnRerender: false,
   })
@@ -102,6 +102,6 @@ const useKeyframes = useImpl => (
 }
 
 export const useKeyframes = {
-  Spring: useKeyframes(useSpring),
-  Trail: useKeyFrames(useTrail),
+  Spring: useKeyframesImpl(useSpring),
+  Trail: useKeyframesImpl(useTrail),
 }
