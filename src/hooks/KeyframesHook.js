@@ -34,7 +34,8 @@ export function parseKeyframedUpdate(slots, config, f, setNext, cancel) {
     )
   } else {
     const last = true
-    setNext(f(slots), last)
+    const config = Array.isArray(config) ? config[0] : config
+    setNext({config, ...f(slots)}, last)
   }
 }
 
@@ -98,6 +99,17 @@ export function setNext(
  *  )
  */
 
+/**
+ *
+ * @param {(useSpring | useTrail)} useImpl
+ * @param {Object} props
+ * @param {Array=} props.items // only needed when using Trail primitive
+ * @param {Object} props.states
+ * @param {Function} props.filter
+ * @param {SpringProps} ...props
+ * @param {String} state
+ * @param {SpringProps} initialProps
+ */
 const useKeyframesImpl = useImpl => (
   props,
   state = '__default',

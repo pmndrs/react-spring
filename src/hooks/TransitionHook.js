@@ -136,7 +136,10 @@ const removeDeleted = (function() {
   }
 })()
 
-export function useTransition(props) {
+/**
+ * @param {TransitionProps} props
+ */
+export function useTransition (props) {
   const {
     items,
     keys: _currentKeys,
