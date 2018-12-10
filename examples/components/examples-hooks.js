@@ -49,7 +49,7 @@ export default [
   },
   {
     name: 'hooks/notification-hub',
-    title: 'List-reordering',
+    title: 'Notification hub',
     link: 'https://codesandbox.io/embed/1wqpz5mzqj',
     tags: ['useTransition']
   },

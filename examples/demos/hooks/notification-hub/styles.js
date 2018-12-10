@@ -35,8 +35,8 @@ export const Content = styled('div')`
   color: white;
   background: #445159;
   opacity: 0.9;
-  padding: 12px 22px;
-  font-size: 1em;
+  padding: 10px 18px;
+  font-size: 12px;
   display: grid;
   grid-template-columns: ${props => (props.canClose === false ? '1fr' : '1fr auto')};
   grid-gap: 10px;

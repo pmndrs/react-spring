@@ -71,8 +71,7 @@ export default function App() {
       <MessageHub>
         {add => {
           add(lorem())
-          setTimeout(() => add(lorem()), 500)
-          setTimeout(() => add(lorem()), 4000)
+          setInterval(() => add(lorem()), 2500)
         }}
       </MessageHub>
     </div>

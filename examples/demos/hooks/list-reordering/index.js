@@ -26,24 +26,27 @@ export default function App() {
   useEffect(() => void setInterval(() => set(shuffle), 2500), [])
 
   return (
-
-    <div className="list-reorder" style={{ height }}>
-      {transitions.map(({ item, props: { y, ...rest }, key }, index) => (
-        <animated.div
-          key={key}
-          className="list-card"
-          style={{
-            transform: y.interpolate(y => `translate3d(0,${y}px,0)`),
-            ...rest,
-          }}>
-          <div className="list-cell">
-            <div className="list-details" style={{ backgroundImage: item.css }}>
-              <h1>{item.name}</h1>
-              <p>{item.description}</p>
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <div className="list-reorder" style={{ height }}>
+        {transitions.map(({ item, props: { y, ...rest }, key }, index) => (
+          <animated.div
+            key={key}
+            className="list-reorder-card"
+            style={{
+              transform: y.interpolate(y => `translate3d(0,${y}px,0)`),
+              ...rest,
+            }}>
+            <div className="list-reorder-cell">
+              <div
+                className="list-reorder-details"
+                style={{ backgroundImage: item.css }}>
+                <h1>{item.name}</h1>
+                <p>{item.description}</p>
+              </div>
             </div>
-          </div>
-        </animated.div>
-      ))}
+          </animated.div>
+        ))}
+      </div>
     </div>
   )
 }
