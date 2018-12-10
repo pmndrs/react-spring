@@ -2,7 +2,7 @@ import React, { useRef, useCallback } from 'react'
 import { useSpring, animated as a, interpolate } from 'react-spring/hooks'
 import lorem from 'lorem-ipsum'
 import './styles.css' // Icon made by Freepik from www.flaticon.com
-import { removeExt } from 'upath';
+import { removeExt } from 'upath'
 
 const calc = (x, y, r) => [x - r.left / 2, y - r.top / 2]
 
@@ -11,46 +11,51 @@ export default function App() {
   const [{ st, xy }, set] = useSpring({ st: 0, xy: [0, 0] })
   const interpBg = xy.interpolate(
     (x, y) =>
-      `perspective(400px) rotateY(${x / 60}deg) rotateX(${-y /
-        60}deg) translate3d(-50%, -50%, 0)`
+      `perspective(400px) rotateY(${x / 40}deg) rotateX(${-y /
+        40}deg) translate3d(-50%, -50%, 0)`
   )
   const interpFace = st.interpolate(o => `translate(90,${105 + o / 4})`)
   const interpEye = interpolate(
     [st, xy],
     (o, xy) =>
-      `translate(${xy[0] / 30 + 157},${xy[1] / 30 + 80 + o / 2}) scale(0.8)`
+      `translate(${xy[0] / 20 + 157},${xy[1] / 20 + 80 + o / 2}) scale(0.8)`
   )
   const interpIris = interpolate(
     [st, xy],
-    (o, xy) => `translate(${xy[0] / 30},${xy[1] / 30 + -10 + o / 8})`
+    (o, xy) => `translate(${xy[0] / 20},${xy[1] / 20 + -10 + o / 8})`
   )
   const interpPupil = interpolate(
     [st, xy],
-    (o, xy) => `translate(${xy[0] / 25},${xy[1] / 25 + -10 + o / 8})`
+    (o, xy) => `translate(${xy[0] / 15},${xy[1] / 15 + -10 + o / 8})`
   )
   const interpSpot = interpolate(
     [st, xy],
-    (o, xy) => `translate(${8 + -xy[0] / 80},${-xy[1] / 80 + -10 + o / 8})`
+    (o, xy) => `translate(${8 + -xy[0] / 70},${-xy[1] / 70 + -10 + o / 8})`
   )
   const interpMouth = interpolate(
     [st, xy],
     (o, xy) =>
-      `translate(${xy[0] / 18 + 188},${xy[1] / 20 + 230 + o / 1.7}) scale(0.8)`
+      `translate(${xy[0] / 15 + 188},${xy[1] / 10 + 230 + o / 1.7}) scale(0.8)`
   )
   const interpHair = st.interpolate(o => `translate(79,${o / 4})`)
   const onScroll = useCallback(e => set({ st: e.target.scrollTop / 30 }), [])
   return (
     <div
-    ref={ref}
+      ref={ref}
       className="scroll-parallax-container"
       onScroll={onScroll}
       onMouseMove={e => {
         const rect = ref.current.getBoundingClientRect()
-        set({ xy: [e.clientX - rect.left - rect.width / 2, e.clientY - rect.top - rect.height / 2] })
+        set({
+          xy: [
+            e.clientX - rect.left - rect.width / 2,
+            e.clientY - rect.top - rect.height / 2,
+          ],
+        })
       }}>
       <div style={{ height: '100%', overflow: 'auto' }}>
         <div style={{ height: '2000%', overflow: 'hidden' }}>
-          {lorem({ count: 200 })}
+          <span style={{ color: '#bfbfbf' }}>Scroll down!</span>&nbsp;{lorem({ count: 200 })}
         </div>
       </div>
       <a.svg

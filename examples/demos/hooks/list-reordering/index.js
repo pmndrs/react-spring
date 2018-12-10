@@ -22,11 +22,10 @@ export default function App() {
     config: { mass: 5, tension: 500, friction: 150 },
   })
 
-  // Shuffle data every 2.5 s
-  useEffect(() => void setInterval(() => set(shuffle), 2500), [])
-
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div
+      style={{ position: 'relative', width: '100%', height: '100%', cursor: 'pointer' }}
+      onClick={() => set(shuffle)}>
       <div className="list-reorder" style={{ height: height + 15 }}>
         {transitions.map(({ item, props: { y, ...rest }, key }, index) => (
           <animated.div
