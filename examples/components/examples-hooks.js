@@ -50,7 +50,7 @@ export default [
   {
     name: 'hooks/notification-hub',
     title: 'Notification hub',
-    link: 'https://codesandbox.io/embed/1wqpz5mzqj',
+    link: 'https://codesandbox.io/embed/7mqy09jyq',
     tags: ['useTransition']
   },
   {
