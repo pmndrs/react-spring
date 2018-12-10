@@ -4836,9 +4836,10 @@ react-spring@^5.3.7:
   dependencies:
     "@babel/runtime" "7.0.0-beta.51"
 
-react-with-gesture@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/react-with-gesture/-/react-with-gesture-1.0.10.tgz#f5e60b848598db587f3d02f5b8d9856bf26dbb59"
+react-with-gesture@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-with-gesture/-/react-with-gesture-2.0.4.tgz#3b1095b55b937d0ca89b9d4570bc35c1e3238236"
+  integrity sha512-SeXrbhj0NQ/NZh3GhPj6j8OGPGjBem6L79JYf37+AuapMVPuOh9ehoBblhc+C5Yq8aduQn/pB2uB4tKE3LrEAw==
 
 react@^16.6.0:
   version "16.6.0"

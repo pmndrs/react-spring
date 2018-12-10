@@ -1,4 +1,5 @@
 import { configure } from '@storybook/react'
+import 'babel-polyfill'
 import '../stories/index.css'
 
 // Load all files in the stories folder with a .js extension

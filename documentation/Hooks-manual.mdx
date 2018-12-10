@@ -1,18 +1,32 @@
 ---
 name: React hooks/manual API
-route: /manual
+route: /hooks
 order: 1
 ---
 
 import { PropsTable } from 'docz'
 import { Spring, animated, config } from '../src/targets/web'
-import { AnimatedMeter, RewindSpringProvider, RewindSpring } from './resources/RewindSpring.js'
+import {
+  AnimatedMeter,
+  RewindSpringProvider,
+  RewindSpring,
+} from './resources/RewindSpring.js'
 import CodeMirror from './resources/Codemirror'
+import DemoGrid from '../examples/components/DemoGrid'
+import Demo from '../examples/components/Demo'
+import examples from '../examples/components/examples-hooks'
 
 # Hooks, manual api
 
 <p>
-  <span className="highlight">React-spring offers multiple ways to animate</span>, the one which you'll probably use most is the declarative and render-prop driven way which is front and center. But there is a second, imperative way which you can either use raw or with the help of Reacts new "hooks" feature which establishes a class-less component architecture (currently in alpha, and you'll need both react@next and react-dom@next to use it).
+  <span className="highlight">
+    React-spring offers multiple ways to animate
+  </span>
+  , the one which you'll probably use most is the declarative and render-prop
+  driven way which is front and center. But there is a second, imperative way
+  which you can either use raw or with the help of Reacts new "hooks" feature
+  which establishes a class-less component architecture (currently in alpha, and
+  you'll need both react@next and react-dom@next to use it).
 </p>
 
 ## Hooks
@@ -27,24 +41,16 @@ You can use this hook to define and update data. The data you pass in consists o
 
 ```jsx
 function ClasslessComponent() {
-  const [props] = useSpring({ 
-    opacity: 1, 
-    color: 'blue', 
-    from: { opacity: 0, color: 'rgba(21,45,60,0.1)' } 
+  const [props] = useSpring({
+    opacity: 1,
+    color: 'blue',
+    from: { opacity: 0, color: 'rgba(21,45,60,0.1)' },
   })
-  return <animated.div style={props}>i will fade in and shift my color</animated.div>
+  return (
+    <animated.div style={props}>i will fade in and shift my color</animated.div>
+  )
 }
 ```
-
-<br />
-<iframe
-  src="https://codesandbox.io/embed/426pvonqj0?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1"
-  style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
-  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
-<p>
-
-</p>
-<br />
 
 You can update spring data simply by overwriting the hook, it will remember previous values and animate adaptively. React will render once every time you change props, but the animation itself will be dealt with outside of React. `useSpring` is [native](/perf) by default.
 
@@ -67,8 +73,10 @@ function ClasslessComponent() {
   }, [])
   return (
     <animated.div
-      style={{ 
-        transform: props.pos.interpolate((x,y) => `translate3d(${x}px,${x}px,0)`) 
+      style={{
+        transform: props.pos.interpolate(
+          (x, y) => `translate3d(${x}px,${x}px,0)`
+        ),
       }}>
       i will move with your mouse
     </animated.div>
@@ -84,12 +92,18 @@ const [{ pos2 }] = useSpring({ pos2: pos1 })
 const [{ pos3 }] = useSpring({ pos3: pos2 })
 ```
 
-<br />
+## Demos
 
-<iframe
-  src="https://codesandbox.io/embed/ppxnl191zx?fontsize=13&editorsize=60&hidenavigation=1&codemirror=1&preview=preview"
-  style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
-  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin" />
+<DemoGrid padding={0}>
+  {examples.map(data => (
+    <Demo
+      key={data.name}
+      {...data}
+      link={`https://github.com/drcmda/react-spring/tree/master/examples/demos/${data.name}`}
+      import={import('../examples/demos/' + data.name)}
+    />
+  ))}
+</DemoGrid>
 
 ## Controller
 
@@ -113,3 +127,4 @@ class Test extends React.Component {
   }
 }
 ```
+

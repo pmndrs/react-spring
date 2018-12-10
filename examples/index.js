@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import Loadable from 'react-loadable'
 import DemoGrid from './components/DemoGrid'
 import Demo from './components/Demo'
-import examples from './components/examples'
+import examples from './components/examples-hooks'
 import './styles.css'
 
 ReactDOM.render(

@@ -1,12 +1,18 @@
-.hooks-main {
-
+.goo-main {
+  position: relative;
   width: 100%;
   height: 100%;
   background: lightblue;
+}
+
+.hooks-main {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: lightblue;
 }
 
 .hooks-main > svg {

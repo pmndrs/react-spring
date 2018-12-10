@@ -30,7 +30,7 @@ export default class Demo extends React.Component {
           {tags && (
             <p>
               {tags.map(tag => (
-                <Tag>{tag}</Tag>
+                <Tag key={tag}>{tag}</Tag>
               ))}
             </p>
           )}

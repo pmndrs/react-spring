@@ -1,0 +1,13 @@
+.transitions-item {
+  overflow: hidden;
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 3em;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding-left: 80px;
+  will-change: transform, opacity, height;
+}

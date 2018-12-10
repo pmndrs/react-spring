@@ -17,7 +17,7 @@ export function useSpring({
     [onRest, onKeyframesHalt]
   )
 
-  React.useEffect(() => updatePropsOnRerender && update(props))
+  React.useEffect(() => void (updatePropsOnRerender && update(props)))
 
   return [
     ctrl.getValues(),

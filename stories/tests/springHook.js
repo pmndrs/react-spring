@@ -3,7 +3,7 @@ import {
   useSpring,
   animated,
   config,
-  useSpringKeyframes
+  useKeyframes
 } from '../../src/targets/web/hooks'
 import { testStories } from '../index'
 import './styles.css'
@@ -35,22 +35,50 @@ function TestSpring () {
 
 testStories.add('Spring Hook', () => <TestSpring />)
 
-function TestColor () {
-  const [state, setState] = React.useState('entry')
-  const props = useSpringKeyframes(
-    {
-      state,
-      states: {
-        entry: { backgroundColor: '#FFAF44', config: config.slow },
-        exit: { backgroundColor: '#000000' }
-      }
-    },
-    { backgroundColor: '#000000' }
-  )
+// function TestColor () {
+//   const [state, setState] = React.useState('entry')
+//   const props = useSpringKeyframes(
+//     {
+//       state,
+//       states: {
+//         entry: { backgroundColor: '#FFAF44', config: config.slow },
+//         exit: { backgroundColor: '#000000' }
+//       }
+//     },
+//     { backgroundColor: '#000000' }
+//   )
 
-  return <>
-  <button onClick={_ => setState( state === 'entry' ? 'exit' : 'entry')}>toggle</button>
-  <animated.div style={{ ...props, width: '200px', height: '200px' }} /> </>
+//   return <>
+//   <button onClick={_ => setState( state === 'entry' ? 'exit' : 'entry')}>toggle</button>
+//   <animated.div style={{ ...props, width: '200px', height: '200px' }} /> </>
+// }
+
+// testStories.add('Color Spring Hook', () => <TestColor />)
+
+function TestSpringKeyframe () {
+  const props = useKeyframes.Spring(async next => {
+    await next({
+      from: { left: '0%', top: '0%', width: '0%', height: '0%' },
+      width: '100%',
+      height: '100%'
+    })
+    while (true) {
+      await next({ height: '50%' })
+      await next({ width: '50%', left: '50%' })
+      await next({ top: '0%', height: '100%' })
+      await next({ top: '50%', height: '50%' })
+      await next({ width: '100%', left: '0%' })
+      await next({ width: '50%' })
+      await next({ top: '0%', height: '100%' })
+      await next({ width: '100%' })
+    }
+  })
+
+  return (
+    <div className="springRoot">
+      <animated.div className='box2' style={props} />
+    </div>
+  )
 }
 
-testStories.add('Color Spring Hook', () => <TestColor />)
+testStories.add('Low level keyFrame scripting', () => <TestSpringKeyframe />)

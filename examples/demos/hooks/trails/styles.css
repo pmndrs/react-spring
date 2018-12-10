@@ -1,0 +1,15 @@
+.trails-box {
+  cursor: pointer;
+  position: relative;
+  width: 50%;
+  height: 20%;
+  background-color: hotpink;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3em;
+  font-weight: 800;
+  text-transform: uppercase;
+  will-change: transform, opacity;
+}
