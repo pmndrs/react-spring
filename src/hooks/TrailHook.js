@@ -1,10 +1,11 @@
 import React from 'react'
 import Controller from '../animated/Controller'
 import { toArray } from '../shared/helpers'
+
 export function useTrail ({
   items,
-  reverse,
   delay,
+  reverse,
   onKeyframesHalt = () => null,
   updatePropsOnRerender = true,
   onRest,
@@ -32,7 +33,7 @@ export function useTrail ({
     props => {
       for (let [idx, ctrl] of instances.current.entries()) {
         if (idx === 0) {
-          ctrl.update({ ...props, delay, attach: undefined })
+          ctrl.update({ delay, ...props, attach: undefined })
         }
         ctrl.update(
           { ...props, attach: () => instances.current.get(idx - 1) },
@@ -63,7 +64,7 @@ export function useTrail ({
     })),
     props => update(props),
     (finished = false) => {
-      for (let [idx, ctrl] of instances.current.entries()) {
+      for (let [, ctrl] of instances.current.entries()) {
         ctrl.stop(finished)
       }
     }
