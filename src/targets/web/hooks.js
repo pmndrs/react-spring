@@ -7,7 +7,7 @@ import { config } from '../../shared/constants'
 import { useSpring } from '../../hooks/SpringHook'
 import { useTrail } from '../../hooks/TrailHook'
 import { useTransition } from '../../hooks/TransitionHook'
-import { useSpringKeyframes, useTrailKeyframes } from '../../hooks/KeyframesHook'
+import { useKeyframes } from '../../hooks/KeyframesHook'
 
 const domElements = [
   'a',
@@ -160,6 +160,5 @@ export {
   useSpring,
   useTrail,
   useTransition,
-  useSpringKeyframes,
-  useTrailKeyframes
+  useKeyframes
 }

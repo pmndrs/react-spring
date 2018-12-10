@@ -1,29 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { useTrail, animated, useTrailKeyframes } from '../../src/targets/web/hooks'
+import { useTrail, animated, useKeyframes } from '../../src/targets/web/hooks'
 import { testStories } from '../index'
 import range from 'lodash/range'
 import './styles.css'
 
-function TestTrail() {
+function TestTrail () {
   const [toggle, setToggle] = useState(false)
   const [items, setState] = useState(range(5))
   const [trail] = useTrail({
     items,
     from: { opacity: 0, x: -100 },
-    to: { opacity: toggle ? 1 : 0.25, x: toggle ? 0 : 100 },
+    to: { opacity: toggle ? 1 : 0.25, x: toggle ? 0 : 100 }
   })
 
   return (
-    <div class="container">
+    <div class='container'>
       {trail.map(({ item, props }) => (
         <animated.div
-          class="box"
+          class='box'
           key={item}
           onClick={() => setToggle(!toggle)}
           style={{
             opacity: props.opacity,
-            transform: props.x.interpolate(x => `translate3d(${x}%,0,0)`),
-          }}>
+            transform: props.x.interpolate(x => `translate3d(${x}%,0,0)`)
+          }}
+        >
           {item}
         </animated.div>
       ))}
@@ -33,12 +34,14 @@ function TestTrail() {
 
 testStories.add('Trail Hook', () => <TestTrail />)
 
-function TestKeyframeTrail() {
-  const [toggle, setToggle] = useState(false)
+
+function TestKeyframeTrail () {
+  const [toggle, setToggle] = useState(true)
   const [items, setState] = useState(range(5))
   const states = {
     start: {
-      opacity:  0.25,
+      from: { opacity: 0, x: -100 },
+      opacity: 0.25,
       x: 100
     },
     end: {
@@ -46,23 +49,26 @@ function TestKeyframeTrail() {
       x: 0
     }
   }
-  const trail = useTrailKeyframes({
-    items,
-    state: toggle ? 'start': 'end',
-    states,
-  },  { opacity: 0, x: -100 })
+  const trail = useKeyframes.Trail(
+    {
+      items,
+      states
+    },
+    toggle ? 'start' : 'end',
+  )
 
   return (
-    <div class="container">
+    <div class='container'>
       {trail.map(({ item, props }) => (
         <animated.div
-          class="box"
+          class='box'
           key={item}
           onClick={() => setToggle(!toggle)}
           style={{
             opacity: props.opacity,
-            transform: props.x.interpolate(x => `translate3d(${x}%,0,0)`),
-          }}>
+            transform: props.x.interpolate(x => `translate3d(${x}%,0,0)`)
+          }}
+        >
           {item}
         </animated.div>
       ))}
