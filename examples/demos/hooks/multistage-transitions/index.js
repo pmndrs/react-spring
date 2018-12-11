@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react'
-import { useTransition, animated } from 'react-spring/hooks'
+import { useTransition, animated, config } from 'react-spring/hooks'
 import './styles.css'
 
 export default function MultiStageTransition() {
@@ -11,13 +11,13 @@ export default function MultiStageTransition() {
       opacity: 0,
       height: 0,
       innerHeight: 0,
-      transform: 'scale(1)',
+      transform: 'perspective(600px) rotateX(0deg)',
       color: '#8fa5b6',
     },
     enter: [
       { opacity: 1, height: 50, innerHeight: 50 },
-      { transform: 'scale(1.2)', color: '#28d79f' },
-      { transform: 'scale(1)' },
+      { transform: 'perspective(600px) rotateX(180deg)', color: '#28d79f' },
+      { transform: 'perspective(600px) rotateX(0deg)' },
     ],
     leave: [
       { color: '#c23369' },
@@ -31,9 +31,13 @@ export default function MultiStageTransition() {
     ref.current.map(clearTimeout)
     ref.current = []
     set([])
-    ref.current.push(setTimeout(() => set(['Apples', 'Oranges', 'Kiwis']), 2000))
+    ref.current.push(
+      setTimeout(() => set(['Apples', 'Oranges', 'Kiwis']), 2000)
+    )
     ref.current.push(setTimeout(() => set(['Apples', 'Kiwis']), 5000))
-    ref.current.push(setTimeout(() => set(['Apples', 'Bananas', 'Kiwis']), 8000))
+    ref.current.push(
+      setTimeout(() => set(['Apples', 'Bananas', 'Kiwis']), 8000)
+    )
   }, [])
 
   useEffect(() => void reset(), [])

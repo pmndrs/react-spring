@@ -45,7 +45,7 @@ The `useTrail` hook replaces `<Trail />`. The api is the same as `useSpring`, wi
 
 ```jsx
 const [items] = useState(['A', 'B', 'C'])
-const [trail, set] = useTrail({ items, opacity: 1 })
+const [trail, set] = useTrail({ items, opacity: 1, from: { opacity: 0 } })
 return trail.map(({ item, props }) => (
   <animated.div key={item} style={props}>
     {item}

@@ -7,6 +7,10 @@
   align-items: center;
 }
 
+.transitions-main > div {
+  width: 270px;
+}
+
 .transitions-item {
   overflow: hidden;
   width: 100%;

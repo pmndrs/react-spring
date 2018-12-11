@@ -5,7 +5,7 @@
   overflow: scroll;
   text-align: justify;
   color: lightpink;
-  font-size: 1.5em;
+  font-size: 3em;
   line-height: 0.9em;
   font-weight: 800;
 }
@@ -21,8 +21,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
-  font-size: 10em;
 }
 
 #bg {
