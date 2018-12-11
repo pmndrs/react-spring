@@ -166,6 +166,6 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
 }
 
 export const useKeyframes = {
-  spring: arg => useKeyframesImpl(useSpring)(arg),
-  trail: arg => useKeyframesImpl(useTrail)(arg),
+  spring: (...arg) => useKeyframesImpl(useSpring)(...arg),
+  trail: (...arg) => useKeyframesImpl(useTrail)(...arg),
 }
