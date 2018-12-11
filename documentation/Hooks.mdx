@@ -32,30 +32,97 @@ import {
 
 ## useSpring
 
-The `useSpring` hook does the same thing a regular `<Spring />` component would do. You give it data and it returns animated-props, which you can then distribute among your views. You can update data either by overwriting it, or by calling `set` which updates the spring without causing a render pass (which is great for iteractive input, mouse events, etc).
+ `useSpring(Values | () => Values): animatedProps | [animatedProps, set]`
+
+<p>
+ useSpring accepts props and returns animated-props, which you can then distribute among your views. It behaves like the <a href="/spring">spring</a> component you already know.
+</p>
+
+<p>
+  <span className="highlight">There are two ways to update a spring hook.</span>
+</p>
+
+### Either: overwrite values to change the animation
 
 ```jsx
-const [props, set] = useSpring({ opacity: 1, from: { opacity: 0 } })
+const props = useSpring({ opacity: 1, from: { opacity: 0 } })
+```
+
+### Or: pass values as a function that returns them
+
+You will get a `set` function back, use it to change the animation without causing the component to render, which is generally more performant.
+
+```jsx
+const [props, set] = useSpring(() => ({ opacity: 1, from: { opacity: 0 } }))
+```
+
+### Finally: distribute animated props among the view
+
+The return value is an object containing animated props. 
+
+```jsx
 return <animated.div style={props}>i will fade in</animated.div>
 ```
 
+<DemoGrid padding={0}>
+  {examples.filter(data => data.tags.includes('useSpring')).map(data => (
+    <Demo
+      key={data.name}
+      {...data}
+      import={import('../examples/demos/' + data.name)}
+    />
+  ))}
+</DemoGrid>
+
 ## useTrail
 
-The `useTrail` hook replaces `<Trail />`. The api is the same as `useSpring`, with the distinction that you pass items, just like you would with a regular `<Trail />` component. You get a collection back, which contains your items and animated props. You can update it by overwriting it or by calling the `set` function.
+ `useTrail(Values | () => Values): animatedProps | [animatedProps, set]`
+
+<p>
+ useTrail accepts an array of items, props and returns an array of animated-props, which you can then distribute among your views. It behaves like the <a href="/trail">trail</a> component you already know.
+</p>
+
+<p>
+  <span className="highlight">There are two ways to update a trail hook.</span>
+</p>
+
+### Either: overwrite values to change the animation
 
 ```jsx
-const [items] = useState(['A', 'B', 'C'])
-const [trail, set] = useTrail({ items, opacity: 1, from: { opacity: 0 } })
-return trail.map(({ item, props }) => (
-  <animated.div key={item} style={props}>
-    {item}
-  </animated.div>
-))
+const trail = useTrail({ items, opacity: 1, from: { opacity: 0 } })
 ```
+
+### Or: pass values as a function that returns them
+
+You will get a `set` function back, use it to change the animation without causing the component to render, which is generally more performant.
+
+```jsx
+const [trail, set] = useTrail(() => ({ items, opacity: 1, from: { opacity: 0 } }))
+```
+
+### Finally: distribute animated props among the view
+
+The return value is an array or objects, each containing the item and its animated props. 
+
+```jsx
+return trail.map(({ item, props }) => (
+  <animated.div key={item.key} style={props}>{item}</animated.div>
+)
+```
+
+<DemoGrid padding={0}>
+  {examples.filter(data => data.tags.includes('useTrail')).map(data => (
+    <Demo
+      key={data.name}
+      {...data}
+      import={import('../examples/demos/' + data.name)}
+    />
+  ))}
+</DemoGrid>
 
 ## useTransition
 
-The `useTransition` hook replaces `<Transition />`. You give it data and it returns animated-props, which you can then distribute among your views. You can update data either by overwriting it, or by calling `set` which updates the spring without causing a render pass (which is great for iteractive input, mouse events, etc).
+The useTransition hook replaces `<Transition />`. You give it data and it returns animated-props, which you can then distribute among your views. You can update data either by overwriting it, or by calling `set` which updates the spring without causing a render pass (which is great for iteractive input, mouse events, etc).
 
 ```jsx
 const [items] = useState(['A', 'B', 'C'])
@@ -72,9 +139,19 @@ return transitions.map(({ item, key, props }) => (
 ))
 ```
 
+<DemoGrid padding={0}>
+  {examples.filter(data => data.tags.includes('useTransition')).map(data => (
+    <Demo
+      key={data.name}
+      {...data}
+      import={import('../examples/demos/' + data.name)}
+    />
+  ))}
+</DemoGrid>
+
 ## useKeyframes
 
-The `useKeyframes` replaces the `Keyframes` factory. It has almost the same API. You give it named slots (or a function, or an array). You toggle these slots by passing the name of the slot you want to run as the second argument. If you do not use slots (when you either declare a function or an array as the first argument) you don't need the second argument.
+The useKeyframes replaces the `Keyframes` factory. It has almost the same API. You give it named slots (or a function, or an array). You toggle these slots by passing the name of the slot you want to run as the second argument. If you do not use slots (when you either declare a function or an array as the first argument) you don't need the second argument.
 
 You can use also trail keyframes by using `useKeyframes.trail`
 
@@ -99,10 +176,8 @@ function App() {
 }
 ```
 
-# Demos
-
 <DemoGrid padding={0}>
-  {examples.map(data => (
+  {examples.filter(data => data.tags.includes('useKeyframes')).map(data => (
     <Demo
       key={data.name}
       {...data}
