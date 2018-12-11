@@ -79,23 +79,24 @@ The `useKeyframes` replaces the `Keyframes` factory. It has almost the same API.
 You can use also trail keyframes by using `useKeyframes.trail`
 
 ```jsx
-const [state, set] = useState('show')
-const props = useKeyframes.spring(
-  {
-    // Single props
-    show: { opacity: 1 },
-    // Chained animations (arrays)
-    showAndHide: [{ opacity: 1 }, { opacity: 0 }],
-    // Functions with side-effects with access to component props
-    wiggle: async (next, cancel, ownProps) => {
-      await next({ x: 100 })
-      await delay(1000)
-      await next({ x: 0 })
-    },
+const useSlot = useKeyframes.spring({
+  // Single props
+  show: { opacity: 1 },
+  // Chained animations (arrays)
+  showAndHide: [{ opacity: 1 }, { opacity: 0 }],
+  // Functions with side-effects with access to component props
+  wiggle: async (next, cancel, ownProps) => {
+    await next({ x: 100 })
+    await delay(1000)
+    await next({ x: 0 })
   },
-  state
-)
-return <animated.div style={props}>content</animated.div>
+})
+
+function App() {
+  const [state, set] = useState('show')
+  const props = useSlot(state)
+  return <animated.div style={props}>content</animated.div>
+}
 ```
 
 # Demos

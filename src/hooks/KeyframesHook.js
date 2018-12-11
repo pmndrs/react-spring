@@ -92,10 +92,8 @@ export function setNext(
  * @param {String} state
  * @param {SpringProps} initialProps
  */
-const useKeyframesImpl = useImpl => (
-  props,
-  state = '__default',
-  initialProps = null
+const useKeyframesImpl = useImpl => (props, initialProps = null) => (
+  state = '__default'
 ) => {
   const resolverRef = React.useRef(null)
   const onRestRef = React.useRef({ onRest: null, onKeyframeRest: null })
@@ -118,9 +116,9 @@ const useKeyframesImpl = useImpl => (
     if (Array.isArray(props) || typeof props === 'function') {
       return { states: { [state]: props } }
     } else {
-      const { onRest, ...rest } = props
+      const { onRest, config, filter, ...rest } = props
       onRestRef.current.onRest = onRest
-      return rest
+      return { states: rest, config, filter }
     }
   })()
 
@@ -170,6 +168,6 @@ const useKeyframesImpl = useImpl => (
 }
 
 export const useKeyframes = {
-  spring: useKeyframesImpl(useSpring),
-  trail: useKeyframesImpl(useTrail),
+  spring: arg => useKeyframesImpl(useSpring)(arg),
+  trail: arg => useKeyframesImpl(useTrail)(arg),
 }

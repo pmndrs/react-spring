@@ -6,9 +6,8 @@ import './styles.css'
 const items = range(4)
 const interp = i => r =>
   `translate3d(0, ${15 * Math.sin(r + (i * 2 * Math.PI) / 1.6)}px, 0)`
-
-export default function App() {
-  const props = useKeyframes.spring(async next => {
+const useScript = useKeyframes.spring({
+  test: async next => {
     while (1)
       await next({
         radians: 2 * Math.PI,
@@ -16,8 +15,11 @@ export default function App() {
         config: { duration: 3500 },
         reset: true,
       })
-  })
+  },
+})
 
+export default function App() {
+  const props = useScript("test")
   return props.radians ? (
     <div className="script-bf-main">
       {items.map(i => (
