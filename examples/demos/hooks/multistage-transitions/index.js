@@ -12,7 +12,7 @@ export default function MultiStageTransition() {
       height: 0,
       innerHeight: 0,
       transform: 'scale(1)',
-      color: '#575757',
+      color: '#8fa5b6',
     },
     enter: [
       { opacity: 1, height: 50, innerHeight: 50 },

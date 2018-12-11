@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "7.0.0-beta.1",
+  "version": "7.0.0-beta.2",
   "description": "A set of spring-physics based animation primitives",
   "main": "web.cjs.js",
   "module": "web.js",
@@ -10,7 +10,7 @@
   "sideEffects": false,
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "npm-run-all --parallel copy rollup docz:build",
+    "build": "npm-run-all --parallel copy rollup",
     "copy": "copyfiles package.json readme.md LICENSE.md index.d.ts dist && json -I -f dist/package.json -e \"this.private=false; this.devDependencies=undefined; this.scripts=undefined; this.husky=undefined; this.prettier=undefined; this.jest=undefined; this['lint-staged'] = undefined;\"",
     "rollup": "rollup -c",
     "prepare": "npm run build",

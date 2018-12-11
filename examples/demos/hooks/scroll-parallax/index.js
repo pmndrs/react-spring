@@ -55,7 +55,7 @@ export default function App() {
       }}>
       <div style={{ height: '100%', overflow: 'auto' }}>
         <div style={{ height: '2000%', overflow: 'hidden' }}>
-          <span style={{ color: 'palevioletred' }}>Scroll down!</span>&nbsp;{lorem({ count: 200 })}
+          <span>Scroll down!</span>&nbsp;{lorem({ count: 200 })}
         </div>
       </div>
       <a.svg

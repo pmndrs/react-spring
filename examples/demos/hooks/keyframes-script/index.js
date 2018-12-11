@@ -1,14 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useKeyframes, animated } from 'react-spring/hooks'
 import './styles.css'
 
-const useScript = useKeyframes.spring(async next => {
-  await next({
-    from: { left: '0%', top: '0%', width: '0%', height: '0%' },
-    width: '100%',
-    height: '100%'
-  })
-  while (true) {
+let next = undefined
+let cancel = undefined
+let script = async () => {
+  if (next) {
+    cancel()
+    await next({
+      left: '0%',
+      top: '0%',
+      width: '100%',
+      height: '100%',
+      config: { duration: 0 }
+    })
     await next({ height: '50%' })
     await next({ width: '50%', left: '50%' })
     await next({ top: '0%', height: '100%' })
@@ -18,13 +23,19 @@ const useScript = useKeyframes.spring(async next => {
     await next({ top: '0%', height: '100%' })
     await next({ width: '100%' })
   }
-})
+}
 
-export default function App () {
+const useScript = useKeyframes.spring(
+  async (fn, cn) => void ((next = fn), (cancel = cn))
+)
+
+export default function App() {
+  const [, forceRender] = useState(null)
   const props = useScript()
+  useEffect(() => void script(), [])
   return (
-    <div className="script-main">
-      <animated.div className='script-box' style={props} />
+    <div className="script-main" onClick={script}>
+      <animated.div className="script-box" style={props} />
     </div>
   )
 }

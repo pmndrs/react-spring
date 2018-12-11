@@ -2,6 +2,7 @@
   position: relative;
   width: 100%;
   height: 100%;
+  cursor: pointer;
 }
 .script-box {
   will-change: width, height, left, top;

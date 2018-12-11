@@ -6,7 +6,6 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: radial-gradient(ellipse at center, #4dd878 0%, #308972 100%);
 }
 
 .card1,
@@ -22,25 +21,21 @@
 }
 
 .card1 {
-  min-width: 60ch;
-  min-height: 60ch;
-  width: 25vw;
-  height: 25vw;
-  max-width: 100ch;
-  max-height: 100ch;
+  width: 300px;
+  height: 300px;
   background-image: url(https://image.flaticon.com/icons/svg/119/119596.svg);
 }
 
 .card2 {
-  width: 15ch;
-  height: 15ch;
+  width: 10ch;
+  height: 10ch;
   background-image: url(https://image.flaticon.com/icons/svg/789/789395.svg);
 }
 
 .card3 {
   opacity: 0.9;
-  width: 15ch;
-  height: 15ch;
+  width: 10ch;
+  height: 10ch;
   background-image: url(https://image.flaticon.com/icons/svg/414/414927.svg);
 }
 

@@ -1,8 +1,11 @@
 import React from 'react'
 import Loadable from 'react-loadable'
 import styled from 'styled-components'
+import { UnControlled as CodeMirror } from 'react-codemirror2'
+import { Spring, animated } from 'react-spring'
 
 export default class Demo extends React.Component {
+  state = { code: undefined }
   constructor(props) {
     super()
     this.component = Loadable({
@@ -14,8 +17,14 @@ export default class Demo extends React.Component {
     })
   }
 
+  enter = tag =>
+    this.props.code &&
+    this.props.code[tag] &&
+    this.setState({ code: this.props.code[tag] })
+  leave = tag => this.setState({ code: undefined })
+
   render() {
-    const { title, description, tags, link } = this.props
+    const { title, description, tags, link, code } = this.props
     return (
       <Container>
         <Header>
@@ -30,7 +39,13 @@ export default class Demo extends React.Component {
           {tags && (
             <p>
               {tags.map(tag => (
-                <Tag key={tag}>{tag}</Tag>
+                <Tag
+                  key={tag}
+                  children={tag}
+                  onMouseEnter={() => this.enter(tag)}
+                  onMouseLeave={() => this.leave(tag)}
+                  style={{ background: code && code[tag] ? '#5f5f5f' : '#9f9f9f' }}
+                />
               ))}
             </p>
           )}
@@ -38,22 +53,18 @@ export default class Demo extends React.Component {
         <Content>
           <div>
             <this.component />
+            <Spring
+              native
+              from={{ opacity: 0 }}
+              to={{ opacity: this.state.code ? 1 : 0 }}>
+              {props => <Code style={props} children={this.state.code} />}
+            </Spring>
           </div>
         </Content>
       </Container>
     )
   }
 }
-
-const Tag = styled('span')`
-  padding: 5px;
-  background: #9f9f9f;
-  border-radius: 5px;
-  margin-right: 5px;
-  text-transform: uppercase;
-  font-size: 0.6em;
-  color: white;
-`
 
 const Container = styled('div')`
   position: relative;
@@ -99,6 +110,33 @@ const Header = styled('div')`
     line-height: 21px;
     text-decoration: none;
   }
+`
+
+const Code = styled(animated.pre)`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 0.45em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f0f0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+`
+
+const Tag = styled('span')`
+  padding: 5px;
+  background: #9f9f9f;
+  border-radius: 5px;
+  margin-right: 5px;
+  text-transform: uppercase;
+  font-size: 0.6em;
+  color: white;
+  cursor: pointer;
 `
 
 const Content = styled('div')`
