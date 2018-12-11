@@ -111,7 +111,6 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
     states,
     config,
     filter = states => states,
-    ...restProps
   } = (function() {
     if (Array.isArray(props) || typeof props === 'function') {
       return { states: { [state]: props } }
@@ -124,7 +123,6 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
 
   const [animProps, setAnimation, cancel] = useImpl({
     ...initialProps,
-    ...restProps,
     onKeyframesHalt: onKeyframesHalt({
       resolverRef,
       lastRef,

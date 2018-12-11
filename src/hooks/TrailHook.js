@@ -1,6 +1,7 @@
 import React from 'react'
 import Controller from '../animated/Controller'
 import { toArray } from '../shared/helpers'
+import * as Globals from '../animated/Globals'
 
 export function useTrail ({
   items,
@@ -15,6 +16,7 @@ export function useTrail ({
   const prevItems = React.useRef()
   const array = toArray(items)
   const mounted = React.useRef(false)
+  const [, forceUpdate] = React.useState()
 
   const onHalt = onRest
     ? ctrl => ({ finished }) => {
@@ -40,6 +42,7 @@ export function useTrail ({
           instances.current.size - 1 === idx && onHalt(ctrl)
         )
       }
+      Globals.requestFrame(() => props.reset && forceUpdate())
     },
     [onRest]
   )
