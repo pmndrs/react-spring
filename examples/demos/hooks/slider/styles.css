@@ -6,13 +6,12 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: linear-gradient(to top, #90a2b2 0%, #b0c0ce 100%);
 }
 
 .slider-item {
   position: relative;
-  width: 300px;
-  height: 100px;
+  width: 250px;
+  height: 70px;
   pointer-events: auto;
   transform-origin: 50% 50% 0px;
   padding-left: 32px;
@@ -37,7 +36,7 @@
   text-align: center;
   border-radius: 5px;
   box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.2);
-  font-size: 3em;
+  font-size: 2em;
   font-weight: 400;
   transition: box-shadow 0.75s;
 }
@@ -52,8 +51,8 @@
 }
 
 .slider-av {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: white;
 }

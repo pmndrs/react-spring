@@ -38,7 +38,8 @@
   font-weight: 100;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
   border-radius: 5px;
   overflow: hidden;
@@ -47,9 +48,10 @@
 .list-reorder-details h1 {
   position: relative;
   color: #ffffff;
-  font-size: 3.5em;
-  line-height: 40px;
+  font-size: 50em;
+  line-height: unset;
   font-weight: 600;
   margin: 0;
   padding: 0;
+  white-space: nowrap;
 }

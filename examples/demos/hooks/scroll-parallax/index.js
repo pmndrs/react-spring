@@ -5,6 +5,7 @@ import './styles.css' // Icon made by Freepik from www.flaticon.com
 import { removeExt } from 'upath'
 
 const calc = (x, y, r) => [x - r.left / 2, y - r.top / 2]
+const text = lorem({ count: 200 })
 
 export default function App() {
   const ref = useRef(null)
@@ -35,7 +36,7 @@ export default function App() {
   const interpMouth = interpolate(
     [st, xy],
     (o, xy) =>
-      `translate(${xy[0] / 15 + 188},${xy[1] / 10 + 230 + o / 1.7}) scale(0.8)`
+      `translate(${xy[0] / 15 + 208},${xy[1] / 10 + 250 + o / 1.7}) scale(0.5)`
   )
   const interpHair = st.interpolate(o => `translate(79,${o / 4})`)
   const onScroll = useCallback(e => set({ st: e.target.scrollTop / 30 }), [])
@@ -55,7 +56,7 @@ export default function App() {
       }}>
       <div style={{ height: '100%', overflow: 'auto' }}>
         <div style={{ height: '2000%', overflow: 'hidden' }}>
-          <span style={{ color: 'palevioletred' }}>Scroll down!</span>&nbsp;{lorem({ count: 200 })}
+          {text}
         </div>
       </div>
       <a.svg
