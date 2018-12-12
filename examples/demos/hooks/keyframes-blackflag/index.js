@@ -6,26 +6,28 @@ import './styles.css'
 const items = range(4)
 const interp = i => r =>
   `translate3d(0, ${15 * Math.sin(r + (i * 2 * Math.PI) / 1.6)}px, 0)`
-const useScript = useKeyframes.spring({
-  test: async next => {
-    while (1)
+const useScript = useKeyframes.spring(
+  async next => {
+    while (1) {
       await next({
         radians: 2 * Math.PI,
-        from: { radians: 0 },
+        // from: { radians: 0 },
         config: { duration: 3500 },
-        reset: true,
+        reset: true
       })
+    }
   },
-})
+  { radians: 0 }
+)
 
-export default function App() {
-  const props = useScript('test')
+export default function App () {
+  const props = useScript()
   return props.radians ? (
-    <div className="script-bf-main">
+    <div className='script-bf-main'>
       {items.map(i => (
         <animated.div
           key={i}
-          className="script-bf-box"
+          className='script-bf-box'
           style={{ transform: props.radians.interpolate(interp(i)) }}
         />
       ))}

@@ -122,7 +122,7 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
   })()
 
   const calculatedProps = () => ({
-    ...initialProps,
+    ...(initialProps && {from: initialProps}),
     onKeyframesHalt: onKeyframesHalt({
       resolverRef,
       lastRef,
