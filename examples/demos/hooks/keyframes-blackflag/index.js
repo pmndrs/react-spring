@@ -22,7 +22,7 @@ const useScript = useKeyframes.spring(
 
 export default function App () {
   const props = useScript()
-  return props.radians ? (
+  return (
     <div className='script-bf-main'>
       {items.map(i => (
         <animated.div
@@ -32,5 +32,5 @@ export default function App () {
         />
       ))}
     </div>
-  ) : null
+  )
 }
