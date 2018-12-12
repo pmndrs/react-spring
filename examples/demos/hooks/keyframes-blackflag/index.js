@@ -20,7 +20,7 @@ export default function App() {
       {items.map(i => (
         <animated.div
           key={i}
-          className="script-bf-box"
+          className='script-bf-box'
           style={{ transform: props.radians.interpolate(interp(i)) }}
         />
       ))}
