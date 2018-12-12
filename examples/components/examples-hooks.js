@@ -87,6 +87,24 @@ return trail.map(({ item, props: { x, height, opacity } }) => (
     },
   },
   {
+    name: 'hooks/simple-transition',
+    title: 'Simple transition',
+    link: 'https://codesandbox.io/embed/vqpqx5vrl0',
+    tags: ['useTransition'],
+    code: {
+      useTransition: `const transitions = useTransition({
+  items: index,
+  from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
+  enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
+  leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
+})
+return transitions.map(({ item, props, key }) => {
+  const Page = pages[item]
+  return <Page key={key} style={props} />
+})`
+    }
+  },
+  {
     name: 'hooks/multistage-transitions',
     title: 'Multistage transitions',
     link: 'https://codesandbox.io/embed/vqpqx5vrl0',

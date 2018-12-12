@@ -16,15 +16,48 @@ import DemoGrid from '../examples/components/DemoGrid'
 import Demo from '../examples/components/Demo'
 import examples from '../examples/components/examples-hooks'
 
-# Hooks
+# Hooks ⚠️
 
 <p>
-  <span className="highlight">Warning: experimental API!</span> Due to hooks being alpha in React the underlying React API as well as the userfacing react-spring API can be subject to changes. Hooks in react-spring are in a separate export in order to not interfere with the stable releases. As of version 7 this export is officially part of the npm package. Test it, use it, enjoy it, but we recommend that you consult this page if you encounter problems or file issues on <a href="https://github.com/drcmda/react-spring/issues">Github</a>.
+  <span className="highlight">Warning: experimental API!</span> Due to hooks being alpha in React the underlying React API as well as the user-facing react-spring API can be subject to changes. Hooks in react-spring are in a separate export in order to not interfere with the stable releases. As of version 7 this export is officially part of the npm package. Test it, use it, enjoy it, but we recommend that you consult this page if you encounter problems or file issues on <a href="https://github.com/drcmda/react-spring/issues">Github</a>.
 </p>
+
+## Recent breaking changes ⚠️
+
+In version 7.1.0 the function signatures for useSpring and useTrail changed slightly. The bug we ran into had to do with the `set` function we return. If you set values with that function the animation updates, but if the component itself updates due to any reason whatsoever, the old values would overwrite the animation back to default values again. The new signatures fix that: you need to be explicit now when you pick your approach to update. We used the opportunity to de-couple useTrail from the user-data, making it a pure utility function.
+
+<table style={{ width: '100%', fontSize: '0.7em', tableLayout: 'fixed' }}>
+  <thead>
+    <tr style={{ fontSize: '1.3em' }}>
+      <td>7.0.0</td>
+      <td>7.1.x</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><pre style={{ margin: 0 }}>const [props] = useSpring(values)</pre></td>
+      <td><pre style={{ margin: 0 }}>const <span style={{ color: '#ea567c' }}>props</span> = useSpring(values)</pre></td>
+    </tr>
+    <tr>
+      <td><pre style={{ margin: 0 }}>const [props, set] = useSpring(values)</pre></td>
+      <td><pre style={{ margin: 0 }}>const [props, set] = useSpring(<span style={{ color: '#ea567c' }}>() => values</span>)</pre></td>
+    </tr>
+    <tr>
+      <td><pre style={{ margin: 0 }}>const [props] = useTrail(values)</pre></td>
+      <td><pre style={{ margin: 0 }}>const <span style={{ color: '#ea567c' }}>props</span> = useTrail(<span style={{ color: '#ea567c' }}>items.length,</span> values)</pre></td>
+    </tr>
+    <tr>
+      <td><pre style={{ margin: 0 }}>const [props, set] = useTrail(values)</pre></td>
+      <td><pre style={{ margin: 0 }}>const [props, set] = useTrail(<span style={{ color: '#ea567c' }}>items.length, () => values</span>)</pre></td>
+    </tr>
+  </tbody>
+</table>
 
 ## What is this?
 
-The React team has recently [unveiled hooks](https://conf.reactjs.org/). This feature allows you to create functional components with linear intent that can store permanent data and cause effects. react-spring now offers all primitives as hooks. You'll need both react@next and react-dom@next to use it.
+<p>
+  The React team has recently <a href="https://conf.reactjs.org">unveiled hooks</a>. This feature allows you to create functional components with linear intent that can store permanent data and cause effects. react-spring now offers all primitives as hooks. You'll need both react@next and react-dom@next to use it.
+</p>
 
 ```jsx
 import {
@@ -41,11 +74,11 @@ import {
  `useSpring(Values | () => Values): animatedProps | [animatedProps, set]`
 
 <p>
- useSpring accepts props and returns animated-props, which you can then distribute among your views. It behaves like the <a href="/spring">spring</a> component you already know. For all full table of all accepted props concult the spring components documentation.
+ useSpring accepts props and returns animated-props, which you can then distribute among your views. For all full table of all accepted props concult the <a href="/spring">spring components documentation</a>.
 </p>
 
 <p>
-  <h3>Either: <span className="highlight">overwrite values</span> to change the animation</h3>
+  <h3><span className="highlight"><i>Either</i>: overwrite values</span> to change the animation</h3>
 </p>
 
 If you re-render the component with changed props, the animation will update.
@@ -55,17 +88,17 @@ const props = useSpring({ opacity: 1, from: { opacity: 0 } })
 ```
 
 <p>
-  <h3>Or: <span className="highlight">pass a function</span> that returns values and an updater-function</h3>
+  <h3><span className="highlight"><i>Or</i>: pass a function</span> that returns values, and update using "set"</h3>
 </p>
 
-You will get a `set(Values)` function back, use it to update the animation. This will not cause the component to render, which can generally more performant.
+You will get a `set(Values)` function back, use it to update the animation. This will not cause the component to render, which can be generally more performant. It also prevents configs from being re-created on every render. Handling updates like this is extremely useful for fast-occuring updates, like event streams, mousemoves, etc.
 
 ```jsx
 const [props, set] = useSpring(() => ({ opacity: 1, from: { opacity: 0 } }))
 ```
 
 <p>
-  <h3>Finally: <span className="highlight">distribute animated props</span> among the view</h3>
+  <h3><span className="highlight"><i>Finally</i>: distribute animated props</span> among the view</h3>
 </p>
 
 The return value is an object containing animated props. 
@@ -86,37 +119,31 @@ return <animated.div style={props}>i will fade in</animated.div>
 
 ## useTrail
 
- `useTrail(Count, Values | () => Values): animatedProps | [animatedProps, set]`
+ `useTrail(Count, Values | () => Values): [animatedProps] | [[animatedProps], set]`
 
 <p>
- useTrail needs the amount of items you want to trail and the props you want to animate. It returns an array of animated-props, which you can then distribute among your views. It behaves like the <a href="/trail">trail</a> component you already know.
+ useTrail needs the amount of items you want to trail and the props you want to animate. It returns an array of animated-props, which you can then distribute among your views.
 </p>
 
 <p>
-  <h3>Either: <span className="highlight">overwrite values</span> to change the animation</h3>
+  <h3><span className="highlight"><i>Either</i>: overwrite values</span> to change the animation</h3>
 </p>
-
-If you re-render the component with changed props, the animation will update.
 
 ```jsx
-const props = useTrail(items.length, { items, opacity: 1, from: { opacity: 0 } })
+const props = useTrail(items.length, { opacity: 1, from: { opacity: 0 } })
 ```
 
 <p>
-  <h3>Or: <span className="highlight">pass a function</span> that returns values and an updater-function</h3>
+  <h3><span className="highlight"><i>Or</i>: pass a function</span> that returns values, and update using "set"</h3>
 </p>
 
-You will get a `set(Values)` function back, use it to update the animation. This will not cause the component to render, which can generally more performant.
-
 ```jsx
-const [props, set] = useTrail(items.length, () => ({ items, opacity: 1, from: { opacity: 0 } }))
+const [props, set] = useTrail(items.length, () => ({ opacity: 1, from: { opacity: 0 } }))
 ```
 
 <p>
-  <h3>Finally: <span className="highlight">distribute animated props</span> among the view</h3>
+  <h3><span className="highlight"><i>Finally</i>: distribute animated props</span> among the view</h3>
 </p>
-
-The return value is an array or objects, each containing the item and its animated props. 
 
 ```jsx
 return items.map((item, index) => (
@@ -136,14 +163,14 @@ return items.map((item, index) => (
 
 ## useTransition
 
- `useTransition(Config): animatedProps`
+ `useTransition(Config): [{ item, key, props, state }]`
 
-The useTransition hook replaces `<Transition />`. You give it data and it returns animated-props, which you can then distribute among your views. You can update data either by overwriting it, or by calling `set` which updates the spring without causing a render pass (which is great for iteractive input, mouse events, etc).
+The useTransition hook is similar to Reacts TransitionGroup, after feeding it your items (and optionally, keys) and lifecycle-configs it takes over and manages them. When you add or remove items (by overwriting the config), it will animate these actions.
 
 ```jsx
-const [items] = useState(['A', 'B', 'C'])
 const transitions = useTransition({
   items,
+  keys: item => item.id,
   from: { opacity: 0 },
   enter: { opacity: 1 },
   leave: { opacity: 0 },
