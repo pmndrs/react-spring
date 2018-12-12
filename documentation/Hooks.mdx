@@ -1,5 +1,5 @@
 ---
-name: React hooks
+name: React hooks ⚠️
 route: /hooks
 order: 1
 ---
@@ -18,7 +18,13 @@ import examples from '../examples/components/examples-hooks'
 
 # Hooks
 
-The React team has recently [unveiled hooks](https://conf.reactjs.org/). This feature allows you to create fully capable functional components that can store permanent data and cause effects. All react-spring primitives are now available as hooks. Hooks are still in alpha, you'll need both react@next and react-dom@next to use it.
+<p>
+  <span className="highlight">Warning: experimental API!</span> Due to hooks being alpha in React the underlying React API as well as the userfacing react-spring API can be subject to changes. Hooks in react-spring are in a separate export in order to not interfere with the stable releases. As of version 7 this export is officially part of the npm package. Test it, use it, enjoy it, but we recommend that you consult this page if you encounter problems or file issues on <a href="https://github.com/drcmda/react-spring/issues">Github</a>.
+</p>
+
+## What is this?
+
+The React team has recently [unveiled hooks](https://conf.reactjs.org/). This feature allows you to create functional components with linear intent that can store permanent data and cause effects. react-spring now offers all primitives as hooks. You'll need both react@next and react-dom@next to use it.
 
 ```jsx
 import {
@@ -35,28 +41,32 @@ import {
  `useSpring(Values | () => Values): animatedProps | [animatedProps, set]`
 
 <p>
- useSpring accepts props and returns animated-props, which you can then distribute among your views. It behaves like the <a href="/spring">spring</a> component you already know.
+ useSpring accepts props and returns animated-props, which you can then distribute among your views. It behaves like the <a href="/spring">spring</a> component you already know. For all full table of all accepted props concult the spring components documentation.
 </p>
 
 <p>
-  <span className="highlight">There are two ways to update a spring hook.</span>
+  <h3>Either: <span className="highlight">overwrite values</span> to change the animation</h3>
 </p>
 
-### Either: overwrite values to change the animation
+If you re-render the component with changed props, the animation will update.
 
 ```jsx
 const props = useSpring({ opacity: 1, from: { opacity: 0 } })
 ```
 
-### Or: pass values as a function that returns them
+<p>
+  <h3>Or: <span className="highlight">pass a function</span> that returns values and an updater-function</h3>
+</p>
 
-You will get a `set` function back, use it to change the animation without causing the component to render, which is generally more performant.
+You will get a `set(Values)` function back, use it to update the animation. This will not cause the component to render, which can generally more performant.
 
 ```jsx
 const [props, set] = useSpring(() => ({ opacity: 1, from: { opacity: 0 } }))
 ```
 
-### Finally: distribute animated props among the view
+<p>
+  <h3>Finally: <span className="highlight">distribute animated props</span> among the view</h3>
+</p>
 
 The return value is an object containing animated props. 
 
@@ -76,37 +86,41 @@ return <animated.div style={props}>i will fade in</animated.div>
 
 ## useTrail
 
- `useTrail(Values | () => Values): animatedProps | [animatedProps, set]`
+ `useTrail(Count, Values | () => Values): animatedProps | [animatedProps, set]`
 
 <p>
- useTrail accepts an array of items, props and returns an array of animated-props, which you can then distribute among your views. It behaves like the <a href="/trail">trail</a> component you already know.
+ useTrail needs the amount of items you want to trail and the props you want to animate. It returns an array of animated-props, which you can then distribute among your views. It behaves like the <a href="/trail">trail</a> component you already know.
 </p>
 
 <p>
-  <span className="highlight">There are two ways to update a trail hook.</span>
+  <h3>Either: <span className="highlight">overwrite values</span> to change the animation</h3>
 </p>
 
-### Either: overwrite values to change the animation
+If you re-render the component with changed props, the animation will update.
 
 ```jsx
-const trail = useTrail({ items, opacity: 1, from: { opacity: 0 } })
+const props = useTrail(items.length, { items, opacity: 1, from: { opacity: 0 } })
 ```
 
-### Or: pass values as a function that returns them
+<p>
+  <h3>Or: <span className="highlight">pass a function</span> that returns values and an updater-function</h3>
+</p>
 
-You will get a `set` function back, use it to change the animation without causing the component to render, which is generally more performant.
+You will get a `set(Values)` function back, use it to update the animation. This will not cause the component to render, which can generally more performant.
 
 ```jsx
-const [trail, set] = useTrail(() => ({ items, opacity: 1, from: { opacity: 0 } }))
+const [props, set] = useTrail(items.length, () => ({ items, opacity: 1, from: { opacity: 0 } }))
 ```
 
-### Finally: distribute animated props among the view
+<p>
+  <h3>Finally: <span className="highlight">distribute animated props</span> among the view</h3>
+</p>
 
 The return value is an array or objects, each containing the item and its animated props. 
 
 ```jsx
-return trail.map(({ item, props }) => (
-  <animated.div key={item.key} style={props}>{item}</animated.div>
+return items.map((item, index) => (
+  <animated.div key={item.key} style={props[index]}>{item}</animated.div>
 )
 ```
 
@@ -121,6 +135,8 @@ return trail.map(({ item, props }) => (
 </DemoGrid>
 
 ## useTransition
+
+ `useTransition(Config): animatedProps`
 
 The useTransition hook replaces `<Transition />`. You give it data and it returns animated-props, which you can then distribute among your views. You can update data either by overwriting it, or by calling `set` which updates the spring without causing a render pass (which is great for iteractive input, mouse events, etc).
 
@@ -151,7 +167,9 @@ return transitions.map(({ item, key, props }) => (
 
 ## useKeyframes
 
-The useKeyframes replaces the `Keyframes` factory. It has almost the same API. You give it named slots (or a function, or an array). You toggle these slots by passing the name of the slot you want to run as the second argument. If you do not use slots (when you either declare a function or an array as the first argument) you don't need the second argument.
+ `useKeyframes.[spring|trail](Config): useFunction(SlotName)`
+
+The useKeyframes replaces the `Keyframes` factory. It has almost the same API. You give it named slots (or a function, or an array) and you will get a function back that can toggle between them. If you do not use slots (when you either declare a function or an array as the first argument) you don't need to pass anything in the toggle function.
 
 You can use also trail keyframes by using `useKeyframes.trail`
 

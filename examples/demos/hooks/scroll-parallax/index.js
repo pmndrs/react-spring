@@ -5,6 +5,7 @@ import './styles.css' // Icon made by Freepik from www.flaticon.com
 import { removeExt } from 'upath'
 
 const calc = (x, y, r) => [x - r.left / 2, y - r.top / 2]
+const text = lorem({ count: 200 })
 
 export default function App() {
   const ref = useRef(null)
@@ -55,7 +56,7 @@ export default function App() {
       }}>
       <div style={{ height: '100%', overflow: 'auto' }}>
         <div style={{ height: '2000%', overflow: 'hidden' }}>
-          {lorem({ count: 200 })}
+          {text}
         </div>
       </div>
       <a.svg
