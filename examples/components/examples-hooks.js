@@ -89,7 +89,7 @@ return trail.map(({ item, props: { x, height, opacity } }) => (
   {
     name: 'hooks/simple-transition',
     title: 'Simple transition',
-    link: 'https://codesandbox.io/embed/vqpqx5vrl0',
+    link: 'https://codesandbox.io/embed/1y3yyqpq7q',
     tags: ['useTransition'],
     code: {
       useTransition: `const transitions = useTransition({
