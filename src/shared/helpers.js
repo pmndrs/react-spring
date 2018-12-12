@@ -1,6 +1,12 @@
+import {useRef, useLayoutEffect} from 'react'
 import AnimatedValue from '../animated/AnimatedValue'
 import AnimatedArray from '../animated/AnimatedArray'
 
+export function usePrevious (value, initialValue = null) {
+  const ref = useRef(initialValue)
+  useLayoutEffect(() => void(ref.current = value), [value])
+  return ref
+}
 export function withDefault(value, defaultValue) {
   return value === undefined || value === null ? defaultValue : value
 }

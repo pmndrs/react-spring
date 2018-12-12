@@ -2,12 +2,11 @@ import React from 'react'
 import Controller from '../animated/Controller'
 import * as Globals from '../animated/Globals'
 
-export function useSpring({
-  onRest,
-  onKeyframesHalt = () => null,
-  updatePropsOnRerender = true,
-  ...props
-}) {
+export function useSpring (params) {
+  const isFunctionProp = typeof params === 'function'
+  const { onRest, onKeyframesHalt = () => null, ...props } = isFunctionProp
+    ? params()
+    : params
   const [ctrl] = React.useState(new Controller(props))
   const [, forceUpdate] = React.useState()
   const onHalt = onRest
@@ -22,11 +21,13 @@ export function useSpring({
     [onRest, onKeyframesHalt]
   )
 
-  React.useEffect(() => void (updatePropsOnRerender && update(props)))
-
-  return [
-    ctrl.getValues(),
-    props => update(props),
-    (finished = false) => ctrl.stop(finished),
-  ]
+  React.useEffect(() => void (!isFunctionProp && update(props)))
+  const propValues = ctrl.getValues()
+  return isFunctionProp
+    ? [
+      propValues,
+      props => update(props),
+      (finished = false) => ctrl.stop(finished)
+    ]
+    : propValues
 }

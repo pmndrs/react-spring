@@ -1,20 +1,18 @@
 import React from 'react'
 import Controller from '../animated/Controller'
-import { toArray } from '../shared/helpers'
+import { toArray, usePrevious } from '../shared/helpers'
 import * as Globals from '../animated/Globals'
 
-export function useTrail ({
-  items,
-  delay,
-  reverse,
-  onKeyframesHalt = () => null,
-  updatePropsOnRerender = true,
-  onRest,
-  ...props
-}) {
-  const instances = React.useRef()
-  const prevItems = React.useRef()
-  const array = toArray(items)
+export function useTrail (count, params) {
+  const isFunctionProps = typeof params === 'function'
+  const {
+    delay,
+    reverse,
+    onKeyframesHalt = () => null,
+    onRest,
+    ...props
+  } = isFunctionProps ? params() : params
+  const instances = React.useRef(new Map([]))
   const mounted = React.useRef(false)
   const [, forceUpdate] = React.useState()
 
@@ -24,23 +22,23 @@ export function useTrail ({
     }
     : onKeyframesHalt
 
-  if (prevItems.current !== items) {
-    instances.current = new Map(
-      array.map((_, idx) => [idx, new Controller(props)])
-    )
+  if (count > instances.current.size) {
+    for (let i = instances.current.size; i < count; i++) {
+      instances.current.set(
+        i,
+        new Controller({
+          ...props,
+          attach: i === 0 ? undefined : () => instances.current.get(i - 1)
+        })
+      )
+    }
   }
 
   const update = React.useCallback(
     /** resolve and last are passed to the update function from the keyframes controller */
     props => {
       for (let [idx, ctrl] of instances.current.entries()) {
-        if (idx === 0) {
-          ctrl.update({ delay, ...props, attach: undefined })
-        }
-        ctrl.update(
-          { ...props, attach: () => instances.current.get(idx - 1) },
-          instances.current.size - 1 === idx && onHalt(ctrl)
-        )
+        ctrl.update(props, instances.current.size - 1 === idx && onHalt(ctrl))
       }
       Globals.requestFrame(() => props.reset && forceUpdate())
     },
@@ -52,24 +50,19 @@ export function useTrail ({
     mounted.current = true
     return () => void (mounted.current = false)
   }, [])
-
-  React.useLayoutEffect(() => {
-    prevItems.current = items
-    if (updatePropsOnRerender) update(props)
-  })
-
-  return [
-    array.map((item, idx) => ({
-      item,
-      props: instances.current
-        .get(reverse ? instances.current.size - (idx + 1) : idx)
-        .getValues()
-    })),
-    props => update(props),
-    (finished = false) => {
-      for (let [, ctrl] of instances.current.entries()) {
-        ctrl.stop(finished)
+  React.useLayoutEffect(() => void (!isFunctionProps && update(props)))
+  const propValues = Array.from(instances.current.values()).map(ctrl =>
+    ctrl.getValues()
+  )
+  return isFunctionProps
+    ? [
+      propValues,
+      props => update(props),
+      (finished = false) => {
+        for (let [, ctrl] of instances.current.entries()) {
+          ctrl.stop(finished)
+        }
       }
-    }
-  ]
+    ]
+    : propValues
 }
