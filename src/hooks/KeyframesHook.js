@@ -93,13 +93,13 @@ export function setNext(
  * @param {SpringProps} initialProps
  */
 const useKeyframesImpl = useImpl => (props, initialProps = null) => (
-  state = '__default'
+ ...params
 ) => {
   const resolverRef = React.useRef(null)
   const onRestRef = React.useRef({ onRest: null, onKeyframeRest: null })
   const lastRef = React.useRef(true)
   const mounted = React.useRef(false)
-
+  const [state, count] = params.length === 2 ? params.reduceRight((a, b) => ([a, b])) : params
   // need to force a rerender for when the
   // animated controller has finally accepted
   // some props
@@ -115,22 +115,26 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
     if (Array.isArray(props) || typeof props === 'function') {
       return { states: { [state]: props } }
     } else {
-      const { onRest, config, filter, ...rest } = props
+      const { onRest, ...rest } = props
       onRestRef.current.onRest = onRest
-      return { states: rest, config, filter }
+      return { ...rest }
     }
   })()
 
-  const [animProps, setAnimation, cancel] = useImpl({
+  const calculatedProps = () => ({
     ...initialProps,
+    ...states[state],
     onKeyframesHalt: onKeyframesHalt({
       resolverRef,
       lastRef,
       mounted,
       onRestRef,
     }),
-    updatePropsOnRerender: false,
   })
+
+  const args = typeof count === 'number' ? [count, calculatedProps] : [calculatedProps];
+
+  const [animProps, setAnimation, cancel] = useImpl(...args)
 
   const setNextKeyFrame = setNext(
     resolverRef,
