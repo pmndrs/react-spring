@@ -54,25 +54,26 @@ testStories.add('Spring Hook', () => <TestSpring />)
 // }
 
 // testStories.add('Color Spring Hook', () => <TestColor />)
+const useScripting = useKeyframes.spring(async next => {
+  await next({
+    from: { left: '0%', top: '0%', width: '0%', height: '0%' },
+    width: '100%',
+    height: '100%'
+  })
+  while (true) {
+    await next({ height: '50%' })
+    await next({ width: '50%', left: '50%' })
+    await next({ top: '0%', height: '100%' })
+    await next({ top: '50%', height: '50%' })
+    await next({ width: '100%', left: '0%' })
+    await next({ width: '50%' })
+    await next({ top: '0%', height: '100%' })
+    await next({ width: '100%' })
+  }
+})
 
 function TestSpringKeyframe () {
-  const props = useKeyframes.Spring(async next => {
-    await next({
-      from: { left: '0%', top: '0%', width: '0%', height: '0%' },
-      width: '100%',
-      height: '100%'
-    })
-    while (true) {
-      await next({ height: '50%' })
-      await next({ width: '50%', left: '50%' })
-      await next({ top: '0%', height: '100%' })
-      await next({ top: '50%', height: '50%' })
-      await next({ width: '100%', left: '0%' })
-      await next({ width: '50%' })
-      await next({ top: '0%', height: '100%' })
-      await next({ width: '100%' })
-    }
-  })
+  const props = useScripting()
 
   return (
     <div className="springRoot">
