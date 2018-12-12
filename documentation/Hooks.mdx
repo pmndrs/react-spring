@@ -194,11 +194,9 @@ return transitions.map(({ item, key, props }) => (
 
 ## useKeyframes
 
- `useKeyframes.[spring|trail](Config): useFunction(SlotName)`
+ `useKeyframes.[spring | trail](Config | Function | [Configs]): useFunction(SlotName)`
 
 The useKeyframes replaces the `Keyframes` factory. It has almost the same API. You give it named slots (or a function, or an array) and you will get a function back that can toggle between them. If you do not use slots (when you either declare a function or an array as the first argument) you don't need to pass anything in the toggle function.
-
-You can use also trail keyframes by using `useKeyframes.trail`
 
 ```jsx
 const useSlot = useKeyframes.spring({
@@ -218,6 +216,34 @@ function App() {
   const [state, set] = useState('show')
   const props = useSlot(state)
   return <animated.div style={props}>content</animated.div>
+}
+```
+
+You can also trail keyframes by using `useKeyframes.trail`.
+
+```jsx
+const useSlot = useKeyframes.trail(values)
+
+function App() {
+  // ...
+  const props = useSlot(items.length, slotName)
+  return items.map((item, index) => (
+    <animated.div key={item.key} style={props[index]}>{item}</animated.div>
+  ))
+}
+```
+
+And of course you can use keyframes to script or loop animations.
+
+```jsx
+const useScript = useKeyframes.spring(async next => {
+  while (1) await next({ opacity: Math.random() * 1 })
+})
+
+function App() {
+  // ...
+  const props = useScript()
+  return <animated.div style={props}>I will fade in and out randomly</animated.div>
 }
 ```
 
