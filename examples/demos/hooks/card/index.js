@@ -12,10 +12,10 @@ const trans = (x, y, s) =>
 
 export default function Card() {
   const ref = useRef(null)
-  const [props, set] = useSpring({
+  const [props, set] = useSpring(() => ({
     xys: [0, 0, 1],
     config: { mass: 5, tension: 350, friction: 40 },
-  })
+  }))
   return (
     <div className="card-main" ref={ref}>
       <animated.div

@@ -152,6 +152,8 @@ const extendedAnimated = domElements.reduce((acc, element) => {
   return acc
 }, animated)
 
+console.warn('Warning: useSpring, useTrail and useKeyframes were slightly changed in 7.1.0 due to a flaw in their API design. Read more about it here: http://react-spring.surge.sh/hooks')
+
 export {
   config,
   extendedAnimated as animated,

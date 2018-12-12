@@ -19,7 +19,7 @@ const useScript = useKeyframes.spring({
 })
 
 export default function App() {
-  const props = useScript("test")
+  const props = useScript('test')
   return props.radians ? (
     <div className="script-bf-main">
       {items.map(i => (

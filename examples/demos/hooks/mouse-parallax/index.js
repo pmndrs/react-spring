@@ -10,10 +10,10 @@ const trans4 = (x, y) => `translate3d(${x / 3.5 - 50}px,${y / 3.5 - 20}px,0)`
 
 export default function Card() {
   const ref = useRef(null)
-  const [props, set] = useSpring({
+  const [props, set] = useSpring(() => ({
     xy: [0, 0],
     config: { mass: 5, tension: 550, friction: 100 },
-  })
+  }))
   return (
     <div
       ref={ref}

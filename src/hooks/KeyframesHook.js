@@ -115,9 +115,9 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
     if (Array.isArray(props) || typeof props === 'function') {
       return { states: { [state]: props } }
     } else {
-      const { onRest, ...rest } = props
+      const { onRest, config, filter, ...rest } = props
       onRestRef.current.onRest = onRest
-      return { ...rest }
+      return { states: rest, config, filter }
     }
   })()
 

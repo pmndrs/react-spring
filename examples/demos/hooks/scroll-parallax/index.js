@@ -9,7 +9,7 @@ const text = lorem({ count: 200 })
 
 export default function App() {
   const ref = useRef(null)
-  const [{ st, xy }, set] = useSpring({ st: 0, xy: [0, 0] })
+  const [{ st, xy }, set] = useSpring(() => ({ st: 0, xy: [0, 0] }))
   const interpBg = xy.interpolate(
     (x, y) =>
       `perspective(400px) rotateY(${x / 40}deg) rotateX(${-y /

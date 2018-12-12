@@ -9,7 +9,7 @@ export default function Slider({ children }) {
   // See: https://github.com/drcmda/react-with-gesture
   // Gives access to: down, x, y, xDelta, yDelta, xInitial, yInitial
   const [handlers, { xDelta, down }] = useGesture()
-  const [{ x, bg, size }] = useSpring({
+  const { x, bg, size } = useSpring({
     x: down ? xDelta : 0,
     bg: `linear-gradient(120deg, ${
       xDelta < 0 ? '#f093fb 0%, #f5576c' : '#96fbc4 0%, #f9f586'

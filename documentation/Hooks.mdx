@@ -30,7 +30,7 @@ In version 7.1.0 the function signatures for useSpring and useTrail changed slig
   <thead>
     <tr style={{ fontSize: '1.3em' }}>
       <td>7.0.0</td>
-      <td>7.1.x</td>
+      <td>7.1.0</td>
     </tr>
   </thead>
   <tbody>
@@ -77,9 +77,10 @@ import {
  useSpring accepts props and returns animated-props, which you can then distribute among your views. For all full table of all accepted props concult the <a href="/spring">spring components documentation</a>.
 </p>
 
-<p>
-  <h3><span className="highlight"><i>Either</i>: overwrite values</span> to change the animation</h3>
-</p>
+
+<h3>
+  <span className="highlight"><i>Either</i>: overwrite values</span> to change the animation
+</h3>
 
 If you re-render the component with changed props, the animation will update.
 
@@ -87,9 +88,9 @@ If you re-render the component with changed props, the animation will update.
 const props = useSpring({ opacity: 1, from: { opacity: 0 } })
 ```
 
-<p>
-  <h3><span className="highlight"><i>Or</i>: pass a function</span> that returns values, and update using "set"</h3>
-</p>
+<h3>
+  <span className="highlight"><i>Or</i>: pass a function</span> that returns values, and update using "set"
+</h3>
 
 You will get a `set(Values)` function back, use it to update the animation. This will not cause the component to render, which can be generally more performant. It also prevents configs from being re-created on every render. Handling updates like this is extremely useful for fast-occuring updates, like event streams, mousemoves, etc.
 
@@ -97,9 +98,9 @@ You will get a `set(Values)` function back, use it to update the animation. This
 const [props, set] = useSpring(() => ({ opacity: 1, from: { opacity: 0 } }))
 ```
 
-<p>
-  <h3><span className="highlight"><i>Finally</i>: distribute animated props</span> among the view</h3>
-</p>
+<h3>
+  <span className="highlight"><i>Finally</i>: distribute animated props</span> among the view
+</h3>
 
 The return value is an object containing animated props. 
 
@@ -125,29 +126,29 @@ return <animated.div style={props}>i will fade in</animated.div>
  useTrail needs the amount of items you want to trail and the props you want to animate. It returns an array of animated-props, which you can then distribute among your views.
 </p>
 
-<p>
-  <h3><span className="highlight"><i>Either</i>: overwrite values</span> to change the animation</h3>
-</p>
+<h3>
+  <span className="highlight"><i>Either</i>: overwrite values</span> to change the animation
+</h3>
 
 ```jsx
 const props = useTrail(items.length, { opacity: 1, from: { opacity: 0 } })
 ```
 
-<p>
-  <h3><span className="highlight"><i>Or</i>: pass a function</span> that returns values, and update using "set"</h3>
-</p>
+<h3>
+  <span className="highlight"><i>Or</i>: pass a function</span> that returns values, and update using "set"
+</h3>
 
 ```jsx
 const [props, set] = useTrail(items.length, () => ({ opacity: 1, from: { opacity: 0 } }))
 ```
 
-<p>
-  <h3><span className="highlight"><i>Finally</i>: distribute animated props</span> among the view</h3>
-</p>
+<h3>
+  <span className="highlight"><i>Finally</i>: distribute animated props</span> among the view
+</h3>
 
 ```jsx
 return items.map((item, index) => (
-  <animated.div key={item.key} style={props[index]}>{item}</animated.div>
+  <animated.div key={item.key} style={props[index]}>{item.content}</animated.div>
 )
 ```
 
@@ -194,9 +195,13 @@ return transitions.map(({ item, key, props }) => (
 
 ## useKeyframes
 
- `useKeyframes.[spring | trail](Config | Function | [Configs]): useFunction(SlotName)`
+ `useKeyframes.[spring | trail](Config | Func | [Configs], initialProps): Func(SlotName)`
 
 The useKeyframes replaces the `Keyframes` factory. It has almost the same API. You give it named slots (or a function, or an array) and you will get a function back that can toggle between them. If you do not use slots (when you either declare a function or an array as the first argument) you don't need to pass anything in the toggle function.
+
+<p>
+  <span className="highlight">Keyframes are async</span> and the return values you receive on first render <i>may be empty</i>. Keep this in mind when distributing animated values. There is a second argument you can pass to the factory function `initialProps`, if you supply this it will return props on first render (use this <i>always</i> for SSR). 
+</p>
 
 ```jsx
 const useSlot = useKeyframes.spring({
@@ -222,13 +227,13 @@ function App() {
 You can also trail keyframes by using `useKeyframes.trail`.
 
 ```jsx
-const useSlot = useKeyframes.trail(values)
+const useSlot = useKeyframes.trail(slots, initialProps)
 
 function App() {
   // ...
   const props = useSlot(items.length, slotName)
   return items.map((item, index) => (
-    <animated.div key={item.key} style={props[index]}>{item}</animated.div>
+    <animated.div key={item.key} style={props[index]}>{item.content}</animated.div>
   ))
 }
 ```

@@ -5,9 +5,9 @@ export default [
     link: 'https://codesandbox.io/embed/8zx4ppk01l',
     tags: ['useSpring'],
     code: {
-      useSpring: `const [{ p1 }, set] = useSpring({ p1: [0, 0] })
-const [{ p2 }] = useSpring({ p2: p1 })
-const [{ p3 }] = useSpring({ p3: p2 })
+      useSpring: `const [{ p1 }, set] = useSpring(() => ({ p1: [0, 0] }))
+const [{ p2 }] = useSpring(() => ({ p2: p1 }))
+const [{ p3 }] = useSpring(() => ({ p3: p2 }))
 const tr = (x, y) => \`translate3d(\${x}px,\${y}px,0)\`
 return (
   <div onMouseMove={({ clientX: x, clientY: y }) => set({ p1: [x, y] })}>
@@ -24,7 +24,7 @@ return (
     link: 'https://codesandbox.io/embed/rj998k4vmm',
     tags: ['useSpring'],
     code: {
-      useSpring: `const [props, set] = useSpring({ xys: [0, 0, 1] })
+      useSpring: `const [props, set] = useSpring(() => ({ xys: [0, 0, 1] }))
 const calc = (x, y) => [-(y - height / 2), (x - width / 2), 1.1]
 const trans = (x, y, s) =>
   \`perspective(600px) rotateX(\${x}deg) rotateY(\${y}deg) scale(\${s})\`
@@ -43,7 +43,7 @@ return (
     link: 'https://codesandbox.io/embed/zrj66y8714',
     tags: ['useSpring'],
     code: {
-      useSpring: `const [{ x, bg, size }] = useSpring({
+      useSpring: `const { x, bg, size } = useSpring({
   x: down ? xDelta : 0,
   size: down ? 1.1 : 1,
   immediate: name => down && name === 'x'
@@ -71,7 +71,7 @@ return <animated.div style={{ transform }} children="Slide">`,
     link: 'https://codesandbox.io/embed/zn2q57vn13',
     tags: ['useTrail'],
     code: {
-      useTrail: `const [trail] = useTrail({
+      useTrail: `const trail = useTrail(items.length, {
   items,
   opacity: toggle ? 1 : 0,
   x: toggle ? 0 : 20,
@@ -79,9 +79,9 @@ return <animated.div style={{ transform }} children="Slide">`,
   from: { opacity: 0, x: 20, height: 0 },
 })
 const transform = x.interpolate(x => \`translate3d(0,\${x}px,0)\`)
-return trail.map(({ item, props: { x, height, opacity } }) => (
+return trail.map(({ x, height, opacity }, index) => (
   <animated.div key={item} style={{ opacity, transform }}>
-    <animated.div style={{ height }}>{item}</animated.div>
+    <animated.div style={{ height }}>{items[index]}</animated.div>
   </animated.div>
 ))`,
     },
@@ -93,15 +93,14 @@ return trail.map(({ item, props: { x, height, opacity } }) => (
     tags: ['useTransition'],
     code: {
       useTransition: `const transitions = useTransition({
-  items: index,
+  items: pages[index],
   from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
   enter: { opacity: 1, transform: 'translate3d(0%,0,0)' },
   leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' },
 })
-return transitions.map(({ item, props, key }) => {
-  const Page = pages[item]
-  return <Page key={key} style={props} />
-})`
+return transitions.map(({ item: Page, props, key }) => (
+  <Page key={key} style={props} />
+))`
     }
   },
   {

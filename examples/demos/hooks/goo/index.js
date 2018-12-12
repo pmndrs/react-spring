@@ -12,9 +12,9 @@ export default function Goo() {
   // You can either update springs by overwriting values when you re-render the component.
   // Or you can use the set function, which allows you to bypass React alltogether.
   // We're dealing with mouse-input here so we choose the latter in order to prevent rendering.
-  const [{ pos1 }, set] = useSpring({ pos1: [0, 0], config: fast })
-  const [{ pos2 }] = useSpring({ pos2: pos1, config: slow })
-  const [{ pos3 }] = useSpring({ pos3: pos2, config: slow })
+  const [{ pos1 }, set] = useSpring(() => ({ pos1: [0, 0], config: fast }))
+  const [{ pos2 }] = useSpring(() => ({ pos2: pos1, config: slow }))
+  const [{ pos3 }] = useSpring(() => ({ pos3: pos2, config: slow }))
 
   // We render the view like always, but we're using animated.el whereever
   // animated values are being used. Just like with regular "native" springs this

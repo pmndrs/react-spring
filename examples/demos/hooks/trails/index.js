@@ -8,7 +8,7 @@ const items = ['Lorem', 'ipsum', 'dolor', 'sit']
 
 export default function Trail() {
   const [toggle, set] = useState(true)
-  const [trail] = useTrail({
+  const trail = useTrail(items.length, {
     items,
     opacity: toggle ? 1 : 0,
     x: toggle ? 0 : 20,
@@ -21,15 +21,15 @@ export default function Trail() {
   return (
     <div className="trails-main" onClick={() => set(state => !state)}>
       <div>
-        {trail.map(({ item, props: { x, height, ...rest } }) => (
+        {trail.map(({ x, height, ...rest }, index) => (
           <animated.div
             className="trails-box"
-            key={item}
+            key={items[index]}
             style={{
               ...rest,
               transform: x.interpolate(x => `translate3d(0,${x}px,0)`),
             }}>
-            <animated.div style={{ height }}>{item}</animated.div>
+            <animated.div style={{ height }}>{items[index]}</animated.div>
           </animated.div>
         ))}
       </div>
