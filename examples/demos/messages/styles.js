@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components'
+import styled from 'styled-components'
 import { animated } from 'react-spring'
 
 export const Main = styled('div')`

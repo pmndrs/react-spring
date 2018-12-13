@@ -30,7 +30,6 @@ const useScript = useKeyframes.spring(
 )
 
 export default function App() {
-  const [, forceRender] = useState(null)
   const props = useScript()
   useEffect(() => void script(), [])
   return (

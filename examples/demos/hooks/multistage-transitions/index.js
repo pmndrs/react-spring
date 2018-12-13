@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react'
-import { useTransition, animated, config } from 'react-spring/hooks'
+import { useTransition, animated } from 'react-spring/hooks'
 import './styles.css'
 
 export default function MultiStageTransition() {

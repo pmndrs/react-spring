@@ -1,7 +1,7 @@
 import 'antd/dist/antd.css'
 import './styles.css'
 import React, { Fragment } from 'react'
-import { Keyframes, animated, config } from 'react-spring'
+import { Keyframes, animated } from 'react-spring'
 import { Avatar, Form, Icon, Input, Button, Checkbox } from 'antd'
 import delay from 'delay'
 

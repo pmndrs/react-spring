@@ -1,5 +1,5 @@
 import React from 'react'
-import { Transition, animated, config } from 'react-spring'
+import { Transition, config } from 'react-spring'
 import lorem from 'lorem-ipsum'
 import { X } from 'react-feather'
 import { Main, Container, Message, Button, Content, Life } from './styles.js'

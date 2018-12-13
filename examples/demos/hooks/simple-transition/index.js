@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { useTransition, animated, config } from 'react-spring/hooks'
+import { useTransition, animated } from 'react-spring/hooks'
 import './styles.css'
 
 const pages = [
