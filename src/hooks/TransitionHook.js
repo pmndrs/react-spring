@@ -169,7 +169,7 @@ export function useTransition(props) {
   stateRef.current = state
   const memoizedDiffInItemsCalc = React.useMemo(
     () => calculateDiffInItems(state, props),
-    [mapKeys(items, _currentKeys), state.deleted]
+    [mapKeys(items, _currentKeys).join(''), state.deleted]
   )
 
   React.useEffect(() => {

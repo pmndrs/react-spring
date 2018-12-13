@@ -8,6 +8,9 @@ import { PropsTable } from 'docz'
 import { Spring, animated, config } from '../src/targets/web'
 import { AnimatedMeter, RewindSpringProvider, RewindSpring } from './resources/RewindSpring.js'
 import CodeMirror from './resources/Codemirror'
+import DemoGrid from '../examples/components/DemoGrid'
+import Demo from '../examples/components/Demo'
+import examples from '../examples/components/examples'
 
 # Spring
 
@@ -24,7 +27,7 @@ import CodeMirror from './resources/Codemirror'
     <span className="highlight">Springs are physics based</span>, you will never have to break your head about <a href="/gotchas">durations and curves</a> again.
   </p>
   <p>
-    <span className="highlight">Do not think of the values you pass as "styles"</span> per se, although you can most certainly use them as such.
+    <span className="highlight">Do not think of the values you pass as "styles"</span> per se, although you can use them as such.
   </p>
   <div className="code-table">
     <CodeMirror value={`<Spring
@@ -203,3 +206,16 @@ It is also possible to set configs key by key.
 ## Props
 
 <PropsTable of={Spring} />
+
+## Demos
+
+<DemoGrid padding={0}>
+  {examples.filter(data => data.tags.includes('springs')).map(data => (
+    <Demo
+      key={data.name}
+      {...data}
+      link={`https://github.com/drcmda/react-spring/tree/master/examples/demos/${data.name}`}
+      import={import('../examples/demos/' + data.name)}
+    />
+  ))}
+</DemoGrid>

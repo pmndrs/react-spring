@@ -56,6 +56,9 @@ export default {
         .code-table {
           display: flex;
         }
+        .code-table {
+          margin-bottom: 1em;
+        }
         .code-table > div:first-of-type {
           flex: 1.5;
         }

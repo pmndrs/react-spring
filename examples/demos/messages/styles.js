@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components'
-import { animated } from 'react-spring/hooks'
+import { animated } from 'react-spring'
 
 export const Main = styled('div')`
   position: relative;
