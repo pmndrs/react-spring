@@ -7,7 +7,7 @@ export function useSpring (params) {
   const { onRest, onKeyframesHalt = () => null, ...props } = isFunctionProp
     ? params()
     : params
-  const [ctrl] = React.useState(new Controller(props))
+  const [ctrl] = React.useState(() => new Controller(props))
   const [, forceUpdate] = React.useState()
   const onHalt = onRest
     ? ({ finished }) => finished && onRest(ctrl.merged)
