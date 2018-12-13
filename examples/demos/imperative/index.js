@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import { Controller, animated } from 'react-spring'
 import './styles.css'
 

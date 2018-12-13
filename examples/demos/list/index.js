@@ -1,6 +1,4 @@
-import React, { Component, Fragment } from 'react'
-import { render } from 'react-dom'
-import { config } from 'react-spring'
+import React, { Component } from 'react'
 import List from './List'
 import data from './data'
 import './styles.css'

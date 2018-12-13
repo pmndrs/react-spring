@@ -1,4 +1,3 @@
-import React from 'react'
 import './globals'
 import * as Globals from '../../animated/Globals'
 import Controller from '../../animated/Controller'

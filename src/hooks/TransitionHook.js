@@ -24,7 +24,7 @@ function debounce(func, delay = 0) {
 
 // function bufferedCall ()
 function calculateDiffInItems({ prevProps, ...state }, props) {
-  const { keys: _keys, items: _items } = get(prevProps || {})
+  const { keys: _keys } = get(prevProps || {})
   const { keys, items, unique, trail, update, enter, leave, config } = get(
     props
   )
@@ -149,7 +149,6 @@ export function useTransition(props) {
     onRest,
     onDestroyed,
     unique,
-    ...rest
   } = get(props)
 
   const instances = React.useRef(new Map([]))

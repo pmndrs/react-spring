@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Spring from './Spring'
 import Keyframes from './Keyframes'
-import { config as springConfig } from './shared/constants'
 import { callProp, toArray, interpolateTo } from './shared/helpers'
 
 let guid = 0

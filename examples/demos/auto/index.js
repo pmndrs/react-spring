@@ -1,9 +1,8 @@
 import React from 'react'
-import { Spring, animated, config } from 'react-spring'
+import { Spring, animated } from 'react-spring'
 import './styles.css'
 
 const LOREM = `Hello world`
-let count = 0
 
 export default class App extends React.Component {
   state = { toggle: true, text: [LOREM] }

@@ -1,7 +1,6 @@
 import * as Globals from './Globals'
 import Animated from './Animated'
 import { AnimatedObjectWithChildren } from './AnimatedWithChildren'
-import { getValues } from '../shared/helpers'
 
 export default class AnimatedStyle extends AnimatedObjectWithChildren {
   constructor(style) {

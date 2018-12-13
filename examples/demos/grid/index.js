@@ -1,16 +1,15 @@
-import React, { Component, Fragment } from 'react'
-import { render } from 'react-dom'
+import React, { Component } from 'react'
 import { config } from 'react-spring'
 import Grid from './Grid'
 import { Slug, Fade } from './Primitives'
 import data from './data'
 import './styles.css'
 import 'antd/dist/antd.css'
-import { Button, Icon, Input } from 'antd'
+import { Icon } from 'antd'
 
 class Cell extends Component {
   render() {
-    const { toggle, name, height, description, css, active } = this.props
+    const { toggle, name, description, css, active } = this.props
     return (
       <div
         className="cell"

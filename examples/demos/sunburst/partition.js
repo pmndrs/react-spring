@@ -22,8 +22,6 @@ export default function Partition({
   if (padding) partition.padding(padding)
 
   const data = partition(root)
-  const links = data.links()
-  const descendants = root.descendants()
 
   return (
     <Group top={top} left={left} className={cx('vx-partition', className)}>

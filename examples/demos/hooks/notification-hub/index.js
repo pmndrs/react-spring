@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom'
 import React, { useRef, useState, useEffect } from 'react'
 import lorem from 'lorem-ipsum'
 import { X } from 'react-feather'

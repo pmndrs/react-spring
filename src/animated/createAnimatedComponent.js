@@ -70,7 +70,6 @@ export default function createAnimatedComponent(Component) {
     }
 
     render() {
-      const forwardRef = this.props.forwardRef
       const {
         scrollTop,
         scrollLeft,

@@ -1,7 +1,5 @@
 import * as Globals from './Globals'
-import Animated from './Animated'
 import { AnimatedObjectWithChildren } from './AnimatedWithChildren'
-import { getValues } from '../shared/helpers'
 
 export default class AnimatedProps extends AnimatedObjectWithChildren {
   constructor(props, callback) {

@@ -1,5 +1,4 @@
 import React, { Component, createContext } from 'react'
-import PropTypes from 'prop-types'
 const { Provider, Consumer } = createContext()
 
 const basicArrayEquals = (arr1 = [], arr2 = []) =>

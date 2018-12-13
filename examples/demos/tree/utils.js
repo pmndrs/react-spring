@@ -1,5 +1,3 @@
-import { pointRadial } from 'd3-shape'
-
 export function findCollapsedParent(node) {
   if (!node.data.isExpanded) {
     return node

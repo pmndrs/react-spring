@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Loadable from 'react-loadable'
 import DemoGrid from './components/DemoGrid'
 import Demo from './components/Demo'
 import examples from './components/examples'

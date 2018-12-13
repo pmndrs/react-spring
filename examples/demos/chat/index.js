@@ -61,7 +61,6 @@ export default class App extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    const parent = this.list.current.parentNode
     if (this.el.current)
       this.el.current.scrollIntoView({
         behavior: 'smooth',

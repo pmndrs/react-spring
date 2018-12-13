@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useLayoutEffect } from 'react'
+import React, { useRef } from 'react'
 import { useSpring, animated as anim } from 'react-spring/hooks'
 import './styles.css'
 

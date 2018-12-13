@@ -1,5 +1,4 @@
 import React from 'react'
-import { render } from 'react-dom'
 import { Spring, animated } from 'react-spring'
 import { Motion, spring as motionSpring } from 'react-motion'
 import './style.css'

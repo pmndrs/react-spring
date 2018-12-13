@@ -1,7 +1,6 @@
 import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 import AnimatedArray from './AnimatedArray'
-import AnimatedProps from './AnimatedProps'
 import * as Globals from './Globals'
 import {
   interpolateTo,
@@ -85,9 +84,6 @@ export default class Controller {
       attach,
       reset,
       immediate,
-      native,
-      onFrame,
-      track,
       autoStart,
     } = this.props.interpolateTo ? interpolateTo(this.props) : this.props
 

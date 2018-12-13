@@ -1,6 +1,6 @@
 import React from 'react'
 import { curveBasis } from '@vx/curve'
-import { AreaClosed, LinePath, Line } from '@vx/shape'
+import { AreaClosed } from '@vx/shape'
 import { scaleTime, scaleLinear } from '@vx/scale'
 import { ParentSize } from '@vx/responsive'
 import { GradientPurpleTeal } from '@vx/gradient'

@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { render } from 'react-dom'
-import range from 'lodash/range'
 import { useTrail, animated } from 'react-spring/hooks'
 import './styles.css'
 

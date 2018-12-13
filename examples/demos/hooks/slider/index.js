@@ -1,7 +1,7 @@
 // Inpired by: https://codepen.io/popmotion/pen/xWrbNm?editors=0010
 
 import React from 'react'
-import { useSpring, animated, interpolate, config } from 'react-spring/hooks'
+import { useSpring, animated, interpolate } from 'react-spring/hooks'
 import { useGesture } from 'react-with-gesture'
 import './styles.css'
 

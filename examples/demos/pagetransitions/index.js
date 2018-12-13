@@ -1,6 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { Transition, animated, config } from 'react-spring'
+import { Transition, animated } from 'react-spring'
 import './styles.css'
 
 const pages = [

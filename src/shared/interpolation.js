@@ -55,7 +55,6 @@ export default function createInterpolation(config) {
     .map((value, i) => {
       return Interpolation.create({ ...config, output: outputRanges[i] })
     })
-  const shouldRound = /^rgb/.test(outputRange[0])
   return input => {
     let i = 0
     return (

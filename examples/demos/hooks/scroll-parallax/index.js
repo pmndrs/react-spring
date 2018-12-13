@@ -2,9 +2,7 @@ import React, { useRef, useCallback } from 'react'
 import { useSpring, animated as a, interpolate } from 'react-spring/hooks'
 import lorem from 'lorem-ipsum'
 import './styles.css' // Icon made by Freepik from www.flaticon.com
-import { removeExt } from 'upath'
 
-const calc = (x, y, r) => [x - r.left / 2, y - r.top / 2]
 const text = lorem({ count: 200 })
 
 export default function App() {

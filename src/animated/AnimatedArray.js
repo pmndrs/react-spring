@@ -1,4 +1,3 @@
-import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 import { AnimatedArrayWithChildren } from './AnimatedWithChildren'
 import AnimatedInterpolation from './AnimatedInterpolation'

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Controller from './animated/Controller'
 import * as Globals from './animated/Globals'
 import { config } from './shared/constants'
-import { convertValues, shallowEqual, getValues } from './shared/helpers'
+import { convertValues, shallowEqual } from './shared/helpers'
 
 const v = React.version.split('.')
 if (process.env.NODE_ENV !== 'production' && (v[0] < 16 || v[1] < 4)) {
@@ -96,7 +96,7 @@ export default class Spring extends React.Component {
   }
 
   render() {
-    const { native, onFrame, children } = this.props
+    const { children } = this.props
     const propsChanged = this.state.propsChanged
 
     // Inject phase -----------------------------------------------------------
@@ -139,7 +139,7 @@ export default class Spring extends React.Component {
     // Render out raw values or AnimatedValues depending on "native"
     let values = { ...this.controller.getValues(), ...this.afterInject }
     if (this.finished) values = { ...values, ...this.props.after }
-    return values && Object.keys(values).length ? children(values) : null
+    return Object.keys(values).length ? children(values) : null
   }
 
   componentDidUpdate() {

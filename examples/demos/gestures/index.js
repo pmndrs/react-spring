@@ -7,7 +7,7 @@ import './styles.css'
 
 class GesturesExample extends React.Component {
   render() {
-    const { xDelta, down, children } = this.props
+    const { xDelta, down } = this.props
     const to = { x: down ? xDelta : 0 }
     return (
       <div className="gestures-main">

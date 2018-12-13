@@ -1,5 +1,4 @@
-import { render } from 'react-dom'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useTransition, animated } from 'react-spring/hooks'
 import shuffle from 'lodash/shuffle'
 import data from './data'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Transition, Trail, animated, config } from 'react-spring'
+import { Transition, Trail, animated } from 'react-spring'
 
 export class Slug extends React.PureComponent {
   render() {

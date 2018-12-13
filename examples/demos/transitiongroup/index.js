@@ -1,5 +1,5 @@
 import React from 'react'
-import { Transition, animated, config } from 'react-spring'
+import { Transition, animated } from 'react-spring'
 import './styles.css'
 
 export default class App extends React.PureComponent {

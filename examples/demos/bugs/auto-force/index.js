@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { Spring, Transition, animated, config as defaultConfig } from 'react-spring'
+import { Spring, animated, config as defaultConfig } from 'react-spring'
 import { Accordion } from './Accordion'
 
 /** A component that handles animating the height of an expandable element. */

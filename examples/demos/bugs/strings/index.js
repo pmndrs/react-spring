@@ -1,6 +1,5 @@
 import React from 'react'
 import { Transition, animated } from 'react-spring'
-import { hidden } from 'ansi-colors'
 
 export default class ReactSpringTest extends React.Component {
   state = {

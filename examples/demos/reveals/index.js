@@ -1,10 +1,9 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { Spring, Transition, animated, config, interpolate } from 'react-spring'
+import { Transition, animated } from 'react-spring'
 import './styles.css'
 
 export default class App extends React.PureComponent {
-  state = { show: true, motion: false }
+  state = { show: true }
   toggle = e => this.setState(state => ({ show: !state.show }))
   render() {
     return (

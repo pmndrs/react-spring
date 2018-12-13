@@ -4,7 +4,6 @@ import * as Globals from './animated/Globals'
 import Spring from './Spring'
 import Trail from './Trail'
 import { interpolateTo, shallowEqual, handleRef } from './shared/helpers'
-import { config as springConfig } from './shared/constants'
 
 const DEFAULT = '__default'
 
@@ -18,7 +17,6 @@ class KeyframesImpl extends React.PureComponent {
   guid = 0
   state = {
     props: {},
-    oldProps: {},
     resolve: () => null,
     last: true,
     index: 0,
@@ -40,7 +38,6 @@ class KeyframesImpl extends React.PureComponent {
         this.setState(
           state => ({
             props,
-            oldProps: { ...this.state.props },
             resolve,
             last,
             index,
@@ -94,7 +91,7 @@ class KeyframesImpl extends React.PureComponent {
   }
 
   render() {
-    const { props, oldProps, resolve, last, index } = this.state
+    const { props, resolve, last, index } = this.state
 
     if (!props || Object.keys(props).length === 0) return null
 

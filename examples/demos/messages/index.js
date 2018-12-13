@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom'
 import React from 'react'
 import { Transition, animated, config } from 'react-spring'
 import lorem from 'lorem-ipsum'
