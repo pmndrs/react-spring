@@ -4,7 +4,7 @@ import { useSpring } from './SpringHook'
 import { useTrail } from './TrailHook'
 import { callProp } from '../shared/helpers'
 
-export function parseKeyframedUpdate(slots, config, f, setNext, cancel) {
+export function parseKeyframedUpdate(slots, config, setNext, cancel) {
   if (Array.isArray(slots)) {
     let q = Promise.resolve()
     for (let i = 0; i < slots.length; i++) {
@@ -14,7 +14,7 @@ export function parseKeyframedUpdate(slots, config, f, setNext, cancel) {
         setNext(
           {
             config: config && (Array.isArray(config) ? config[i] : config),
-            ...f(slot),
+            ...slot,
           },
           last
         )
@@ -26,7 +26,7 @@ export function parseKeyframedUpdate(slots, config, f, setNext, cancel) {
       (animatedProps, last = false) => {
         const props = {
           config: config && Array.isArray(config) ? config[index++] : config,
-          ...f(animatedProps),
+          ...animatedProps,
         }
         return setNext(props, last)
       },
@@ -36,7 +36,7 @@ export function parseKeyframedUpdate(slots, config, f, setNext, cancel) {
     setNext(
       {
         config: config && Array.isArray(config) ? config[0] : config,
-        ...f(slots),
+        ...slots,
       },
       true
     )
@@ -87,42 +87,35 @@ export function setNext(
  * @param {Object} props
  * @param {Array=} props.items // only needed when using Trail primitive
  * @param {Object} props.states
- * @param {Function} props.filter
  * @param {SpringProps} ...props
  * @param {String} state
  * @param {SpringProps} initialProps
  */
 const useKeyframesImpl = useImpl => (props, initialProps = null) => (
- ...params
+  ...params
 ) => {
   const resolverRef = React.useRef(null)
   const onRestRef = React.useRef({ onRest: null, onKeyframeRest: null })
   const lastRef = React.useRef(true)
   const mounted = React.useRef(false)
-  const [state, count] = params.length === 2 ? params.reduceRight((a, b) => ([a, b])) : params
-  // need to force a rerender for when the
-  // animated controller has finally accepted
-  // some props
+  const [state, count] =
+    params.length === 2 ? params.reduceRight((a, b) => [a, b]) : params
 
+  // need to force a rerender for when the animated controller has finally accepted props
   const [, forceUpdate] = React.useState()
   const shouldForceUpdateRef = React.useRef(!initialProps)
 
-  const {
-    states,
-    config,
-    filter = states => states,
-  } = (function() {
+  const { states, config } = (function() {
     if (Array.isArray(props) || typeof props === 'function') {
       return { states: { [state]: props } }
     } else {
-      const { onRest, config, filter, ...rest } = props
+      const { onRest, config, ...rest } = props
       onRestRef.current.onRest = onRest
-      return { states: rest, config, filter }
+      return { states: rest, config }
     }
   })()
 
   const calculatedProps = () => ({
-    ...(initialProps && {from: initialProps}),
     ...initialProps,
     onKeyframesHalt: onKeyframesHalt({
       resolverRef,
@@ -132,7 +125,8 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
     }),
   })
 
-  const args = typeof count === 'number' ? [count, calculatedProps] : [calculatedProps];
+  const args =
+    typeof count === 'number' ? [count, calculatedProps] : [calculatedProps]
 
   const [animProps, setAnimation, cancel] = useImpl(...args)
 
@@ -156,7 +150,6 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
         parseKeyframedUpdate(
           states[state],
           callProp(config, state),
-          filter,
           setNextKeyFrame,
           cancel
         )
@@ -170,6 +163,6 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
 }
 
 export const useKeyframes = {
-  spring: (...arg) => useKeyframesImpl(useSpring)(...arg),
-  trail: (...arg) => useKeyframesImpl(useTrail)(...arg),
+  spring: (...args) => useKeyframesImpl(useSpring)(...args),
+  trail: (...args) => useKeyframesImpl(useTrail)(...args),
 }

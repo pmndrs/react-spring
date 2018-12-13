@@ -33,9 +33,9 @@
     }
   },
   "dist/web.umd.js": {
-    "bundled": 84197,
-    "minified": 32839,
-    "gzipped": 11944
+    "bundled": 84332,
+    "minified": 32828,
+    "gzipped": 11949
   },
   "dist/native.js": {
     "bundled": 74716,
@@ -80,22 +80,22 @@
     }
   },
   "dist/hooks.js": {
-    "bundled": 75555,
-    "minified": 36191,
-    "gzipped": 11974,
+    "bundled": 75815,
+    "minified": 36395,
+    "gzipped": 12101,
     "treeshaked": {
       "rollup": {
-        "code": 16316,
+        "code": 16504,
         "import_statements": 287
       },
       "webpack": {
-        "code": 17982
+        "code": 18170
       }
     }
   },
   "dist/hooks.umd.js": {
-    "bundled": 81117,
-    "minified": 31346,
-    "gzipped": 11634
+    "bundled": 81648,
+    "minified": 31557,
+    "gzipped": 11773
   }
 }

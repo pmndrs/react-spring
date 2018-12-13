@@ -104,6 +104,27 @@ return transitions.map(({ item: Page, props, key }) => (
     }
   },
   {
+    name: 'hooks/image-fade',
+    title: 'Image fade',
+    link: 'https://codesandbox.io/embed/vqpqx5vrl0',
+    tags: ['useTransition'],
+    code: {
+      useTransition: `const transitions = useTransition({
+  items: slides[index],
+  keys: item => item.id,
+  from: { opacity: 0 },
+  enter: { opacity: 1 },
+  leave: { opacity: 0 },
+})
+return transitions.map(({ item, props, key }) => (
+  <animated.div
+    key={key}
+    style={{ ...props, backgroundImage: \`url(\${item.url})\` }}
+  />
+))`
+    }
+  },
+  {
     name: 'hooks/multistage-transitions',
     title: 'Multistage transitions',
     link: 'https://codesandbox.io/embed/vqpqx5vrl0',

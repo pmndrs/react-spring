@@ -4,12 +4,12 @@ import { parseKeyframedUpdate, setNext } from './KeyframesHook'
 import { toArray, callProp } from '../shared/helpers'
 
 let guid = 0
+let mapKeys = (items, keys) =>
+  (typeof keys === 'function' ? items.map(keys) : toArray(keys)).map(String)
 let get = props => {
   let { items, keys = states => states, ...rest } = props
   items = toArray(items !== void 0 ? items : null)
-  keys = typeof keys === 'function' ? items.map(keys) : toArray(keys)
-  // Make sure numeric keys are interpreted as Strings (5 !== "5")
-  return { items, keys, ...rest }
+  return { items, keys: mapKeys(items, keys), ...rest }
 }
 
 function debounce(func, delay = 0) {
@@ -139,7 +139,7 @@ const removeDeleted = (function() {
 /**
  * @param {TransitionProps} props
  */
-export function useTransition (props) {
+export function useTransition(props) {
   const {
     items,
     keys: _currentKeys,
@@ -149,7 +149,6 @@ export function useTransition (props) {
     onRest,
     onDestroyed,
     unique,
-    filter = states => states,
     ...rest
   } = get(props)
 
@@ -170,7 +169,7 @@ export function useTransition (props) {
   stateRef.current = state
   const memoizedDiffInItemsCalc = React.useMemo(
     () => calculateDiffInItems(state, props),
-    [props.items, state.deleted]
+    [mapKeys(items, _currentKeys), state.deleted]
   )
 
   React.useEffect(() => {
@@ -219,7 +218,6 @@ export function useTransition (props) {
             parseKeyframedUpdate(
               to,
               config,
-              filter,
               setNextKeyframe,
               (finished = true) => ctrl.stop(finished)
             )

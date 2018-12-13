@@ -8,7 +8,7 @@ import './styles.css'
 
 ReactDOM.render(
   <DemoGrid>
-    {examples.map(data => (
+    {examples.filter(item => item.name === 'hooks/list-reordering').map(data => (
       <Demo key={data.name} {...data} import={import('./demos/' + data.name)} />
     ))}
   </DemoGrid>,
