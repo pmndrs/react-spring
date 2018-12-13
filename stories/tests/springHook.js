@@ -11,7 +11,7 @@ import './styles.css'
 function TestSpring () {
   const ref = useRef(null)
   const [length, set] = useState(0)
-  const [props] = useSpring({ dash: length, config: config.molasses })
+  const props = useSpring({ dash: length, config: config.molasses })
 
   useEffect(() => void set(ref.current.getTotalLength()), [])
 

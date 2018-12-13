@@ -50,10 +50,11 @@ export function useTrail (count, params) {
     mounted.current = true
     return () => void (mounted.current = false)
   }, [])
+
   React.useLayoutEffect(() => void (!isFunctionProps && update(props)))
-  const propValues = Array.from(instances.current.values()).map(ctrl =>
-    ctrl.getValues()
-  )
+
+  const propValues = Array.from(instances.current.values()).map(ctrl =>ctrl.getValues())
+
   return isFunctionProps
     ? [
       propValues,

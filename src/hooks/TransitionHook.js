@@ -125,7 +125,7 @@ const removeDeleted = (function() {
       ...state,
       deleted: state.deleted.filter(
         item =>
-          deleted.findIndex(val => val.originalKey === item.originalKey) === -1
+          deleted.findIndex(key => key === item.originalKey) === -1
       ),
     })
     deleted = []

@@ -44,25 +44,23 @@ const states = {
     x: 0
   }
 }
-const useKeyframedTrail = useKeyframes.trail({
-    states
-})
+
+const useKeyframedTrail = useKeyframes.trail(states)
 
 function TestKeyframeTrail () {
   const [toggle, setToggle] = useState(true)
   const items = range(5)
   const trail = useKeyframedTrail(items.length, toggle ? 'start' : 'end')
-
   return (
     <div class='container'>
-      {trail.map((prop, idx) => (
+      {trail.map((props, idx) => (
         <animated.div
           class='box'
           key={items[idx]}
           onClick={() => setToggle(!toggle)}
           style={{
-            opacity: prop.opacity,
-            transform: prop.x.interpolate(x => `translate3d(${x}%,0,0)`)
+            opacity: props.opacity,
+            transform: props.x.interpolate(x => `translate3d(${x}%,0,0)`)
           }}
         >
           {items[idx]}
