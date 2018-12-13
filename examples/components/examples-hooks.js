@@ -165,7 +165,7 @@ const useScript = useKeyframes.spring(async next => {
       reset: true,
     })
 })
-    
+
 const props = useScript()
 return items.map(i =>
   <animated.div style={{ transform: props.r.interpolate(interp(i)) }} />)`

@@ -2,10 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import DemoGrid from './components/DemoGrid'
 import Demo from './components/Demo'
-import examples from './components/examples'
+import examples from './components/examples-hooks'
 import './styles.css'
 
-const DEBUG = false //'notif'
+const DEBUG = false
 
 ReactDOM.render(
   <DemoGrid>
