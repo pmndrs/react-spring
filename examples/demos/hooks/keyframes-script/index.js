@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useKeyframes, animated } from 'react-spring/hooks'
 import './styles.css'
 

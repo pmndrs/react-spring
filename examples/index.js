@@ -5,7 +5,7 @@ import Demo from './components/Demo'
 import examples from './components/examples'
 import './styles.css'
 
-const DEBUG = false //'notif'
+const DEBUG = false //'slider'
 
 ReactDOM.render(
   <DemoGrid>

@@ -1,7 +1,6 @@
 import React from 'react'
 import Loadable from 'react-loadable'
 import styled from 'styled-components'
-import { UnControlled as CodeMirror } from 'react-codemirror2'
 import { Spring, animated } from 'react-spring'
 
 export default class Demo extends React.Component {

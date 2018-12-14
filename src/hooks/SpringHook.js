@@ -12,6 +12,7 @@ export function useSpring (params) {
   const onHalt = onRest
     ? ({ finished }) => finished && onRest(ctrl.merged)
     : onKeyframesHalt(ctrl)
+
   const update = React.useCallback(
     // resolve and last are passed to the update function from the keyframes controller
     animProps => {

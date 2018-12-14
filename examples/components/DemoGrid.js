@@ -19,7 +19,7 @@ const Container = styled('div')`
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
+  
   & > div:last-of-type:nth-child(odd) {
     grid-column: 1/-1;
   }

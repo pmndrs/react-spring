@@ -106,7 +106,7 @@ return transitions.map(({ item: Page, props, key }) => (
   {
     name: 'hooks/image-fade',
     title: 'Image fade',
-    link: 'https://codesandbox.io/embed/vqpqx5vrl0',
+    link: 'https://codesandbox.io/embed/morr206pv8',
     tags: ['useTransition'],
     code: {
       useTransition: `const transitions = useTransition({

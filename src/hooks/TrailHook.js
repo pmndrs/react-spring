@@ -1,6 +1,5 @@
 import React from 'react'
 import Controller from '../animated/Controller'
-import { toArray, usePrevious } from '../shared/helpers'
 import * as Globals from '../animated/Globals'
 
 export function useTrail (count, params) {
