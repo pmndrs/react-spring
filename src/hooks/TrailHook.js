@@ -2,6 +2,7 @@ import React from 'react'
 import Controller from '../animated/Controller'
 import * as Globals from '../animated/Globals'
 
+const map = new Map([])
 export function useTrail (count, params) {
   const isFunctionProps = typeof params === 'function'
   const {
@@ -11,7 +12,7 @@ export function useTrail (count, params) {
     onRest,
     ...props
   } = isFunctionProps ? params() : params
-  const instances = React.useRef(new Map([]))
+  const instances = React.useRef(map)
   const mounted = React.useRef(false)
   const [, forceUpdate] = React.useState()
 

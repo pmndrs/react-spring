@@ -13,11 +13,6 @@ const Container = styled('div')`
   grid-gap: 40px;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   padding: ${props => (props.padding !== void 0 ? props.padding : 40)}px;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   
   & > div:last-of-type:nth-child(odd) {

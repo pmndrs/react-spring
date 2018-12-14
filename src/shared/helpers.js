@@ -7,6 +7,16 @@ export function usePrevious (value, initialValue = null) {
   useLayoutEffect(() => void(ref.current = value), [value])
   return ref
 }
+
+export function debounce (func, delay = 0) {
+  let timeoutId
+  return function () {
+    const context = this
+    const args = arguments
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => func.apply(context, args), delay)
+  }
+}
 export function withDefault(value, defaultValue) {
   return value === undefined || value === null ? defaultValue : value
 }
