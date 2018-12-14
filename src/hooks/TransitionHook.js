@@ -115,12 +115,10 @@ export function useTransition (props) {
   const {
     items,
     keys: _currentKeys,
-    trail,
     from,
     initial,
     onRest,
     onDestroyed,
-    unique
   } = get(props)
 
   const instances = React.useRef(map)
@@ -199,7 +197,7 @@ export function useTransition (props) {
 
       setState(() => ({transitions, prevProps: props, ...rest }))
     },
-    [mapKeys(props.items, _currentKeys).join("")]
+    [mapKeys(items, _currentKeys).join("")]
   )
 
   return state.transitions.map(({ item, state, key }) => ({
