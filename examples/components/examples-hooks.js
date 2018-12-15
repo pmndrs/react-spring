@@ -38,6 +38,23 @@ return (
     },
   },
   {
+    name: 'hooks/flip-card',
+    title: 'Flip card',
+    link: 'https://codesandbox.io/embed/01yl7knw70',
+    tags: ['useSpring'],
+    code: {
+      useSpring: `const { transform, opacity } = useSpring({
+  opacity: flipped ? 1 : 0,
+  transform: \`perspective(1400px) rotateX(\${flipped ? 180 : 0}deg)\`,
+})
+return (
+  <a.div style={{ opacity: opacity.interpolate(o => 1 - o), transform }} />
+  <a.div style={{ opacity, transform: transform.interpolate(t =>
+    \`\${t} rotateX(180deg)\`) }} />
+)`,
+    },
+  },
+  {
     name: 'hooks/slider',
     title: 'Gesture slider',
     link: 'https://codesandbox.io/embed/zrj66y8714',
@@ -134,6 +151,12 @@ return transitions.map(({ item, props, key }) => (
     name: 'hooks/list-reordering',
     title: 'List-reordering',
     link: 'https://codesandbox.io/embed/1wqpz5mzqj',
+    tags: ['useTransition'],
+  },
+  {
+    name: 'hooks/flip-animation',
+    title: 'Flip animation',
+    link: 'https://codesandbox.io/embed/7mqy09jyq',
     tags: ['useTransition'],
   },
   {

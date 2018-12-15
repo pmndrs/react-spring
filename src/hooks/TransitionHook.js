@@ -143,13 +143,14 @@ export function useTransition (props) {
     () => {
       const { transitions, ...rest } = calculateDiffInItems(state, props)
       transitions.forEach(
-        ({ state: slot, to, config, key, item, destroyed }) => {
+        ({ state: slot, to, config, trail, key, item, destroyed }) => {
           !instances.current.has(key) &&
             instances.current.set(key, {
               ctrl: new Controller({
                 ...(from || {}),
                 ...((first.current && initial) || {}),
-                config
+                config,
+                delay: trail
               }),
               resolve: { current: null },
               last: { current: true }
