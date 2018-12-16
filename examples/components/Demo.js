@@ -52,12 +52,12 @@ export default class Demo extends React.Component {
         <Content>
           <div>
             <this.component />
-            <Spring
+            {/*<Spring
               native
               from={{ opacity: 0 }}
               to={{ opacity: this.state.code ? 1 : 0 }}>
               {props => <Code style={props} children={this.state.code} />}
-            </Spring>
+            </Spring>*/}
           </div>
         </Content>
       </Container>

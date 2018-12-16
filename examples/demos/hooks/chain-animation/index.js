@@ -20,18 +20,14 @@ import range from 'lodash/range'
 
 function useChain(args) {
   useEffect(() => {
-    console.log('useChain', args)
     let queue = Promise.resolve()
     for (let ref of args) {
-      console.log('  starting', ref.current)
       if (ref && ref.current) {
         if (Array.isArray(ref.current))
-          queue = queue.then(r =>
-            Promise.all(
-              ref.current.map(ref => new Promise(res => ref.start(res)))
-            )
+          queue = queue.then(() =>
+            Promise.all(ref.current.map(ref => ref.start()))
           )
-        else queue = queue.then(r => new Promise(res => ref.current.start(res)))
+        else queue = queue.then(() => ref.current.start())
       }
     }
   })
@@ -39,7 +35,7 @@ function useChain(args) {
 
 export default function App() {
   const [open, set] = useState(true)
-  const [items] = useState(() => range(6))
+  const [items] = useState(() => range(100))
 
   // 1. create spring-refs, which will refer to the springs Controller
   const springRef = useRef(null)
@@ -58,7 +54,7 @@ export default function App() {
     enter: { opacity: 1, transform: 'translate3d(0,0px,0)' },
     leave: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
     config: { mass: 5, tension: 500, friction: 90 },
-    trail: 100,
+    trail: 1000 / items.length,
     unique: true,
     ref: transRef,
   })
@@ -69,7 +65,9 @@ export default function App() {
   return (
     <Main onClick={() => set(open => !open)}>
       <Sidebar style={props}>
-        {transitions.map(({ item, key, props }) => <Item key={key} style={props} />)}
+        {transitions.map(({ item, key, props }) => (
+          <Item key={key} style={props} />
+        ))}
       </Sidebar>
     </Main>
   )
@@ -85,15 +83,16 @@ const Sidebar = styled(animated.div)`
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  grid-template-rows: repeat(auto-fill, 100px);
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  grid-template-rows: repeat(auto-fill, 50px);
   grid-gap: 20px;
   padding: 20px;
   background: lightgrey;
+  overflow-y: scroll;
 `
 
 const Item = styled(animated.div)`
   width: 100%;
-  height: 100px;
+  height: 50px;
   background: hotpink;
 `

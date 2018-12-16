@@ -151,8 +151,8 @@ export function useTransition(props) {
           !instances.current.has(key) &&
             instances.current.set(key, {
               ctrl: new Controller({
-                ...(from || {}),
-                ...((first.current && initial) || {}),
+                ...from,
+                ...(first.current && initial),
                 config,
                 delay: trail,
                 ref,
@@ -169,6 +169,7 @@ export function useTransition(props) {
             // add the current running slot to the active slots ref so the same slot isnt re-applied
             activeSlots.current[key] = slot
             function onEnd({ finished }) {
+              
               resolve.current && resolve.current(ctrl.merged)
               if (last.current && mounted.current && finished) {
                 if (destroyed && onDestroyed) onDestroyed(item)
@@ -179,7 +180,8 @@ export function useTransition(props) {
                     deleted: state.current.deleted.filter(filter),
                     transitions: state.current.transitions.filter(filter),
                   }
-                  forceUpdate()
+                  if (!instanceArray.some(v => v.ctrl.isActive))
+                    forceUpdate()
                 }
 
                 // Only call onRest when all springs have come to rest

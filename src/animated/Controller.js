@@ -74,7 +74,6 @@ export default class Controller {
    * values from there, if present.
    */
   update(props, ...start) {
-    this.startProps = start
     this.props = { ...this.props, ...props }
     let {
       from = {},
@@ -236,7 +235,12 @@ export default class Controller {
       }
     }
 
+    this.startProps = ref ? start : undefined
     if (!ref && (autoStart || start.length)) this.start(...start)
+
+    const [onEnd, onUpdate] = start
+    this.onEnd = typeof onEnd === 'function' && onEnd
+    this.onUpdate = onUpdate
 
     return this.getValues()
   }
@@ -246,8 +250,8 @@ export default class Controller {
     if (this.isActive) this.stop()
 
     this.isActive = true
-    this.onEnd = typeof onEnd === 'function' && onEnd
-    this.onUpdate = onUpdate
+    //this.onEnd = typeof onEnd === 'function' && onEnd
+    //this.onUpdate = onUpdate
 
     if (this.props.onStart) this.props.onStart()
     // Start RAF loop
@@ -257,6 +261,8 @@ export default class Controller {
     if (this.props.track)
       for (let controller of this.dependents)
         controller.update({ ...controller.props, ...controller.merged }, true)
+
+    return new Promise(res => this.resolve = res)
   }
 
   stop(finished = false) {
@@ -278,6 +284,7 @@ export default class Controller {
     const onEnd = this.onEnd
     this.onEnd = null
     onEnd && onEnd(result)
+    if (this.resolve) this.resolve()
   }
 
   getValues = () =>
