@@ -74,6 +74,7 @@ export default class Controller {
    * values from there, if present.
    */
   update(props, ...start) {
+    this.startProps = start
     this.props = { ...this.props, ...props }
     let {
       from = {},
@@ -85,6 +86,7 @@ export default class Controller {
       reset,
       immediate,
       autoStart,
+      ref,
     } = this.props.interpolateTo ? interpolateTo(this.props) : this.props
 
     // Reverse values when requested
@@ -233,7 +235,8 @@ export default class Controller {
         this.animatedProps[key] = this.animations[key].interpolation.getValue()
       }
     }
-    if (autoStart || start.length) this.start(...start)
+
+    if (!ref && (autoStart || start.length)) this.start(...start)
 
     return this.getValues()
   }

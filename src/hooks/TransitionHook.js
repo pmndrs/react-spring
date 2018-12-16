@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useState, useEffect, useMemo } from 'react'
 import Controller from '../animated/Controller'
 import { parseKeyframedUpdate, setNext } from './KeyframesHook'
 import { toArray, callProp } from '../shared/helpers'
@@ -12,7 +12,7 @@ let get = props => {
   return { items, keys: mapKeys(items, keys), ...rest }
 }
 
-function calculateDiffInItems ({ prevProps, ...state }, props) {
+function calculateDiffInItems({ prevProps, ...state }, props) {
   const { keys: _keys } = get(prevProps || {})
   const { keys, items, unique, trail, update, enter, leave, config } = get(
     props
@@ -23,7 +23,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
   let current = { ...state.current }
 
   const removed = state.transitions.filter(
-    item => !item.destroyed && !currSet.has(item.originalKey)
+    ({ destroyed, originalKey }) => !destroyed && !currSet.has(originalKey)
   )
   const added = keys.filter(key => !prevSet.has(key))
   const updated = _keys.filter(key => currSet.has(key))
@@ -47,7 +47,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
       originalKey: key,
       destroyed: false,
       config: callProp(config, item, state),
-      to: callProp(enter, item)
+      to: callProp(enter, item),
     }
   })
 
@@ -63,7 +63,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
       destroyed: true,
       trail: (delay = delay + trail),
       config: callProp(config, item, state),
-      to: callProp(leave, item)
+      to: callProp(leave, item),
     })
     delete current[item.originalKey]
   })
@@ -79,7 +79,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
       destroyed: false,
       trail: (delay = delay + trail),
       config: callProp(config, item, state),
-      to: callProp(update, item)
+      to: callProp(update, item),
     }
   })
 
@@ -100,7 +100,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
     transitions = [
       ...transitions.slice(0, pos),
       item,
-      ...transitions.slice(pos)
+      ...transitions.slice(pos),
     ]
   })
 
@@ -111,7 +111,7 @@ const map = new Map([])
 /**
  * @param {TransitionProps} props
  */
-export function useTransition (props) {
+export function useTransition(props) {
   const {
     items,
     keys: _currentKeys,
@@ -119,29 +119,33 @@ export function useTransition (props) {
     initial,
     onRest,
     onDestroyed,
+    ref,
   } = get(props)
 
-  const instances = React.useRef(map)
-  const first = React.useRef(true)
-  const mounted = React.useRef(false)
-  const activeSlots = React.useRef({})
-  const [state, setState] = React.useState({
+  const [, forceUpdate] = useState()
+  const instances = useRef(map)
+  const first = useRef(true)
+  const mounted = useRef(false)
+  const activeSlots = useRef({})
+  const state = useRef({
     deleted: [],
     current: {},
     transitions: [],
-    prevProps: null
+    prevProps: null,
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     mounted.current = true
     return () => void (mounted.current = false)
   }, [])
 
-
   // Prop changes effect
-  React.useEffect(
+  useMemo(
     () => {
-      const { transitions, ...rest } = calculateDiffInItems(state, props)
+      const { transitions, ...rest } = calculateDiffInItems(
+        state.current,
+        props
+      )
       transitions.forEach(
         ({ state: slot, to, config, trail, key, item, destroyed }) => {
           !instances.current.has(key) &&
@@ -150,61 +154,67 @@ export function useTransition (props) {
                 ...(from || {}),
                 ...((first.current && initial) || {}),
                 config,
-                delay: trail
+                delay: trail,
+                ref,
               }),
               resolve: { current: null },
-              last: { current: true }
+              last: { current: true },
             })
 
           const instance = instances.current.get(key)
+          const instanceArray = [...instances.current.values()]
           const { ctrl, resolve, last } = instance
 
           if (slot === 'update' || slot !== activeSlots.current[key]) {
             // add the current running slot to the active slots ref so the same slot isnt re-applied
             activeSlots.current[key] = slot
-            function onEnd ({ finished }) {
+            function onEnd({ finished }) {
               resolve.current && resolve.current(ctrl.merged)
               if (last.current && mounted.current && finished) {
-                destroyed && onDestroyed && onDestroyed(item)
-                destroyed &&
-                  setState(state => {
-                    const filter = ({ key: _key}) => _key !== key
-                    return {
-                      ...state,
-                      deleted: state.deleted.filter(filter),
-                      transitions: state.transitions.filter(filter)
-                    }
-                  })
-                onRest && onRest(item, slot, ctrl.merged)
+                if (destroyed && onDestroyed) onDestroyed(item)
+                if (destroyed) {
+                  const filter = ({ key: _key }) => _key !== key
+                  state.current = {
+                    ...state.current,
+                    deleted: state.current.deleted.filter(filter),
+                    transitions: state.current.transitions.filter(filter),
+                  }
+                  forceUpdate()
+                }
+
+                // Only call onRest when all springs have come to rest
+                if (onRest && !instanceArray.some(v => v.ctrl.isActive))
+                  onRest(item, slot, ctrl.merged)
               }
             }
-
-            const updater = props => {
-              ctrl.update(props, onEnd)
-            }
-
-            const setNextKeyframe = setNext(resolve, last, updater)
 
             parseKeyframedUpdate(
               to,
               config,
-              setNextKeyframe,
+              setNext(resolve, last, props => ctrl.update(props, onEnd)),
               (finished = true) => ctrl.stop(finished)
             )
           }
         }
       )
       first.current = false
-
-      setState(() => ({transitions, prevProps: props, ...rest }))
+      state.current = {
+        ...state.current,
+        transitions,
+        prevProps: props,
+        ...rest,
+      }
     },
-    [mapKeys(items, _currentKeys).join("")]
+    [mapKeys(items, _currentKeys).join('')]
   )
 
-  return state.transitions.map(({ item, state, key }) => ({
+  if (props.ref)
+    props.ref.current = [...instances.current.values()].map(v => v.ctrl)
+
+  return state.current.transitions.map(({ item, state, key }) => ({
     item,
     key,
     state,
-    props: instances.current.get(key).ctrl.getValues()
+    props: instances.current.get(key).ctrl.getValues(),
   }))
 }

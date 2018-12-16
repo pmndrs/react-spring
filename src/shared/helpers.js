@@ -64,6 +64,7 @@ export function getForwardProps(props) {
     track,
     interpolateTo,
     autoStart,
+    ref,
     ...forward
   } = props
   return forward
