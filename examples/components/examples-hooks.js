@@ -154,8 +154,8 @@ return transitions.map(({ item, props, key }) => (
     tags: ['useTransition'],
   },
   {
-    name: 'hooks/flip-animation',
-    title: 'Flip animation',
+    name: 'hooks/chain-animation',
+    title: 'Chain animation',
     link: 'https://codesandbox.io/embed/7mqy09jyq',
     tags: ['useTransition'],
   },
