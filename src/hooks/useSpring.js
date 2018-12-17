@@ -1,50 +1,48 @@
-import React from 'react'
+import React, {
+  useState,
+  useRef,
+  useImperativeMethods,
+  useEffect,
+  useCallback,
+} from 'react'
 import Controller from '../animated/Controller'
-import * as Globals from '../animated/Globals'
+import { requestFrame } from '../animated/Globals'
 
-export function useSpring (params) {
-  const isFunctionProp = typeof params === 'function'
-  const { onRest, onKeyframesHalt, ...props } = isFunctionProp
-    ? params()
-    : params
-  const endResolver = React.useRef(null)
-  const [ctrl] = React.useState(() => new Controller(props))
-  const [, forceUpdate] = React.useState()
+export function useSpring(args) {
+  const isFn = typeof args === 'function'
+  const { onRest, onKeyframesHalt, ...props } = isFn ? args() : args
+  const [ctrl] = useState(() => new Controller(props))
+  const endResolver = useRef(null)
+  const [, forceUpdate] = useState()
   const onHalt = onKeyframesHalt
     ? onKeyframesHalt(ctrl)
     : ({ finished }) => {
-      finished && endResolver.current && endResolver.current()
-      finished && onRest && onRest(ctrl.merged)
-    }
+        if (finished) {
+          if (endResolver.current) endResolver.current()
+          if (onRest) onRest(ctrl.merged)
+        }
+      }
 
-  React.useImperativeMethods(props.ref, () => ({
-    start: resolve => {
-      endResolver.current = resolve
-      ctrl.start(onHalt)
-    },
-    tag: 'SpringHook'
+  useImperativeMethods(props.ref, () => ({
+    start: resolve =>
+      void ((endResolver.current = resolve), ctrl.start(onHalt)),
   }))
 
-  const update = React.useCallback(
-    // resolve and last are passed to the update function from the keyframes controller
-    animProps => {
-      ctrl.update(animProps)
+  const updateCtrl = useCallback(
+    updateProps => {
+      ctrl.update(updateProps)
       if (!props.ref) {
         endResolver.current = null
         ctrl.start(onHalt)
       }
-      Globals.requestFrame(() => animProps.reset && forceUpdate())
+      if (props.reset) requestFrame(forceUpdate)
     },
     [onRest, onKeyframesHalt, props.ref]
   )
 
-  React.useEffect(() => void (!isFunctionProp && update(props)))
+  useEffect(() => void (!isFn && updateCtrl(props)))
   const propValues = ctrl.getValues()
-  return isFunctionProp
-    ? [
-      propValues,
-      props => update(props),
-      (finished = false) => ctrl.stop(finished)
-    ]
+  return isFn
+    ? [propValues, updateCtrl, (finished = false) => ctrl.stop(finished)]
     : propValues
 }
