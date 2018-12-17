@@ -18,20 +18,20 @@ import range from 'lodash/range'
  *    is called on every item that comes to rest instead ...
  */
 
-function useChain (args) {
+function useChain (args, dependants) {
   useEffect(() => {
     let queue = Promise.resolve()
     for (let ref of args) {
       if (ref && ref.current) {
+        // console.log('Starting ', '----------' , ref.current.tag)
         queue = queue.then(r => {
           return new Promise(resolve => {
-            console.log('starting' , ' ...... ', ref.current.tag)
             ref.current.start(resolve)
           })
         })
       }
     }
-  })
+  }, dependants)
 }
 
 export default function App () {
@@ -61,7 +61,8 @@ export default function App () {
   })
 
   // 3. set execution order
-  useChain(open ? [springRef, transRef] : [transRef, springRef])
+  // React.useMemo(() =>  void useChain(open ? [springRef, transRef] : [transRef, springRef]) , [open])
+  useChain(open ? [springRef, transRef] : [transRef, springRef], [open])
 
   return (
     <Main onClick={() => set(open => !open)}>
