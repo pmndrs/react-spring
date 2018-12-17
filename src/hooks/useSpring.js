@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
   useRef,
   useImperativeMethods,
@@ -41,7 +41,7 @@ export function useSpring(args) {
     },
     [onRest, onKeyframesHalt, props.ref]
   )
-  
+
   // Update next frame is props aren't functional
   useEffect(() => void (!isFn && updateCtrl(props)))
   // Return animated props, or, anim-props + the update-setter above
