@@ -8,9 +8,9 @@ export function useChain(args) {
   // const local = ++guid
   useEffect(() => {
     args.reduce(
-      (q, r) =>
+      (q, ({ current })) =>
         (q = q.then(
-          () => r.current && /*guid === local &&*/ new Promise(r.current.start)
+          () => current && /*guid === local &&*/ new Promise(current.start)
         )),
       Promise.resolve()
     )
