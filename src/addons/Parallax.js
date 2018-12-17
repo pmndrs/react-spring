@@ -15,7 +15,7 @@ const START_TRANSLATE = 'translate(0px,0px)'
 
 export class ParallaxLayer extends React.PureComponent {
   static propTypes = {
-    /** Size of a page, (1=100%, 1.5=1 and 1/5, ...) */
+    /** Size of a page, (1=100%, 1.5=1 and 1/2, ...) */
     factor: PropTypes.number,
     /** Determines where the layer will be at when scrolled to (0=start, 1=1st page, ...) */
     offset: PropTypes.number,
