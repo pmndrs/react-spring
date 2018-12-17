@@ -113,8 +113,6 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
   return { deleted, updated, current, transitions }
 }
 
-const map = new Map([])
-const queue = new Queue()
 /**
  * @param {TransitionProps} props
  */
@@ -126,6 +124,7 @@ export function useTransition (props) {
     initial,
     onRest,
     onDestroyed,
+    unique,
     ref
   } = get(props)
 
@@ -136,6 +135,7 @@ export function useTransition (props) {
     queue: !mounted.current && new Queue(),
     endResolver: () => null
   })
+  const destroyedRef = useRef([])
   const first = useRef(true)
   const activeSlots = useRef({})
   const state = useRef({
@@ -150,16 +150,33 @@ export function useTransition (props) {
     return () => void (mounted.current = false)
   }, [])
 
+  useMemo(() => {
+
+  }, [state.current.transitions])
+
   // Prop changes effect
   useMemo(
     () => {
+      // clear removed items controller
+
+      // destroyedRef.current.forEach(key => instances.current.delete(key))
+      // destroyedRef.current = []
+
       const { transitions, ...rest } = calculateDiffInItems(
         state.current,
         props
       )
-
       transitions.forEach(
         ({ state: slot, to, config, trail, key, item, destroyed }) => {
+          // when values are unique, clear out old controllers on enter
+          // also stop if inactive so that on end is not called
+
+          if(slot === 'enter' && unique && instances.current.has(key)) {
+            const ctrl = instances.current.get(key)
+            ctrl && ctrl.isActive && ctrl.stop(false)
+            instances.current.delete(key)
+          }
+
           !instances.current.has(key) &&
             instances.current.set(key, {
               ctrl: new Controller({
@@ -177,7 +194,6 @@ export function useTransition (props) {
           const { ctrl, resolve, last } = instance
 
           if (slot === 'update' || slot !== activeSlots.current[key]) {
-            ctrl.isActive && slot !== 'update' && ctrl.stop(true)
             // add the current running slot to the active slots ref so the same slot isnt re-applied
             activeSlots.current[key] = slot
             function onEnd ({ finished }) {
@@ -185,13 +201,7 @@ export function useTransition (props) {
               if (last.current && mounted.current && finished) {
                 if (destroyed && onDestroyed) onDestroyed(item)
                 if (destroyed) {
-                  const filter = ({ key: _key }) => _key !== key
-                  state.current = {
-                    ...state.current,
-                    deleted: state.current.deleted.filter(filter),
-                    transitions: state.current.transitions.filter(filter)
-                  }
-                  instances.current.delete(key)
+                  destroyedRef.current.push(key)
                 }
 
                 // onRest needs to be called everytime each item
@@ -199,16 +209,28 @@ export function useTransition (props) {
                 // we could have two seperate callback, one for each
                 // and one for a sort of global on rest and peritem onrest?
                 onRest && onRest(item, slot, ctrl.merged)
-
+                const instanceArray = [...instances.current.values()];
                 // Only call onRest when all springs have come to rest
                 if (
-                  ![...instances.current.values()].some(v => v.ctrl.isActive)
+                  !instanceArray.some(v => v.ctrl.isActive)
                 ) {
                   if (ref) {
                     startQueue.current.endResolver &&
                       startQueue.current.endResolver()
                     startQueue.current.endResolver = null
                   }
+
+                  // run full cleanup when all instances of controller are done animating
+                  const filter = ({ key: _key }) => !~destroyedRef.current.indexOf(_key)
+                  state.current = {
+                    ...state.current,
+                    deleted: state.current.deleted.filter(filter),
+                    transitions: state.current.transitions.filter(filter)
+                  }
+
+                  destroyedRef.current.forEach(key => instances.current.delete(key))
+                  destroyedRef.current = []
+
                   // update when all transitions is complete to clean dom of removed elements.
                   forceUpdate()
                 }
@@ -248,7 +270,6 @@ export function useTransition (props) {
     },
     tag: 'TransitionHook'
   }))
-
 
   return state.current.transitions.map(({ item, state, key }) => ({
     item,
