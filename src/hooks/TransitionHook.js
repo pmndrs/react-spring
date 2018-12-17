@@ -34,7 +34,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
   const added = keys.filter(key => !prevSet.has(key))
   const updated = _keys.filter(key => currSet.has(key))
 
-  let delay = 0
+  let delay = props.delay || 0
 
   added.forEach(key => {
     const keyIndex = keys.indexOf(key)
