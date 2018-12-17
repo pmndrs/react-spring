@@ -49,15 +49,14 @@ export function useTrail(length, args) {
 
   // Defines the hooks setter, which updates the controller
   const updateCtrl = useCallback(
-    props => {
+    props =>
       instances.forEach((ctrl, i) => {
         const last = instances.length - 1 === i
         ctrl.update(props)
         if (!ctrl.props.ref) ctrl.start(last && onHalt(ctrl))
         if (last && ctrl.props.reset) requestFrame(forceUpdate)
-      })
-    },
-    [onRest, onKeyframesHalt, props.ref]
+      }),
+    [instances, onRest, onKeyframesHalt, props.ref]
   )
 
   // Update next frame is props aren't functional
