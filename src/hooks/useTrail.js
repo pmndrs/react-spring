@@ -1,90 +1,77 @@
-import React from 'react'
-import Controller from '../animated/Controller'
-import * as Globals from '../animated/Globals'
+import {
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+  useImperativeMethods,
+  useEffect,
+} from 'react'
+import Ctrl from '../animated/Controller'
+import { requestFrame } from '../animated/Globals'
 
-const map = new Map([])
-export function useTrail (count, params) {
-  const isFunctionProps = typeof params === 'function'
-  const {
-    delay,
-    reverse,
-    onKeyframesHalt = () => null,
-    onRest,
-    ...props
-  } = isFunctionProps ? params() : params
-  const instances = React.useRef(map)
-  const mounted = React.useRef(false)
-  const endResolver = React.useRef()
-  const [, forceUpdate] = React.useState()
-
-  const onHalt = onRest
+export function useTrail(length, args) {
+  const [, forceUpdate] = useState()
+  // Extract animation props and hook-specific props, can be a function or an obj
+  const isFn = typeof args === 'function'
+  const { reverse, onKeyframesHalt, onRest, ...props } = isFn ? args() : args
+  // The controller maintains the animation values, starts and tops animations
+  const instances = useMemo(
+    () => {
+      const instances = []
+      for (let i = 0; i < length; i++)
+        instances.push(
+          new Ctrl({ ...props, attach: i > 0 && (() => instances[i - 1]) })
+        )
+      return instances
+    },
+    [length]
+  )
+  // Define onEnd callbacks and resolvers
+  const endResolver = useRef()
+  const onHalt = onKeyframesHalt
     ? ctrl => ({ finished }) => {
-      finished && endResolver.current && endResolver.current()
-      finished && mounted.current && onRest(ctrl.merged)
-    }
-    : onKeyframesHalt
-
-  if (count > instances.current.size) {
-    for (let i = instances.current.size; i < count; i++) {
-      instances.current.set(
-        i,
-        new Controller({
-          ...props,
-          attach: i === 0 ? undefined : () => instances.current.get(i - 1)
-        })
-      )
-    }
-  }
-
-  const update = React.useCallback(
-    /** resolve and last are passed to the update function from the keyframes controller */
-    props => {
-      for (let [idx, ctrl] of instances.current.entries()) {
-        ctrl.update(props)
-        if (!props.ref) {
-          ctrl.start(instances.current.size - 1 === idx && onHalt(ctrl))
+        if (finished) {
+          if (endResolver.current) endResolver.current()
+          if (onRest) onRest(ctrl.merged)
         }
       }
-      Globals.requestFrame(() => props.reset && forceUpdate())
-    },
-    [onRest]
-  )
+    : onKeyframesHalt || (() => null)
 
-  React.useImperativeMethods(props.ref, () => ({
+  // The hooks explcit API gets defined here ...
+  useImperativeMethods(props.ref, () => ({
     start: resolve => {
       endResolver.current = resolve
-      for (let [idx, ctrl] of instances.current.entries()) {
-        ctrl.start(instances.current.size - 1 === idx && onHalt(ctrl))
-      }
+      instances.forEach((ctrl, i) =>
+        ctrl.start(instances.length - 1 === i && onHalt(ctrl))
+      )
     },
-    tag: 'TrailHook'
   }))
 
-  /** must hoooks always return something? */
-  React.useEffect(() => {
-    mounted.current = true
-    return () => void (mounted.current = false)
-  }, [])
-
-  React.useLayoutEffect(() => void (!isFunctionProps && update(props)))
-
-  const propValues = Array.from(instances.current.values()).reduce(
-    (acc, ctrl) => {
-      reverse ? acc.unshift(ctrl.getValues()) : acc.push(ctrl.getValues())
-      return acc
+  // Defines the hooks setter, which updates the controller
+  const updateCtrl = useCallback(
+    props => {
+      instances.forEach((ctrl, i) => {
+        const last = instances.length - 1 === i
+        ctrl.update(props)
+        if (!ctrl.props.ref) ctrl.start(last && onHalt(ctrl))
+        if (last && ctrl.props.reset) requestFrame(forceUpdate)
+      })
     },
-    []
+    [onRest, onKeyframesHalt, props.ref]
   )
 
-  return isFunctionProps
+  // Update next frame is props aren't functional
+  useEffect(() => void (!isFn && updateCtrl(props)))
+  // Return animated props, or, anim-props + the update-setter above
+  const propValues = instances.reduce((acc, ctrl) => {
+    reverse ? acc.unshift(ctrl.getValues()) : acc.push(ctrl.getValues())
+    return acc
+  }, [])
+  return isFn
     ? [
-      propValues,
-      props => update(props),
-      (finished = false) => {
-        for (let [, ctrl] of instances.current.entries()) {
-          ctrl.stop(finished)
-        }
-      }
-    ]
+        propValues,
+        updateCtrl,
+        (finished = false) => instances.forEach(ctrl => ctrl.stop(finished)),
+      ]
     : propValues
 }
