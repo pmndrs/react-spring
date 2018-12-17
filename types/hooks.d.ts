@@ -40,7 +40,7 @@ declare module 'react-spring/hooks' {
   //  but with a delayed evaluation that still allows A to be inferrable
   type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
 
-  type SetUpdateFn<DS extends object> = (ds: ForwardedProps<DS>) => void
+  type SetUpdateFn<DS extends object> = (ds: DS) => void
 
   // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
   // updating it. However, there are no types for Controller, and I assume it is intentionally so.
@@ -65,23 +65,23 @@ declare module 'react-spring/hooks' {
     }
   >
 
-  export function useSpring<DS extends object>(
-    values: UseSpringProps<DS>
-  ): ForwardedProps<DS>
   // there's a third value in the tuple but it's not public API (?)
   export function useSpring<DS extends object>(
     getProps: () => UseSpringProps<DS>
   ): [ForwardedProps<DS>, SetUpdateFn<DS>]
-
-  export function useTrail<DS extends object>(
-    count: number,
+  export function useSpring<DS extends object>(
     values: UseSpringProps<DS>
-  ): ForwardedProps<DS>[] // safe to modify (result of .map)
+  ): ForwardedProps<DS>
+
   // there's a third value in the tuple but it's not public API (?)
   export function useTrail<DS extends object>(
     count: number,
     getProps: () => UseSpringProps<DS>
   ): [ForwardedProps<DS>[], SetUpdateFn<DS>]
+  export function useTrail<DS extends object>(
+    count: number,
+    values: UseSpringProps<DS>
+  ): ForwardedProps<DS>[] // safe to modify (result of .map)
 
   interface UseTransitionProps<TItem, DS extends object>
     extends HooksBaseProps {
@@ -180,15 +180,6 @@ declare module 'react-spring/hooks' {
       ? never
       : T
 
-    // unfortunately, it's not possible to infer the type of the callback functions (if any are given)
-    // while also remaining possible to infer the slot names. Callback functions have to be cast with
-    // `as useKeyframes.KeyframeFn<{ ... }>`.
-    // it's also not possible to specify the types of the values inside TSlots. This is a mess.
-    export function spring<TSlots extends object>(
-      slots: TSlots & SpringKeyframeSlotsConfig,
-      // also unfortunately not possible to strongly type this either
-      initialProps?: UseSpringProps<any>
-    ): UseSpringKeyframesWithSlots<TSlots>
     // fun fact: the state is literally named "undefined" if you're using this overload
     // the docs are vague but it seems this just loops the one animation forever?
     export function spring<DS extends object>(
@@ -198,11 +189,16 @@ declare module 'react-spring/hooks' {
         | KeyframeFn<DS>,
       initialProps?: UseSpringProps<DS>
     ): UseSpringKeyframes<DS>
-
-    export function trail<TItem, TSlots extends object>(
-      slots: TSlots & TrailKeyframeSlotsConfig<TItem>,
+    // unfortunately, it's not possible to infer the type of the callback functions (if any are given)
+    // while also remaining possible to infer the slot names. Callback functions have to be cast with
+    // `as useKeyframes.KeyframeFn<{ ... }>`.
+    // it's also not possible to specify the types of the values inside TSlots. This is a mess.
+    export function spring<TSlots extends object>(
+      slots: TSlots & SpringKeyframeSlotsConfig,
+      // also unfortunately not possible to strongly type this either
       initialProps?: UseSpringProps<any>
-    ): UseTrailKeyframesWithSlots<TSlots>
+    ): UseSpringKeyframesWithSlots<TSlots>
+
     export function trail<DS extends object>(
       animation:
         | ReadonlyArray<DS>
@@ -210,6 +206,10 @@ declare module 'react-spring/hooks' {
         | KeyframeFn<DS>,
       initialProps?: UseSpringProps<DS>
     ): UseTrailKeyframes<DS>
+    export function trail<TItem, TSlots extends object>(
+      slots: TSlots & TrailKeyframeSlotsConfig<TItem>,
+      initialProps?: UseSpringProps<any>
+    ): UseTrailKeyframesWithSlots<TSlots>
 
     type UseSpringKeyframesWithSlots<TSlots extends object> =
       // there's a bug in the implementation that actually should cause a crash
