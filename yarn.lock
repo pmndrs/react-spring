@@ -1781,10 +1781,10 @@
   version "15.5.6"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.5.6.tgz#9c03d3fed70a8d517c191b7734da2879b50ca26c"
 
-"@types/react@^16.7.8":
-  version "16.7.8"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.7.8.tgz#ca24ba280f79debfc86578278a503c6d917d402e"
-  integrity sha512-7Vua2IYokMiPBk0WWXaDt4Cg3XVcwU6HpkuPhvwhBrVEy4SafpcvEfGYByoY9jxyFMiegYQPaSOT+H+AY00CPw==
+"@types/react@^16.7.17":
+  version "16.7.17"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.7.17.tgz#3242e796a1ffbba4f49eae5915a67f4c079504e9"
+  integrity sha512-YcXcaoXaxo7A76mBCGlKlN2aZu3REQfF0DTrhiyXVJLA7PDdxVCr+wiQOrkVNn44D/zLlIyDSn3U918Ve0AaEA==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
