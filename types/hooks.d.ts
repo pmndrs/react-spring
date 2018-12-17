@@ -1,6 +1,6 @@
 /// <reference types="./react-spring"/>
 
-declare module 'react-spring/dist/hooks' {
+declare module 'react-spring/hooks' {
   import {
     SpringConfig,
     SpringBaseProps,
