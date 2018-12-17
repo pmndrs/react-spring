@@ -3,10 +3,11 @@ import * as Globals from '../../animated/Globals'
 import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
 import { config } from '../../shared/constants'
-import { useSpring } from '../../hooks/SpringHook'
-import { useTrail } from '../../hooks/TrailHook'
-import { useTransition } from '../../hooks/TransitionHook'
-import { useKeyframes } from '../../hooks/KeyframesHook'
+import { useSpring } from '../../hooks/useSpring'
+import { useTrail } from '../../hooks/useTrail'
+import { useTransition } from '../../hooks/useTransition'
+import { useKeyframes } from '../../hooks/useKeyframes'
+import { useChain } from '../../hooks/useChain'
 
 const domElements = [
   'a',
@@ -151,7 +152,9 @@ const extendedAnimated = domElements.reduce((acc, element) => {
   return acc
 }, animated)
 
-console.warn('Warning: useSpring, useTrail and useKeyframes were slightly changed in 7.1.0 due to a flaw in their API design. Read more about it here: http://react-spring.surge.sh/hooks')
+console.warn(
+  'Warning: useSpring, useTrail and useKeyframes were slightly changed in 7.1.0 due to a flaw in their API design. Read more about it here: http://react-spring.surge.sh/hooks'
+)
 
 export {
   config,
@@ -162,4 +165,5 @@ export {
   useTrail,
   useTransition,
   useKeyframes,
+  useChain,
 }

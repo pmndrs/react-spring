@@ -6,7 +6,7 @@ import React, {
   useImperativeMethods
 } from 'react'
 import Controller from '../animated/Controller'
-import { parseKeyframedUpdate, setNext } from './KeyframesHook'
+import { parseKeyframedUpdate, setNext } from './useKeyframes'
 import { toArray, callProp, Queue } from '../shared/helpers'
 
 let guid = 0
@@ -35,6 +35,9 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
   const updated = _keys.filter(key => currSet.has(key))
 
   let delay = props.delay || 0
+
+  // Make sure trailed transitions start at 0
+  if (trail) delay -= trail 
 
   added.forEach(key => {
     const keyIndex = keys.indexOf(key)

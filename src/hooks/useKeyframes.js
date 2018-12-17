@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Globals from '../animated/Globals'
-import { useSpring } from './SpringHook'
-import { useTrail } from './TrailHook'
+import { useSpring } from './useSpring'
+import { useTrail } from './useTrail'
 import { callProp } from '../shared/helpers'
 
 export function parseKeyframedUpdate(slots, config, setNext, cancel) {

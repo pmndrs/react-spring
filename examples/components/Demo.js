@@ -23,7 +23,7 @@ export default class Demo extends React.Component {
   leave = tag => this.setState({ code: undefined })
 
   render() {
-    const { title, description, tags, link, code } = this.props
+    const { title, description, tags, link, code, overlayCode } = this.props
     return (
       <Container>
         <Header>
@@ -43,7 +43,9 @@ export default class Demo extends React.Component {
                   children={tag}
                   onMouseEnter={() => this.enter(tag)}
                   onMouseLeave={() => this.leave(tag)}
-                  style={{ background: code && code[tag] ? '#5f5f5f' : '#9f9f9f' }}
+                  style={{
+                    background: code && code[tag] ? '#5f5f5f' : '#9f9f9f',
+                  }}
                 />
               ))}
             </p>
@@ -52,12 +54,14 @@ export default class Demo extends React.Component {
         <Content>
           <div>
             <this.component />
-            {/*<Spring
-              native
-              from={{ opacity: 0 }}
-              to={{ opacity: this.state.code ? 1 : 0 }}>
-              {props => <Code style={props} children={this.state.code} />}
-            </Spring>*/}
+            {overlayCode && (
+              <Spring
+                native
+                from={{ opacity: 0 }}
+                to={{ opacity: this.state.code ? 1 : 0 }}>
+                {props => <Code style={props} children={this.state.code} />}
+              </Spring>
+            )}
           </div>
         </Content>
       </Container>

@@ -1,42 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { useTransition, useSpring, animated } from 'react-spring/hooks'
+import { useTransition, useSpring, useChain, animated } from 'react-spring/hooks'
 import styled from 'styled-components'
 import range from 'lodash/range'
 
-/** Problem: primitives can't be chained, it is hard to orchestrate them.
- * In this case we want the sidebar to open first, then the content transitions in.
- * On close we want the content to transition out, then the sidebar closes.
- *
- * Possible solution: Controller has a "autostart" property that's set to true by default
- * for hooks. If we can let the user controll that, they can "start" the animation on their own.
- * A hook (useChain?) could perhaps controll the order in which primites are started, watching
- * their onRest props.
- *
- * Requirements for this to:
- * 1. hooks could switch to autostart: false when a "ref" is given, which points to their controller
- * 2. onRest should only be called when all springs come to rest. In current useTransition onRest
- *    is called on every item that comes to rest instead ...
- */
-
-function useChain (args, dependants) {
-  useEffect(() => {
-    let queue = Promise.resolve()
-    for (let ref of args) {
-      if (ref && ref.current) {
-        // console.log('Starting ', '----------' , ref.current.tag)
-        queue = queue.then(r => {
-          return new Promise(resolve => {
-            ref.current.start(resolve)
-          })
-        })
-      }
-    }
-  }, dependants)
-}
-
 export default function App () {
   const [open, set] = useState(true)
-  const [items] = useState(() => range(100))
+  const [items] = useState(() => range(15))
 
   // 1. create spring-refs, which will refer to the springs Controller
   const springRef = useRef()
@@ -55,14 +24,14 @@ export default function App () {
     enter: { opacity: 1, transform: 'translate3d(0,0px,0)' },
     leave: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
     config: { mass: 5, tension: 500, friction: 90 },
-    trail: 1000 / items.length,
+    trail: Math.min(50, 1000 / items.length),
     unique: true,
     ref: transRef
   })
 
   // 3. set execution order
   // React.useMemo(() =>  void useChain(open ? [springRef, transRef] : [transRef, springRef]) , [open])
-  useChain(open ? [springRef, transRef] : [transRef, springRef], [open])
+  useChain(open ? [springRef, transRef] : [transRef, springRef])
 
   return (
     <Main onClick={() => set(open => !open)}>
