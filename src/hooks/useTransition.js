@@ -6,7 +6,7 @@ import React, {
   useImperativeMethods
 } from 'react'
 import Controller from '../animated/Controller'
-import { parseKeyframedUpdate, setNext } from './useKeyframes'
+import { memoizedParse, setNext, parseKeyframedUpdate } from './KeyframesHook'
 import { toArray, callProp, Queue } from '../shared/helpers'
 
 let guid = 0
@@ -37,7 +37,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
   let delay = props.delay || 0
 
   // Make sure trailed transitions start at 0
-  if (trail) delay -= trail 
+  if (trail) delay -= trail
 
   added.forEach(key => {
     const keyIndex = keys.indexOf(key)
@@ -120,16 +120,9 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
  * @param {TransitionProps} props
  */
 export function useTransition (props) {
-  const {
-    items,
-    keys: _currentKeys,
-    from,
-    initial,
-    onRest,
-    onDestroyed,
-    unique,
-    ref
-  } = get(props)
+  const { items, keys: _currentKeys, from, initial, onRest, onDestroyed, ref } = get(
+    props
+  )
 
   const [, forceUpdate] = useState()
   const mounted = useRef(false)
@@ -138,6 +131,8 @@ export function useTransition (props) {
     queue: !mounted.current && new Queue(),
     endResolver: () => null
   })
+
+  // const memoizedParse = React.useMemo(() => parseKeyframedUpdate(), [])
   const destroyedRef = useRef([])
   const first = useRef(true)
   const activeSlots = useRef({})
@@ -153,18 +148,9 @@ export function useTransition (props) {
     return () => void (mounted.current = false)
   }, [])
 
-  useMemo(() => {
-
-  }, [state.current.transitions])
-
   // Prop changes effect
   useMemo(
     () => {
-      // clear removed items controller
-
-      // destroyedRef.current.forEach(key => instances.current.delete(key))
-      // destroyedRef.current = []
-
       const { transitions, ...rest } = calculateDiffInItems(
         state.current,
         props
@@ -173,12 +159,6 @@ export function useTransition (props) {
         ({ state: slot, to, config, trail, key, item, destroyed }) => {
           // when values are unique, clear out old controllers on enter
           // also stop if inactive so that on end is not called
-
-          if(slot === 'enter' && unique && instances.current.has(key)) {
-            const ctrl = instances.current.get(key)
-            ctrl && ctrl.isActive && ctrl.stop(false)
-            instances.current.delete(key)
-          }
 
           !instances.current.has(key) &&
             instances.current.set(key, {
@@ -190,11 +170,12 @@ export function useTransition (props) {
                 // ref: ref && true
               }),
               resolve: { current: null },
-              last: { current: true }
+              last: { current: true },
+              ctrlKeyframeParser: parseKeyframedUpdate()
             })
 
           const instance = instances.current.get(key)
-          const { ctrl, resolve, last } = instance
+          const { ctrl, resolve, last, ctrlKeyframeParser } = instance
 
           if (slot === 'update' || slot !== activeSlots.current[key]) {
             // add the current running slot to the active slots ref so the same slot isnt re-applied
@@ -203,20 +184,15 @@ export function useTransition (props) {
               resolve.current && resolve.current(ctrl.merged)
               if (last.current && mounted.current && finished) {
                 if (destroyed && onDestroyed) onDestroyed(item)
-                if (destroyed) {
-                  destroyedRef.current.push(key)
-                }
-
+                if (destroyed) destroyedRef.current.push(key)
                 // onRest needs to be called everytime each item
                 // has finished, it is needed for notif hub to work.
                 // we could have two seperate callback, one for each
                 // and one for a sort of global on rest and peritem onrest?
                 onRest && onRest(item, slot, ctrl.merged)
-                const instanceArray = [...instances.current.values()];
+                const instanceArray = [...instances.current.values()]
                 // Only call onRest when all springs have come to rest
-                if (
-                  !instanceArray.some(v => v.ctrl.isActive)
-                ) {
+                if (!instanceArray.some(v => v.ctrl.isActive)) {
                   if (ref) {
                     startQueue.current.endResolver &&
                       startQueue.current.endResolver()
@@ -224,15 +200,13 @@ export function useTransition (props) {
                   }
 
                   // run full cleanup when all instances of controller are done animating
-                  const filter = ({ key: _key }) => !~destroyedRef.current.indexOf(_key)
+                  const filter = ({ key: _key }) =>
+                    !~destroyedRef.current.indexOf(_key)
                   state.current = {
                     ...state.current,
                     deleted: state.current.deleted.filter(filter),
                     transitions: state.current.transitions.filter(filter)
                   }
-
-                  destroyedRef.current.forEach(key => instances.current.delete(key))
-                  destroyedRef.current = []
 
                   // update when all transitions is complete to clean dom of removed elements.
                   forceUpdate()
@@ -241,7 +215,7 @@ export function useTransition (props) {
             }
 
             const parser = () =>
-              parseKeyframedUpdate(
+              ctrlKeyframeParser(
                 to,
                 config,
                 setNext(resolve, last, props => ctrl.update(props, onEnd)),

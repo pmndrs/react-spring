@@ -7,7 +7,7 @@ const items = ['Lorem', 'ipsum', 'dolor', 'sit']
 export default function Trail() {
   const [toggle, set] = useState(true)
   const trail = useTrail(items.length, {
-    items,
+    // items,
     opacity: toggle ? 1 : 0,
     x: toggle ? 0 : 20,
     height: toggle ? 50 : 0,
