@@ -5,7 +5,8 @@ import Demo from './components/Demo'
 import examples from './components/examples-hooks'
 import './styles.css'
 
-const DEBUG = "chain-anim"
+const DEBUG = false
+// const DEBUG = "chain-anim"
 
 ReactDOM.render(
   <DemoGrid>

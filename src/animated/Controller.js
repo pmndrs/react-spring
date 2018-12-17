@@ -235,7 +235,7 @@ export default class Controller {
       }
     }
 
-    this.startProps = ref ? start : undefined
+    // TODO: clean up ref in controller
     if (!ref && (autoStart || start.length)) this.start(...start)
 
     const [onEnd, onUpdate] = start
@@ -250,8 +250,8 @@ export default class Controller {
     if (this.isActive) this.stop()
 
     this.isActive = true
-    //this.onEnd = typeof onEnd === 'function' && onEnd
-    //this.onUpdate = onUpdate
+    this.onEnd = typeof onEnd === 'function' && onEnd
+    this.onUpdate = onUpdate
 
     if (this.props.onStart) this.props.onStart()
     // Start RAF loop

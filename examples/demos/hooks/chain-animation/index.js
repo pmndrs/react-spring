@@ -18,36 +18,37 @@ import range from 'lodash/range'
  *    is called on every item that comes to rest instead ...
  */
 
-function useChain(args) {
+function useChain (args) {
   useEffect(() => {
     let queue = Promise.resolve()
     for (let ref of args) {
       if (ref && ref.current) {
-        if (Array.isArray(ref.current))
-          queue = queue.then(() =>
-            Promise.all(ref.current.map(ref => ref.start()))
-          )
-        else queue = queue.then(() => ref.current.start())
+        queue = queue.then(r => {
+          return new Promise(resolve => {
+            console.log('starting' , ' ...... ', ref.current.tag)
+            ref.current.start(resolve)
+          })
+        })
       }
     }
   })
 }
 
-export default function App() {
+export default function App () {
   const [open, set] = useState(true)
   const [items] = useState(() => range(100))
 
   // 1. create spring-refs, which will refer to the springs Controller
-  const springRef = useRef(null)
+  const springRef = useRef()
   const props = useSpring({
     from: { opacity: 0, transform: `translate3d(-100%,0,0)` },
     opacity: open ? 1 : 0,
     transform: `translate3d(${open ? 0 : -100}%,0,0)`,
-    ref: springRef,
+    ref: springRef
   })
 
   // 2. create transition-refs
-  const transRef = useRef(null)
+  const transRef = useRef()
   const transitions = useTransition({
     items: open ? items : [],
     from: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
@@ -56,7 +57,7 @@ export default function App() {
     config: { mass: 5, tension: 500, friction: 90 },
     trail: 1000 / items.length,
     unique: true,
-    ref: transRef,
+    ref: transRef
   })
 
   // 3. set execution order

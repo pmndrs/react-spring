@@ -2,35 +2,49 @@ import React from 'react'
 import Controller from '../animated/Controller'
 import * as Globals from '../animated/Globals'
 
-export function useSpring(params) {
+export function useSpring (params) {
   const isFunctionProp = typeof params === 'function'
-  const { onRest, onKeyframesHalt = () => null, ...props } = isFunctionProp
+  const { onRest, onKeyframesHalt, ...props } = isFunctionProp
     ? params()
     : params
+  const endResolver = React.useRef(null)
   const [ctrl] = React.useState(() => new Controller(props))
   const [, forceUpdate] = React.useState()
-  const onHalt = onRest
-    ? ({ finished }) => finished && onRest(ctrl.merged)
-    : onKeyframesHalt(ctrl)
+  const onHalt = onKeyframesHalt
+    ? onKeyframesHalt(ctrl)
+    : ({ finished }) => {
+      finished && endResolver.current && endResolver.current()
+      finished && onRest && onRest(ctrl.merged)
+    }
 
-  if (params.ref) params.ref.current = ctrl
+  React.useImperativeMethods(props.ref, () => ({
+    start: resolve => {
+      endResolver.current = resolve
+      ctrl.start(onHalt)
+    },
+    tag: 'SpringHook'
+  }))
 
   const update = React.useCallback(
     // resolve and last are passed to the update function from the keyframes controller
     animProps => {
-      ctrl.update(animProps, onHalt)
+      ctrl.update(animProps)
+      if (!props.ref) {
+        endResolver.current = null
+        ctrl.start(onHalt)
+      }
       Globals.requestFrame(() => animProps.reset && forceUpdate())
     },
-    [onRest, onKeyframesHalt]
+    [onRest, onKeyframesHalt, props.ref]
   )
 
   React.useEffect(() => void (!isFunctionProp && update(props)))
   const propValues = ctrl.getValues()
   return isFunctionProp
     ? [
-        propValues,
-        props => update(props),
-        (finished = false) => ctrl.stop(finished),
-      ]
+      propValues,
+      props => update(props),
+      (finished = false) => ctrl.stop(finished)
+    ]
     : propValues
 }

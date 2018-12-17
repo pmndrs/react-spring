@@ -14,10 +14,12 @@ export function useTrail (count, params) {
   } = isFunctionProps ? params() : params
   const instances = React.useRef(map)
   const mounted = React.useRef(false)
+  const endResolver = React.useRef()
   const [, forceUpdate] = React.useState()
 
   const onHalt = onRest
     ? ctrl => ({ finished }) => {
+      finished && endResolver.current && endResolver.current()
       finished && mounted.current && onRest(ctrl.merged)
     }
     : onKeyframesHalt
@@ -38,12 +40,25 @@ export function useTrail (count, params) {
     /** resolve and last are passed to the update function from the keyframes controller */
     props => {
       for (let [idx, ctrl] of instances.current.entries()) {
-        ctrl.update(props, instances.current.size - 1 === idx && onHalt(ctrl))
+        ctrl.update(props)
+        if (!props.ref) {
+          ctrl.start(instances.current.size - 1 === idx && onHalt(ctrl))
+        }
       }
       Globals.requestFrame(() => props.reset && forceUpdate())
     },
     [onRest]
   )
+
+  React.useImperativeMethods(props.ref, () => ({
+    start: resolve => {
+      endResolver.current = resolve
+      for (let [idx, ctrl] of instances.current.entries()) {
+        ctrl.start(instances.current.size - 1 === idx && onHalt(ctrl))
+      }
+    },
+    tag: 'TrailHook'
+  }))
 
   /** must hoooks always return something? */
   React.useEffect(() => {
@@ -53,7 +68,13 @@ export function useTrail (count, params) {
 
   React.useLayoutEffect(() => void (!isFunctionProps && update(props)))
 
-  const propValues = Array.from(instances.current.values()).map(ctrl =>ctrl.getValues())
+  const propValues = Array.from(instances.current.values()).reduce(
+    (acc, ctrl) => {
+      reverse ? acc.unshift(ctrl.getValues()) : acc.push(ctrl.getValues())
+      return acc
+    },
+    []
+  )
 
   return isFunctionProps
     ? [
