@@ -31,8 +31,6 @@ export default function App () {
     ref: transRef
   })
 
-  // 3. set execution order
-  // React.useMemo(() =>  void useChain(open ? [springRef, transRef] : [transRef, springRef]) , [open])
   useChain2(open ? [springRef, transRef] : [transRef, springRef], [open])
 
   return (

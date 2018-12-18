@@ -1,6 +1,6 @@
 import Controller from './Controller'
 import { shallowEqual } from '../shared/helpers'
-import { timingSafeEqual } from 'crypto'
+import { requestFrame } from '../animated/Globals'
 
 export default class KeyframeController {
   frameId = 0
@@ -49,6 +49,10 @@ export default class KeyframeController {
     return this.instance.isActive
   }
 
+  set config (config) {
+    this.globalConfig = config
+  }
+
   next = (props, localFrameId, last = true, index = 0) => {
     this.last = last
     this.running = true
@@ -90,15 +94,15 @@ export default class KeyframeController {
         }
       } else if (typeof this.currSlots === 'function') {
         let index = 0
-        slots(
+        this.currSlots(
           // next
           (props, last = false) =>
             localFrameId === this.frameId &&
             this.next(props, localFrameId, last, index++),
           // cancel
           () =>
-            Globals.requestFrame(
-              () => this.instance.isActive && this.instance.stop()
+            requestFrame(
+              () => this.instance.isActive && this.instance.stop(true)
             )
         )
       } else {

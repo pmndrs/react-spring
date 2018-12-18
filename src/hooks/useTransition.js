@@ -5,9 +5,7 @@ import {
   useMemo,
   useImperativeMethods
 } from 'react'
-import Controller from '../animated/Controller'
 import KeyframeController from '../animated/KeyframeController'
-// import { parseKeyframedUpdate, setNext } from './useKeyframes'
 import { toArray, callProp, Queue } from '../shared/helpers'
 
 let guid = 0
@@ -224,6 +222,7 @@ export function useTransition (props) {
                 }
               }
             }
+            ctrl.config = config
             ctrl.update(to, onEnd)
             if (ref) {
               startQueue.current.queue.enqueue(() => ctrl.start(onEnd))
