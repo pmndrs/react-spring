@@ -155,7 +155,7 @@ return transitions.map(({ item, props, key }) => (
     name: 'hooks/chain-animation',
     title: 'Chain animation',
     link: 'https://codesandbox.io/embed/7mqy09jyq',
-    tags: ['useTransition'],
+    tags: ['useChain'],
   },
   {
     name: 'hooks/notification-hub',
