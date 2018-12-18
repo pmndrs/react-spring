@@ -1,7 +1,2 @@
-/// <reference types="./react-spring"/>
-/// <reference types="./addons"/>
-/// <reference types="./hooks"/>
-
-declare module 'react-spring/web' {
-  export * from 'react-spring'
-}
+// This is the file TypeScript will see when it looks inside the module without any sub-paths
+export * from './web'
