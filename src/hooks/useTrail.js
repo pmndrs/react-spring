@@ -4,13 +4,13 @@ import {
   useMemo,
   useCallback,
   useImperativeMethods,
-  useEffect
+  useEffect,
 } from 'react'
 import Ctrl from '../animated/Controller'
 import { callProp } from '../shared/helpers'
 import { requestFrame } from '../animated/Globals'
 
-export function useTrail (length, args) {
+export function useTrail(length, args) {
   const [, forceUpdate] = useState()
   // Extract animation props and hook-specific props, can be a function or an obj
   const isFn = typeof args === 'function'
@@ -25,7 +25,7 @@ export function useTrail (length, args) {
           new Ctrl({
             ...props,
             attach: i > 0 && (() => instances[i - 1]),
-            config: callProp(config, i)
+            config: callProp(config, i),
           })
         )
       }
@@ -33,15 +33,26 @@ export function useTrail (length, args) {
     },
     [length]
   )
+  // Destroy controller on onmount
+  const instancesRef = useRef()
+  instancesRef.current = instances
+  useEffect(
+    () => () => {
+      console.log('tr')
+      console.log(instancesRef.current)
+      instancesRef.current.forEach(i => i.destroy())
+    },
+    []
+  )
   // Define onEnd callbacks and resolvers
   const endResolver = useRef()
   const onHalt = onKeyframesHalt
     ? ctrl => ({ finished }) => {
-      if (finished) {
-        if (endResolver.current) endResolver.current()
-        if (onRest) onRest(ctrl.merged)
+        if (finished) {
+          if (endResolver.current) endResolver.current()
+          if (onRest) onRest(ctrl.merged)
+        }
       }
-    }
     : onKeyframesHalt || (() => null)
 
   // The hooks explcit API gets defined here ...
@@ -53,7 +64,7 @@ export function useTrail (length, args) {
           (reverse ? i === 0 : instances.current.size - 1) && onHalt(ctrl)
       )
     },
-    get isActive () {
+    get isActive() {
       ;[...instances.current.values()].some(ctrl => ctrl.isActive)
     },
     stop: (finished = false) =>
@@ -69,7 +80,7 @@ export function useTrail (length, args) {
         const attachController = instances[attachIdx]
         ctrl.update({
           ...props,
-          attach: attachController && (() => attachController)
+          attach: attachController && (() => attachController),
         })
 
         if (!ctrl.props.ref) ctrl.start(last && onHalt(ctrl))
@@ -85,9 +96,9 @@ export function useTrail (length, args) {
   const propValues = instances.map(v => v.getValues())
   return isFn
     ? [
-      propValues,
-      updateCtrl,
-      (finished = false) => instances.forEach(ctrl => ctrl.stop(finished))
-    ]
+        propValues,
+        updateCtrl,
+        (finished = false) => instances.forEach(ctrl => ctrl.stop(finished)),
+      ]
     : propValues
 }

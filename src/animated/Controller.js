@@ -182,6 +182,16 @@ export default class Controller {
     this.debouncedOnEnd({ finished })
   }
 
+  destroy() {
+    removeController(this)
+    this.props = {}
+    this.merged = {}
+    this.animations = {}
+    this.interpolations = {}
+    this.animatedProps = {}
+    this.configs = []
+  }
+
   debouncedOnEnd(result) {
     this.isActive = false
     const onEnd = this.onEnd

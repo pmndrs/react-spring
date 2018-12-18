@@ -16,6 +16,13 @@ export function useSpring(args) {
   const { onRest, onKeyframesHalt, ...props } = callProp(args)
   // The controller maintains the animation values, starts and tops animations
   const [ctrl] = useState(() => new Ctrl(props))
+  useEffect(
+    () => () => {
+      console.log('sp')
+      ctrl.destroy()
+    },
+    []
+  )
   // Define onEnd callbacks and resolvers
   const endResolver = useRef(null)
   const onHalt = onKeyframesHalt

@@ -9,17 +9,20 @@ import './styles.css'
 const DEBUG = 'chain'
 
 ReactDOM.render(
-  <DemoGrid>
-    {examples
-      .filter(item => (DEBUG ? item.name.includes(DEBUG) : true))
-      .map(data => (
-        <Demo
-          overlayCode={DEBUG === false}
-          key={data.name}
-          {...data}
-          import={import('./demos/' + data.name)}
-        />
-      ))}
-  </DemoGrid>,
+  <>
+    <div style={{ height: '200%', width: '100%', background: 'red' }} />
+    <DemoGrid>
+      {examples
+        .filter(item => (DEBUG ? item.name.includes(DEBUG) : true))
+        .map(data => (
+          <Demo
+            overlayCode={DEBUG === false}
+            key={data.name}
+            {...data}
+            import={import('./demos/' + data.name)}
+          />
+        ))}
+    </DemoGrid>
+  </>,
   document.getElementById('root')
 )

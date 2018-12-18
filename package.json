@@ -70,6 +70,7 @@
     "@babel/plugin-transform-template-literals": "^7.0.0",
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
+    "@researchgate/react-intersection-observer": "^0.7.4",
     "@storybook/addon-knobs": "^3.4.11",
     "@storybook/react": "^3.4.11",
     "@types/react": "^16.7.8",
