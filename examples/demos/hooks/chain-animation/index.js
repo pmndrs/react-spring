@@ -1,41 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { useTransition, useSpring, useChain, animated } from 'react-spring/hooks'
+import { useTransition, useSpring, animated, useChain2 } from 'react-spring/hooks'
 import styled from 'styled-components'
 import range from 'lodash/range'
 
-/** Problem: primitives can't be chained, it is hard to orchestrate them.
- * In this case we want the sidebar to open first, then the content transitions in.
- * On close we want the content to transition out, then the sidebar closes.
- *
- * Possible solution: Controller has a "autostart" property that's set to true by default
- * for hooks. If we can let the user controll that, they can "start" the animation on their own.
- * A hook (useChain?) could perhaps controll the order in which primites are started, watching
- * their onRest props.
- *
- * Requirements for this to:
- * 1. hooks could switch to autostart: false when a "ref" is given, which points to their controller
- * 2. onRest should only be called when all springs come to rest. In current useTransition onRest
- *    is called on every item that comes to rest instead ...
- */
 
-function useChain (args, dependants) {
-  const guidRef = React.useRef(0)
-  React.useEffect(() => {
-    let queue = Promise.resolve()
-    const localId = ++guidRef.current
-    for (let ref of args) {
-      if (ref && ref.current) {
-        ref.current.isActive && ref.current.stop && ref.current.stop()
-        console.log('starting ', '---------------',  ref.current.tag)
-        queue = queue.then(r => {
-          return  localId === guidRef.current && new Promise(resolve => {
-            ref.current.start(resolve)
-          })
-        })
-      }
-    }
-  }, dependants)
-}
 
 export default function App () {
   const [open, set] = useState(true)
@@ -65,7 +33,7 @@ export default function App () {
 
   // 3. set execution order
   // React.useMemo(() =>  void useChain(open ? [springRef, transRef] : [transRef, springRef]) , [open])
-  useChain(open ? [springRef, transRef] : [transRef, springRef])
+  useChain2(open ? [springRef, transRef] : [transRef, springRef], [open])
 
   return (
     <Main onClick={() => set(open => !open)}>

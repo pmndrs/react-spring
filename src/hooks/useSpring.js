@@ -30,14 +30,22 @@ export function useSpring(args) {
   useImperativeMethods(props.ref, () => ({
     start: resolve =>
       void ((endResolver.current = resolve), ctrl.start(onHalt)),
+    get isActive() {
+      return ctrl.isActive
+    },
+    stop: (finished = false, resolve) => {
+      ctrl.stop(finished)
+      resolve && resolve()
+    },
+    tag: 'SpringHook'
   }))
 
   // Defines the hooks setter, which updates the controller
   const updateCtrl = useCallback(
     updateProps => {
       ctrl.update(updateProps)
-      if (!props.ref) ctrl.start(onHalt)
-      if (props.reset) requestFrame(forceUpdate)
+      if (!updateProps.ref) ctrl.start(onHalt)
+      if (updateProps.reset) requestFrame(forceUpdate)
     },
     [onRest, onKeyframesHalt, props.ref]
   )
