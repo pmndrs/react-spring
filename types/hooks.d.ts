@@ -1,5 +1,10 @@
-import { SpringConfig, SpringBaseProps, TransitionKeyProps } from './universal'
-export { SpringConfig, SpringBaseProps, TransitionKeyProps }
+import {
+  SpringConfig,
+  SpringBaseProps,
+  TransitionKeyProps,
+  State,
+} from './universal'
+export { SpringConfig, SpringBaseProps, TransitionKeyProps, State }
 
 /** List from `function getForwardProps` in `src/shared/helpers` */
 type ExcludedProps =
@@ -120,12 +125,10 @@ export interface UseTransitionProps<TItem, DS extends object>
   update?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>)
 }
 
-export type TransitionState = 'enter' | 'leave' | 'update'
-
 export interface UseTransitionResult<TItem, DS extends object> {
   item: TItem
   key: string
-  state: TransitionState
+  state: State
   props: ForwardedProps<DS>
 }
 
