@@ -38,7 +38,6 @@ export function useSpring(args) {
       ctrl.stop(finished)
       resolve && resolve()
     },
-    tag: 'SpringHook'
   }))
 
   // Defines the hooks setter, which updates the controller

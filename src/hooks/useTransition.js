@@ -138,6 +138,8 @@ export function useTransition (props) {
     endResolver: () => null
   })
 
+  const destroyedItems = useRef([])
+
   // const memoizedParse = React.useMemo(() => parseKeyframedUpdate(), [])
   const first = useRef(true)
   const activeSlots = useRef({})
@@ -156,13 +158,9 @@ export function useTransition (props) {
   // Prop changes effect
   useMemo(
     () => {
-      let destroyedItems = []
       startQueue.current.queue.clear()
-      console.log('memo is called')
-      const { transitions, ...rest } = calculateDiffInItems(
-        state,
-        props
-      )
+      startQueue.current.endResolver = null
+      const { transitions, ...rest } = calculateDiffInItems(state, props)
 
       transitions.forEach(
         ({ state: slot, to, config, trail, key, item, destroyed }) => {
@@ -189,10 +187,9 @@ export function useTransition (props) {
             // add the current running slot to the active slots ref so the same slot isnt re-applied
             activeSlots.current[key] = slot
             function onEnd ({ finished }) {
-              // console.log('on end is called')
               if (mounted.current && finished) {
                 if (destroyed && onDestroyed) onDestroyed(item)
-                if (destroyed) destroyedItems.push(key)
+                if (destroyed) destroyedItems.current.push(key)
                 // onRest needs to be called everytime each item
                 // has finished, it is needed for notif hub to work.
                 // we could have two seperate callback, one for each
@@ -206,18 +203,33 @@ export function useTransition (props) {
                     startQueue.current.endResolver = null
                   }
 
-                  console.log(destroyedItems, transitions, 'called on last onEnd')
-
                   // run full cleanup when all instances of controller are done animating
-                  const filter = ({ key }) =>{
-                    return !~destroyedItems.indexOf(key)
+                  const cleanup = ({
+                    transitions: _transitions,
+                    deleted: _deleted
+                  }) => {
+                    let transitions = [..._transitions]
+                    let deleted = [..._deleted]
+                    destroyedItems.current
+                      .filter((key, i, self) => self.indexOf(key) === i)
+                      .forEach(deletedKey => {
+                        transitions = transitions.filter(
+                          ({ key, destroyed }) =>
+                            !(destroyed && key === deletedKey)
+                        )
+                        deleted = deleted.filter(
+                          ({ key, destroyed }) =>
+                            !(destroyed && key === deletedKey)
+                        )
+                      })
+                    destroyedItems.current = []
+                    return { transitions, deleted }
                   }
 
                   // update when all transitions is complete to clean dom of removed elements.
                   setState(state => ({
                     ...state,
-                    deleted: state.deleted.filter(filter),
-                    transitions: state.transitions.filter(filter)
+                    ...cleanup(state)
                   }))
                 }
               }
@@ -229,17 +241,15 @@ export function useTransition (props) {
             }
           }
         }
-        )
+      )
 
-      // console.log(startQueue.current.queue, state, 'this is value of queue on each render pass')
       first.current = false
       setState(state => ({
-          ...state,
-          transitions,
-          prevProps: props,
-          ...rest
+        ...state,
+        transitions,
+        prevProps: props,
+        ...rest
       }))
-
     },
     [mapKeys(items, _currentKeys).join('')]
   )
@@ -253,10 +263,9 @@ export function useTransition (props) {
       }
     },
     stop: (finished, resolve) => {
-      instances.current.forEach(ctrl => ctrl.stop(finished))
+      instances.current.forEach(ctrl => ctrl.isActive && ctrl.stop(finished))
       resolve && resolve()
-    },
-    tag: 'TransitionHook'
+    }
   }))
 
   return state.transitions.map(({ item, state, key }) => {

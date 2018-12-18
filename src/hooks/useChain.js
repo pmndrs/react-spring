@@ -11,12 +11,11 @@ export function useChain(args) {
 }
 
 export function useChain2 (args, dependants) {
-  // const guidRef = React.useRef(0)
   const chain = async function (args) {
     for (let ref of args) {
       if (ref && ref.current && ref.current.stop) {
         await new Promise(
-          resolve => ref.current.stop && ref.current.stop(false, resolve)
+          resolve => ref.current.stop && ref.current.stop(true, resolve)
         )
       }
     }

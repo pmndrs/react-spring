@@ -58,7 +58,6 @@ export function useTrail (length, args) {
     },
     stop: (finished = false) =>
       instances.current.forEach(([, ctrl]) => ctrl.stop(finished)),
-    tag: 'TrailHook'
   }))
 
   // Defines the hooks setter, which updates the controller

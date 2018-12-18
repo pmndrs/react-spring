@@ -4,7 +4,6 @@ import { requestFrame } from '../animated/Globals'
 
 export default class KeyframeController {
   frameId = 0
-
   constructor (props) {
     const { config, onRest, ref, ...initialProps } = props
     this.globalProps = (({
@@ -113,15 +112,13 @@ export default class KeyframeController {
   }
 
   stop = (finished = false) => {
-    this.frameId++
+    ++this.frameId
     this.instance.isActive && this.instance.stop(finished)
   }
 
   onEnd = (onFrameRest, localFrameId, last, resolve) => {
     return args => {
-      // console.log(this.frameId)
       if (localFrameId === this.frameId) {
-        // resolve the previous keyframe withing the same Frame Id
         resolve()
         onFrameRest && onFrameRest(this.merged)
         last && this.globalOnEnd && this.globalOnEnd(args)
