@@ -23,7 +23,14 @@ export default class Demo extends React.Component {
   leave = tag => this.setState({ code: undefined })
 
   render() {
-    const { title, description, tags, link, code, overlayCode } = this.props
+    const {
+      title,
+      description,
+      tags,
+      link,
+      code,
+      overlayCode = true,
+    } = this.props
     return (
       <Container>
         <Header>
