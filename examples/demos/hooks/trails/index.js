@@ -13,7 +13,7 @@ export default function Trail() {
     height: toggle ? 50 : 0,
     from: { opacity: 0, x: 20, height: 0 },
     config: { mass: 5, tension: 2000, friction: 200 },
-    //reverse: !toggle,
+    reverse: !toggle,
   })
 
   return (

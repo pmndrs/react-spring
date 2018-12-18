@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 export function useChain(args) {
   useEffect(() => {
@@ -28,5 +28,5 @@ export function useChain2 (args, dependants) {
       }
     }
   }
-  React.useEffect(() => void chain(args), dependants)
+  useEffect(() => void chain(args), dependants)
 }
