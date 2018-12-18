@@ -1,10 +1,16 @@
+// This is where the bulk of the type definitions should go.
+// The other entry points (except for hooks) all just expose this but with some customization.
+
 import {
   Component,
   PureComponent,
   ReactNode,
   ComponentClass,
   ComponentType,
+  ReactType,
   Ref,
+  ForwardRefExoticComponent,
+  ComponentPropsWithRef,
 } from 'react'
 
 export type SpringEasingFunc = (t: number) => number
@@ -23,7 +29,7 @@ export interface SpringConfig {
 
 type SpringRendererFunc<DS extends object = {}> = (params: DS) => ReactNode
 
-interface SpringProps<DS extends object = {}> {
+export interface SpringBaseProps {
   /**
    * Spring config, or for individual keys: fn(key => config)
    * @default config.default
@@ -35,6 +41,31 @@ interface SpringProps<DS extends object = {}> {
    */
   native?: boolean
   /**
+   * When true it literally resets: from -> to
+   * @default false
+   */
+  reset?: boolean
+  /**
+   * Prevents animation if true
+   * @default false
+   */
+  immediate?: boolean | ((key: string) => boolean)
+  /**
+   * Animation start delay, optional
+   */
+  delay?: number
+  /**
+   * reverse the animation
+   */
+  reverse?: boolean
+  /**
+   * Callback when the animation starts to animate
+   */
+  onStart?(): void
+}
+
+export interface SpringProps<DS extends object = {}> {
+  /**
    * Base styles
    * @default {}
    */
@@ -44,10 +75,6 @@ interface SpringProps<DS extends object = {}> {
    * @default {}
    */
   to: DS
-  /**
-   * Callback when the animation starts to animate
-   */
-  onStart?: () => void
   /**
    * Callback when the animation comes to a still-stand
    */
@@ -66,27 +93,14 @@ interface SpringProps<DS extends object = {}> {
    */
   immediate?: boolean | string[] | ((key: string) => boolean)
   /**
-   * When true it literally resets: from -> to
-   * @default false
-   */
-  reset?: boolean
-  /**
    * Inject props
    * @default undefined
    */
   inject?: any
   /**
-   * Animation start delay, optional
-   */
-  delay?: number
-  /**
    * Inject props after animation is ended
    */
   after?: Partial<DS>
-  /**
-   * reverse the animation
-   */
-  reverse?: boolean
   /**
    * Escape hatch to force the spring to render
    */
@@ -115,19 +129,15 @@ export function interpolate(
   config: (...args: number[]) => any
 ): any
 
-export const animated: {
-  <P>(comp: ComponentType<P>): ComponentType<P>
-} & {
-  [Tag in keyof JSX.IntrinsicElements]: ComponentType<
-    JSX.IntrinsicElements[Tag]
-  >
-}
+export function animated<T extends ReactType>(
+  comp: T
+): ForwardRefExoticComponent<ComponentPropsWithRef<T>>
 
-type TransitionKeyProps = string | number
+export type TransitionKeyProps = string | number
 
-type State = 'enter' | 'update' | 'leave'
+export type State = 'enter' | 'update' | 'leave'
 
-interface TransitionProps<
+export interface TransitionProps<
   TItem,
   TInit extends object = {},
   TFrom extends object = {},
@@ -136,21 +146,11 @@ interface TransitionProps<
   TUpdate extends object = {},
   SpringProps extends object = {},
   DS extends object = {}
-> {
+> extends SpringBaseProps {
   /**
    * First-render initial values, if present overrides "from" on the first render pass. It can be "null" to skip first mounting transition. Otherwise it can take an object or a function (item => object)
    */
   initial?: TInit | null
-  /**
-   * Will skip rendering the component if true and write to the dom directly
-   * @default false
-   */
-  native?: boolean
-  /**
-   * Spring config ({ tension, friction })
-   * @default config.default
-   */
-  config?: SpringConfig | ((key: string) => SpringConfig)
   /**
    * Base values (from -> enter), or: item => values
    * @default {}
@@ -166,10 +166,6 @@ interface TransitionProps<
    * @default {}
    */
   leave?: TLeave
-  /**
-   * Callback when the animation starts to animate
-   */
-  onStart?: () => void
   /**
    * Callback when the animation comes to a still-stand
    */
@@ -235,17 +231,7 @@ export class Transition<
 
 type TrailKeyProps = string | number
 
-interface TrailProps<TItem, DS extends object = {}> {
-  /**
-   * Will skip rendering the component if true and write to the dom directly
-   * @default false
-   */
-  native?: boolean
-  /**
-   * Spring config, or for individual keys: fn(key => config)
-   * @default config.default
-   */
-  config?: SpringConfig | ((key: string) => SpringConfig)
+interface TrailProps<TItem, DS extends object = {}> extends SpringBaseProps {
   /**
    * Base values, optional
    */
@@ -267,41 +253,11 @@ interface TrailProps<TItem, DS extends object = {}> {
    * A single function-child that receives the individual item and return a functional component (item, index) => props => view)
    */
   children?: (item: TItem, index: number) => SpringRendererFunc<DS>
-  /**
-   * When true the trailing order is switched, it will then trail bottom to top
-   */
-  reverse?: boolean
 }
 
 export class Trail<TItem, DS extends object> extends PureComponent<
   TrailProps<TItem, DS>
 > {}
-
-interface ParallaxProps {
-  pages: number
-
-  config?: SpringConfig | ((key: string) => SpringConfig)
-
-  scrolling?: boolean
-
-  horizontal?: boolean
-
-  ref?: Ref<Parallax>
-}
-
-export class Parallax extends PureComponent<ParallaxProps> {
-  scrollTo: (offset: number) => void
-}
-
-interface ParallaxLayerProps {
-  factor?: number
-
-  offset?: number
-
-  speed?: number
-}
-
-export class ParallaxLayer extends PureComponent<ParallaxLayerProps> {}
 
 interface KeyframesProps<DS extends object = {}> {
   state?: string
