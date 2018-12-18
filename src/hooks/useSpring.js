@@ -3,51 +3,56 @@ import {
   useRef,
   useImperativeMethods,
   useEffect,
-  useCallback,
+  useCallback
 } from 'react'
 import Ctrl from '../animated/Controller'
 import { callProp } from '../shared/helpers'
 import { requestFrame } from '../animated/Globals'
+import KCtrl from '../animated/KeyframeController'
 
-export function useSpring(args) {
+export const useSpringImpl = (type = 'default') => args => {
   const [, forceUpdate] = useState()
   // Extract animation props and hook-specific props, can be a function or an obj
   const isFn = typeof args === 'function'
   const { onRest, onKeyframesHalt, ...props } = callProp(args)
   // The controller maintains the animation values, starts and tops animations
-  const [ctrl] = useState(() => new Ctrl(props))
+  const [ctrl] = useState(() =>
+    type === 'keyframe' ? new KCtrl(props) : new Ctrl(props)
+  )
   // Define onEnd callbacks and resolvers
   const endResolver = useRef(null)
-  const onHalt = onKeyframesHalt
-    ? onKeyframesHalt(ctrl)
-    : ({ finished }) => {
-        if (finished) {
-          if (endResolver.current) endResolver.current()
-          if (onRest) onRest(ctrl.merged)
-        }
-      }
+  const onHalt = ({ finished }) => {
+    if (finished) {
+      if (endResolver.current) endResolver.current()
+      if (onRest) onRest(ctrl.merged)
+    }
+  }
 
   // The hooks explcit API gets defined here ...
   useImperativeMethods(props.ref, () => ({
     start: resolve =>
       void ((endResolver.current = resolve), ctrl.start(onHalt)),
-    get isActive() {
+    get isActive () {
       return ctrl.isActive
     },
     stop: (finished = false, resolve) => {
       ctrl.stop(finished)
       resolve && resolve()
-    },
+    }
   }))
 
   // Defines the hooks setter, which updates the controller
   const updateCtrl = useCallback(
     updateProps => {
-      ctrl.update(updateProps)
+      ctrl.props.reset && type === 'keyframe'
+        ? ctrl.updateWithForceUpdate(forceUpdate, updateProps)
+        : ctrl.update(updateProps)
       if (!ctrl.props.ref) ctrl.start(onHalt)
-      if (ctrl.props.reset) requestFrame(forceUpdate)
+      if (ctrl.props.reset && type === 'default') {
+        requestFrame(forceUpdate)
+      }
     },
-    [onRest, onKeyframesHalt, props.ref]
+    [onRest, ctrl.props.ref]
   )
 
   // Update next frame is props aren't functional
@@ -58,3 +63,5 @@ export function useSpring(args) {
     ? [propValues, updateCtrl, (finished = false) => ctrl.stop(finished)]
     : propValues
 }
+
+export const useSpring = useSpringImpl()

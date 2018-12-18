@@ -9,8 +9,9 @@ import {
 import Ctrl from '../animated/Controller'
 import { callProp } from '../shared/helpers'
 import { requestFrame } from '../animated/Globals'
+import KeyframeController from '../animated/KeyframeController'
 
-export function useTrail (length, args) {
+export const useTrailImpl = (type = 'default') => (length, args) => {
   const [, forceUpdate] = useState()
   // Extract animation props and hook-specific props, can be a function or an obj
   const isFn = typeof args === 'function'
@@ -21,12 +22,15 @@ export function useTrail (length, args) {
     () => {
       const instances = []
       for (let i = 0; i < length; i++) {
+        const initProps = {
+          ...props,
+          attach: i > 0 && (() => instances[i - 1]),
+          config: callProp(config, i)
+        }
         instances.push(
-          new Ctrl({
-            ...props,
-            attach: i > 0 && (() => instances[i - 1]),
-            config: callProp(config, i)
-          })
+          type === 'keyframe'
+            ? new KeyframeController(initProps)
+            : new Ctrl(initProps)
         )
       }
       return instances
@@ -57,7 +61,7 @@ export function useTrail (length, args) {
       ;[...instances.current.values()].some(ctrl => ctrl.isActive)
     },
     stop: (finished = false) =>
-      instances.current.forEach(([, ctrl]) => ctrl.stop(finished)),
+      instances.current.forEach(([, ctrl]) => ctrl.stop(finished))
   }))
 
   // Defines the hooks setter, which updates the controller
@@ -67,10 +71,14 @@ export function useTrail (length, args) {
         const last = reverse ? i === 0 : instances.length - 1 === i
         const attachIdx = reverse ? i + 1 : i - 1
         const attachController = instances[attachIdx]
-        ctrl.update({
+
+        const updateProps = {
           ...props,
           attach: attachController && (() => attachController)
-        })
+        }
+        ctrl.props.reset && type === 'keyframe' && last
+          ? ctrl.updateWithForceUpdate(forceUpdate, updateProps)
+          : ctrl.update(updateProps)
 
         if (!ctrl.props.ref) ctrl.start(last && onHalt(ctrl))
         if (last && ctrl.props.reset) requestFrame(forceUpdate)
@@ -91,3 +99,7 @@ export function useTrail (length, args) {
     ]
     : propValues
 }
+
+export const useTrail = useTrailImpl()
+
+// export default useTrail

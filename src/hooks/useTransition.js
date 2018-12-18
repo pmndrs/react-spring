@@ -138,9 +138,6 @@ export function useTransition (props) {
     endResolver: () => null
   })
 
-  const destroyedItems = useRef([])
-
-  // const memoizedParse = React.useMemo(() => parseKeyframedUpdate(), [])
   const first = useRef(true)
   const activeSlots = useRef({})
   const [state, setState] = useState({
@@ -189,7 +186,6 @@ export function useTransition (props) {
             function onEnd ({ finished }) {
               if (mounted.current && finished) {
                 if (destroyed && onDestroyed) onDestroyed(item)
-                if (destroyed) destroyedItems.current.push(key)
                 // onRest needs to be called everytime each item
                 // has finished, it is needed for notif hub to work.
                 // we could have two seperate callback, one for each
@@ -203,33 +199,11 @@ export function useTransition (props) {
                     startQueue.current.endResolver = null
                   }
 
-                  // run full cleanup when all instances of controller are done animating
-                  const cleanup = ({
-                    transitions: _transitions,
-                    deleted: _deleted
-                  }) => {
-                    let transitions = [..._transitions]
-                    let deleted = [..._deleted]
-                    destroyedItems.current
-                      .filter((key, i, self) => self.indexOf(key) === i)
-                      .forEach(deletedKey => {
-                        transitions = transitions.filter(
-                          ({ key, destroyed }) =>
-                            !(destroyed && key === deletedKey)
-                        )
-                        deleted = deleted.filter(
-                          ({ key, destroyed }) =>
-                            !(destroyed && key === deletedKey)
-                        )
-                      })
-                    destroyedItems.current = []
-                    return { transitions, deleted }
-                  }
-
                   // update when all transitions is complete to clean dom of removed elements.
                   setState(state => ({
                     ...state,
-                    ...cleanup(state)
+                    deleted: [],
+                    transitions: state.transitions.filter(({destroyed}) => !destroyed)
                   }))
                 }
               }

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
-import { useTransition, useSpring, animated, useChain2 } from 'react-spring/hooks'
+import React, { useState, useRef } from 'react'
+import { useTransition, useSpring, animated, useChain } from 'react-spring/hooks'
 import styled from 'styled-components'
 import range from 'lodash/range'
 
@@ -31,7 +31,7 @@ export default function App () {
     ref: transRef
   })
 
-  useChain2(open ? [springRef, transRef] : [transRef, springRef], [open])
+  useChain(open ? [springRef, transRef] : [transRef, springRef], [open])
 
   return (
     <Main onClick={() => set(open => !open)}>

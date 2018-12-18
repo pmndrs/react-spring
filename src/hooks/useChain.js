@@ -1,31 +1,17 @@
 import { useEffect } from 'react'
 
-export function useChain(args) {
+export function useChain (args, dependants) {
   useEffect(() => {
-    args.reduce(
-      (q, { current }) =>
-        (q = q.then(() => current && new Promise(current.start))),
-      Promise.resolve()
-    )
-  }, args)
-}
+    // adding stops
+    const promise = args.reduce((q, { current }) => {
+      q = q.then(() => current && new Promise(resolve => current.stop(true, resolve)))
+      return q
+    }, Promise.resolve())
 
-export function useChain2 (args, dependants) {
-  const chain = async function (args) {
-    for (let ref of args) {
-      if (ref && ref.current && ref.current.stop) {
-        await new Promise(
-          resolve => ref.current.stop && ref.current.stop(true, resolve)
-        )
-      }
-    }
-    for (let ref of args) {
-      if (ref && ref.current) {
-        ref.current.isActive && ref.current.stop && ref.current.stop()
-        // console.log('starting ', '---------------',  localId, guidRef.current, ref.current.tag)
-        await new Promise(resolve => ref.current.start(resolve))
-      }
-    }
-  }
-  useEffect(() => void chain(args), dependants)
+    // now add start to the promis chain
+   args.reduce((q, { current }) => {
+      q = q.then(() => current && new Promise(current.start))
+      return q
+    }, promise)
+  }, dependants || args)
 }
