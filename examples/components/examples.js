@@ -60,7 +60,7 @@ export default [
     tags: ['keyframes']
   },
   {
-    name: 'spring',
+    name: 'simple-spring',
     title: 'Simple spring',
     link: '#',
     tags: ['springs']

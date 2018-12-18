@@ -6,13 +6,14 @@ import {
   useCallback,
 } from 'react'
 import Ctrl from '../animated/Controller'
+import { callProp } from '../shared/helpers'
 import { requestFrame } from '../animated/Globals'
 
 export function useSpring(args) {
   const [, forceUpdate] = useState()
   // Extract animation props and hook-specific props, can be a function or an obj
   const isFn = typeof args === 'function'
-  const { onRest, onKeyframesHalt, ...props } = isFn ? args() : args
+  const { onRest, onKeyframesHalt, ...props } = callProp(args)
   // The controller maintains the animation values, starts and tops animations
   const [ctrl] = useState(() => new Ctrl(props))
   // Define onEnd callbacks and resolvers

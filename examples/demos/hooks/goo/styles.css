@@ -17,31 +17,31 @@
   display: none;
 }
 
-.b1, .b2, .b3 {
+.hooks-filter > div {
   position: absolute;
   will-change: transform;
   border-radius: 50%;
   background: lightcoral;
-  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.75);
   opacity: 0.6;
 }
 
-.b1 {
+.hooks-filter > div:nth-child(1) {
   width: 120px;
   height: 120px;
 }
 
-.b2 {
+.hooks-filter > div:nth-child(2) {
   width: 250px;
   height: 250px;
 }
 
-.b3 {
+.hooks-filter > div:nth-child(3) {
   width: 150px;
   height: 150px;
 }
 
-.b1::after, .b2::after, .b3::after {
+.hooks-filter > div::after {
   content: '';
   position: absolute;
   top: 20px;
@@ -49,17 +49,17 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.8);
 }
 
-.b2::after {
+.hooks-filter > div:nth-child(2)::after {
   top: 70px;
   left: 70px;
   width: 70px;
   height: 70px;
 }
 
-.b3::after {
+.hooks-filter > div:nth-child(3)::after {
   top: 50px;
   left: 50px;
   width: 50px;

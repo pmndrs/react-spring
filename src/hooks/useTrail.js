@@ -7,20 +7,26 @@ import {
   useEffect,
 } from 'react'
 import Ctrl from '../animated/Controller'
+import { callProp } from '../shared/helpers'
 import { requestFrame } from '../animated/Globals'
 
 export function useTrail(length, args) {
   const [, forceUpdate] = useState()
   // Extract animation props and hook-specific props, can be a function or an obj
   const isFn = typeof args === 'function'
-  const { reverse, onKeyframesHalt, onRest, ...props } = isFn ? args() : args
+  const { config, reverse, onKeyframesHalt, onRest, ...props } = callProp(args)
+  const isFnConfig = typeof config === 'function'
   // The controller maintains the animation values, starts and tops animations
   const instances = useMemo(
     () => {
       const instances = []
       for (let i = 0; i < length; i++)
         instances.push(
-          new Ctrl({ ...props, attach: i > 0 && (() => instances[i - 1]) })
+          new Ctrl({
+            ...props,
+            attach: i > 0 && (() => instances[i - 1]),
+            config: callProp(config, i),
+          })
         )
       return instances
     },

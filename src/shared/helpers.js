@@ -68,8 +68,8 @@ export function shallowEqual (a, b) {
   return i === void 0 ? a === b : true
 }
 
-export function callProp (obj, state, ...args) {
-  return typeof obj === 'function' ? obj(state, ...args) : obj
+export function callProp (obj, ...args) {
+  return typeof obj === 'function' ? obj(...args) : obj
 }
 
 export function getValues (object) {
@@ -95,7 +95,6 @@ export function getForwardProps (props) {
     delay,
     attach,
     destroyed,
-    track,
     interpolateTo,
     autoStart,
     ref,
