@@ -36,6 +36,10 @@ export class Queue {
     }
     return item
   }
+  clear () {
+    this.queue = []
+    this.offset = 0
+  }
   peek () {
     const { queue, offset } = this
     return queue.length > 0 ? queue[offset] : undefined

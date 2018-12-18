@@ -4,48 +4,52 @@ import { useSpring } from './useSpring'
 import { useTrail } from './useTrail'
 import { callProp } from '../shared/helpers'
 
-export function parseKeyframedUpdate(slots, config, setNext, cancel) {
-  if (Array.isArray(slots)) {
-    let q = Promise.resolve()
-    for (let i = 0; i < slots.length; i++) {
-      const slot = slots[i]
-      const last = i === slots.length - 1
-      q = q.then(() =>
-        setNext(
-          {
-            config: config && (Array.isArray(config) ? config[i] : config),
-            ...slot,
-          },
-          last
-        )
+export function parseKeyframedUpdate () {
+  var guid = 0
+  return function (slots, config, setNext, cancel) {
+    const localId = ++guid
+    if (Array.isArray(slots)) {
+      let q = Promise.resolve()
+      for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i]
+        const last = i === slots.length - 1
+        q = q.then(() => {
+          return localId === guid && setNext(
+            {
+              config: config && (Array.isArray(config) ? config[i] : config),
+              ...slot
+            },
+            last
+          )
+        })
+      }
+    } else if (typeof slots === 'function') {
+      let index = 0
+      slots(
+        (animatedProps, last = false) => {
+          const props = {
+            config: config && Array.isArray(config) ? config[index++] : config,
+            ...animatedProps
+          }
+          return localId === guid && setNext(props, last)
+        },
+        (finished = true) => cancel && cancel(finished)
+      )
+    } else {
+      setNext(
+        {
+          config: config && Array.isArray(config) ? config[0] : config,
+          ...slots
+        },
+        true
       )
     }
-  } else if (typeof slots === 'function') {
-    let index = 0
-    slots(
-      (animatedProps, last = false) => {
-        const props = {
-          config: config && Array.isArray(config) ? config[index++] : config,
-          ...animatedProps,
-        }
-        return setNext(props, last)
-      },
-      (finished = true) => cancel && cancel(finished)
-    )
-  } else {
-    setNext(
-      {
-        config: config && Array.isArray(config) ? config[0] : config,
-        ...slots,
-      },
-      true
-    )
   }
 }
 
-export function onKeyframesHalt({ resolverRef, lastRef, mounted, onRestRef }) {
-  return function(ctrl) {
-    return function({ finished }) {
+export function onKeyframesHalt ({ resolverRef, lastRef, mounted, onRestRef }) {
+  return function (ctrl) {
+    return function ({ finished }) {
       resolverRef.current && resolverRef.current()
       const merged = ctrl && ctrl.merged
       const { onRest, onKeyframeRest } = onRestRef.current
@@ -57,7 +61,7 @@ export function onKeyframesHalt({ resolverRef, lastRef, mounted, onRestRef }) {
   }
 }
 
-export function setNext(
+export function setNext (
   resolverRef = { current: null },
   lastRef = { current: null },
   setAnimation,
@@ -65,7 +69,7 @@ export function setNext(
   shouldForceUpdateRef = { current: false },
   forceUpdate
 ) {
-  return function(props, last) {
+  return function (props, last) {
     return new Promise(resolve => {
       const { onRest, ...animatedProps } = props || {}
       onRestRef.current.onKeyframeRest = onRest
@@ -101,11 +105,13 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
   const [state, count] =
     params.length === 2 ? params.reduceRight((a, b) => [a, b]) : params
 
+  const memoizedParse = React.useMemo(() => parseKeyframedUpdate(), [])
+
   // need to force a rerender for when the animated controller has finally accepted props
   const [, forceUpdate] = React.useState()
   const shouldForceUpdateRef = React.useRef(!initialProps)
 
-  const { states, config } = (function() {
+  const { states, config } = (function () {
     if (Array.isArray(props) || typeof props === 'function') {
       return { states: { [state]: props } }
     } else {
@@ -121,8 +127,8 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
       resolverRef,
       lastRef,
       mounted,
-      onRestRef,
-    }),
+      onRestRef
+    })
   })
 
   const args =
@@ -147,7 +153,7 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
     () => {
       void (
         mounted.current &&
-        parseKeyframedUpdate(
+        memoizedParse(
           states[state],
           callProp(config, state),
           setNextKeyFrame,
@@ -164,5 +170,5 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
 
 export const useKeyframes = {
   spring: (...args) => useKeyframesImpl(useSpring)(...args),
-  trail: (...args) => useKeyframesImpl(useTrail)(...args),
+  trail: (...args) => useKeyframesImpl(useTrail)(...args)
 }

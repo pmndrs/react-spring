@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { useTransition, useSpring, useChain, animated } from 'react-spring/hooks'
+import { useTransition, useSpring, animated, useChain2 } from 'react-spring/hooks'
 import styled from 'styled-components'
 import range from 'lodash/range'
+
+
 
 export default function App () {
   const [open, set] = useState(true)
@@ -29,9 +31,7 @@ export default function App () {
     ref: transRef
   })
 
-  // 3. set execution order
-  // React.useMemo(() =>  void useChain(open ? [springRef, transRef] : [transRef, springRef]) , [open])
-  useChain(open ? [springRef, transRef] : [transRef, springRef])
+  useChain2(open ? [springRef, transRef] : [transRef, springRef], [open])
 
   return (
     <Main onClick={() => set(open => !open)}>

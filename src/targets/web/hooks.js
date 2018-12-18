@@ -7,7 +7,7 @@ import { useSpring } from '../../hooks/useSpring'
 import { useTrail } from '../../hooks/useTrail'
 import { useTransition } from '../../hooks/useTransition'
 import { useKeyframes } from '../../hooks/useKeyframes'
-import { useChain } from '../../hooks/useChain'
+import { useChain, useChain2 } from '../../hooks/useChain'
 
 const domElements = [
   'a',
@@ -166,4 +166,5 @@ export {
   useTransition,
   useKeyframes,
   useChain,
+  useChain2
 }
