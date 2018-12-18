@@ -1,3 +1,6 @@
+// This is where the bulk of the type definitions should go.
+// The other entry points (except for hooks) all just expose this but with some customization.
+
 import {
   Component,
   PureComponent,

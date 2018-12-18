@@ -1,4 +1,5 @@
 import { SpringConfig, SpringBaseProps, TransitionKeyProps } from './universal'
+export { SpringConfig, SpringBaseProps, TransitionKeyProps }
 
 /** List from `function getForwardProps` in `src/shared/helpers` */
 type ExcludedProps =
@@ -23,7 +24,7 @@ type ExcludedProps =
   | 'interpolateTo'
   | 'autoStart'
   | 'ref'
-type ForwardedProps<T> = Pick<T, Exclude<keyof T, ExcludedProps>>
+export type ForwardedProps<T> = Pick<T, Exclude<keyof T, ExcludedProps>>
 // NOTE: because of the Partial, this makes a weak type, which can have excess props
 type InferFrom<T extends object> = T extends { to: infer TTo }
   ? Partial<TTo>
@@ -33,21 +34,21 @@ type InferFrom<T extends object> = T extends { to: infer TTo }
 //  but with a delayed evaluation that still allows A to be inferrable
 type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
 
-type SetUpdateFn<DS extends object> = (ds: DS) => void
+export type SetUpdateFn<DS extends object> = (ds: DS) => void
 
 // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
 // updating it. However, there are no types for Controller, and I assume it is intentionally so.
-interface HooksBaseProps
+export interface HooksBaseProps
   extends Pick<SpringBaseProps, Exclude<keyof SpringBaseProps, 'config'>> {
   // there is an undocumented onKeyframesHalt which passes the controller instance,
   // so it also cannot be typed unless Controller types are written
 }
 
-interface UseSpringBaseProps extends HooksBaseProps {
+export interface UseSpringBaseProps extends HooksBaseProps {
   config?: SpringBaseProps['config']
 }
 
-type UseSpringProps<DS extends UseSpringBaseProps> = Merge<
+export type UseSpringProps<DS extends UseSpringBaseProps> = Merge<
   DS,
   {
     from?: InferFrom<DS>
@@ -76,7 +77,8 @@ export function useTrail<DS extends object>(
   values: UseSpringProps<DS>
 ): ForwardedProps<DS>[] // safe to modify (result of .map)
 
-interface UseTransitionProps<TItem, DS extends object> extends HooksBaseProps {
+export interface UseTransitionProps<TItem, DS extends object>
+  extends HooksBaseProps {
   items: ReadonlyArray<TItem> | null | undefined
   /**
    * Spring config, or for individual items: fn(item => config)
@@ -118,9 +120,9 @@ interface UseTransitionProps<TItem, DS extends object> extends HooksBaseProps {
   update?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>)
 }
 
-type TransitionState = 'enter' | 'leave' | 'update'
+export type TransitionState = 'enter' | 'leave' | 'update'
 
-interface UseTransitionResult<TItem, DS extends object> {
+export interface UseTransitionResult<TItem, DS extends object> {
   item: TItem
   key: string
   state: TransitionState
@@ -142,7 +144,7 @@ export namespace useKeyframes {
     next: (props: UseSpringProps<DS>) => Promise<void>,
     cancel: () => void
   ) => Promise<void>
-  interface SpringKeyframeSlotsConfig extends HooksBaseProps {
+  export interface SpringKeyframeSlotsConfig extends HooksBaseProps {
     // this is way too self-referential to type correctly
     // both onRest and config have to have vague types... 😭
 
@@ -155,11 +157,12 @@ export namespace useKeyframes {
       | ReadonlyArray<SpringConfig>
       | ((slot: string) => SpringConfig | ReadonlyArray<SpringConfig>)
   }
-  interface TrailKeyframeSlotsConfig<TItem> extends SpringKeyframeSlotsConfig {
+  export interface TrailKeyframeSlotsConfig<TItem>
+    extends SpringKeyframeSlotsConfig {
     items: ReadonlyArray<TItem>
   }
 
-  type ResolveKeyframeSlotValue<T> = T extends KeyframeFn<infer V>
+  export type ResolveKeyframeSlotValue<T> = T extends KeyframeFn<infer V>
     ? V
     : T extends ReadonlyArray<infer U>
     ? U extends KeyframeFn<infer V>
@@ -202,7 +205,7 @@ export namespace useKeyframes {
     initialProps?: UseSpringProps<any>
   ): UseTrailKeyframesWithSlots<TSlots>
 
-  type UseSpringKeyframesWithSlots<TSlots extends object> =
+  export type UseSpringKeyframesWithSlots<TSlots extends object> =
     // there's a bug in the implementation that actually should cause a crash
     // because there is no second argument, but because it is built with babel on loose mode,
     // it doesn't...
@@ -210,16 +213,16 @@ export namespace useKeyframes {
       slot: TSlot
     ) => ForwardedProps<ResolveKeyframeSlotValue<TSlots[TSlot]>>
   // this one crashes "even more" because both values are undefined
-  type UseSpringKeyframes<DS extends object> = () => ForwardedProps<DS>
+  export type UseSpringKeyframes<DS extends object> = () => ForwardedProps<DS>
 
-  type UseTrailKeyframesWithSlots<TSlots extends object> = <
+  export type UseTrailKeyframesWithSlots<TSlots extends object> = <
     TSlot extends Exclude<keyof TSlots, keyof TrailKeyframeSlotsConfig<any>>
   >(
     count: number,
     slot: TSlot
   ) => ForwardedProps<ResolveKeyframeSlotValue<TSlots[TSlot]>>[]
 
-  type UseTrailKeyframes<DS extends object> = (
+  export type UseTrailKeyframes<DS extends object> = (
     count: number
   ) => ForwardedProps<DS>[]
 }
