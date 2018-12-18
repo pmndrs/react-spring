@@ -116,8 +116,8 @@ const frameLoop = () => {
     }
     // Either call onEnd or next frame
     if (isDone) {
-      controller.debouncedOnEnd({ finished: true, noChange })
       controllers.delete(controller)
+      controller.debouncedOnEnd({ finished: true, noChange })
     }
   }
 
