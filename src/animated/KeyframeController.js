@@ -4,7 +4,7 @@ import { requestFrame } from '../animated/Globals'
 
 export default class KeyframeController {
   frameId = 0
-  constructor (props) {
+  constructor(props) {
     const { config, onRest, ref, ...initialProps } = props
     this.globalProps = (({
       native,
@@ -24,16 +24,17 @@ export default class KeyframeController {
       destroyed,
       track,
       interpolateTo,
-      autoStart
+      autoStart,
     }) => ({
       native,
       onStart,
+      reset,
       onFrame,
       children,
       inject,
       delay,
       destroyed,
-      track
+      track,
     }))(props)
 
     this.globalConfig = props.config
@@ -44,11 +45,11 @@ export default class KeyframeController {
     this.instance = new Controller({ ...initialProps, native: true })
   }
 
-  get isActive () {
+  get isActive() {
     return this.instance.isActive
   }
 
-  set config (config) {
+  set config(config) {
     this.globalConfig = config
   }
 
@@ -60,23 +61,29 @@ export default class KeyframeController {
     // controller instantiation i.e. globalConfig
 
     const config = props.config
-      ? config
+      ? props.config
       : Array.isArray(this.globalConfig)
-        ? this.globalConfig[index]
-        : this.globalConfig
-
+      ? this.globalConfig[index]
+      : this.globalConfig
     this.onFrameRest = props.onRest
     return new Promise(resolve => {
       this.instance.update(
         { ...this.globalProps, ...props, config },
         this.onEnd(this.onFrameRest, localFrameId, last, resolve)
       )
+
+      // hacky solution to force the parent to be updated any time
+      // the child controller is reset
+      this.instance.props.reset &&
+        this.instance.props.native &&
+        this.parentForceUpdate &&
+        requestFrame(this.parentForceUpdate)
     })
   }
 
   start = onEnd => {
     this.globalOnEnd = onEnd
-    if (this.currSlots && !shallowEqual(this.prevSlots, this.currSlots)) {
+    if (this.currSlots) {
       const localFrameId = ++this.frameId
       if (Array.isArray(this.currSlots)) {
         let q = Promise.resolve()
@@ -129,16 +136,30 @@ export default class KeyframeController {
     }
   }
 
-  get merged () {
+  get merged() {
     return this.instance.merged
   }
 
+  get props() {
+    return this.instance.props
+  }
+
+  updateWithForceUpdate = (forceUpdate, ...args) => {
+    this.parentForceUpdate = forceUpdate
+    // needed to forceUpdate when the controller is reset
+    // for native controllers
+    this.parentForceUpdate = forceUpdate
+    this.update(...args)
+  }
   update = (slots, ...args) => {
     this.currSlots = slots
+
     !this.ref && this.start(...args)
   }
 
   getValues = () => {
     return this.instance.getValues()
   }
+
+  destroy = () => this.instance.destroy()
 }

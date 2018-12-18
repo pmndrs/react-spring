@@ -1,89 +1,8 @@
 import React from 'react'
-import * as Globals from '../animated/Globals'
-import { useSpring } from './useSpring'
-import { useTrail } from './useTrail'
+import { useSpring, useSpringImpl } from './useSpring'
+import { useTrail, useTrailImpl } from './useTrail'
 import { callProp } from '../shared/helpers'
-
-export function parseKeyframedUpdate () {
-  var guid = 0
-  return function (slots, config, setNext, cancel) {
-    const localId = ++guid
-    if (Array.isArray(slots)) {
-      let q = Promise.resolve()
-      for (let i = 0; i < slots.length; i++) {
-        const slot = slots[i]
-        const last = i === slots.length - 1
-        q = q.then(() => {
-          return localId === guid && setNext(
-            {
-              config: config && (Array.isArray(config) ? config[i] : config),
-              ...slot
-            },
-            last
-          )
-        })
-      }
-    } else if (typeof slots === 'function') {
-      let index = 0
-      slots(
-        (animatedProps, last = false) => {
-          const props = {
-            config: config && Array.isArray(config) ? config[index++] : config,
-            ...animatedProps
-          }
-          return localId === guid && setNext(props, last)
-        },
-        (finished = true) => cancel && cancel(finished)
-      )
-    } else {
-      setNext(
-        {
-          config: config && Array.isArray(config) ? config[0] : config,
-          ...slots
-        },
-        true
-      )
-    }
-  }
-}
-
-export function onKeyframesHalt ({ resolverRef, lastRef, mounted, onRestRef }) {
-  return function (ctrl) {
-    return function ({ finished }) {
-      resolverRef.current && resolverRef.current()
-      const merged = ctrl && ctrl.merged
-      const { onRest, onKeyframeRest } = onRestRef.current
-      if (finished && lastRef.current && mounted.current) {
-        onKeyframeRest && onKeyframeRest(merged)
-        onRest && onRest(merged)
-      }
-    }
-  }
-}
-
-export function setNext (
-  resolverRef = { current: null },
-  lastRef = { current: null },
-  setAnimation,
-  onRestRef = { current: { onKeyframeRest: null } },
-  shouldForceUpdateRef = { current: false },
-  forceUpdate
-) {
-  return function (props, last) {
-    return new Promise(resolve => {
-      const { onRest, ...animatedProps } = props || {}
-      onRestRef.current.onKeyframeRest = onRest
-      resolverRef.current = resolve
-      lastRef.current = last
-      setAnimation && setAnimation(animatedProps)
-      shouldForceUpdateRef.current &&
-        Globals.requestFrame(() => {
-          shouldForceUpdateRef.current = false
-          forceUpdate()
-        })
-    })
-  }
-}
+import * as Globals from '../animated/Globals'
 
 /**
  *
@@ -98,37 +17,29 @@ export function setNext (
 const useKeyframesImpl = useImpl => (props, initialProps = null) => (
   ...params
 ) => {
-  const resolverRef = React.useRef(null)
-  const onRestRef = React.useRef({ onRest: null, onKeyframeRest: null })
-  const lastRef = React.useRef(true)
   const mounted = React.useRef(false)
-  const [state, count] =
+  const [state = 'default', count] =
     params.length === 2 ? params.reduceRight((a, b) => [a, b]) : params
-
-  const memoizedParse = React.useMemo(() => parseKeyframedUpdate(), [])
 
   // need to force a rerender for when the animated controller has finally accepted props
   const [, forceUpdate] = React.useState()
+
   const shouldForceUpdateRef = React.useRef(!initialProps)
 
-  const { states, config } = (function () {
+  const { states, config, onRest } = (function() {
     if (Array.isArray(props) || typeof props === 'function') {
       return { states: { [state]: props } }
     } else {
       const { onRest, config, ...rest } = props
-      onRestRef.current.onRest = onRest
-      return { states: rest, config }
+      return { states: rest, config, onRest }
     }
   })()
 
   const calculatedProps = () => ({
     ...initialProps,
-    onKeyframesHalt: onKeyframesHalt({
-      resolverRef,
-      lastRef,
-      mounted,
-      onRestRef
-    })
+    native: true,
+    onRest,
+    config,
   })
 
   const args =
@@ -136,14 +47,6 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
 
   const [animProps, setAnimation, cancel] = useImpl(...args)
 
-  const setNextKeyFrame = setNext(
-    resolverRef,
-    lastRef,
-    setAnimation,
-    onRestRef,
-    shouldForceUpdateRef,
-    forceUpdate
-  )
   React.useEffect(() => {
     mounted.current = true
     return () => (mounted.current = false)
@@ -151,24 +54,17 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
 
   React.useEffect(
     () => {
-      void (
-        mounted.current &&
-        memoizedParse(
-          states[state],
-          callProp(config, state),
-          setNextKeyFrame,
-          cancel
-        )
-      )
+      setAnimation(states[state])
     },
     [state]
   )
+
   return shouldForceUpdateRef.current && Array.isArray(animProps)
     ? []
     : animProps
 }
 
 export const useKeyframes = {
-  spring: (...args) => useKeyframesImpl(useSpring)(...args),
-  trail: (...args) => useKeyframesImpl(useTrail)(...args)
+  spring: (...args) => useKeyframesImpl(useSpringImpl('keyframe'))(...args),
+  trail: (...args) => useKeyframesImpl(useTrailImpl('keyframe'))(...args),
 }

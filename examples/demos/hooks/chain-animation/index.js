@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   useTransition,
   useSpring,
   animated,
   config,
-  useChain2,
+  useChain,
 } from 'react-spring/hooks'
 import styled from 'styled-components'
-import range from 'lodash/range'
 import data from '../list-reordering/data'
-import { useChain } from '../../../../dist/hooks'
 
 export default function App() {
   const [open, set] = useState(true)
@@ -39,7 +37,7 @@ export default function App() {
     ref: transRef,
   })
 
-  useChain2(open ? [springRef, transRef] : [transRef, springRef], [open])
+  useChain(open ? [springRef, transRef] : [transRef, springRef], [open])
 
   return (
     <Main>

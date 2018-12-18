@@ -3,7 +3,7 @@ import {
   useState,
   useEffect,
   useMemo,
-  useImperativeMethods
+  useImperativeMethods,
 } from 'react'
 import KeyframeController from '../animated/KeyframeController'
 import { toArray, callProp, Queue } from '../shared/helpers'
@@ -17,7 +17,7 @@ let get = props => {
   return { items, keys: mapKeys(items, keys), ...rest }
 }
 
-function calculateDiffInItems ({ prevProps, ...state }, props) {
+function calculateDiffInItems({ prevProps, ...state }, props) {
   const { keys: _keys } = get(prevProps || {})
   const { keys, items, unique, trail = 0, update, enter, leave, config } = get(
     props
@@ -57,7 +57,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
       originalKey: key,
       destroyed: false,
       config: callProp(config, item, state),
-      to: callProp(enter, item)
+      to: callProp(enter, item),
     }
   })
 
@@ -73,7 +73,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
       destroyed: true,
       trail: (delay = delay + trail),
       config: callProp(config, item, state),
-      to: callProp(leave, item)
+      to: callProp(leave, item),
     })
     delete current[item.originalKey]
   })
@@ -89,7 +89,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
       destroyed: false,
       trail: (delay = delay + trail),
       config: callProp(config, item, state),
-      to: callProp(update, item)
+      to: callProp(update, item),
     }
   })
 
@@ -110,7 +110,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
     transitions = [
       ...transitions.slice(0, pos),
       item,
-      ...transitions.slice(pos)
+      ...transitions.slice(pos),
     ]
   })
 
@@ -120,7 +120,7 @@ function calculateDiffInItems ({ prevProps, ...state }, props) {
 /**
  * @param {TransitionProps} props
  */
-export function useTransition (props) {
+export function useTransition(props) {
   const {
     items,
     keys: _currentKeys,
@@ -128,26 +128,23 @@ export function useTransition (props) {
     initial,
     onRest,
     onDestroyed,
-    ref
+    ref,
   } = get(props)
 
   const mounted = useRef(false)
   const instances = useRef(!mounted.current && new Map([]))
   const startQueue = useRef({
     queue: !mounted.current && new Queue(),
-    endResolver: () => null
+    endResolver: () => null,
   })
 
-  const destroyedItems = useRef([])
-
-  // const memoizedParse = React.useMemo(() => parseKeyframedUpdate(), [])
   const first = useRef(true)
   const activeSlots = useRef({})
   const [state, setState] = useState({
     deleted: [],
     current: {},
     transitions: [],
-    prevProps: null
+    prevProps: null,
   })
 
   useEffect(() => {
@@ -176,7 +173,7 @@ export function useTransition (props) {
                 config,
                 delay: trail,
                 native: true,
-                ref
+                ref,
               })
             )
 
@@ -186,10 +183,9 @@ export function useTransition (props) {
           if (slot === 'update' || slot !== activeSlots.current[key]) {
             // add the current running slot to the active slots ref so the same slot isnt re-applied
             activeSlots.current[key] = slot
-            function onEnd ({ finished }) {
+            function onEnd({ finished }) {
               if (mounted.current && finished) {
                 if (destroyed && onDestroyed) onDestroyed(item)
-                if (destroyed) destroyedItems.current.push(key)
                 // onRest needs to be called everytime each item
                 // has finished, it is needed for notif hub to work.
                 // we could have two seperate callback, one for each
@@ -203,33 +199,13 @@ export function useTransition (props) {
                     startQueue.current.endResolver = null
                   }
 
-                  // run full cleanup when all instances of controller are done animating
-                  const cleanup = ({
-                    transitions: _transitions,
-                    deleted: _deleted
-                  }) => {
-                    let transitions = [..._transitions]
-                    let deleted = [..._deleted]
-                    destroyedItems.current
-                      .filter((key, i, self) => self.indexOf(key) === i)
-                      .forEach(deletedKey => {
-                        transitions = transitions.filter(
-                          ({ key, destroyed }) =>
-                            !(destroyed && key === deletedKey)
-                        )
-                        deleted = deleted.filter(
-                          ({ key, destroyed }) =>
-                            !(destroyed && key === deletedKey)
-                        )
-                      })
-                    destroyedItems.current = []
-                    return { transitions, deleted }
-                  }
-
                   // update when all transitions is complete to clean dom of removed elements.
                   setState(state => ({
                     ...state,
-                    ...cleanup(state)
+                    deleted: [],
+                    transitions: state.transitions.filter(
+                      ({ destroyed }) => !destroyed
+                    ),
                   }))
                 }
               }
@@ -248,7 +224,7 @@ export function useTransition (props) {
         ...state,
         transitions,
         prevProps: props,
-        ...rest
+        ...rest,
       }))
     },
     [mapKeys(items, _currentKeys).join('')]
@@ -265,7 +241,7 @@ export function useTransition (props) {
     stop: (finished, resolve) => {
       instances.current.forEach(ctrl => ctrl.isActive && ctrl.stop(finished))
       resolve && resolve()
-    }
+    },
   }))
 
   return state.transitions.map(({ item, state, key }) => {
@@ -273,7 +249,7 @@ export function useTransition (props) {
       item,
       key,
       state,
-      props: instances.current.get(key).getValues()
+      props: instances.current.get(key).getValues(),
     }
   })
 }

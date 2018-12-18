@@ -115,8 +115,8 @@ return trail.map(({ x, height, opacity }, index) => (
 })
 return transitions.map(({ item: Page, props, key }) => (
   <Page key={key} style={props} />
-))`
-    }
+))`,
+    },
   },
   {
     name: 'hooks/image-fade',
@@ -136,8 +136,8 @@ return transitions.map(({ item, props, key }) => (
     key={key}
     style={{ ...props, backgroundImage: \`url(\${item.url})\` }}
   />
-))`
-    }
+))`,
+    },
   },
   {
     name: 'hooks/multistage-transitions',
@@ -189,7 +189,7 @@ const useScript = useKeyframes.spring(async next => {
 
 const props = useScript()
 return items.map(i =>
-  <animated.div style={{ transform: props.r.interpolate(interp(i)) }} />)`
-    }
+  <animated.div style={{ transform: props.r.interpolate(interp(i)) }} />)`,
+    },
   },
 ]

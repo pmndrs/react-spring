@@ -9,8 +9,9 @@ import {
 import Ctrl from '../animated/Controller'
 import { callProp } from '../shared/helpers'
 import { requestFrame } from '../animated/Globals'
+import KeyframeController from '../animated/KeyframeController'
 
-export function useTrail(length, args) {
+export const useTrailImpl = (type = 'default') => (length, args) => {
   const [, forceUpdate] = useState()
   // Extract animation props and hook-specific props, can be a function or an obj
   const isFn = typeof args === 'function'
@@ -21,12 +22,15 @@ export function useTrail(length, args) {
     () => {
       const instances = []
       for (let i = 0; i < length; i++) {
+        const initProps = {
+          ...props,
+          attach: i > 0 && (() => instances[i - 1]),
+          config: callProp(config, i),
+        }
         instances.push(
-          new Ctrl({
-            ...props,
-            attach: i > 0 && (() => instances[i - 1]),
-            config: callProp(config, i),
-          })
+          type === 'keyframe'
+            ? new KeyframeController(initProps)
+            : new Ctrl(initProps)
         )
       }
       return instances
@@ -36,14 +40,7 @@ export function useTrail(length, args) {
   // Destroy controller on onmount
   const instancesRef = useRef()
   instancesRef.current = instances
-  useEffect(
-    () => () => {
-      console.log('tr')
-      console.log(instancesRef.current)
-      instancesRef.current.forEach(i => i.destroy())
-    },
-    []
-  )
+  //useEffect(() => () => instancesRef.current.forEach(i => i.destroy()), [])
   // Define onEnd callbacks and resolvers
   const endResolver = useRef()
   const onHalt = onKeyframesHalt
@@ -78,10 +75,14 @@ export function useTrail(length, args) {
         const last = reverse ? i === 0 : instances.length - 1 === i
         const attachIdx = reverse ? i + 1 : i - 1
         const attachController = instances[attachIdx]
-        ctrl.update({
+
+        const updateProps = {
           ...props,
           attach: attachController && (() => attachController),
-        })
+        }
+        ctrl.props.reset && type === 'keyframe' && last
+          ? ctrl.updateWithForceUpdate(forceUpdate, updateProps)
+          : ctrl.update(updateProps)
 
         if (!ctrl.props.ref) ctrl.start(last && onHalt(ctrl))
         if (last && ctrl.props.reset) requestFrame(forceUpdate)
@@ -102,3 +103,7 @@ export function useTrail(length, args) {
       ]
     : propValues
 }
+
+export const useTrail = useTrailImpl()
+
+// export default useTrail
