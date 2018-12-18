@@ -7,7 +7,7 @@ import range from 'lodash/range'
 
 export default function App () {
   const [open, set] = useState(true)
-  const [items] = useState(() => range(15))
+  const [items] = useState(() => range(5))
 
   // 1. create spring-refs, which will refer to the springs Controller
   const springRef = useRef()
@@ -26,7 +26,7 @@ export default function App () {
     enter: { opacity: 1, transform: 'translate3d(0,0px,0)' },
     leave: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
     config: { mass: 5, tension: 500, friction: 90 },
-    trail: Math.min(50, 1000 / items.length),
+    trail: 500 / items.length,
     unique: true,
     ref: transRef
   })
@@ -54,16 +54,16 @@ const Sidebar = styled(animated.div)`
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-  grid-template-rows: repeat(auto-fill, 50px);
-  grid-gap: 20px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+  grid-template-rows: repeat(auto-fill, 20px);
+  grid-gap: 10px;
+  padding: 10px;
   background: lightgrey;
   overflow-y: scroll;
 `
 
 const Item = styled(animated.div)`
   width: 100%;
-  height: 50px;
+  height: 20px;
   background: hotpink;
 `
