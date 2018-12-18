@@ -14,6 +14,9 @@ export default {
       ],
       raw: `
       <style>
+        * {
+          box-sizing: border-box;
+        }
         #root > div > div:first-of-type {
           width: 350px;
           min-width: 350px;

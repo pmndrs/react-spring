@@ -1,19 +1,28 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { useTransition, useSpring, animated, config, useChain2 } from 'react-spring/hooks'
+import {
+  useTransition,
+  useSpring,
+  animated,
+  config,
+  useChain2,
+} from 'react-spring/hooks'
 import styled from 'styled-components'
 import range from 'lodash/range'
 import data from '../list-reordering/data'
+import { useChain } from '../../../../dist/hooks'
 
-export default function App () {
+export default function App() {
   const [open, set] = useState(true)
 
   // 1. create spring-refs, which will refer to the springs Controller
   const springRef = useRef()
-  const props = useSpring({
+  const { size, background, opacity } = useSpring({
     from: { size: '20%' },
-    size: open ? '80%' : '20%',
+    size: open ? '100%' : '20%',
+    background: open ? 'white' : 'hotpink',
+    opacity: open ? 0 : 1,
     config: config.stiff,
-    ref: springRef
+    ref: springRef,
   })
 
   // 2. create transition-refs
@@ -27,14 +36,17 @@ export default function App () {
     trail: 500 / data.length,
     config: config.stiff,
     unique: true,
-    ref: transRef
+    ref: transRef,
   })
 
   useChain2(open ? [springRef, transRef] : [transRef, springRef], [open])
 
   return (
     <Main>
-      <Sidebar style={{ width: props.size, height: props.size }} onClick={() => set(open => !open)}>
+      <Sidebar
+        style={{ background, width: size, height: size }}
+        onClick={() => set(open => !open)}>
+        <Content style={{ opacity }}>Click</Content>
         {transitions.map(({ item, key, props }) => (
           <Item key={key} style={{ ...props, background: item.css }} />
         ))}
@@ -50,9 +62,11 @@ const Main = styled('div')`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 `
 
 const Sidebar = styled(animated.div)`
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   grid-gap: 20px;
@@ -63,6 +77,18 @@ const Sidebar = styled(animated.div)`
   cursor: pointer;
   will-change: width, height;
   box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.05);
+`
+
+const Content = styled(animated.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const Item = styled(animated.div)`
