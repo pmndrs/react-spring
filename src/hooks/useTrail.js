@@ -62,7 +62,7 @@ export const useTrailImpl = (type = 'default') => (length, args) => {
       )
     },
     get isActive() {
-      ;[...instances.current.values()].some(ctrl => ctrl.isActive)
+      Array.from(instances.current.values()).some(ctrl => ctrl.isActive)
     },
     stop: (finished = false) =>
       instances.current.forEach(([, ctrl]) => ctrl.stop(finished)),

@@ -37,7 +37,7 @@ export default function App() {
     ref: transRef,
   })
 
-  useChain(open ? [springRef, transRef] : [transRef, springRef], [open])
+  useChain(open ? [springRef, transRef] : [transRef, springRef])
 
   return (
     <Main>

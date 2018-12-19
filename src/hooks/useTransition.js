@@ -195,7 +195,9 @@ export function useTransition(props) {
                 // and one for a sort of global on rest and peritem onrest?
                 onRest && onRest(item, slot, ctrl.merged)
                 // Only call onRest when all springs have come to rest
-                if (![...instances.current.values()].some(v => v.isActive)) {
+                if (
+                  !Array.from(instances.current.values()).some(v => v.isActive)
+                ) {
                   if (ref) {
                     startQueue.current.endResolver &&
                       startQueue.current.endResolver()
