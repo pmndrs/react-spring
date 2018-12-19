@@ -1,10 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
-export function useChain(args, dependants) {
-  useEffect(
-    () => {
+export function useChain(refs, timeSteps, timeFrame = 1000) {
+  const frames = useRef([])
+  useEffect(() => {
+    if (timeSteps) {
+      frames.current.forEach(clearTimeout)
+      frames.current = []
+      refs.forEach((ref, index) =>
+        frames.current.push(
+          setTimeout(() => ref.current.start(), timeFrame * timeSteps[index])
+        )
+      )
+    } else {
       // Adding stops
-      const promise = args.reduce(
+      const promise = refs.reduce(
         (q, { current }) =>
           (q = q.then(
             () => current && new Promise(resolve => current.stop(true, resolve))
@@ -12,12 +21,11 @@ export function useChain(args, dependants) {
         Promise.resolve()
       )
       // Now add start to the promise chain
-      args.reduce(
+      refs.reduce(
         (q, { current }) =>
           (q = q.then(() => current && new Promise(current.start))),
         promise
       )
-    },
-    dependants !== void 0 ? dependants : args
-  )
+    }
+  }, refs)
 }

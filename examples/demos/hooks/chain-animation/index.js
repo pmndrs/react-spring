@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   useTransition,
   useSpring,
@@ -37,7 +37,8 @@ export default function App() {
     ref: transRef,
   })
 
-  useChain(open ? [springRef, transRef] : [transRef, springRef])
+  const chain = [springRef, transRef]
+  useChain(open ? chain : chain.reverse())
 
   return (
     <Main>
