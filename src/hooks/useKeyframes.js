@@ -54,6 +54,8 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
 
   React.useEffect(
     () => {
+      shouldForceUpdateRef.current && forceUpdate()
+      shouldForceUpdateRef.current = false
       setAnimation(states[state])
     },
     [state]

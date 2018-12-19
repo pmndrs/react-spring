@@ -153,7 +153,6 @@ export default class KeyframeController {
   }
   update = (slots, ...args) => {
     this.currSlots = slots
-
     !this.ref && this.start(...args)
   }
 
