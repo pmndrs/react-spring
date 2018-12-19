@@ -265,11 +265,12 @@ function App() {
 
 ## useChain
 
- `useChain([...refs])`
+ `useChain([...refs], timeSteps, timeFrame=1000)`
 
-The useChain hook allows you to set the execution order of previously defined animation-hooks, where one animation starts after the other. In order to do this you have to collect refs off the hooks you want to chain. A ref contains a managing instance with start/stop functionality (which you could call yourself if you wanted to). A hook that has given its ref will not start on its own from there on. The order in which you animate can be changed in subsequent render passes. 
+The useChain hook allows you to set the execution order of previously defined animation-hooks, where one animation starts after the other in sequence. In order to do this you have to collect refs off the hooks you want to chain. A ref contains a managing instance with start/stop functionality (which you could call yourself if you wanted to). A hook that has given its ref will not start on its own from there on. The order in which you animate can be changed in subsequent render passes. 
 
 useChain does not change how you form your views otherwise, you can use the output you get from animation-hooks in the same manner as before.
+
 
 ```jsx
 // Build a spring and catch its ref
@@ -287,6 +288,14 @@ return (
       <animated.div key={key} style={props} />)}
   </animated.div>
 )
+```
+
+If a sequence isn't what you want you can optionally define timeSteps and a timeFrame (which defaults to a second). timeSteps is just an array with offsets between 0-1 that correspend to beginning and the end of the timeFrame.
+
+```jsx
+// The spring will start right away
+// The transition will start after 0.5 * 1000ms (the timeFrame default) = 500ms
+useChain([springRef, transitionRef], [0, 0.5])
 ```
 
 <DemoGrid padding={0}>
