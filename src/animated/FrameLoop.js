@@ -3,15 +3,11 @@ import { now, requestFrame } from './Globals'
 
 let active = false
 const controllers = new Set()
-window.c = controllers
+
 const frameLoop = () => {
   let time = now()
 
   for (let controller of controllers) {
-    if (controller.isActive == undefined) {
-      debugger
-    }
-
     let isDone = true
     let noChange = true
 
