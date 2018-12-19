@@ -5,7 +5,8 @@ import Demo from './components/Demo'
 import examples from './components/examples-hooks'
 import './styles.css'
 
-const DEBUG = "chain-anim"
+const DEBUG = false
+//const DEBUG = 'chain'
 
 ReactDOM.render(
   <DemoGrid>
@@ -13,6 +14,7 @@ ReactDOM.render(
       .filter(item => (DEBUG ? item.name.includes(DEBUG) : true))
       .map(data => (
         <Demo
+          overlayCode={DEBUG === false}
           key={data.name}
           {...data}
           import={import('./demos/' + data.name)}

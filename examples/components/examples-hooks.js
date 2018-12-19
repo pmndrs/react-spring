@@ -5,15 +5,13 @@ export default [
     link: 'https://codesandbox.io/embed/8zx4ppk01l',
     tags: ['useSpring'],
     code: {
-      useSpring: `const [{ p1 }, set] = useSpring(() => ({ p1: [0, 0] }))
-const [{ p2 }] = useSpring(() => ({ p2: p1 }))
-const [{ p3 }] = useSpring(() => ({ p3: p2 }))
+      useSpring: `const [trail, set] = useTrail(3, () => ({ xy: [0, 0] }))
 const tr = (x, y) => \`translate3d(\${x}px,\${y}px,0)\`
 return (
   <div onMouseMove={({ clientX: x, clientY: y }) => set({ p1: [x, y] })}>
-    <animated.div style={{ transform: p3.interpolate(tr) }} />
-    <animated.div style={{ transform: p2.interpolate(tr) }} />
-    <animated.div style={{ transform: p1.interpolate(tr) }} />
+  {trail.map(({ xy }, index) => (
+    <animated.div key={index} style={{ transform: xy.interpolate(tr) }} />
+  ))}
   </div>
 )`,
     },
@@ -117,8 +115,8 @@ return trail.map(({ x, height, opacity }, index) => (
 })
 return transitions.map(({ item: Page, props, key }) => (
   <Page key={key} style={props} />
-))`
-    }
+))`,
+    },
   },
   {
     name: 'hooks/image-fade',
@@ -138,8 +136,8 @@ return transitions.map(({ item, props, key }) => (
     key={key}
     style={{ ...props, backgroundImage: \`url(\${item.url})\` }}
   />
-))`
-    }
+))`,
+    },
   },
   {
     name: 'hooks/multistage-transitions',
@@ -157,7 +155,7 @@ return transitions.map(({ item, props, key }) => (
     name: 'hooks/chain-animation',
     title: 'Chain animation',
     link: 'https://codesandbox.io/embed/7mqy09jyq',
-    tags: ['useTransition'],
+    tags: ['useChain'],
   },
   {
     name: 'hooks/notification-hub',
@@ -191,7 +189,7 @@ const useScript = useKeyframes.spring(async next => {
 
 const props = useScript()
 return items.map(i =>
-  <animated.div style={{ transform: props.r.interpolate(interp(i)) }} />)`
-    }
+  <animated.div style={{ transform: props.r.interpolate(interp(i)) }} />)`,
+    },
   },
 ]

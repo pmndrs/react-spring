@@ -1,72 +1,53 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
-import { useTransition, useSpring, animated } from 'react-spring/hooks'
+import React, { useState, useRef, useEffect } from 'react'
+import {
+  useTransition,
+  useSpring,
+  animated,
+  config,
+  useChain,
+} from 'react-spring/hooks'
 import styled from 'styled-components'
-import range from 'lodash/range'
-
-/** Problem: primitives can't be chained, it is hard to orchestrate them.
- * In this case we want the sidebar to open first, then the content transitions in.
- * On close we want the content to transition out, then the sidebar closes.
- *
- * Possible solution: Controller has a "autostart" property that's set to true by default
- * for hooks. If we can let the user controll that, they can "start" the animation on their own.
- * A hook (useChain?) could perhaps controll the order in which primites are started, watching
- * their onRest props.
- *
- * Requirements for this to:
- * 1. hooks could switch to autostart: false when a "ref" is given, which points to their controller
- * 2. onRest should only be called when all springs come to rest. In current useTransition onRest
- *    is called on every item that comes to rest instead ...
- */
-
-function useChain(args) {
-  useEffect(() => {
-    let queue = Promise.resolve()
-    for (let ref of args) {
-      if (ref && ref.current) {
-        if (Array.isArray(ref.current))
-          queue = queue.then(() =>
-            Promise.all(ref.current.map(ref => ref.start()))
-          )
-        else queue = queue.then(() => ref.current.start())
-      }
-    }
-  })
-}
+import data from '../list-reordering/data'
 
 export default function App() {
   const [open, set] = useState(true)
-  const [items] = useState(() => range(100))
 
   // 1. create spring-refs, which will refer to the springs Controller
-  const springRef = useRef(null)
-  const props = useSpring({
-    from: { opacity: 0, transform: `translate3d(-100%,0,0)` },
-    opacity: open ? 1 : 0,
-    transform: `translate3d(${open ? 0 : -100}%,0,0)`,
+  const springRef = useRef()
+  const { size, opacity, ...rest } = useSpring({
+    from: { size: '20%', background: 'hotpink' },
+    size: open ? '100%' : '20%',
+    background: open ? 'white' : 'hotpink',
+    opacity: open ? 0 : 1,
+    config: config.stiff,
     ref: springRef,
   })
 
   // 2. create transition-refs
-  const transRef = useRef(null)
+  const transRef = useRef()
   const transitions = useTransition({
-    items: open ? items : [],
-    from: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
-    enter: { opacity: 1, transform: 'translate3d(0,0px,0)' },
-    leave: { opacity: 0, transform: 'translate3d(0,-40px,0)' },
-    config: { mass: 5, tension: 500, friction: 90 },
-    trail: 1000 / items.length,
+    items: open ? data : [],
+    keys: item => item.name,
+    from: { opacity: 0, transform: 'scale(0)' },
+    enter: { opacity: 1, transform: 'scale(1)' },
+    leave: { opacity: 0, transform: 'scale(0)' },
+    trail: 500 / data.length,
+    config: config.stiff,
     unique: true,
     ref: transRef,
   })
 
-  // 3. set execution order
-  useChain(open ? [springRef, transRef] : [transRef, springRef])
+  const chain = [springRef, transRef]
+  useChain(open ? chain : chain.reverse())
 
   return (
-    <Main onClick={() => set(open => !open)}>
-      <Sidebar style={props}>
+    <Main>
+      <Sidebar
+        style={{ ...rest, width: size, height: size }}
+        onClick={() => set(open => !open)}>
+        <Content style={{ opacity }}>Click</Content>
         {transitions.map(({ item, key, props }) => (
-          <Item key={key} style={props} />
+          <Item key={key} style={{ ...props, background: item.css }} />
         ))}
       </Sidebar>
     </Main>
@@ -77,22 +58,45 @@ const Main = styled('div')`
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 `
 
 const Sidebar = styled(animated.div)`
-  width: 100%;
-  height: 100%;
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-  grid-template-rows: repeat(auto-fill, 50px);
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   grid-gap: 20px;
   padding: 20px;
-  background: lightgrey;
+  background: white;
   overflow-y: scroll;
+  border-radius: 5px;
+  cursor: pointer;
+  will-change: width, height;
+  box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.05);
+`
+
+const Content = styled(animated.div)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const Item = styled(animated.div)`
   width: 100%;
-  height: 50px;
-  background: hotpink;
+  height: 100%;
+  background: white;
+  border-radius: 5px;
+  background-image: url(https://images.unsplash.com/photo-1544511916-0148ccdeb877?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1901&q=80i);
+  background-size: cover;
+  background-position: center center;
+  will-change: transform, opacity;
 `

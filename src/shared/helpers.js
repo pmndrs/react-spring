@@ -1,16 +1,54 @@
-import {useRef, useLayoutEffect} from 'react'
+import { useRef, useLayoutEffect } from 'react'
 import AnimatedValue from '../animated/AnimatedValue'
 import AnimatedArray from '../animated/AnimatedArray'
 
-export function usePrevious (value, initialValue = null) {
+export function usePrevious(value, initialValue = null) {
   const ref = useRef(initialValue)
-  useLayoutEffect(() => void(ref.current = value), [value])
+  useLayoutEffect(() => void (ref.current = value), [value])
   return ref
 }
 
-export function debounce (func, delay = 0) {
+export class Queue {
+  constructor() {
+    this.queue = []
+    this.offset = 0
+  }
+  get length() {
+    return this.queue.length - this.offset
+  }
+
+  isEmpty() {
+    return this.queue.length === 0
+  }
+  enqueue(item) {
+    this.queue.push(item)
+  }
+
+  dequeue() {
+    // const { queue, offset } = this
+    if (this.queue.length == 0) return undefined
+
+    const item = this.queue[this.offset]
+
+    if (++this.offset * 2 >= this.queue.length) {
+      this.queue = this.queue.slice(this.offset)
+      this.offset = 0
+    }
+    return item
+  }
+  clear() {
+    this.queue = []
+    this.offset = 0
+  }
+  peek() {
+    const { queue, offset } = this
+    return queue.length > 0 ? queue[offset] : undefined
+  }
+}
+
+export function debounce(func, delay = 0) {
   let timeoutId
-  return function () {
+  return function() {
     const context = this
     const args = arguments
     clearTimeout(timeoutId)
@@ -34,8 +72,8 @@ export function shallowEqual(a, b) {
   return i === void 0 ? a === b : true
 }
 
-export function callProp(obj, state, ...args) {
-  return typeof obj === 'function' ? obj(state, ...args) : obj
+export function callProp(obj, ...args) {
+  return typeof obj === 'function' ? obj(...args) : obj
 }
 
 export function getValues(object) {
@@ -61,7 +99,6 @@ export function getForwardProps(props) {
     delay,
     attach,
     destroyed,
-    track,
     interpolateTo,
     autoStart,
     ref,
@@ -98,9 +135,10 @@ export function handleRef(ref, forward) {
   if (forward) {
     // If it's a function, assume it's a ref callback
     if (typeof forward === 'function') forward(ref)
-    else if (typeof forward === 'object')
+    else if (typeof forward === 'object') {
       // If it's an object and has a 'current' property, assume it's a ref object
       forward.current = ref
+    }
   }
   return ref
 }

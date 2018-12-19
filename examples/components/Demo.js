@@ -2,9 +2,10 @@ import React from 'react'
 import Loadable from 'react-loadable'
 import styled from 'styled-components'
 import { Spring, animated } from 'react-spring'
+import Observer from '@researchgate/react-intersection-observer'
 
 export default class Demo extends React.Component {
-  state = { code: undefined }
+  state = { code: undefined, visible: false }
   constructor(props) {
     super()
     this.component = Loadable({
@@ -16,6 +17,8 @@ export default class Demo extends React.Component {
     })
   }
 
+  setVisible = visible => this.setState({ visible })
+
   enter = tag =>
     this.props.code &&
     this.props.code[tag] &&
@@ -23,7 +26,14 @@ export default class Demo extends React.Component {
   leave = tag => this.setState({ code: undefined })
 
   render() {
-    const { title, description, tags, link, code } = this.props
+    const {
+      title,
+      description,
+      tags,
+      link,
+      code,
+      overlayCode = true,
+    } = this.props
     return (
       <Container>
         <Header>
@@ -43,7 +53,9 @@ export default class Demo extends React.Component {
                   children={tag}
                   onMouseEnter={() => this.enter(tag)}
                   onMouseLeave={() => this.leave(tag)}
-                  style={{ background: code && code[tag] ? '#5f5f5f' : '#9f9f9f' }}
+                  style={{
+                    background: code && code[tag] ? '#5f5f5f' : '#9f9f9f',
+                  }}
                 />
               ))}
             </p>
@@ -51,13 +63,18 @@ export default class Demo extends React.Component {
         </Header>
         <Content>
           <div>
+            {/*<Observer onChange={rec => this.setVisible(rec.isIntersecting)}>
+              {this.state.visible ? <this.component /> : <div />}
+            </Observer>*/}
             <this.component />
-            {/*<Spring
-              native
-              from={{ opacity: 0 }}
-              to={{ opacity: this.state.code ? 1 : 0 }}>
-              {props => <Code style={props} children={this.state.code} />}
-            </Spring>*/}
+            {overlayCode && (
+              <Spring
+                native
+                from={{ opacity: 0 }}
+                to={{ opacity: this.state.code ? 1 : 0 }}>
+                {props => <Code style={props} children={this.state.code} />}
+              </Spring>
+            )}
           </div>
         </Content>
       </Container>

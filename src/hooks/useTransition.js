@@ -1,7 +1,12 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react'
-import Controller from '../animated/Controller'
-import { parseKeyframedUpdate, setNext } from './KeyframesHook'
-import { toArray, callProp } from '../shared/helpers'
+import {
+  useRef,
+  useState,
+  useEffect,
+  useMemo,
+  useImperativeMethods,
+} from 'react'
+import KeyframeController from '../animated/KeyframeController'
+import { toArray, callProp, Queue } from '../shared/helpers'
 
 let guid = 0
 let mapKeys = (items, keys) =>
@@ -14,7 +19,7 @@ let get = props => {
 
 function calculateDiffInItems({ prevProps, ...state }, props) {
   const { keys: _keys } = get(prevProps || {})
-  const { keys, items, unique, trail, update, enter, leave, config } = get(
+  const { keys, items, unique, trail = 0, update, enter, leave, config } = get(
     props
   )
   const currSet = new Set(keys)
@@ -25,10 +30,15 @@ function calculateDiffInItems({ prevProps, ...state }, props) {
   const removed = state.transitions.filter(
     ({ destroyed, originalKey }) => !destroyed && !currSet.has(originalKey)
   )
+
   const added = keys.filter(key => !prevSet.has(key))
   const updated = _keys.filter(key => currSet.has(key))
 
-  let delay = 0
+  // if n
+  let delay = (!trail && props.delay) || 0
+
+  // Make sure trailed transitions start at 0
+  if (trail) delay -= trail
 
   added.forEach(key => {
     const keyIndex = keys.indexOf(key)
@@ -107,7 +117,6 @@ function calculateDiffInItems({ prevProps, ...state }, props) {
   return { deleted, updated, current, transitions }
 }
 
-const map = new Map([])
 /**
  * @param {TransitionProps} props
  */
@@ -122,12 +131,19 @@ export function useTransition(props) {
     ref,
   } = get(props)
 
-  const [, forceUpdate] = useState()
-  const instances = useRef(map)
-  const first = useRef(true)
   const mounted = useRef(false)
+  const instances = useRef(!mounted.current && new Map([]))
+  const startQueue = useRef({
+    queue: !mounted.current && new Queue(),
+    endResolver: () => null,
+  })
+
+  // Destroy controllers on unmount
+  useEffect(() => () => instances.current.forEach(i => i.destroy()), [])
+
+  const first = useRef(true)
   const activeSlots = useRef({})
-  const state = useRef({
+  const [state, setState] = useState({
     deleted: [],
     current: {},
     transitions: [],
@@ -142,81 +158,103 @@ export function useTransition(props) {
   // Prop changes effect
   useMemo(
     () => {
-      const { transitions, ...rest } = calculateDiffInItems(
-        state.current,
-        props
-      )
+      startQueue.current.queue.clear()
+      startQueue.current.endResolver = null
+      const { transitions, ...rest } = calculateDiffInItems(state, props)
+
       transitions.forEach(
         ({ state: slot, to, config, trail, key, item, destroyed }) => {
+          // when values are unique, clear out old controllers on enter
+          // also stop if inactive so that on end is not called
+
           !instances.current.has(key) &&
-            instances.current.set(key, {
-              ctrl: new Controller({
+            instances.current.set(
+              key,
+              new KeyframeController({
                 ...from,
                 ...(first.current && initial),
                 config,
                 delay: trail,
+                native: true,
                 ref,
-              }),
-              resolve: { current: null },
-              last: { current: true },
-            })
+              })
+            )
 
           const instance = instances.current.get(key)
-          const instanceArray = [...instances.current.values()]
-          const { ctrl, resolve, last } = instance
+          const ctrl = instance
 
           if (slot === 'update' || slot !== activeSlots.current[key]) {
             // add the current running slot to the active slots ref so the same slot isnt re-applied
             activeSlots.current[key] = slot
             function onEnd({ finished }) {
-              
-              resolve.current && resolve.current(ctrl.merged)
-              if (last.current && mounted.current && finished) {
+              if (mounted.current && finished) {
                 if (destroyed && onDestroyed) onDestroyed(item)
-                if (destroyed) {
-                  const filter = ({ key: _key }) => _key !== key
-                  state.current = {
-                    ...state.current,
-                    deleted: state.current.deleted.filter(filter),
-                    transitions: state.current.transitions.filter(filter),
-                  }
-                  if (!instanceArray.some(v => v.ctrl.isActive))
-                    forceUpdate()
-                }
-
+                // onRest needs to be called everytime each item
+                // has finished, it is needed for notif hub to work.
+                // we could have two seperate callback, one for each
+                // and one for a sort of global on rest and peritem onrest?
+                onRest && onRest(item, slot, ctrl.merged)
                 // Only call onRest when all springs have come to rest
-                if (onRest && !instanceArray.some(v => v.ctrl.isActive))
-                  onRest(item, slot, ctrl.merged)
+                if (
+                  !Array.from(instances.current.values()).some(v => v.isActive)
+                ) {
+                  if (ref) {
+                    startQueue.current.endResolver &&
+                      startQueue.current.endResolver()
+                    startQueue.current.endResolver = null
+                  }
+
+                  // update when all transitions is complete to clean dom of removed elements.
+                  setState(state => ({
+                    ...state,
+                    deleted: [],
+                    transitions: state.transitions.filter(
+                      ({ destroyed }) => !destroyed
+                    ),
+                  }))
+                }
               }
             }
-
-            parseKeyframedUpdate(
-              to,
-              config,
-              setNext(resolve, last, props => ctrl.update(props, onEnd)),
-              (finished = true) => ctrl.stop(finished)
-            )
+            ctrl.config = config
+            ctrl.update(to, onEnd)
+            if (ref) {
+              startQueue.current.queue.enqueue(() => ctrl.start(onEnd))
+            }
           }
         }
       )
+
       first.current = false
-      state.current = {
-        ...state.current,
+      setState(state => ({
+        ...state,
         transitions,
         prevProps: props,
         ...rest,
-      }
+      }))
     },
     [mapKeys(items, _currentKeys).join('')]
   )
 
-  if (props.ref)
-    props.ref.current = [...instances.current.values()].map(v => v.ctrl)
-
-  return state.current.transitions.map(({ item, state, key }) => ({
-    item,
-    key,
-    state,
-    props: instances.current.get(key).ctrl.getValues(),
+  useImperativeMethods(ref, () => ({
+    start: resolve => {
+      startQueue.current.endResolver = resolve
+      while (startQueue.current.queue.length) {
+        const start = startQueue.current.queue.dequeue()
+        start()
+      }
+    },
+    stop: (finished, resolve) => {
+      instances.current.forEach(ctrl => ctrl.isActive && ctrl.stop(finished))
+      resolve && resolve()
+    },
   }))
+
+  return state.transitions.map(({ item, state, key }) => {
+    return {
+      item,
+      key,
+      state,
+      props: instances.current.get(key).getValues(),
+    }
+  })
 }

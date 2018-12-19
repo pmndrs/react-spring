@@ -67,6 +67,7 @@ export default class AnimatedValue extends AnimatedWithChildren {
     }
   }
 
+  setValue = value => (this.value = value)
   getValue = () => this.value
   updateStyles = () => findAnimatedStyles(this, this.animatedStyles)
   updateValue = value => this.flush((this.value = value))

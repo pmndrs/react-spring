@@ -19,83 +19,83 @@
     "gzipped": 1990
   },
   "dist/web.js": {
-    "bundled": 78138,
-    "minified": 37292,
-    "gzipped": 12172,
+    "bundled": 77460,
+    "minified": 37094,
+    "gzipped": 12100,
     "treeshaked": {
       "rollup": {
-        "code": 30853,
-        "import_statements": 287
+        "code": 30631,
+        "import_statements": 341
       },
       "webpack": {
-        "code": 32289
+        "code": 32100
       }
     }
   },
   "dist/web.umd.js": {
-    "bundled": 83851,
-    "minified": 32699,
-    "gzipped": 11902
+    "bundled": 83768,
+    "minified": 32503,
+    "gzipped": 11738
   },
   "dist/native.js": {
-    "bundled": 74257,
-    "minified": 34805,
-    "gzipped": 10786,
+    "bundled": 73579,
+    "minified": 34607,
+    "gzipped": 10727,
     "treeshaked": {
       "rollup": {
-        "code": 27288,
-        "import_statements": 298
+        "code": 27133,
+        "import_statements": 352
       },
       "webpack": {
-        "code": 28703
+        "code": 28569
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 60200,
-    "minified": 27441,
-    "gzipped": 8007,
+    "bundled": 59531,
+    "minified": 27243,
+    "gzipped": 7954,
     "treeshaked": {
       "rollup": {
-        "code": 19891,
-        "import_statements": 262
+        "code": 19788,
+        "import_statements": 316
       },
       "webpack": {
-        "code": 21225
+        "code": 21121
       }
     }
   },
   "dist/konva.js": {
-    "bundled": 71362,
-    "minified": 33404,
-    "gzipped": 10706,
+    "bundled": 70684,
+    "minified": 33206,
+    "gzipped": 10650,
     "treeshaked": {
       "rollup": {
-        "code": 27245,
-        "import_statements": 262
+        "code": 27102,
+        "import_statements": 316
       },
       "webpack": {
-        "code": 28652
+        "code": 28509
       }
     }
   },
   "dist/hooks.js": {
-    "bundled": 74232,
-    "minified": 35771,
-    "gzipped": 11878,
+    "bundled": 81107,
+    "minified": 38568,
+    "gzipped": 12549,
     "treeshaked": {
       "rollup": {
-        "code": 16463,
-        "import_statements": 287
+        "code": 16663,
+        "import_statements": 341
       },
       "webpack": {
-        "code": 17809
+        "code": 28759
       }
     }
   },
   "dist/hooks.umd.js": {
-    "bundled": 79959,
-    "minified": 30990,
-    "gzipped": 11539
+    "bundled": 87707,
+    "minified": 34639,
+    "gzipped": 12334
   }
 }
