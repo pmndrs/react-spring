@@ -138,6 +138,9 @@ export function useTransition(props) {
     endResolver: () => null,
   })
 
+  // Destroy controllers on unmount
+  useEffect(() => () => instances.current.forEach(i => i.destroy()), [])
+
   const first = useRef(true)
   const activeSlots = useRef({})
   const [state, setState] = useState({

@@ -19,6 +19,7 @@ export const useSpringImpl = (type = 'default') => args => {
   const [ctrl] = useState(() =>
     type === 'keyframe' ? new KCtrl(props) : new Ctrl(props)
   )
+  // Destroy controller on unmount
   useEffect(() => () => ctrl.destroy(), [])
   // Define onEnd callbacks and resolvers
   const endResolver = useRef(null)

@@ -37,10 +37,10 @@ export const useTrailImpl = (type = 'default') => (length, args) => {
     },
     [length]
   )
-  // Destroy controller on onmount
+  // Destroy controllers on unmount
   const instancesRef = useRef()
   instancesRef.current = instances
-  //useEffect(() => () => instancesRef.current.forEach(i => i.destroy()), [])
+  useEffect(() => () => instancesRef.current.forEach(i => i.destroy()), [])
   // Define onEnd callbacks and resolvers
   const endResolver = useRef()
   const onHalt = onKeyframesHalt

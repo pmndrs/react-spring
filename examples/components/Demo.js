@@ -63,9 +63,10 @@ export default class Demo extends React.Component {
         </Header>
         <Content>
           <div>
-            <Observer onChange={rec => this.setVisible(rec.isIntersecting)}>
+            {/*<Observer onChange={rec => this.setVisible(rec.isIntersecting)}>
               {this.state.visible ? <this.component /> : <div />}
-            </Observer>
+            </Observer>*/}
+            <this.component />
             {overlayCode && (
               <Spring
                 native

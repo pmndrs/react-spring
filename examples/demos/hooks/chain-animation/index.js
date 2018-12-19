@@ -14,8 +14,8 @@ export default function App() {
 
   // 1. create spring-refs, which will refer to the springs Controller
   const springRef = useRef()
-  const { size, background, opacity } = useSpring({
-    from: { size: '20%' },
+  const { size, opacity, ...rest } = useSpring({
+    from: { size: '20%', background: 'hotpink' },
     size: open ? '100%' : '20%',
     background: open ? 'white' : 'hotpink',
     opacity: open ? 0 : 1,
@@ -42,7 +42,7 @@ export default function App() {
   return (
     <Main>
       <Sidebar
-        style={{ background, width: size, height: size }}
+        style={{ ...rest, width: size, height: size }}
         onClick={() => set(open => !open)}>
         <Content style={{ opacity }}>Click</Content>
         {transitions.map(({ item, key, props }) => (
