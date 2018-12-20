@@ -22,37 +22,6 @@ import examples from '../examples/components/examples-hooks'
   <span className="highlight">Warning: experimental API!</span> Due to hooks being alpha in React the underlying React API as well as the user-facing react-spring API can be subject to changes. Hooks in react-spring are in a separate export in order to not interfere with the stable releases. As of version 7 this export is officially part of the npm package. Test it, use it, enjoy it, but we recommend that you consult this page if you encounter problems or file issues on <a href="https://github.com/drcmda/react-spring/issues">Github</a>.
 </p>
 
-## Recent breaking changes ⚠️
-
-In version 7.1.0 the function signatures for useSpring and useTrail changed slightly. The bug we ran into had to do with the `set` function we return. If you set values with that function the animation updates, but if the component itself updates due to any reason whatsoever, the old values would overwrite the animation back to default values again. The new signatures fix that: you need to be explicit now when you pick your approach to update. We used the opportunity to de-couple useTrail from the user-data, making it a pure utility function.
-
-<table style={{ width: '100%', fontSize: '0.7em', tableLayout: 'fixed' }}>
-  <thead>
-    <tr style={{ fontSize: '1.3em' }}>
-      <td>7.0.0</td>
-      <td>7.1.0</td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><pre style={{ margin: 0 }}>const [props] = useSpring(values)</pre></td>
-      <td><pre style={{ margin: 0 }}>const <span style={{ color: '#ea567c' }}>props</span> = useSpring(values)</pre></td>
-    </tr>
-    <tr>
-      <td><pre style={{ margin: 0 }}>const [props, set] = useSpring(values)</pre></td>
-      <td><pre style={{ margin: 0 }}>const [props, set] = useSpring(<span style={{ color: '#ea567c' }}>() => values</span>)</pre></td>
-    </tr>
-    <tr>
-      <td><pre style={{ margin: 0 }}>const [props] = useTrail(values)</pre></td>
-      <td><pre style={{ margin: 0 }}>const <span style={{ color: '#ea567c' }}>props</span> = useTrail(<span style={{ color: '#ea567c' }}>items.length,</span> values)</pre></td>
-    </tr>
-    <tr>
-      <td><pre style={{ margin: 0 }}>const [props, set] = useTrail(values)</pre></td>
-      <td><pre style={{ margin: 0 }}>const [props, set] = useTrail(<span style={{ color: '#ea567c' }}>items.length, () => values</span>)</pre></td>
-    </tr>
-  </tbody>
-</table>
-
 ## What is this?
 
 <p>
