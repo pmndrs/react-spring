@@ -10,9 +10,6 @@ import styled from 'styled-components'
 import data from '../list-reordering/data'
 
 export default function App() {
-  const [, forceUpdate] = useState()
-  useEffect(() => void setInterval(forceUpdate, 250), [])
-
   const [open, set] = useState(true)
 
   // 1. create spring-refs, which will refer to the springs Controller
@@ -74,7 +71,6 @@ const Sidebar = styled(animated.div)`
   grid-gap: 20px;
   padding: 20px;
   background: white;
-  overflow-y: scroll;
   border-radius: 5px;
   cursor: pointer;
   will-change: width, height;

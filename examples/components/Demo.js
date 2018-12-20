@@ -163,7 +163,7 @@ const Content = styled('div')`
   & > div {
     position: relative;
     height: 100%;
-    overflow: hidden auto;
+    overflow: hidden;
     border-radius: 7px;
     background: #f0f0f0;
   }

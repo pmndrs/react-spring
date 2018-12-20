@@ -22,9 +22,7 @@ export default function App() {
   })
 
   return (
-    <div
-      style={{ position: 'relative', width: '100%', height: '100%', cursor: 'pointer' }}
-      onClick={() => set(shuffle)}>
+    <div className="list-reorder-scroll" onClick={() => set(shuffle)}>
       <div className="list-reorder" style={{ height: height + 15 }}>
         {transitions.map(({ item, props: { y, ...rest }, key }, index) => (
           <animated.div
@@ -47,8 +45,3 @@ export default function App() {
     </div>
   )
 }
-
-
-
-
-

@@ -8,44 +8,6 @@ export function usePrevious(value, initialValue = null) {
   return ref
 }
 
-export class Queue {
-  constructor() {
-    this.queue = []
-    this.offset = 0
-  }
-  get length() {
-    return this.queue.length - this.offset
-  }
-
-  isEmpty() {
-    return this.queue.length === 0
-  }
-  enqueue(item) {
-    this.queue.push(item)
-  }
-
-  dequeue() {
-    // const { queue, offset } = this
-    if (this.queue.length == 0) return undefined
-
-    const item = this.queue[this.offset]
-
-    if (++this.offset * 2 >= this.queue.length) {
-      this.queue = this.queue.slice(this.offset)
-      this.offset = 0
-    }
-    return item
-  }
-  clear() {
-    this.queue = []
-    this.offset = 0
-  }
-  peek() {
-    const { queue, offset } = this
-    return queue.length > 0 ? queue[offset] : undefined
-  }
-}
-
 export function debounce(func, delay = 0) {
   let timeoutId
   return function() {
