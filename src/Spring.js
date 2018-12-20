@@ -5,13 +5,6 @@ import * as Globals from './animated/Globals'
 import { config } from './shared/constants'
 import { convertValues, shallowEqual } from './shared/helpers'
 
-const v = React.version.split('.')
-if (process.env.NODE_ENV !== 'production' && (v[0] < 16 || v[1] < 4)) {
-  console.warn(
-    'Please consider upgrading to react/react-dom 16.4.x or higher! Older React versions break getDerivedStateFromProps, see https://github.com/facebook/react/issues/12898'
-  )
-}
-
 export default class Spring extends React.Component {
   static propTypes = {
     /** Base values, optional */
