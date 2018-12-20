@@ -6,7 +6,8 @@ import {
   useImperativeMethods,
 } from 'react'
 import KeyframeController from '../animated/KeyframeController'
-import { toArray, callProp, Queue } from '../shared/helpers'
+import { toArray, callProp } from '../shared/helpers'
+import { requestFrame } from '../animated/Globals'
 
 let guid = 0
 let mapKeys = (items, keys) =>
@@ -45,9 +46,8 @@ function calculateDiffInItems({ prevProps, ...state }, props) {
     const item = items[keyIndex]
     const state = 'enter'
 
-    if (unique && deleted.find(d => d.originalKey === key)) {
+    if (unique && deleted.find(d => d.originalKey === key))
       deleted = deleted.filter(t => t.originalKey !== key)
-    }
 
     current[key] = {
       item,
@@ -133,13 +133,16 @@ export function useTransition(props) {
 
   const mounted = useRef(false)
   const instances = useRef(!mounted.current && new Map([]))
-  const startQueue = useRef({
-    queue: !mounted.current && new Queue(),
-    endResolver: () => null,
-  })
 
   // Destroy controllers on unmount
-  useEffect(() => () => instances.current.forEach(i => i.destroy()), [])
+  useEffect(
+    () => () =>
+      Array.from(instances.current).map(([key, { ctrl }]) => {
+        ctrl.destroy()
+        instances.current.delete(key)
+      }),
+    []
+  )
 
   const first = useRef(true)
   const activeSlots = useRef({})
@@ -155,71 +158,70 @@ export function useTransition(props) {
     return () => void (mounted.current = false)
   }, [])
 
+  // only to be used internally, must be bound to the instance obj to work
+  function onEnd({ finished }) {
+    const { item, destroyed, slot, ctrl } = this
+    if (mounted.current && finished) {
+      if (destroyed && onDestroyed) onDestroyed(item)
+      // onRest needs to be called everytime each item
+      // has finished, it is needed for notif hub to work.
+      // we could have two seperate callback, one for each
+      // and one for a sort of global on rest and peritem onrest?
+      if (onRest) onRest(item, slot, ctrl.merged)
+
+      if (
+        !Array.from(instances.current).some(([, { ctrl }]) => ctrl.isActive)
+      ) {
+        // update when all transitions is complete to clean dom of removed elements.
+        state.transitions.some(({ destroyed }) => destroyed) &&
+          requestFrame(() =>
+            setState(state => ({
+              ...state,
+              deleted: [],
+              transitions: state.transitions.filter(
+                ({ destroyed }) => !destroyed
+              ),
+            }))
+          )
+      }
+    }
+  }
+
   // Prop changes effect
   useMemo(
     () => {
-      startQueue.current.queue.clear()
-      startQueue.current.endResolver = null
       const { transitions, ...rest } = calculateDiffInItems(state, props)
 
       transitions.forEach(
         ({ state: slot, to, config, trail, key, item, destroyed }) => {
-          // when values are unique, clear out old controllers on enter
-          // also stop if inactive so that on end is not called
-
           !instances.current.has(key) &&
-            instances.current.set(
-              key,
-              new KeyframeController({
+            instances.current.set(key, {
+              ctrl: new KeyframeController({
                 ...from,
                 ...(first.current && initial),
                 config,
                 delay: trail,
                 native: true,
                 ref,
-              })
-            )
+              }),
+              item,
+              destroyed,
+              slot,
+            })
 
+          // update the map object
           const instance = instances.current.get(key)
-          const ctrl = instance
+          instance.item = item
+          instance.destroyed = destroyed
+          instance.slot = slot
+          const ctrl = instance.ctrl
 
           if (slot === 'update' || slot !== activeSlots.current[key]) {
-            // add the current running slot to the active slots ref so the same slot isnt re-applied
             activeSlots.current[key] = slot
-            function onEnd({ finished }) {
-              if (mounted.current && finished) {
-                if (destroyed && onDestroyed) onDestroyed(item)
-                // onRest needs to be called everytime each item
-                // has finished, it is needed for notif hub to work.
-                // we could have two seperate callback, one for each
-                // and one for a sort of global on rest and peritem onrest?
-                onRest && onRest(item, slot, ctrl.merged)
-                // Only call onRest when all springs have come to rest
-                if (
-                  !Array.from(instances.current.values()).some(v => v.isActive)
-                ) {
-                  if (ref) {
-                    startQueue.current.endResolver &&
-                      startQueue.current.endResolver()
-                    startQueue.current.endResolver = null
-                  }
-
-                  // update when all transitions is complete to clean dom of removed elements.
-                  setState(state => ({
-                    ...state,
-                    deleted: [],
-                    transitions: state.transitions.filter(
-                      ({ destroyed }) => !destroyed
-                    ),
-                  }))
-                }
-              }
-            }
-            ctrl.config = config
-            ctrl.update(to, onEnd)
-            if (ref) {
-              startQueue.current.queue.enqueue(() => ctrl.start(onEnd))
-            }
+            const cb = onEnd.bind(instance)
+            // Set the controller if config has changed
+            if (config) ctrl.config = config
+            ctrl.update(to, cb)
           }
         }
       )
@@ -236,16 +238,17 @@ export function useTransition(props) {
   )
 
   useImperativeMethods(ref, () => ({
-    start: resolve => {
-      startQueue.current.endResolver = resolve
-      while (startQueue.current.queue.length) {
-        const start = startQueue.current.queue.dequeue()
-        start()
-      }
-    },
+    start: () =>
+      Promise.all(
+        Array.from(instances.current).map(([, obj]) =>
+          obj.ctrl.start(onEnd.bind(obj))
+        )
+      ),
     stop: (finished, resolve) => {
-      instances.current.forEach(ctrl => ctrl.isActive && ctrl.stop(finished))
-      resolve && resolve()
+      Array.from(instances.current).forEach(
+        ([, { ctrl }]) => ctrl.isActive && ctrl.stop(finished)
+      )
+      if (resolve) resolve()
     },
   }))
 
@@ -254,7 +257,7 @@ export function useTransition(props) {
       item,
       key,
       state,
-      props: instances.current.get(key).getValues(),
+      props: instances.current.get(key).ctrl.getValues(),
     }
   })
 }

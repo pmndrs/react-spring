@@ -5,33 +5,22 @@ import { requestFrame } from '../animated/Globals'
 export default class KeyframeController {
   frameId = 0
   constructor(props) {
-    const { config, onRest, ref, ...initialProps } = props
+    const { config, onRest, ...initialProps } = props
     this.globalProps = (({
       native,
-      // config,
-      // onRest,
       onStart,
       onFrame,
       children,
       reset,
-      reverse,
-      force,
-      immediate,
-      impl,
-      inject,
       delay,
-      attach,
       destroyed,
       track,
-      interpolateTo,
-      autoStart,
     }) => ({
       native,
       onStart,
       reset,
       onFrame,
       children,
-      inject,
       delay,
       destroyed,
       track,
@@ -54,8 +43,8 @@ export default class KeyframeController {
   }
 
   next = (props, localFrameId, last = true, index = 0) => {
-    this.last = last
-    this.running = true
+    // this.last = last
+    // this.running = true
 
     // config passed to props can overwrite global config passed in
     // controller instantiation i.e. globalConfig
@@ -67,10 +56,17 @@ export default class KeyframeController {
       : this.globalConfig
     this.onFrameRest = props.onRest
     return new Promise(resolve => {
+      // if ref is passed to internal controller, then it ignore onEnd call back
       this.instance.update(
         { ...this.globalProps, ...props, config },
         this.onEnd(this.onFrameRest, localFrameId, last, resolve)
       )
+
+      // start needs to be called here if ref is present to activate the anim
+      if (this.ref)
+        this.instance.start(
+          this.onEnd(this.onFrameRest, localFrameId, last, resolve)
+        )
 
       // hacky solution to force the parent to be updated any time
       // the child controller is reset
@@ -91,12 +87,11 @@ export default class KeyframeController {
           let index = i
           let slot = this.currSlots[index]
           let last = index === this.currSlots.length - 1
-          q = q.then(() => {
-            return (
+          q = q.then(
+            () =>
               localFrameId === this.frameId &&
               this.next(slot, localFrameId, last, index)
-            )
-          })
+          )
         }
       } else if (typeof this.currSlots === 'function') {
         let index = 0
@@ -111,28 +106,25 @@ export default class KeyframeController {
               () => this.instance.isActive && this.instance.stop(true)
             )
         )
-      } else {
-        this.next(this.currSlots, localFrameId)
-      }
+      } else this.next(this.currSlots, localFrameId)
       this.prevSlots = this.currSlots
+      return new Promise(resolve => (this.keyFrameEndResolver = resolve))
     }
   }
 
   stop = (finished = false) => {
     ++this.frameId
-    this.instance.isActive && this.instance.stop(finished)
+    if (this.instance.isActive) this.instance.stop(finished)
   }
 
-  onEnd = (onFrameRest, localFrameId, last, resolve) => {
-    return args => {
-      if (localFrameId === this.frameId) {
-        resolve()
-        onFrameRest && onFrameRest(this.merged)
-        last && this.globalOnEnd && this.globalOnEnd(args)
-        if (args.finished) {
-          last && this.globalOnRest && this.globalOnRest(this.merged)
-        }
-      }
+  onEnd = (onFrameRest, localFrameId, last, resolve) => args => {
+    if (localFrameId === this.frameId) {
+      if (resolve) resolve()
+      if (onFrameRest) onFrameRest(this.merged)
+      if (last && this.globalOnEnd) this.globalOnEnd(args)
+      if (last && this.keyFrameEndResolver) this.keyFrameEndResolver()
+      if (args.finished && last && this.globalOnRest)
+        this.globalOnRest(this.merged)
     }
   }
 
@@ -145,7 +137,6 @@ export default class KeyframeController {
   }
 
   updateWithForceUpdate = (forceUpdate, ...args) => {
-    this.parentForceUpdate = forceUpdate
     // needed to forceUpdate when the controller is reset
     // for native controllers
     this.parentForceUpdate = forceUpdate
@@ -155,10 +146,6 @@ export default class KeyframeController {
     this.currSlots = slots
     !this.ref && this.start(...args)
   }
-
-  getValues = () => {
-    return this.instance.getValues()
-  }
-
+  getValues = () => this.instance.getValues()
   destroy = () => this.instance.destroy()
 }

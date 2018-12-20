@@ -71,7 +71,6 @@ const Sidebar = styled(animated.div)`
   grid-gap: 20px;
   padding: 20px;
   background: white;
-  overflow-y: scroll;
   border-radius: 5px;
   cursor: pointer;
   will-change: width, height;

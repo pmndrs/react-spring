@@ -12,12 +12,6 @@ export default class AnimatedWithChildren extends Animated {
 
   removeChild(child) {
     const index = this.children.indexOf(child)
-    if (index === -1) {
-      if (process.env.NODEENV !== 'production') {
-        console.warn("Trying to remove a child that doesn't exist")
-      }
-      return
-    }
     this.children.splice(index, 1)
     if (this.children.length === 0) this.detach()
   }
