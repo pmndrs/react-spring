@@ -74,7 +74,7 @@ export default class KeyframeController {
       )
 
       // start needs to be called here if ref is present to activate the anim
-      this.ref &&
+      if (this.ref)
         this.instance.start(
           this.onEnd(this.onFrameRest, localFrameId, last, resolve)
         )
@@ -98,12 +98,11 @@ export default class KeyframeController {
           let index = i
           let slot = this.currSlots[index]
           let last = index === this.currSlots.length - 1
-          q = q.then(() => {
-            return (
+          q = q.then(
+            () =>
               localFrameId === this.frameId &&
               this.next(slot, localFrameId, last, index)
-            )
-          })
+          )
         }
       } else if (typeof this.currSlots === 'function') {
         let index = 0
@@ -118,32 +117,25 @@ export default class KeyframeController {
               () => this.instance.isActive && this.instance.stop(true)
             )
         )
-      } else {
-        this.next(this.currSlots, localFrameId)
-      }
+      } else this.next(this.currSlots, localFrameId)
       this.prevSlots = this.currSlots
       return new Promise(resolve => (this.keyFrameEndResolver = resolve))
     }
-    // returning resolved if no update is happening
-    return Promise.resolve()
   }
 
   stop = (finished = false) => {
     ++this.frameId
-    this.instance.isActive && this.instance.stop(finished)
+    if (this.instance.isActive) this.instance.stop(finished)
   }
 
-  onEnd = (onFrameRest, localFrameId, last, resolve) => {
-    return args => {
-      if (localFrameId === this.frameId) {
-        resolve && resolve()
-        onFrameRest && onFrameRest(this.merged)
-        last && this.globalOnEnd && this.globalOnEnd(args)
-        last && this.keyFrameEndResolver && this.keyFrameEndResolver()
-        if (args.finished) {
-          last && this.globalOnRest && this.globalOnRest(this.merged)
-        }
-      }
+  onEnd = (onFrameRest, localFrameId, last, resolve) => args => {
+    if (localFrameId === this.frameId) {
+      if (resolve) resolve()
+      if (onFrameRest) onFrameRest(this.merged)
+      if (last && this.globalOnEnd) this.globalOnEnd(args)
+      if (last && this.keyFrameEndResolver) this.keyFrameEndResolver()
+      if (args.finished && last && this.globalOnRest)
+        this.globalOnRest(this.merged)
     }
   }
 
@@ -165,10 +157,6 @@ export default class KeyframeController {
     this.currSlots = slots
     !this.ref && this.start(...args)
   }
-
-  getValues = () => {
-    return this.instance.getValues()
-  }
-
+  getValues = () => this.instance.getValues()
   destroy = () => this.instance.destroy()
 }

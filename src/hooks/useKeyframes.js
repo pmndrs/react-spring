@@ -23,7 +23,6 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
 
   // need to force a rerender for when the animated controller has finally accepted props
   const [, forceUpdate] = React.useState()
-
   const shouldForceUpdateRef = React.useRef(!initialProps)
 
   const { states, config, onRest } = (function() {

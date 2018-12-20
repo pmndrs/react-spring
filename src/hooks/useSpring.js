@@ -22,23 +22,17 @@ export const useSpringImpl = (type = 'default') => args => {
   // Destroy controller on unmount
   useEffect(() => () => ctrl.destroy(), [])
 
-  const onHalt = ({ finished }) => {
-    if (finished) {
-      if (onRest) onRest(ctrl.merged)
-    }
-  }
+  const onHalt = ({ finished }) => finished && onRest && onRest(ctrl.merged)
 
   // The hooks explcit API gets defined here ...
   useImperativeMethods(props.ref, () => ({
-    start: () => {
-      return ctrl.start(onHalt)
-    },
+    start: () => ctrl.start(onHalt),
     get isActive() {
       return ctrl.isActive
     },
     stop: (finished = false, resolve) => {
-      ctrl.isActive && ctrl.stop(finished)
-      resolve && resolve()
+      if (ctrl.isActive) ctrl.stop(finished)
+      if (resolve) resolve()
     },
   }))
 
@@ -49,9 +43,7 @@ export const useSpringImpl = (type = 'default') => args => {
         ? ctrl.updateWithForceUpdate(forceUpdate, updateProps)
         : ctrl.update(updateProps)
       if (!ctrl.props.ref) ctrl.start(onHalt)
-      if (ctrl.props.reset && type === 'default') {
-        requestFrame(forceUpdate)
-      }
+      if (ctrl.props.reset && type === 'default') requestFrame(forceUpdate)
     },
     [onRest, ctrl.props.ref]
   )

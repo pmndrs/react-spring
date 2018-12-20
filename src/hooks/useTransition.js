@@ -46,9 +46,8 @@ function calculateDiffInItems({ prevProps, ...state }, props) {
     const item = items[keyIndex]
     const state = 'enter'
 
-    if (unique && deleted.find(d => d.originalKey === key)) {
+    if (unique && deleted.find(d => d.originalKey === key))
       deleted = deleted.filter(t => t.originalKey !== key)
-    }
 
     current[key] = {
       item,
@@ -134,10 +133,6 @@ export function useTransition(props) {
 
   const mounted = useRef(false)
   const instances = useRef(!mounted.current && new Map([]))
-  /* const startQueue = useRef({
-    queue: !mounted.current && new Queue(),
-    endResolver: () => null,
-  }) */
 
   // Destroy controllers on unmount
   useEffect(
@@ -172,7 +167,7 @@ export function useTransition(props) {
       // has finished, it is needed for notif hub to work.
       // we could have two seperate callback, one for each
       // and one for a sort of global on rest and peritem onrest?
-      onRest && onRest(item, slot, ctrl.merged)
+      if (onRest) onRest(item, slot, ctrl.merged)
 
       if (
         !Array.from(instances.current).some(([, { ctrl }]) => ctrl.isActive)
@@ -225,7 +220,7 @@ export function useTransition(props) {
             activeSlots.current[key] = slot
             const cb = onEnd.bind(instance)
             // Set the controller if config has changed
-            config && (ctrl.config = config)
+            if (config) ctrl.config = config
             ctrl.update(to, cb)
           }
         }
@@ -243,21 +238,17 @@ export function useTransition(props) {
   )
 
   useImperativeMethods(ref, () => ({
-    start: () => {
-      // TODO: imp API probably doesn't need resolvers (start: resolve => ...)
-      // since it can just return ctrl.start's promise
-      return Promise.all(
-        Array.from(instances.current).map(([, obj]) => {
-          const cb = onEnd.bind(obj)
-          return obj.ctrl.start(cb)
-        })
-      )
-    },
+    start: () =>
+      Promise.all(
+        Array.from(instances.current).map(([, obj]) =>
+          obj.ctrl.start(onEnd.bind(obj))
+        )
+      ),
     stop: (finished, resolve) => {
       Array.from(instances.current).forEach(
         ([, { ctrl }]) => ctrl.isActive && ctrl.stop(finished)
       )
-      resolve && resolve()
+      if (resolve) resolve()
     },
   }))
 

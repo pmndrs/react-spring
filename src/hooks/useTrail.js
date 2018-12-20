@@ -42,30 +42,24 @@ export const useTrailImpl = (type = 'default') => (length, args) => {
   instancesRef.current = instances
   useEffect(() => () => instancesRef.current.forEach(i => i.destroy()), [])
   // Define onEnd callbacks and resolvers
-  const endResolver = useRef()
   const onHalt = onKeyframesHalt
-    ? ctrl => ({ finished }) => {
-        if (finished) {
-          if (endResolver.current) endResolver.current()
-          if (onRest) onRest(ctrl.merged)
-        }
-      }
+    ? ctrl => ({ finished }) => finished && onRest && onRest(ctrl.merged)
     : onKeyframesHalt || (() => null)
 
   // The hooks explcit API gets defined here ...
   useImperativeMethods(props.ref, () => ({
-    start: resolve => {
-      endResolver.current = resolve
-      instances.forEach(
-        (ctrl, i) =>
-          (reverse ? i === 0 : instances.current.size - 1) && onHalt(ctrl)
-      )
-    },
+    start: () =>
+      Promise.all(
+        Array.from(instancesRef.current).map(
+          ([, ctrl], i) =>
+            (reverse ? i === 0 : instancesRef.current.size - 1) && onHalt(ctrl)
+        )
+      ),
     get isActive() {
-      Array.from(instances.current.values()).some(ctrl => ctrl.isActive)
+      Array.from(instancesRef.current).some(([, ctrl]) => ctrl.isActive)
     },
     stop: (finished = false) =>
-      instances.current.forEach(([, ctrl]) => ctrl.stop(finished)),
+      instancesRef.current.forEach(([, ctrl]) => ctrl.stop(finished)),
   }))
 
   // Defines the hooks setter, which updates the controller
@@ -75,7 +69,6 @@ export const useTrailImpl = (type = 'default') => (length, args) => {
         const last = reverse ? i === 0 : instances.length - 1 === i
         const attachIdx = reverse ? i + 1 : i - 1
         const attachController = instances[attachIdx]
-
         const updateProps = {
           ...props,
           attach: attachController && (() => attachController),
@@ -105,5 +98,3 @@ export const useTrailImpl = (type = 'default') => (length, args) => {
 }
 
 export const useTrail = useTrailImpl()
-
-// export default useTrail
