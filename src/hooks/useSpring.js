@@ -24,6 +24,7 @@ export const useSpringImpl = (type = 'default') => args => {
   // Define onEnd callbacks and resolvers
   const endResolver = useRef(null)
   const onHalt = ({ finished }) => {
+    console.log('  spring.onHalt')
     if (finished) {
       if (endResolver.current) endResolver.current()
       if (onRest) onRest(ctrl.merged)
@@ -32,12 +33,15 @@ export const useSpringImpl = (type = 'default') => args => {
 
   // The hooks explcit API gets defined here ...
   useImperativeMethods(props.ref, () => ({
-    start: resolve =>
-      void ((endResolver.current = resolve), ctrl.start(onHalt)),
+    start: resolve => {
+      endResolver.current = resolve
+      return ctrl.start(onHalt)
+    },
     get isActive() {
       return ctrl.isActive
     },
     stop: (finished = false, resolve) => {
+      console.log('  spring.stop')
       ctrl.stop(finished)
       resolve && resolve()
     },

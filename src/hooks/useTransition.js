@@ -133,13 +133,16 @@ export function useTransition(props) {
 
   const mounted = useRef(false)
   const instances = useRef(!mounted.current && new Map([]))
-  const startQueue = useRef({
+  /*const startQueue = useRef({
     queue: !mounted.current && new Queue(),
     endResolver: () => null,
-  })
+  })*/
 
   // Destroy controllers on unmount
-  useEffect(() => () => instances.current.forEach(i => i.destroy()), [])
+  useEffect(
+    () => () => Array.from(instances.current).map(([, c]) => c.destroy()),
+    []
+  )
 
   const first = useRef(true)
   const activeSlots = useRef({})
@@ -158,8 +161,8 @@ export function useTransition(props) {
   // Prop changes effect
   useMemo(
     () => {
-      startQueue.current.queue.clear()
-      startQueue.current.endResolver = null
+      //startQueue.current.queue.clear()
+      //startQueue.current.endResolver = null
       const { transitions, ...rest } = calculateDiffInItems(state, props)
 
       transitions.forEach(
@@ -186,6 +189,8 @@ export function useTransition(props) {
           if (slot === 'update' || slot !== activeSlots.current[key]) {
             // add the current running slot to the active slots ref so the same slot isnt re-applied
             activeSlots.current[key] = slot
+
+            // TODO: this function is needed down there in imperativeAPI.start(onENd)
             function onEnd({ finished }) {
               if (mounted.current && finished) {
                 if (destroyed && onDestroyed) onDestroyed(item)
@@ -196,14 +201,8 @@ export function useTransition(props) {
                 onRest && onRest(item, slot, ctrl.merged)
                 // Only call onRest when all springs have come to rest
                 if (
-                  !Array.from(instances.current.values()).some(v => v.isActive)
+                  !Array.from(instances.current).some(([, c]) => c.isActive)
                 ) {
-                  if (ref) {
-                    startQueue.current.endResolver &&
-                      startQueue.current.endResolver()
-                    startQueue.current.endResolver = null
-                  }
-
                   // update when all transitions is complete to clean dom of removed elements.
                   setState(state => ({
                     ...state,
@@ -215,11 +214,14 @@ export function useTransition(props) {
                 }
               }
             }
-            ctrl.config = config
+            //ctrl.config = config
             ctrl.update(to, onEnd)
             if (ref) {
-              startQueue.current.queue.enqueue(() => ctrl.start(onEnd))
+              Array.from(instances.current).forEach(([, c]) => c.start(onEnd))
             }
+            /*if (ref) {
+              startQueue.current.queue.enqueue(() => ctrl.start(onEnd))
+            }*/
           }
         }
       )
@@ -237,14 +239,23 @@ export function useTransition(props) {
 
   useImperativeMethods(ref, () => ({
     start: resolve => {
-      startQueue.current.endResolver = resolve
+      // TODO: imp API probably doesn't need resolvers (start: resolve => ...)
+      // since it can just return ctrl.start's promise
+
+      /*startQueue.current.endResolver = resolve
       while (startQueue.current.queue.length) {
         const start = startQueue.current.queue.dequeue()
         start()
-      }
+      }*/
+
+      return Promise.all(
+        Array.from(instances.current).map(([, c]) => c.start(onEnd))
+      )
     },
     stop: (finished, resolve) => {
-      instances.current.forEach(ctrl => ctrl.isActive && ctrl.stop(finished))
+      Array.from(instances.current).forEach(
+        ([, c]) => c.isActive && c.stop(finished)
+      )
       resolve && resolve()
     },
   }))

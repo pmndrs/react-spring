@@ -22,8 +22,7 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
       )
       // Now add start to the promise chain
       refs.reduce(
-        (q, { current }) =>
-          (q = q.then(() => current && new Promise(current.start))),
+        (q, { current }) => (q = q.then(() => current && current.start())),
         promise
       )
     }
