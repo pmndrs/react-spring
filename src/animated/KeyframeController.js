@@ -54,8 +54,8 @@ export default class KeyframeController {
   }
 
   next = (props, localFrameId, last = true, index = 0) => {
-    this.last = last
-    this.running = true
+    // this.last = last
+    // this.running = true
 
     // config passed to props can overwrite global config passed in
     // controller instantiation i.e. globalConfig
@@ -122,7 +122,7 @@ export default class KeyframeController {
         this.next(this.currSlots, localFrameId)
       }
       this.prevSlots = this.currSlots
-      return new Promise(resolve => (this.resolve = resolve))
+      return new Promise(resolve => (this.keyFrameEndResolver = resolve))
     }
     // returning resolved if no update is happening
     return Promise.resolve()
@@ -133,12 +133,13 @@ export default class KeyframeController {
     this.instance.isActive && this.instance.stop(finished)
   }
 
-  onEnd = (onFrameRest, localFrameId, last) => {
+  onEnd = (onFrameRest, localFrameId, last, resolve) => {
     return args => {
       if (localFrameId === this.frameId) {
+        resolve && resolve()
         onFrameRest && onFrameRest(this.merged)
         last && this.globalOnEnd && this.globalOnEnd(args)
-        last && this.resolve && this.resolve()
+        last && this.keyFrameEndResolver && this.keyFrameEndResolver()
         if (args.finished) {
           last && this.globalOnRest && this.globalOnRest(this.merged)
         }
