@@ -23,7 +23,6 @@ export const useSpringImpl = (type = 'default') => args => {
   useEffect(() => () => ctrl.destroy(), [])
 
   const onHalt = ({ finished }) => {
-    console.log('  spring.onHalt ')
     if (finished) {
       if (onRest) onRest(ctrl.merged)
     }
@@ -38,7 +37,6 @@ export const useSpringImpl = (type = 'default') => args => {
       return ctrl.isActive
     },
     stop: (finished = false, resolve) => {
-      console.log('  spring.stop')
       ctrl.isActive && ctrl.stop(finished)
       resolve && resolve()
     },

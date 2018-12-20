@@ -163,7 +163,6 @@ export default class Controller {
   }
 
   start(onEnd, onUpdate) {
-    console.log('    ctrl.start')
     this.startTime = now()
     if (this.isActive) this.stop()
     this.isActive = true
@@ -175,7 +174,6 @@ export default class Controller {
   }
 
   stop(finished = false) {
-    console.log('    ctrl.stop')
     this.isActive = false
     removeController(this)
     // Reset collected changes since the animation has been stopped cold turkey
@@ -195,7 +193,6 @@ export default class Controller {
   }
 
   debouncedOnEnd(result) {
-    console.log('    ctrl.debouncedOnEnd')
     this.isActive = false
     const onEnd = this.onEnd
     this.onEnd = null

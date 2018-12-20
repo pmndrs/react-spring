@@ -12,7 +12,6 @@ import data from '../list-reordering/data'
 export default function App() {
   const [, forceUpdate] = useState()
   useEffect(() => void setInterval(forceUpdate, 250), [])
-  console.log('RENDER')
 
   const [open, set] = useState(true)
 
