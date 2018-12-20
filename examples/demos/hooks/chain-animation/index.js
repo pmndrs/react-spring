@@ -10,6 +10,9 @@ import styled from 'styled-components'
 import data from '../list-reordering/data'
 
 export default function App() {
+  const [, forceUpdate] = useState()
+  useEffect(() => void setInterval(forceUpdate, 250), [])
+
   const [open, set] = useState(true)
 
   // 1. create spring-refs, which will refer to the springs Controller

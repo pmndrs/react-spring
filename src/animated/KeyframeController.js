@@ -5,7 +5,7 @@ import { requestFrame } from '../animated/Globals'
 export default class KeyframeController {
   frameId = 0
   constructor(props) {
-    const { config, onRest, ref, ...initialProps } = props
+    const { config, onRest, ...initialProps } = props
     this.globalProps = (({
       native,
       // config,
@@ -67,10 +67,17 @@ export default class KeyframeController {
       : this.globalConfig
     this.onFrameRest = props.onRest
     return new Promise(resolve => {
+      // if ref is passed to internal controller, then it ignore onEnd call back
       this.instance.update(
         { ...this.globalProps, ...props, config },
         this.onEnd(this.onFrameRest, localFrameId, last, resolve)
       )
+
+      // start needs to be called here if ref is present to activate the anim
+      this.ref &&
+        this.instance.start(
+          this.onEnd(this.onFrameRest, localFrameId, last, resolve)
+        )
 
       // hacky solution to force the parent to be updated any time
       // the child controller is reset
@@ -115,7 +122,10 @@ export default class KeyframeController {
         this.next(this.currSlots, localFrameId)
       }
       this.prevSlots = this.currSlots
+      return new Promise(resolve => (this.resolve = resolve))
     }
+    // returning resolved if no update is happening
+    return Promise.resolve()
   }
 
   stop = (finished = false) => {
@@ -123,12 +133,12 @@ export default class KeyframeController {
     this.instance.isActive && this.instance.stop(finished)
   }
 
-  onEnd = (onFrameRest, localFrameId, last, resolve) => {
+  onEnd = (onFrameRest, localFrameId, last) => {
     return args => {
       if (localFrameId === this.frameId) {
-        resolve()
         onFrameRest && onFrameRest(this.merged)
         last && this.globalOnEnd && this.globalOnEnd(args)
+        last && this.resolve && this.resolve()
         if (args.finished) {
           last && this.globalOnRest && this.globalOnRest(this.merged)
         }
@@ -145,7 +155,6 @@ export default class KeyframeController {
   }
 
   updateWithForceUpdate = (forceUpdate, ...args) => {
-    this.parentForceUpdate = forceUpdate
     // needed to forceUpdate when the controller is reset
     // for native controllers
     this.parentForceUpdate = forceUpdate

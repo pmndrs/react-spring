@@ -21,24 +21,23 @@ export const useSpringImpl = (type = 'default') => args => {
   )
   // Destroy controller on unmount
   useEffect(() => () => ctrl.destroy(), [])
-  // Define onEnd callbacks and resolvers
-  const endResolver = useRef(null)
+
   const onHalt = ({ finished }) => {
     if (finished) {
-      if (endResolver.current) endResolver.current()
       if (onRest) onRest(ctrl.merged)
     }
   }
 
   // The hooks explcit API gets defined here ...
   useImperativeMethods(props.ref, () => ({
-    start: resolve =>
-      void ((endResolver.current = resolve), ctrl.start(onHalt)),
+    start: () => {
+      return ctrl.start(onHalt)
+    },
     get isActive() {
       return ctrl.isActive
     },
     stop: (finished = false, resolve) => {
-      ctrl.stop(finished)
+      ctrl.isActive && ctrl.stop(finished)
       resolve && resolve()
     },
   }))
