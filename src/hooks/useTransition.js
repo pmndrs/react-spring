@@ -6,7 +6,7 @@ import {
   useImperativeMethods,
 } from 'react'
 import KeyframeController from '../animated/KeyframeController'
-import { toArray, callProp, Queue } from '../shared/helpers'
+import { toArray, callProp } from '../shared/helpers'
 import { requestFrame } from '../animated/Globals'
 
 let guid = 0
