@@ -19,8 +19,19 @@ import examples from '../examples/components/examples-hooks'
 # Hooks ⚠️
 
 <p>
-  <span className="highlight">Warning: experimental API!</span> Due to hooks being alpha in React the underlying React API as well as the user-facing react-spring API can be subject to changes. Hooks in react-spring are in a separate export in order to not interfere with the stable releases. As of version 7 this export is officially part of the npm package. Test it, use it, enjoy it, but we recommend that you consult this page if you encounter problems or file issues on <a href="https://github.com/drcmda/react-spring/issues">Github</a>.
+  <span className="highlight">Warning: experimental API!</span> Due to hooks being alpha in React, the underlying React API as well as the user-facing react-spring API can be subject to changes.
 </p>
+
+Therefore, to reduce the impact of changes, `react-spring` offers a completely different entry point to work with Hooks, so to not interfere with the stable releases.
+
+```diff
+- import { animated, Spring } from 'react-spring';
+                     ↓ ↓ ↓              ↓ ↓ ↓ ↓
++ import { animated, useSpring } from 'react-spring/hooks';
+!                                                   =====  !
+```
+
+As of version 7 this export is officially part of the npm package. Test it, use it, enjoy it, but we recommend that you consult this page if you encounter problems or file issues on [Github](https://github.com/drcmda/react-spring/issues).
 
 ## What is this?
 
