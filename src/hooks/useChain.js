@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 export function useChain(refs, timeSteps, timeFrame = 1000) {
   const frames = useRef([])
   useEffect(() => {
+    refs.forEach(({ current }) => current && current.stop())
     if (timeSteps) {
       frames.current.forEach(clearTimeout)
       frames.current = []
@@ -12,18 +13,9 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
         )
       )
     } else {
-      // Adding stops
-      const promise = refs.reduce(
-        (q, { current }) =>
-          (q = q.then(
-            () => current && new Promise(resolve => current.stop(true, resolve))
-          )),
-        Promise.resolve()
-      )
-      // Now add start to the promise chain
       refs.reduce(
         (q, { current }) => (q = q.then(() => current && current.start())),
-        promise
+        Promise.resolve()
       )
     }
   }, refs)

@@ -30,9 +30,8 @@ export const useSpringImpl = (type = 'default') => args => {
     get isActive() {
       return ctrl.isActive
     },
-    stop: (finished = false, resolve) => {
+    stop: (finished = false) => {
       if (ctrl.isActive) ctrl.stop(finished)
-      if (resolve) resolve()
     },
   }))
 

@@ -221,10 +221,9 @@ export function useTransition(props) {
 
           if (slot === 'update' || slot !== state.current.activeSlots[key]) {
             state.current.activeSlots[key] = slot
-            const cb = onEnd.bind(instance)
             // Set the controller if config has changed
             if (config) ctrl.config = config
-            ctrl.update(to, cb)
+            ctrl.update(to, onEnd.bind(instance))
           }
         }
       )
@@ -247,11 +246,10 @@ export function useTransition(props) {
           obj.ctrl.start(onEnd.bind(obj))
         )
       ),
-    stop: (finished, resolve) => {
+    stop: (finished = false) => {
       Array.from(instances.current).forEach(
         ([, { ctrl }]) => ctrl.isActive && ctrl.stop(finished)
       )
-      if (resolve) resolve()
     },
   }))
 

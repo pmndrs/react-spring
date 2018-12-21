@@ -80,9 +80,9 @@
     }
   },
   "dist/hooks.js": {
-    "bundled": 79437,
-    "minified": 37702,
-    "gzipped": 12189,
+    "bundled": 79356,
+    "minified": 37758,
+    "gzipped": 12202,
     "treeshaked": {
       "rollup": {
         "code": 16351,
@@ -94,8 +94,8 @@
     }
   },
   "dist/hooks.umd.js": {
-    "bundled": 85893,
-    "minified": 33766,
-    "gzipped": 12022
+    "bundled": 85798,
+    "minified": 33820,
+    "gzipped": 12032
   }
 }
