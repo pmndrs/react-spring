@@ -132,9 +132,12 @@ export function useTransition(props) {
   } = get(props)
 
   const mounted = useRef(false)
-  const instances = useRef(!mounted.current && new Map([]))
+  useEffect(
+    () => ((mounted.current = true), () => (mounted.current = false)),
+    []
+  )
 
-  // Destroy controllers on unmount
+  const instances = useRef(!mounted.current && new Map([]))
   useEffect(
     () => () =>
       Array.from(instances.current).map(([key, { ctrl }]) => {
@@ -144,19 +147,15 @@ export function useTransition(props) {
     []
   )
 
-  const first = useRef(true)
-  const activeSlots = useRef({})
-  const [state, setState] = useState({
+  const [, forceUpdate] = useState()
+  const state = useRef({
+    first: false,
+    activeSlots: {},
     deleted: [],
     current: {},
     transitions: [],
     prevProps: null,
   })
-
-  useEffect(() => {
-    mounted.current = true
-    return () => void (mounted.current = false)
-  }, [])
 
   // only to be used internally, must be bound to the instance obj to work
   function onEnd({ finished }) {
@@ -173,16 +172,17 @@ export function useTransition(props) {
         !Array.from(instances.current).some(([, { ctrl }]) => ctrl.isActive)
       ) {
         // update when all transitions is complete to clean dom of removed elements.
-        state.transitions.some(({ destroyed }) => destroyed) &&
-          requestFrame(() =>
-            setState(state => ({
-              ...state,
+        state.current.transitions.some(({ destroyed }) => destroyed) &&
+          requestFrame(() => {
+            state.current = {
+              ...state.current,
               deleted: [],
-              transitions: state.transitions.filter(
+              transitions: state.current.transitions.filter(
                 ({ destroyed }) => !destroyed
               ),
-            }))
-          )
+            }
+            forceUpdate()
+          })
       }
     }
   }
@@ -190,7 +190,10 @@ export function useTransition(props) {
   // Prop changes effect
   useMemo(
     () => {
-      const { transitions, ...rest } = calculateDiffInItems(state, props)
+      const { transitions, ...rest } = calculateDiffInItems(
+        state.current,
+        props
+      )
 
       transitions.forEach(
         ({ state: slot, to, config, trail, key, item, destroyed }) => {
@@ -198,7 +201,7 @@ export function useTransition(props) {
             instances.current.set(key, {
               ctrl: new KeyframeController({
                 ...from,
-                ...(first.current && initial),
+                ...(state.current.first && initial),
                 config,
                 delay: trail,
                 native: true,
@@ -216,8 +219,8 @@ export function useTransition(props) {
           instance.slot = slot
           const ctrl = instance.ctrl
 
-          if (slot === 'update' || slot !== activeSlots.current[key]) {
-            activeSlots.current[key] = slot
+          if (slot === 'update' || slot !== state.current.activeSlots[key]) {
+            state.current.activeSlots[key] = slot
             const cb = onEnd.bind(instance)
             // Set the controller if config has changed
             if (config) ctrl.config = config
@@ -226,15 +229,15 @@ export function useTransition(props) {
         }
       )
 
-      first.current = false
-      setState(state => ({
-        ...state,
+      state.current = {
+        ...state.current,
         transitions,
         prevProps: props,
+        first: true,
         ...rest,
-      }))
+      }
     },
-    [mapKeys(items, _currentKeys).join('')]
+    [items, mapKeys(items, _currentKeys).join('')]
   )
 
   useImperativeMethods(ref, () => ({
@@ -252,7 +255,7 @@ export function useTransition(props) {
     },
   }))
 
-  return state.transitions.map(({ item, state, key }) => {
+  return state.current.transitions.map(({ item, state, key }) => {
     return {
       item,
       key,

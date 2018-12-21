@@ -22,13 +22,11 @@ import examples from '../examples/components/examples-hooks'
   <span className="highlight">Warning: experimental API!</span> Due to hooks being alpha in React, the underlying React API as well as the user-facing react-spring API can be subject to changes.
 </p>
 
-Therefore, to reduce the impact of changes, `react-spring` offers a completely different entry point to work with Hooks, so to not interfere with the stable releases.
+To reduce the impact we opted to serve a different entry point: `/hooks`.
 
 ```diff
-- import { animated, Spring } from 'react-spring';
-                     ↓ ↓ ↓              ↓ ↓ ↓ ↓
-+ import { animated, useSpring } from 'react-spring/hooks';
-!                                                   =====  !
+- import { animated, Spring    } from 'react-spring'
++ import { animated, useSpring } from 'react-spring/hooks'
 ```
 
 As of version 7 this export is officially part of the npm package. Test it, use it, enjoy it, but we recommend that you consult this page if you encounter problems or file issues on [Github](https://github.com/drcmda/react-spring/issues).
@@ -47,6 +45,7 @@ import {
   useKeyframes,
   useChain,
   animated,
+  config,
 } from 'react-spring/hooks'
 ```
 
@@ -66,7 +65,7 @@ import {
 If you re-render the component with changed props, the animation will update.
 
 ```jsx
-const props = useSpring({ opacity: 1, from: { opacity: 0 } })
+const props = useSpring({ opacity: toggle ? 1 : 0 })
 ```
 
 <h3>
@@ -76,7 +75,9 @@ const props = useSpring({ opacity: 1, from: { opacity: 0 } })
 You will get a `set(Values)` function back, use it to update the animation. This will not cause the component to render, which can be generally more performant. It also prevents configs from being re-created on every render. Handling updates like this is extremely useful for fast-occuring updates, like event streams, mousemoves, etc.
 
 ```jsx
-const [props, set] = useSpring(() => ({ opacity: 1, from: { opacity: 0 } }))
+const [props, set] = useSpring(() => ({ opacity: 1 }))
+// ...
+  <div onClick={() => set({ opacity: toggle ? 1 : 0 })} />
 ```
 
 <h3>
@@ -86,7 +87,7 @@ const [props, set] = useSpring(() => ({ opacity: 1, from: { opacity: 0 } }))
 The return value is an object containing animated props. 
 
 ```jsx
-return <animated.div style={props}>i will fade in</animated.div>
+return <animated.div style={props}>i will fade</animated.div>
 ```
 
 <DemoGrid padding={0}>
