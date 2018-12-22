@@ -6,6 +6,10 @@ import {
 } from './universal'
 export { SpringConfig, SpringBaseProps, TransitionKeyProps, State }
 
+export { config, interpolate } from './universal'
+// hooks are currently web-only
+export { animated } from './web'
+
 /** List from `function getForwardProps` in `src/shared/helpers` */
 type ExcludedProps =
   | 'to'
