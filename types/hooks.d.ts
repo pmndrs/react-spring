@@ -36,17 +36,17 @@ export type InterpolationOptions<T, U = T> = {
 }
 
 export interface InterpolationFn<T> {
-  <U>(options: InterpolationOptions<T, U>): OpaqueInterpolation<U> & U
-  <U>(interpolator: (params: T) => U): OpaqueInterpolation<U> & U
+  <U>(options: InterpolationOptions<T, U>): OpaqueInterpolation<U>
+  <U>(interpolator: (params: T) => U): OpaqueInterpolation<U>
 }
 
 export type OpaqueInterpolation<T> = {
   interpolate: InterpolationFn<T>
   getValue: () => T
-}
+} & T
 
 export type AnimatedValue<T extends object> = {
-  [P in keyof T]: OpaqueInterpolation<T[P]> & string
+  [P in keyof T]: OpaqueInterpolation<T[P]>
 }
 
 export type ForwardedProps<T> = AnimatedValue<
