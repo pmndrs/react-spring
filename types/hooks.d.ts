@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react'
+import { CSSProperties, RefObject } from 'react'
 import {
   SpringConfig,
   SpringBaseProps,
@@ -48,10 +48,26 @@ export type SetUpdateFn<DS extends object> = (ds: DS) => void
 
 // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
 // updating it. However, there are no types for Controller, and I assume it is intentionally so.
+// This is a partial interface for Controller that has only the properties needed for useChain to work.
+export interface ReactSpringHook {
+  start(): void
+  stop(): void
+}
+
+export function useChain(refs: ReadonlyArray<RefObject<ReactSpringHook>>): void
+// this looks like it can just be a single overload, but we don't want to allow
+// timeFrame to be specifiable when timeSteps is explicitly "undefined"
+export function useChain(
+  refs: ReadonlyArray<RefObject<ReactSpringHook>>,
+  timeSteps: number[],
+  timeFrame?: number
+): void
+
 export interface HooksBaseProps
   extends Pick<SpringBaseProps, Exclude<keyof SpringBaseProps, 'config'>> {
   // there is an undocumented onKeyframesHalt which passes the controller instance,
   // so it also cannot be typed unless Controller types are written
+  ref?: React.RefObject<ReactSpringHook>
 }
 
 export interface UseSpringBaseProps extends HooksBaseProps {
