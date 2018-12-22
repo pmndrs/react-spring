@@ -64,7 +64,7 @@ export interface SpringBaseProps {
   onStart?(): void
 }
 
-export interface SpringProps<DS extends object = {}> {
+export interface SpringProps<DS extends object = {}> extends SpringBaseProps {
   /**
    * Base styles
    * @default {}
@@ -87,11 +87,6 @@ export interface SpringProps<DS extends object = {}> {
    * Takes a function that receives interpolated styles
    */
   children?: SpringRendererFunc<DS>
-  /**
-   * Prevents animation if true, you can also pass individual keys
-   * @default false
-   */
-  immediate?: boolean | string[] | ((key: string) => boolean)
   /**
    * Inject props
    * @default undefined
