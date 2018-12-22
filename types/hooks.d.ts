@@ -36,8 +36,8 @@ export type InterpolationOptions<T, U = T> = {
 }
 
 export interface InterpolationFn<T> {
-  <U>(options: InterpolationOptions<T, U>): OpaqueInterpolation<U> & U & string
-  (interpolator: (params: T) => string): OpaqueInterpolation<T> & T & string
+  <U>(options: InterpolationOptions<T, U>): OpaqueInterpolation<U> & U
+  <U>(interpolator: (params: T) => U): OpaqueInterpolation<U> & U
 }
 
 export type OpaqueInterpolation<T> = {
