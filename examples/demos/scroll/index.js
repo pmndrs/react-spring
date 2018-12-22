@@ -24,28 +24,30 @@ export default class App extends React.Component {
   render() {
     const y = this.el.current ? this.el.current.scrollTop : 0
     return (
-      <div className="dashoffset-main">
-        <Spring
-          native
-          reset
-          from={{ y }}
-          to={{ y: this.state.y }}
-          ref={this.spring}
-          config={config.slow}>
-          {props => (
-            <animated.div
-              className="c"
-              ref={this.el}
-              onWheel={this.stop}
-              scrollTop={props.y}>
-              {COLORS.map(c => (
-                <div key={c} style={{ height: 200, background: c }} />
-              ))}
-            </animated.div>
-          )}
-        </Spring>
-        <div className="b" onClick={this.setY} />
-      </div>
+      <>
+        <div className="scrolltop-main">
+          <Spring
+            native
+            reset
+            from={{ y }}
+            to={{ y: this.state.y }}
+            ref={this.spring}
+            config={config.slow}>
+            {props => (
+              <animated.div
+                className="scrolltop-c"
+                ref={this.el}
+                onWheel={this.stop}
+                scrollTop={props.y}>
+                {COLORS.map(c => (
+                  <div key={c} style={{ height: 200, background: c }} />
+                ))}
+              </animated.div>
+            )}
+          </Spring>
+        </div>
+        <div className="scrolltop-b" onClick={this.setY} />
+      </>
     )
   }
 }

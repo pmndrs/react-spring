@@ -14,7 +14,6 @@ export default class KeyframeController {
       reset,
       delay,
       destroyed,
-      track,
     }) => ({
       native,
       onStart,
@@ -23,7 +22,6 @@ export default class KeyframeController {
       children,
       delay,
       destroyed,
-      track,
     }))(props)
 
     this.globalConfig = props.config

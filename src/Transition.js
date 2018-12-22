@@ -49,7 +49,7 @@ export default class Transition extends React.PureComponent {
     onDestroyed: PropTypes.func,
     /** The same keys you would normally hand over to React in a list. Keys can be specified as a key-accessor function, an array of keys, or a single value */
     keys: PropTypes.oneOfType([PropTypes.func, PropTypes.array, PropTypes.any]),
-    /** An array of items to be displayed, this is used by Transition as the primary means of detecting changes. */
+    /** An array of items to be displayed (or a single item of any type), this is used by Transition as the primary means of detecting changes. */
     items: PropTypes.oneOfType([PropTypes.array, PropTypes.any]).isRequired,
     /** A single function-child that receives the individual item and return a functional component (item => props => view) */
     children: PropTypes.func.isRequired,
@@ -183,7 +183,7 @@ export default class Transition extends React.PureComponent {
       prevProps: props,
     }
   }
-  
+
   destroyItem = (item, key, state) => values => {
     const { onRest, onDestroyed } = this.props
     if (this.mounted) {

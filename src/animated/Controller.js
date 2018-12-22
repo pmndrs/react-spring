@@ -121,8 +121,8 @@ export default class Controller {
               name,
               parent,
               interpolation,
-              changes: value,
               animatedValues,
+              changes: value,
               fromValues: toArray(parent.getValue()),
               toValues: toArray(target ? toValue.getPayload() : toValue),
               immediate: callProp(immediate, name),
@@ -154,11 +154,9 @@ export default class Controller {
 
     // TODO: clean up ref in controller
     if (!ref && (autoStart || start.length)) this.start(...start)
-
     const [onEnd, onUpdate] = start
     this.onEnd = typeof onEnd === 'function' && onEnd
     this.onUpdate = onUpdate
-
     return this.getValues()
   }
 
@@ -174,8 +172,6 @@ export default class Controller {
   }
 
   stop(finished = false) {
-    this.isActive = false
-    removeController(this)
     // Reset collected changes since the animation has been stopped cold turkey
     if (finished)
       getValues(this.animations).forEach(a => (a.changes = undefined))
@@ -193,11 +189,13 @@ export default class Controller {
   }
 
   debouncedOnEnd(result) {
+    removeController(this)
     this.isActive = false
     const onEnd = this.onEnd
     this.onEnd = null
     if (onEnd) onEnd(result)
     if (this.resolve) this.resolve()
+    this.resolve = null
   }
 
   getValues = () =>

@@ -200,8 +200,14 @@ export function useTransition(props) {
           !instances.current.has(key) &&
             instances.current.set(key, {
               ctrl: new KeyframeController({
-                ...from,
-                ...(state.current.first && initial),
+                ...callProp(
+                  state.current.first
+                    ? initial !== void 0
+                      ? initial || {}
+                      : from
+                    : from,
+                  item
+                ),
                 config,
                 delay: trail,
                 native: true,

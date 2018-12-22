@@ -75,6 +75,12 @@ class Example extends React.Component {
             reset
             from={{ t: 0 }}
             to={{ t: 1 }}
+            config={{
+              mass: 5,
+              tension: 500,
+              friction: 100,
+              precision: 0.00001,
+            }}
             onFrame={({ t }) => this.handleUpdate(t, xd, yd, yr)}>
             {({ t }) => (
               <Group top={height / 2} left={width / 2}>
@@ -89,7 +95,7 @@ class Example extends React.Component {
                     )}
                     fillRule="evenodd"
                     onClick={() => this.handleClick(node)}
-                    key={`node-${i}`}
+                    key={i}
                   />
                 ))}
               </Group>

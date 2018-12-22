@@ -6,7 +6,6 @@ const controllers = new Set()
 
 const frameLoop = () => {
   let time = now()
-
   for (let controller of controllers) {
     let isDone = true
     let noChange = true
@@ -18,34 +17,41 @@ const frameLoop = () => {
     ) {
       let config = controller.configs[configIdx]
 
-      // Doing delay here instead of setTimeout is one async worry less
-      if (config.delay && time - controller.startTime < config.delay) {
-        isDone = false
-        continue
-      }
-
       let endOfAnimation, lastTime, velocity
       for (let valIdx = 0; valIdx < config.animatedValues.length; valIdx++) {
         let animation = config.animatedValues[valIdx]
+
+        // If an animation is done, skip, until all of them conclude
+        if (animation.done) continue
+
         let from = config.fromValues[valIdx]
         let to = config.toValues[valIdx]
         let position = animation.lastPosition
         let isAnimated = to instanceof Animated
         if (isAnimated) to = to.getValue()
 
-        // If an animation is done, skip, until all of them conclude
-        if (animation.done) continue
-
-        // Break animation when animation is immediate or string values are involved
-        if (
-          config.immediate ||
-          typeof from === 'string' ||
-          typeof to === 'string'
-        ) {
+        // Conclude animation if it's either immediate, or from-values match end-state
+        if (config.immediate || (!isAnimated && from === to)) {
           animation.updateValue(to)
           animation.done = true
           continue
-        } else noChange = false
+        }
+
+        // Doing delay here instead of setTimeout is one async worry less
+        if (config.delay && time - controller.startTime < config.delay) {
+          isDone = false
+          continue
+        }
+
+        // Flag change
+        noChange = false
+
+        // Break animation when string values are involved
+        if (typeof from === 'string' || typeof to === 'string') {
+          animation.updateValue(to)
+          animation.done = true
+          continue
+        }
 
         if (config.duration !== void 0) {
           position =
@@ -136,7 +142,7 @@ const addController = controller => {
 }
 
 const removeController = controller => {
-  if (!controllers.has(controller)) {
+  if (controllers.has(controller)) {
     controllers.delete(controller)
   }
 }

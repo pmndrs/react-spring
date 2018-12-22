@@ -1,11 +1,14 @@
-.dashoffset-main {
+.scrolltop-main {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: scroll;
+  width: 100%;
+  height: 100%;
 }
 
-.c {
+.scrolltop-c {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -16,7 +19,9 @@
   opacity: 0.6;
 }
 
-.b {
+.scrolltop-b {
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
   position: absolute;
   width: 100px;
   height: 100px;
@@ -29,13 +34,13 @@
   align-items: center;
 }
 
-.b::after {
+.scrolltop-b::after {
   content: 'Scroll';
   font-size: 1.2em;
   font-weight: 100;
   color: rgb(106, 86, 112);
 }
 
-.b:hover {
+.scrolltop-b:hover {
   background: rgb(217, 203, 218);
 }
