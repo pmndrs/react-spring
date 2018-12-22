@@ -29,7 +29,29 @@ type ExcludedProps =
   | 'interpolateTo'
   | 'autoStart'
   | 'ref'
-export type ForwardedProps<T> = Pick<T, Exclude<keyof T, ExcludedProps>>
+
+export type InterpolationOptions<T, U = T> = {
+  range: T[]
+  output: U[]
+}
+
+export interface InterpolationFn<T> {
+  <U>(options: InterpolationOptions<T, U>): OpaqueInterpolation<U> & U & string
+  (interpolator: (params: T) => string): OpaqueInterpolation<T> & T & string
+}
+
+export type OpaqueInterpolation<T> = {
+  interpolate: InterpolationFn<T>
+  getValue: () => T
+}
+
+export type AnimatedValue<T extends object> = {
+  [P in keyof T]: OpaqueInterpolation<T[P]> & string
+}
+
+export type ForwardedProps<T> = AnimatedValue<
+  Pick<T, Exclude<keyof T, ExcludedProps>>
+>
 // NOTE: because of the Partial, this makes a weak type, which can have excess props
 type InferFrom<T extends object> = T extends { to: infer TTo }
   ? Partial<TTo>

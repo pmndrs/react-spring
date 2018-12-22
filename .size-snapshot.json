@@ -19,83 +19,83 @@
     "gzipped": 1990
   },
   "dist/web.js": {
-    "bundled": 75825,
-    "minified": 36044,
-    "gzipped": 11686,
+    "bundled": 76049,
+    "minified": 36091,
+    "gzipped": 11709,
     "treeshaked": {
       "rollup": {
-        "code": 30418,
+        "code": 30465,
         "import_statements": 287
       },
       "webpack": {
-        "code": 31818
+        "code": 31865
       }
     }
   },
   "dist/web.umd.js": {
-    "bundled": 81489,
-    "minified": 32103,
-    "gzipped": 11503
+    "bundled": 81727,
+    "minified": 32150,
+    "gzipped": 11528
   },
   "dist/native.js": {
-    "bundled": 71944,
-    "minified": 33557,
-    "gzipped": 10299,
+    "bundled": 72168,
+    "minified": 33604,
+    "gzipped": 10326,
     "treeshaked": {
       "rollup": {
-        "code": 26924,
+        "code": 26971,
         "import_statements": 298
       },
       "webpack": {
-        "code": 28273
+        "code": 28320
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 57896,
-    "minified": 26193,
-    "gzipped": 7532,
+    "bundled": 58120,
+    "minified": 26240,
+    "gzipped": 7553,
     "treeshaked": {
       "rollup": {
-        "code": 19581,
+        "code": 19628,
         "import_statements": 262
       },
       "webpack": {
-        "code": 20850
+        "code": 20897
       }
     }
   },
   "dist/konva.js": {
-    "bundled": 69049,
-    "minified": 32156,
-    "gzipped": 10227,
+    "bundled": 69273,
+    "minified": 32203,
+    "gzipped": 10251,
     "treeshaked": {
       "rollup": {
-        "code": 26894,
+        "code": 26941,
         "import_statements": 262
       },
       "webpack": {
-        "code": 28217
+        "code": 28264
       }
     }
   },
   "dist/hooks.js": {
-    "bundled": 79356,
-    "minified": 37758,
-    "gzipped": 12202,
+    "bundled": 79357,
+    "minified": 37761,
+    "gzipped": 12226,
     "treeshaked": {
       "rollup": {
         "code": 16351,
         "import_statements": 341
       },
       "webpack": {
-        "code": 28369
+        "code": 28393
       }
     }
   },
   "dist/hooks.umd.js": {
-    "bundled": 85798,
-    "minified": 33820,
-    "gzipped": 12032
+    "bundled": 85799,
+    "minified": 33805,
+    "gzipped": 12040
   }
 }
