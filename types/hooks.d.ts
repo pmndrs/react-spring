@@ -30,25 +30,35 @@ type ExcludedProps =
   | 'autoStart'
   | 'ref'
 
-export type InterpolationOptions<T, U = T> = {
+// The config options for an interoplation. It maps out from in "in" type
+// to an "out" type.
+export type InterpolationConfig<T, U = T> = {
   range: T[]
   output: U[]
 }
 
-export interface InterpolationFn<T> {
-  <U>(options: InterpolationOptions<T, U>): OpaqueInterpolation<U>
+// The InterpolationChain is either a function that takes a config object
+// and returns the next chainable type or it is a function that takes in params
+// and maps out to another InterpolationChain.
+export interface InterpolationChain<T> {
+  <U>(config: InterpolationConfig<T, U>): OpaqueInterpolation<U>
   <U>(interpolator: (params: T) => U): OpaqueInterpolation<U>
 }
 
+// The opaque interpolation masks as its original type but provides to helpers
+// for chaining the interpolate method and getting its raw value.
 export type OpaqueInterpolation<T> = {
-  interpolate: InterpolationFn<T>
+  interpolate: InterpolationChain<T>
   getValue: () => T
 } & T
 
+// Map all keys to our OpaqueInterpolation type which can either be interpreted
+// as its initial value by "animated.{tag}" or chained with interpolations.
 export type AnimatedValue<T extends object> = {
   [P in keyof T]: OpaqueInterpolation<T[P]>
 }
 
+// Make ForwardedProps chainable with interpolate / make it an animated value.
 export type ForwardedProps<T> = AnimatedValue<
   Pick<T, Exclude<keyof T, ExcludedProps>>
 >
