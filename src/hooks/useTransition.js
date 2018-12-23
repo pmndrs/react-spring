@@ -61,11 +61,12 @@ function calculateDiffInItems({ prevProps, ...state }, props) {
     }
   })
 
-  removed.forEach(({ item, ...rest }) => {
-    const keyIndex = _keys.indexOf(item.originalKey)
+  removed.forEach(({ item, originalKey, ...rest }) => {
+    const keyIndex = _keys.indexOf(originalKey)
     const state = 'leave'
     deleted.unshift({
       ...rest,
+      originalKey,
       item,
       state,
       left: _keys[Math.max(0, keyIndex - 1)],
@@ -95,6 +96,7 @@ function calculateDiffInItems({ prevProps, ...state }, props) {
 
   let transitions = keys.map(key => current[key])
 
+  // debugger
   // this is so the latest deleted item might find its position first
   // as older deleted items might reference later deleted items to their left or right
   deleted.forEach(({ left, right, ...item }) => {
