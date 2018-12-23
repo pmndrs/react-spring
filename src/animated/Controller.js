@@ -91,9 +91,18 @@ export default class Controller {
             parent = interpolation =
               entry.parent || new AnimatedArray(fromValue)
           else {
-            const prev =
-              entry.interpolation &&
-              entry.interpolation.calc(entry.parent.value)
+            let prev
+            if (entry.interpolation) {
+              if (!entry.interpolation.calc) {
+                throw new TypeError(
+                  `it seems you're mixing numbers and strings in your inline styles for property "${
+                    entry.name
+                  }". \n react-spring can only interpolate between the same type`
+                )
+              }
+              prev = entry.interpolation.calc(entry.parent.value)
+            }
+
             if (entry.parent) {
               parent = entry.parent
               parent.setValue(0)
