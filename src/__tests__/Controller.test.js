@@ -24,7 +24,7 @@ describe('Controller', function() {
         },
       })
     }).toThrowErrorMatchingInlineSnapshot(`
-"it seems you're mixing numbers and strings in your inline styles for property \\"left\\". 
+"Invariant failed: it seems you're mixing numbers and strings in your inline styles for property \\"left\\".
  react-spring can only interpolate between the same type"
 `)
   })

@@ -11,6 +11,7 @@ import {
   callProp,
   shallowEqual,
 } from '../shared/helpers'
+import invariant from 'tiny-invariant'
 
 export default class Controller {
   constructor(
@@ -93,13 +94,13 @@ export default class Controller {
           else {
             let prev
             if (entry.interpolation) {
-              if (!entry.interpolation.calc) {
-                throw new TypeError(
-                  `it seems you're mixing numbers and strings in your inline styles for property "${
-                    entry.name
-                  }". \n react-spring can only interpolate between the same type`
-                )
-              }
+              invariant(
+                entry.interpolation.calc,
+                `it seems you're mixing numbers and strings in your inline styles for property "${
+                  entry.name
+                }". \n react-spring can only interpolate between the same type`
+              )
+
               prev = entry.interpolation.calc(entry.parent.value)
             }
 
