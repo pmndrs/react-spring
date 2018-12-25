@@ -46,8 +46,9 @@ function calculateDiffInItems({ prevProps, ...state }, props) {
     const item = items[keyIndex]
     const state = 'enter'
 
-    if (unique && deleted.find(d => d.originalKey === key))
+    if (unique && deleted.find(d => d.originalKey === key)) {
       deleted = deleted.filter(t => t.originalKey !== key)
+    }
 
     current[key] = {
       item,
@@ -229,8 +230,12 @@ export function useTransition(props) {
 
           if (slot === 'update' || slot !== state.current.activeSlots[key]) {
             state.current.activeSlots[key] = slot
+
             // Set the controller if config has changed
             if (config) ctrl.config = config
+
+            // update props that are not animated values
+            ctrl.globals = { delay: trail }
             ctrl.update(to, onEnd.bind(instance))
           }
         }
