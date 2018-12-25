@@ -71,7 +71,6 @@ function calculateDiffInItems({ prevProps, ...state }, props) {
       item,
       state,
       left: _keys[Math.max(0, keyIndex - 1)],
-      right: _keys[Math.min(_keys.length, keyIndex + 1)],
       destroyed: true,
       trail: (delay = delay + trail),
       config: callProp(config, item, state),
@@ -95,29 +94,21 @@ function calculateDiffInItems({ prevProps, ...state }, props) {
     }
   })
 
-  let transitions = keys.map(key => current[key])
+  let out = keys.map(key => current[key])
 
-  // debugger
-  // this is so the latest deleted item might find its position first
-  // as older deleted items might reference later deleted items to their left or right
+  // This tries to restore order for deleted items by finding their last known siblings
+  // only using the left sibling to keep order placement consistent for all deleted items
   deleted.forEach(({ left, right, ...item }) => {
     let pos
     // Was it the element on the left, if yes, move there ...
-    if ((pos = transitions.findIndex(t => t.originalKey === left)) !== -1) {
-      pos += 1
-    }
-    // Or how about the element on the right ...
-    if (pos === -1) pos = transitions.findIndex(t => t.originalKey === right)
+    if ((pos = out.findIndex(t => t.originalKey === left)) !== -1) pos += 1
+
     // And if nothing else helps, move it to the start ¯\_(ツ)_/¯
     pos = Math.max(0, pos)
-    transitions = [
-      ...transitions.slice(0, pos),
-      item,
-      ...transitions.slice(pos),
-    ]
+    out = [...out.slice(0, pos), item, ...out.slice(pos)]
   })
 
-  return { deleted, updated, current, transitions }
+  return { deleted, updated, current, transitions: out }
 }
 
 /**
