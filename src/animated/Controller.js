@@ -96,7 +96,7 @@ export default class Controller {
               entry.interpolation.calc(entry.parent.value)
             if (entry.parent) {
               parent = entry.parent
-              parent.setValue(0)
+              parent.setValue(0, false)
             } else parent = new AnimatedValue(0)
             const range = {
               output: [prev !== void 0 ? prev : fromValue, value],
@@ -108,7 +108,7 @@ export default class Controller {
           }
 
           // Set immediate values
-          if (callProp(immediate, name)) parent.setValue(value)
+          if (callProp(immediate, name)) parent.setValue(value, false)
 
           // Reset animated values
           const animatedValues = toArray(parent.getPayload())

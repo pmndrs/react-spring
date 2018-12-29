@@ -11,11 +11,12 @@ export default class AnimatedArray extends AnimatedArrayWithChildren {
         : array.map(n => new AnimatedValue(n))
   }
 
-  setValue = value => {
+  setValue = (value, flush = true) => {
     if (Array.isArray(value)) {
       if (value.length === this.payload.length)
-        value.forEach((v, i) => this.payload[i].setValue(v))
-    } else this.payload.forEach((v, i) => this.payload[i].setValue(value))
+        value.forEach((v, i) => this.payload[i].setValue(v, flush))
+    } else
+      this.payload.forEach((v, i) => this.payload[i].setValue(value, flush))
   }
   getValue = () => this.payload.map(v => v.getValue())
   interpolate = (config, arg) => new AnimatedInterpolation(this, config, arg)

@@ -69,6 +69,12 @@ return <animated.div style={{ transform }} children="Slide">`,
     },
   },
   {
+    name: 'hooks/draggable-list',
+    title: 'Mouse parallax',
+    link: 'https://codesandbox.io/embed/r5x34869vq',
+    tags: ['useSpring'],
+  },
+  {
     name: 'hooks/mouse-parallax',
     title: 'Mouse parallax',
     link: 'https://codesandbox.io/embed/r5x34869vq',

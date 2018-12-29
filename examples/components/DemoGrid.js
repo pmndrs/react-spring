@@ -9,7 +9,7 @@ export default function DemoGrid({ children, ...props }) {
 const Container = styled('div')`
   position: relative;
   width: 100%;
-  height: auto;
+  height: ${props => (props.fullscreen ? '100%' : 'auto')};
   display: grid;
   grid-gap: 40px;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
