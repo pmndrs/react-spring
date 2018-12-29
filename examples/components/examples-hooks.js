@@ -70,9 +70,9 @@ return <animated.div style={{ transform }} children="Slide">`,
   },
   {
     name: 'hooks/draggable-list',
-    title: 'Mouse parallax',
-    link: 'https://codesandbox.io/embed/r5x34869vq',
-    tags: ['useSpring'],
+    title: 'Draggable list',
+    link: 'https://codesandbox.io/embed/r5qmj8m6lq',
+    tags: ['useTrail'],
   },
   {
     name: 'hooks/mouse-parallax',

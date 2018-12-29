@@ -26,7 +26,7 @@ export default function Slider({ children }) {
   return (
     <div className="slider-main">
       <animated.div
-        {...handlers}
+        {...handlers()}
         className="slider-item"
         style={{ background: bg }}>
         <animated.div

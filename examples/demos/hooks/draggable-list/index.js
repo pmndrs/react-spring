@@ -1,48 +1,76 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useSprings } from 'react-spring/hooks'
-import clamp from 'lodash-es/clamp'
-import { useGesture } from './gesture'
-import { Main, Container, Item } from './styles'
+import React, { useRef } from 'react'
+import clamp from 'lodash/clamp'
+import { useGesture } from 'react-with-gesture'
+import { useSprings, animated, interpolate } from 'react-spring/hooks'
+import data from '../list-reordering/data'
+import './styles.css'
 
-const swap = (a, from, to) => (a.splice(to, 0, ...a.splice(from, 1)), a)
-const yFn = o => i => ({ y: o.indexOf(i) * 100, zIndex: '0', immediate: false })
+// Swaps two values in an array
+const swap = (array, from, to) => (
+  array.splice(to, 0, ...array.splice(from, 1)), array
+)
+// Returns fitting styles for dragged/idle items
+const fn = (order, down, originalIndex, curIndex, y) => index =>
+  down && index === originalIndex
+    ? {
+        y: curIndex * 60 + y,
+        scale: 1.1,
+        zIndex: '1',
+        shadow: 16,
+        immediate: n => n === 'y' || n === 'zIndex',
+      }
+    : {
+        y: order.indexOf(index) * 60,
+        scale: 1,
+        zIndex: '0',
+        shadow: 1,
+        immediate: false,
+      }
 
-function DraggableList({ items = ['LOREM', 'IPSUM', 'DOLOR', 'SIT'] }) {
+export default function DraggableList({
+  items = ['Lorem', 'Ipsum', 'Dolor', 'Sit'],
+}) {
+  // Store indicies as a local ref, this represents the item order
   const order = useRef([0, 1, 2, 3])
-  const [props, setSprings] = useSprings(items.length, yFn(order.current))
-  const bind = useGesture(
-    ({ args: [item, originalIndex], down, yDelta: y }) => {
-      const idx = order.current.indexOf(originalIndex)
-      const row = clamp(Math.floor((idx * 100 + y) / 100), 0, items.length - 1)
-      const newOrder = swap(order.current.slice(0), idx, row)
-      setSprings(i =>
-        down && items[i] === item
-          ? { y: idx * 100 + y, zIndex: '1', immediate: true }
-          : yFn(newOrder)(i)
-      )
-      if (!down) order.current = newOrder
-    }
-  )
-
+  // Create springs, each corresponds to an item, controlling its transform, scale, etc.
+  const [springs, setSprings] = useSprings(items.length, fn(order.current))
+  // Preps a gesture handler which returns drag-deltas, touched/clicked state, etc.
+  const bind = useGesture(({ args: [originalIndex], down, yDelta }) => {
+    // Bunch of math to calculate current row and new order, it's unavoidable ¯\_(ツ)_/¯
+    const curIndex = order.current.indexOf(originalIndex)
+    const curRow = clamp(
+      Math.round((curIndex * 60 + yDelta) / 60),
+      0,
+      items.length - 1
+    )
+    const newOrder = swap(order.current.slice(0), curIndex, curRow)
+    // Feed springs new style data, they'll animate the view without causing a single render
+    setSprings(fn(newOrder, down, originalIndex, curIndex, yDelta))
+    if (!down) order.current = newOrder
+  })
+  // Map resulting animated values to the actual items
   return (
-    <Main>
-      <Container>
-        {items.map((item, index) => (
-          <Item
-            {...bind(item, index)}
+    <div className="draggable-main">
+      <div className="draggable-inner">
+        {springs.map(({ zIndex, shadow, y, scale }, i) => (
+          <animated.div
+            key={i}
             style={{
-              zIndex: props[index].zIndex,
-              transform: props[index].y.interpolate(
-                y => `translate3d(0,${y}px,0)`
+              background: data[i].css,
+              zIndex: zIndex,
+              boxShadow: shadow.interpolate(
+                s => `rgba(0, 0, 0, 0.2) 0px ${s}px ${2 * s}px 0px`
+              ),
+              transform: interpolate(
+                [y, scale],
+                (y, s) => `translate3d(0,${y}px,0) scale(${s})`
               ),
             }}
-            key={item}
-            children={item}
+            children={items[i]}
+            {...bind(i)}
           />
         ))}
-      </Container>
-    </Main>
+      </div>
+    </div>
   )
 }
-
-export default DraggableList
