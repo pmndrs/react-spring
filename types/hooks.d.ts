@@ -34,7 +34,38 @@ type ExcludedProps =
   | 'interpolateTo'
   | 'autoStart'
   | 'ref'
+
+// The config options for an interoplation. It maps out from in "in" type
+// to an "out" type.
+export type InterpolationConfig<T, U = T> = {
+  range: T[]
+  output: U[]
+}
+
+// The InterpolationChain is either a function that takes a config object
+// and returns the next chainable type or it is a function that takes in params
+// and maps out to another InterpolationChain.
+export interface InterpolationChain<T> {
+  <U>(config: InterpolationConfig<T, U>): OpaqueInterpolation<U>
+  <U>(interpolator: (params: T) => U): OpaqueInterpolation<U>
+}
+
+// The opaque interpolation masks as its original type but provides to helpers
+// for chaining the interpolate method and getting its raw value.
+export type OpaqueInterpolation<T> = {
+  interpolate: InterpolationChain<T>
+  getValue: () => T
+} & T
+
+// Map all keys to our OpaqueInterpolation type which can either be interpreted
+// as its initial value by "animated.{tag}" or chained with interpolations.
+export type AnimatedValue<T extends object> = {
+  [P in keyof T]: OpaqueInterpolation<T[P]>
+}
+
+// Make ForwardedProps chainable with interpolate / make it an animated value.
 export type ForwardedProps<T> = Pick<T, Exclude<keyof T, ExcludedProps>>
+
 // NOTE: because of the Partial, this makes a weak type, which can have excess props
 type InferFrom<T extends object> = T extends { to: infer TTo }
   ? Partial<TTo>
@@ -44,7 +75,9 @@ type InferFrom<T extends object> = T extends { to: infer TTo }
 //  but with a delayed evaluation that still allows A to be inferrable
 type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
 
-export type SetUpdateFn<DS extends object> = (ds: DS) => void
+export type SetUpdateFn<DS extends object> = (
+  ds: Pick<DS, Exclude<keyof DS, ExcludedProps>>
+) => void
 
 // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
 // updating it. However, there are no types for Controller, and I assume it is intentionally so.
@@ -94,10 +127,10 @@ export function useSpring<DS extends CSSProperties>(
 ): [ForwardedProps<DS>, SetUpdateFn<DS>]
 export function useSpring<DS extends object>(
   getProps: () => UseSpringProps<DS>
-): [ForwardedProps<DS>, SetUpdateFn<DS>]
+): [AnimatedValue<ForwardedProps<DS>>, SetUpdateFn<DS>]
 export function useSpring<DS extends object>(
   values: UseSpringProps<DS>
-): ForwardedProps<DS>
+): AnimatedValue<ForwardedProps<DS>>
 
 // there's a third value in the tuple but it's not public API (?)
 export function useTrail<DS extends CSSProperties>(
@@ -111,11 +144,11 @@ export function useTrail<DS extends CSSProperties>(
 export function useTrail<DS extends object>(
   count: number,
   getProps: () => UseSpringProps<DS>
-): [ForwardedProps<DS>[], SetUpdateFn<DS>]
+): [AnimatedValue<ForwardedProps<DS>>[], SetUpdateFn<DS>]
 export function useTrail<DS extends object>(
   count: number,
   values: UseSpringProps<DS>
-): ForwardedProps<DS>[] // safe to modify (result of .map)
+): AnimatedValue<ForwardedProps<DS>>[] // safe to modify (result of .map)
 
 export interface UseTransitionProps<TItem, DS extends object>
   extends HooksBaseProps {
@@ -164,7 +197,7 @@ export interface UseTransitionResult<TItem, DS extends object> {
   item: TItem
   key: string
   state: State
-  props: ForwardedProps<DS>
+  props: AnimatedValue<ForwardedProps<DS>>
 }
 
 export function useTransition<TItem, DS extends CSSProperties>(
@@ -172,7 +205,7 @@ export function useTransition<TItem, DS extends CSSProperties>(
 ): UseTransitionResult<TItem, ForwardedProps<DS>>[] // result array is safe to modify
 export function useTransition<TItem, DS extends object>(
   values: Merge<DS, UseTransitionProps<TItem, DS>>
-): UseTransitionResult<TItem, ForwardedProps<DS>>[] // result array is safe to modify
+): UseTransitionResult<TItem, AnimatedValue<ForwardedProps<DS>>>[] // result array is safe to modify
 
 // higher order hooks 🤯
 export namespace useKeyframes {
@@ -287,7 +320,9 @@ export namespace useKeyframes {
       slot: TSlot
     ) => ForwardedProps<ResolveKeyframeSlotValue<TSlots[TSlot]>>
   // this one crashes "even more" because both values are undefined
-  export type UseSpringKeyframes<DS extends object> = () => ForwardedProps<DS>
+  export type UseSpringKeyframes<DS extends object> = () => AnimatedValue<
+    ForwardedProps<DS>
+  >
 
   export type UseTrailKeyframesWithSlots<TSlots extends object> = <
     TSlot extends Exclude<keyof TSlots, keyof TrailKeyframeSlotsConfig<any>>
@@ -298,5 +333,5 @@ export namespace useKeyframes {
 
   export type UseTrailKeyframes<DS extends object> = (
     count: number
-  ) => ForwardedProps<DS>[]
+  ) => AnimatedValue<ForwardedProps<DS>>[]
 }
