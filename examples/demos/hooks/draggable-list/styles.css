@@ -1,0 +1,40 @@
+.draggable-main {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
+    segoe ui, arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f0f0;
+}
+
+.draggable-inner {
+  position: relative;
+  width: 320px;
+  height: 240px;
+}
+
+.draggable-inner > div {
+  position: absolute;
+  width: 320px;
+  height: 50px;
+  overflow: visible;
+  pointer-events: auto;
+  transform-origin: 50% 50% 0px;
+  border-radius: 5px;
+  color: white;
+  line-height: 50px;
+  padding-left: 32px;
+  font-size: 14.5px;
+  font-weight: 400;
+  cursor: -webkit-grab;
+}
+
+.draggable-inner > div:active {
+  cursor: -webkit-grabbing;
+}

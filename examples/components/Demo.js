@@ -33,9 +33,10 @@ export default class Demo extends React.Component {
       link,
       code,
       overlayCode = true,
+      fullscreen = false,
     } = this.props
     return (
-      <Container>
+      <Container fullscreen={fullscreen}>
         <Header>
           <h1>{title}</h1>
           <p>
@@ -85,7 +86,7 @@ export default class Demo extends React.Component {
 const Container = styled('div')`
   position: relative;
   width: 100%;
-  height: 400px;
+  height: ${props => (props.fullscreen ? '100%' : '400px')};
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
 `

@@ -40,6 +40,10 @@ export default class KeyframeController {
     this.globalConfig = config
   }
 
+  set globals(props) {
+    this.globalProps = { ...this.globalProps, ...props }
+  }
+
   next = (props, localFrameId, last = true, index = 0) => {
     // this.last = last
     // this.running = true
@@ -61,10 +65,11 @@ export default class KeyframeController {
       )
 
       // start needs to be called here if ref is present to activate the anim
-      if (this.ref)
+      if (this.ref) {
         this.instance.start(
           this.onEnd(this.onFrameRest, localFrameId, last, resolve)
         )
+      }
 
       // hacky solution to force the parent to be updated any time
       // the child controller is reset
@@ -121,8 +126,9 @@ export default class KeyframeController {
       if (onFrameRest) onFrameRest(this.merged)
       if (last && this.globalOnEnd) this.globalOnEnd(args)
       if (last && this.keyFrameEndResolver) this.keyFrameEndResolver()
-      if (args.finished && last && this.globalOnRest)
+      if (args.finished && last && this.globalOnRest) {
         this.globalOnRest(this.merged)
+      }
     }
   }
 
