@@ -65,5 +65,6 @@ export default [
   ...createConfig('targets/native/index', 'native'),
   ...createConfig('targets/universal/index', 'universal'),
   ...createConfig('targets/konva/index', 'konva'),
-  ...createConfig('targets/web/hooks', 'hooks', 'ReactSpringHooks'),
+  ...createConfig('targets/web/hooks', 'hooks'),
+  ...createConfig('targets/native/hooks', 'native-hooks'),
 ]
