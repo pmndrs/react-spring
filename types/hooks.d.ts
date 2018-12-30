@@ -1,3 +1,4 @@
+import { CSSProperties, RefObject } from 'react'
 import {
   SpringConfig,
   SpringBaseProps,
@@ -5,6 +6,10 @@ import {
   State,
 } from './universal'
 export { SpringConfig, SpringBaseProps, TransitionKeyProps, State }
+
+export { config, interpolate } from './universal'
+// hooks are currently web-only
+export { animated } from './web'
 
 /** List from `function getForwardProps` in `src/shared/helpers` */
 type ExcludedProps =
@@ -43,18 +48,34 @@ export type SetUpdateFn<DS extends object> = (ds: DS) => void
 
 // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
 // updating it. However, there are no types for Controller, and I assume it is intentionally so.
+// This is a partial interface for Controller that has only the properties needed for useChain to work.
+export interface ReactSpringHook {
+  start(): void
+  stop(): void
+}
+
+export function useChain(refs: ReadonlyArray<RefObject<ReactSpringHook>>): void
+// this looks like it can just be a single overload, but we don't want to allow
+// timeFrame to be specifiable when timeSteps is explicitly "undefined"
+export function useChain(
+  refs: ReadonlyArray<RefObject<ReactSpringHook>>,
+  timeSteps: number[],
+  timeFrame?: number
+): void
+
 export interface HooksBaseProps
   extends Pick<SpringBaseProps, Exclude<keyof SpringBaseProps, 'config'>> {
   // there is an undocumented onKeyframesHalt which passes the controller instance,
   // so it also cannot be typed unless Controller types are written
+  ref?: React.RefObject<ReactSpringHook>
 }
 
 export interface UseSpringBaseProps extends HooksBaseProps {
   config?: SpringBaseProps['config']
 }
 
-export type UseSpringProps<DS extends UseSpringBaseProps> = Merge<
-  DS,
+export type UseSpringProps<DS extends object> = Merge<
+  DS & UseSpringBaseProps,
   {
     from?: InferFrom<DS>
     /**
@@ -65,6 +86,12 @@ export type UseSpringProps<DS extends UseSpringBaseProps> = Merge<
 >
 
 // there's a third value in the tuple but it's not public API (?)
+export function useSpring<DS extends CSSProperties>(
+  values: UseSpringProps<DS & CSSProperties>
+): ForwardedProps<DS>
+export function useSpring<DS extends CSSProperties>(
+  getProps: () => UseSpringProps<DS & CSSProperties>
+): [ForwardedProps<DS>, SetUpdateFn<DS>]
 export function useSpring<DS extends object>(
   getProps: () => UseSpringProps<DS>
 ): [ForwardedProps<DS>, SetUpdateFn<DS>]
@@ -73,6 +100,14 @@ export function useSpring<DS extends object>(
 ): ForwardedProps<DS>
 
 // there's a third value in the tuple but it's not public API (?)
+export function useTrail<DS extends CSSProperties>(
+  count: number,
+  getProps: () => UseSpringProps<DS & CSSProperties>
+): [ForwardedProps<DS>[], SetUpdateFn<DS>]
+export function useTrail<DS extends CSSProperties>(
+  count: number,
+  values: UseSpringProps<DS & CSSProperties>
+): ForwardedProps<DS>[] // safe to modify (result of .map)
 export function useTrail<DS extends object>(
   count: number,
   getProps: () => UseSpringProps<DS>
@@ -132,6 +167,9 @@ export interface UseTransitionResult<TItem, DS extends object> {
   props: ForwardedProps<DS>
 }
 
+export function useTransition<TItem, DS extends CSSProperties>(
+  values: Merge<DS & CSSProperties, UseTransitionProps<TItem, DS>>
+): UseTransitionResult<TItem, ForwardedProps<DS>>[] // result array is safe to modify
 export function useTransition<TItem, DS extends object>(
   values: Merge<DS, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, ForwardedProps<DS>>[] // result array is safe to modify
@@ -179,6 +217,13 @@ export namespace useKeyframes {
 
   // fun fact: the state is literally named "undefined" if you're using this overload
   // the docs are vague but it seems this just loops the one animation forever?
+  export function spring<DS extends CSSProperties>(
+    animation:
+      | ReadonlyArray<DS & CSSProperties>
+      | ReadonlyArray<KeyframeFn<DS & CSSProperties>>
+      | KeyframeFn<DS & CSSProperties>,
+    initialProps?: UseSpringProps<DS & CSSProperties>
+  ): UseSpringKeyframes<DS & CSSProperties>
   export function spring<DS extends object>(
     animation:
       | ReadonlyArray<DS>
@@ -186,16 +231,38 @@ export namespace useKeyframes {
       | KeyframeFn<DS>,
     initialProps?: UseSpringProps<DS>
   ): UseSpringKeyframes<DS>
+  // this overload does provide CSSProperties autocompletes, but only as long as config, delay, onRest
+  // et al are not specified. It's not possible to say TSlotNames can be
+  // "string but not keyof SpringKeyframeSlotsConfig".
+  export function spring<
+    TSlotNames extends string,
+    TSlots extends Record<TSlotNames, CSSProperties>
+  >(
+    slots: TSlots &
+      Record<TSlotNames, CSSProperties> &
+      SpringKeyframeSlotsConfig,
+    initialProps?: UseSpringProps<CSSProperties>
+  ): UseSpringKeyframesWithSlots<TSlots>
   // unfortunately, it's not possible to infer the type of the callback functions (if any are given)
-  // while also remaining possible to infer the slot names. Callback functions have to be cast with
+  // while also remaining possible to infer the slot contents. Callback functions have to be cast with
   // `as useKeyframes.KeyframeFn<{ ... }>`.
   // it's also not possible to specify the types of the values inside TSlots. This is a mess.
-  export function spring<TSlots extends object>(
+  export function spring<
+    TSlotNames extends string,
+    TSlots extends Record<TSlotNames, any>
+  >(
     slots: TSlots & SpringKeyframeSlotsConfig,
     // also unfortunately not possible to strongly type this either
     initialProps?: UseSpringProps<any>
   ): UseSpringKeyframesWithSlots<TSlots>
 
+  export function trail<DS extends CSSProperties>(
+    animation:
+      | ReadonlyArray<DS & CSSProperties>
+      | ReadonlyArray<KeyframeFn<DS & CSSProperties>>
+      | KeyframeFn<DS & CSSProperties>,
+    initialProps?: UseSpringProps<DS>
+  ): UseTrailKeyframes<DS>
   export function trail<DS extends object>(
     animation:
       | ReadonlyArray<DS>
@@ -203,6 +270,10 @@ export namespace useKeyframes {
       | KeyframeFn<DS>,
     initialProps?: UseSpringProps<DS>
   ): UseTrailKeyframes<DS>
+  // we unfortunately can't use the same trick in trail as we did in spring to have autocomplete for
+  // CSS properties, for the same reason the spring trick stops working when a config key is given.
+  // It would fail as soon as `items`, a required property, is specified, as its value
+  // (necessarily an array-like) would not be compatible with CSSProperties.
   export function trail<TItem, TSlots extends object>(
     slots: TSlots & TrailKeyframeSlotsConfig<TItem>,
     initialProps?: UseSpringProps<any>
