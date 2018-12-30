@@ -176,7 +176,7 @@ export interface UseTransitionProps<TItem, DS extends object>
    */
   trail?: number
 
-  from?: InferFrom<DS>
+  from?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>)
   /**
    * Values that apply to new elements, or: item => values
    * @default {}
