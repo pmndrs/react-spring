@@ -16,6 +16,7 @@ export const useSpringsImpl = (type = 'default') => (
   props,
   initialProps = {}
 ) => {
+  const isFn = typeof props === 'function'
   const [, forceUpdate] = useState()
   const { config, reverse, onKeyframesHalt, onRest, ...rest } = initialProps
   // The controller maintains the animation values, starts and tops animations
@@ -23,7 +24,7 @@ export const useSpringsImpl = (type = 'default') => (
     () => {
       const instances = []
       for (let i = 0; i < length; i++) {
-        const initProps = { ...rest, ...callProp(props, i) }
+        const initProps = { ...rest, ...(isFn ? callProp(props, i) : props[i]) }
         instances.push(
           type === 'keyframe'
             ? new KeyframeController(initProps)
@@ -64,7 +65,7 @@ export const useSpringsImpl = (type = 'default') => (
     props => {
       instances.forEach((ctrl, i) => {
         const last = reverse ? i === 0 : instances.length - 1 === i
-        const initProps = { ...rest, ...callProp(props, i) }
+        const initProps = { ...rest, ...(isFn ? callProp(props, i) : props[i]) }
         ctrl.props.reset && type === 'keyframe' && last
           ? ctrl.updateWithForceUpdate(forceUpdate, initProps)
           : ctrl.update(initProps)
@@ -76,13 +77,17 @@ export const useSpringsImpl = (type = 'default') => (
     [instances, onRest, onKeyframesHalt, rest.ref, reverse]
   )
 
+  // Update next frame is props aren't functional
+  useEffect(() => void (!isFn && updateCtrl(props)))
   // Return animated props, or, anim-props + the update-setter above
   const propValues = instances.map(v => v.getValues())
-  return [
-    propValues,
-    updateCtrl,
-    (finished = false) => instances.forEach(ctrl => ctrl.stop(finished)),
-  ]
+  return isFn
+    ? [
+        propValues,
+        updateCtrl,
+        (finished = false) => instances.forEach(ctrl => ctrl.stop(finished)),
+      ]
+    : propValues
 }
 
 export const useSprings = useSpringsImpl()
