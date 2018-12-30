@@ -64,7 +64,7 @@ export interface SpringBaseProps {
   onStart?(): void
 }
 
-export interface SpringProps<DS extends object = {}> {
+export interface SpringProps<DS extends object = {}> extends SpringBaseProps {
   /**
    * Base styles
    * @default {}
