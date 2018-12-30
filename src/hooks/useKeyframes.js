@@ -1,6 +1,6 @@
 import React from 'react'
-import { useSpring, useSpringImpl } from './useSpring'
-import { useTrail, useTrailImpl } from './useTrail'
+import { useSpringImpl } from './useSpring'
+import { useSpringsImpl } from './useSprings'
 import { callProp } from '../shared/helpers'
 import * as Globals from '../animated/Globals'
 
@@ -67,5 +67,7 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
 
 export const useKeyframes = {
   spring: (...args) => useKeyframesImpl(useSpringImpl('keyframe'))(...args),
-  trail: (...args) => useKeyframesImpl(useTrailImpl('keyframe'))(...args),
+  springs: (...args) => useKeyframesImpl(useSpringsImpl('keyframe'))(...args),
+  trail: (...args) =>
+    useKeyframesImpl(useSpringsImpl('keyframe', true))(...args),
 }

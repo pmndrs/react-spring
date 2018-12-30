@@ -11,20 +11,26 @@ import { callProp } from '../shared/helpers'
 import { requestFrame } from '../animated/Globals'
 import KeyframeController from '../animated/KeyframeController'
 
-export const useSpringsImpl = (type = 'default') => (
+export const useSpringsImpl = (type = 'default', trail = false) => (
   length,
   props,
   initialProps = {}
 ) => {
   const isFn = typeof props === 'function'
   const [, forceUpdate] = useState()
-  const { config, reverse, onKeyframesHalt, onRest, ...rest } = initialProps
+  const args = trail ? callProp(props) : initialProps
+  const { config, reverse, onKeyframesHalt, onRest, ...rest } = args
   // The controller maintains the animation values, starts and tops animations
   const instances = useMemo(
     () => {
       const instances = []
       for (let i = 0; i < length; i++) {
-        const initProps = { ...rest, ...(isFn ? callProp(props, i) : props[i]) }
+        const initProps = {
+          ...rest,
+          ...(!trail && (isFn ? callProp(props, i) : props[i])),
+          config: trail && callProp(config, i),
+          attach: trail && i > 0 && (() => instances[i - 1]),
+        }
         instances.push(
           type === 'keyframe'
             ? new KeyframeController(initProps)
@@ -65,7 +71,14 @@ export const useSpringsImpl = (type = 'default') => (
     props => {
       instances.forEach((ctrl, i) => {
         const last = reverse ? i === 0 : instances.length - 1 === i
-        const initProps = { ...rest, ...(isFn ? callProp(props, i) : props[i]) }
+        const attachIdx = reverse ? i + 1 : i - 1
+        const attachController = instances[attachIdx]
+        const initProps = {
+          ...rest,
+          ...(!trail && (isFn ? callProp(props, i) : props[i])),
+          config: trail && callProp(props.config, i),
+          attach: trail && attachController && (() => attachController),
+        }
         ctrl.props.reset && type === 'keyframe' && last
           ? ctrl.updateWithForceUpdate(forceUpdate, initProps)
           : ctrl.update(initProps)
