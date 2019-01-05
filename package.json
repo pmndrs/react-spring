@@ -104,7 +104,7 @@
     "react-testing-library": "5.2.0",
     "react-transition-group": "2.5.0",
     "react-twitter-widgets": "1.7.1",
-    "react-with-gesture": "2.0.4",
+    "react-with-gesture": "4.0.0",
     "rimraf": "2.6.2",
     "rollup": "0.66.6",
     "rollup-plugin-babel": "4.0.3",

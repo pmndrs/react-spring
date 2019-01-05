@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useKeyframes, animated } from 'react-spring/hooks'
 import './styles.css'
-import { useChain } from '../../../../dist/hooks'
 
 const useScript = useKeyframes.spring(async next => {
   while (true) {

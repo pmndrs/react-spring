@@ -13051,10 +13051,10 @@ react-twitter-widgets@1.7.1:
     prop-types "^15.3.0"
     scriptjs "^2.5.8"
 
-react-with-gesture@2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/react-with-gesture/-/react-with-gesture-2.0.4.tgz#3b1095b55b937d0ca89b9d4570bc35c1e3238236"
-  integrity sha512-SeXrbhj0NQ/NZh3GhPj6j8OGPGjBem6L79JYf37+AuapMVPuOh9ehoBblhc+C5Yq8aduQn/pB2uB4tKE3LrEAw==
+react-with-gesture@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-with-gesture/-/react-with-gesture-4.0.0.tgz#2ef465e6118c79abc0916368df0de6d1485b2d5d"
+  integrity sha512-+7WjnIiqvhW/ViZZxg+kKa9R4evq/PrZuEOo7x/uxWqojPgX1tLfaAlLR+8XlzIS1U0tEJ2ap9nPDe5wOsAccg==
 
 react@16.7.0-alpha.2:
   version "16.7.0-alpha.2"

@@ -72,7 +72,7 @@ return <animated.div style={{ transform }} children="Slide">`,
     name: 'hooks/draggable-list',
     title: 'Draggable list',
     link: 'https://codesandbox.io/embed/r5qmj8m6lq',
-    tags: ['useTrail'],
+    tags: ['useSprings'],
   },
   {
     name: 'hooks/mouse-parallax',

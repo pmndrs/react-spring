@@ -144,6 +144,50 @@ return items.map((item, index) => (
   ))}
 </DemoGrid>
 
+## useSprings
+
+ `useSprings(Count, [Values] | index => Values): [animatedProps] | [[animatedProps], set]`
+
+<p>
+ useSprings has a similar api as useTrail, the only distinction is that the springs don't trail, you define individual values for them.
+</p>
+
+<h3>
+  <span className="highlight"><i>Either</i>: overwrite values</span> to change the animation
+</h3>
+
+```jsx
+const props = useSprings(items.length, [{ x: 0 }, { x: 1000 }, { x: 2000 }] })
+```
+
+<h3>
+  <span className="highlight"><i>Or</i>: pass a function</span> that returns values, and update using "set"
+</h3>
+
+```jsx
+const [props, set] = useSprings(items.length, index => ({ x: index * 1000 } }))
+```
+
+<h3>
+  <span className="highlight"><i>Finally</i>: distribute animated props</span> among the view
+</h3>
+
+```jsx
+return items.map((item, index) => (
+  <animated.div key={item.key} style={props[index]}>{item.content}</animated.div>
+)
+```
+
+<DemoGrid padding={0}>
+  {examples.filter(data => data.tags.includes('useSprings')).map(data => (
+    <Demo
+      key={data.name}
+      {...data}
+      import={import('../examples/demos/' + data.name)}
+    />
+  ))}
+</DemoGrid>
+
 ## useTransition
 
  `useTransition(Config): [{ item, key, props, state }]`
