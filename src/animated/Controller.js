@@ -80,9 +80,8 @@ export default class Controller {
         if (target) toValue = target.animations[name].parent
 
         // Detect changes, animated values will be checked in the raf-loop
-        if (!shallowEqual(entry.changes, value)) {
+        if (toConfig.decay !== void 0 || !shallowEqual(entry.changes, value)) {
           this.hasChanged = true
-
           let parent, interpolation
           if (isNumber || isString)
             parent = interpolation =
@@ -135,6 +134,7 @@ export default class Controller {
               mass: withDefault(toConfig.mass, 1),
               duration: toConfig.duration,
               easing: withDefault(toConfig.easing, t => t),
+              decay: toConfig.decay,
             },
           }
         } else return acc

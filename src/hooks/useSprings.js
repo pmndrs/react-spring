@@ -19,18 +19,22 @@ export const useSpringsImpl = (type = 'default', trail = false) => (
   const isFn = typeof props === 'function'
   const [, forceUpdate] = useState()
   const args = trail ? callProp(props) : initialProps
-  const { config, reverse, onKeyframesHalt, onRest, ...rest } = args
+  const { reverse, onKeyframesHalt, onRest, ...rest } = args
   // The controller maintains the animation values, starts and tops animations
   const instances = useMemo(
     () => {
       const instances = []
       for (let i = 0; i < length; i++) {
-        const initProps = {
-          ...rest,
-          ...(!trail && (isFn ? callProp(props, i) : props[i])),
-          config: trail && callProp(config, i),
-          attach: trail && i > 0 && (() => instances[i - 1]),
-        }
+        const initProps = trail
+          ? {
+              ...rest,
+              config: callProp(rest.config, i),
+              attach: i > 0 && (() => instances[i - 1]),
+            }
+          : {
+              ...rest,
+              ...(isFn ? callProp(props, i) : props[i]),
+            }
         instances.push(
           type === 'keyframe'
             ? new KeyframeController(initProps)
@@ -73,16 +77,16 @@ export const useSpringsImpl = (type = 'default', trail = false) => (
         const last = reverse ? i === 0 : instances.length - 1 === i
         const attachIdx = reverse ? i + 1 : i - 1
         const attachController = instances[attachIdx]
-        const initProps = {
-          ...rest,
-          ...(!trail && (isFn ? callProp(props, i) : props[i])),
-          config: trail && callProp(props.config, i),
-          attach: trail && attachController && (() => attachController),
-        }
+        const updateProps = trail
+          ? {
+              ...props,
+              config: callProp(props.config || rest.config, i),
+              attach: attachController && (() => attachController),
+            }
+          : { ...(isFn ? callProp(props, i) : props[i]) }
         ctrl.props.reset && type === 'keyframe' && last
-          ? ctrl.updateWithForceUpdate(forceUpdate, initProps)
-          : ctrl.update(initProps)
-
+          ? ctrl.updateWithForceUpdate(forceUpdate, updateProps)
+          : ctrl.update(updateProps)
         if (!ctrl.props.ref) ctrl.start(last && onHalt(ctrl))
         if (last && ctrl.props.reset) requestFrame(forceUpdate)
       })

@@ -198,4 +198,16 @@ return items.map(i =>
   <animated.div style={{ transform: props.r.interpolate(interp(i)) }} />)`,
     },
   },
+  {
+    name: 'hooks/gestures-pull',
+    title: 'Gestures (pull & release)',
+    link: 'https://codesandbox.io/embed/r24mzvo3q',
+    tags: ['useSpring'],
+  },
+  {
+    name: 'hooks/gestures-pager',
+    title: 'View pager',
+    link: 'https://codesandbox.io/embed/n9vo1my91p',
+    tags: ['useSprings'],
+  },
 ]

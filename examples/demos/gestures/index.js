@@ -7,7 +7,10 @@ import './styles.css'
 
 class GesturesExample extends React.Component {
   render() {
-    const { xDelta, down } = this.props
+    const {
+      delta: [xDelta],
+      down,
+    } = this.props
     const to = { x: down ? xDelta : 0 }
     return (
       <div className="gestures-main">
@@ -46,4 +49,4 @@ class GesturesExample extends React.Component {
 }
 
 // https://github.com/drcmda/react-with-gesture
-export default withGesture(GesturesExample)
+export default withGesture()(GesturesExample)

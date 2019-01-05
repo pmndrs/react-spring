@@ -28,10 +28,13 @@ const frameLoop = () => {
         let to = config.toValues[valIdx]
         let position = animation.lastPosition
         let isAnimated = to instanceof Animated
+        let velocity = Array.isArray(config.initialVelocity)
+          ? config.initialVelocity[valIdx]
+          : config.initialVelocity
         if (isAnimated) to = to.getValue()
 
         // Conclude animation if it's either immediate, or from-values match end-state
-        if (config.immediate || (!isAnimated && from === to)) {
+        if (config.immediate || (!isAnimated && !config.decay && from === to)) {
           animation.updateValue(to)
           animation.done = true
           continue
@@ -54,6 +57,7 @@ const frameLoop = () => {
         }
 
         if (config.duration !== void 0) {
+          /** Duration easing */
           position =
             from +
             config.easing(
@@ -62,7 +66,16 @@ const frameLoop = () => {
               (to - from)
           endOfAnimation =
             time >= controller.startTime + config.delay + config.duration
+        } else if (config.decay) {
+          /** Decay easing */
+          position =
+            from +
+            (velocity / (1 - 0.998)) *
+              (1 - Math.exp(-(1 - 0.998) * (time - controller.startTime)))
+          endOfAnimation = Math.abs(animation.lastPosition - position) < 0.1
+          if (endOfAnimation) to = position
         } else {
+          /** Spring easing */
           lastTime = animation.lastTime !== void 0 ? animation.lastTime : time
           velocity =
             animation.lastVelocity !== void 0

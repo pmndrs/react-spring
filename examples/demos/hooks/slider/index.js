@@ -8,11 +8,11 @@ import './styles.css'
 export default function Slider({ children }) {
   // See: https://github.com/drcmda/react-with-gesture
   // Gives access to: down, x, y, xDelta, yDelta, xInitial, yInitial
-  const [handlers, { xDelta, down }] = useGesture()
+  const [handlers, { delta, down }] = useGesture()
   const { x, bg, size } = useSpring({
-    x: down ? xDelta : 0,
+    x: down ? delta[0] : 0,
     bg: `linear-gradient(120deg, ${
-      xDelta < 0 ? '#f093fb 0%, #f5576c' : '#96fbc4 0%, #f9f586'
+      delta[0] < 0 ? '#f093fb 0%, #f5576c' : '#96fbc4 0%, #f9f586'
     } 100%)`,
     size: down ? 1.1 : 1,
     immediate: name => down && name === 'x',
@@ -33,7 +33,7 @@ export default function Slider({ children }) {
           className="slider-av"
           style={{
             transform: avSize,
-            justifySelf: xDelta < 0 ? 'end' : 'start',
+            justifySelf: delta[0] < 0 ? 'end' : 'start',
           }}
         />
         <animated.div
