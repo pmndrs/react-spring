@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import clamp from 'lodash/clamp'
 import { useGesture } from 'react-with-gesture'
 import { useSprings, animated, interpolate } from 'react-spring/hooks'
-import data from '../list-reordering/data'
 import './styles.css'
 
 // Swaps two values in an array
@@ -56,7 +55,6 @@ export default function DraggableList({
           <animated.div
             key={i}
             style={{
-              background: data[i].css,
               zIndex: zIndex,
               boxShadow: shadow.interpolate(
                 s => `rgba(0, 0, 0, 0.2) 0px ${s}px ${2 * s}px 0px`

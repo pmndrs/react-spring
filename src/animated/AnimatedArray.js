@@ -5,10 +5,7 @@ import AnimatedInterpolation from './AnimatedInterpolation'
 export default class AnimatedArray extends AnimatedArrayWithChildren {
   constructor(array) {
     super()
-    this.payload =
-      array instanceof AnimatedArray
-        ? array.payload
-        : array.map(n => new AnimatedValue(n))
+    this.payload = array.map(n => new AnimatedValue(n))
   }
 
   setValue = (value, flush = true) => {

@@ -210,4 +210,10 @@ return items.map(i =>
     link: 'https://codesandbox.io/embed/n9vo1my91p',
     tags: ['useSprings'],
   },
+  {
+    name: 'hooks/card-flick',
+    title: 'Card stack',
+    link: 'https://codesandbox.io/embed/j0y0vpz59',
+    tags: ['useSprings'],
+  },
 ]

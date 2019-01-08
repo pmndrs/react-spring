@@ -19,77 +19,77 @@
     "gzipped": 1990
   },
   "dist/web.js": {
-    "bundled": 76786,
-    "minified": 36368,
-    "gzipped": 11805,
+    "bundled": 76872,
+    "minified": 36369,
+    "gzipped": 11801,
     "treeshaked": {
       "rollup": {
-        "code": 30742,
+        "code": 30743,
         "import_statements": 287
       },
       "webpack": {
-        "code": 32142
+        "code": 32143
       }
     }
   },
   "dist/web.umd.js": {
-    "bundled": 82494,
-    "minified": 32427,
-    "gzipped": 11622
+    "bundled": 82586,
+    "minified": 32428,
+    "gzipped": 11618
   },
   "dist/native.js": {
-    "bundled": 72905,
-    "minified": 33881,
-    "gzipped": 10422,
+    "bundled": 72991,
+    "minified": 33882,
+    "gzipped": 10419,
     "treeshaked": {
       "rollup": {
-        "code": 27248,
+        "code": 27249,
         "import_statements": 298
       },
       "webpack": {
-        "code": 28597
+        "code": 28598
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 58857,
-    "minified": 26517,
-    "gzipped": 7645,
+    "bundled": 58943,
+    "minified": 26518,
+    "gzipped": 7649,
     "treeshaked": {
       "rollup": {
-        "code": 19905,
+        "code": 19906,
         "import_statements": 262
       },
       "webpack": {
-        "code": 21174
+        "code": 21175
       }
     }
   },
   "dist/konva.js": {
-    "bundled": 70010,
-    "minified": 32480,
-    "gzipped": 10352,
+    "bundled": 70096,
+    "minified": 32481,
+    "gzipped": 10349,
     "treeshaked": {
       "rollup": {
-        "code": 27218,
+        "code": 27219,
         "import_statements": 262
       },
       "webpack": {
-        "code": 28541
+        "code": 28542
       }
     }
   },
   "dist/hooks.js": {
-    "bundled": 80699,
-    "minified": 38363,
-    "gzipped": 12434,
+    "bundled": 80785,
+    "minified": 38364,
+    "gzipped": 12422,
     "treeshaked": {
       "rollup": {
-        "code": 16403,
+        "code": 16404,
         "import_statements": 341
       },
       "webpack": {
-        "code": 28881
+        "code": 28882
       }
     }
   },
@@ -99,16 +99,16 @@
     "gzipped": 12303
   },
   "dist/native-hooks.js": {
-    "bundled": 72436,
-    "minified": 34149,
-    "gzipped": 10591,
+    "bundled": 72522,
+    "minified": 34150,
+    "gzipped": 10584,
     "treeshaked": {
       "rollup": {
-        "code": 10006,
+        "code": 10032,
         "import_statements": 345
       },
       "webpack": {
-        "code": 25041
+        "code": 25042
       }
     }
   }

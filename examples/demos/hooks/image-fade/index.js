@@ -38,7 +38,7 @@ export default function App() {
   })
 
   useEffect(() => {
-    const id = setInterval(() => set(state => ++state % slides.length), 3000)
+    const id = setInterval(() => set(state => ++state % slides.length), 2000)
     return () => clearInterval(id)
   }, [])
 

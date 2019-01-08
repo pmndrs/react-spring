@@ -153,7 +153,7 @@ export function useTransition(props) {
 
   // only to be used internally, must be bound to the instance obj to work
   function onEnd({ finished }) {
-    const { item, destroyed, slot, ctrl } = this
+    const { item, key, destroyed, slot, ctrl } = this
     if (mounted.current && finished) {
       if (destroyed && onDestroyed) onDestroyed(item)
       // onRest needs to be called everytime each item
@@ -162,22 +162,19 @@ export function useTransition(props) {
       // and one for a sort of global on rest and peritem onrest?
       if (onRest) onRest(item, slot, ctrl.merged)
 
-      if (
-        !Array.from(instances.current).some(([, { ctrl }]) => ctrl.isActive)
-      ) {
-        // update when all transitions is complete to clean dom of removed elements.
-        state.current.transitions.some(({ destroyed }) => destroyed) &&
-          requestFrame(() => {
-            state.current = {
-              ...state.current,
-              deleted: [],
-              transitions: state.current.transitions.filter(
-                ({ destroyed }) => !destroyed
-              ),
-            }
-            forceUpdate()
-          })
+      // Clean up internal state when items unmount, this doesn't necessrily trigger a forceUpdate
+      if (destroyed) {
+        state.current = {
+          ...state.current,
+          deleted: state.current.deleted.filter(t => t.key !== key),
+          transitions: state.current.transitions.filter(t => t.key !== key),
+        }
       }
+
+      // Only when everything's come to rest we enforce a complete dom clean-up
+      const currentInstances = Array.from(instances.current)
+      if (!currentInstances.some(([, { ctrl }]) => ctrl.isActive))
+        requestFrame(() => forceUpdate())
     }
   }
 
@@ -210,6 +207,7 @@ export function useTransition(props) {
               item,
               destroyed,
               slot,
+              key,
             })
 
           // update the map object

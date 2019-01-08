@@ -1,7 +1,9 @@
 import * as Globals from './Globals'
 
 export default class Interpolation {
-  static create(config, arg) {
+  // Default config = config, args
+  // Short config   = range, output, extrapolate
+  static create(config, output, extra) {
     if (typeof config === 'function') return config
     else if (
       Globals.interpolation &&
@@ -10,7 +12,11 @@ export default class Interpolation {
     )
       return Globals.interpolation(config)
     else if (Array.isArray(config))
-      return Interpolation.create({ range: config, output: arg })
+      return Interpolation.create({
+        range: config,
+        output,
+        extrapolate: extra || 'extend',
+      })
 
     let outputRange = config.output
     let inputRange = config.range || [0, 1]
