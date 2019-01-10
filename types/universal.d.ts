@@ -141,7 +141,12 @@ export interface TransitionProps<
   TUpdate extends object = {},
   SpringProps extends object = {},
   DS extends object = {}
-> extends SpringBaseProps {
+> extends Pick<SpringBaseProps, Exclude<keyof SpringBaseProps, 'config'>> {
+  /**
+   * Spring config, or for individual keys: fn((item,type) => config), where "type" can be either enter, leave or update
+   * @default config.default
+   */
+  config?: SpringConfig | ((item: TItem, type: State) => SpringConfig)
   /**
    * First-render initial values, if present overrides "from" on the first render pass. It can be "null" to skip first mounting transition. Otherwise it can take an object or a function (item => object)
    */
