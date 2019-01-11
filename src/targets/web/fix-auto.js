@@ -15,9 +15,13 @@ export default function fixAuto(props, callback) {
   // TODO: deal with "null"
   if (!(getValues(to).some(check) || getValues(from).some(check))) return
   // Fetch render v-dom
-  const element = children(convertValues(props))
+  let element = children(convertValues(props))
   // A spring can return undefined/null, check against that (#153)
   if (!element) return
+  // Or it could be an array (#346) ...
+  if (Array.isArray(element))
+    element = { type: 'div', props: { children: element } }
+  // Extract styles
   const elementStyles = element.props.style
 
   // Return v.dom with injected ref

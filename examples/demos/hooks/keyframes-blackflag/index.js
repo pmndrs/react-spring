@@ -12,7 +12,7 @@ const useScript = useKeyframes.spring(
       await next({
         radians: 2 * Math.PI,
         from: { radians: 0 },
-        reset: true,
+        reset: true, // <----------- this doesn't work
         config: { duration: 3500 },
       })
   },

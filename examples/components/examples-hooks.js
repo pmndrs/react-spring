@@ -216,4 +216,10 @@ return items.map(i =>
     link: 'https://codesandbox.io/embed/j0y0vpz59',
     tags: ['useSprings'],
   },
+  {
+    name: 'hooks/freshtilledsoil',
+    title: 'Freshtilledsoil stresstest',
+    link: 'https://codesandbox.io/embed/j0y0vpz59',
+    tags: ['useChain'],
+  },
 ]
