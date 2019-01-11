@@ -38,7 +38,7 @@ export const useSpringImpl = (type = 'default') => args => {
   // Defines the hooks setter, which updates the controller
   const updateCtrl = useCallback(
     updateProps => {
-      ctrl.props.reset && type === 'keyframe'
+      type === 'keyframe'
         ? ctrl.updateWithForceUpdate(forceUpdate, updateProps)
         : ctrl.update(updateProps)
       if (!ctrl.props.ref) ctrl.start(onHalt)

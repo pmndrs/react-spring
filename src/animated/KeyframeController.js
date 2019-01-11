@@ -146,9 +146,16 @@ export default class KeyframeController {
     this.parentForceUpdate = forceUpdate
     this.update(...args)
   }
-  update = (slots, ...args) => {
-    this.currSlots = slots
-    !this.ref && this.start(...args)
+  update = args => {
+    const isFnOrArray = typeof args === 'function' || Array.isArray(args)
+    if (isFnOrArray) {
+      this.currSlots = args
+      !this.ref && this.start()
+    } else {
+      const { slots, ...rest } = args
+      this.currSlots = slots
+      !this.ref && this.start(...rest)
+    }
   }
   getValues = () => this.instance.getValues()
   destroy = () => this.instance.destroy()
