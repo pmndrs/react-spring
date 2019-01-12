@@ -54,7 +54,7 @@ import {
  `useSpring(Values | () => Values): animatedProps | [animatedProps, set]`
 
 <p>
- useSpring accepts props and returns animated-props, which you can then distribute among your views. For all full table of all accepted props concult the <a href="/spring">spring components documentation</a>.
+ useSpring accepts props and returns animated-props, which you can then distribute among your views. For all full table of all accepted props consult the <a href="/spring">spring components documentation</a>.
 </p>
 
 
@@ -72,7 +72,7 @@ const props = useSpring({ opacity: toggle ? 1 : 0 })
   <span className="highlight"><i>Or</i>: pass a function</span> that returns values, and update using "set"
 </h3>
 
-You will get a `set(Values)` function back, use it to update the animation. This will not cause the component to render, which can be generally more performant. It also prevents configs from being re-created on every render. Handling updates like this is extremely useful for fast-occuring updates, like event streams, mousemoves, etc.
+You will get a `set(Values)` function back, use it to update the animation. This will not cause the component to render, which can be generally more performant. It also prevents configs from being re-created on every render. Handling updates like this is extremely useful for fast-occurring updates, like event streams, mousemoves, etc.
 
 ```jsx
 const [props, set] = useSpring(() => ({ opacity: 1 }))
