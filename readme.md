@@ -38,7 +38,11 @@ React-spring is a spring physics based animation library for React.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
-Full documentation and examples here: [react-spring.surge.sh](https://react-spring.github.io)
+# Documentation and Examples
+
+Full documentation and examples here: **[react-spring.surge.sh](https://react-spring.surge.sh/)**
+
+---
 
 # What others say
 
