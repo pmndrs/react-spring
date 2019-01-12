@@ -150,22 +150,22 @@ export interface TransitionProps<
   /**
    * First-render initial values, if present overrides "from" on the first render pass. It can be "null" to skip first mounting transition. Otherwise it can take an object or a function (item => object)
    */
-  initial?: TInit | null
+  initial?: TInit | ((item: TItem) => TInit) | null
   /**
    * Base values (from -> enter), or: item => values
    * @default {}
    */
-  from?: TFrom
+  from?: TFrom | ((item: TItem) => TFrom)
   /**
    * Values that apply to new elements, or: fitem => values
    * @default {}
    */
-  enter?: TEnter
+  enter?: TEnter | ((item: TItem) => TEnter)
   /**
    * Values that apply to leaving elements, or: item => values
    * @default {}
    */
-  leave?: TLeave
+  leave?: TLeave | ((item: TItem) => TLeave)
   /**
    * Callback when the animation comes to a still-stand
    */
@@ -174,7 +174,7 @@ export interface TransitionProps<
   /**
    * Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values
    */
-  update?: TUpdate
+  update?: TUpdate | ((item: TItem) => TUpdate)
   /**
    * The same keys you would normally hand over to React in a list. Keys can be specified as a key-accessor function, an array of keys, or a single value
    */
