@@ -40,7 +40,7 @@ For a more detailed explanation read [Why React needed yet another animation lib
 
 # Documentation and Examples
 
-Full documentation and examples here: [react-spring.surge.sh](https://react-spring.github.io)
+Full documentation and examples here: **[react-spring.surge.sh](https://react-spring.github.io)**
 
 ---
 
