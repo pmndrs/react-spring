@@ -157,7 +157,7 @@ export interface TransitionProps<
    */
   from?: TFrom | ((item: TItem) => TFrom)
   /**
-   * Values that apply to new elements, or: fitem => values
+   * Values that apply to new elements, or: item => values
    * @default {}
    */
   enter?: TEnter | ((item: TItem) => TEnter)
