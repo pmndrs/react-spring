@@ -19,7 +19,7 @@ export default class Transition extends React.PureComponent {
     initial: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Base values (from -> enter), or: item => values */
     from: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
-    /** Values that apply to new elements, or: fitem => values */
+    /** Values that apply to new elements, or: item => values */
     enter: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.array,

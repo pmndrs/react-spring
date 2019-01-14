@@ -157,7 +157,7 @@ export interface TransitionProps<
    */
   from?: TFrom | ((item: TItem) => TFrom)
   /**
-   * Values that apply to new elements, or: fitem => values
+   * Values that apply to new elements, or: item => values
    * @default {}
    */
   enter?: TEnter | ((item: TItem) => TEnter)
@@ -201,7 +201,7 @@ export interface TransitionProps<
   /**
    * Calls back once a transition is about to wrap up
    */
-  onDestroyed?: () => void
+  onDestroyed?: (item: TItem) => void
   /**
    * Useful in combination with "unique", when true it forces incoming items that already exist to restart instead of adapting to their current values
    * @default false
