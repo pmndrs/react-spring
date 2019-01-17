@@ -1,7 +1,7 @@
 import {
   useState,
   useRef,
-  useImperativeMethods,
+  useImperativeHandle,
   useEffect,
   useCallback,
 } from 'react'
@@ -25,7 +25,7 @@ export const useSpringImpl = (type = 'default') => args => {
   const onHalt = ({ finished }) => finished && onRest && onRest(ctrl.merged)
 
   // The hooks explcit API gets defined here ...
-  useImperativeMethods(props.ref, () => ({
+  useImperativeHandle(props.ref, () => ({
     start: () => ctrl.start(onHalt),
     get isActive() {
       return ctrl.isActive

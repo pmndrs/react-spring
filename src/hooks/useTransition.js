@@ -3,7 +3,7 @@ import {
   useState,
   useEffect,
   useMemo,
-  useImperativeMethods,
+  useImperativeHandle,
 } from 'react'
 import KeyframeController from '../animated/KeyframeController'
 import { toArray, callProp } from '../shared/helpers'
@@ -241,7 +241,7 @@ export function useTransition(props) {
     [items, mapKeys(items, _currentKeys).join('')]
   )
 
-  useImperativeMethods(ref, () => ({
+  useImperativeHandle(ref, () => ({
     start: () =>
       Promise.all(
         Array.from(instances.current).map(([, obj]) =>

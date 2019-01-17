@@ -3,7 +3,7 @@ import {
   useState,
   useMemo,
   useCallback,
-  useImperativeMethods,
+  useImperativeHandle,
   useEffect,
 } from 'react'
 import Ctrl from '../animated/Controller'
@@ -55,7 +55,7 @@ export const useSpringsImpl = (type = 'default', trail = false) => (
     : onKeyframesHalt || (() => null)
 
   // The hooks explcit API gets defined here ...
-  useImperativeMethods(rest.ref, () => ({
+  useImperativeHandle(rest.ref, () => ({
     start: () =>
       Promise.all(
         Array.from(instancesRef.current).map(

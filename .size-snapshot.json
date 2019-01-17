@@ -80,16 +80,16 @@
     }
   },
   "dist/hooks.js": {
-    "bundled": 81453,
-    "minified": 38637,
-    "gzipped": 12487,
+    "bundled": 81097,
+    "minified": 38460,
+    "gzipped": 12482,
     "treeshaked": {
       "rollup": {
         "code": 16458,
         "import_statements": 341
       },
       "webpack": {
-        "code": 29055
+        "code": 28935
       }
     }
   },
@@ -99,8 +99,8 @@
     "gzipped": 12303
   },
   "dist/native-hooks.js": {
-    "bundled": 73025,
-    "minified": 34369,
+    "bundled": 72669,
+    "minified": 34192,
     "gzipped": 10627,
     "treeshaked": {
       "rollup": {
@@ -108,7 +108,7 @@
         "import_statements": 345
       },
       "webpack": {
-        "code": 25161
+        "code": 25041
       }
     }
   }
