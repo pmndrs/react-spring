@@ -46,7 +46,7 @@ export default function Viewpager() {
   )
   return (
     <div
-      ref={r => (width.current = r.getBoundingClientRect().width)}
+      ref={r => (width.current = r ? r.getBoundingClientRect().width : 0)}
       className="viewpager-main">
       {props.map(({ x, display, sc }, i) => (
         <animated.div
