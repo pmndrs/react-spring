@@ -47,7 +47,7 @@ export const useSpringImpl = (type = 'default') => args => {
     [onRest, ctrl.props.ref]
   )
 
-  // Update next frame is props aren't functional
+  // Update next frame if props aren't functional
   useEffect(() => void (!isFn && updateCtrl(props)))
   // Return animated props, or, anim-props + the update-setter above
   const propValues = ctrl.getValues()

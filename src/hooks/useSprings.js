@@ -94,7 +94,7 @@ export const useSpringsImpl = (type = 'default', trail = false) => (
     [instances, onRest, onKeyframesHalt, rest.ref, reverse]
   )
 
-  // Update next frame is props aren't functional
+  // Update next frame if props aren't functional
   useEffect(() => void (!isFn && updateCtrl(props)))
   // Return animated props, or, anim-props + the update-setter above
   const propValues = instances.map(v => v.getValues())
