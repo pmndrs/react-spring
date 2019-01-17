@@ -84,7 +84,7 @@ export const useSpringsImpl = (type = 'default', trail = false) => (
               attach: attachController && (() => attachController),
             }
           : { ...(isFn ? callProp(props, i) : props[i]) }
-        type === 'keyframe' && last
+        ctrl.props.reset && type === 'keyframe' && last
           ? ctrl.updateWithForceUpdate(forceUpdate, updateProps)
           : ctrl.update(updateProps)
         if (!ctrl.props.ref) ctrl.start(last && onHalt(ctrl))
