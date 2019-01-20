@@ -104,3 +104,15 @@ export function handleRef(ref, forward) {
   }
   return ref
 }
+
+export function flattenDeep(array) {
+  const items = toArray(array)
+
+  return items.reduce(
+    (result, item) =>
+      Array.isArray(item)
+        ? result.concat(flattenDeep(item))
+        : result.concat(item),
+    []
+  )
+}

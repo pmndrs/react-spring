@@ -24,9 +24,11 @@ Globals.injectApplyAnimatedValues(
     instance.setNativeProps ? instance.setNativeProps(props) : false,
   style => ({ ...style, transform: new AnimatedTransform(style.transform) })
 )
-Globals.injectCreateAnimatedStyle(styles =>
-  Array.isArray(styles) ? new AnimatedStyles(styles) : new AnimatedStyle(styles)
-)
+Globals.injectCreateAnimatedStyle(style => {
+  if (typeof style === 'number') return new AnimatedStyles([style])
+  if (Array.isArray(style)) return new AnimatedStyles(style)
+  return new AnimatedStyle(style)
+})
 
 export {
   config,
