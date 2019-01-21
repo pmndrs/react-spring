@@ -11,8 +11,7 @@ import Keyframes from '../../Keyframes'
 import createInterpolation from '../../shared/interpolation'
 import colorNames from '../../shared/colors'
 import AnimatedTransform from './AnimatedTransform'
-import AnimatedStyles from './AnimatedStyles'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 Globals.injectDefaultElement(View)
 Globals.injectInterpolation(createInterpolation)
@@ -22,8 +21,8 @@ Globals.injectApplyAnimatedValues(
     instance.setNativeProps ? instance.setNativeProps(props) : false,
   style => ({ ...style, transform: new AnimatedTransform(style.transform) })
 )
-Globals.injectCreateAnimatedStyle(styles =>
-  Array.isArray(styles) ? new AnimatedStyles(styles) : new AnimatedStyle(styles)
+Globals.injectCreateAnimatedStyle(
+  styles => new AnimatedStyle(StyleSheet.flatten(styles))
 )
 
 export {
