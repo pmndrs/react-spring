@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Spring from './Spring'
 import Keyframes from './Keyframes'
+import { requestFrame } from './animated/Globals'
 import { callProp, toArray, interpolateTo } from './shared/helpers'
 
 let guid = 0
@@ -74,6 +75,7 @@ export default class Transition extends React.PureComponent {
       deleted: [],
       prevProps,
     }
+    this.batch = null
   }
 
   static getDerivedStateFromProps(props, { first, prevProps, ...state }) {
@@ -188,10 +190,20 @@ export default class Transition extends React.PureComponent {
     const { onRest, onDestroyed } = this.props
     if (this.mounted) {
       onDestroyed && onDestroyed(item)
-      this.setState(({ deleted }) => ({
-        deleted: deleted.filter(t => t.key !== key),
-      }))
       onRest && onRest(item, state, values)
+
+      if (this.batch) {
+        this.batch.add(key)
+      } else {
+        this.batch = new Set([key])
+        requestFrame(() => {
+          this.setState(({ deleted }) => {
+            deleted = deleted.filter(t => !this.batch.has(t.key))
+            this.batch = null
+            return { deleted }
+          })
+        })
+      }
     }
   }
 
