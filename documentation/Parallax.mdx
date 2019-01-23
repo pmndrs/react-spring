@@ -15,7 +15,7 @@ import { Parallax, ParallaxLayer } from 'react-spring/addons'
 
 ## Basics
 
-`Parallax` creates a scroll container. Throw in any amount of layers and it will take care of moving them in accordance to their offsets and speeds.
+`Parallax` creates a scroll container. Throw in any amount of `ParallaxLayer`s and it will take care of moving them in accordance to their offsets and speeds.
 
 ```jsx
 <Parallax pages={3} scrolling={false} horizontal ref={ref => this.parallax = ref}>
@@ -45,6 +45,10 @@ import { Parallax, ParallaxLayer } from 'react-spring/addons'
 
 ## Props
 
+### Parallax
+
 <PropsTable of={Parallax} />
+
+### ParallaxLayer
 
 <PropsTable of={ParallaxLayer} />
