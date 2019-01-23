@@ -8,29 +8,11 @@ React-spring is a spring physics based animation library for React.
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
 <p align="middle">
-  <img src="assets/spring.gif" width="285" />
-  <img src="assets/transitions.gif" width="285" />
-  <img src="assets/trails.gif" width="285" />
+  <a href="https://codesandbox.io/embed/n9vo1my91p"><img src="https://i.imgur.com/tg1mN1F.gif" width="655"/></a>
 </p>
 <p align="middle">
-  <img src="assets/tree.gif" width="285" />
-  <img src="assets/sunburst.gif" width="285" />
-  <img src="assets/areas.gif" width="285" />
-</p>
-<p align="middle">
-  <img src="assets/gestures.gif" width="285" />
-  <img src="assets/reveals.gif" width="285" />
-  <img src="assets/morph.gif" width="285" />
-</p>
-<p align="middle">
-  <img src="assets/vertical.gif" width="285" />
-  <img src="assets/horizontal.gif" width="285" />
-  <img src="assets/keyframes-trail.gif" width="285" />
-</p>
-<p align="middle">
-  <img src="assets/dragndrop.gif" width="285" />
-  <img src="assets/stream.gif" width="285" />
-  <img src="assets/time.gif" width="285" />
+  <a href="https://codesandbox.io/embed/j0y0vpz59"><img src="https://i.imgur.com/OxGLHeT.gif" width="515"/></a>
+  <a href="https://codesandbox.io/embed/r5qmj8m6lq"><img src="https://i.imgur.com/ifdCBvG.gif" width="130"/></a>
 </p>
 
 <br />
