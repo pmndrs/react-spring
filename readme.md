@@ -38,7 +38,7 @@ And [many others](https://github.com/drcmda/react-spring/network/dependents) ...
 
 # Funding
 
-If you like this project, consider helping out, ... all contributions are welcome as well as donations to [Opencollective](https://opencollective.com/react-spring) or [Patreon](https://www.patreon.com/0xca0a). You can make one off donations in crypto to 36fuguTPxGCNnYZSRdgdh6Ea94brCAjMbH (BTC).
+If you like this project, consider helping out, ... all contributions are welcome as well as donations to [Opencollective](https://opencollective.com/react-spring). You can make one off donations in crypto to 36fuguTPxGCNnYZSRdgdh6Ea94brCAjMbH (BTC) or 0x6E3f79Ea1d0dcedeb33D3fC6c34d2B1f156F2682 (ETH).
 
 ## Contributors
 
