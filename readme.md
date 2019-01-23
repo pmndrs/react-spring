@@ -2,6 +2,7 @@
   <img src="https://i.imgur.com/Q0eNnVY.png" width="400" />
 </p>
 
+<br />
 
 React-spring is a spring physics based animation library for React.
 
