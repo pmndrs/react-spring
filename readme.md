@@ -43,6 +43,7 @@ If you like this project, please consider helping out. All contributions are wel
 ## Contributors
 
 This project exists thanks to all the people who contribute.
+
 <a href="https://github.com/drcmda/react-spring/graphs/contributors"><img src="https://opencollective.com/react-spring/contributors.svg?width=890" /></a>
 
 ## Backers
