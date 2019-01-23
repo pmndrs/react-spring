@@ -1,6 +1,11 @@
 <p align="center">
-  <img src="assets/front/logo.png" width="700" />
+  <img src="https://i.imgur.com/Q0eNnVY.png" width="400" />
 </p>
+
+
+React-spring is a spring physics based animation library for React.
+
+For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
 <p align="middle">
   <img src="assets/spring.gif" width="285" />
@@ -33,10 +38,6 @@
  [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring) <span class="badge-patreon"><a href="https://www.patreon.com/0xca0a" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span> [![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors)
 
     npm install react-spring
-
-React-spring is a spring physics based animation library for React.
-
-For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
 # Documentation and Examples
 
