@@ -7,14 +7,6 @@ React-spring is a spring physics based animation library for React.
 
 For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
 
-<p align="middle">
-  <a href="https://codesandbox.io/embed/n9vo1my91p"><img src="https://i.imgur.com/tg1mN1F.gif" width="655"/></a>
-</p>
-<p align="middle">
-  <a href="https://codesandbox.io/embed/j0y0vpz59"><img src="https://i.imgur.com/OxGLHeT.gif" width="515"/></a>
-  <a href="https://codesandbox.io/embed/r5qmj8m6lq"><img src="https://i.imgur.com/ifdCBvG.gif" width="130"/></a>
-</p>
-
 <br />
 
  [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring) <span class="badge-patreon"><a href="https://www.patreon.com/0xca0a" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span> [![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors)
@@ -26,6 +18,16 @@ For a more detailed explanation read [Why React needed yet another animation lib
 Full documentation and examples here: **[react-spring.surge.sh](https://react-spring.surge.sh/)**
 
 ---
+
+<p align="middle">
+  <a href="https://codesandbox.io/embed/n9vo1my91p"><img src="https://i.imgur.com/tg1mN1F.gif" width="655"/></a>
+</p>
+<p align="middle">
+  <a href="https://codesandbox.io/embed/j0y0vpz59"><img src="https://i.imgur.com/OxGLHeT.gif" width="515"/></a>
+  <a href="https://codesandbox.io/embed/r5qmj8m6lq"><img src="https://i.imgur.com/ifdCBvG.gif" width="130"/></a>
+</p>
+
+<br />
 
 # What others say
 
