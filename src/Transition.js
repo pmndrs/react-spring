@@ -43,7 +43,7 @@ export default class Transition extends React.PureComponent {
     unique: PropTypes.bool,
     /** Useful in combination with "unique", when true it forces incoming items that already exist to restart instead of adapting to their current values */
     reset: PropTypes.bool,
-    /** Spring config, or for individual keys: fn((item,type) => config), where "type" can be either enter, leave or update */
+    /** Spring config, or for individual keys: fn((item,type) => key => config) or fn((item,type) => config), where "type" can be either enter, leave or update */
     config: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
     /** Calls back once a transition is about to wrap up */
     onDestroyed: PropTypes.func,
