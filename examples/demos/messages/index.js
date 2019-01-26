@@ -24,7 +24,7 @@ export default class MessageHub extends React.PureComponent {
     this.cancelMap.set(item, cancel)
     await next({ life: '0%' })
     await next({ opacity: 0 })
-    await next({ height: 0 }, true) // Inform Keyframes that is is the last frame
+    await next({ height: 0 }, true) // Inform Keyframes that this is the last frame
   }
   render() {
     return (
