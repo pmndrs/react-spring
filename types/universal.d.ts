@@ -231,7 +231,7 @@ export class Transition<
 
 type TrailKeyProps = string | number
 
-interface TrailProps<TItem, DS extends object = {}> extends SpringBaseProps {
+interface TrailProps<TItem, DS extends object = {}> extends SpringProps {
   /**
    * Base values, optional
    */
