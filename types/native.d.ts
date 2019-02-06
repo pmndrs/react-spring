@@ -1,1 +1,1 @@
-export * from './renderprops-universal'
+export * from './index'
