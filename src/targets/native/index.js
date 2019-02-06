@@ -4,14 +4,15 @@ import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
 import { config } from '../../shared/constants'
 import AnimatedStyle from '../../animated/AnimatedStyle'
-import Spring from '../../Spring'
-import Transition from '../../Transition'
-import Trail from '../../Trail'
-import Keyframes from '../../Keyframes'
 import createInterpolation from '../../shared/interpolation'
 import colorNames from '../../shared/colors'
 import AnimatedTransform from './AnimatedTransform'
 import { StyleSheet, View } from 'react-native'
+import { useSpring } from '../../useSpring'
+import { useTrail } from '../../useTrail'
+import { useTransition } from '../../useTransition'
+import { useChain } from '../../useChain'
+import { useSprings } from '../../useSprings'
 
 Globals.injectDefaultElement(View)
 Globals.injectInterpolation(createInterpolation)
@@ -24,15 +25,22 @@ Globals.injectApplyAnimatedValues(
 Globals.injectCreateAnimatedStyle(
   styles => new AnimatedStyle(StyleSheet.flatten(styles))
 )
+Globals.injectAnimatedApi((node, mounted, forceUpdate) => ({
+  setNativeProps: props => {
+    const didUpdate = ApplyAnimatedValues(node.current, props)
+    if (!didUpdate) mounted.current && forceUpdate()
+  },
+  getNode: () => node.current,
+}))
 
 export {
-  Spring,
-  Keyframes,
-  Transition,
-  Trail,
-  Controller,
   config,
   animated,
   interpolate,
   Globals,
+  useSpring,
+  useTrail,
+  useTransition,
+  useChain,
+  useSprings,
 }

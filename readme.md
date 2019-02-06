@@ -2,13 +2,13 @@
   <img src="https://i.imgur.com/QZownhg.png" width="240" />
 </p>
 
-# react-spring
-
-**A spring physics based animation library for React**
-
-For a more detailed explanation read [Why React needed yet another animation library](https://medium.com/@drcmda/why-react-needed-yet-another-animation-library-introducing-react-spring-8212e424c5ce).
-
 <br />
+<br />
+<br />
+
+**react-spring** is a spring-physics based animation library that should cover most of your UI related animation needs. It gives you tools flexible enough to confidently cast your ideas into moving interfaces.
+
+This library represents a modern approach to animation. It is very much inspired by Christopher Chedeau's [animated](https://github.com/animatedjs/animated) and Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). It inherits animated's powerful interpolations and performance, as well as react-motion's ease of use. But while animated is mostly imperative and react-motion mostly declarative, react-spring bridges both. Hooks allow us to express intent linearly, you will be surprised how easy static data is cast into motion with small, explicit utility functions that don't necessarily affect how you form your views.
 
 [![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring) <span class="badge-patreon"><a href="https://www.patreon.com/0xca0a" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span> [![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors)
 
@@ -18,9 +18,25 @@ For a more detailed explanation read [Why React needed yet another animation lib
 
 ### Documentation and Examples
 
-Full documentation and examples here: **[react-spring.surge.sh](https://react-spring.surge.sh/)**
+react-spring has two api's. If you can, pick hooks, which is more suitable for animations.
+
+Hooks: **[react-spring.surge.sh](https://react-spring-hooks.surge.sh/)**
+
+Render-props: **[react-spring-renderprops.surge.sh](https://react-spring.surge.sh/)**
 
 ---
+
+## Why springs and not durations
+
+The principle you will be working with is called a `spring`, it *does not have a defined curve or a set duration*. In that it differs greatly from the animation you are probably used to. We think of animation in terms of time and curves, but that in itself causes most of the struggle we face when trying to make elements on the screen move naturally, because nothing in the real world moves like that.
+
+<p align="middle">
+  <img height="250" src="https://i.imgur.com/7CCH51r.gif" />
+</p>
+
+We are so used to time-based animation that we believe that struggle is normal, dealing with arbitrary curves, easings, time waterfalls, not to mention getting this all in sync. As Andy Matuschak (ex Apple UI-Kit developer) [expressed it once](https://twitter.com/andy_matuschak/status/566736015188963328): *Animation APIs parameterized by duration and curve are fundamentally opposed to continuous, fluid interactivity*.
+
+Springs change that, animation becomes easy and approachable, everything you do looks and feels natural by default. For a detailed explanation watch [this video](https://www.youtube.com/embed/1tavDv5hXpo?controls=0&amp;start=370).
 
 ### What others say
 
@@ -38,29 +54,39 @@ Full documentation and examples here: **[react-spring.surge.sh](https://react-sp
 
 And [many others](https://github.com/drcmda/react-spring/network/dependents) ...
 
-### Funding
+## Funding
 
 If you like this project, please consider helping out. All contributions are welcome as well as donations to [Opencollective](https://opencollective.com/react-spring), or in crypto: 36fuguTPxGCNnYZSRdgdh6Ea94brCAjMbH (BTC) or 0x6E3f79Ea1d0dcedeb33D3fC6c34d2B1f156F2682 (ETH).
+
+You can also support this project by becoming a sponsor. Your logo will show up here with a link to your website.
+
+## Gold sponsors
+
+<a href="https://aragon.org/">
+  <img width="300" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"/>
+</a>
+
+## Sponsors
+
+<a href="https://opencollective.com/react-spring/sponsor/0/website" target="_blank">
+  <img src="https://opencollective.com/react-spring/sponsor/0/avatar.svg"/>
+</a>
+<a href="https://opencollective.com/react-spring/sponsor/1/website" target="_blank">
+  <img src="https://opencollective.com/react-spring/sponsor/1/avatar.svg"/>
+</a>
+
+## Backers
+
+Thank you to all our backers! 🙏
+
+<a href="https://opencollective.com/react-spring#backers" target="_blank">
+  <img src="https://opencollective.com/react-spring/backers.svg?width=890"/>
+</a>
 
 ### Contributors
 
 This project exists thanks to all the people who contribute.
 
-<a href="https://github.com/drcmda/react-spring/graphs/contributors"><img src="https://opencollective.com/react-spring/contributors.svg?width=890" /></a>
-
-### Backers
-
-Thank you to all our backers! 🙏
-
-<a href="https://opencollective.com/react-spring#backers" target="_blank"><img src="https://opencollective.com/react-spring/backers.svg?width=890"></a>
-
-### Gold sponsors
-
-<a href="https://aragon.org/"><img width="300" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"></a>
-
-### Sponsors
-
-Support this project by [becoming a sponsor](https://opencollective.com/react-spring#sponsor). Your logo will show up here with a link to your website.
-
-<a href="https://opencollective.com/react-spring/sponsor/0/website" target="_blank"><img src="https://opencollective.com/react-spring/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/react-spring/sponsor/1/website" target="_blank"><img src="https://opencollective.com/react-spring/sponsor/1/avatar.svg"></a>
+<a href="https://github.com/drcmda/react-spring/graphs/contributors">
+  <img src="https://opencollective.com/react-spring/contributors.svg?width=890" />
+</a>

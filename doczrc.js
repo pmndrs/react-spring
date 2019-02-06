@@ -4,6 +4,7 @@ const css = require('docz-plugin-css').css
 export default {
   protocol: 'http',
   title: '✌️ react-spring',
+  hashRouter: true,
   htmlContext: {
     head: {
       links: [
@@ -14,9 +15,6 @@ export default {
       ],
       raw: `
       <style>
-        * {
-          box-sizing: border-box;
-        }
         #root > div > div:first-of-type {
           width: 350px;
           min-width: 350px;
@@ -35,6 +33,9 @@ export default {
         #root > div > div:first-of-type > div:first-of-type > div:nth-child(2) h1 {
           font-size: 2.5em;
           font-weight: 100;
+        }
+        #root > div > div:nth-of-type(3) > div:first-of-type > a:first-of-type {
+          display: none;
         }
         .scrollbar-container {
           max-height: unset!important;
@@ -112,10 +113,10 @@ export default {
           font-family: "Source Code Pro",monospace;
           font-size: 14px;
         }
-        a, a:visited, a:active {
-          color: rgb(31, 182, 255);
-          text-decoration: none;
-          cursor: pointer;
+        #root > div > div:nth-of-type(3) a, #root > div > div:nth-of-type(3) a:visited, #root > div > div:nth-of-type(3) a:active {
+          color: rgb(31, 182, 255)!important;
+          text-decoration: none!important;
+          cursor: pointer!important;
         }
       </style>
       `,

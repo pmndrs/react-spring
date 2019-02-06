@@ -2,7 +2,6 @@ import * as Globals from '../../animated/Globals'
 import AnimatedStyle from '../../animated/AnimatedStyle'
 import colorNames from '../../shared/colors'
 import createInterpolation from '../../shared/interpolation'
-import fixAuto from './fix-auto'
 
 let isUnitlessNumber = {
   animationIterationCount: true,
@@ -76,7 +75,7 @@ Globals.injectCreateAnimatedStyle(style => new AnimatedStyle(style))
 Globals.injectDefaultElement('div')
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
-Globals.injectBugfixes(fixAuto)
+Globals.injectAnimatedApi(node => node.current)
 Globals.injectApplyAnimatedValues(
   (instance, props) => {
     if (instance.nodeType && instance.setAttribute !== undefined) {

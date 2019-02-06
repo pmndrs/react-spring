@@ -5,8 +5,8 @@ import Demo from './components/Demo'
 import examples from './components/examples-hooks'
 import './styles.css'
 
-//const DEBUG = false
-const DEBUG = 'fresh'
+const DEBUG = false
+//const DEBUG = 'card'
 
 ReactDOM.render(
   <DemoGrid fullscreen={!!DEBUG}>

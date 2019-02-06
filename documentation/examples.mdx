@@ -1,0 +1,21 @@
+---
+name: Examples
+route: /examples
+order: 900
+---
+
+import DemoGrid from '../examples/components/DemoGrid'
+import Demo from '../examples/components/Demo'
+import examples from '../examples/components/examples-hooks'
+
+# Examples
+
+<DemoGrid padding={0}>
+  {examples.map(data => (
+    <Demo
+      key={data.name}
+      {...data}
+      import={import('../examples/demos/' + data.name)}
+    />
+  ))}
+</DemoGrid>

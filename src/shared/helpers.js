@@ -2,6 +2,32 @@ import { useRef, useLayoutEffect } from 'react'
 import AnimatedValue from '../animated/AnimatedValue'
 import AnimatedArray from '../animated/AnimatedArray'
 
+export const is = {
+  arr: Array.isArray,
+  obj: a => Object.prototype.toString.call(a) === '[object Object]',
+  fun: a => typeof a === 'function',
+  str: a => typeof a === 'string',
+  num: a => typeof a === 'number',
+  und: a => a === void 0,
+  nul: a => a === null,
+  set: a => a instanceof Set,
+  map: a => a instanceof Map,
+  equ(a, b) {
+    if (typeof a !== typeof b) return false
+    if (is.str(a) || is.num(a)) return a === b
+    if (
+      is.obj(a) &&
+      is.obj(b) &&
+      Object.keys(a).length + Object.keys(b).length === 0
+    )
+      return true
+    let i
+    for (i in a) if (!(i in b)) return false
+    for (i in b) if (a[i] !== b[i]) return false
+    return is.und(i) ? a === b : true
+  },
+}
+
 export function usePrevious(value, initialValue = null) {
   const ref = useRef(initialValue)
   useLayoutEffect(() => void (ref.current = value), [value])
@@ -18,24 +44,15 @@ export function debounce(func, delay = 0) {
   }
 }
 export function withDefault(value, defaultValue) {
-  return value === undefined || value === null ? defaultValue : value
+  return is.und(value) || is.nul(value) ? defaultValue : value
 }
 
 export function toArray(a) {
-  return a !== void 0 ? (Array.isArray(a) ? a : [a]) : []
-}
-
-export function shallowEqual(a, b) {
-  if (typeof a !== typeof b) return false
-  if (typeof a === 'string' || typeof a === 'number') return a === b
-  let i
-  for (i in a) if (!(i in b)) return false
-  for (i in b) if (a[i] !== b[i]) return false
-  return i === void 0 ? a === b : true
+  return !is.und(a) ? (is.arr(a) ? a : [a]) : []
 }
 
 export function callProp(obj, ...args) {
-  return typeof obj === 'function' ? obj(...args) : obj
+  return is.fun(obj) ? obj(...args) : obj
 }
 
 export function getValues(object) {
@@ -47,7 +64,6 @@ export function getForwardProps(props) {
     to,
     from,
     config,
-    native,
     onStart,
     onRest,
     onFrame,
@@ -56,14 +72,12 @@ export function getForwardProps(props) {
     reverse,
     force,
     immediate,
-    impl,
-    inject,
     delay,
     attach,
     destroyed,
     interpolateTo,
-    autoStart,
     ref,
+    lazy,
     ...forward
   } = props
   return forward
@@ -72,7 +86,7 @@ export function getForwardProps(props) {
 export function interpolateTo(props) {
   const forward = getForwardProps(props)
   const rest = Object.keys(props).reduce(
-    (a, k) => (forward[k] !== void 0 ? a : { ...a, [k]: props[k] }),
+    (a, k) => (!is.und(forward[k]) ? a : { ...a, [k]: props[k] }),
     {}
   )
   return { to: forward, ...rest }
@@ -81,7 +95,7 @@ export function interpolateTo(props) {
 export function convertToAnimatedValue(acc, [name, value]) {
   return {
     ...acc,
-    [name]: new (Array.isArray(value) ? AnimatedArray : AnimatedValue)(value),
+    [name]: new (is.arr(value) ? AnimatedArray : AnimatedValue)(value),
   }
 }
 
@@ -96,8 +110,8 @@ export function convertValues(props) {
 export function handleRef(ref, forward) {
   if (forward) {
     // If it's a function, assume it's a ref callback
-    if (typeof forward === 'function') forward(ref)
-    else if (typeof forward === 'object') {
+    if (is.fun(forward)) forward(ref)
+    else if (is.obj(forward)) {
       // If it's an object and has a 'current' property, assume it's a ref object
       forward.current = ref
     }

@@ -7,8 +7,8 @@ const controllers = new Set()
 const frameLoop = () => {
   let time = now()
   for (let controller of controllers) {
-    let isDone = true
     let noChange = true
+    let isActive = false
 
     for (
       let configIdx = 0;
@@ -16,7 +16,6 @@ const frameLoop = () => {
       configIdx++
     ) {
       let config = controller.configs[configIdx]
-
       let endOfAnimation, lastTime, velocity
       for (let valIdx = 0; valIdx < config.animatedValues.length; valIdx++) {
         let animation = config.animatedValues[valIdx]
@@ -34,15 +33,9 @@ const frameLoop = () => {
         if (isAnimated) to = to.getValue()
 
         // Conclude animation if it's either immediate, or from-values match end-state
-        if (config.immediate || (!isAnimated && !config.decay && from === to)) {
+        if (config.immediate) {
           animation.updateValue(to)
           animation.done = true
-          continue
-        }
-
-        // Doing delay here instead of setTimeout is one async worry less
-        if (config.delay && time - controller.startTime < config.delay) {
-          isDone = false
           continue
         }
 
@@ -60,12 +53,9 @@ const frameLoop = () => {
           /** Duration easing */
           position =
             from +
-            config.easing(
-              (time - controller.startTime - config.delay) / config.duration
-            ) *
+            config.easing((time - animation.startTime) / config.duration) *
               (to - from)
-          endOfAnimation =
-            time >= controller.startTime + config.delay + config.duration
+          endOfAnimation = time >= animation.startTime + config.duration
         } else if (config.decay) {
           /** Decay easing */
           position =
@@ -118,26 +108,23 @@ const frameLoop = () => {
           // Ensure that we end up with a round value
           if (animation.value !== to) position = to
           animation.done = true
-        } else isDone = false
+        } else isActive = true
 
         animation.updateValue(position)
         animation.lastPosition = position
       }
 
       // Keep track of updated values only when necessary
-      if (controller.props.onFrame || !controller.props.native)
-        controller.animatedProps[config.name] = config.interpolation.getValue()
+      if (controller.props.onFrame)
+        controller.values[config.name] = config.interpolation.getValue()
     }
     // Update callbacks in the end of the frame
-    if (controller.props.onFrame || !controller.props.native) {
-      if (!controller.props.native && controller.onUpdate) controller.onUpdate()
-      if (controller.props.onFrame)
-        controller.props.onFrame(controller.animatedProps)
-    }
+    if (controller.props.onFrame) controller.props.onFrame(controller.values)
+
     // Either call onEnd or next frame
-    if (isDone) {
+    if (!isActive) {
       controllers.delete(controller)
-      controller.debouncedOnEnd({ finished: true, noChange })
+      controller.stop(true, noChange)
     }
   }
 
@@ -146,7 +133,7 @@ const frameLoop = () => {
   else active = false
 }
 
-const addController = controller => {
+const start = controller => {
   if (!controllers.has(controller)) {
     controllers.add(controller)
     if (!active) requestFrame(frameLoop)
@@ -154,10 +141,6 @@ const addController = controller => {
   }
 }
 
-const removeController = controller => {
-  if (controllers.has(controller)) {
-    controllers.delete(controller)
-  }
-}
+const isActive = controller => active && controllers.has(controller)
 
-export { addController, removeController }
+export { start }

@@ -1,9 +1,9 @@
 export default [
   {
-    name: 'hooks/goo',
+    name: 'goo',
     title: 'Goo blobs',
     link: 'https://codesandbox.io/embed/8zx4ppk01l',
-    tags: ['useSpring'],
+    tags: ['useTrail'],
     code: {
       useSpring: `const [trail, set] = useTrail(3, () => ({ xy: [0, 0] }))
 const tr = (x, y) => \`translate3d(\${x}px,\${y}px,0)\`
@@ -17,7 +17,7 @@ return (
     },
   },
   {
-    name: 'hooks/card',
+    name: 'card',
     title: '3D card',
     link: 'https://codesandbox.io/embed/rj998k4vmm',
     tags: ['useSpring'],
@@ -36,7 +36,7 @@ return (
     },
   },
   {
-    name: 'hooks/flip-card',
+    name: 'flip-card',
     title: 'Flip card',
     link: 'https://codesandbox.io/embed/01yl7knw70',
     tags: ['useSpring'],
@@ -53,7 +53,7 @@ return (
     },
   },
   {
-    name: 'hooks/slider',
+    name: 'slider',
     title: 'Gesture slider',
     link: 'https://codesandbox.io/embed/zrj66y8714',
     tags: ['useSpring'],
@@ -69,25 +69,25 @@ return <animated.div style={{ transform }} children="Slide">`,
     },
   },
   {
-    name: 'hooks/draggable-list',
+    name: 'draggable-list',
     title: 'Draggable list',
     link: 'https://codesandbox.io/embed/r5qmj8m6lq',
     tags: ['useSprings'],
   },
   {
-    name: 'hooks/mouse-parallax',
+    name: 'mouse-parallax',
     title: 'Mouse parallax',
     link: 'https://codesandbox.io/embed/r5x34869vq',
     tags: ['useSpring'],
   },
   {
-    name: 'hooks/scroll-parallax',
+    name: 'scroll-parallax',
     title: 'Scroll parallax',
     link: 'https://codesandbox.io/embed/py912w5k6m',
     tags: ['useSpring'],
   },
   {
-    name: 'hooks/trails',
+    name: 'trails',
     title: 'Trails',
     link: 'https://codesandbox.io/embed/zn2q57vn13',
     tags: ['useTrail'],
@@ -108,7 +108,7 @@ return trail.map(({ x, height, opacity }, index) => (
     },
   },
   {
-    name: 'hooks/simple-transition',
+    name: 'simple-transition',
     title: 'Simple transition',
     link: 'https://codesandbox.io/embed/1y3yyqpq7q',
     tags: ['useTransition'],
@@ -125,7 +125,7 @@ return transitions.map(({ item: Page, props, key }) => (
     },
   },
   {
-    name: 'hooks/image-fade',
+    name: 'image-fade',
     title: 'Image fade',
     link: 'https://codesandbox.io/embed/morr206pv8',
     tags: ['useTransition'],
@@ -146,40 +146,46 @@ return transitions.map(({ item, props, key }) => (
     },
   },
   {
-    name: 'hooks/multistage-transitions',
+    name: 'multistage-transitions',
     title: 'Multistage transitions',
     link: 'https://codesandbox.io/embed/vqpqx5vrl0',
     tags: ['useTransition'],
   },
   {
-    name: 'hooks/list-reordering',
+    name: 'keyframes',
+    title: 'Emulating css keyframes',
+    link: 'https://codesandbox.io/embed/88lmnl6w88',
+    tags: ['useSpring'],
+  },
+  {
+    name: 'list-reordering',
     title: 'List-reordering',
     link: 'https://codesandbox.io/embed/1wqpz5mzqj',
     tags: ['useTransition'],
   },
   {
-    name: 'hooks/chain-animation',
+    name: 'chain-animation',
     title: 'Chain animation',
     link: 'https://codesandbox.io/embed/2v716k56pr',
     tags: ['useChain'],
   },
   {
-    name: 'hooks/notification-hub',
+    name: 'notification-hub',
     title: 'Notification hub',
     link: 'https://codesandbox.io/embed/7mqy09jyq',
     tags: ['useTransition'],
   },
   {
-    name: 'hooks/keyframes-script',
-    title: 'Keyframes scripting',
+    name: 'keyframes-script',
+    title: 'Spring scripting',
     link: 'https://codesandbox.io/embed/141nrz6v73',
-    tags: ['useKeyframes'],
+    tags: ['useSpring'],
   },
   {
-    name: 'hooks/keyframes-blackflag',
-    title: 'Keyframes reset script',
+    name: 'keyframes-blackflag',
+    title: 'Spring reset script',
     link: 'https://codesandbox.io/embed/8ypj5vq6m9',
-    tags: ['useKeyframes'],
+    tags: ['useSpring'],
     code: {
       useKeyframes: `const interp = i => r =>
   \`translate3d(0, \${15 * Math.sin(r + (i * 2 * Math.PI) / 1.6)}px, 0)\`
@@ -199,27 +205,27 @@ return items.map(i =>
     },
   },
   {
-    name: 'hooks/gestures-pull',
+    name: 'gestures-pull',
     title: 'Gestures (pull & release)',
     link: 'https://codesandbox.io/embed/r24mzvo3q',
     tags: ['useSpring'],
   },
   {
-    name: 'hooks/gestures-pager',
+    name: 'gestures-pager',
     title: 'View pager',
     link: 'https://codesandbox.io/embed/n9vo1my91p',
     tags: ['useSprings'],
   },
   {
-    name: 'hooks/card-flick',
+    name: 'card-flick',
     title: 'Card stack',
     link: 'https://codesandbox.io/embed/j0y0vpz59',
     tags: ['useSprings'],
   },
   {
-    name: 'hooks/freshtilledsoil',
-    title: 'Freshtilledsoil stresstest',
-    link: 'https://codesandbox.io/embed/j0y0vpz59',
-    tags: ['useChain'],
+    name: 'masonry-grid',
+    title: 'Masonry grid',
+    link: 'https://codesandbox.io/embed/26mjowzpr',
+    tags: ['useTransition'],
   },
 ]

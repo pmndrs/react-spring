@@ -1,0 +1,76 @@
+---
+name: useTransition
+route: /useTransition
+order: 50
+---
+
+import DemoGrid from '../examples/components/DemoGrid'
+import Demo from '../examples/components/Demo'
+import examples from '../examples/components/examples-hooks'
+
+# useTransition
+
+```js
+import { useTransition, animated } from 'react-spring'
+```
+
+An animated TransitionGroup. Feed it your items, keys (which can be `null` if items are atomic), and lifecycles. Whenever items are added or removed, it will animate these changes.
+
+```jsx
+const transitions = useTransition(items, item => item.id, {
+  from: { opacity: 0 },
+  enter: { opacity: 1 },
+  leave: { opacity: 0 },
+})
+return transitions.map(({ item, key, props }) => (
+  <animated.div key={key} style={props}>
+    {item}
+  </animated.div>
+))
+```
+
+## Properties
+
+All properties of the [shared-api](/api) apply.
+
+| Property | Type | Description |
+| -------- | ---- | -------- | ------- | ----------- |
+| initial  | obj/fn | Initial (first time) base values, optional (can be null) |
+| from     | obj/fn | Base values, optional |
+| enter    | obj/fn/array(obj) | Styles apply for entering elements |
+| update   | obj/fn/array(obj) | Styles apply for updating elements (you can update the hook itself with new values) |
+| leave    | obj/fn/array(obj) | Styles apply for leaving elements |
+| trail    | number | Delay in ms before the animation starts, adds up for each enter/update and leave |
+| unique   | bool/fn | If this is true, items going in and out with the same key will be re-used |
+| reset    | bool/fn | Used in combination with "unique" and makes entering items start from scratch |
+
+## Additional notes
+
+The initial/from/enter/update/leave lifecycles can be objects, arrays or functions. When you provide a function you have access to individual items. The function is allowed to return plain objects, or either an array or a function for multi-stage transitions. When you provide a plain array you also can form a basic multi-stage transition (without access to the item). 
+
+```jsx
+useTransition(items, items => items.id, {
+  enter: item => [
+    { opacity: item.opacity, height: item.height },
+    { life: '100%' },
+  ],
+  leave: item => async (next, cancel) => {
+    await next({ life: '0%' })
+    await next({ opacity: 0 })
+    await next({ height: 0 })
+  },
+  from: { life: '0%', opacity: 0, height: 0 },
+})
+```
+
+## Demos
+
+<DemoGrid padding={0}>
+  {examples.filter(data => data.tags.includes('useTransition')).map(data => (
+    <Demo
+      key={data.name}
+      {...data}
+      import={import('../examples/demos/' + data.name)}
+    />
+  ))}
+</DemoGrid>

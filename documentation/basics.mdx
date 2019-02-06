@@ -1,0 +1,258 @@
+---
+name: Basics
+route: /basics
+order: 100
+---
+
+import { CodeMirror, RewindSpringProvider, RewindSpring, animated } from './components'
+import Demo from '../examples/components/Demo'
+
+# Basics
+
+## Installation
+
+```text
+npm install react-spring
+```
+
+## Primitives
+
+There are 5 hooks in react-spring currently:
+
+* `useSpring` a single spring, moves data from a -> b
+* `useSprings` multiple springs, for lists, where each spring moves data from a -> b
+* `useTrail` multiple springs with a single dataset, one spring follows or trails behind the other
+* `useTransition` for mount/unmount transitions (lists where items are added/removed/updated)
+* `useChain` to queue or chain multiple animations together
+
+The easiest is [useSpring](/useSpring). Let's have a look ...
+
+### First, you fetch your imports
+
+```jsx
+import { useSpring, animated } from 'react-spring'
+```
+
+You need the primitive itself, and a special factory called `animated`. This library animates outside React (for performance reasons). Your view has to know how to handle the animated props you pass to it. This is what `animated` is there for, it extends native elements to receive animated values.
+
+### Next, define your spring
+
+```jsx
+const props = useSpring({ opacity: 1, from: { opacity: 0 } })
+```
+
+A spring simply animates values from one state to another. Updates are accumulative, sorings remember all the values you ever pass. You can use arbitrary names. There are a couple of reserved keywords like "from" (for base values). [You can learn about the api here](/api). The received props are not static values! These props are self-updating, you cannot use them in regular divs and such.
+
+### Finally, tie the animated values to your view
+
+```jsx
+return <animated.div style={props}>I will fade in</animated.div>
+```
+
+In the view part of your component you simply wire these props in. Make sure to extend the native element you want to animate using `animated`. If your target is the web then `animated` contains all valid html elements (divs, spans, svgs, etc). If you want to animate React components, styled-components, or elements on other platforms, then do this:
+
+```jsx
+// React components
+const AnimatedDonut = animated(Donut)
+
+// React-native
+const AnimatedView = animated(View)
+
+// styled-components, emotion, etc.
+const AnimatedHeader = styled(animated.h1)`
+  ...
+`
+```
+
+### Do not think of the values you pass as "styles" per se
+
+<RewindSpringProvider>
+  <p>
+    Although you can use them as such.
+  </p>
+  <div className="code-table">
+    <CodeMirror value={`const props = useSpring({
+  opacity: 1,
+  from: { opacity: 0 }
+})
+return <animated.h1 style={props}>hello</animated.h1>`}/>
+    <RewindSpring>
+      {x => <animated.div style={{ opacity: x }}>hello</animated.div>}
+    </RewindSpring>
+  </div>
+
+  <p>
+    Do with them whatever you like, animate attributes for instance, 
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`const props = useSpring({
+  x: 100,
+  from: { x: 0 }
+})
+return (
+  <animated.svg strokeDashoffset={props.x}>
+    <path d="..." />
+  </animated.svg>
+)`}/>
+    <RewindSpring>
+      {x => (
+        <animated.svg
+          style={{ width: 120, height: 120, opacity: x.interpolate({ range: [0,0.05,1], output: [0,1,1] }) }}
+          viewBox="0 0 45 44"
+          strokeWidth="2"
+          fill="white"
+          stroke="rgb(45, 55, 71)"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray={156} strokeDashoffset={x.interpolate(x => (1-x) * 156)}>
+          <polygon points="22.5 35.25 8.68704657 42.5118994 11.3250859 27.1309497 0.150171867 16.2381006 15.5935233 13.9940503 22.5 0 29.4064767 13.9940503 44.8498281 16.2381006 33.6749141 27.1309497 36.3129534 42.5118994" />
+        </animated.svg>
+      )}
+    </RewindSpring>
+  </div>
+
+  <p>
+    or innerText,
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`const props = useSpring({
+  number: 1,
+  from: { number: 0 }
+})
+return <animated.span>{props.number}</animated.span>`}/>
+    <RewindSpring>
+      {x => <animated.div style={{ fontFamily: 'monospace' }}>{x.interpolate(n => n.toFixed(2))}</animated.div>}
+    </RewindSpring>
+  </div>
+
+  <p>
+    or generic React-component props.
+  </p>
+
+  <div className="code-table">
+    <CodeMirror value={`const AnimatedDonut = animated(Donut)
+// ...
+const props = useSpring({
+  value: 100,
+  from: { value: 0 }
+})
+return <AnimatedDonut percent={props.value} />`}/>
+    <RewindSpring>
+      {x => (
+        <animated.svg
+          style={{ width: 120, height: 120, opacity: x.interpolate({ range: [0,0.05,1], output: [0,1,1] }) }}
+          viewBox="0 0 51 51"
+          strokeWidth="2.5"
+          fill="white"
+          stroke="rgb(45, 55, 71)"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray={156} strokeDashoffset={x.interpolate(x => (1-x) * 156)}>
+          <circle transform="translate(25.500000, 25.500000) rotate(-270.000000) translate(-25.500000, -25.500000)" cx="25.5" cy="25.5" r="24.5" />
+        </animated.svg>
+      )}
+    </RewindSpring>
+  </div>
+</RewindSpringProvider>
+
+## Up-front interpolation
+
+Springs take pretty much everything, they don't just handle numbers.
+
+* colors (names, rgb, rgba, hsl, hsla, gradients)
+* absolute lengths (cm, mm, in, px, pt, pc)
+* relative lengths (em, ex, ch, rem, vw, vh, vmin, vmax, %)
+* angles (deg, rad, grad, turn)
+* flex and grid units (fr, etc)
+* all HTML attributes
+* SVG paths (as long as the number of points matches, otherwise use [custom interpolation](https://codesandbox.io/embed/lwpkp46om))
+* arrays
+* string patterns (transform, border, boxShadow, etc)
+* non-animatable string values (visibility, pointerEvents, etc)
+* scrollTop/scrollLeft
+
+```jsx
+const props = useSpring({
+  vector: [0, 10, 30],
+  display: 'block',
+  padding: 20, 
+  background:
+    'linear-gradient(to right, #009fff, #ec2f4b)', 
+  transform: 
+    'translate3d(0px,0,0) scale(1) rotateX(0deg)', 
+  boxShadow: '0px 10px 20px 0px rgba(0,0,0,0.4)', 
+  borderBottom: '10px solid #2D3747', 
+  shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z', 
+  textShadow: '0px 5px 15px rgba(255,255,255,0.5)',
+})
+```
+
+## View interpolation
+
+In cases where you need to clamp or extrapolate, each animated value can `interpolate` inside the view, which is a powerful tool to have. The interpolate function either takes a function or a an object which forms a range. Interpolations can also form chains which allows you to route one calculation into another or reuse them. [Look into the shared-api](/api) for a object description.
+
+You may wonder why you wouldn't interpolate always inside the spring. View interpolation can be a little faster, and it takes up less space.
+
+```jsx
+import { useSpring, animated, interpolate } from 'react-spring'
+
+const { o, xyz, color } = useSpring({
+  from: { o: 0, xyz: [0, 0, 0], color: 'red' }
+  o: 1, xyz: [10, 20, 5], color: 'green'
+})
+
+return (
+  <animated.div
+    style={{
+      // If you can, use plain animated values like always, ...
+      // You would do that in all cases where values "just fit"
+      color,
+      // Unless you need to interpolate them
+      background: o.interpolate(o => `rgba(210, 57, 77, ${o})`),
+      // Which works with arrays as well
+      transform: xyz.interpolate((x, y, z) => `translate3d(${x}px, ${y}px, ${z}px)`),
+      // If you want to combine multiple values use the "interpolate" helper
+      border: interpolate([o, color], (o, c) => `${o * 10}px solid ${c}`)
+      // You can also form ranges, even chain multiple interpolations
+      padding:
+        o.interpolate({ range: [0, 0.5, 1], output: [0, 0, 10] })
+         .interpolate(o => `${o}%`),
+      // There's also a shortcut for plain, optionless ranges ...
+      opacity: o.interpolate([0.1, 0.2. 0.6, 1], [1, 0.1, 0.5, 1]),
+  }}>
+    {r.interpolate(n => n.toFixed(2)) /* innerText interpolation ... */ }
+  </animated.div>
+)
+```
+
+## Emulating css-keyframes
+
+```jsx
+/*
+0 % { transform: scale(1); }
+25 % { transform: scale(.97); }
+35 % { transform: scale(.9); }
+45 % { transform: scale(1.1); }
+55 % { transform: scale(.9); }
+65 % { transform: scale(1.1); }
+75 % { transform: scale(1.03); }
+100 % { transform: scale(1); }
+`*/
+
+const props = useSpring({ x: state ? 1 : 0 })
+return (
+  <animated.div
+    style={{
+      transform: props.x
+        .interpolate(
+          [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
+          [1, 0.97, 0.9, 1.1, 0.9, 1.1, 1.03, 1]
+        )
+        .interpolate(x => `scale(${x})`)
+    }} />
+)
+```
+
+<Demo link="https://codesandbox.io/s/88lmnl6w88" import={import('../examples/demos/keyframes')} />

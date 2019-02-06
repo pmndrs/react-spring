@@ -1,8 +1,22 @@
 import React from 'react'
 import Loadable from 'react-loadable'
 import styled from 'styled-components'
-import { Spring, animated } from 'react-spring'
-import Observer from '@researchgate/react-intersection-observer'
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true }
+  }
+
+  render() {
+    if (this.state.hasError) return <h1>Something went wrong.</h1>
+    return this.props.children
+  }
+}
 
 export default class Demo extends React.Component {
   state = { code: undefined, visible: false }
@@ -39,12 +53,14 @@ export default class Demo extends React.Component {
       <Container fullscreen={fullscreen}>
         <Header>
           <h1>{title}</h1>
-          <p>
-            {link.includes('codesandbox.io') ? 'Codesandbox' : 'Source'}:{' '}
-            <a target="_blank" href={link}>
-              {link.slice(link.lastIndexOf('/'))}
-            </a>
-          </p>
+          {link && (
+            <p>
+              {link.includes('codesandbox.io') ? 'Codesandbox' : 'Source'}:{' '}
+              <a target="_blank" href={link}>
+                {link.slice(link.lastIndexOf('/'))}
+              </a>
+            </p>
+          )}
           {description && <p>{description}</p>}
           {tags && (
             <p>
@@ -63,20 +79,19 @@ export default class Demo extends React.Component {
           )}
         </Header>
         <Content>
-          <div>
-            {/*<Observer onChange={rec => this.setVisible(rec.isIntersecting)}>
-              {this.state.visible ? <this.component /> : <div />}
-            </Observer>*/}
-            <this.component />
-            {overlayCode && (
+          <ErrorBoundary>
+            <div>
+              <this.component />
+              {/*overlayCode && (
               <Spring
                 native
                 from={{ opacity: 0 }}
                 to={{ opacity: this.state.code ? 1 : 0 }}>
                 {props => <Code style={props} children={this.state.code} />}
               </Spring>
-            )}
-          </div>
+            )*/}
+            </div>
+          </ErrorBoundary>
         </Content>
       </Container>
     )
@@ -129,7 +144,7 @@ const Header = styled('div')`
   }
 `
 
-const Code = styled(animated.pre)`
+const Code = styled('pre' /*animated.pre*/)`
   position: absolute;
   left: 0;
   top: 0;

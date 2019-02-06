@@ -1,39 +1,36 @@
-import React from 'react'
-import { Trail, animated } from 'react-spring'
+import React, { useState, useRef } from 'react'
+import { useTrail, animated } from 'react-spring'
 import './styles.css'
 
-export default class TrailsExample extends React.PureComponent {
-  state = { toggle: true, items: ['item1', 'item2', 'item3', 'item4', 'item5'] }
-  toggle = () => this.setState(state => ({ toggle: !state.toggle }))
-  render() {
-    const { toggle, items } = this.state
-    return (
-      <div
-        style={{
-          backgroundColor: '#247BA0',
-          position: 'relative',
-          width: '100%',
-          height: '100%',
-        }}>
-        <Trail
-          native
-          reverse={toggle}
-          initial={null}
-          items={items}
-          from={{ opacity: 0, x: -100 }}
-          to={{ opacity: toggle ? 1 : 0.25, x: toggle ? 0 : 100 }}>
-          {item =>({ x, opacity }) => (
-            <animated.div
-              className="box"
-              onClick={this.toggle}
-              style={{
-                opacity,
-                transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
-              }}
-            />
-          )}
-        </Trail>
+const items = ['Lorem', 'ipsum', 'dolor', 'sit']
+
+export default function Trail() {
+  const [toggle, set] = useState(true)
+  const trail = useTrail(items.length, {
+    // items,
+    opacity: toggle ? 1 : 0,
+    x: toggle ? 0 : 20,
+    height: toggle ? 50 : 0,
+    from: { opacity: 0, x: 20, height: 0 },
+    config: { mass: 5, tension: 2000, friction: 200 },
+    reverse: !toggle,
+  })
+
+  return (
+    <div className="trails-main" onClick={() => set(state => !state)}>
+      <div>
+        {trail.map(({ x, height, ...rest }, index) => (
+          <animated.div
+            className="trails-box"
+            key={items[index]}
+            style={{
+              ...rest,
+              transform: x.interpolate(x => `translate3d(0,${x}px,0)`),
+            }}>
+            <animated.div style={{ height }}>{items[index]}</animated.div>
+          </animated.div>
+        ))}
       </div>
-    )
-  }
+    </div>
+  )
 }

@@ -21,7 +21,7 @@ const getBabelOptions = ({ useESModules }) => ({
   plugins: [['@babel/transform-runtime', { regenerator: false, useESModules }]],
 })
 
-function createConfig(entry, out, name) {
+function createConfig(entry, out) {
   return [
     {
       input: `./src/${entry}.js`,
@@ -35,36 +35,18 @@ function createConfig(entry, out, name) {
       external,
       plugins: [babel(getBabelOptions({ useESModules: false }))],
     },
-    ...(name
-      ? [
-          {
-            input: `./src/${entry}.js`,
-            output: {
-              file: `dist/${out}.umd.js`,
-              format: 'umd',
-              name,
-              globals,
-            },
-            external: Object.keys(globals),
-            plugins: [
-              resolve(),
-              babel(getBabelOptions({ useESModules: true })),
-              commonjs({ include: '**/node_modules/**' }),
-              sizeSnapshot(),
-              uglify(),
-            ],
-          },
-        ]
-      : []),
   ]
 }
 
 export default [
-  ...createConfig('addons/index', 'addons', 'ReactSpringAddons'),
-  ...createConfig('targets/web/index', 'web', 'ReactSpring'),
+  ...createConfig('targets/web/index', 'web'),
   ...createConfig('targets/native/index', 'native'),
-  ...createConfig('targets/universal/index', 'universal'),
-  ...createConfig('targets/konva/index', 'konva'),
-  ...createConfig('targets/web/hooks', 'hooks'),
-  ...createConfig('targets/native/hooks', 'native-hooks'),
+  ...createConfig('renderprops/targets/web/index', 'renderprops'),
+  ...createConfig('renderprops/addons/index', 'renderprops-addons'),
+  ...createConfig('renderprops/targets/native/index', 'renderprops-native'),
+  ...createConfig(
+    'renderprops/targets/universal/index',
+    'renderprops-universal'
+  ),
+  ...createConfig('renderprops/targets/konva/index', 'renderprops-konva'),
 ]
