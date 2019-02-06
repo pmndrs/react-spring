@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from 'react'
+import { useState, useCallback } from 'react'
 import AnimatedValue from '../animated/AnimatedValue'
 import AnimatedArray from '../animated/AnimatedArray'
 
@@ -28,21 +28,12 @@ export const is = {
   },
 }
 
-export function usePrevious(value, initialValue = null) {
-  const ref = useRef(initialValue)
-  useLayoutEffect(() => void (ref.current = value), [value])
-  return ref
+export function useForceUpdate() {
+  const [, f] = useState(false)
+  const forceUpdate = useCallback(() => f(v => !v), [])
+  return forceUpdate
 }
 
-export function debounce(func, delay = 0) {
-  let timeoutId
-  return function() {
-    const context = this
-    const args = arguments
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => func.apply(context, args), delay)
-  }
-}
 export function withDefault(value, defaultValue) {
   return is.und(value) || is.nul(value) ? defaultValue : value
 }

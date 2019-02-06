@@ -8,12 +8,12 @@ import React, {
   useMemo,
 } from 'react'
 import AnimatedProps from './AnimatedProps'
-import { handleRef, is } from '../shared/helpers'
+import { handleRef, is, useForceUpdate } from '../shared/helpers'
 import { applyAnimatedValues, animatedApi } from './Globals'
 
 export default function createAnimatedComponent(Component) {
   const AnimatedComponent = forwardRef((props, ref) => {
-    const forceUpdate = useState()[1]
+    const forceUpdate = useForceUpdate()
     const mounted = useRef(true)
     const propsAnimated = useRef()
     const node = useRef()

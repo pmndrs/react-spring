@@ -4,9 +4,10 @@ import {
   useEffect,
   useMemo,
   useImperativeHandle,
+  useCallback,
 } from 'react'
 import Ctrl from './animated/Controller'
-import { is, toArray, callProp } from './shared/helpers'
+import { is, toArray, callProp, useForceUpdate } from './shared/helpers'
 import { requestFrame } from './animated/Globals'
 
 /** API
@@ -42,7 +43,7 @@ export function useTransition(input, keyTransform, config) {
     ...extra
   } = get(props)
 
-  const [, forceUpdate] = useState()
+  const forceUpdate = useForceUpdate()
   const mounted = useRef(false)
   const state = useRef({
     mounted: false,
