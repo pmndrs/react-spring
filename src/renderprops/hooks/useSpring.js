@@ -11,7 +11,8 @@ import { requestFrame } from '../animated/Globals'
 import KCtrl from '../animated/KeyframeController'
 
 export const useSpringImpl = (type = 'default') => args => {
-  const [, forceUpdate] = useState()
+  const [, _forceUpdate] = useState()
+  const forceUpdate = () => _forceUpdate(v => !v)
   // Extract animation props and hook-specific props, can be a function or an obj
   const isFn = typeof args === 'function'
   const { onRest, onKeyframesHalt, ...props } = callProp(args)

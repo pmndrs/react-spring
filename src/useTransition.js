@@ -42,7 +42,8 @@ export function useTransition(input, keyTransform, config) {
     ...extra
   } = get(props)
 
-  const [, forceUpdate] = useState()
+  const [, _forceUpdate] = useState()
+  const forceUpdate = () => _forceUpdate(v => !v)
   const mounted = useRef(false)
   const state = useRef({
     mounted: false,

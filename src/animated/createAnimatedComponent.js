@@ -13,7 +13,8 @@ import { applyAnimatedValues, animatedApi } from './Globals'
 
 export default function createAnimatedComponent(Component) {
   const AnimatedComponent = forwardRef((props, ref) => {
-    const forceUpdate = useState()[1]
+    const [, _forceUpdate] = useState()
+    const forceUpdate = () => _forceUpdate(v => !v)
     const mounted = useRef(true)
     const propsAnimated = useRef()
     const node = useRef()

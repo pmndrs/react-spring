@@ -141,7 +141,8 @@ export function useTransition(props) {
     []
   )
 
-  const [, forceUpdate] = useState()
+  const [, _forceUpdate] = useState()
+  const forceUpdate = () => _forceUpdate(v => !v)
   const state = useRef({
     first: false,
     activeSlots: {},
@@ -179,61 +180,67 @@ export function useTransition(props) {
   }
 
   // Prop changes effect
-  useMemo(() => {
-    const { transitions, ...rest } = calculateDiffInItems(state.current, props)
+  useMemo(
+    () => {
+      const { transitions, ...rest } = calculateDiffInItems(
+        state.current,
+        props
+      )
 
-    transitions.forEach(
-      ({ state: slot, to, config, trail, key, item, destroyed }) => {
-        !instances.current.has(key) &&
-          instances.current.set(key, {
-            ctrl: new KeyframeController({
-              ...callProp(
-                state.current.first
-                  ? initial !== void 0
-                    ? initial || {}
-                    : from
-                  : from,
-                item
-              ),
-              config,
-              delay: trail,
-              native: true,
-              ref,
-            }),
-            item,
-            destroyed,
-            slot,
-            key,
-          })
+      transitions.forEach(
+        ({ state: slot, to, config, trail, key, item, destroyed }) => {
+          !instances.current.has(key) &&
+            instances.current.set(key, {
+              ctrl: new KeyframeController({
+                ...callProp(
+                  state.current.first
+                    ? initial !== void 0
+                      ? initial || {}
+                      : from
+                    : from,
+                  item
+                ),
+                config,
+                delay: trail,
+                native: true,
+                ref,
+              }),
+              item,
+              destroyed,
+              slot,
+              key,
+            })
 
-        // update the map object
-        const instance = instances.current.get(key)
-        instance.item = item
-        instance.destroyed = destroyed
-        instance.slot = slot
-        const ctrl = instance.ctrl
+          // update the map object
+          const instance = instances.current.get(key)
+          instance.item = item
+          instance.destroyed = destroyed
+          instance.slot = slot
+          const ctrl = instance.ctrl
 
-        if (slot === 'update' || slot !== state.current.activeSlots[key]) {
-          state.current.activeSlots[key] = slot
+          if (slot === 'update' || slot !== state.current.activeSlots[key]) {
+            state.current.activeSlots[key] = slot
 
-          // Set the controller if config has changed
-          if (config) ctrl.config = config
+            // Set the controller if config has changed
+            if (config) ctrl.config = config
 
-          // update props that are not animated values
-          ctrl.globals = { delay: trail }
-          ctrl.update(to, onEnd.bind(instance))
+            // update props that are not animated values
+            ctrl.globals = { delay: trail }
+            ctrl.update(to, onEnd.bind(instance))
+          }
         }
-      }
-    )
+      )
 
-    state.current = {
-      ...state.current,
-      transitions,
-      prevProps: props,
-      first: true,
-      ...rest,
-    }
-  }, [items, mapKeys(items, _currentKeys).join('')])
+      state.current = {
+        ...state.current,
+        transitions,
+        prevProps: props,
+        first: true,
+        ...rest,
+      }
+    },
+    [items, mapKeys(items, _currentKeys).join('')]
+  )
 
   useImperativeMethods(ref, () => ({
     start: () =>

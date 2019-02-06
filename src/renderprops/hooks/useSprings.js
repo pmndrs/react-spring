@@ -17,31 +17,35 @@ export const useSpringsImpl = (type = 'default', trail = false) => (
   initialProps = {}
 ) => {
   const isFn = typeof props === 'function'
-  const [, forceUpdate] = useState()
+  const [, _forceUpdate] = useState()
+  const forceUpdate = () => _forceUpdate(v => !v)
   const args = trail ? callProp(props) : initialProps
   const { reverse, onKeyframesHalt, onRest, ...rest } = args
   // The controller maintains the animation values, starts and tops animations
-  const instances = useMemo(() => {
-    const instances = []
-    for (let i = 0; i < length; i++) {
-      const initProps = trail
-        ? {
-            ...rest,
-            config: callProp(rest.config, i),
-            attach: i > 0 && (() => instances[i - 1]),
-          }
-        : {
-            ...rest,
-            ...(isFn ? callProp(props, i) : props[i]),
-          }
-      instances.push(
-        type === 'keyframe'
-          ? new KeyframeController(initProps)
-          : new Ctrl(initProps)
-      )
-    }
-    return instances
-  }, [length])
+  const instances = useMemo(
+    () => {
+      const instances = []
+      for (let i = 0; i < length; i++) {
+        const initProps = trail
+          ? {
+              ...rest,
+              config: callProp(rest.config, i),
+              attach: i > 0 && (() => instances[i - 1]),
+            }
+          : {
+              ...rest,
+              ...(isFn ? callProp(props, i) : props[i]),
+            }
+        instances.push(
+          type === 'keyframe'
+            ? new KeyframeController(initProps)
+            : new Ctrl(initProps)
+        )
+      }
+      return instances
+    },
+    [length]
+  )
   // Destroy controllers on unmount
   const instancesRef = useRef()
   instancesRef.current = instances

@@ -22,7 +22,8 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
     params.length === 2 ? params.reduceRight((a, b) => [a, b]) : params
 
   // need to force a rerender for when the animated controller has finally accepted props
-  const [, forceUpdate] = React.useState()
+  const [, _forceUpdate] = React.useState()
+  const forceUpdate = () => _forceUpdate(v => !v)
   const shouldForceUpdateRef = React.useRef(!initialProps)
 
   const { states, config, onRest } = (function() {
@@ -51,11 +52,14 @@ const useKeyframesImpl = useImpl => (props, initialProps = null) => (
     return () => (mounted.current = false)
   }, [])
 
-  React.useEffect(() => {
-    shouldForceUpdateRef.current && forceUpdate()
-    shouldForceUpdateRef.current = false
-    setAnimation(states[state])
-  }, [state])
+  React.useEffect(
+    () => {
+      shouldForceUpdateRef.current && forceUpdate()
+      shouldForceUpdateRef.current = false
+      setAnimation(states[state])
+    },
+    [state]
+  )
 
   return shouldForceUpdateRef.current && Array.isArray(animProps)
     ? []
