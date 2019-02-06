@@ -41,7 +41,7 @@ You need the primitive itself, and a special factory called `animated`. This lib
 const props = useSpring({ opacity: 1, from: { opacity: 0 } })
 ```
 
-A spring simply animates values from one state to another. Updates are accumulative, sorings remember all the values you ever pass. You can use arbitrary names. There are a couple of reserved keywords like "from" (for base values). [You can learn about the api here](/api). The received props are not static values! These props are self-updating, you cannot use them in regular divs and such.
+A spring simply animates values from one state to another. Updates are accumulative, springs remember all the values you ever pass. You can use arbitrary names. There are a couple of reserved keywords like "from" (for base values). [You can learn about the api here](/api). The received props are not static values! These props are self-updating, you cannot use them in regular divs and such.
 
 ### Finally, tie the animated values to your view
 
