@@ -152,7 +152,6 @@ export function useTrail<DS extends object>(
 
 export interface UseTransitionProps<TItem, DS extends object>
   extends HooksBaseProps {
-  items: ReadonlyArray<TItem> | null | undefined
   /**
    * Spring config, or for individual items: fn(item => config)
    * @default config.default
@@ -201,8 +200,10 @@ export interface UseTransitionResult<TItem, DS extends object> {
 }
 
 export function useTransition<TItem, DS extends CSSProperties>(
+  items: ReadonlyArray<TItem> | null | undefined,
   values: Merge<DS & CSSProperties, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, ForwardedProps<DS>>[] // result array is safe to modify
 export function useTransition<TItem, DS extends object>(
+  items: ReadonlyArray<TItem> | null | undefined,
   values: Merge<DS, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, AnimatedValue<ForwardedProps<DS>>>[] // result array is safe to modify
