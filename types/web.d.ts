@@ -209,7 +209,7 @@ export interface UseTransitionResult<TItem, DS extends object> {
 }
 
 export function useTransition<TItem, DS extends CSSProperties>(
-  items: ReadonlyArray<TItem> | null | undefined,
+  items: ReadonlyArray<TItem> | TItem | null | undefined,
   keys:
     | ((item: TItem) => TransitionKeyProps)
     | ReadonlyArray<TransitionKeyProps>
@@ -217,7 +217,7 @@ export function useTransition<TItem, DS extends CSSProperties>(
   values: Merge<DS & CSSProperties, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, ForwardedProps<DS>>[] // result array is safe to modify
 export function useTransition<TItem, DS extends object>(
-  items: ReadonlyArray<TItem> | null | undefined,
+  items: ReadonlyArray<TItem> | TItem | null | undefined,
   keys:
     | ((item: TItem) => TransitionKeyProps)
     | ReadonlyArray<TransitionKeyProps>
