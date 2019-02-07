@@ -74,7 +74,7 @@ export interface SpringProps<DS extends object = {}> extends SpringBaseProps {
    * Animates to...
    * @default {}
    */
-  to: DS
+  to?: DS
   /**
    * Callback when the animation comes to a still-stand
    */
@@ -231,7 +231,13 @@ export class Transition<
 
 type TrailKeyProps = string | number
 
-interface TrailProps<TItem, DS extends object = {}> extends SpringProps {
+/**
+ * Relay interface to override inheritance property
+ */
+interface TrailPropsWeaken extends SpringProps {
+  children?: any
+}
+interface TrailProps<TItem, DS extends object = {}> extends TrailPropsWeaken {
   /**
    * Base values, optional
    */
@@ -239,7 +245,7 @@ interface TrailProps<TItem, DS extends object = {}> extends SpringProps {
   /**
    * Animates to ...
    */
-  to: DS
+  to?: DS
   /**
    * An array of items to be displayed, use this if you need access to the actual items when distributing values as functions
    */
@@ -252,7 +258,7 @@ interface TrailProps<TItem, DS extends object = {}> extends SpringProps {
   /**
    * A single function-child that receives the individual item and return a functional component (item, index) => props => view)
    */
-  children?: (item: TItem, index: number) => SpringRendererFunc<DS>
+  children: (item: TItem, index: number) => SpringRendererFunc<DS>
 }
 
 export class Trail<TItem, DS extends object> extends PureComponent<
