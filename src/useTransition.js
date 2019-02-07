@@ -101,7 +101,7 @@ export function useTransition(input, keyTransform, config) {
             const active = curInstances.some(([, c]) => !c.idle)
             if (!active && (ref || lazy) && state.current.deleted.length > 0)
               cleanUp(state)
-            if (onRest) onRest(item)
+            if (onRest) onRest(item, slot, values)
           }
         },
         onStart: onStart && (() => onStart(item, slot)),
