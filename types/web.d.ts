@@ -163,13 +163,6 @@ export interface UseTransitionProps<TItem, DS extends object>
    * @default config.default
    */
   config?: SpringConfig | ((item: TItem) => SpringConfig)
-  /**
-   * The same keys you would normally hand over to React in a list. Keys can be specified as a key-accessor function, an array of keys, or a single value
-   */
-  keys?:
-    | ((item: TItem) => TransitionKeyProps)
-    | ReadonlyArray<TransitionKeyProps>
-    | TransitionKeyProps
 
   /**
    * When true enforces that an item can only occur once instead of allowing two or more items with the same key to co-exist in a stack
@@ -207,9 +200,17 @@ export interface UseTransitionResult<TItem, DS extends object> {
 
 export function useTransition<TItem, DS extends CSSProperties>(
   items: ReadonlyArray<TItem> | null | undefined,
+  keys:
+    | ((item: TItem) => TransitionKeyProps)
+    | ReadonlyArray<TransitionKeyProps>
+    | TransitionKeyProps,
   values: Merge<DS & CSSProperties, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, ForwardedProps<DS>>[] // result array is safe to modify
 export function useTransition<TItem, DS extends object>(
   items: ReadonlyArray<TItem> | null | undefined,
+  keys:
+    | ((item: TItem) => TransitionKeyProps)
+    | ReadonlyArray<TransitionKeyProps>
+    | TransitionKeyProps,
   values: Merge<DS, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, AnimatedValue<ForwardedProps<DS>>>[] // result array is safe to modify
