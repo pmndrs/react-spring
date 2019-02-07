@@ -98,6 +98,12 @@ export function useChain(
 
 export interface HooksBaseProps
   extends Pick<SpringBaseProps, Exclude<keyof SpringBaseProps, 'config'>> {
+  /**
+   * Will skip rendering the component if true and write to the dom directly.
+   * @default true
+   * @deprecated
+   */
+  native?: never
   // there is an undocumented onKeyframesHalt which passes the controller instance,
   // so it also cannot be typed unless Controller types are written
   ref?: React.RefObject<ReactSpringHook>
