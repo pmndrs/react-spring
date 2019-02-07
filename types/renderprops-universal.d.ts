@@ -239,7 +239,7 @@ interface TrailProps<TItem, DS extends object = {}> extends SpringProps {
   /**
    * Animates to ...
    */
-  to?: DS
+  to: DS
   /**
    * An array of items to be displayed, use this if you need access to the actual items when distributing values as functions
    */
