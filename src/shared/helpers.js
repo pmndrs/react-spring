@@ -83,21 +83,6 @@ export function interpolateTo(props) {
   return { to: forward, ...rest }
 }
 
-export function convertToAnimatedValue(acc, [name, value]) {
-  return {
-    ...acc,
-    [name]: new (is.arr(value) ? AnimatedArray : AnimatedValue)(value),
-  }
-}
-
-export function convertValues(props) {
-  const { from, to, native } = props
-  const allProps = Object.entries({ ...from, ...to })
-  return native
-    ? allProps.reduce(convertToAnimatedValue, {})
-    : { ...from, ...to }
-}
-
 export function handleRef(ref, forward) {
   if (forward) {
     // If it's a function, assume it's a ref callback
