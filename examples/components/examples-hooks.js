@@ -228,4 +228,10 @@ return items.map(i =>
     link: 'https://codesandbox.io/embed/26mjowzpr',
     tags: ['useTransition'],
   },
+  {
+    name: 'liquify',
+    title: 'Svg filter',
+    link: 'https://codesandbox.io/embed/rloj7nw3pn',
+    tags: ['useSpring'],
+  },
 ]

@@ -80,6 +80,9 @@ Globals.injectApplyAnimatedValues(
   (instance, props) => {
     if (instance.nodeType && instance.setAttribute !== undefined) {
       const { style, children, scrollTop, scrollLeft, ...attributes } = props
+      const filter =
+        instance.nodeName === 'filter' ||
+        (instance.parentNode && instance.parentNode.nodeName === 'filter')
 
       if (scrollTop !== void 0) instance.scrollTop = scrollTop
       if (scrollLeft !== void 0) instance.scrollLeft = scrollLeft
@@ -104,12 +107,13 @@ Globals.injectApplyAnimatedValues(
       // Set attributes ...
       for (let name in attributes) {
         // Attributes are written in dash case
-        const dashCase =
-          attributeCache[name] ||
-          (attributeCache[name] = name.replace(
-            /([A-Z])/g,
-            n => '-' + n.toLowerCase()
-          ))
+        const dashCase = filter
+          ? name
+          : attributeCache[name] ||
+            (attributeCache[name] = name.replace(
+              /([A-Z])/g,
+              n => '-' + n.toLowerCase()
+            ))
         if (typeof instance.getAttribute(dashCase) !== 'undefined')
           instance.setAttribute(dashCase, attributes[name])
       }
