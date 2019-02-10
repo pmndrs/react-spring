@@ -15,7 +15,9 @@ const globals = {
   'react-spring': 'ReactSpring',
 }
 
+const extensions = ['.js', '.jsx', '.ts', '.tsx']
 const getBabelOptions = ({ useESModules }) => ({
+  extensions,
   exclude: '**/node_modules/**',
   runtimeHelpers: true,
   plugins: [['@babel/transform-runtime', { regenerator: false, useESModules }]],
@@ -27,13 +29,20 @@ function createConfig(entry, out) {
       input: `./src/${entry}.js`,
       output: { file: `dist/${out}.js`, format: 'esm' },
       external,
-      plugins: [babel(getBabelOptions({ useESModules: true })), sizeSnapshot()],
+      plugins: [
+        babel(getBabelOptions({ useESModules: true })),
+        sizeSnapshot(),
+        resolve({ extensions }),
+      ],
     },
     {
       input: `./src/${entry}.js`,
       output: { file: `dist/${out}.cjs.js`, format: 'cjs' },
       external,
-      plugins: [babel(getBabelOptions({ useESModules: false }))],
+      plugins: [
+        babel(getBabelOptions({ useESModules: false })),
+        resolve({ extensions }),
+      ],
     },
   ]
 }

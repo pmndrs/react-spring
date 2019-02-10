@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
-    "jsx": "react",
-    "noUnusedLocals": true,
-    "strict": true,
-    "noImplicitReturns": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
+    "target": "es2017",
+    "moduleResolution": "node",
+    "lib": ["dom", "es2017"],
+    "outDir": "./dist",
+    "allowJs": true,
     "noEmitOnError": true,
+    "jsx": "react",
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es2016", "dom"],
-    "skipLibCheck": false
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true
   },
-  "include": ["tests/**/*.tsx", "types/**/*.ts"]
+  "include": ["src/**/*", "types/**/*.ts"]
 }
