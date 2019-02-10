@@ -176,13 +176,19 @@ return transitions.map(({ item, props, key }) => (
     tags: ['useTransition'],
   },
   {
-    name: 'keyframes-script',
+    name: 'script',
     title: 'Spring scripting',
     link: 'https://codesandbox.io/embed/141nrz6v73',
     tags: ['useSpring'],
   },
   {
-    name: 'keyframes-blackflag',
+    name: 'auto',
+    title: 'Animating auto',
+    link: 'https://codesandbox.io/embed/q3ypxr5yp4',
+    tags: ['useSpring'],
+  },
+  {
+    name: 'blackflag',
     title: 'Spring reset script',
     link: 'https://codesandbox.io/embed/8ypj5vq6m9',
     tags: ['useSpring'],
@@ -229,7 +235,7 @@ return items.map(i =>
     tags: ['useTransition'],
   },
   {
-    name: 'liquify',
+    name: 'liquid',
     title: 'Svg filter',
     link: 'https://codesandbox.io/embed/rloj7nw3pn',
     tags: ['useSpring'],

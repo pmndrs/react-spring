@@ -67,7 +67,7 @@ const Main = styled('div')`
 const Sidebar = styled(animated.div)`
   position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 20px;
   padding: 20px;
   background: white;
