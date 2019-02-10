@@ -19,16 +19,16 @@
     "gzipped": 1999
   },
   "dist/web.js": {
-    "bundled": 71631,
-    "minified": 33475,
-    "gzipped": 11211,
+    "bundled": 71975,
+    "minified": 33676,
+    "gzipped": 11284,
     "treeshaked": {
       "rollup": {
-        "code": 12777,
+        "code": 12911,
         "import_statements": 362
       },
       "webpack": {
-        "code": 14005
+        "code": 14185
       }
     }
   },
@@ -38,16 +38,16 @@
     "gzipped": 11641
   },
   "dist/native.js": {
-    "bundled": 69249,
-    "minified": 31638,
-    "gzipped": 10188,
+    "bundled": 69463,
+    "minified": 31766,
+    "gzipped": 10227,
     "treeshaked": {
       "rollup": {
-        "code": 9626,
+        "code": 9611,
         "import_statements": 300
       },
       "webpack": {
-        "code": 11453
+        "code": 11438
       }
     }
   },
