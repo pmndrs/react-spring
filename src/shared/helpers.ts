@@ -48,10 +48,6 @@ export function callProp<T>(
   return is.fun(obj) ? obj(...args) : obj
 }
 
-export function getValues<T>(obj: { [key: string]: T }): T[] {
-  return Object.keys(obj).map(k => obj[k])
-}
-
 function getForwardProps(props: any) {
   const {
     to,
