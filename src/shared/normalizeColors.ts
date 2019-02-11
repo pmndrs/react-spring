@@ -32,10 +32,10 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import colorNames from './colors'
 import * as matchers from './colorMatchers'
+import colorNames, { ColorName } from './colors'
 
-export default function normalizeColor(color) {
+export default function normalizeColor(color: number | string) {
   let match
 
   if (typeof color === 'number') {
@@ -48,7 +48,7 @@ export default function normalizeColor(color) {
   if ((match = matchers.hex6.exec(color)))
     return parseInt(match[1] + 'ff', 16) >>> 0
 
-  if (colorNames.hasOwnProperty(color)) return colorNames[color]
+  if (colorNames.hasOwnProperty(color)) return colorNames[color as ColorName]
 
   if ((match = matchers.rgb.exec(color))) {
     return (
@@ -130,7 +130,7 @@ export default function normalizeColor(color) {
   return null
 }
 
-function hue2rgb(p, q, t) {
+function hue2rgb(p: number, q: number, t: number) {
   if (t < 0) t += 1
   if (t > 1) t -= 1
   if (t < 1 / 6) return p + (q - p) * 6 * t
@@ -139,7 +139,7 @@ function hue2rgb(p, q, t) {
   return p
 }
 
-function hslToRgb(h, s, l) {
+function hslToRgb(h: number, s: number, l: number) {
   const q = l < 0.5 ? l * (1 + s) : l + s - l * s
   const p = 2 * l - q
   const r = hue2rgb(p, q, h + 1 / 3)
@@ -152,26 +152,26 @@ function hslToRgb(h, s, l) {
   )
 }
 
-function parse255(str) {
+function parse255(str: string) {
   const int = parseInt(str, 10)
   if (int < 0) return 0
   if (int > 255) return 255
   return int
 }
 
-function parse360(str) {
+function parse360(str: string) {
   const int = parseFloat(str)
   return (((int % 360) + 360) % 360) / 360
 }
 
-function parse1(str) {
+function parse1(str: string) {
   const num = parseFloat(str)
   if (num < 0) return 0
   if (num > 1) return 255
   return Math.round(num * 255)
 }
 
-function parsePercentage(str) {
+function parsePercentage(str: string) {
   // parseFloat conveniently ignores the final %
   const int = parseFloat(str)
   if (int < 0) return 0

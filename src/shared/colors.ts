@@ -152,4 +152,6 @@ const colors = {
   yellowgreen: 0x9acd32ff,
 }
 
+export type ColorName = keyof typeof colors
+
 export default colors

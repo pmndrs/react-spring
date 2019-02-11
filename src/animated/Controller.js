@@ -13,7 +13,6 @@ import {
   interpolateTo,
   withDefault,
   toArray,
-  getValues,
   callProp,
   is,
 } from '../shared/helpers'
@@ -329,7 +328,7 @@ export default class Controller {
 
     if (this.hasChanged) {
       // Make animations available to frameloop
-      this.configs = getValues(this.animations)
+      this.configs = Object.values(this.animations)
       this.values = {}
       this.interpolations = {}
       for (let key in this.animations) {

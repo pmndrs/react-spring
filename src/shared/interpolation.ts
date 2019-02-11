@@ -1,8 +1,8 @@
-import Interpolation from '../animated/Interpolation'
-import normalizeColor from './normalizeColors'
+import Interpolation, { InterpolationConfig } from '../animated/Interpolation'
 import colors from './colors'
+import normalizeColor from './normalizeColors'
 
-function colorToRgba(input) {
+function colorToRgba(input: string) {
   let int32Color = normalizeColor(input)
   if (int32Color === null) return input
   int32Color = int32Color || 0
@@ -31,43 +31,40 @@ const colorNamesRegex = new RegExp(`(${Object.keys(colors).join('|')})`, 'g')
  *   -45deg                            // values with units
  *   0 2px 2px 0px rgba(0, 0, 0, 0.12) // box shadows
  */
-export default function createInterpolation(config) {
+export default function createInterpolation(
+  config: InterpolationConfig<number, string>
+) {
   // Replace colors with rgba
   const outputRange = config.output
     .map(rangeValue => rangeValue.replace(colorRegex, colorToRgba))
     .map(rangeValue => rangeValue.replace(colorNamesRegex, colorToRgba))
-  // ->
-  // [
-  //   [0, 50],
-  //   [100, 150],
-  //   [200, 250],
-  //   [0, 0.5],
-  // ]
 
-  const outputRanges = outputRange[0].match(stringShapeRegex).map(() => [])
+  const outputRanges: number[][] = outputRange[0]
+    .match(stringShapeRegex)!
+    .map(() => [])
   outputRange.forEach(value => {
     value
-      .match(stringShapeRegex)
+      .match(stringShapeRegex)!
       .forEach((number, i) => outputRanges[i].push(+number))
   })
   const interpolations = outputRange[0]
-    .match(stringShapeRegex)
-    .map((value, i) => {
+    .match(stringShapeRegex)!
+    .map((_value, i) => {
       return Interpolation.create({ ...config, output: outputRanges[i] })
     })
-  return input => {
+  return (input: number) => {
     let i = 0
     return (
       outputRange[0]
         // 'rgba(0, 100, 200, 0)'
         // ->
         // 'rgba(${interpolations[0](input)}, ${interpolations[1](input)}, ...'
-        .replace(stringShapeRegex, () => interpolations[i++](input))
+        .replace(stringShapeRegex, () => interpolations[i++](input) as string)
         // rgba requires that the r,g,b are integers.... so we want to round them, but we *dont* want to
         // round the opacity (4th column).
         .replace(
           /rgba\(([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+)\)/gi,
-          (_, p1, p2, p3, p4) =>
+          (_, p1: number, p2: number, p3: number, p4: number) =>
             `rgba(${Math.round(p1)}, ${Math.round(p2)}, ${Math.round(
               p3
             )}, ${p4})`
