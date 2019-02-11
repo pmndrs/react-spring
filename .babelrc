@@ -5,7 +5,7 @@
       {
         "loose": true,
         "modules": false,
-        "targets": ">0.05%, not dead, not ie <= 11, not op_mini all"
+        "targets": ">1%, not dead, not ie 11, not op_mini all"
       }
     ],
     "@babel/preset-react"

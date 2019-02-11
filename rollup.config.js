@@ -7,46 +7,57 @@ import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
 const external = id => !id.startsWith('.') && !id.startsWith(root)
-
-const globals = {
-  react: 'React',
-  'react-dom': 'ReactDOM',
-  'prop-types': 'PropTypes',
-  'react-spring': 'ReactSpring',
-}
-
-const getBabelOptions = ({ useESModules }) => ({
+const getBabelOptions = ({ useESModules }, targets) => ({
+  babelrc: false,
   exclude: '**/node_modules/**',
   runtimeHelpers: true,
-  plugins: [['@babel/transform-runtime', { regenerator: false, useESModules }]],
+  presets: [
+    ['@babel/preset-env', { loose: true, modules: false, targets }],
+    '@babel/preset-react',
+  ],
+  plugins: [
+    ['@babel/proposal-class-properties', { loose: true }],
+    ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
+    ['transform-react-remove-prop-types', { removeImport: true }],
+    ['@babel/transform-runtime', { regenerator: false, useESModules }],
+  ],
 })
 
 function createConfig(entry, out) {
   return [
     {
-      input: `./src/${entry}.js`,
+      input: `./src/${entry}/index.js`,
       output: { file: `dist/${out}.js`, format: 'esm' },
       external,
-      plugins: [babel(getBabelOptions({ useESModules: true })), sizeSnapshot()],
+      plugins: [
+        babel(
+          getBabelOptions(
+            { useESModules: true },
+            '>1%, not dead, not ie 11, not op_mini all'
+          )
+        ),
+        sizeSnapshot(),
+      ],
     },
     {
-      input: `./src/${entry}.js`,
+      input: `./src/${entry}/index.js`,
       output: { file: `dist/${out}.cjs.js`, format: 'cjs' },
       external,
-      plugins: [babel(getBabelOptions({ useESModules: false }))],
+      plugins: [
+        babel(getBabelOptions({ useESModules: false })),
+        sizeSnapshot(),
+      ],
     },
   ]
 }
 
 export default [
-  ...createConfig('targets/web/index', 'web'),
-  ...createConfig('targets/native/index', 'native'),
-  ...createConfig('renderprops/targets/web/index', 'renderprops'),
-  ...createConfig('renderprops/addons/index', 'renderprops-addons'),
-  ...createConfig('renderprops/targets/native/index', 'renderprops-native'),
-  ...createConfig(
-    'renderprops/targets/universal/index',
-    'renderprops-universal'
-  ),
-  ...createConfig('renderprops/targets/konva/index', 'renderprops-konva'),
+  ...createConfig('targets/web', 'web'),
+  ...createConfig('targets/native', 'native'),
+  ...createConfig('targets/universal', 'universal'),
+  ...createConfig('renderprops/targets/web', 'renderprops'),
+  ...createConfig('renderprops/addons', 'renderprops-addons'),
+  ...createConfig('renderprops/targets/native', 'renderprops-native'),
+  ...createConfig('renderprops/targets/universal', 'renderprops-universal'),
+  ...createConfig('renderprops/targets/konva', 'renderprops-konva'),
 ]
