@@ -10,11 +10,13 @@ const external = id => !id.startsWith('.') && !id.startsWith(root)
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 const getBabelOptions = ({ useESModules }, targets) => ({
   babelrc: false,
+  extensions,
   exclude: '**/node_modules/**',
   runtimeHelpers: true,
   presets: [
     ['@babel/preset-env', { loose: true, modules: false, targets }],
     '@babel/preset-react',
+    '@babel/preset-typescript',
   ],
   plugins: [
     ['@babel/proposal-class-properties', { loose: true }],

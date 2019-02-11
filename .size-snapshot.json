@@ -19,16 +19,16 @@
     "gzipped": 1999
   },
   "dist/web.js": {
-    "bundled": 62869,
-    "minified": 29874,
-    "gzipped": 10785,
+    "bundled": 62689,
+    "minified": 29847,
+    "gzipped": 10797,
     "treeshaked": {
       "rollup": {
-        "code": 11659,
+        "code": 11689,
         "import_statements": 242
       },
       "webpack": {
-        "code": 12817
+        "code": 12847
       }
     }
   },
@@ -38,23 +38,23 @@
     "gzipped": 11641
   },
   "dist/native.js": {
-    "bundled": 59887,
-    "minified": 27815,
-    "gzipped": 9747,
+    "bundled": 59707,
+    "minified": 27788,
+    "gzipped": 9751,
     "treeshaked": {
       "rollup": {
-        "code": 8500,
+        "code": 8530,
         "import_statements": 180
       },
       "webpack": {
-        "code": 10096
+        "code": 10126
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 47391,
-    "minified": 21145,
-    "gzipped": 6970,
+    "bundled": 47200,
+    "minified": 21082,
+    "gzipped": 6960,
     "treeshaked": {
       "rollup": {
         "code": 744,
@@ -202,14 +202,14 @@
     }
   },
   "dist/web.cjs.js": {
-    "bundled": 72506,
-    "minified": 34127,
-    "gzipped": 11365
+    "bundled": 72299,
+    "minified": 34083,
+    "gzipped": 11381
   },
   "dist/native.cjs.js": {
-    "bundled": 70012,
-    "minified": 32235,
-    "gzipped": 10316
+    "bundled": 69805,
+    "minified": 32191,
+    "gzipped": 10333
   },
   "dist/renderprops.cjs.js": {
     "bundled": 77632,
@@ -237,8 +237,8 @@
     "gzipped": 10452
   },
   "dist/universal.cjs.js": {
-    "bundled": 56695,
-    "minified": 25265,
-    "gzipped": 7517
+    "bundled": 56477,
+    "minified": 25185,
+    "gzipped": 7521
   }
 }
