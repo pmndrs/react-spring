@@ -1,18 +1,17 @@
-import { useState, useCallback } from 'react'
-import AnimatedValue from '../animated/AnimatedValue'
-import AnimatedArray from '../animated/AnimatedArray'
+import { MutableRefObject, Ref, useCallback, useState } from 'react'
 
 export const is = {
   arr: Array.isArray,
-  obj: a => Object.prototype.toString.call(a) === '[object Object]',
-  fun: a => typeof a === 'function',
-  str: a => typeof a === 'string',
-  num: a => typeof a === 'number',
-  und: a => a === void 0,
-  nul: a => a === null,
-  set: a => a instanceof Set,
-  map: a => a instanceof Map,
-  equ(a, b) {
+  obj: (a: unknown): a is object =>
+    Object.prototype.toString.call(a) === '[object Object]',
+  fun: (a: unknown): a is Function => typeof a === 'function',
+  str: (a: unknown): a is string => typeof a === 'string',
+  num: (a: unknown): a is number => typeof a === 'number',
+  und: (a: unknown): a is undefined => a === void 0,
+  nul: (a: unknown): a is null => a === null,
+  set: (a: unknown): a is Set<any> => a instanceof Set,
+  map: (a: unknown): a is Map<any, any> => a instanceof Map,
+  equ(a: any, b: any) {
     if (typeof a !== typeof b) return false
     if (is.str(a) || is.num(a)) return a === b
     if (
@@ -34,23 +33,22 @@ export function useForceUpdate() {
   return forceUpdate
 }
 
-export function withDefault(value, defaultValue) {
+export function withDefault<T, DT>(value: T, defaultValue: DT) {
   return is.und(value) || is.nul(value) ? defaultValue : value
 }
 
-export function toArray(a) {
+export function toArray<T>(a?: T | T[]): T[] {
   return !is.und(a) ? (is.arr(a) ? a : [a]) : []
 }
 
-export function callProp(obj, ...args) {
+export function callProp<T>(
+  obj: T,
+  ...args: any[]
+): T extends (...args: any[]) => infer R ? R : T {
   return is.fun(obj) ? obj(...args) : obj
 }
 
-export function getValues(object) {
-  return Object.keys(object).map(k => object[k])
-}
-
-export function getForwardProps(props) {
+function getForwardProps(props: any) {
   const {
     to,
     from,
@@ -74,7 +72,7 @@ export function getForwardProps(props) {
   return forward
 }
 
-export function interpolateTo(props) {
+export function interpolateTo(props: any) {
   const forward = getForwardProps(props)
   const rest = Object.keys(props).reduce(
     (a, k) => (!is.und(forward[k]) ? a : { ...a, [k]: props[k] }),
@@ -83,28 +81,13 @@ export function interpolateTo(props) {
   return { to: forward, ...rest }
 }
 
-export function convertToAnimatedValue(acc, [name, value]) {
-  return {
-    ...acc,
-    [name]: new (is.arr(value) ? AnimatedArray : AnimatedValue)(value),
-  }
-}
-
-export function convertValues(props) {
-  const { from, to, native } = props
-  const allProps = Object.entries({ ...from, ...to })
-  return native
-    ? allProps.reduce(convertToAnimatedValue, {})
-    : { ...from, ...to }
-}
-
-export function handleRef(ref, forward) {
+export function handleRef(ref: any, forward: Ref<any>) {
   if (forward) {
     // If it's a function, assume it's a ref callback
     if (is.fun(forward)) forward(ref)
     else if (is.obj(forward)) {
       // If it's an object and has a 'current' property, assume it's a ref object
-      forward.current = ref
+      ;(forward as MutableRefObject<any>).current = ref
     }
   }
   return ref
