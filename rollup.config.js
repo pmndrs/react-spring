@@ -60,6 +60,7 @@ export default [
   ...createConfig('targets/web', 'web'),
   ...createConfig('targets/native', 'native'),
   ...createConfig('targets/universal', 'universal'),
+  ...createConfig('targets/konva', 'konva'),
   ...createConfig('renderprops/targets/web', 'renderprops'),
   ...createConfig('renderprops/addons', 'renderprops-addons'),
   ...createConfig('renderprops/targets/native', 'renderprops-native'),

@@ -75,7 +75,6 @@ Globals.injectCreateAnimatedStyle(style => new AnimatedStyle(style))
 Globals.injectDefaultElement('div')
 Globals.injectInterpolation(createInterpolation)
 Globals.injectColorNames(colorNames)
-Globals.injectAnimatedApi(node => node.current)
 Globals.injectApplyAnimatedValues(
   (instance, props) => {
     if (instance.nodeType && instance.setAttribute !== undefined) {

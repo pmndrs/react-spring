@@ -31,8 +31,6 @@ function createInterpolation(config) {
   }
 }
 
-// Render 30/fps by default
-Globals.injectFrame(cb => setTimeout(cb, 1000 / 30), r => clearTimeout(r))
 Globals.injectInterpolation(createInterpolation)
 Globals.injectApplyAnimatedValues(() => false, style => style)
 
