@@ -8,7 +8,7 @@ export let interpolation = undefined
 export let now = () => Date.now()
 export let defaultElement = undefined
 export let createAnimatedStyle = undefined
-export let animatedApi = undefined
+export let animatedApi = node => node.current
 
 export const injectApplyAnimatedValues = (fn, transform) =>
   (applyAnimatedValues = { fn, transform })

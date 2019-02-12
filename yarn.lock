@@ -691,7 +691,7 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.5", "@babel/runtime@^7.3.1":
+"@babel/runtime@^7.1.5", "@babel/runtime@^7.3.1":
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.3.1.tgz#574b03e8e8a9898eaf4a872a92ea20b7846f6f2a"
   integrity sha512-7jGW8ppV0ant637pIqAcFfQDDH1orEPGJb8aXfUozuCU3QqX7rX4DA8iwrbPrR1hcH0FTTHz47yQnk+bl5xHQA==
@@ -5431,7 +5431,7 @@ react-is@^16.7.0, react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.1.tgz#a80141e246eb894824fb4f2901c0c50ef31d4cdb"
   integrity sha512-ioMCzVDWvCvKD8eeT+iukyWrBGrA3DiFYkXfBsVYIRdaREZuBjENG+KjrikavCLasozqRWTwFUagU/O4vPpRMA==
 
-react-konva@^16.7.1:
+react-konva@^16.8.0:
   version "16.8.0"
   resolved "https://registry.yarnpkg.com/react-konva/-/react-konva-16.8.0.tgz#2be2a8f14e51e4a096d905fbc30f8d8135d3cb6a"
   integrity sha512-+3u96gWrhBv7soq3Tyi+uxLhFiVN2D5fGvs0eoz93B+M3CGyK8ho1v3iyCiNAWjIDppTdwyx6S6tpjLptGu/fg==
@@ -5459,10 +5459,10 @@ react-test-renderer@16.8.1, react-test-renderer@^16.0.0-0:
     react-is "^16.8.1"
     scheduler "^0.13.1"
 
-react-testing-library@5.6.0:
-  version "5.6.0"
-  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-5.6.0.tgz#1a964e50750695426da69eaa9caafbdd414965ed"
-  integrity sha512-K9Ql3ytFhblRGs19MjwwdvOT0MZ4XhamVGrS7FtVxSzpmmG1gIPVWYwgt7Mz8LNUDW2BOsBGFDp0a2UskCJI4w==
+react-testing-library@5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/react-testing-library/-/react-testing-library-5.6.1.tgz#fe352198e84275590b7654fc3deb7e20d46120a3"
+  integrity sha512-e3ssuBrHBh/3D6kBQkkoSfuS1gPpPAQPrwB9H0L8Ktwbv95rRn6VVRl+KlgkkqrkA+9OV+TL6u64IG1LpfrlJQ==
   dependencies:
     "@babel/runtime" "^7.3.1"
     dom-testing-library "^3.13.1"
