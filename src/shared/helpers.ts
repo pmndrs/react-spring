@@ -103,13 +103,13 @@ export function interpolateTo(props: any) {
   return { to: forward, ...rest }
 }
 
-export function handleRef(ref: any, forward: Ref<any>) {
+export function handleRef<T>(ref: T, forward: Ref<T>) {
   if (forward) {
     // If it's a function, assume it's a ref callback
     if (is.fun(forward)) forward(ref)
     else if (is.obj(forward)) {
       // If it's an object and has a 'current' property, assume it's a ref object
-      ;(forward as MutableRefObject<any>).current = ref
+      ;(forward as MutableRefObject<T>).current = ref
     }
   }
   return ref
