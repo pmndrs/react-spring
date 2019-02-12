@@ -89,6 +89,7 @@
     "react": "16.8.1",
     "react-dom": "16.8.1",
     "react-konva": "^16.8.0",
+    "react-native": "^0.58.4",
     "react-test-renderer": "16.8.1",
     "react-testing-library": "5.6.1",
     "rimraf": "2.6.3",
@@ -127,7 +128,9 @@
       "src/**/*.js",
       "!test/"
     ],
-    "setupFilesAfterEnv": ["<rootDir>/setupTests.js"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTests.js"
+    ]
   },
   "collective": {
     "type": "opencollective",

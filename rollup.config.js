@@ -29,7 +29,7 @@ const getBabelOptions = ({ useESModules }, targets) => ({
 function createConfig(entry, out) {
   return [
     {
-      input: `./src/${entry}/index.js`,
+      input: `./src/${entry}/index`,
       output: { file: `dist/${out}.js`, format: 'esm' },
       external,
       plugins: [
@@ -44,7 +44,7 @@ function createConfig(entry, out) {
       ],
     },
     {
-      input: `./src/${entry}/index.js`,
+      input: `./src/${entry}/index`,
       output: { file: `dist/${out}.cjs.js`, format: 'cjs' },
       external,
       plugins: [

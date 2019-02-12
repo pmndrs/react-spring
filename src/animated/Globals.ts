@@ -2,14 +2,15 @@ import { MutableRefObject, ReactType } from 'react'
 import createInterpolation from '../shared/interpolation'
 import AnimatedStyle from './AnimatedStyle'
 
-interface ApplyAnimatedValues {
-  fn(node?: any, props?: any): undefined | false
-  transform<Style extends object>(style: Style): Style
+type ApplyPropsFunction = (node?: any, props?: any) => undefined | false
+type TransformFunction = (style: any) => any
+export let applyAnimatedValues: {
+  fn: ApplyPropsFunction
+  transform: TransformFunction
 }
-export let applyAnimatedValues: ApplyAnimatedValues
 export function injectApplyAnimatedValues(
-  fn: ApplyAnimatedValues['fn'],
-  transform: ApplyAnimatedValues['transform']
+  fn: ApplyPropsFunction,
+  transform: TransformFunction
 ) {
   applyAnimatedValues = { fn, transform }
 }
@@ -45,15 +46,16 @@ export function injectDefaultElement(el?: typeof defaultElement) {
 }
 
 interface AnimatedApi {
-  <T extends ReactType>(node: MutableRefObject<T>): T
   <T extends ReactType>(
     node: MutableRefObject<T>,
-    mounted: MutableRefObject<boolean>,
-    forceUpdate: () => void
-  ): {
-    getNode(): T
-    setNativeProps(props: any): void
-  }
+    mounted?: MutableRefObject<boolean>,
+    forceUpdate?: () => void
+  ):
+    | T
+    | {
+        getNode(): T
+        setNativeProps(props: any): void
+      }
 }
 export let animatedApi: AnimatedApi = (node: any) => node.current
 export function injectAnimatedApi(fn: typeof animatedApi) {

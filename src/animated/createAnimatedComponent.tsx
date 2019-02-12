@@ -1,8 +1,11 @@
 import React, {
   ComponentPropsWithRef,
   forwardRef,
+  ForwardRefExoticComponent,
   MutableRefObject,
+  PropsWithoutRef,
   ReactType,
+  RefAttributes,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -38,9 +41,17 @@ type AnimatedComponentProps<C extends ReactType> = JSX.LibraryManagedAttributes<
   AnimateStyleProp<ComponentPropsWithRef<C>> & ScrollProps
 >
 
-export default function createAnimatedComponent<C extends ReactType>(
+export interface CreateAnimatedComponent<C extends ReactType> {
+  (Component: C): ForwardRefExoticComponent<
+    PropsWithoutRef<AnimatedComponentProps<C>> & RefAttributes<C>
+  >
+}
+
+const createAnimatedComponent: CreateAnimatedComponent<ReactType> = <
+  C extends ReactType
+>(
   Component: C
-) {
+) => {
   const AnimatedComponent = forwardRef<C, AnimatedComponentProps<C>>(
     (props, ref) => {
       const forceUpdate = useForceUpdate()
@@ -89,3 +100,5 @@ export default function createAnimatedComponent<C extends ReactType>(
   )
   return AnimatedComponent
 }
+
+export default createAnimatedComponent

@@ -1,15 +1,20 @@
-import './globals'
-import * as Globals from '../../animated/Globals'
+import { ReactType } from 'react'
 import { interpolate } from '../../animated/AnimatedInterpolation'
-import animated from '../../animated/createAnimatedComponent'
+import animated, {
+  CreateAnimatedComponent,
+} from '../../animated/createAnimatedComponent'
+import * as Globals from '../../animated/Globals'
 import { config } from '../../shared/constants'
+import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
+import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
-import { useChain } from '../../useChain'
-import { useSprings } from '../../useSprings'
+import './globals'
 
-const domElements = [
+type JSXElements = keyof JSX.IntrinsicElements
+
+const domElements: JSXElements[] = [
   'a',
   'abbr',
   'address',
@@ -147,10 +152,16 @@ const domElements = [
   'tspan',
 ]
 
-const extendedAnimated = domElements.reduce((acc, element) => {
-  acc[element] = animated(element)
-  return acc
-}, animated)
+type AnimatedWithDOMElements = CreateAnimatedComponent<ReactType> &
+  { [Tag in JSXElements]: ReturnType<CreateAnimatedComponent<Tag>> }
+
+const extendedAnimated = domElements.reduce(
+  (acc, element) => {
+    acc[element] = animated(element)
+    return acc
+  },
+  animated as AnimatedWithDOMElements
+)
 
 export {
   config,
