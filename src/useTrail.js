@@ -13,7 +13,7 @@ export const useTrail = (length, props) => {
   const updateProps = callProp(props)
   const instances = useRef()
 
-  const [result, set] = useSprings(length, (i, ctrl) => {
+  const [result, set, stop] = useSprings(length, (i, ctrl) => {
     if (i === 0) instances.current = []
     instances.current.push(ctrl)
     return {
@@ -43,5 +43,5 @@ export const useTrail = (length, props) => {
   // Update mounted flag and destroy controller on unmount
   useEffect(() => void (mounted.current = true), [])
 
-  return isFn ? [result, updateCtrl] : result
+  return isFn ? [result, updateCtrl, stop] : result
 }
