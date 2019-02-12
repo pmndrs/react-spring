@@ -45,7 +45,7 @@ export default function createAnimatedComponent<C extends ReactType>(
       )
 
       useImperativeHandle<C, any>(ref, () =>
-        (animatedApi as any)(node, mounted, forceUpdate)
+        animatedApi(node as MutableRefObject<C>, mounted, forceUpdate)
       )
       attachProps(props)
 

@@ -54,7 +54,7 @@ export default class Interpolation {
       })
     }
     if (Globals.interpolation && typeof range.output[0] === 'string') {
-      return Globals.interpolation(range)
+      return Globals.interpolation(range as InterpolationConfig<number, string>)
     }
     let config = range as InterpolationConfig<number, number>
     let outputRange = config.output
