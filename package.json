@@ -114,7 +114,7 @@
       "jest",
       "legacy"
     ],
-    "testRegex": "test.(js|ts)$",
+    "testRegex": "test.(js|ts|tsx)$",
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
     "coverageReporters": [
