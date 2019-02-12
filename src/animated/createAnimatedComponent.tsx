@@ -50,7 +50,7 @@ export default function createAnimatedComponent<C extends ReactType>(
       attachProps(props)
 
       const {
-        scrolTop,
+        scrollTop,
         scrollLeft,
         ...animatedProps
       } = propsAnimated.current.getValue()
