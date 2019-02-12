@@ -48,7 +48,29 @@ export function callProp<T>(
   return is.fun(obj) ? obj(...args) : obj
 }
 
-function getForwardProps(props: any) {
+type PartialExcludedProps = Partial<{ 
+  to: any, 
+  from: any, 
+  config: any, 
+  onStart: any, 
+  onRest: any, 
+  onFrame: any, 
+  children: any, 
+  reset: any, 
+  reverse: any, 
+  force: any, 
+  immediate: any,
+  delay: any,
+  attach: any,
+  destroyed: any,
+  interpolateTo: any,
+  ref: any,
+  lazy: any
+}> & object;
+
+export type ForwardedProps<T> = Pick<T, Exclude<keyof T, keyof PartialExcludedProps>>
+
+function getForwardProps<P extends PartialExcludedProps>(props: P): ForwardedProps<P> {
   const {
     to,
     from,

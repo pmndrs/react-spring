@@ -16,7 +16,6 @@ type ExcludedProps =
   | 'to'
   | 'from'
   | 'config'
-  | 'native'
   | 'onStart'
   | 'onRest'
   | 'onFrame'
@@ -25,15 +24,12 @@ type ExcludedProps =
   | 'reverse'
   | 'force'
   | 'immediate'
-  | 'impl'
-  | 'inject'
   | 'delay'
   | 'attach'
   | 'destroyed'
-  | 'track'
   | 'interpolateTo'
-  | 'autoStart'
   | 'ref'
+  | 'lazy'
 
 // The config options for an interoplation. It maps out from in "in" type
 // to an "out" type.
@@ -213,7 +209,8 @@ export function useTransition<TItem, DS extends CSSProperties>(
   keys:
     | ((item: TItem) => TransitionKeyProps)
     | ReadonlyArray<TransitionKeyProps>
-    | TransitionKeyProps,
+    | TransitionKeyProps
+    | null,
   values: Merge<DS & CSSProperties, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, ForwardedProps<DS>>[] // result array is safe to modify
 export function useTransition<TItem, DS extends object>(
@@ -221,6 +218,7 @@ export function useTransition<TItem, DS extends object>(
   keys:
     | ((item: TItem) => TransitionKeyProps)
     | ReadonlyArray<TransitionKeyProps>
-    | TransitionKeyProps,
+    | TransitionKeyProps           
+    | null,
   values: Merge<DS, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, AnimatedValue<ForwardedProps<DS>>>[] // result array is safe to modify
