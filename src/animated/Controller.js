@@ -122,7 +122,7 @@ export default class Controller {
     return this
   }
 
-  stop(finished, noChange) {
+  stop(finished) {
     this.listeners.forEach(onEnd => onEnd(finished))
     this.listeners = []
     return this
