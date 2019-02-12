@@ -7,7 +7,6 @@ const controllers = new Set()
 const frameLoop = () => {
   let time = now()
   for (let controller of controllers) {
-    let noChange = true
     let isActive = false
 
     for (
@@ -38,9 +37,6 @@ const frameLoop = () => {
           animation.done = true
           continue
         }
-
-        // Flag change
-        noChange = false
 
         // Break animation when string values are involved
         if (typeof from === 'string' || typeof to === 'string') {
@@ -124,7 +120,7 @@ const frameLoop = () => {
     // Either call onEnd or next frame
     if (!isActive) {
       controllers.delete(controller)
-      controller.stop(true, noChange)
+      controller.stop(true)
     }
   }
 
