@@ -79,7 +79,6 @@ const domElements: JSXElements[] = [
   'main',
   'map',
   'mark',
-  'marquee',
   'menu',
   'menuitem',
   'meta',
