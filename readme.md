@@ -18,11 +18,7 @@ This library represents a modern approach to animation. It is very much inspired
 
 ### Documentation and Examples
 
-react-spring has two api's. If you can, pick hooks, which is more suitable for animations.
-
-Hooks: **[react-spring.surge.sh](https://react-spring-hooks.surge.sh/)**
-
-Render-props: **[react-spring-renderprops.surge.sh](https://react-spring-renderprops.surge.sh/)**
+https://www.react-spring.io
 
 ---
 
