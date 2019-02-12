@@ -9,7 +9,7 @@ test('update', () => {
   Globals.injectFrame(mockRaf.raf, mockRaf.cancel)
   Globals.injectNow(mockRaf.now)
 
-  const ctrl = new Controller({ x: 0 })
+  const ctrl = new Controller({ x: 0 }).start()
   expect(ctrl.getValues().x.getValue()).toBe(0)
 
   ctrl.update({ x: 100 })
