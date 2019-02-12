@@ -16,7 +16,6 @@ type ExcludedProps =
   | 'to'
   | 'from'
   | 'config'
-  | 'native'
   | 'onStart'
   | 'onRest'
   | 'onFrame'
@@ -25,15 +24,12 @@ type ExcludedProps =
   | 'reverse'
   | 'force'
   | 'immediate'
-  | 'impl'
-  | 'inject'
   | 'delay'
   | 'attach'
   | 'destroyed'
-  | 'track'
   | 'interpolateTo'
-  | 'autoStart'
   | 'ref'
+  | 'lazy'
 
 // The config options for an interoplation. It maps out from in "in" type
 // to an "out" type.
