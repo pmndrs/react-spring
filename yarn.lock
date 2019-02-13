@@ -882,6 +882,11 @@
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-24.0.0.tgz#848492026c327b3548d92be0352a545c36a21e8a"
   integrity sha512-kOafJnUTnMd7/OfEO/x3I47EHswNjn+dbz9qk3mtonr1RvKT+1FGVxnxAx08I9K8Tl7j9hpoJRE7OCf+t10fng==
 
+"@types/mock-raf@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/mock-raf/-/mock-raf-1.0.2.tgz#de0df16b1cbe2475cb1a4680a19f344f386d8252"
+  integrity sha1-3g3xaxy+JHXLGkaAoZ80TzhtglI=
+
 "@types/node@*":
   version "10.12.24"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.24.tgz#b13564af612a22a20b5d95ca40f1bffb3af315cf"
