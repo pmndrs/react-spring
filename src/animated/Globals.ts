@@ -1,10 +1,10 @@
-import { CSSProperties, MutableRefObject, ReactType } from 'react'
+import { MutableRefObject, ReactType } from 'react'
 import createInterpolation from '../shared/interpolation'
 import AnimatedStyle from './AnimatedStyle'
 
 interface ApplyAnimatedValues {
   fn(node?: any, props?: any): undefined | false
-  transform<Style extends CSSProperties>(style: Style): Style
+  transform<Style extends object>(style: Style): Style
 }
 export let applyAnimatedValues: ApplyAnimatedValues
 export function injectApplyAnimatedValues(

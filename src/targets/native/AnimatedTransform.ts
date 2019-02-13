@@ -1,15 +1,19 @@
 import Animated from '../../animated/Animated'
 import AnimatedWithChildren from '../../animated/AnimatedWithChildren'
 
+type Transform = { [key: string]: string | number | Animated }
+
 export default class AnimatedTransform extends AnimatedWithChildren {
-  constructor(transforms) {
+  _transforms: Transform[]
+
+  constructor(transforms: Transform[]) {
     super()
     this._transforms = transforms
   }
 
   getValue() {
     return this._transforms.map(transform => {
-      var result = {}
+      let result: { [key: string]: number | string } = {}
       for (var key in transform) {
         var value = transform[key]
         result[key] = value instanceof Animated ? value.getValue() : value
@@ -20,7 +24,7 @@ export default class AnimatedTransform extends AnimatedWithChildren {
 
   getAnimatedValue() {
     return this._transforms.map(transform => {
-      var result = {}
+      let result: { [key: string]: number | string } = {}
       for (var key in transform) {
         var value = transform[key]
         result[key] =
