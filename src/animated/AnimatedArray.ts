@@ -1,6 +1,6 @@
+import { AnimatedArrayWithChildren } from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
 import AnimatedValue from './AnimatedValue'
-import { AnimatedArrayWithChildren } from './AnimatedWithChildren'
 import { InterpolationConfig } from './Interpolation'
 
 export default class AnimatedArray extends AnimatedArrayWithChildren {

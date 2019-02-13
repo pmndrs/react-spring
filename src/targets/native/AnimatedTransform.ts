@@ -1,5 +1,4 @@
-import Animated from '../../animated/Animated'
-import AnimatedWithChildren from '../../animated/AnimatedWithChildren'
+import Animated, { AnimatedWithChildren } from '../../animated/Animated'
 
 type Transform = { [key: string]: string | number | Animated }
 

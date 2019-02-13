@@ -1,5 +1,4 @@
-import Animated from './Animated'
-import { AnimatedObjectWithChildren } from './AnimatedWithChildren'
+import Animated, { AnimatedObjectWithChildren } from './Animated'
 import * as Globals from './Globals'
 
 export default class AnimatedStyle extends AnimatedObjectWithChildren {

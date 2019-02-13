@@ -1,5 +1,5 @@
+import { AnimatedWithChildren } from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
-import AnimatedWithChildren from './AnimatedWithChildren'
 import { InterpolationConfig } from './Interpolation'
 
 /**
