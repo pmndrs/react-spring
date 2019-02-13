@@ -1,4 +1,5 @@
 import Animated from './Animated'
+import Controller from './Controller'
 import { now, requestFrame } from './Globals'
 
 let active = false
@@ -15,7 +16,7 @@ const frameLoop = () => {
       configIdx++
     ) {
       let config = controller.configs[configIdx]
-      let endOfAnimation, lastTime, velocity
+      let endOfAnimation, lastTime
       for (let valIdx = 0; valIdx < config.animatedValues.length; valIdx++) {
         let animation = config.animatedValues[valIdx]
 
@@ -129,14 +130,12 @@ const frameLoop = () => {
   else active = false
 }
 
-const start = controller => {
+const start = (controller: Controller) => {
   if (!controllers.has(controller)) {
     controllers.add(controller)
     if (!active) requestFrame(frameLoop)
     active = true
   }
 }
-
-const isActive = controller => active && controllers.has(controller)
 
 export { start }
