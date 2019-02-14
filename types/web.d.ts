@@ -72,7 +72,7 @@ type InferFrom<T extends object> = T extends { to: infer TTo }
 type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
 
 export type SetUpdateFn<DS extends object> = (
-  ds: Pick<DS, Exclude<keyof DS, ExcludedProps>>
+  ds: Partial<Pick<DS, Exclude<keyof DS, ExcludedProps>>>
 ) => void
 
 // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
