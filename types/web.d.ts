@@ -123,10 +123,10 @@ export type UseSpringProps<DS extends object> = Merge<
 // there's a third value in the tuple but it's not public API (?)
 export function useSpring<DS extends CSSProperties>(
   values: UseSpringProps<DS & CSSProperties>
-): ForwardedProps<DS>
+): AnimatedValue<ForwardedProps<DS>>
 export function useSpring<DS extends CSSProperties>(
   getProps: () => UseSpringProps<DS & CSSProperties>
-): [ForwardedProps<DS>, SetUpdateFn<DS>]
+): [AnimatedValue<ForwardedProps<DS>>, SetUpdateFn<DS>]
 export function useSpring<DS extends object>(
   getProps: () => UseSpringProps<DS>
 ): [AnimatedValue<ForwardedProps<DS>>, SetUpdateFn<DS>]
