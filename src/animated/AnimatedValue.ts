@@ -1,5 +1,6 @@
-import AnimatedWithChildren from './AnimatedWithChildren'
+import { AnimatedWithChildren } from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
+import { InterpolationConfig } from './Interpolation'
 
 /**
  * Animated works by building a directed acyclic graph of dependencies
@@ -24,9 +25,12 @@ import AnimatedInterpolation from './AnimatedInterpolation'
  * transform which can receive values from multiple parents.
  */
 
-function findAnimatedStyles(node, styles) {
+function findAnimatedStyles(node: any, styles: Set<any>) {
   if (typeof node.update === 'function') styles.add(node)
-  else node.getChildren().forEach(child => findAnimatedStyles(child, styles))
+  else
+    node
+      .getChildren()
+      .forEach((child: any) => findAnimatedStyles(child, styles))
 }
 
 /**
@@ -36,16 +40,21 @@ function findAnimatedStyles(node, styles) {
  * or calling `setValue`) will stop any previous ones.
  */
 export default class AnimatedValue extends AnimatedWithChildren {
-  constructor(value) {
+  value: number
+  startPosition: number
+  lastPosition: number
+
+  done = false
+  animatedStyles = new Set()
+  lastVelocity?: number
+  startTime?: number
+  lastTime?: number
+
+  constructor(value: number) {
     super()
     this.value = value
-    this.animatedStyles = new Set()
-    this.done = false
     this.startPosition = value
     this.lastPosition = value
-    this.lastVelocity = undefined
-    this.startTime = undefined
-    this.lastTime = undefined
   }
 
   flush() {
@@ -53,12 +62,19 @@ export default class AnimatedValue extends AnimatedWithChildren {
     this.animatedStyles.forEach(animatedStyle => animatedStyle.update())
   }
 
-  setValue = (value, flush = true) => {
+  setValue = (value: number, flush = true) => {
     this.value = value
     if (flush) this.flush()
   }
+
   getValue = () => this.value
+
   updateStyles = () => findAnimatedStyles(this, this.animatedStyles)
-  updateValue = value => this.flush((this.value = value))
-  interpolate = (config, arg) => new AnimatedInterpolation(this, config, arg)
+
+  updateValue = (value: number) => {
+    this.setValue(value, true)
+  }
+
+  interpolate = (config: InterpolationConfig, arg: any) =>
+    new AnimatedInterpolation(this, config, arg)
 }
