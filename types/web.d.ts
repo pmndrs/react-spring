@@ -120,19 +120,15 @@ export type UseSpringProps<DS extends object> = Merge<
   }
 >
 
+type OverwriteKeys<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] };
+
 // there's a third value in the tuple but it's not public API (?)
-export function useSpring<DS extends CSSProperties>(
-  values: UseSpringProps<DS & CSSProperties>
-): AnimatedValue<ForwardedProps<DS>>
-export function useSpring<DS extends CSSProperties>(
-  getProps: () => UseSpringProps<DS & CSSProperties>
-): [AnimatedValue<ForwardedProps<DS>>, SetUpdateFn<DS>]
 export function useSpring<DS extends object>(
-  getProps: () => UseSpringProps<DS>
-): [AnimatedValue<ForwardedProps<DS>>, SetUpdateFn<DS>]
+  values: UseSpringProps<Merge<DS, CSSProperties>>
+): AnimatedValue<ForwardedProps<OverwriteKeys<DS, CSSProperties>>>
 export function useSpring<DS extends object>(
-  values: UseSpringProps<DS>
-): AnimatedValue<ForwardedProps<DS>>
+  getProps: () => UseSpringProps<Merge<DS, CSSProperties>>
+): [AnimatedValue<ForwardedProps<OverwriteKeys<DS, CSSProperties>>>, SetUpdateFn<OverwriteKeys<DS, CSSProperties>>]
 
 // there's a third value in the tuple but it's not public API (?)
 export function useSprings<TItem, DS extends CSSProperties>(
