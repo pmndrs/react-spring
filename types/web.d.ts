@@ -71,9 +71,7 @@ type InferFrom<T extends object> = T extends { to: infer TTo }
 //  but with a delayed evaluation that still allows A to be inferrable
 type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
 
-export type SetUpdateFn<DS extends object> = (
-  ds: Partial<Pick<DS, Exclude<keyof DS, ExcludedProps>>>
-) => void
+export type SetUpdateFn<DS extends object> = (ds: Partial<UseSpringProps<DS>>) => void
 
 // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
 // updating it. However, there are no types for Controller, and I assume it is intentionally so.
