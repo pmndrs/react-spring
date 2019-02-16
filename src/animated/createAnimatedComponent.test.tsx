@@ -1,18 +1,23 @@
 import React, { forwardRef } from 'react'
 import { cleanup, render } from 'react-testing-library'
+import '../targets/web'
+import AnimatedValue from './AnimatedValue'
 import animated from './createAnimatedComponent'
 
 afterEach(cleanup)
 
 describe('animated component', () => {
-  it('can create a new element from a string', () => {
+  it('creates an HTML element from a tag name', () => {
     const AnimatedH1 = animated('h1')
-    const { container } = render(<AnimatedH1 title="Foo">Bar</AnimatedH1>)
-    expect(container.textContent).toBe('Bar')
-    expect(container.querySelector('h1')!.title).toBe('Foo')
+    const { queryByTitle } = render(
+      <AnimatedH1 title="Foo" style={{ color: 'red' }}>
+        Bar
+      </AnimatedH1>
+    )
+    expect(queryByTitle('Foo')).toBeTruthy()
   })
 
-  it('can create a new element from a component', () => {
+  it('wraps a component', () => {
     const Name = forwardRef<
       HTMLHeadingElement,
       { name: string; children: React.ReactNode }
@@ -22,8 +27,39 @@ describe('animated component', () => {
       </h2>
     ))
     const AnimatedName = animated(Name)
-    const { container } = render(<AnimatedName name="Foo">Bar</AnimatedName>)
-    expect(container.textContent).toBe('Bar')
-    expect(container.querySelector('h2')!.title).toBe('Foo')
+    const { queryByTitle } = render(<AnimatedName name="Foo">Bar</AnimatedName>)
+    expect(queryByTitle('Bar')).toBeTruthy()
+  })
+
+  it('accepts Animated values in style prop', () => {
+    const AnimatedDiv = animated('div')
+    const opacity = new AnimatedValue(0)
+    const { queryByText } = render(
+      <AnimatedDiv style={{ opacity: opacity, color: 'red' }}>Text</AnimatedDiv>
+    )
+    const div = queryByText('Text')!
+    expect(div).toBeTruthy()
+    expect(div.style.opacity).toBe('0')
+    opacity.setValue(1)
+    expect(div.style.opacity).toBe('1')
+  })
+
+  it('accepts scrollTop and scrollLeft properties', () => {
+    const AnimatedDiv = animated('div')
+    const scrollTop = new AnimatedValue(0)
+    const { queryByTestId } = render(
+      <AnimatedDiv
+        scrollTop={scrollTop}
+        scrollLeft={new AnimatedValue(0)}
+        style={{ height: 100 }}
+        data-testid="wrapper">
+        <div style={{ height: 200 }} />
+      </AnimatedDiv>
+    )
+    const wrapper = queryByTestId('wrapper')!
+    expect(wrapper.scrollTop).toBe(0)
+    expect(wrapper.scrollLeft).toBe(0)
+    scrollTop.setValue(20)
+    expect(wrapper.scrollTop).toBe(20)
   })
 })
