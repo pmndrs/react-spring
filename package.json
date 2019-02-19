@@ -1,5 +1,5 @@
 {
-  "name": "@morgs32/react-spring",
+  "name": "react-spring",
   "version": "8.0.7",
   "description": "A set of spring-physics based animation primitives",
   "main": "web.cjs.js",
