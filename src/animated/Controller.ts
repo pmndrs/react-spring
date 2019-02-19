@@ -40,9 +40,8 @@ class Controller<P extends any = {}> {
   queue: any[] = []
   localQueue?: any[]
 
-  constructor(props?: P) {
+  constructor() {
     this.id = G++
-    if (props) this.update(props)
   }
 
   /** update(props)

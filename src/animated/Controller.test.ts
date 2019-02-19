@@ -7,7 +7,7 @@ test('update simple value', () => {
   Globals.injectFrame(mockRaf.raf, mockRaf.cancel)
   Globals.injectNow(mockRaf.now)
 
-  const ctrl = new Controller() as any
+  const ctrl = new Controller<{ x: number; y?: number }>()
   ctrl.update({ x: 0 })
   ctrl.start()
   expect(ctrl.getValues().x.getValue()).toBe(0)
@@ -29,7 +29,7 @@ test('update array value', () => {
   Globals.injectFrame(mockRaf.raf, mockRaf.cancel)
   Globals.injectNow(mockRaf.now)
 
-  const ctrl = new Controller() as any
+  const ctrl = new Controller<{ x: number[] }>()
   ctrl.update({ x: [0, 0] })
   ctrl.start()
   expect(ctrl.getValues().x.getValue()).toEqual([0, 0])
