@@ -16,9 +16,13 @@ import { requestFrame } from './animated/Globals'
  */
 
 let guid = 0
-let mapKeys = (items, keys) =>
+
+const ENTER = 'enter'
+const LEAVE = 'leave'
+const UPDATE = 'update'
+const mapKeys = (items, keys) =>
   (typeof keys === 'function' ? items.map(keys) : toArray(keys)).map(String)
-let get = props => {
+const get = props => {
   let { items, keys = item => item, ...rest } = props
   items = toArray(items !== void 0 ? items : null)
   return { items, keys: mapKeys(items, keys), ...rest }
@@ -107,7 +111,7 @@ export function useTransition(input, keyTransform, config) {
         onStart: onStart && (() => onStart(item, slot)),
         onFrame: onFrame && (values => onFrame(item, slot, values)),
         delay: trail,
-        reset: reset && slot === 'enter',
+        reset: reset && slot === ENTER,
       }
 
       // Update controller
@@ -160,7 +164,7 @@ function diffItems({ first, prevProps, ...state }, props) {
     trail = 0,
     unique,
     config,
-    order = ['added', 'removed', 'updated'],
+    order = [ENTER, LEAVE, UPDATE],
   } = get(props)
   let { keys: _keys, items: _items } = get(prevProps)
   let current = { ...state.current }
@@ -179,19 +183,15 @@ function diffItems({ first, prevProps, ...state }, props) {
 
   while (order.length) {
     const changeType = order.shift()
-
     switch (changeType) {
-
-      case 'added': {
+      case ENTER: {
         added.forEach((key, index) => {
           // In unique mode, remove fading out transitions if their key comes in again
           if (unique && deleted.find(d => d.originalKey === key))
             deleted = deleted.filter(t => t.originalKey !== key)
-
-          // TODO: trail shouldn't apply to the first item, no matter if it's enter, leave or update!
           const keyIndex = keys.indexOf(key)
           const item = items[keyIndex]
-          const slot = first && initial !== void 0 ? 'initial' : 'enter'
+          const slot = first && initial !== void 0 ? 'initial' : ENTER
           current[key] = {
             slot,
             originalKey: key,
@@ -208,11 +208,11 @@ function diffItems({ first, prevProps, ...state }, props) {
         })
         break
       }
-      case 'removed': {
+      case LEAVE: {
         removed.forEach(key => {
           const keyIndex = _keys.indexOf(key)
           const item = _items[keyIndex]
-          const slot = 'leave'
+          const slot = LEAVE
           deleted.unshift({
             ...current[key],
             slot,
@@ -227,11 +227,11 @@ function diffItems({ first, prevProps, ...state }, props) {
         })
         break
       }
-      case 'updated': {
+      case UPDATE: {
         updated.forEach(key => {
           const keyIndex = keys.indexOf(key)
           const item = items[keyIndex]
-          const slot = 'update'
+          const slot = UPDATE
           current[key] = {
             ...current[key],
             item,
@@ -245,8 +245,6 @@ function diffItems({ first, prevProps, ...state }, props) {
       }
     }
   }
-
-
   let out = keys.map(key => current[key])
 
   // This tries to restore order for deleted items by finding their last known siblings

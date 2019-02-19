@@ -55,7 +55,7 @@ interface AnimatedApi {
     setNativeProps(props: any): void
   }
 }
-export let animatedApi: AnimatedApi
+export let animatedApi: AnimatedApi = (node: any) => node.current
 export function injectAnimatedApi(fn: typeof animatedApi) {
   animatedApi = fn
 }
