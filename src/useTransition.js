@@ -160,6 +160,7 @@ function diffItems({ first, prevProps, ...state }, props) {
     trail = 0,
     unique,
     config,
+    order = ['added', 'removed', 'updated'],
   } = get(props)
   let { keys: _keys, items: _items } = get(prevProps)
   let current = { ...state.current }
@@ -174,62 +175,77 @@ function diffItems({ first, prevProps, ...state }, props) {
     .filter(item => !item.destroyed && !nextSet.has(item.originalKey))
     .map(i => i.originalKey)
   let updated = keys.filter(item => currentSet.has(item))
-  let delay = 0
+  let delay = -trail
 
-  added.forEach((key, index) => {
-    // In unique mode, remove fading out transitions if their key comes in again
-    if (unique && deleted.find(d => d.originalKey === key))
-      deleted = deleted.filter(t => t.originalKey !== key)
+  while (order.length) {
+    const changeType = order.shift()
 
-    // TODO: trail shouldn't apply to the first item, no matter if it's enter, leave or update!
-    const keyIndex = keys.indexOf(key)
-    const item = items[keyIndex]
-    const slot = first && initial !== void 0 ? 'initial' : 'enter'
-    current[key] = {
-      slot,
-      originalKey: key,
-      key: unique ? String(key) : guid++,
-      item,
-      trail: (delay = delay + (index > 0 ? trail : 0)),
-      config: callProp(config, item, slot),
-      from: callProp(
-        first ? (initial !== void 0 ? initial || {} : from) : from,
-        item
-      ),
-      to: callProp(enter, item),
+    switch (changeType) {
+
+      case 'added': {
+        added.forEach((key, index) => {
+          // In unique mode, remove fading out transitions if their key comes in again
+          if (unique && deleted.find(d => d.originalKey === key))
+            deleted = deleted.filter(t => t.originalKey !== key)
+
+          // TODO: trail shouldn't apply to the first item, no matter if it's enter, leave or update!
+          const keyIndex = keys.indexOf(key)
+          const item = items[keyIndex]
+          const slot = first && initial !== void 0 ? 'initial' : 'enter'
+          current[key] = {
+            slot,
+            originalKey: key,
+            key: unique ? String(key) : guid++,
+            item,
+            trail: (delay = delay + trail),
+            config: callProp(config, item, slot),
+            from: callProp(
+              first ? (initial !== void 0 ? initial || {} : from) : from,
+              item
+            ),
+            to: callProp(enter, item),
+          }
+        })
+        break
+      }
+      case 'removed': {
+        removed.forEach(key => {
+          const keyIndex = _keys.indexOf(key)
+          const item = _items[keyIndex]
+          const slot = 'leave'
+          deleted.unshift({
+            ...current[key],
+            slot,
+            destroyed: true,
+            left: _keys[Math.max(0, keyIndex - 1)],
+            right: _keys[Math.min(_keys.length, keyIndex + 1)],
+            trail: (delay = delay + trail),
+            config: callProp(config, item, slot),
+            to: callProp(leave, item),
+          })
+          delete current[key]
+        })
+        break
+      }
+      case 'updated': {
+        updated.forEach(key => {
+          const keyIndex = keys.indexOf(key)
+          const item = items[keyIndex]
+          const slot = 'update'
+          current[key] = {
+            ...current[key],
+            item,
+            slot,
+            trail: (delay = delay + trail),
+            config: callProp(config, item, slot),
+            to: callProp(update, item),
+          }
+        })
+        break
+      }
     }
-  })
+  }
 
-  removed.forEach(key => {
-    const keyIndex = _keys.indexOf(key)
-    const item = _items[keyIndex]
-    const slot = 'leave'
-    deleted.unshift({
-      ...current[key],
-      slot,
-      destroyed: true,
-      left: _keys[Math.max(0, keyIndex - 1)],
-      right: _keys[Math.min(_keys.length, keyIndex + 1)],
-      trail: (delay = delay + trail),
-      config: callProp(config, item, slot),
-      to: callProp(leave, item),
-    })
-    delete current[key]
-  })
-
-  updated.forEach(key => {
-    const keyIndex = keys.indexOf(key)
-    const item = items[keyIndex]
-    const slot = 'update'
-    current[key] = {
-      ...current[key],
-      item,
-      slot,
-      trail: (delay = delay + trail),
-      config: callProp(config, item, slot),
-      to: callProp(update, item),
-    }
-  })
 
   let out = keys.map(key => current[key])
 

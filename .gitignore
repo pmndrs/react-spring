@@ -10,3 +10,4 @@ $RECYCLE.BIN/
 .docz/
 package-lock.json
 coverage/
+.idea
