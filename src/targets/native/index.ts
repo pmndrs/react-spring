@@ -36,6 +36,7 @@ Globals.injectAnimatedApi((node, mounted, forceUpdate) => ({
 
 const apply = merge(animated)
 
+export { Spring, Trail, Transition } from '../../elements'
 export {
   apply,
   config,

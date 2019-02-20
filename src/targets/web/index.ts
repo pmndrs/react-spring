@@ -161,6 +161,7 @@ type AnimatedWithDOMElements = CreateAnimatedComponent &
 const apply = merge(animated as AnimatedWithDOMElements, false)
 const extendedAnimated = apply(domElements)
 
+export { Spring, Trail, Transition } from '../../elements'
 export {
   apply,
   config,

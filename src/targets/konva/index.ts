@@ -71,6 +71,7 @@ type AnimatedWithKonvaElements = CreateAnimatedComponent &
 const apply = merge(animated as AnimatedWithKonvaElements, false)
 const extendedAnimated = apply(konvaElements)
 
+export { Spring, Trail, Transition } from '../../elements'
 export {
   apply,
   config,

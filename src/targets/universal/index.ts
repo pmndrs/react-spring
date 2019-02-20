@@ -45,6 +45,7 @@ const Interpolation = {
   create: createInterpolator,
 }
 
+export { Spring, Trail, Transition } from '../../elements'
 export {
   apply,
   config,
