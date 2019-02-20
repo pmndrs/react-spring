@@ -14,6 +14,7 @@ import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
 import { Spring, Trail, Transition } from '../../classes'
+import './globals'
 
 Globals.injectDefaultElement('Group')
 Globals.injectInterpolation(createInterpolation)
