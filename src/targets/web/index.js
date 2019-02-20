@@ -8,6 +8,7 @@ import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
 import { useChain } from '../../useChain'
 import { useSprings } from '../../useSprings'
+import { Spring, Trail, Transition } from '../../classes'
 
 const domElements = [
   'a',
@@ -162,4 +163,7 @@ export {
   useTransition,
   useChain,
   useSprings,
+  Spring,
+  Trail,
+  Transition,
 }

@@ -13,6 +13,7 @@ import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
 import { useChain } from '../../useChain'
 import { useSprings } from '../../useSprings'
+import { Spring, Trail, Transition } from '../../classes'
 
 Globals.injectDefaultElement(View)
 Globals.injectInterpolation(createInterpolation)
@@ -43,4 +44,7 @@ export {
   useTransition,
   useChain,
   useSprings,
+  Spring,
+  Trail,
+  Transition,
 }

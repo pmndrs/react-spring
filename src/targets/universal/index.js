@@ -8,6 +8,7 @@ import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
 import { useChain } from '../../useChain'
 import { useSprings } from '../../useSprings'
+import { Spring, Trail, Transition } from '../../classes'
 
 // Problem: https://github.com/animatedjs/animated/pull/102
 // Solution: https://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly/658662
@@ -44,4 +45,7 @@ export {
   useTransition,
   useChain,
   useSprings,
+  Spring,
+  Trail,
+  Transition,
 }
