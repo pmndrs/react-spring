@@ -1,9 +1,9 @@
-import * as Globals from '../../animated/Globals'
 import AnimatedStyle from '../../animated/AnimatedStyle'
+import * as Globals from '../../animated/Globals'
 import colorNames from '../../shared/colors'
 import createInterpolation from '../../shared/interpolation'
 
-let isUnitlessNumber = {
+let isUnitlessNumber: { [key: string]: true } = {
   animationIterationCount: true,
   borderImageOutset: true,
   borderImageSlice: true,
@@ -48,7 +48,7 @@ let isUnitlessNumber = {
   strokeWidth: true,
 }
 
-const prefixKey = (prefix, key) =>
+const prefixKey = (prefix: string, key: string) =>
   prefix + key.charAt(0).toUpperCase() + key.substring(1)
 const prefixes = ['Webkit', 'Ms', 'Moz', 'O']
 
@@ -57,7 +57,11 @@ isUnitlessNumber = Object.keys(isUnitlessNumber).reduce((acc, prop) => {
   return acc
 }, isUnitlessNumber)
 
-function dangerousStyleValue(name, value, isCustomProperty) {
+function dangerousStyleValue(
+  name: string,
+  value: string | number | boolean | null,
+  isCustomProperty: boolean
+) {
   if (value == null || typeof value === 'boolean' || value === '') return ''
   if (
     !isCustomProperty &&
@@ -70,7 +74,7 @@ function dangerousStyleValue(name, value, isCustomProperty) {
   return ('' + value).trim()
 }
 
-const attributeCache = {}
+const attributeCache: { [key: string]: string } = {}
 Globals.injectCreateAnimatedStyle(style => new AnimatedStyle(style))
 Globals.injectDefaultElement('div')
 Globals.injectInterpolation(createInterpolation)
@@ -116,6 +120,7 @@ Globals.injectApplyAnimatedValues(
         if (typeof instance.getAttribute(dashCase) !== 'undefined')
           instance.setAttribute(dashCase, attributes[name])
       }
+      return
     } else return false
   },
   style => style

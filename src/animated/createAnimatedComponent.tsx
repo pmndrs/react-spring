@@ -1,23 +1,23 @@
 import React, {
   ComponentPropsWithRef,
   forwardRef,
+  ForwardRefExoticComponent,
   MutableRefObject,
+  PropsWithoutRef,
   ReactType,
+  RefAttributes,
   useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
 } from 'react'
 import { handleRef, useForceUpdate } from '../shared/helpers'
+import { SpringValue } from './Animated'
 import AnimatedProps from './AnimatedProps'
 import { animatedApi, applyAnimatedValues } from './Globals'
 
-type AnimatedValue<T> = {
-  getValue: () => T
-}
-
 type AnimateProperties<T extends object | undefined> = {
-  [P in keyof T]: AnimatedValue<T[P]> | T[P]
+  [P in keyof T]: SpringValue<T[P]> | T[P]
 }
 
 type AnimateStyleProp<P extends object> = P extends { style?: object }
@@ -29,8 +29,8 @@ type AnimateStyleProp<P extends object> = P extends { style?: object }
   : P
 
 type ScrollProps = {
-  scrollLeft?: AnimatedValue<number>
-  scrollTop?: AnimatedValue<number>
+  scrollLeft?: SpringValue<number>
+  scrollTop?: SpringValue<number>
 }
 
 type AnimatedComponentProps<C extends ReactType> = JSX.LibraryManagedAttributes<
@@ -38,9 +38,17 @@ type AnimatedComponentProps<C extends ReactType> = JSX.LibraryManagedAttributes<
   AnimateStyleProp<ComponentPropsWithRef<C>> & ScrollProps
 >
 
-export default function createAnimatedComponent<C extends ReactType>(
+export interface CreateAnimatedComponent<C extends ReactType> {
+  (Component: C): ForwardRefExoticComponent<
+    PropsWithoutRef<AnimatedComponentProps<C>> & RefAttributes<C>
+  >
+}
+
+const createAnimatedComponent: CreateAnimatedComponent<ReactType> = <
+  C extends ReactType
+>(
   Component: C
-) {
+) => {
   const AnimatedComponent = forwardRef<C, AnimatedComponentProps<C>>(
     (props, ref) => {
       const forceUpdate = useForceUpdate()
@@ -89,3 +97,5 @@ export default function createAnimatedComponent<C extends ReactType>(
   )
   return AnimatedComponent
 }
+
+export default createAnimatedComponent

@@ -1,18 +1,17 @@
-import * as Globals from '../../animated/Globals'
-import Controller from '../../animated/Controller'
-import { interpolate } from '../../animated/AnimatedInterpolation'
-import animated from '../../animated/createAnimatedComponent'
-import { config } from '../../shared/constants'
-import AnimatedStyle from '../../animated/AnimatedStyle'
-import createInterpolation from '../../shared/interpolation'
-import colorNames from '../../shared/colors'
-import AnimatedTransform from './AnimatedTransform'
 import { StyleSheet, View } from 'react-native'
+import { interpolate } from '../../animated/AnimatedInterpolation'
+import AnimatedStyle from '../../animated/AnimatedStyle'
+import animated from '../../animated/createAnimatedComponent'
+import * as Globals from '../../animated/Globals'
+import colorNames from '../../shared/colors'
+import { config } from '../../shared/constants'
+import createInterpolation from '../../shared/interpolation'
+import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
+import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
-import { useChain } from '../../useChain'
-import { useSprings } from '../../useSprings'
+import AnimatedTransform from './AnimatedTransform'
 
 Globals.injectDefaultElement(View)
 Globals.injectInterpolation(createInterpolation)
@@ -28,7 +27,7 @@ Globals.injectCreateAnimatedStyle(
 Globals.injectAnimatedApi((node, mounted, forceUpdate) => ({
   setNativeProps: props => {
     const didUpdate = Globals.applyAnimatedValues.fn(node.current, props)
-    if (!didUpdate) mounted.current && forceUpdate()
+    if (!didUpdate) mounted!.current && forceUpdate!()
   },
   getNode: () => node.current,
 }))

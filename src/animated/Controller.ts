@@ -1,56 +1,64 @@
-import Animated from './Animated'
-import AnimatedValue from './AnimatedValue'
-import AnimatedArray from './AnimatedArray'
-import Interpolation from './Interpolation'
 import {
-  interpolation as interp,
-  now,
-  colorNames,
-  requestFrame as raf,
-} from './Globals'
-import { start } from './FrameLoop'
-import {
-  interpolateTo,
-  withDefault,
-  toArray,
   callProp,
+  interpolateTo,
   is,
+  toArray,
+  withDefault,
 } from '../shared/helpers'
+import AnimatedArray from './AnimatedArray'
+import AnimatedValue from './AnimatedValue'
+import { start } from './FrameLoop'
+import { colorNames, interpolation as interp, now } from './Globals'
+
+type FinishedCallback = (finished?: boolean) => void
+
+type AnimationsFor<P> = { [Key in keyof P]: any }
+
+type ValuesFor<P> = { [Key in keyof P]: any }
+
+type InterpolationsFor<P> = {
+  [Key in keyof P]: P[Key] extends ArrayLike<any>
+    ? AnimatedArray
+    : AnimatedValue
+}
 
 let G = 0
-export default class Controller {
-  constructor(props) {
+class Controller<P extends any = {}> {
+  id: number
+
+  idle = true
+  hasChanged = false
+  guid = 0
+  local = 0
+  props: P = {} as P
+  merged: any = {}
+  animations = {} as AnimationsFor<P>
+  interpolations = {} as InterpolationsFor<P>
+  values = {} as ValuesFor<P>
+  configs: any = []
+  listeners: FinishedCallback[] = []
+  queue: any[] = []
+  localQueue?: any[]
+
+  constructor() {
     this.id = G++
-    this.idle = true
-    this.hasChanged = false
-    this.guid = 0
-    this.local = 0
-    this.props = {}
-    this.merged = {}
-    this.animations = {}
-    this.interpolations = {}
-    this.values = {}
-    this.configs = []
-    this.listeners = []
-    this.queue = []
-    if (props) this.update(props)
   }
 
   /** update(props)
    *  This function filters input props and creates an array of tasks which are executed in .start()
    *  Each task is allowed to carry a delay, which means it can execute asnychroneously */
-  update(args) {
+  update(args?: P) {
     //this._id = n + this.id
 
     if (!args) return this
     // Extract delay and the to-prop from props
-    const { delay = 0, to, ...props } = interpolateTo(args)
+    const { delay = 0, to, ...props } = interpolateTo(args) as any
     if (is.arr(to) || is.fun(to)) {
       // If config is either a function or an array queue it up as is
       this.queue.push({ ...props, delay, to })
     } else if (to) {
       // Otherwise go through each key since it could be delayed individually
-      let merge = {}
+      let merge: any = {}
       Object.entries(to).forEach(([k, v]) => {
         // Fetch delay and create an entry, consisting of the to-props, the delay, and basic props
         const entry = { to: { [k]: v }, delay: callProp(delay, k), ...props }
@@ -71,7 +79,7 @@ export default class Controller {
 
   /** start(onEnd)
    *  This function either executes a queue, if present, or starts the frameloop, which animates */
-  start(onEnd) {
+  start(onEnd?: FinishedCallback) {
     // If a queue is present we must excecute it
     if (this.queue.length) {
       this.idle = false
@@ -92,7 +100,7 @@ export default class Controller {
 
       // Go through each entry and execute it
       queue.forEach(({ delay, ...props }, index) => {
-        const cb = finished => {
+        const cb: FinishedCallback = finished => {
           if (index === queue.length - 1 && local === this.guid && finished) {
             this.idle = true
             if (this.props.onRest) this.props.onRest(this.merged)
@@ -122,43 +130,45 @@ export default class Controller {
     return this
   }
 
-  stop(finished) {
+  stop(finished?: boolean) {
     this.listeners.forEach(onEnd => onEnd(finished))
     this.listeners = []
     return this
   }
 
-  runAsync({ delay, ...props }, onEnd) {
+  runAsync({ delay, ...props }: P, onEnd: FinishedCallback) {
     const local = this.local
     // If "to" is either a function or an array it will be processed async, therefor "to" should be empty right now
     // If the view relies on certain values "from" has to be present
-    let queue = Promise.resolve()
+    let queue = Promise.resolve(undefined)
     if (is.arr(props.to)) {
       for (let i = 0; i < props.to.length; i++) {
         const index = i
-        const last = index === props.to.length - 1
         const fresh = { ...props, to: props.to[index] }
         if (is.arr(fresh.config)) fresh.config = fresh.config[index]
-        queue = queue.then(() => {
-          //this.stop()
-          if (local === this.guid)
-            return new Promise(r => this.diff(interpolateTo(fresh)).start(r))
-        })
+        queue = queue.then(
+          (): Promise<any> | void => {
+            //this.stop()
+            if (local === this.guid)
+              return new Promise(r => this.diff(interpolateTo(fresh)).start(r))
+          }
+        )
       }
     } else if (is.fun(props.to)) {
       let index = 0
-      let last = undefined
+      let last: Promise<any>
       queue = queue.then(() =>
         props
           .to(
             // next(props)
-            p => {
+            (p: P) => {
               const fresh = { ...props, ...interpolateTo(p) }
               if (is.arr(fresh.config)) fresh.config = fresh.config[index]
               index++
               //this.stop()
               if (local === this.guid)
                 return (last = new Promise(r => this.diff(fresh).start(r)))
+              return
             },
             // cancel()
             (finished = true) => this.stop(finished)
@@ -169,7 +179,7 @@ export default class Controller {
     queue.then(onEnd)
   }
 
-  diff(props) {
+  diff(props: any) {
     this.props = { ...this.props, ...props }
     let {
       from = {},
@@ -179,7 +189,6 @@ export default class Controller {
       attach,
       reset,
       immediate,
-      ref,
     } = this.props
 
     // Reverse values when requested
@@ -195,8 +204,8 @@ export default class Controller {
     let target = attach && attach(this)
 
     // Reduces input { name: value } pairs into animated values
-    this.animations = Object.entries(this.merged).reduce(
-      (acc, [name, value], i) => {
+    this.animations = Object.entries<any>(this.merged).reduce(
+      (acc, [name, value]) => {
         // Issue cached entries, except on reset
         let entry = acc[name] || {}
 
@@ -222,12 +231,16 @@ export default class Controller {
 
         let newValue = value
         if (isInterpolation)
-          newValue = interp({ range: [0, 1], output: [value, value] })(1)
+          newValue = interp({
+            range: [0, 1],
+            output: [value as string, value as string],
+          })(1)
         let currentValue = interpolation && interpolation.getValue()
 
         // Change detection flags
         const isFirst = is.und(parent)
-        const isActive = !isFirst && entry.animatedValues.some(v => !v.done)
+        const isActive =
+          !isFirst && entry.animatedValues.some((v: AnimatedValue) => !v.done)
         const currentValueDiffersFromGoal = !is.equ(newValue, currentValue)
         const hasNewGoal = !is.equ(newValue, entry.previous)
         const hasNewConfig = !is.equ(toConfig, entry.config)
@@ -301,7 +314,7 @@ export default class Controller {
               friction: withDefault(toConfig.friction, 26),
               mass: withDefault(toConfig.mass, 1),
               duration: toConfig.duration,
-              easing: withDefault(toConfig.easing, t => t),
+              easing: withDefault(toConfig.easing, (t: number) => t),
               decay: toConfig.decay,
             },
           }
@@ -329,8 +342,8 @@ export default class Controller {
     if (this.hasChanged) {
       // Make animations available to frameloop
       this.configs = Object.values(this.animations)
-      this.values = {}
-      this.interpolations = {}
+      this.values = {} as ValuesFor<P>
+      this.interpolations = {} as InterpolationsFor<P>
       for (let key in this.animations) {
         this.interpolations[key] = this.animations[key].interpolation
         this.values[key] = this.animations[key].interpolation.getValue()
@@ -341,14 +354,16 @@ export default class Controller {
 
   destroy() {
     this.stop()
-    this.props = {}
+    this.props = {} as P
     this.merged = {}
-    this.animations = {}
-    this.interpolations = {}
-    this.values = {}
+    this.animations = {} as AnimationsFor<P>
+    this.interpolations = {} as InterpolationsFor<P>
+    this.values = {} as ValuesFor<P>
     this.configs = []
     this.local = 0
   }
 
   getValues = () => this.interpolations
 }
+
+export default Controller
