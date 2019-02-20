@@ -36,6 +36,7 @@ Globals.injectColorNames(colorNames)
 // This is how we teach react-spring to set props "natively", the api is (instance, props) => { ... }
 Globals.injectApplyAnimatedValues(applyProps, style => style)
 
+export { Spring, Trail, Transition } from '../../elements'
 export {
   apply,
   update,
