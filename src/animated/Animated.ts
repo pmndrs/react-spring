@@ -1,3 +1,10 @@
+/**
+ * The public API for Animated classes.
+ */
+export interface SpringValue<T> {
+  getValue: () => T
+}
+
 export default abstract class Animated {
   abstract addChild(child: Animated): void
   abstract removeChild(child: Animated): void
