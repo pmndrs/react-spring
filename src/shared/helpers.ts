@@ -94,10 +94,14 @@ function getForwardProps<P extends PartialExcludedProps>(props: P): ForwardedPro
   return forward
 }
 
-export function interpolateTo(props: any) {
-  const forward = getForwardProps(props)
-  const rest = Object.keys(props).reduce(
-    (a, k) => (!is.und(forward[k]) ? a : { ...a, [k]: props[k] }),
+interface InterpolateTo<T> extends PartialExcludedProps {
+  to: ForwardedProps<T>
+}
+export function interpolateTo<T extends PartialExcludedProps>(props: T): InterpolateTo<T> {
+  const forward: ForwardedProps<T> = getForwardProps(props)
+  if (is.und(forward)) return { to: forward, ...props }
+  const rest = Object.keys(props).reduce<PartialExcludedProps>(
+    (a: PartialExcludedProps, k: string) => (!is.und((forward as any)[k]) ? a : { ...a, [k]: (props as any)[k] }),
     {}
   )
   return { to: forward, ...rest }
