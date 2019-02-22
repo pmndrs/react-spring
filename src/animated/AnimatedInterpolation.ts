@@ -1,5 +1,5 @@
 import Animated, { AnimatedArrayWithChildren } from './Animated'
-import Interpolation, { InterpolationConfig } from './Interpolation'
+import createInterpolation, { InterpolationConfig } from './createInterpolation'
 
 export default class AnimatedInterpolation extends AnimatedArrayWithChildren {
   calc: any
@@ -18,13 +18,13 @@ export default class AnimatedInterpolation extends AnimatedArrayWithChildren {
         : Array.isArray(parents)
         ? parents
         : [parents]
-    this.calc = Interpolation.create(config as any, arg)
+    this.calc = createInterpolation(config as any, arg)
   }
 
   getValue = () => this.calc(...this.payload.map(value => value.getValue()))
 
   updateConfig = (config: InterpolationConfig, arg: any) => {
-    this.calc = Interpolation.create(config as any, arg)
+    this.calc = createInterpolation(config as any, arg)
   }
 
   interpolate = (config: InterpolationConfig, arg: any) =>

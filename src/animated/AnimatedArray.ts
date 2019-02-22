@@ -1,7 +1,7 @@
 import { AnimatedArrayWithChildren } from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
 import AnimatedValue from './AnimatedValue'
-import { InterpolationConfig } from './Interpolation'
+import { InterpolationConfig } from './createInterpolation'
 
 export default class AnimatedArray extends AnimatedArrayWithChildren {
   payload: AnimatedValue[]

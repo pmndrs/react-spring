@@ -5,7 +5,7 @@ import animated from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
 import colorNames from '../../shared/colors'
 import { config } from '../../shared/constants'
-import createInterpolation from '../../shared/interpolation'
+import createStringInterpolation from '../../shared/stringInterpolation'
 import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
@@ -14,7 +14,7 @@ import { useTransition } from '../../useTransition'
 import AnimatedTransform from './AnimatedTransform'
 
 Globals.injectDefaultElement(View)
-Globals.injectInterpolation(createInterpolation)
+Globals.injectStringInterpolation(createStringInterpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectApplyAnimatedValues(
   (instance, props) =>

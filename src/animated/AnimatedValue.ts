@@ -1,6 +1,6 @@
 import { AnimatedWithChildren } from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
-import { InterpolationConfig } from './Interpolation'
+import { InterpolationConfig } from './createInterpolation'
 
 /**
  * Animated works by building a directed acyclic graph of dependencies

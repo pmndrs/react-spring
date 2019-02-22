@@ -1,6 +1,6 @@
 import createMockRaf from 'mock-raf'
-import Controller from '../animated/Controller'
-import { Globals } from '../targets/web'
+import Controller from './Controller'
+import * as Globals from './Globals'
 
 test('update simple value', () => {
   const mockRaf = createMockRaf()

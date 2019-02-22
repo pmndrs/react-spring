@@ -1,7 +1,7 @@
 import AnimatedStyle from '../../animated/AnimatedStyle'
 import * as Globals from '../../animated/Globals'
 import colorNames from '../../shared/colors'
-import createInterpolation from '../../shared/interpolation'
+import createStringInterpolation from '../../shared/stringInterpolation'
 
 let isUnitlessNumber: { [key: string]: true } = {
   animationIterationCount: true,
@@ -77,7 +77,7 @@ function dangerousStyleValue(
 const attributeCache: { [key: string]: string } = {}
 Globals.injectCreateAnimatedStyle(style => new AnimatedStyle(style))
 Globals.injectDefaultElement('div')
-Globals.injectInterpolation(createInterpolation)
+Globals.injectStringInterpolation(createStringInterpolation)
 Globals.injectColorNames(colorNames)
 Globals.injectApplyAnimatedValues(
   (instance, props) => {

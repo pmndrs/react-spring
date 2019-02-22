@@ -1,4 +1,6 @@
-import Interpolation, { InterpolationConfig } from '../animated/Interpolation'
+import createInterpolation, {
+  InterpolationConfig,
+} from '../animated/createInterpolation'
 import colors from './colors'
 import normalizeColor from './normalizeColors'
 
@@ -31,7 +33,7 @@ const colorNamesRegex = new RegExp(`(${Object.keys(colors).join('|')})`, 'g')
  *   -45deg                            // values with units
  *   0 2px 2px 0px rgba(0, 0, 0, 0.12) // box shadows
  */
-export default function createInterpolation(
+export default function createStringInterpolation(
   config: InterpolationConfig<number, string>
 ) {
   // Replace colors with rgba
@@ -50,7 +52,7 @@ export default function createInterpolation(
   const interpolations = outputRange[0]
     .match(stringShapeRegex)!
     .map((_value, i) => {
-      return Interpolation.create({ ...config, output: outputRanges[i] })
+      return createInterpolation({ ...config, output: outputRanges[i] })
     })
   return (input: number) => {
     let i = 0

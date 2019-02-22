@@ -34,60 +34,65 @@ export type InterpolationConfig<In = number, Out = number | string> = {
 
 type Interpolator = (input: number) => number | string
 
-export default class Interpolation {
-  static create(interpolator: Interpolator): Interpolator
-  static create(range: InputRange, output: OutputRange): Interpolator
-  static create(config: InterpolationConfig): Interpolator
-  static create(
-    range: InputRange | InterpolationConfig | Interpolator,
-    output?: OutputRange,
-    extra?: ExtrapolateType
-  ): Interpolator {
-    if (typeof range === 'function') {
-      return range
-    }
-    if (Array.isArray(range)) {
-      return Interpolation.create({
-        range,
-        output: output!,
-        extrapolate: extra || 'extend',
-      })
-    }
-    if (Globals.interpolation && typeof range.output[0] === 'string') {
-      return Globals.interpolation(range as InterpolationConfig<number, string>)
-    }
-    let config = range as InterpolationConfig<number, number>
-    let outputRange = config.output
-    let inputRange = config.range || [0, 1]
-    let easing = config.easing || ((t: number) => t)
-    let extrapolateLeft: ExtrapolateType = 'extend'
-    let map = config.map
+export default function createInterpolation(
+  interpolator: Interpolator
+): Interpolator
+export default function createInterpolation(
+  range: InputRange,
+  output: OutputRange
+): Interpolator
+export default function createInterpolation(
+  config: InterpolationConfig
+): Interpolator
+export default function createInterpolation(
+  range: InputRange | InterpolationConfig | Interpolator,
+  output?: OutputRange,
+  extra?: ExtrapolateType
+): Interpolator {
+  if (typeof range === 'function') {
+    return range
+  }
+  if (Array.isArray(range)) {
+    return createInterpolation({
+      range,
+      output: output!,
+      extrapolate: extra || 'extend',
+    })
+  }
+  if (Globals.interpolation && typeof range.output[0] === 'string') {
+    return Globals.interpolation(range as InterpolationConfig<number, string>)
+  }
+  let config = range as InterpolationConfig<number, number>
+  let outputRange = config.output
+  let inputRange = config.range || [0, 1]
+  let easing = config.easing || ((t: number) => t)
+  let extrapolateLeft: ExtrapolateType = 'extend'
+  let map = config.map
 
-    if (config.extrapolateLeft !== undefined)
-      extrapolateLeft = config.extrapolateLeft
-    else if (config.extrapolate !== undefined)
-      extrapolateLeft = config.extrapolate
+  if (config.extrapolateLeft !== undefined)
+    extrapolateLeft = config.extrapolateLeft
+  else if (config.extrapolate !== undefined)
+    extrapolateLeft = config.extrapolate
 
-    let extrapolateRight: ExtrapolateType = 'extend'
-    if (config.extrapolateRight !== undefined)
-      extrapolateRight = config.extrapolateRight
-    else if (config.extrapolate !== undefined)
-      extrapolateRight = config.extrapolate
+  let extrapolateRight: ExtrapolateType = 'extend'
+  if (config.extrapolateRight !== undefined)
+    extrapolateRight = config.extrapolateRight
+  else if (config.extrapolate !== undefined)
+    extrapolateRight = config.extrapolate
 
-    return (input: number) => {
-      let range = findRange(input, inputRange)
-      return interpolate(
-        input,
-        inputRange[range],
-        inputRange[range + 1],
-        outputRange[range],
-        outputRange[range + 1],
-        easing,
-        extrapolateLeft,
-        extrapolateRight,
-        map
-      )
-    }
+  return (input: number) => {
+    let range = findRange(input, inputRange)
+    return interpolate(
+      input,
+      inputRange[range],
+      inputRange[range + 1],
+      outputRange[range],
+      outputRange[range + 1],
+      easing,
+      extrapolateLeft,
+      extrapolateRight,
+      map
+    )
   }
 }
 
