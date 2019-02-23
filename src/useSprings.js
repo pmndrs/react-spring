@@ -12,7 +12,7 @@ export const useSprings = (length, props) => {
   const ctrl = useRef()
   const isFn = is.fun(props)
 
-  // The controller maintains the animation values, starts and tops animations
+  // The controller maintains the animation values, starts and stops animations
   const [controllers, ref] = useMemo(() => {
     // Remove old controllers
     if (ctrl.current) {
