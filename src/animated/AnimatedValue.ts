@@ -1,6 +1,6 @@
+import { InterpolationConfig, Interpolator } from '../types/interpolation'
 import { AnimatedWithChildren } from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
-import { InterpolationConfig } from './createInterpolation'
 
 /**
  * Animated works by building a directed acyclic graph of dependencies
@@ -75,6 +75,10 @@ export default class AnimatedValue extends AnimatedWithChildren {
     this.setValue(value, true)
   }
 
-  interpolate = (config: InterpolationConfig, arg: any) =>
-    new AnimatedInterpolation(this, config, arg)
+  interpolate<In extends string | number, Out extends string | number>(
+    range: number[] | InterpolationConfig<Out> | Interpolator<In, Out>,
+    output?: Out[]
+  ) {
+    return new AnimatedInterpolation(this, range as number[], output!)
+  }
 }

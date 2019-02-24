@@ -1,5 +1,5 @@
 import { MutableRefObject, ReactType } from 'react'
-import createStringInterpolation from '../shared/stringInterpolation'
+import { InterpolatorFromConfig } from '../types/interpolation'
 import AnimatedStyle from './AnimatedStyle'
 
 type ApplyPropsFunction = (node?: any, props?: any) => undefined | false
@@ -30,8 +30,8 @@ export function injectFrame(raf: typeof requestFrame, caf: typeof cancelFrame) {
   cancelFrame = caf
 }
 
-export let interpolation: typeof createStringInterpolation
-export function injectStringInterpolation(fn: typeof interpolation) {
+export let interpolation: InterpolatorFromConfig<string>
+export function injectStringInterpolator(fn: typeof interpolation) {
   interpolation = fn
 }
 

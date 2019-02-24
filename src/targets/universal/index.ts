@@ -1,10 +1,9 @@
 import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
-import createInterpolation, {
-  InterpolationConfig,
-} from '../../animated/createInterpolation'
+import createInterpolator from '../../animated/createInterpolator'
 import * as Globals from '../../animated/Globals'
 import { config } from '../../shared/constants'
+import { InterpolatorFromConfig } from '../../types/interpolation'
 import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
@@ -14,9 +13,7 @@ import { useTransition } from '../../useTransition'
 // Problem: https://github.com/animatedjs/animated/pull/102
 // Solution: https://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly/658662
 const stringShapeRegex = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
-function createStringInterpolation(
-  config: InterpolationConfig<number, string>
-) {
+const createStringInterpolator: InterpolatorFromConfig<string> = config => {
   const outputRange = config.output
   const outputRanges: number[][] = outputRange[0]
     .match(stringShapeRegex)!
@@ -28,7 +25,7 @@ function createStringInterpolation(
   })
   const interpolations = outputRange[0]
     .match(stringShapeRegex)!
-    .map((_, i) => createInterpolation({ ...config, output: outputRanges[i] }))
+    .map((_, i) => createInterpolator({ ...config, output: outputRanges[i] }))
   return (input: number) => {
     let i = 0
     return outputRange[0].replace(
@@ -38,7 +35,7 @@ function createStringInterpolation(
   }
 }
 
-Globals.injectStringInterpolation(createStringInterpolation)
+Globals.injectStringInterpolator(createStringInterpolator)
 Globals.injectApplyAnimatedValues(() => false, style => style)
 
 const Interpolation = {

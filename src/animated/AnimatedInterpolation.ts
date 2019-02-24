@@ -1,38 +1,57 @@
+import {
+  AnimatedValueFromInterpolation,
+  InterpolationConfig,
+  Interpolator,
+} from '../types/interpolation'
 import Animated, { AnimatedArrayWithChildren } from './Animated'
-import createInterpolation, { InterpolationConfig } from './createInterpolation'
+import createInterpolator from './createInterpolator'
 
-export default class AnimatedInterpolation extends AnimatedArrayWithChildren {
-  calc: any
+export default class AnimatedInterpolation<
+  Value extends number | string = number | string
+> extends AnimatedArrayWithChildren {
+  calc: Interpolator<number, Value>
 
   constructor(
     parents: Animated | Animated[],
-    config: InterpolationConfig,
-    arg: any
+    range: number[] | InterpolationConfig<Value> | Interpolator<Value>,
+    output?: Value[]
   ) {
     super()
     this.payload =
       // AnimatedArrays should unfold, except AnimatedInterpolation which is taken as is
       parents instanceof AnimatedArrayWithChildren &&
-      !(parents as AnimatedInterpolation).updateConfig
+      !('updateConfig' in parents)
         ? parents.payload
         : Array.isArray(parents)
         ? parents
         : [parents]
-    this.calc = createInterpolation(config as any, arg)
+    this.calc = createInterpolator(range as number[], output!)
   }
 
-  getValue = () => this.calc(...this.payload.map(value => value.getValue()))
+  getValue = (): Value =>
+    (this.calc as any)(...this.payload.map(value => value.getValue()))
 
-  updateConfig = (config: InterpolationConfig, arg: any) => {
-    this.calc = createInterpolation(config as any, arg)
+  updateConfig(
+    range: number[] | InterpolationConfig<Value> | Interpolator<Value>,
+    output?: Value[]
+  ) {
+    this.calc = createInterpolator<Value>(range as number[], output!)
   }
 
-  interpolate = (config: InterpolationConfig, arg: any) =>
-    new AnimatedInterpolation(this, config, arg)
+  interpolate<In extends string | number, Out extends string | number = In>(
+    range: number[] | InterpolationConfig<Out> | Interpolator<In, Out>,
+    output?: Out[]
+  ) {
+    return new AnimatedInterpolation(this, range as number[], output!)
+  }
 }
 
-export const interpolate = (
+export const interpolate: AnimatedValueFromInterpolation = <
+  In extends number | string,
+  Out extends number | string = In
+>(
   parents: Animated | Animated[],
-  config: InterpolationConfig,
-  arg: any
-) => parents && new AnimatedInterpolation(parents, config, arg)
+  range: number[] | InterpolationConfig<Out> | Interpolator<In, Out>,
+  output?: Out[]
+) =>
+  parents && new AnimatedInterpolation<Out>(parents, range as number[], output!)

@@ -1,7 +1,7 @@
+import { InterpolationConfig, Interpolator } from '../types/interpolation'
 import { AnimatedArrayWithChildren } from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
 import AnimatedValue from './AnimatedValue'
-import { InterpolationConfig } from './createInterpolation'
 
 export default class AnimatedArray extends AnimatedArrayWithChildren {
   payload: AnimatedValue[]
@@ -21,6 +21,10 @@ export default class AnimatedArray extends AnimatedArrayWithChildren {
 
   getValue = () => this.payload.map(v => v.getValue())
 
-  interpolate = (config: InterpolationConfig, arg: any) =>
-    new AnimatedInterpolation(this, config, arg)
+  interpolate<In extends string | number, Out extends string | number>(
+    range: number[] | InterpolationConfig<Out> | Interpolator<In, Out>,
+    output?: Out[]
+  ) {
+    return new AnimatedInterpolation(this, range as number[], output!)
+  }
 }
