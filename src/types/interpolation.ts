@@ -3,9 +3,11 @@ export type EasingFunction = (t: number) => number
 export type ExtrapolateType = 'identity' | 'clamp' | 'extend'
 
 /**
- * The config options for an interpolation.
+ * Long-form configuration options for an interpolation.
  */
-export type InterpolationConfig<Out = number | string> = {
+export type InterpolationConfig<
+  Out extends number | string = number | string
+> = {
   /**
    * What happens when the spring goes below its target value.
    *
@@ -57,54 +59,12 @@ export type InterpolationConfig<Out = number | string> = {
   output: Out[]
 
   /**
-   * Transform the
+   * Transformation to apply to the value before interpolation.
    */
   map?: (value: number) => number
 
+  /**
+   * Custom easing to apply in interpolator.
+   */
   easing?: EasingFunction
-}
-
-export type Interpolator<
-  In extends number | string = number,
-  Out extends number | string = number | string
-> = (input: In) => Out
-
-export type InterpolatorFromConfig<
-  Out extends number | string = number | string
-> = (config: InterpolationConfig<Out>) => Interpolator<number, Out>
-
-export interface CreateInterpolator<
-  In extends number = number,
-  Out extends number | string = number | string
-> {
-  <
-    T extends number | string = Out,
-    Fn extends Interpolator<In, Out> = Interpolator<In, Out>
-  >(
-    interpolator: Fn
-  ): Fn
-  <T extends number | string = Out>(
-    config: InterpolationConfig<Out>
-  ): Interpolator<In, Out>
-  <T extends number | string = Out>(range: number[], output: T[]): Interpolator<
-    In,
-    T
-  >
-}
-
-// Creates an interpolator of animated values
-export interface AnimatedValueFromInterpolation {
-  <Out extends number | string>(
-    parents: any | any[],
-    interpolator: Interpolator<Out>
-  ): any
-  <Out extends number | string>(
-    parents: any | any[],
-    config: InterpolationConfig<Out>
-  ): any
-  <Out extends number | string>(
-    parents: any | any[],
-    range: number[],
-    output: Out[]
-  ): any
 }

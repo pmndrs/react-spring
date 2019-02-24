@@ -12,12 +12,12 @@ import React, {
   useRef,
 } from 'react'
 import { handleRef, useForceUpdate } from '../shared/helpers'
-import { SpringValue } from './Animated'
+import { AnimatedValue as AV } from '../types/animated'
 import AnimatedProps from './AnimatedProps'
 import { animatedApi, applyAnimatedValues } from './Globals'
 
 type AnimateProperties<T extends object | undefined> = {
-  [P in keyof T]: SpringValue<T[P]> | T[P]
+  [P in keyof T]: T[P] extends number | string ? AV<T[P]> : T[P]
 }
 
 type AnimateStyleProp<P extends object> = P extends { style?: object }
@@ -29,8 +29,8 @@ type AnimateStyleProp<P extends object> = P extends { style?: object }
   : P
 
 type ScrollProps = {
-  scrollLeft?: SpringValue<number>
-  scrollTop?: SpringValue<number>
+  scrollLeft?: AV<number>
+  scrollTop?: AV<number>
 }
 
 type AnimatedComponentProps<C extends ReactType> = JSX.LibraryManagedAttributes<

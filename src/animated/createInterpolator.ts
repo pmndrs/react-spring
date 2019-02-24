@@ -1,18 +1,27 @@
-import {
-  CreateInterpolator,
-  EasingFunction,
-  InterpolationConfig,
-  Interpolator,
-} from '../types/interpolation'
+import { EasingFunction, InterpolationConfig } from '../types/interpolation'
 import * as Globals from './Globals'
 
 type ExtrapolateType = InterpolationConfig['extrapolate']
 
-const createInterpolator: CreateInterpolator = (
-  range: number[] | InterpolationConfig | Interpolator,
-  output?: number[] | string[],
-  extra?: ExtrapolateType
-) => {
+// The most generic interpolation value, possible with custom interpolation functions.
+type IpValue = string | number | (string | number)[]
+
+function createInterpolator<
+  Interpolator extends (...input: IpValue[]) => IpValue
+>(interpolator: Interpolator): Interpolator
+function createInterpolator<
+  In extends number | string,
+  Out extends number | string
+>(config: InterpolationConfig<Out>): (input: In) => Out
+function createInterpolator<
+  In extends number | string,
+  Out extends number | string
+>(range: number[], output: Out[]): (input: In) => Out
+function createInterpolator(
+  range: number[] | InterpolationConfig | ((...input: IpValue[]) => IpValue),
+  output?: (number | string)[],
+  extrapolate?: ExtrapolateType
+) {
   if (typeof range === 'function') {
     return range
   }
@@ -20,7 +29,7 @@ const createInterpolator: CreateInterpolator = (
     return createInterpolator({
       range,
       output: output!,
-      extrapolate: extra,
+      extrapolate,
     })
   }
   if (Globals.interpolation && typeof range.output[0] === 'string') {

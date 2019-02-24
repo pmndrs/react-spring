@@ -1,14 +1,22 @@
-import { AnimatedObjectWithChildren } from './Animated'
+import { AnimatedObject } from './Animated'
 import * as Globals from './Globals'
 
-export default class AnimatedProps extends AnimatedObjectWithChildren {
+/**
+ * Wraps the `style` property with `AnimatedStyle`.
+ */
+export default class AnimatedProps<
+  Props extends object & { style?: any } = {}
+> extends AnimatedObject<Props> {
   update: () => void
 
-  constructor(props: any, callback: () => void) {
+  constructor(props: Props, callback: () => void) {
     super()
-    if (props.style)
-      props = { ...props, style: Globals.createAnimatedStyle(props.style) }
-    this.payload = props
+    this.payload = !props.style
+      ? props
+      : {
+          ...props,
+          style: Globals.createAnimatedStyle(props.style),
+        }
     this.update = callback
     this.attach()
   }
