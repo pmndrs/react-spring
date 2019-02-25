@@ -46,9 +46,3 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
     return new AnimatedInterpolation(this, range as number[], output!)
   }
 }
-
-export const interpolate: AnimatedValueFromInterpolation = (
-  parents: AV | AV[],
-  range: number[] | InterpolationConfig | Interpolator,
-  output?: (number | string)[]
-) => parents && new AnimatedInterpolation(parents, range as number[], output!)

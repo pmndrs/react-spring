@@ -1,10 +1,10 @@
 import { ReactType } from 'react'
 import * as konva from 'react-konva'
-import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated, {
   CreateAnimatedComponent,
 } from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
+import { interpolate } from '../../interpolate'
 import colorNames from '../../shared/colors'
 import { config } from '../../shared/constants'
 import createStringInterpolator from '../../shared/stringInterpolation'

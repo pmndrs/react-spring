@@ -1,7 +1,7 @@
-import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated from '../../animated/createAnimatedComponent'
 import createInterpolator from '../../animated/createInterpolator'
 import * as Globals from '../../animated/Globals'
+import { interpolate } from '../../interpolate'
 import { config } from '../../shared/constants'
 import { InterpolationConfig } from '../../types/interpolation'
 import { useChain } from '../../useChain'

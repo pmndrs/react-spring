@@ -1,9 +1,9 @@
 import { ReactType } from 'react'
-import { interpolate } from '../../animated/AnimatedInterpolation'
 import animated, {
   CreateAnimatedComponent,
 } from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
+import { interpolate } from '../../interpolate'
 import { config } from '../../shared/constants'
 import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
