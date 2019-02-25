@@ -19,7 +19,7 @@ This library represents a modern approach to animation. It is very much inspired
 ### Documentation and Examples
 More info about the project can be found [here](https://www.react-spring.io).
 
-Eamples and tutorials can be found [here](https://www.react-spring.io/docs/hooks/basics).
+Examples and tutorials can be found [here](https://www.react-spring.io/docs/hooks/basics).
 
 ---
 
