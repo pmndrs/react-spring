@@ -10,15 +10,16 @@
 
 This library represents a modern approach to animation. It is very much inspired by Christopher Chedeau's [animated](https://github.com/animatedjs/animated) and Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). It inherits animated's powerful interpolations and performance, as well as react-motion's ease of use. But while animated is mostly imperative and react-motion mostly declarative, react-spring bridges both. You will be surprised how easy static data is cast into motion with small, explicit utility functions that don't necessarily affect how you form your views.
 
-[![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring) <span class="badge-patreon"><a href="https://www.patreon.com/0xca0a" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span> [![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors)
+[![Build Status](https://travis-ci.org/drcmda/react-spring.svg?branch=master)](https://travis-ci.org/drcmda/react-spring) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/react-spring) [![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors)
 
 ### Installation
 
     npm install react-spring
 
 ### Documentation and Examples
+More info about the project can be found [here](https://www.react-spring.io).
 
-https://www.react-spring.io
+Eamples and tutorials can be found [here](https://www.react-spring.io/docs/hooks/basics).
 
 ---
 
@@ -52,7 +53,11 @@ And [many others](https://github.com/drcmda/react-spring/network/dependents) ...
 
 ## Funding
 
-If you like this project, please consider helping out. All contributions are welcome as well as donations to [Opencollective](https://opencollective.com/react-spring), or in crypto: 36fuguTPxGCNnYZSRdgdh6Ea94brCAjMbH (BTC) or 0x6E3f79Ea1d0dcedeb33D3fC6c34d2B1f156F2682 (ETH).
+If you like this project, please consider helping out. All contributions are welcome as well as donations to [Opencollective](https://opencollective.com/react-spring), or in crypto:
+
+BTC: 36fuguTPxGCNnYZSRdgdh6Ea94brCAjMbH
+
+ETH: 0x6E3f79Ea1d0dcedeb33D3fC6c34d2B1f156F2682
 
 You can also support this project by becoming a sponsor. Your logo will show up here with a link to your website.
 
@@ -62,7 +67,7 @@ You can also support this project by becoming a sponsor. Your logo will show up 
   <img width="300" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"/>
 </a>
 
-## Sponsors
+## Other Sponsors
 
 <a href="https://opencollective.com/react-spring/sponsor/0/website" target="_blank">
   <img src="https://opencollective.com/react-spring/sponsor/0/avatar.svg"/>
