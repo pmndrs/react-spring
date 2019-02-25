@@ -49,4 +49,5 @@ export {
   useTransition,
   useChain,
   useSprings,
+  Interpolation,
 }
