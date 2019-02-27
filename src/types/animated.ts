@@ -1,5 +1,46 @@
 import { InterpolationConfig } from './interpolation'
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+
+type SpringifyProps<Props> = {
+  [K in keyof Props]: Props[K] extends number | string | undefined
+    ? SpringValue<Props[K]> | Props[K]
+    : Props[K]
+}
+
+type SpringifyChildren<Props> = Props extends { children?: infer T }
+  ? Omit<Props, 'children'> & { children?: SpringValue<string | number> | T }
+  : Props
+
+type SpringifyStyle<Props> = Props extends { style?: infer S }
+  ? S extends object
+    ? Omit<Props, 'style'> & { style?: SpringifyProps<S> }
+    : Props
+  : Props
+
+export type AnimatedComponentProps<
+  C extends React.ReactType
+> = JSX.LibraryManagedAttributes<
+  C,
+  SpringifyStyle<
+    SpringifyChildren<SpringifyProps<React.ComponentPropsWithoutRef<C>>>
+  >
+> & {
+  scrollLeft?: SpringValue<number>
+  scrollTop?: SpringValue<number>
+} & React.RefAttributes<C>
+
+export type AnimatedComponent<
+  C extends React.ReactType
+> = React.ForwardRefExoticComponent<
+  React.PropsWithoutRef<AnimatedComponentProps<C>>
+> &
+  React.RefAttributes<C>
+
+export interface CreateAnimatedComponent {
+  <C extends React.ReactType>(Component: C): AnimatedComponent<C>
+}
+
 export type GetValueType<T> = T extends number
   ? number
   : T extends string
@@ -15,7 +56,7 @@ export type GetArrayValueType<T extends any[]> = T extends (infer U)[]
  */
 export interface SpringValue<
   // The literal value from initialization.
-  Value extends number | string | (number | string)[] =
+  Value extends undefined | number | string | (number | string)[] =
     | number
     | string
     | (number | string)[],
