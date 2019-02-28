@@ -196,7 +196,7 @@ export interface UseTransitionProps<TItem, DS extends object>
   /**
    * Called when objects have disappeared for good
    */
-  onDestroyed?: () => void
+  onDestroyed?: (isDestroyed: boolean) => void
 }
 
 export interface UseTransitionResult<TItem, DS extends object> {
