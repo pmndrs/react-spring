@@ -56,14 +56,44 @@ function createConfig(entry, out) {
   ]
 }
 
+function createCjs(entry, out) {
+  return [
+    {
+      input: `./src/${entry}/index`,
+      output: { file: `dist/${out}.js`, format: 'cjs' },
+      external,
+      plugins: [
+        babel(
+          getBabelOptions(
+            { useESModules: true },
+            '>1%, not dead, not ie 11, not op_mini all'
+          )
+        ),
+        sizeSnapshot(),
+        resolve({ extensions }),
+      ],
+    },
+    {
+      input: `./src/${entry}/index`,
+      output: { file: `dist/${out}.cjs.js`, format: 'cjs' },
+      external,
+      plugins: [
+        babel(getBabelOptions({ useESModules: false })),
+        sizeSnapshot(),
+        resolve({ extensions }),
+      ],
+    },
+  ]
+}
+
 export default [
   ...createConfig('targets/web', 'web'),
   ...createConfig('targets/native', 'native'),
   ...createConfig('targets/universal', 'universal'),
   ...createConfig('targets/konva', 'konva'),
-  ...createConfig('renderprops/targets/web', 'renderprops'),
-  ...createConfig('renderprops/addons', 'renderprops-addons'),
-  ...createConfig('renderprops/targets/native', 'renderprops-native'),
-  ...createConfig('renderprops/targets/universal', 'renderprops-universal'),
-  ...createConfig('renderprops/targets/konva', 'renderprops-konva'),
+  ...createCjs('renderprops/targets/web', 'renderprops'),
+  ...createCjs('renderprops/addons', 'renderprops-addons'),
+  ...createCjs('renderprops/targets/native', 'renderprops-native'),
+  ...createCjs('renderprops/targets/universal', 'renderprops-universal'),
+  ...createCjs('renderprops/targets/konva', 'renderprops-konva'),
 ]
