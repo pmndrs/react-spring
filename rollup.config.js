@@ -91,6 +91,20 @@ export default [
   ...createConfig('targets/native', 'native'),
   ...createConfig('targets/universal', 'universal'),
   ...createConfig('targets/konva', 'konva'),
+  {
+    input: `./src/targets/cookbook/index`,
+    output: { file: `dist/cookbook.js`, format: 'esm' },
+    external,
+    plugins: [
+      babel(
+        getBabelOptions(
+          { useESModules: true },
+          '>1%, not dead, not ie 11, not op_mini all'
+        )
+      ),
+      resolve({ extensions }),
+    ],
+  },
   ...createCjs('renderprops/targets/web', 'renderprops'),
   ...createCjs('renderprops/addons', 'renderprops-addons'),
   ...createCjs('renderprops/targets/native', 'renderprops-native'),
