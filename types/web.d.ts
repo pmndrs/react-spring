@@ -188,7 +188,15 @@ export interface UseTransitionProps<TItem, DS extends object>
   /**
    * Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values
    */
-  update?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>)
+  update?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>)                           
+  /**
+   * Initial (first time) base values, optional (can be null)
+   */
+  initial?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>) | null
+  /**
+   * Called when objects have disappeared for good
+   */
+  onDestroyed?: (isDestroyed: boolean) => void
 }
 
 export interface UseTransitionResult<TItem, DS extends object> {
