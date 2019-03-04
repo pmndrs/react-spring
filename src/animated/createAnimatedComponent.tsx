@@ -1,59 +1,28 @@
 import React, {
-  ComponentPropsWithRef,
   forwardRef,
-  ForwardRefExoticComponent,
   MutableRefObject,
-  PropsWithoutRef,
   ReactType,
-  RefAttributes,
   useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
 } from 'react'
 import { handleRef, useForceUpdate } from '../shared/helpers'
-import { SpringValue } from './Animated'
+import {
+  AnimatedComponentProps,
+  CreateAnimatedComponent,
+} from '../types/animated'
 import AnimatedProps from './AnimatedProps'
 import { animatedApi, applyAnimatedValues } from './Globals'
 
-type AnimateProperties<T extends object | undefined> = {
-  [P in keyof T]: SpringValue<T[P]> | T[P]
-}
-
-type AnimateStyleProp<P extends object> = P extends { style?: object }
-  ?
-      | P
-      | (P extends { style: object }
-          ? Record<'style', AnimateProperties<P['style']>>
-          : Partial<Record<'style', AnimateProperties<P['style']>>>)
-  : P
-
-type ScrollProps = {
-  scrollLeft?: SpringValue<number>
-  scrollTop?: SpringValue<number>
-}
-
-type AnimatedComponentProps<C extends ReactType> = JSX.LibraryManagedAttributes<
-  C,
-  AnimateStyleProp<ComponentPropsWithRef<C>> & ScrollProps
->
-
-export interface CreateAnimatedComponent<C extends ReactType> {
-  (Component: C): ForwardRefExoticComponent<
-    PropsWithoutRef<AnimatedComponentProps<C>> & RefAttributes<C>
-  >
-}
-
-const createAnimatedComponent: CreateAnimatedComponent<ReactType> = <
-  C extends ReactType
->(
+const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
   Component: C
 ) => {
   const AnimatedComponent = forwardRef<C, AnimatedComponentProps<C>>(
     (props, ref) => {
       const forceUpdate = useForceUpdate()
       const mounted = useRef(true)
-      const propsAnimated: MutableRefObject<any> = useRef(null)
+      const propsAnimated: MutableRefObject<AnimatedProps | null> = useRef(null)
       const node: MutableRefObject<C | null> = useRef(null)
       const attachProps = useCallback(props => {
         const oldPropsAnimated = propsAnimated.current
@@ -61,7 +30,7 @@ const createAnimatedComponent: CreateAnimatedComponent<ReactType> = <
           if (node.current) {
             const didUpdate = applyAnimatedValues.fn(
               node.current,
-              propsAnimated.current.getAnimatedValue()
+              propsAnimated.current!.getAnimatedValue()
             )
             if (didUpdate === false) forceUpdate()
           }
@@ -86,7 +55,7 @@ const createAnimatedComponent: CreateAnimatedComponent<ReactType> = <
         scrollTop,
         scrollLeft,
         ...animatedProps
-      } = propsAnimated.current.getValue()
+      } = propsAnimated.current!.getValue()
       return (
         <Component
           {...animatedProps as typeof props}

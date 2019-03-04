@@ -1,10 +1,11 @@
-import { ReactType } from 'react'
-import { interpolate } from '../../animated/AnimatedInterpolation'
-import animated, {
-  CreateAnimatedComponent,
-} from '../../animated/createAnimatedComponent'
+import animated from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
+import { interpolate } from '../../interpolate'
 import { config } from '../../shared/constants'
+import {
+  AnimatedComponent,
+  CreateAnimatedComponent,
+} from '../../types/animated'
 import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
@@ -151,12 +152,12 @@ const domElements: JSXElements[] = [
   'tspan',
 ]
 
-type AnimatedWithDOMElements = CreateAnimatedComponent<ReactType> &
-  { [Tag in JSXElements]: ReturnType<CreateAnimatedComponent<Tag>> }
+type AnimatedWithDOMElements = CreateAnimatedComponent &
+  { [Tag in JSXElements]: AnimatedComponent<Tag> }
 
 const extendedAnimated = domElements.reduce(
   (acc, element) => {
-    acc[element] = animated(element)
+    acc[element] = animated(element) as AnimatedComponent<any>
     return acc
   },
   animated as AnimatedWithDOMElements

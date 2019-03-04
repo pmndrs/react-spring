@@ -5,8 +5,8 @@ import {
   toArray,
   withDefault,
 } from '../shared/helpers'
-import AnimatedArray from './AnimatedArray'
 import AnimatedValue from './AnimatedValue'
+import AnimatedValueArray from './AnimatedValueArray'
 import { start } from './FrameLoop'
 import { colorNames, interpolation as interp, now } from './Globals'
 
@@ -18,7 +18,7 @@ type ValuesFor<P> = { [Key in keyof P]: any }
 
 type InterpolationsFor<P> = {
   [Key in keyof P]: P[Key] extends ArrayLike<any>
-    ? AnimatedArray
+    ? AnimatedValueArray
     : AnimatedValue
 }
 
@@ -258,7 +258,7 @@ class Controller<P extends any = {}> {
               entry.parent || new AnimatedValue(fromValue)
           else if (isArray)
             parent = interpolation =
-              entry.parent || new AnimatedArray(fromValue)
+              entry.parent || new AnimatedValueArray(fromValue)
           else if (isInterpolation) {
             let prev =
               entry.interpolation &&

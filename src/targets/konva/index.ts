@@ -1,13 +1,14 @@
-import { ReactType } from 'react'
 import * as konva from 'react-konva'
-import { interpolate } from '../../animated/AnimatedInterpolation'
-import animated, {
-  CreateAnimatedComponent,
-} from '../../animated/createAnimatedComponent'
+import animated from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
+import { interpolate } from '../../interpolate'
 import colorNames from '../../shared/colors'
 import { config } from '../../shared/constants'
-import createInterpolation from '../../shared/interpolation'
+import createStringInterpolator from '../../shared/stringInterpolation'
+import {
+  AnimatedComponent,
+  CreateAnimatedComponent,
+} from '../../types/animated'
 import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
@@ -15,7 +16,7 @@ import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
 
 Globals.injectDefaultElement('Group')
-Globals.injectInterpolation(createInterpolation)
+Globals.injectStringInterpolator(createStringInterpolator)
 Globals.injectColorNames(colorNames)
 Globals.injectApplyAnimatedValues(
   (instance, props) => {
@@ -30,7 +31,9 @@ Globals.injectApplyAnimatedValues(
 type KonvaComponents = Pick<
   typeof konva,
   {
-    [K in keyof typeof konva]: typeof konva[K] extends ReactType ? K : never
+    [K in keyof typeof konva]: typeof konva[K] extends React.ReactType
+      ? K
+      : never
   }[keyof typeof konva]
 >
 
@@ -59,16 +62,14 @@ const konvaElements: (keyof KonvaComponents)[] = [
   'Wedge',
 ]
 
-type AnimatedWithKonvaElements = CreateAnimatedComponent<ReactType> &
-  {
-    [Tag in keyof KonvaComponents]: ReturnType<
-      CreateAnimatedComponent<KonvaComponents[Tag]>
-    >
-  }
+type AnimatedWithKonvaElements = CreateAnimatedComponent &
+  { [Tag in keyof KonvaComponents]: AnimatedComponent<KonvaComponents[Tag]> }
 
 const extendedAnimated = konvaElements.reduce(
   (acc, element) => {
-    acc[element] = animated(element as ReactType)
+    acc[element] = animated(element as React.ReactType) as AnimatedComponent<
+      any
+    >
     return acc
   },
   animated as AnimatedWithKonvaElements

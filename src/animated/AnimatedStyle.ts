@@ -1,12 +1,14 @@
-import Animated, { AnimatedObjectWithChildren } from './Animated'
+import Animated, { AnimatedObject } from './Animated'
 import * as Globals from './Globals'
 
-export default class AnimatedStyle extends AnimatedObjectWithChildren {
-  constructor(style: any) {
+export default class AnimatedStyle<
+  Payload extends object & { transform?: Animated } = {}
+> extends AnimatedObject<Payload> {
+  constructor(style: Payload = {} as Payload) {
     super()
-    style = style || {}
-    if (style.transform && !(style.transform instanceof Animated))
+    if (style.transform && !(style.transform instanceof Animated)) {
       style = Globals.applyAnimatedValues.transform(style)
+    }
     this.payload = style
   }
 }
