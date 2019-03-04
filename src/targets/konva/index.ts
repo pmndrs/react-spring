@@ -13,6 +13,7 @@ import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
+import { merge } from '../../shared/helpers'
 
 Globals.injectDefaultElement('Group')
 Globals.injectInterpolation(createInterpolation)
@@ -66,15 +67,12 @@ type AnimatedWithKonvaElements = CreateAnimatedComponent<ReactType> &
     >
   }
 
-const extendedAnimated = konvaElements.reduce(
-  (acc, element) => {
-    acc[element] = animated(element as ReactType)
-    return acc
-  },
-  animated as AnimatedWithKonvaElements
-)
+// Extend animated with all the available Konva elements
+const apply = merge(animated as AnimatedWithKonvaElements, false)
+const extendedAnimated = apply(konvaElements)
 
 export {
+  apply,
   config,
   extendedAnimated as animated,
   interpolate,

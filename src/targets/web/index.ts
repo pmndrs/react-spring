@@ -10,6 +10,7 @@ import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
+import { merge } from '../../shared/helpers'
 import './globals'
 
 type JSXElements = keyof JSX.IntrinsicElements
@@ -154,15 +155,12 @@ const domElements: JSXElements[] = [
 type AnimatedWithDOMElements = CreateAnimatedComponent<ReactType> &
   { [Tag in JSXElements]: ReturnType<CreateAnimatedComponent<Tag>> }
 
-const extendedAnimated = domElements.reduce(
-  (acc, element) => {
-    acc[element] = animated(element)
-    return acc
-  },
-  animated as AnimatedWithDOMElements
-)
+// Extend animated with all the available THREE elements
+const apply = merge(animated as AnimatedWithDOMElements, false)
+const extendedAnimated = apply(domElements)
 
 export {
+  apply,
   config,
   extendedAnimated as animated,
   interpolate,

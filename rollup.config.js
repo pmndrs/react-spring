@@ -91,6 +91,7 @@ export default [
   ...createConfig('targets/native', 'native'),
   ...createConfig('targets/universal', 'universal'),
   ...createConfig('targets/konva', 'konva'),
+  ...createConfig('targets/three', 'three'),
   {
     input: `./src/targets/cookbook/index`,
     output: { file: `dist/cookbook.js`, format: 'esm' },

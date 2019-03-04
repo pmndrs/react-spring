@@ -10,6 +10,7 @@ import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
+import { merge } from '../../shared/helpers'
 
 // Problem: https://github.com/animatedjs/animated/pull/102
 // Solution: https://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly/658662
@@ -39,7 +40,10 @@ function createInterpolation(config: InterpolationConfig<number, string>) {
 Globals.injectInterpolation(createInterpolation)
 Globals.injectApplyAnimatedValues(() => false, style => style)
 
+const apply = merge(animated)
+
 export {
+  apply,
   config,
   animated,
   interpolate,
