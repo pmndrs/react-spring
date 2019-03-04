@@ -1,6 +1,8 @@
-import { AnimatedWithChildren } from './Animated'
+import { SpringValue } from '../types/animated'
+import { InterpolationConfig } from '../types/interpolation'
+import Animated from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
-import { InterpolationConfig } from './Interpolation'
+import AnimatedProps from './AnimatedProps'
 
 /**
  * Animated works by building a directed acyclic graph of dependencies
@@ -14,7 +16,7 @@ import { InterpolationConfig } from './Interpolation'
  *                                         View#123
  *
  * A) Top Down phase
- * When an Animated.Value is updated, we recursively go down through this
+ * When an AnimatedValue is updated, we recursively go down through this
  * graph in order to find leaf nodes: the views that we flag as needing
  * an update.
  *
@@ -25,56 +27,59 @@ import { InterpolationConfig } from './Interpolation'
  * transform which can receive values from multiple parents.
  */
 
-function findAnimatedStyles(node: any, styles: Set<any>) {
-  if (typeof node.update === 'function') styles.add(node)
-  else
-    node
-      .getChildren()
-      .forEach((child: any) => findAnimatedStyles(child, styles))
+function addAnimatedStyles(
+  node: Animated | AnimatedProps,
+  styles: Set<AnimatedProps>
+) {
+  if ('update' in node) {
+    styles.add(node)
+  } else {
+    node.getChildren().forEach(child => addAnimatedStyles(child, styles))
+  }
 }
 
-/**
- * Standard value for driving animations.  One `Animated.Value` can drive
- * multiple properties in a synchronized fashion, but can only be driven by one
- * mechanism at a time.  Using a new mechanism (e.g. starting a new animation,
- * or calling `setValue`) will stop any previous ones.
- */
-export default class AnimatedValue extends AnimatedWithChildren {
-  value: number
-  startPosition: number
-  lastPosition: number
+export default class AnimatedValue extends Animated implements SpringValue {
+  private animatedStyles = new Set<AnimatedProps>()
 
-  done = false
-  animatedStyles = new Set()
-  lastVelocity?: number
-  startTime?: number
-  lastTime?: number
+  public value: number | string
+  public startPosition: number | string
+  public lastPosition: number | string
+  public lastVelocity?: number
+  public startTime?: number
+  public lastTime?: number
+  public done = false
 
-  constructor(value: number) {
+  constructor(value: number | string) {
     super()
     this.value = value
     this.startPosition = value
     this.lastPosition = value
   }
 
-  flush() {
-    if (this.animatedStyles.size === 0) this.updateStyles()
+  private flush() {
+    if (this.animatedStyles.size === 0) {
+      addAnimatedStyles(this, this.animatedStyles)
+    }
     this.animatedStyles.forEach(animatedStyle => animatedStyle.update())
   }
 
-  setValue = (value: number, flush = true) => {
+  public clearStyles() {
+    this.animatedStyles.clear()
+  }
+
+  public setValue = (value: number | string, flush = true) => {
     this.value = value
     if (flush) this.flush()
   }
 
-  getValue = () => this.value
-
-  updateStyles = () => findAnimatedStyles(this, this.animatedStyles)
-
-  updateValue = (value: number) => {
-    this.setValue(value, true)
+  public getValue() {
+    return this.value
   }
 
-  interpolate = (config: InterpolationConfig, arg: any) =>
-    new AnimatedInterpolation(this, config, arg)
+  public interpolate(
+    range: number[] | InterpolationConfig | ((...args: any[]) => any),
+    output?: (number | string)[]
+  ): AnimatedInterpolation {
+    return new AnimatedInterpolation(this, range as number[], output!)
+  }
 }

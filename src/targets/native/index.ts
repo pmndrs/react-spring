@@ -1,11 +1,11 @@
 import { StyleSheet, View } from 'react-native'
-import { interpolate } from '../../animated/AnimatedInterpolation'
 import AnimatedStyle from '../../animated/AnimatedStyle'
 import animated from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
+import { interpolate } from '../../interpolate'
 import colorNames from '../../shared/colors'
 import { config } from '../../shared/constants'
-import createInterpolation from '../../shared/interpolation'
+import createStringInterpolator from '../../shared/stringInterpolation'
 import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
@@ -15,7 +15,7 @@ import AnimatedTransform from './AnimatedTransform'
 import { merge } from '../../shared/helpers'
 
 Globals.injectDefaultElement(View)
-Globals.injectInterpolation(createInterpolation)
+Globals.injectStringInterpolator(createStringInterpolator)
 Globals.injectColorNames(colorNames)
 Globals.injectApplyAnimatedValues(
   (instance, props) =>

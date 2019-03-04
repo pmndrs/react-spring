@@ -1,9 +1,16 @@
-import '../targets/web'
-import Interpolation from './Interpolation'
+import colorNames from '../shared/colors'
+import createStringInterpolator from '../shared/stringInterpolation'
+import createInterpolator from './createInterpolator'
+import * as Globals from './Globals'
+
+beforeAll(() => {
+  Globals.injectColorNames(colorNames)
+  Globals.injectStringInterpolator(createStringInterpolator)
+})
 
 describe('Interpolation', () => {
   it('should work with defaults', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [0, 1],
       output: [0, 1],
     })
@@ -15,14 +22,14 @@ describe('Interpolation', () => {
   })
 
   it('should work with interpolation function as argument', () => {
-    const interpolation = Interpolation.create(value => `scale(${value})`)
+    const interpolation = createInterpolator(value => `scale(${value})`)
 
     expect(interpolation(0)).toBe('scale(0)')
     expect(interpolation(10.5)).toBe('scale(10.5)')
   })
 
   it('should work with range arrays as arguments', () => {
-    const interpolation = Interpolation.create([0, 1], [100, 200])
+    const interpolation = createInterpolator([0, 1], [100, 200])
 
     expect(interpolation(0)).toBe(100)
     expect(interpolation(0.5)).toBe(150)
@@ -31,7 +38,7 @@ describe('Interpolation', () => {
   })
 
   it('should work with output range', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [0, 1],
       output: [100, 200],
     })
@@ -43,7 +50,7 @@ describe('Interpolation', () => {
   })
 
   it('should work with input range', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [100, 200],
       output: [0, 1],
     })
@@ -55,7 +62,7 @@ describe('Interpolation', () => {
   })
 
   it('should work with keyframes without extrapolate', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [0, 1, 2],
       output: [0.2, 1, 0.2],
       extrapolate: 'clamp',
@@ -65,7 +72,7 @@ describe('Interpolation', () => {
   })
 
   it('should work with output ranges as string', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [0, 1],
       output: ['rgba(0, 100, 200, 0)', 'rgba(50, 150, 250, 0.4)'],
     })
@@ -76,7 +83,7 @@ describe('Interpolation', () => {
   })
 
   it('should work with output ranges as short hex string', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [0, 1],
       output: ['#024', '#9BF'],
     })
@@ -87,7 +94,7 @@ describe('Interpolation', () => {
   })
 
   it('should work with output ranges as long hex string', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [0, 1],
       output: ['#FF9500', '#87FC70'],
     })
@@ -98,7 +105,7 @@ describe('Interpolation', () => {
   })
 
   it('should work with output ranges with mixed hex and rgba strings', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [0, 1],
       output: ['rgba(100, 120, 140, .4)', '#87FC70'],
     })
@@ -109,7 +116,7 @@ describe('Interpolation', () => {
   })
 
   it('should work with negative and decimal values in string ranges', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [0, 1],
       output: ['-100.5deg', '100deg'],
     })
@@ -120,7 +127,7 @@ describe('Interpolation', () => {
   })
 
   it('should support a mix of color patterns', () => {
-    const interpolation = Interpolation.create({
+    const interpolation = createInterpolator({
       range: [0, 1, 2],
       output: ['rgba(0, 100, 200, 0)', 'rgb(50, 150, 250)', 'red'],
     })

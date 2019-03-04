@@ -1,38 +1,48 @@
-import Animated, { AnimatedArrayWithChildren } from './Animated'
-import Interpolation, { InterpolationConfig } from './Interpolation'
+import { SpringValue } from '../types/animated'
+import { InterpolationConfig } from '../types/interpolation'
+import Animated, { AnimatedArray } from './Animated'
+import createInterpolator from './createInterpolator'
 
-export default class AnimatedInterpolation extends AnimatedArrayWithChildren {
-  calc: any
+type IpValue = string | number | (string | number)[]
+// The widest possible interpolator type, possible if interpolate() is passed
+// a custom interpolation function.
+type Interpolator = (...input: IpValue[]) => IpValue
+
+export default class AnimatedInterpolation extends AnimatedArray<Animated>
+  implements SpringValue {
+  calc: Interpolator
 
   constructor(
     parents: Animated | Animated[],
-    config: InterpolationConfig,
-    arg: any
+    range: number[] | InterpolationConfig | Interpolator,
+    output?: (number | string)[]
   ) {
     super()
     this.payload =
-      // AnimatedArrays should unfold, except AnimatedInterpolation which is taken as is
-      parents instanceof AnimatedArrayWithChildren &&
-      !(parents as AnimatedInterpolation).updateConfig
-        ? parents.payload
+      parents instanceof AnimatedArray &&
+      !(parents instanceof AnimatedInterpolation)
+        ? (parents.getPayload() as Animated[])
         : Array.isArray(parents)
         ? parents
         : [parents]
-    this.calc = Interpolation.create(config as any, arg)
+    this.calc = createInterpolator(range as number[], output!) as Interpolator
   }
 
-  getValue = () => this.calc(...this.payload.map(value => value.getValue()))
-
-  updateConfig = (config: InterpolationConfig, arg: any) => {
-    this.calc = Interpolation.create(config as any, arg)
+  public getValue() {
+    return this.calc(...this.payload.map(value => value.getValue()))
   }
 
-  interpolate = (config: InterpolationConfig, arg: any) =>
-    new AnimatedInterpolation(this, config, arg)
+  public updateConfig(
+    range: number[] | InterpolationConfig | Interpolator,
+    output?: (number | string)[]
+  ) {
+    this.calc = createInterpolator(range as number[], output!) as Interpolator
+  }
+
+  public interpolate(
+    range: number[] | InterpolationConfig | ((...args: any[]) => IpValue),
+    output?: (number | string)[]
+  ): AnimatedInterpolation {
+    return new AnimatedInterpolation(this, range as number[], output!)
+  }
 }
-
-export const interpolate = (
-  parents: Animated | Animated[],
-  config: InterpolationConfig,
-  arg: any
-) => parents && new AnimatedInterpolation(parents, config, arg)

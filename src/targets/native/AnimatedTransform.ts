@@ -1,8 +1,8 @@
-import Animated, { AnimatedWithChildren } from '../../animated/Animated'
+import Animated from '../../animated/Animated'
 
 type Transform = { [key: string]: string | number | Animated }
 
-export default class AnimatedTransform extends AnimatedWithChildren {
+export default class AnimatedTransform extends Animated {
   _transforms: Transform[]
 
   constructor(transforms: Transform[]) {
@@ -12,7 +12,7 @@ export default class AnimatedTransform extends AnimatedWithChildren {
 
   getValue() {
     return this._transforms.map(transform => {
-      let result: { [key: string]: number | string } = {}
+      let result: { [key: string]: unknown } = {}
       for (var key in transform) {
         var value = transform[key]
         result[key] = value instanceof Animated ? value.getValue() : value
@@ -23,7 +23,7 @@ export default class AnimatedTransform extends AnimatedWithChildren {
 
   getAnimatedValue() {
     return this._transforms.map(transform => {
-      let result: { [key: string]: number | string } = {}
+      let result: { [key: string]: unknown } = {}
       for (var key in transform) {
         var value = transform[key]
         result[key] =

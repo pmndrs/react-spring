@@ -27,7 +27,7 @@ export const is = {
   },
 }
 
-export function merge(target: any, lowercase: boolean) {
+export function merge(target: any, lowercase: boolean = true) {
   return (object: object) =>
     (is.arr(object) ? object : Object.keys(object)).reduce(
       (acc: any, element) => {

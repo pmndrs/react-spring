@@ -1,4 +1,5 @@
-import Interpolation, { InterpolationConfig } from '../animated/Interpolation'
+import createInterpolator from '../animated/createInterpolator'
+import { InterpolationConfig } from '../types/interpolation'
 import colors from './colors'
 import normalizeColor from './normalizeColors'
 
@@ -31,9 +32,7 @@ const colorNamesRegex = new RegExp(`(${Object.keys(colors).join('|')})`, 'g')
  *   -45deg                            // values with units
  *   0 2px 2px 0px rgba(0, 0, 0, 0.12) // box shadows
  */
-export default function createInterpolation(
-  config: InterpolationConfig<number, string>
-) {
+const createStringInterpolator = (config: InterpolationConfig<string>) => {
   // Replace colors with rgba
   const outputRange = config.output
     .map(rangeValue => rangeValue.replace(colorRegex, colorToRgba))
@@ -49,9 +48,9 @@ export default function createInterpolation(
   })
   const interpolations = outputRange[0]
     .match(stringShapeRegex)!
-    .map((_value, i) => {
-      return Interpolation.create({ ...config, output: outputRanges[i] })
-    })
+    .map((_value, i) =>
+      createInterpolator({ ...config, output: outputRanges[i] })
+    )
   return (input: number) => {
     let i = 0
     return (
@@ -59,7 +58,10 @@ export default function createInterpolation(
         // 'rgba(0, 100, 200, 0)'
         // ->
         // 'rgba(${interpolations[0](input)}, ${interpolations[1](input)}, ...'
-        .replace(stringShapeRegex, () => interpolations[i++](input) as string)
+        .replace(
+          stringShapeRegex,
+          () => (interpolations[i++](input) as unknown) as string
+        )
         // rgba requires that the r,g,b are integers.... so we want to round them, but we *dont* want to
         // round the opacity (4th column).
         .replace(
@@ -72,3 +74,5 @@ export default function createInterpolation(
     )
   }
 }
+
+export default createStringInterpolator
