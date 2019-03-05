@@ -229,6 +229,7 @@ export class Parallax extends React.PureComponent {
       style,
       innerStyle,
       pages,
+      id,
       className,
       scrolling,
       children,
@@ -254,6 +255,7 @@ export class Parallax extends React.PureComponent {
           transform: START_TRANSLATE_3D,
           ...style,
         }}
+        id={id}
         className={className}>
         {this.state.ready && (
           <El
