@@ -135,7 +135,7 @@ export function useSprings<TItem, DS extends CSSProperties>(
 ): ForwardedProps<DS>[] // safe to modify (result of .map)
 export function useSprings<DS extends object>(
   count: number,
-  getProps: () => UseSpringProps<DS>
+  getProps: (i: number) => UseSpringProps<DS>
 ): [AnimatedValue<ForwardedProps<DS>>[], SetUpdateFn<DS>]
 
 // there's a third value in the tuple but it's not public API (?)
