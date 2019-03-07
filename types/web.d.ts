@@ -72,6 +72,10 @@ type InferFrom<T extends object> = T extends { to: infer TTo }
 type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
 
 export type SetUpdateFn<DS extends object> = (ds: Partial<UseSpringProps<DS>>) => void
+export interface SetUpdateCallbackFn<DS extends object> {
+  (ds: Partial<UseSpringProps<DS>>): void;
+  (i: number): Partial<UseSpringProps<DS>>;
+}
 
 // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
 // updating it. However, there are no types for Controller, and I assume it is intentionally so.
@@ -136,7 +140,7 @@ export function useSprings<TItem, DS extends CSSProperties>(
 export function useSprings<DS extends object>(
   count: number,
   getProps: (i: number) => UseSpringProps<DS>
-): [AnimatedValue<ForwardedProps<DS>>[], SetUpdateFn<DS>]
+): [AnimatedValue<ForwardedProps<DS>>[], SetUpdateCallbackFn<DS>]
 
 // there's a third value in the tuple but it's not public API (?)
 export function useTrail<DS extends CSSProperties>(
