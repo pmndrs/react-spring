@@ -8,6 +8,6 @@ import { is } from './shared/helpers'
 
 export const useSpring = props => {
   const isFn = is.fun(props)
-  const [result, set, stop] = useSprings(1, isFn ? props : [props])
-  return isFn ? [result[0], set, stop] : result
+  const [result, set, pause] = useSprings(1, isFn ? props : [props])
+  return isFn ? [result[0], set, pause] : result
 }

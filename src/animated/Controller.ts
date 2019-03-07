@@ -7,7 +7,7 @@ import {
 } from '../shared/helpers'
 import AnimatedValue from './AnimatedValue'
 import AnimatedValueArray from './AnimatedValueArray'
-import { start } from './FrameLoop'
+import { start, stop } from './FrameLoop'
 import { colorNames, interpolation as interp, now } from './Globals'
 
 type FinishedCallback = (finished?: boolean) => void
@@ -133,6 +133,13 @@ class Controller<P extends any = {}> {
   stop(finished?: boolean) {
     this.listeners.forEach(onEnd => onEnd(finished))
     this.listeners = []
+    return this
+  }
+
+  /** Pause sets onEnd listeners free, but also removes the controller from the frameloop */
+  pause(finished?: boolean) {
+    this.stop(true)
+    if (finished) stop(this)
     return this
   }
 

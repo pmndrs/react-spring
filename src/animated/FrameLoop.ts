@@ -140,4 +140,9 @@ const start = (controller: Controller) => {
   }
 }
 
-export { start, update }
+const stop = (controller: Controller) => {
+  if (controllers.has(controller))
+    controllers.delete(controller)
+}
+
+export { start, stop, update }

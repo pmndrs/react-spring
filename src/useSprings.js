@@ -73,6 +73,10 @@ export const useSprings = (length, props) => {
   // Return animated props, or, anim-props + the update-setter above
   const propValues = ctrl.current.map(c => c.getValues())
   return isFn
-    ? [propValues, updateCtrl, () => ctrl.current.forEach(c => c.stop())]
+    ? [
+        propValues,
+        updateCtrl,
+        finished => ctrl.current.forEach(c => c.pause(finished)),
+      ]
     : propValues
 }
