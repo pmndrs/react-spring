@@ -4,6 +4,7 @@ import {
   is,
   toArray,
   withDefault,
+  getForwardProps,
 } from '../shared/helpers'
 import AnimatedValue from './AnimatedValue'
 import AnimatedValueArray from './AnimatedValueArray'
@@ -151,13 +152,13 @@ class Controller<P extends any = {}> {
     if (is.arr(props.to)) {
       for (let i = 0; i < props.to.length; i++) {
         const index = i
-        const fresh = { ...props, to: props.to[index] }
+        const fresh = { ...props, ...interpolateTo(props.to[index]) }
         if (is.arr(fresh.config)) fresh.config = fresh.config[index]
         queue = queue.then(
           (): Promise<any> | void => {
             //this.stop()
             if (local === this.guid)
-              return new Promise(r => this.diff(interpolateTo(fresh)).start(r))
+              return new Promise(r => this.diff(fresh).start(r))
           }
         )
       }
