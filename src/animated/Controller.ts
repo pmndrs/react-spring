@@ -300,7 +300,9 @@ class Controller<P extends any = {}> {
           })
 
           // Set immediate values
-          if (callProp(immediate, name)) parent.setValue(value, false)
+          if (callProp(immediate, name)) {
+            parent.setValue(isInterpolation ? toValue : value, false)
+          }
 
           return {
             ...acc,
