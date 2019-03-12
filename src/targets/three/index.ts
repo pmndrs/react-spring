@@ -1,4 +1,4 @@
-import * as THREE from 'three/src/Three'
+import * as THREE from 'three'
 import { applyProps } from 'react-three-fiber'
 import { interpolate } from '../../interpolate'
 import animated from '../../animated/createAnimatedComponent'
