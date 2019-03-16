@@ -33,7 +33,7 @@ The principle you will be working with is called a `spring`, it *does not have a
 
 We are so used to time-based animation that we believe that struggle is normal, dealing with arbitrary curves, easings, time waterfalls, not to mention getting this all in sync. As Andy Matuschak (ex Apple UI-Kit developer) [expressed it once](https://twitter.com/andy_matuschak/status/566736015188963328): *Animation APIs parameterized by duration and curve are fundamentally opposed to continuous, fluid interactivity*.
 
-Springs change that, animation becomes easy and approachable, everything you do looks and feels natural by default. For a detailed explanation watch [this video](https://www.youtube.com/embed/1tavDv5hXpo?controls=0&amp;start=370).
+Springs change that, animation becomes easy and approachable, everything you do looks and feels natural by default. For a detailed explanation watch [this video](https://www.youtube.com/embed/1tavDv5hXpo?controls=1&amp;start=370).
 
 ### What others say
 
