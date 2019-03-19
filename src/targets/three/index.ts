@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { applyProps, addEffect, invalidate } from 'react-three-fiber'
+import { invalidate, applyProps, addEffect } from 'react-three-fiber'
 import { interpolate } from '../../interpolate'
 import animated from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
@@ -20,8 +20,8 @@ const extendedAnimated = apply(THREE)
 if (addEffect) {
   // Add the update function as a global effect to react-three-fibers update loop
   addEffect(update)
-  // Hook up the invalidate function to react-springs update-loop
-  Globals.injectManualFrameloop(invalidate)
+  // We don't really need to invalidate, since react-spring is most likely causing invalidation through applyProps
+  Globals.injectManualFrameloop(() => invalidate())
 }
 
 // Set default native-element

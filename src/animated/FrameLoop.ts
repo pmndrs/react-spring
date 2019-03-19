@@ -130,24 +130,23 @@ const update = () => {
   if (controllers.size) {
     if (manualFrameloop) manualFrameloop()
     else requestFrame(update)
-  } else active = false
+  } else {
+    active = false
+  }
   return active
 }
 
 const start = (controller: Controller) => {
-  if (!controllers.has(controller)) {
-    controllers.add(controller)
-    if (!active) {
-      if (manualFrameloop) requestFrame(manualFrameloop)
-      else requestFrame(update)
-    }
+  if (!controllers.has(controller)) controllers.add(controller)
+  if (!active) {
     active = true
+    if (manualFrameloop) requestFrame(manualFrameloop)
+    else requestFrame(update)
   }
 }
 
 const stop = (controller: Controller) => {
-  if (controllers.has(controller))
-    controllers.delete(controller)
+  if (controllers.has(controller)) controllers.delete(controller)
 }
 
 export { start, stop, update }

@@ -19,9 +19,9 @@
     "gzipped": 1999
   },
   "dist/web.js": {
-    "bundled": 63059,
-    "minified": 29978,
-    "gzipped": 10898,
+    "bundled": 63153,
+    "minified": 30004,
+    "gzipped": 10904,
     "treeshaked": {
       "rollup": {
         "code": 11455,
@@ -38,9 +38,9 @@
     "gzipped": 11641
   },
   "dist/native.js": {
-    "bundled": 60184,
-    "minified": 28050,
-    "gzipped": 9921,
+    "bundled": 60278,
+    "minified": 28076,
+    "gzipped": 9927,
     "treeshaked": {
       "rollup": {
         "code": 8256,
@@ -52,9 +52,9 @@
     }
   },
   "dist/universal.js": {
-    "bundled": 47621,
-    "minified": 21340,
-    "gzipped": 7118,
+    "bundled": 47715,
+    "minified": 21366,
+    "gzipped": 7125,
     "treeshaked": {
       "rollup": {
         "code": 1235,
@@ -66,9 +66,9 @@
     }
   },
   "dist/konva.js": {
-    "bundled": 58681,
-    "minified": 27202,
-    "gzipped": 9829,
+    "bundled": 58775,
+    "minified": 27228,
+    "gzipped": 9834,
     "treeshaked": {
       "rollup": {
         "code": 8974,
@@ -157,14 +157,14 @@
     "gzipped": 9928
   },
   "dist/web.cjs.js": {
-    "bundled": 71464,
-    "minified": 33758,
-    "gzipped": 11481
+    "bundled": 71558,
+    "minified": 33790,
+    "gzipped": 11484
   },
   "dist/native.cjs.js": {
-    "bundled": 69070,
-    "minified": 32016,
-    "gzipped": 10476
+    "bundled": 69164,
+    "minified": 32048,
+    "gzipped": 10484
   },
   "dist/renderprops.cjs.js": {
     "bundled": 77632,
@@ -192,9 +192,9 @@
     "gzipped": 10452
   },
   "dist/universal.cjs.js": {
-    "bundled": 55697,
-    "minified": 24987,
-    "gzipped": 7681
+    "bundled": 55791,
+    "minified": 25019,
+    "gzipped": 7687
   },
   "dist/test.js": {
     "bundled": 32365,
@@ -216,27 +216,27 @@
     "gzipped": 5405
   },
   "dist/konva.cjs.js": {
-    "bundled": 66798,
-    "minified": 30880,
-    "gzipped": 10381
+    "bundled": 66892,
+    "minified": 30912,
+    "gzipped": 10387
   },
   "dist/three.js": {
-    "bundled": 58622,
-    "minified": 27013,
-    "gzipped": 9703,
+    "bundled": 58973,
+    "minified": 27132,
+    "gzipped": 9745,
     "treeshaked": {
       "rollup": {
-        "code": 8805,
-        "import_statements": 313
+        "code": 10339,
+        "import_statements": 344
       },
       "webpack": {
-        "code": 10009
+        "code": 11539
       }
     }
   },
   "dist/three.cjs.js": {
-    "bundled": 66753,
-    "minified": 30697,
-    "gzipped": 10253
+    "bundled": 67146,
+    "minified": 30864,
+    "gzipped": 10293
   }
 }
