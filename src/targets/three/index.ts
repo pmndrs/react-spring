@@ -20,7 +20,7 @@ const extendedAnimated = apply(THREE)
 if (addEffect) {
   // Add the update function as a global effect to react-three-fibers update loop
   addEffect(update)
-  // We don't really need to invalidate, since react-spring is most likely causing invalidation through applyProps
+  // Ping react-three-fiber, so that it will call react-springs update function as an effect
   Globals.injectManualFrameloop(() => invalidate())
 }
 
