@@ -221,22 +221,22 @@
     "gzipped": 10381
   },
   "dist/three.js": {
-    "bundled": 58632,
-    "minified": 27023,
-    "gzipped": 9710,
+    "bundled": 58622,
+    "minified": 27013,
+    "gzipped": 9703,
     "treeshaked": {
       "rollup": {
-        "code": 8815,
-        "import_statements": 323
+        "code": 8805,
+        "import_statements": 313
       },
       "webpack": {
-        "code": 10019
+        "code": 10009
       }
     }
   },
   "dist/three.cjs.js": {
-    "bundled": 66763,
-    "minified": 30707,
-    "gzipped": 10259
+    "bundled": 66753,
+    "minified": 30697,
+    "gzipped": 10253
   }
 }

@@ -69,7 +69,7 @@ export function injectCreateAnimatedStyle(factory: typeof createAnimatedStyle) {
   createAnimatedStyle = factory
 }
 
-export let manualFrameloop = false
-export function injectManualFrameloop(manual: boolean) {
-  manualFrameloop = manual
+export let manualFrameloop: any
+export function injectManualFrameloop(callback: any) {
+  manualFrameloop = callback
 }

@@ -6,7 +6,7 @@ let active = false
 const controllers = new Set()
 
 const update = () => {
-  if (!active) return
+  if (!active) return false
   let time = now()
   for (let controller of controllers) {
     let isActive = false
@@ -128,14 +128,19 @@ const update = () => {
 
   // Loop over as long as there are controllers ...
   if (controllers.size) {
-    if (!manualFrameloop) requestFrame(update)
+    if (manualFrameloop) manualFrameloop()
+    else requestFrame(update)
   } else active = false
+  return active
 }
 
 const start = (controller: Controller) => {
   if (!controllers.has(controller)) {
     controllers.add(controller)
-    if (!active && !manualFrameloop) requestFrame(update)
+    if (!active) {
+      if (manualFrameloop) requestFrame(manualFrameloop)
+      else requestFrame(update)
+    }
     active = true
   }
 }
