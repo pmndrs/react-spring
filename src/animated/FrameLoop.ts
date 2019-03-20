@@ -59,7 +59,7 @@ const update = () => {
           position =
             from +
             (velocity / (1 - 0.998)) *
-              (1 - Math.exp(-(1 - 0.998) * (time - controller.startTime)))
+              (1 - Math.exp(-(1 - 0.998) * (time - animation.startTime)))
           endOfAnimation = Math.abs(animation.lastPosition - position) < 0.1
           if (endOfAnimation) to = position
         } else {
