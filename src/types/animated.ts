@@ -8,9 +8,11 @@ type SpringifyProps<Props> = {
     : Props[K]
 }
 
-type SpringifyChildren<Props> = Props extends { children?: infer T }
-  ? Omit<Props, 'children'> & { children?: SpringValue<string | number> | T }
-  : Props
+type SpringifyChildren<Props> = {
+  [K in keyof Props]: K extends 'children'
+    ? Props[K] | SpringValue<string | number>
+    : Props[K]
+}
 
 type SpringifyStyle<Props> = Props extends { style?: infer S }
   ? S extends object
