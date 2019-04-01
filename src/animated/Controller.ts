@@ -14,7 +14,12 @@ import { SpringProps } from '../../types/renderprops'
 
 type Animation = any
 type AnimationMap = { [name: string]: Animation }
-type InterpolationMap = { [name: string]: AnimatedValue | AnimatedValueArray }
+
+type InterpolationMap<DS> = {
+  [K in keyof DS]: DS[K] extends ArrayLike<any>
+    ? AnimatedValueArray
+    : AnimatedValue
+}
 
 type UpdateProps<DS extends object> = DS &
   SpringProps<DS> & {
@@ -31,7 +36,7 @@ class Controller<DS extends object = any> {
   props: UpdateProps<DS> = {} as any
   merged: DS = {} as any
   values: DS = {} as any
-  interpolations: InterpolationMap = {}
+  interpolations: InterpolationMap<DS> = {} as any
   animations: AnimationMap = {}
   configs: any[] = []
   queue: any[] = []
@@ -41,28 +46,30 @@ class Controller<DS extends object = any> {
 
   getValues = () => this.interpolations
 
-  /** update(props)
-   *  This function filters input props and creates an array of tasks which are executed in .start()
-   *  Each task is allowed to carry a delay, which means it can execute asnychroneously */
-  update(args: UpdateProps<DS>) {
+  /**
+   * Update the controller by merging the given props into an array of tasks.
+   * Individual tasks may be async and/or delayed.
+   */
+  update(props: UpdateProps<DS>) {
     // Extract delay and the to-prop from props
-    const { delay = 0, to, ...props } = interpolateTo(args) as any
+    const { delay = 0, to, ...restProps } = interpolateTo(props) as any
 
     // If config is either a function or an array, queue it up as is
     if (is.arr(to) || is.fun(to)) {
-      this.queue.push({ ...props, delay, to })
+      this.queue.push({ ...restProps, delay, to })
     }
     // Otherwise go through each key since it could be delayed individually
     else if (to) {
       let ops: any[] = []
       Object.entries(to).forEach(([k, v]) => {
-        // Fetch delay and create an entry, consisting of the to-props, the delay, and basic props
-        const entry = { to: { [k]: v }, delay: callProp(delay, k), ...props }
-        const previous = ops[entry.delay] && ops[entry.delay].to
-        ops[entry.delay] = {
-          ...ops[entry.delay],
-          ...entry,
-          to: { ...previous, ...entry.to },
+        // Merge entries with the same delay
+        const dt = callProp(delay, k)
+        const previous = ops[dt] || {}
+        ops[dt] = {
+          ...previous,
+          ...restProps,
+          delay: dt,
+          to: { ...previous.to, [k]: v },
         }
       })
       ops.forEach(op => this.queue.push(op))
@@ -72,14 +79,15 @@ class Controller<DS extends object = any> {
     this.queue.sort((a, b) => a.delay - b.delay)
 
     // Diff the reduced props immediately (they'll contain the from-prop and some config)
-    if (hasKeys(props)) this._diff(props)
+    if (hasKeys(restProps)) this._diff(restProps)
 
     return this
   }
 
-  /** start()
-   *  This function either executes a queue, if present, or starts the frameloop, which animates.
-   *  The `useSpring` hooks never have > 1 update per call, because they call this every render. */
+  /**
+   * Execute any queued updates, else make sure the frameloop is running.
+   * The `useSpring` hooks never have > 1 update per call, because they call this every render.
+   */
   start(onEnd?: OnEnd) {
     // If a queue is present we must execute it
     if (this.queue.length) {
@@ -91,7 +99,10 @@ class Controller<DS extends object = any> {
           if (is.obj(from)) this.merged = { ...from, ...this.merged }
           if (is.obj(to)) this.merged = { ...this.merged, ...to }
         })
+        // Reset any queue-related state
         prevQueue.length = 0
+        this.pendingCount = 0
+        this.onEndQueue.length = 0
       }
 
       // The guid helps when tracking frames, a new queue over an old one means an override.
@@ -100,18 +111,13 @@ class Controller<DS extends object = any> {
       const queue = (this.prevQueue = this.queue)
       this.queue = prevQueue
 
-      // Reset any queue-related state
-      this.pendingCount = 0
-      this.onEndQueue.length = 0
-
       // Never assume that the last update always finishes last, since that's
-      // not true when 2+ async animations have indeterminate durations.
+      // not true when 2+ async updates have indeterminate durations.
       let remaining = queue.length
       const didEnd =
         onEnd &&
         ((finished?: boolean) => {
-          if (--remaining < 0 || guid !== this.guid) return
-          onEnd(finished)
+          if (--remaining === 0) onEnd(finished)
         })
 
       // Go through each entry and execute it
@@ -159,17 +165,21 @@ class Controller<DS extends object = any> {
     this.props = {} as any
     this.merged = {} as any
     this.values = {} as any
-    this.interpolations = {}
+    this.interpolations = {} as any
     this.animations = {}
     this.configs = []
   }
 
   // Add this controller to the frameloop
   private _start(onEnd?: OnEnd) {
-    if (onEnd) this.onEndQueue.push(onEnd)
-    if (this.idle) {
-      this.idle = false
-      start(this)
+    if (this.configs.length) {
+      if (onEnd) this.onEndQueue.push(onEnd)
+      if (this.idle) {
+        this.idle = false
+        start(this)
+      }
+    } else if (onEnd) {
+      onEnd(true)
     }
   }
 
@@ -401,16 +411,15 @@ class Controller<DS extends object = any> {
     )
 
     if (changed) {
-      // Make animations available to frameloop
-      this.configs = Object.values(this.animations)
-
-      this.interpolations = {}
       const values = (this.values = {} as any)
+      const interpolations = (this.interpolations = {} as any)
       for (const key in this.animations) {
         const { interpolation } = this.animations[key]
-        this.interpolations[key] = interpolation
         values[key] = interpolation.getValue()
+        interpolations[key] = interpolation
       }
+      // Make animations available to frameloop
+      this.configs = Object.values(this.animations)
     }
     return this
   }
