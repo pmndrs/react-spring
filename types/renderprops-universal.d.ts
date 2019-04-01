@@ -74,7 +74,12 @@ export interface SpringProps<DS extends object = {}> extends SpringBaseProps {
    * Animates to...
    * @default {}
    */
-  to?: DS
+  to?:
+    | DS
+    | ((
+        next: (props: SpringProps<DS>) => void,
+        stop: (finished: boolean) => void
+      ) => Promise<void>)
   /**
    * Callback when the animation comes to a still-stand
    */

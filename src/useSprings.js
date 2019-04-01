@@ -25,9 +25,7 @@ export const useSprings = (length, props) => {
         const ctrl = new Ctrl()
         const newProps = isFn ? callProp(props, i, ctrl) : props[i]
         if (i === 0) ref = newProps.ref
-        ctrl.update(newProps)
-        if (!ref) ctrl.start()
-        return ctrl
+        return ctrl.update(newProps)
       }),
       ref,
     ]
@@ -59,16 +57,16 @@ export const useSprings = (length, props) => {
   useEffect(() => {
     if (mounted.current) {
       if (!isFn) updateCtrl(props)
-    } else if (!ref) ctrl.current.forEach(c => c.start())
+    } else if (!ref) {
+      ctrl.current.forEach(c => c.start())
+    }
   })
 
   // Update mounted flag and destroy controller on unmount
-  useEffect(
-    () => (
-      (mounted.current = true), () => ctrl.current.forEach(c => c.destroy())
-    ),
-    []
-  )
+  useEffect(() => {
+    mounted.current = true
+    return () => ctrl.current.forEach(c => c.destroy())
+  }, [])
 
   // Return animated props, or, anim-props + the update-setter above
   const propValues = ctrl.current.map(c => c.getValues())
@@ -76,7 +74,7 @@ export const useSprings = (length, props) => {
     ? [
         propValues,
         updateCtrl,
-        finished => ctrl.current.forEach(c => c.pause(finished)),
+        finished => ctrl.current.forEach(c => c.stop(finished)),
       ]
     : propValues
 }

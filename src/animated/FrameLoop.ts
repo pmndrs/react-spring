@@ -113,17 +113,12 @@ const update = () => {
       }
 
       // Keep track of updated values only when necessary
-      if (controller.props.onFrame)
+      if (controller.props.onFrame) {
         controller.values[config.name] = config.interpolation.getValue()
+      }
     }
-    // Update callbacks in the end of the frame
-    if (controller.props.onFrame) controller.props.onFrame(controller.values)
 
-    // Either call onEnd or next frame
-    if (!isActive) {
-      controllers.delete(controller)
-      controller.stop(true)
-    }
+    controller.onFrame(isActive)
   }
 
   // Loop over as long as there are controllers ...
@@ -137,7 +132,7 @@ const update = () => {
 }
 
 const start = (controller: Controller) => {
-  if (!controllers.has(controller)) controllers.add(controller)
+  controllers.add(controller)
   if (!active) {
     active = true
     if (manualFrameloop) requestFrame(manualFrameloop)
@@ -146,7 +141,7 @@ const start = (controller: Controller) => {
 }
 
 const stop = (controller: Controller) => {
-  if (controllers.has(controller)) controllers.delete(controller)
+  controllers.delete(controller)
 }
 
 export { start, stop, update }

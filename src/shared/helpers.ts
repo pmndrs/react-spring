@@ -141,3 +141,8 @@ export function handleRef<T>(ref: T, forward: Ref<T>) {
   }
   return ref
 }
+
+export function hasKeys(obj: object) {
+  for (const _ in obj) return true
+  return false
+}
