@@ -4,7 +4,6 @@ import {
   is,
   toArray,
   withDefault,
-  getForwardProps,
 } from '../shared/helpers'
 import AnimatedValue from './AnimatedValue'
 import AnimatedValueArray from './AnimatedValueArray'
@@ -59,20 +58,22 @@ class Controller<P extends any = {}> {
       this.queue.push({ ...props, delay, to })
     } else if (to) {
       // Otherwise go through each key since it could be delayed individually
-      let merge: any = {}
+      let ops: any = {}
       Object.entries(to).forEach(([k, v]) => {
         // Fetch delay and create an entry, consisting of the to-props, the delay, and basic props
         const entry = { to: { [k]: v }, delay: callProp(delay, k), ...props }
-        // If it doesn't have a delay, merge it, otherwise add it to the queue
-        if (!entry.delay)
-          merge = { ...merge, ...entry, to: { ...merge.to, ...entry.to } }
-        else this.queue = [...this.queue, entry]
+        const previous = ops[entry.delay] && ops[entry.delay].to
+        ops[entry.delay] = {
+          ...ops[entry.delay],
+          ...entry,
+          to: { ...previous, ...entry.to },
+        }
       })
-      // Append merged props, if present
-      if (Object.keys(merge).length > 0) this.queue = [...this.queue, merge]
+      this.queue = Object.values(ops)
     }
     // Sort queue, so that async calls go last
     this.queue = this.queue.sort((a, b) => a.delay - b.delay)
+
     // Diff the reduced props immediately (they'll contain the from-prop and some config)
     this.diff(props)
     return this
@@ -210,7 +211,6 @@ class Controller<P extends any = {}> {
     this.hasChanged = false
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
     let target = attach && attach(this)
-
     // Reduces input { name: value } pairs into animated values
     this.animations = Object.entries<any>(this.merged).reduce(
       (acc, [name, value]) => {
