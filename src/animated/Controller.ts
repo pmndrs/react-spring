@@ -13,65 +13,38 @@ import { colorNames, interpolation as interp, now } from './Globals'
 import { SpringProps } from '../../types/renderprops'
 
 type Animation = any
+type AnimationMap = { [name: string]: Animation }
+type InterpolationMap = { [name: string]: AnimatedValue | AnimatedValueArray }
 
-type ControllerProps<DS extends object> = DS &
+type UpdateProps<DS extends object> = DS &
   SpringProps<DS> & {
     attach?: (ctrl: Controller) => Animation
   }
 
-type AnimationsFor<P> = { [Key in keyof P]: any }
-
-type ValuesFor<P> = { [Key in keyof P]: any }
-
-type InterpolationsFor<DS> = {
-  [K in keyof DS]: DS[K] extends ArrayLike<any>
-    ? AnimatedValueArray
-    : AnimatedValue
-}
-
-type EndCallback = (finished?: boolean) => void
+type OnEnd = (finished?: boolean) => void
 
 let nextId = 1
 class Controller<DS extends object = any> {
   id = nextId++
   idle = true
   guid = 0
-  props: ControllerProps<DS> = {} as any
-  merged: any = {}
-  animations = {} as AnimationsFor<DS>
-  interpolations = {} as InterpolationsFor<DS>
-  values = {} as ValuesFor<DS>
-  configs: any = []
+  props: UpdateProps<DS> = {} as any
+  merged: DS = {} as any
+  values: DS = {} as any
+  interpolations: InterpolationMap = {}
+  animations: AnimationMap = {}
+  configs: any[] = []
   queue: any[] = []
   prevQueue: any[] = []
-  onEndQueue: EndCallback[] = []
+  onEndQueue: OnEnd[] = []
   pendingCount = 0
 
-  // Add this controller to the frameloop
-  private _start(onEnd?: EndCallback) {
-    if (onEnd) this.onEndQueue.push(onEnd)
-    if (this.idle) {
-      this.idle = false
-      start(this)
-    }
-  }
-
-  private _stop(finished?: boolean) {
-    this.idle = true
-    stop(this)
-    if (finished && this.props.onRest) {
-      this.props.onRest(this.merged)
-    }
-    if (this.onEndQueue.length) {
-      this.onEndQueue.forEach(onEnd => onEnd(finished))
-      this.onEndQueue = []
-    }
-  }
+  getValues = () => this.interpolations
 
   /** update(props)
    *  This function filters input props and creates an array of tasks which are executed in .start()
    *  Each task is allowed to carry a delay, which means it can execute asnychroneously */
-  update(args: ControllerProps<DS>) {
+  update(args: UpdateProps<DS>) {
     // Extract delay and the to-prop from props
     const { delay = 0, to, ...props } = interpolateTo(args) as any
 
@@ -99,7 +72,7 @@ class Controller<DS extends object = any> {
     this.queue.sort((a, b) => a.delay - b.delay)
 
     // Diff the reduced props immediately (they'll contain the from-prop and some config)
-    if (hasKeys(props)) this.diff(props)
+    if (hasKeys(props)) this._diff(props)
 
     return this
   }
@@ -107,7 +80,7 @@ class Controller<DS extends object = any> {
   /** start()
    *  This function either executes a queue, if present, or starts the frameloop, which animates.
    *  The `useSpring` hooks never have > 1 update per call, because they call this every render. */
-  start(onEnd?: EndCallback) {
+  start(onEnd?: OnEnd) {
     // If a queue is present we must execute it
     if (this.queue.length) {
       const { prevQueue } = this
@@ -127,39 +100,38 @@ class Controller<DS extends object = any> {
       const queue = (this.prevQueue = this.queue)
       this.queue = prevQueue
 
-      // Reset delay/async tracking
+      // Reset any queue-related state
       this.pendingCount = 0
+      this.onEndQueue.length = 0
+
+      // Never assume that the last update always finishes last, since that's
+      // not true when 2+ async animations have indeterminate durations.
+      let remaining = queue.length
+      const didEnd =
+        onEnd &&
+        ((finished?: boolean) => {
+          if (--remaining < 0 || guid !== this.guid) return
+          onEnd(finished)
+        })
 
       // Go through each entry and execute it
-      queue.forEach(({ delay, onStart, ...props }) => {
+      queue.forEach(({ delay, ...props }) => {
         // Entries can be delayed, async, or immediate
-        const async = is.arr(props.to) || is.fun(props.to)
         if (delay) {
           this.pendingCount++
           setTimeout(() => {
             if (guid === this.guid) {
               this.pendingCount--
-              if (async) this.runAsync(guid, props, onEnd)
-              else this.diff(props)._start(onEnd)
+              this._run(guid, props, didEnd)
             }
           }, delay)
         } else {
-          if (async) this.runAsync(guid, props, onEnd)
-          else this.diff(props)._start(onEnd)
+          this._run(guid, props, didEnd)
         }
       })
     }
     // Otherwise ensure the frameloop is active
     else this._start(onEnd)
-    return this
-  }
-
-  stop(finished?: boolean) {
-    if (!this.idle || this.pendingCount) {
-      this.guid++
-      this._stop(finished)
-      this.pendingCount = 0
-    }
     return this
   }
 
@@ -173,11 +145,61 @@ class Controller<DS extends object = any> {
     }
   }
 
-  runAsync(
-    guid: number,
-    props: SpringProps<DS>,
-    onEnd?: (finished: boolean) => void
-  ) {
+  stop(finished?: boolean) {
+    if (!this.idle || this.pendingCount) {
+      this.guid++
+      this._stop(finished)
+      this.pendingCount = 0
+    }
+    return this
+  }
+
+  destroy() {
+    this.stop()
+    this.props = {} as any
+    this.merged = {} as any
+    this.values = {} as any
+    this.interpolations = {}
+    this.animations = {}
+    this.configs = []
+  }
+
+  // Add this controller to the frameloop
+  private _start(onEnd?: OnEnd) {
+    if (onEnd) this.onEndQueue.push(onEnd)
+    if (this.idle) {
+      this.idle = false
+      start(this)
+    }
+  }
+
+  private _stop(finished?: boolean) {
+    this.idle = true
+    stop(this)
+    if (finished && this.props.onRest) {
+      this.props.onRest(this.merged)
+    }
+    if (this.onEndQueue.length) {
+      this.onEndQueue.forEach(onEnd => onEnd(finished))
+      this.onEndQueue = []
+    }
+  }
+
+  private _run(guid: number, props: UpdateProps<DS>, onEnd?: OnEnd) {
+    // Never call `onStart` for immediate animations
+    if (!props.immediate) {
+      const { onStart } = props
+      // Allow `useCallback` to prevent multiple calls
+      if (onStart && onStart !== this.props.onStart) onStart()
+    }
+    if (is.arr(props.to) || is.fun(props.to)) {
+      this._runAsync(guid, props, onEnd)
+    } else {
+      this._diff(props)._start(onEnd)
+    }
+  }
+
+  private _runAsync(guid: number, props: UpdateProps<DS>, onEnd?: OnEnd) {
     // If "to" is either a function or an array it will be processed async, therefor "to" should be empty right now
     // If the view relies on certain values "from" has to be present
     let queue = Promise.resolve()
@@ -189,7 +211,7 @@ class Controller<DS extends object = any> {
           if (guid !== this.guid) return
           const fresh = { ...props, ...interpolateTo(p) }
           if (is.arr(fresh.config)) fresh.config = fresh.config[i]
-          return new Promise<any>(r => this.diff(fresh).start(r))
+          return new Promise<any>(r => this._diff(fresh)._start(r))
         })
       })
     } else if (is.fun(to)) {
@@ -202,7 +224,7 @@ class Controller<DS extends object = any> {
             if (guid !== this.guid) return
             const fresh = { ...props, ...interpolateTo(p) }
             if (is.arr(fresh.config)) fresh.config = fresh.config[i++]
-            return (last = new Promise(r => this.diff(fresh).start(r)))
+            return (last = new Promise(r => this._diff(fresh)._start(r)))
           },
           // cancel()
           finished => this.stop(finished)
@@ -219,11 +241,11 @@ class Controller<DS extends object = any> {
     })
   }
 
-  diff(props: any) {
+  private _diff(props: UpdateProps<DS>) {
     this.props = { ...this.props, ...props }
     let {
-      from = {},
-      to = {},
+      from = {} as any,
+      to = {} as any,
       config = {},
       reverse,
       attach,
@@ -381,27 +403,17 @@ class Controller<DS extends object = any> {
     if (changed) {
       // Make animations available to frameloop
       this.configs = Object.values(this.animations)
-      this.values = {} as ValuesFor<DS>
-      this.interpolations = {} as InterpolationsFor<DS>
-      for (let key in this.animations) {
-        this.interpolations[key] = this.animations[key].interpolation
-        this.values[key] = this.animations[key].interpolation.getValue()
+
+      this.interpolations = {}
+      const values = (this.values = {} as any)
+      for (const key in this.animations) {
+        const { interpolation } = this.animations[key]
+        this.interpolations[key] = interpolation
+        values[key] = interpolation.getValue()
       }
     }
     return this
   }
-
-  destroy() {
-    this.stop()
-    this.props = {} as DS
-    this.merged = {}
-    this.animations = {} as AnimationsFor<DS>
-    this.interpolations = {} as InterpolationsFor<DS>
-    this.values = {} as ValuesFor<DS>
-    this.configs = []
-  }
-
-  getValues = () => this.interpolations
 }
 
 export default Controller
