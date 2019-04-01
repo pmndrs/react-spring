@@ -213,7 +213,7 @@ function diffItems({ first, prevProps, ...state }, props) {
           const keyIndex = _keys.indexOf(key)
           const item = _items[keyIndex]
           const slot = LEAVE
-          deleted.push({
+          deleted.unshift({
             ...current[key],
             slot,
             destroyed: true,
