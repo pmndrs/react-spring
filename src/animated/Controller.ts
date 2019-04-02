@@ -6,27 +6,42 @@ import {
   withDefault,
   hasKeys,
 } from '../shared/helpers'
+import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 import AnimatedValueArray from './AnimatedValueArray'
+import AnimatedInterpolation from './AnimatedInterpolation'
 import { start, stop } from './FrameLoop'
-import { colorNames, interpolation as interp, now } from './Globals'
-import { SpringProps } from '../../types/renderprops'
+import { colorNames, interpolation as interp } from './Globals'
+import { SpringProps, SpringConfig } from '../../types/renderprops'
 
-type Animation = any
-type AnimationMap = { [name: string]: Animation }
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-type InterpolationMap<DS> = {
-  [K in keyof DS]: DS[K] extends ArrayLike<any>
+interface Animation<T> extends Omit<SpringConfig, 'velocity'> {
+  name: string
+  node: T extends any[]
     ? AnimatedValueArray
-    : AnimatedValue
+    : AnimatedValue | AnimatedInterpolation
+  immediate?: boolean
+  goalValue: T
+  toValues: T extends any[] ? T : T[]
+  fromValues: T extends any[] ? T : T[]
+  animatedValues: (AnimatedValue)[]
+  initialVelocity: number
+  config: SpringConfig
 }
+
+type AnimationMap = { [name: string]: Animation<any> }
+type AnimatedMap<DS> = { [K in keyof DS]: Animated<DS[K]> }
 
 type UpdateProps<DS extends object> = DS &
   SpringProps<DS> & {
-    attach?: (ctrl: Controller) => Animation
+    attach?: (ctrl: Controller) => Controller
   }
 
 type OnEnd = (finished?: boolean) => void
+
+// Default easing
+const linear = (t: number) => t
 
 let nextId = 1
 class Controller<DS extends object = any> {
@@ -36,7 +51,7 @@ class Controller<DS extends object = any> {
   props: UpdateProps<DS> = {} as any
   merged: DS = {} as any
   values: DS = {} as any
-  interpolations: InterpolationMap<DS> = {} as any
+  nodes: AnimatedMap<DS> = {} as any
   animations: AnimationMap = {}
   configs: any[] = []
   queue: any[] = []
@@ -44,7 +59,7 @@ class Controller<DS extends object = any> {
   onEndQueue: OnEnd[] = []
   pendingCount = 0
 
-  getValues = () => this.interpolations
+  getValues = () => this.nodes
 
   /**
    * Update the controller by merging the given props into an array of tasks.
@@ -165,7 +180,7 @@ class Controller<DS extends object = any> {
     this.props = {} as any
     this.merged = {} as any
     this.values = {} as any
-    this.interpolations = {} as any
+    this.nodes = {} as any
     this.animations = {}
     this.configs = []
   }
@@ -281,129 +296,111 @@ class Controller<DS extends object = any> {
     this.animations = Object.entries<any>(this.merged).reduce(
       (acc, [name, value]) => {
         // Issue cached entries, except on reset
-        let entry = acc[name] || {}
+        const entry: Animation<any> = acc[name] || {}
+        let { node, animatedValues } = entry
 
-        // Figure out what the value is supposed to be
-        const isNumber = is.num(value)
-        const isString =
-          is.str(value) &&
-          !value.startsWith('#') &&
-          !/\d/.test(value) &&
-          !colorNames[value]
-        const isArray = is.arr(value)
-        const isInterpolation = !isNumber && !isArray && !isString
+        const currentValue = node && node.getValue()
+        const goalValue = computeGoalValue(value)
+        const toConfig = callProp(config, name)
 
-        let fromValue = !is.und(from[name]) ? from[name] : value
-        let toValue = isNumber || isArray ? value : isString ? value : 1
-        let toConfig = callProp(config, name)
-        if (target) toValue = target.animations[name].parent
-
-        let parent = entry.parent,
-          interpolation = entry.interpolation,
-          toValues = toArray(target ? toValue.getPayload() : toValue),
-          animatedValues
-
-        let newValue = value
-        if (isInterpolation)
-          newValue = interp({
-            range: [0, 1],
-            output: [value as string, value as string],
-          })(1)
-        let currentValue = interpolation && interpolation.getValue()
-
-        // Change detection flags
-        const isFirst = is.und(parent)
-        const isActive =
-          !isFirst && entry.animatedValues.some((v: AnimatedValue) => !v.done)
-        const currentValueDiffersFromGoal = !is.equ(newValue, currentValue)
-        const hasNewGoal = !is.equ(newValue, entry.previous)
-        const hasNewConfig = !is.equ(toConfig, entry.config)
-
-        // Change animation props when props indicate a new goal (new value differs from previous one)
-        // and current values differ from it. Config changes trigger a new update as well (though probably shouldn't?)
-        if (
-          reset ||
-          (hasNewGoal && currentValueDiffersFromGoal) ||
-          hasNewConfig
-        ) {
-          // Convert regular values into animated values, ALWAYS re-use if possible
-          if (isNumber || isString)
-            parent = interpolation =
-              entry.parent || new AnimatedValue(fromValue)
-          else if (isArray)
-            parent = interpolation =
-              entry.parent || new AnimatedValueArray(fromValue)
-          else if (isInterpolation) {
-            let prev =
-              entry.interpolation &&
-              entry.interpolation.calc(entry.parent.value)
-            prev = prev !== void 0 && !reset ? prev : fromValue
-            if (entry.parent) {
-              parent = entry.parent
-              parent.setValue(0, false)
-            } else parent = new AnimatedValue(0)
-            const range = { output: [prev, value] }
-            if (entry.interpolation) {
-              interpolation = entry.interpolation
-              entry.interpolation.updateConfig(range)
-            } else interpolation = parent.interpolate(range)
+        // When the goal value equals the current value, silently flag the
+        // animation as done, as long as `reset` is falsy. Interpolated strings
+        // also need their config updated and value set to 1.
+        if (!reset && is.equ(goalValue, currentValue)) {
+          changed = true
+          if (node instanceof AnimatedInterpolation) {
+            const [parent] = animatedValues
+            parent.done = true
+            parent.setValue(1, false)
+            node.updateConfig({
+              output: [goalValue, goalValue],
+            })
+          } else {
+            animatedValues.forEach(v => (v.done = true))
           }
+          acc[name] = {
+            ...(entry as Animation<any>),
+            goalValue,
+          }
+        }
+        // Animations are only updated when they were reset, they have a new
+        // goal value, or their spring config was changed.
+        else if (
+          reset ||
+          !is.equ(goalValue, entry.goalValue) ||
+          !is.equ(toConfig, entry.config)
+        ) {
+          const isActive = !!animatedValues && animatedValues.some(v => !v.done)
+          const isImmediate = callProp(immediate, name)
 
-          toValues = toArray(target ? toValue.getPayload() : toValue)
-          animatedValues = toArray(parent.getPayload())
-          if (reset && !isInterpolation) parent.setValue(fromValue, false)
+          const isArray = is.arr(value)
+          const isInterpolated = isAnimatableString(value)
 
-          // Reset animated values
-          animatedValues.forEach(value => {
-            value.startPosition = value.value
-            value.lastPosition = value.value
-            value.lastVelocity = isActive ? value.lastVelocity : undefined
-            value.lastTime = isActive ? value.lastTime : undefined
-            value.startTime = now()
-            value.done = false
-            value.animatedStyles.clear()
-          })
+          const fromValue = !is.und(from[name]) ? from[name] : value
+          const toValue = target
+            ? target.animations[name].node
+            : (isInterpolated && 1) || value
 
-          // Set immediate values
-          if (callProp(immediate, name)) {
-            parent.setValue(isInterpolation ? toValue : value, false)
+          // Animatable strings use interpolation
+          if (isInterpolated) {
+            let parent: AnimatedValue
+            const output = [fromValue, goalValue]
+            if (node instanceof AnimatedInterpolation) {
+              parent = animatedValues[0]
+
+              if (!reset) output[0] = node.calc(parent.value)
+              node.updateConfig({ output })
+
+              parent.reset(isActive)
+              parent.setValue(0, false)
+            } else {
+              parent = new AnimatedValue(0)
+              node = parent.interpolate({ output })
+            }
+            if (isImmediate) {
+              parent.setValue(toValue, false)
+            }
+          } else {
+            // Convert values into Animated nodes (reusing nodes whenever possible)
+            if (isArray) {
+              if (node instanceof AnimatedValueArray) {
+                animatedValues.forEach(node => node.reset(isActive))
+              } else {
+                node = new AnimatedValueArray(fromValue)
+              }
+            } else {
+              if (node instanceof AnimatedValue) {
+                node.reset(isActive)
+              } else {
+                node = new AnimatedValue(fromValue)
+              }
+            }
+            if (reset || isImmediate) {
+              node.setValue(reset ? fromValue : goalValue, false)
+            }
           }
 
           changed = true
           acc[name] = {
             ...entry,
             name,
-            parent,
-            interpolation,
-            animatedValues,
-            toValues,
-            previous: newValue,
-            config: toConfig,
-            fromValues: toArray(parent.getValue()),
-            immediate: callProp(immediate, name),
+            node,
+            immediate: isImmediate,
+            goalValue,
+            toValues: toArray(target ? toValue.getPayload() : toValue),
+            fromValues: toArray(node.getValue()),
+            animatedValues: toArray(node.getPayload() as any),
+            mass: withDefault(toConfig.mass, 1),
+            tension: withDefault(toConfig.tension, 170),
+            friction: withDefault(toConfig.friction, 26),
             initialVelocity: withDefault(toConfig.velocity, 0),
             clamp: withDefault(toConfig.clamp, false),
             precision: withDefault(toConfig.precision, 0.01),
-            tension: withDefault(toConfig.tension, 170),
-            friction: withDefault(toConfig.friction, 26),
-            mass: withDefault(toConfig.mass, 1),
-            duration: toConfig.duration,
-            easing: withDefault(toConfig.easing, (t: number) => t),
             decay: toConfig.decay,
+            duration: toConfig.duration,
+            easing: withDefault(toConfig.easing, linear),
+            config: toConfig,
           }
-        } else if (!currentValueDiffersFromGoal) {
-          // So ... the current target value (newValue) appears to be different from the previous value,
-          // which normally constitutes an update, but the actual value (currentValue) matches the target!
-          // In order to resolve this without causing an animation update we silently flag the animation as done,
-          // which it technically is. Interpolations also needs a config update with their target set to 1.
-          if (isInterpolation) {
-            parent.setValue(1, false)
-            interpolation.updateConfig({ output: [newValue, newValue] })
-          }
-
-          changed = true
-          parent.done = true
-          acc[name] = { ...entry, previous: newValue }
         }
         return acc
       },
@@ -412,17 +409,32 @@ class Controller<DS extends object = any> {
 
     if (changed) {
       const values = (this.values = {} as any)
-      const interpolations = (this.interpolations = {} as any)
+      const nodes = (this.nodes = {} as any)
       for (const key in this.animations) {
-        const { interpolation } = this.animations[key]
-        values[key] = interpolation.getValue()
-        interpolations[key] = interpolation
+        const { node } = this.animations[key]
+        values[key] = node.getValue()
+        nodes[key] = node
       }
       // Make animations available to frameloop
       this.configs = Object.values(this.animations)
     }
     return this
   }
+}
+
+// Not all strings can be animated (eg: {display: "none"})
+function isAnimatableString(value: unknown): value is string {
+  if (!is.str(value)) return false
+  return value.startsWith('#') || /^\d/.test(value) || !!colorNames[value]
+}
+
+// Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
+function computeGoalValue(value: any): any {
+  return is.arr(value)
+    ? value.map(computeGoalValue)
+    : isAnimatableString(value)
+    ? interp({ range: [0, 1], output: [value, value] })(1)
+    : value
 }
 
 export default Controller

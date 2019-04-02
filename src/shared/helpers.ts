@@ -48,7 +48,7 @@ export function useForceUpdate() {
 }
 
 export function withDefault<T, DT>(value: T, defaultValue: DT) {
-  return is.und(value) || is.nul(value) ? defaultValue : value
+  return is.und(value) || is.nul(value) ? defaultValue : value!
 }
 
 export function toArray<T>(a?: T | T[]): T[] {
