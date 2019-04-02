@@ -74,6 +74,7 @@ export {
   apply,
   config,
   extendedAnimated as animated,
+  extendedAnimated as a,
   interpolate,
   Globals,
   useSpring,

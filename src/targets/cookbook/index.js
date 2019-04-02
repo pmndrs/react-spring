@@ -28,6 +28,7 @@ export {
   AnimatedInterpolation,
   interpolate,
   animated,
+  animated as a,
   createInterpolator,
   Animated,
   AnimatedValueArray,

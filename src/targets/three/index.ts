@@ -13,10 +13,13 @@ import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
 import { merge } from '../../shared/helpers'
 import { update } from '../../animated/FrameLoop'
+import { ReactType } from 'react'
 
 // Extend animated with all the available THREE elements
 const apply = merge(animated)
 const extendedAnimated = apply(THREE)
+extendedAnimated.primitive = animated('primitive' as ReactType)
+
 if (addEffect) {
   // Add the update function as a global effect to react-three-fibers update loop
   addEffect(update)
@@ -38,6 +41,7 @@ export {
   update,
   config,
   extendedAnimated as animated,
+  extendedAnimated as a,
   interpolate,
   Globals,
   useSpring,
