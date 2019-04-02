@@ -13,52 +13,48 @@ export const useSprings = (length, props) => {
   const isFn = is.fun(props)
 
   // The controller maintains the animation values, starts and stops animations
-  const [controllers, ref] = useMemo(() => {
-    // Remove old controllers
-    if (ctrl.current) {
-      ctrl.current.map(c => c.destroy())
-      ctrl.current = undefined
-    }
+  const [controllers, setProps, ref, api] = useMemo(() => {
     let ref
     return [
+      // Recreate the controllers whenever `length` changes
       new Array(length).fill().map((_, i) => {
-        const ctrl = new Ctrl()
-        const newProps = isFn ? callProp(props, i, ctrl) : props[i]
+        const c = new Ctrl()
+        const newProps = isFn ? callProp(props, i, c) : props[i]
         if (i === 0) ref = newProps.ref
-        return ctrl.update(newProps)
+        return c.update(newProps)
       }),
+      // This updates the controllers with new props
+      props =>
+        ctrl.current.forEach((c, i) => {
+          c.update(is.fun(props) ? callProp(props, i, c) : props[i])
+          if (!ref) c.start()
+        }),
+      // The imperative API is accessed via ref
       ref,
+      ref && {
+        start: () =>
+          Promise.all(ctrl.current.map(c => new Promise(r => c.start(r)))),
+        stop: finished => ctrl.current.forEach(c => c.stop(finished)),
+        get controllers() {
+          return ctrl.current
+        },
+      },
     ]
   }, [length])
 
-  ctrl.current = controllers
-
-  // The hooks reference api gets defined here ...
-  const api = useImperativeHandle(ref, () => ({
-    start: () =>
-      Promise.all(ctrl.current.map(c => new Promise(r => c.start(r)))),
-    stop: finished => ctrl.current.forEach(c => c.stop(finished)),
-    get controllers() {
-      return ctrl.current
-    },
-  }))
-
-  // This function updates the controllers
-  const updateCtrl = useMemo(
-    () => updateProps =>
-      ctrl.current.map((c, i) => {
-        c.update(isFn ? callProp(updateProps, i, c) : updateProps[i])
-        if (!ref) c.start()
-      }),
-    [length]
-  )
+  // Attach the imperative API to its ref
+  useImperativeHandle(ref, () => api, [api])
 
   // Update controller if props aren't functional
   useEffect(() => {
+    if (ctrl.current !== controllers) {
+      if (ctrl.current) ctrl.current.map(c => c.destroy())
+      ctrl.current = controllers
+    }
     if (mounted.current) {
-      if (!isFn) updateCtrl(props)
+      if (!isFn) setProps(props)
     } else if (!ref) {
-      ctrl.current.forEach(c => c.start())
+      controllers.forEach(c => c.start())
     }
   })
 
@@ -69,12 +65,12 @@ export const useSprings = (length, props) => {
   }, [])
 
   // Return animated props, or, anim-props + the update-setter above
-  const propValues = ctrl.current.map(c => c.getValues())
+  const values = ctrl.current.map(c => c.getValues())
   return isFn
     ? [
-        propValues,
-        updateCtrl,
+        values,
+        setProps,
         finished => ctrl.current.forEach(c => c.stop(finished)),
       ]
-    : propValues
+    : values
 }
