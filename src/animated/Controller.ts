@@ -56,7 +56,7 @@ class Controller<DS extends object = any> {
   queue: any[] = []
   prevQueue: any[] = []
   onEndQueue: OnEnd[] = []
-  pendingCount = 0
+  runCount = 0
 
   getValues = () => this.values as { [K in keyof DS]: Animation<DS[K]>['node'] }
 
@@ -65,6 +65,8 @@ class Controller<DS extends object = any> {
    * Individual tasks may be async and/or delayed.
    */
   update(updateProps: UpdateProps<DS>) {
+    if (!updateProps) return this
+
     // Extract delay and the to-prop from props
     const { delay = 0, to, ...props } = interpolateTo(updateProps) as any
 
@@ -146,7 +148,6 @@ class Controller<DS extends object = any> {
 
         // Reset any queue-related state
         prevQueue.length = 0
-        this.pendingCount = 0
         this.onEndQueue.length = 0
       }
 
@@ -156,28 +157,33 @@ class Controller<DS extends object = any> {
       const queue = (this.prevQueue = this.queue)
       this.queue = prevQueue
 
+      // Track the number of running animations.
+      let runsLeft = queue.length
+      this.runCount = runsLeft
+
       // Never assume that the last update always finishes last, since that's
       // not true when 2+ async updates have indeterminate durations.
-      let remaining = queue.length
-      const didEnd =
-        onEnd &&
-        ((finished?: boolean) => {
-          if (--remaining === 0) onEnd(finished)
-        })
+      const onRunEnd = (finished?: boolean) => {
+        if (guid === this.guid) {
+          this.runCount--
+        }
+        if (--runsLeft) return
+        if (onEnd) onEnd(finished)
+        if (finished) {
+          const { onRest } = this.props
+          if (onRest && !this.runCount) {
+            onRest(this.merged)
+          }
+        }
+      }
 
       // Go through each entry and execute it
       queue.forEach(({ delay, ...props }) => {
         // Entries can be delayed, async, or immediate
         if (delay) {
-          this.pendingCount++
-          setTimeout(() => {
-            if (guid === this.guid) {
-              this.pendingCount--
-              this._run(guid, props, didEnd)
-            }
-          }, delay)
+          setTimeout(() => this._run(guid, props, onRunEnd), delay)
         } else {
-          this._run(guid, props, didEnd)
+          this._run(guid, props, onRunEnd)
         }
       })
     }
@@ -197,10 +203,10 @@ class Controller<DS extends object = any> {
   }
 
   stop(finished?: boolean) {
-    if (!this.idle || this.pendingCount) {
+    if (this.runCount) {
       this.guid++
+      this.runCount = 0
       this._stop(finished)
-      this.pendingCount = 0
     }
     return this
   }
@@ -231,16 +237,19 @@ class Controller<DS extends object = any> {
   private _stop(finished?: boolean) {
     this.idle = true
     stop(this)
-    if (finished && this.props.onRest) {
-      this.props.onRest(this.merged)
-    }
-    if (this.onEndQueue.length) {
-      this.onEndQueue.forEach(onEnd => onEnd(finished))
+
+    const queue = this.onEndQueue
+    if (queue.length) {
       this.onEndQueue = []
+      queue.forEach(onEnd => onEnd(finished))
     }
   }
 
   private _run(guid: number, props: UpdateProps<DS>, onEnd?: OnEnd) {
+    if (guid !== this.guid) {
+      if (onEnd) onEnd(false)
+      return
+    }
     if (is.arr(props.to) || is.fun(props.to)) {
       this._runAsync(guid, props, onEnd)
     } else {
@@ -281,13 +290,9 @@ class Controller<DS extends object = any> {
       )
     }
 
-    this.pendingCount++
-    queue.then(() => {
-      if (guid === this.guid) {
-        this.pendingCount--
-        if (onEnd) onEnd(true)
-      }
-    })
+    if (onEnd) {
+      queue.then(() => onEnd(guid === this.guid))
+    }
   }
 
   private _diff(props: UpdateProps<DS>) {
@@ -360,15 +365,20 @@ class Controller<DS extends object = any> {
         ) {
           const isActive = !!animatedValues && animatedValues.some(v => !v.done)
           const isImmediate = callProp(immediate, name)
-          if (!isImmediate) started.push(name)
+
+          // When `node` is falsy, this is the initial diff, which means the
+          // goal value is omitted. The animation will start in the next diff.
+          // Immediate animations are never passed to the `onStart` prop.
+          if (node && !isImmediate) {
+            started.push(name)
+          }
 
           const isArray = is.arr(value)
           const isInterpolated = isAnimatableString(value)
 
-          const fromValue = !is.und(from[name]) ? from[name] : value
-          const toValue = target
-            ? target.animations[name].node
-            : (isInterpolated && 1) || value
+          const fromValue = !is.und(from[name])
+            ? computeGoalValue(from[name])
+            : goalValue
 
           // Animatable strings use interpolation
           if (isInterpolated) {
@@ -387,7 +397,7 @@ class Controller<DS extends object = any> {
               node = input.interpolate({ output })
             }
             if (isImmediate) {
-              input.setValue(toValue, false)
+              input.setValue(1, false)
             }
           } else {
             // Convert values into Animated nodes (reusing nodes whenever possible)
@@ -418,7 +428,11 @@ class Controller<DS extends object = any> {
             node,
             immediate: isImmediate,
             goalValue,
-            toValues: toArray(target ? toValue.getPayload() : toValue),
+            toValues: toArray(
+              target
+                ? target.animations[name].node.getPayload()
+                : (isInterpolated && 1) || goalValue
+            ),
             fromValues: animatedValues.map(node => node.getValue()),
             animatedValues,
             mass: withDefault(toConfig.mass, 1),
@@ -439,7 +453,7 @@ class Controller<DS extends object = any> {
     )
 
     if (changed) {
-      if (started.length && onStart) {
+      if (onStart && started.length) {
         started.forEach(name => onStart!(this.animations[name]))
       }
 

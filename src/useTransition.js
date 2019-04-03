@@ -84,6 +84,9 @@ export function useTransition(input, keyTransform, config) {
       if (!state.current.instances.has(key))
         state.current.instances.set(key, new Ctrl())
 
+      // Avoid calling `onStart` more than once per transition.
+      let started = false
+
       // update the map object
       const ctrl = state.current.instances.get(key)
       const newProps = {
@@ -103,12 +106,22 @@ export function useTransition(input, keyTransform, config) {
             // A transition comes to rest once all its springs conclude
             const curInstances = Array.from(state.current.instances)
             const active = curInstances.some(([, c]) => !c.idle)
-            if (!active && (ref || lazy) && state.current.deleted.length > 0)
+            if (!active && (ref || lazy) && state.current.deleted.length > 0) {
               cleanUp(state)
-            if (onRest) onRest(item, slot, values)
+            }
+            if (onRest) {
+              onRest(item, slot, values)
+            }
           }
         },
-        onStart: onStart && (() => onStart(item, slot)),
+        onStart:
+          onStart &&
+          (() => {
+            if (!started) {
+              started = true
+              onStart(item, slot)
+            }
+          }),
         onFrame: onFrame && (values => onFrame(item, slot, values)),
         delay: trail,
         reset: reset && slot === ENTER,
