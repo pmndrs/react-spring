@@ -1,10 +1,11 @@
 import {
   callProp,
+  fillArray,
+  hasKeys,
   interpolateTo,
   is,
   toArray,
   withDefault,
-  hasKeys,
 } from '../shared/helpers'
 import AnimatedValue from './AnimatedValue'
 import AnimatedValueArray from './AnimatedValueArray'
@@ -89,13 +90,13 @@ class Controller<DS extends object = any> {
         // Eagerly create an Animated node to be used during render.
         // When `from[name]` exists, the node is created by `_diff` instead.
         if (!hasFrom && !this.values[name]) {
+          // Use undefined as the placeholder value
+          const nil = undefined as any
           const node = is.arr(value)
-            ? new AnimatedValueArray(
-                new Array(value.length).fill(() => new AnimatedValue(NaN))
-              )
+            ? new AnimatedValueArray(fillArray(value.length, () => nil))
             : isAnimatableString(value)
-            ? new AnimatedValue(NaN).interpolate({ output: [] })
-            : new AnimatedValue(NaN)
+            ? new AnimatedValue(nil).interpolate({ output: [] })
+            : new AnimatedValue(nil)
 
           // For `node` to be reused, an animation object must exist
           const animation: any = {
@@ -241,16 +242,27 @@ class Controller<DS extends object = any> {
   }
 
   private _run(guid: number, props: UpdateProps<DS>, onEnd?: OnEnd) {
-    // Never call `onStart` for immediate animations
-    if (!props.immediate) {
-      const { onStart } = props
-      // Allow `useCallback` to prevent multiple calls
-      if (onStart && onStart !== this.props.onStart) onStart()
-    }
     if (is.arr(props.to) || is.fun(props.to)) {
       this._runAsync(guid, props, onEnd)
     } else {
       this._diff(props)._start(onEnd)
+    }
+  }
+
+  private _willStart(props: SpringProps<any>, oldProps: SpringProps<any>) {
+    const { immediate, to, onStart } = props
+
+    // Equals true when all animations are immediate
+    const isImmediate =
+      immediate === true ||
+      (is.fun(immediate) && Object.keys(to).every(name => immediate(name)))
+
+    // Never call `onStart` for immediate animations
+    if (!isImmediate) {
+      // Allow `useCallback` to prevent multiple calls
+      if (onStart && onStart !== oldProps.onStart) {
+        onStart(props)
+      }
     }
   }
 
@@ -297,7 +309,8 @@ class Controller<DS extends object = any> {
   }
 
   private _diff(props: UpdateProps<DS>) {
-    this.props = { ...this.props, ...props }
+    const oldProps = this.props
+    this.props = { ...oldProps, ...props }
     let {
       from = {} as any,
       to = {} as any,
@@ -437,6 +450,7 @@ class Controller<DS extends object = any> {
     )
 
     if (changed) {
+      this._willStart(props, oldProps)
       const frames = (this.frames = {} as any)
       const values = (this.values = {} as any)
       for (const key in this.animations) {

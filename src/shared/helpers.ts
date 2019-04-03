@@ -146,3 +146,9 @@ export function hasKeys(obj: object) {
   for (const _ in obj) return true
   return false
 }
+
+export function fillArray<T>(length: number, mapIndex: (index: number) => T) {
+  const arr = []
+  for (let i = 0; i < length; i++) arr.push(mapIndex(i))
+  return arr
+}

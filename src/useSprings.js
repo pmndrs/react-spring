@@ -1,6 +1,6 @@
 import { useMemo, useRef, useImperativeHandle, useEffect } from 'react'
 import Ctrl from './animated/Controller'
-import { callProp, is } from './shared/helpers'
+import { callProp, fillArray, is } from './shared/helpers'
 
 /** API
  * const props = useSprings(number, [{ ... }, { ... }, ...])
@@ -17,7 +17,7 @@ export const useSprings = (length, props) => {
     let ref
     return [
       // Recreate the controllers whenever `length` changes
-      new Array(length).fill().map((_, i) => {
+      fillArray(length, i => {
         const c = new Ctrl()
         const newProps = isFn ? callProp(props, i, c) : props[i]
         if (i === 0) ref = newProps.ref
@@ -65,7 +65,7 @@ export const useSprings = (length, props) => {
   }, [])
 
   // Return animated props, or, anim-props + the update-setter above
-  const values = ctrl.current.map(c => c.getValues())
+  const values = controllers.map(c => c.getValues())
   return isFn
     ? [
         values,
