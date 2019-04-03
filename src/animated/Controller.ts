@@ -15,7 +15,7 @@ import { SpringProps, SpringConfig } from '../../types/renderprops'
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
-interface Animation<T> extends Omit<SpringConfig, 'velocity'> {
+interface Animation<T = any> extends Omit<SpringConfig, 'velocity'> {
   name: string
   node: T extends any[]
     ? AnimatedValueArray
@@ -29,8 +29,8 @@ interface Animation<T> extends Omit<SpringConfig, 'velocity'> {
   config: SpringConfig
 }
 
-type AnimationMap = { [name: string]: Animation<any> }
-type AnimatedMap = { [name: string]: Animation<any>['node'] }
+type AnimationMap = { [name: string]: Animation }
+type AnimatedMap = { [name: string]: Animation['node'] }
 
 type UpdateProps<DS extends object> = DS &
   SpringProps<DS> & {
@@ -112,7 +112,9 @@ class Controller<DS extends object = any> {
     this.queue.sort((a, b) => a.delay - b.delay)
 
     // Diff the reduced props immediately (they'll contain the from-prop and some config)
-    if (hasKeys(props)) this._diff(props)
+    if (hasKeys(props)) {
+      this._diff(props)
+    }
 
     return this
   }
@@ -246,23 +248,6 @@ class Controller<DS extends object = any> {
     }
   }
 
-  private _willStart(props: SpringProps<any>, oldProps: SpringProps<any>) {
-    const { immediate, to, onStart } = props
-
-    // Equals true when all animations are immediate
-    const isImmediate =
-      immediate === true ||
-      (is.fun(immediate) && Object.keys(to).every(name => immediate(name)))
-
-    // Never call `onStart` for immediate animations
-    if (!isImmediate) {
-      // Allow `useCallback` to prevent multiple calls
-      if (onStart && onStart !== oldProps.onStart) {
-        onStart(props)
-      }
-    }
-  }
-
   private _runAsync(guid: number, props: UpdateProps<DS>, onEnd?: OnEnd) {
     // If "to" is either a function or an array it will be processed async, therefor "to" should be empty right now
     // If the view relies on certain values "from" has to be present
@@ -306,8 +291,7 @@ class Controller<DS extends object = any> {
   }
 
   private _diff(props: UpdateProps<DS>) {
-    const oldProps = this.props
-    this.props = { ...oldProps, ...props }
+    Object.assign(this.props, props)
     let {
       from = {} as any,
       to = {} as any,
@@ -316,6 +300,7 @@ class Controller<DS extends object = any> {
       attach,
       reset,
       immediate,
+      onStart,
     } = this.props
 
     // Reverse values when requested
@@ -323,8 +308,11 @@ class Controller<DS extends object = any> {
       ;[from, to] = [to, from]
     }
 
-    // Detect when no animations are changed
+    // True if any animation was updated
     let changed = false
+
+    // The animations that are starting/restarting
+    const started: string[] = []
 
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
     const target = attach && attach(this)
@@ -336,7 +324,7 @@ class Controller<DS extends object = any> {
     this.animations = Object.entries<any>(this.merged).reduce(
       (acc, [name, value]) => {
         // Issue cached entries, except on reset
-        const entry: Animation<any> = acc[name] || {}
+        const entry: Animation = acc[name] || {}
         let { node, animatedValues } = entry
 
         const currentValue = node && node.getValue()
@@ -347,7 +335,6 @@ class Controller<DS extends object = any> {
         // animation as done, as long as `reset` is falsy. Interpolated strings
         // also need their config updated and value set to 1.
         if (!reset && is.equ(goalValue, currentValue)) {
-          changed = true
           if (node instanceof AnimatedInterpolation) {
             const [parent] = animatedValues
             parent.done = true
@@ -358,8 +345,9 @@ class Controller<DS extends object = any> {
           } else {
             animatedValues.forEach(v => (v.done = true))
           }
+          changed = true
           acc[name] = {
-            ...(entry as Animation<any>),
+            ...(entry as Animation),
             goalValue,
           }
         }
@@ -372,6 +360,7 @@ class Controller<DS extends object = any> {
         ) {
           const isActive = !!animatedValues && animatedValues.some(v => !v.done)
           const isImmediate = callProp(immediate, name)
+          if (!isImmediate) started.push(name)
 
           const isArray = is.arr(value)
           const isInterpolated = isAnimatableString(value)
@@ -416,7 +405,7 @@ class Controller<DS extends object = any> {
               }
             }
             if (reset || isImmediate) {
-              node.setValue(reset ? fromValue : goalValue, false)
+              node.setValue(isImmediate ? goalValue : fromValue, false)
             }
           }
 
@@ -450,7 +439,10 @@ class Controller<DS extends object = any> {
     )
 
     if (changed) {
-      this._willStart(props, oldProps)
+      if (started.length && onStart) {
+        started.forEach(name => onStart!(this.animations[name]))
+      }
+
       const frames = (this.frames = {} as any)
       const values = (this.values = {} as any)
       for (const key in this.animations) {
@@ -458,6 +450,7 @@ class Controller<DS extends object = any> {
         frames[key] = node.getValue()
         values[key] = node
       }
+
       // Make animations available to frameloop
       this.configs = Object.values(this.animations)
     }
