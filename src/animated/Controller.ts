@@ -6,7 +6,6 @@ import {
   withDefault,
   hasKeys,
 } from '../shared/helpers'
-import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 import AnimatedValueArray from './AnimatedValueArray'
 import AnimatedInterpolation from './AnimatedInterpolation'
@@ -31,7 +30,7 @@ interface Animation<T> extends Omit<SpringConfig, 'velocity'> {
 }
 
 type AnimationMap = { [name: string]: Animation<any> }
-type AnimatedMap<DS> = { [K in keyof DS]: Animated<DS[K]> }
+type AnimatedMap = { [name: string]: Animation<any>['node'] }
 
 type UpdateProps<DS extends object> = DS &
   SpringProps<DS> & {
@@ -50,8 +49,8 @@ class Controller<DS extends object = any> {
   guid = 0
   props: UpdateProps<DS> = {} as any
   merged: DS = {} as any
-  values: DS = {} as any
-  nodes: AnimatedMap<DS> = {} as any
+  frames: DS = {} as any
+  values: AnimatedMap = {} as any
   animations: AnimationMap = {}
   configs: any[] = []
   queue: any[] = []
@@ -59,32 +58,53 @@ class Controller<DS extends object = any> {
   onEndQueue: OnEnd[] = []
   pendingCount = 0
 
-  getValues = () => this.nodes
+  getValues = () => this.values as { [K in keyof DS]: Animation<DS[K]>['node'] }
 
   /**
    * Update the controller by merging the given props into an array of tasks.
    * Individual tasks may be async and/or delayed.
    */
-  update(props: UpdateProps<DS>) {
+  update(updateProps: UpdateProps<DS>) {
     // Extract delay and the to-prop from props
-    const { delay = 0, to, ...restProps } = interpolateTo(props) as any
+    const { delay = 0, to, ...props } = interpolateTo(updateProps) as any
 
     // If config is either a function or an array, queue it up as is
     if (is.arr(to) || is.fun(to)) {
-      this.queue.push({ ...restProps, delay, to })
+      this.queue.push({ ...props, delay, to })
     }
     // Otherwise go through each key since it could be delayed individually
     else if (to) {
       let ops: any[] = []
-      Object.entries(to).forEach(([k, v]) => {
+      Object.entries(to).forEach(([name, value]) => {
         // Merge entries with the same delay
-        const dt = callProp(delay, k)
+        const dt = callProp(delay, name)
         const previous = ops[dt] || {}
         ops[dt] = {
           ...previous,
-          ...restProps,
+          ...props,
           delay: dt,
-          to: { ...previous.to, [k]: v },
+          to: { ...previous.to, [name]: value },
+        }
+        const hasFrom = is.obj(props.from) && !is.und(props.from[name])
+        // Eagerly create an Animated node to be used during render.
+        // When `from[name]` exists, the node is created by `_diff` instead.
+        if (!hasFrom && !this.values[name]) {
+          const node = is.arr(value)
+            ? new AnimatedValueArray(
+                new Array(value.length).fill(() => new AnimatedValue(NaN))
+              )
+            : isAnimatableString(value)
+            ? new AnimatedValue(NaN).interpolate({ output: [] })
+            : new AnimatedValue(NaN)
+
+          // For `node` to be reused, an animation object must exist
+          const animation: any = {
+            node,
+            animatedValues: toArray(node.getPayload()),
+          }
+
+          this.values[name] = node
+          this.animations[name] = animation
         }
       })
       ops.forEach(op => this.queue.push(op))
@@ -94,7 +114,7 @@ class Controller<DS extends object = any> {
     this.queue.sort((a, b) => a.delay - b.delay)
 
     // Diff the reduced props immediately (they'll contain the from-prop and some config)
-    if (hasKeys(restProps)) this._diff(restProps)
+    if (hasKeys(props)) this._diff(props)
 
     return this
   }
@@ -110,10 +130,20 @@ class Controller<DS extends object = any> {
 
       // Updates can interrupt trailing queues, in that case we just merge values
       if (prevQueue.length) {
+        const froms: any[] = []
+        const goals: any[] = []
         prevQueue.forEach(({ from, to }) => {
-          if (is.obj(from)) this.merged = { ...from, ...this.merged }
-          if (is.obj(to)) this.merged = { ...this.merged, ...to }
+          if (is.obj(from)) froms.push(from)
+          if (is.obj(to)) goals.push(to)
         })
+
+        // Update `this.merged` with new values
+        if (froms.length) {
+          this.merged = Object.assign({}, ...froms, this.merged, ...goals)
+        } else if (goals.length) {
+          Object.assign(this.merged, ...goals)
+        }
+
         // Reset any queue-related state
         prevQueue.length = 0
         this.pendingCount = 0
@@ -159,7 +189,7 @@ class Controller<DS extends object = any> {
   // Called by the frameloop
   onFrame(isActive: boolean) {
     if (this.props.onFrame) {
-      this.props.onFrame(this.values)
+      this.props.onFrame(this.frames)
     }
     if (!isActive) {
       this._stop(true)
@@ -179,8 +209,8 @@ class Controller<DS extends object = any> {
     this.stop()
     this.props = {} as any
     this.merged = {} as any
+    this.frames = {} as any
     this.values = {} as any
-    this.nodes = {} as any
     this.animations = {}
     this.configs = []
   }
@@ -287,12 +317,12 @@ class Controller<DS extends object = any> {
     this.merged = { ...from, ...this.merged, ...to }
 
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
-    let target = attach && attach(this)
+    const target = attach && attach(this)
 
     // Detect when no animations are changed
     let changed = false
 
-    // Reduces input { name: value } pairs into animated values
+    // Reduces input { name: value } pairs into animation objects
     this.animations = Object.entries<any>(this.merged).reduce(
       (acc, [name, value]) => {
         // Issue cached entries, except on reset
@@ -382,7 +412,6 @@ class Controller<DS extends object = any> {
 
           changed = true
           acc[name] = {
-            ...entry,
             name,
             node,
             immediate: isImmediate,
@@ -408,12 +437,12 @@ class Controller<DS extends object = any> {
     )
 
     if (changed) {
+      const frames = (this.frames = {} as any)
       const values = (this.values = {} as any)
-      const nodes = (this.nodes = {} as any)
       for (const key in this.animations) {
         const { node } = this.animations[key]
-        values[key] = node.getValue()
-        nodes[key] = node
+        frames[key] = node.getValue()
+        values[key] = node
       }
       // Make animations available to frameloop
       this.configs = Object.values(this.animations)
