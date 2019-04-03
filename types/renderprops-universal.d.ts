@@ -62,7 +62,7 @@ export interface SpringBaseProps {
   /**
    * Callback when the animation starts to animate
    */
-  onStart?(): void
+  onStart?(props: any): void
 }
 
 export interface SpringProps<DS extends object = {}> extends SpringBaseProps {

@@ -1,6 +1,6 @@
 import { useMemo, useRef, useImperativeHandle, useEffect } from 'react'
 import Ctrl from './animated/Controller'
-import { callProp, fillArray, is } from './shared/helpers'
+import { callProp, fillArray, is, toArray } from './shared/helpers'
 
 /** API
  * const props = useSprings(number, [{ ... }, { ... }, ...])
@@ -24,11 +24,14 @@ export const useSprings = (length, props) => {
         return c.update(newProps)
       }),
       // This updates the controllers with new props
-      props =>
+      props => {
+        const isFn = is.fun(props)
+        if (!isFn) props = toArray(props)
         ctrl.current.forEach((c, i) => {
-          c.update(is.fun(props) ? callProp(props, i, c) : props[i])
+          c.update(isFn ? callProp(props, i, c) : props[i])
           if (!ref) c.start()
-        }),
+        })
+      },
       // The imperative API is accessed via ref
       ref,
       ref && {

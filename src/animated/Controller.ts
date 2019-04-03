@@ -1,6 +1,5 @@
 import {
   callProp,
-  fillArray,
   hasKeys,
   interpolateTo,
   is,
@@ -90,13 +89,11 @@ class Controller<DS extends object = any> {
         // Eagerly create an Animated node to be used during render.
         // When `from[name]` exists, the node is created by `_diff` instead.
         if (!hasFrom && !this.values[name]) {
-          // Use undefined as the placeholder value
-          const nil = undefined as any
           const node = is.arr(value)
-            ? new AnimatedValueArray(fillArray(value.length, () => nil))
+            ? new AnimatedValueArray(value)
             : isAnimatableString(value)
-            ? new AnimatedValue(nil).interpolate({ output: [] })
-            : new AnimatedValue(nil)
+            ? new AnimatedValue(0).interpolate({ output: [value, value] })
+            : new AnimatedValue(value as any)
 
           // For `node` to be reused, an animation object must exist
           const animation: any = {
@@ -326,14 +323,14 @@ class Controller<DS extends object = any> {
       ;[from, to] = [to, from]
     }
 
-    // This will collect all props that were ever set, reset merged props when necessary
-    this.merged = { ...from, ...this.merged, ...to }
+    // Detect when no animations are changed
+    let changed = false
 
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
     const target = attach && attach(this)
 
-    // Detect when no animations are changed
-    let changed = false
+    // The goal values of every key ever animated
+    this.merged = { ...from, ...this.merged, ...to }
 
     // Reduces input { name: value } pairs into animation objects
     this.animations = Object.entries<any>(this.merged).reduce(
@@ -386,22 +383,22 @@ class Controller<DS extends object = any> {
 
           // Animatable strings use interpolation
           if (isInterpolated) {
-            let parent: AnimatedValue
+            let input: AnimatedValue
             const output = [fromValue, goalValue]
             if (node instanceof AnimatedInterpolation) {
-              parent = animatedValues[0]
+              input = animatedValues[0]
 
-              if (!reset) output[0] = node.calc(parent.value)
+              if (!reset) output[0] = node.calc(input.value)
               node.updateConfig({ output })
 
-              parent.reset(isActive)
-              parent.setValue(0, false)
+              input.setValue(0, false)
+              input.reset(isActive)
             } else {
-              parent = new AnimatedValue(0)
-              node = parent.interpolate({ output })
+              input = new AnimatedValue(0)
+              node = input.interpolate({ output })
             }
             if (isImmediate) {
-              parent.setValue(toValue, false)
+              input.setValue(toValue, false)
             }
           } else {
             // Convert values into Animated nodes (reusing nodes whenever possible)
@@ -423,6 +420,9 @@ class Controller<DS extends object = any> {
             }
           }
 
+          // Update the array of Animated nodes used by the frameloop
+          animatedValues = toArray(node.getPayload() as any)
+
           changed = true
           acc[name] = {
             name,
@@ -430,8 +430,8 @@ class Controller<DS extends object = any> {
             immediate: isImmediate,
             goalValue,
             toValues: toArray(target ? toValue.getPayload() : toValue),
-            fromValues: toArray(node.getValue()),
-            animatedValues: toArray(node.getPayload() as any),
+            fromValues: animatedValues.map(node => node.getValue()),
+            animatedValues,
             mass: withDefault(toConfig.mass, 1),
             tension: withDefault(toConfig.tension, 170),
             friction: withDefault(toConfig.friction, 26),
@@ -468,7 +468,7 @@ class Controller<DS extends object = any> {
 // Not all strings can be animated (eg: {display: "none"})
 function isAnimatableString(value: unknown): value is string {
   if (!is.str(value)) return false
-  return value.startsWith('#') || /^\d/.test(value) || !!colorNames[value]
+  return value.startsWith('#') || /\d/.test(value) || !!colorNames[value]
 }
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process

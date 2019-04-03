@@ -114,7 +114,7 @@ const update = () => {
 
       // Keep track of updated values only when necessary
       if (controller.props.onFrame) {
-        controller.values[config.name] = config.interpolation.getValue()
+        controller.frames[config.name] = config.node.getValue()
       }
     }
 
