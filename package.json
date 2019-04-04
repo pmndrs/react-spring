@@ -34,12 +34,6 @@
     "tabWidth": 2,
     "printWidth": 80
   },
-  "lint-staged": {
-    "*.{js,}": [
-      "prettier --write",
-      "git add"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/drcmda/react-spring.git"
