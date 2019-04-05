@@ -97,12 +97,12 @@
     "typescript": "3.3.3"
   },
   "peerDependencies": {
-    "prop-types": "15.x.x",
     "react": ">= 16.8.0",
     "react-dom": ">= 16.8.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.3.1"
+    "@babel/runtime": "^7.3.1",
+    "prop-types": "^15.5.8"
   },
   "jest": {
     "testPathIgnorePatterns": [
