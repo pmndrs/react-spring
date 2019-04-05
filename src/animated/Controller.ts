@@ -126,69 +126,23 @@ class Controller<DS extends object = any> {
    * The `useSpring` hooks never have > 1 update per call, because they call this every render.
    */
   start(onEnd?: OnEnd) {
-    // If a queue is present we must execute it
-    if (this.queue.length) {
-      const { prevQueue } = this
-
-      // Updates can interrupt trailing queues, in that case we just merge values
-      if (prevQueue.length) {
-        const froms: any[] = []
-        const goals: any[] = []
-        prevQueue.forEach(({ from, to }) => {
-          if (is.obj(from)) froms.push(from)
-          if (is.obj(to)) goals.push(to)
-        })
-
-        // Update `this.merged` with new values
-        if (froms.length) {
-          this.merged = Object.assign({}, ...froms, this.merged, ...goals)
-        } else if (goals.length) {
-          Object.assign(this.merged, ...goals)
-        }
-
-        // Reset any queue-related state
-        prevQueue.length = 0
-        this.onEndQueue.length = 0
-      }
-
-      // The guid helps when tracking frames, a new queue over an old one means an override.
-      // We discard async calls in that case
-      const guid = ++this.guid
-      const queue = (this.prevQueue = this.queue)
-      this.queue = prevQueue
-
-      // Track the number of running animations.
-      let runsLeft = queue.length
-      this.runCount = runsLeft
-
-      // Never assume that the last update always finishes last, since that's
-      // not true when 2+ async updates have indeterminate durations.
-      const onRunEnd = (finished?: boolean) => {
-        if (guid === this.guid) {
-          this.runCount--
-        }
-        if (--runsLeft) return
-        if (onEnd) onEnd(finished)
-        if (finished) {
-          const { onRest } = this.props
-          if (onRest && !this.runCount) {
-            onRest(this.merged)
-          }
-        }
-      }
-
-      // Go through each entry and execute it
-      queue.forEach(({ delay, ...props }) => {
-        // Entries can be delayed, async, or immediate
-        if (delay) {
-          setTimeout(() => this._run(guid, props, onRunEnd), delay)
-        } else {
-          this._run(guid, props, onRunEnd)
-        }
-      })
-    }
-    // Otherwise ensure the frameloop is active
+    // Apply any queued updates
+    if (this.queue.length) this._flush(onEnd)
+    // ...or start the frameloop
     else this._start(onEnd)
+
+    return this
+  }
+
+  // Clear all animations
+  stop(finished?: boolean) {
+    if (this.runCount) {
+      this.guid++
+      this.runCount = 0
+      this.configs = []
+      this.animations = {}
+      this._stop(finished)
+    }
     return this
   }
 
@@ -200,15 +154,6 @@ class Controller<DS extends object = any> {
     if (!isActive) {
       this._stop(true)
     }
-  }
-
-  stop(finished?: boolean) {
-    if (this.runCount) {
-      this.guid++
-      this.runCount = 0
-      this._stop(finished)
-    }
-    return this
   }
 
   destroy() {
@@ -238,13 +183,73 @@ class Controller<DS extends object = any> {
     this.idle = true
     stop(this)
 
-    const queue = this.onEndQueue
-    if (queue.length) {
+    const { onEndQueue } = this
+    if (onEndQueue.length) {
       this.onEndQueue = []
-      queue.forEach(onEnd => onEnd(finished))
+      onEndQueue.forEach(onEnd => onEnd(finished))
     }
   }
 
+  // Execute the current queue of update props to our animations.
+  private _flush(onEnd?: OnEnd) {
+    const { prevQueue } = this
+
+    // Updates can interrupt trailing queues, in that case we just merge values
+    if (prevQueue.length) {
+      const froms: any[] = []
+      const goals: any[] = []
+      prevQueue.forEach(({ from, to }) => {
+        if (is.obj(from)) froms.push(from)
+        if (is.obj(to)) goals.push(to)
+      })
+      prevQueue.length = 0
+
+      // Update `this.merged` with new values
+      if (froms.length) {
+        this.merged = Object.assign({}, ...froms, this.merged, ...goals)
+      } else if (goals.length) {
+        Object.assign(this.merged, ...goals)
+      }
+    }
+
+    // The guid helps when tracking frames, a new queue over an old one means an override.
+    // We discard async calls in that case
+    const guid = ++this.guid
+    const queue = (this.prevQueue = this.queue)
+    this.queue = prevQueue
+
+    // Track the number of running animations.
+    let runsLeft = queue.length
+    this.runCount = runsLeft
+
+    // Never assume that the last update always finishes last, since that's
+    // not true when 2+ async updates have indeterminate durations.
+    const onRunEnd = (finished?: boolean) => {
+      if (guid === this.guid) {
+        this.runCount--
+      }
+      if (--runsLeft) return
+      if (onEnd) onEnd(finished)
+      if (finished) {
+        const { onRest } = this.props
+        if (onRest && !this.runCount) {
+          onRest(this.merged)
+        }
+      }
+    }
+
+    // Go through each entry and execute it
+    queue.forEach(({ delay, ...props }) => {
+      // Entries can be delayed, async, or immediate
+      if (delay) {
+        setTimeout(() => this._run(guid, props, onRunEnd), delay)
+      } else {
+        this._run(guid, props, onRunEnd)
+      }
+    })
+  }
+
+  // Add or update (possibly async) animations.
   private _run(guid: number, props: UpdateProps<DS>, onEnd?: OnEnd) {
     if (guid !== this.guid) {
       if (onEnd) onEnd(false)
@@ -257,9 +262,8 @@ class Controller<DS extends object = any> {
     }
   }
 
+  // Start an async chain or an async script.
   private _runAsync(guid: number, props: UpdateProps<DS>, onEnd?: OnEnd) {
-    // If "to" is either a function or an array it will be processed async, therefor "to" should be empty right now
-    // If the view relies on certain values "from" has to be present
     let queue = Promise.resolve()
 
     const { to } = props
@@ -273,20 +277,28 @@ class Controller<DS extends object = any> {
         })
       })
     } else if (is.fun(to)) {
+      // Throw this to interrupt an infinite script
+      const stopToken = {}
+
       let i = 0
       let last: Promise<any>
       queue = queue.then(() =>
         to(
           // next(props)
           p => {
-            if (guid !== this.guid) return
+            if (guid !== this.guid) throw stopToken
             const fresh = { ...props, ...interpolateTo(p) }
             if (is.arr(fresh.config)) fresh.config = fresh.config[i++]
             return (last = new Promise(r => this._diff(fresh)._start(r)))
           },
-          // cancel()
-          finished => this.stop(finished)
-        ).then(() => last)
+          // stop(finished)
+          this.stop.bind(this)
+        ).then(
+          () => last,
+          err => {
+            if (err !== stopToken) throw err
+          }
+        )
       )
     }
 
@@ -309,9 +321,7 @@ class Controller<DS extends object = any> {
     } = this.props
 
     // Reverse values when requested
-    if (reverse) {
-      ;[from, to] = [to, from]
-    }
+    if (reverse) [from, to] = [to, from]
 
     // True if any animation was updated
     let changed = false
@@ -328,7 +338,6 @@ class Controller<DS extends object = any> {
     // Reduces input { name: value } pairs into animation objects
     this.animations = Object.entries<any>(this.merged).reduce(
       (acc, [name, value]) => {
-        // Issue cached entries, except on reset
         const entry: Animation = acc[name] || {}
         let { node, animatedValues } = entry
 
