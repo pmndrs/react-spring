@@ -13,6 +13,7 @@ import {
   callProp,
   interpolateTo,
   useForceUpdate,
+  reconcileDeleted,
 } from './shared/helpers'
 import { requestFrame } from './animated/Globals'
 
@@ -234,7 +235,7 @@ function diffItems({ first, current, deleted, prevProps, ...state }, props) {
         const i = _keys.indexOf(key)
         const item = _items[i]
         const leaveProps = callProp(leave, item, i)
-        deleted.unshift({
+        deleted.push({
           ...current[key],
           phase,
           destroyed: true,
@@ -268,17 +269,7 @@ function diffItems({ first, current, deleted, prevProps, ...state }, props) {
     }
   }
   let out = keys.map(key => current[key])
-
-  // This tries to restore order for deleted items by finding their last known siblings
-  // only using the left sibling to keep order placement consistent for all deleted items
-  deleted.forEach(({ left, right, ...item }) => {
-    let pos
-    // Was it the element on the left, if yes, move there ...
-    if ((pos = out.findIndex(t => t.originalKey === left)) !== -1) pos += 1
-    // And if nothing else helps, move it to the start ¯\_(ツ)_/¯
-    pos = Math.max(0, pos)
-    out = [...out.slice(0, pos), item, ...out.slice(pos)]
-  })
+  out = reconcileDeleted(deleted, out)
 
   return {
     ...state,
