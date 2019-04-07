@@ -183,16 +183,16 @@ export interface UseTransitionProps<TItem, DS extends object>
    * Values that apply to new elements, or: item => values
    * @default {}
    */
-  enter?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>)
+  enter?: InferFrom<DS> | InferFrom<DS>[] | ((item: TItem) => InferFrom<DS>)
   /**
    * Values that apply to leaving elements, or: item => values
    * @default {}
    */
-  leave?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>)
+  leave?: InferFrom<DS> | InferFrom<DS>[] | ((item: TItem) => InferFrom<DS>)
   /**
    * Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values
    */
-  update?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>)                           
+  update?: InferFrom<DS> | InferFrom<DS>[] | ((item: TItem) => InferFrom<DS>)                           
   /**
    * Initial (first time) base values, optional (can be null)
    */
