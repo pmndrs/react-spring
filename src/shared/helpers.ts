@@ -146,3 +146,66 @@ export function fillArray<T>(length: number, mapIndex: (index: number) => T) {
   for (let i = 0; i < length; i++) arr.push(mapIndex(i))
   return arr
 }
+
+/**
+ * This tries to put deleted items back into out list in correct order. Deleted
+ * items need to have a left and right property with id of their sibling which
+ * is used to find the correct placement.
+ * @param deleted
+ * @param out
+ */
+export function reconcileDeleted(
+  deleted: { left?: number; right?: number }[],
+  out: { originalKey: number }[]
+): any[] {
+  // Copy as we will be mutating the arrays
+  deleted = [...deleted]
+  let result: any[] = [...out]
+
+  // Keep track of how many times we were not able to insert an item
+  let failedTries = 0
+
+  // Either try to insert all deleted items or bail if we went through whole
+  // list and did not insert single item. Bailing means the chain was
+  // interrupted somewhere and we cannot recreate the ordering.
+  while (deleted.length && failedTries < deleted.length) {
+    const d = deleted.shift()!
+    let indexToInsert = null
+
+    result.forEach((item, index) => {
+      // try find a sibling in out array
+      if (item.originalKey == d.left) {
+        indexToInsert = index + 1
+        return
+      }
+
+      if (item.originalKey == d.right) {
+        indexToInsert = index
+        return
+      }
+    })
+
+    if (indexToInsert === null) {
+      // we did not find where it should be inserted, probably the sibling is
+      // in deleted array and we did not insert it yet so put it back on stack
+      // and try later
+      deleted.push(d)
+      failedTries += 1
+    } else {
+      result.splice(Math.max(indexToInsert, 0), 0, d)
+      indexToInsert = null
+      failedTries = 0
+    }
+  }
+
+  // We were not able to recreate the ordering just put them in the beginning.
+  // We assume deleted item are already ordered properly. There are some
+  // (not sure if bugs or not) cases where we get here, for example items without
+  // siblings have left set to their own key so if items are added one by one
+  // they won't be linked
+  if (deleted.length) {
+    result = [...deleted, ...result]
+  }
+
+  return result
+}
