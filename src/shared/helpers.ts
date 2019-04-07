@@ -2,7 +2,7 @@ import { MutableRefObject, Ref, useCallback, useState } from 'react'
 
 export const is = {
   arr: Array.isArray,
-  obj: (a: unknown): a is object =>
+  obj: (a: unknown): a is { [key: string]: any } =>
     Object.prototype.toString.call(a) === '[object Object]',
   fun: (a: unknown): a is Function => typeof a === 'function',
   str: (a: unknown): a is string => typeof a === 'string',
@@ -140,11 +140,6 @@ export function handleRef<T>(ref: T, forward: Ref<T>) {
     }
   }
   return ref
-}
-
-export function hasKeys(obj: object) {
-  for (const _ in obj) return true
-  return false
 }
 
 export function fillArray<T>(length: number, mapIndex: (index: number) => T) {

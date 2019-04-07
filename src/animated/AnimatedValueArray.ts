@@ -6,9 +6,9 @@ import AnimatedValue from './AnimatedValue'
 
 export default class AnimatedValueArray extends AnimatedArray<AnimatedValue>
   implements SpringValue {
-  constructor(values: (string | number)[]) {
+  constructor(values: AnimatedValue[]) {
     super()
-    this.payload = values.map(n => new AnimatedValue(n))
+    this.payload = values
   }
 
   public setValue(value: (string | number)[] | string | number, flush = true) {
@@ -29,6 +29,6 @@ export default class AnimatedValueArray extends AnimatedArray<AnimatedValue>
     range: number[] | InterpolationConfig | ((...args: any[]) => any),
     output?: (number | string)[]
   ): AnimatedInterpolation {
-    return new AnimatedInterpolation(this, range as number[], output!)
+    return new AnimatedInterpolation(this, range as number[], output)
   }
 }

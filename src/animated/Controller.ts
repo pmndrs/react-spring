@@ -1,6 +1,5 @@
 import {
   callProp,
-  hasKeys,
   interpolateTo,
   is,
   toArray,
@@ -10,112 +9,102 @@ import AnimatedValue from './AnimatedValue'
 import AnimatedValueArray from './AnimatedValueArray'
 import AnimatedInterpolation from './AnimatedInterpolation'
 import { start, stop } from './FrameLoop'
-import { colorNames, interpolation as interp } from './Globals'
+import { colorNames, interpolation as interp, now } from './Globals'
 import { SpringProps, SpringConfig } from '../../types/renderprops'
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
 interface Animation<T = any> extends Omit<SpringConfig, 'velocity'> {
-  name: string
-  node: T extends any[]
-    ? AnimatedValueArray
-    : AnimatedValue | AnimatedInterpolation
+  key: string
+  config: SpringConfig
+  initialVelocity: number
   immediate?: boolean
   goalValue: T
-  toValues: T extends any[] ? T : T[]
-  fromValues: T extends any[] ? T : T[]
-  animatedValues: (AnimatedValue)[]
-  initialVelocity: number
-  config: SpringConfig
+  toValues: T extends ReadonlyArray<any> ? T : [T]
+  fromValues: T extends ReadonlyArray<any> ? T : [T]
+  animatedValues: AnimatedValue[]
+  animated: T extends ReadonlyArray<any>
+    ? AnimatedValueArray
+    : AnimatedValue | AnimatedInterpolation
 }
 
-type AnimationMap = { [name: string]: Animation }
-type AnimatedMap = { [name: string]: Animation['node'] }
+type AnimationMap = { [key: string]: Animation }
+type AnimatedMap = { [key: string]: Animation['animated'] }
 
-type UpdateProps<DS extends object> = DS &
-  SpringProps<DS> & {
-    attach?: (ctrl: Controller) => Controller
-  }
+interface UpdateProps<DS extends object> extends SpringProps<DS> {
+  [key: string]: any
+  timestamp?: number
+  attach?: (ctrl: Controller) => Controller
+}
 
 type OnEnd = (finished?: boolean) => void
 
 // Default easing
 const linear = (t: number) => t
 
+const emptyObj: any = Object.freeze({})
+
 let nextId = 1
-class Controller<DS extends object = any> {
+class Controller<State extends object = any> {
   id = nextId++
   idle = true
-  guid = 0
-  props: UpdateProps<DS> = {} as any
-  merged: DS = {} as any
-  frames: DS = {} as any
-  values: AnimatedMap = {} as any
+  props: UpdateProps<State> = {}
+  timestamps: { [key: string]: number } = {}
+  values: State = {} as any
+  merged: State = {} as any
+  animated: AnimatedMap = {}
   animations: AnimationMap = {}
-  configs: any[] = []
+  configs: Animation[] = []
   queue: any[] = []
   prevQueue: any[] = []
   onEndQueue: OnEnd[] = []
   runCount = 0
 
-  getValues = () => this.values as { [K in keyof DS]: Animation<DS[K]>['node'] }
+  getValues = () =>
+    this.animated as { [K in keyof State]: Animation<State[K]>['animated'] }
 
   /**
    * Update the controller by merging the given props into an array of tasks.
    * Individual tasks may be async and/or delayed.
    */
-  update(updateProps: UpdateProps<DS>) {
-    if (!updateProps) return this
+  update(propsArg: UpdateProps<State>) {
+    if (!propsArg) return this
+    let { delay = 0, to, ...props } = interpolateTo(propsArg) as any
 
-    // Extract delay and the to-prop from props
-    const { delay = 0, to, ...props } = interpolateTo(updateProps) as any
-
-    // If config is either a function or an array, queue it up as is
-    if (is.arr(to) || is.fun(to)) {
-      this.queue.push({ ...props, delay, to })
+    // For async animations, the `from` prop must be defined for
+    // the Animated nodes to exist before animations have started.
+    if (props.from) {
+      for (const key in props.from) {
+        this._ensureAnimated(key, props.from[key])
+      }
     }
-    // Otherwise go through each key since it could be delayed individually
-    else if (to) {
-      let ops: any[] = []
-      Object.entries(to).forEach(([name, value]) => {
+
+    if (is.arr(to) || is.fun(to)) {
+      if (is.num(delay) && delay < 0) delay = 0
+      this.queue.push({
+        ...props,
+        timestamp: now(),
+        delay,
+        to,
+      })
+    } else if (to) {
+      // Compute the delay of each key
+      const ops: any[] = []
+      for (const key in to) {
+        this._ensureAnimated(key, to[key])
+
         // Merge entries with the same delay
-        const dt = callProp(delay, name)
-        const previous = ops[dt] || {}
-        ops[dt] = {
+        const delay = Math.max(0, callProp(propsArg.delay, key) || 0)
+        const previous = ops[delay] || emptyObj
+        ops[delay] = {
           ...previous,
           ...props,
-          delay: dt,
-          to: { ...previous.to, [name]: value },
+          timestamp: now(),
+          delay,
+          to: { ...previous.to, [key]: to[key] },
         }
-        const hasFrom = is.obj(props.from) && !is.und(props.from[name])
-        // Eagerly create an Animated node to be used during render.
-        // When `from[name]` exists, the node is created by `_diff` instead.
-        if (!hasFrom && !this.values[name]) {
-          const node = is.arr(value)
-            ? new AnimatedValueArray(value)
-            : isAnimatableString(value)
-            ? new AnimatedValue(0).interpolate({ output: [value, value] })
-            : new AnimatedValue(value as any)
-
-          // For `node` to be reused, an animation object must exist
-          const animation: any = {
-            node,
-            animatedValues: toArray(node.getPayload()),
-          }
-
-          this.values[name] = node
-          this.animations[name] = animation
-        }
-      })
+      }
       ops.forEach(op => this.queue.push(op))
-    }
-
-    // Sort queue, so that async calls go last
-    this.queue.sort((a, b) => a.delay - b.delay)
-
-    // Diff the reduced props immediately (they'll contain the from-prop and some config)
-    if (hasKeys(props)) {
-      this._diff(props)
     }
 
     return this
@@ -137,7 +126,6 @@ class Controller<DS extends object = any> {
   // Clear all animations
   stop(finished?: boolean) {
     if (this.runCount) {
-      this.guid++
       this.runCount = 0
       this.configs = []
       this.animations = {}
@@ -149,7 +137,7 @@ class Controller<DS extends object = any> {
   // Called by the frameloop
   onFrame(isActive: boolean) {
     if (this.props.onFrame) {
-      this.props.onFrame(this.frames)
+      this.props.onFrame(this.values)
     }
     if (!isActive) {
       this._stop(true)
@@ -159,14 +147,33 @@ class Controller<DS extends object = any> {
   destroy() {
     this.stop()
     this.props = {} as any
-    this.merged = {} as any
-    this.frames = {} as any
+    this.timestamps = {}
     this.values = {} as any
+    this.merged = {} as any
+    this.animated = {} as any
     this.animations = {}
     this.configs = []
   }
 
-  // Add this controller to the frameloop
+  // Create an Animated node if none exists.
+  private _ensureAnimated(key: string, value: any) {
+    if (this.animated[key]) return
+    const animated = createAnimated(value)
+    if (!animated) {
+      return console.warn('Given value not animatable:', value)
+    }
+
+    // Every `animated` needs an `animation` object
+    const animation: any = {
+      animated,
+      animatedValues: toArray(animated.getPayload()),
+    }
+
+    this.animated[key] = animated
+    this.animations[key] = animation
+  }
+
+  // Add this controller to the frameloop.
   private _start(onEnd?: OnEnd) {
     if (this.configs.length) {
       if (onEnd) this.onEndQueue.push(onEnd)
@@ -179,6 +186,7 @@ class Controller<DS extends object = any> {
     }
   }
 
+  // Remove this controller from the frameloop, and notify any listeners.
   private _stop(finished?: boolean) {
     this.idle = true
     stop(this)
@@ -190,310 +198,322 @@ class Controller<DS extends object = any> {
     }
   }
 
-  // Execute the current queue of update props to our animations.
+  // Execute the current queue of prop updates.
   private _flush(onEnd?: OnEnd) {
     const { prevQueue } = this
-
-    // Updates can interrupt trailing queues, in that case we just merge values
-    if (prevQueue.length) {
-      const froms: any[] = []
-      const goals: any[] = []
-      prevQueue.forEach(({ from, to }) => {
-        if (is.obj(from)) froms.push(from)
-        if (is.obj(to)) goals.push(to)
-      })
-      prevQueue.length = 0
-
-      // Update `this.merged` with new values
-      if (froms.length) {
-        this.merged = Object.assign({}, ...froms, this.merged, ...goals)
-      } else if (goals.length) {
-        Object.assign(this.merged, ...goals)
-      }
-    }
-
-    // The guid helps when tracking frames, a new queue over an old one means an override.
-    // We discard async calls in that case
-    const guid = ++this.guid
     const queue = (this.prevQueue = this.queue)
     this.queue = prevQueue
+    prevQueue.length = 0
 
     // Track the number of running animations.
     let runsLeft = queue.length
-    this.runCount = runsLeft
+    this.runCount += runsLeft
 
     // Never assume that the last update always finishes last, since that's
     // not true when 2+ async updates have indeterminate durations.
     const onRunEnd = (finished?: boolean) => {
-      if (guid === this.guid) {
-        this.runCount--
-      }
+      this.runCount--
       if (--runsLeft) return
       if (onEnd) onEnd(finished)
-      if (finished) {
+      if (!this.runCount) {
         const { onRest } = this.props
-        if (onRest && !this.runCount) {
+        if (onRest && finished) {
           onRest(this.merged)
         }
       }
     }
 
-    // Go through each entry and execute it
     queue.forEach(({ delay, ...props }) => {
-      // Entries can be delayed, async, or immediate
-      if (delay) {
-        setTimeout(() => this._run(guid, props, onRunEnd), delay)
-      } else {
-        this._run(guid, props, onRunEnd)
-      }
+      if (delay) setTimeout(() => this._run(props, onRunEnd), delay)
+      else this._run(props, onRunEnd)
     })
   }
 
-  // Add or update (possibly async) animations.
-  private _run(guid: number, props: UpdateProps<DS>, onEnd?: OnEnd) {
-    if (guid !== this.guid) {
-      if (onEnd) onEnd(false)
-      return
-    }
-    if (is.arr(props.to) || is.fun(props.to)) {
-      this._runAsync(guid, props, onEnd)
-    } else {
-      this._diff(props)._start(onEnd)
+  private _run(props: UpdateProps<State>, onEnd?: OnEnd) {
+    if (this._diff(props)) {
+      this._animate(this.props)
+      if (is.arr(props.to) || is.fun(props.to)) {
+        this._runAsync(props, onEnd)
+      } else {
+        this._start(onEnd)
+      }
     }
   }
 
   // Start an async chain or an async script.
-  private _runAsync(guid: number, props: UpdateProps<DS>, onEnd?: OnEnd) {
-    let queue = Promise.resolve()
+  private _runAsync({ to }: UpdateProps<State>, onEnd?: OnEnd) {
+    const { animations } = this
 
-    const { to } = props
-    if (is.arr(to)) {
-      to.forEach((p, i) => {
-        queue = queue.then(() => {
-          if (guid !== this.guid) return
-          const fresh = { ...props, ...interpolateTo(p) }
-          if (is.arr(fresh.config)) fresh.config = fresh.config[i]
-          return new Promise<any>(r => this._diff(fresh)._start(r))
-        })
-      })
-    } else if (is.fun(to)) {
-      // Throw this to interrupt an infinite script
-      const stopToken = {}
+    // The `stop` and `destroy` methods clear the animation map.
+    const isCancelled = () => animations !== this.animations
 
-      let i = 0
-      let last: Promise<any>
-      queue = queue.then(() =>
-        to(
-          // next(props)
-          p => {
-            if (guid !== this.guid) throw stopToken
-            const fresh = { ...props, ...interpolateTo(p) }
-            if (is.arr(fresh.config)) fresh.config = fresh.config[i++]
-            return (last = new Promise(r => this._diff(fresh)._start(r)))
-          },
-          // stop(finished)
-          this.stop.bind(this)
-        ).then(
-          () => last,
-          err => {
-            if (err !== stopToken) throw err
-          }
-        )
-      )
+    let last: Promise<void>
+    const next = (asyncProps: SpringProps<State>) => {
+      if (isCancelled()) throw this
+      if (to !== this.props.to) return
+      return (last = new Promise<any>(done => {
+        this.update(asyncProps).start(done)
+      }))
     }
 
+    let queue = Promise.resolve()
+    if (is.arr(to)) {
+      to.forEach(props => (queue = queue.then(() => next(props))))
+    } else if (is.fun(to)) {
+      queue = queue.then(() => to(next, this.stop.bind(this)).then(() => last))
+    }
+
+    queue = queue.catch(err => {
+      // "this" is thrown when the animation is cancelled
+      if (err !== this) console.error(err)
+    })
+
     if (onEnd) {
-      queue.then(() => onEnd(guid === this.guid))
+      queue.then(() => onEnd(!isCancelled()))
     }
   }
 
-  private _diff(props: UpdateProps<DS>) {
-    Object.assign(this.props, props)
-    let {
-      from = {} as any,
-      to = {} as any,
-      config = {},
-      reverse,
-      attach,
-      reset,
-      immediate,
-      onStart,
-    } = this.props
+  // Merge every fresh prop. Return false if no props were fresh.
+  private _diff({ timestamp, ...props }: UpdateProps<State>): boolean {
+    let changed = false
 
-    // Reverse values when requested
-    if (reverse) [from, to] = [to, from]
+    // Ensure the newer timestamp is used.
+    const diffTimestamp = (keyPath: string) => {
+      const previous = this.timestamps[keyPath]
+      if (is.und(previous) || timestamp! > previous) {
+        this.timestamps[keyPath] = timestamp!
+        return true
+      }
+      return false
+    }
 
+    // Generalized diffing algorithm
+    const diffProp = (keys: string[], value: unknown, parent: any) => {
+      const lastKey = keys[keys.length - 1]
+      if (is.obj(value)) {
+        if (is.und(parent[lastKey])) parent[lastKey] = {}
+        for (const key in value) {
+          diffProp(keys.concat(key), value[key], parent[lastKey])
+        }
+      } else if (diffTimestamp(keys.join('.'))) {
+        let oldValue = parent[lastKey]
+        if (!is.equ(value, oldValue)) {
+          changed = true
+          parent[lastKey] = value
+        }
+      }
+    }
+
+    for (const key in props) {
+      diffProp([key], (props as any)[key], this.props)
+    }
+    return changed
+  }
+
+  // Update the animation configs.
+  private _animate({
+    to = emptyObj,
+    from = emptyObj,
+    config = emptyObj,
+    reverse,
+    attach,
+    reset,
+    immediate,
+    onStart,
+  }: UpdateProps<State>) {
     // True if any animation was updated
     let changed = false
 
-    // The animations that are starting/restarting
+    // The animations that are starting or restarting
     const started: string[] = []
 
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
     const target = attach && attach(this)
 
-    // The goal values of every key ever animated
+    // Reverse values when requested
+    if (reverse) [from, to] = [to as any, from]
+
+    // Merge `from` values with `to` values
     this.merged = { ...from, ...this.merged, ...to }
 
-    // Reduces input { name: value } pairs into animation objects
-    this.animations = Object.entries<any>(this.merged).reduce(
-      (acc, [name, value]) => {
-        const entry: Animation = acc[name] || {}
-        let { node, animatedValues } = entry
+    // Reduces input { key: value } pairs into animation objects
+    for (const key in this.merged) {
+      const state = this.animations[key as any]
+      if (!state) {
+        console.warn(
+          `Failed to animate key: "${key}"\n` +
+            `Did you forget to define "from.${key}" for an async animation?`
+        )
+        continue
+      }
 
-        const currentValue = node && node.getValue()
-        const goalValue = computeGoalValue(value)
-        const toConfig = callProp(config, name)
+      // Reuse the Animated nodes whenever possible
+      let { animated, animatedValues } = state
 
-        // When the goal value equals the current value, silently flag the
-        // animation as done, as long as `reset` is falsy. Interpolated strings
-        // also need their config updated and value set to 1.
-        if (!reset && is.equ(goalValue, currentValue)) {
-          if (node instanceof AnimatedInterpolation) {
-            const [parent] = animatedValues
-            parent.done = true
-            parent.setValue(1, false)
-            node.updateConfig({
-              output: [goalValue, goalValue],
-            })
-          } else {
-            animatedValues.forEach(v => (v.done = true))
+      const value = this.merged[key]
+      const goalValue = computeGoalValue<any>(value)
+
+      // The animation is done already if the current value is the goal value.
+      if (!reset && is.equ(goalValue, animated.getValue())) {
+        changed = true
+
+        const values = toArray(goalValue)
+        animatedValues.forEach((animated, i) => {
+          animated.done = true
+          if (isAnimatableString(values[i])) {
+            animated.setValue(1, false)
           }
-          changed = true
-          acc[name] = {
-            ...(entry as Animation),
-            goalValue,
+        })
+
+        this.animations[key] = { ...state, key, goalValue }
+        continue
+      }
+
+      const newConfig = callProp(config, key)
+
+      // Animations are only updated when they were reset, they have a new
+      // goal value, or their spring config was changed.
+      if (
+        reset ||
+        !is.equ(goalValue, state.goalValue) ||
+        !is.equ(newConfig, state.config)
+      ) {
+        const isImmediate = callProp(immediate, key)
+        if (!isImmediate) started.push(key)
+
+        const isActive = animatedValues.some(v => !v.done)
+        const fromValue = !is.und(from[key])
+          ? computeGoalValue(from[key])
+          : goalValue
+
+        // Animatable strings use interpolation
+        const isInterpolated = isAnimatableString(value)
+        if (isInterpolated) {
+          let input: AnimatedValue
+          const output: any[] = [fromValue, goalValue]
+          if (animated instanceof AnimatedInterpolation) {
+            input = animatedValues[0]
+
+            if (!reset) output[0] = animated.calc(input.value)
+            animated.updateConfig({ output })
+
+            input.setValue(0, false)
+            input.reset(isActive)
+          } else {
+            input = new AnimatedValue(0)
+            animated = input.interpolate({ output })
+          }
+          if (isImmediate) {
+            input.setValue(1, false)
+          }
+        } else {
+          // Convert values into Animated nodes (reusing nodes whenever possible)
+          if (is.arr(value)) {
+            if (animated instanceof AnimatedValueArray) {
+              animatedValues.forEach(v => v.reset(isActive))
+            } else {
+              animated = createAnimated<any[]>(fromValue)
+            }
+          } else {
+            if (animated instanceof AnimatedValue) {
+              animated.reset(isActive)
+            } else {
+              animated = new AnimatedValue(fromValue)
+            }
+          }
+          if (reset || isImmediate) {
+            animated.setValue(isImmediate ? goalValue : fromValue, false)
           }
         }
-        // Animations are only updated when they were reset, they have a new
-        // goal value, or their spring config was changed.
-        else if (
-          reset ||
-          !is.equ(goalValue, entry.goalValue) ||
-          !is.equ(toConfig, entry.config)
-        ) {
-          const isActive = !!animatedValues && animatedValues.some(v => !v.done)
-          const isImmediate = callProp(immediate, name)
 
-          // When `node` is falsy, this is the initial diff, which means the
-          // goal value is omitted. The animation will start in the next diff.
-          // Immediate animations are never passed to the `onStart` prop.
-          if (node && !isImmediate) {
-            started.push(name)
-          }
+        // Update the array of Animated nodes used by the frameloop
+        animatedValues = toArray(animated.getPayload() as any)
 
-          const isArray = is.arr(value)
-          const isInterpolated = isAnimatableString(value)
-
-          const fromValue = !is.und(from[name])
-            ? computeGoalValue(from[name])
-            : goalValue
-
-          // Animatable strings use interpolation
-          if (isInterpolated) {
-            let input: AnimatedValue
-            const output = [fromValue, goalValue]
-            if (node instanceof AnimatedInterpolation) {
-              input = animatedValues[0]
-
-              if (!reset) output[0] = node.calc(input.value)
-              node.updateConfig({ output })
-
-              input.setValue(0, false)
-              input.reset(isActive)
-            } else {
-              input = new AnimatedValue(0)
-              node = input.interpolate({ output })
-            }
-            if (isImmediate) {
-              input.setValue(1, false)
-            }
-          } else {
-            // Convert values into Animated nodes (reusing nodes whenever possible)
-            if (isArray) {
-              if (node instanceof AnimatedValueArray) {
-                animatedValues.forEach(node => node.reset(isActive))
-              } else {
-                node = new AnimatedValueArray(fromValue)
-              }
-            } else {
-              if (node instanceof AnimatedValue) {
-                node.reset(isActive)
-              } else {
-                node = new AnimatedValue(fromValue)
-              }
-            }
-            if (reset || isImmediate) {
-              node.setValue(isImmediate ? goalValue : fromValue, false)
-            }
-          }
-
-          // Update the array of Animated nodes used by the frameloop
-          animatedValues = toArray(node.getPayload() as any)
-
-          changed = true
-          acc[name] = {
-            name,
-            node,
-            immediate: isImmediate,
-            goalValue,
-            toValues: toArray(
-              target
-                ? target.animations[name].node.getPayload()
-                : (isInterpolated && 1) || goalValue
-            ),
-            fromValues: animatedValues.map(node => node.getValue()),
-            animatedValues,
-            mass: withDefault(toConfig.mass, 1),
-            tension: withDefault(toConfig.tension, 170),
-            friction: withDefault(toConfig.friction, 26),
-            initialVelocity: withDefault(toConfig.velocity, 0),
-            clamp: withDefault(toConfig.clamp, false),
-            precision: withDefault(toConfig.precision, 0.01),
-            decay: toConfig.decay,
-            duration: toConfig.duration,
-            easing: withDefault(toConfig.easing, linear),
-            config: toConfig,
-          }
+        changed = true
+        this.animations[key] = {
+          key,
+          goalValue,
+          toValues: toArray(
+            target
+              ? target.animations[key].animated.getPayload()
+              : (isInterpolated && 1) || goalValue
+          ),
+          fromValues: animatedValues.map(v => v.getValue()),
+          animated,
+          animatedValues,
+          immediate: isImmediate,
+          duration: newConfig.duration,
+          easing: withDefault(newConfig.easing, linear),
+          decay: newConfig.decay,
+          mass: withDefault(newConfig.mass, 1),
+          tension: withDefault(newConfig.tension, 170),
+          friction: withDefault(newConfig.friction, 26),
+          initialVelocity: withDefault(newConfig.velocity, 0),
+          clamp: withDefault(newConfig.clamp, false),
+          precision: withDefault(newConfig.precision, 0.01),
+          config: newConfig,
         }
-        return acc
-      },
-      this.animations
-    )
+      }
+    }
 
     if (changed) {
       if (onStart && started.length) {
-        started.forEach(name => onStart!(this.animations[name]))
+        started.forEach(key => onStart!(this.animations[key]))
       }
 
-      const frames = (this.frames = {} as any)
+      // Make animations available to the frameloop
+      const configs = (this.configs = [] as Animation[])
       const values = (this.values = {} as any)
+      const nodes = (this.animated = {} as any)
       for (const key in this.animations) {
-        const { node } = this.animations[key]
-        frames[key] = node.getValue()
-        values[key] = node
+        const config = this.animations[key]
+        configs.push(config)
+        values[key] = config.animated.getValue()
+        nodes[key] = config.animated
       }
-
-      // Make animations available to frameloop
-      this.configs = Object.values(this.animations)
     }
     return this
   }
 }
 
 // Not all strings can be animated (eg: {display: "none"})
-function isAnimatableString(value: unknown): value is string {
+function isAnimatableString(value: unknown): boolean {
   if (!is.str(value)) return false
   return value.startsWith('#') || /\d/.test(value) || !!colorNames[value]
 }
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
-function computeGoalValue(value: any): any {
+function computeGoalValue<T>(value: T): T {
   return is.arr(value)
     ? value.map(computeGoalValue)
     : isAnimatableString(value)
-    ? interp({ range: [0, 1], output: [value, value] })(1)
+    ? (interp as any)({ range: [0, 1], output: [value, value] })(1)
     : value
+}
+
+// Wrap any value with an Animated node
+function createAnimated<T>(
+  value: T
+): T extends ReadonlyArray<any>
+  ? AnimatedValueArray
+  : AnimatedValue | AnimatedInterpolation | null {
+  return is.arr(value)
+    ? new AnimatedValueArray(
+        value.map(fromValue => {
+          const animated = createAnimated(fromValue)!
+          if (!animated) console.warn('Given value not animatable:', fromValue)
+          return animated instanceof AnimatedValue
+            ? animated
+            : (animated.getPayload() as any)
+        })
+      )
+    : isAnimatableString(value)
+    ? (new AnimatedValue(0).interpolate({
+        output: [value, value] as any,
+      }) as any)
+    : is.num(value) || is.str(value)
+    ? new AnimatedValue(value)
+    : null
 }
 
 export default Controller

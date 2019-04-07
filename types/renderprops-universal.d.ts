@@ -72,9 +72,10 @@ export interface SpringProps<DS extends object = {}> extends SpringBaseProps {
    * @default {}
    */
   to?:
-    | DS
+    | Partial<DS>
+    | Array<DS & SpringProps<DS>>
     | ((
-        next: (props: SpringProps<DS>) => void,
+        next: (props: DS & SpringProps<DS>) => void,
         stop: (finished: boolean) => void
       ) => Promise<void>)
   /**
