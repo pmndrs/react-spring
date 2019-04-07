@@ -7,7 +7,13 @@ import {
   useCallback,
 } from 'react'
 import Ctrl from './animated/Controller'
-import { is, toArray, callProp, useForceUpdate } from './shared/helpers'
+import {
+  is,
+  toArray,
+  callProp,
+  useForceUpdate,
+  reconcileDeleted,
+} from './shared/helpers'
 import { requestFrame } from './animated/Globals'
 
 /** API
@@ -213,7 +219,7 @@ function diffItems({ first, prevProps, ...state }, props) {
           const keyIndex = _keys.indexOf(key)
           const item = _items[keyIndex]
           const slot = LEAVE
-          deleted.unshift({
+          deleted.push({
             ...current[key],
             slot,
             destroyed: true,
@@ -246,17 +252,7 @@ function diffItems({ first, prevProps, ...state }, props) {
     }
   }
   let out = keys.map(key => current[key])
-
-  // This tries to restore order for deleted items by finding their last known siblings
-  // only using the left sibling to keep order placement consistent for all deleted items
-  deleted.forEach(({ left, right, ...item }) => {
-    let pos
-    // Was it the element on the left, if yes, move there ...
-    if ((pos = out.findIndex(t => t.originalKey === left)) !== -1) pos += 1
-    // And if nothing else helps, move it to the start ¯\_(ツ)_/¯
-    pos = Math.max(0, pos)
-    out = [...out.slice(0, pos), item, ...out.slice(pos)]
-  })
+  out = reconcileDeleted(deleted, out)
 
   return {
     ...state,

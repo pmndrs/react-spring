@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Spring from './Spring'
 import Keyframes from './Keyframes'
 import { callProp, toArray, interpolateTo } from './shared/helpers'
+import { reconcileDeleted } from '../shared/helpers'
 
 let guid = 0
 let get = props => {
@@ -160,20 +161,7 @@ export default class Transition extends React.PureComponent {
 
     // This tries to restore order for deleted items by finding their last known siblings
     let out = keys.map(key => current[key])
-    deleted.forEach(({ left, right, ...transition }) => {
-      let pos
-      // Was it the element on the left, if yes, move there ...
-      if ((pos = out.findIndex(t => t.originalKey === left)) !== -1) pos += 1
-      // Or how about the element on the right ...
-      if (pos === -1) pos = out.findIndex(t => t.originalKey === right)
-      // Maybe we'll find it in the list of deleted items
-      if (pos === -1) pos = deleted.findIndex(t => t.originalKey === left)
-      // Checking right side as well
-      if (pos === -1) pos = deleted.findIndex(t => t.originalKey === right)
-      // And if nothing else helps, move it to the start ¯\_(ツ)_/¯
-      pos = Math.max(0, pos)
-      out = [...out.slice(0, pos), transition, ...out.slice(pos)]
-    })
+    out = reconcileDeleted(deleted, out)
 
     return {
       first: first && added.length === 0,
