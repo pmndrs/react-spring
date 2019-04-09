@@ -2,13 +2,14 @@ import { MutableRefObject, Ref, useCallback, useState } from 'react'
 
 export const is = {
   arr: Array.isArray,
-  obj: (a: unknown): a is { [key: string]: any } =>
+  obj: (a: unknown): a is Object =>
     Object.prototype.toString.call(a) === '[object Object]',
   fun: (a: unknown): a is Function => typeof a === 'function',
   str: (a: unknown): a is string => typeof a === 'string',
   num: (a: unknown): a is number => typeof a === 'number',
   und: (a: unknown): a is undefined => a === void 0,
   nul: (a: unknown): a is null => a === null,
+  boo: (a: unknown): a is boolean => typeof a === 'boolean',
   set: (a: unknown): a is Set<any> => a instanceof Set,
   map: (a: unknown): a is Map<any, any> => a instanceof Map,
   equ(a: any, b: any) {
@@ -120,14 +121,17 @@ interface InterpolateTo<T> extends PartialExcludedProps {
 export function interpolateTo<T extends PartialExcludedProps>(
   props: T
 ): InterpolateTo<T> {
-  const forward: ForwardedProps<T> = getForwardProps(props)
-  if (is.und(forward)) return { to: forward, ...props }
-  const rest = Object.keys(props).reduce<PartialExcludedProps>(
-    (a: PartialExcludedProps, k: string) =>
-      !is.und((forward as any)[k]) ? a : { ...a, [k]: (props as any)[k] },
-    {}
+  const forward = getForwardProps(props)
+  props = Object.entries(props).reduce(
+    (props, [key, value]) => (key in forward || (props[key] = value), props),
+    {} as any
   )
-  return { to: forward, ...rest }
+  return { to: forward, ...props }
+}
+
+export function isEmptyObj(obj: object) {
+  for (const _ in obj) return false
+  return true
 }
 
 export function handleRef<T>(ref: T, forward: Ref<T>) {

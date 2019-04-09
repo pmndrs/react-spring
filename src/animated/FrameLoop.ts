@@ -114,7 +114,7 @@ const update = () => {
 
       // Keep track of updated values only when necessary
       if (controller.props.onFrame) {
-        controller.frames[config.name] = config.node.getValue()
+        controller.values[config.name] = config.animated.getValue()
       }
     }
 

@@ -14,20 +14,20 @@ export const useSprings = (length, props) => {
 
   // The controller maintains the animation values, starts and stops animations
   const [controllers, setProps, ref, api] = useMemo(() => {
-    let ref
+    let ref, controllers
     return [
       // Recreate the controllers whenever `length` changes
-      fillArray(length, i => {
+      (controllers = fillArray(length, i => {
         const c = new Ctrl()
         const newProps = isFn ? callProp(props, i, c) : props[i]
         if (i === 0) ref = newProps.ref
         return c.update(newProps)
-      }),
+      })),
       // This updates the controllers with new props
       props => {
         const isFn = is.fun(props)
         if (!isFn) props = toArray(props)
-        ctrl.current.forEach((c, i) => {
+        controllers.forEach((c, i) => {
           c.update(isFn ? callProp(props, i, c) : props[i])
           if (!ref) c.start()
         })
@@ -36,11 +36,9 @@ export const useSprings = (length, props) => {
       ref,
       ref && {
         start: () =>
-          Promise.all(ctrl.current.map(c => new Promise(r => c.start(r)))),
-        stop: finished => ctrl.current.forEach(c => c.stop(finished)),
-        get controllers() {
-          return ctrl.current
-        },
+          Promise.all(controllers.map(c => new Promise(r => c.start(r)))),
+        stop: finished => controllers.forEach(c => c.stop(finished)),
+        controllers,
       },
     ]
   }, [length])
@@ -73,7 +71,7 @@ export const useSprings = (length, props) => {
     ? [
         values,
         setProps,
-        finished => ctrl.current.forEach(c => c.stop(finished)),
+        (key, finished) => ctrl.current.forEach(c => c.stop(key, finished)),
       ]
     : values
 }
