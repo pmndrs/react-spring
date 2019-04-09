@@ -46,6 +46,9 @@
     "spring"
   ],
   "author": "Paul Henschel",
+  "contributors": [
+    "Alec Larson (https://github.com/aleclarson)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/drcmda/react-spring/issues"
