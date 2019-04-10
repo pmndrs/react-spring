@@ -19,55 +19,55 @@ const update = () => {
       let config = controller.configs[configIdx]
       let endOfAnimation, lastTime
       for (let valIdx = 0; valIdx < config.animatedValues.length; valIdx++) {
-        let animation = config.animatedValues[valIdx]
+        let animated = config.animatedValues[valIdx]
+        if (animated.done) continue
 
-        // If an animation is done, skip, until all of them conclude
-        if (animation.done) continue
-
-        let from = config.fromValues[valIdx]
         let to = config.toValues[valIdx]
-        let position = animation.lastPosition
         let isAnimated = to instanceof Animated
-        let velocity = Array.isArray(config.initialVelocity)
-          ? config.initialVelocity[valIdx]
-          : config.initialVelocity
         if (isAnimated) to = to.getValue()
 
-        // Conclude animation if it's either immediate, or from-values match end-state
+        // Jump to end value for immediate animations
         if (config.immediate) {
-          animation.setValue(to)
-          animation.done = true
+          animated.setValue(to)
+          animated.done = true
           continue
         }
+
+        let from = config.fromValues[valIdx]
 
         // Break animation when string values are involved
         if (typeof from === 'string' || typeof to === 'string') {
-          animation.setValue(to)
-          animation.done = true
+          animated.setValue(to)
+          animated.done = true
           continue
         }
+
+        let position = animated.lastPosition
+        let velocity = Array.isArray(config.initialVelocity)
+          ? config.initialVelocity[valIdx]
+          : config.initialVelocity
 
         if (config.duration !== void 0) {
           /** Duration easing */
           position =
             from +
-            config.easing((time - animation.startTime) / config.duration) *
+            config.easing((time - animated.startTime) / config.duration) *
               (to - from)
-          endOfAnimation = time >= animation.startTime + config.duration
+          endOfAnimation = time >= animated.startTime + config.duration
         } else if (config.decay) {
           /** Decay easing */
           position =
             from +
             (velocity / (1 - 0.998)) *
-              (1 - Math.exp(-(1 - 0.998) * (time - animation.startTime)))
-          endOfAnimation = Math.abs(animation.lastPosition - position) < 0.1
+              (1 - Math.exp(-(1 - 0.998) * (time - animated.startTime)))
+          endOfAnimation = Math.abs(animated.lastPosition - position) < 0.1
           if (endOfAnimation) to = position
         } else {
           /** Spring easing */
-          lastTime = animation.lastTime !== void 0 ? animation.lastTime : time
+          lastTime = animated.lastTime !== void 0 ? animated.lastTime : time
           velocity =
-            animation.lastVelocity !== void 0
-              ? animation.lastVelocity
+            animated.lastVelocity !== void 0
+              ? animated.lastVelocity
               : config.initialVelocity
 
           // If we lost a lot of frames just jump to the end.
@@ -95,8 +95,8 @@ const update = () => {
               ? Math.abs(to - position) <= config.precision
               : true
           endOfAnimation = isOvershooting || (isVelocity && isDisplacement)
-          animation.lastVelocity = velocity
-          animation.lastTime = time
+          animated.lastVelocity = velocity
+          animated.lastTime = time
         }
 
         // Trails aren't done until their parents conclude
@@ -104,26 +104,21 @@ const update = () => {
 
         if (endOfAnimation) {
           // Ensure that we end up with a round value
-          if (animation.value !== to) position = to
-          animation.done = true
+          if (animated.value !== to) position = to
+          animated.done = true
         } else isActive = true
 
-        animation.setValue(position)
-        animation.lastPosition = position
+        animated.setValue(position)
+        animated.lastPosition = position
       }
 
       // Keep track of updated values only when necessary
-      if (controller.props.onFrame)
-        controller.values[config.name] = config.interpolation.getValue()
+      if (controller.props.onFrame) {
+        controller.values[config.name] = config.animated.getValue()
+      }
     }
-    // Update callbacks in the end of the frame
-    if (controller.props.onFrame) controller.props.onFrame(controller.values)
 
-    // Either call onEnd or next frame
-    if (!isActive) {
-      controllers.delete(controller)
-      controller.stop(true)
-    }
+    controller.onFrame(isActive)
   }
 
   // Loop over as long as there are controllers ...
@@ -137,7 +132,7 @@ const update = () => {
 }
 
 const start = (controller: Controller) => {
-  if (!controllers.has(controller)) controllers.add(controller)
+  controllers.add(controller)
   if (!active) {
     active = true
     if (manualFrameloop) requestFrame(manualFrameloop)
@@ -146,7 +141,7 @@ const start = (controller: Controller) => {
 }
 
 const stop = (controller: Controller) => {
-  if (controllers.has(controller)) controllers.delete(controller)
+  controllers.delete(controller)
 }
 
 export { start, stop, update }

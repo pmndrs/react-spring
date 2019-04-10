@@ -43,6 +43,6 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
     range: number[] | InterpolationConfig | ((...args: any[]) => IpValue),
     output?: (number | string)[]
   ): AnimatedInterpolation {
-    return new AnimatedInterpolation(this, range as number[], output!)
+    return new AnimatedInterpolation(this, range as number[], output)
   }
 }

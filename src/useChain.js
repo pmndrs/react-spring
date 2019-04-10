@@ -17,7 +17,7 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
           if (ctrls.length) {
             const t = timeFrame * timeSteps[index]
             ctrls.forEach(ctrl => {
-              ctrl.queue = ctrl.queue.map(e => ({ ...e, delay: e.delay + t }))
+              ctrl.queue.forEach(props => (props.delay += t))
               ctrl.start()
             })
           }
