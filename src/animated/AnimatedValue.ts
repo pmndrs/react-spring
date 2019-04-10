@@ -3,6 +3,7 @@ import { InterpolationConfig } from '../types/interpolation'
 import Animated from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
 import AnimatedProps from './AnimatedProps'
+import { now } from './Globals'
 
 /**
  * Animated works by building a directed acyclic graph of dependencies
@@ -81,5 +82,15 @@ export default class AnimatedValue extends Animated implements SpringValue {
     output?: (number | string)[]
   ): AnimatedInterpolation {
     return new AnimatedInterpolation(this, range as number[], output!)
+  }
+
+  public reset(isActive: boolean) {
+    this.startPosition = this.value
+    this.lastPosition = this.value
+    this.lastVelocity = isActive ? this.lastVelocity : undefined
+    this.lastTime = isActive ? this.lastTime : undefined
+    this.startTime = now()
+    this.done = false
+    this.animatedStyles.clear()
   }
 }

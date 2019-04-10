@@ -7,7 +7,13 @@ import {
   useCallback,
 } from 'react'
 import Ctrl from './animated/Controller'
-import { is, toArray, callProp, useForceUpdate } from './shared/helpers'
+import {
+  is,
+  toArray,
+  callProp,
+  interpolateTo,
+  useForceUpdate,
+} from './shared/helpers'
 import { requestFrame } from './animated/Globals'
 
 /** API
@@ -17,23 +23,31 @@ import { requestFrame } from './animated/Globals'
 
 let guid = 0
 
+const INITIAL = 'initial'
 const ENTER = 'enter'
-const LEAVE = 'leave'
 const UPDATE = 'update'
-const mapKeys = (items, keys) =>
+const LEAVE = 'leave'
+
+const makeKeys = (items, keys) =>
   (typeof keys === 'function' ? items.map(keys) : toArray(keys)).map(String)
-const get = props => {
-  let { items, keys = item => item, ...rest } = props
-  items = toArray(items !== void 0 ? items : null)
-  return { items, keys: mapKeys(items, keys), ...rest }
+
+const makeConfig = props => {
+  let { items, keys, ...rest } = props
+  items = toArray(is.und(items) ? null : items)
+  return { items, keys: makeKeys(items, keys), ...rest }
 }
 
-export function useTransition(input, keyTransform, config) {
-  const props = { items: input, keys: keyTransform || (i => i), ...config }
+export function useTransition(input, keyTransform, props) {
+  props = makeConfig({
+    ...props,
+    items: input,
+    keys: keyTransform || (i => i),
+  })
   const {
     lazy = false,
     unique = false,
     reset = false,
+    from,
     enter,
     leave,
     update,
@@ -45,7 +59,7 @@ export function useTransition(input, keyTransform, config) {
     onStart,
     ref,
     ...extra
-  } = get(props)
+  } = props
 
   const forceUpdate = useForceUpdate()
   const mounted = useRef(false)
@@ -80,17 +94,19 @@ export function useTransition(input, keyTransform, config) {
   if (state.current.changed) {
     // Update state
     state.current.transitions.forEach(transition => {
-      const { slot, from, to, config, trail, key, item } = transition
+      const { phase, key, item, props } = transition
       if (!state.current.instances.has(key))
         state.current.instances.set(key, new Ctrl())
 
+      // Avoid calling `onStart` more than once per transition.
+      let started = false
+
       // update the map object
       const ctrl = state.current.instances.get(key)
-      const newProps = {
+      const itemProps = {
+        reset: reset && phase === ENTER,
         ...extra,
-        to,
-        from,
-        config,
+        ...props,
         ref,
         onRest: values => {
           if (state.current.mounted) {
@@ -103,19 +119,22 @@ export function useTransition(input, keyTransform, config) {
             // A transition comes to rest once all its springs conclude
             const curInstances = Array.from(state.current.instances)
             const active = curInstances.some(([, c]) => !c.idle)
-            if (!active && (ref || lazy) && state.current.deleted.length > 0)
+            if (!active && (ref || lazy) && state.current.deleted.length > 0) {
               cleanUp(state)
-            if (onRest) onRest(item, slot, values)
+            }
+            if (onRest) {
+              onRest(item, phase, values)
+            }
           }
         },
-        onStart: onStart && (() => onStart(item, slot)),
-        onFrame: onFrame && (values => onFrame(item, slot, values)),
-        delay: trail,
-        reset: reset && slot === ENTER,
+        onFrame: onFrame && (values => onFrame(item, phase, values)),
+        onStart:
+          onStart &&
+          (() => started || (started = (onStart(item, phase), true))),
       }
 
       // Update controller
-      ctrl.update(newProps)
+      ctrl.update(itemProps)
       if (!state.current.paused) ctrl.start()
     })
   }
@@ -129,30 +148,30 @@ export function useTransition(input, keyTransform, config) {
     }
   }, [])
 
-  return state.current.transitions.map(({ item, slot, key }) => {
+  return state.current.transitions.map(({ item, phase, key }) => {
     return {
       item,
       key,
-      state: slot,
+      phase,
       props: state.current.instances.get(key).getValues(),
     }
   })
 }
 
-function cleanUp(state, filterKey) {
-  const deleted = state.current.deleted
+function cleanUp({ current: state }, filterKey) {
+  const { deleted } = state
   for (let { key } of deleted) {
     const filter = t => t.key !== key
     if (is.und(filterKey) || filterKey === key) {
-      state.current.instances.delete(key)
-      state.current.transitions = state.current.transitions.filter(filter)
-      state.current.deleted = state.current.deleted.filter(filter)
+      state.instances.delete(key)
+      state.transitions = state.transitions.filter(filter)
+      state.deleted = state.deleted.filter(filter)
     }
   }
-  state.current.forceUpdate()
+  state.forceUpdate()
 }
 
-function diffItems({ first, prevProps, ...state }, props) {
+function diffItems({ first, current, deleted, prevProps, ...state }, props) {
   let {
     items,
     keys,
@@ -165,84 +184,86 @@ function diffItems({ first, prevProps, ...state }, props) {
     unique,
     config,
     order = [ENTER, LEAVE, UPDATE],
-  } = get(props)
-  let { keys: _keys, items: _items } = get(prevProps)
-  let current = { ...state.current }
-  let deleted = [...state.deleted]
+  } = props
+  let { keys: _keys, items: _items } = makeConfig(prevProps)
 
   // Compare next keys with current keys
-  let currentKeys = Object.keys(current)
-  let currentSet = new Set(currentKeys)
-  let nextSet = new Set(keys)
-  let added = keys.filter(item => !currentSet.has(item))
-  let removed = state.transitions
-    .filter(item => !item.destroyed && !nextSet.has(item.originalKey))
-    .map(i => i.originalKey)
-  let updated = keys.filter(item => currentSet.has(item))
+  const currentKeys = Object.keys(current)
+  const currentSet = new Set(currentKeys)
+  const nextSet = new Set(keys)
+
+  const addedKeys = keys.filter(key => !currentSet.has(key))
+  const updatedKeys = update ? keys.filter(key => currentSet.has(key)) : []
+  const deletedKeys = state.transitions
+    .filter(t => !t.destroyed && !nextSet.has(t.originalKey))
+    .map(t => t.originalKey)
+
   let delay = -trail
 
   while (order.length) {
-    const changeType = order.shift()
-    switch (changeType) {
-      case ENTER: {
-        added.forEach((key, index) => {
-          // In unique mode, remove fading out transitions if their key comes in again
-          if (unique && deleted.find(d => d.originalKey === key))
-            deleted = deleted.filter(t => t.originalKey !== key)
-          const keyIndex = keys.indexOf(key)
-          const item = items[keyIndex]
-          const slot = first && initial !== void 0 ? 'initial' : ENTER
-          current[key] = {
-            slot,
-            originalKey: key,
-            key: unique ? String(key) : guid++,
-            item,
-            trail: (delay = delay + trail),
-            config: callProp(config, item, slot),
-            from: callProp(
-              first ? (initial !== void 0 ? initial || {} : from) : from,
-              item
-            ),
-            to: callProp(enter, item),
-          }
-        })
-        break
+    let phase = order.shift()
+    if (phase === ENTER) {
+      if (first && !is.und(initial)) {
+        phase = INITIAL
       }
-      case LEAVE: {
-        removed.forEach(key => {
-          const keyIndex = _keys.indexOf(key)
-          const item = _items[keyIndex]
-          const slot = LEAVE
-          deleted.unshift({
-            ...current[key],
-            slot,
-            destroyed: true,
-            left: _keys[Math.max(0, keyIndex - 1)],
-            right: _keys[Math.min(_keys.length, keyIndex + 1)],
-            trail: (delay = delay + trail),
-            config: callProp(config, item, slot),
-            to: callProp(leave, item),
-          })
-          delete current[key]
+      addedKeys.forEach(key => {
+        // In unique mode, remove fading out transitions if their key comes in again
+        if (unique && deleted.find(d => d.originalKey === key)) {
+          deleted = deleted.filter(t => t.originalKey !== key)
+        }
+        const i = keys.indexOf(key)
+        const item = items[i]
+        const enterProps = callProp(enter, item, i)
+        current[key] = {
+          phase,
+          originalKey: key,
+          key: unique ? String(key) : guid++,
+          item,
+          props: {
+            delay: (delay += trail),
+            config: callProp(config, item, phase),
+            from: callProp(first && !is.und(initial) ? initial : from, item),
+            to: enterProps,
+            ...(is.obj(enterProps) && interpolateTo(enterProps)),
+          },
+        }
+      })
+    } else if (phase === LEAVE) {
+      deletedKeys.forEach(key => {
+        const i = _keys.indexOf(key)
+        const item = _items[i]
+        const leaveProps = callProp(leave, item, i)
+        deleted.unshift({
+          ...current[key],
+          phase,
+          destroyed: true,
+          left: _keys[Math.max(0, i - 1)],
+          right: _keys[Math.min(_keys.length, i + 1)],
+          props: {
+            delay: (delay += trail),
+            config: callProp(config, item, phase),
+            to: leaveProps,
+            ...(is.obj(leaveProps) && interpolateTo(leaveProps)),
+          },
         })
-        break
-      }
-      case UPDATE: {
-        updated.forEach(key => {
-          const keyIndex = keys.indexOf(key)
-          const item = items[keyIndex]
-          const slot = UPDATE
-          current[key] = {
-            ...current[key],
-            item,
-            slot,
-            trail: (delay = delay + trail),
-            config: callProp(config, item, slot),
-            to: callProp(update, item),
-          }
-        })
-        break
-      }
+        delete current[key]
+      })
+    } else if (phase === UPDATE) {
+      updatedKeys.forEach(key => {
+        const i = keys.indexOf(key)
+        const item = items[i]
+        const updateProps = callProp(update, item, i)
+        current[key] = {
+          ...current[key],
+          phase,
+          props: {
+            delay: (delay += trail),
+            config: callProp(config, item, phase),
+            to: updateProps,
+            ...(is.obj(updateProps) && interpolateTo(updateProps)),
+          },
+        }
+      })
     }
   }
   let out = keys.map(key => current[key])
@@ -260,8 +281,8 @@ function diffItems({ first, prevProps, ...state }, props) {
 
   return {
     ...state,
-    changed: added.length || removed.length || updated.length,
-    first: first && added.length === 0,
+    first: first && !addedKeys.length,
+    changed: !!(addedKeys.length || deletedKeys.length || updatedKeys.length),
     transitions: out,
     current,
     deleted,

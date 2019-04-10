@@ -23,6 +23,7 @@ export interface SpringConfig {
   clamp?: boolean
   precision?: number
   delay?: number
+  decay?: number
   duration?: number
   easing?: SpringEasingFunc
 }
@@ -58,10 +59,6 @@ export interface SpringBaseProps {
    * reverse the animation
    */
   reverse?: boolean
-  /**
-   * Callback when the animation starts to animate
-   */
-  onStart?(): void
 }
 
 export interface SpringProps<DS extends object = {}> extends SpringBaseProps {
@@ -74,15 +71,25 @@ export interface SpringProps<DS extends object = {}> extends SpringBaseProps {
    * Animates to...
    * @default {}
    */
-  to?: DS
+  to?:
+    | Partial<DS>
+    | Array<DS & SpringProps<DS>>
+    | ((
+        next: (props: DS & SpringProps<DS>) => void,
+        stop: (finished: boolean) => void
+      ) => Promise<void>)
   /**
-   * Callback when the animation comes to a still-stand
+   * Called when an animation will begin
    */
-  onRest?: (ds: DS) => void
+  onStart?: (animation: any) => void
   /**
-   * Frame by frame callback, first argument passed is the animated value
+   * Called when all animations have come to a stand-still
    */
-  onFrame?: (ds: DS) => void
+  onRest?: (restValues: DS) => void
+  /**
+   * Called on every frame with the current values
+   */
+  onFrame?: (currentValues: DS) => void
   /**
    * Takes a function that receives interpolated styles
    */
@@ -130,7 +137,7 @@ export function animated<T extends ReactType>(
 
 export type TransitionKeyProps = string | number
 
-export type State = 'enter' | 'update' | 'leave'
+export type TransitionPhase = 'enter' | 'update' | 'leave'
 
 export interface TransitionProps<
   TItem,
@@ -146,7 +153,9 @@ export interface TransitionProps<
    * Spring config, or for individual keys: fn((item,type) => config), where "type" can be either enter, leave or update
    * @default config.default
    */
-  config?: SpringConfig | ((item: TItem, type: State) => SpringConfig)
+  config?:
+    | SpringConfig
+    | ((item: TItem, phase: TransitionPhase) => SpringConfig)
   /**
    * First-render initial values, if present overrides "from" on the first render pass. It can be "null" to skip first mounting transition. Otherwise it can take an object or a function (item => object)
    */
@@ -167,14 +176,21 @@ export interface TransitionProps<
    */
   leave?: TLeave | ((item: TItem) => TLeave)
   /**
-   * Callback when the animation comes to a still-stand
-   */
-  onRest?: (ds: DS) => void
-
-  /**
    * Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values
    */
   update?: TUpdate | ((item: TItem) => TUpdate)
+  /**
+   * Called when an item's transition will begin
+   */
+  onStart?: (item: TItem, phase: TransitionPhase) => void
+  /**
+   * Called when an item's transition has come to a stand-still
+   */
+  onRest?: (item: TItem, phase: TransitionPhase, restValues: DS) => void
+  /**
+   * Called on every frame with the current values
+   */
+  onFrame?: (item: TItem, phase: TransitionPhase, currentValues: DS) => void
   /**
    * The same keys you would normally hand over to React in a list. Keys can be specified as a key-accessor function, an array of keys, or a single value
    */
@@ -192,7 +208,7 @@ export interface TransitionProps<
    */
   children?: (
     item: TItem,
-    state: State,
+    phase: TransitionPhase,
     index: number
   ) =>
     | boolean

@@ -32,7 +32,7 @@ export function injectFrame(raf: typeof requestFrame, caf: typeof cancelFrame) {
 
 export let interpolation: (
   config: InterpolationConfig<string>
-) => (input: number) => string
+) => (input: number) => number | string
 export function injectStringInterpolator(fn: typeof interpolation) {
   interpolation = fn
 }

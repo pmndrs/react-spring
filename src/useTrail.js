@@ -36,7 +36,7 @@ export const useTrail = (length, props) => {
           attach: attachController && (() => attachController),
         }
       }),
-    [length, updateProps.reverse]
+    [length, updateProps.config]
   )
   // Update controller if props aren't functional
   useEffect(() => void (mounted.current && !isFn && updateCtrl(props)))
