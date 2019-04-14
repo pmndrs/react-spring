@@ -72,7 +72,7 @@ export const useSprings = (length, props) => {
     ? [
         values,
         setProps,
-        (key, finished) => ctrl.current.forEach(c => c.stop(key, finished)),
+        (...args) => ctrl.current.forEach(c => c.stop(...args)),
       ]
     : values
 }
