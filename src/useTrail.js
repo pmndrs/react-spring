@@ -33,7 +33,7 @@ export const useTrail = (length, props) => {
         return {
           ...props,
           config: callProp(props.config || updateProps.config, i),
-          attach: attachController && (() => attachController),
+          attach: !!attachController && (() => attachController),
         }
       }),
     [length, updateProps.config]
