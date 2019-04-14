@@ -346,6 +346,12 @@ class Controller<State extends object = any> {
       }
     }
 
+    if (reverse) {
+      const { to } = props
+      props.to = props.from
+      props.from = is.obj(to) ? (to as any) : void 0
+    }
+
     for (const key in props) {
       diffProp([key], props[key], this.props)
     }
@@ -355,9 +361,6 @@ class Controller<State extends object = any> {
   // Update the animation configs. The given props override any default props.
   private _animate(props: UpdateProps<State>) {
     let { to = emptyObj, from = emptyObj } = this.props
-
-    // Reverse values when requested
-    if (props.reverse) [from, to] = [to, from]
 
     // Merge `from` values with `to` values
     this.merged = { ...from, ...to }
