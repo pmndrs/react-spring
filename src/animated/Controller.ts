@@ -438,19 +438,21 @@ class Controller<State extends object = any> {
           // Convert values into Animated nodes (reusing nodes whenever possible)
           if (is.arr(value)) {
             if (animated instanceof AnimatedValueArray) {
+              if (props.reset) animated.setValue(fromValue, false)
               animatedValues.forEach(v => v.reset(isActive))
             } else {
               animated = createAnimated<any[]>(fromValue)
             }
           } else {
             if (animated instanceof AnimatedValue) {
+              if (props.reset) animated.setValue(fromValue, false)
               animated.reset(isActive)
             } else {
               animated = new AnimatedValue(fromValue)
             }
           }
-          if (props.reset || immediate) {
-            animated.setValue(immediate ? goalValue : fromValue, false)
+          if (immediate) {
+            animated.setValue(goalValue, false)
           }
         }
 
