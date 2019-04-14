@@ -556,7 +556,7 @@ function createAnimated<T>(
 }
 
 // Merge updates with the same delay.
-// NOTE: Mutation can occur!
+// NOTE: Mutation of `props` may occur!
 function reduceDelays(merged: any[], props: any) {
   const prev = merged[props.delay]
   if (prev) {
