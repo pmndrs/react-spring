@@ -130,7 +130,8 @@ export function useTransition(input, keyTransform, props) {
         onFrame: onFrame && (values => onFrame(item, phase, values)),
         onStart:
           onStart &&
-          (() => started || (started = (onStart(item, phase), true))),
+          (animation =>
+            started || (started = (onStart(item, phase, animation), true))),
       }
 
       // Update controller
