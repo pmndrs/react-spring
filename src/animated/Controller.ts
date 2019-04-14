@@ -255,7 +255,7 @@ class Controller<State extends object = any> {
     if (is.arr(props.to) || is.fun(props.to)) {
       this._runAsync(props, onEnd)
     } else if (this._diff(props)) {
-      this._animate(this.props, props.config)._start(onEnd)
+      this._animate(props)._start(onEnd)
     } else {
       this._onEnd(onEnd)
     }
@@ -308,8 +308,14 @@ class Controller<State extends object = any> {
   }
 
   // Merge every fresh prop. Returns true if one or more props changed.
-  // The `config` prop is ignored by this method.
-  private _diff({ timestamp, config, ...props }: UpdateProps<State>) {
+  // These props are ignored: (config, immediate, reverse)
+  private _diff({
+    timestamp,
+    config,
+    immediate,
+    reverse,
+    ...props
+  }: UpdateProps<State>) {
     let changed = false
 
     // Ensure the newer timestamp is used.
@@ -346,12 +352,9 @@ class Controller<State extends object = any> {
     return changed
   }
 
-  // Update the animation configs.
-  private _animate(
-    props: UpdateProps<State>,
-    configArg: typeof props.config = props.config
-  ) {
-    let { to = emptyObj, from = emptyObj } = props
+  // Update the animation configs. The given props override any default props.
+  private _animate(props: UpdateProps<State>) {
+    let { to = emptyObj, from = emptyObj } = this.props
 
     // Reverse values when requested
     if (props.reverse) [from, to] = [to, from]
@@ -366,7 +369,7 @@ class Controller<State extends object = any> {
     const started: string[] = []
 
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
-    const target = props.attach && props.attach(this)
+    const target = this.props.attach && this.props.attach(this)
 
     // Reduces input { key: value } pairs into animation objects
     for (const key in this.merged) {
@@ -397,8 +400,11 @@ class Controller<State extends object = any> {
 
       // Replace an animation when its goal value is changed (or it's been reset)
       if (props.reset || !is.equ(goalValue, state.goalValue)) {
-        const immediate = callProp(props.immediate, key)
-        if (!immediate) started.push(key)
+        let { immediate } = is.und(props.immediate) ? this.props : props
+        immediate = callProp(immediate, key)
+        if (!immediate) {
+          started.push(key)
+        }
 
         const isActive = animatedValues.some(v => !v.done)
         const fromValue = !is.und(from[key])
@@ -446,7 +452,10 @@ class Controller<State extends object = any> {
         }
 
         // Only change the "config" of updated animations.
-        const config: SpringConfig = callProp(configArg, key) || emptyObj
+        const config: SpringConfig =
+          callProp(props.config, key) ||
+          callProp(this.props.config, key) ||
+          emptyObj
 
         changed = true
         animatedValues = toArray(animated.getPayload() as any)
@@ -477,13 +486,9 @@ class Controller<State extends object = any> {
     }
 
     if (changed) {
-      if (props.onStart && started.length) {
-        started.forEach(key => props.onStart!(this.animations[key]))
+      if (this.props.onStart && started.length) {
+        started.forEach(key => this.props.onStart!(this.animations[key]))
       }
-
-      // Reset any flags
-      props.reset = false
-      props.immediate = false
 
       // Make animations available to the frameloop
       const configs = (this.configs = [] as Animation[])
