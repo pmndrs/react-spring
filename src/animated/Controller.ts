@@ -239,7 +239,7 @@ class Controller<State extends object = any> {
     if (is.arr(props.to) || is.fun(props.to)) {
       this._runAsync(props, onEnd)
     } else if (this._diff(props)) {
-      this._animate(this.props)._start(onEnd)
+      this._animate(this.props, props.config)._start(onEnd)
     } else {
       this._onEnd(onEnd)
     }
@@ -292,6 +292,7 @@ class Controller<State extends object = any> {
   }
 
   // Merge every fresh prop. Returns true if one or more props changed.
+  // The `config` prop is ignored by this method.
   private _diff({ timestamp, config, ...props }: UpdateProps<State>) {
     let changed = false
 
@@ -323,12 +324,6 @@ class Controller<State extends object = any> {
       }
     }
 
-    // The `config` prop is atomic
-    if (config && diffTimestamp('config')) {
-      changed = true
-      this.props.config = config
-    }
-
     for (const key in props) {
       diffProp([key], props[key], this.props)
     }
@@ -336,7 +331,10 @@ class Controller<State extends object = any> {
   }
 
   // Update the animation configs.
-  private _animate(props: UpdateProps<State>) {
+  private _animate(
+    props: UpdateProps<State>,
+    configArg: typeof props.config = props.config
+  ) {
     let { to = emptyObj, from = emptyObj } = props
 
     // Reverse values when requested
@@ -381,15 +379,8 @@ class Controller<State extends object = any> {
         continue
       }
 
-      const config = callProp(props.config, key) || emptyObj
-
-      // Animations are only updated when they were reset, they have a new
-      // goal value, or their spring config was changed.
-      if (
-        props.reset ||
-        !is.equ(goalValue, state.goalValue) ||
-        !is.equ(config, state.config)
-      ) {
+      // Replace an animation when its goal value is changed (or it's been reset)
+      if (props.reset || !is.equ(goalValue, state.goalValue)) {
         const immediate = callProp(props.immediate, key)
         if (!immediate) started.push(key)
 
@@ -438,10 +429,11 @@ class Controller<State extends object = any> {
           }
         }
 
-        // Update the array of Animated nodes used by the frameloop
-        animatedValues = toArray(animated.getPayload() as any)
+        // Only change the "config" of updated animations.
+        const config: SpringConfig = callProp(configArg, key) || emptyObj
 
         changed = true
+        animatedValues = toArray(animated.getPayload() as any)
         this.animations[key] = {
           key,
           goalValue,
