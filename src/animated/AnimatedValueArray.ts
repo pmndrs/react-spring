@@ -11,7 +11,7 @@ export default class AnimatedValueArray extends AnimatedArray<AnimatedValue>
     this.payload = values
   }
 
-  public setValue(value: (string | number)[] | string | number, flush = true) {
+  public setValue(value: any, flush = true) {
     if (Array.isArray(value)) {
       if (value.length === this.payload.length) {
         value.forEach((v, i) => this.payload[i].setValue(v, flush))
