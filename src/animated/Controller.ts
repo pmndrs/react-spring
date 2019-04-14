@@ -321,7 +321,7 @@ class Controller<State extends object = any> {
     // Ensure the newer timestamp is used.
     const diffTimestamp = (keyPath: string) => {
       const previous = this.timestamps[keyPath]
-      if (is.und(previous) || timestamp! > previous) {
+      if (is.und(previous) || timestamp! >= previous) {
         this.timestamps[keyPath] = timestamp!
         return true
       }
