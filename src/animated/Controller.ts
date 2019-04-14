@@ -165,6 +165,21 @@ class Controller<State extends object = any> {
     this.configs = []
   }
 
+  /**
+   * Set a prop for the next animations where the prop is undefined. The given
+   * value is overridden by the next update where the prop is defined.
+   *
+   * Ongoing animations are not changed.
+   */
+  setProp<P extends keyof UpdateProps<State>>(
+    key: P,
+    value: UpdateProps<State>[P]
+  ) {
+    this.props[key] = value
+    this.timestamps[key] = now()
+    return this
+  }
+
   // Create an Animated node if none exists.
   private _ensureAnimated(values: any) {
     for (const key in values) {
