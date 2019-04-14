@@ -537,26 +537,22 @@ function createAnimated<T>(
   value: T
 ): T extends ReadonlyArray<any>
   ? AnimatedValueArray
-  : AnimatedValue | AnimatedInterpolation | null {
+  : AnimatedValue | AnimatedInterpolation {
   return is.arr(value)
     ? new AnimatedValueArray(
-        value.map(fromValue => {
-          const animated = createAnimated(fromValue)!
-          if (!animated) {
-            console.warn('Given value not animatable:', fromValue)
-          }
-          return animated instanceof AnimatedValue
-            ? animated
-            : (animated.getPayload() as any)
+        value.map(value => {
+          const animated = createAnimated(value)
+          const payload: any = animated.getPayload()
+          return animated instanceof AnimatedInterpolation
+            ? payload[0]
+            : payload
         })
       )
     : isAnimatableString(value)
     ? (new AnimatedValue(0).interpolate({
         output: [value, value] as any,
       }) as any)
-    : is.num(value) || is.str(value)
-    ? new AnimatedValue(value)
-    : null
+    : new AnimatedValue(value)
 }
 
 // Merge updates with the same delay.
