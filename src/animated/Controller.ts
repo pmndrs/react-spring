@@ -75,7 +75,6 @@ class Controller<State extends object = any> {
   update(propsArg: UpdateProps<State>) {
     if (!propsArg) return this
     const props = interpolateTo(propsArg) as any
-    props.timestamp = now()
 
     // For async animations, the `from` prop must be defined for
     // the Animated nodes to exist before animations have started.
@@ -83,6 +82,8 @@ class Controller<State extends object = any> {
     if (is.obj(props.to)) {
       this._ensureAnimated(props.to)
     }
+
+    props.timestamp = now()
 
     // The `delay` prop of every update must be a number >= 0
     if (is.fun(props.delay) && is.obj(props.to)) {
