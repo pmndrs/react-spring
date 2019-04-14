@@ -42,15 +42,15 @@ function addAnimatedStyles(
 export default class AnimatedValue extends Animated implements SpringValue {
   private animatedStyles = new Set<AnimatedProps>()
 
-  public value: number | string
-  public startPosition: number | string
-  public lastPosition: number | string
+  public value: any
+  public startPosition: any
+  public lastPosition: any
   public lastVelocity?: number
   public startTime?: number
   public lastTime?: number
   public done = false
 
-  constructor(value: number | string) {
+  constructor(value: any) {
     super()
     this.value = value
     this.startPosition = value
@@ -68,7 +68,7 @@ export default class AnimatedValue extends Animated implements SpringValue {
     this.animatedStyles.clear()
   }
 
-  public setValue = (value: number | string, flush = true) => {
+  public setValue = (value: any, flush = true) => {
     this.value = value
     if (flush) this.flush()
   }
