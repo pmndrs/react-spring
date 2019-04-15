@@ -52,10 +52,14 @@ export const useSprings = (length, props) => {
       if (ctrl.current) ctrl.current.map(c => c.destroy())
       ctrl.current = controllers
     }
+
+    // Use some props as defaults
     controllers.forEach((c, i) => {
-      c.setProp('config', props[i].config)
-      c.setProp('immediate', props[i].immediate)
+      const p = callProp(is.arr(props) ? props[i] : props, i, c)
+      c.setProp('config', p.config)
+      c.setProp('immediate', p.immediate)
     })
+
     if (mounted.current) {
       if (!isFn) setProps(props)
     } else if (!ref) {
