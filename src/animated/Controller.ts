@@ -355,6 +355,12 @@ class Controller<State extends object = any> {
     for (const key in props) {
       diffProp([key], props[key], this.props)
     }
+
+    // Never cache "reset: true"
+    if (props.reset) {
+      this.props.reset = false
+    }
+
     return changed
   }
 
