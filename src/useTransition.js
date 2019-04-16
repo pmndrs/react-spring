@@ -47,7 +47,6 @@ export function useTransition(input, keyTransform, props) {
   const {
     lazy = false,
     unique = false,
-    reset = false,
     from,
     enter,
     leave,
@@ -105,7 +104,6 @@ export function useTransition(input, keyTransform, props) {
       // update the map object
       const ctrl = state.current.instances.get(key)
       const itemProps = {
-        reset: reset && phase === ENTER,
         ...extra,
         ...props,
         ref,
@@ -188,6 +186,11 @@ function diffItems({ first, current, deleted, prevProps, ...state }, props) {
     order = [ENTER, LEAVE, UPDATE],
   } = props
   let { keys: _keys, items: _items } = makeConfig(prevProps)
+
+  if (props.reset) {
+    current = {}
+    state.transitions = []
+  }
 
   // Compare next keys with current keys
   const currentKeys = Object.keys(current)
