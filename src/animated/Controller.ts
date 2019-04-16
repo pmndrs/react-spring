@@ -99,6 +99,11 @@ class Controller<State extends object = any> {
       props.delay = is.num(props.delay)
         ? Math.max(0, Math.round(props.delay))
         : 0
+
+      // Coerce falsy values to undefined for these props
+      if (!props.to) props.to = void 0
+      if (!props.from) props.from = void 0
+
       this.queue.push(props)
     }
     return this
@@ -347,9 +352,9 @@ class Controller<State extends object = any> {
     }
 
     if (reverse) {
-      const { to } = props
+      const to: any = props.to
       props.to = props.from
-      props.from = is.obj(to) ? (to as any) : void 0
+      props.from = is.obj(to) ? to : void 0
     }
 
     for (const key in props) {
@@ -366,7 +371,7 @@ class Controller<State extends object = any> {
 
   // Update the animation configs. The given props override any default props.
   private _animate(props: UpdateProps<State>) {
-    let { to = emptyObj, from = emptyObj } = this.props
+    const { from = emptyObj, to = emptyObj } = this.props
 
     // Merge `from` values with `to` values
     this.merged = { ...from, ...to }
