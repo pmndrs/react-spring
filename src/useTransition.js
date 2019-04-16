@@ -239,8 +239,8 @@ function diffItems({ first, current, deleted, prevProps, ...state }, props) {
           ...current[key],
           phase,
           destroyed: true,
-          left: _keys[Math.max(0, i - 1)],
-          right: _keys[Math.min(_keys.length, i + 1)],
+          left: _keys[i - 1],
+          right: _keys[i + 1],
           props: {
             delay: (delay += trail),
             config: callProp(config, item, phase),
