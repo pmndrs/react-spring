@@ -7,10 +7,13 @@ import { callProp, fillArray, is, toArray } from './shared/helpers'
  * const [props, set] = useSprings(number, (i, controller) => ({ ... }))
  */
 
-export const useSprings = (length, props) => {
+export const useSprings = (length, propsArg) => {
   const mounted = useRef(false)
   const ctrl = useRef()
-  const isFn = is.fun(props)
+  const isFn = is.fun(propsArg)
+
+  // The `propsArg` coerced into an array
+  const props = isFn ? [] : propsArg
 
   // The controller maintains the animation values, starts and stops animations
   const [controllers, setProps, ref, api] = useMemo(() => {
@@ -19,9 +22,9 @@ export const useSprings = (length, props) => {
       // Recreate the controllers whenever `length` changes
       (controllers = fillArray(length, i => {
         const c = new Ctrl()
-        const newProps = isFn ? callProp(props, i, c) : props[i]
-        if (i === 0) ref = newProps.ref
-        return c.update(newProps)
+        const p = props[i] || (props[i] = callProp(propsArg, i, c))
+        if (i === 0) ref = p.ref
+        return c.update(p)
       })),
       // This updates the controllers with new props
       props => {
@@ -46,19 +49,21 @@ export const useSprings = (length, props) => {
   // Attach the imperative API to its ref
   useImperativeHandle(ref, () => api, [api])
 
-  // Update controller if props aren't functional
+  // Once mounted, update the local state and start any animations.
   useEffect(() => {
-    if (ctrl.current !== controllers) {
-      if (ctrl.current) ctrl.current.map(c => c.destroy())
-      ctrl.current = controllers
+    if (!isFn || ctrl.current !== controllers) {
+      controllers.forEach((c, i) => {
+        const p = props[i]
+        // Set the default props for async updates
+        c.setProp('config', p.config)
+        c.setProp('immediate', p.immediate)
+      })
     }
 
-    // Use some props as defaults
-    controllers.forEach((c, i) => {
-      const p = callProp(is.arr(props) ? props[i] : props, i, c)
-      c.setProp('config', p.config)
-      c.setProp('immediate', p.immediate)
-    })
+    if (ctrl.current !== controllers) {
+      if (ctrl.current) ctrl.current.forEach(c => c.destroy())
+      ctrl.current = controllers
+    }
 
     if (mounted.current) {
       if (!isFn) setProps(props)
