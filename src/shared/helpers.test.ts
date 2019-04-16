@@ -61,8 +61,8 @@ describe('helpers', () => {
       expect(reconcileWrapper('1:4:|:5:4', '1|2|3')).toEqual([1, 5, 4, 2, 3])
     })
 
-    it('should handle interupted chain', () => {
-      expect(reconcileWrapper('9:4:|4:5:', '1|2|3')).toEqual([4, 5, 1, 2, 3])
+    it('should handle interrupted chain', () => {
+      expect(reconcileWrapper('5:3:|9:5:', '1|2|4')).toEqual([1, 2, 4, 3, 5])
     })
 
     it('should handle empty arrays', () => {
