@@ -151,12 +151,9 @@ class Controller<State extends object = any> {
 
   /** @internal Called by the frameloop */
   onFrame(isActive: boolean) {
-    if (this.props.onFrame) {
-      this.props.onFrame(this.values)
-    }
-    if (!isActive) {
-      this._stop(true)
-    }
+    const { onFrame } = this.props
+    if (onFrame) onFrame(this.values)
+    if (!isActive) this._stop(true)
   }
 
   /** Reset the internal state */
@@ -371,7 +368,7 @@ class Controller<State extends object = any> {
 
   // Update the animation configs. The given props override any default props.
   private _animate(props: UpdateProps<State>) {
-    const { from = emptyObj, to = emptyObj } = this.props
+    const { from = emptyObj, to = emptyObj, attach, onStart } = this.props
 
     // Merge `from` values with `to` values
     this.merged = { ...from, ...to }
@@ -383,7 +380,7 @@ class Controller<State extends object = any> {
     const started: string[] = []
 
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
-    const target = this.props.attach && this.props.attach(this)
+    const target = attach && attach(this)
 
     // Reduces input { key: value } pairs into animation objects
     for (const key in this.merged) {
@@ -502,8 +499,8 @@ class Controller<State extends object = any> {
     }
 
     if (changed) {
-      if (this.props.onStart && started.length) {
-        started.forEach(key => this.props.onStart!(this.animations[key]))
+      if (onStart && started.length) {
+        started.forEach(key => onStart!(this.animations[key]))
       }
 
       // Make animations available to the frameloop
