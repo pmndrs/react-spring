@@ -210,6 +210,7 @@ function diffItems({ first, current, deleted, prevProps, ...state }, props) {
     if (phase === ENTER) {
       if (first && !is.und(initial)) {
         phase = INITIAL
+        from = initial
       }
       addedKeys.forEach(key => {
         // In unique mode, remove fading out transitions if their key comes in again
@@ -227,7 +228,7 @@ function diffItems({ first, current, deleted, prevProps, ...state }, props) {
           props: {
             delay: (delay += trail),
             config: callProp(config, item, phase),
-            from: callProp(first && !is.und(initial) ? initial : from, item),
+            from: callProp(from, item),
             to: enterProps,
             ...(is.obj(enterProps) && interpolateTo(enterProps)),
           },
