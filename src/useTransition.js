@@ -194,7 +194,10 @@ function diffItems({ first, current, deleted, prevProps, ...state }, props) {
   const nextSet = new Set(keys)
 
   const addedKeys = keys.filter(key => !currentSet.has(key))
-  const updatedKeys = update ? keys.filter(key => currentSet.has(key)) : []
+  const updatedKeys =
+    update && prevProps.items !== props.items
+      ? keys.filter(key => currentSet.has(key))
+      : []
   const deletedKeys = state.transitions
     .filter(t => !t.destroyed && !nextSet.has(t.originalKey))
     .map(t => t.originalKey)
