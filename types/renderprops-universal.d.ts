@@ -59,6 +59,10 @@ export interface SpringBaseProps {
    * reverse the animation
    */
   reverse?: boolean
+  /**
+   * Stop animation when true, else restart animations (if necessary)
+   */
+  cancel?: boolean | string | string[]
 }
 
 export interface SpringProps<DS extends object = {}> extends SpringBaseProps {

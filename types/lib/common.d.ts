@@ -221,6 +221,7 @@ export type ReservedProps =
   | 'to'
   | 'ref'
   | 'reset'
+  | 'cancel'
   | 'reverse'
   | 'immediate'
   | 'delay'

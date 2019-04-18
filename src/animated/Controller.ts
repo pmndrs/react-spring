@@ -366,9 +366,37 @@ class Controller<State extends object = any> {
     return changed
   }
 
+  // Return true if the given prop was changed by this update
+  private _isModified(props: UpdateProps<State>, prop: string) {
+    return this.timestamps[prop] === props.timestamp
+  }
+
   // Update the animation configs. The given props override any default props.
   private _animate(props: UpdateProps<State>) {
-    const { from = emptyObj, to = emptyObj, attach, onStart } = this.props
+    const {
+      from = emptyObj,
+      to = emptyObj,
+      attach,
+      cancel,
+      onStart,
+    } = this.props
+
+    let isPrevented = (_: string) => false
+    if (cancel && this._isModified(props, 'cancel')) {
+      // Stop all animations when `cancel` is true
+      if (cancel === true) {
+        return this.stop()
+      }
+      // Prevent matching properties from animating when
+      // `cancel` is a string or array of strings
+      if (is.str(cancel)) {
+        this.stop(cancel)
+        isPrevented = key => key === cancel
+      } else if (is.arr(cancel) && cancel.length) {
+        this.stop(...cancel)
+        isPrevented = key => cancel.indexOf(key) >= 0
+      }
+    }
 
     // Merge `from` values with `to` values
     this.merged = { ...from, ...to }
@@ -384,6 +412,7 @@ class Controller<State extends object = any> {
 
     // Reduces input { key: value } pairs into animation objects
     for (const key in this.merged) {
+      if (isPrevented(key)) continue
       const state = this.animations[key]
       if (!state) {
         console.warn(

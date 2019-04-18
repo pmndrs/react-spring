@@ -16,6 +16,7 @@ const reservedProps = {
   from: {},
   to: {},
   ref: $1,
+  cancel: $1,
   reset: $1,
   reverse: $1,
   immediate: $1,
