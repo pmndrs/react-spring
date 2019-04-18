@@ -11,6 +11,7 @@ import AnimatedInterpolation from './AnimatedInterpolation'
 import { start, stop } from './FrameLoop'
 import { colorNames, interpolation as interp, now } from './Globals'
 import { SpringProps, SpringConfig } from '../../types/renderprops'
+import Animated from './Animated'
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
@@ -453,6 +454,10 @@ class Controller<State extends object = any> {
         // Animatable strings use interpolation
         const isInterpolated = isAnimatableString(value)
         if (isInterpolated) {
+          const output: any[] = [
+            props.reset ? fromValue : animated.getValue(),
+            goalValue,
+          ]
           let input = animatedValues[0]
           if (input) {
             input.setValue(0, false)
@@ -461,14 +466,14 @@ class Controller<State extends object = any> {
             input = new AnimatedValue(0)
           }
           try {
-            animated = input.interpolate({
-              output: [fromValue, goalValue],
-            })
+            const prev = animated
+            animated = input.interpolate({ output })
+            moveChildren(prev, animated)
           } catch (err) {
             console.warn(
               'Failed to interpolate string from "%s" to "%s"',
-              fromValue,
-              goalValue
+              output[0],
+              output[1]
             )
             console.error(err)
             continue
@@ -483,14 +488,18 @@ class Controller<State extends object = any> {
               if (props.reset) animated.setValue(fromValue, false)
               animatedValues.forEach(v => v.reset(isActive))
             } else {
+              const prev = animated
               animated = createAnimated<any[]>(fromValue)
+              moveChildren(prev, animated)
             }
           } else {
             if (animated instanceof AnimatedValue) {
               if (props.reset) animated.setValue(fromValue, false)
               animated.reset(isActive)
             } else {
+              const prev = animated
               animated = new AnimatedValue(fromValue)
+              moveChildren(prev, animated)
             }
           }
           if (immediate) {
@@ -578,7 +587,7 @@ class Controller<State extends object = any> {
 
 export default Controller
 
-// Wrap any value with an Animated node
+/** Wrap any value with an `Animated` node */
 function createAnimated<T>(
   value: T
 ): T extends ReadonlyArray<any>
@@ -599,6 +608,30 @@ function createAnimated<T>(
         output: [value, value] as any,
       }) as any)
     : new AnimatedValue(value)
+}
+
+/**
+ * Replace an `Animated` node in the graph.
+ * This is most useful for async updates, which don't cause a re-render.
+ */
+function moveChildren(prev: Animated, next: Animated) {
+  const children = prev.getChildren().slice()
+  children.forEach(child => {
+    prev.removeChild(child)
+    next.addChild(child)
+
+    // Replace `prev` with `next` in child payloads
+    const payload = child.getPayload()
+    if (is.arr(payload)) {
+      const i = payload.indexOf(prev)
+      if (i >= 0) payload[i] = next
+    } else if (is.obj(payload)) {
+      for (const key in payload) {
+        const value = payload[key]
+        if (value === prev) payload[key] = next
+      }
+    }
+  })
 }
 
 // Merge updates with the same delay.
