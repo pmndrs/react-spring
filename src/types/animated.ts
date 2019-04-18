@@ -1,7 +1,5 @@
 import { InterpolationConfig } from './interpolation'
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
 type SpringifyProps<Props> = {
   [K in keyof Props]: Props[K] extends number | string | undefined
     ? SpringValue<Props[K]> | Props[K]
@@ -14,11 +12,9 @@ type SpringifyChildren<Props> = {
     : Props[K]
 }
 
-type SpringifyStyle<Props> = Props extends { style?: infer S }
-  ? S extends object
-    ? Omit<Props, 'style'> & { style?: SpringifyProps<S> }
-    : Props
-  : Props
+type SpringifyStyle<Props> = {
+  [K in keyof Props]: K extends 'style' ? SpringifyProps<Props[K]> : Props[K]
+}
 
 export type AnimatedComponentProps<
   C extends React.ReactType
