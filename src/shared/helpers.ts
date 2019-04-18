@@ -71,6 +71,7 @@ type PartialExcludedProps = Partial<{
   onRest: any
   onFrame: any
   children: any
+  cancel: any
   reset: any
   reverse: any
   force: any
@@ -100,6 +101,7 @@ function getForwardProps<P extends PartialExcludedProps>(
     onRest,
     onFrame,
     children,
+    cancel,
     reset,
     reverse,
     force,

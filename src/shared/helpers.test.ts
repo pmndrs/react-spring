@@ -14,6 +14,7 @@ describe('helpers', () => {
       onRest: undefined,
       onFrame: undefined,
       children: undefined,
+      cancel: undefined,
       reset: undefined,
       reverse: undefined,
       force: undefined,
