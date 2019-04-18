@@ -1,8 +1,12 @@
 import { MutableRefObject, Ref, useCallback, useState } from 'react'
 
+export type NarrowObject<T> = unknown extends T
+  ? T & { [key: string]: any }
+  : Exclude<Extract<T, object>, Function | ReadonlyArray<any>>
+
 export const is = {
   arr: Array.isArray,
-  obj: (a: unknown): a is Object =>
+  obj: <T>(a: T): a is NarrowObject<T> =>
     Object.prototype.toString.call(a) === '[object Object]',
   fun: (a: unknown): a is Function => typeof a === 'function',
   str: (a: unknown): a is string => typeof a === 'string',
