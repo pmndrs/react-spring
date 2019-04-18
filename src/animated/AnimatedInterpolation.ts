@@ -1,16 +1,11 @@
-import { SpringValue } from '../types/animated'
+import { SpringValue, Interpolator } from '../types/animated'
 import { InterpolationConfig } from '../types/interpolation'
 import Animated, { AnimatedArray } from './Animated'
 import createInterpolator from './createInterpolator'
 
-type IpValue = string | number | (string | number)[]
-// The widest possible interpolator type, possible if interpolate() is passed
-// a custom interpolation function.
-type Interpolator = (...input: IpValue[]) => IpValue
-
 export default class AnimatedInterpolation extends AnimatedArray<Animated>
   implements SpringValue {
-  calc: Interpolator
+  calc: Interpolator<any[]>
 
   constructor(
     parents: Animated | Animated[],
@@ -18,6 +13,7 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
     output?: (number | string)[]
   ) {
     super()
+    this.calc = createInterpolator(range as any, output!)
     this.payload =
       parents instanceof AnimatedArray &&
       !(parents instanceof AnimatedInterpolation)
@@ -25,7 +21,6 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
         : Array.isArray(parents)
         ? parents
         : [parents]
-    this.calc = createInterpolator(range as number[], output!) as Interpolator
   }
 
   public getValue() {
@@ -36,13 +31,13 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
     range: number[] | InterpolationConfig | Interpolator,
     output?: (number | string)[]
   ) {
-    this.calc = createInterpolator(range as number[], output!) as Interpolator
+    this.calc = createInterpolator(range as any, output!)
   }
 
   public interpolate(
-    range: number[] | InterpolationConfig | ((...args: any[]) => IpValue),
+    range: number[] | InterpolationConfig | Interpolator,
     output?: (number | string)[]
   ): AnimatedInterpolation {
-    return new AnimatedInterpolation(this, range as number[], output)
+    return new AnimatedInterpolation(this, range, output)
   }
 }

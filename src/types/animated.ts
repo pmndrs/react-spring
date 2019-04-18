@@ -43,36 +43,26 @@ export interface CreateAnimatedComponent {
   <C extends React.ReactType>(Component: C): AnimatedComponent<C>
 }
 
-export type GetValueType<T> = T extends number
-  ? number
-  : T extends string
-  ? string
-  : string | number
+export type AnimatableValue = number | string | (number | string)[]
 
-export type GetArrayValueType<T extends any[]> = T extends (infer U)[]
-  ? GetValueType<U>
-  : string | number
+// The widest possible interpolator type, possible if interpolate() is passed
+// a custom interpolation function.
+export type Interpolator<
+  In extends AnimatableValue = AnimatableValue,
+  Out extends number | string = number | string
+> = In extends any[]
+  ? (...input: In) => Out extends number ? number : string
+  : (input: In) => Out extends number ? number : string
 
 /**
  * An animated value that can be assigned to `animated` component's properties.
  */
-export interface SpringValue<
-  // The literal value from initialization.
-  Value extends undefined | number | string | (number | string)[] =
-    | number
-    | string
-    | (number | string)[],
-  // Widen the literal `Value` type to either string or number because the
-  // value will change during animation.
-  ValueType extends number | string = Value extends (number | string)[]
-    ? GetArrayValueType<Value>
-    : GetValueType<Value>
-> {
+export interface SpringValue<T extends AnimatableValue = AnimatableValue> {
   /**
    * Get the animated value. Automatically invoked when an `AnimatedValue`
    * is assigned to a property of an `animated` element.
    */
-  getValue(): Value extends any[] ? ValueType[] : ValueType
+  getValue(): T
 
   /**
    * Interpolate the value with a custom interpolation function,
@@ -84,21 +74,12 @@ export interface SpringValue<
    * interpolate({ range: [0, 1], output: ['yellow', 'red'], extrapolate: 'clamp' })
    * interpolate([0, 0.25, 1], ['yellow', 'orange', 'red'])
    */
-  interpolate<Out extends number | string | (number | string)[]>(
-    // Narrows argument types for AnimatedArrayValues if possible
-    interpolator: Value extends string[]
-      ? (...input: string[]) => Out
-      : Value extends number[]
-      ? (...input: number[]) => Out
-      : Value extends (number | string)[]
-      ? (...input: (number | string)[]) => Out
-      : (input: ValueType) => Out
-  ): SpringValue<Out>
   interpolate<Out extends number | string>(
-    config: InterpolationConfig<Out>
-  ): SpringValue<Out>
+    config: InterpolationConfig<Out> | Interpolator<T>
+  ): SpringValue<Out extends number ? number : string>
+
   interpolate<Out extends number | string>(
     range: number[],
     output: Out[]
-  ): SpringValue<Out>
+  ): SpringValue<Out extends number ? number : string>
 }
