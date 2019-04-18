@@ -454,20 +454,16 @@ class Controller<State extends object = any> {
         // Animatable strings use interpolation
         const isInterpolated = isAnimatableString(value)
         if (isInterpolated) {
-          let input: AnimatedValue
-          const output: any[] = [fromValue, goalValue]
-          if (animated instanceof AnimatedInterpolation) {
-            input = animatedValues[0]
-
-            if (!props.reset) output[0] = animated.calc(input.value)
-            animated.updateConfig({ output })
-
+          let input = animatedValues[0]
+          if (input) {
             input.setValue(0, false)
             input.reset(isActive)
           } else {
             input = new AnimatedValue(0)
-            animated = input.interpolate({ output })
           }
+          animated = input.interpolate({
+            output: [fromValue, goalValue],
+          })
           if (immediate) {
             input.setValue(1, false)
           }

@@ -13,7 +13,7 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
     output?: (number | string)[]
   ) {
     super()
-    this.calc = createInterpolator(range as any, output!)
+    this.calc = createInterpolator(range as any, output)
     this.payload =
       parents instanceof AnimatedArray &&
       !(parents instanceof AnimatedInterpolation)
@@ -25,13 +25,6 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
 
   public getValue() {
     return this.calc(...this.payload.map(value => value.getValue()))
-  }
-
-  public updateConfig(
-    range: number[] | InterpolationConfig | Interpolator,
-    output?: (number | string)[]
-  ) {
-    this.calc = createInterpolator(range as any, output!)
   }
 
   public interpolate(
