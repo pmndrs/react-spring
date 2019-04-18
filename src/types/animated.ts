@@ -1,9 +1,11 @@
 import { InterpolationConfig } from './interpolation'
 
 type SpringifyProps<Props> = {
-  [K in keyof Props]: Props[K] extends number | string | undefined
-    ? SpringValue<Props[K]> | Props[K]
-    : Props[K]
+  [K in keyof Props]: Props[K] extends infer P
+    ? P extends number | string
+      ? SpringValue<P> | P
+      : P
+    : never
 }
 
 type SpringifyChildren<Props> = {
