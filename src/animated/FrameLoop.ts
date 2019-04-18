@@ -11,6 +11,9 @@ const update = () => {
   for (let controller of controllers) {
     let isActive = false
 
+    // Number of updated animations
+    let updateCount = 0
+
     for (
       let configIdx = 0;
       configIdx < controller.configs.length;
@@ -21,6 +24,7 @@ const update = () => {
       for (let valIdx = 0; valIdx < config.animatedValues.length; valIdx++) {
         let animated = config.animatedValues[valIdx]
         if (animated.done) continue
+        updateCount++
 
         let to = config.toValues[valIdx]
         let isAnimated = to instanceof Animated
@@ -118,7 +122,7 @@ const update = () => {
       }
     }
 
-    controller.onFrame(isActive)
+    controller.onFrame(isActive, updateCount)
   }
 
   // Loop over as long as there are controllers ...

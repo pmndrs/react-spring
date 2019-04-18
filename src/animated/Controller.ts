@@ -150,9 +150,11 @@ class Controller<State extends object = any> {
   }
 
   /** @internal Called by the frameloop */
-  onFrame(isActive: boolean) {
-    const { onFrame } = this.props
-    if (onFrame) onFrame(this.values)
+  onFrame(isActive: boolean, updateCount: number) {
+    if (updateCount) {
+      const { onFrame } = this.props
+      if (onFrame) onFrame(this.values)
+    }
     if (!isActive) this._stop(true)
   }
 
