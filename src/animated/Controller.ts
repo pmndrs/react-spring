@@ -442,9 +442,6 @@ class Controller<State extends object = any> {
       if (props.reset || !is.equ(goalValue, state.goalValue)) {
         let { immediate } = is.und(props.immediate) ? this.props : props
         immediate = callProp(immediate, key)
-        if (!immediate) {
-          started.push(key)
-        }
 
         const isActive = animatedValues.some(v => !v.done)
         const fromValue = !is.und(from[key])
@@ -461,9 +458,19 @@ class Controller<State extends object = any> {
           } else {
             input = new AnimatedValue(0)
           }
-          animated = input.interpolate({
-            output: [fromValue, goalValue],
-          })
+          try {
+            animated = input.interpolate({
+              output: [fromValue, goalValue],
+            })
+          } catch (err) {
+            console.warn(
+              'Failed to interpolate string from "%s" to "%s"',
+              fromValue,
+              goalValue
+            )
+            console.error(err)
+            continue
+          }
           if (immediate) {
             input.setValue(1, false)
           }
@@ -494,6 +501,10 @@ class Controller<State extends object = any> {
           callProp(props.config, key) ||
           callProp(this.props.config, key) ||
           emptyObj
+
+        if (!immediate) {
+          started.push(key)
+        }
 
         changed = true
         animatedValues = toArray(animated.getPayload() as any)
