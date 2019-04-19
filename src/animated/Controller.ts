@@ -273,15 +273,20 @@ class Controller<State extends object = any> {
       this._animate(props)
     }
 
-    // This async animation might be overridden.
+    // Async scripts can be declaratively cancelled.
+    if (props.cancel === true) {
+      this.props.asyncTo = null
+      return onEnd(false)
+    }
+
+    // Never run more than one script at a time.
     if (!this._diff({ asyncTo: to, timestamp: props.timestamp })) {
       return onEnd(false)
     }
 
-    // Async chains run to completion. Async scripts are interrupted.
     const { animations } = this
     const isCancelled = () =>
-      // The `stop` and `destroy` methods clear the animation map.
+      // The `stop` and `destroy` methods replace the `animations` map.
       animations !== this.animations ||
       // Async scripts are cancelled when a new chain/script begins.
       (is.fun(to) && to !== this.props.asyncTo)
