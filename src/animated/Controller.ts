@@ -600,13 +600,12 @@ class Controller<State extends Indexable = any> {
     // Tell the frameloop to stop animating these values
     animatedValues.forEach(v => (v.done = true))
 
-    // The current value becomes the goalValue
-    const goalValue = animated.getValue()
-
     // Prevent any pending updates to this key
     this.timestamps['to.' + key] = now()
 
-    // Pretend that we arrived at the goal
+    // The current value becomes the goal value,
+    // which ensures the integrity of the diffing algorithm.
+    const goalValue = animated.getValue()
     if (this.props.to) {
       this.props.to[key] = goalValue
     }
