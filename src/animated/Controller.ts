@@ -270,7 +270,7 @@ class Controller<State extends object = any> {
   private _runAsync({ to, ...props }: UpdateProps<State>, onEnd: OnEnd) {
     // Merge other props immediately.
     if (this._diff(props)) {
-      this._animate(this.props)
+      this._animate(props)
     }
 
     // This async animation might be overridden.
