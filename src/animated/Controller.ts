@@ -19,6 +19,8 @@ type Indexable<T = any> = { [key: string]: T }
 /** Animation config that is ignored by the frameloop */
 interface IdleAnimation<T = any> {
   key: string
+  idle: boolean
+  goalValue: T
   animatedValues: AnimatedValue[]
   animated: T extends ReadonlyArray<any>
     ? AnimatedValueArray
@@ -31,8 +33,7 @@ interface ActiveAnimation<T = any>
     Omit<SpringConfig, 'velocity'> {
   config: SpringConfig
   initialVelocity: number
-  immediate?: boolean
-  goalValue: T
+  immediate: boolean
   toValues: T extends ReadonlyArray<any> ? T : [T]
   fromValues: T extends ReadonlyArray<any> ? T : [T]
 }
@@ -452,7 +453,7 @@ class Controller<State extends Indexable = any> {
       // Stop animations with a goal value equal to its current value.
       if (!props.reset && is.equ(goalValue, animated.getValue())) {
         // The animation might be stopped already.
-        if (!is.und(state.goalValue)) {
+        if (!state.idle) {
           changed = true
           this._stopAnimation(key)
         }
@@ -462,7 +463,7 @@ class Controller<State extends Indexable = any> {
       // Replace an animation when its goal value is changed (or it's been reset)
       if (props.reset || !is.equ(goalValue, state.goalValue)) {
         let { immediate } = is.und(props.immediate) ? this.props : props
-        immediate = callProp(immediate, key)
+        immediate = !!callProp(immediate, key)
 
         const isActive = animatedValues.some(v => !v.done)
         const fromValue = !is.und(from[key])
@@ -539,6 +540,7 @@ class Controller<State extends Indexable = any> {
         animatedValues = toArray(animated.getPayload() as any)
         this.animations[key] = {
           key,
+          idle: false,
           goalValue,
           toValues: toArray(
             target
@@ -587,7 +589,7 @@ class Controller<State extends Indexable = any> {
     if (!this.animated[key]) return
 
     const state = this.animations[key]
-    if (state && is.und(state.goalValue)) return
+    if (state && state.idle) return
 
     let { animated, animatedValues } = state || emptyObj
     if (!state) {
@@ -595,20 +597,28 @@ class Controller<State extends Indexable = any> {
       animatedValues = toArray(animated.getPayload() as any)
     }
 
-    // Replace the animation config with a lighter object
-    this.animations[key] = { key, animated, animatedValues } as any
-
-    // Tell the frameloop: "these animations are done"
+    // Tell the frameloop to stop animating these values
     animatedValues.forEach(v => (v.done = true))
 
-    // Prevent delayed updates to this key
-    this.timestamps['to.' + key] = now()
-    this.timestamps['from.' + key] = now()
+    // The current value becomes the goalValue
+    const goalValue = animated.getValue()
 
-    // Clear this key from the prop cache, so future diffs are guaranteed
-    const { to, from } = this.props
-    if (is.obj(to)) delete to[key]
-    if (from) delete from[key]
+    // Prevent any pending updates to this key
+    this.timestamps['to.' + key] = now()
+
+    // Pretend that we arrived at the goal
+    if (this.props.to) {
+      this.props.to[key] = goalValue
+    }
+
+    // Remove unused data from this key's animation config
+    this.animations[key] = {
+      key,
+      idle: true,
+      goalValue,
+      animated,
+      animatedValues,
+    }
   }
 }
 
