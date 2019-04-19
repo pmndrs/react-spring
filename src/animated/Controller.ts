@@ -573,11 +573,20 @@ class Controller<State extends object = any> {
       animatedValues = toArray(animated.getPayload() as any)
     }
 
+    // Replace the animation config with a lighter object
     this.animations[key] = { key, animated, animatedValues } as any
+
+    // Tell the frameloop: "these animations are done"
     animatedValues.forEach(v => (v.done = true))
 
-    // Prevent delayed updates to this key.
+    // Prevent delayed updates to this key
     this.timestamps['to.' + key] = now()
+    this.timestamps['from.' + key] = now()
+
+    // Clear this key from the prop cache, so future diffs are guaranteed
+    const { to, from } = this.props
+    if (is.obj(to)) delete to[key]
+    if (from) delete from[key]
   }
 }
 
