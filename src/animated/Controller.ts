@@ -16,20 +16,29 @@ import Animated from './Animated'
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 type Indexable<T = any> = { [key: string]: T }
 
-interface Animation<T = any> extends Omit<SpringConfig, 'velocity'> {
+/** Animation config that is ignored by the frameloop */
+interface IdleAnimation<T = any> {
   key: string
-  config: SpringConfig
-  initialVelocity: number
-  immediate?: boolean
-  goalValue: T
-  toValues: T extends ReadonlyArray<any> ? T : [T]
-  fromValues: T extends ReadonlyArray<any> ? T : [T]
   animatedValues: AnimatedValue[]
   animated: T extends ReadonlyArray<any>
     ? AnimatedValueArray
     : AnimatedValue | AnimatedInterpolation
 }
 
+/** Animation config that is executed by the frameloop */
+interface ActiveAnimation<T = any>
+  extends IdleAnimation<T>,
+    Omit<SpringConfig, 'velocity'> {
+  config: SpringConfig
+  initialVelocity: number
+  immediate?: boolean
+  goalValue: T
+  toValues: T extends ReadonlyArray<any> ? T : [T]
+  fromValues: T extends ReadonlyArray<any> ? T : [T]
+}
+
+/** Internal animation config (used by frameloop) */
+type Animation<T = any> = ActiveAnimation<T> | IdleAnimation<T>
 type AnimationMap = Indexable<Animation>
 type AnimatedMap = Indexable<Animation['animated']>
 
