@@ -629,11 +629,15 @@ function moveChildren(prev: Animated, next: Animated) {
     const payload = child.getPayload()
     if (is.arr(payload)) {
       const i = payload.indexOf(prev)
-      if (i >= 0) payload[i] = next
+      if (i >= 0) {
+        const copy = [...payload]
+        copy[i] = next
+        child['payload'] = copy
+      }
     } else if (is.obj(payload)) {
-      for (const key in payload) {
-        const value = payload[key]
-        if (value === prev) payload[key] = next
+      const entry = Object.entries(payload).find(entry => entry[1] === prev)
+      if (entry) {
+        child['payload'] = { ...payload, [entry[0]]: next }
       }
     }
   })
