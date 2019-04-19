@@ -256,7 +256,7 @@ class Controller<State extends Indexable = any> {
     const queue = this.queue.reduce(reduceDelays, [])
     this.queue.length = 0
 
-    // Track the number of running animations.
+    // Track the number of active `_run` calls.
     let runsLeft = Object.keys(queue).length
     this.runCount += runsLeft
 
