@@ -366,10 +366,9 @@ class Controller<State extends object = any> {
       diffProp([key], props[key], this.props)
     }
 
-    // Never cache "reset: true"
-    if (props.reset) {
-      this.props.reset = false
-    }
+    // These props only affect one update
+    if (props.reset) this.props.reset = false
+    if (props.cancel) this.props.cancel = false
 
     return changed
   }
@@ -381,28 +380,20 @@ class Controller<State extends object = any> {
 
   // Update the animation configs. The given props override any default props.
   private _animate(props: UpdateProps<State>) {
-    const {
-      from = emptyObj,
-      to = emptyObj,
-      attach,
-      cancel,
-      onStart,
-    } = this.props
+    const { from = emptyObj, to = emptyObj, attach, onStart } = this.props
 
     let isPrevented = (_: string) => false
-    if (cancel && this._isModified(props, 'cancel')) {
+    if (props.cancel && this._isModified(props, 'cancel')) {
       // Stop all animations when `cancel` is true
-      if (cancel === true) {
+      if (props.cancel === true) {
         return this.stop()
       }
       // Prevent matching properties from animating when
       // `cancel` is a string or array of strings
-      if (is.str(cancel)) {
-        this.stop(cancel)
-        isPrevented = key => key === cancel
-      } else if (is.arr(cancel) && cancel.length) {
-        this.stop(...cancel)
-        isPrevented = key => cancel.indexOf(key) >= 0
+      const keys = toArray(props.cancel)
+      if (is.arr(keys) && keys.length) {
+        isPrevented = key => keys.indexOf(key) >= 0
+        this.stop(...keys)
       }
     }
 
