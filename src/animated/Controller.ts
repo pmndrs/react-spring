@@ -111,11 +111,12 @@ class Controller<State extends Indexable = any> {
 
     // The `delay` prop of every update must be a number >= 0
     if (is.fun(props.delay) && is.obj(props.to)) {
+      const from = props.from || emptyObj
       for (const key in props.to) {
         this.queue.push({
           ...props,
           to: { [key]: props.to[key] },
-          from: key in props.from ? { [key]: props.from[key] } : void 0,
+          from: key in from ? { [key]: from[key] } : void 0,
           delay: Math.max(0, Math.round(props.delay(key))),
         })
       }
