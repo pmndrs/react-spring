@@ -14,6 +14,7 @@ import { SpringProps, SpringConfig } from '../../types/renderprops'
 import Animated from './Animated'
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+type Indexable<T = any> = { [key: string]: T }
 
 interface Animation<T = any> extends Omit<SpringConfig, 'velocity'> {
   key: string
@@ -29,10 +30,10 @@ interface Animation<T = any> extends Omit<SpringConfig, 'velocity'> {
     : AnimatedValue | AnimatedInterpolation
 }
 
-type AnimationMap = { [key: string]: Animation }
-type AnimatedMap = { [key: string]: Animation['animated'] }
+type AnimationMap = Indexable<Animation>
+type AnimatedMap = Indexable<Animation['animated']>
 
-interface UpdateProps<DS extends object> extends SpringProps<DS> {
+interface UpdateProps<State extends object> extends SpringProps<State> {
   [key: string]: any
   timestamp?: number
   attach?: (ctrl: Controller) => Controller
@@ -46,12 +47,12 @@ const linear = (t: number) => t
 const emptyObj: any = Object.freeze({})
 
 let nextId = 1
-class Controller<State extends object = any> {
+class Controller<State extends Indexable = any> {
   id = nextId++
   idle = true
   props: UpdateProps<State> = {}
   queue: any[] = []
-  timestamps: { [key: string]: number } = {}
+  timestamps: Indexable<number> = {}
   values: State = {} as any
   merged: State = {} as any
   animated: AnimatedMap = {}
