@@ -103,9 +103,7 @@ class Controller<State extends Indexable = any> {
     // For async animations, the `from` prop must be defined for
     // the Animated nodes to exist before animations have started.
     this._ensureAnimated(props.from)
-    if (is.obj(props.to)) {
-      this._ensureAnimated(props.to)
-    }
+    this._ensureAnimated(props.to)
 
     props.timestamp = now()
 
@@ -212,6 +210,7 @@ class Controller<State extends Indexable = any> {
 
   // Create an Animated node if none exists.
   private _ensureAnimated(values: any) {
+    if (!is.obj(values)) return
     for (const key in values) {
       if (this.animated[key]) continue
       const value = values[key]
