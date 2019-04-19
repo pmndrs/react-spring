@@ -7,6 +7,7 @@
     "outDir": "./dist",
     "allowJs": true,
     "noEmitOnError": true,
+    "preserveSymlinks": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
