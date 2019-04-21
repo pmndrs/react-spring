@@ -19,16 +19,16 @@
     "gzipped": 1999
   },
   "dist/web.js": {
-    "bundled": 63030,
-    "minified": 30004,
-    "gzipped": 10925,
+    "bundled": 72344,
+    "minified": 33806,
+    "gzipped": 12147,
     "treeshaked": {
       "rollup": {
-        "code": 11455,
+        "code": 11500,
         "import_statements": 242
       },
       "webpack": {
-        "code": 12615
+        "code": 12660
       }
     }
   },
@@ -38,44 +38,44 @@
     "gzipped": 11641
   },
   "dist/native.js": {
-    "bundled": 60162,
-    "minified": 28083,
-    "gzipped": 9943,
+    "bundled": 69476,
+    "minified": 31885,
+    "gzipped": 11171,
     "treeshaked": {
       "rollup": {
-        "code": 8256,
+        "code": 8274,
         "import_statements": 180
       },
       "webpack": {
-        "code": 10763
+        "code": 10808
       }
     }
   },
   "dist/universal.js": {
-    "bundled": 47599,
-    "minified": 21373,
-    "gzipped": 7136,
+    "bundled": 56913,
+    "minified": 25175,
+    "gzipped": 8380,
     "treeshaked": {
       "rollup": {
-        "code": 1235,
+        "code": 1253,
         "import_statements": 128
       },
       "webpack": {
-        "code": 4615
+        "code": 4660
       }
     }
   },
   "dist/konva.js": {
-    "bundled": 58652,
-    "minified": 27228,
-    "gzipped": 9850,
+    "bundled": 67966,
+    "minified": 31030,
+    "gzipped": 11089,
     "treeshaked": {
       "rollup": {
-        "code": 8974,
+        "code": 9019,
         "import_statements": 242
       },
       "webpack": {
-        "code": 10128
+        "code": 10173
       }
     }
   },
@@ -127,9 +127,9 @@
     }
   },
   "dist/renderprops.js": {
-    "bundled": 66797,
-    "minified": 32950,
-    "gzipped": 11394
+    "bundled": 68036,
+    "minified": 33144,
+    "gzipped": 11517
   },
   "dist/renderprops-addons.js": {
     "bundled": 8318,
@@ -142,34 +142,34 @@
     "gzipped": 2008
   },
   "dist/renderprops-native.js": {
-    "bundled": 61366,
-    "minified": 29741,
-    "gzipped": 9942
+    "bundled": 62605,
+    "minified": 29935,
+    "gzipped": 10059
   },
   "dist/renderprops-universal.js": {
-    "bundled": 49095,
-    "minified": 23185,
-    "gzipped": 7226
+    "bundled": 50334,
+    "minified": 23379,
+    "gzipped": 7348
   },
   "dist/renderprops-konva.js": {
-    "bundled": 60176,
-    "minified": 29110,
-    "gzipped": 9928
+    "bundled": 61415,
+    "minified": 29304,
+    "gzipped": 10055
   },
   "dist/web.cjs.js": {
-    "bundled": 71300,
-    "minified": 33678,
-    "gzipped": 11478
+    "bundled": 82223,
+    "minified": 37849,
+    "gzipped": 12868
   },
   "dist/native.cjs.js": {
-    "bundled": 68913,
-    "minified": 31943,
-    "gzipped": 10481
+    "bundled": 79836,
+    "minified": 36114,
+    "gzipped": 11890
   },
   "dist/renderprops.cjs.js": {
-    "bundled": 77392,
-    "minified": 36683,
-    "gzipped": 11921
+    "bundled": 78499,
+    "minified": 36790,
+    "gzipped": 12044
   },
   "dist/renderprops-addons.cjs.js": {
     "bundled": 9833,
@@ -177,24 +177,24 @@
     "gzipped": 1892
   },
   "dist/renderprops-native.cjs.js": {
-    "bundled": 72258,
-    "minified": 33567,
-    "gzipped": 10465
+    "bundled": 73365,
+    "minified": 33674,
+    "gzipped": 10588
   },
   "dist/renderprops-universal.cjs.js": {
-    "bundled": 59269,
-    "minified": 26754,
-    "gzipped": 7738
+    "bundled": 60376,
+    "minified": 26861,
+    "gzipped": 7857
   },
   "dist/renderprops-konva.cjs.js": {
-    "bundled": 70422,
-    "minified": 32717,
-    "gzipped": 10442
+    "bundled": 71529,
+    "minified": 32824,
+    "gzipped": 10563
   },
   "dist/universal.cjs.js": {
-    "bundled": 55540,
-    "minified": 24914,
-    "gzipped": 7679
+    "bundled": 66463,
+    "minified": 29085,
+    "gzipped": 9076
   },
   "dist/test.js": {
     "bundled": 32365,
@@ -216,27 +216,27 @@
     "gzipped": 5405
   },
   "dist/konva.cjs.js": {
-    "bundled": 66634,
-    "minified": 30800,
-    "gzipped": 10382
+    "bundled": 77557,
+    "minified": 34971,
+    "gzipped": 11783
   },
   "dist/three.js": {
-    "bundled": 59009,
-    "minified": 27202,
-    "gzipped": 9778,
+    "bundled": 68323,
+    "minified": 31004,
+    "gzipped": 11006,
     "treeshaked": {
       "rollup": {
-        "code": 10383,
+        "code": 10390,
         "import_statements": 344
       },
       "webpack": {
-        "code": 11593
+        "code": 11600
       }
     }
   },
   "dist/three.cjs.js": {
-    "bundled": 67071,
-    "minified": 30837,
-    "gzipped": 10309
+    "bundled": 77994,
+    "minified": 35008,
+    "gzipped": 11720
   }
 }
