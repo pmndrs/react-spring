@@ -79,12 +79,12 @@ export const useSprings = (length, propsArg) => {
   }, [])
 
   // Return animated props, or, anim-props + the update-setter above
-  const values = controllers.map(c => c.getValues())
+  const animatedProps = controllers.map(c => c.animated)
   return isFn
     ? [
-        values,
+        animatedProps,
         setProps,
         (...args) => ctrl.current.forEach(c => c.stop(...args)),
       ]
-    : values
+    : animatedProps
 }

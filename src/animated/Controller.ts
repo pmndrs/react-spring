@@ -83,9 +83,6 @@ class Controller<State extends Indexable = any> {
   onEndQueue: OnEnd[] = []
   runCount = 0
 
-  getValues = () =>
-    this.animated as { [K in keyof State]: Animation<State[K]>['animated'] }
-
   constructor(props?: UpdateProps<State>) {
     if (props) this.update(props).start()
   }
