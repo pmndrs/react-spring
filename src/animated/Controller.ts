@@ -43,15 +43,14 @@ type Animation<T = any> = ActiveAnimation<T> | IdleAnimation<T>
 type AnimationMap = Indexable<Animation>
 type AnimatedMap = Indexable<Animation['animated']>
 
-/** Controller props while in the update queue */
+/** Controller props in pending updates */
 interface UpdateProps<State extends object> extends SpringProps<State> {
-  [key: string]: any
   timestamp?: number
   attach?: (ctrl: Controller) => Controller
 }
 
-/** Controller props after being diffed */
-interface PropCache<State extends object> extends UpdateProps<State> {
+/** Controller props from previous updates */
+interface CachedProps<State extends object> extends UpdateProps<State> {
   to?: Partial<State>
   asyncTo?:
     | Array<State & SpringProps<State>>
@@ -72,7 +71,7 @@ let nextId = 1
 class Controller<State extends Indexable = any> {
   id = nextId++
   idle = true
-  props: PropCache<State> = {}
+  props: CachedProps<State> = {}
   queue: any[] = []
   timestamps: Indexable<number> = {}
   values: State = {} as any
@@ -345,7 +344,7 @@ class Controller<State extends Indexable = any> {
     immediate,
     reverse,
     ...props
-  }: UpdateProps<State>) {
+  }: UpdateProps<State> & { [key: string]: any }) {
     let changed = false
 
     // Ensure the newer timestamp is used.
