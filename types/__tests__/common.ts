@@ -114,11 +114,11 @@ test('PickAnimated', () => {
 
 test('AnimatedProps', () => {
   // Primitive props
-  type P2 = AnimatedProps<{ foo?: number }>;
+  type P2 = AnimatedProps<{ foo?: number | string }>;
   assert(
     _ as P2,
     _ as {
-      foo?: number | AnimatedValue<number>;
+      foo?: number | string | AnimatedValue<number | string>;
     }
   );
 
@@ -127,7 +127,7 @@ test('AnimatedProps', () => {
   assert(
     _ as P3,
     _ as {
-      foo?: AnimatedProps<{ bar?: number }>;
+      foo?: { bar?: number } | AnimatedValue<{ bar?: number }>;
     }
   );
 

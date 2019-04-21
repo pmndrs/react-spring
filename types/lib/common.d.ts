@@ -96,17 +96,30 @@ export type AnimatedComponent<T extends ReactType> = ForwardRefExoticComponent<
 
 /** The props of an `animated()` component */
 export type AnimatedProps<Props extends object> = Solve<
-  { [P in keyof Props]: P extends 'ref' ? Props[P] : AnimatedProp<Props[P]> }
+  {
+    [P in keyof Props]: P extends 'ref'
+      ? Props[P]
+      : P extends 'style'
+      ? AnimatedStyle<Props[P]>
+      : AnimatedProp<Props[P]>
+  }
 >
 
 /** The value of an `animated()` component's prop */
-export type AnimatedProp<T> = T extends void
-  ? never
+export type AnimatedProp<T> = T | AnimatedValue<Exclude<T, void>>
+
+/** The value of an `animated()` component's style */
+export type AnimatedStyle<T> = {
+  void: never
+  leaf: T | AnimatedValue<T>
+  branch: { [P in keyof T]: AnimatedStyle<T[P]> }
+}[T extends void
+  ? 'void'
   : T extends AtomicObject
-  ? T | AnimatedValue<T>
+  ? 'leaf'
   : T extends object
-  ? AnimatedProps<T>
-  : T | AnimatedValue<T>
+  ? 'branch'
+  : 'leaf']
 
 /**
  * An animated value that can be passed into an `animated()` component.
