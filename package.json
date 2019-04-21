@@ -14,7 +14,6 @@
     "build": "npm-run-all --parallel copy rollup",
     "copy": "copyfiles -f package.json readme.md LICENSE.md \"types/*.d.ts\" dist && copyfiles -f \"types/lib/*.d.ts\" dist/lib && json -I -f dist/package.json -e \"this.private=false; this.devDependencies=undefined; this.optionalDependencies=undefined; this.scripts=undefined; this.husky=undefined; this.prettier=undefined; this.jest=undefined;\"",
     "rollup": "rollup -c",
-    "prepare": "npm run build",
     "test": "jest",
     "test:dev": "jest --watch --no-coverage",
     "test:coverage:watch": "jest --watch",
