@@ -1,6 +1,6 @@
 import Animated from './Animated'
 import Controller from './Controller'
-import { now, requestFrame, manualFrameloop } from './Globals'
+import { now, requestAnimationFrame, manualFrameloop } from './Globals'
 
 let active = false
 const controllers = new Set()
@@ -128,7 +128,7 @@ const update = () => {
   // Loop over as long as there are controllers ...
   if (controllers.size) {
     if (manualFrameloop) manualFrameloop()
-    else requestFrame(update)
+    else requestAnimationFrame!(update)
   } else {
     active = false
   }
@@ -139,8 +139,8 @@ const start = (controller: Controller) => {
   controllers.add(controller)
   if (!active) {
     active = true
-    if (manualFrameloop) requestFrame(manualFrameloop)
-    else requestFrame(update)
+    if (manualFrameloop) manualFrameloop()
+    else requestAnimationFrame!(update)
   }
 }
 

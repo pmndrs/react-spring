@@ -1,4 +1,4 @@
-import animated from '../../animated/createAnimatedComponent'
+import animated, { withExtend } from '../../animated/createAnimatedComponent'
 import createInterpolator from '../../animated/createInterpolator'
 import * as Globals from '../../animated/Globals'
 import { update } from '../../animated/FrameLoop'
@@ -10,7 +10,6 @@ import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
-import { merge } from '../../shared/helpers'
 
 // Problem: https://github.com/animatedjs/animated/pull/102
 // Solution: https://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly/658662
@@ -37,21 +36,26 @@ const createStringInterpolator = (config: InterpolationConfig<string>) => {
   }
 }
 
-Globals.injectStringInterpolator(createStringInterpolator)
-Globals.injectApplyAnimatedValues(() => false, style => style)
+Globals.assign({
+  createStringInterpolator,
+  applyAnimatedValues: () => false,
+})
 
-const apply = merge(animated, false)
+const animatedFn = withExtend(animated)
+
+/** @deprecated Use `animated.extend` instead */
+export const apply = animatedFn.extend
+
 const Interpolation = {
   create: createInterpolator,
 }
 
 export { Spring, Trail, Transition } from '../../elements'
 export {
-  apply,
   config,
   update,
-  animated,
-  animated as a,
+  animatedFn as animated,
+  animatedFn as a,
   interpolate,
   Globals,
   useSpring,

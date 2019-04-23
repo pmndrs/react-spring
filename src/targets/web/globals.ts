@@ -75,53 +75,54 @@ function dangerousStyleValue(
 }
 
 const attributeCache: { [key: string]: string } = {}
-Globals.injectCreateAnimatedStyle(style => new AnimatedStyle(style))
-Globals.injectDefaultElement('div')
-Globals.injectStringInterpolator(createStringInterpolator)
-Globals.injectColorNames(colorNames)
-Globals.injectApplyAnimatedValues(
-  (instance, props) => {
-    if (instance.nodeType && instance.setAttribute !== undefined) {
-      const { style, children, scrollTop, scrollLeft, ...attributes } = props
-      const filter =
-        instance.nodeName === 'filter' ||
-        (instance.parentNode && instance.parentNode.nodeName === 'filter')
 
-      if (scrollTop !== void 0) instance.scrollTop = scrollTop
-      if (scrollLeft !== void 0) instance.scrollLeft = scrollLeft
+Globals.assign({
+  defaultElement: 'div',
+  createStringInterpolator,
+  colorNames,
+  createAnimatedStyle: style => new AnimatedStyle(style),
+  applyAnimatedValues(instance, props) {
+    if (!instance.nodeType || !instance.setAttribute) {
+      return false
+    }
 
-      // Set textContent, if children is an animatable value
-      if (children !== void 0) instance.textContent = children
+    const { style, children, scrollTop, scrollLeft, ...attributes } = props!
+    const filter =
+      instance.nodeName === 'filter' ||
+      (instance.parentNode && instance.parentNode.nodeName === 'filter')
 
-      // Set styles ...
-      for (let styleName in style) {
-        if (!style.hasOwnProperty(styleName)) continue
-        var isCustomProperty = styleName.indexOf('--') === 0
-        var styleValue = dangerousStyleValue(
-          styleName,
-          style[styleName],
-          isCustomProperty
-        )
-        if (styleName === 'float') styleName = 'cssFloat'
-        if (isCustomProperty) instance.style.setProperty(styleName, styleValue)
-        else instance.style[styleName] = styleValue
-      }
+    if (scrollTop !== void 0) instance.scrollTop = scrollTop
+    if (scrollLeft !== void 0) instance.scrollLeft = scrollLeft
 
-      // Set attributes ...
-      for (let name in attributes) {
-        // Attributes are written in dash case
-        const dashCase = filter
-          ? name
-          : attributeCache[name] ||
-            (attributeCache[name] = name.replace(
-              /([A-Z])/g,
-              n => '-' + n.toLowerCase()
-            ))
-        if (typeof instance.getAttribute(dashCase) !== 'undefined')
-          instance.setAttribute(dashCase, attributes[name])
-      }
-      return
-    } else return false
+    // Set textContent, if children is an animatable value
+    if (children !== void 0) instance.textContent = children
+
+    // Set styles ...
+    for (let styleName in style) {
+      if (!style.hasOwnProperty(styleName)) continue
+      var isCustomProperty = styleName.indexOf('--') === 0
+      var styleValue = dangerousStyleValue(
+        styleName,
+        style[styleName],
+        isCustomProperty
+      )
+      if (styleName === 'float') styleName = 'cssFloat'
+      if (isCustomProperty) instance.style.setProperty(styleName, styleValue)
+      else instance.style[styleName] = styleValue
+    }
+
+    // Set attributes ...
+    for (let name in attributes) {
+      // Attributes are written in dash case
+      const dashCase = filter
+        ? name
+        : attributeCache[name] ||
+          (attributeCache[name] = name.replace(
+            /([A-Z])/g,
+            n => '-' + n.toLowerCase()
+          ))
+      if (typeof instance.getAttribute(dashCase) !== 'undefined')
+        instance.setAttribute(dashCase, attributes[name])
+    }
   },
-  style => style
-)
+})

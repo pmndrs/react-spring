@@ -1,75 +1,102 @@
 import { MutableRefObject, ReactType } from 'react'
 import { InterpolationConfig } from '../types/interpolation'
-import AnimatedStyle from './AnimatedStyle'
 
-type ApplyPropsFunction = (node?: any, props?: any) => undefined | false
-type TransformFunction = (style: any) => any
-export let applyAnimatedValues: {
-  fn: ApplyPropsFunction
-  transform: TransformFunction
-}
-export function injectApplyAnimatedValues(
-  fn: ApplyPropsFunction,
-  transform: TransformFunction
-) {
-  applyAnimatedValues = { fn, transform }
+type Props = { [key: string]: any }
+
+export interface AnimatedRef<T> {
+  getNode(): T
+  setNativeProps(props: Props): void
 }
 
-export let colorNames: { [key: string]: number }
-export function injectColorNames(names: typeof colorNames) {
-  colorNames = names
-}
+//
+// Required
+//
 
-export let requestFrame: typeof window.requestAnimationFrame = cb =>
-  typeof window !== 'undefined' ? window.requestAnimationFrame(cb) : -1
-export let cancelFrame: typeof window.cancelAnimationFrame = id => {
-  typeof window !== 'undefined' && window.cancelAnimationFrame(id)
-}
-export function injectFrame(raf: typeof requestFrame, caf: typeof cancelFrame) {
-  requestFrame = raf
-  cancelFrame = caf
-}
+export let applyAnimatedValues: (node: any, props: Props) => boolean | void
 
-export let interpolation: (
-  config: InterpolationConfig<string>
-) => (input: number) => number | string
-export function injectStringInterpolator(fn: typeof interpolation) {
-  interpolation = fn
-}
+//
+// Optional
+//
 
 export let now = () => Date.now()
-export function injectNow(nowFn: typeof now) {
-  now = nowFn
-}
+
+export let colorNames: { [key: string]: number } = {}
 
 export let defaultElement: any
-export function injectDefaultElement(el?: typeof defaultElement) {
-  defaultElement = el
+
+export let manualFrameloop: (() => void) | undefined
+
+export let createAnimatedStyle: ((style: any) => any) | undefined
+
+export let createAnimatedTransform: ((transform: any) => any) | undefined
+
+export let createAnimatedRef: <T extends ReactType>(
+  node: MutableRefObject<T>,
+  mounted?: MutableRefObject<boolean>,
+  forceUpdate?: () => void
+) => T | AnimatedRef<T> = node => node.current
+
+export let createStringInterpolator:
+  | ((config: InterpolationConfig<string>) => (input: number) => string)
+  | undefined
+
+export let requestAnimationFrame =
+  typeof window !== 'undefined' ? window.requestAnimationFrame : void 0
+
+export let cancelAnimationFrame =
+  typeof window !== 'undefined' ? window.cancelAnimationFrame : void 0
+
+export let interpolation:
+  | ((
+      config: InterpolationConfig<string>
+    ) => (input: number) => number | string)
+  | undefined
+
+//
+// Configuration
+//
+
+export interface AnimatedGlobals {
+  now?: typeof now
+  colorNames?: typeof colorNames
+  defaultElement?: typeof defaultElement
+  applyAnimatedValues?: typeof applyAnimatedValues
+  createStringInterpolator?: typeof createStringInterpolator
+  createAnimatedTransform?: typeof createAnimatedTransform
+  createAnimatedStyle?: typeof createAnimatedStyle
+  createAnimatedRef?: typeof createAnimatedRef
+  requestAnimationFrame?: typeof requestAnimationFrame
+  cancelAnimationFrame?: typeof cancelAnimationFrame
+  manualFrameloop?: typeof manualFrameloop
+  interpolation?: typeof interpolation
 }
 
-interface AnimatedApi {
-  <T extends ReactType>(
-    node: MutableRefObject<T>,
-    mounted?: MutableRefObject<boolean>,
-    forceUpdate?: () => void
-  ):
-    | T
-    | {
-        getNode(): T
-        setNativeProps(props: any): void
-      }
-}
-export let animatedApi: AnimatedApi = (node: any) => node.current
-export function injectAnimatedApi(fn: typeof animatedApi) {
-  animatedApi = fn
-}
-
-export let createAnimatedStyle: (style: any) => AnimatedStyle
-export function injectCreateAnimatedStyle(factory: typeof createAnimatedStyle) {
-  createAnimatedStyle = factory
-}
-
-export let manualFrameloop: any
-export function injectManualFrameloop(callback: any) {
-  manualFrameloop = callback
-}
+export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
+  ({
+    colorNames,
+    defaultElement,
+    applyAnimatedValues,
+    createStringInterpolator,
+    createAnimatedTransform,
+    createAnimatedStyle,
+    createAnimatedRef,
+    requestAnimationFrame,
+    cancelAnimationFrame,
+    manualFrameloop,
+    interpolation,
+  } = Object.assign(
+    {
+      colorNames,
+      defaultElement,
+      applyAnimatedValues,
+      createStringInterpolator,
+      createAnimatedTransform,
+      createAnimatedStyle,
+      createAnimatedRef,
+      requestAnimationFrame,
+      cancelAnimationFrame,
+      manualFrameloop,
+      interpolation,
+    },
+    globals
+  ))

@@ -1,5 +1,5 @@
 import { AnimatedObject } from './Animated'
-import * as Globals from './Globals'
+import { createAnimatedStyle as wrapStyle } from './Globals'
 
 /**
  * Wraps the `style` property with `AnimatedStyle`.
@@ -11,12 +11,10 @@ export default class AnimatedProps<
 
   constructor(props: Props, callback: () => void) {
     super()
-    this.payload = !props.style
-      ? props
-      : {
-          ...props,
-          style: Globals.createAnimatedStyle(props.style),
-        }
+    this.payload =
+      props.style && wrapStyle
+        ? { ...props, style: wrapStyle(props.style) }
+        : props
     this.update = callback
     this.attach()
   }

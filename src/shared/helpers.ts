@@ -32,20 +32,6 @@ export const is = {
   },
 }
 
-export function merge(target: any, lowercase: boolean = true) {
-  return (object: object) =>
-    (is.arr(object) ? object : Object.keys(object)).reduce(
-      (acc: any, element) => {
-        const key = lowercase
-          ? element[0].toLowerCase() + element.substring(1)
-          : element
-        acc[key] = target(key)
-        return acc
-      },
-      target
-    )
-}
-
 export function useForceUpdate() {
   const [, f] = useState(false)
   const forceUpdate = useCallback(() => f(v => !v), [])

@@ -1,48 +1,47 @@
-import { StyleSheet, View } from 'react-native'
-import AnimatedStyle from '../../animated/AnimatedStyle'
-import animated from '../../animated/createAnimatedComponent'
-import * as Globals from '../../animated/Globals'
-import { update } from '../../animated/FrameLoop'
-import { interpolate } from '../../interpolate'
-import colorNames from '../../shared/colors'
+import { StyleSheet, View, Text } from 'react-native'
 import { config } from '../../shared/constants'
-import createStringInterpolator from '../../shared/stringInterpolation'
+import { interpolate } from '../../interpolate'
 import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
+import * as Globals from '../../animated/Globals'
+import animated, { withExtend } from '../../animated/createAnimatedComponent'
+import colorNames from '../../shared/colors'
+import createStringInterpolator from '../../shared/stringInterpolation'
 import AnimatedTransform from './AnimatedTransform'
-import { merge } from '../../shared/helpers'
+import AnimatedStyle from '../../animated/AnimatedStyle'
+import { update } from '../../animated/FrameLoop'
 
-Globals.injectDefaultElement(View)
-Globals.injectStringInterpolator(createStringInterpolator)
-Globals.injectColorNames(colorNames)
-Globals.injectApplyAnimatedValues(
-  (instance, props) =>
+Globals.assign({
+  defaultElement: View,
+  colorNames,
+  createStringInterpolator,
+  applyAnimatedValues: (instance, props) =>
     instance.setNativeProps ? instance.setNativeProps(props) : false,
-  style => ({ ...style, transform: new AnimatedTransform(style.transform) })
-)
-Globals.injectCreateAnimatedStyle(
-  styles => new AnimatedStyle(StyleSheet.flatten(styles))
-)
-Globals.injectAnimatedApi((node, mounted, forceUpdate) => ({
-  setNativeProps: props => {
-    const didUpdate = Globals.applyAnimatedValues.fn(node.current, props)
-    if (!didUpdate) mounted!.current && forceUpdate!()
-  },
-  getNode: () => node.current,
-}))
+  createAnimatedTransform: transform => new AnimatedTransform(transform),
+  createAnimatedStyle: styles => new AnimatedStyle(StyleSheet.flatten(styles)),
+  createAnimatedRef: (node, mounted, forceUpdate) => ({
+    getNode: () => node.current,
+    setNativeProps: props => {
+      const didUpdate = Globals.applyAnimatedValues(node.current, props)
+      if (!didUpdate) mounted!.current && forceUpdate!()
+    },
+  }),
+})
 
-const apply = merge(animated)
+const nativeAnimated = withExtend(animated).extend(View, Text)
+
+/** @deprecated Use `animated.extend` instead */
+export const apply = nativeAnimated.extend
 
 export { Spring, Trail, Transition } from '../../elements'
 export {
-  apply,
   config,
   update,
-  animated,
-  animated as a,
+  nativeAnimated as animated,
+  nativeAnimated as a,
   interpolate,
   Globals,
   useSpring,

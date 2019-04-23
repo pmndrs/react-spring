@@ -1,4 +1,4 @@
-import animated from '../../animated/createAnimatedComponent'
+import animated, { withExtend } from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
 import { update } from '../../animated/FrameLoop'
 import { interpolate } from '../../interpolate'
@@ -12,7 +12,6 @@ import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
-import { merge } from '../../shared/helpers'
 import './globals'
 
 type JSXElements = keyof JSX.IntrinsicElements
@@ -158,16 +157,19 @@ type AnimatedWithDOMElements = CreateAnimatedComponent &
   { [Tag in JSXElements]: AnimatedComponent<Tag> }
 
 // Extend animated with all the available THREE elements
-const apply = merge(animated as AnimatedWithDOMElements, false)
-const extendedAnimated = apply(domElements)
+const domAnimated = withExtend(animated as AnimatedWithDOMElements).extend(
+  domElements
+)
+
+/** @deprecated Use `animated.extend` instead */
+export const apply = domAnimated.extend
 
 export { Spring, Trail, Transition } from '../../elements'
 export {
-  apply,
   config,
   update,
-  extendedAnimated as animated,
-  extendedAnimated as a,
+  domAnimated as animated,
+  domAnimated as a,
   interpolate,
   Globals,
   useSpring,
