@@ -30,7 +30,7 @@ export interface SpringConfig {
   clamp?: boolean
   precision?: number
   delay?: number
-  decay?: number
+  decay?: number | boolean
   duration?: number
   easing?: SpringEasingFunc
 }
