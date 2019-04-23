@@ -59,11 +59,12 @@ const update = () => {
               (to - from)
           endOfAnimation = time >= animated.startTime + config.duration
         } else if (config.decay) {
+          const decay = config.decay === true ? 0.998 : config.decay
           /** Decay easing */
           position =
             from +
-            (velocity / (1 - 0.998)) *
-              (1 - Math.exp(-(1 - 0.998) * (time - animated.startTime)))
+            (velocity / (1 - decay)) *
+              (1 - Math.exp(-(1 - decay) * (time - animated.startTime)))
           endOfAnimation = Math.abs(animated.lastPosition - position) < 0.1
           if (endOfAnimation) to = position
         } else {
