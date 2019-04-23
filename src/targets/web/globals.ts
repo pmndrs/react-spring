@@ -87,9 +87,6 @@ Globals.assign({
     }
 
     const { style, children, scrollTop, scrollLeft, ...attributes } = props!
-    const filter =
-      instance.nodeName === 'filter' ||
-      (instance.parentNode && instance.parentNode.nodeName === 'filter')
 
     if (scrollTop !== void 0) instance.scrollTop = scrollTop
     if (scrollLeft !== void 0) instance.scrollLeft = scrollLeft
@@ -97,7 +94,7 @@ Globals.assign({
     // Set textContent, if children is an animatable value
     if (children !== void 0) instance.textContent = children
 
-    // Set styles ...
+    // Apply CSS styles
     for (let styleName in style) {
       if (!style.hasOwnProperty(styleName)) continue
       var isCustomProperty = styleName.indexOf('--') === 0
@@ -111,18 +108,23 @@ Globals.assign({
       else instance.style[styleName] = styleValue
     }
 
-    // Set attributes ...
+    const isFilterElement =
+      instance.nodeName === 'filter' ||
+      (instance.parentNode && instance.parentNode.nodeName === 'filter')
+
+    // Apply DOM attributes
     for (let name in attributes) {
       // Attributes are written in dash case
-      const dashCase = filter
-        ? name
-        : attributeCache[name] ||
-          (attributeCache[name] = name.replace(
-            /([A-Z])/g,
-            n => '-' + n.toLowerCase()
-          ))
-      if (typeof instance.getAttribute(dashCase) !== 'undefined')
-        instance.setAttribute(dashCase, attributes[name])
+      const attributeName =
+        isFilterElement || instance.hasAttribute(name)
+          ? name
+          : attributeCache[name] ||
+            (attributeCache[name] = name.replace(
+              /([A-Z])/g,
+              n => '-' + n.toLowerCase()
+            ))
+
+      instance.setAttribute(attributeName, attributes[name])
     }
   },
 })
