@@ -1,5 +1,5 @@
 import * as konva from 'react-konva'
-import animated from '../../animated/createAnimatedComponent'
+import animated, { withExtend } from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
 import { interpolate } from '../../interpolate'
 import colorNames from '../../shared/colors'
@@ -14,20 +14,16 @@ import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
-import { merge } from '../../shared/helpers'
 
-Globals.injectDefaultElement('Group')
-Globals.injectStringInterpolator(createStringInterpolator)
-Globals.injectColorNames(colorNames)
-Globals.injectApplyAnimatedValues(
-  (instance, props) => {
-    if (instance.nodeType) {
-      instance._applyProps(instance, props)
-      return
-    } else return false
+Globals.assign({
+  defaultElement: 'Group',
+  createStringInterpolator,
+  colorNames,
+  applyAnimatedValues(instance, props) {
+    if (!instance.nodeType) return false
+    instance._applyProps(instance, props)
   },
-  style => style
-)
+})
 
 type KonvaComponents = Pick<
   typeof konva,
@@ -67,15 +63,18 @@ type AnimatedWithKonvaElements = CreateAnimatedComponent &
   { [Tag in keyof KonvaComponents]: AnimatedComponent<KonvaComponents[Tag]> }
 
 // Extend animated with all the available Konva elements
-const apply = merge(animated as AnimatedWithKonvaElements, false)
-const extendedAnimated = apply(konvaElements)
+const konvaAnimated = withExtend(animated as AnimatedWithKonvaElements).extend(
+  konvaElements
+)
+
+/** @deprecated Use `animated.extend` instead */
+export const apply = konvaAnimated.extend
 
 export { Spring, Trail, Transition } from '../../elements'
 export {
-  apply,
   config,
-  extendedAnimated as animated,
-  extendedAnimated as a,
+  konvaAnimated as animated,
+  konvaAnimated as a,
   interpolate,
   Globals,
   useSpring,

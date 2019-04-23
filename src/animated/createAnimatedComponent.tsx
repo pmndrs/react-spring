@@ -7,13 +7,13 @@ import React, {
   useImperativeHandle,
   useRef,
 } from 'react'
-import { handleRef, useForceUpdate } from '../shared/helpers'
+import { handleRef, useForceUpdate, is } from '../shared/helpers'
 import {
   AnimatedComponentProps,
   CreateAnimatedComponent,
 } from '../types/animated'
 import AnimatedProps from './AnimatedProps'
-import { animatedApi, applyAnimatedValues } from './Globals'
+import { createAnimatedRef, applyAnimatedValues } from './Globals'
 
 const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
   Component: C
@@ -28,7 +28,7 @@ const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
         const oldPropsAnimated = propsAnimated.current
         const callback = () => {
           if (node.current) {
-            const didUpdate = applyAnimatedValues.fn(
+            const didUpdate = applyAnimatedValues(
               node.current,
               propsAnimated.current!.getAnimatedValue()
             )
@@ -47,7 +47,7 @@ const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
         []
       )
       useImperativeHandle<C, any>(ref, () =>
-        animatedApi(node as MutableRefObject<C>, mounted, forceUpdate)
+        createAnimatedRef(node as MutableRefObject<C>, mounted, forceUpdate)
       )
       attachProps(props)
 
@@ -68,3 +68,68 @@ const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
 }
 
 export default createAnimatedComponent
+
+/**
+ * withExtend(animated, options = {})
+ */
+
+type WithExtend<T> = T & {
+  extend: (
+    ...args: Array<AnimatedTarget | Array<AnimatedTarget>>
+  ) => WithExtend<T>
+}
+
+/** Strings like "div", or components, or a map of components, or an array of those */
+export type AnimatedTarget = string | ReactType | { [key: string]: ReactType }
+
+/** Add an `extend` method to your `animated` factory function */
+export function withExtend<T extends CreateAnimatedComponent>(
+  animated: T,
+  options: { lowercase?: boolean } = {}
+) {
+  const self = animated as WithExtend<T> & {
+    [key: string]: ReactType
+  }
+  self.extend = (...args) => {
+    args.forEach(arg => extend(arg))
+    return self
+  }
+  return self as WithExtend<T>
+
+  function extend(
+    arg: AnimatedTarget | AnimatedTarget[],
+    overrideKey?: string | number
+  ): void {
+    // Arrays avoid passing their index to `extend`
+    if (is.arr(arg)) {
+      return arg.forEach(arg => extend(arg))
+    }
+
+    // Object keys are always used over value inspection
+    if (is.obj(arg)) {
+      for (const key in arg) extend(arg[key], key)
+      return
+    }
+
+    // Use the `overrideKey` or inspect the value for a key
+    let key = is.str(overrideKey)
+      ? overrideKey
+      : is.str(arg)
+      ? arg
+      : arg && is.str(arg.displayName)
+      ? arg.displayName
+      : is.fun(arg)
+      ? arg.name
+      : ''
+
+    // This lowercases the first letter of the key
+    if (options.lowercase) {
+      key = key[0].toLowerCase() + key.slice(1)
+    }
+
+    // NOTE(typescript): Properties are not yet inferred from the arguments of
+    // the `extend` method and then attached to the `animated` function via
+    // the return type.
+    self[key] = animated(arg as ReactType)
+  }
+}
