@@ -1123,6 +1123,14 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.0.tgz#4c48fed958d6dcf9487195a0ef6456d5f6e0163a"
   integrity sha512-eItQyV43bj4rR3JPV0Skpl1SncRCdziTEK9/v8VwXmV6d/qOUO8/EuWeHBbCZcsfSHfzI5UyMJLCSXtxxznyZg==
 
+"@types/react@*":
+  version "16.8.14"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.14.tgz#b561bfabeb8f60d12e6d4766367e7a9ae927aa18"
+  integrity sha512-26tFVJ1omGmzIdFTFmnC5zhz1GTaqCjxgUxV4KzWvsybF42P7/j4RBn6UeO3KbHPXqKWZszMXMoI65xIWm954A==
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
 "@types/react@16.8.2":
   version "16.8.2"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.2.tgz#3b7a7f7ea89d1c7d68b00849fb5de839011c077b"
@@ -6543,6 +6551,14 @@ react-konva@^16.8.0:
   dependencies:
     react-reconciler "^0.20.4"
     scheduler "^0.13.6"
+
+"react-native-types@npm:@types/react-native@latest":
+  version "0.57.49"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.57.49.tgz#eef43fba8149c6591201edcde9930cb30169b97f"
+  integrity sha512-Qv9goNNMTMo/KQNV6KrkJkRi8+X+JnkVws3ST1yW//iloRqkxreYHxQb0aFFXI+Cj/TRsEimszK82eujBn4wNw==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/react" "*"
 
 react-native@^0.58.4:
   version "0.58.6"
