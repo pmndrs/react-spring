@@ -9,6 +9,7 @@
     "noEmitOnError": true,
     "preserveSymlinks": true,
     "jsx": "react",
+    "types": ["@types", "node_modules/@types"],
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,

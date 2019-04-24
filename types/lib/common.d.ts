@@ -84,42 +84,29 @@ export type AnimationFrame<T extends object> = Remap<
   UnknownProps & ({} extends PickAnimated<T> ? unknown : PickAnimated<T>)
 >
 
-/** Create a HOC that accepts `AnimatedValue` props */
-export function animated<T extends ReactType>(
-  wrappedComponent: T
-): AnimatedComponent<T>
-
-/** The type of an `animated()` component */
-export type AnimatedComponent<T extends ReactType> = ForwardRefExoticComponent<
-  AnimatedProps<ComponentPropsWithRef<T>>
->
-
-/** The props of an `animated()` component */
-export type AnimatedProps<Props extends object> = Solve<
-  {
-    [P in keyof Props]: P extends 'ref'
-      ? Props[P]
-      : P extends 'style'
-      ? AnimatedStyle<Props[P]>
-      : AnimatedProp<Props[P]>
-  }
->
-
-/** The value of an `animated()` component's prop */
-export type AnimatedProp<T> = T | AnimatedValue<Exclude<T, void>>
+/** The type of an `animated()` transform prop */
+export type AnimatedTransform<T> = T extends ReadonlyArray<any>
+  ? {
+      [P in keyof T]: T[P] extends infer U
+        ? U extends ReadonlyArray<any>
+          ? AnimatedTransform<U>
+          : AnimatedStyle<U>
+        : never
+    }
+  : T
 
 /** The value of an `animated()` component's style */
-export type AnimatedStyle<T> = {
-  void: never
-  leaf: T | AnimatedValue<T>
-  branch: { [P in keyof T]: AnimatedStyle<T[P]> }
-}[T extends void
-  ? 'void'
-  : T extends AtomicObject
-  ? 'leaf'
-  : T extends object
-  ? 'branch'
-  : 'leaf']
+export type AnimatedStyle<T> = [T] extends [infer U]
+  ? T extends void
+    ? undefined
+    : T extends object
+    ? {
+        [P in keyof T]: P extends 'transform'
+          ? AnimatedTransform<T[P]>
+          : AnimatedStyle<T[P]>
+      }
+    : T | AnimatedValue<U>
+  : never
 
 /**
  * An animated value that can be passed into an `animated()` component.
@@ -275,18 +262,3 @@ export interface InterpolationChain<T> {
   <U>(config: InterpolationConfig<T, U>): AnimatedValue<U>
   <U>(interpolator: Interpolator<T, U>): AnimatedValue<U>
 }
-
-/** Object types that should never be mapped */
-type AtomicObject =
-  | ReadonlyArray<any>
-  | Function
-  | Map<any, any>
-  | WeakMap<any, any>
-  | Set<any>
-  | WeakSet<any>
-  | Promise<any>
-  | Date
-  | RegExp
-  | Boolean
-  | Number
-  | String

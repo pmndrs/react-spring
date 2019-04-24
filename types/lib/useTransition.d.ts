@@ -60,11 +60,14 @@ export type UseTransitionProps<Item = any> = {
    */
   leave?: TransitionProp<Item>
   /**
-   * Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values
+   * Values that apply to elements that are neither entering nor leaving (you
+   * can use this to update present elements), or: item => values
    */
   update?: TransitionProp<Item>
   /**
-   * First-render initial values, if present overrides "from" on the first render pass. It can be "null" to skip first mounting transition. Otherwise it can take an object or a function (item => object)
+   * First-render initial values, if present overrides "from" on the first
+   * render pass. It can be "null" to skip first mounting transition. Otherwise
+   * it can take an object or a function (item => object)
    */
   initial?: TransitionProp<Item> | null
   /**

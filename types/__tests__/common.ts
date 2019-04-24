@@ -1,7 +1,7 @@
 import {
   PickAnimated,
   ForwardProps,
-  AnimatedProps,
+  AnimatedStyle,
   AnimatedValue,
   AnimationFrame,
   UnknownProps,
@@ -112,55 +112,32 @@ test('PickAnimated', () => {
   );
 });
 
-test('AnimatedProps', () => {
+test('AnimatedStyle', () => {
   // Primitive props
-  type P2 = AnimatedProps<{ foo?: number | string }>;
+  type P1 = AnimatedStyle<{ width?: number | string }>;
+  assert(
+    _ as P1,
+    _ as {
+      width?: number | string | AnimatedValue<number | string | undefined>;
+    }
+  );
+
+  // Transform props
+  type P2 = AnimatedStyle<{
+    transform: [{ translateX: number }, [{ translateY: number | string }]];
+  }>;
   assert(
     _ as P2,
     _ as {
-      foo?: number | string | AnimatedValue<number | string>;
-    }
-  );
-
-  // Object props
-  type P3 = AnimatedProps<{ foo?: { bar?: number } }>;
-  assert(
-    _ as P3,
-    _ as {
-      foo?: { bar?: number } | AnimatedValue<{ bar?: number }>;
-    }
-  );
-
-  // Array props
-  type P4 = AnimatedProps<{ foo: [number, number] }>;
-  assert(
-    _ as P4,
-    _ as {
-      foo: [number, number] | AnimatedValue<[number, number]>;
-    }
-  );
-
-  // Atomic object props
-  type P5 = AnimatedProps<{
-    set: Set<any>;
-    map: Map<any, any>;
-    date: Date;
-    func: Function;
-    prom: Promise<any>;
-  }>;
-  assert(
-    _ as P5,
-    _ as {
-      set: Set<any> | AnimatedValue<Set<any>>;
-      map: Map<any, any> | AnimatedValue<Map<any, any>>;
-      date: Date | AnimatedValue<Date>;
-      func: Function | AnimatedValue<Function>;
-      prom: Promise<any> | AnimatedValue<Promise<any>>;
+      transform: [
+        { translateX: number | AnimatedValue<number> },
+        [{ translateY: number | string | AnimatedValue<number | string> }]
+      ];
     }
   );
 });
 
-test('SpringFrame', () => {
+test('AnimationFrame', () => {
   type T1 = AnimationFrame<{}>;
   assert(_ as T1, _ as UnknownProps);
 
