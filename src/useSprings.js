@@ -7,7 +7,7 @@ import { callProp, fillArray, is, toArray } from './shared/helpers'
  * const [props, set] = useSprings(number, (i, controller) => ({ ... }))
  */
 
-export const useSprings = (length, propsArg) => {
+export const useSprings = (length, propsArg, dependencies) => {
   const mounted = useRef(false)
   const ctrl = useRef()
   const isFn = is.fun(propsArg)
@@ -70,7 +70,7 @@ export const useSprings = (length, propsArg) => {
     } else if (!ref) {
       controllers.forEach(c => c.start())
     }
-  })
+  }, dependencies)
 
   // Update mounted flag and destroy controller on unmount
   useEffect(() => {
