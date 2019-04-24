@@ -6,8 +6,8 @@ import { is } from './shared/helpers'
  * const [props, set] = useSpring(() => ({ ... }))
  */
 
-export const useSpring = props => {
+export const useSpring = (props, deps) => {
   const isFn = is.fun(props)
-  const [result, set, stop] = useSprings(1, isFn ? props : [props])
+  const [result, set, stop] = useSprings(1, isFn ? props : [props], deps)
   return isFn ? [result[0], set, stop] : result
 }

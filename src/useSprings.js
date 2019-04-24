@@ -7,7 +7,7 @@ import { Controller } from './animated/Controller'
  * const [props, set] = useSprings(number, (i, controller) => ({ ... }))
  */
 
-export const useSprings = (length, propsArg) => {
+export const useSprings = (length, propsArg, deps) => {
   const hasNewSprings = length !== usePrev(length)
   const isFn = is.fun(propsArg)
 
@@ -80,7 +80,7 @@ export const useSprings = (length, propsArg) => {
     } else if (!isFn) {
       update(props)
     }
-  })
+  }, deps)
 
   // Destroy the controllers on unmount
   useEffect(() => {
