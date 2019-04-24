@@ -1,11 +1,4 @@
-import {
-  useRef,
-  useState,
-  useEffect,
-  useMemo,
-  useImperativeHandle,
-  useCallback,
-} from 'react'
+import { useRef, useEffect, useMemo, useImperativeHandle } from 'react'
 import Ctrl from './animated/Controller'
 import {
   is,
@@ -15,7 +8,6 @@ import {
   useForceUpdate,
   reconcileDeleted,
 } from './shared/helpers'
-import { requestFrame } from './animated/Globals'
 
 /** API
  * const transitions = useTransition(items, itemKeys, { ... })
