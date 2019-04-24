@@ -11,7 +11,7 @@ export * from './lib/useSprings'
 export * from './lib/useTransition'
 export * from './lib/useTrail'
 export * from './lib/useChain'
-export * from './lib/render-props'
+export * from './lib/legacy'
 
 export {
   config,

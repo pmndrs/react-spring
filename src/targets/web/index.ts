@@ -164,7 +164,7 @@ const domAnimated = withExtend(animated as AnimatedWithDOMElements).extend(
 /** @deprecated Use `animated.extend` instead */
 export const apply = domAnimated.extend
 
-export { Spring, Trail, Transition } from '../../elements'
+export { Spring, Trail, Transition } from '../../legacy'
 export {
   config,
   update,

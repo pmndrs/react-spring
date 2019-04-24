@@ -30,7 +30,7 @@ Globals.assign({
 /** @deprecated Use `animated.extend` instead */
 export const apply = threeAnimated.extend
 
-export { Spring, Trail, Transition } from '../../elements'
+export { Spring, Trail, Transition } from '../../legacy'
 export {
   update,
   config,

@@ -50,7 +50,7 @@ const Interpolation = {
   create: createInterpolator,
 }
 
-export { Spring, Trail, Transition } from '../../elements'
+export { Spring, Trail, Transition } from '../../legacy'
 export {
   config,
   update,
