@@ -7431,10 +7431,10 @@ spdx-license-ids@^3.0.0:
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.3.tgz#81c0ce8f21474756148bbb5f3bfc0f36bf15d76e"
   integrity sha512-uBIcIl3Ih6Phe3XHK1NqboJLdGfwr1UN3k6wSD1dZpmPsIkb8AGNbZYJ1fOBk834+Gxy8rpfDxrS6XLEMZMY2g==
 
-spec.ts@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/spec.ts/-/spec.ts-1.1.1.tgz#495bc9d6a92a4763e46029afd988d010e68218d6"
-  integrity sha512-I2gWVvTzC7PcS11TWL1q7d5K/B9HIcdVGg4HA6g5SOBnyK2EX3UQEF5CvRxiwDSBGDdpSvpdoKbrBC8W9+DK5g==
+spec.ts@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/spec.ts/-/spec.ts-1.1.3.tgz#2951ed40a984386fdd5bb287719e67a1ceaafff1"
+  integrity sha512-xDzHAwbHqe9OIHT1c+pnVpVuYSHNC5vk51aFKKoql2aH1RCzHplkd7MoSV7uLfzgm3GmlfpAfwLtfH2T3lQMmw==
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
@@ -7865,10 +7865,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.3.3.tgz#f1657fc7daa27e1a8930758ace9ae8da31403221"
-  integrity sha512-Y21Xqe54TBVp+VDSNbuDYdGw0BpoR/Q6wo/+35M8PAU0vipahnyduJWirxxdxjsAkS7hue53x2zp8gz7F05u0A==
+typescript@3.4.3:
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.3.tgz#0eb320e4ace9b10eadf5bc6103286b0f8b7c224f"
+  integrity sha512-FFgHdPt4T/duxx6Ndf7hwgMZZjZpB+U0nMNGVCYPq0rEzWKjEDobm4J6yb3CS7naZ0yURFqdw9Gwc7UOh/P9oQ==
 
 ua-parser-js@^0.7.18:
   version "0.7.19"
