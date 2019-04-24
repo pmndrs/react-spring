@@ -66,7 +66,7 @@ export type UseTransitionProps<Item = any> = {
   /**
    * First-render initial values, if present overrides "from" on the first render pass. It can be "null" to skip first mounting transition. Otherwise it can take an object or a function (item => object)
    */
-  initial?: TransitionProp<Item>
+  initial?: TransitionProp<Item> | null
   /**
    * Configure the spring behavior for each item.
    */
