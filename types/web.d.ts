@@ -6,25 +6,14 @@ import {
   ForwardRefExoticComponent,
 } from 'react'
 
-export * from './lib/useSpring'
-export * from './lib/useSprings'
-export * from './lib/useTransition'
-export * from './lib/useTrail'
-export * from './lib/useChain'
-export * from './lib/legacy'
+export * from './universal'
 
-export {
-  config,
-  AnimatedValue,
-  AnimatedStyle,
-  SpringConfig,
-  TransitionPhase,
-} from './lib/common'
+type CreateAnimated = <T extends ReactType>(
+  wrappedComponent: T
+) => AnimatedComponent<T>
 
 /** Create a HOC that accepts `AnimatedValue` props */
-export const animated: <T extends ReactType>(
-  wrappedComponent: T
-) => AnimatedComponent<T> &
+export const animated: CreateAnimated &
   { [Tag in keyof JSX.IntrinsicElements]: AnimatedComponent<Tag> }
 
 /** The type of an `animated()` component */
