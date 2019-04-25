@@ -37,7 +37,7 @@ const nativeAnimated = withExtend(animated).extend(View, Text)
 /** @deprecated Use `animated.extend` instead */
 export const apply = nativeAnimated.extend
 
-export { Spring, Trail, Transition } from '../../legacy'
+export * from '../../legacy'
 export {
   config,
   update,

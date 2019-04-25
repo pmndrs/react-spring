@@ -72,7 +72,7 @@ const konvaAnimated = withExtend(animated as AnimatedWithKonvaElements).extend(
 /** @deprecated Use `animated.extend` instead */
 export const apply = konvaAnimated.extend
 
-export { Spring, Trail, Transition } from '../../legacy'
+export * from '../../legacy'
 export {
   config,
   update,
