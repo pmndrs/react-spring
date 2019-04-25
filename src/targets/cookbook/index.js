@@ -23,7 +23,7 @@ import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
 
-export { Spring, Trail, Transition } from '../../legacy'
+export * from '../../legacy'
 export {
   Globals,
   AnimatedInterpolation,

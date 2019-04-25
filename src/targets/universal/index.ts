@@ -50,7 +50,7 @@ const Interpolation = {
   create: createInterpolator,
 }
 
-export { Spring, Trail, Transition } from '../../legacy'
+export * from '../../legacy'
 export {
   config,
   animatedFn as animated,
