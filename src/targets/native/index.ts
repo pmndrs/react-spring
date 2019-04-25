@@ -7,6 +7,7 @@ import { useSprings } from '../../useSprings'
 import { useTrail } from '../../useTrail'
 import { useTransition } from '../../useTransition'
 import * as Globals from '../../animated/Globals'
+import Controller from '../../animated/Controller'
 import animated, { withExtend } from '../../animated/createAnimatedComponent'
 import colorNames from '../../shared/colors'
 import createStringInterpolator from '../../shared/stringInterpolation'
@@ -43,6 +44,7 @@ export {
   nativeAnimated as animated,
   nativeAnimated as a,
   interpolate,
+  Controller,
   Globals,
   useSpring,
   useTrail,

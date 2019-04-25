@@ -3,6 +3,7 @@ import { invalidate, applyProps, addEffect } from 'react-three-fiber'
 import { interpolate } from '../../interpolate'
 import animated, { withExtend } from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
+import Controller from '../../animated/Controller'
 import colorNames from '../../shared/colors'
 import { config } from '../../shared/constants'
 import createStringInterpolator from '../../shared/stringInterpolation'
@@ -37,6 +38,7 @@ export {
   threeAnimated as animated,
   threeAnimated as a,
   interpolate,
+  Controller,
   Globals,
   useSpring,
   useTrail,

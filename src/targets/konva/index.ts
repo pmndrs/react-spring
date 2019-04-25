@@ -2,6 +2,7 @@ import * as konva from 'react-konva'
 import animated, { withExtend } from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
 import { update } from '../../animated/FrameLoop'
+import Controller from '../../animated/Controller'
 import { interpolate } from '../../interpolate'
 import colorNames from '../../shared/colors'
 import { config } from '../../shared/constants'
@@ -78,6 +79,7 @@ export {
   konvaAnimated as animated,
   konvaAnimated as a,
   interpolate,
+  Controller,
   Globals,
   useSpring,
   useTrail,
