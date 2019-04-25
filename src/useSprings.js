@@ -1,6 +1,6 @@
 import { useMemo, useRef, useImperativeHandle, useEffect } from 'react'
-import Ctrl from './animated/Controller'
-import { callProp, fillArray, is, toArray } from './shared/helpers'
+import { callProp, fillArray, is, toArray, usePrev } from './shared/helpers'
+import Controller from './animated/Controller'
 
 /** API
  * const props = useSprings(number, [{ ... }, { ... }, ...])
@@ -8,83 +8,76 @@ import { callProp, fillArray, is, toArray } from './shared/helpers'
  */
 
 export const useSprings = (length, propsArg) => {
-  const mounted = useRef(false)
-  const ctrl = useRef()
+  const hasNewSprings = length !== usePrev(length)
   const isFn = is.fun(propsArg)
 
   // The `propsArg` coerced into an array
   const props = isFn ? [] : propsArg
 
-  // The controller maintains the animation values, starts and stops animations
-  const [controllers, setProps, ref, api] = useMemo(() => {
-    let ref, controllers
-    return [
-      // Recreate the controllers whenever `length` changes
-      (controllers = fillArray(length, i => {
-        const c = new Ctrl()
-        const p = props[i] || (props[i] = callProp(propsArg, i, c))
-        if (i === 0) ref = p.ref
-        return c.update(p)
-      })),
-      // This updates the controllers with new props
-      props => {
+  // Recreate the controllers whenever `length` changes
+  const springsRef = useRef()
+  const springs = useMemo(
+    () =>
+      fillArray(length, i => {
+        const s = new Controller()
+        const p = props[i] || (props[i] = callProp(propsArg, i, s))
+        return s.update(p)
+      }),
+    [length]
+  )
+
+  const ref = springs[0].props.ref
+  const { start, update, stop } = useMemo(
+    () => ({
+      /** Apply any pending updates */
+      start: () =>
+        Promise.all(
+          springsRef.current.map(s => new Promise(done => s.start(done)))
+        ),
+      /** Update the spring controllers */
+      update: props => {
         const isFn = is.fun(props)
         if (!isFn) props = toArray(props)
-        controllers.forEach((c, i) => {
-          c.update(isFn ? callProp(props, i, c) : props[i])
-          if (!ref) c.start()
+        springsRef.current.forEach((spring, i) => {
+          spring.update(isFn ? callProp(props, i, spring) : props[i])
+          if (!ref) spring.start()
         })
       },
-      // The imperative API is accessed via ref
-      ref,
-      ref && {
-        start: () =>
-          Promise.all(controllers.map(c => new Promise(r => c.start(r)))),
-        stop: finished => controllers.forEach(c => c.stop(finished)),
-        controllers,
-      },
-    ]
-  }, [length])
+      /** Stop one key or all keys from animating */
+      stop: (...args) => springsRef.current.forEach(s => s.stop(...args)),
+    }),
+    []
+  )
 
-  // Attach the imperative API to its ref
-  useImperativeHandle(ref, () => api, [api])
+  useImperativeHandle(ref, () => ({ start, stop }))
 
   // Once mounted, update the local state and start any animations.
   useEffect(() => {
-    if (!isFn || ctrl.current !== controllers) {
-      controllers.forEach((c, i) => {
-        const p = props[i]
-        // Set the default props for async updates
-        c.setProp('config', p.config)
-        c.setProp('immediate', p.immediate)
+    if (!isFn || hasNewSprings) {
+      props.forEach((p, i) => {
+        // Set default props for async updates
+        springs[i].setProp('config', p.config)
+        springs[i].setProp('immediate', p.immediate)
       })
     }
-
-    if (ctrl.current !== controllers) {
-      if (ctrl.current) ctrl.current.forEach(c => c.destroy())
-      ctrl.current = controllers
-    }
-
-    if (mounted.current) {
-      if (!isFn) setProps(props)
-    } else if (!ref) {
-      controllers.forEach(c => c.start())
+    if (hasNewSprings) {
+      if (springsRef.current) {
+        springsRef.current.forEach(s => s.destroy())
+      }
+      springsRef.current = springs
+      if (!ref) {
+        springs.forEach(s => s.start())
+      }
+    } else if (!isFn) {
+      update(props)
     }
   })
 
-  // Update mounted flag and destroy controller on unmount
+  // Destroy the controllers on unmount
   useEffect(() => {
-    mounted.current = true
-    return () => ctrl.current.forEach(c => c.destroy())
+    return () => springsRef.current.forEach(s => s.destroy())
   }, [])
 
-  // Return animated props, or, anim-props + the update-setter above
-  const animatedProps = controllers.map(c => c.animated)
-  return isFn
-    ? [
-        animatedProps,
-        setProps,
-        (...args) => ctrl.current.forEach(c => c.stop(...args)),
-      ]
-    : animatedProps
+  const values = springs.map(s => s.animated)
+  return isFn ? [values, update, stop] : values
 }
