@@ -1,5 +1,5 @@
-import { useRef, useMemo, useEffect } from 'react'
-import { callProp, is } from './shared/helpers'
+import { useCallback, useRef, useMemo, useEffect } from 'react'
+import { callProp, is, usePrev } from './shared/helpers'
 import { useSprings } from './useSprings'
 
 /** API
@@ -7,41 +7,52 @@ import { useSprings } from './useSprings'
  * const [trails, set] = useTrail(number, () => ({ ... }))
  */
 
-export const useTrail = (length, props) => {
-  const mounted = useRef(false)
-  const isFn = is.fun(props)
-  const updateProps = callProp(props)
-  const instances = useRef()
+export const useTrail = (length, propsArg) => {
+  const hasNewSprings = length !== usePrev(length)
+  const isFn = is.fun(propsArg)
 
-  const [result, set, stop] = useSprings(length, (i, ctrl) => {
-    if (i === 0) instances.current = []
-    instances.current.push(ctrl)
+  // The `propsArg` coerced into an object
+  let props = isFn ? null : propsArg
+
+  // Retain the controllers so we can update them.
+  const springsRef = useRef([])
+  const springs = springsRef.current
+  if (hasNewSprings) springs.length = length
+
+  // The controllers are recreated whenever `length` changes.
+  const [values, animate, stop] = useSprings(length, (i, spring) => {
+    if (isFn && !props) props = callProp(propsArg) || {}
+    springs[i] = spring
     return {
-      ...updateProps,
-      config: callProp(updateProps.config, i),
-      attach: i > 0 && (() => instances.current[i - 1]),
+      ...props,
+      config: callProp(props.config, i),
+      attach: i > 0 && (() => springs[i - 1]),
     }
   })
 
-  // Set up function to update controller
-  const updateCtrl = useMemo(
-    () => props =>
-      set((i, ctrl) => {
-        const last = props.reverse ? i === 0 : length - 1 === i
-        const attachIdx = props.reverse ? i + 1 : i - 1
-        const attachController = instances.current[attachIdx]
+  /** For imperative updates to the props of all springs in the trail */
+  const update = useCallback(
+    propsArg =>
+      animate((i, spring) => {
+        const props = callProp(propsArg, i, spring) || {}
+        const parent = springsRef.current[props.reverse ? i + 1 : i - 1]
         return {
           ...props,
-          config: callProp(props.config || updateProps.config, i),
-          attach: !!attachController && (() => attachController),
+          config: callProp(props.config, i),
+          attach: !!parent && (() => parent),
         }
       }),
-    [length, updateProps.config]
+    []
   )
-  // Update controller if props aren't functional
-  useEffect(() => void (mounted.current && !isFn && updateCtrl(props)))
-  // Update mounted flag and destroy controller on unmount
-  useEffect(() => void (mounted.current = true), [])
 
-  return isFn ? [result, updateCtrl, stop] : result
+  // Update the animations on re-render when `propsArg` is an object
+  // and the controllers were *not* created in the current render.
+  useEffect(() => {
+    if (!isFn && !hasNewSprings) {
+      update(propsArg)
+    }
+  })
+
+  // Return the update/stop functions when the `propsArg` is a function.
+  return isFn ? [values, update, stop] : values
 }
