@@ -1,5 +1,6 @@
 import animated, { withExtend } from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
+import Controller from '../../animated/Controller'
 import { interpolate } from '../../interpolate'
 import { config } from '../../shared/constants'
 import {
@@ -163,12 +164,13 @@ const domAnimated = withExtend(animated as AnimatedWithDOMElements).extend(
 /** @deprecated Use `animated.extend` instead */
 export const apply = domAnimated.extend
 
-export { Spring, Trail, Transition } from '../../legacy'
+export * from '../../legacy'
 export {
   config,
   domAnimated as animated,
   domAnimated as a,
   interpolate,
+  Controller,
   Globals,
   useSpring,
   useTrail,

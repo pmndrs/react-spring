@@ -1,6 +1,7 @@
 import animated, { withExtend } from '../../animated/createAnimatedComponent'
 import createInterpolator from '../../animated/createInterpolator'
 import * as Globals from '../../animated/Globals'
+import Controller from '../../animated/Controller'
 import { interpolate } from '../../interpolate'
 import { config } from '../../shared/constants'
 import { InterpolationConfig } from '../../types/interpolation'
@@ -55,6 +56,7 @@ export {
   animatedFn as animated,
   animatedFn as a,
   interpolate,
+  Controller,
   Globals,
   useSpring,
   useTrail,
