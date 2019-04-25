@@ -1,4 +1,4 @@
-import { MutableRefObject, Ref, useCallback, useState } from 'react'
+import { MutableRefObject, Ref, useCallback, useState, useRef } from 'react'
 
 export type NarrowObject<T> = unknown extends T
   ? T & { [key: string]: any }
@@ -131,6 +131,14 @@ export function handleRef<T>(ref: T, forward: Ref<T>) {
     }
   }
   return ref
+}
+
+/** Use a value from the previous render */
+export function usePrev<T>(value: T): T | undefined {
+  const prevRef = useRef<any>(undefined)
+  const prev = prevRef.current
+  prevRef.current = value
+  return prev
 }
 
 export function fillArray<T>(length: number, mapIndex: (index: number) => T) {
