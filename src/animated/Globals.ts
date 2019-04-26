@@ -14,6 +14,10 @@ export interface AnimatedRef<T> {
 
 export let applyAnimatedValues: (node: any, props: Props) => boolean | void
 
+export let createStringInterpolator: (
+  config: InterpolationConfig<string>
+) => (input: number) => string
+
 //
 // Optional
 //
@@ -36,21 +40,11 @@ export let createAnimatedRef: <T extends ReactType>(
   forceUpdate?: () => void
 ) => T | AnimatedRef<T> = node => node.current
 
-export let createStringInterpolator:
-  | ((config: InterpolationConfig<string>) => (input: number) => string)
-  | undefined
-
 export let requestAnimationFrame =
   typeof window !== 'undefined' ? window.requestAnimationFrame : void 0
 
 export let cancelAnimationFrame =
   typeof window !== 'undefined' ? window.cancelAnimationFrame : void 0
-
-export let interpolation:
-  | ((
-      config: InterpolationConfig<string>
-    ) => (input: number) => number | string)
-  | undefined
 
 //
 // Configuration
@@ -68,7 +62,6 @@ export interface AnimatedGlobals {
   requestAnimationFrame?: typeof requestAnimationFrame
   cancelAnimationFrame?: typeof cancelAnimationFrame
   manualFrameloop?: typeof manualFrameloop
-  interpolation?: typeof interpolation
 }
 
 export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
@@ -83,7 +76,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     requestAnimationFrame,
     cancelAnimationFrame,
     manualFrameloop,
-    interpolation,
   } = Object.assign(
     {
       colorNames,
@@ -96,7 +88,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       requestAnimationFrame,
       cancelAnimationFrame,
       manualFrameloop,
-      interpolation,
     },
     globals
   ))

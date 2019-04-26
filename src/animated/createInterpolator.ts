@@ -1,6 +1,6 @@
 import { EasingFunction, InterpolationConfig } from '../types/interpolation'
+import { createStringInterpolator } from './Globals'
 import { Interpolator } from '../types/animated'
-import * as Globals from './Globals'
 
 type ExtrapolateType = InterpolationConfig['extrapolate']
 
@@ -31,8 +31,8 @@ function createInterpolator(
       extrapolate,
     })
   }
-  if (Globals.interpolation && typeof range.output[0] === 'string') {
-    return Globals.interpolation(range as InterpolationConfig<string>)
+  if (typeof range.output[0] === 'string') {
+    return createStringInterpolator(range as InterpolationConfig<string>)
   }
   const config = range as InterpolationConfig<number>
   const outputRange = config.output
