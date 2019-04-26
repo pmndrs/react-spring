@@ -2,11 +2,17 @@ import createMockRaf from 'mock-raf'
 import Controller from './Controller'
 import * as Globals from './Globals'
 
-test('update simple value', () => {
-  const mockRaf = createMockRaf()
-  Globals.injectFrame(mockRaf.raf, mockRaf.cancel)
-  Globals.injectNow(mockRaf.now)
+let mockRaf: MockRaf
+beforeEach(() => {
+  mockRaf = createMockRaf()
+  Globals.assign({
+    now: mockRaf.now,
+    requestAnimationFrame: mockRaf.raf,
+    cancelAnimationFrame: mockRaf.cancel,
+  })
+})
 
+test('update simple value', () => {
   const ctrl = new Controller<{ x: number; y?: number }>()
   ctrl.update({ x: 0 })
   ctrl.start()
@@ -25,10 +31,6 @@ test('update simple value', () => {
 })
 
 test('update array value', () => {
-  const mockRaf = createMockRaf()
-  Globals.injectFrame(mockRaf.raf, mockRaf.cancel)
-  Globals.injectNow(mockRaf.now)
-
   const ctrl = new Controller<{ x: number[] }>()
   ctrl.update({ x: [0, 0] })
   ctrl.start()

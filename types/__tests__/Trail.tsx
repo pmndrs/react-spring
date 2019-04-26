@@ -4,7 +4,7 @@ import React from 'react';
 
 const View = animated('div');
 
-const items = [1, 2] as [1, 2];
+declare const items: [1, 2];
 
 test('basic usage', () => {
   <Trail items={items} from={{ opacity: 0 }} to={{ opacity: 1, color: 'blue' }}>

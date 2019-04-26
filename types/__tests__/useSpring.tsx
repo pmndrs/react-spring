@@ -11,59 +11,59 @@ import {
 } from '../web';
 
 test('infer return type via forward prop', () => {
-  const props = useSpring({ foo: 0 });
+  const props = useSpring({ width: 0 });
   assert(props, _ as {
     [key: string]: AnimatedValue<any>;
-    foo: AnimatedValue<number>;
+    width: AnimatedValue<number>;
   });
 
   test('using with "animated()" component', () => {
-    const Test = animated((_: { style: { foo: number } }) => null);
+    const Test = animated((_: { style: { width: number } }) => null);
     return <Test style={props} />;
   });
 });
 
 test('infer return type via "from" prop', () => {
   const props = useSpring({
-    from: { foo: 0 },
+    from: { width: 0 },
   });
   assert(props, _ as {
     [key: string]: AnimatedValue<any>;
-    foo: AnimatedValue<number>;
+    width: AnimatedValue<number>;
   });
 });
 
 test('infer return type via "to" prop', () => {
   const props = useSpring({
-    to: { foo: 0 },
+    to: { width: 0 },
   });
   assert(props, _ as {
     [key: string]: AnimatedValue<any>;
-    foo: AnimatedValue<number>;
+    width: AnimatedValue<number>;
   });
 });
 
 test('infer return type via "from" and "to" props', () => {
   const props = useSpring({
-    from: { foo: 0 },
-    to: { bar: '1' },
+    from: { width: 0 },
+    to: { height: '100%' },
   });
   assert(props, _ as {
     [key: string]: AnimatedValue<any>;
-    foo: AnimatedValue<number>;
-    bar: AnimatedValue<string>;
+    width: AnimatedValue<number>;
+    height: AnimatedValue<string>;
   });
 });
 
 test('infer return type via "from" and forward props', () => {
   const props = useSpring({
-    from: { foo: 0 },
-    bar: '1',
+    from: { width: 0 },
+    height: '100%',
   });
   assert(props, _ as {
     [key: string]: AnimatedValue<any>;
-    foo: AnimatedValue<number>;
-    bar: AnimatedValue<string>;
+    width: AnimatedValue<number>;
+    height: AnimatedValue<string>;
   });
 });
 

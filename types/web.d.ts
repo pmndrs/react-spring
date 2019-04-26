@@ -1,4 +1,4 @@
-import { AnimatedStyle, AnimatedValue, Solve } from './lib/common'
+import { AnimatedValue, Solve, AssignableKeys } from './lib/common'
 import {
   ReactType,
   CSSProperties,
@@ -22,19 +22,50 @@ export type AnimatedComponent<T extends ReactType> = ForwardRefExoticComponent<
 >
 
 /** The props of an `animated()` component */
-export type AnimatedProps<Props extends object> = Solve<
-  { [P in keyof Props]: AnimatedProp<Props, P> }
->
+export type AnimatedProps<Props extends object> = {
+  [P in keyof Props]: (P extends 'ref' ? Props[P] : AnimatedProp<Props[P]>)
+}
 
-type AnimatedProp<
-  Props extends object,
-  P extends keyof Props
-> = Props[P] extends infer T
-  ? P extends 'ref'
-    ? T
-    : P extends 'style'
-    ? AnimatedStyle<T>
-    : T extends CSSProperties
-    ? AnimatedStyle<T>
-    : T | AnimatedValue<Exclude<T, void>>
+// The animated prop value of a React element
+type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
+  ? [DT] extends [never]
+    ? never
+    : DT extends void
+    ? undefined
+    : DT extends object
+    ? [AssignableKeys<DT, CSSProperties>] extends [never]
+      ? DT extends ReadonlyArray<any>
+        ? AnimatedStyles<DT>
+        : DT
+      : AnimatedStyle<T>
+    : DT | AnimatedLeaf<T>
   : never
+
+// An animated array of style objects
+type AnimatedStyles<T extends ReadonlyArray<any>> = {
+  [P in keyof T]: [T[P]] extends [infer DT]
+    ? DT extends object
+      ? [AssignableKeys<DT, CSSProperties>] extends [never]
+        ? DT extends ReadonlyArray<any>
+          ? AnimatedStyles<DT>
+          : DT
+        : { [P in keyof DT]: AnimatedProp<DT[P]> }
+      : DT
+    : never
+}
+
+// An animated object of style attributes
+type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
+  ? DT extends void
+    ? undefined
+    : [DT] extends [never]
+    ? never
+    : DT extends object
+    ? { [P in keyof DT]: AnimatedStyle<DT[P]> }
+    : DT | AnimatedLeaf<T>
+  : never
+
+// An animated value that is not an object
+type AnimatedLeaf<T> = [T] extends [object]
+  ? never
+  : AnimatedValue<Exclude<T, object | void>>

@@ -1,10 +1,5 @@
-import {
-  AnimatedStyle,
-  AnimatedValue,
-  Solve,
-  AnimatedTransform,
-} from './lib/common'
-import { StyleProp, ViewStyle, View, Text } from 'react-native'
+import { AnimatedValue, Solve, AssignableKeys } from './lib/common'
+import { ViewStyle, View, Text, StyleProp, RecursiveArray } from 'react-native'
 import {
   ReactType,
   ComponentPropsWithRef,
@@ -30,13 +25,58 @@ export type AnimatedComponent<T extends ReactType> = ForwardRefExoticComponent<
 
 /** The props of an `animated()` component */
 export type AnimatedProps<Props extends object> = {
-  [P in keyof Props]: [Props[P]] extends [infer T]
-    ? P extends 'ref'
-      ? T
-      : [T] extends [infer U]
-      ? T extends StyleProp<ViewStyle>
-        ? AnimatedStyle<T>
-        : T | AnimatedValue<Exclude<U, void>>
-      : never
+  [P in keyof Props]: (P extends 'ref' ? Props[P] : AnimatedProp<Props[P]>)
+}
+
+// The animated prop value of a React element
+type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
+  ? [DT] extends [never]
+    ? never
+    : DT extends void
+    ? undefined
+    : DT extends object
+    ? [AssignableKeys<DT, ViewStyle>] extends [never]
+      ? DT extends ReadonlyArray<any>
+        ? AnimatedStyles<DT>
+        : DT
+      : AnimatedStyle<T>
+    : DT | AnimatedLeaf<T>
+  : never
+
+// An animated array of style objects
+type AnimatedStyles<T extends ReadonlyArray<any>> = {
+  [P in keyof T]: [T[P]] extends [infer DT]
+    ? DT extends object
+      ? [AssignableKeys<DT, ViewStyle>] extends [never]
+        ? DT extends ReadonlyArray<any>
+          ? AnimatedStyles<DT>
+          : DT
+        : { [P in keyof DT]: AnimatedProp<DT[P]> }
+      : DT
     : never
 }
+
+// An animated object of style attributes
+type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
+  ? DT extends void
+    ? undefined
+    : [DT] extends [never]
+    ? never
+    : DT extends object
+    ? {
+        [P in keyof DT]: P extends 'transform'
+          ? AnimatedTransform<DT[P]>
+          : AnimatedStyle<DT[P]>
+      }
+    : DT | AnimatedLeaf<T>
+  : never
+
+// An animated array of transform objects
+type AnimatedTransform<T> = T extends ReadonlyArray<any>
+  ? { [P in keyof T]: AnimatedStyle<T[P]> }
+  : T
+
+// An animated value that is not an object
+type AnimatedLeaf<T> = [T] extends [object]
+  ? never
+  : AnimatedValue<Exclude<T, object | void>>
