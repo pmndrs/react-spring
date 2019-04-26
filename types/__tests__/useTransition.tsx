@@ -1,8 +1,8 @@
 import { assert, test, _ } from 'spec.ts';
 import { useTransition, ItemTransition } from '../lib/useTransition';
-import React from 'react';
-import { animated, AnimatedValue } from '../lib/common';
 import { SpringUpdateFn } from '../lib/useSpring';
+import { animated, AnimatedValue } from '../web';
+import React from 'react';
 
 const View = animated('div');
 

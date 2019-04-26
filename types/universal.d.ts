@@ -7,8 +7,10 @@ export * from './lib/legacy'
 
 export {
   config,
-  AnimatedValue,
-  AnimatedStyle,
   SpringConfig,
+  SpringValues,
+  AnimatedValue,
   TransitionPhase,
+  ReservedProps,
+  ForwardProps,
 } from './lib/common'

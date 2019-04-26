@@ -84,34 +84,10 @@ export type AnimationFrame<T extends object> = Remap<
   UnknownProps & ({} extends PickAnimated<T> ? unknown : PickAnimated<T>)
 >
 
-/** The type of an `animated()` transform prop */
-export type AnimatedTransform<T> = T extends ReadonlyArray<any>
-  ? {
-      [P in keyof T]: T[P] extends infer U
-        ? U extends ReadonlyArray<any>
-          ? AnimatedTransform<U>
-          : AnimatedStyle<U>
-        : never
-    }
-  : T
-
-/** The value of an `animated()` component's style */
-export type AnimatedStyle<T> = [T] extends [infer U]
-  ? T extends void
-    ? undefined
-    : T extends object
-    ? {
-        [P in keyof T]: P extends 'transform'
-          ? AnimatedTransform<T[P]>
-          : AnimatedStyle<T[P]>
-      }
-    : T | AnimatedValue<U>
-  : never
-
 /**
  * An animated value that can be passed into an `animated()` component.
  */
-export interface AnimatedValue<T> {
+export class AnimatedValue<T> {
   interpolate: InterpolationChain<T>
   getValue: () => T
 }
@@ -240,14 +216,6 @@ export type ReservedProps =
   | 'timestamp'
 
 /**
- * The input `range` and `output` range of an interpolation
- */
-export type InterpolationConfig<T, U = T> = {
-  range: T[]
-  output: U[]
-}
-
-/**
  * An "interpolator" transforms an animated value. Animated arrays are spread
  * into the interpolator.
  */
@@ -259,6 +227,15 @@ export type Interpolator<T, U> = T extends any[]
  * A chain of interpolated values
  */
 export interface InterpolationChain<T> {
-  <U>(config: InterpolationConfig<T, U>): AnimatedValue<U>
+  <U>(config: { range: number[]; output: U[] }): AnimatedValue<U>
   <U>(interpolator: Interpolator<T, U>): AnimatedValue<U>
 }
+
+/** Return the keys of `T` with values that are assignable to `U` */
+export type AssignableKeys<T, U> = T extends object
+  ? U extends object
+    ? {
+        [P in Extract<keyof T, keyof U>]: T[P] extends U[P] ? P : never
+      }[Extract<keyof T, keyof U>]
+    : never
+  : never

@@ -1,52 +1,45 @@
+import { assert, _, test } from 'spec.ts';
 import {
   PickAnimated,
   ForwardProps,
-  AnimatedStyle,
-  AnimatedValue,
   AnimationFrame,
   UnknownProps,
   Remap,
 } from '../lib/common';
-import { assert, _, test } from 'spec.ts';
 
-const $1: 1 = 1;
-
-const reservedProps = {
-  config: $1,
-  from: {},
-  to: {},
-  ref: $1,
-  cancel: $1,
-  reset: $1,
-  reverse: $1,
-  immediate: $1,
-  delay: $1,
-  lazy: $1,
-  onStart: $1,
-  onRest: $1,
-  onFrame: $1,
+type ReservedProps = {
+  config: 1;
+  from: {};
+  to: {};
+  ref: 1;
+  cancel: 1;
+  reset: 1;
+  reverse: 1;
+  immediate: 1;
+  delay: 1;
+  lazy: 1;
+  onStart: 1;
+  onRest: 1;
+  onFrame: 1;
 };
 
-const forwardProps = {
-  foo: $1,
-  bar: $1,
+type UserProps = {
+  foo: 1;
+  bar: 1;
 };
-
-type R = typeof reservedProps;
-type F = typeof forwardProps;
 
 test('ForwardProps', () => {
   // With reserved props, no forward props
-  type P1 = ForwardProps<R>;
+  type P1 = ForwardProps<ReservedProps>;
   assert(_ as P1, _ as {});
 
   // With reserved and forward props
-  type P2 = ForwardProps<R & F>;
-  assert(_ as P2, _ as F);
+  type P2 = ForwardProps<ReservedProps & UserProps>;
+  assert(_ as P2, _ as UserProps);
 
   // With forward props, no reserved props
-  type P3 = ForwardProps<F>;
-  assert(_ as P3, _ as F);
+  type P3 = ForwardProps<UserProps>;
+  assert(_ as P3, _ as UserProps);
 
   // No reserved or forward props
   type P4 = ForwardProps<{}>;
@@ -59,8 +52,8 @@ test('PickAnimated', () => {
   assert(_ as A1, _ as {});
 
   // Forward props only
-  type A3 = PickAnimated<F>;
-  assert(_ as A3, _ as F);
+  type A3 = PickAnimated<UserProps>;
+  assert(_ as A3, _ as UserProps);
 
   // Forward props and "from" prop
   type A4 = PickAnimated<{
@@ -68,14 +61,14 @@ test('PickAnimated', () => {
     width: 1;
     from: { bar: 1; width: 2 };
   }>;
-  assert(_ as A4, _ as Remap<F & { width: 1 | 2 }>);
+  assert(_ as A4, _ as Remap<UserProps & { width: 1 | 2 }>);
 
   // "to" and "from" props
   type A5 = PickAnimated<{
     to: { foo: 1; width: 1 };
     from: { bar: 1; width: 2 };
   }>;
-  assert(_ as A5, _ as Remap<F & { width: 1 | 2 }>);
+  assert(_ as A5, _ as Remap<UserProps & { width: 1 | 2 }>);
 
   // "useTransition" props
   type A6 = PickAnimated<{
@@ -108,31 +101,6 @@ test('PickAnimated', () => {
     _ as A7,
     _ as {
       a: 1 | 2 | 3 | 4 | 5;
-    }
-  );
-});
-
-test('AnimatedStyle', () => {
-  // Primitive props
-  type P1 = AnimatedStyle<{ width?: number | string }>;
-  assert(
-    _ as P1,
-    _ as {
-      width?: number | string | AnimatedValue<number | string | undefined>;
-    }
-  );
-
-  // Transform props
-  type P2 = AnimatedStyle<{
-    transform: [{ translateX: number }, [{ translateY: number | string }]];
-  }>;
-  assert(
-    _ as P2,
-    _ as {
-      transform: [
-        { translateX: number | AnimatedValue<number> },
-        [{ translateY: number | string | AnimatedValue<number | string> }]
-      ];
     }
   );
 });

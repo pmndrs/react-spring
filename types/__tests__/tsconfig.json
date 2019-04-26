@@ -1,9 +1,8 @@
 {
-  "include": ["*.ts", "useChain.tsx"],
   "compilerOptions": {
     "target": "es2017",
     "moduleResolution": "node",
-    "lib": ["dom", "es2017"],
+    "lib": [],
     "noEmit": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
