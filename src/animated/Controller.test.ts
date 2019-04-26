@@ -1,5 +1,5 @@
 import createMockRaf from 'mock-raf'
-import Controller from './Controller'
+import { Controller } from './Controller'
 import * as Globals from './Globals'
 
 let mockRaf: MockRaf

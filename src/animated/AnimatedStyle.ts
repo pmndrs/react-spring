@@ -1,7 +1,7 @@
-import Animated, { AnimatedObject } from './Animated'
+import { Animated, AnimatedObject } from './Animated'
 import { createAnimatedTransform as wrapTransform } from './Globals'
 
-export default class AnimatedStyle<
+export class AnimatedStyle<
   Payload extends object & { transform?: Animated } = {}
 > extends AnimatedObject<Payload> {
   constructor(style: Payload = {} as Payload) {

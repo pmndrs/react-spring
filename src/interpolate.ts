@@ -1,7 +1,17 @@
-import Animated from './animated/Animated'
-import AnimatedInterpolation from './animated/AnimatedInterpolation'
-import { GetArrayValueType, GetValueType, SpringValue } from './types/animated'
+import { Animated } from './animated/Animated'
+import { AnimatedInterpolation } from './animated/AnimatedInterpolation'
+import { SpringValue } from './types/animated'
 import { InterpolationConfig } from './types/interpolation'
+
+type GetValueType<T> = T extends number
+  ? number
+  : T extends string
+  ? string
+  : string | number
+
+type GetArrayValueType<T extends any[]> = T extends (infer U)[]
+  ? GetValueType<U>
+  : string | number
 
 interface SpringValueFromInterpolation {
   // Single AnimatedValue parent

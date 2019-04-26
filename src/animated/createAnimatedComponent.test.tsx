@@ -2,8 +2,8 @@ import React, { forwardRef } from 'react'
 import { cleanup, render } from 'react-testing-library'
 import '../targets/web'
 import { SpringValue } from '../types/animated'
-import AnimatedValue from './AnimatedValue'
-import animated from './createAnimatedComponent'
+import { AnimatedValue } from './AnimatedValue'
+import { animated } from './createAnimatedComponent'
 
 afterEach(cleanup)
 

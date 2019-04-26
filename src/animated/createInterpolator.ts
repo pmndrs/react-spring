@@ -4,19 +4,19 @@ import { Interpolator } from '../types/animated'
 
 type ExtrapolateType = InterpolationConfig['extrapolate']
 
-function createInterpolator<T extends Interpolator>(interpolator: T): T
+export function createInterpolator<T extends Interpolator>(interpolator: T): T
 
-function createInterpolator<Out extends number | string>(
+export function createInterpolator<Out extends number | string>(
   config: InterpolationConfig<Out>
 ): (input: number) => Out extends number ? number : string
 
-function createInterpolator<Out extends number | string>(
+export function createInterpolator<Out extends number | string>(
   range: number[],
   output?: Out[],
   extrapolate?: ExtrapolateType
 ): (input: number) => Out extends number ? number : string
 
-function createInterpolator(
+export function createInterpolator(
   range: number[] | InterpolationConfig | Interpolator,
   output?: (number | string)[],
   extrapolate?: ExtrapolateType
@@ -101,5 +101,3 @@ function findRange(input: number, inputRange: number[]) {
     if (inputRange[i] >= input) break
   return i - 1
 }
-
-export default createInterpolator

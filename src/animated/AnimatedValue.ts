@@ -1,8 +1,8 @@
 import { SpringValue } from '../types/animated'
 import { InterpolationConfig } from '../types/interpolation'
-import Animated from './Animated'
-import AnimatedInterpolation from './AnimatedInterpolation'
-import AnimatedProps from './AnimatedProps'
+import { Animated } from './Animated'
+import { AnimatedInterpolation } from './AnimatedInterpolation'
+import { AnimatedProps } from './AnimatedProps'
 import { now } from './Globals'
 
 /**
@@ -39,7 +39,7 @@ function addAnimatedStyles(
   }
 }
 
-export default class AnimatedValue extends Animated implements SpringValue {
+export class AnimatedValue extends Animated implements SpringValue {
   private animatedStyles = new Set<AnimatedProps>()
 
   public value: any

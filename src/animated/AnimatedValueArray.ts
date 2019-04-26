@@ -1,10 +1,10 @@
 import { SpringValue } from '../types/animated'
 import { InterpolationConfig } from '../types/interpolation'
 import { AnimatedArray } from './Animated'
-import AnimatedInterpolation from './AnimatedInterpolation'
-import AnimatedValue from './AnimatedValue'
+import { AnimatedInterpolation } from './AnimatedInterpolation'
+import { AnimatedValue } from './AnimatedValue'
 
-export default class AnimatedValueArray extends AnimatedArray<AnimatedValue>
+export class AnimatedValueArray extends AnimatedArray<AnimatedValue>
   implements SpringValue {
   constructor(values: AnimatedValue[]) {
     super()
