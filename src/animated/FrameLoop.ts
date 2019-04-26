@@ -1,5 +1,5 @@
-import Animated from './Animated'
-import Controller from './Controller'
+import { Animated } from './Animated'
+import { Controller } from './Controller'
 import { now, requestAnimationFrame, manualFrameloop } from './Globals'
 
 let active = false

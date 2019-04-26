@@ -1,5 +1,5 @@
 import { useRef, useEffect, useMemo, useImperativeHandle } from 'react'
-import Ctrl from './animated/Controller'
+import { Controller } from './animated/Controller'
 import {
   is,
   toArray,
@@ -88,7 +88,7 @@ export function useTransition(input, keyTransform, props) {
     state.current.transitions.forEach(transition => {
       const { phase, key, item, props } = transition
       if (!state.current.instances.has(key))
-        state.current.instances.set(key, new Ctrl())
+        state.current.instances.set(key, new Controller())
 
       // Avoid calling `onStart` more than once per transition.
       let started = false

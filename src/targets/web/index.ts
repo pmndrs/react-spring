@@ -1,6 +1,6 @@
-import animated, { withExtend } from '../../animated/createAnimatedComponent'
+import { animated, withExtend } from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
-import Controller from '../../animated/Controller'
+import { Controller } from '../../animated/Controller'
 import { interpolate } from '../../interpolate'
 import { config } from '../../shared/constants'
 import {

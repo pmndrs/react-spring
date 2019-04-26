@@ -1,8 +1,8 @@
-import Animated from '../../animated/Animated'
+import { Animated } from '../../animated/Animated'
 
 type Transform = { [key: string]: string | number | Animated }
 
-export default class AnimatedTransform extends Animated {
+export class AnimatedTransform extends Animated {
   _transforms: Transform[]
 
   constructor(transforms: Transform[]) {

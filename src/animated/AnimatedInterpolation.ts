@@ -1,9 +1,9 @@
 import { SpringValue, Interpolator } from '../types/animated'
 import { InterpolationConfig } from '../types/interpolation'
-import Animated, { AnimatedArray } from './Animated'
-import createInterpolator from './createInterpolator'
+import { Animated, AnimatedArray } from './Animated'
+import { createInterpolator } from './createInterpolator'
 
-export default class AnimatedInterpolation extends AnimatedArray<Animated>
+export class AnimatedInterpolation extends AnimatedArray<Animated>
   implements SpringValue {
   calc: Interpolator<any[]>
 

@@ -1,11 +1,13 @@
 import colorNames from '../shared/colors'
-import createStringInterpolator from '../shared/stringInterpolation'
-import createInterpolator from './createInterpolator'
+import { createStringInterpolator } from '../shared/stringInterpolation'
+import { createInterpolator } from './createInterpolator'
 import * as Globals from './Globals'
 
 beforeAll(() => {
-  Globals.injectColorNames(colorNames)
-  Globals.injectStringInterpolator(createStringInterpolator)
+  Globals.assign({
+    colorNames,
+    createStringInterpolator,
+  })
 })
 
 describe('Interpolation', () => {
@@ -22,7 +24,9 @@ describe('Interpolation', () => {
   })
 
   it('should work with interpolation function as argument', () => {
-    const interpolation = createInterpolator(value => `scale(${value})`)
+    const interpolation = createInterpolator(
+      (value: number) => `scale(${value})`
+    )
 
     expect(interpolation(0)).toBe('scale(0)')
     expect(interpolation(10.5)).toBe('scale(10.5)')

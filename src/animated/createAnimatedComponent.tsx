@@ -12,10 +12,12 @@ import {
   AnimatedComponentProps,
   CreateAnimatedComponent,
 } from '../types/animated'
-import AnimatedProps from './AnimatedProps'
+import { AnimatedProps } from './AnimatedProps'
 import { createAnimatedRef, applyAnimatedValues } from './Globals'
 
-const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
+export const createAnimatedComponent: CreateAnimatedComponent = <
+  C extends ReactType
+>(
   Component: C
 ) => {
   const AnimatedComponent = forwardRef<C, AnimatedComponentProps<C>>(
@@ -66,8 +68,6 @@ const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
   )
   return AnimatedComponent
 }
-
-export default createAnimatedComponent
 
 /**
  * withExtend(animated, options = {})
@@ -133,3 +133,5 @@ export function withExtend<T extends CreateAnimatedComponent>(
     self[key] = animated(arg as ReactType)
   }
 }
+
+export { createAnimatedComponent as animated }

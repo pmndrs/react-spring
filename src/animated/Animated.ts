@@ -1,4 +1,4 @@
-export default abstract class Animated<Payload = unknown> {
+export abstract class Animated<Payload = unknown> {
   public abstract getValue(): any
   public getAnimatedValue() {
     return this.getValue()

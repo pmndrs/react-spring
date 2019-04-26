@@ -5,13 +5,13 @@ import {
   toArray,
   withDefault,
 } from '../shared/helpers'
-import AnimatedValue from './AnimatedValue'
-import AnimatedValueArray from './AnimatedValueArray'
-import AnimatedInterpolation from './AnimatedInterpolation'
+import { AnimatedValue } from './AnimatedValue'
+import { AnimatedValueArray } from './AnimatedValueArray'
+import { AnimatedInterpolation } from './AnimatedInterpolation'
 import { start, stop } from './FrameLoop'
 import { colorNames, createStringInterpolator, now } from './Globals'
 import { SpringProps, SpringConfig } from '../../types/renderprops'
-import Animated from './Animated'
+import { Animated } from './Animated'
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 type Indexable<T = any> = { [key: string]: T }
@@ -68,7 +68,7 @@ const linear = (t: number) => t
 const emptyObj: any = Object.freeze({})
 
 let nextId = 1
-class Controller<State extends Indexable = any> {
+export class Controller<State extends Indexable = any> {
   id = nextId++
   idle = true
   props: CachedProps<State> = {}
@@ -616,8 +616,6 @@ class Controller<State extends Indexable = any> {
     }
   }
 }
-
-export default Controller
 
 /** Wrap any value with an `Animated` node */
 function createAnimated<T>(

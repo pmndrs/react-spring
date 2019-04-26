@@ -4,7 +4,7 @@ import { createAnimatedStyle as wrapStyle } from './Globals'
 /**
  * Wraps the `style` property with `AnimatedStyle`.
  */
-export default class AnimatedProps<
+export class AnimatedProps<
   Props extends object & { style?: any } = {}
 > extends AnimatedObject<Props> {
   update: () => void

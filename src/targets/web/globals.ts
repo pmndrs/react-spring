@@ -1,7 +1,7 @@
-import AnimatedStyle from '../../animated/AnimatedStyle'
+import { AnimatedStyle } from '../../animated/AnimatedStyle'
 import * as Globals from '../../animated/Globals'
 import colorNames from '../../shared/colors'
-import createStringInterpolator from '../../shared/stringInterpolation'
+import { createStringInterpolator } from '../../shared/stringInterpolation'
 
 let isUnitlessNumber: { [key: string]: true } = {
   animationIterationCount: true,

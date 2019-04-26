@@ -1,6 +1,6 @@
 import { useMemo, useRef, useImperativeHandle, useEffect } from 'react'
 import { callProp, fillArray, is, toArray, usePrev } from './shared/helpers'
-import Controller from './animated/Controller'
+import { Controller } from './animated/Controller'
 
 /** API
  * const props = useSprings(number, [{ ... }, { ... }, ...])
