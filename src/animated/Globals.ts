@@ -1,6 +1,15 @@
 import { MutableRefObject, ReactType } from 'react'
 import { InterpolationConfig } from '../types/interpolation'
 
+declare const window: {
+  requestAnimationFrame: (cb: FrameRequestCallback) => number
+  cancelAnimationFrame: (id: number) => void
+}
+
+interface FrameRequestCallback {
+  (time: number): void
+}
+
 type Props = { [key: string]: any }
 
 export interface AnimatedRef<T> {
