@@ -9,7 +9,7 @@ import AnimatedValue from './AnimatedValue'
 import AnimatedValueArray from './AnimatedValueArray'
 import AnimatedInterpolation from './AnimatedInterpolation'
 import { start, stop } from './FrameLoop'
-import { colorNames, interpolation as interp, now } from './Globals'
+import { colorNames, createStringInterpolator, now } from './Globals'
 import { SpringProps, SpringConfig } from '../../types/renderprops'
 import Animated from './Animated'
 
@@ -699,6 +699,9 @@ function computeGoalValue<T>(value: T): T {
   return is.arr(value)
     ? value.map(computeGoalValue)
     : isAnimatableString(value)
-    ? (interp as any)({ range: [0, 1], output: [value, value] })(1)
+    ? (createStringInterpolator as any)({
+        range: [0, 1],
+        output: [value, value],
+      })(1)
     : value
 }
