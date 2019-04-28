@@ -12,14 +12,12 @@ import { start, stop } from './FrameLoop'
 import { colorNames, createStringInterpolator, now } from './Globals'
 import { SpringProps, SpringConfig } from '../../types/renderprops'
 import { Animated } from './Animated'
+import { Omit, Indexable, Arrify } from '../types/common'
+import { Animatable } from '../types/animated'
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-type Indexable<T = any> = { [key: string]: T }
-
-/** Animation config that is ignored by the frameloop */
-interface IdleAnimation<T = any> {
+/** Properties in every animation config */
+interface AnimationConfig<T = any> {
   key: string
-  idle: boolean
   goalValue: T
   animatedValues: AnimatedValue[]
   animated: T extends ReadonlyArray<any>
@@ -27,19 +25,24 @@ interface IdleAnimation<T = any> {
     : AnimatedValue | AnimatedInterpolation
 }
 
-/** Animation config that is executed by the frameloop */
+/** An animation ignored by the frameloop */
+interface IdleAnimation<T = any> extends AnimationConfig<T> {
+  idle: true
+}
+
+/** An animation being executed by the frameloop */
 interface ActiveAnimation<T = any>
-  extends IdleAnimation<T>,
+  extends AnimationConfig<T>,
     Omit<SpringConfig, 'velocity'> {
+  idle: false
   config: SpringConfig
   initialVelocity: number
   immediate: boolean
-  toValues: T extends ReadonlyArray<any> ? T : [T]
-  fromValues: T extends ReadonlyArray<any> ? T : [T]
+  toValues: Arrify<T>
+  fromValues: Arrify<T>
 }
 
-/** Internal animation config (used by frameloop) */
-type Animation<T = any> = ActiveAnimation<T> | IdleAnimation<T>
+type Animation<T = any> = IdleAnimation<T> | ActiveAnimation<T>
 type AnimationMap = Indexable<Animation>
 type AnimatedMap = Indexable<Animation['animated']>
 
@@ -82,7 +85,7 @@ export class Controller<State extends Indexable = any> {
   onEndQueue: OnEnd[] = []
   runCount = 0
 
-  constructor(props?: UpdateProps<State>) {
+  constructor(props?: Partial<State> & UpdateProps<State>) {
     if (props) this.update(props).start()
   }
 
@@ -92,7 +95,7 @@ export class Controller<State extends Indexable = any> {
    * that later calls to this method properly override any delayed props.
    * The `propsArg` argument is always copied before mutations are made.
    */
-  update(propsArg: UpdateProps<State>) {
+  update(propsArg: Partial<State> & UpdateProps<State>) {
     if (!propsArg) return this
     const props = interpolateTo(propsArg) as any
 
@@ -205,7 +208,7 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Create an Animated node if none exists.
-  private _ensureAnimated(values: any) {
+  private _ensureAnimated(values: unknown) {
     if (!is.obj(values)) return
     for (const key in values) {
       if (this.animated[key]) continue
@@ -258,7 +261,7 @@ export class Controller<State extends Indexable = any> {
 
     // Never assume that the last update always finishes last, since that's
     // not true when 2+ async updates have indeterminate durations.
-    const onRunEnd = (finished?: boolean) => {
+    const onRunEnd: OnEnd = finished => {
       this.runCount--
       if (--runsLeft) return
       if (onEnd) onEnd(finished)
@@ -311,7 +314,7 @@ export class Controller<State extends Indexable = any> {
       (is.fun(to) && to !== this.props.asyncTo)
 
     let last: Promise<void>
-    const next = (props: UpdateProps<State>) => {
+    const next = (props: Partial<State> & UpdateProps<State>) => {
       if (isCancelled()) throw this
       return (last = new Promise<any>(done => {
         this.update(props).start(done)
@@ -368,7 +371,7 @@ export class Controller<State extends Indexable = any> {
         }
       } else if (diffTimestamp(keys.join('.'))) {
         const oldValue = parent[lastKey]
-        if (!is.equ(value, oldValue)) {
+        if (!isEqual(value, oldValue)) {
           changed = true
           parent[lastKey] = value
         }
@@ -376,9 +379,9 @@ export class Controller<State extends Indexable = any> {
     }
 
     if (reverse) {
-      const to: any = props.to
+      const { to } = props
       props.to = props.from
-      props.from = is.obj(to) ? to : void 0
+      props.from = (is.obj(to) ? to : void 0) as any
     }
 
     for (const key in props) {
@@ -447,7 +450,7 @@ export class Controller<State extends Indexable = any> {
       const goalValue = computeGoalValue(value)
 
       // Stop animations with a goal value equal to its current value.
-      if (!props.reset && is.equ(goalValue, animated.getValue())) {
+      if (!props.reset && isEqual(goalValue, animated.getValue())) {
         // The animation might be stopped already.
         if (!state.idle) {
           changed = true
@@ -457,7 +460,7 @@ export class Controller<State extends Indexable = any> {
       }
 
       // Replace an animation when its goal value is changed (or it's been reset)
-      if (props.reset || !is.equ(goalValue, state.goalValue)) {
+      if (props.reset || !isEqual(goalValue, state.goalValue)) {
         let { immediate } = is.und(props.immediate) ? this.props : props
         immediate = !!callProp(immediate, key)
 
@@ -634,10 +637,13 @@ function createAnimated<T>(
         })
       )
     : isAnimatableString(value)
-    ? (new AnimatedValue(0).interpolate({
+    ? // Convert "red" into "rgba(255, 0, 0, 1)" etc
+      (new AnimatedValue(0).interpolate({
         output: [value, value] as any,
       }) as any)
-    : new AnimatedValue(value)
+    : // The `AnimatedValue` class supports any type, but only numbers are
+      // interpolated by the frameloop.
+      new AnimatedValue(value as any)
 }
 
 /**
@@ -702,4 +708,16 @@ function computeGoalValue<T>(value: T): T {
         output: [value, value],
       })(1)
     : value
+}
+
+// Compare animatable values
+function isEqual(a: Animatable, b: Animatable) {
+  if (is.arr(a)) {
+    if (!is.arr(b) || a.length !== b.length) return false
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false
+    }
+    return true
+  }
+  return a === b
 }

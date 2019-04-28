@@ -1,7 +1,5 @@
-import { SpringValue } from '../types/animated'
-import { InterpolationConfig } from '../types/interpolation'
 import { Animated } from './Animated'
-import { AnimatedInterpolation } from './AnimatedInterpolation'
+import { interpolate, InterpolateMethod } from './AnimatedInterpolation'
 import { AnimatedProps } from './AnimatedProps'
 import { now } from './Globals'
 
@@ -39,49 +37,33 @@ function addAnimatedStyles(
   }
 }
 
-export class AnimatedValue extends Animated implements SpringValue {
+export class AnimatedValue extends Animated {
   private animatedStyles = new Set<AnimatedProps>()
 
-  public value: any
-  public startPosition: any
-  public lastPosition: any
+  public value: number
+  public startPosition: number
+  public lastPosition: number
   public lastVelocity?: number
   public startTime?: number
   public lastTime?: number
   public done = false
 
-  constructor(value: any) {
+  readonly interpolate = interpolate as InterpolateMethod<number>
+
+  constructor(value: number) {
     super()
     this.value = value
     this.startPosition = value
     this.lastPosition = value
   }
 
-  private flush() {
-    if (this.animatedStyles.size === 0) {
-      addAnimatedStyles(this, this.animatedStyles)
-    }
-    this.animatedStyles.forEach(animatedStyle => animatedStyle.update())
-  }
-
-  public clearStyles() {
-    this.animatedStyles.clear()
-  }
-
-  public setValue = (value: any, flush = true) => {
-    this.value = value
-    if (flush) this.flush()
-  }
-
   public getValue() {
     return this.value
   }
 
-  public interpolate(
-    range: number[] | InterpolationConfig | ((...args: any[]) => any),
-    output?: (number | string)[]
-  ): AnimatedInterpolation {
-    return new AnimatedInterpolation(this, range as number[], output!)
+  public setValue = (value: number, flush = true) => {
+    this.value = value
+    if (flush) this.flush()
   }
 
   public reset(isActive: boolean) {
@@ -92,5 +74,16 @@ export class AnimatedValue extends Animated implements SpringValue {
     this.startTime = now()
     this.done = false
     this.animatedStyles.clear()
+  }
+
+  public clearStyles() {
+    this.animatedStyles.clear()
+  }
+
+  private flush() {
+    if (this.animatedStyles.size === 0) {
+      addAnimatedStyles(this, this.animatedStyles)
+    }
+    this.animatedStyles.forEach(animatedStyle => animatedStyle.update())
   }
 }

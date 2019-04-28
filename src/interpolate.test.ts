@@ -1,5 +1,6 @@
-import AnimatedValue from './animated/AnimatedValue'
-import AnimatedValueArray from './animated/AnimatedValueArray'
+import { assert, _ } from 'spec.ts'
+import { AnimatedValue } from './animated/AnimatedValue'
+import { AnimatedValueArray } from './animated/AnimatedValueArray'
 import { interpolate } from './interpolate'
 import { SpringValue } from './types/animated'
 
@@ -35,8 +36,12 @@ describe('AnimatedValue interpolation options', () => {
     expect(value.getValue()).toBe(100)
   })
 
+  function createAnimatedArray(values: ReadonlyArray<number>) {
+    return new AnimatedValueArray(values.map(value => new AnimatedValue(value)))
+  }
+
   it('accepts an AnimatedValueArray and a range shortcut config', () => {
-    const value = interpolate(new AnimatedValueArray([1, 2]), [1, 2], [4, 5])
+    const value = interpolate(createAnimatedArray([1, 2]), [1, 2], [4, 5])
     expect(value.getValue()).toBe(4)
   })
 
@@ -46,20 +51,26 @@ describe('AnimatedValue interpolation options', () => {
       [0, 2, 4, 6, 8],
       [10, 20, 30, 40, 50]
     )
+    assert(value, _ as SpringValue<number>)
     expect(value.getValue()).toBe(20)
   })
 
   it('accepts multiple AnimatedValues and an interpolation function', () => {
     const value = interpolate(
-      [new AnimatedValue(5), new AnimatedValue('text')],
-      (a, b) => `t(${a}, ${b})`
+      [new AnimatedValue(0), new AnimatedValue(0)],
+      (a, b) => {
+        assert(a, _ as number)
+        assert(b, _ as number)
+        return `t(${a}, ${b})`
+      }
     )
+    assert(value, _ as SpringValue<string>)
     expect(value.getValue()).toBe('t(5, text)')
   })
 
   it('accepts an AnimatedValueArray and an interpolation function', () => {
     const value = interpolate(
-      new AnimatedValueArray([1, 2, 3]),
+      createAnimatedArray([1, 2, 3]),
       (r, g, b) => `rgb(${r}, ${g}, ${b})`
     )
     expect(value.getValue()).toBe('rgb(1, 2, 3)')

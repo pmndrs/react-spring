@@ -1,5 +1,5 @@
 import { MutableRefObject, ReactType } from 'react'
-import { InterpolationConfig } from '../types/interpolation'
+import { InterpolatorConfig } from '../types/interpolation'
 
 declare const window: {
   requestAnimationFrame: (cb: FrameRequestCallback) => number
@@ -24,7 +24,7 @@ export interface AnimatedRef<T> {
 export let applyAnimatedValues: (node: any, props: Props) => boolean | void
 
 export let createStringInterpolator: (
-  config: InterpolationConfig<string>
+  config: InterpolatorConfig<string>
 ) => (input: number) => string
 
 //
