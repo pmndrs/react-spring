@@ -1,40 +1,47 @@
-import { EasingFunction, InterpolationConfig } from '../types/interpolation'
+import {
+  EasingFunction,
+  InterpolatorConfig,
+  ExtrapolateType,
+} from '../types/interpolation'
 import { createStringInterpolator } from './Globals'
-import { Interpolator } from '../types/animated'
+import { InterpolatorFn } from '../types/interpolation'
+import { Animatable } from '../types/animated'
+import { Arrify } from '../types/common'
+import { is } from '../shared/helpers'
 
-type ExtrapolateType = InterpolationConfig['extrapolate']
+interface InterpolatorFactory {
+  <T extends InterpolatorFn>(interpolator: T): T
 
-export function createInterpolator<T extends Interpolator>(interpolator: T): T
+  <T extends Animatable>(config: InterpolatorConfig<T>): (
+    ...args: Arrify<T>
+  ) => T
 
-export function createInterpolator<Out extends number | string>(
-  config: InterpolationConfig<Out>
-): (input: number) => Out extends number ? number : string
+  <T extends Animatable>(
+    range: ReadonlyArray<number>,
+    output?: ReadonlyArray<T>,
+    extrapolate?: ExtrapolateType
+  ): (input: number) => T
+}
 
-export function createInterpolator<Out extends number | string>(
-  range: number[],
-  output?: Out[],
+export const createInterpolator: InterpolatorFactory = (
+  range: InterpolatorFn | InterpolatorConfig | ReadonlyArray<number>,
+  output?: ReadonlyArray<Animatable>,
   extrapolate?: ExtrapolateType
-): (input: number) => Out extends number ? number : string
-
-export function createInterpolator(
-  range: number[] | InterpolationConfig | Interpolator,
-  output?: (number | string)[],
-  extrapolate?: ExtrapolateType
-) {
-  if (typeof range === 'function') {
+) => {
+  if (is.fun(range)) {
     return range
   }
-  if (Array.isArray(range)) {
+  if (is.arr(range)) {
     return createInterpolator({
       range,
       output: output!,
       extrapolate,
     })
   }
-  if (typeof range.output[0] === 'string') {
-    return createStringInterpolator(range as InterpolationConfig<string>)
+  if (is.str(range.output[0])) {
+    return createStringInterpolator(range as any) as any
   }
-  const config = range as InterpolationConfig<number>
+  const config = range as InterpolatorConfig<number>
   const outputRange = config.output
   const inputRange = config.range || [0, 1]
 
@@ -96,7 +103,7 @@ function interpolate(
   return result
 }
 
-function findRange(input: number, inputRange: number[]) {
+function findRange(input: number, inputRange: ReadonlyArray<number>) {
   for (var i = 1; i < inputRange.length - 1; ++i)
     if (inputRange[i] >= input) break
   return i - 1

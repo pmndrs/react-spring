@@ -219,9 +219,9 @@ export type ReservedProps =
  * An "interpolator" transforms an animated value. Animated arrays are spread
  * into the interpolator.
  */
-export type Interpolator<T, U> = T extends any[]
-  ? ((...params: T) => U)
-  : ((params: T) => U)
+export type Interpolator<In, Out> = (
+  ...input: In extends ReadonlyArray<any> ? In : [In]
+) => Out
 
 /**
  * A chain of interpolated values

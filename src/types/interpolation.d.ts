@@ -1,13 +1,54 @@
+import { Animatable, SpringValue } from './animated'
+import { Animated, AnimatedArray } from '../animated/Animated'
+import { AnimatedValueArray } from '../animated/AnimatedValueArray'
+
 export type EasingFunction = (t: number) => number
 
 export type ExtrapolateType = 'identity' | 'clamp' | 'extend'
 
+/** These types can be interpolated */
+export type Interpolatable = ReadonlyArray<number | string>
+
 /**
- * Long-form configuration options for an interpolation.
+ * Interpolate the value with a custom interpolation function,
+ * a configuration object or keyframe-like ranges.
+ *
+ * @example
+ *
+ * interpolate(alpha => `rgba(255, 165, 0, ${alpha})`)
+ * interpolate({ range: [0, 1], output: ['yellow', 'red'], extrapolate: 'clamp' })
+ * interpolate([0, 0.25, 1], ['yellow', 'orange', 'red'])
  */
-export type InterpolationConfig<
-  Out extends number | string = number | string
-> = {
+export interface Interpolator<In extends Interpolatable = Interpolatable> {
+  <Out extends Animatable = Animatable>(
+    range: number[],
+    output: Out[],
+    extrapolate?: ExtrapolateType
+  ): SpringValue<Out>
+
+  <Out extends Animatable = Animatable>(
+    config: InterpolatorConfig<Out> | InterpolatorFn<In, Out>
+  ): SpringValue<Out>
+}
+
+// Parameters<Interpolation> is insufficient 😢
+export type InterpolatorArgs<
+  In extends Interpolatable = Interpolatable,
+  Out extends Animatable = Animatable
+> =
+  | [InterpolatorConfig<Out> | InterpolatorFn<In, Out>]
+  | [number[], Out[], (ExtrapolateType | undefined)?]
+
+/**
+ * An "interpolator" transforms an animated value. Animated arrays are spread
+ * into the interpolator.
+ */
+export type InterpolatorFn<
+  In extends Interpolatable = Interpolatable,
+  Out extends Animatable = Animatable
+> = (...input: In) => Out
+
+export type InterpolatorConfig<Out extends Animatable = Animatable> = {
   /**
    * What happens when the spring goes below its target value.
    *
@@ -51,12 +92,12 @@ export type InterpolationConfig<
    *
    * @default [0,1]
    */
-  range?: number[]
+  range?: ReadonlyArray<number>
 
   /**
    * Output values from the interpolation function. Should match the length of the `range` array.
    */
-  output: Out[]
+  output: ReadonlyArray<Out>
 
   /**
    * Transformation to apply to the value before interpolation.

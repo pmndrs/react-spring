@@ -1,34 +1,30 @@
-import { SpringValue } from '../types/animated'
-import { InterpolationConfig } from '../types/interpolation'
-import { AnimatedArray } from './Animated'
-import { AnimatedInterpolation } from './AnimatedInterpolation'
+import { interpolate, InterpolateMethod } from './AnimatedInterpolation'
 import { AnimatedValue } from './AnimatedValue'
+import { AnimatedArray } from './Animated'
+import { OneOrMore } from '../types/common'
+import { is } from '../shared/helpers'
 
-export class AnimatedValueArray extends AnimatedArray<AnimatedValue>
-  implements SpringValue {
-  constructor(values: AnimatedValue[]) {
+export class AnimatedValueArray<
+  T extends AnimatedValue[] = AnimatedValue[]
+> extends AnimatedArray<T> {
+  readonly interpolate = interpolate as InterpolateMethod<ReadonlyArray<number>>
+
+  constructor(values: T) {
     super()
     this.payload = values
   }
 
-  public setValue(value: any, flush = true) {
-    if (Array.isArray(value)) {
+  public getValue(): { [P in keyof T]: number } {
+    return this.payload.map(v => v.getValue()) as any
+  }
+
+  public setValue(value: OneOrMore<number>, flush = true) {
+    if (is.arr(value)) {
       if (value.length === this.payload.length) {
         value.forEach((v, i) => this.payload[i].setValue(v, flush))
       }
     } else {
       this.payload.forEach(p => p.setValue(value, flush))
     }
-  }
-
-  public getValue() {
-    return this.payload.map(v => v.getValue())
-  }
-
-  public interpolate(
-    range: number[] | InterpolationConfig | ((...args: any[]) => any),
-    output?: (number | string)[]
-  ): AnimatedInterpolation {
-    return new AnimatedInterpolation(this, range as number[], output)
   }
 }

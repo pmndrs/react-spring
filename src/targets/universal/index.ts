@@ -5,7 +5,7 @@ import { update } from '../../animated/FrameLoop'
 import { Controller } from '../../animated/Controller'
 import { interpolate } from '../../interpolate'
 import { config } from '../../shared/constants'
-import { InterpolationConfig } from '../../types/interpolation'
+import { InterpolatorConfig } from '../../types/interpolation'
 import { useChain } from '../../useChain'
 import { useSpring } from '../../useSpring'
 import { useSprings } from '../../useSprings'
@@ -15,7 +15,7 @@ import { useTransition } from '../../useTransition'
 // Problem: https://github.com/animatedjs/animated/pull/102
 // Solution: https://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly/658662
 const stringShapeRegex = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
-const createStringInterpolator = (config: InterpolationConfig<string>) => {
+const createStringInterpolator = (config: InterpolatorConfig<string>) => {
   const outputRange = config.output
   const outputRanges: number[][] = outputRange[0]
     .match(stringShapeRegex)!

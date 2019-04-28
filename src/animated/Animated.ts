@@ -31,16 +31,18 @@ export abstract class Animated<Payload = unknown> {
   }
 }
 
-export abstract class AnimatedArray<Payload = unknown> extends Animated<
-  Payload[]
-> {
-  protected payload = [] as Payload[]
+export abstract class AnimatedArray<
+  Payload extends ReadonlyArray<any> = ReadonlyArray<unknown>
+> extends Animated<Payload> {
+  protected payload!: Payload
 
-  attach = () =>
+  public attach() {
     this.payload.forEach(p => p instanceof Animated && p.addChild(this))
+  }
 
-  detach = () =>
+  public detach() {
     this.payload.forEach(p => p instanceof Animated && p.removeChild(this))
+  }
 }
 
 export abstract class AnimatedObject<

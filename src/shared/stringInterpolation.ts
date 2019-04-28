@@ -1,5 +1,5 @@
 import { createInterpolator } from '../animated/createInterpolator'
-import { InterpolationConfig } from '../types/interpolation'
+import { InterpolatorConfig } from '../types/interpolation'
 import colors from './colors'
 import normalizeColor from './normalizeColors'
 
@@ -33,7 +33,7 @@ const colorNamesRegex = new RegExp(`(${Object.keys(colors).join('|')})`, 'g')
  *   0 2px 2px 0px rgba(0, 0, 0, 0.12) // box shadows
  */
 export const createStringInterpolator = (
-  config: InterpolationConfig<string>
+  config: InterpolatorConfig<string>
 ) => {
   // Replace colors with rgba
   const outputRange = config.output

@@ -1,35 +1,19 @@
 import { MutableRefObject, Ref, useCallback, useState, useRef } from 'react'
+import { Indexable } from '../types/common'
 
-export type NarrowObject<T> = unknown extends T
-  ? T & { [key: string]: any }
-  : Exclude<Extract<T, object>, Function | ReadonlyArray<any>>
+interface IsArray {
+  <T>(a: T): a is T & ReadonlyArray<any>
+}
 
 export const is = {
-  arr: Array.isArray,
-  obj: <T>(a: T): a is NarrowObject<T> =>
+  arr: Array.isArray as IsArray,
+  obj: (a: unknown): a is Indexable =>
     Object.prototype.toString.call(a) === '[object Object]',
   fun: (a: unknown): a is Function => typeof a === 'function',
   str: (a: unknown): a is string => typeof a === 'string',
   num: (a: unknown): a is number => typeof a === 'number',
   und: (a: unknown): a is undefined => a === void 0,
-  nul: (a: unknown): a is null => a === null,
   boo: (a: unknown): a is boolean => typeof a === 'boolean',
-  set: (a: unknown): a is Set<any> => a instanceof Set,
-  map: (a: unknown): a is Map<any, any> => a instanceof Map,
-  equ(a: any, b: any) {
-    if (typeof a !== typeof b) return false
-    if (is.str(a) || is.num(a)) return a === b
-    if (
-      is.obj(a) &&
-      is.obj(b) &&
-      Object.keys(a).length + Object.keys(b).length === 0
-    )
-      return true
-    let i
-    for (i in a) if (!(i in b)) return false
-    for (i in b) if (a[i] !== b[i]) return false
-    return is.und(i) ? a === b : true
-  },
 }
 
 export function useForceUpdate() {
@@ -39,11 +23,11 @@ export function useForceUpdate() {
 }
 
 export function withDefault<T, DT>(value: T, defaultValue: DT) {
-  return is.und(value) || is.nul(value) ? defaultValue : value!
+  return value == null ? defaultValue : value!
 }
 
 export function toArray<T>(a?: T | T[]): T[] {
-  return !is.und(a) ? (is.arr(a) ? a : [a]) : []
+  return is.und(a) ? [] : Array.isArray(a) ? a : [a]
 }
 
 export function callProp<T>(
