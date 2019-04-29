@@ -1,7 +1,7 @@
 import { createInterpolator } from '../animated/createInterpolator'
 import { InterpolatorConfig } from '../types/interpolation'
+import { normalizeColor } from './normalizeColor'
 import colors from './colors'
-import normalizeColor from './normalizeColors'
 
 function colorToRgba(input: string) {
   let int32Color = normalizeColor(input)

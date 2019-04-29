@@ -1,7 +1,7 @@
 import {
   ComponentPropsWithRef,
   ForwardRefExoticComponent,
-  ReactType,
+  ElementType,
   CSSProperties,
 } from 'react'
 

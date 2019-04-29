@@ -1,13 +1,15 @@
 import { Globals } from '../../animated'
-import { applyAnimatedValues } from './applyAnimatedValues'
 import { createStringInterpolator } from '../../shared/stringInterpolation'
 import colorNames from '../../shared/colors'
 
 Globals.assign({
-  defaultElement: 'div',
-  colorNames,
-  applyAnimatedValues: applyAnimatedValues,
+  defaultElement: 'Group',
   createStringInterpolator,
+  colorNames,
+  applyAnimatedValues(instance, props) {
+    if (!instance.nodeType) return false
+    instance._applyProps(instance, props)
+  },
 })
 
 export { Globals }

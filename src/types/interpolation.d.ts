@@ -1,6 +1,7 @@
 import { Animatable, SpringValue } from './animated'
 import { Animated, AnimatedArray } from '../animated/Animated'
 import { AnimatedValueArray } from '../animated/AnimatedValueArray'
+import { Arrify } from './common'
 
 export type EasingFunction = (t: number) => number
 
@@ -19,34 +20,30 @@ export type Interpolatable = ReadonlyArray<number | string>
  * interpolate({ range: [0, 1], output: ['yellow', 'red'], extrapolate: 'clamp' })
  * interpolate([0, 0.25, 1], ['yellow', 'orange', 'red'])
  */
-export interface Interpolator<In extends Interpolatable = Interpolatable> {
+export interface Interpolator<In = any> {
   <Out extends Animatable = Animatable>(
     range: number[],
     output: Out[],
     extrapolate?: ExtrapolateType
-  ): SpringValue<Out>
+  ): SpringValue<Animatable<Out>>
 
   <Out extends Animatable = Animatable>(
     config: InterpolatorConfig<Out> | InterpolatorFn<In, Out>
-  ): SpringValue<Out>
+  ): SpringValue<Animatable<Out>>
 }
 
 // Parameters<Interpolation> is insufficient 😢
-export type InterpolatorArgs<
-  In extends Interpolatable = Interpolatable,
-  Out extends Animatable = Animatable
-> =
-  | [InterpolatorConfig<Out> | InterpolatorFn<In, Out>]
+export type InterpolatorArgs<In = any, Out extends Animatable = Animatable> =
+  | [InterpolatorConfig<Out> | InterpolatorFn<Arrify<In>, Out>]
   | [number[], Out[], (ExtrapolateType | undefined)?]
 
 /**
  * An "interpolator" transforms an animated value. Animated arrays are spread
  * into the interpolator.
  */
-export type InterpolatorFn<
-  In extends Interpolatable = Interpolatable,
-  Out extends Animatable = Animatable
-> = (...input: In) => Out
+export type InterpolatorFn<In extends ReadonlyArray<any> = any[], Out = any> = (
+  ...input: In
+) => Out
 
 export type InterpolatorConfig<Out extends Animatable = Animatable> = {
   /**

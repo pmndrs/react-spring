@@ -1,69 +1,20 @@
-import { animated, withExtend } from '../../animated/createAnimatedComponent'
-import { createInterpolator } from '../../animated/createInterpolator'
-import * as Globals from '../../animated/Globals'
-import { update } from '../../animated/FrameLoop'
-import { Controller } from '../../animated/Controller'
-import { interpolate } from '../../interpolate'
-import { config } from '../../shared/constants'
-import { InterpolatorConfig } from '../../types/interpolation'
-import { useChain } from '../../useChain'
-import { useSpring } from '../../useSpring'
-import { useSprings } from '../../useSprings'
-import { useTrail } from '../../useTrail'
-import { useTransition } from '../../useTransition'
+import {
+  createInterpolator,
+  createAnimatedComponent,
+  withExtend,
+} from '../../animated'
 
-// Problem: https://github.com/animatedjs/animated/pull/102
-// Solution: https://stackoverflow.com/questions/638565/parsing-scientific-notation-sensibly/658662
-const stringShapeRegex = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
-const createStringInterpolator = (config: InterpolatorConfig<string>) => {
-  const outputRange = config.output
-  const outputRanges: number[][] = outputRange[0]
-    .match(stringShapeRegex)!
-    .map(() => [])
-  outputRange.forEach(value => {
-    value
-      .match(stringShapeRegex)!
-      .forEach((number, i) => outputRanges[i].push(+number))
-  })
-  const interpolations = outputRange[0]
-    .match(stringShapeRegex)!
-    .map((_, i) => createInterpolator({ ...config, output: outputRanges[i] }))
-  return (input: number) => {
-    let i = 0
-    return outputRange[0].replace(
-      stringShapeRegex,
-      () => (interpolations[i++](input) as unknown) as string
-    )
-  }
-}
+export * from '../..'
+export * from './Globals'
 
-Globals.assign({
-  createStringInterpolator,
-  applyAnimatedValues: () => false,
-})
+export { update } from '../../animated/FrameLoop'
 
-const animatedFn = withExtend(animated)
+export const animated = withExtend(createAnimatedComponent)
+export { animated as a }
 
 /** @deprecated Use `animated.extend` instead */
-export const apply = animatedFn.extend
+export const apply = animated.extend
 
-const Interpolation = {
+export const Interpolation = {
   create: createInterpolator,
-}
-
-export * from '../../legacy'
-export {
-  config,
-  update,
-  animatedFn as animated,
-  animatedFn as a,
-  interpolate,
-  Controller,
-  Globals,
-  useSpring,
-  useTrail,
-  useTransition,
-  useChain,
-  useSprings,
-  Interpolation,
 }

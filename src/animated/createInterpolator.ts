@@ -1,30 +1,37 @@
 import {
   EasingFunction,
-  InterpolatorConfig,
   ExtrapolateType,
+  InterpolatorConfig,
+  Interpolatable,
 } from '../types/interpolation'
 import { createStringInterpolator } from './Globals'
 import { InterpolatorFn } from '../types/interpolation'
 import { Animatable } from '../types/animated'
-import { Arrify } from '../types/common'
 import { is } from '../shared/helpers'
 
 interface InterpolatorFactory {
-  <T extends InterpolatorFn>(interpolator: T): T
+  <In extends Interpolatable, Out extends Animatable>(
+    interpolator: InterpolatorFn<In, Out>
+  ): typeof interpolator
 
-  <T extends Animatable>(config: InterpolatorConfig<T>): (
-    ...args: Arrify<T>
-  ) => T
+  <In extends Interpolatable, Out extends Animatable>(
+    config: InterpolatorConfig<Out>
+  ): (input: number) => Animatable<Out>
 
-  <T extends Animatable>(
+  <Out extends Animatable>(
     range: ReadonlyArray<number>,
-    output?: ReadonlyArray<T>,
+    output?: ReadonlyArray<Out>,
     extrapolate?: ExtrapolateType
-  ): (input: number) => T
+  ): (input: number) => Animatable<Out>
 }
 
-export const createInterpolator: InterpolatorFactory = (
-  range: InterpolatorFn | InterpolatorConfig | ReadonlyArray<number>,
+export const createInterpolator: InterpolatorFactory = <
+  Out extends Animatable = Animatable
+>(
+  range:
+    | InterpolatorFn<any, Out>
+    | InterpolatorConfig<Out>
+    | ReadonlyArray<number>,
   output?: ReadonlyArray<Animatable>,
   extrapolate?: ExtrapolateType
 ) => {

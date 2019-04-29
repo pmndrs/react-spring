@@ -1,48 +1,26 @@
 import * as THREE from 'three'
-import { invalidate, applyProps, addEffect } from 'react-three-fiber'
-import { interpolate } from '../../interpolate'
-import { animated, withExtend } from '../../animated/createAnimatedComponent'
-import * as Globals from '../../animated/Globals'
-import { Controller } from '../../animated/Controller'
-import colorNames from '../../shared/colors'
-import { config } from '../../shared/constants'
-import { createStringInterpolator } from '../../shared/stringInterpolation'
-import { useChain } from '../../useChain'
-import { useSpring } from '../../useSpring'
-import { useSprings } from '../../useSprings'
-import { useTrail } from '../../useTrail'
-import { useTransition } from '../../useTransition'
-import { update } from '../../animated/FrameLoop'
+import { createAnimatedComponent, withExtend } from '../../animated'
+import { CreateAnimatedComponent } from '../../types/animated'
+
+export * from '../..'
+export * from './Globals'
+
+export { update } from '../../animated/FrameLoop'
+
+// TODO: Support type-checking for `animated` props
+type ThreeComponents = {
+  [key: string]: React.ComponentType<{ [key: string]: any }>
+}
+
+const elements = Object.keys(THREE).filter(key => /^[A-Z]/.test(key))
 
 // Extend animated with all the available THREE elements
-const threeAnimated = withExtend(animated).extend(THREE, 'primitive')
+export const animated = withExtend(
+  createAnimatedComponent as CreateAnimatedComponent & ThreeComponents,
+  { lowercase: true }
+).extend(elements, 'primitive')
 
-// Add the update function as a global effect to react-three-fibers update loop
-if (addEffect) addEffect(update)
-
-Globals.assign({
-  colorNames,
-  defaultElement: 'group',
-  manualFrameloop: addEffect && invalidate,
-  applyAnimatedValues: applyProps,
-  createStringInterpolator,
-})
+export { animated as a }
 
 /** @deprecated Use `animated.extend` instead */
-export const apply = threeAnimated.extend
-
-export * from '../../legacy'
-export {
-  update,
-  config,
-  threeAnimated as animated,
-  threeAnimated as a,
-  interpolate,
-  Controller,
-  Globals,
-  useSpring,
-  useTrail,
-  useTransition,
-  useChain,
-  useSprings,
-}
+export const apply = animated.extend

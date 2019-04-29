@@ -7,7 +7,7 @@ import {
   ReactNode,
   ComponentClass,
   ComponentType,
-  ReactType,
+  ElementType,
   Ref,
   ForwardRefExoticComponent,
   ComponentPropsWithRef,
@@ -135,7 +135,7 @@ export function interpolate(
   config: (...args: number[]) => any
 ): any
 
-export function animated<T extends ReactType>(
+export function animated<T extends ElementType>(
   comp: T
 ): ForwardRefExoticComponent<ComponentPropsWithRef<T>>
 

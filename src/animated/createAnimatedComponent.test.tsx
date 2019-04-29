@@ -35,7 +35,7 @@ describe('animated component', () => {
         {child}
       </AnimatedName>
     )
-    const el = queryByTitle('name')!
+    const el: any = queryByTitle('name')!
     expect(el).toBeTruthy()
     expect(el.textContent).toBe('Animated Text')
   })
@@ -46,7 +46,7 @@ describe('animated component', () => {
     const { queryByText } = render(
       <AnimatedDiv style={{ opacity: opacity, color: 'red' }}>Text</AnimatedDiv>
     )
-    const div = queryByText('Text')!
+    const div: any = queryByText('Text')!
     expect(div).toBeTruthy()
     expect(div.style.opacity).toBe('0')
     opacity.setValue(1)
@@ -73,7 +73,7 @@ describe('animated component', () => {
         Text
       </AnimatedName>
     )
-    const div = queryByText('Text')!
+    const div: any = queryByText('Text')!
     expect(div).toBeTruthy()
     expect(div.style.opacity).toBe('0.5')
     opacity.setValue(1)
@@ -92,7 +92,7 @@ describe('animated component', () => {
         <div style={{ height: 200 }} />
       </AnimatedDiv>
     )
-    const wrapper = queryByTestId('wrapper')!
+    const wrapper: any = queryByTestId('wrapper')!
     expect(wrapper.scrollTop).toBe(0)
     expect(wrapper.scrollLeft).toBe(0)
     scrollTop.setValue(20)

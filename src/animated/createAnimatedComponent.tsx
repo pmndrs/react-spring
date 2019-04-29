@@ -1,22 +1,21 @@
 import React, {
   forwardRef,
   MutableRefObject,
-  ReactType,
   useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
 } from 'react'
-import { handleRef, useForceUpdate, is } from '../shared/helpers'
 import {
   AnimatedComponentProps,
   CreateAnimatedComponent,
 } from '../types/animated'
 import { AnimatedProps } from './AnimatedProps'
+import { handleRef, useForceUpdate, is } from '../shared/helpers'
 import { createAnimatedRef, applyAnimatedValues } from './Globals'
 
 export const createAnimatedComponent: CreateAnimatedComponent = <
-  C extends ReactType
+  C extends React.ElementType
 >(
   Component: C
 ) => {
@@ -69,9 +68,12 @@ export const createAnimatedComponent: CreateAnimatedComponent = <
   return AnimatedComponent
 }
 
-/**
- * withExtend(animated, options = {})
- */
+export const animated = createAnimatedComponent
+export { animated as a }
+
+//
+// withExtend(animated, options = {})
+//
 
 type WithExtend<T> = T & {
   extend: (
@@ -80,7 +82,10 @@ type WithExtend<T> = T & {
 }
 
 /** Strings like "div", or components, or a map of components, or an array of those */
-export type AnimatedTarget = string | ReactType | { [key: string]: ReactType }
+export type AnimatedTarget =
+  | string
+  | React.ElementType
+  | { [key: string]: React.ElementType }
 
 /** Add an `extend` method to your `animated` factory function */
 export function withExtend<T extends CreateAnimatedComponent>(
@@ -88,7 +93,7 @@ export function withExtend<T extends CreateAnimatedComponent>(
   options: { lowercase?: boolean } = {}
 ) {
   const self = animated as WithExtend<T> & {
-    [key: string]: ReactType
+    [key: string]: React.ElementType
   }
   self.extend = (...args) => {
     args.forEach(arg => extend(arg))
@@ -130,8 +135,6 @@ export function withExtend<T extends CreateAnimatedComponent>(
     // NOTE(typescript): Properties are not yet inferred from the arguments of
     // the `extend` method and then attached to the `animated` function via
     // the return type.
-    self[key] = animated(arg as ReactType)
+    self[key] = animated(arg as React.ElementType)
   }
 }
-
-export { createAnimatedComponent as animated }

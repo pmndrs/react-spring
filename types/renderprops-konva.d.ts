@@ -1,7 +1,7 @@
 import {
   ForwardRefExoticComponent,
   ComponentPropsWithRef,
-  ReactType,
+  ElementType,
 } from 'react'
 import * as konva from 'react-konva'
 import { animated } from './renderprops-universal'
@@ -10,7 +10,7 @@ export * from './renderprops-universal'
 type KonvaComponents = Pick<
   typeof konva,
   {
-    [K in keyof typeof konva]: typeof konva[K] extends ReactType ? K : never
+    [K in keyof typeof konva]: typeof konva[K] extends ElementType ? K : never
   }[keyof typeof konva]
 >
 
