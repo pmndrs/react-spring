@@ -212,3 +212,13 @@ export function reconcileDeleted(
 
   return current
 }
+
+export function freeze<T extends object>(obj: T): T {
+  if (
+    typeof process !== 'undefined' &&
+    process.env.NODE_ENV === 'development'
+  ) {
+    return Object.freeze(obj)
+  }
+  return obj
+}
