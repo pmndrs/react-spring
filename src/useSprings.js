@@ -26,7 +26,7 @@ export const useSprings = (length, propsArg) => {
     [length]
   )
 
-  const ref = springs[0].props.ref
+  const ref = springs[0] ? springs[0].props.ref : void 0
   const { start, update, stop } = useMemo(
     () => ({
       /** Apply any pending updates */
