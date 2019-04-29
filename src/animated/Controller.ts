@@ -4,6 +4,7 @@ import {
   is,
   toArray,
   withDefault,
+  freeze,
 } from '../shared/helpers'
 import { AnimatedValue } from './AnimatedValue'
 import { AnimatedValueArray } from './AnimatedValueArray'
@@ -423,7 +424,7 @@ export class Controller<State extends Indexable = any> {
     }
 
     // Merge `from` values with `to` values
-    this.merged = { ...from, ...to }
+    this.merged = freeze({ ...from, ...to })
 
     // True if any animation was updated
     let changed = false
