@@ -43,8 +43,11 @@ interface ActiveAnimation<T = any>
 }
 
 type Animation<T = any> = IdleAnimation<T> | ActiveAnimation<T>
-type AnimationMap = Indexable<Animation>
-type AnimatedMap = Indexable<Animation['animated']>
+type AnimationMap<T = any> = Indexable<Animation<T>>
+
+type AnimatedMap<T extends Indexable = any> = {
+  [P in keyof T]: Animation<T[P]>['animated']
+}
 
 /** Controller props in pending updates */
 interface UpdateProps<State extends object> extends SpringProps<State> {
@@ -79,7 +82,7 @@ export class Controller<State extends Indexable = any> {
   timestamps: Indexable<number> = {}
   values: State = {} as any
   merged: State = {} as any
-  animated: AnimatedMap = {}
+  animated: AnimatedMap<State> = {} as any
   animations: AnimationMap = {}
   configs: Animation[] = []
   onEndQueue: OnEnd[] = []
@@ -187,7 +190,7 @@ export class Controller<State extends Indexable = any> {
     this.timestamps = {}
     this.values = {} as any
     this.merged = {} as any
-    this.animated = {}
+    this.animated = {} as any
     this.animations = {}
     this.configs = []
   }
@@ -210,7 +213,7 @@ export class Controller<State extends Indexable = any> {
   // Create an Animated node if none exists.
   private _ensureAnimated(values: unknown) {
     if (!is.obj(values)) return
-    for (const key in values) {
+    for (const key in values as Partial<State>) {
       if (this.animated[key]) continue
       const value = values[key]
       const animated = createAnimated(value)
@@ -485,7 +488,7 @@ export class Controller<State extends Indexable = any> {
           }
           try {
             const prev = animated
-            animated = input.interpolate({ output })
+            animated = input.interpolate({ output }) as any
             moveChildren(prev, animated)
           } catch (err) {
             console.warn(

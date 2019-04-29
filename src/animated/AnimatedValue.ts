@@ -1,7 +1,10 @@
 import { Animated } from './Animated'
-import { interpolate, InterpolateMethod } from './AnimatedInterpolation'
 import { AnimatedProps } from './AnimatedProps'
+import { Animatable, SpringValue } from '../types/animated'
+import { InterpolatorArgs } from '../types/interpolation'
+import { interpolate } from '../interpolate'
 import { now } from './Globals'
+import { is } from '../shared/helpers'
 
 /**
  * Animated works by building a directed acyclic graph of dependencies
@@ -37,41 +40,50 @@ function addAnimatedStyles(
   }
 }
 
-export class AnimatedValue extends Animated {
+export class AnimatedValue<T = number> extends Animated
+  implements SpringValue<T> {
   private animatedStyles = new Set<AnimatedProps>()
 
-  public value: number
-  public startPosition: number
-  public lastPosition: number
+  public value: T
+  public startPosition!: number
+  public lastPosition!: number
   public lastVelocity?: number
   public startTime?: number
   public lastTime?: number
   public done = false
 
-  readonly interpolate = interpolate as InterpolateMethod<number>
-
-  constructor(value: number) {
+  constructor(value: T) {
     super()
     this.value = value
-    this.startPosition = value
-    this.lastPosition = value
+    if (is.num(value)) {
+      this.startPosition = value
+      this.lastPosition = value
+    }
   }
 
   public getValue() {
     return this.value
   }
 
-  public setValue = (value: number, flush = true) => {
+  public setValue = (value: T, flush = true) => {
     this.value = value
     if (flush) this.flush()
   }
 
+  public interpolate<Out extends Animatable>(
+    ...args: InterpolatorArgs<T, Out>
+  ): SpringValue<Out> {
+    return interpolate(this, ...(args as [any])) as any
+  }
+
   public reset(isActive: boolean) {
-    this.startPosition = this.value
-    this.lastPosition = this.value
-    this.lastVelocity = isActive ? this.lastVelocity : undefined
-    this.lastTime = isActive ? this.lastTime : undefined
-    this.startTime = now()
+    if (is.num(this.value)) {
+      this.startPosition = this.value
+      this.lastPosition = this.value
+      this.lastVelocity = isActive ? this.lastVelocity : undefined
+      this.lastTime = isActive ? this.lastTime : undefined
+      this.startTime = now()
+    }
     this.done = false
     this.animatedStyles.clear()
   }

@@ -1,6 +1,6 @@
 import { AnimatedValue, Solve, AssignableKeys } from './lib/common'
 import {
-  ReactType,
+  ElementType,
   CSSProperties,
   ComponentPropsWithRef,
   ForwardRefExoticComponent,
@@ -8,7 +8,7 @@ import {
 
 export * from './universal'
 
-type CreateAnimated = <T extends ReactType>(
+type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
 
@@ -17,9 +17,9 @@ export const animated: CreateAnimated &
   { [Tag in keyof JSX.IntrinsicElements]: AnimatedComponent<Tag> }
 
 /** The type of an `animated()` component */
-export type AnimatedComponent<T extends ReactType> = ForwardRefExoticComponent<
-  AnimatedProps<ComponentPropsWithRef<T>>
->
+export type AnimatedComponent<
+  T extends ElementType
+> = ForwardRefExoticComponent<AnimatedProps<ComponentPropsWithRef<T>>>
 
 /** The props of an `animated()` component */
 export type AnimatedProps<Props extends object> = {

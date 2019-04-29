@@ -5,9 +5,11 @@ interface IsArray {
   <T>(a: T): a is T & ReadonlyArray<any>
 }
 
+type PlainObject<T> = Exclude<T & Indexable, Function | ReadonlyArray<any>>
+
 export const is = {
   arr: Array.isArray as IsArray,
-  obj: (a: unknown): a is Indexable =>
+  obj: <T>(a: T): a is PlainObject<T> =>
     Object.prototype.toString.call(a) === '[object Object]',
   fun: (a: unknown): a is Function => typeof a === 'function',
   str: (a: unknown): a is string => typeof a === 'string',

@@ -1,4 +1,5 @@
-import { MutableRefObject, ReactType } from 'react'
+import { Animated } from './Animated'
+import { SpringInterpolator } from '../types/animated'
 import { InterpolatorConfig } from '../types/interpolation'
 
 declare const window: {
@@ -39,13 +40,15 @@ export let defaultElement: any
 
 export let manualFrameloop: (() => void) | undefined
 
-export let createAnimatedStyle: ((style: any) => any) | undefined
+export let createAnimatedStyle: ((style: any) => Animated) | undefined
 
-export let createAnimatedTransform: ((transform: any) => any) | undefined
+export let createAnimatedTransform: ((transform: any) => Animated) | undefined
 
-export let createAnimatedRef: <T extends ReactType>(
-  node: MutableRefObject<T>,
-  mounted?: MutableRefObject<boolean>,
+export let createAnimatedInterpolation: SpringInterpolator
+
+export let createAnimatedRef: <T extends React.ElementType>(
+  node: React.MutableRefObject<T>,
+  mounted?: React.MutableRefObject<boolean>,
   forceUpdate?: () => void
 ) => T | AnimatedRef<T> = node => node.current
 
@@ -65,6 +68,7 @@ export interface AnimatedGlobals {
   defaultElement?: typeof defaultElement
   applyAnimatedValues?: typeof applyAnimatedValues
   createStringInterpolator?: typeof createStringInterpolator
+  createAnimatedInterpolation?: typeof createAnimatedInterpolation
   createAnimatedTransform?: typeof createAnimatedTransform
   createAnimatedStyle?: typeof createAnimatedStyle
   createAnimatedRef?: typeof createAnimatedRef
@@ -79,6 +83,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     defaultElement,
     applyAnimatedValues,
     createStringInterpolator,
+    createAnimatedInterpolation,
     createAnimatedTransform,
     createAnimatedStyle,
     createAnimatedRef,
@@ -91,6 +96,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       defaultElement,
       applyAnimatedValues,
       createStringInterpolator,
+      createAnimatedInterpolation,
       createAnimatedTransform,
       createAnimatedStyle,
       createAnimatedRef,

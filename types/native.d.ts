@@ -1,14 +1,14 @@
 import { AnimatedValue, Solve, AssignableKeys } from './lib/common'
 import { ViewStyle, View, Text, StyleProp, RecursiveArray } from 'react-native'
 import {
-  ReactType,
+  ElementType,
   ComponentPropsWithRef,
   ForwardRefExoticComponent,
 } from 'react'
 
 export * from './universal'
 
-type CreateAnimated = <T extends ReactType>(
+type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
 
@@ -19,9 +19,9 @@ export const animated: CreateAnimated & {
 }
 
 /** The type of an `animated()` component */
-export type AnimatedComponent<T extends ReactType> = ForwardRefExoticComponent<
-  AnimatedProps<ComponentPropsWithRef<T>>
->
+export type AnimatedComponent<
+  T extends ElementType
+> = ForwardRefExoticComponent<AnimatedProps<ComponentPropsWithRef<T>>>
 
 /** The props of an `animated()` component */
 export type AnimatedProps<Props extends object> = {

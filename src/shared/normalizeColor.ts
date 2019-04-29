@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import * as matchers from './colorMatchers'
 import colorNames, { ColorName } from './colors'
 
-export default function normalizeColor(color: number | string) {
+export function normalizeColor(color: number | string) {
   let match
 
   if (typeof color === 'number') {
