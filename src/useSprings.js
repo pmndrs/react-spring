@@ -51,7 +51,13 @@ export const useSprings = (length, propsArg) => {
   )
 
   const ref = props[0] ? props[0].ref : isFn ? state.ref : null
-  useImperativeHandle(ref, () => ({ start, stop }))
+  useImperativeHandle(ref, () => ({
+    start,
+    stop,
+    get controllers() {
+      return state.springs
+    },
+  }))
 
   // Once mounted, update the local state and start any animations.
   useEffect(() => {
