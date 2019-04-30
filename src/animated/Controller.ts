@@ -6,15 +6,15 @@ import {
   withDefault,
   freeze,
 } from '../shared/helpers'
-import { AnimatedValue } from './AnimatedValue'
-import { AnimatedValueArray } from './AnimatedValueArray'
-import { AnimatedInterpolation } from './AnimatedInterpolation'
 import { start, stop } from './FrameLoop'
-import { colorNames, createStringInterpolator, now } from './Globals'
 import { SpringProps, SpringConfig } from '../../types/renderprops'
-import { Animated } from './Animated'
-import { Omit, Indexable, Arrify } from '../types/common'
+import { Omit, Indexable, Arrify, OnEnd, Falsy } from '../types/common'
+import { colorNames, createStringInterpolator, now } from './Globals'
+import { AnimatedInterpolation } from './AnimatedInterpolation'
+import { AnimatedValueArray } from './AnimatedValueArray'
+import { AnimatedValue } from './AnimatedValue'
 import { Animatable } from '../types/animated'
+import { Animated } from './Animated'
 
 /** Properties in every animation config */
 interface AnimationConfig<T = any> {
@@ -67,8 +67,6 @@ interface CachedProps<State extends object> extends UpdateProps<State> {
       ) => Promise<void>)
 }
 
-type OnEnd = (finished?: boolean) => void
-
 // Default easing
 const linear = (t: number) => t
 
@@ -99,7 +97,7 @@ export class Controller<State extends Indexable = any> {
    * that later calls to this method properly override any delayed props.
    * The `propsArg` argument is always copied before mutations are made.
    */
-  update(propsArg: Partial<State> & UpdateProps<State>) {
+  update(propsArg: (Partial<State> & UpdateProps<State>) | Falsy) {
     if (!propsArg) return this
     const props = interpolateTo(propsArg) as any
 
