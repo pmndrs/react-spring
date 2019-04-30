@@ -14,7 +14,14 @@ export const Trail: <Item, Props extends object>(
     UseSpringProps<Props>,
     {
       items: ReadonlyArray<Item>
-      children: (item: Item) => (props: SpringValues<Props>) => ReactNode
+      children: (
+        item: Item,
+        index: number
+      ) =>
+        | ((props: SpringValues<Props>) => ReactNode)
+        | false
+        | null
+        | undefined
     }
   >
 ) => JSX.Element
@@ -23,13 +30,17 @@ export const Transition: <Item, Props extends object>(
   props: Merge<
     Props,
     UseTransitionProps<Item> & {
+      keys?: ItemKeys<Item>
       items: ItemsProp<Item>
       children: (
         item: Item,
         phase: TransitionPhase,
         index: number
-      ) => (props: SpringValues<Props>) => ReactNode
-      keys?: ItemKeys<Item>
+      ) =>
+        | ((props: SpringValues<Props>) => ReactNode)
+        | false
+        | null
+        | undefined
     }
   >
 ) => JSX.Element
