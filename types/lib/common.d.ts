@@ -72,11 +72,11 @@ export interface AnimationEvents<T extends object = {}> {
   /**
    * Called when all animations come to a stand-still
    */
-  onRest?: (restValues: AnimationFrame<T>) => void
+  onRest?: (restValues: Readonly<AnimationFrame<T>>) => void
   /**
    * Called on every frame when animations are active
    */
-  onFrame?: (currentValues: AnimationFrame<T>) => void
+  onFrame?: (currentValues: Readonly<AnimationFrame<T>>) => void
 }
 
 /** The current values in a specific frame */
