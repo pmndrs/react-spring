@@ -11,11 +11,15 @@ export const useSprings = (length, propsArg) => {
   const hasNewSprings = length !== usePrev(length)
   const isFn = is.fun(propsArg)
 
+  const state = useRef({
+    springs: null,
+    ref: null,
+  }).current
+
   // The `propsArg` coerced into an array
   const props = isFn ? [] : propsArg
 
   // Recreate the controllers whenever `length` changes
-  const springsRef = useRef()
   const springs = useMemo(
     () =>
       fillArray(length, i => {
@@ -26,29 +30,27 @@ export const useSprings = (length, propsArg) => {
     [length]
   )
 
-  const ref = springs[0] ? springs[0].props.ref : void 0
   const { start, update, stop } = useMemo(
     () => ({
       /** Apply any pending updates */
       start: () =>
-        Promise.all(
-          springsRef.current.map(s => new Promise(done => s.start(done)))
-        ),
+        Promise.all(state.springs.map(s => new Promise(done => s.start(done)))),
       /** Update the spring controllers */
       update: props => {
         const isFn = is.fun(props)
         if (!isFn) props = toArray(props)
-        springsRef.current.forEach((spring, i) => {
+        state.springs.forEach((spring, i) => {
           spring.update(isFn ? callProp(props, i, spring) : props[i])
-          if (!ref) spring.start()
+          if (!state.ref) spring.start()
         })
       },
       /** Stop one key or all keys from animating */
-      stop: (...args) => springsRef.current.forEach(s => s.stop(...args)),
+      stop: (...args) => state.springs.forEach(s => s.stop(...args)),
     }),
     []
   )
 
+  const ref = props[0] ? props[0].ref : null
   useImperativeHandle(ref, () => ({ start, stop }))
 
   // Once mounted, update the local state and start any animations.
@@ -61,10 +63,11 @@ export const useSprings = (length, propsArg) => {
       })
     }
     if (hasNewSprings) {
-      if (springsRef.current) {
-        springsRef.current.forEach(s => s.destroy())
+      if (state.springs) {
+        state.springs.forEach(s => s.destroy())
       }
-      springsRef.current = springs
+      state.springs = springs
+      state.ref = ref
       if (!ref) {
         springs.forEach(s => s.start())
       }
@@ -75,7 +78,7 @@ export const useSprings = (length, propsArg) => {
 
   // Destroy the controllers on unmount
   useEffect(() => {
-    return () => springsRef.current.forEach(s => s.destroy())
+    return () => state.springs.forEach(s => s.destroy())
   }, [])
 
   const values = springs.map(s => s.animated)
