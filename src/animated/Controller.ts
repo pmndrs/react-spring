@@ -344,9 +344,10 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Merge every fresh prop. Returns true if one or more props changed.
-  // These props are ignored: (config, immediate, reverse)
+  // These props are ignored: (delay, config, immediate, reverse)
   private _diff({
     timestamp,
+    delay,
     config,
     immediate,
     reverse,
