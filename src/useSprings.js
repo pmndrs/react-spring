@@ -1,5 +1,5 @@
 import { useMemo, useRef, useImperativeHandle, useEffect } from 'react'
-import { callProp, fillArray, is, toArray, usePrev } from './shared/helpers'
+import { callProp, fillArray, is, usePrev } from './shared/helpers'
 import { Controller } from './animated/Controller'
 
 /** API
@@ -38,9 +38,11 @@ export const useSprings = (length, propsArg, deps) => {
       /** Update the spring controllers */
       update: props => {
         const isFn = is.fun(props)
-        if (!isFn) props = toArray(props)
+        const isArr = is.arr(props)
         state.springs.forEach((spring, i) => {
-          spring.update(isFn ? callProp(props, i, spring) : props[i])
+          spring.update(
+            isFn ? callProp(props, i, spring) : isArr ? props[i] : props
+          )
           if (!state.ref) spring.start()
         })
       },
