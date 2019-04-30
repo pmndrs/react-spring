@@ -88,7 +88,7 @@ test('imperative mode', () => {
   const [props, update, stop] = useSpring(() => ({
     foo: 0,
     onRest(values) {
-      assert(values, _ as UnknownProps); // FIXME: should be "UnknownProps & { foo: number }"
+      assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { foo: number }"
     },
   }));
   assert(props, _ as {
@@ -108,10 +108,10 @@ test('imperative mode', () => {
     // With event listener
     update({
       onRest(values) {
-        assert(values, _ as {
+        assert(values, _ as Readonly<{
           [key: string]: unknown;
           foo: number;
-        });
+        }>);
       },
     });
   });
@@ -143,10 +143,10 @@ test('imperative mode', () => {
         assert(anim, _ as any);
       },
       onFrame(values) {
-        assert(values, _ as UnknownProps); // FIXME: should be "UnknownProps & { foo: number }"
+        assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { foo: number }"
       },
       onRest(values) {
-        assert(values, _ as UnknownProps); // FIXME: should be "UnknownProps & { foo: number }"
+        assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { foo: number }"
       },
     }));
     assert(props, _ as {
@@ -173,10 +173,10 @@ test('basic config', () => {
       assert(animation, _ as any);
     },
     onFrame(values) {
-      assert(values, _ as UnknownProps); // FIXME: should be "UnknownProps & { width: number }"
+      assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { width: number }"
     },
     onRest(values) {
-      assert(values, _ as UnknownProps); // FIXME: should be "UnknownProps & { width: number }"
+      assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { width: number }"
     },
   });
   assert(props, _ as {
@@ -198,7 +198,7 @@ test('function as "to" prop', () => {
         delay: 1000,
         config: { duration: 1000 },
         onRest(values) {
-          assert(values, _ as UnknownProps); // FIXME: should be "UnknownProps & { foo: number }"
+          assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { foo: number }"
         },
       });
     },
@@ -214,7 +214,7 @@ test('function as "to" prop', () => {
         assert(next, _ as SpringUpdateFn); // FIXME: should be "SpringUpdateFn<{ foo: number }>"
         await next({
           onRest(values) {
-            assert(values, _ as UnknownProps); // FIXME: should be "UnknownProps & { foo: number }"
+            assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { foo: number }"
           },
         });
       },
