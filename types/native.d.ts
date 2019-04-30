@@ -18,6 +18,8 @@ export const animated: CreateAnimated & {
   Text: AnimatedComponent<typeof Text>
 }
 
+export { animated as a }
+
 /** The type of an `animated()` component */
 export type AnimatedComponent<
   T extends ElementType

@@ -16,6 +16,8 @@ type CreateAnimated = <T extends ElementType>(
 export const animated: CreateAnimated &
   { [Tag in keyof JSX.IntrinsicElements]: AnimatedComponent<Tag> }
 
+export { animated as a }
+
 /** The type of an `animated()` component */
 export type AnimatedComponent<
   T extends ElementType
