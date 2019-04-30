@@ -45,10 +45,12 @@ export abstract class AnimatedArray<
   }
 }
 
-export abstract class AnimatedObject<
+export class AnimatedObject<
   Payload extends { [key: string]: unknown }
 > extends Animated<Payload> {
-  protected payload = {} as Payload
+  constructor(protected payload: Payload) {
+    super()
+  }
 
   getValue(animated = false) {
     const payload: { [key: string]: any } = {}

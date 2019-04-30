@@ -2,6 +2,8 @@ import { View, StyleSheet } from 'react-native'
 import { createStringInterpolator } from '../../shared/stringInterpolation'
 import { AnimatedTransform } from './AnimatedTransform'
 import { AnimatedStyle } from '../../animated/AnimatedStyle'
+import { AnimatedObject } from '../../animated/Animated'
+import { is } from '../../shared/helpers'
 import colorNames from '../../shared/colors'
 import * as Globals from '../../animated/Globals'
 
@@ -12,7 +14,13 @@ Globals.assign({
   applyAnimatedValues: (instance, props) =>
     instance.setNativeProps ? instance.setNativeProps(props) : false,
   createAnimatedTransform: transform => new AnimatedTransform(transform),
-  createAnimatedStyle: styles => new AnimatedStyle(StyleSheet.flatten(styles)),
+  createAnimatedStyle(styles) {
+    styles = StyleSheet.flatten(styles)
+    if (is.obj(styles.shadowOffset)) {
+      styles.shadowOffset = new AnimatedObject(styles.shadowOffset)
+    }
+    return new AnimatedStyle(styles)
+  },
   createAnimatedRef: (node, mounted, forceUpdate) => ({
     getNode: () => node.current,
     setNativeProps: props => {
