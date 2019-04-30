@@ -10,11 +10,11 @@ export class AnimatedProps<
   update: () => void
 
   constructor(props: Props, callback: () => void) {
-    super()
-    this.payload =
+    super(
       props.style && wrapStyle
         ? { ...props, style: wrapStyle(props.style) }
         : props
+    )
     this.update = callback
     this.attach()
   }
