@@ -2,5 +2,5 @@ language: node_js
 node_js:
   - stable
 script:
-  - yarn build
   - yarn test:ts
+  - yarn build
