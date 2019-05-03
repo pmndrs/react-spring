@@ -53,10 +53,10 @@ export let createAnimatedRef: <T extends React.ElementType>(
 ) => T | AnimatedRef<T> = node => node.current
 
 export let requestAnimationFrame =
-  typeof window !== 'undefined' ? window.requestAnimationFrame : void 0
+  typeof window !== 'undefined' ? window.requestAnimationFrame : () => {}
 
 export let cancelAnimationFrame =
-  typeof window !== 'undefined' ? window.cancelAnimationFrame : void 0
+  typeof window !== 'undefined' ? window.cancelAnimationFrame : () => {}
 
 //
 // Configuration
