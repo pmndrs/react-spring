@@ -1,6 +1,7 @@
 import animated from '../../animated/createAnimatedComponent'
 import createInterpolator from '../../animated/createInterpolator'
 import * as Globals from '../../animated/Globals'
+import { update } from '../../animated/FrameLoop'
 import { interpolate } from '../../interpolate'
 import { config } from '../../shared/constants'
 import { InterpolationConfig } from '../../types/interpolation'
@@ -47,6 +48,7 @@ const Interpolation = {
 export {
   apply,
   config,
+  update,
   animated,
   animated as a,
   interpolate,

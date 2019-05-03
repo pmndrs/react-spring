@@ -1,6 +1,7 @@
 import * as konva from 'react-konva'
 import animated from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
+import { update } from '../../animated/FrameLoop'
 import { interpolate } from '../../interpolate'
 import colorNames from '../../shared/colors'
 import { config } from '../../shared/constants'
@@ -73,6 +74,7 @@ const extendedAnimated = apply(konvaElements)
 export {
   apply,
   config,
+  update,
   extendedAnimated as animated,
   extendedAnimated as a,
   interpolate,

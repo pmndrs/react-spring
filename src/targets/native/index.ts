@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native'
 import AnimatedStyle from '../../animated/AnimatedStyle'
 import animated from '../../animated/createAnimatedComponent'
 import * as Globals from '../../animated/Globals'
+import { update } from '../../animated/FrameLoop'
 import { interpolate } from '../../interpolate'
 import colorNames from '../../shared/colors'
 import { config } from '../../shared/constants'
@@ -38,6 +39,7 @@ const apply = merge(animated)
 export {
   apply,
   config,
+  update,
   animated,
   animated as a,
   interpolate,
