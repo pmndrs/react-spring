@@ -1,7 +1,8 @@
 import { test, assert, _ } from 'spec.ts';
-import { interpolate } from '../../src/interpolate';
-import { SpringValue } from '../../src/types/animated';
+import { interpolate } from '../lib/interpolation';
+import { SpringValue } from '../lib/animated';
 
+/** Return the arguments as-is */
 const args = <T extends ReadonlyArray<any>>(...args: T) => args;
 
 test('with one SpringValue', () => {

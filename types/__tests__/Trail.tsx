@@ -1,5 +1,5 @@
 import { assert, test, _ } from 'spec.ts';
-import { Trail, animated, AnimatedValue } from '../web';
+import { Trail, animated, SpringValue } from '../web';
 import React from 'react';
 
 const View = animated('div');
@@ -11,9 +11,9 @@ test('basic usage', () => {
     {item => props => {
       assert(item, _ as 1 | 2);
       assert(props, _ as {
-        [key: string]: AnimatedValue<any>;
-        opacity: AnimatedValue<number>;
-        color: AnimatedValue<string>;
+        [key: string]: SpringValue<any>;
+        opacity: SpringValue<number>;
+        color: SpringValue<string>;
       });
       return <View style={props}>{item}</View>;
     }}

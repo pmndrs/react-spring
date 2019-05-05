@@ -4,17 +4,17 @@ import { UnknownProps } from '../lib/common';
 import {
   animated,
   useSpring,
-  AnimatedValue,
+  SpringValue,
   SpringHandle,
   SpringStopFn,
   SpringUpdateFn,
 } from '../web';
 
 test('infer return type via forward prop', () => {
-  const props = useSpring({ width: 0 });
+  const props = useSpring({ width: 0, delay: 1000 });
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
-    width: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    width: SpringValue<number>;
   });
 
   test('using with "animated()" component', () => {
@@ -28,8 +28,8 @@ test('infer return type via "from" prop', () => {
     from: { width: 0 },
   });
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
-    width: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    width: SpringValue<number>;
   });
 });
 
@@ -38,8 +38,8 @@ test('infer return type via "to" prop', () => {
     to: { width: 0 },
   });
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
-    width: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    width: SpringValue<number>;
   });
 });
 
@@ -49,9 +49,9 @@ test('infer return type via "from" and "to" props', () => {
     to: { height: '100%' },
   });
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
-    width: AnimatedValue<number>;
-    height: AnimatedValue<string>;
+    [key: string]: SpringValue<any>;
+    width: SpringValue<number>;
+    height: SpringValue<string>;
   });
 });
 
@@ -61,9 +61,9 @@ test('infer return type via "from" and forward props', () => {
     height: '100%',
   });
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
-    width: AnimatedValue<number>;
-    height: AnimatedValue<string>;
+    [key: string]: SpringValue<any>;
+    width: SpringValue<number>;
+    height: SpringValue<string>;
   });
 });
 
@@ -72,14 +72,15 @@ test('infer animated array', () => {
     to: { foo: [0, 0] },
   });
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
-    foo: AnimatedValue<number[]>;
+    [key: string]: SpringValue<any>;
+    foo: SpringValue<number[]>;
   });
 
   test('interpolated array', () => {
     props.foo.interpolate((a, b) => {
       assert(a, _ as number);
       assert(b, _ as number);
+      return 0;
     });
   });
 });
@@ -92,8 +93,8 @@ test('imperative mode', () => {
     },
   }));
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
-    foo: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    foo: SpringValue<number>;
   });
   assert(update, _ as SpringUpdateFn<{ foo: number }>);
   assert(stop, _ as SpringStopFn);
@@ -131,8 +132,8 @@ test('imperative mode', () => {
       reset: true,
     }));
     assert(props, _ as {
-      [key: string]: AnimatedValue<any>;
-      foo: AnimatedValue<number>;
+      [key: string]: SpringValue<any>;
+      foo: SpringValue<number>;
     });
   });
 
@@ -150,8 +151,8 @@ test('imperative mode', () => {
       },
     }));
     assert(props, _ as {
-      [key: string]: AnimatedValue<any>;
-      foo: AnimatedValue<number>;
+      [key: string]: SpringValue<any>;
+      foo: SpringValue<number>;
     });
   });
 });
@@ -180,8 +181,8 @@ test('basic config', () => {
     },
   });
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
-    width: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    width: SpringValue<number>;
   });
 });
 
@@ -204,7 +205,7 @@ test('function as "to" prop', () => {
     },
   });
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
+    [key: string]: SpringValue<any>;
   });
 
   test('with "from" prop', () => {
@@ -220,8 +221,8 @@ test('function as "to" prop', () => {
       },
     });
     assert(props, _ as {
-      [key: string]: AnimatedValue<any>;
-      foo: AnimatedValue<number>;
+      [key: string]: SpringValue<any>;
+      foo: SpringValue<number>;
     });
   });
 });
@@ -233,8 +234,8 @@ test('array as "to" prop', () => {
     foo: 0, // ️️⚠️ This key is ignored because "to" exists
   });
   assert(props, _ as {
-    [key: string]: AnimatedValue<any>;
-    opacity: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    opacity: SpringValue<number>;
   });
 
   test('with "from" prop', () => {
@@ -243,8 +244,8 @@ test('array as "to" prop', () => {
       from: { opacity: 0 },
     });
     assert(props, _ as {
-      [key: string]: AnimatedValue<any>;
-      opacity: AnimatedValue<number>;
+      [key: string]: SpringValue<any>;
+      opacity: SpringValue<number>;
     });
   });
 });

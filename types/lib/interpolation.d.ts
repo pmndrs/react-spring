@@ -1,4 +1,4 @@
-import { Animatable, SpringValue } from './animated'
+import { Animatable, SpringValue, RawValues } from './animated'
 import { Arrify } from './common'
 
 export type EasingFunction = (t: number) => number
@@ -7,6 +7,40 @@ export type ExtrapolateType = 'identity' | 'clamp' | 'extend'
 
 /** These types can be interpolated */
 export type Interpolatable = ReadonlyArray<number | string>
+
+export const interpolate: SpringInterpolator
+
+/**
+ * This interpolates one or more `SpringValue` objects.
+ * The exported `interpolate` function uses this type.
+ */
+export interface SpringInterpolator {
+  // Single SpringValue parent
+  <In extends Animatable, Out extends Animatable>(
+    parent: SpringValue<In>,
+    interpolator: (...args: Arrify<In>) => Out
+  ): SpringValue<Animatable<Out>>
+
+  // Tuple of SpringValue parents
+  <In extends ReadonlyArray<SpringValue>, Out extends Animatable>(
+    parents: In,
+    interpolator: (...args: RawValues<In>) => Out
+  ): SpringValue<Animatable<Out>>
+
+  // Interpolation config
+  <Out extends Animatable>(
+    parents: OneOrMore<SpringValue>,
+    config: InterpolatorConfig<Out>
+  ): SpringValue<Animatable<Out>>
+
+  // Range shortcuts
+  <Out extends Animatable>(
+    parents: OneOrMore<SpringValue>,
+    range: number[],
+    output: Out[],
+    extrapolate?: ExtrapolateType
+  ): SpringValue<Animatable<Out>>
+}
 
 /**
  * Interpolate the value with a custom interpolation function,

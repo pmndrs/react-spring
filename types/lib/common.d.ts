@@ -84,25 +84,6 @@ export type AnimationFrame<T extends object> = Remap<
   UnknownProps & ({} extends PickAnimated<T> ? unknown : PickAnimated<T>)
 >
 
-/**
- * An animated value that can be passed into an `animated()` component.
- */
-export class AnimatedValue<T> {
-  interpolate: InterpolationChain<T>
-  getValue: () => T
-}
-
-/**
- * The map of `Animated` objects passed into `animated()` components.
- *
- * Parameter `T` represents the options object passed into `useSpring`.
- */
-export type SpringValues<T extends object> = Remap<
-  { [key: string]: AnimatedValue<any> } & ({} extends PickAnimated<T>
-    ? unknown
-    : { [P in keyof PickAnimated<T>]: AnimatedValue<PickAnimated<T>[P]> })
->
-
 /** For solving generic types */
 export type Solve<T> = T
 
@@ -112,7 +93,7 @@ export type Remap<T> = Solve<{ [P in keyof T]: T[P] }>
 /** Intersected with other object types to allow for unknown properties */
 export type UnknownProps = { [key: string]: unknown }
 
-/** Infer an object from `ReturnType<T>` or `T` itself */
+/** Infer an object type from an object, array, or function type */
 type InferObject<T> = T extends
   | ReadonlyArray<infer U>
   | ((...args: any[]) => infer U)
@@ -171,11 +152,6 @@ type Intersect<U> = (U extends any ? (k: U) => void : never) extends ((
   ? I
   : never
 
-/** Convert a map of `AnimatedValue` objects to their raw values */
-export type RawValues<T extends object> = {
-  [P in keyof T]: T[P] extends AnimatedValue<infer U> ? U : T[P]
-}
-
 /** Override the property types of `A` with `B` and merge any new properties */
 export type Merge<A, B> = Solve<
   { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
@@ -192,6 +168,7 @@ export type ForwardProps<T extends object> = keyof T extends ReservedProps
  * Property names that are reserved for animation config
  */
 export type ReservedProps =
+  | 'children'
   | 'config'
   | 'from'
   | 'to'
@@ -215,22 +192,6 @@ export type ReservedProps =
   | 'onDestroyed'
   | 'timestamp'
 
-/**
- * An "interpolator" transforms an animated value. Animated arrays are spread
- * into the interpolator.
- */
-export type Interpolator<In, Out> = (
-  ...input: In extends ReadonlyArray<any> ? In : [In]
-) => Out
-
-/**
- * A chain of interpolated values
- */
-export interface InterpolationChain<T> {
-  <U>(config: { range: number[]; output: U[] }): AnimatedValue<U>
-  <U>(interpolator: Interpolator<T, U>): AnimatedValue<U>
-}
-
 /** Return the keys of `T` with values that are assignable to `U` */
 export type AssignableKeys<T, U> = T extends object
   ? U extends object
@@ -239,3 +200,8 @@ export type AssignableKeys<T, U> = T extends object
       }[Extract<keyof T, keyof U>]
     : never
   : never
+
+/** Ensure each type of `T` is an array */
+export type Arrify<T> = T extends ReadonlyArray<any> ? T : Readonly<[T]>
+
+export type OneOrMore<T> = T | ReadonlyArray<T>

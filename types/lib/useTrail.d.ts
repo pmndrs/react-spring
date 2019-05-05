@@ -1,5 +1,6 @@
 import { UseSpringProps, SpringUpdateFn, SpringStopFn } from './useSpring'
-import { SpringValues, PickAnimated } from './common'
+import { SpringValues } from './animated'
+import { PickAnimated } from './common'
 
 export function useTrail<Props extends object>(
   count: number,

@@ -1,8 +1,8 @@
+import { SpringValues } from './animated'
 import {
   PickAnimated,
   UnknownProps,
   AnimationProps,
-  SpringValues,
   AnimationEvents,
   Merge,
 } from './common'

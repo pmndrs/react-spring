@@ -1,6 +1,5 @@
 import { assert, test, _ } from 'spec.ts';
-import { useSprings } from '../web';
-import { AnimatedValue } from '../lib/common';
+import { useSprings, SpringValue } from '../web';
 import { SpringUpdateFn, SpringStopFn } from '../lib/useSpring';
 
 const items: string[] = [];
@@ -14,8 +13,8 @@ test('pass an array', () => {
     })
   );
   assert(springs, _ as Array<{
-    [key: string]: AnimatedValue<any>;
-    opacity: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    opacity: SpringValue<number>;
   }>);
 });
 
@@ -25,8 +24,8 @@ test('pass a function', () => {
     return { opacity: i };
   });
   assert(springs, _ as Array<{
-    [key: string]: AnimatedValue<any>;
-    opacity: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    opacity: SpringValue<number>;
   }>);
   assert(set, _ as SpringUpdateFn<{
     opacity: number;
