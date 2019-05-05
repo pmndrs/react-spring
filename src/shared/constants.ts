@@ -1,3 +1,4 @@
+// The `mass` prop defaults to 1
 export const config = {
   default: { tension: 170, friction: 26 },
   gentle: { tension: 120, friction: 14 },
