@@ -11,3 +11,6 @@ $RECYCLE.BIN/
 package-lock.json
 coverage/
 .idea
+.yalc/
+yalc.lock
+*.log
