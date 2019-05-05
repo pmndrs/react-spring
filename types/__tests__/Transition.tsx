@@ -1,5 +1,5 @@
 import { assert, test, _ } from 'spec.ts';
-import { Transition, animated, AnimatedValue, TransitionPhase } from '../web';
+import { Transition, animated, SpringValue, TransitionPhase } from '../web';
 import React from 'react';
 
 const View = animated('div');
@@ -13,9 +13,9 @@ test('basic usage', () => {
     leave={{ opacity: 0 }}>
     {(item, phase, i) => props => {
       assert(props, _ as {
-        [key: string]: AnimatedValue<any>;
-        opacity: AnimatedValue<number>;
-        color: AnimatedValue<string>;
+        [key: string]: SpringValue<any>;
+        opacity: SpringValue<number>;
+        color: SpringValue<string>;
       });
       assert(item, _ as 1 | 2);
       assert(phase, _ as TransitionPhase);

@@ -1,4 +1,4 @@
-import { AnimatedValue, Solve, AssignableKeys } from './lib/common'
+import { SpringValue, Solve, AssignableKeys } from './lib/common'
 import { ViewStyle, View, Text, StyleProp, RecursiveArray } from 'react-native'
 import {
   ElementType,
@@ -12,7 +12,7 @@ type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
 
-/** Create a HOC that accepts `AnimatedValue` props */
+/** Create a HOC that accepts `SpringValue` props */
 export const animated: CreateAnimated & {
   View: AnimatedComponent<typeof View>
   Text: AnimatedComponent<typeof Text>
@@ -81,4 +81,4 @@ type AnimatedTransform<T> = T extends ReadonlyArray<any>
 // An animated value that is not an object
 type AnimatedLeaf<T> = [T] extends [object]
   ? never
-  : AnimatedValue<Exclude<T, object | void>>
+  : SpringValue<Exclude<T, object | void>>

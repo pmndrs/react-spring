@@ -1,5 +1,5 @@
 import { assert, _, test, describe } from 'spec.ts';
-import { AnimatedProps, AnimatedValue } from '../web';
+import { AnimatedProps, SpringValue } from '../web';
 import { CSSProperties } from 'react';
 
 describe('AnimatedProps', () => {
@@ -11,7 +11,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style?: {
-          width?: number | string | AnimatedValue<number | string>;
+          width?: number | string | SpringValue<number | string>;
         };
       }
     );
@@ -26,7 +26,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style: {
-          wordWrap: WordWrap | AnimatedValue<Exclude<WordWrap, void>>;
+          wordWrap: WordWrap | SpringValue<Exclude<WordWrap, void>>;
         };
       }
     );
@@ -41,7 +41,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         ref: { current: any };
-        foo: number | AnimatedValue<number>;
+        foo: number | SpringValue<number>;
       }
     );
   });
@@ -56,7 +56,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style?: {
-          transform: string | AnimatedValue<string>;
+          transform: string | SpringValue<string>;
         };
       }
     );
@@ -71,7 +71,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         foo: { bar: number };
-        bar?: number | { foo: number } | AnimatedValue<number>;
+        bar?: number | { foo: number } | SpringValue<number>;
       }
     );
   });
@@ -84,8 +84,8 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style: [
-          { width: number | AnimatedValue<number> },
-          [{ height: number | AnimatedValue<number> }],
+          { width: number | SpringValue<number> },
+          [{ height: number | SpringValue<number> }],
           false
         ];
       }

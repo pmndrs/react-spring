@@ -1,5 +1,5 @@
 import { assert, _, test, describe } from 'spec.ts';
-import { AnimatedProps, AnimatedValue } from '../native';
+import { AnimatedProps, SpringValue } from '../native';
 
 describe('AnimatedProps', () => {
   test('width prop', () => {
@@ -10,7 +10,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style?: {
-          width?: number | string | AnimatedValue<number | string>;
+          width?: number | string | SpringValue<number | string>;
         };
       }
     );
@@ -25,7 +25,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         ref: { current: any };
-        foo: number | AnimatedValue<number>;
+        foo: number | SpringValue<number>;
       }
     );
   });
@@ -41,8 +41,8 @@ describe('AnimatedProps', () => {
       _ as {
         style?: {
           transform: [
-            { rotateX: string | AnimatedValue<string> },
-            { translateY: number | AnimatedValue<number> }
+            { rotateX: string | SpringValue<string> },
+            { translateY: number | SpringValue<number> }
           ];
         };
       }
@@ -58,7 +58,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         foo: { bar: number };
-        bar?: number | { foo: number } | AnimatedValue<number>;
+        bar?: number | { foo: number } | SpringValue<number>;
       }
     );
   });
@@ -71,8 +71,8 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style: [
-          { width: number | AnimatedValue<number> },
-          [{ height: number | AnimatedValue<number> }],
+          { width: number | SpringValue<number> },
+          [{ height: number | SpringValue<number> }],
           false
         ];
       }

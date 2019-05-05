@@ -1,11 +1,6 @@
-import {
-  SpringValues,
-  UnknownProps,
-  SpringConfig,
-  Solve,
-  TransitionPhase,
-} from './common'
+import { SpringValues } from './animated'
 import { SpringAsyncFn, SpringUpdate } from './useSpring'
+import { UnknownProps, SpringConfig, Solve, TransitionPhase } from './common'
 
 export type ItemsProp<T> = ReadonlyArray<T> | T | null | undefined
 export type ItemKeys<T> =

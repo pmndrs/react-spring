@@ -1,7 +1,7 @@
 import { assert, test, _ } from 'spec.ts';
 import { useTransition, ItemTransition } from '../lib/useTransition';
 import { SpringUpdateFn } from '../lib/useSpring';
-import { animated, AnimatedValue } from '../web';
+import { animated, SpringValue } from '../web';
 import React from 'react';
 
 const View = animated('div');
@@ -17,12 +17,12 @@ test('infer animated from these props', () => {
     initial: { e: 1 },
   });
   assert(transition.props, _ as {
-    [key: string]: AnimatedValue<any>;
-    a: AnimatedValue<number>;
-    b: AnimatedValue<number>;
-    c: AnimatedValue<number>;
-    d: AnimatedValue<number>;
-    e: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    a: SpringValue<number>;
+    b: SpringValue<number>;
+    c: SpringValue<number>;
+    d: SpringValue<number>;
+    e: SpringValue<number>;
   });
 });
 
@@ -54,10 +54,10 @@ test('with function props', () => {
     leave: { width: '0%', opacity: 0 },
   });
   assert(transitions[0].props, _ as {
-    [key: string]: AnimatedValue<any>;
-    width: AnimatedValue<string | number>;
-    height: AnimatedValue<string | number>;
-    opacity: AnimatedValue<number>;
+    [key: string]: SpringValue<any>;
+    width: SpringValue<string | number>;
+    height: SpringValue<string | number>;
+    opacity: SpringValue<number>;
   });
 
   test('return an async function', () => {
