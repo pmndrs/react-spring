@@ -561,7 +561,7 @@ export class Controller<State extends Indexable = any> {
           friction: withDefault(config.friction, 26),
           initialVelocity: withDefault(config.velocity, 0),
           clamp: withDefault(config.clamp, false),
-          precision: withDefault(config.precision, 0.01),
+          precision: withDefault(config.precision, 0.005),
           config,
         }
       }
