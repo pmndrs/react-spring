@@ -408,8 +408,8 @@ export class Controller<State extends Indexable = any> {
     }
 
     // These props only affect one update
-    if (props.reset) this.props.reset = false
-    if (props.cancel) this.props.cancel = false
+    if ('reset' in props) this.props.reset = false
+    if ('cancel' in props) this.props.cancel = void 0
 
     return changed
   }
