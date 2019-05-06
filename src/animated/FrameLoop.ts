@@ -105,13 +105,17 @@ const update = () => {
         }
 
         // Trails aren't done until their parents conclude
-        if (isAnimated && !config.toValues[valIdx].done) endOfAnimation = false
+        if (isAnimated && !config.toValues[valIdx].done) {
+          endOfAnimation = false
+        }
 
         if (endOfAnimation) {
           // Ensure that we end up with a round value
           if (animated.value !== to) position = to
           animated.done = true
-        } else isActive = true
+        } else {
+          isActive = true
+        }
 
         animated.setValue(position)
         animated.lastPosition = position
