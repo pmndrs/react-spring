@@ -613,13 +613,16 @@ export class Controller<State extends Indexable = any> {
 
     const state = this.animations[key] || emptyObj
     if (state.idle && animated === state.animated) return
+    if (!isNew) isNew = !!state.isNew
 
     // Tell the frameloop to stop animating these values
     const animatedValues = toArray(animated.getPayload() as any)
     animatedValues.forEach(v => (v.done = true))
 
     // Prevent any pending updates to this key
-    this.timestamps['to.' + key] = now()
+    if (!isNew) {
+      this.timestamps['to.' + key] = now()
+    }
 
     // The current value becomes the goal value,
     // which ensures the integrity of the diffing algorithm.
@@ -632,7 +635,7 @@ export class Controller<State extends Indexable = any> {
     this.animations[key] = {
       key,
       idle: true,
-      isNew: isNew || state.isNew,
+      isNew,
       goalValue,
       animated,
       animatedValues,
