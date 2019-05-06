@@ -19,6 +19,7 @@ import { Animated } from './Animated'
 /** Properties in every animation config */
 interface AnimationConfig<T = any> {
   key: string
+  isNew?: boolean
   goalValue: T
   animatedValues: AnimatedValue[]
   animated: T extends ReadonlyArray<any>
@@ -103,7 +104,7 @@ export class Controller<State extends Indexable = any> {
 
     // For async animations, the `from` prop must be defined for
     // the Animated nodes to exist before animations have started.
-    this._ensureAnimated(props.from)
+    this._ensureAnimated(props.from, true)
     this._ensureAnimated(props.to)
 
     props.timestamp = now()
@@ -210,17 +211,22 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Create an Animated node if none exists.
-  private _ensureAnimated(values: unknown) {
+  private _ensureAnimated(values: unknown, shouldUpdate = false) {
     if (!is.obj(values)) return
     for (const key in values as Partial<State>) {
-      if (this.animated[key]) continue
       const value = values[key]
-      const animated = createAnimated(value)
-      if (animated) {
-        this.animated[key] = animated
-        this._stopAnimation(key)
-      } else {
-        console.warn('Given value not animatable:', value)
+      let animated: any = this.animated[key]
+      if (!animated) {
+        animated = createAnimated(value)
+        if (animated) {
+          this.animated[key] = animated
+          this._stopAnimation(key, true)
+        } else {
+          console.warn('Given value not animatable:', value)
+        }
+      } else if (shouldUpdate && this.animations[key].isNew) {
+        // Ensure the initial value is up-to-date.
+        animated.setValue(value)
       }
     }
   }
@@ -451,9 +457,10 @@ export class Controller<State extends Indexable = any> {
 
       const value = this.merged[key]
       const goalValue = computeGoalValue(value)
+      const currValue = animated.getValue()
 
       // Stop animations with a goal value equal to its current value.
-      if (!props.reset && isEqual(goalValue, animated.getValue())) {
+      if (!props.reset && isEqual(goalValue, currValue)) {
         // The animation might be stopped already.
         if (!state.idle) {
           changed = true
@@ -463,7 +470,10 @@ export class Controller<State extends Indexable = any> {
       }
 
       // Replace an animation when its goal value is changed (or it's been reset)
-      if (props.reset || !isEqual(goalValue, state.goalValue)) {
+      if (
+        props.reset ||
+        !isEqual(goalValue, state.isNew ? currValue : state.goalValue)
+      ) {
         let { immediate } = is.und(props.immediate) ? this.props : props
         immediate = !!callProp(immediate, key)
 
@@ -587,7 +597,7 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Stop an animation by its key
-  private _stopAnimation(key: string) {
+  private _stopAnimation(key: string, isNew = false) {
     if (!this.animated[key]) return
 
     const state = this.animations[key]
@@ -616,6 +626,7 @@ export class Controller<State extends Indexable = any> {
     this.animations[key] = {
       key,
       idle: true,
+      isNew,
       goalValue,
       animated,
       animatedValues,
