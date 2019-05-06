@@ -52,7 +52,7 @@ export class AnimatedObject<
     super()
   }
 
-  getValue(animated = false) {
+  public getValue(animated = false) {
     const payload: { [key: string]: any } = {}
     for (const key in this.payload) {
       const value = this.payload[key]
@@ -65,17 +65,19 @@ export class AnimatedObject<
     return payload
   }
 
-  getAnimatedValue() {
+  public getAnimatedValue() {
     return this.getValue(true)
   }
 
-  attach = () =>
+  public attach() {
     Object.values(this.payload).forEach(
       s => s instanceof Animated && s.addChild(this)
     )
+  }
 
-  detach = () =>
+  public detach() {
     Object.values(this.payload).forEach(
       s => s instanceof Animated && s.removeChild(this)
     )
+  }
 }
