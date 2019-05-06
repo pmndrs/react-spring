@@ -5,7 +5,7 @@ const execa = require('execa') // 1.x
 const path = require('path')
 const fs = require('fs-extra') // 6.x
 
-const NPM_BIN = './node_modules/.bin'
+const NPM_BIN = './node_modules/.bin'.replace(/\//g, path.sep)
 const BUILD_DIR = 'dist'
 
 const run = (...scripts) =>
