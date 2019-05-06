@@ -607,19 +607,15 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Stop an animation by its key
-  private _stopAnimation(key: string, isNew = false) {
-    if (!this.animated[key]) return
+  private _stopAnimation(key: string, isNew?: boolean) {
+    const animated = this.animated[key]
+    if (!animated) return
 
-    const state = this.animations[key]
-    if (state && state.idle) return
-
-    let { animated, animatedValues } = state || emptyObj
-    if (!state) {
-      animated = this.animated[key]
-      animatedValues = toArray(animated.getPayload() as any)
-    }
+    const state = this.animations[key] || emptyObj
+    if (state.idle && animated === state.animated) return
 
     // Tell the frameloop to stop animating these values
+    const animatedValues = toArray(animated.getPayload() as any)
     animatedValues.forEach(v => (v.done = true))
 
     // Prevent any pending updates to this key
@@ -636,7 +632,7 @@ export class Controller<State extends Indexable = any> {
     this.animations[key] = {
       key,
       idle: true,
-      isNew,
+      isNew: isNew || state.isNew,
       goalValue,
       animated,
       animatedValues,
