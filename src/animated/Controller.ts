@@ -545,7 +545,7 @@ export class Controller<State extends Indexable = any> {
           idle: false,
           goalValue,
           toValues: toArray(
-            target
+            target instanceof Controller
               ? target.animations[key].animated.getPayload()
               : (isInterpolated && 1) || goalValue
           ),
