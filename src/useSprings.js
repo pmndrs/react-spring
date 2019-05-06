@@ -12,7 +12,7 @@ export const useSprings = (length, propsArg, deps) => {
   const isFn = is.fun(propsArg)
 
   const state = useRef({
-    springs: null,
+    springs: [],
     ref: null,
   }).current
 
@@ -71,9 +71,7 @@ export const useSprings = (length, propsArg, deps) => {
       })
     }
     if (hasNewSprings) {
-      if (state.springs) {
-        state.springs.forEach(s => s.destroy())
-      }
+      state.springs.forEach(s => s.destroy())
       state.springs = springs
       state.ref = ref
       if (!ref) {

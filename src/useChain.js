@@ -28,10 +28,8 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
     } else {
       let p = Promise.resolve()
       refs.forEach(ref => {
-        if (!ref.current) return
-
-        const { controllers, start } = ref.current
-        if (controllers.length) {
+        const { controllers, start } = ref.current || {}
+        if (controllers && controllers.length) {
           // Take the queue of each controller
           const updates = controllers.map(ctrl => {
             const q = ctrl.queue
@@ -44,6 +42,8 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
             controllers.forEach((ctrl, i) => ctrl.queue.push(...updates[i]))
             return start()
           })
+        } else {
+          console.warn('useChain ref has no animations:', ref)
         }
       })
     }
