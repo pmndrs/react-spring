@@ -216,17 +216,27 @@ export class Controller<State extends Indexable = any> {
     for (const key in values as Partial<State>) {
       const value = values[key]
       let animated: any = this.animated[key]
+      if (animated && shouldUpdate && this.animations[key].isNew) {
+        // Ensure the initial value is up-to-date.
+        if (animated.setValue) {
+          animated.setValue(value)
+        } else {
+          // Derived nodes need to be swapped out.
+          animated = null
+        }
+      }
       if (!animated) {
         animated = createAnimated(value)
         if (animated) {
+          if (this.animated[key]) {
+            // Swap out the old node with the new node.
+            moveChildren(this.animated[key], animated)
+          }
           this.animated[key] = animated
           this._stopAnimation(key, true)
         } else {
           console.warn('Given value not animatable:', value)
         }
-      } else if (shouldUpdate && this.animations[key].isNew) {
-        // Ensure the initial value is up-to-date.
-        animated.setValue(value)
       }
     }
   }
