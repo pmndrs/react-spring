@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 const { argv } = require('yargs') // 12.x
+const unquote = require('unquote')
 const chalk = require('chalk') // 2.x
 const execa = require('execa') // 1.x
 const path = require('path')
@@ -14,10 +15,13 @@ const run = (...scripts) =>
       if (!script) return
       if (typeof script === 'string') {
         let [cmd, ...args] = script.trim().split(' ')
-        console.log(chalk.gray('$ ' + cmd + ' ' + args.join(' ')))
+        args = args.map(unquote)
+
         if (cmd !== 'npm') {
           cmd = path.join(NPM_BIN, cmd)
         }
+
+        console.log(chalk.gray('$ ' + cmd + ' ' + args.join(' ')))
         await execa(cmd, args, { stdio: 'inherit' })
       }
     })
