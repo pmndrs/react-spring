@@ -593,15 +593,14 @@ export class Controller<State extends Indexable = any> {
       }
 
       // Make animations available to the frameloop
-      const configs = (this.configs = [] as Animation[])
-      const values = (this.values = {} as any)
-      const nodes = (this.animated = {} as any)
-      for (const key in this.animations) {
+      const keys = Object.keys(this.animations)
+      this.configs.length = keys.length
+      keys.forEach((key, i) => {
         const config = this.animations[key]
-        configs.push(config)
-        values[key] = config.animated.getValue()
-        nodes[key] = config.animated
-      }
+        this.configs[i] = config
+        this.values[key] = config.animated.getValue()
+        this.animated[key] = config.animated as any
+      })
     }
     return this
   }
