@@ -605,7 +605,12 @@ export class Controller<State extends Indexable = any> {
     return this
   }
 
-  // Stop an animation by its key
+  /**
+   * Stop an animation by its key.
+   *
+   * This mutates the `timestamps.to[key]`, `props.to[key]`, and `animations[key]` properties.
+   * Notably, it does *not* mutate the `configs[key]` or `animated[key]` properties.
+   */
   private _stopAnimation(key: string, isNew?: boolean) {
     const animated = this.animated[key]
     if (!animated) return
