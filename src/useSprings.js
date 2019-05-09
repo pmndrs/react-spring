@@ -87,6 +87,6 @@ export const useSprings = (length, propsArg, deps) => {
     return () => state.springs.forEach(s => s.destroy())
   }, [])
 
-  const values = springs.map(s => s.animated)
+  const values = springs.map(s => ({ ...s.animated }))
   return isFn ? [values, update, stop] : values
 }
