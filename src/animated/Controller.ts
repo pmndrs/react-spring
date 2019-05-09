@@ -77,6 +77,8 @@ let nextId = 1
 export class Controller<State extends Indexable = any> {
   id = nextId++
   idle = true
+  runCount = 0
+  destroyed = false
   props: CachedProps<State> = {}
   queue: any[] = []
   timestamps: Indexable<number> = {}
@@ -86,7 +88,6 @@ export class Controller<State extends Indexable = any> {
   animations: AnimationMap = {}
   configs: Animation[] = []
   onEndQueue: OnEnd[] = []
-  runCount = 0
 
   constructor(props?: Partial<State> & UpdateProps<State>) {
     if (props) this.update(props).start()
@@ -99,7 +100,7 @@ export class Controller<State extends Indexable = any> {
    * The `propsArg` argument is always copied before mutations are made.
    */
   update(propsArg: (Partial<State> & UpdateProps<State>) | Falsy) {
-    if (!propsArg) return this
+    if (!propsArg || this.destroyed) return this
     const props = interpolateTo(propsArg) as any
 
     // For async animations, the `from` prop must be defined for
@@ -174,6 +175,32 @@ export class Controller<State extends Indexable = any> {
     return this
   }
 
+  /** Revert the controller to its initial state */
+  reset() {
+    // Stop all current animations
+    this.stop()
+
+    // Revert the internal state
+    this.destroyed = false
+    this.props = {}
+    this.queue = []
+    this.timestamps = {}
+    this.values = {} as any
+    this.merged = {} as any
+    this.animated = {} as any
+    this.animations = {}
+    this.configs = []
+
+    return this
+  }
+
+  /** Prevent all current and future animation */
+  destroy() {
+    this.stop()
+    this.destroyed = true
+    this.animations = {}
+  }
+
   /** @internal Called by the frameloop */
   onFrame(isActive: boolean, updateCount: number) {
     if (updateCount) {
@@ -181,18 +208,6 @@ export class Controller<State extends Indexable = any> {
       if (onFrame) onFrame({ ...this.values })
     }
     if (!isActive) this._stop(true)
-  }
-
-  /** Reset the internal state */
-  destroy() {
-    this.stop()
-    this.props = {}
-    this.timestamps = {}
-    this.values = {} as any
-    this.merged = {} as any
-    this.animated = {} as any
-    this.animations = {}
-    this.configs = []
   }
 
   /**
@@ -290,8 +305,16 @@ export class Controller<State extends Indexable = any> {
     }
 
     queue.forEach((props, delay) => {
-      if (delay) setTimeout(() => this._run(props, onRunEnd), delay)
-      else this._run(props, onRunEnd)
+      if (delay) {
+        // All cancelling methods replace the `animations` map.
+        const { animations } = this
+        setTimeout(() => {
+          if (this.animations !== animations) return
+          this._run(props, onRunEnd)
+        }, delay)
+      } else {
+        this._run(props, onRunEnd)
+      }
     })
   }
 
@@ -326,7 +349,7 @@ export class Controller<State extends Indexable = any> {
 
     const { animations } = this
     const isCancelled = () =>
-      // The `stop` and `destroy` methods replace the `animations` map.
+      // All cancelling methods replace the `animations` map.
       animations !== this.animations ||
       // Async scripts are cancelled when a new chain/script begins.
       (is.fun(to) && to !== this.props.asyncTo)
