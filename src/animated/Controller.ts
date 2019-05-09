@@ -617,7 +617,7 @@ export class Controller<State extends Indexable = any> {
 
     const state = this.animations[key] || emptyObj
     if (state.idle && animated === state.animated) return
-    if (!isNew) isNew = !!state.isNew
+    if (is.und(isNew)) isNew = !!state.isNew
 
     // Tell the frameloop to stop animating these values
     const animatedValues = toArray(animated.getPayload() as any)
