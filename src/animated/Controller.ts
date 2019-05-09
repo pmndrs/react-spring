@@ -178,7 +178,7 @@ export class Controller<State extends Indexable = any> {
   onFrame(isActive: boolean, updateCount: number) {
     if (updateCount) {
       const { onFrame } = this.props
-      if (onFrame) onFrame(this.values)
+      if (onFrame) onFrame({ ...this.values })
     }
     if (!isActive) this._stop(true)
   }
