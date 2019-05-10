@@ -88,6 +88,7 @@ export class Controller<State extends Indexable = any> {
   animations: AnimationMap = {}
   configs: Animation[] = []
   onEndQueue: OnEnd[] = []
+  cancelledAt = 0
 
   constructor(props?: Partial<State> & UpdateProps<State>) {
     if (props) this.update(props).start()
@@ -162,8 +163,7 @@ export class Controller<State extends Indexable = any> {
     }
     // Stop all animations
     else if (this.runCount) {
-      // Stop all async animations
-      this.animations = { ...this.animations }
+      this.cancelledAt = now()
 
       // Update the animation configs
       this.configs.forEach(config => this._stopAnimation(config.key))
@@ -196,9 +196,10 @@ export class Controller<State extends Indexable = any> {
 
   /** Prevent all current and future animation */
   destroy() {
-    this.stop()
-    this.destroyed = true
-    this.animations = {}
+    if (!this.destroyed) {
+      this.stop()
+      this.destroyed = true
+    }
   }
 
   /** @internal Called by the frameloop */
@@ -306,10 +307,9 @@ export class Controller<State extends Indexable = any> {
 
     queue.forEach((props, delay) => {
       if (delay) {
-        // All cancelling methods replace the `animations` map.
-        const { animations } = this
         setTimeout(() => {
-          if (this.animations !== animations) return
+          // Cancelling methods touch the `cancelledAt` property
+          if (props.timestamp < this.cancelledAt) return
           this._run(props, onRunEnd)
         }, delay)
       } else {
@@ -342,16 +342,16 @@ export class Controller<State extends Indexable = any> {
       return onEnd(false)
     }
 
-    // Never run more than one script at a time.
-    if (!this._diff({ asyncTo: to, timestamp: props.timestamp })) {
+    // Never run more than one script at a time
+    const { timestamp } = props
+    if (!this._diff({ asyncTo: to, timestamp })) {
       return onEnd(false)
     }
 
-    const { animations } = this
     const isCancelled = () =>
-      // All cancelling methods replace the `animations` map.
-      animations !== this.animations ||
-      // Async scripts are cancelled when a new chain/script begins.
+      // Cancelling methods touch the `cancelledAt` property
+      timestamp! < this.cancelledAt ||
+      // Async scripts are also cancelled when a new chain/script begins
       (is.fun(to) && to !== this.props.asyncTo)
 
     let last: Promise<void>
@@ -450,7 +450,12 @@ export class Controller<State extends Indexable = any> {
     if (props.cancel && this._isModified(props, 'cancel')) {
       // Stop all animations when `cancel` is true
       if (props.cancel === true) {
-        return this.stop()
+        this.stop()
+
+        // Prevent pending updates from *before* this update only!
+        // (This must come after the `stop` call above)
+        this.cancelledAt = props.timestamp!
+        return this
       }
       // Prevent matching properties from animating when
       // `cancel` is a string or array of strings
@@ -636,20 +641,27 @@ export class Controller<State extends Indexable = any> {
    */
   private _stopAnimation(key: string, isNew?: boolean) {
     const animated = this.animated[key]
-    if (!animated) return
-
-    const state = this.animations[key] || emptyObj
-    if (state.idle && animated === state.animated) return
-    if (is.und(isNew)) isNew = !!state.isNew
-
-    // Tell the frameloop to stop animating these values
-    const animatedValues = toArray(animated.getPayload() as any)
-    animatedValues.forEach(v => (v.done = true))
+    if (!animated) {
+      return console.warn(
+        `Cannot stop an animation for a key that isn't animated: "${key}"`
+      )
+    }
 
     // Prevent any pending updates to this key
-    if (!isNew) {
-      this.timestamps['to.' + key] = now()
+    this.timestamps['to.' + key] = now()
+
+    // Idle animations are skipped unless their Animated node changed
+    const state = this.animations[key] || emptyObj
+    if (state.idle && animated === state.animated) return
+
+    // Use the previous `isNew` value if nothing was passed
+    if (is.und(isNew)) {
+      isNew = !!state.isNew
     }
+
+    // Tell the frameloop to skip animating these values
+    const animatedValues = toArray(animated.getPayload() as any)
+    animatedValues.forEach(v => (v.done = true))
 
     // The current value becomes the goal value,
     // which ensures the integrity of the diffing algorithm.
