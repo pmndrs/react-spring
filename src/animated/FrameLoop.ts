@@ -20,7 +20,7 @@ const update = () => {
       configIdx++
     ) {
       let config = controller.configs[configIdx]
-      let endOfAnimation, lastTime
+      let endOfAnimation
       for (let valIdx = 0; valIdx < config.animatedValues.length; valIdx++) {
         let animated = config.animatedValues[valIdx]
         if (animated.done) continue
@@ -37,7 +37,7 @@ const update = () => {
           continue
         }
 
-        let from = config.fromValues[valIdx]
+        const from = config.fromValues[valIdx]
 
         // Break animation when string values are involved
         if (typeof from === 'string' || typeof to === 'string') {
@@ -51,25 +51,29 @@ const update = () => {
           ? config.initialVelocity[valIdx]
           : config.initialVelocity
 
+        // Duration easing
         if (config.duration !== void 0) {
-          /** Duration easing */
           position =
             from +
             config.easing((time - animated.startTime) / config.duration) *
               (to - from)
+
           endOfAnimation = time >= animated.startTime + config.duration
-        } else if (config.decay) {
+        }
+        // Decay easing
+        else if (config.decay) {
           const decay = config.decay === true ? 0.998 : config.decay
-          /** Decay easing */
           position =
             from +
             (velocity / (1 - decay)) *
               (1 - Math.exp(-(1 - decay) * (time - animated.startTime)))
+
           endOfAnimation = Math.abs(animated.lastPosition - position) < 0.1
           if (endOfAnimation) to = position
-        } else {
-          /** Spring easing */
-          lastTime = animated.lastTime !== void 0 ? animated.lastTime : time
+        }
+        // Spring easing
+        else {
+          let lastTime = animated.lastTime !== void 0 ? animated.lastTime : time
           velocity =
             animated.lastVelocity !== void 0
               ? animated.lastVelocity
@@ -87,21 +91,23 @@ const update = () => {
             position = position + (velocity * 1) / 1000
           }
 
+          animated.lastTime = time
+          animated.lastVelocity = velocity
+
           // Conditions for stopping the spring animation
-          let isOvershooting =
+          const isOvershooting =
             config.clamp && config.tension !== 0
               ? from < to
                 ? position > to
                 : position < to
               : false
-          let isVelocity = Math.abs(velocity) <= config.precision
-          let isDisplacement =
+          const isVelocity = Math.abs(velocity) <= config.precision
+          const isDisplacement =
             config.tension !== 0
               ? Math.abs(to - position) <= config.precision
               : true
+
           endOfAnimation = isOvershooting || (isVelocity && isDisplacement)
-          animated.lastVelocity = velocity
-          animated.lastTime = time
         }
 
         // Trails aren't done until their parents conclude
