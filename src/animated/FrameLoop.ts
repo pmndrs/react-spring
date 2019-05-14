@@ -74,10 +74,9 @@ const update = () => {
         // Spring easing
         else {
           let lastTime = animated.lastTime !== void 0 ? animated.lastTime : time
-          velocity =
-            animated.lastVelocity !== void 0
-              ? animated.lastVelocity
-              : config.initialVelocity
+          if (animated.lastVelocity !== void 0) {
+            velocity = animated.lastVelocity
+          }
 
           // If we lost a lot of frames just jump to the end.
           if (time > lastTime + 64) lastTime = time
