@@ -52,6 +52,10 @@ export class AnimatedValue<T = number> extends Animated
   public lastTime?: number
   public done = false
 
+  static from(value: any) {
+    return value instanceof AnimatedValue ? value : new AnimatedValue(value)
+  }
+
   constructor(value: T) {
     super()
     this.value = value
