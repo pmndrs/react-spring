@@ -54,6 +54,7 @@ type AnimatedMap<T extends Indexable = any> = {
 /** Controller props in pending updates */
 interface UpdateProps<State extends object> extends SpringProps<State> {
   timestamp?: number
+  parent?: Controller
   attach?: (ctrl: Controller) => Controller
 }
 
@@ -381,13 +382,15 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Merge every fresh prop. Returns true if one or more props changed.
-  // These props are ignored: (delay, config, immediate, reverse)
+  // These props cannot trigger an update by themselves:
+  //   [delay, config, immediate, reverse, attach]
   private _diff({
     timestamp,
     delay,
     config,
     immediate,
     reverse,
+    attach,
     ...props
   }: UpdateProps<State> & { [key: string]: any }) {
     let changed = false
@@ -426,6 +429,14 @@ export class Controller<State extends Indexable = any> {
       props.from = (is.obj(to) ? to : void 0) as any
     }
 
+    // The "attach" prop is called on every diff. It overwrites the "parent" prop.
+    if (attach) {
+      props.parent = attach(this)
+    }
+    if (!isValidParent(props.parent)) {
+      throw Error('The "parent" prop must be a Controller object or undefined')
+    }
+
     for (const key in props) {
       diffProp([key], props[key], this.props)
     }
@@ -444,7 +455,7 @@ export class Controller<State extends Indexable = any> {
 
   // Update the animation configs. The given props override any default props.
   private _animate(props: UpdateProps<State>) {
-    const { from = emptyObj, to = emptyObj, attach, onStart } = this.props
+    const { from = emptyObj, to = emptyObj, parent, onStart } = this.props
 
     let isPrevented = (_: string) => false
     if (props.cancel && this._isModified(props, 'cancel')) {
@@ -475,8 +486,8 @@ export class Controller<State extends Indexable = any> {
     // The animations that are starting or restarting
     const started: string[] = []
 
-    // Attachment handling, trailed springs can "attach" themselves to a previous spring
-    const target = attach && attach(this)
+    // Attach when a new "parent" controller exists.
+    const isAttaching = parent && this._isModified(props, 'parent')
 
     // Reduces input { key: value } pairs into animation objects
     for (const key in this.merged) {
@@ -498,7 +509,7 @@ export class Controller<State extends Indexable = any> {
       const currValue = animated.getValue()
 
       // Stop animations with a goal value equal to its current value.
-      if (!props.reset && isEqual(goalValue, currValue)) {
+      if (!props.reset && !isAttaching && isEqual(goalValue, currValue)) {
         // The animation might be stopped already.
         if (!state.idle) {
           changed = true
@@ -510,6 +521,7 @@ export class Controller<State extends Indexable = any> {
       // Replace an animation when its goal value is changed (or it's been reset)
       if (
         props.reset ||
+        isAttaching ||
         !isEqual(goalValue, state.isNew ? currValue : state.goalValue)
       ) {
         let { immediate } = is.und(props.immediate) ? this.props : props
@@ -593,8 +605,8 @@ export class Controller<State extends Indexable = any> {
           idle: false,
           goalValue,
           toValues: toArray(
-            target instanceof Controller
-              ? target.animations[key].animated.getPayload()
+            parent
+              ? parent.animations[key].animated.getPayload()
               : (isInterpolated && 1) || goalValue
           ),
           fromValues: animatedValues.map(v => v.getValue()),
@@ -782,4 +794,9 @@ function isEqual(a: Animatable, b: Animatable) {
     return true
   }
   return a === b
+}
+
+// Validate the "parent" prop
+function isValidParent(val: any) {
+  return val == null || val instanceof Controller
 }
