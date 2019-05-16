@@ -27,8 +27,10 @@ export const useTrail = (length, propsArg) => {
     springs[i] = spring
     return {
       ...props,
+      ...(i > 0 && {
+        attach: () => springs[i - 1],
+      }),
       config: callProp(props.config, i),
-      attach: i > 0 && (() => springs[i - 1]),
     }
   })
 
@@ -40,8 +42,8 @@ export const useTrail = (length, propsArg) => {
         const parent = springsRef.current[props.reverse ? i + 1 : i - 1]
         return {
           ...props,
+          ...(!!parent && { attach: () => parent }),
           config: callProp(props.config, i),
-          attach: !!parent && (() => parent),
         }
       }),
     []
