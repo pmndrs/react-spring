@@ -5,6 +5,7 @@ import {
   Interpolator,
 } from '../types/interpolation'
 import { Animated, AnimatedArray } from './Animated'
+import { AnimatedValue } from './AnimatedValue'
 import { AnimatedValueArray } from './AnimatedValueArray'
 import { createInterpolator } from './createInterpolator'
 import { interpolate } from '../interpolate'
@@ -27,7 +28,7 @@ export class AnimatedInterpolation<
     super()
     this.calc = createInterpolator(...(args as [any])) as any
     this.payload = Array.isArray(parents)
-      ? parents
+      ? parents.map(AnimatedValue.from)
       : parents instanceof AnimatedValueArray
       ? parents.getPayload()
       : [parents]
