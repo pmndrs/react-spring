@@ -29,6 +29,9 @@ export const useTrail = (length, propsArg) => {
       ...props,
       ...(i > 0 && {
         attach: () => springs[i - 1],
+        onStart: withArgument(props.onStart, i),
+        onFrame: withArgument(props.onFrame, i),
+        onRest: withArgument(props.onRest, i),
       }),
       config: callProp(props.config, i),
     }
@@ -59,4 +62,8 @@ export const useTrail = (length, propsArg) => {
 
   // Return the update/stop functions when the `propsArg` is a function.
   return isFn ? [values, update, stop] : values
+}
+
+function withArgument(fn, arg) {
+  return is.fun(fn) ? (...args) => fn(...args, arg) : fn
 }
