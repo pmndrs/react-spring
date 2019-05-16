@@ -21,7 +21,9 @@ export const useTrail = (length, propsArg) => {
 
   // The controllers are recreated whenever `length` changes.
   const [values, animate, stop] = useSprings(length, (i, spring) => {
-    if (isFn && !props) props = callProp(propsArg) || {}
+    if (isFn && !props) {
+      props = callProp(propsArg, spring) || {}
+    }
     springs[i] = spring
     return {
       ...props,
