@@ -145,7 +145,7 @@ export function useTransition(input, keyTransform, props) {
       item,
       key,
       phase,
-      props: state.current.instances.get(key).animated,
+      props: { ...state.current.instances.get(key).animated },
     }
   })
 }
