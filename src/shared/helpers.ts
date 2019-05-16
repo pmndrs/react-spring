@@ -9,8 +9,7 @@ type PlainObject<T> = Exclude<T & Indexable, Function | ReadonlyArray<any>>
 
 export const is = {
   arr: Array.isArray as IsArray,
-  obj: <T>(a: T): a is PlainObject<T> =>
-    Object.prototype.toString.call(a) === '[object Object]',
+  obj: <T>(a: T): a is PlainObject<T> => !!a && a.constructor.name === 'Object',
   fun: (a: unknown): a is Function => typeof a === 'function',
   str: (a: unknown): a is string => typeof a === 'string',
   num: (a: unknown): a is number => typeof a === 'number',
