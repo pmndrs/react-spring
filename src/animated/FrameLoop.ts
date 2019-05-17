@@ -27,8 +27,8 @@ const update = () => {
         updateCount++
 
         let to = config.toValues[valIdx]
-        let isAnimated = to instanceof Animated
-        if (isAnimated) to = to.getValue()
+        let isAttached = to instanceof Animated
+        if (isAttached) to = to.getValue()
 
         // Jump to end value for immediate animations
         if (config.immediate) {
@@ -110,7 +110,7 @@ const update = () => {
         }
 
         // Trails aren't done until their parents conclude
-        if (isAnimated && !config.toValues[valIdx].done) {
+        if (isAttached && !config.toValues[valIdx].done) {
           endOfAnimation = false
         }
 
