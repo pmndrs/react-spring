@@ -17,5 +17,6 @@ export { useTransition } from './useTransition'
 export { config } from './shared/constants'
 export { interpolate } from './interpolate'
 export { Controller } from './animated/Controller'
+export { isAnimated } from './animated/Animated'
 
 export * from './legacy'
