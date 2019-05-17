@@ -270,18 +270,22 @@ export class Controller<State extends Indexable = any> {
     if (onEnd) this._onEnd(onEnd)
     if (this.idle && this.runCount) {
       this.idle = false
-      for (const key in this.animated) this._attach(key)
       start(this)
     }
   }
 
-  /** Tell our children to begin animating the given key */
-  private _attach(key: string) {
+  /** Attach our children to the given keys if possible */
+  private _attach(keys: string[]) {
     this.children.forEach(c => {
-      const payload = getPayload(c, key)
-      if (payload) {
-        payload.forEach(v => v.done && v.reset(true))
-        c._attach(key)
+      const attached = keys.filter(key => {
+        const payload = getPayload(c, key)
+        if (payload) {
+          payload.forEach(v => v.done && v.reset(true))
+          return true
+        }
+      })
+      if (attached.length) {
+        c._attach(attached)
         c._start()
       }
     })
@@ -648,8 +652,12 @@ export class Controller<State extends Indexable = any> {
     }
 
     if (changed) {
-      if (onStart && started.length) {
-        started.forEach(key => onStart!(this.animations[key]))
+      if (started.length) {
+        this._attach(started)
+        if (onStart)
+          started.forEach(key => {
+            onStart(this.animations[key])
+          })
       }
 
       // Make animations available to the frameloop
