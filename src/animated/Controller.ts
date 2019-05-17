@@ -88,6 +88,7 @@ export class Controller<State extends Indexable = any> {
   animated: AnimatedMap<State> = {} as any
   animations: AnimationMap = {}
   configs: Animation[] = []
+  children: Controller[] = []
   onEndQueue: OnEnd[] = []
   cancelledAt = 0
 
@@ -269,8 +270,21 @@ export class Controller<State extends Indexable = any> {
     if (onEnd) this._onEnd(onEnd)
     if (this.idle && this.runCount) {
       this.idle = false
+      for (const key in this.animated) this._attach(key)
       start(this)
     }
+  }
+
+  /** Tell our children to begin animating the given key */
+  private _attach(key: string) {
+    this.children.forEach(c => {
+      const payload = getPayload(c, key)
+      if (payload) {
+        payload.forEach(v => v.done && v.reset(true))
+        c._attach(key)
+        c._start()
+      }
+    })
   }
 
   // Remove this controller from the frameloop, and notify any listeners.
@@ -433,8 +447,16 @@ export class Controller<State extends Indexable = any> {
     if (attach) {
       props.parent = attach(this)
     }
-    if (!isValidParent(props.parent)) {
-      throw Error('The "parent" prop must be a Controller object or undefined')
+
+    const { parent } = props
+    if (parent && !(parent instanceof Controller)) {
+      throw Error('The "parent" prop must be a Controller object or falsy')
+    }
+    const oldParent = this.props.parent
+    if (parent != null && parent !== oldParent) {
+      if (oldParent)
+        oldParent.children.splice(oldParent.children.indexOf(this), 1)
+      if (parent) parent.children.push(this)
     }
 
     for (const key in props) {
@@ -604,11 +626,9 @@ export class Controller<State extends Indexable = any> {
           key,
           idle: false,
           goalValue,
-          toValues: toArray(
-            parent
-              ? parent.animations[key].animated.getPayload()
-              : (isInterpolated && 1) || goalValue
-          ),
+          toValues:
+            (parent && getPayload(parent, key)) ||
+            toArray((isInterpolated && 1) || goalValue),
           fromValues: animatedValues.map(v => v.getValue()),
           animated,
           animatedValues,
@@ -796,7 +816,10 @@ function isEqual(a: Animatable, b: Animatable) {
   return a === b
 }
 
-// Validate the "parent" prop
-function isValidParent(val: any) {
-  return val == null || val instanceof Controller
+function getPayload(
+  ctrl: Controller,
+  key: string
+): AnimatedValue[] | undefined {
+  const anim = ctrl.animations[key]
+  return anim && anim.animatedValues
 }
