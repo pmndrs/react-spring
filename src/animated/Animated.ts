@@ -1,3 +1,7 @@
+export function isAnimated(val: unknown): val is Animated {
+  return val instanceof Animated
+}
+
 export abstract class Animated<Payload = unknown> {
   public abstract getValue(): any
   public getAnimatedValue() {
@@ -37,11 +41,11 @@ export abstract class AnimatedArray<
   protected payload!: Payload
 
   public attach() {
-    this.payload.forEach(p => p instanceof Animated && p.addChild(this))
+    this.payload.forEach(p => isAnimated(p) && p.addChild(this))
   }
 
   public detach() {
-    this.payload.forEach(p => p instanceof Animated && p.removeChild(this))
+    this.payload.forEach(p => isAnimated(p) && p.removeChild(this))
   }
 }
 
@@ -56,11 +60,10 @@ export class AnimatedObject<
     const payload: { [key: string]: any } = {}
     for (const key in this.payload) {
       const value = this.payload[key]
-      if (animated && !(value instanceof Animated)) continue
-      payload[key] =
-        value instanceof Animated
-          ? value[animated ? 'getAnimatedValue' : 'getValue']()
-          : value
+      if (animated && !isAnimated(value)) continue
+      payload[key] = isAnimated(value)
+        ? value[animated ? 'getAnimatedValue' : 'getValue']()
+        : value
     }
     return payload
   }
@@ -70,14 +73,12 @@ export class AnimatedObject<
   }
 
   public attach() {
-    Object.values(this.payload).forEach(
-      s => s instanceof Animated && s.addChild(this)
-    )
+    Object.values(this.payload).forEach(s => isAnimated(s) && s.addChild(this))
   }
 
   public detach() {
     Object.values(this.payload).forEach(
-      s => s instanceof Animated && s.removeChild(this)
+      s => isAnimated(s) && s.removeChild(this)
     )
   }
 }

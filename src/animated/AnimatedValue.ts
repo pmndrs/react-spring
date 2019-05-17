@@ -1,4 +1,4 @@
-import { Animated } from './Animated'
+import { Animated, isAnimated } from './Animated'
 import { AnimatedProps } from './AnimatedProps'
 import { Animatable, SpringValue } from '../types/animated'
 import { InterpolatorArgs } from '../types/interpolation'
@@ -53,7 +53,7 @@ export class AnimatedValue<T = number> extends Animated
   public done = false
 
   static from(value: any) {
-    return value instanceof AnimatedValue ? value : new AnimatedValue(value)
+    return isAnimated(value) ? value : new AnimatedValue(value)
   }
 
   constructor(value: T) {

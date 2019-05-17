@@ -1,4 +1,4 @@
-import { Animated } from '../../animated/Animated'
+import { Animated, isAnimated } from '../../animated/Animated'
 
 type Transform = { [key: string]: string | number | Animated }
 
@@ -15,7 +15,7 @@ export class AnimatedTransform extends Animated {
       let result: { [key: string]: unknown } = {}
       for (var key in transform) {
         var value = transform[key]
-        result[key] = value instanceof Animated ? value.getValue() : value
+        result[key] = isAnimated(value) ? value.getValue() : value
       }
       return result
     })
@@ -26,8 +26,7 @@ export class AnimatedTransform extends Animated {
       let result: { [key: string]: unknown } = {}
       for (var key in transform) {
         var value = transform[key]
-        result[key] =
-          value instanceof Animated ? value.getAnimatedValue() : value
+        result[key] = isAnimated(value) ? value.getAnimatedValue() : value
       }
       return result
     })
@@ -37,7 +36,7 @@ export class AnimatedTransform extends Animated {
     this._transforms.forEach(transform => {
       for (var key in transform) {
         var value = transform[key]
-        if (value instanceof Animated) value.addChild(this)
+        if (isAnimated(value)) value.addChild(this)
       }
     })
   }
@@ -46,7 +45,7 @@ export class AnimatedTransform extends Animated {
     this._transforms.forEach(transform => {
       for (var key in transform) {
         var value = transform[key]
-        if (value instanceof Animated) value.removeChild(this)
+        if (isAnimated(value)) value.removeChild(this)
       }
     })
   }
