@@ -1,5 +1,5 @@
 import { MutableRefObject, Ref, useCallback, useState, useRef } from 'react'
-import { Indexable } from '../types/common'
+import { Indexable, OneOrMore } from '../types/common'
 
 interface IsArray {
   <T>(a: T): a is T & ReadonlyArray<any>
@@ -27,7 +27,7 @@ export function withDefault<T, DT>(value: T, defaultValue: DT) {
   return value == null ? defaultValue : value!
 }
 
-export function toArray<T>(a?: T | T[]): T[] {
+export function toArray<T>(a?: OneOrMore<T>): T[] {
   return is.und(a) ? [] : Array.isArray(a) ? a : [a]
 }
 

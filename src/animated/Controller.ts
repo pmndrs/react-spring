@@ -7,14 +7,20 @@ import {
   freeze,
 } from '../shared/helpers'
 import { start, stop } from './FrameLoop'
-import { SpringProps, SpringConfig } from '../../types/renderprops'
-import { Omit, Indexable, Arrify, OnEnd, Falsy } from '../types/common'
+import { Omit, Indexable, Arrify, OnEnd, Falsy, Merge } from '../types/common'
+import {
+  SpringAsyncFn,
+  SpringConfig,
+  SpringUpdate,
+  Animatable,
+  ToProp,
+} from '../../types/universal'
 import { colorNames, createStringInterpolator, now } from './Globals'
 import { AnimatedInterpolation } from './AnimatedInterpolation'
 import { AnimatedValueArray } from './AnimatedValueArray'
 import { AnimatedValue } from './AnimatedValue'
-import { Animatable } from '../types/animated'
 import { Animated } from './Animated'
+import { AnimationProps } from '../../types/lib/common'
 
 /** Properties in every animation config */
 interface AnimationConfig<T = any> {
@@ -52,22 +58,25 @@ type AnimatedMap<T extends Indexable = any> = {
 }
 
 /** Controller props in pending updates */
-interface UpdateProps<State extends object> extends SpringProps<State> {
-  timestamp?: number
-  parent?: Controller
-  attach?: (ctrl: Controller) => Controller
-}
+type PendingProps<State extends object> = Merge<
+  AnimationProps<State>,
+  {
+    to?: ToProp<State>
+    from?: Partial<State>
+    parent?: Controller
+    attach?: (ctrl: Controller) => Controller
+    timestamp?: number
+  }
+>
 
 /** Controller props from previous updates */
-interface CachedProps<State extends object> extends UpdateProps<State> {
-  to?: Partial<State>
-  asyncTo?:
-    | Array<State & SpringProps<State>>
-    | ((
-        next: (props: State & SpringProps<State>) => void,
-        stop: (finished: boolean) => void
-      ) => Promise<void>)
-}
+type CachedProps<State extends object> = Merge<
+  PendingProps<State>,
+  {
+    to?: Partial<State>
+    asyncTo?: ReadonlyArray<SpringUpdate<State>> | SpringAsyncFn<State>
+  }
+>
 
 // Default easing
 const linear = (t: number) => t
@@ -92,7 +101,7 @@ export class Controller<State extends Indexable = any> {
   onEndQueue: OnEnd[] = []
   cancelledAt = 0
 
-  constructor(props?: Partial<State> & UpdateProps<State>) {
+  constructor(props?: Partial<State> & PendingProps<State>) {
     if (props) this.update(props).start()
   }
 
@@ -102,7 +111,7 @@ export class Controller<State extends Indexable = any> {
    * that later calls to this method properly override any delayed props.
    * The `propsArg` argument is always copied before mutations are made.
    */
-  update(propsArg: (Partial<State> & UpdateProps<State>) | Falsy) {
+  update(propsArg: (Partial<State> & PendingProps<State>) | Falsy) {
     if (!propsArg || this.destroyed) return this
     const props = interpolateTo(propsArg) as any
 
@@ -150,8 +159,8 @@ export class Controller<State extends Indexable = any> {
 
   /** Stop one animation or all animations */
   stop(...keys: string[]): this
-  stop(finished: boolean, ...keys: string[]): this
-  stop(...keys: [boolean, ...any[]] | string[]) {
+  stop(finished?: boolean, ...keys: string[]): this
+  stop(...keys: any[]) {
     let finished = false
     if (is.boo(keys[0])) [finished, ...keys] = keys
 
@@ -219,9 +228,9 @@ export class Controller<State extends Indexable = any> {
    *
    * Ongoing animations are not changed.
    */
-  setProp<P extends keyof UpdateProps<State>>(
+  setProp<P extends keyof CachedProps<State>>(
     key: P,
-    value: UpdateProps<State>[P]
+    value: CachedProps<State>[P]
   ) {
     this.props[key] = value
     this.timestamps[key] = now()
@@ -338,7 +347,7 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Update the props and animations
-  private _run(props: UpdateProps<State>, onEnd: OnEnd) {
+  private _run(props: PendingProps<State>, onEnd: OnEnd) {
     if (is.arr(props.to) || is.fun(props.to)) {
       this._runAsync(props, onEnd)
     } else if (this._diff(props)) {
@@ -349,7 +358,7 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Start an async chain or an async script.
-  private _runAsync({ to, ...props }: UpdateProps<State>, onEnd: OnEnd) {
+  private _runAsync({ to, ...props }: PendingProps<State>, onEnd: OnEnd) {
     // Merge other props immediately.
     if (this._diff(props)) {
       this._animate(props)
@@ -374,7 +383,7 @@ export class Controller<State extends Indexable = any> {
       (is.fun(to) && to !== this.props.asyncTo)
 
     let last: Promise<void>
-    const next = (props: Partial<State> & UpdateProps<State>) => {
+    const next = (props: Partial<State> & PendingProps<State>) => {
       if (isCancelled()) throw this
       return (last = new Promise<any>(done => {
         this.update(props).start(done)
@@ -410,7 +419,7 @@ export class Controller<State extends Indexable = any> {
     reverse,
     attach,
     ...props
-  }: UpdateProps<State> & { [key: string]: any }) {
+  }: PendingProps<State> & { [key: string]: any }) {
     let changed = false
 
     // Ensure the newer timestamp is used.
@@ -475,12 +484,12 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Return true if the given prop was changed by this update
-  private _isModified(props: UpdateProps<State>, prop: string) {
+  private _isModified(props: PendingProps<State>, prop: string) {
     return this.timestamps[prop] === props.timestamp
   }
 
   // Update the animation configs. The given props override any default props.
-  private _animate(props: UpdateProps<State>) {
+  private _animate(props: PendingProps<State>) {
     const { from = emptyObj, to = emptyObj, parent, onStart } = this.props
 
     let isPrevented = (_: string) => false
