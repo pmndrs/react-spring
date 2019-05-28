@@ -4,7 +4,6 @@
     "target": "es2017",
     "moduleResolution": "node",
     "lib": [],
-    "skipLibCheck": true,
     "typeRoots": ["node_modules/@types", "@types"],
     "outDir": "./dist",
     "allowJs": true,
