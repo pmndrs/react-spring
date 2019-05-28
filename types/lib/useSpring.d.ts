@@ -4,53 +4,58 @@ import {
   UnknownProps,
   AnimationProps,
   AnimationEvents,
+  SpringProps,
+  OneOrMore,
   Merge,
 } from './common'
 import { RefObject } from 'react'
 
 export function useSpring<Props extends object>(
-  props: () => UseSpringProps<Props>
+  props: () => Props & UseSpringProps<Props>
 ): [SpringValues<Props>, SpringUpdateFn<PickAnimated<Props>>, SpringStopFn]
 
 export function useSpring<Props extends object>(
-  props: UseSpringProps<Props>
+  props: Props extends Function ? UseSpringProps : Props & UseSpringProps<Props>
 ): SpringValues<Props>
 
-/** The props that `useSpring` recognizes */
-export type UseSpringProps<Props extends object = {}> = Props &
-  UseSpringBaseProps & {
-    /**
-     * The start values of the first animations.
-     *
-     * The `reset` prop also uses these values.
-     */
-    from?: Partial<PickAnimated<Props>>
-    /**
-     * The end values of the current animations.
-     *
-     * As an array, it creates a chain of animations.
-     *
-     * As an async function, it can create animations on-the-fly.
-     */
-    to?: ToProp<PickAnimated<Props>>
-  }
-
-type UnknownPartial<T extends object> = UnknownProps & Partial<T>
-
-type ToProp<T extends object> =
-  | UnknownPartial<T>
-  | ReadonlyArray<UnknownPartial<T> & UseSpringProps<T>>
-  | SpringAsyncFn
-
-/** Static `useSpring` props (use with `extends` or `&`) */
-export interface UseSpringBaseProps extends AnimationProps {
+/**
+ * The props that `useSpring` recognizes.
+ */
+export interface UseSpringProps<Props extends object = {}>
+  extends AnimationProps {
   /**
    * Used to access the imperative API.
    *
    * Animations never auto-start when `ref` is defined.
    */
   ref?: RefObject<SpringHandle>
+  /**
+   * The start values of the first animations.
+   *
+   * The `reset` prop also uses these values.
+   */
+  from?: Partial<PickAnimated<Props>>
+  /**
+   * The end values of the current animations.
+   *
+   * As an array, it creates a chain of animations.
+   *
+   * As an async function, it can create animations on-the-fly.
+   */
+  to?: ToProp
 }
+
+type UnknownPartial<T extends object> = UnknownProps & Partial<T>
+
+/**
+ * The `to` prop type.
+ *
+ * The `T` parameter should only contain animated props.
+ */
+export type ToProp<T extends object = {}> =
+  | UnknownPartial<T>
+  | ReadonlyArray<UnknownPartial<T> & AnimationProps<T>>
+  | SpringAsyncFn<T>
 
 export interface SpringStopFn {
   /** Stop all animations and delays */
@@ -61,21 +66,33 @@ export interface SpringStopFn {
   (finished: boolean, ...keys: string[]): void
 }
 
-/** An imperative update to the props of a spring */
-export type SpringUpdate<T extends object = {}> = UnknownProps &
-  Merge<UseSpringProps<Partial<T>>, AnimationEvents<T>>
+/**
+ * An imperative update to the props of a spring.
+ *
+ * The `T` parameter should only contain animated props.
+ */
+export type SpringUpdate<T extends object = {}> = Partial<T> &
+  SpringProps<{ to: T }> &
+  UnknownProps
 
-/** Imperative API for updating the props of a spring */
+/**
+ * Imperative API for updating the props of a spring.
+ *
+ * The `T` parameter should only contain animated props.
+ */
 export interface SpringUpdateFn<T extends object = {}> {
   /** Update the props of a spring */
   (props: SpringUpdate<T>): void
 }
 
-/** An async function that can update or cancel the animations of a spring */
-export type SpringAsyncFn<T extends object = {}> = (
-  next: SpringUpdateFn<T>,
-  stop: SpringStopFn
-) => Promise<void>
+/**
+ * An async function that can update or cancel the animations of a spring.
+ *
+ * The `T` parameter should only contain animated props.
+ */
+export interface SpringAsyncFn<T extends object = {}> {
+  (next: SpringUpdateFn<T>, stop: SpringStopFn): Promise<void>
+}
 
 /**
  * Imperative animation controller

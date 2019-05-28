@@ -1,4 +1,6 @@
-import { SpringValue, Solve, AssignableKeys } from './lib/common'
+import { ReactNode } from 'react'
+import { SpringValue } from './lib/animated'
+import { Solve, AssignableKeys } from './lib/common'
 import { ViewStyle, View, Text, StyleProp, RecursiveArray } from 'react-native'
 import {
   ElementType,
@@ -33,7 +35,7 @@ export type AnimatedProps<Props extends object> = {
 }
 
 // The animated prop value of a React element
-type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
+type AnimatedProp<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is a distributed union
   ? [DT] extends [never]
     ? never
     : DT extends void
@@ -49,7 +51,7 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
 
 // An animated array of style objects
 type AnimatedStyles<T extends ReadonlyArray<any>> = {
-  [P in keyof T]: [T[P]] extends [infer DT]
+  [P in keyof T]: [T[P]] extends [infer DT] // DT is a distributed union
     ? DT extends object
       ? [AssignableKeys<DT, ViewStyle>] extends [never]
         ? DT extends ReadonlyArray<any>
@@ -61,7 +63,7 @@ type AnimatedStyles<T extends ReadonlyArray<any>> = {
 }
 
 // An animated object of style attributes
-type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
+type AnimatedStyle<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is a distributed union
   ? DT extends void
     ? undefined
     : [DT] extends [never]

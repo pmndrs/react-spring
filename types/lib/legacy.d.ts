@@ -1,18 +1,19 @@
 import { ReactNode } from 'react'
 import { SpringValues } from './animated'
-import { UseSpringProps, UseSpringBaseProps } from './useSpring'
-import { TransitionPhase, Merge, PickAnimated } from './common'
+import { TransitionPhase, Merge } from './common'
 import { UseTransitionProps, ItemsProp, ItemKeys } from './useTransition'
+import { UseSpringProps } from './useSpring'
 
 export const Spring: <Props extends object>(
-  props: UseSpringProps<Props> & {
-    children: (props: SpringValues<Props>) => ReactNode
-  }
+  props: Props &
+    UseSpringProps<Props> & {
+      children: (props: SpringValues<Props>) => ReactNode
+    }
 ) => JSX.Element
 
 export const Trail: <Item, Props extends object>(
   props: Merge<
-    UseSpringProps<Props>,
+    Props & UseSpringProps<Props>,
     {
       items: ReadonlyArray<Item>
       children: (

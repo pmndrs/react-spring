@@ -40,12 +40,27 @@ export type SpringEasingFunc = (t: number) => number
 
 /**
  * Animation-related props
+ *
+ * The `T` parameter is the props object passed to `useSpring` or similar.
  */
-export interface AnimationProps extends AnimationEvents {
+export type SpringProps<T extends object> = Merge<
+  AnimationProps<PickAnimated<T>>,
+  AnimationEvents<PickAnimated<T>>
+>
+
+/**
+ * Animation-related props
+ *
+ * The `T` parameter should only contain animated props.
+ *
+ * Note: The `onFrame` and `onRest` props do *not* have entirely accurate
+ * argument types, because the ambiguity helps with inference.
+ */
+export interface AnimationProps<T extends object = {}> extends AnimationEvents {
   /**
    * Configure the spring behavior for each key.
    */
-  config?: SpringConfig | ((key: string) => SpringConfig)
+  config?: SpringConfig | ((key: keyof T) => SpringConfig)
   /**
    * Milliseconds to wait before applying the other props.
    */
@@ -53,7 +68,12 @@ export interface AnimationProps extends AnimationEvents {
   /**
    * When true, props jump to their goal values instead of animating.
    */
-  immediate?: boolean | ((key: string) => boolean)
+  immediate?: boolean | ((key: keyof T) => boolean)
+  /**
+   * Cancel all animations by using `true`, or some animations by using a key
+   * or an array of keys.
+   */
+  cancel?: boolean | OneOrMore<keyof T>
   /**
    * Start the next animations at their values in the `from` prop.
    */
@@ -64,6 +84,11 @@ export interface AnimationProps extends AnimationEvents {
   reverse?: boolean
 }
 
+/**
+ * The event props of an animation.
+ *
+ * The `T` parameter should only contain animated props.
+ */
 export interface AnimationEvents<T extends object = {}> {
   /**
    * Called when an animation is about to start
@@ -72,17 +97,12 @@ export interface AnimationEvents<T extends object = {}> {
   /**
    * Called when all animations come to a stand-still
    */
-  onRest?: (restValues: Readonly<AnimationFrame<T>>) => void
+  onRest?: (restValues: Readonly<T & UnknownProps>) => void
   /**
    * Called on every frame when animations are active
    */
-  onFrame?: (currentValues: Readonly<AnimationFrame<T>>) => void
+  onFrame?: (currentValues: Readonly<T & UnknownProps>) => void
 }
-
-/** The current values in a specific frame */
-export type AnimationFrame<T extends object> = Remap<
-  UnknownProps & ({} extends PickAnimated<T> ? unknown : PickAnimated<T>)
->
 
 /** For solving generic types */
 export type Solve<T> = T

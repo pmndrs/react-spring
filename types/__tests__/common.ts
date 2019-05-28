@@ -1,11 +1,5 @@
 import { assert, _, test } from 'spec.ts';
-import {
-  PickAnimated,
-  ForwardProps,
-  AnimationFrame,
-  UnknownProps,
-  Remap,
-} from '../lib/common';
+import { PickAnimated, ForwardProps, Remap } from '../lib/common';
 
 type ReservedProps = {
   config: 1;
@@ -103,12 +97,4 @@ test('PickAnimated', () => {
       a: 1 | 2 | 3 | 4 | 5;
     }
   );
-});
-
-test('AnimationFrame', () => {
-  type T1 = AnimationFrame<{}>;
-  assert(_ as T1, _ as UnknownProps);
-
-  type T2 = AnimationFrame<{ to: { a: number }; from: { b: number } }>;
-  assert(_ as T2, _ as { [key: string]: unknown; a: number; b: number });
 });

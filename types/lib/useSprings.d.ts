@@ -4,10 +4,10 @@ import { PickAnimated } from './common'
 
 export function useSprings<Props extends object>(
   count: number,
-  props: (i: number) => UseSpringProps<Props>
+  props: (i: number) => Props & UseSpringProps<Props>
 ): [SpringValues<Props>[], SpringUpdateFn<PickAnimated<Props>>, SpringStopFn]
 
 export function useSprings<Props extends object>(
   count: number,
-  props: ReadonlyArray<UseSpringProps<Props>>
+  props: ReadonlyArray<Props & UseSpringProps<Props>>
 ): SpringValues<Props>[]

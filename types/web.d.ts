@@ -1,4 +1,5 @@
-import { SpringValue, Solve, AssignableKeys } from './lib/common'
+import { SpringValue } from './lib/animated'
+import { Solve, AssignableKeys } from './lib/common'
 import {
   ElementType,
   CSSProperties,

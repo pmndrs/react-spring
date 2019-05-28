@@ -35,12 +35,19 @@ export interface SpringValue<T = any> {
 /**
  * The map of `Animated` objects passed into `animated()` components.
  *
- * Parameter `T` represents the options object passed into `useSpring`.
+ * The `T` parameter is the props object passed to `useSpring` or similar.
  */
-export type SpringValues<T extends object> = Remap<
-  { [key: string]: SpringValue<any> } & ({} extends Required<PickAnimated<T>>
+export type SpringValues<T extends object> = AnimationValues<PickAnimated<T>>
+
+/**
+ * The map of `Animated` objects passed into `animated()` components.
+ *
+ * The `T` parameter should only contain animated props.
+ */
+export type AnimationValues<T extends object> = Remap<
+  { [key: string]: SpringValue<any> } & ({} extends Required<T>
     ? unknown
-    : { [P in keyof PickAnimated<T>]: SpringValue<PickAnimated<T>[P]> })
+    : { [P in keyof T]: SpringValue<T[P]> })
 >
 
 // Extract the raw value types that are being animated
