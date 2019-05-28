@@ -9,8 +9,6 @@
   "sideEffects": false,
   "scripts": {
     "prebuild": "rimraf dist",
-    "docz": "docz dev",
-    "docz:build": "docz build && cp .docz/dist/index.html .docz/dist/200.html && cp examples/CNAME .docz/dist/CNAME",
     "build": "./scripts/build.js",
     "rollup": "rollup -c",
     "copy:ts": "cpx 'types/**/*.d.ts' dist",
