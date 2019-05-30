@@ -1,5 +1,5 @@
 import { Animatable, SpringValue, RawValues } from './animated'
-import { Arrify } from './common'
+import { Arrify, OneOrMore } from './common'
 
 export type EasingFunction = (t: number) => number
 
@@ -60,7 +60,7 @@ export interface Interpolator<In = any> {
   ): SpringValue<Animatable<Out>>
 
   <Out extends Animatable = Animatable>(
-    config: InterpolatorConfig<Out> | InterpolatorFn<In, Out>
+    config: InterpolatorConfig<Out> | InterpolatorFn<Arrify<In>, Out>
   ): SpringValue<Animatable<Out>>
 }
 
