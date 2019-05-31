@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/web",
-  "version": "9.0.0-beta.8",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
     "@react-spring/core": "link:../core"
