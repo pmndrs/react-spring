@@ -1,0 +1,25 @@
+{
+  "name": "@react-spring/native",
+  "version": "0.0.1-alpha.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "dependencies": {
+    "@react-spring/animated": "link:../animated",
+    "@react-spring/core": "link:../core",
+    "@react-spring/shared": "link:../shared",
+    "@types/react": "~16.8.0",
+    "@types/react-native": "~0.57.0",
+    "shared": "file:./src/shared"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8.0",
+    "react-native": ">= 0.58.0"
+  },
+  "devDependencies": {
+    "react": "~16.8.0",
+    "react-native": "~0.58.0"
+  }
+}

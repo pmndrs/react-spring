@@ -1,0 +1,16 @@
+{
+  "name": "react-spring",
+  "version": "9.0.0-beta.8",
+  "private": true,
+  "main": "src/web.ts",
+  "dependencies": {
+    "@react-spring/core": "link:../core",
+    "@react-spring/konva": "link:../konva",
+    "@react-spring/native": "link:../native",
+    "@react-spring/three": "link:../three",
+    "@react-spring/web": "link:../web"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  }
+}

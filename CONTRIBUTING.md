@@ -12,13 +12,13 @@ cd react-spring
 3. Bootstrap the packages:
 
 ```sh
-npx lerna bootstrap
+npx lerna@3 bootstrap
 ```
 
 4. Link the packages:
 
 ```
-npx lerna exec -- yarn link
+npx lerna@3 exec -- yarn link
 ```
 
 5. Link `react-spring` to your project:
