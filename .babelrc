@@ -12,13 +12,12 @@
     "@babel/preset-typescript"
   ],
   "plugins": [
-    ["@babel/proposal-class-properties", { "loose": true }],
-    ["@babel/plugin-proposal-object-rest-spread", { "loose": true }],
-    ["transform-react-remove-prop-types", { "removeImport": true }]
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    ["@babel/plugin-proposal-object-rest-spread", { "loose": true }]
   ],
   "env": {
     "test": {
-      "plugins": ["@babel/transform-modules-commonjs"]
+      "plugins": ["@babel/plugin-transform-modules-commonjs"]
     }
   }
 }

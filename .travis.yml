@@ -2,5 +2,4 @@ language: node_js
 node_js:
   - stable
 script:
-  - yarn test:ts
-  - yarn build
+  - npx lerna@3 bootstrap

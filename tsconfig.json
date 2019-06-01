@@ -1,15 +1,20 @@
 {
-  "include": ["src", "types"],
+  "include": ["packages/**/*"],
+  "exclude": ["**/node_modules/**"],
   "compilerOptions": {
     "target": "es2017",
     "moduleResolution": "node",
     "lib": [],
-    "typeRoots": ["node_modules/@types", "@types"],
-    "outDir": "./dist",
-    "allowJs": true,
+    "typeRoots": ["./node_modules/@types", "./@types"],
     "noEmitOnError": true,
-    "preserveSymlinks": true,
+    "baseUrl": ".",
+    "paths": {
+      "shared": ["./packages/shared/src"],
+      "shared/*": ["./packages/shared/src/*"]
+    },
     "jsx": "react",
+    "importHelpers": true,
+    "preserveSymlinks": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,

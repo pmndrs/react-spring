@@ -1,0 +1,24 @@
+{
+  "name": "@react-spring/three",
+  "version": "0.0.1-alpha.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@react-spring/animated": "link:../animated",
+    "@react-spring/core": "link:../core",
+    "@react-spring/shared": "link:../shared"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8.0",
+    "react-three-fiber": ">= 2.0.0",
+    "three": ">= 0.104.0"
+  },
+  "devDependencies": {
+    "react": "~16.8.0",
+    "react-three-fiber": "~2.0.0",
+    "three": "~0.104.0"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  }
+}
