@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "lib": ["dom"],
+    "outDir": "dist",
+    "incremental": true,
+    "tsBuildInfoFile": ".",
+    "declaration": true
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "@react-spring/shared",
+  "version": "9.0.0-beta.8",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p ."
+  }
+}

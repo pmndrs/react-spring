@@ -1,0 +1,22 @@
+{
+  "name": "@react-spring/konva",
+  "version": "9.0.0-beta.8",
+  "private": true,
+  "dependencies": {
+    "@react-spring/animated": "link:../animated",
+    "@react-spring/core": "link:../core"
+  },
+  "peerDependencies": {
+    "konva": ">= 2.6.0",
+    "react": ">= 16.8.0",
+    "react-konva": ">= 16.8.0"
+  },
+  "devDependencies": {
+    "konva": "~2.6.0",
+    "react": "~16.8.0",
+    "react-konva": "~16.8.0"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  }
+}

@@ -1,22 +1,56 @@
 {
   "name": "react-spring",
-  "version": "9.0.0-beta.8",
-  "description": "A set of spring-physics based animation primitives",
-  "main": "web.cjs.js",
-  "module": "web.js",
-  "react-native": "native.js",
   "private": true,
+  "description": "Cross-platform animation engine",
+  "keywords": [
+    "animated",
+    "animation",
+    "velocity",
+    "spring",
+    "hooks",
+    "motion",
+    "react",
+    "react-native",
+    "typescript"
+  ],
+  "homepage": "https://github.com/react-spring/react-spring#readme",
+  "bugs": {
+    "url": "https://github.com/react-spring/react-spring/issues"
+  },
+  "license": "MIT",
+  "author": "Paul Henschel",
+  "contributors": [
+    "Alec Larson (https://github.com/aleclarson)"
+  ],
   "sideEffects": false,
+  "main": "index.cjs.js",
+  "module": "index.js",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@react-spring/*",
+      "**/three",
+      "**/react-three-fiber",
+      "**/konva",
+      "**/react-konva",
+      "**/react-native",
+      "**/@types/react-native",
+      "**/react-testing-library",
+      "**/react-dom"
+    ]
+  },
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "./scripts/build.js",
-    "rollup": "rollup -c",
-    "copy:ts": "cpx 'types/**/*.d.ts' dist",
+    "build": "lerna run --parallel build",
+    "clean": "lerna exec --parallel --no-bail -- rimraf dist",
+    "prepack": "node ./scripts/prepack.js",
+    "prepare": "yarn prepack && yarn build && yarn test:ts",
+    "release": "lerna publish from-package --contents dist --registry https://registry.npmjs.org",
     "test": "jest",
+    "test:cov": "jest --watch",
     "test:dev": "jest --watch --no-coverage",
-    "test:coverage:watch": "jest --watch",
-    "test:ts": "tsc -p . --noEmit",
-    "postinstall": "node -e \"console.log('\\u001b[35m\\u001b[1mEnjoy react-spring? You can now donate to our open collective:\\u001b[22m\\u001b[39m\\n > \\u001b[34mhttps://opencollective.com/react-spring/donate\\u001b[0m')\""
+    "test:ts": "lerna exec --no-bail -- tsc -p . --noEmit"
   },
   "husky": {
     "hooks": {
@@ -24,115 +58,63 @@
     }
   },
   "prettier": {
-    "semi": false,
-    "trailingComma": "es5",
-    "singleQuote": true,
     "jsxBracketSameLine": true,
+    "printWidth": 80,
+    "semi": false,
+    "singleQuote": true,
     "tabWidth": 2,
-    "printWidth": 80
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/drcmda/react-spring.git"
-  },
-  "keywords": [
-    "react",
-    "motion",
-    "animated",
-    "animation",
-    "spring"
-  ],
-  "author": "Paul Henschel",
-  "contributors": [
-    "Alec Larson (https://github.com/aleclarson)"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/drcmda/react-spring/issues"
-  },
-  "homepage": "https://github.com/drcmda/react-spring#readme",
-  "devDependencies": {
-    "@alloc/cpx": "^1.6.0",
-    "@babel/core": "7.2.2",
-    "@babel/plugin-proposal-class-properties": "7.3.0",
-    "@babel/plugin-proposal-do-expressions": "7.2.0",
-    "@babel/plugin-proposal-object-rest-spread": "7.3.2",
-    "@babel/plugin-transform-modules-commonjs": "7.2.0",
-    "@babel/plugin-transform-parameters": "7.2.0",
-    "@babel/plugin-transform-runtime": "7.2.0",
-    "@babel/plugin-transform-template-literals": "7.2.0",
-    "@babel/preset-env": "7.3.1",
-    "@babel/preset-react": "7.0.0",
-    "@babel/preset-typescript": "^7.1.0",
-    "@types/jest": "^24.0.0",
-    "@types/react-native": "~0.57.50",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "24.1.0",
-    "babel-plugin-transform-react-remove-prop-types": "0.4.24",
-    "babel-polyfill": "6.26.0",
-    "chalk": "2.4.2",
-    "enzyme": "3.8.0",
-    "enzyme-adapter-react-16": "1.9.1",
-    "execa": "^1.0.0",
-    "fs-extra": "^6.0.0",
-    "husky": "1.3.1",
-    "jest": "24.1.0",
-    "json": "9.0.6",
-    "konva": "^2.6.0",
-    "mock-raf": "1.0.1",
-    "npm-run-all": "4.1.5",
-    "prettier": "^1.17.0",
-    "pretty-quick": "1.10.0",
-    "react": "16.8.1",
-    "react-dom": "16.8.1",
-    "react-konva": "^16.8.0",
-    "react-native": "^0.58.4",
-    "react-test-renderer": "16.8.1",
-    "react-testing-library": "5.6.1",
-    "react-three-fiber": "^2.0.9",
-    "rimraf": "2.6.3",
-    "rollup": "1.1.2",
-    "rollup-plugin-babel": "4.3.2",
-    "rollup-plugin-commonjs": "9.2.0",
-    "rollup-plugin-node-resolve": "4.0.0",
-    "rollup-plugin-size-snapshot": "0.8.0",
-    "rollup-plugin-uglify": "6.0.2",
-    "spec.ts": "^1.1.3",
-    "three": "^0.104.0",
-    "typescript": "3.4.5",
-    "unquote": "^1.1.1",
-    "yargs": "^12.0.2"
-  },
-  "peerDependencies": {
-    "react": ">= 16.8.0",
-    "react-dom": ">= 16.8.0"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.3.1",
-    "prop-types": "^15.5.8"
+    "trailingComma": "es5"
   },
   "jest": {
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "jest",
-      "legacy"
-    ],
-    "testRegex": "test.(js|ts|tsx)$",
-    "coverageDirectory": "./coverage/",
     "collectCoverage": true,
+    "collectCoverageFrom": [
+      "packages/*/src/**/*"
+    ],
+    "coverageDirectory": "./coverage",
     "coverageReporters": [
       "json",
       "html",
-      "text",
-      "text-summary"
+      "text"
     ],
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!test/"
+    "testPathIgnorePatterns": [
+      "/node_modules/"
     ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/setupTests.js"
-    ]
+    "testRegex": "test.(js|ts|tsx)$"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.3.1",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@alloc/cpx": "^1.6.1",
+    "@babel/core": "7.2.2",
+    "@babel/plugin-proposal-class-properties": "7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "7.3.2",
+    "@babel/plugin-transform-modules-commonjs": "7.4.4",
+    "@babel/plugin-transform-runtime": "7.4.4",
+    "@babel/preset-env": "7.3.1",
+    "@babel/preset-react": "7.0.0",
+    "@babel/preset-typescript": "7.1.0",
+    "@types/jest": "~24.0.0",
+    "@types/react": "~16.8.0",
+    "babel-jest": "24.8.0",
+    "fs-extra": "7.0.1",
+    "husky": "1.3.1",
+    "jest": "24.1.0",
+    "lerna": "3.14.1",
+    "mock-raf": "1.0.1",
+    "prettier": "1.17.1",
+    "pretty-quick": "1.10.0",
+    "rimraf": "^2.6.3",
+    "rollup": "1.12.4",
+    "rollup-plugin-babel": "4.3.2",
+    "rollup-plugin-dts": "^0.15.1",
+    "rollup-plugin-node-resolve": "4.0.0",
+    "rollup-plugin-size-snapshot": "0.8.0",
+    "rollup-plugin-terser": "5.0.0",
+    "sort-package-json": "^1.22.1",
+    "spec.ts": "^1.1.3",
+    "typescript": "3.5.1"
   },
   "collective": {
     "type": "opencollective",
