@@ -93,5 +93,24 @@
     "bundled": 276,
     "minified": 223,
     "gzipped": 177
+  },
+  "dist/addons.js": {
+    "bundled": 37,
+    "minified": 34,
+    "gzipped": 54,
+    "treeshaked": {
+      "rollup": {
+        "code": 29,
+        "import_statements": 29
+      },
+      "webpack": {
+        "code": 1048
+      }
+    }
+  },
+  "dist/addons.cjs.js": {
+    "bundled": 288,
+    "minified": 235,
+    "gzipped": 179
   }
 }
