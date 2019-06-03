@@ -10,6 +10,9 @@ fs.moveSync('src/core', 'node_modules/' + CORE_ID)
 fs.moveSync('src/shared', 'node_modules/' + SHARED_ID)
 
 const json = fs.readJsonSync('package.json')
+// Help bundlers find our private packages.
 json.dependencies[CORE_ID] = '*'
 json.dependencies[SHARED_ID] = '*'
+// The bundler handles babel stuff.
+delete json.dependencies['@babel/runtime']
 fs.writeJsonSync('package.json', json, { spaces: '  ' })
