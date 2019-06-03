@@ -1,6 +1,6 @@
 {
   "name": "shared",
-  "version": "0.0.0",
+  "private": true,
   "main": "index.ts",
   "description": "Stub package for @react-spring/shared"
 }

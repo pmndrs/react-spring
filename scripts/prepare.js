@@ -80,9 +80,12 @@ async function prepare() {
     delete json.scripts
     delete json.devDependencies
 
+    const deps = json.dependencies
     if (dir == 'native') {
-      const deps = packages['@react-spring/core'].dependencies
-      json.dependencies = { ...deps, ...json.dependencies }
+      // Since we embed "core" into "native", we need its dependencies.
+      Object.assign(deps, packages['@react-spring/core'].dependencies)
+      delete deps['@react-spring/core']
+      json.scripts = { postinstall: 'node postinstall.js' }
     } else {
       // The default entry points
       json.main = 'index.cjs.js'
@@ -90,7 +93,6 @@ async function prepare() {
     }
 
     // Update the versions of "@react-spring/*" dependencies.
-    const deps = json.dependencies
     if (deps)
       for (const name in deps) {
         if (name.startsWith('@react-spring/')) {
@@ -99,10 +101,6 @@ async function prepare() {
       }
 
     if (dir == 'native') {
-      // Point to local packages.
-      Object.assign(deps, {
-        '@react-spring/core': 'file:./src/core',
-      })
       // Include "typescript" in devDependencies
       const rootDeps = rootJson.devDependencies
       json.devDependencies = {

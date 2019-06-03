@@ -13,12 +13,14 @@ rimraf.sync('dist/src')
 fs.copySync('src', 'dist/src')
 fs.copySync('tsconfig.json', 'dist/tsconfig.json')
 
+// We need to move embedded dependencies after they're installed.
+fs.copySync('scripts/_postinstall.js', 'dist/postinstall.js')
+
 // Copy "@react-spring/core" into this package (instead of depending on it)
 // because we want proper sourcemap support when using Metro.
 fs.copySync('../core/src', 'dist/src/core')
 const json = fs.readJsonSync('../core/package.json')
 json.main = 'index.ts'
-delete json.private
 delete json.scripts
 delete json.dependencies
 fs.writeJsonSync('dist/src/core/package.json', sortPackageJson(json))

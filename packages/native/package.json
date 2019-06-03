@@ -12,7 +12,7 @@
     "@react-spring/shared": "link:../shared",
     "@types/react": "~16.8.0",
     "@types/react-native": "~0.57.0",
-    "shared": "file:./src/shared"
+    "fs-extra": "^8.0.1"
   },
   "peerDependencies": {
     "react": ">= 16.8.0",
