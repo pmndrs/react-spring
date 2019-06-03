@@ -10,6 +10,7 @@
       "shared": ["node_modules/@react-spring/shared/src/index"],
       "shared/*": ["node_modules/@react-spring/shared/src/*"]
     },
+    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
