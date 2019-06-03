@@ -18,8 +18,9 @@ fs.copySync('tsconfig.json', 'dist/tsconfig.json')
 fs.copySync('../core/src', 'dist/src/core')
 const json = fs.readJsonSync('../core/package.json')
 json.main = 'index.ts'
-json.scripts = undefined
-json.dependencies = undefined
+delete json.private
+delete json.scripts
+delete json.dependencies
 fs.writeJsonSync('dist/src/core/package.json', sortPackageJson(json))
 
 // Remove any test files.
