@@ -1,4 +1,5 @@
 dist/
+.bic_cache
 .rpt2_cache/
 node_modules/
 coverage/
