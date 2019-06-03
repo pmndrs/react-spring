@@ -1,3 +1,6 @@
 [submodule "examples"]
 	path = examples
 	url = https://github.com/react-spring/react-spring-examples.git
+[submodule "docs"]
+	path = docs
+	url = https://github.com/react-spring/react-spring.io.git
