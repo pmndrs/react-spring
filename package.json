@@ -36,7 +36,8 @@
       "**/react-native",
       "**/@types/react-native",
       "**/react-testing-library",
-      "**/react-dom"
+      "**/react-dom",
+      "**/shared"
     ]
   },
   "scripts": {
