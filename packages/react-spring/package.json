@@ -4,6 +4,7 @@
   "private": true,
   "main": "src/web.ts",
   "dependencies": {
+    "@react-spring/addons": "link:../addons",
     "@react-spring/core": "link:../core",
     "@react-spring/konva": "link:../konva",
     "@react-spring/native": "link:../native",
