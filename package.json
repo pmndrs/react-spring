@@ -43,6 +43,7 @@
     "build": "lerna run --parallel build",
     "clean": "lerna exec --parallel --no-bail -- rimraf dist",
     "prepare": "node ./scripts/prepare.js && yarn build",
+    "version": "lerna version -m 'chore: ship it 🚀'",
     "release": "yarn test:ts && lerna publish from-package --contents dist",
     "test": "jest",
     "test:cov": "jest --watch",
