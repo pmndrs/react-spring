@@ -13,6 +13,7 @@ cd react-spring
 
 ```sh
 npx lerna@3 bootstrap
+npx meta@1 git update
 ```
 
 4. Link the packages:

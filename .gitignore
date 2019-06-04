@@ -15,3 +15,5 @@ report.*.json
 .yalc/
 yalc.lock
 *.log
+/docs/
+/examples/
