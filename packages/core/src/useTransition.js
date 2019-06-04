@@ -1,13 +1,7 @@
-import { useRef, useEffect, useOnce, useMemo, useImperativeHandle } from 'react'
+import { useRef, useEffect, useMemo, useImperativeHandle } from 'react'
+import { toArray, callProp, interpolateTo, reconcileDeleted } from './helpers'
+import { is, useForceUpdate, useOnce } from 'shared'
 import { Controller } from './Controller'
-import {
-  is,
-  toArray,
-  callProp,
-  interpolateTo,
-  useForceUpdate,
-  reconcileDeleted,
-} from 'shared'
 
 /** API
  * const transitions = useTransition(items, itemKeys, { ... })

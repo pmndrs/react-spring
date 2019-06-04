@@ -1,5 +1,6 @@
 import { useMemo, useRef, useImperativeHandle, useEffect } from 'react'
-import { callProp, fillArray, is, usePrev, useOnce } from 'shared'
+import { is, usePrev, useOnce } from 'shared'
+import { callProp, fillArray } from './helpers'
 import { useMemoOne } from 'use-memo-one'
 import { Controller } from './Controller'
 

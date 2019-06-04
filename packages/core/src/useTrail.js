@@ -1,7 +1,8 @@
 import { useRef, useMemo, useEffect } from 'react'
-import { callProp, is, usePrev } from 'shared'
 import { useCallbackOne } from 'use-memo-one'
+import { is, usePrev } from 'shared'
 import { useSprings } from './useSprings'
+import { callProp } from './helpers'
 
 /** API
  * const trails = useTrail(number, { ... })
