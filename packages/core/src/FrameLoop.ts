@@ -1,9 +1,11 @@
 import { Animated } from '@react-spring/animated'
+import { FrameRequestCallback } from 'shared/types'
 import { now, requestAnimationFrame } from 'shared/globals'
 import { Controller, FrameUpdate } from './Controller'
 
 type FrameUpdater = (this: FrameLoop) => boolean
 type FrameListener = (this: FrameLoop, updates: FrameUpdate[]) => void
+type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
 export class FrameLoop {
   /**
@@ -33,7 +35,7 @@ export class FrameLoop {
   /**
    * The `requestAnimationFrame` function or a custom scheduler.
    */
-  requestFrame: typeof requestAnimationFrame
+  requestFrame: RequestFrameFn
 
   constructor({
     update,
@@ -42,9 +44,9 @@ export class FrameLoop {
   }: {
     update?: FrameUpdater
     onFrame?: FrameListener
-    requestFrame?: typeof requestAnimationFrame
+    requestFrame?: RequestFrameFn
   } = {}) {
-    this.requestFrame = requestFrame || requestAnimationFrame
+    this.requestFrame = requestFrame || (fn => requestAnimationFrame(fn))
 
     this.onFrame =
       (onFrame && onFrame.bind(this)) ||
