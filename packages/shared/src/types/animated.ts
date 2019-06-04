@@ -41,6 +41,10 @@ type RawValues<T extends ReadonlyArray<any>> = {
   [P in keyof T]: T[P] extends SpringValue<infer U> ? U : never
 }
 
+export interface FrameRequestCallback {
+  (time: number): void
+}
+
 /**
  * This interpolates one or more `SpringValue` objects.
  * The exported `interpolate` function uses this type.

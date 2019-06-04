@@ -5,10 +5,6 @@ declare const window: {
   cancelAnimationFrame: (id: number) => void
 }
 
-interface FrameRequestCallback {
-  (time: number): void
-}
-
 type Props = { [key: string]: any }
 
 export interface AnimatedRef<T> {
