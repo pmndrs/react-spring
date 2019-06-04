@@ -28,7 +28,7 @@ export let createStringInterpolator: (
 
 export let frameLoop: {
   update: () => boolean
-  controllers: any[]
+  controllers: Map<number, any>
   start(controller: any): void
   stop(controller: any): void
 }
