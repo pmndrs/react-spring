@@ -42,7 +42,7 @@
   },
   "scripts": {
     "build": "bic",
-    "clean": "lerna exec --parallel --no-bail -- rimraf dist",
+    "clean": "lerna exec --parallel --no-bail -- rimraf dist .rpt2_cache .bic_cache",
     "prepare": "node ./scripts/prepare.js && yarn build",
     "postinstall": "patch-package",
     "version": "lerna version -m 'chore: ship it 🚀'",
