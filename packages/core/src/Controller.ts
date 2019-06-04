@@ -32,8 +32,17 @@ import {
   freeze,
 } from './helpers'
 
-/** `[isActive, [key, value][]]` */
+/**
+ * A tuple containing:
+ *
+ *   [0] `controllerID`: The controller being updated
+ *
+ *   [1] `isActive`: False when all animations have finished
+ *
+ *   [2] `changes`: An array of `[key, value]` tuples
+ */
 export type FrameUpdate<State extends object = any> = [
+  number,
   boolean,
   [keyof State, State[keyof State]][] | undefined
 ]
@@ -195,7 +204,8 @@ export class Controller<State extends Indexable = any> {
   }
 
   /** @internal Called by the frameloop */
-  onFrame([isActive, entries]: FrameUpdate<State>) {
+  onFrame([id, isActive, entries]: FrameUpdate<State>) {
+    if (id !== this.id) return
     if (entries && entries.length) {
       for (const [key, value] of entries) {
         this.values[key] = value

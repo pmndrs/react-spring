@@ -8,11 +8,8 @@ type FrameListener = (this: FrameLoop, updates: FrameUpdate[]) => void
 export class FrameLoop {
   /**
    * On each frame, these controllers are searched for values to animate.
-   *
-   * To avoid calling `requestAnimationFrame`, you can add controllers directly
-   * to this.
    */
-  controllers: Controller[] = []
+  controllers = new Map<number, Controller>()
   /**
    * True when at least one value is animating.
    */
@@ -52,8 +49,9 @@ export class FrameLoop {
     this.onFrame =
       (onFrame && onFrame.bind(this)) ||
       (updates => {
-        updates.forEach((entries, i) => {
-          this.controllers[i].onFrame(entries)
+        updates.forEach(update => {
+          const ctrl = this.controllers.get(update[0])
+          if (ctrl) ctrl.onFrame(update)
         })
       })
 
@@ -66,25 +64,26 @@ export class FrameLoop {
 
         // Update the animations.
         const updates: FrameUpdate[] = []
-        for (const controller of this.controllers) {
+        for (const id of Array.from(this.controllers.keys())) {
           let isActive = false
-          type E = FrameUpdate[1] | undefined
-          const entries: E = controller.props.onFrame ? [] : void 0
-          for (const config of controller.configs) {
+          const ctrl = this.controllers.get(id)!
+          const changes: FrameUpdate[2] = ctrl.props.onFrame && []
+          for (const config of ctrl.configs) {
             if (this.advance(config)) {
               isActive = true
-              if (entries) {
-                entries.push([config.key, config.animated.getValue()])
+              if (changes) {
+                changes.push([config.key, config.animated.getValue()])
               }
             }
           }
-          updates.push([isActive, entries])
+          updates.push([id, isActive, changes])
         }
 
+        // Notify the controllers!
         this.onFrame(updates)
 
         // Are we done yet?
-        if (!this.controllers.length) {
+        if (!this.controllers.size) {
           return (this.isActive = false)
         }
 
@@ -95,9 +94,7 @@ export class FrameLoop {
   }
 
   start(ctrl: Controller) {
-    if (!this.controllers.includes(ctrl)) {
-      this.controllers.push(ctrl)
-    }
+    this.controllers.set(ctrl.id, ctrl)
     if (!this.isActive) {
       this.isActive = true
       this.requestFrame(this.update)
@@ -105,8 +102,7 @@ export class FrameLoop {
   }
 
   stop(ctrl: Controller) {
-    const i = this.controllers.indexOf(ctrl)
-    if (i >= 0) this.controllers.splice(i, 1)
+    this.controllers.delete(ctrl.id)
   }
 
   /** Advance an animation forward one frame. */
