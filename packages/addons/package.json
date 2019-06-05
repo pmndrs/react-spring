@@ -9,7 +9,7 @@
     "use-memo-one": "^1.1.0"
   },
   "peerDependencies": {
-    "react": ">= 16.8.0"
+    "react": ">=16.8"
   },
   "scripts": {
     "build": "rollup -c"

@@ -9,8 +9,8 @@
     "@react-spring/shared": "link:../shared"
   },
   "peerDependencies": {
-    "react": ">= 16.8.0",
-    "react-dom": ">= 16.8.0"
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
   },
   "devDependencies": {
     "react": "~16.8.0",
