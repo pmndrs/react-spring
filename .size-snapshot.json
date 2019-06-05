@@ -19,9 +19,9 @@
     "gzipped": 1999
   },
   "dist/web.js": {
-    "bundled": 63030,
-    "minified": 30004,
-    "gzipped": 10925,
+    "bundled": 63038,
+    "minified": 30011,
+    "gzipped": 10933,
     "treeshaked": {
       "rollup": {
         "code": 11455,
@@ -38,9 +38,9 @@
     "gzipped": 11641
   },
   "dist/native.js": {
-    "bundled": 60162,
-    "minified": 28083,
-    "gzipped": 9943,
+    "bundled": 60170,
+    "minified": 28090,
+    "gzipped": 9957,
     "treeshaked": {
       "rollup": {
         "code": 8256,
@@ -52,9 +52,9 @@
     }
   },
   "dist/universal.js": {
-    "bundled": 47599,
-    "minified": 21373,
-    "gzipped": 7136,
+    "bundled": 47607,
+    "minified": 21380,
+    "gzipped": 7145,
     "treeshaked": {
       "rollup": {
         "code": 1235,
@@ -66,9 +66,9 @@
     }
   },
   "dist/konva.js": {
-    "bundled": 58652,
-    "minified": 27228,
-    "gzipped": 9850,
+    "bundled": 58660,
+    "minified": 27235,
+    "gzipped": 9865,
     "treeshaked": {
       "rollup": {
         "code": 8974,
@@ -157,14 +157,14 @@
     "gzipped": 9928
   },
   "dist/web.cjs.js": {
-    "bundled": 71300,
-    "minified": 33678,
-    "gzipped": 11478
+    "bundled": 71325,
+    "minified": 33700,
+    "gzipped": 11493
   },
   "dist/native.cjs.js": {
-    "bundled": 68913,
-    "minified": 31943,
-    "gzipped": 10481
+    "bundled": 68938,
+    "minified": 31965,
+    "gzipped": 10503
   },
   "dist/renderprops.cjs.js": {
     "bundled": 77392,
@@ -192,9 +192,9 @@
     "gzipped": 10442
   },
   "dist/universal.cjs.js": {
-    "bundled": 55540,
-    "minified": 24914,
-    "gzipped": 7679
+    "bundled": 55565,
+    "minified": 24936,
+    "gzipped": 7690
   },
   "dist/test.js": {
     "bundled": 32365,
@@ -216,9 +216,9 @@
     "gzipped": 5405
   },
   "dist/konva.cjs.js": {
-    "bundled": 66634,
-    "minified": 30800,
-    "gzipped": 10382
+    "bundled": 66659,
+    "minified": 30822,
+    "gzipped": 10403
   },
   "dist/three.js": {
     "bundled": 59009,
@@ -238,5 +238,24 @@
     "bundled": 67071,
     "minified": 30837,
     "gzipped": 10309
+  },
+  "dist/zdog.js": {
+    "bundled": 59235,
+    "minified": 27423,
+    "gzipped": 9833,
+    "treeshaked": {
+      "rollup": {
+        "code": 10517,
+        "import_statements": 354
+      },
+      "webpack": {
+        "code": 11644
+      }
+    }
+  },
+  "dist/zdog.cjs.js": {
+    "bundled": 67237,
+    "minified": 30998,
+    "gzipped": 10377
   }
 }

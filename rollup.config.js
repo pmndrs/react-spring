@@ -92,6 +92,7 @@ export default [
   ...createConfig('targets/universal', 'universal'),
   ...createConfig('targets/konva', 'konva'),
   ...createConfig('targets/three', 'three'),
+  ...createConfig('targets/zdog', 'zdog'),
   {
     input: `./src/targets/cookbook/index`,
     output: { file: `dist/cookbook.js`, format: 'esm' },
