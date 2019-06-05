@@ -2,6 +2,7 @@ import { CSSProperties, RefObject } from 'react'
 import {
   SpringConfig,
   SpringBaseProps,
+  SpringProps,
   TransitionKeyProps,
   State,
 } from './renderprops-universal'
@@ -95,7 +96,7 @@ export function useChain(
 ): void
 
 export interface HooksBaseProps
-  extends Pick<SpringBaseProps, Exclude<keyof SpringBaseProps, 'config'>> {
+  extends Pick<SpringProps, Exclude<keyof SpringProps, 'config'>> {
   /**
    * Will skip rendering the component if true and write to the dom directly.
    * @default true
