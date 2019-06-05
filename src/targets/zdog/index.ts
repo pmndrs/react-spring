@@ -30,7 +30,7 @@ for (let key of Object.keys(elements)) {
 }
 
 if (addEffect) {
-  // Add the update function as a global effect to react-three-fibers update loop
+  // Add the update function as a global effect to react-zdog's update loop
   addEffect(update)
   // Ping react-three-fiber, so that it will call react-springs update function as an effect
   Globals.injectManualFrameloop(() => invalidate())
