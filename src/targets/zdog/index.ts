@@ -13,7 +13,7 @@ import { useTransition } from '../../useTransition'
 import { merge } from '../../shared/helpers'
 import { update } from '../../animated/FrameLoop'
 
-// Extend animated with all the available ZDOG elements
+// Extend animated with all the available ZDOG elements, so that we can do animated.Shape/Ellipse/.. later on
 const {
   invalidate,
   applyProps,
@@ -30,19 +30,22 @@ for (let key of Object.keys(elements)) {
 }
 
 if (addEffect) {
-  // Add the update function as a global effect to react-zdog's update loop
+  // Add react-springs update function as a global effect to react-zdog's render loop
+  // Having multiple requestAnimationFrame-loops is very bad for performance, so we join them
   addEffect(update)
-  // Ping react-three-fiber, so that it will call react-springs update function as an effect
+  // This one switches off react-springs own render loop, instead it will call us back whenever
+  // it needs to render, we use this to invalidate react-zdog's render loop, in case it renders on demand
   Globals.injectManualFrameloop(() => invalidate())
 }
 
 // Set default native-element
 Globals.injectDefaultElement(Zdog.Anchor)
-// Use default interpolation (which includes numbers, strings, colors)
+// Use default interpolation (which includes numbers, strings, colors), zdog uses web standards
 Globals.injectStringInterpolator(createInterpolation)
-// Inject color names, so that it will be able to deal with things like "peachpuff"
+// Inject web color names, so that it will be able to deal with things like "peachpuff"
 Globals.injectColorNames(colorNames)
 // This is how we teach react-spring to set props "natively", the api is (instance, props) => { ... }
+// It will write updates directly into the view from now on, avoiding component updates through React
 Globals.injectApplyAnimatedValues(applyProps, style => style)
 
 export {
