@@ -31,6 +31,8 @@
       "**/@react-spring/*",
       "**/three",
       "**/react-three-fiber",
+      "**/zdog",
+      "**/react-zdog",
       "**/konva",
       "**/react-konva",
       "**/react-native",

@@ -9,7 +9,8 @@
     "@react-spring/konva": "link:../konva",
     "@react-spring/native": "link:../native",
     "@react-spring/three": "link:../three",
-    "@react-spring/web": "link:../web"
+    "@react-spring/web": "link:../web",
+    "@react-spring/zdog": "link:../zdog"
   },
   "scripts": {
     "build": "rollup -c"
