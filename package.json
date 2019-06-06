@@ -111,6 +111,7 @@
     "postinstall-postinstall": "^2.0.0",
     "prettier": "1.17.1",
     "pretty-quick": "1.10.0",
+    "recrawl": "^1.2.2",
     "rimraf": "2.6.3",
     "rollup": "1.12.4",
     "rollup-plugin-babel": "4.3.2",
