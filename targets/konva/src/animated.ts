@@ -1,5 +1,9 @@
 import * as konva from 'react-konva'
-import { createAnimatedComponent, withExtend } from '@react-spring/animated'
+import {
+  createAnimatedComponent,
+  withExtend,
+  WithExtend,
+} from '@react-spring/animated'
 import { AssignableKeys, SpringValue } from 'shared'
 import {
   ElementType,
@@ -48,8 +52,9 @@ type CreateAnimated = <T extends ElementType>(
 ) => AnimatedComponent<T>
 
 // Extend animated with all the available Konva elements
-export const animated = withExtend(createAnimatedComponent as CreateAnimated &
-  KonvaComponents).extend(elements)
+export const animated: WithExtend<
+  CreateAnimated & KonvaComponents
+> = withExtend(createAnimatedComponent as any).extend(elements)
 
 export { animated as a }
 
