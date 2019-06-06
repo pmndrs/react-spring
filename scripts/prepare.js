@@ -163,8 +163,14 @@ async function prepare() {
       await fs.writeFile(join(distDir, file), content)
     }
 
+    // Inject custom @types dependencies.
     if (name.endsWith('zdog')) {
-      await fs.copy('@types/react-zdog', join(dir, '@types/react-zdog'))
+      await fs.copy('@types/react-zdog', join(dir, 'dist/@types/react-zdog'))
+      await fs.writeJson(
+        join(dir, 'dist/tsconfig.json'),
+        { include: ['**/*.d.ts'] },
+        { spaces: '  ' }
+      )
     }
   }
 }
