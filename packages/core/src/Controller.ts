@@ -464,7 +464,7 @@ export class Controller<State extends Indexable = any> {
       throw Error('The "parent" prop must be a Controller object or falsy')
     }
     const oldParent = this.props.parent
-    if (parent != null && parent !== oldParent) {
+    if (parent !== oldParent) {
       if (oldParent)
         oldParent.children.splice(oldParent.children.indexOf(this), 1)
       if (parent) parent.children.push(this)
