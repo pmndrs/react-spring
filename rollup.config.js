@@ -1,11 +1,12 @@
-const path = require('path')
-const babel = require('rollup-plugin-babel')
-const resolve = require('rollup-plugin-node-resolve')
-const ts = require('rollup-plugin-typescript2')
-const fs = require('fs-extra')
-const { dts } = require('rollup-plugin-dts')
-const { terser } = require('rollup-plugin-terser')
-const { sizeSnapshot } = require('rollup-plugin-size-snapshot')
+import fs from 'fs-extra'
+import path from 'path'
+
+import ts from 'rollup-plugin-typescript2'
+import dts from 'rollup-plugin-dts'
+import babel from 'rollup-plugin-babel'
+import resolve from 'rollup-plugin-node-resolve'
+import { terser } from 'rollup-plugin-terser'
+import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
 const external = id => !id.startsWith('.') && !id.startsWith(root)
@@ -102,8 +103,6 @@ export const getBabelOptions = ({ useESModules }, targets) => ({
   presets: [
     ['@babel/preset-env', { loose: true, modules: false, targets }],
     '@babel/preset-react',
-    // TODO: Use this when it can strip re-exported types!
-    // '@babel/preset-typescript',
   ],
   plugins: [
     ['@babel/plugin-proposal-class-properties', { loose: true }],
