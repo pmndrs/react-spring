@@ -282,8 +282,10 @@ export class Controller<State extends Indexable = any> {
   }
 
   /** Attach our children to the given keys if possible */
-  private _attach(keys: string[]) {
+  private _attach(keys: string[], visited: { [id: number]: true } = {}) {
     this.children.forEach(c => {
+      if (visited[this.id]) return
+      visited[this.id] = true
       const attached = keys.filter(key => {
         const payload = getPayload(c, key)
         if (payload) {
@@ -292,7 +294,7 @@ export class Controller<State extends Indexable = any> {
         }
       })
       if (attached.length) {
-        c._attach(attached)
+        c._attach(attached, visited)
         c._start()
       }
     })
