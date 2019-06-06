@@ -62,7 +62,7 @@ export const createAnimatedComponent: CreateAnimated = <C extends ElementType>(
 // withExtend()
 //
 
-type WithExtend<T> = T & {
+export type WithExtend<T> = T & {
   extend: (
     ...args: Array<AnimatedTarget | Array<AnimatedTarget>>
   ) => WithExtend<T>
