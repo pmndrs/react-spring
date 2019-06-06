@@ -25,7 +25,8 @@
   "sideEffects": false,
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "targets/*"
     ],
     "nohoist": [
       "**/@react-spring/*",

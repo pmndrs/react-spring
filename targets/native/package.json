@@ -7,9 +7,9 @@
     "build": "node scripts/build.js"
   },
   "dependencies": {
-    "@react-spring/animated": "link:../animated",
-    "@react-spring/core": "link:../core",
-    "@react-spring/shared": "link:../shared",
+    "@react-spring/animated": "link:../../packages/animated",
+    "@react-spring/core": "link:../../packages/core",
+    "@react-spring/shared": "link:../../packages/shared",
     "@types/react": "~16.8.0",
     "@types/react-native": "~0.57.0",
     "fs-extra": "^8.0.1"
