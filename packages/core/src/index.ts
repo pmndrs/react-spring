@@ -8,13 +8,7 @@ export * from './legacy'
 export * from './globals'
 export * from './constants'
 export * from './Controller'
-
-export * from 'shared/types/animated'
-export * from 'shared/types/interpolation'
-
-export { interpolate } from '@react-spring/animated'
-export { createInterpolator } from 'shared'
-export { FrameLoop } from './FrameLoop'
+export * from './FrameLoop'
 
 export {
   AnimationEvents,
@@ -34,3 +28,9 @@ export {
   TransitionPhase,
   UnknownProps,
 } from './types/common'
+
+export { interpolate } from '@react-spring/animated'
+export { createInterpolator } from 'shared'
+
+export * from 'shared/types/animated'
+export * from 'shared/types/interpolation'
