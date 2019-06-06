@@ -39,7 +39,7 @@ type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
 
-// Extend animated with all the available Konva elements
+// Extend animated with all the available Zdog elements
 export const animated = withExtend(createAnimatedComponent as CreateAnimated &
   ZdogComponents).extend(elements)
 

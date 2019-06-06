@@ -4,9 +4,9 @@
   "private": true,
   "main": "src/index.ts",
   "dependencies": {
-    "@react-spring/animated": "link:../animated",
-    "@react-spring/core": "link:../core",
-    "@react-spring/shared": "link:../shared"
+    "@react-spring/animated": "link:../../packages/animated",
+    "@react-spring/core": "link:../../packages/core",
+    "@react-spring/shared": "link:../../packages/shared"
   },
   "peerDependencies": {
     "konva": ">=2.6",

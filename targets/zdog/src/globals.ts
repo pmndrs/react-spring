@@ -3,7 +3,7 @@ import { Globals, FrameLoop, update } from '@react-spring/core'
 import { createStringInterpolator } from 'shared/stringInterpolation'
 import colorNames from 'shared/colors'
 
-// Add the update function as a global effect to react-three-fibers update loop
+// Add the update function as a global effect to react-zdog's update loop
 if (addEffect) addEffect(update)
 
 Globals.assign({
