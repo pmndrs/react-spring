@@ -112,5 +112,24 @@
     "bundled": 288,
     "minified": 235,
     "gzipped": 179
+  },
+  "dist/zdog.js": {
+    "bundled": 35,
+    "minified": 32,
+    "gzipped": 52,
+    "treeshaked": {
+      "rollup": {
+        "code": 27,
+        "import_statements": 27
+      },
+      "webpack": {
+        "code": 1046
+      }
+    }
+  },
+  "dist/zdog.cjs.js": {
+    "bundled": 280,
+    "minified": 227,
+    "gzipped": 178
   }
 }
