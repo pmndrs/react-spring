@@ -8536,7 +8536,7 @@ realpath-native@^1.1.0:
   dependencies:
     util.promisify "^1.0.0"
 
-recrawl@^1.1.1:
+recrawl@^1.1.1, recrawl@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/recrawl/-/recrawl-1.2.2.tgz#c95eab5c65ed101cc63704d6383f2994a85431d9"
   integrity sha512-zmFZLG8PVsprORNNYipY6VYv86W1NngIXmLIJAwM5mKq+avf4xbWzfPtGGFzIBbhpd1rP8LS63nG3aeXANeaJA==
@@ -10525,9 +10525,9 @@ yargs@^9.0.0:
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
 
-"zdog@git+https://github.com/metafizzy/zdog.git":
+"zdog@https://github.com/metafizzy/zdog":
   version "1.0.2"
-  resolved "git+https://github.com/metafizzy/zdog.git#c6165f0f50c322cfbf35786dde6e79c5cd08edbe"
+  resolved "https://github.com/metafizzy/zdog#c6165f0f50c322cfbf35786dde6e79c5cd08edbe"
 
 zdog@~1.0.0:
   version "1.0.2"
