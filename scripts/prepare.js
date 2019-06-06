@@ -1,6 +1,10 @@
 const fs = require('fs-extra')
+const { crawl } = require('recrawl')
 const sortPackageJson = require('sort-package-json')
-const { resolve, join } = require('path')
+const { resolve, join, dirname } = require('path')
+const chalk = require('chalk')
+
+const { log } = console
 
 // Root "package.json" fields to merge
 const mergedFields = [
@@ -41,32 +45,36 @@ const { isArray } = Array
 
 const PJ = 'package.json'
 
+const getWorkspaces = async rootJson =>
+  (await crawl('.', {
+    only: rootJson.workspaces.packages.map(path => join(path, PJ)),
+    skip: ['.*', 'node_modules'],
+  })).map(dirname)
+
 // Executed by "lerna publish" and "lerna bootstrap"
 async function prepare() {
   process.chdir(resolve(__dirname, '..'))
-  const local = (...paths) => join('packages', ...paths)
-
-  // Directory names in "packages/*"
-  const dirs = fs
-    .readdirSync('packages')
-    .filter(name => fs.statSync(local(name)).isDirectory())
-
-  // Package names from each "package.json"
+  const rootJson = await fs.readJson(PJ)
+  const dirs = await getWorkspaces(rootJson)
   const names = []
-
-  // Metadata by package name
   const packages = {}
+
+  // Read the "package.json" of each workspace
   for (const dir of dirs) {
-    const json = await fs.readJson(local(dir, PJ))
+    const json = await fs.readJson(join(dir, PJ))
     packages[json.name] = json
     names.push(json.name)
   }
 
-  const rootJson = await fs.readJson(PJ)
+  log(``)
   for (let i = 0; i < names.length; i++) {
     const dir = dirs[i]
     const name = names[i]
     const json = packages[name]
+    log(chalk.cyan(json.name))
+    log(`  rootDir: %O`, dir)
+    log(`  version: %O`, json.version)
+    log(``)
 
     json.homepage = rootJson.homepage
     if (dir !== 'react-spring')
@@ -81,7 +89,7 @@ async function prepare() {
     delete json.devDependencies
 
     const deps = json.dependencies
-    if (dir == 'native') {
+    if (name.endsWith('native')) {
       // Since we embed "core" into "native", we need its dependencies.
       Object.assign(deps, packages['@react-spring/core'].dependencies)
       delete deps['@react-spring/core']
@@ -100,7 +108,7 @@ async function prepare() {
         }
       }
 
-    if (dir == 'native') {
+    if (name.endsWith('native')) {
       // Include "typescript" in devDependencies
       const rootDeps = rootJson.devDependencies
       json.devDependencies = {
@@ -139,20 +147,24 @@ async function prepare() {
     }
 
     // Save the dist-only "package.json"
-    const distPath = local(dir, 'dist')
-    await fs.ensureDir(distPath)
-    await fs.writeJson(join(distPath, PJ), sortPackageJson(json), {
+    const distDir = join(dir, 'dist')
+    await fs.ensureDir(distDir)
+    await fs.writeJson(join(distDir, PJ), sortPackageJson(json), {
       spaces: '  ',
     })
 
     // Copy any dist-only files.
     for (const file of inheritedFiles) {
-      await fs.copy(file, join(distPath, file))
+      await fs.copy(file, join(distDir, file))
     }
     for (const file of ownFiles) {
       // Avoid "copy" in case of symlinks.
-      const content = await fs.readFile(local(dir, file), 'utf8')
-      await fs.writeFileSync(join(distPath, file), content)
+      const content = await fs.readFile(join(dir, file), 'utf8')
+      await fs.writeFile(join(distDir, file), content)
+    }
+
+    if (name.endsWith('zdog')) {
+      await fs.copy('@types/react-zdog', join(dir, '@types/react-zdog'))
     }
   }
 }
