@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-dts",
-  "version": "1.0.0-11f5f8ee",
+  "version": "1.0.0-28f856dc",
   "description": "An experiment to generate .d.ts rollup files",
   "keywords": [
     "rollup-plugin",
