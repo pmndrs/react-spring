@@ -431,19 +431,19 @@ export class Controller<State extends Indexable = any> {
     }
 
     // Generalized diffing algorithm
-    const diffProp = (keys: string[], value: any, parent: any) => {
+    const diffProp = (keys: string[], value: any, owner: any) => {
       if (is.und(value)) return
       const lastKey = keys[keys.length - 1]
       if (is.obj(value)) {
-        if (!is.obj(parent[lastKey])) parent[lastKey] = {}
+        if (!is.obj(owner[lastKey])) owner[lastKey] = {}
         for (const key in value) {
-          diffProp(keys.concat(key), value[key], parent[lastKey])
+          diffProp(keys.concat(key), value[key], owner[lastKey])
         }
       } else if (diffTimestamp(keys.join('.'))) {
-        const oldValue = parent[lastKey]
+        const oldValue = owner[lastKey]
         if (!isEqual(value, oldValue)) {
           changed = true
-          parent[lastKey] = value
+          owner[lastKey] = value
         }
       }
     }
