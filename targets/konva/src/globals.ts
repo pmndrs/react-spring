@@ -11,5 +11,3 @@ Globals.assign({
     instance._applyProps(instance, props)
   },
 })
-
-export { Globals }
