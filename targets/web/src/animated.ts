@@ -1,5 +1,4 @@
-import {
-  ElementType,
+import React, {
   CSSProperties,
   ComponentPropsWithRef,
   ForwardRefExoticComponent,
@@ -150,7 +149,7 @@ const elements: JSXElements[] = [
   'tspan',
 ]
 
-type CreateAnimated = <T extends ElementType>(
+type CreateAnimated = <T extends React.ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
 
@@ -163,7 +162,7 @@ export { animated as a }
 
 /** The type of an `animated()` component */
 export type AnimatedComponent<
-  T extends ElementType
+  T extends React.ElementType
 > = ForwardRefExoticComponent<
   AnimatedProps<ComponentPropsWithRef<T>> & {
     scrollTop?: SpringValue<number> | number
