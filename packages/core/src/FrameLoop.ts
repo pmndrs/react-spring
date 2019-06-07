@@ -2,6 +2,7 @@ import { Animated } from '@react-spring/animated'
 import { FrameRequestCallback } from 'shared/types'
 import { now, requestAnimationFrame } from 'shared/globals'
 import { Controller, FrameUpdate } from './Controller'
+import { ActiveAnimation } from './types/spring'
 
 type FrameUpdater = (this: FrameLoop) => boolean
 type FrameListener = (this: FrameLoop, updates: FrameUpdate[]) => void
@@ -71,6 +72,7 @@ export class FrameLoop {
           const ctrl = this.controllers.get(id)!
           const changes: FrameUpdate[2] = ctrl.props.onFrame && []
           for (const config of ctrl.configs) {
+            if (config.idle) continue
             if (this.advance(config)) {
               isActive = true
               if (changes) {
@@ -108,7 +110,7 @@ export class FrameLoop {
   }
 
   /** Advance an animation forward one frame. */
-  advance(config: any): boolean {
+  advance(config: ActiveAnimation): boolean {
     const time = now()
     let isActive = false
     let finished = false
@@ -116,9 +118,9 @@ export class FrameLoop {
       const animated = config.animatedValues[i]
       if (animated.done) continue
 
-      let to = config.toValues[i]
-      const isAttached = to instanceof Animated
-      if (isAttached) to = to.getValue()
+      let to: any = config.toValues[i]
+      const target: any = to instanceof Animated ? to : null
+      if (target) to = target.getValue()
 
       // Jump to end value for immediate animations
       if (config.immediate) {
@@ -127,7 +129,8 @@ export class FrameLoop {
         continue
       }
 
-      const from = config.fromValues[i]
+      const from: any = config.fromValues[i]
+      const startTime = animated.startTime!
 
       // Break animation when string values are involved
       if (typeof from === 'string' || typeof to === 'string') {
@@ -145,10 +148,9 @@ export class FrameLoop {
       if (config.duration !== void 0) {
         position =
           from +
-          config.easing((time - animated.startTime) / config.duration) *
-            (to - from)
+          config.easing!((time - startTime) / config.duration) * (to - from)
 
-        finished = time >= animated.startTime + config.duration
+        finished = time >= startTime + config.duration
       }
       // Decay easing
       else if (config.decay) {
@@ -156,7 +158,7 @@ export class FrameLoop {
         position =
           from +
           (velocity / (1 - decay)) *
-            (1 - Math.exp(-(1 - decay) * (time - animated.startTime)))
+            (1 - Math.exp(-(1 - decay) * (time - startTime)))
 
         finished = Math.abs(animated.lastPosition - position) < 0.1
         if (finished) to = position
@@ -173,9 +175,9 @@ export class FrameLoop {
         // http://gafferongames.com/game-physics/fix-your-timestep/
         const numSteps = Math.floor(time - lastTime)
         for (let n = 0; n < numSteps; ++n) {
-          const force = -config.tension * (position - to)
-          const damping = -config.friction * velocity
-          const acceleration = (force + damping) / config.mass
+          const force = -config.tension! * (position - to)
+          const damping = -config.friction! * velocity
+          const acceleration = (force + damping) / config.mass!
           velocity = velocity + (acceleration * 1) / 1000
           position = position + (velocity * 1) / 1000
         }
@@ -190,17 +192,17 @@ export class FrameLoop {
               ? position > to
               : position < to
             : false
-        const isVelocity = Math.abs(velocity) <= config.precision
+        const isVelocity = Math.abs(velocity) <= config.precision!
         const isDisplacement =
           config.tension !== 0
-            ? Math.abs(to - position) <= config.precision
+            ? Math.abs(to - position) <= config.precision!
             : true
 
         finished = isOvershooting || (isVelocity && isDisplacement)
       }
 
       // Trails aren't done until their parents conclude
-      if (isAttached && !config.toValues[i].done) {
+      if (target && !target.done) {
         finished = false
       }
 
