@@ -8,10 +8,6 @@ type FrameUpdater = (this: FrameLoop) => boolean
 type FrameListener = (this: FrameLoop, updates: FrameUpdate[]) => void
 type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
-// Prevent bundlers from using `globals.requestAnimationFrame`
-// because that leads to an "Illegal invocation" error.
-const raf = requestAnimationFrame
-
 export class FrameLoop {
   /**
    * On each frame, these controllers are searched for values to animate.
@@ -51,7 +47,9 @@ export class FrameLoop {
     onFrame?: FrameListener
     requestFrame?: RequestFrameFn
   } = {}) {
-    this.requestFrame = requestFrame || (fn => raf(fn))
+    this.requestFrame =
+      // The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
+      requestFrame || (fn => (void 0, requestAnimationFrame)(fn))
 
     this.onFrame =
       (onFrame && onFrame.bind(this)) ||
