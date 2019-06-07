@@ -93,9 +93,21 @@ async function prepare() {
       // Since we embed "core" into "native", we need its dependencies.
       Object.assign(deps, packages['@react-spring/core'].dependencies)
       delete deps['@react-spring/core']
+
+      // Include "typescript" in devDependencies
+      const rootDeps = rootJson.devDependencies
+      json.devDependencies = {
+        typescript: rootDeps.typescript,
+      }
+
+      // Run "postinstall" script to prepare private packages
       json.scripts = { postinstall: 'node postinstall.js' }
-    } else {
-      // The default entry points
+
+      // Copy .babelrc for bundlers to find
+      await fs.copy('.babelrc', join(dir, 'dist/.babelrc'))
+    }
+    // Non-native config
+    else {
       json.main = 'index.cjs.js'
       json.module = 'index.js'
     }
@@ -107,14 +119,6 @@ async function prepare() {
           deps[name] = '^' + packages[name].version
         }
       }
-
-    if (name.endsWith('native')) {
-      // Include "typescript" in devDependencies
-      const rootDeps = rootJson.devDependencies
-      json.devDependencies = {
-        typescript: rootDeps.typescript,
-      }
-    }
 
     for (const field of mergedFields) {
       const value = json[field]
