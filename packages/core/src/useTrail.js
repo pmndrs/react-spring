@@ -47,7 +47,7 @@ export const useTrail = (length, propsArg) => {
         const parent = springsRef.current[props.reverse ? i + 1 : i - 1]
         return {
           ...props,
-          ...(!!parent && { attach: () => parent }),
+          attach: () => parent,
           config: callProp(props.config, i),
         }
       }),

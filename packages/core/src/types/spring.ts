@@ -157,13 +157,13 @@ interface AnimationConfig<T = unknown, P extends string = string> {
 }
 
 /** An animation ignored by the frameloop */
-interface IdleAnimation<T = unknown, P extends string = string>
+export interface IdleAnimation<T = unknown, P extends string = string>
   extends AnimationConfig<T, P> {
   idle: true
 }
 
 /** An animation being executed by the frameloop */
-interface ActiveAnimation<T = unknown, P extends string = string>
+export interface ActiveAnimation<T = unknown, P extends string = string>
   extends AnimationConfig<T, P>,
     Omit<SpringConfig, 'velocity'> {
   idle: false

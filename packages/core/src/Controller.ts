@@ -53,8 +53,8 @@ type PendingProps<State extends object> = Merge<
   {
     to?: ToProp<State>
     from?: Partial<State>
-    parent?: Controller
-    attach?: (ctrl: Controller) => Controller
+    parent?: Controller | null
+    attach?: (ctrl: Controller) => Controller | null
     timestamp?: number
   }
 >
@@ -452,15 +452,12 @@ export class Controller<State extends Indexable = any> {
     }
 
     // The "attach" prop is called on every diff. It overwrites the "parent" prop.
-    if (attach) {
-      props.parent = attach(this)
-    }
-    const { parent } = props
-    const oldParent = this.props.parent
-    if (parent !== oldParent) {
+    props.parent = (attach ? attach(this) : props.parent) || null
+    const oldParent = this.props.parent || null
+    if (props.parent !== oldParent) {
       if (oldParent)
         oldParent.children.splice(oldParent.children.indexOf(this), 1)
-      if (parent) parent.children.push(this)
+      if (props.parent) props.parent.children.push(this)
     }
 
     for (const key in props) {
