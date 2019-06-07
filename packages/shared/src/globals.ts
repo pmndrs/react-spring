@@ -1,7 +1,7 @@
 import { SpringInterpolator, InterpolatorConfig } from './types'
 
 declare const window: {
-  requestAnimationFrame: (cb: FrameRequestCallback) => number
+  requestAnimationFrame: (cb: (time: number) => void) => number
   cancelAnimationFrame: (id: number) => void
 }
 
