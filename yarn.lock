@@ -1747,33 +1747,33 @@
     url-template "^2.0.8"
 
 "@react-spring/addons@link:packages/addons":
-  version "0.0.1-alpha.0"
+  version "0.0.1-alpha.1"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     use-memo-one "^1.1.0"
 
 "@react-spring/animated@link:packages/animated":
-  version "0.0.1-alpha.0"
+  version "0.0.1-alpha.1"
   dependencies:
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/core@link:packages/core":
-  version "0.0.1-alpha.0"
+  version "0.0.1-alpha.1"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
-  version "0.0.1-alpha.0"
+  version "0.0.1-alpha.1"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "0.0.1-alpha.3"
+  version "0.0.1-alpha.4"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -1783,17 +1783,17 @@
     fs-extra "^8.0.1"
 
 "@react-spring/shared@link:packages/shared":
-  version "0.0.1-alpha.0"
+  version "0.0.1-alpha.1"
 
 "@react-spring/three@link:targets/three":
-  version "0.0.1-alpha.0"
+  version "0.0.1-alpha.1"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/web@link:targets/web":
-  version "0.0.1-alpha.1"
+  version "0.0.1-alpha.2"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -1882,9 +1882,9 @@
     "@types/jest-diff" "*"
 
 "@types/node@^12.0.2":
-  version "12.0.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.6.tgz#215fa05292dab13e0ebc066f54d14eb983c5ad78"
-  integrity sha512-3sV/MUw6uYxPaRIoooI/MjO0j1A06JNlbpkGc56F+zikO52qavehD/Qw85so47gWhO82tNzEFoF6adXqIfK+EA==
+  version "12.0.7"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.7.tgz#4f2563bad652b2acb1722d7e7aae2b0ff62d192c"
+  integrity sha512-1YKeT4JitGgE4SOzyB9eMwO0nGVNkNEsm9qlIt1Lqm/tG2QEiSMTD4kS3aO6L+w5SClLVxALmIBESK6Mk5wX0A==
 
 "@types/prop-types@*":
   version "15.7.1"
@@ -3861,9 +3861,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.137:
-  version "1.3.149"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.149.tgz#80c9ea1cf9d2bcebc4fbdcc9c829bebf636d6dac"
-  integrity sha512-XO+s6imdgjUS5hHDwh31fpkzxiIz7hFX8B5qnJdlP/BnzqqDF2A/YoitbGt5TknCm8dS9tIYdiXwDbarsonaFA==
+  version "1.3.150"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.150.tgz#afb972b53a702b37c76db843c39c967e9f68464b"
+  integrity sha512-5wuYlaXhXbBvavSTij5ZyidICB6sAK/1BwgZZoPCgsniid1oDgzVvDOV/Dw6J25lKV9QZ9ZdQCp8MEfF0/OIKA==
 
 elliptic@^6.0.0:
   version "6.4.1"
@@ -10528,9 +10528,9 @@ yargs@^9.0.0:
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
 
-"zdog@https://github.com/metafizzy/zdog":
+"zdog@git+https://github.com/metafizzy/zdog.git":
   version "1.0.2"
-  resolved "https://github.com/metafizzy/zdog#c6165f0f50c322cfbf35786dde6e79c5cd08edbe"
+  resolved "git+https://github.com/metafizzy/zdog.git#125bda077e142ed066fba1f59bec5d4ef9713d94"
 
 zdog@~1.0.0:
   version "1.0.2"
