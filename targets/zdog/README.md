@@ -1,3 +1,3 @@
-# @react-spring/konva
+# @react-spring/zdog
 
-[`konva`](https://github.com/konvajs/konva) support
+[`zdog`](https://github.com/metafizzy/zdog) support
