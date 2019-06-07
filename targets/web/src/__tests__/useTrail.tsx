@@ -2,7 +2,7 @@ import { assert, test, _ } from 'spec.ts';
 import { useTrail, SpringValue, SpringUpdateFn, SpringStopFn } from '..';
 
 test('basic usage', () => {
-  const springs = useTrail(3, { opacity: 1 });
+  const [springs] = useTrail(3, { opacity: 1 });
   assert(springs, _ as Array<{
     [key: string]: SpringValue<any>;
     opacity: SpringValue<number>;

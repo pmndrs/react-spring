@@ -4,8 +4,8 @@ import { is, useForceUpdate, useOnce } from 'shared'
 import { Controller } from './Controller'
 
 /** API
- * const transitions = useTransition(items, itemKeys, { ... })
- * const [transitions, update] = useTransition(items, itemKeys, () => ({ ... }))
+ * const transitions = useTransition(items, itemKeys, props)
+ * const transitions = useTransition(items, itemKeys, () => props)
  */
 
 let guid = 0
@@ -25,6 +25,8 @@ const makeConfig = props => {
 }
 
 export function useTransition(input, keyTransform, props) {
+  // Coerce props to an object
+  props = useMemo(() => callProp(props), [])
   props = makeConfig({
     ...props,
     items: input,

@@ -5,11 +5,11 @@ import { useTransition } from './useTransition'
 import { is } from 'shared'
 
 export function Spring({ children, ...props }) {
-  return children(useSpring(props))
+  return children(useSpring(props)[0])
 }
 
 export function Trail({ items, children, ...props }) {
-  const trails = useTrail(items.length, props)
+  const [trails] = useTrail(items.length, props)
   return items.map((item, index) => {
     const result = children(item, index)
     return is.fun(result) ? result(trails[index]) : result

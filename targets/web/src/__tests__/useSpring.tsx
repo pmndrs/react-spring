@@ -11,7 +11,7 @@ import {
 } from '..';
 
 test('infer return type via forward prop', () => {
-  const props = useSpring({ width: 0, delay: 1000 });
+  const [props] = useSpring({ width: 0, delay: 1000 });
   assert(props, _ as {
     [key: string]: SpringValue<any>;
     width: SpringValue<number>;
@@ -24,7 +24,7 @@ test('infer return type via forward prop', () => {
 });
 
 test('infer return type via "from" prop', () => {
-  const props = useSpring({
+  const [props] = useSpring({
     from: { width: 0 },
   });
   assert(props, _ as {
@@ -34,7 +34,7 @@ test('infer return type via "from" prop', () => {
 });
 
 test('infer return type via "to" prop', () => {
-  const props = useSpring({
+  const [props] = useSpring({
     to: { width: 0 },
   });
   assert(props, _ as {
@@ -44,7 +44,7 @@ test('infer return type via "to" prop', () => {
 });
 
 test('infer return type via "from" and "to" props', () => {
-  const props = useSpring({
+  const [props] = useSpring({
     from: { width: 0 },
     to: { height: '100%' },
   });
@@ -56,7 +56,7 @@ test('infer return type via "from" and "to" props', () => {
 });
 
 test('infer return type via "from" and forward props', () => {
-  const props = useSpring({
+  const [props] = useSpring({
     from: { width: 0 },
     height: '100%',
   });
@@ -68,7 +68,7 @@ test('infer return type via "from" and forward props', () => {
 });
 
 test('infer animated array', () => {
-  const props = useSpring({
+  const [props] = useSpring({
     to: { foo: [0, 0] },
   });
   assert(props, _ as {
@@ -166,7 +166,7 @@ test('spring refs', () => {
 });
 
 test('basic config', () => {
-  const props = useSpring({
+  const [props] = useSpring({
     from: { width: 0 },
     reset: true,
     delay: 1000,
@@ -187,7 +187,7 @@ test('basic config', () => {
 });
 
 test('function as "to" prop', () => {
-  const props = useSpring({
+  const [props] = useSpring({
     to: async next => {
       assert(next, _ as SpringUpdateFn);
 
@@ -209,7 +209,7 @@ test('function as "to" prop', () => {
   });
 
   test('with "from" prop', () => {
-    const props = useSpring({
+    const [props] = useSpring({
       from: { foo: 1 },
       to: async next => {
         assert(next, _ as SpringUpdateFn); // FIXME: should be "SpringUpdateFn<{ foo: number }>"
@@ -229,7 +229,7 @@ test('function as "to" prop', () => {
 
 test('array as "to" prop', () => {
   // ⚠️ Animated keys are not inferred when "to" is an array (unless "from" exists)
-  const props = useSpring({
+  const [props] = useSpring({
     to: [{ opacity: 1 }, { opacity: 0 }],
     foo: 0, // ️️⚠️ This key is ignored because "to" exists
   });
@@ -239,7 +239,7 @@ test('array as "to" prop', () => {
   });
 
   test('with "from" prop', () => {
-    const props = useSpring({
+    const [props] = useSpring({
       to: [{ opacity: 1 }, { opacity: 0 }],
       from: { opacity: 0 },
     });
