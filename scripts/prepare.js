@@ -89,6 +89,13 @@ async function prepare() {
     delete json.scripts
     delete json.devDependencies
 
+    // Add "postinstall" script for donations.
+    if (/(native|core)$/.test(name))
+      json.scripts = {
+        postinstall:
+          'node -e "console.log(\'\\u001b[35m\\u001b[1mEnjoy react-spring? You can now donate to our open collective:\\u001b[22m\\u001b[39m\\n > \\u001b[34mhttps://opencollective.com/react-spring/donate\\u001b[0m\')"',
+      }
+
     const deps = json.dependencies
     if (name.endsWith('native')) {
       // Since we embed "core" into "native", we need its dependencies.
