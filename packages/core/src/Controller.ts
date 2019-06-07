@@ -460,11 +460,7 @@ export class Controller<State extends Indexable = any> {
     if (attach) {
       props.parent = attach(this)
     }
-
     const { parent } = props
-    if (parent && !(parent instanceof Controller)) {
-      throw Error('The "parent" prop must be a Controller object or falsy')
-    }
     const oldParent = this.props.parent
     if (parent !== oldParent) {
       if (oldParent)
