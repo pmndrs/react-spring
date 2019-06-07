@@ -1,7 +1,7 @@
 {
   "name": "@react-spring/shared",
   "version": "0.0.1-alpha.1",
-  "description": "Internal use only",
+  "description": "Globals and shared modules",
   "private": true,
   "main": "src/index.ts",
   "scripts": {
