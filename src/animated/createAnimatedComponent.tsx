@@ -7,7 +7,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from 'react'
-import { handleRef, useForceUpdate } from '../shared/helpers'
+import { handleRef, useForceUpdate, is } from '../shared/helpers'
 import {
   AnimatedComponentProps,
   CreateAnimatedComponent,
@@ -27,12 +27,17 @@ const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
       const attachProps = useCallback(props => {
         const oldPropsAnimated = propsAnimated.current
         const callback = () => {
+          let didUpdate: false | undefined = false
           if (node.current) {
-            const didUpdate = applyAnimatedValues.fn(
+            didUpdate = applyAnimatedValues.fn(
               node.current,
               propsAnimated.current!.getAnimatedValue()
             )
-            if (didUpdate === false) forceUpdate()
+          }
+          if (!node.current || didUpdate === false) {
+            // If no referenced node has been found, or the update target didn't have a
+            // native-responder, then forceUpdate the animation ...
+            forceUpdate()
           }
         }
         propsAnimated.current = new AnimatedProps(props, callback)
@@ -56,12 +61,13 @@ const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
         scrollLeft,
         ...animatedProps
       } = propsAnimated.current!.getValue()
-      return (
-        <Component
-          {...animatedProps as typeof props}
-          ref={(childRef: C) => (node.current = handleRef(childRef, ref))}
-        />
-      )
+
+      // Functions cannot have refs, see:
+      // See: https://github.com/react-spring/react-spring/issues/569
+      const refFn = is.fun(Component)
+        ? undefined
+        : (childRef: C) => (node.current = handleRef(childRef, ref))
+      return <Component {...animatedProps as typeof props} ref={refFn} />
     }
   )
   return AnimatedComponent
