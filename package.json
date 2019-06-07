@@ -115,7 +115,7 @@
     "rimraf": "2.6.3",
     "rollup": "1.12.4",
     "rollup-plugin-babel": "4.3.2",
-    "rollup-plugin-dts": "link:.yalc/rollup-plugin-dts",
+    "rollup-plugin-dts": "^1.1.0",
     "rollup-plugin-node-resolve": "4.0.0",
     "rollup-plugin-size-snapshot": "0.8.0",
     "rollup-plugin-terser": "5.0.0",
