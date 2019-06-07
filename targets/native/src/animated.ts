@@ -1,5 +1,9 @@
 import { View, Text, ViewStyle } from 'react-native'
-import { createAnimatedComponent, withExtend } from '@react-spring/animated'
+import {
+  createAnimatedComponent,
+  withExtend,
+  WithExtend,
+} from '@react-spring/animated'
 import { AssignableKeys, SpringValue } from 'shared'
 import {
   ReactNode,
@@ -23,8 +27,9 @@ type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
 
-export const animated = withExtend(createAnimatedComponent as CreateAnimated &
-  NativeComponents).extend(elements)
+export const animated: WithExtend<
+  CreateAnimated & NativeComponents
+> = withExtend(createAnimatedComponent as any).extend(elements)
 
 export { animated as a }
 
