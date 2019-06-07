@@ -2,6 +2,7 @@ import { is } from 'shared'
 import {
   colorNames,
   createStringInterpolator,
+  forceImmediate,
   frameLoop,
   now,
 } from 'shared/globals'
@@ -443,6 +444,10 @@ export class Controller<State extends Indexable = any> {
           }
         }
       }
+    }
+
+    if (forceImmediate) {
+      immediate = true
     }
 
     if (reverse) {
