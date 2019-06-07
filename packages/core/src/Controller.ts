@@ -422,16 +422,6 @@ export class Controller<State extends Indexable = any> {
   }: PendingProps<State> & Indexable) {
     let changed = false
 
-    // Ensure the newer timestamp is used.
-    const diffTimestamp = (keyPath: string) => {
-      const previous = this.timestamps[keyPath]
-      if (is.und(previous) || timestamp! >= previous) {
-        this.timestamps[keyPath] = timestamp!
-        return true
-      }
-      return false
-    }
-
     // Generalized diffing algorithm
     const diffProp = (keys: string[], value: any, owner: any) => {
       if (is.und(value)) return
@@ -441,11 +431,16 @@ export class Controller<State extends Indexable = any> {
         for (const key in value) {
           diffProp(keys.concat(key), value[key], owner[lastKey])
         }
-      } else if (diffTimestamp(keys.join('.'))) {
-        const oldValue = owner[lastKey]
-        if (!isEqual(value, oldValue)) {
-          changed = true
-          owner[lastKey] = value
+      } else {
+        const keyPath = keys.join('.')
+        const oldTimestamp = this.timestamps[keyPath]
+        if (is.und(oldTimestamp) || timestamp! >= oldTimestamp) {
+          this.timestamps[keyPath] = timestamp!
+          const oldValue = owner[lastKey]
+          if (!isEqual(value, oldValue)) {
+            changed = true
+            owner[lastKey] = value
+          }
         }
       }
     }
