@@ -13,6 +13,7 @@
       "shared/*": ["./packages/shared/src/*"]
     },
     "jsx": "react",
+    "sourceMap": true,
     "importHelpers": true,
     "preserveSymlinks": true,
     "allowSyntheticDefaultImports": true,
