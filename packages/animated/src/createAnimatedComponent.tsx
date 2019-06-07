@@ -52,7 +52,7 @@ export const createAnimatedComponent: CreateAnimated = <C extends ElementType>(
     const { scrollTop, scrollLeft, ...animatedProps } = attachProps(props)
     return (
       <Component
-        {...animatedProps as typeof props}
+        {...(animatedProps as typeof props)}
         ref={(childRef: C) => (node.current = handleRef(childRef, ref))}
       />
     )
