@@ -1766,14 +1766,14 @@
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
-  version "0.0.1-alpha.1"
+  version "0.0.1-alpha.2"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "0.0.1-alpha.4"
+  version "0.0.1-alpha.5"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -1786,21 +1786,21 @@
   version "0.0.1-alpha.1"
 
 "@react-spring/three@link:targets/three":
-  version "0.0.1-alpha.1"
-  dependencies:
-    "@react-spring/animated" "link:packages/animated"
-    "@react-spring/core" "link:packages/core"
-    "@react-spring/shared" "link:packages/shared"
-
-"@react-spring/web@link:targets/web":
   version "0.0.1-alpha.2"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
+"@react-spring/web@link:targets/web":
+  version "0.0.1-alpha.3"
+  dependencies:
+    "@react-spring/animated" "link:packages/animated"
+    "@react-spring/core" "link:packages/core"
+    "@react-spring/shared" "link:packages/shared"
+
 "@react-spring/zdog@link:targets/zdog":
-  version "0.0.1-alpha.0"
+  version "0.0.1-alpha.1"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -10528,9 +10528,9 @@ yargs@^9.0.0:
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
 
-"zdog@git+https://github.com/metafizzy/zdog.git":
+"zdog@https://github.com/metafizzy/zdog":
   version "1.0.2"
-  resolved "git+https://github.com/metafizzy/zdog.git#125bda077e142ed066fba1f59bec5d4ef9713d94"
+  resolved "https://github.com/metafizzy/zdog#125bda077e142ed066fba1f59bec5d4ef9713d94"
 
 zdog@~1.0.0:
   version "1.0.2"
