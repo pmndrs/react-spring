@@ -77,11 +77,12 @@ async function prepare() {
     log(``)
 
     json.homepage = rootJson.homepage
-    if (dir !== 'react-spring')
+    if (name !== 'react-spring') {
       json.homepage = json.homepage.replace(
         '#readme',
-        `/packages/${dir}#readme`
+        `/tree/master/${dir}#readme`
       )
+    }
 
     // Be gone dev-only fields!
     delete json.private
