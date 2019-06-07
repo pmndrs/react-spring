@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "rollup-plugin-dts": {
-      "signature": "28f856dc4bc2763a29509a8e8a56c9c0",
-      "link": true
-    }
-  }
-}
