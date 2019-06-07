@@ -13,5 +13,3 @@ Globals.assign({
   createStringInterpolator,
   colorNames,
 })
-
-export { Globals }

@@ -9,5 +9,3 @@ Globals.assign({
   applyAnimatedValues,
   createStringInterpolator,
 })
-
-export { Globals }

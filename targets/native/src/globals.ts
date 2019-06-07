@@ -27,5 +27,3 @@ Globals.assign({
     },
   }),
 })
-
-export { Globals }
