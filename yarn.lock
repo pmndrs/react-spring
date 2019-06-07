@@ -1759,7 +1759,7 @@
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/core@link:packages/core":
-  version "0.0.1-alpha.4"
+  version "0.0.1-alpha.5"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
@@ -1773,7 +1773,7 @@
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "0.0.1-alpha.6"
+  version "0.0.1-alpha.7"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
