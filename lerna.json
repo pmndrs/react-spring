@@ -3,5 +3,15 @@
   "npmClient": "yarn",
   "useWorkspaces": true,
   "registry": "https://registry.npmjs.org",
-  "allowBranch": "master"
+  "ignoreChanges": ["**/__tests__/**", "**/*.test.*", "**/*.md"],
+  "command": {
+    "version": {
+      "changelog": false,
+      "conventionalCommits": true,
+      "gitTagVersion": false,
+      "message": "chore: ship it 🚀",
+      "push": false,
+      "skipGit": true
+    }
+  }
 }
