@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/konva",
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.1-alpha.4",
   "private": true,
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",

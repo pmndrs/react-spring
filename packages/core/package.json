@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/core",
-  "version": "0.0.1-alpha.5",
+  "version": "0.1.0-alpha.0",
   "private": true,
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
