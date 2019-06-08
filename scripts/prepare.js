@@ -68,6 +68,9 @@ async function prepare() {
     names.push(json.name)
   }
 
+  // Ensure all "dist" directories exist.
+  dirs.forEach(dir => fs.ensureDirSync(join(dir, distId)))
+
   log(``)
   for (let i = 0; i < names.length; i++) {
     const dir = dirs[i]
