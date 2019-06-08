@@ -60,22 +60,6 @@
       "pre-commit": "pretty-quick --staged"
     }
   },
-  "jest": {
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "packages/*/src/**/*"
-    ],
-    "coverageDirectory": "./coverage",
-    "coverageReporters": [
-      "json",
-      "html",
-      "text"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "testRegex": "test.(js|ts|tsx)$"
-  },
   "dependencies": {
     "@babel/runtime": "^7.3.1",
     "tslib": "^1.9.3"
@@ -91,12 +75,12 @@
     "@babel/preset-typescript": "7.1.0",
     "@types/jest": "~24.0.0",
     "@types/react": "~16.8.0",
-    "babel-jest": "24.8.0",
     "build-if-changed": "^1.4.4",
     "chalk": "^2.4.2",
     "fs-extra": "7.0.1",
     "husky": "1.3.1",
-    "jest": "24.1.0",
+    "jest": "^24.8.0",
+    "jest-watch-typeahead": "^0.3.1",
     "lerna": "3.14.1",
     "mock-raf": "1.0.1",
     "patch-package": "^6.1.2",
