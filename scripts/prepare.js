@@ -6,6 +6,8 @@ const chalk = require('chalk')
 
 const { log } = console
 
+const distId = 'dist'
+
 // Root "package.json" fields to merge
 const mergedFields = [
   'license',
@@ -111,8 +113,9 @@ async function prepare() {
       // Run "postinstall" script to prepare private packages
       json.scripts = { postinstall: 'node postinstall.js' }
 
-      // Copy .babelrc for bundlers to find
-      await fs.copy('.babelrc', join(dir, 'dist/.babelrc'))
+      // Copy babel config for bundlers to find
+      const configId = 'babel.config.js'
+      await fs.copy(configId, join(dir, distId, configId))
     }
     // Non-native config
     else {
@@ -127,10 +130,10 @@ async function prepare() {
           deps[dep] = '^' + packages[dep].version
 
           // Link "dist" packages together.
-          const linkDir = join(dir, 'dist/node_modules')
+          const linkDir = join(dir, distId, 'node_modules')
           const linkPath = join(linkDir, dep)
           const depIndex = names.findIndex(name => name === dep)
-          const depPath = join(dirs[depIndex], 'dist')
+          const depPath = join(dirs[depIndex], distId)
           fs.removeSync(linkPath)
           fs.ensureSymlinkSync(depPath, linkPath)
         }
@@ -167,7 +170,7 @@ async function prepare() {
     }
 
     // Save the dist-only "package.json"
-    const distDir = join(dir, 'dist')
+    const distDir = join(dir, distId)
     await fs.ensureDir(distDir)
     await fs.writeJson(join(distDir, PJ), sortPackageJson(json), {
       spaces: '  ',
@@ -185,9 +188,10 @@ async function prepare() {
 
     // Inject custom @types dependencies.
     if (name.endsWith('zdog')) {
-      await fs.copy('@types/react-zdog', join(dir, 'dist/@types/react-zdog'))
+      const typesId = '@types/react-zdog'
+      await fs.copy(typesId, join(dir, distId, typesId))
       await fs.writeJson(
-        join(dir, 'dist/tsconfig.json'),
+        join(dir, distId, 'tsconfig.json'),
         { include: ['**/*.d.ts'] },
         { spaces: '  ' }
       )
