@@ -1,6 +1,5 @@
-import * as Globals from './globals'
+import { createInterpolator, Globals } from '.'
 import { createStringInterpolator } from './stringInterpolation'
-import { createInterpolator } from './createInterpolator'
 import colorNames from './colors'
 
 beforeAll(() => {
@@ -111,7 +110,7 @@ describe('Interpolation', () => {
   it('should work with output ranges with mixed hex and rgba strings', () => {
     const interpolation = createInterpolator({
       range: [0, 1],
-      output: ['rgba(100, 120, 140, .4)', '#87FC70'],
+      output: ['rgba(100, 120, 140, 0.4)', '#87FC70'],
     })
 
     expect(interpolation(0)).toBe('rgba(100, 120, 140, 0.4)')
@@ -140,5 +139,14 @@ describe('Interpolation', () => {
     expect(interpolation(0.5)).toBe('rgba(25, 125, 225, 0.5)')
     expect(interpolation(1.5)).toBe('rgba(153, 75, 125, 1)')
     expect(interpolation(2)).toBe('rgba(255, 0, 0, 1)')
+  })
+
+  it('should round rgb values', () => {
+    const interpolation = createInterpolator({
+      range: [0, 1],
+      output: ['rgba(0, 0, 0, 0)', 'rgba(3, 3, 3, 1)'],
+    })
+
+    expect(interpolation(0.5)).toBe('rgba(2, 2, 2, 0.5)')
   })
 })
