@@ -440,10 +440,6 @@ export class Controller<State extends Indexable = any> {
       }
     }
 
-    if (G.forceImmediate) {
-      immediate = true
-    }
-
     if (reverse) {
       const { to } = props
       props.to = props.from
@@ -546,8 +542,10 @@ export class Controller<State extends Indexable = any> {
         isAttaching ||
         !isEqual(goalValue, state.isNew ? currValue : state.goalValue)
       ) {
-        let { immediate } = is.und(props.immediate) ? this.props : props
-        immediate = !!callProp(immediate, key)
+        const immediate = !!callProp(
+          (is.und(props.immediate) ? this.props : props).immediate,
+          key
+        )
 
         const isActive = animatedValues.some(v => !v.done)
         const fromValue = !is.und(from[key])
@@ -581,6 +579,11 @@ export class Controller<State extends Indexable = any> {
             console.error(err)
             continue
           }
+          if (G.skipAnimation) {
+            input.setValue(1)
+            this._stopAnimation(key)
+            continue
+          }
           if (immediate) {
             input.setValue(1, false)
           }
@@ -605,6 +608,11 @@ export class Controller<State extends Indexable = any> {
               moveChildren(prev, animated)
             }
           }
+          if (G.skipAnimation) {
+            animated.setValue!(goalValue)
+            this._stopAnimation(key)
+            continue
+          }
           if (immediate) {
             animated.setValue!(goalValue, false)
           }
@@ -616,7 +624,7 @@ export class Controller<State extends Indexable = any> {
           callProp(this.props.config, key) ||
           emptyObj
 
-        if (!immediate) {
+        if (!(immediate || G.skipAnimation)) {
           started.push(key)
         }
 

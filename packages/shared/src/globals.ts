@@ -37,9 +37,9 @@ export let now = () => Date.now()
 
 export let colorNames: { [key: string]: number } = {}
 
-export let defaultElement: any
+export let skipAnimation = false
 
-export let forceImmediate = false
+export let defaultElement: any
 
 export let createAnimatedStyle: ((style: any) => any) | undefined
 
@@ -67,7 +67,7 @@ export interface AnimatedGlobals {
   now?: typeof now
   frameLoop?: typeof frameLoop
   colorNames?: typeof colorNames
-  forceImmediate?: typeof forceImmediate
+  skipAnimation?: typeof skipAnimation
   defaultElement?: typeof defaultElement
   applyAnimatedValues?: typeof applyAnimatedValues
   createStringInterpolator?: typeof createStringInterpolator
@@ -84,8 +84,8 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     now,
     frameLoop,
     colorNames,
+    skipAnimation,
     defaultElement,
-    forceImmediate,
     applyAnimatedValues,
     createStringInterpolator,
     createAnimatedInterpolation,
@@ -99,8 +99,8 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       now,
       frameLoop,
       colorNames,
+      skipAnimation,
       defaultElement,
-      forceImmediate,
       applyAnimatedValues,
       createStringInterpolator,
       createAnimatedInterpolation,
