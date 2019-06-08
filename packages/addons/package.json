@@ -2,7 +2,8 @@
   "name": "@react-spring/addons",
   "version": "0.0.1-alpha.2",
   "private": true,
-  "main": "src/index.ts",
+  "main": "dist/index.cjs.js",
+  "types": "src/index.ts",
   "dependencies": {
     "@react-spring/animated": "link:../animated",
     "@react-spring/core": "link:../core",
