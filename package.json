@@ -88,7 +88,7 @@
     "pretty-quick": "1.10.0",
     "recrawl": "^1.2.2",
     "rimraf": "2.6.3",
-    "rollup": "1.12.4",
+    "rollup": "^1.14.4",
     "rollup-plugin-babel": "4.3.2",
     "rollup-plugin-dts": "^1.1.0",
     "rollup-plugin-node-resolve": "4.0.0",
