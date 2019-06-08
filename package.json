@@ -81,6 +81,7 @@
     "jest": "^24.8.0",
     "jest-watch-typeahead": "^0.3.1",
     "lerna": "3.14.1",
+    "meta": "^1.2.19",
     "mock-raf": "1.0.1",
     "patch-package": "^6.1.2",
     "postinstall-postinstall": "^2.0.0",
