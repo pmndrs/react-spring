@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/shared",
-  "version": "0.0.1-alpha.2",
+  "version": "0.0.1-alpha.3",
   "description": "Globals and shared modules",
   "private": true,
   "main": "dist/index.js",
