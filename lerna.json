@@ -12,6 +12,11 @@
       "message": "chore: ship it 🚀",
       "push": false,
       "skipGit": true
+    },
+    "publish": {
+      "bump": "from-package",
+      "contents": "dist",
+      "ignoreScripts": true
     }
   }
 }
