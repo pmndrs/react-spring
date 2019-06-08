@@ -1,7 +1,7 @@
 const fs = require('fs-extra')
 const { crawl } = require('recrawl')
 const sortPackageJson = require('sort-package-json')
-const { resolve, join, dirname } = require('path')
+const { relative, resolve, join, dirname } = require('path')
 const chalk = require('chalk')
 
 const { log } = console
@@ -122,9 +122,17 @@ async function prepare() {
 
     // Update the versions of "@react-spring/*" dependencies.
     if (deps)
-      for (const name in deps) {
-        if (name.startsWith('@react-spring/')) {
-          deps[name] = '^' + packages[name].version
+      for (const dep in deps) {
+        if (dep.startsWith('@react-spring/')) {
+          deps[dep] = '^' + packages[dep].version
+
+          // Link "dist" packages together.
+          const linkDir = join(dir, 'dist/node_modules')
+          const linkPath = join(linkDir, dep)
+          const depIndex = names.findIndex(name => name === dep)
+          const depPath = join(dirs[depIndex], 'dist')
+          fs.removeSync(linkPath)
+          fs.ensureSymlinkSync(depPath, linkPath)
         }
       }
 
