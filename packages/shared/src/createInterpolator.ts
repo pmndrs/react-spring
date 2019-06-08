@@ -20,7 +20,7 @@ interface InterpolatorFactory {
 
   <Out extends Animatable>(
     range: ReadonlyArray<number>,
-    output?: ReadonlyArray<Out>,
+    output: ReadonlyArray<Out>,
     extrapolate?: ExtrapolateType
   ): (input: number) => Animatable<Out>
 }
