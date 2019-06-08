@@ -2,7 +2,7 @@ import { Animatable, SpringValue, InterpolatorArgs, is } from 'shared'
 import { Animated, isAnimated } from './Animated'
 import { AnimatedProps } from './AnimatedProps'
 import { interpolate } from './interpolate'
-import { now } from 'shared/globals'
+import * as G from 'shared/globals'
 
 /**
  * Animated works by building a directed acyclic graph of dependencies
@@ -84,7 +84,7 @@ export class AnimatedValue<T = number> extends Animated
       this.lastPosition = this.value
       this.lastVelocity = isActive ? this.lastVelocity : undefined
       this.lastTime = isActive ? this.lastTime : undefined
-      this.startTime = now()
+      this.startTime = G.now()
     }
     this.done = false
     this.animatedStyles.clear()

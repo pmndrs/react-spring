@@ -7,19 +7,15 @@ import React, {
   useRef,
   Ref,
 } from 'react'
-import {
-  AnimatedRef,
-  createAnimatedRef,
-  applyAnimatedValues,
-} from 'shared/globals'
+import * as G from 'shared/globals'
 import { is, useForceUpdate, useOnce } from 'shared'
 import { AnimatedProps } from './AnimatedProps'
 
 export const createAnimatedComponent: CreateAnimated = <C extends ElementType>(
   Component: C
 ) =>
-  forwardRef<C | AnimatedRef<C>>((props: any, ref) => {
-    const node = useRef<C | AnimatedRef<C> | null>(null)
+  forwardRef<C | G.AnimatedRef<C>>((props: any, ref) => {
+    const node = useRef<C | G.AnimatedRef<C> | null>(null)
     const mounted = useRef(true)
     const propsAnimated = useRef<AnimatedProps | null>(null)
     const forceUpdate = useForceUpdate()
@@ -28,7 +24,7 @@ export const createAnimatedComponent: CreateAnimated = <C extends ElementType>(
       const oldPropsAnimated = propsAnimated.current
       const callback = () => {
         if (node.current) {
-          const didUpdate = applyAnimatedValues(
+          const didUpdate = G.applyAnimatedValues(
             node.current,
             propsAnimated.current!.getAnimatedValue()
           )
@@ -45,7 +41,7 @@ export const createAnimatedComponent: CreateAnimated = <C extends ElementType>(
       propsAnimated.current && propsAnimated.current.detach()
     })
     useImperativeHandle(ref, () =>
-      createAnimatedRef(node as MutableRefObject<C>, mounted, forceUpdate)
+      G.createAnimatedRef(node as MutableRefObject<C>, mounted, forceUpdate)
     )
 
     // TODO: Avoid special case for scrollTop/scrollLeft

@@ -1,11 +1,5 @@
 import { is } from 'shared'
-import {
-  colorNames,
-  createStringInterpolator,
-  forceImmediate,
-  frameLoop,
-  now,
-} from 'shared/globals'
+import * as G from 'shared/globals'
 import {
   Animatable,
   Animation,
@@ -111,7 +105,7 @@ export class Controller<State extends Indexable = any> {
     this._ensureAnimated(props.from, true)
     this._ensureAnimated(props.to)
 
-    props.timestamp = now()
+    props.timestamp = G.now()
 
     // The `delay` prop of every update must be a number >= 0
     if (is.fun(props.delay) && is.obj(props.to)) {
@@ -165,7 +159,7 @@ export class Controller<State extends Indexable = any> {
     }
     // Stop all animations
     else if (this.runCount) {
-      this.cancelledAt = now()
+      this.cancelledAt = G.now()
 
       // Update the animation configs
       this.configs.forEach(config => this._stopAnimation(config.key))
@@ -232,7 +226,7 @@ export class Controller<State extends Indexable = any> {
     value: CachedProps<State>[P]
   ) {
     this.props[key] = value
-    this.timestamps[key] = now()
+    this.timestamps[key] = G.now()
     return this
   }
 
@@ -278,7 +272,7 @@ export class Controller<State extends Indexable = any> {
     if (onEnd) this._onEnd(onEnd)
     if (this.idle && this.runCount) {
       this.idle = false
-      frameLoop.start(this)
+      G.frameLoop.start(this)
     }
   }
 
@@ -304,7 +298,7 @@ export class Controller<State extends Indexable = any> {
   // Remove this controller from the frameloop, and notify any listeners.
   private _stop(finished?: boolean) {
     this.idle = true
-    frameLoop.stop(this)
+    G.frameLoop.stop(this)
 
     const { onEndQueue } = this
     if (onEndQueue.length) {
@@ -446,7 +440,7 @@ export class Controller<State extends Indexable = any> {
       }
     }
 
-    if (forceImmediate) {
+    if (G.forceImmediate) {
       immediate = true
     }
 
@@ -693,7 +687,7 @@ export class Controller<State extends Indexable = any> {
     }
 
     // Prevent any pending updates to this key
-    this.timestamps['to.' + key] = now()
+    this.timestamps['to.' + key] = G.now()
 
     // Idle animations are skipped unless their Animated node changed
     const state = this.animations[key] || emptyObj
@@ -802,7 +796,7 @@ function merge(dest: any, src: any) {
 // Not all strings can be animated (eg: {display: "none"})
 function isAnimatableString(value: unknown): boolean {
   if (!is.str(value)) return false
-  return value.startsWith('#') || /\d/.test(value) || !!colorNames[value]
+  return value.startsWith('#') || /\d/.test(value) || !!G.colorNames[value]
 }
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
@@ -810,7 +804,7 @@ function computeGoalValue<T>(value: T): T {
   return is.arr(value)
     ? value.map(computeGoalValue)
     : isAnimatableString(value)
-    ? (createStringInterpolator as any)({
+    ? (G.createStringInterpolator as any)({
         range: [0, 1],
         output: [value, value],
       })(1)

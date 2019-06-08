@@ -1,4 +1,4 @@
-import { createStringInterpolator } from './globals'
+import * as G from './globals'
 import {
   Animatable,
   InterpolatorFn,
@@ -46,7 +46,7 @@ export const createInterpolator: InterpolatorFactory = <
     })
   }
   if (is.str(range.output[0])) {
-    return createStringInterpolator(range as any) as any
+    return G.createStringInterpolator(range as any) as any
   }
   const config = range as InterpolatorConfig<number>
   const outputRange = config.output

@@ -1,6 +1,6 @@
+import * as G from 'shared/globals'
 import { Animated } from '@react-spring/animated'
 import { FrameRequestCallback } from 'shared/types'
-import { now, requestAnimationFrame } from 'shared/globals'
 import { Controller, FrameUpdate } from './Controller'
 import { ActiveAnimation } from './types/spring'
 
@@ -49,7 +49,7 @@ export class FrameLoop {
   } = {}) {
     this.requestFrame =
       // The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
-      requestFrame || (fn => (void 0, requestAnimationFrame)(fn))
+      requestFrame || (fn => (void 0, G.requestAnimationFrame)(fn))
 
     this.onFrame =
       (onFrame && onFrame.bind(this)) ||
@@ -113,7 +113,7 @@ export class FrameLoop {
 
   /** Advance an animation forward one frame. */
   advance(config: ActiveAnimation): boolean {
-    const time = now()
+    const time = G.now()
     let isActive = false
     let finished = false
     for (let i = 0; i < config.animatedValues.length; i++) {
