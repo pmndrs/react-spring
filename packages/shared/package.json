@@ -4,7 +4,7 @@
   "description": "Globals and shared modules",
   "private": true,
   "main": "dist/index.js",
-  "types": "src/index.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -p ."
   },

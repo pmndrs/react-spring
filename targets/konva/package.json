@@ -3,7 +3,7 @@
   "version": "0.0.1-alpha.4",
   "private": true,
   "main": "dist/index.cjs.js",
-  "types": "src/index.ts",
+  "types": "dist/index.d.ts",
   "dependencies": {
     "@react-spring/animated": "link:../../packages/animated",
     "@react-spring/core": "link:../../packages/core",

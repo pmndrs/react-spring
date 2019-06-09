@@ -3,7 +3,7 @@
   "version": "0.0.1-alpha.6",
   "private": true,
   "main": "dist/index.cjs.js",
-  "types": "src/index.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rollup -c"
   },
