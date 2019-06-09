@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "bin": {
     "react-spring-envinfo": "index.js"
+  },
+  "dependencies": {
+    "envinfo": "^7.3.1",
+    "execa": "^1.0.0"
   }
 }
