@@ -1,5 +1,5 @@
 import { AnimatedValue, AnimatedValueArray, interpolate } from '.'
-import { SpringValue } from 'shared/types'
+import { SpringValue } from 'shared'
 import { assert, _ } from 'spec.ts'
 
 describe('AnimatedValue interpolation options', () => {
@@ -55,10 +55,10 @@ describe('AnimatedValue interpolation options', () => {
 
   it('accepts multiple AnimatedValues and an interpolation function', () => {
     const value = interpolate(
-      [new AnimatedValue(0), new AnimatedValue(0)],
+      [new AnimatedValue(5), new AnimatedValue('text')] as const,
       (a, b) => {
         assert(a, _ as number)
-        assert(b, _ as number)
+        assert(b, _ as string)
         return `t(${a}, ${b})`
       }
     )

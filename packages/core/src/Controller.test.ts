@@ -1,6 +1,7 @@
 import createMockRaf from 'mock-raf'
 import * as Globals from 'shared/globals'
 import { Controller } from './Controller'
+import { FrameLoop } from './FrameLoop'
 
 let mockRaf: MockRaf
 beforeEach(() => {
@@ -9,6 +10,7 @@ beforeEach(() => {
     now: mockRaf.now,
     requestAnimationFrame: mockRaf.raf,
     cancelAnimationFrame: mockRaf.cancel,
+    frameLoop: new FrameLoop(),
   })
 })
 
