@@ -33,7 +33,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 import * as matchers from './colorMatchers'
-import colorNames, { ColorName } from './colors'
+import * as G from './globals'
 
 export function normalizeColor(color: number | string) {
   let match
@@ -48,7 +48,9 @@ export function normalizeColor(color: number | string) {
   if ((match = matchers.hex6.exec(color)))
     return parseInt(match[1] + 'ff', 16) >>> 0
 
-  if (colorNames.hasOwnProperty(color)) return colorNames[color as ColorName]
+  if (G.colorNames && G.colorNames[color] !== void 0) {
+    return G.colorNames[color]
+  }
 
   if ((match = matchers.rgb.exec(color))) {
     return (

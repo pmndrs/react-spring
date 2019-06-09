@@ -804,7 +804,11 @@ function merge(dest: any, src: any) {
 // Not all strings can be animated (eg: {display: "none"})
 function isAnimatableString(value: unknown): boolean {
   if (!is.str(value)) return false
-  return value.startsWith('#') || /\d/.test(value) || !!G.colorNames[value]
+  return (
+    value.startsWith('#') ||
+    /\d/.test(value) ||
+    !!(G.colorNames && G.colorNames[value])
+  )
 }
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
