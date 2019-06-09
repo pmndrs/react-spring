@@ -1,4 +1,5 @@
 import { SpringInterpolator, InterpolatorConfig } from './types'
+import { ElementType } from 'react'
 
 declare const window: {
   requestAnimationFrame: (cb: (time: number) => void) => number
@@ -16,7 +17,11 @@ export interface AnimatedRef<T> {
 // Required
 //
 
+export let defaultElement: string | ElementType
+
 export let applyAnimatedValues: (node: any, props: Props) => boolean | void
+
+export let createAnimatedInterpolation: SpringInterpolator
 
 export let createStringInterpolator: (
   config: InterpolatorConfig<string>
@@ -35,17 +40,15 @@ export let frameLoop: {
 
 export let now = () => Date.now()
 
-export let colorNames: { [key: string]: number } | undefined
+export let colorNames: { [key: string]: number } | null = null as any
 
 export let skipAnimation = false
 
-export let defaultElement: any
+export let createAnimatedStyle: ((style: any) => any) | null = null as any
 
-export let createAnimatedStyle: ((style: any) => any) | undefined
-
-export let createAnimatedTransform: ((transform: any) => any) | undefined
-
-export let createAnimatedInterpolation: SpringInterpolator
+export let createAnimatedTransform:
+  | ((transform: any) => any)
+  | null = null as any
 
 export let createAnimatedRef: <T extends React.ElementType>(
   node: React.MutableRefObject<T>,
@@ -53,10 +56,10 @@ export let createAnimatedRef: <T extends React.ElementType>(
   forceUpdate: () => void
 ) => T | AnimatedRef<T> = node => node.current
 
-export let requestAnimationFrame =
-  typeof window !== 'undefined' ? window.requestAnimationFrame : () => {}
+export let requestAnimationFrame: typeof window.requestAnimationFrame =
+  typeof window !== 'undefined' ? window.requestAnimationFrame : () => -1
 
-export let cancelAnimationFrame =
+export let cancelAnimationFrame: typeof window.cancelAnimationFrame =
   typeof window !== 'undefined' ? window.cancelAnimationFrame : () => {}
 
 //
@@ -110,5 +113,14 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       requestAnimationFrame,
       cancelAnimationFrame,
     },
-    globals
+    pluckDefined(globals)
   ))
+
+// Ignore undefined values
+function pluckDefined(globals: any) {
+  const defined: any = {}
+  for (const key in globals) {
+    if (globals[key] !== void 0) defined[key] = globals[key]
+  }
+  return defined
+}
