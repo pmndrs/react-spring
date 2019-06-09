@@ -12,7 +12,7 @@ cd react-spring
 3. Bootstrap the packages:
 
 ```sh
-yarn lerna bootstrap
+yarn
 yarn meta git update
 ```
 
