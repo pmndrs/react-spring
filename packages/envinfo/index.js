@@ -4,7 +4,18 @@ const versions = {
   System: ['OS'],
   Binaries: ['Node', 'Yarn', 'npm'],
   npmPackages: [].concat(
+    'react',
+    'react-dom',
+    'react-native',
+    'konva',
+    'react-konva',
+    'three',
+    'react-three-fiber',
+    'zdog',
+    'react-zdog',
     'typescript',
+    '@types/react',
+    '@types/react-native',
     'react-spring',
     [
       'addons',
