@@ -1,7 +1,6 @@
 import React, {
   forwardRef,
   ElementType,
-  MutableRefObject,
   useCallback,
   useImperativeHandle,
   useRef,
@@ -11,7 +10,9 @@ import * as G from 'shared/globals'
 import { is, useForceUpdate, useOnce } from 'shared'
 import { AnimatedProps } from './AnimatedProps'
 
-export const createAnimatedComponent: CreateAnimated = <C extends ElementType>(
+export const createAnimatedComponent: CreateAnimated = <
+  C extends string | ElementType
+>(
   Component: C
 ) =>
   forwardRef<C | G.AnimatedRef<C>>((props: any, ref) => {
@@ -44,7 +45,7 @@ export const createAnimatedComponent: CreateAnimated = <C extends ElementType>(
       propsAnimated.current && propsAnimated.current.detach()
     })
     useImperativeHandle(ref, () =>
-      G.createAnimatedRef(node as MutableRefObject<C>, mounted, forceUpdate)
+      G.createAnimatedRef<any>(node, mounted, forceUpdate)
     )
 
     // TODO: Avoid special case for scrollTop/scrollLeft
@@ -72,7 +73,7 @@ export type WithExtend<T> = T & {
 type AnimatedTarget = string | ElementType | { [key: string]: ElementType }
 
 // A stub type that gets replaced by @react-spring/web and others.
-type CreateAnimated = (Component: ElementType) => any
+type CreateAnimated = (Component: string | ElementType) => any
 
 /** Add an `extend` method to your `animated` factory function */
 export function withExtend<T extends CreateAnimated>(
@@ -114,7 +115,7 @@ export function withExtend<T extends CreateAnimated>(
     // NOTE(typescript): Properties are not yet inferred from the arguments of
     // the `extend` method and then attached to the `animated` function via
     // the return type.
-    self[key] = animated(arg as ElementType)
+    self[key] = animated(arg)
   }
   self.extend = (...args: any[]) => {
     args.forEach(arg => extend(arg))
