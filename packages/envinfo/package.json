@@ -1,0 +1,7 @@
+{
+  "name": "@react-spring/envinfo",
+  "version": "1.0.0",
+  "bin": {
+    "react-spring-envinfo": "index.js"
+  }
+}
