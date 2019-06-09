@@ -35,7 +35,7 @@ export let frameLoop: {
 
 export let now = () => Date.now()
 
-export let colorNames: { [key: string]: number } = {}
+export let colorNames: { [key: string]: number } | undefined
 
 export let skipAnimation = false
 
