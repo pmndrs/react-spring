@@ -1,5 +1,4 @@
 import { Globals, InterpolatorConfig, createInterpolator } from 'shared'
-import { AnimatedStyle, AnimatedInterpolation } from '@react-spring/animated'
 import { FrameLoop } from './FrameLoop'
 
 // Problem: https://github.com/animatedjs/animated/pull/102
@@ -31,9 +30,6 @@ Globals.assign({
   frameLoop: new FrameLoop(),
   createStringInterpolator,
   applyAnimatedValues: () => false,
-  createAnimatedStyle: style => new AnimatedStyle(style),
-  createAnimatedInterpolation: (parents: any, ...args: [any]) =>
-    new AnimatedInterpolation(parents, args),
 })
 
 export { Globals }

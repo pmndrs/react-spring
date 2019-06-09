@@ -1,3 +1,4 @@
+import './globals'
 export * from './Animated'
 export * from './AnimatedValue'
 export * from './AnimatedValueArray'
