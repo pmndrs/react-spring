@@ -10,5 +10,6 @@
   },
   "dependencies": {
     "@react-spring/shared": "link:../shared"
-  }
+  },
+  "devDependencies": {}
 }

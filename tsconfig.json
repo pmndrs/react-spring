@@ -1,26 +1,25 @@
 {
-  "include": ["packages/**/*"],
+  "include": ["packages/**", "targets/**"],
   "exclude": ["**/node_modules/**"],
   "compilerOptions": {
-    "target": "es2017",
-    "moduleResolution": "node",
-    "lib": [],
-    "typeRoots": ["./node_modules/@types", "./@types"],
-    "noEmitOnError": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "lib": [],
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "paths": {
       "shared": ["./packages/shared/src"],
       "shared/*": ["./packages/shared/src/*"]
     },
-    "jsx": "react",
-    "sourceMap": true,
-    "importHelpers": true,
     "preserveSymlinks": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "strict": true
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017"
   }
 }

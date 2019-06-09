@@ -1,22 +1,23 @@
 {
-  "include": ["src"],
   "compilerOptions": {
-    "target": "es2017",
-    "moduleResolution": "node",
-    "lib": ["es2017"],
-    "jsx": "react",
-    "baseUrl": ".",
-    "paths": {
-      "shared": ["node_modules/@react-spring/shared/src/index"],
-      "shared/*": ["node_modules/@react-spring/shared/src/*"]
-    },
-    "sourceMap": true,
-    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "lib": ["es2017"],
+    "moduleResolution": "node",
+    "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strict": true
+    "paths": {
+      "shared": ["./node_modules/@react-spring/shared/src"],
+      "shared/*": ["./node_modules/@react-spring/shared/src/*"]
+    },
+    "preserveSymlinks": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017"
   }
 }

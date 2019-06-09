@@ -1,12 +1,27 @@
 {
-  "extends": "../../tsconfig.json",
   "include": ["src"],
-  "exclude": ["**/*.test.ts"],
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es2017"],
-    "outDir": "./dist",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
     "declaration": true,
-    "sourceMap": true
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "lib": ["es2017"],
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "./dist",
+    "preserveSymlinks": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es5",
+    "typeRoots": [
+      "../../node_modules/@types",
+      "./node_modules/@types",
+      "./@types"
+    ]
   }
 }

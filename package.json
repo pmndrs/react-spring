@@ -30,6 +30,7 @@
     ],
     "nohoist": [
       "**/@react-spring/*",
+      "**/@types/*",
       "**/three",
       "**/react-three-fiber",
       "**/zdog",
@@ -37,7 +38,6 @@
       "**/konva",
       "**/react-konva",
       "**/react-native",
-      "**/@types/react-native",
       "**/react-testing-library",
       "**/react-dom"
     ]
@@ -52,7 +52,7 @@
     "test": "jest",
     "test:cov": "jest --watch",
     "test:dev": "jest --watch --no-coverage",
-    "test:ts": "lerna exec --no-bail -- tsc -p . --noEmit"
+    "test:ts": "lerna exec --concurrency=1 --no-bail -- 'pwd && tsc -p . --noEmit'"
   },
   "husky": {
     "hooks": {
@@ -72,8 +72,8 @@
     "@babel/preset-env": "7.3.1",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
-    "@types/jest": "~24.0.0",
-    "@types/react": "~16.8.0",
+    "@types/jest": "^24.0.13",
+    "@types/react": "^16.8.19",
     "build-if-changed": "^1.4.4",
     "chalk": "^2.4.2",
     "fs-extra": "7.0.1",

@@ -39,7 +39,7 @@ const forcedFields = {
 const inheritedFiles = ['LICENSE']
 
 // Files to copy from package root into "dist" directory
-const ownFiles = ['README.md']
+const ownFiles = ['README.md', '@types']
 
 const union = (a, b) => Array.from(new Set(a.concat(b)))
 const isObject = x => !!x && x.constructor.name === 'Object'
@@ -184,20 +184,17 @@ async function prepare() {
       await fs.copy(file, join(distDir, file))
     }
     for (const file of ownFiles) {
-      // Avoid "copy" in case of symlinks.
-      const content = await fs.readFile(join(dir, file), 'utf8')
-      await fs.writeFile(join(distDir, file), content)
-    }
-
-    // Inject custom @types dependencies.
-    if (name.endsWith('zdog')) {
-      const typesId = '@types/react-zdog'
-      await fs.copy(typesId, join(dir, distId, typesId))
-      await fs.writeJson(
-        join(dir, distId, 'tsconfig.json'),
-        { include: ['**/*.d.ts'] },
-        { spaces: '  ' }
-      )
+      const srcPath = join(dir, file)
+      const distPath = join(distDir, file)
+      try {
+        await fs.remove(distPath)
+        if ((await fs.lstat(srcPath)).isDirectory()) {
+          await fs.copy(srcPath, distPath)
+        } else {
+          const buf = await fs.readFile(srcPath)
+          await fs.writeFile(distPath, buf)
+        }
+      } catch {}
     }
   }
 }

@@ -1,7 +1,25 @@
 {
-  "extends": "../../tsconfig.json",
   "include": ["src"],
   "compilerOptions": {
-    "lib": ["dom"]
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "lib": ["dom", "es2017"],
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "paths": {
+      "shared": ["./node_modules/@react-spring/shared/src"],
+      "shared/*": ["./node_modules/@react-spring/shared/src/*"]
+    },
+    "preserveSymlinks": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2017",
+    "typeRoots": ["./node_modules/@types", "./@types"]
   }
 }
