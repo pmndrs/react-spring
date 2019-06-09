@@ -1,4 +1,4 @@
-import { Animatable, EasingFunction, SpringValue } from 'shared'
+import { Animatable, EasingFunction, SpringValue, RawValues } from 'shared'
 import { AnimatedValue, Animated } from '@react-spring/animated'
 import {
   Arrify,
@@ -10,7 +10,7 @@ import {
   UnknownProps,
 } from './common'
 
-export { Animatable, SpringValue }
+export { Animatable, SpringValue, RawValues }
 
 /**
  * The map of `Animated` objects passed into `animated()` components.
@@ -29,11 +29,6 @@ export type AnimationValues<T extends object> = Remap<
     ? unknown
     : { [P in keyof T]: SpringValue<T[P]> })
 >
-
-// Extract the raw value types that are being animated
-export type RawValues<T extends ReadonlyArray<any>> = {
-  [P in keyof T]: T[P] extends SpringValue<infer U> ? U : never
-}
 
 export interface SpringStopFn<T extends object = any> {
   /** Stop all animations and delays */

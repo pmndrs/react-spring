@@ -37,8 +37,8 @@ export interface SpringValue<T = any> {
 }
 
 // Extract the raw value types that are being animated
-type RawValues<T extends ReadonlyArray<any>> = {
-  [P in keyof T]: T[P] extends SpringValue<infer U> ? U : never
+export type RawValues<T extends ReadonlyArray<any>> = {
+  [P in keyof T]: T[P] extends { getValue(): infer U } ? U : never
 }
 
 export interface FrameRequestCallback {
