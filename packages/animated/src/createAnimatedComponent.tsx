@@ -23,13 +23,16 @@ export const createAnimatedComponent: CreateAnimated = <C extends ElementType>(
     const attachProps = useCallback(props => {
       const oldPropsAnimated = propsAnimated.current
       const callback = () => {
-        if (node.current) {
-          const didUpdate = G.applyAnimatedValues(
+        const didUpdate =
+          node.current &&
+          G.applyAnimatedValues(
             node.current,
             propsAnimated.current!.getAnimatedValue()
           )
-          if (didUpdate === false) forceUpdate()
-        }
+
+        // If no referenced node has been found, or the update target didn't have a
+        // native-responder, then forceUpdate the animation ...
+        if (didUpdate === false) forceUpdate()
       }
       propsAnimated.current = new AnimatedProps(props, callback)
       oldPropsAnimated && oldPropsAnimated.detach()
@@ -46,12 +49,13 @@ export const createAnimatedComponent: CreateAnimated = <C extends ElementType>(
 
     // TODO: Avoid special case for scrollTop/scrollLeft
     const { scrollTop, scrollLeft, ...animatedProps } = attachProps(props)
-    return (
-      <Component
-        {...(animatedProps as typeof props)}
-        ref={(childRef: C) => (node.current = handleRef(childRef, ref))}
-      />
-    )
+
+    // Functions cannot have refs (see #569)
+    const refFn = is.fun(Component)
+      ? undefined
+      : (childRef: C) => (node.current = handleRef(childRef, ref))
+
+    return <Component {...(animatedProps as typeof props)} ref={refFn} />
   })
 
 //
