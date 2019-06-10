@@ -8,7 +8,7 @@ import {
   withExtend,
   WithExtend,
 } from '@react-spring/animated'
-import { AssignableKeys, SpringValue } from 'shared'
+import { SpringValue } from 'shared'
 
 type JSXElements = keyof JSX.IntrinsicElements
 
@@ -175,6 +175,11 @@ export type AnimatedProps<Props extends object> = {
   [P in keyof Props]: (P extends 'ref' ? Props[P] : AnimatedProp<Props[P]>)
 }
 
+type CSSPropertyNames = keyof CSSProperties
+type CSSValidProperties<T extends object> = {
+  [P in keyof T & CSSPropertyNames]: T[P] extends CSSProperties[P] ? P : never
+}[keyof T & CSSPropertyNames]
+
 // The animated prop value of a React element
 type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
   ? [DT] extends [never]
@@ -182,7 +187,7 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
     : DT extends void
     ? undefined
     : DT extends object
-    ? [AssignableKeys<DT, CSSProperties>] extends [never]
+    ? [CSSValidProperties<DT>] extends [never]
       ? DT extends ReadonlyArray<any>
         ? AnimatedStyles<DT>
         : DT
@@ -194,7 +199,7 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
 type AnimatedStyles<T extends ReadonlyArray<any>> = {
   [P in keyof T]: [T[P]] extends [infer DT]
     ? DT extends object
-      ? [AssignableKeys<DT, CSSProperties>] extends [never]
+      ? [CSSValidProperties<DT>] extends [never]
         ? DT extends ReadonlyArray<any>
           ? AnimatedStyles<DT>
           : DT
