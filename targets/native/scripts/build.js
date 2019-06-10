@@ -16,10 +16,9 @@ function build() {
   fs.copySync('src', 'dist/src')
   fs.copySync('tsconfig.json', 'dist/tsconfig.json')
 
-  // Copy uncompiled source code from "@react-spring" dependencies
+  // Copy uncompiled source code from "@react-spring/core"
   // into "dist" so Metro can provide proper sourcemaps.
   copyPackage('../../packages/core', 'dist/src/core')
-  copyPackage('../../packages/shared', 'dist/src/shared')
 
   // We need to move embedded dependencies after they're installed.
   fs.copySync('scripts/_postinstall.js', 'dist/postinstall.js')
