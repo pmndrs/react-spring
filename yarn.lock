@@ -2894,10 +2894,10 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-build-if-changed@^1.4.4:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/build-if-changed/-/build-if-changed-1.4.4.tgz#9b62fb012db7067d7d5477f1f2e0838120fa59f5"
-  integrity sha512-/mJjYbLOEW/o9Og65rqKuaA/CrAIHOOizIn3eDun/QjfITIcEChgPLozjWhM+KOLlQtO7uD4U+WnjTqJrcAxnA==
+build-if-changed@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/build-if-changed/-/build-if-changed-1.5.0.tgz#54e81ea975715144a6501d742f348424be772c4d"
+  integrity sha512-E0S3YnigcXf+HsP4fa21Ol/bS8ZCAXv9P385o/p3LFa85FQN1VgJ40FgJyHzFBiZ7TW0LKXYC9DM0V9Heg7a3Q==
   dependencies:
     ansi-256-colors "^1.1.0"
     has-flag "^4.0.0"
