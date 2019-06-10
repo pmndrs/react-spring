@@ -96,7 +96,6 @@ async function prepare() {
     delete json.private
     delete json.scripts
     delete json.devDependencies
-    delete json.types
 
     // Add "postinstall" script for donations.
     if (/(native|core)$/.test(name))
@@ -128,6 +127,7 @@ async function prepare() {
     else {
       json.main = json.main.replace(/^dist\//, '')
       if (json.main.endsWith('.cjs.js')) {
+        json.types = json.main.replace('.cjs.js', '.d.ts')
         json.module = json.main.replace('.cjs', '')
       }
     }
