@@ -96,6 +96,7 @@ async function prepare() {
     delete json.private
     delete json.scripts
     delete json.devDependencies
+    delete json.types
 
     // Add "postinstall" script for donations.
     if (/(native|core)$/.test(name))
