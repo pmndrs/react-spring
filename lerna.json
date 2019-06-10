@@ -16,7 +16,8 @@
     "publish": {
       "bump": "from-package",
       "contents": "dist",
-      "ignoreScripts": true
+      "ignoreScripts": true,
+      "preDistTag": "next"
     }
   }
 }
