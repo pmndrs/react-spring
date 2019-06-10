@@ -121,7 +121,7 @@ async function prepare() {
       await fs.copy(configId, join(dir, distId, configId))
     }
     // Non-native config
-    else {
+    else if (name !== 'react-spring') {
       json.main = 'index.cjs.js'
       json.module = 'index.js'
     }
