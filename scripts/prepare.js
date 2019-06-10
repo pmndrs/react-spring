@@ -8,6 +8,9 @@ const { log } = console
 
 const distId = 'dist'
 
+// Packages with no "dist" folder
+const rawPackages = ['packages/envinfo']
+
 // Root "package.json" fields to merge
 const mergedFields = [
   'license',
@@ -50,7 +53,7 @@ const PJ = 'package.json'
 const getWorkspaces = async rootJson =>
   (await crawl('.', {
     only: rootJson.workspaces.packages.map(path => join(path, PJ)),
-    skip: ['.*', 'node_modules'],
+    skip: ['.*', 'node_modules'].concat(rawPackages),
   })).map(dirname)
 
 // Executed by "lerna publish" and "lerna bootstrap"
