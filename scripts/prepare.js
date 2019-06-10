@@ -125,9 +125,11 @@ async function prepare() {
       await fs.copy(configId, join(dir, distId, configId))
     }
     // Non-native config
-    else if (name !== 'react-spring') {
-      json.main = 'index.cjs.js'
-      json.module = 'index.js'
+    else {
+      json.main = json.main.replace(/^dist\//, '')
+      if (json.main.endsWith('.cjs.js')) {
+        json.module = json.main.replace('.cjs', '')
+      }
     }
 
     // Update the versions of "@react-spring/*" dependencies.
