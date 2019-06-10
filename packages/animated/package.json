@@ -10,5 +10,8 @@
   },
   "dependencies": {
     "@react-spring/shared": "link:../shared"
+  },
+  "publishConfig": {
+    "directory": "dist"
   }
 }

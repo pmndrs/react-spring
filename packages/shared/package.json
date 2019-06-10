@@ -10,5 +10,8 @@
   },
   "dependencies": {
     "tiny-invariant": "^1.0.4"
+  },
+  "publishConfig": {
+    "directory": "dist"
   }
 }

@@ -23,5 +23,8 @@
   },
   "scripts": {
     "build": "rollup -c"
+  },
+  "publishConfig": {
+    "directory": "dist"
   }
 }
