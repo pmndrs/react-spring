@@ -6317,7 +6317,7 @@ left-pad@^1.3.0:
   resolved "https://registry.yarnpkg.com/left-pad/-/left-pad-1.3.0.tgz#5b8a3a7765dfe001261dde915589e782f8c94d1e"
   integrity sha512-XI5MPzVNApjAyhQzphX8BkmKsKUxD4LdyK24iZeQGinBN9yTQT3bFlCBy/aVx2HrNcqQGsdot8ghrjyrvMCoEA==
 
-lerna@^3.15.0:
+lerna@3.15.0:
   version "3.15.0"
   resolved "https://registry.yarnpkg.com/lerna/-/lerna-3.15.0.tgz#b044dba8138d7a1a8dd48ac1d80e7541bdde0d1f"
   integrity sha512-kRIQ3bgzkmew5/WZQ0C9WjH0IUf3ZmTNnBwTHfXgLkVY7td0lbwMQFD7zehflUn0zG4ou54o/gn+IfjF0ti/5A==
