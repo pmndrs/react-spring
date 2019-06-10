@@ -8,10 +8,8 @@
     "version": {
       "changelog": false,
       "conventionalCommits": true,
-      "gitTagVersion": false,
       "message": "chore: ship it 🚀",
-      "push": false,
-      "skipGit": true
+      "push": false
     },
     "publish": {
       "bump": "from-package",
