@@ -1,4 +1,5 @@
 import * as G from './globals'
+import { is } from './helpers'
 import {
   Animatable,
   InterpolatorFn,
@@ -7,7 +8,6 @@ import {
   InterpolatorConfig,
   Interpolatable,
 } from './types'
-import { is } from '.'
 
 interface InterpolatorFactory {
   <In extends Interpolatable, Out extends Animatable>(
