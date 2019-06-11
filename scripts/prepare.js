@@ -125,9 +125,10 @@ async function prepare() {
     }
     // Non-native config
     else {
-      json.main = json.main.replace(/^dist\//, '')
+      const distDir = /^dist\//
+      json.main = json.main.replace(distDir, '')
+      json.types = json.types.replace(distDir, '')
       if (json.main.endsWith('.cjs.js')) {
-        json.types = json.main.replace('.cjs.js', '.d.ts')
         json.module = json.main.replace('.cjs', '')
       }
     }
