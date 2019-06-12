@@ -1,4 +1,5 @@
 const { relative, resolve, join, dirname } = require('path')
+const { rewritePaths } = require('typescript-rewrite-paths')
 const { crawl } = require('recrawl')
 const sortPackageJson = require('sort-package-json')
 const chalk = require('chalk')
@@ -124,23 +125,24 @@ async function prepare() {
     const files = await crawl(srcDir, {
       skip: ['*.d.ts', '*.test.*', '__(tests|fixtures)__'],
     })
-    return Promise.all(
-      files.map(file => fs.copy(join(srcDir, file), join(distDir, file)))
-    )
+    files.forEach(file => {
+      let content = fs.readFileSync(join(srcDir, file), 'utf8')
+      if (/\.[tj]sx?$/.test(file)) {
+        content = rewritePaths(
+          content,
+          path => path.startsWith('shared') && '@react-spring/' + path
+        )
+      }
+      const distPath = join(distDir, file)
+      fs.ensureDirSync(dirname(distPath))
+      fs.writeFileSync(distPath, content)
+    })
   }
 
   // Prepare packages that can be used in react-native.
   const prepareNativePackage = pkg => {
     if (/\/(native|addons|core|animated)$/.test(pkg.name)) {
-      // Add entry point for bundlers that want the source code
       pkg['react-native'] = join(SRC, 'index.ts')
-
-      // Use "postinstall" from "targets/native"
-      pkg.scripts = { postinstall: 'node postinstall.js' }
-      fs.copySync(
-        'targets/native/scripts/_postinstall.js',
-        join(pkg.dir, DIST, 'postinstall.js')
-      )
     }
   }
 

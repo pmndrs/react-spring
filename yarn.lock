@@ -10095,6 +10095,13 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
+typescript-rewrite-paths@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/typescript-rewrite-paths/-/typescript-rewrite-paths-1.2.0.tgz#0c90cb7de90da787cd669bea42ecb70e3ab18f4d"
+  integrity sha512-4rYNw8He/RFQttZKrnkU8PVTPfRaOUYBGuT/oKQZY0/xLSELV6UrAgFRLOcGn2icLuxWcQa7eZnNHXo03nzU9w==
+  dependencies:
+    magic-string "^0.25.2"
+
 typescript@3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.1.tgz#ba72a6a600b2158139c5dd8850f700e231464202"
