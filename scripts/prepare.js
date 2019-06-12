@@ -110,6 +110,7 @@ async function prepare() {
   // (like Metro) that ignore pre-existing sourcemaps.
   const publishSources = async pkg => {
     if (pkg.name == 'react-spring') return
+    if (pkg.name.endsWith('shared')) return
     const srcDir = join(pkg.dir, SRC)
     const distDir = join(pkg.dir, DIST, SRC)
 
