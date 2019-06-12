@@ -137,7 +137,7 @@ async function prepare() {
       // Use "postinstall" from "targets/native"
       pkg.scripts = { postinstall: 'node postinstall.js' }
       fs.copySync(
-        'targets/native/scripts/postinstall.js',
+        'targets/native/scripts/_postinstall.js',
         join(pkg.dir, DIST, 'postinstall.js')
       )
     }
