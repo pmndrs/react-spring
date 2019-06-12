@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/zdog",
-  "version": "9.0.0-beta.14",
+  "version": "9.0.0-beta.15",
   "private": true,
   "main": "dist/src/index.cjs.js",
   "types": "dist/src/index.d.ts",
