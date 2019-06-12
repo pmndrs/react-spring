@@ -1,5 +1,5 @@
 {
-  "dist/index.js": {
+  "dist/src/index.js": {
     "bundled": 1034,
     "minified": 799,
     "gzipped": 395,
@@ -13,7 +13,7 @@
       }
     }
   },
-  "dist/index.cjs.js": {
+  "dist/src/index.cjs.js": {
     "bundled": 1483,
     "minified": 1131,
     "gzipped": 531

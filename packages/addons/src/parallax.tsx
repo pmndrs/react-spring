@@ -40,6 +40,7 @@ interface IParallaxLayer {
 }
 
 interface IParallax {
+  config: ConfigProp
   busy: boolean
   space: number
   offset: number
@@ -72,7 +73,7 @@ export const ParallaxLayer = React.memo(
     ...rest
   }: ParallaxLayerProps) => {
     // Our parent controls our height and position.
-    const parent = useContext(ParentContext)
+    const parent = useContext<IParallax>(ParentContext)
 
     // This is how we animate.
     const ctrl = useMemoOne(() => {
@@ -92,14 +93,14 @@ export const ParallaxLayer = React.memo(
           const distance = height * offset + targetScroll * speed
           ctrl.update({
             translate: -(scrollTop * speed) + distance,
-            config: parent.props.config,
+            config: parent.config,
             immediate,
           })
         },
         setHeight(height, immediate = false) {
           ctrl.update({
             space: height * factor,
-            config: parent.props.config,
+            config: parent.config,
             immediate,
           })
         },
@@ -146,10 +147,12 @@ export const ParallaxLayer = React.memo(
   }
 )
 
+type ConfigProp = SpringConfig | ((key: string) => SpringConfig)
+
 interface ParallaxProps extends ViewProps {
   /** Determines the total space of the inner content where each page takes 100% of the visible container */
   pages: number
-  config?: SpringConfig | ((key: string) => SpringConfig)
+  config?: ConfigProp
   enabled?: boolean
   horizontal?: boolean
   innerStyle?: CSSProperties
@@ -169,6 +172,7 @@ export const Parallax = React.memo(
     let state: IParallax
     state = useMemoOne(
       () => ({
+        config,
         busy: false,
         space: 0,
         current: 0,
@@ -181,6 +185,10 @@ export const Parallax = React.memo(
       }),
       []
     )
+
+    useEffect(() => {
+      state.config = config
+    }, [config])
 
     const containerRef = useRef<any>()
     const contentRef = useRef<any>()

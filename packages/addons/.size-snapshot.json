@@ -1,45 +1,40 @@
 {
-  "dist/index.js": {
-    "bundled": 7598,
-    "minified": 4028,
-    "gzipped": 1547,
+  "dist/src/index.js": {
+    "bundled": 7697,
+    "minified": 4063,
+    "gzipped": 1556,
     "treeshaked": {
       "rollup": {
-        "code": 3608,
+        "code": 3635,
         "import_statements": 427
       },
       "webpack": {
-        "code": 5027
+        "code": 5072
       }
     }
   },
-  "dist/index.cjs.js": {
-    "bundled": 8009,
-    "minified": 4391,
-    "gzipped": 1643
+  "dist/src/index.cjs.js": {
+    "bundled": 8108,
+    "minified": 4432,
+    "gzipped": 1652
   },
-  "dist/parallax.js": {
-    "bundled": 7598,
-    "minified": 4028,
-    "gzipped": 1547,
+  "dist/src/parallax.js": {
+    "bundled": 7697,
+    "minified": 4063,
+    "gzipped": 1556,
     "treeshaked": {
       "rollup": {
-        "code": 3608,
+        "code": 3635,
         "import_statements": 427
       },
       "webpack": {
-        "code": 5027
+        "code": 5072
       }
     }
   },
-  "dist/parallax.cjs.js": {
-    "bundled": 8009,
-    "minified": 4391,
-    "gzipped": 1643
-  },
-  "dist/parallax.tsx": {
-    "bundled": 8009,
-    "minified": 4391,
-    "gzipped": 1643
+  "dist/src/parallax.cjs.js": {
+    "bundled": 8108,
+    "minified": 4432,
+    "gzipped": 1652
   }
 }

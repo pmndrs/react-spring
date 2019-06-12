@@ -2,10 +2,11 @@
   "name": "@react-spring/core",
   "version": "9.0.0-beta.12",
   "private": true,
-  "main": "dist/index.cjs.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.cjs.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "postinstall": "node -e \"console.log('\\u001b[35m\\u001b[1mEnjoy react-spring? You can now donate to our open collective:\\u001b[22m\\u001b[39m\\n > \\u001b[34mhttps://opencollective.com/react-spring/donate\\u001b[0m')\""
   },
   "dependencies": {
     "@react-spring/animated": "link:../animated",

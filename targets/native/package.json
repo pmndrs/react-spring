@@ -2,23 +2,23 @@
   "name": "@react-spring/native",
   "version": "9.0.0-beta.13",
   "private": true,
-  "main": "src/index.ts",
+  "main": "dist/src/index.cjs.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
-    "build": "node scripts/build.js"
+    "build": "rollup -c"
   },
   "dependencies": {
     "@react-spring/animated": "link:../../packages/animated",
     "@react-spring/core": "link:../../packages/core",
-    "@react-spring/shared": "link:../../packages/shared",
-    "@types/react": "~16.8.0",
-    "@types/react-native": "~0.57.0",
-    "fs-extra": "^8.0.1"
+    "@react-spring/shared": "link:../../packages/shared"
   },
   "peerDependencies": {
     "react": ">=16.8",
     "react-native": ">=0.58"
   },
   "devDependencies": {
+    "@types/react": "~16.8.0",
+    "@types/react-native": "~0.57.0",
     "react": "~16.8.0",
     "react-native": "~0.58.0"
   },
