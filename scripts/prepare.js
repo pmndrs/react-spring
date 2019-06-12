@@ -43,12 +43,7 @@ async function prepare() {
   }
 
   // Package-specific fields to override
-  const overrides = {
-    'react-spring': {
-      main: 'web.cjs.js',
-      module: 'web.js',
-    },
-  }
+  // const overrides = {}
 
   // The pipeline of changes
   const preparePackage = async pkg => {
@@ -73,7 +68,7 @@ async function prepare() {
     useOwnFiles(pkg, ['README.md', '@types'])
     useFiles(pkg, ['LICENSE'])
     deleteFields(pkg, deletions[pkg.name])
-    assignFields(pkg, overrides[pkg.name])
+    // assignFields(pkg, overrides[pkg.name])
     savePackage(pkg)
   }
 
@@ -103,7 +98,7 @@ async function prepare() {
 
   // Ensure "package.json" points to the correct modules.
   const setEntryModules = pkg => {
-    const DIST_RE = /^dist\//
+    const DIST_RE = pkg.name == 'react-spring' ? /^dist\/src\// : /^dist\//
     pkg.main = pkg.main.replace(DIST_RE, '')
     pkg.types = pkg.types.replace(DIST_RE, '')
     if (pkg.main.endsWith('.cjs.js')) {
