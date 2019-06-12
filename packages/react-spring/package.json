@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "9.0.0-beta.15",
+  "version": "9.0.0-beta.16",
   "private": true,
   "main": "dist/src/web.cjs.js",
   "types": "dist/src/web.d.ts",
