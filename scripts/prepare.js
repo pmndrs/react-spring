@@ -1,7 +1,6 @@
 const { relative, resolve, join, dirname } = require('path')
 const { crawl } = require('recrawl')
 const sortPackageJson = require('sort-package-json')
-const rimraf = require('rimraf')
 const chalk = require('chalk')
 const fs = require('fs-extra')
 
@@ -52,7 +51,7 @@ async function prepare() {
   }
 
   // The pipeline of changes
-  const preparePackage = pkg => {
+  const preparePackage = async pkg => {
     const { postinstall } = pkg.scripts || {}
     deleteFields(pkg, ['private', 'scripts', 'devDependencies'])
     setScript(pkg, 'postinstall', postinstall)
@@ -68,7 +67,7 @@ async function prepare() {
     pkg.publishConfig = rootJson.publishConfig
     setHomepage(pkg)
     setEntryModules(pkg)
-    publishSources(pkg)
+    await publishSources(pkg)
     prepareNativePackage(pkg)
     upgradeLocals(pkg)
     useOwnFiles(pkg, ['README.md', '@types'])
@@ -114,27 +113,32 @@ async function prepare() {
 
   // Publish the source code for sourcemaps and for bundlers
   // (like Metro) that ignore pre-existing sourcemaps.
-  const publishSources = pkg => {
-    const distDir = join(pkg.dir, DIST)
-
-    // Copy the "src" folder into the "dist" folder.
-    fs.copySync(join(pkg.dir, SRC), join(distDir, SRC))
-
-    // Remove any test files.
-    rimraf.sync(join(distDir, SRC, '**/__tests__'))
-    rimraf.sync(join(distDir, SRC, '**/*.test.*'))
+  const publishSources = async pkg => {
+    const srcDir = join(pkg.dir, SRC)
+    const distDir = join(pkg.dir, DIST, SRC)
 
     // Include "typescript" in devDependencies
     const rootDeps = rootJson.devDependencies
     pkg.devDependencies = {
       typescript: rootDeps.typescript,
     }
+
+    // Copy every "src" module (except for tests and declarations)
+    const files = await crawl(srcDir, {
+      skip: ['*.d.ts', '*.test.*', '__(tests|fixtures)__'],
+    })
+    return Promise.all(
+      files.map(file => fs.copy(join(srcDir, file), join(distDir, file)))
+    )
   }
 
   // Prepare packages that can be used in react-native.
   const prepareNativePackage = pkg => {
     if (/\/(native|core|animated|shared)$/.test(pkg.name)) {
+      // Add entry point for bundlers that want the source code
       pkg['react-native'] = join(SRC, 'index.ts')
+
+      // Use "postinstall" from "targets/native"
       pkg.scripts = { postinstall: 'node postinstall.js' }
       fs.copySync(
         'targets/native/scripts/postinstall.js',
@@ -223,14 +227,16 @@ async function prepare() {
     })
 
   log(``)
-  for (const name in packages) {
-    const pkg = packages[name]
-    log(chalk.cyan(name))
-    log(`  rootDir: %O`, pkg.dir)
-    log(`  version: %O`, pkg.version)
-    log(``)
-    preparePackage(pkg)
-  }
+  await Promise.all(
+    Object.keys(packages).map(name => {
+      const pkg = packages[name]
+      log(chalk.cyan(name))
+      log(`  rootDir: %O`, pkg.dir)
+      log(`  version: %O`, pkg.version)
+      log(``)
+      return preparePackage(pkg)
+    })
+  )
 }
 
 prepare().catch(console.error)
