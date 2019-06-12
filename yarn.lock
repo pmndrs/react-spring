@@ -1828,62 +1828,59 @@
     url-template "^2.0.8"
 
 "@react-spring/addons@link:packages/addons":
-  version "9.0.0-beta.12"
+  version "9.0.0-beta.14"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     use-memo-one "^1.1.0"
 
 "@react-spring/animated@link:packages/animated":
-  version "9.0.0-beta.12"
+  version "9.0.0-beta.14"
   dependencies:
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/core@link:packages/core":
-  version "9.0.0-beta.12"
+  version "9.0.0-beta.14"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
-  version "9.0.0-beta.12"
+  version "9.0.0-beta.14"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "9.0.0-beta.13"
+  version "9.0.0-beta.14"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
-    "@types/react" "~16.8.0"
-    "@types/react-native" "~0.57.0"
-    fs-extra "^8.0.1"
 
 "@react-spring/shared@link:packages/shared":
-  version "9.0.0-beta.13"
+  version "9.0.0-beta.14"
   dependencies:
     tiny-invariant "^1.0.4"
 
 "@react-spring/three@link:targets/three":
-  version "9.0.0-beta.12"
+  version "9.0.0-beta.14"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/web@link:targets/web":
-  version "9.0.0-beta.12"
+  version "9.0.0-beta.14"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/zdog@link:targets/zdog":
-  version "9.0.0-beta.12"
+  version "9.0.0-beta.14"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -4578,15 +4575,6 @@ fs-extra@^1.0.0:
     graceful-fs "^4.1.2"
     jsonfile "^2.1.0"
     klaw "^1.0.0"
-
-fs-extra@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-8.0.1.tgz#90294081f978b1f182f347a440a209154344285b"
-  integrity sha512-W+XLrggcDzlle47X/XnS7FXrXu9sDo+Ze9zpndeBxdgv88FHLm1HtmkhEwavruS6koanBjp098rUpHs65EmG7A==
-  dependencies:
-    graceful-fs "^4.1.2"
-    jsonfile "^4.0.0"
-    universalify "^0.1.0"
 
 fs-minipass@^1.2.5:
   version "1.2.6"

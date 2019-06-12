@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/web",
-  "version": "9.0.0-beta.12",
+  "version": "9.0.0-beta.14",
   "private": true,
   "main": "dist/src/index.cjs.js",
   "types": "dist/src/index.d.ts",
