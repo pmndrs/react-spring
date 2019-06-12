@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const mkdir = name => fs.existsSync(name) && fs.mkdirSync(name)
+const mkdir = name => fs.existsSync(name) || fs.mkdirSync(name)
 
 process.chdir(__dirname)
 mkdir('node_modules')
