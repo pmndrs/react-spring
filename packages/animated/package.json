@@ -3,8 +3,7 @@
   "version": "9.0.0-beta.20",
   "description": "Animated component props for React",
   "private": true,
-  "main": "dist/src/index.cjs.js",
-  "types": "dist/src/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "rollup -c"
   },

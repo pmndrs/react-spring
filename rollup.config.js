@@ -17,7 +17,7 @@ const rewritePaths = path =>
 // Every module in the "input" directory gets its own bundle.
 export const multiBundle = ({
   input = 'src',
-  output = 'dist/src',
+  output = 'dist',
   ...config
 } = {}) =>
   fs.readdirSync(input).reduce(
@@ -34,10 +34,11 @@ export const multiBundle = ({
 
 export const bundle = ({
   input = 'src/index.ts',
-  output = 'dist/src/index.js',
+  output = 'dist/index.js',
   minify = false,
   sourcemap = true,
   sourcemapExcludeSources = true,
+  sourceRoot = path.dirname(input),
 } = {}) => {
   const config = {
     input,
@@ -45,6 +46,7 @@ export const bundle = ({
     minify,
     sourcemap,
     sourcemapExcludeSources,
+    sourceRoot,
   }
   return [esmBundle(config), cjsBundle(config), dtsBundle(config)]
 }
@@ -56,7 +58,7 @@ export const esmBundle = config => ({
     format: 'esm',
     paths: rewritePaths,
     sourcemap: config.sourcemap,
-    sourcemapPathTransform: getSourceRoot(config),
+    sourcemapPathTransform: rewriteSourcePaths(config),
     sourcemapExcludeSources: config.sourcemapExcludeSources,
   },
   external,
@@ -81,7 +83,7 @@ export const cjsBundle = config => ({
     format: 'cjs',
     paths: rewritePaths,
     sourcemap: config.sourcemap,
-    sourcemapPathTransform: getSourceRoot(config),
+    sourcemapPathTransform: rewriteSourcePaths(config),
     sourcemapExcludeSources: config.sourcemapExcludeSources,
   },
   external,
@@ -122,10 +124,11 @@ export const getBabelOptions = ({ useESModules }, targets) => ({
   ],
 })
 
-const getSourceRoot = config => {
+const rewriteSourcePaths = config => {
   const outToIn = path.relative(
     path.dirname(config.output),
     path.dirname(config.input)
   )
-  return file => path.relative(outToIn, file)
+  return file =>
+    path.join(config.sourceRoot || '', path.relative(outToIn, file))
 }

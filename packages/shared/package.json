@@ -3,8 +3,7 @@
   "version": "9.0.0-beta.20",
   "description": "Globals and shared modules",
   "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc -p ."
   },

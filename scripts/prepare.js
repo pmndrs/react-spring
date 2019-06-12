@@ -14,6 +14,7 @@ const isObject = x => !!x && x.constructor.name === 'Object'
 const SRC = 'src'
 const DIST = 'dist'
 const PJ = 'package.json'
+const RS = '@react-spring'
 
 // Packages with no "dist" folder
 const rawPackages = ['packages/envinfo']
@@ -40,17 +41,24 @@ async function prepare() {
 
   // Package-specific fields to delete
   const deletions = {
-    '@react-spring/shared': ['keywords'],
+    [`${RS}/shared`]: ['keywords'],
   }
 
   // Package-specific fields to override
   // const overrides = {}
 
+  // Entry module overrides
+  const entryOverrides = {
+    [`${RS}/shared`]: {
+      main: 'index.js',
+    },
+  }
+
   // The pipeline of changes
   const preparePackage = async pkg => {
     const { postinstall } = pkg.scripts || {}
     deleteFields(pkg, ['private', 'scripts', 'devDependencies'])
-    setScript(pkg, 'postinstall', postinstall)
+    if (postinstall) setScript(pkg, 'postinstall', postinstall)
     useDefaultFields(pkg, ['description', 'sideEffects'])
     useFields(pkg, [
       'license',
@@ -64,7 +72,6 @@ async function prepare() {
     setHomepage(pkg)
     setEntryModules(pkg)
     await publishSources(pkg)
-    prepareNativePackage(pkg)
     upgradeLocals(pkg)
     useOwnFiles(pkg, ['README.md', '@types'])
     useFiles(pkg, ['LICENSE'])
@@ -99,11 +106,29 @@ async function prepare() {
 
   // Ensure "package.json" points to the correct modules.
   const setEntryModules = pkg => {
-    const DIST_RE = pkg.name == 'react-spring' ? /^dist\/src\// : /^dist\//
-    pkg.main = pkg.main.replace(DIST_RE, '')
-    pkg.types = pkg.types.replace(DIST_RE, '')
-    if (pkg.main.endsWith('.cjs.js')) {
-      pkg.module = pkg.main.replace('.cjs', '')
+    const overrides = entryOverrides[pkg.name] || {}
+    const main = overrides.main || pkg.main
+    if (!main) {
+      throw Error('pkg.main must exist')
+    }
+
+    const srcDir = new RegExp(`^${SRC}/`)
+    const tsxExt = /\.tsx?$/
+
+    pkg.main =
+      overrides.main || main.replace(srcDir, '').replace(tsxExt, '.cjs.js')
+    pkg.module =
+      overrides.module ||
+      (pkg.main.endsWith('.cjs.js') ? pkg.main.replace(/\.cjs\./, '.') : void 0)
+    pkg.types =
+      overrides.types ||
+      (pkg.types || tsxExt.test(main)
+        ? (pkg.types || main.replace(tsxExt, '.d.ts')).replace(srcDir, '')
+        : void 0)
+
+    // Packages compatible with "react-native" provide an uncompiled main module.
+    if (/\/(native|addons|core|animated)$/.test(pkg.name)) {
+      pkg['react-native'] = main
     }
   }
 
@@ -130,20 +155,13 @@ async function prepare() {
       if (/\.[tj]sx?$/.test(file)) {
         content = rewritePaths(
           content,
-          path => path.startsWith('shared') && '@react-spring/' + path
+          path => path.startsWith('shared') && `${RS}/${path}`
         )
       }
       const distPath = join(distDir, file)
       fs.ensureDirSync(dirname(distPath))
       fs.writeFileSync(distPath, content)
     })
-  }
-
-  // Prepare packages that can be used in react-native.
-  const prepareNativePackage = pkg => {
-    if (/\/(native|addons|core|animated)$/.test(pkg.name)) {
-      pkg['react-native'] = join(SRC, 'index.ts')
-    }
   }
 
   // Update the versions of "@react-spring/*" dependencies.

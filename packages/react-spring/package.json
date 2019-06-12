@@ -2,8 +2,7 @@
   "name": "react-spring",
   "version": "9.0.0-beta.20",
   "private": true,
-  "main": "dist/src/web.cjs.js",
-  "types": "dist/src/web.d.ts",
+  "main": "src/web.ts",
   "dependencies": {
     "@react-spring/addons": "link:../addons",
     "@react-spring/core": "link:../core",
