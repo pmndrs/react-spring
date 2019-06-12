@@ -1,6 +1,6 @@
 import { multiBundle } from '../../rollup.config'
 
 export default multiBundle({
-  minify: false,
+  output: 'dist',
   sourcemap: false,
 })

@@ -114,6 +114,7 @@ async function prepare() {
   // Publish the source code for sourcemaps and for bundlers
   // (like Metro) that ignore pre-existing sourcemaps.
   const publishSources = async pkg => {
+    if (pkg.name == 'react-spring') return
     const srcDir = join(pkg.dir, SRC)
     const distDir = join(pkg.dir, DIST, SRC)
 
