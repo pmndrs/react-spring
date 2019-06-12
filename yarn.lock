@@ -1861,7 +1861,7 @@
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/shared@link:packages/shared":
-  version "9.0.0-beta.17"
+  version "9.0.0-beta.18"
   dependencies:
     tiny-invariant "^1.0.4"
 
