@@ -130,7 +130,7 @@ async function prepare() {
 
   // Prepare packages that can be used in react-native.
   const prepareNativePackage = pkg => {
-    if (/\/(native|core|animated|shared)$/.test(pkg.name)) {
+    if (/\/(native|core|animated)$/.test(pkg.name)) {
       // Add entry point for bundlers that want the source code
       pkg['react-native'] = join(SRC, 'index.ts')
 
