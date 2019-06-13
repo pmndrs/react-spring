@@ -29,17 +29,7 @@
       "targets/*"
     ],
     "nohoist": [
-      "**/@react-spring/*",
-      "**/@types/*",
-      "**/three",
-      "**/react-three-fiber",
-      "**/zdog",
-      "**/react-zdog",
-      "**/konva",
-      "**/react-konva",
-      "**/react-native",
-      "**/react-testing-library",
-      "**/react-dom"
+      "**"
     ]
   },
   "scripts": {
