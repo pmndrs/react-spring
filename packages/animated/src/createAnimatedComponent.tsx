@@ -52,15 +52,13 @@ export const createAnimatedComponent: CreateAnimated = <
     const { scrollTop, scrollLeft, ...animatedProps } = attachProps(props)
 
     // Functions cannot have refs (see #569)
-    const refFn = isFunctionComponent(Component)
-      ? undefined
-      : (childRef: C) => (node.current = handleRef(childRef, ref))
+    const refFn =
+      !is.fun(Component) || Component.prototype.isReactComponent
+        ? (childRef: C) => (node.current = handleRef(childRef, ref))
+        : void 0
 
     return <Component {...(animatedProps as typeof props)} ref={refFn} />
   })
-
-const isFunctionComponent = (val: unknown): boolean =>
-  is.fun(val) && !(val.prototype instanceof React.Component)
 
 //
 // withExtend()
