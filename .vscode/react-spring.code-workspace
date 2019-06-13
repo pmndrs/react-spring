@@ -1,0 +1,27 @@
+{
+  "folders": [
+    {
+      "name": "targets",
+      "path": "../targets"
+    },
+    {
+      "name": "packages",
+      "path": "../packages"
+    },
+    {
+      "name": "examples",
+      "path": "../examples"
+    },
+    {
+      "name": "docs",
+      "path": "../docs"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.bic_cache": true,
+      "**/.rpt2_cache": true,
+      "**/node_modules": true
+    }
+  }
+}
