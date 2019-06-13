@@ -16,6 +16,9 @@ const DIST = 'dist'
 const PJ = 'package.json'
 const RS = '@react-spring'
 
+// Packages compatible with react-native
+const RN_PKG = /\/(native|addons|core|animated)$/
+
 // Packages with no "dist" folder
 const rawPackages = ['packages/envinfo']
 
@@ -127,7 +130,7 @@ async function prepare() {
         : void 0)
 
     // Packages compatible with "react-native" provide an uncompiled main module.
-    if (/\/(native|addons|core|animated)$/.test(pkg.name)) {
+    if (RN_PKG.test(pkg.name)) {
       pkg['react-native'] = main
     }
   }
