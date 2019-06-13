@@ -15,6 +15,9 @@ import {
 import AnimatedProps from './AnimatedProps'
 import { animatedApi, applyAnimatedValues } from './Globals'
 
+const isFunctionComponent = (val: unknown): boolean =>
+  is.fun(val) && !(val.prototype instanceof React.Component)
+
 const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
   Component: C
 ) => {
@@ -38,6 +41,7 @@ const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
             // If no referenced node has been found, or the update target didn't have a
             // native-responder, then forceUpdate the animation ...
             forceUpdate()
+            console.log('force')
           }
         }
         propsAnimated.current = new AnimatedProps(props, callback)
@@ -64,7 +68,7 @@ const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
 
       // Functions cannot have refs, see:
       // See: https://github.com/react-spring/react-spring/issues/569
-      const refFn = is.fun(Component)
+      const refFn = isFunctionComponent(Component)
         ? undefined
         : (childRef: C) => (node.current = handleRef(childRef, ref))
       return <Component {...animatedProps as typeof props} ref={refFn} />
