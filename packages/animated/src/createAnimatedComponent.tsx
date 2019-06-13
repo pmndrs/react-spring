@@ -25,7 +25,7 @@ export const createAnimatedComponent: CreateAnimated = <
       const oldPropsAnimated = propsAnimated.current
       const callback = () => {
         const didUpdate =
-          node.current &&
+          !!node.current &&
           G.applyAnimatedValues(
             node.current,
             propsAnimated.current!.getAnimatedValue()
@@ -52,12 +52,15 @@ export const createAnimatedComponent: CreateAnimated = <
     const { scrollTop, scrollLeft, ...animatedProps } = attachProps(props)
 
     // Functions cannot have refs (see #569)
-    const refFn = is.fun(Component)
+    const refFn = isFunctionComponent(Component)
       ? undefined
       : (childRef: C) => (node.current = handleRef(childRef, ref))
 
     return <Component {...(animatedProps as typeof props)} ref={refFn} />
   })
+
+const isFunctionComponent = (val: unknown): boolean =>
+  is.fun(val) && !(val.prototype instanceof React.Component)
 
 //
 // withExtend()
