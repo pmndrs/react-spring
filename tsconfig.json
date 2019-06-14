@@ -1,5 +1,5 @@
 {
-  "include": ["packages/**", "targets/**"],
+  "include": ["packages", "targets"],
   "exclude": ["**/node_modules/**"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
@@ -7,7 +7,7 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "jsx": "react",
-    "lib": [],
+    "lib": ["es2017"],
     "moduleResolution": "node",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
