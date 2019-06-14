@@ -41,7 +41,6 @@ const createAnimatedComponent: CreateAnimatedComponent = <C extends ReactType>(
             // If no referenced node has been found, or the update target didn't have a
             // native-responder, then forceUpdate the animation ...
             forceUpdate()
-            console.log('force')
           }
         }
         propsAnimated.current = new AnimatedProps(props, callback)
