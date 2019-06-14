@@ -4,7 +4,7 @@ import {
   WithExtend,
 } from '@react-spring/animated'
 import { ForwardRefExoticComponent } from 'react'
-import { Text, View, ViewStyle } from 'react-native'
+import { Text, View, Image, ViewStyle } from 'react-native'
 import {
   AssignableKeys,
   SpringValue,
@@ -16,6 +16,7 @@ import {
 const elements = {
   View,
   Text,
+  Image,
 }
 
 type NativeElements = typeof elements
