@@ -1,24 +1,23 @@
-import * as THREE from 'three'
 import {
   createAnimatedComponent,
   withExtend,
   WithExtend,
 } from '@react-spring/animated'
-import { AssignableKeys, SpringValue } from 'shared'
-import React, {
-  CSSProperties,
+import { CSSProperties, ForwardRefExoticComponent } from 'react'
+import {
+  AssignableKeys,
   ComponentPropsWithRef,
-  ForwardRefExoticComponent,
-} from 'react'
+  ElementType,
+  SpringValue,
+} from 'shared'
+import * as THREE from 'three'
 
 // TODO: Support type-checking for `animated` props
-type ThreeComponents = {
-  [key: string]: React.ComponentType<{ [key: string]: any }>
-}
+type ThreeComponents = { [key: string]: ElementType }
 
 const elements = Object.keys(THREE).filter(key => /^[A-Z]/.test(key))
 
-type CreateAnimated = <T extends React.ElementType>(
+type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
 
@@ -33,7 +32,7 @@ export { animated as a }
 
 /** The type of an `animated()` component */
 export type AnimatedComponent<
-  T extends React.ElementType
+  T extends ElementType
 > = ForwardRefExoticComponent<AnimatedProps<ComponentPropsWithRef<T>>>
 
 /** The props of an `animated()` component */

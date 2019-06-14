@@ -1,16 +1,16 @@
-import { View, Text, ViewStyle } from 'react-native'
 import {
   createAnimatedComponent,
   withExtend,
   WithExtend,
 } from '@react-spring/animated'
-import { AssignableKeys, SpringValue } from 'shared'
+import { ForwardRefExoticComponent } from 'react'
+import { Text, View, ViewStyle } from 'react-native'
 import {
-  ReactNode,
+  AssignableKeys,
+  SpringValue,
   ElementType,
   ComponentPropsWithRef,
-  ForwardRefExoticComponent,
-} from 'react'
+} from 'shared'
 
 // These are converted into `animated` components
 const elements = {
@@ -36,9 +36,7 @@ export { animated as a }
 /** The type of an `animated()` component */
 export type AnimatedComponent<
   T extends ElementType
-> = ForwardRefExoticComponent<
-  AnimatedProps<ComponentPropsWithRef<T>> & { children?: ReactNode }
->
+> = ForwardRefExoticComponent<AnimatedProps<ComponentPropsWithRef<T>>>
 
 /** The props of an `animated()` component */
 export type AnimatedProps<Props extends object> = {

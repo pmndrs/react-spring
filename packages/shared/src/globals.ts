@@ -6,20 +6,13 @@ declare const window: {
   cancelAnimationFrame: (id: number) => void
 }
 
-type Props = { [key: string]: any }
-
-export interface AnimatedRef<T> {
-  getNode(): T
-  setNativeProps(props: Props): void
-}
-
 //
 // Required
 //
 
 export let defaultElement: string | ElementType
 
-export let applyAnimatedValues: (node: any, props: Props) => boolean | void
+export let applyAnimatedValues: (node: any, props: any) => boolean | void
 
 export let createAnimatedInterpolation: SpringInterpolator
 
@@ -50,12 +43,6 @@ export let createAnimatedTransform:
   | ((transform: any) => any)
   | null = null as any
 
-export let createAnimatedRef: <T extends React.ElementType>(
-  node: React.MutableRefObject<T>,
-  mounted: React.MutableRefObject<boolean>,
-  forceUpdate: () => void
-) => T | AnimatedRef<T> = node => node.current
-
 export let requestAnimationFrame: typeof window.requestAnimationFrame =
   typeof window !== 'undefined' ? window.requestAnimationFrame : () => -1
 
@@ -77,7 +64,6 @@ export interface AnimatedGlobals {
   createAnimatedInterpolation?: typeof createAnimatedInterpolation
   createAnimatedTransform?: typeof createAnimatedTransform
   createAnimatedStyle?: typeof createAnimatedStyle
-  createAnimatedRef?: typeof createAnimatedRef
   requestAnimationFrame?: typeof requestAnimationFrame
   cancelAnimationFrame?: typeof cancelAnimationFrame
 }
@@ -94,7 +80,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     createAnimatedInterpolation,
     createAnimatedTransform,
     createAnimatedStyle,
-    createAnimatedRef,
     requestAnimationFrame,
     cancelAnimationFrame,
   } = Object.assign(
@@ -109,7 +94,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       createAnimatedInterpolation,
       createAnimatedTransform,
       createAnimatedStyle,
-      createAnimatedRef,
       requestAnimationFrame,
       cancelAnimationFrame,
     },

@@ -19,13 +19,6 @@ Globals.assign({
     }
     return new AnimatedStyle(styles)
   },
-  createAnimatedRef: (node, mounted, forceUpdate) => ({
-    getNode: () => node.current,
-    setNativeProps: props => {
-      const didUpdate = Globals.applyAnimatedValues(node.current, props)
-      if (!didUpdate && mounted.current) forceUpdate()
-    },
-  }),
 })
 
 export * from './animated'

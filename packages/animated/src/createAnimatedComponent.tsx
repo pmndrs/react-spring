@@ -1,26 +1,14 @@
-import React, {
-  forwardRef,
-  ElementType,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-  Ref,
-} from 'react'
+import { forwardRef, useCallback, useRef, Ref } from 'react'
 import * as G from 'shared/globals'
-import { is, useForceUpdate, useOnce } from 'shared'
+import { is, useForceUpdate, useOnce, ElementType } from 'shared'
 import { AnimatedProps } from './AnimatedProps'
 
-export const createAnimatedComponent: CreateAnimated = <
-  C extends string | ElementType
->(
-  Component: C
-) =>
-  forwardRef<C | G.AnimatedRef<C>>((props: any, ref) => {
-    const node = useRef<C | G.AnimatedRef<C> | null>(null)
-    const mounted = useRef(true)
+export const createAnimatedComponent: CreateAnimated = Component =>
+  forwardRef((props: any, ref: Ref<any>) => {
     const propsAnimated = useRef<AnimatedProps | null>(null)
     const forceUpdate = useForceUpdate()
 
+    const node = useRef<any>(null)
     const attachProps = useCallback(props => {
       const oldPropsAnimated = propsAnimated.current
       const callback = () => {
@@ -41,12 +29,8 @@ export const createAnimatedComponent: CreateAnimated = <
     }, [])
 
     useOnce(() => () => {
-      mounted.current = false
       propsAnimated.current && propsAnimated.current.detach()
     })
-    useImperativeHandle(ref, () =>
-      G.createAnimatedRef<any>(node, mounted, forceUpdate)
-    )
 
     // TODO: Avoid special case for scrollTop/scrollLeft
     const { scrollTop, scrollLeft, ...animatedProps } = attachProps(props)
@@ -54,11 +38,19 @@ export const createAnimatedComponent: CreateAnimated = <
     // Functions cannot have refs (see #569)
     const refFn =
       !is.fun(Component) || Component.prototype.isReactComponent
-        ? (childRef: C) => (node.current = handleRef(childRef, ref))
+        ? (value: any) => (node.current = updateRef(ref, value))
         : void 0
 
     return <Component {...(animatedProps as typeof props)} ref={refFn} />
   })
+
+function updateRef<T>(ref: Ref<T>, value: T) {
+  if (ref) {
+    if (is.fun(ref)) ref(value)
+    else (ref as any).current = value
+  }
+  return value
+}
 
 //
 // withExtend()
@@ -123,16 +115,4 @@ export function withExtend<T extends CreateAnimated>(
     return self
   }
   return self
-}
-
-function handleRef<T>(ref: T, forward: Ref<T>) {
-  if (forward) {
-    // If it's a function, assume it's a ref callback
-    if (is.fun(forward)) forward(ref)
-    else if (is.obj(forward)) {
-      // If it's an object and has a 'current' property, assume it's a ref object
-      ;(forward as any).current = ref
-    }
-  }
-  return ref
 }

@@ -1,55 +1,24 @@
-import * as konva from 'react-konva'
 import {
   createAnimatedComponent,
   withExtend,
   WithExtend,
 } from '@react-spring/animated'
-import { AssignableKeys, SpringValue } from 'shared'
+import { CSSProperties, ForwardRefExoticComponent } from 'react'
 import {
+  AssignableKeys,
+  SpringValue,
   ElementType,
-  CSSProperties,
   ComponentPropsWithRef,
-  ForwardRefExoticComponent,
-} from 'react'
-
-type KonvaExports = typeof konva
-
-type KonvaElements = {
-  [P in keyof KonvaExports]: KonvaExports[P] extends ElementType ? P : never
-}[keyof KonvaExports]
-
-type KonvaComponents = {
-  [Tag in KonvaElements]: AnimatedComponent<KonvaExports[Tag]>
-}
-
-const elements: KonvaElements[] = [
-  'Arc',
-  'Arrow',
-  'Circle',
-  'Ellipse',
-  'FastLayer',
-  'Group',
-  'Image',
-  'Label',
-  'Layer',
-  'Line',
-  'Path',
-  'Rect',
-  'RegularPolygon',
-  'Ring',
-  'Shape',
-  'Sprite',
-  'Star',
-  'Tag',
-  'Text',
-  'TextPath',
-  'Transformer',
-  'Wedge',
-]
+} from 'shared'
+import { KonvaExports, KonvaElements, elements } from './elements'
 
 type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
+
+type KonvaComponents = {
+  [Tag in KonvaElements]: AnimatedComponent<KonvaExports[Tag]>
+}
 
 // Extend animated with all the available Konva elements
 export const animated: WithExtend<
