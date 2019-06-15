@@ -54,13 +54,13 @@ export interface SpringInterpolator {
   <In extends Animatable, Out extends Animatable>(
     parent: SpringValue<In>,
     interpolator: (...args: Arrify<In>) => Out
-  ): SpringValue<Animatable<Out>>
+  ): SpringValue<Out>
 
   // Tuple of AnimatedValue parents
   <In extends ReadonlyArray<SpringValue>, Out extends Animatable>(
     parents: In,
     interpolator: (...args: RawValues<In>) => Out
-  ): SpringValue<Animatable<Out>>
+  ): SpringValue<Out>
 
   // Interpolation config
   <Out extends Animatable>(
@@ -71,8 +71,8 @@ export interface SpringInterpolator {
   // Range shortcuts
   <Out extends Animatable>(
     parents: OneOrMore<SpringValue>,
-    range: number[],
-    output: Out[],
+    range: ReadonlyArray<number>,
+    output: ReadonlyArray<Out>,
     extrapolate?: ExtrapolateType
   ): SpringValue<Animatable<Out>>
 }

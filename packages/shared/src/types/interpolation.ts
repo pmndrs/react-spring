@@ -20,20 +20,20 @@ export type Interpolatable = ReadonlyArray<number | string>
  */
 export interface Interpolator<In extends ReadonlyArray<any> = any[]> {
   <Out extends Animatable = Animatable>(
-    range: number[],
-    output: Out[],
+    range: ReadonlyArray<number>,
+    output: ReadonlyArray<Out>,
     extrapolate?: ExtrapolateType
   ): SpringValue<Animatable<Out>>
 
   <Out extends Animatable = Animatable>(
     config: InterpolatorConfig<Out> | InterpolatorFn<In, Out>
-  ): SpringValue<Animatable<Out>>
+  ): SpringValue<Out>
 }
 
 // Parameters<Interpolation> is insufficient 😢
 export type InterpolatorArgs<In = any, Out extends Animatable = Animatable> =
   | [InterpolatorConfig<Out> | InterpolatorFn<Arrify<In>, Out>]
-  | [number[], Out[], (ExtrapolateType | undefined)?]
+  | [ReadonlyArray<number>, ReadonlyArray<Out>, (ExtrapolateType | undefined)?]
 
 /**
  * An "interpolator" transforms an animated value. Animated arrays are spread
