@@ -36,5 +36,43 @@
     "bundled": 8108,
     "minified": 4432,
     "gzipped": 1652
+  },
+  "dist/index.js": {
+    "bundled": 7697,
+    "minified": 4063,
+    "gzipped": 1556,
+    "treeshaked": {
+      "rollup": {
+        "code": 3635,
+        "import_statements": 427
+      },
+      "webpack": {
+        "code": 5072
+      }
+    }
+  },
+  "dist/index.cjs.js": {
+    "bundled": 8108,
+    "minified": 4432,
+    "gzipped": 1652
+  },
+  "dist/parallax.js": {
+    "bundled": 7697,
+    "minified": 4063,
+    "gzipped": 1556,
+    "treeshaked": {
+      "rollup": {
+        "code": 3635,
+        "import_statements": 427
+      },
+      "webpack": {
+        "code": 5072
+      }
+    }
+  },
+  "dist/parallax.cjs.js": {
+    "bundled": 8108,
+    "minified": 4432,
+    "gzipped": 1652
   }
 }

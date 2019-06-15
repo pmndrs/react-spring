@@ -1828,59 +1828,59 @@
     url-template "^2.0.8"
 
 "@react-spring/addons@link:packages/addons":
-  version "9.0.0-beta.20"
+  version "9.0.0-beta.21"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     use-memo-one "^1.1.0"
 
 "@react-spring/animated@link:packages/animated":
-  version "9.0.0-beta.20"
+  version "9.0.0-beta.21"
   dependencies:
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/core@link:packages/core":
-  version "9.0.0-beta.20"
+  version "9.0.0-beta.21"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
-  version "9.0.0-beta.20"
+  version "9.0.0-beta.21"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "9.0.0-beta.20"
+  version "9.0.0-beta.21"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/shared@link:packages/shared":
-  version "9.0.0-beta.20"
+  version "9.0.0-beta.21"
   dependencies:
     tiny-invariant "^1.0.4"
 
 "@react-spring/three@link:targets/three":
-  version "9.0.0-beta.20"
+  version "9.0.0-beta.21"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/web@link:targets/web":
-  version "9.0.0-beta.20"
+  version "9.0.0-beta.21"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/zdog@link:targets/zdog":
-  version "9.0.0-beta.20"
+  version "9.0.0-beta.21"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"

@@ -76,7 +76,7 @@
     "gzipped": 177
   },
   "dist/universal.js": {
-    "bundled": 108,
+    "bundled": 35,
     "minified": 32,
     "gzipped": 52,
     "treeshaked": {
@@ -90,7 +90,7 @@
     }
   },
   "dist/universal.cjs.js": {
-    "bundled": 351,
+    "bundled": 280,
     "minified": 227,
     "gzipped": 177
   },

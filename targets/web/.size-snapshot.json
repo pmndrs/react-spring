@@ -17,5 +17,24 @@
     "bundled": 6375,
     "minified": 3616,
     "gzipped": 1646
+  },
+  "dist/index.js": {
+    "bundled": 5968,
+    "minified": 3327,
+    "gzipped": 1519,
+    "treeshaked": {
+      "rollup": {
+        "code": 2937,
+        "import_statements": 284
+      },
+      "webpack": {
+        "code": 4077
+      }
+    }
+  },
+  "dist/index.cjs.js": {
+    "bundled": 6375,
+    "minified": 3616,
+    "gzipped": 1646
   }
 }
