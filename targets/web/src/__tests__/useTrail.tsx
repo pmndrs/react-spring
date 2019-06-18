@@ -10,12 +10,12 @@ test('basic usage', () => {
 });
 
 test('function argument', () => {
-  const [springs, set, stop] = useTrail(3, () => ({ opacity: 1 }));
+  const [springs, update, stop] = useTrail(3, () => ({ opacity: 1 }));
   assert(springs, _ as Array<{
     [key: string]: SpringValue<any>;
     opacity: SpringValue<number>;
   }>);
-  assert(set, _ as SpringUpdateFn<{
+  assert(update, _ as SpringUpdateFn<{
     opacity: number;
   }>);
   assert(stop, _ as SpringStopFn);

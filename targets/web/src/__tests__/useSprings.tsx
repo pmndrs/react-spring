@@ -18,7 +18,7 @@ test('pass an array', () => {
 });
 
 test('pass a function', () => {
-  const [springs, set, stop] = useSprings(2, i => {
+  const [springs, update, stop] = useSprings(2, i => {
     assert(i, _ as number);
     return { opacity: i };
   });
@@ -26,7 +26,7 @@ test('pass a function', () => {
     [key: string]: SpringValue<any>;
     opacity: SpringValue<number>;
   }>);
-  assert(set, _ as SpringUpdateFn<{
+  assert(update, _ as SpringUpdateFn<{
     opacity: number;
   }>);
   assert(stop, _ as SpringStopFn);

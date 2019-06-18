@@ -5,9 +5,9 @@ import { useMemoOne } from 'use-memo-one'
 import { Controller } from './Controller'
 
 /** API
- * const [props, set, cancel] = useSprings(number, props, [optionalDeps])
- * const [props, set, cancel] = useSprings(number, [props], [optionalDeps])
- * const [props, set, cancel] = useSprings(number, index => props, [optionalDeps])
+ * const [props, update, stop] = useSprings(number, props, [optionalDeps])
+ * const [props, update, stop] = useSprings(number, [props], [optionalDeps])
+ * const [props, update, stop] = useSprings(number, index => props, [optionalDeps])
  */
 
 export const useSprings = (length, propsArg, deps) => {

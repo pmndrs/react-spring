@@ -5,8 +5,8 @@ import { useSprings } from './useSprings'
 import { callProp } from './helpers'
 
 /** API
- * const [trails, set, cancel] = useTrail(number, props, [optionalDeps])
- * const [trails, set, cancel] = useTrail(number, () => props, [optionalDeps])
+ * const [trails, update, cancel] = useTrail(number, props, [optionalDeps])
+ * const [trails, update, cancel] = useTrail(number, () => props, [optionalDeps])
  */
 
 export const useTrail = (length, propsArg, deps) => {
