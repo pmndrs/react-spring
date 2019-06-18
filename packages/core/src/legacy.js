@@ -5,7 +5,7 @@ import { useTransition } from './useTransition'
 import { is } from 'shared'
 
 export function Spring({ children, ...props }) {
-  return children(useSpring(props)[0])
+  return children(...useSpring(props))
 }
 
 export function Trail({ items, children, ...props }) {
