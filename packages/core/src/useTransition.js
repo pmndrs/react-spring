@@ -56,12 +56,12 @@ export function useTransition(input, keyTransform, props) {
     current: {},
     transitions: [],
     prevProps: {},
-    paused: !!props.ref,
+    paused: !!ref,
     instances: !mounted.current && new Map(),
     forceUpdate,
   })
 
-  useImperativeHandle(props.ref, () => ({
+  useImperativeHandle(ref, () => ({
     start: () =>
       Promise.all(
         Array.from(state.current.instances).map(
@@ -92,7 +92,6 @@ export function useTransition(input, keyTransform, props) {
       const itemProps = {
         ...extra,
         ...props,
-        ref,
         onRest: values => {
           if (state.current.mounted) {
             if (transition.destroyed) {
