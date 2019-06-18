@@ -52,23 +52,25 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is
     ? never
     : DT extends void
     ? undefined
+    : DT extends ReadonlyArray<any>
+    ? TransformArray extends DT
+      ? AnimatedTransform
+      : AnimatedStyles<DT>
     : DT extends object
     ? [AssignableKeys<DT, ViewStyle>] extends [never]
-      ? DT extends ReadonlyArray<any>
-        ? AnimatedStyles<DT>
-        : DT
-      : AnimatedStyle<T>
+      ? DT
+      : AnimatedStyle<DT>
     : DT | AnimatedLeaf<T>
   : never
 
 // An animated array of style objects
 type AnimatedStyles<T extends ReadonlyArray<any>> = {
   [P in keyof T]: [T[P]] extends [infer DT] // DT is a distributed union
-    ? DT extends object
+    ? DT extends ReadonlyArray<any>
+      ? AnimatedStyles<DT>
+      : DT extends object
       ? [AssignableKeys<DT, ViewStyle>] extends [never]
-        ? DT extends ReadonlyArray<any>
-          ? AnimatedStyles<DT>
-          : DT
+        ? AnimatedProp<DT>
         : { [P in keyof DT]: AnimatedProp<DT[P]> }
       : DT
     : never
@@ -83,16 +85,22 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT] // T is a union, DT i
     : DT extends object
     ? {
         [P in keyof DT]: P extends 'transform'
-          ? AnimatedTransform<DT[P]>
+          ? AnimatedTransform
           : AnimatedStyle<DT[P]>
       }
     : DT | AnimatedLeaf<T>
   : never
 
+type Indices<T> = Extract<keyof T, number>
+
+type TransformArray = Exclude<ViewStyle['transform'], void>
+
 // An animated array of transform objects
-type AnimatedTransform<T> = T extends ReadonlyArray<any>
-  ? { [P in keyof T]: AnimatedStyle<T[P]> }
-  : T
+type AnimatedTransform = {
+  [P in Indices<TransformArray>]: TransformArray[P] extends infer T
+    ? { [P in keyof T]: T[P] | AnimatedLeaf<T[P]> }
+    : never
+}
 
 // An animated value that is not an object
 type AnimatedLeaf<T> = [T] extends [object]

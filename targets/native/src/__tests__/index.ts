@@ -1,5 +1,7 @@
 import { assert, _, test, describe } from 'spec.ts';
 import { AnimatedProps, SpringValue } from '..';
+import { AnimatedTransformProp } from 'src/animated';
+import { ViewStyle } from 'react-native';
 
 describe('AnimatedProps', () => {
   test('width prop', () => {
@@ -33,17 +35,14 @@ describe('AnimatedProps', () => {
   test('transform prop', () => {
     type Props = AnimatedProps<{
       style?: {
-        transform: [{ rotateX: string }, { translateY: number }];
+        transform: ViewStyle['transform'];
       };
     }>;
     assert(
       _ as Props,
       _ as {
         style?: {
-          transform: [
-            { rotateX: string | SpringValue<string> },
-            { translateY: number | SpringValue<number> }
-          ];
+          transform: AnimatedTransformProp;
         };
       }
     );
