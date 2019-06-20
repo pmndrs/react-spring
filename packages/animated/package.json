@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/animated",
-  "version": "9.0.0-beta.21",
+  "version": "9.0.0-beta.23",
   "description": "Animated component props for React",
   "private": true,
   "main": "src/index.ts",

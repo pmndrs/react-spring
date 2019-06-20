@@ -19,7 +19,7 @@
     "gzipped": 533
   },
   "dist/index.js": {
-    "bundled": 1075,
+    "bundled": 923,
     "minified": 801,
     "gzipped": 387,
     "treeshaked": {
@@ -33,8 +33,8 @@
     }
   },
   "dist/index.cjs.js": {
-    "bundled": 1492,
-    "minified": 1105,
-    "gzipped": 533
+    "bundled": 1348,
+    "minified": 1099,
+    "gzipped": 529
   }
 }
