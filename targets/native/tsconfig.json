@@ -3,7 +3,6 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
-    "importHelpers": true,
     "jsx": "react",
     "lib": ["es2017"],
     "moduleResolution": "node",
@@ -18,6 +17,6 @@
     "preserveSymlinks": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "target": "esnext"
   }
 }

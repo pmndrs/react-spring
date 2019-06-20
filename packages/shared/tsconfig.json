@@ -6,7 +6,6 @@
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "importHelpers": true,
     "inlineSources": true,
     "jsx": "react",
     "lib": ["es2017"],

@@ -109,9 +109,16 @@ export const dtsBundle = config => ({
   external,
 })
 
+const babelExtensions = [
+  ...require('@babel/core').DEFAULT_EXTENSIONS,
+  'ts',
+  'tsx',
+]
+
 export const getBabelOptions = ({ useESModules }, targets) => ({
   babelrc: false,
   exclude: '**/node_modules/**',
+  extensions: babelExtensions,
   runtimeHelpers: true,
   presets: [
     ['@babel/preset-env', { loose: true, modules: false, targets }],

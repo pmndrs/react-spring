@@ -4,7 +4,6 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
-    "importHelpers": true,
     "jsx": "react",
     "lib": ["es2017"],
     "moduleResolution": "node",
@@ -14,13 +13,12 @@
     "noUnusedParameters": true,
     "paths": {
       "shared": ["../shared/dist"],
-      "shared/*": ["../shared/dist/*"],
-      "@react-spring/*": ["../../targets/*/dist"]
+      "shared/*": ["../shared/dist/*"]
     },
     "preserveSymlinks": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es5"
+    "target": "esnext"
   }
 }
