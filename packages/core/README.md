@@ -1,3 +1,3 @@
 # @react-spring/core
 
-The `Controller` class that powers every animation
+The platform-agnostic core of `react-spring`
