@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useRef } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 import { Indexable } from './types'
 
 interface IsArray {
@@ -22,11 +22,8 @@ export function useOnce(effect: React.EffectCallback) {
   useEffect(effect, [])
 }
 
-export function useForceUpdate() {
-  const [, f] = useState(false)
-  const forceUpdate = useCallback(() => f(v => !v), [])
-  return forceUpdate
-}
+export const useForceUpdate = () =>
+  useReducer(() => ({}), {})[1] as (() => void)
 
 /** Use a value from the previous render */
 export function usePrev<T>(value: T): T | undefined {
