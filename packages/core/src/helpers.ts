@@ -53,6 +53,7 @@ function getForwardProps<Props extends ReservedProps>(
     enter,
     leave,
     update,
+    onAnimate,
     onStart,
     onRest,
     onFrame,
