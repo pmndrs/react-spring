@@ -213,7 +213,7 @@ function diffItems({ first, current, deleted, prevProps, ...state }, props) {
           props: {
             delay: (delay += trail),
             config: callProp(config, item, phase),
-            from: callProp(from, item),
+            from: callProp(from, item, i),
             to: enterProps,
             ...(is.obj(enterProps) && interpolateTo(enterProps)),
           },
