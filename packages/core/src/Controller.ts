@@ -324,7 +324,7 @@ export class Controller<State extends Indexable = any> {
       if (onEnd) onEnd(finished)
       if (!this.runCount && finished) {
         const { onRest } = this.props
-        if (onRest) onRest(this.merged)
+        if (typeof onRest === 'function') onRest(this.merged)
       }
     }
 
