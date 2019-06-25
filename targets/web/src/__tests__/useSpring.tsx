@@ -1,6 +1,6 @@
 import { assert, test, _ } from 'spec.ts';
 import React, { useRef } from 'react';
-import { UnknownProps } from '@react-spring/core';
+import { UnknownProps, AnimationProps, Controller } from '@react-spring/core';
 import {
   animated,
   useSpring,
@@ -248,5 +248,16 @@ test('array as "to" prop', () => {
       [key: string]: SpringValue<any>;
       opacity: SpringValue<number>;
     });
+  });
+});
+
+test('with "onAnimate" prop', () => {
+  useSpring({
+    width: 0,
+    onAnimate(props, ctrl) {
+      // FIXME: should be "UnknownProps & { foo: number }"
+      assert(props, _ as AnimationProps<UnknownProps>);
+      assert(ctrl, _ as Controller<UnknownProps>);
+    },
   });
 });

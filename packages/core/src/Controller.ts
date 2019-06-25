@@ -473,7 +473,17 @@ export class Controller<State extends Indexable = any> {
 
   // Update the animation configs. The given props override any default props.
   private _animate(props: PendingProps<State>) {
-    const { from = emptyObj, to = emptyObj, parent, onStart } = this.props
+    const {
+      from = emptyObj,
+      to = emptyObj,
+      parent,
+      onAnimate,
+      onStart,
+    } = this.props
+
+    if (onAnimate) {
+      onAnimate(props as any, this as any)
+    }
 
     let isPrevented = (_: string) => false
     if (props.cancel && this._isModified(props, 'cancel')) {

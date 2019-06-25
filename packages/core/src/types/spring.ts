@@ -9,6 +9,7 @@ import {
   StringKeys,
   UnknownProps,
 } from './common'
+import { Controller } from '../Controller'
 
 export { Animatable, SpringValue, RawValues }
 
@@ -211,6 +212,13 @@ export interface AnimationProps<T extends object = {}> extends AnimationEvents {
  * The `T` parameter should only contain animated props.
  */
 export interface AnimationEvents<T extends object = {}> {
+  /**
+   * Called when a controller is told to animate
+   */
+  onAnimate?: (
+    props: AnimationProps<T & UnknownProps>,
+    controller: Controller<T & UnknownProps>
+  ) => void
   /**
    * Called when an animation is about to start
    */
