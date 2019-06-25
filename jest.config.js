@@ -1,5 +1,4 @@
 module.exports = {
-  collectCoverage: true,
   collectCoverageFrom: ['**/src/**/*', '!**/dist/**/*', '!**/*.json'],
   coverageDirectory: './coverage',
   coverageReporters: ['json', 'html', 'text'],
