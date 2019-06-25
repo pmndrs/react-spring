@@ -2,10 +2,10 @@ import { useEffect, useReducer, useRef } from 'react'
 import { Indexable } from './types'
 
 interface IsArray {
-  <T>(a: T): a is T & ReadonlyArray<any>
+  <T>(a: T): a is T & readonly any[]
 }
 
-type PlainObject<T> = Exclude<T & Indexable, Function | ReadonlyArray<any>>
+type PlainObject<T> = Exclude<T & Indexable, Function | readonly any[]>
 
 export const is = {
   arr: Array.isArray as IsArray,

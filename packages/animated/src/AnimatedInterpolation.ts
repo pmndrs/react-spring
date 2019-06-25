@@ -23,7 +23,7 @@ export class AnimatedInterpolation<
   public calc: Interpolator<In>
 
   constructor(
-    parents: SpringValue | ReadonlyArray<SpringValue>,
+    parents: SpringValue | readonly SpringValue[],
     args: InterpolatorArgs<In, Out>
   ) {
     super()

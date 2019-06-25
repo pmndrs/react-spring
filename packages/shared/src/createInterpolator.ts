@@ -19,8 +19,8 @@ interface InterpolatorFactory {
   ): (input: number) => Animatable<Out>
 
   <Out extends Animatable>(
-    range: ReadonlyArray<number>,
-    output: ReadonlyArray<Out>,
+    range: readonly number[],
+    output: readonly Out[],
     extrapolate?: ExtrapolateType
   ): (input: number) => Animatable<Out>
 }
@@ -29,10 +29,10 @@ export const createInterpolator: InterpolatorFactory = <
   Out extends Animatable = Animatable
 >(
   range:
-    | InterpolatorFn<any, Out>
-    | InterpolatorConfig<Out>
-    | ReadonlyArray<number>,
-  output?: ReadonlyArray<Animatable>,
+    | readonly number[]
+    | InterpolatorFn<any[], Out>
+    | InterpolatorConfig<Out>,
+  output?: readonly Animatable[],
   extrapolate?: ExtrapolateType
 ) => {
   if (is.fun(range)) {
@@ -110,7 +110,7 @@ function interpolate(
   return result
 }
 
-function findRange(input: number, inputRange: ReadonlyArray<number>) {
+function findRange(input: number, inputRange: readonly number[]) {
   for (var i = 1; i < inputRange.length - 1; ++i)
     if (inputRange[i] >= input) break
   return i - 1

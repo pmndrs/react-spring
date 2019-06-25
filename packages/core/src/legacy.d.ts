@@ -15,7 +15,7 @@ export declare const Trail: <Item, Props extends object>(
   props: Merge<
     Props & UseSpringProps<Props>,
     {
-      items: ReadonlyArray<Item>
+      items: readonly Item[]
       children: (
         item: Item,
         index: number

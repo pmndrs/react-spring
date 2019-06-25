@@ -20,8 +20,8 @@ export type Interpolatable = ReadonlyArray<number | string>
  */
 export interface Interpolator<In extends ReadonlyArray<any> = any[]> {
   <Out extends Animatable = Animatable>(
-    range: ReadonlyArray<number>,
-    output: ReadonlyArray<Out>,
+    range: readonly number[],
+    output: readonly Out[],
     extrapolate?: ExtrapolateType
   ): SpringValue<Animatable<Out>>
 
@@ -33,7 +33,7 @@ export interface Interpolator<In extends ReadonlyArray<any> = any[]> {
 // Parameters<Interpolation> is insufficient 😢
 export type InterpolatorArgs<In = any, Out extends Animatable = Animatable> =
   | [InterpolatorConfig<Out> | InterpolatorFn<Arrify<In>, Out>]
-  | [ReadonlyArray<number>, ReadonlyArray<Out>, (ExtrapolateType | undefined)?]
+  | [readonly number[], readonly Out[], (ExtrapolateType | undefined)?]
 
 /**
  * An "interpolator" transforms an animated value. Animated arrays are spread
@@ -87,12 +87,12 @@ export type InterpolatorConfig<Out extends Animatable = Animatable> = {
    *
    * @default [0,1]
    */
-  range?: ReadonlyArray<number>
+  range?: readonly number[]
 
   /**
    * Output values from the interpolation function. Should match the length of the `range` array.
    */
-  output: ReadonlyArray<Out>
+  output: readonly Out[]
 
   /**
    * Transformation to apply to the value before interpolation.

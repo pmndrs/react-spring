@@ -34,7 +34,7 @@ describe('AnimatedValue interpolation options', () => {
     expect(value.getValue()).toBe(100)
   })
 
-  function createAnimatedArray(values: ReadonlyArray<number>) {
+  function createAnimatedArray(values: readonly number[]) {
     return new AnimatedValueArray(values.map(value => new AnimatedValue(value)))
   }
 

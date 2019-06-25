@@ -39,7 +39,7 @@ export type ItemTransition<Item, Props extends object = {}> = Solve<{
 /** For props that provide animated keys */
 type TransitionProp<Item> =
   | SpringUpdate
-  | ReadonlyArray<SpringUpdate>
+  | readonly SpringUpdate[]
   | ((item: Item) => SpringUpdate | SpringAsyncFn)
 
 export type UseTransitionProps<Item = any> = {
