@@ -30,7 +30,10 @@ export declare function useSpring<Props extends object>(
  * The props that `useSpring` recognizes.
  */
 export interface UseSpringProps<Props extends object = {}>
-  extends AnimationProps {
+  extends AnimationProps,
+    InferProps<Props> {}
+
+export interface InferProps<Props extends object = {}> {
   /**
    * Used to access the imperative API.
    *

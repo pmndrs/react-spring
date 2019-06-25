@@ -23,3 +23,15 @@ test('basic usage', () => {
     }}
   </Spring>;
 });
+
+test('async "to" prop', () => {
+  <Spring
+    from={{ opacity: 0 }}
+    to={async update => {
+      // ...
+    }}>
+    {props => {
+      // ...
+    }}
+  </Spring>;
+});

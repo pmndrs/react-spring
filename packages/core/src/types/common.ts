@@ -8,6 +8,9 @@ export type StringKeys<T extends object> = Extract<keyof T, string>
 /** Intersected with other object types to allow for unknown properties */
 export type UnknownProps = { [key: string]: unknown }
 
+// https://github.com/microsoft/TypeScript/issues/14829#issuecomment-504042546
+export type NoInfer<T> = [T][T extends any ? 0 : never]
+
 /** Infer an object type from an object, array, or function type */
 type InferObject<T> = T extends
   | ReadonlyArray<infer U>
