@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/web",
-  "version": "9.0.0-beta.23",
+  "version": "9.0.0-beta.24",
   "private": true,
   "main": "src/index.ts",
   "dependencies": {
