@@ -39,8 +39,7 @@
     "prepare": "node ./scripts/prepare.js && bic",
     "release": "lerna publish",
     "test": "jest",
-    "test:cov": "jest --watch",
-    "test:dev": "jest --watch --no-coverage",
+    "test:cov": "jest --coverage",
     "test:ts": "lerna exec --concurrency=1 --no-bail -- 'pwd && tsc -p . --noEmit'"
   },
   "husky": {
