@@ -663,7 +663,7 @@ export class Controller<State extends Indexable = any> {
         this._attach(started)
         if (onStart)
           started.forEach(key => {
-            onStart(this.animations[key])
+            onStart(this.animations[key] as any)
           })
       }
 

@@ -214,7 +214,7 @@ export interface AnimationEvents<T extends object = {}> {
   /**
    * Called when an animation is about to start
    */
-  onStart?: (animation: any) => void
+  onStart?: (animation: ActiveAnimation) => void
   /**
    * Called when all animations come to a stand-still
    */

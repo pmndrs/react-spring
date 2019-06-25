@@ -9,6 +9,7 @@ import {
   SpringStopFn,
   SpringUpdateFn,
 } from '..';
+import { ActiveAnimation } from '@react-spring/core/src/types/spring';
 
 test('infer return type via forward prop', () => {
   const props = useSpring({ width: 0, delay: 1000 });
@@ -141,7 +142,7 @@ test('imperative mode', () => {
     const [props] = useSpring(() => ({
       foo: 0,
       onStart(anim) {
-        assert(anim, _ as any);
+        assert(anim, _ as ActiveAnimation);
       },
       onFrame(values) {
         assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { foo: number }"
@@ -170,8 +171,8 @@ test('basic config', () => {
     from: { width: 0 },
     reset: true,
     delay: 1000,
-    onStart(animation) {
-      assert(animation, _ as any);
+    onStart(anim) {
+      assert(anim, _ as ActiveAnimation);
     },
     onFrame(values) {
       assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { width: number }"
