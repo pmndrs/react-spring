@@ -324,7 +324,9 @@ export class Controller<State extends Indexable = any> {
       if (onEnd) onEnd(finished)
       if (!this.runCount && finished) {
         const { onRest } = this.props
-        if (onRest) onRest(this.merged)
+        if (is.fun(onRest)) {
+          onRest(this.merged)
+        }
       }
     }
 
@@ -481,7 +483,7 @@ export class Controller<State extends Indexable = any> {
       onStart,
     } = this.props
 
-    if (onAnimate) {
+    if (is.fun(onAnimate)) {
       onAnimate(props as any, this as any)
     }
 
@@ -671,7 +673,7 @@ export class Controller<State extends Indexable = any> {
     if (changed) {
       if (started.length) {
         this._attach(started)
-        if (onStart)
+        if (is.fun(onStart))
           started.forEach(key => {
             onStart(this.animations[key] as any)
           })

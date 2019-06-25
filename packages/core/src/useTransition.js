@@ -106,14 +106,14 @@ export function useTransition(input, keyTransform, props) {
             if (!active && (ref || lazy) && state.current.deleted.length > 0) {
               cleanUp(state)
             }
-            if (onRest) {
+            if (is.fun(onRest)) {
               onRest(item, phase, values)
             }
           }
         },
-        onFrame: onFrame && (values => onFrame(item, phase, values)),
+        onFrame: is.fun(onFrame) && (values => onFrame(item, phase, values)),
         onStart:
-          onStart &&
+          is.fun(onStart) &&
           (animation =>
             started || (started = (onStart(item, phase, animation), true))),
       }
