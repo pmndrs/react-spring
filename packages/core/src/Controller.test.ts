@@ -14,39 +14,98 @@ beforeEach(() => {
   })
 })
 
-test('update simple value', () => {
-  const ctrl = new Controller<{ x: number; y?: number }>()
-  ctrl.update({ x: 0 })
-  ctrl.start()
-  expect(ctrl.animated.x.getValue()).toBe(0)
+it('can animate a number', () => {
+  const ctrl = new Controller({ x: 0 })
+  ctrl.update({ x: 100 }).start()
 
-  ctrl.update({ x: 100, y: 50 })
-  expect(ctrl.animated.x.getValue()).toBe(0)
+  const frames = getFrames(ctrl)
+  expect(frames).toMatchSnapshot()
 
-  ctrl.start()
+  // The first frame should be the from value.
+  expect(frames[0]).toEqual({ x: 0 })
 
-  mockRaf.step({ count: 10 })
-  expect(ctrl.animated.x.getValue()).toBeCloseTo(56.4)
-
-  mockRaf.step({ count: 100 })
-  expect(ctrl.animated.x.getValue()).toBe(100)
+  // The last frame should be the goal value.
+  expect(frames.slice(-1)[0]).toEqual({ x: 100 })
 })
 
-test('update array value', () => {
-  const ctrl = new Controller<{ x: number[] }>()
-  ctrl.update({ x: [0, 0] })
-  ctrl.start()
-  expect(ctrl.animated.x.getValue()).toEqual([0, 0])
+it('can animate an array of numbers', () => {
+  const config = { precision: 0.005 }
+  const ctrl = new Controller({ x: [1, 2], config })
+  ctrl.update({ x: [5, 10] }).start()
 
-  ctrl.update({ x: [10, 20] })
-  expect(ctrl.animated.x.getValue()).toEqual([0, 0])
+  const frames = getFrames(ctrl)
+  expect(frames).toMatchSnapshot()
 
-  ctrl.start()
+  // The last frame should be the goal value.
+  expect(frames.slice(-1)[0]).toEqual({ x: [5, 10] })
 
-  mockRaf.step({ count: 10 })
-  expect(ctrl.animated.x.getValue()[0]).toBeCloseTo(5.64)
-  expect(ctrl.animated.x.getValue()[1]).toBeCloseTo(11.28)
-
-  mockRaf.step({ count: 100 })
-  expect(ctrl.animated.x.getValue()).toEqual([10, 20])
+  // The 2nd value is always ~2x the 1st value (within the defined precision).
+  const factors = frames.map(frame => frame.x[1] / frame.x[0])
+  expect(
+    factors.every(factor => Math.abs(2 - factor) < config.precision)
+  ).toBeTruthy()
 })
+
+describe('async "to" prop', () => {
+  it('acts strangely without the "from" prop', async () => {
+    const ctrl = new Controller({
+      to: async update => {
+        // The animated node does not exist yet!
+        expect(ctrl.animated.x).toBeUndefined()
+
+        // Any values passed here are treated as "from" values,
+        // because no "from" prop was ever given.
+        let promise = update({ x: 1 })
+        // Now the animated node exists!
+        expect(ctrl.animated.x).toBeDefined()
+        // But the animation is idle!
+        expect(ctrl.animations.x.idle).toBeTruthy()
+        await promise
+
+        // This call *will* start an animation!
+        promise = update({ x: 2 })
+        expect(ctrl.animations.x.idle).toBeFalsy()
+        await promise
+      },
+    })
+
+    // Animated nodes are not created synchronously!
+    expect(ctrl.animated).toEqual({})
+
+    // Since we call `update` twice, frames are generated!
+    expect(await getAsyncFrames(ctrl)).toMatchSnapshot()
+  })
+})
+
+function getFrames<T extends object>(ctrl: Controller<T>): T[] {
+  const frames: any[] = []
+  ctrl.props.onFrame = values => {
+    frames.push(values)
+  }
+  let steps = 0
+  while (ctrl.runCount) {
+    mockRaf.step()
+    if (++steps > 1e5) {
+      break // Prevent infinite loops
+    }
+  }
+  return frames
+}
+
+async function getAsyncFrames<T extends object>(
+  ctrl: Controller<T>
+): Promise<T[]> {
+  const frames: any[] = []
+  ctrl.props.onFrame = values => {
+    frames.push(values)
+  }
+  let steps = 0
+  while (ctrl.runCount) {
+    mockRaf.step()
+    await Promise.resolve()
+    if (++steps > 1e5) {
+      break // Prevent infinite loops
+    }
+  }
+  return frames
+}
