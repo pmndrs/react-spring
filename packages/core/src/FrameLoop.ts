@@ -75,11 +75,8 @@ export class FrameLoop {
           const changes: FrameUpdate[2] = ctrl.props.onFrame ? [] : null
           for (const config of ctrl.configs) {
             if (config.idle) continue
-            if (this.advance(config)) {
+            if (this.advance(config, changes)) {
               idle = false
-              if (changes) {
-                changes.push([config.key, config.animated.getValue()])
-              }
             }
           }
           updates.push([id, idle, changes])
@@ -112,13 +109,15 @@ export class FrameLoop {
   }
 
   /** Advance an animation forward one frame. */
-  advance(config: ActiveAnimation): boolean {
+  advance(config: ActiveAnimation, changes: FrameUpdate[2]): boolean {
     const time = G.now()
-    let isActive = false
-    let finished = false
+
+    let active = false
+    let changed = false
     for (let i = 0; i < config.animatedValues.length; i++) {
       const animated = config.animatedValues[i]
       if (animated.done) continue
+      changed = true
 
       let to: any = config.toValues[i]
       const target: any = to instanceof Animated ? to : null
@@ -141,6 +140,7 @@ export class FrameLoop {
         continue
       }
 
+      let finished = false
       let position = animated.lastPosition
       let velocity = Array.isArray(config.initialVelocity)
         ? config.initialVelocity[i]
@@ -204,21 +204,22 @@ export class FrameLoop {
       }
 
       // Trails aren't done until their parents conclude
-      if (target && !target.done) {
-        finished = false
-      }
-
-      if (finished) {
+      if (finished && !(target && !target.done)) {
         // Ensure that we end up with a round value
         if (animated.value !== to) position = to
         animated.done = true
       } else {
-        isActive = true
+        active = true
       }
 
       animated.setValue(position)
       animated.lastPosition = position
     }
-    return isActive
+
+    if (changes && changed) {
+      changes.push([config.key, config.animated.getValue()])
+    }
+
+    return active
   }
 }
