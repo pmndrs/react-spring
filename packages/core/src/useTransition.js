@@ -1,6 +1,6 @@
 import { useRef, useEffect, useMemo, useImperativeHandle } from 'react'
-import { toArray, callProp, interpolateTo, reconcileDeleted } from './helpers'
-import { is, useForceUpdate, useOnce } from 'shared'
+import { callProp, interpolateTo, reconcileDeleted } from './helpers'
+import { is, toArray, useForceUpdate, useOnce } from 'shared'
 import { Controller } from './Controller'
 
 /** API

@@ -1,4 +1,4 @@
-import { AnimatedValue, AnimatedValueArray, interpolate } from '.'
+import { AnimatedValue, AnimatedArray, interpolate } from '.'
 import { SpringValue } from 'shared'
 import { assert, _ } from 'spec.ts'
 
@@ -35,7 +35,7 @@ describe('AnimatedValue interpolation options', () => {
   })
 
   function createAnimatedArray(values: readonly number[]) {
-    return new AnimatedValueArray(values.map(value => new AnimatedValue(value)))
+    return new AnimatedArray(values.map(value => new AnimatedValue(value)))
   }
 
   it('accepts an AnimatedValueArray and a range shortcut config', () => {

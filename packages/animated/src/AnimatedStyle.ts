@@ -1,10 +1,10 @@
-import { Animated, AnimatedObject } from './Animated'
+import { AnimatedObject } from './AnimatedObject'
 import * as G from 'shared/globals'
 
-export class AnimatedStyle<
-  Payload extends object & { transform?: Animated } = {}
-> extends AnimatedObject<Payload> {
-  constructor(style = {} as Payload) {
+type Style = object & { transform?: any }
+
+export class AnimatedStyle extends AnimatedObject {
+  constructor(style = {} as Style) {
     super(
       style.transform && G.createAnimatedTransform
         ? { ...style, transform: G.createAnimatedTransform(style.transform) }

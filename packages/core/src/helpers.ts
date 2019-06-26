@@ -1,4 +1,4 @@
-import { is, OneOrMore, Merge, Remap } from 'shared'
+import { is, Merge, Remap, each } from 'shared'
 import { ReservedProps, ForwardProps } from './types/common'
 
 declare const process:
@@ -13,10 +13,6 @@ export function fillArray<T>(length: number, mapIndex: (index: number) => T) {
 
 export function withDefault<T, DT>(value: T, defaultValue: DT) {
   return value == null ? defaultValue : value!
-}
-
-export function toArray<T>(a?: OneOrMore<T>): T[] {
-  return is.und(a) ? [] : Array.isArray(a) ? a : [a]
 }
 
 export function callProp<T>(
@@ -72,12 +68,9 @@ type InterpolateTo<T extends object> = Remap<
 export function interpolateTo<T extends ReservedProps>(
   props: T
 ): InterpolateTo<T> {
-  const forward = getForwardProps(props)
-  props = Object.entries(props).reduce(
-    (props, [key, value]) => (key in forward || (props[key] = value), props),
-    {} as any
-  )
-  return { to: forward, ...props }
+  const out: any = { to: getForwardProps(props) }
+  each(props, (val, key) => key in out.to || (out[key] = val))
+  return out
 }
 
 type ItemKey = number | string

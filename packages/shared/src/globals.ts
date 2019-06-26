@@ -12,14 +12,18 @@ declare const window: {
 
 export let defaultElement: string | ElementType
 
+/** Provide custom logic for native updates */
 export let applyAnimatedValues: (node: any, props: any) => boolean | void
 
+/** Provide a custom `interpolate` function */
 export let createAnimatedInterpolation: SpringInterpolator
 
+/** Provide custom logic for string interpolation */
 export let createStringInterpolator: (
   config: InterpolatorConfig<string>
 ) => (input: number) => string
 
+/** Provide a custom `FrameLoop` instance */
 export let frameLoop: {
   update: () => boolean
   controllers: Map<number, any>
@@ -33,12 +37,19 @@ export let frameLoop: {
 
 export let now = () => Date.now()
 
+/** Provide custom color names for interpolation */
 export let colorNames: { [key: string]: number } | null = null as any
 
+/** Make all animations instant and skip the frameloop entirely */
 export let skipAnimation = false
 
+/** Intercept props before they're passed to an animated component */
+export let getComponentProps = (props: any) => props
+
+/** Wrap the `style` prop with an animated node */
 export let createAnimatedStyle: ((style: any) => any) | null = null as any
 
+/** Wrap the `transform` prop with an animated node */
 export let createAnimatedTransform:
   | ((transform: any) => any)
   | null = null as any
@@ -59,6 +70,7 @@ export interface AnimatedGlobals {
   colorNames?: typeof colorNames
   skipAnimation?: typeof skipAnimation
   defaultElement?: typeof defaultElement
+  getComponentProps?: typeof getComponentProps
   applyAnimatedValues?: typeof applyAnimatedValues
   createStringInterpolator?: typeof createStringInterpolator
   createAnimatedInterpolation?: typeof createAnimatedInterpolation
@@ -75,6 +87,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     colorNames,
     skipAnimation,
     defaultElement,
+    getComponentProps,
     applyAnimatedValues,
     createStringInterpolator,
     createAnimatedInterpolation,
@@ -89,6 +102,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       colorNames,
       skipAnimation,
       defaultElement,
+      getComponentProps,
       applyAnimatedValues,
       createStringInterpolator,
       createAnimatedInterpolation,

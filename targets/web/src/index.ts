@@ -8,6 +8,7 @@ Globals.assign({
   colorNames,
   applyAnimatedValues,
   createStringInterpolator,
+  getComponentProps: ({ scrollTop, scrollLeft, ...props }) => props,
 })
 
 export * from './animated'

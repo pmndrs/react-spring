@@ -1,4 +1,4 @@
-import { is } from 'shared'
+import { is, toArray, each } from 'shared'
 import * as G from 'shared/globals'
 import {
   Animatable,
@@ -13,33 +13,27 @@ import {
   ToProp,
 } from './types/spring'
 import { StringKeys, Indexable, OnEnd, Falsy, Merge } from './types/common'
+import { callProp, interpolateTo, withDefault, freeze } from './helpers'
 import {
   Animated,
+  AnimatedArray,
   AnimatedInterpolation,
-  AnimatedValueArray,
   AnimatedValue,
 } from '@react-spring/animated'
-import {
-  callProp,
-  interpolateTo,
-  toArray,
-  withDefault,
-  freeze,
-} from './helpers'
 
 /**
  * A tuple containing:
  *
  *   [0] `controllerID`: The controller being updated
  *
- *   [1] `isActive`: False when all animations have finished
+ *   [1] `idle`: True when all animations have finished
  *
  *   [2] `changes`: An array of `[key, value]` tuples
  */
 export type FrameUpdate<State extends object = any> = [
   number,
   boolean,
-  [keyof State, State[keyof State]][] | undefined
+  [keyof State, State[keyof State]][] | null
 ]
 
 /** Controller props in pending updates */
@@ -162,7 +156,7 @@ export class Controller<State extends Indexable = any> {
       this.cancelledAt = G.now()
 
       // Update the animation configs
-      this.configs.forEach(config => this._stopAnimation(config.key))
+      each(this.configs, config => this._stopAnimation(config.key))
       this.configs = Object.values(this.animations) as any
 
       // Exit the frameloop
@@ -199,18 +193,18 @@ export class Controller<State extends Indexable = any> {
   }
 
   /** @internal Called by the frameloop */
-  onFrame([id, isActive, entries]: FrameUpdate<State>) {
+  onFrame([id, idle, changes]: FrameUpdate<State>) {
     if (id !== this.id) return
-    if (entries && entries.length) {
-      for (const [key, value] of entries) {
+    if (changes && changes.length) {
+      for (const [key, value] of changes) {
         this.values[key] = value
       }
-      // The `onFrame` prop always exists when `entries` exists.
+      // The `onFrame` prop always exists when `changes` exists.
       this.props.onFrame!({
         ...this.values,
       })
     }
-    if (!isActive) {
+    if (idle) {
       this._stop(true)
     }
   }
@@ -230,6 +224,12 @@ export class Controller<State extends Indexable = any> {
     return this
   }
 
+  /** @internal Get the `AnimatedValue` nodes for the given key */
+  getPayload(key: string): AnimatedValue[] | undefined {
+    const anim = this.animations[key]
+    return anim && anim.animatedValues
+  }
+
   // Create an Animated node if none exists.
   private _ensureAnimated(values: unknown, shouldUpdate = false) {
     if (!is.obj(values)) return
@@ -247,16 +247,12 @@ export class Controller<State extends Indexable = any> {
       }
       if (!animated) {
         animated = createAnimated(value)
-        if (animated) {
-          if (this.animated[key]) {
-            // Swap out the old node with the new node.
-            moveChildren(this.animated[key], animated)
-          }
-          this.animated[key] = animated
-          this._stopAnimation(key, true)
-        } else {
-          console.warn('Given value not animatable:', value)
+        if (this.animated[key]) {
+          // Swap out the old node with the new node.
+          moveChildren(this.animated[key], animated)
         }
+        this.animated[key] = animated
+        this._stopAnimation(key, true)
       }
     }
   }
@@ -276,15 +272,15 @@ export class Controller<State extends Indexable = any> {
     }
   }
 
-  /** Attach our children to the given keys if possible */
+  // Attach our children to the given keys if possible.
   private _attach(keys: string[], visited: { [id: number]: true } = {}) {
-    this.children.forEach(c => {
+    each(this.children, c => {
       if (visited[this.id]) return
       visited[this.id] = true
       const attached = keys.filter(key => {
-        const payload = getPayload(c, key)
+        const payload = c.getPayload(key)
         if (payload) {
-          payload.forEach(v => v.done && v.reset(true))
+          each(payload, node => node.done && node.reset(true))
           return true
         }
       })
@@ -303,7 +299,7 @@ export class Controller<State extends Indexable = any> {
     const { onEndQueue } = this
     if (onEndQueue.length) {
       this.onEndQueue = []
-      onEndQueue.forEach(onEnd => onEnd(finished))
+      each(onEndQueue, onEnd => onEnd(finished))
     }
   }
 
@@ -330,7 +326,7 @@ export class Controller<State extends Indexable = any> {
       }
     }
 
-    queue.forEach((props, delay) => {
+    each(queue, (props, delay) => {
       if (delay) {
         setTimeout(() => {
           // Cancelling methods touch the `cancelledAt` property
@@ -391,7 +387,9 @@ export class Controller<State extends Indexable = any> {
 
     let queue = Promise.resolve()
     if (is.arr(to)) {
-      to.forEach(props => (queue = queue.then(() => next(props))))
+      each(to, props => {
+        queue = queue.then(() => next(props))
+      })
     } else if (is.fun(to)) {
       queue = queue.then(() =>
         to(next, this.stop.bind(this))
@@ -559,7 +557,7 @@ export class Controller<State extends Indexable = any> {
           key
         )
 
-        const isActive = animatedValues.some(v => !v.done)
+        const isActive = animatedValues.some(node => !node.done)
         const fromValue = !is.und(from[key])
           ? computeGoalValue(from[key])
           : goalValue
@@ -602,9 +600,9 @@ export class Controller<State extends Indexable = any> {
         } else {
           // Convert values into Animated nodes (reusing nodes whenever possible)
           if (is.arr(value)) {
-            if (animated instanceof AnimatedValueArray) {
+            if (animated instanceof AnimatedArray) {
               if (props.reset) animated.setValue(fromValue, false)
-              animatedValues.forEach(v => v.reset(isActive))
+              each(animatedValues, node => node.reset(isActive))
             } else {
               const prev = animated
               animated = createAnimated(fromValue as any[])
@@ -642,11 +640,10 @@ export class Controller<State extends Indexable = any> {
 
         const fromValues: any = animatedValues.map(v => v.getValue())
         const toValues: any =
-          (parent && getPayload(parent, key)) ||
-          toArray((isInterpolated && 1) || goalValue)
+          (parent && parent.getPayload(key)) ||
+          toArray(isInterpolated ? 1 : goalValue)
 
         changed = true
-        animatedValues = toArray(animated.getPayload() as any)
         this.animations[key] = {
           key,
           idle: false,
@@ -654,7 +651,7 @@ export class Controller<State extends Indexable = any> {
           toValues,
           fromValues,
           animated,
-          animatedValues,
+          animatedValues: Array.from(animated.getPayload()),
           immediate,
           duration: config.duration,
           easing: withDefault(config.easing, linear),
@@ -674,7 +671,7 @@ export class Controller<State extends Indexable = any> {
       if (started.length) {
         this._attach(started)
         if (is.fun(onStart))
-          started.forEach(key => {
+          each(started, key => {
             onStart(this.animations[key] as any)
           })
       }
@@ -682,7 +679,7 @@ export class Controller<State extends Indexable = any> {
       // Make animations available to the frameloop
       const keys = Object.keys(this.animations) as StringKeys<State>[]
       this.configs.length = keys.length
-      keys.forEach((key, i) => {
+      each(keys, (key, i) => {
         const config = this.animations[key]
         this.configs[i] = config
         this.values[key] = config.animated.getValue()
@@ -719,8 +716,10 @@ export class Controller<State extends Indexable = any> {
     }
 
     // Tell the frameloop to skip animating these values
-    const animatedValues = toArray(animated.getPayload() as any)
-    animatedValues.forEach(v => (v.done = true))
+    const animatedValues = Array.from(animated.getPayload())
+    each(animatedValues, node => {
+      node.done = true
+    })
 
     // The current value becomes the goal value,
     // which ensures the integrity of the diffing algorithm.
@@ -745,18 +744,10 @@ export class Controller<State extends Indexable = any> {
 function createAnimated<T>(
   value: T
 ): T extends ReadonlyArray<any>
-  ? AnimatedValueArray
+  ? AnimatedArray
   : AnimatedValue | AnimatedInterpolation {
   return is.arr(value)
-    ? new AnimatedValueArray(
-        value.map(value => {
-          const animated = createAnimated(value)
-          const payload: any = animated.getPayload()
-          return animated instanceof AnimatedInterpolation
-            ? payload[0]
-            : payload
-        })
-      )
+    ? new AnimatedArray(value.map(createAnimated))
     : isAnimatableString(value)
     ? // Convert "red" into "rgba(255, 0, 0, 1)" etc
       (new AnimatedValue(0).interpolate({
@@ -772,26 +763,10 @@ function createAnimated<T>(
  * This is most useful for async updates, which don't cause a re-render.
  */
 function moveChildren(prev: Animated, next: Animated) {
-  const children = prev.getChildren().slice()
-  children.forEach(child => {
+  each([...prev.getChildren()], child => {
+    child.updatePayload(prev, next)
     prev.removeChild(child)
     next.addChild(child)
-
-    // Replace `prev` with `next` in child payloads
-    const payload = child.getPayload()
-    if (is.arr(payload)) {
-      const i = payload.indexOf(prev)
-      if (i >= 0) {
-        const copy = [...payload]
-        copy[i] = next
-        child['payload'] = copy
-      }
-    } else if (is.obj(payload)) {
-      const entry = Object.entries(payload).find(entry => entry[1] === prev)
-      if (entry) {
-        child['payload'] = { ...payload, [entry[0]]: next }
-      }
-    }
   })
 }
 
@@ -845,12 +820,4 @@ function isEqual(a: Animatable, b: Animatable) {
     return true
   }
   return a === b
-}
-
-function getPayload(
-  ctrl: Controller,
-  key: string
-): AnimatedValue[] | undefined {
-  const anim = ctrl.animations[key]
-  return anim && anim.animatedValues
 }

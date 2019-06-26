@@ -1,52 +1,59 @@
-import { Animated, isAnimated } from '@react-spring/animated'
+import { each } from 'shared'
+import {
+  Animated,
+  isAnimated,
+  addChild,
+  removeChild,
+  AnimatedValue,
+} from '@react-spring/animated'
 
 type Transform = { [key: string]: string | number | Animated }
 
 export class AnimatedTransform extends Animated {
-  _transforms: Transform[]
-
-  constructor(transforms: Transform[]) {
+  constructor(protected source: Transform[]) {
     super()
-    this._transforms = transforms
+    this.payload = toPayload(source)
   }
 
   getValue() {
-    return this._transforms.map(transform => {
-      let result: { [key: string]: unknown } = {}
-      for (var key in transform) {
-        var value = transform[key]
-        result[key] = isAnimated(value) ? value.getValue() : value
-      }
-      return result
+    return this.source.map(transform => {
+      const obj: any = {}
+      each(transform, (val, key) => {
+        obj[key] = isAnimated(val) ? val.getValue() : val
+      })
+      return obj
     })
   }
 
-  getAnimatedValue() {
-    return this._transforms.map(transform => {
-      let result: { [key: string]: unknown } = {}
-      for (var key in transform) {
-        var value = transform[key]
-        result[key] = isAnimated(value) ? value.getAnimatedValue() : value
+  updatePayload(prev: Animated, next: Animated) {
+    const source = [...this.source]
+    each(source, (transform, i) => {
+      const key = Object.keys(transform)[0]
+      if (transform[key] === prev) {
+        source[i] = { [key]: next }
       }
-      return result
     })
+    this.source = source
+    this.payload = toPayload(source)
   }
 
-  attach() {
-    this._transforms.forEach(transform => {
-      for (var key in transform) {
-        var value = transform[key]
-        if (isAnimated(value)) value.addChild(this)
-      }
-    })
+  _attach() {
+    each(this.source, transform => each(transform, addChild, this))
   }
 
-  detach() {
-    this._transforms.forEach(transform => {
-      for (var key in transform) {
-        var value = transform[key]
-        if (isAnimated(value)) value.removeChild(this)
+  _detach() {
+    each(this.source, transform => each(transform, removeChild, this))
+  }
+}
+
+function toPayload(source: Transform[]) {
+  const payload = new Set<AnimatedValue>()
+  each(source, transform =>
+    each(transform, val => {
+      if (isAnimated(val)) {
+        each(val.getPayload(), node => payload.add(node))
       }
     })
-  }
+  )
+  return payload
 }

@@ -1,84 +1,44 @@
-export function isAnimated(val: unknown): val is Animated {
-  return val instanceof Animated
-}
+import { AnimatedValue } from './AnimatedValue'
 
-export abstract class Animated<Payload = unknown> {
-  public abstract getValue(): any
-  public getAnimatedValue() {
-    return this.getValue()
+export const animatedTag = Symbol.for('isAnimated')
+
+export const isAnimated = (val: any): val is Animated =>
+  !!(val && val[animatedTag])
+
+export abstract class Animated {
+  protected [animatedTag] = true
+  protected children = new Set<Animated>()
+  protected payload?: Set<AnimatedValue>
+
+  /** Returns all values contained by this node. Pass true for only the animated values. */
+  abstract getValue(animated?: boolean): any
+
+  /** Returns the set of `AnimatedValue` nodes contained by this node. */
+  getPayload(): ReadonlySet<AnimatedValue> {
+    return this.payload!
   }
 
-  protected payload?: Payload
-  public getPayload() {
-    return this.payload || this
-  }
+  /** Replace an `AnimatedValue` node in the payload. */
+  abstract updatePayload(prev: Animated, next: Animated): void
 
-  public attach(): void {}
-
-  public detach(): void {}
-
-  private children: Animated[] = []
-
-  public getChildren() {
+  /** Returns the set of animated nodes that depend on this node. */
+  getChildren(): ReadonlySet<Animated> {
     return this.children
   }
 
-  public addChild(child: Animated) {
-    if (this.children.length === 0) this.attach()
-    this.children.push(child)
+  addChild(child: Animated) {
+    this.children.size || this._attach()
+    this.children.add(child)
   }
 
-  public removeChild(child: Animated) {
-    const index = this.children.indexOf(child)
-    this.children.splice(index, 1)
-    if (this.children.length === 0) this.detach()
-  }
-}
-
-export abstract class AnimatedArray<
-  Payload extends ReadonlyArray<any> = ReadonlyArray<unknown>
-> extends Animated<Payload> {
-  protected payload!: Payload
-
-  public attach() {
-    this.payload.forEach(p => isAnimated(p) && p.addChild(this))
+  removeChild(child: Animated) {
+    this.children.delete(child)
+    this.children.size || this._detach()
   }
 
-  public detach() {
-    this.payload.forEach(p => isAnimated(p) && p.removeChild(this))
-  }
-}
+  /** Called when this node goes from 0 children to 1+ children. */
+  abstract _attach(): void
 
-export class AnimatedObject<
-  Payload extends { [key: string]: unknown }
-> extends Animated<Payload> {
-  constructor(protected payload: Payload) {
-    super()
-  }
-
-  public getValue(animated = false) {
-    const payload: { [key: string]: any } = {}
-    for (const key in this.payload) {
-      const value = this.payload[key]
-      if (animated && !isAnimated(value)) continue
-      payload[key] = isAnimated(value)
-        ? value[animated ? 'getAnimatedValue' : 'getValue']()
-        : value
-    }
-    return payload
-  }
-
-  public getAnimatedValue() {
-    return this.getValue(true)
-  }
-
-  public attach() {
-    Object.values(this.payload).forEach(s => isAnimated(s) && s.addChild(this))
-  }
-
-  public detach() {
-    Object.values(this.payload).forEach(
-      s => isAnimated(s) && s.removeChild(this)
-    )
-  }
+  /** Called when this node goes from 1+ children to 0 children. */
+  abstract _detach(): void
 }

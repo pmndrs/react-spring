@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react'
-import { Indexable } from './types'
+import { Indexable, OneOrMore } from './types'
 
 interface IsArray {
   <T>(a: T): a is T & readonly any[]
@@ -18,12 +18,41 @@ export const is = {
   boo: (a: unknown): a is boolean => typeof a === 'boolean',
 }
 
-export function useOnce(effect: React.EffectCallback) {
-  useEffect(effect, [])
+interface EachFn {
+  <T = any, This = any>(
+    obj: ReadonlySet<T>,
+    cb: (this: This, value: T) => void,
+    ctx?: This
+  ): void
+
+  <T = any, This = any>(
+    arr: readonly T[],
+    cb: (this: This, value: T, index: number) => void,
+    ctx?: This
+  ): void
+
+  <T = any, This = any>(
+    obj: Indexable<T>,
+    cb: (this: This, value: T, key: string) => void,
+    ctx?: This
+  ): void
 }
 
-export const useForceUpdate = () =>
-  useReducer(() => ({}), {})[1] as (() => void)
+/** An unsafe object/array/set iterator that allows for better minification */
+export const each: EachFn = (obj: Indexable, cb: any, ctx: any) => {
+  if (is.fun(obj.forEach)) {
+    obj.forEach(cb, ctx)
+  } else {
+    Object.keys(obj).forEach(key => cb.call(ctx, obj[key], key))
+  }
+}
+
+export const toArray = <T>(a?: OneOrMore<T>): T[] =>
+  is.und(a) ? [] : Array.isArray(a) ? a : [a]
+
+export const useOnce = (effect: React.EffectCallback) => useEffect(effect, [])
+
+export const useForceUpdate = () => useReducer(() => ({}), 0)[1] as (() => void)
 
 /** Use a value from the previous render */
 export function usePrev<T>(value: T): T | undefined {

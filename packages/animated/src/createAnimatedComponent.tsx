@@ -1,39 +1,41 @@
-import React, { forwardRef, useCallback, useRef, Ref } from 'react'
-import * as G from 'shared/globals'
-import { is, useForceUpdate, useOnce, ElementType } from 'shared'
+import React, { forwardRef, useRef, Ref, useEffect } from 'react'
+import { is, useForceUpdate, useOnce, ElementType, each } from 'shared'
 import { AnimatedProps } from './AnimatedProps'
+import * as G from 'shared/globals'
 
 export const createAnimatedComponent: CreateAnimated = Component =>
-  forwardRef((props: any, ref: Ref<any>) => {
-    const propsAnimated = useRef<AnimatedProps | null>(null)
-    const forceUpdate = useForceUpdate()
-
+  forwardRef((rawProps: any, ref: Ref<any>) => {
     const node = useRef<any>(null)
-    const attachProps = useCallback(props => {
-      const oldPropsAnimated = propsAnimated.current
-      const callback = () => {
-        const didUpdate =
-          !!node.current &&
-          G.applyAnimatedValues(
-            node.current,
-            propsAnimated.current!.getAnimatedValue()
-          )
+    const props = useRef<AnimatedProps | null>(null)
 
-        // If no referenced node has been found, or the update target didn't have a
-        // native-responder, then forceUpdate the animation ...
-        if (didUpdate === false) forceUpdate()
+    const forceUpdate = useForceUpdate()
+    const nextProps = new AnimatedProps(rawProps, () => {
+      const didUpdate =
+        !!node.current &&
+        G.applyAnimatedValues(node.current, nextProps.getValue(true))
+
+      // Re-render the component when native updates fail.
+      if (didUpdate === false) {
+        forceUpdate()
       }
-      propsAnimated.current = new AnimatedProps(props, callback)
-      oldPropsAnimated && oldPropsAnimated.detach()
-      return propsAnimated.current!.getValue()
-    }, [])
-
-    useOnce(() => () => {
-      propsAnimated.current && propsAnimated.current.detach()
     })
 
-    // TODO: Avoid special case for scrollTop/scrollLeft
-    const { scrollTop, scrollLeft, ...animatedProps } = attachProps(props)
+    useEffect(() => {
+      const prevProps = props.current
+      props.current = nextProps
+
+      // To avoid causing a cascade of detachment, we must detach
+      // the old props only *after* the new props are attached.
+      nextProps._attach()
+      if (prevProps) {
+        prevProps._detach()
+      }
+    })
+
+    // Ensure the latest props are detached on unmount.
+    useOnce(() => () => {
+      props.current!._detach()
+    })
 
     // Functions cannot have refs (see #569)
     const refFn =
@@ -41,7 +43,8 @@ export const createAnimatedComponent: CreateAnimated = Component =>
         ? (value: any) => (node.current = updateRef(ref, value))
         : void 0
 
-    return <Component {...(animatedProps as typeof props)} ref={refFn} />
+    rawProps = G.getComponentProps(nextProps.getValue())
+    return <Component {...rawProps} ref={refFn} />
   })
 
 function updateRef<T>(ref: Ref<T>, value: T) {
@@ -78,15 +81,8 @@ export function withExtend<T extends CreateAnimated>(
     arg: AnimatedTarget | AnimatedTarget[],
     overrideKey?: string | number
   ): void => {
-    // Arrays avoid passing their index to `extend`
-    if (is.arr(arg)) {
-      return arg.forEach(arg => extend(arg))
-    }
-
-    // Object keys are always used over value inspection
-    if (is.obj(arg)) {
-      for (const key in arg) extend(arg[key], key)
-      return
+    if (is.arr(arg) || is.obj(arg)) {
+      return each(arg as any, extend)
     }
 
     // Use the `overrideKey` or inspect the value for a key
@@ -111,7 +107,7 @@ export function withExtend<T extends CreateAnimated>(
     self[key] = animated(arg)
   }
   self.extend = (...args: any[]) => {
-    args.forEach(arg => extend(arg))
+    each(args, arg => extend(arg))
     return self
   }
   return self

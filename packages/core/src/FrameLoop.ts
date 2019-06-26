@@ -14,9 +14,9 @@ export class FrameLoop {
    */
   controllers = new Map<number, Controller>()
   /**
-   * True when at least one value is animating.
+   * True when no controllers are animating.
    */
-  isActive = false
+  idle = true
   /**
    * Process the next animation frame.
    *
@@ -63,26 +63,26 @@ export class FrameLoop {
     this.update =
       (update && update.bind(this)) ||
       (() => {
-        if (!this.isActive) {
+        if (this.idle) {
           return false
         }
 
         // Update the animations.
         const updates: FrameUpdate[] = []
         for (const id of Array.from(this.controllers.keys())) {
-          let isActive = false
+          let idle = true
           const ctrl = this.controllers.get(id)!
-          const changes: FrameUpdate[2] = ctrl.props.onFrame && []
+          const changes: FrameUpdate[2] = ctrl.props.onFrame ? [] : null
           for (const config of ctrl.configs) {
             if (config.idle) continue
             if (this.advance(config)) {
-              isActive = true
+              idle = false
               if (changes) {
                 changes.push([config.key, config.animated.getValue()])
               }
             }
           }
-          updates.push([id, isActive, changes])
+          updates.push([id, idle, changes])
         }
 
         // Notify the controllers!
@@ -90,7 +90,7 @@ export class FrameLoop {
 
         // Are we done yet?
         if (!this.controllers.size) {
-          return (this.isActive = false)
+          return !(this.idle = true)
         }
 
         // Keep going.
@@ -101,8 +101,8 @@ export class FrameLoop {
 
   start(ctrl: Controller) {
     this.controllers.set(ctrl.id, ctrl)
-    if (!this.isActive) {
-      this.isActive = true
+    if (this.idle) {
+      this.idle = false
       this.requestFrame(this.update)
     }
   }

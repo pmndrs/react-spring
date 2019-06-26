@@ -5,44 +5,65 @@ import {
   Interpolatable,
   InterpolatorArgs,
   Interpolator,
+  is,
+  OneOrMore,
+  toArray,
+  each,
 } from 'shared'
+import { Animated } from './Animated'
 import { interpolate } from './interpolate'
-import { Animated, AnimatedArray } from './Animated'
-import { AnimatedValue } from './AnimatedValue'
-import { AnimatedValueArray } from './AnimatedValueArray'
-
-/** Wrap each element type of `T` with the `Animated` type */
-type AnimatedInputs<T extends Interpolatable> = {
-  [P in keyof T]: Animated<T[P]>
-}
+import { toPayload, addChild, removeChild } from './AnimatedObject'
 
 export class AnimatedInterpolation<
   In extends Interpolatable = Interpolatable,
   Out extends Animatable = Animatable
-> extends AnimatedArray<AnimatedInputs<In>> implements SpringValue<Out> {
-  public calc: Interpolator<In>
-
+> extends Animated implements SpringValue<Out> {
+  calc: Interpolator<In>
   constructor(
-    parents: SpringValue | readonly SpringValue[],
+    public source: OneOrMore<Animated>,
     args: InterpolatorArgs<In, Out>
   ) {
     super()
     this.calc = createInterpolator(...(args as [any])) as any
-    this.payload = Array.isArray(parents)
-      ? parents.map(AnimatedValue.from)
-      : parents instanceof AnimatedValueArray
-      ? parents.getPayload()
-      : [parents]
   }
 
-  public getValue(): Out {
-    const args = this.payload.map(value => value.getValue())
-    return this.calc(...(args as [any])) as any
+  getValue(animated?: boolean): Out {
+    const args = is.arr(this.source)
+      ? this.source.map(node => node.getValue(animated))
+      : toArray(this.source.getValue(animated))
+    return (this.calc as any)(...args)
   }
 
-  public interpolate<T extends Animatable>(
+  interpolate<T extends Animatable>(
     ...args: InterpolatorArgs<Out, T>
   ): SpringValue<T> {
-    return interpolate(this, ...(args as [any])) as any
+    return (interpolate as any)(this, ...args)
+  }
+
+  getPayload() {
+    return is.arr(this.source)
+      ? this.payload || (this.payload = toPayload(this.source))
+      : this.source.getPayload()
+  }
+
+  updatePayload(prev: Animated, next: Animated) {
+    this.payload = void 0
+    if (is.arr(this.source)) {
+      const source = [...this.source]
+      each(source, (val, index) => {
+        if (val === prev) source[index] = next
+      })
+      this.source = source
+    } else {
+      this.source = next
+    }
+  }
+
+  _attach() {
+    each(toArray(this.source), addChild, this)
+  }
+
+  _detach() {
+    each(toArray(this.source), removeChild, this)
   }
 }
