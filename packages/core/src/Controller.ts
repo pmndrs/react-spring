@@ -763,7 +763,7 @@ function createAnimated<T>(
  * This is most useful for async updates, which don't cause a re-render.
  */
 function moveChildren(prev: Animated, next: Animated) {
-  each([...prev.getChildren()], child => {
+  each(Array.from(prev.getChildren()), child => {
     child.updatePayload(prev, next)
     prev.removeChild(child)
     next.addChild(child)
