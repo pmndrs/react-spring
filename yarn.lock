@@ -1840,7 +1840,7 @@
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/core@link:packages/core":
-  version "9.0.0-beta.25"
+  version "9.0.0-beta.26"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
