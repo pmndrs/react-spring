@@ -266,7 +266,7 @@ export class Controller<State extends Indexable = any> {
   // Add this controller to the frameloop.
   private _start(onEnd?: OnEnd) {
     if (onEnd) this._onEnd(onEnd)
-    if (this.idle && this.runCount) {
+    if (this.idle && this.configs.some(config => !config.idle)) {
       this.idle = false
       G.frameLoop.start(this)
     }
