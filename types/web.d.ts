@@ -71,11 +71,13 @@ type InferFrom<T extends object> = T extends { to: infer TTo }
 //  but with a delayed evaluation that still allows A to be inferrable
 type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
 
-export type SetUpdateFn<DS extends object> = (ds: Partial<UseSpringProps<DS>>) => void
-export interface SetUpdateCallbackFn<DS extends object> {
-  (ds: Partial<UseSpringProps<DS>>): void;
-  (i: number): Partial<UseSpringProps<DS>>;
-}
+export type SetUpdateFn<DS extends object> = (
+  ds: Partial<UseSpringProps<DS>>
+) => void
+// useSprings setter requires a callback of i => new useSpring props
+export type SetUpdateCallbackFn<DS extends object> = (
+  callback: (i: number) => Partial<UseSpringProps<DS>>
+) => void
 
 // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
 // updating it. However, there are no types for Controller, and I assume it is intentionally so.
@@ -122,7 +124,7 @@ export type UseSpringProps<DS extends object> = Merge<
   }
 >
 
-type OverwriteKeys<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] };
+type OverwriteKeys<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] }
 
 // there's a third value in the tuple but it's not public API (?)
 export function useSpring<DS extends object>(
@@ -130,12 +132,15 @@ export function useSpring<DS extends object>(
 ): AnimatedValue<ForwardedProps<OverwriteKeys<DS, CSSProperties>>>
 export function useSpring<DS extends object>(
   getProps: () => UseSpringProps<Merge<DS, CSSProperties>>
-): [AnimatedValue<ForwardedProps<OverwriteKeys<DS, CSSProperties>>>, SetUpdateFn<OverwriteKeys<DS, CSSProperties>>]
+): [
+  AnimatedValue<ForwardedProps<OverwriteKeys<DS, CSSProperties>>>,
+  SetUpdateFn<OverwriteKeys<DS, CSSProperties>>
+]
 
 // there's a third value in the tuple but it's not public API (?)
 export function useSprings<TItem, DS extends CSSProperties>(
   count: number,
-  items: ReadonlyArray<TItem>,
+  items: ReadonlyArray<TItem>
 ): ForwardedProps<DS>[] // safe to modify (result of .map)
 export function useSprings<DS extends object>(
   count: number,
@@ -192,11 +197,11 @@ export interface UseTransitionProps<TItem, DS extends object>
   /**
    * Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values
    */
-  update?: InferFrom<DS> | InferFrom<DS>[] | ((item: TItem) => InferFrom<DS>)                           
+  update?: InferFrom<DS> | InferFrom<DS>[] | ((item: TItem) => InferFrom<DS>)
   /**
    * Initial (first time) base values, optional (can be null)
    */
-  initial?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>) | null
+  initial?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>) | null
   /**
    * Called when objects have disappeared for good
    */
@@ -224,7 +229,7 @@ export function useTransition<TItem, DS extends object>(
   keys:
     | ((item: TItem) => TransitionKeyProps)
     | ReadonlyArray<TransitionKeyProps>
-    | TransitionKeyProps           
+    | TransitionKeyProps
     | null,
   values: Merge<DS, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, AnimatedValue<ForwardedProps<DS>>>[] // result array is safe to modify
