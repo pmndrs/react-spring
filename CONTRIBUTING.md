@@ -13,7 +13,6 @@ cd react-spring
 
 ```sh
 yarn
-yarn build
 
 # Clone the docs and examples (optional)
 yarn meta git update
