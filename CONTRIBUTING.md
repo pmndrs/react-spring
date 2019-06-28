@@ -13,12 +13,18 @@ cd react-spring
 
 ```sh
 yarn
+
+# Clone the docs and examples (optional)
 yarn meta git update
 ```
 
 4. Link the packages:
 
-```
+```sh
+# link the javascript bundles:
+yarn lerna exec -- 'cd dist && yarn link'
+
+# ..or link the uncompiled typescript packages:
 yarn lerna exec -- yarn link
 ```
 
@@ -29,4 +35,4 @@ cd ~/my-project
 yarn link react-spring
 ```
 
-6. Let's get cooking!
+6. Let's get cooking! 👨🏻‍🍳🥓
