@@ -1,8 +1,4 @@
-import {
-  createAnimatedComponent,
-  withExtend,
-  WithExtend,
-} from '@react-spring/animated'
+import { withAnimated, extendAnimated } from '@react-spring/animated'
 import { ForwardRefExoticComponent } from 'react'
 import { Text, View, Image, ViewStyle } from 'react-native'
 import {
@@ -28,9 +24,10 @@ type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
 
-export const animated: WithExtend<
-  CreateAnimated & NativeComponents
-> = withExtend(createAnimatedComponent as any).extend(elements)
+export const animated: CreateAnimated & NativeComponents = extendAnimated(
+  withAnimated,
+  Object.values(elements)
+)
 
 export { animated as a }
 

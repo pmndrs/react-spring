@@ -1,8 +1,4 @@
-import {
-  createAnimatedComponent,
-  withExtend,
-  WithExtend,
-} from '@react-spring/animated'
+import { withAnimated, extendAnimated } from '@react-spring/animated'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
 import {
   AssignableKeys,
@@ -21,9 +17,10 @@ type KonvaComponents = {
 }
 
 // Extend animated with all the available Konva elements
-export const animated: WithExtend<
-  CreateAnimated & KonvaComponents
-> = withExtend(createAnimatedComponent as any).extend(elements)
+export const animated: CreateAnimated & KonvaComponents = extendAnimated(
+  withAnimated,
+  elements
+)
 
 export { animated as a }
 

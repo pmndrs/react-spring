@@ -1,9 +1,5 @@
 import * as Zdog from 'react-zdog'
-import {
-  createAnimatedComponent,
-  withExtend,
-  WithExtend,
-} from '@react-spring/animated'
+import { withAnimated, extendAnimated } from '@react-spring/animated'
 import { SpringValue } from '@react-spring/core'
 import {
   ElementType,
@@ -44,9 +40,10 @@ type CreateAnimated = <T extends ElementType>(
 ) => AnimatedComponent<T>
 
 // Extend animated with all the available Zdog elements
-export const animated: WithExtend<CreateAnimated & ZdogComponents> = withExtend(
-  createAnimatedComponent as any
-).extend(elements)
+export const animated: CreateAnimated & ZdogComponents = extendAnimated(
+  withAnimated,
+  elements
+)
 
 export { animated as a }
 

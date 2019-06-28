@@ -1,8 +1,4 @@
-import {
-  createAnimatedComponent,
-  withExtend,
-  WithExtend,
-} from '@react-spring/animated'
+import { withAnimated, extendAnimated } from '@react-spring/animated'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
 import {
   AssignableKeys,
@@ -22,11 +18,11 @@ type CreateAnimated = <T extends ElementType>(
 ) => AnimatedComponent<T>
 
 // Extend animated with all the available THREE elements
-export const animated: WithExtend<
-  CreateAnimated & ThreeComponents
-> = withExtend(createAnimatedComponent as any, {
-  lowercase: true,
-}).extend(elements, 'primitive')
+export const animated: CreateAnimated & ThreeComponents = extendAnimated(
+  withAnimated,
+  [...elements, 'primitive'],
+  true
+)
 
 export { animated as a }
 

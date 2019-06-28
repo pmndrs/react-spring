@@ -1,20 +1,21 @@
-import {
-  createAnimatedComponent,
-  withExtend,
-  WithExtend,
-} from '@react-spring/animated'
+import { withAnimated, extendAnimated } from '@react-spring/animated'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
 import { SpringValue, ElementType, ComponentPropsWithRef } from 'shared'
 import { elements, JSXElements } from './elements'
+
+type DOMComponents = {
+  [Tag in JSXElements]: AnimatedComponent<Tag>
+}
 
 type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
 ) => AnimatedComponent<T>
 
 // Extend `animated` with every available DOM element
-export const animated: WithExtend<
-  CreateAnimated & { [Tag in JSXElements]: AnimatedComponent<Tag> }
-> = withExtend(createAnimatedComponent as any).extend(elements)
+export const animated: CreateAnimated & DOMComponents = extendAnimated(
+  withAnimated,
+  elements
+)
 
 export { animated as a }
 
