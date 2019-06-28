@@ -1828,59 +1828,59 @@
     url-template "^2.0.8"
 
 "@react-spring/addons@link:packages/addons":
-  version "9.0.0-beta.25"
+  version "9.0.0-beta.27"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     use-memo-one "^1.1.0"
 
 "@react-spring/animated@link:packages/animated":
-  version "9.0.0-beta.25"
+  version "9.0.0-beta.27"
   dependencies:
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/core@link:packages/core":
-  version "9.0.0-beta.26"
+  version "9.0.0-beta.27"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
-  version "9.0.0-beta.25"
+  version "9.0.0-beta.27"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "9.0.0-beta.25"
+  version "9.0.0-beta.27"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/shared@link:packages/shared":
-  version "9.0.0-beta.25"
+  version "9.0.0-beta.27"
   dependencies:
     tiny-invariant "^1.0.4"
 
 "@react-spring/three@link:targets/three":
-  version "9.0.0-beta.25"
+  version "9.0.0-beta.27"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/web@link:targets/web":
-  version "9.0.0-beta.25"
+  version "9.0.0-beta.27"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/zdog@link:targets/zdog":
-  version "9.0.0-beta.25"
+  version "9.0.0-beta.27"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -3247,7 +3247,7 @@ commander@^2.19.0, commander@^2.9.0, commander@~2.20.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
   integrity sha512-7j2y+40w61zy6YC2iRNpUe/NwhNyoXrYpHMrSunaMG64nRnaf96zO/KMQR4OyN/UnE5KLyEBnKHd4aG3rskjpQ==
 
-"commander@github:mateodelnorte/commander.js":
+commander@mateodelnorte/commander.js:
   version "2.15.1"
   resolved "https://codeload.github.com/mateodelnorte/commander.js/tar.gz/fc217f4bf1a4cc4728af169f4ea60659dd7a94ea"
   dependencies:

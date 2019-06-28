@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/konva",
-  "version": "9.0.0-beta.25",
+  "version": "9.0.0-beta.27",
   "private": true,
   "main": "src/index.ts",
   "dependencies": {
