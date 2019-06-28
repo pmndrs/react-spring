@@ -70,7 +70,7 @@ export interface SpringsUpdateFn<T extends object = {}> {
     props:
       | SpringUpdate<T>
       | SpringUpdate<T>[]
-      | ((index: number, spring: Controller<T>) => SpringUpdate<T>)
+      | ((index: number, spring?: Controller<T>) => SpringUpdate<T>)
   ): void
 }
 

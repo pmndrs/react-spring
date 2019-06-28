@@ -23,7 +23,7 @@ yarn meta git update
 
 ```sh
 # link the javascript bundles:
-yarn lerna exec -- 'cd dist && yarn link'
+yarn link-packages
 
 # ..or link the uncompiled typescript packages:
 yarn lerna exec -- yarn link
