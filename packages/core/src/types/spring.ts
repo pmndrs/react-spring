@@ -56,7 +56,12 @@ export type SpringUpdate<T extends object = {}> = Partial<T> &
  */
 export interface SpringUpdateFn<T extends object = {}> {
   /** Update the props of a spring */
-  (props: SpringUpdate<T>): void
+  (
+    props:
+      | SpringUpdate<T>
+      | SpringUpdate<T>[]
+      | ((index: number, spring: Controller<T>) => SpringUpdate<T>)
+  ): void
 }
 
 /**
