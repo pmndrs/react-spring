@@ -56,6 +56,16 @@ export type SpringUpdate<T extends object = {}> = Partial<T> &
  */
 export interface SpringUpdateFn<T extends object = {}> {
   /** Update the props of a spring */
+  (props: SpringUpdate<T>): void
+}
+
+/**
+ * Imperative API for the useSprings hook, allowing to update individually or over the array
+ *
+ * The `T` parameter should only contain animated props.
+ */
+export interface SpringsUpdateFn<T extends object = {}> {
+  /** Update the props of a spring */
   (
     props:
       | SpringUpdate<T>
