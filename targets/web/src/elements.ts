@@ -1,5 +1,4 @@
-export type JSXElements = keyof JSX.IntrinsicElements
-export const elements: JSXElements[] = [
+export const elements: Array<keyof JSX.IntrinsicElements> = [
   'a',
   'abbr',
   'address',

@@ -5,7 +5,7 @@ import {
 } from '@react-spring/animated'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
 import { SpringValue, ElementType, ComponentPropsWithRef } from 'shared'
-import { elements, JSXElements } from './elements'
+import { elements } from './elements'
 
 type CreateAnimated = <T extends ElementType>(
   wrappedComponent: T
@@ -13,7 +13,8 @@ type CreateAnimated = <T extends ElementType>(
 
 // Extend `animated` with every available DOM element
 export const animated: WithExtend<
-  CreateAnimated & { [Tag in JSXElements]: AnimatedComponent<Tag> }
+  CreateAnimated &
+    { [Tag in keyof JSX.IntrinsicElements]: AnimatedComponent<Tag> }
 > = withExtend(createAnimatedComponent as any).extend(elements)
 
 export { animated as a }
