@@ -3,7 +3,7 @@
 1. Clone this repository:
 
 ```sh
-git clone https://github.com/react-spring/react-spring
+git clone https://github.com/react-spring/react-spring -b v9
 cd react-spring
 ```
 
