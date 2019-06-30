@@ -68,8 +68,9 @@ type InterpolateTo<T extends object> = Remap<
 export function interpolateTo<T extends ReservedProps>(
   props: T
 ): InterpolateTo<T> {
-  const out: any = { to: getForwardProps(props) }
-  each(props, (val, key) => key in out.to || (out[key] = val))
+  const to = getForwardProps(props)
+  const out: any = { to }
+  each(props, (val, key) => key in to || (out[key] = val))
   return out
 }
 
