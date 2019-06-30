@@ -7090,12 +7090,10 @@ mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   dependencies:
     minimist "0.0.8"
 
-mock-raf@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/mock-raf/-/mock-raf-1.0.1.tgz#7567d23fa1220439853317a8ff0eaad1588e9535"
-  integrity sha512-+25y56bblLzEnv+G4ODsHNck07A5uP5HFfu/1VBKeFrUXoFT9oru+R+jLxLz6rwdM5drUHFdqX9LYBsMP4dz/w==
-  dependencies:
-    object-assign "^3.0.0"
+"mock-raf@npm:@react-spring/mock-raf":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@react-spring/mock-raf/-/mock-raf-1.0.0.tgz#923aeb6638db17189acd0cebe190977098e450e3"
+  integrity sha512-bXsQi4KhNOZHGeLWSgqS3/RLmAEJLbc3TvQLtpZHgYFNCzDy+aF7oAVEylruU6ARSJcQfa3+gCvMmbvVsFMsbg==
 
 modify-values@^1.0.0:
   version "1.0.1"
@@ -7471,11 +7469,6 @@ oauth-sign@~0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.9.0.tgz#47a7b016baa68b5fa0ecf3dee08a85c679ac6455"
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
-
-object-assign@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-3.0.0.tgz#9bedd5ca0897949bca47e7ff408062d549f587f2"
-  integrity sha1-m+3VygiXlJvKR+f/QIBi1Un1h/I=
 
 object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"

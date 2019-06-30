@@ -69,7 +69,7 @@
     "jest-watch-typeahead": "^0.3.1",
     "lerna": "3.15.0",
     "meta": "^1.2.19",
-    "mock-raf": "1.0.1",
+    "mock-raf": "npm:@react-spring/mock-raf",
     "prettier": "^1.18.2",
     "pretty-quick": "1.10.0",
     "react": "~16.8.0",
