@@ -3,6 +3,7 @@ import { InterpolationConfig } from '../types/interpolation'
 import Animated from './Animated'
 import AnimatedInterpolation from './AnimatedInterpolation'
 import AnimatedProps from './AnimatedProps'
+import { ExtrapolateType } from './createInterpolator'
 
 /**
  * Animated works by building a directed acyclic graph of dependencies
@@ -78,8 +79,14 @@ export default class AnimatedValue extends Animated implements SpringValue {
 
   public interpolate(
     range: number[] | InterpolationConfig | ((...args: any[]) => any),
-    output?: (number | string)[]
+    output?: (number | string)[],
+    extrapolate?: ExtrapolateType
   ): AnimatedInterpolation {
-    return new AnimatedInterpolation(this, range as number[], output!)
+    return new AnimatedInterpolation(
+      this,
+      range as number[],
+      output!,
+      extrapolate
+    )
   }
 }
