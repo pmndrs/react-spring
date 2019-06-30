@@ -11,7 +11,7 @@ import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
 const external = id => !id.startsWith('.') && !id.startsWith(root)
 const extensions = ['.tsx', '.ts', '.js']
-const rewritePaths = path =>
+const rewritePath = path =>
   path.startsWith('shared') ? '@react-spring/' + path : path
 
 // Every module in the "input" directory gets its own bundle.
@@ -56,7 +56,7 @@ export const esmBundle = config => ({
   output: {
     file: config.output,
     format: 'esm',
-    paths: rewritePaths,
+    paths: rewritePath,
     sourcemap: config.sourcemap,
     sourcemapPathTransform: rewriteSourcePaths(config),
     sourcemapExcludeSources: config.sourcemapExcludeSources,
@@ -81,7 +81,7 @@ export const cjsBundle = config => ({
   output: {
     file: config.output.replace(/\.js$/, '.cjs.js'),
     format: 'cjs',
-    paths: rewritePaths,
+    paths: path => rewritePath(path.replace(/^(shared\/.+)/, '$1.cjs.js')),
     sourcemap: config.sourcemap,
     sourcemapPathTransform: rewriteSourcePaths(config),
     sourcemapExcludeSources: config.sourcemapExcludeSources,
@@ -102,7 +102,7 @@ export const dtsBundle = config => ({
     {
       file: config.output.replace(/\.js$/, '.d.ts'),
       format: 'es',
-      paths: rewritePaths,
+      paths: rewritePath,
     },
   ],
   plugins: [dts()],
