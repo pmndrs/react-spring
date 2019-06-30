@@ -39,8 +39,17 @@ yarn link react-spring
 
 ## Guidelines
 
-- Be sure your commit messages follow this specification: https://www.conventionalcommits.org/en/v1.0.0-beta.4/
+Be sure your commit messages follow this specification: https://www.conventionalcommits.org/en/v1.0.0-beta.4/
 
-- If your dev environment has poor support for symlinks, you can try using
-  [relative-deps](https://github.com/mweststrate/relative-deps). Let us know if
-  this setup doesn't work for you.
+### Duplicate `react` errors
+
+React 16.8+ has global state to support its "hooks" feature, so you need to ensure only one copy of `react` exists in your program. Otherwise, you'll most likely see [this error](https://reactjs.org/warnings/invalid-hook-call-warning.html). Please try the following solutions, and let us know if it still doesn't work for you.
+
+- **For `create-react-app` users:** Follow this guide: https://github.com/facebook/react/issues/13991#issuecomment-496383268
+
+- **For `webpack` users:** Add an alias to `webpack.config.js` like this:
+  ```js
+  alias: {
+    react: path.resolve('node_modules/react'),
+  }
+  ```
