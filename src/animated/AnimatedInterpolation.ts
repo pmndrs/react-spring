@@ -1,7 +1,7 @@
 import { SpringValue } from '../types/animated'
 import { InterpolationConfig } from '../types/interpolation'
 import Animated, { AnimatedArray } from './Animated'
-import createInterpolator from './createInterpolator'
+import createInterpolator, { ExtrapolateType } from './createInterpolator'
 
 type IpValue = string | number | (string | number)[]
 // The widest possible interpolator type, possible if interpolate() is passed
@@ -15,7 +15,8 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
   constructor(
     parents: Animated | Animated[],
     range: number[] | InterpolationConfig | Interpolator,
-    output?: (number | string)[]
+    output?: (number | string)[],
+    extrapolate?: ExtrapolateType
   ) {
     super()
     this.payload =
@@ -25,7 +26,11 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
         : Array.isArray(parents)
         ? parents
         : [parents]
-    this.calc = createInterpolator(range as number[], output!) as Interpolator
+    this.calc = createInterpolator(
+      range as number[],
+      output!,
+      extrapolate
+    ) as Interpolator
   }
 
   public getValue() {
@@ -34,15 +39,26 @@ export default class AnimatedInterpolation extends AnimatedArray<Animated>
 
   public updateConfig(
     range: number[] | InterpolationConfig | Interpolator,
-    output?: (number | string)[]
+    output?: (number | string)[],
+    extrapolate?: ExtrapolateType
   ) {
-    this.calc = createInterpolator(range as number[], output!) as Interpolator
+    this.calc = createInterpolator(
+      range as number[],
+      output!,
+      extrapolate
+    ) as Interpolator
   }
 
   public interpolate(
     range: number[] | InterpolationConfig | ((...args: any[]) => IpValue),
-    output?: (number | string)[]
+    output?: (number | string)[],
+    extrapolate?: ExtrapolateType
   ): AnimatedInterpolation {
-    return new AnimatedInterpolation(this, range as number[], output!)
+    return new AnimatedInterpolation(
+      this,
+      range as number[],
+      output!,
+      extrapolate
+    )
   }
 }
