@@ -1,4 +1,4 @@
-import { AnimatedValue, AnimatedArray, interpolate } from '.'
+import { AnimatedValue, AnimatedArray, to } from '.'
 import { SpringValue } from 'shared'
 import { assert, _ } from 'spec.ts'
 
@@ -6,12 +6,12 @@ jest.mock('./interpolate')
 
 describe('AnimatedValue interpolation options', () => {
   it('accepts an AnimatedValue and a range shortcut config', () => {
-    const value = interpolate(new AnimatedValue(1), [0, 1, 2], [4, 5, 6])
+    const value = to(new AnimatedValue(1), [0, 1, 2], [4, 5, 6])
     expect(value.getValue()).toBe(5)
   })
 
   it('accepts a config object with extrapolate extend', () => {
-    const value = interpolate(new AnimatedValue(2), {
+    const value = to(new AnimatedValue(2), {
       range: [0, 1],
       output: [10, 20],
       extrapolate: 'extend',
@@ -20,7 +20,7 @@ describe('AnimatedValue interpolation options', () => {
   })
 
   it('accepts a config object with extrapolate clamp', () => {
-    const value = interpolate(new AnimatedValue(100), {
+    const value = to(new AnimatedValue(100), {
       range: [0, 1],
       output: [10, 20],
       extrapolate: 'clamp',
@@ -29,7 +29,7 @@ describe('AnimatedValue interpolation options', () => {
   })
 
   it('accepts a config object with extrapolate identity', () => {
-    const value = interpolate(new AnimatedValue(100), {
+    const value = to(new AnimatedValue(100), {
       output: [10, 20],
       extrapolate: 'identity',
     })
@@ -41,12 +41,12 @@ describe('AnimatedValue interpolation options', () => {
   }
 
   it('accepts an AnimatedValueArray and a range shortcut config', () => {
-    const value = interpolate(createAnimatedArray([1, 2]), [1, 2], [4, 5])
+    const value = to(createAnimatedArray([1, 2]), [1, 2], [4, 5])
     expect(value.getValue()).toBe(4)
   })
 
   it('accepts multiple AnimatedValues and a range shortcut config', () => {
-    const value = interpolate(
+    const value = to(
       [new AnimatedValue(2), new AnimatedValue(4)],
       [0, 2, 4, 6, 8],
       [10, 20, 30, 40, 50]
@@ -56,7 +56,7 @@ describe('AnimatedValue interpolation options', () => {
   })
 
   it('accepts multiple AnimatedValues and an interpolation function', () => {
-    const value = interpolate(
+    const value = to(
       [new AnimatedValue(5), new AnimatedValue('text')] as const,
       (a, b) => {
         assert(a, _ as number)
@@ -69,7 +69,7 @@ describe('AnimatedValue interpolation options', () => {
   })
 
   it('accepts an AnimatedValueArray and an interpolation function', () => {
-    const value = interpolate(
+    const value = to(
       createAnimatedArray([1, 2, 3]),
       (r, g, b) => `rgb(${r}, ${g}, ${b})`
     )
@@ -77,14 +77,14 @@ describe('AnimatedValue interpolation options', () => {
   })
 
   it('chains interpolations', () => {
-    const value = interpolate(
+    const value = to(
       new AnimatedValue(1) as SpringValue<number>,
       [0, 1],
       [1, 2]
     )
-      .interpolate(x => x * 2)
-      .interpolate([3, 4], [30, 40])
-      .interpolate(x => x / 2)
+      .to(x => x * 2)
+      .to([3, 4], [30, 40])
+      .to(x => x / 2)
     expect(value.getValue()).toBe(20)
   })
 })
