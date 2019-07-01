@@ -1,12 +1,10 @@
-import { Animatable, SpringValue, InterpolatorArgs } from 'shared'
+import { SpringInterpolator } from 'shared'
 import { createAnimatedInterpolation as to } from 'shared/globals'
 import { deprecateInterpolate } from 'shared/deprecations'
 
-function interpolate<Out extends Animatable>(
-  ...args: InterpolatorArgs<any, Out>
-): SpringValue<Out> {
+const interpolate: SpringInterpolator = (...args: [any, any]) => {
   deprecateInterpolate()
-  return (to as any)(...args)
+  return to(...args)
 }
 
 export { to, interpolate }

@@ -1,6 +1,7 @@
 import { useMemo, useRef, useImperativeHandle, useEffect } from 'react'
 import { is, usePrev, useOnce } from 'shared'
 import { callProp, fillArray } from './helpers'
+import { useMemoOne } from 'use-memo-one'
 import { Controller } from './Controller'
 
 /** API
@@ -21,7 +22,7 @@ export const useSprings = (length, propsArg, deps) => {
   const props = isFn ? [] : propsArg
 
   // Recreate the controllers whenever `length` changes
-  const springs = useMemo(
+  const springs = useMemoOne(
     () =>
       fillArray(length, i => {
         const s = new Controller()
