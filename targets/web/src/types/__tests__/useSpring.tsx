@@ -1,6 +1,7 @@
 import { assert, test, _ } from 'spec.ts';
 import React, { useRef } from 'react';
 import { UnknownProps, AnimationProps, Controller } from '@react-spring/core';
+import { ActiveAnimation } from '@react-spring/core/src/types/spring';
 import {
   animated,
   useSpring,
@@ -8,8 +9,7 @@ import {
   SpringHandle,
   SpringStopFn,
   SpringUpdateFn,
-} from '..';
-import { ActiveAnimation } from '@react-spring/core/src/types/spring';
+} from '../..';
 
 test('infer return type via forward prop', () => {
   const props = useSpring({ width: 0, delay: 1000 });

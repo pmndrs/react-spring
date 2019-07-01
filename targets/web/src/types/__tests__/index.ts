@@ -1,5 +1,5 @@
 import { assert, _, test, describe } from 'spec.ts';
-import { AnimatedProps, SpringValue } from '..';
+import { AnimatedProps, SpringValue } from '../..';
 import { CSSProperties } from 'react';
 
 describe('AnimatedProps', () => {

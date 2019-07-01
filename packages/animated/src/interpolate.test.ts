@@ -2,6 +2,8 @@ import { AnimatedValue, AnimatedArray, interpolate } from '.'
 import { SpringValue } from 'shared'
 import { assert, _ } from 'spec.ts'
 
+jest.mock('./interpolate')
+
 describe('AnimatedValue interpolation options', () => {
   it('accepts an AnimatedValue and a range shortcut config', () => {
     const value = interpolate(new AnimatedValue(1), [0, 1, 2], [4, 5, 6])

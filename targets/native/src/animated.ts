@@ -6,7 +6,7 @@ import {
   SpringValue,
   ElementType,
   ComponentPropsWithRef,
-} from 'shared'
+} from '@react-spring/shared'
 
 // These are converted into `animated` components
 const elements = {
@@ -74,7 +74,7 @@ type AnimatedStyles<T extends ReadonlyArray<any>> = {
 }
 
 // An animated object of style attributes
-type AnimatedStyle<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is a distributed union
+export type AnimatedStyle<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is a distributed union
   ? DT extends void
     ? undefined
     : [DT] extends [never]

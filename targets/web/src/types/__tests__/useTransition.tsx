@@ -6,7 +6,7 @@ import {
   ItemTransition,
   SpringValue,
   SpringUpdateFn,
-} from '..';
+} from '../..';
 
 const View = animated('div');
 

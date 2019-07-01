@@ -12,6 +12,7 @@ type ReservedProps = {
   immediate: 1;
   delay: 1;
   lazy: 1;
+  onAnimate: 1;
   onStart: 1;
   onRest: 1;
   onFrame: 1;

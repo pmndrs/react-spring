@@ -1,4 +1,4 @@
-import createMockRaf from 'mock-raf'
+import createMockRaf, { MockRaf } from 'mock-raf'
 import * as Globals from 'shared/globals'
 import { Controller } from './Controller'
 import { FrameLoop } from './FrameLoop'
@@ -30,7 +30,7 @@ it('can animate a number', () => {
 
 it('can animate an array of numbers', () => {
   const config = { precision: 0.005 }
-  const ctrl = new Controller({ x: [1, 2], config })
+  const ctrl = new Controller<{ x: [number, number] }>({ x: [1, 2], config })
   ctrl.update({ x: [5, 10] }).start()
 
   const frames = getFrames(ctrl)
@@ -48,7 +48,7 @@ it('can animate an array of numbers', () => {
 
 describe('async "to" prop', () => {
   it('acts strangely without the "from" prop', async () => {
-    const ctrl = new Controller({
+    const ctrl = new Controller<{ x: number }>({
       to: async update => {
         // The animated node does not exist yet!
         expect(ctrl.animated.x).toBeUndefined()
@@ -104,7 +104,7 @@ async function getAsyncFrames<T extends object>(
     mockRaf.step()
     await Promise.resolve()
     if (++steps > 1e5) {
-      break // Prevent infinite loops
+      throw Error('Infinite loop detected')
     }
   }
   return frames

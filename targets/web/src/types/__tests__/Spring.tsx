@@ -1,6 +1,6 @@
 import React from 'react';
 import { assert, test, _ } from 'spec.ts';
-import { animated, Spring, SpringValue } from '..';
+import { animated, Spring, SpringValue } from '../..';
 
 const View = animated('div');
 

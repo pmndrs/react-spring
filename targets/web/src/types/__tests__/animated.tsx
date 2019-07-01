@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { cleanup, render } from 'react-testing-library';
 import { AnimatedValue } from '@react-spring/animated';
 import { SpringValue } from '@react-spring/core';
-import { animated } from '..';
+import { animated } from '../..';
 
 afterEach(cleanup);
 

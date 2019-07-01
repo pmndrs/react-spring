@@ -19,9 +19,9 @@
     "gzipped": 7510
   },
   "dist/index.js": {
-    "bundled": 49630,
-    "minified": 20251,
-    "gzipped": 7232,
+    "bundled": 49639,
+    "minified": 20252,
+    "gzipped": 7237,
     "treeshaked": {
       "rollup": {
         "code": 2429,
@@ -33,8 +33,8 @@
     }
   },
   "dist/index.cjs.js": {
-    "bundled": 56616,
-    "minified": 23320,
-    "gzipped": 7797
+    "bundled": 56641,
+    "minified": 23335,
+    "gzipped": 7811
   }
 }

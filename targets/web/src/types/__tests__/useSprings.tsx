@@ -1,6 +1,7 @@
 import { assert, test, _ } from 'spec.ts';
-import { useSprings, SpringValue, SpringUpdateFn, SpringStopFn } from '..';
+import { useSprings, SpringValue, SpringStopFn } from '../..';
 import { Controller, SpringUpdate } from '@react-spring/core';
+import { SpringsUpdateFn } from '@react-spring/core/src/types/spring';
 
 const items: string[] = [];
 
@@ -32,7 +33,7 @@ test('pass a function', () => {
   set((_index: number, _spring: Controller<{ opacity: number }>) => {
     return _ as SpringUpdate<{ opacity?: number }>;
   });
-  assert(set, _ as SpringUpdateFn<{
+  assert(set, _ as SpringsUpdateFn<{
     opacity: number;
   }>);
   assert(stop, _ as SpringStopFn);

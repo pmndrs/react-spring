@@ -40,7 +40,7 @@
     "release": "lerna publish",
     "test": "jest",
     "test:cov": "jest --coverage",
-    "test:ts": "lerna exec --concurrency=1 --no-bail -- 'pwd && tsc -p . --noEmit'"
+    "test:ts": "cd packages/react-spring && tsc -p . --noEmit"
   },
   "husky": {
     "hooks": {
@@ -58,7 +58,6 @@
     "@babel/plugin-transform-runtime": "7.4.4",
     "@babel/preset-env": "7.3.1",
     "@babel/preset-react": "7.0.0",
-    "@babel/preset-typescript": "7.1.0",
     "@types/jest": "^24.0.13",
     "@types/react": "^16.8.19",
     "build-if-changed": "^1.5.0",
@@ -73,7 +72,7 @@
     "prettier": "^1.18.2",
     "pretty-quick": "1.10.0",
     "react": "~16.8.0",
-    "recrawl": "^1.2.2",
+    "recrawl-sync": "^1.2.2",
     "rimraf": "2.6.3",
     "rollup": "^1.14.4",
     "rollup-plugin-babel": "4.3.2",
@@ -84,6 +83,7 @@
     "rollup-plugin-typescript2": "0.21.1",
     "sort-package-json": "1.22.1",
     "spec.ts": "1.1.3",
+    "ts-jest": "^24.0.2",
     "typescript": "3.5.1",
     "typescript-rewrite-paths": "^1.2.0"
   },

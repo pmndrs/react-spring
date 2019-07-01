@@ -1,5 +1,5 @@
 import { assert, test, _ } from 'spec.ts';
-import { useTrail, SpringValue, SpringUpdateFn, SpringStopFn } from '..';
+import { useTrail, SpringValue, SpringUpdateFn, SpringStopFn } from '../..';
 
 test('basic usage', () => {
   const springs = useTrail(3, { opacity: 1 });

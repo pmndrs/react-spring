@@ -19,6 +19,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "typeRoots": ["../../targets/zdog/@types", "../../targets/three/@types"]
   }
 }

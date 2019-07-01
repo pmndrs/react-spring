@@ -1,6 +1,6 @@
 const { relative, resolve, join, dirname } = require('path')
 const { rewritePaths } = require('typescript-rewrite-paths')
-const { crawl } = require('recrawl')
+const { crawl } = require('recrawl-sync')
 const sortPackageJson = require('sort-package-json')
 const chalk = require('chalk')
 const fs = require('fs-extra')
@@ -23,11 +23,11 @@ const RN_PKG = /\/(native|addons|core|animated)$/
 const rawPackages = ['packages/envinfo']
 
 // Read all "package.json" modules in advance.
-const readPackages = async rootJson =>
-  (await crawl('.', {
+const readPackages = rootJson =>
+  crawl('.', {
     only: rootJson.workspaces.packages.map(path => join(path, PJ)),
     skip: ['.*', 'node_modules'].concat(rawPackages),
-  })).reduce((packages, pkgJsonPath) => {
+  }).reduce((packages, pkgJsonPath) => {
     const pkgDir = dirname(pkgJsonPath)
     const pkg = fs.readJsonSync(pkgJsonPath)
     Object.defineProperty(pkg, 'dir', { value: pkgDir })
@@ -40,7 +40,7 @@ const readPackages = async rootJson =>
 async function prepare() {
   process.chdir(resolve(__dirname, '..'))
   const rootJson = await fs.readJson(PJ)
-  const packages = await readPackages(rootJson)
+  const packages = readPackages(rootJson)
 
   // Package-specific fields to delete
   const deletions = {
@@ -150,7 +150,7 @@ async function prepare() {
     }
 
     // Copy every "src" module (except for tests and declarations)
-    const files = await crawl(srcDir, {
+    const files = crawl(srcDir, {
       skip: ['*.d.ts', '*.test.*', '__(tests|fixtures)__'],
     })
     files.forEach(file => {
