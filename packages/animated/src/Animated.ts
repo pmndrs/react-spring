@@ -1,5 +1,4 @@
 import { AnimatedValue } from './AnimatedValue'
-
 export const animatedTag = Symbol.for('isAnimated')
 
 export const isAnimated = (val: any): val is Animated =>

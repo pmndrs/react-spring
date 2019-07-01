@@ -9,8 +9,7 @@
   },
   "dependencies": {
     "@react-spring/animated": "link:../animated",
-    "@react-spring/shared": "link:../shared",
-    "use-memo-one": "^1.1.0"
+    "@react-spring/shared": "link:../shared"
   },
   "publishConfig": {
     "directory": "dist"

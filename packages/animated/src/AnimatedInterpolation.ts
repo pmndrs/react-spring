@@ -10,8 +10,9 @@ import {
   toArray,
   each,
 } from 'shared'
+import { deprecateInterpolate } from 'shared/deprecations'
 import { Animated } from './Animated'
-import { interpolate } from './interpolate'
+import { to } from './interpolate'
 import { toPayload, addChild, removeChild } from './AnimatedObject'
 
 export class AnimatedInterpolation<
@@ -34,10 +35,15 @@ export class AnimatedInterpolation<
     return (this.calc as any)(...args)
   }
 
+  to<T extends Animatable>(...args: InterpolatorArgs<Out, T>): SpringValue<T> {
+    return (to as any)(this, ...args)
+  }
+
   interpolate<T extends Animatable>(
     ...args: InterpolatorArgs<Out, T>
   ): SpringValue<T> {
-    return (interpolate as any)(this, ...args)
+    deprecateInterpolate()
+    return this.to(...args)
   }
 
   getPayload() {

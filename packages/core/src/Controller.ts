@@ -584,7 +584,7 @@ export class Controller<State extends Indexable = any> {
           }
           try {
             const prev = animated
-            animated = input.interpolate({ output }) as any
+            animated = input.to({ output }) as any
             moveChildren(prev, animated)
           } catch (err) {
             console.warn(
@@ -756,7 +756,7 @@ function createAnimated<T>(
     ? new AnimatedArray(value.map(createAnimated))
     : isAnimatableString(value)
     ? // Convert "red" into "rgba(255, 0, 0, 1)" etc
-      (new AnimatedValue(0).interpolate({
+      (new AnimatedValue(0).to({
         output: [value, value] as any,
       }) as any)
     : // The `AnimatedValue` class supports any type, but only numbers are

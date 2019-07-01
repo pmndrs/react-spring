@@ -1,7 +1,8 @@
 import { is, Animatable, SpringValue, InterpolatorArgs, each } from 'shared'
+import { deprecateInterpolate } from 'shared/deprecations'
 import { Animated } from './Animated'
 import { AnimatedObject, toPayload } from './AnimatedObject'
-import { interpolate } from './interpolate'
+import { to } from './interpolate'
 import invariant from 'tiny-invariant'
 
 /** An array of animated nodes */
@@ -27,10 +28,17 @@ export class AnimatedArray extends AnimatedObject
     }
   }
 
+  to<Out extends Animatable>(
+    ...args: InterpolatorArgs<any[], Out>
+  ): SpringValue<Out> {
+    return (to as any)(this, ...args)
+  }
+
   interpolate<Out extends Animatable>(
     ...args: InterpolatorArgs<any[], Out>
   ): SpringValue<Out> {
-    return (interpolate as any)(this, ...args)
+    deprecateInterpolate()
+    return this.to(...args)
   }
 
   updatePayload(prev: Animated, next: Animated) {

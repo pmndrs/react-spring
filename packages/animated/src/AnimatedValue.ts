@@ -1,7 +1,8 @@
 import { Animatable, SpringValue, InterpolatorArgs, is, each } from 'shared'
 import { AnimatedProps } from './AnimatedProps'
-import { interpolate } from './interpolate'
+import { to } from './interpolate'
 import { Animated } from './Animated'
+import { deprecateInterpolate } from 'shared/deprecations'
 import * as G from 'shared/globals'
 
 /** An animated number or a native attribute value */
@@ -41,10 +42,17 @@ export class AnimatedValue<T = unknown> extends Animated
     }
   }
 
+  to<Out extends Animatable>(
+    ...args: InterpolatorArgs<T, Out>
+  ): SpringValue<Out> {
+    return (to as any)(this, ...args)
+  }
+
   interpolate<Out extends Animatable>(
     ...args: InterpolatorArgs<T, Out>
   ): SpringValue<Out> {
-    return (interpolate as any)(this, ...args)
+    deprecateInterpolate()
+    return this.to(...args)
   }
 
   reset(isActive: boolean) {
