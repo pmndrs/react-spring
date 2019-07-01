@@ -52,9 +52,9 @@
     }
   },
   "dist/index.cjs.js": {
-    "bundled": 8415,
-    "minified": 4581,
-    "gzipped": 1698
+    "bundled": 8408,
+    "minified": 4574,
+    "gzipped": 1692
   },
   "dist/parallax.js": {
     "bundled": 7306,
@@ -71,8 +71,8 @@
     }
   },
   "dist/parallax.cjs.js": {
-    "bundled": 8415,
-    "minified": 4581,
-    "gzipped": 1698
+    "bundled": 8408,
+    "minified": 4574,
+    "gzipped": 1692
   }
 }

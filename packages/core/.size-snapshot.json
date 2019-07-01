@@ -33,8 +33,8 @@
     }
   },
   "dist/index.cjs.js": {
-    "bundled": 56735,
-    "minified": 23360,
-    "gzipped": 7825
+    "bundled": 56721,
+    "minified": 23346,
+    "gzipped": 7819
   }
 }
