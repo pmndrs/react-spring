@@ -151,7 +151,7 @@ async function prepare() {
 
     // Copy every "src" module (except for tests and declarations)
     const files = crawl(srcDir, {
-      skip: ['*.d.ts', '*.test.*', '__(tests|fixtures)__'],
+      skip: ['*.d.ts', '*.test.*', '__(tests|fixtures|mocks|snapshots)__'],
     })
     files.forEach(file => {
       let content = fs.readFileSync(join(srcDir, file), 'utf8')
