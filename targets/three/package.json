@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/three",
-  "version": "9.0.0-beta.29",
+  "version": "9.0.0-beta.30",
   "private": true,
   "main": "src/index.ts",
   "dependencies": {

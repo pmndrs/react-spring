@@ -38,16 +38,16 @@
     "gzipped": 1652
   },
   "dist/index.js": {
-    "bundled": 7306,
-    "minified": 3958,
-    "gzipped": 1560,
+    "bundled": 8000,
+    "minified": 4218,
+    "gzipped": 1601,
     "treeshaked": {
       "rollup": {
-        "code": 3462,
+        "code": 3724,
         "import_statements": 492
       },
       "webpack": {
-        "code": 4868
+        "code": 5126
       }
     }
   },
@@ -57,16 +57,16 @@
     "gzipped": 1692
   },
   "dist/parallax.js": {
-    "bundled": 7306,
-    "minified": 3958,
-    "gzipped": 1560,
+    "bundled": 8000,
+    "minified": 4218,
+    "gzipped": 1601,
     "treeshaked": {
       "rollup": {
-        "code": 3462,
+        "code": 3724,
         "import_statements": 492
       },
       "webpack": {
-        "code": 4868
+        "code": 5126
       }
     }
   },
