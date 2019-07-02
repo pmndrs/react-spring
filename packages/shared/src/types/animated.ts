@@ -25,13 +25,17 @@ export interface SpringValue<T = any> {
   getValue(): T
   /**
    * Interpolate the value with a custom interpolation function,
-   * a configuration object or keyframe-like ranges.
+   * a configuration object, or keyframe-like ranges.
    *
    * @example
    *
-   * interpolate(alpha => `rgba(255, 165, 0, ${alpha})`)
-   * interpolate({ range: [0, 1], output: ['yellow', 'red'], extrapolate: 'clamp' })
-   * interpolate([0, 0.25, 1], ['yellow', 'orange', 'red'])
+   * value.to(alpha => `rgba(255, 165, 0, ${alpha})`)
+   * value.to({ range: [0, 1], output: ['yellow', 'red'], extrapolate: 'clamp' })
+   * value.to([0, 0.25, 1], ['yellow', 'orange', 'red'])
+   */
+  to: Interpolator<Arrify<T>>
+  /**
+   * @deprecated Use the `to` method instead. This will be removed in v10.
    */
   interpolate: Interpolator<Arrify<T>>
 }
