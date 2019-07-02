@@ -20,6 +20,7 @@ export {
   SpringStopFn,
   SpringUpdate,
   SpringUpdateFn,
+  SpringsUpdateFn,
 } from './types/spring'
 
 export {
