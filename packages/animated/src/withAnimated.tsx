@@ -6,9 +6,7 @@ import * as G from 'shared/globals'
 // For storing the animated version on the original component
 const cacheKey = Symbol.for('AnimatedComponent')
 
-type AnimatableComponent =
-  | string
-  | (Extract<ElementType, object> & { [cacheKey]?: any })
+type AnimatableComponent = string | Exclude<ElementType, string>
 
 // A stub type that gets replaced by @react-spring/web and others.
 type WithAnimated = {
@@ -16,7 +14,7 @@ type WithAnimated = {
   [key: string]: any
 }
 
-export const withAnimated: WithAnimated = Component =>
+export const withAnimated: WithAnimated = (Component: any) =>
   is.str(Component)
     ? createAnimatedComponent(Component)
     : Component[cacheKey] ||
