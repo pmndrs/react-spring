@@ -38,41 +38,41 @@
     "gzipped": 1652
   },
   "dist/index.js": {
-    "bundled": 8000,
-    "minified": 4218,
-    "gzipped": 1601,
+    "bundled": 7306,
+    "minified": 3958,
+    "gzipped": 1560,
     "treeshaked": {
       "rollup": {
-        "code": 3724,
+        "code": 3462,
         "import_statements": 492
       },
       "webpack": {
-        "code": 5126
+        "code": 4868
       }
     }
   },
   "dist/index.cjs.js": {
-    "bundled": 8408,
-    "minified": 4574,
-    "gzipped": 1692
+    "bundled": 8434,
+    "minified": 4600,
+    "gzipped": 1703
   },
   "dist/parallax.js": {
-    "bundled": 8000,
-    "minified": 4218,
-    "gzipped": 1601,
+    "bundled": 7306,
+    "minified": 3958,
+    "gzipped": 1560,
     "treeshaked": {
       "rollup": {
-        "code": 3724,
+        "code": 3462,
         "import_statements": 492
       },
       "webpack": {
-        "code": 5126
+        "code": 4868
       }
     }
   },
   "dist/parallax.cjs.js": {
-    "bundled": 8408,
-    "minified": 4574,
-    "gzipped": 1692
+    "bundled": 8434,
+    "minified": 4600,
+    "gzipped": 1703
   }
 }
