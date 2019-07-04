@@ -65,7 +65,12 @@ export const esmBundle = config => ({
   plugins: [
     resolve({ extensions }),
     ts({ check: false }),
-    babel(getBabelOptions({ useESModules: true })),
+    babel(
+      getBabelOptions(
+        { useESModules: true },
+        '>1%, not dead, not ie 11, not op_mini all'
+      )
+    ),
     sizeSnapshot(),
     config.minify && terser(),
   ],
@@ -110,13 +115,13 @@ const babelExtensions = [
   'tsx',
 ]
 
-export const getBabelOptions = ({ useESModules }) => ({
+export const getBabelOptions = ({ useESModules }, targets) => ({
   babelrc: false,
   exclude: '**/node_modules/**',
   extensions: babelExtensions,
   runtimeHelpers: true,
   presets: [
-    ['@babel/preset-env', { loose: true, modules: false }],
+    ['@babel/preset-env', { loose: true, modules: false, targets }],
     '@babel/preset-react',
   ],
   plugins: [
