@@ -56,6 +56,11 @@ describe('helpers', () => {
       expect(reconcileWrapper(':2:1', '1')).toEqual([2, 1])
     })
 
+    it('preserves order when deleting a single item', () => {
+      expect(reconcileWrapper(':1:', '2')).toEqual([1, 2])
+      expect(reconcileWrapper(':1:', '2|3')).toEqual([1, 2, 3])
+    })
+
     it('should handle multiple items', () => {
       expect(reconcileWrapper('1:4:|4:5:', '1|2|3')).toEqual([1, 4, 5, 2, 3])
       expect(reconcileWrapper('1:4:|3:5:', '1|2|3')).toEqual([1, 4, 2, 3, 5])

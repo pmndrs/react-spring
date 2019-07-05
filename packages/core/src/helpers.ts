@@ -132,15 +132,21 @@ export function reconcileDeleted(
 
     // Look for the left or right sibling in `current`
     const { left, right, ...deletedItem } = deleted[i]
-    for (let j = current.length; --j >= 0; ) {
-      const { originalKey: key } = current[j]
-      if (key === right) {
-        index = j
-        break
-      }
-      if (key === left) {
-        index = j + 1
-        break
+
+    // If there are no left or right siblings, it's the only item. Keep it first
+    if (!left && !right) {
+      index = 0
+    } else {
+      for (let j = current.length; --j >= 0; ) {
+        const { originalKey: key } = current[j]
+        if (key === right) {
+          index = j
+          break
+        }
+        if (key === left) {
+          index = j + 1
+          break
+        }
       }
     }
 
