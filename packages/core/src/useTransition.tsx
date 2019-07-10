@@ -4,6 +4,17 @@ import { callProp, interpolateTo } from './helpers'
 import { Controller } from './Controller'
 import { now } from 'shared/globals'
 
+// TODO: convert to "const enum" once Babel supports it
+type Phase = number
+/** This transition is being mounted */
+const MOUNT = 0
+/** This transition is entering or has entered */
+const ENTER = 1
+/** This transition had its animations updated */
+const UPDATE = 2
+/** This transition will expire after animating */
+const LEAVE = 3
+
 export function useTransition<T>(
   data: T | readonly T[],
   props: any,
@@ -60,9 +71,9 @@ export function useTransition<T>(
     let to: any
     let from: any
     let phase: Phase
-    if (t.phase == Phase.Mount) {
+    if (t.phase == MOUNT) {
       to = props.enter
-      phase = Phase.Enter
+      phase = ENTER
       // The "initial" prop is only used on first render. It always overrides
       // the "from" prop when defined, and it makes "enter" instant when null.
       from = props.initial
@@ -71,16 +82,16 @@ export function useTransition<T>(
       }
     } else {
       const isDeleted = items.indexOf(t.item) < 0
-      if (t.phase < Phase.Leave) {
+      if (t.phase < LEAVE) {
         if (isDeleted) {
           to = props.leave
-          phase = Phase.Leave
+          phase = LEAVE
         } else if ((to = props.update)) {
-          phase = Phase.Update
+          phase = UPDATE
         } else return
       } else if (!isDeleted) {
         to = props.enter
-        phase = Phase.Enter
+        phase = ENTER
       } else return
     }
 
@@ -99,7 +110,7 @@ export function useTransition<T>(
       if (is.fun(onRest)) {
         onRest(values)
       }
-      if (t.phase == Phase.Leave) {
+      if (t.phase == LEAVE) {
         t.expiresBy = now() + expires
         if (expires <= 0) {
           forceUpdate()
@@ -120,7 +131,7 @@ export function useTransition<T>(
 
     // To ensure all Animated nodes exist during render,
     // the payload must be applied immediately for new items.
-    if (t.phase > Phase.Mount) {
+    if (t.phase > MOUNT) {
       change.payload = payload
     } else {
       t.spring.update(payload)
@@ -180,15 +191,4 @@ interface Transition<T = any> {
   /** Destroy no later than this date */
   expiresBy?: number
   expirationId?: number
-}
-
-const enum Phase {
-  /** This transition is being mounted */
-  Mount,
-  /** This transition is entering or has entered */
-  Enter,
-  /** This transition had its animations updated */
-  Update,
-  /** This transition will expire after animating */
-  Leave,
 }
