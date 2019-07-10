@@ -124,15 +124,15 @@ export type UseSpringProps<DS extends object> = Merge<
 
 type OverwriteKeys<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] };
 
-// there's a third value in the tuple but it's not public API (?)
+type StopAnimationFn = () => void
+
 export function useSpring<DS extends object>(
   values: UseSpringProps<Merge<DS, CSSProperties>>
 ): AnimatedValue<ForwardedProps<OverwriteKeys<DS, CSSProperties>>>
 export function useSpring<DS extends object>(
   getProps: () => UseSpringProps<Merge<DS, CSSProperties>>
-): [AnimatedValue<ForwardedProps<OverwriteKeys<DS, CSSProperties>>>, SetUpdateFn<OverwriteKeys<DS, CSSProperties>>]
+): [AnimatedValue<ForwardedProps<OverwriteKeys<DS, CSSProperties>>>, SetUpdateFn<OverwriteKeys<DS, CSSProperties>>, StopAnimationFn]
 
-// there's a third value in the tuple but it's not public API (?)
 export function useSprings<TItem, DS extends CSSProperties>(
   count: number,
   items: ReadonlyArray<TItem>,
@@ -140,9 +140,8 @@ export function useSprings<TItem, DS extends CSSProperties>(
 export function useSprings<DS extends object>(
   count: number,
   getProps: (i: number) => UseSpringProps<DS>
-): [AnimatedValue<ForwardedProps<DS>>[], SetUpdateCallbackFn<DS>]
+): [AnimatedValue<ForwardedProps<DS>>[], SetUpdateCallbackFn<DS>, StopAnimationFn]
 
-// there's a third value in the tuple but it's not public API (?)
 export function useTrail<DS extends CSSProperties>(
   count: number,
   getProps: () => UseSpringProps<DS & CSSProperties>
@@ -154,7 +153,7 @@ export function useTrail<DS extends CSSProperties>(
 export function useTrail<DS extends object>(
   count: number,
   getProps: () => UseSpringProps<DS>
-): [AnimatedValue<ForwardedProps<DS>>[], SetUpdateFn<DS>]
+): [AnimatedValue<ForwardedProps<DS>>[], SetUpdateFn<DS>, StopAnimationFn]
 export function useTrail<DS extends object>(
   count: number,
   values: UseSpringProps<DS>
