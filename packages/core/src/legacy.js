@@ -16,15 +16,6 @@ export function Trail({ items, children, ...props }) {
   })
 }
 
-export function Transition({ items, keys = null, children, ...props }) {
-  const transitions = useTransition(items, keys, props)
-  return transitions.map(({ item, key, props, phase }, index) => {
-    const result = children(item, phase, index)
-    const element = is.fun(result) ? result(props) : result
-    return element && element.type ? (
-      <element.type {...element.props} key={key} ref={element.ref} />
-    ) : (
-      element
-    )
-  })
+export function Transition({ items, children, ...props }) {
+  return useTransition(items, props)(children)
 }
