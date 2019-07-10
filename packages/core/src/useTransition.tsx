@@ -9,66 +9,7 @@ export function useTransition<T>(
   props: any,
   deps?: any
 ) {
-  const { ref, reset } = props
-  const { transitions, changes } = useDiff(data, props)
-
-  useEffect(
-    () => {
-      changes.forEach(({ phase, payload }, t) => {
-        t.phase = phase
-        if (payload) t.spring.update(payload)
-        if (!ref) t.spring.start()
-      })
-    },
-    reset ? void 0 : deps
-  )
-
-  const render = (render: (props: any, item: T) => ReactNode) =>
-    transitions.map(t => {
-      const elem: any = render({ ...t.spring.animated }, t.item)
-      return elem && elem.type ? (
-        <elem.type {...elem.props} key={t.id} ref={elem.ref} />
-      ) : (
-        elem
-      )
-    })
-
-  return render
-}
-
-interface State<T = any> {
-  transitions: Transition<T>[]
-  changes: Map<Transition<T>, Change>
-}
-
-interface Change {
-  phase: Phase
-  payload?: any
-}
-
-interface Transition<T = any> {
-  id: number
-  item: T
-  phase: Phase
-  spring: Controller
-  /** Destroy no later than this date */
-  expiresBy?: number
-  expirationId?: number
-}
-
-const enum Phase {
-  /** This transition is being mounted */
-  Mount,
-  /** This transition is entering or has entered */
-  Enter,
-  /** This transition had its animations updated */
-  Update,
-  /** This transition will expire after animating */
-  Leave,
-}
-
-function useDiff<T>(data: T | readonly T[], props: any): State {
-  const { reset, trail = 0, expires = Infinity } = props
+  const { ref, reset, trail = 0, expires = Infinity } = props
 
   // Every item has its own transition.
   const items = toArray(data)
@@ -185,7 +126,7 @@ function useDiff<T>(data: T | readonly T[], props: any): State {
   })
 
   useImperativeHandle(
-    props.ref,
+    ref,
     () => ({
       get controllers() {
         return usedTransitions.current!.map(t => t.spring)
@@ -202,8 +143,50 @@ function useDiff<T>(data: T | readonly T[], props: any): State {
     []
   )
 
-  return {
-    changes,
-    transitions,
-  }
+  useEffect(
+    () => {
+      changes.forEach(({ phase, payload }, t) => {
+        t.phase = phase
+        if (payload) t.spring.update(payload)
+        if (!ref) t.spring.start()
+      })
+    },
+    reset ? void 0 : deps
+  )
+
+  return (render: (props: any, item: T) => ReactNode) =>
+    transitions.map(t => {
+      const elem: any = render({ ...t.spring.animated }, t.item)
+      return elem && elem.type ? (
+        <elem.type {...elem.props} key={t.id} ref={elem.ref} />
+      ) : (
+        elem
+      )
+    })
+}
+
+interface Change {
+  phase: Phase
+  payload?: any
+}
+
+interface Transition<T = any> {
+  id: number
+  item: T
+  phase: Phase
+  spring: Controller
+  /** Destroy no later than this date */
+  expiresBy?: number
+  expirationId?: number
+}
+
+const enum Phase {
+  /** This transition is being mounted */
+  Mount,
+  /** This transition is entering or has entered */
+  Enter,
+  /** This transition had its animations updated */
+  Update,
+  /** This transition will expire after animating */
+  Leave,
 }
