@@ -57,7 +57,8 @@ export const useForceUpdate = () => useReducer(() => ({}), 0)[1] as (() => void)
 /** Use a value from the previous render */
 export function usePrev<T>(value: T): T | undefined {
   const prevRef = useRef<any>(undefined)
-  const prev = prevRef.current
-  prevRef.current = value
-  return prev
+  useEffect(() => {
+    prevRef.current = value
+  })
+  return prevRef.current
 }
