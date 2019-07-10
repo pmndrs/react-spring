@@ -27,27 +27,22 @@ export function useTransition<T>(
     usedTransitions.current!.forEach(t => t.spring.destroy())
   })
 
-  // All items are new on first render.
+  // Determine which items are new.
   let newItems = items
-
-  // Track the first render for the "initial" prop.
-  const isFirst = reset || !prevTransitions
-  if (!isFirst) {
+  if (prevTransitions && !reset) {
     // Reuse old transitions unless expired.
-    prevTransitions!.forEach(t => {
+    prevTransitions.forEach(t => {
       if (is.und(t.expiresBy)) {
         transitions.push(t)
       } else {
         clearTimeout(t.expirationId)
       }
     })
-
-    // Deduce which items are new.
     const oldItems = transitions.map(t => t.item)
     newItems = newItems.filter(item => oldItems.indexOf(item) < 0)
   }
 
-  // Append transitions for new items.
+  // Append new transitions for new items.
   newItems.forEach(item => {
     const spring = new Controller()
     transitions.push({ id: spring.id, item, phase: Phase.Mount, spring })
@@ -63,10 +58,17 @@ export function useTransition<T>(
   const changes = new Map<Transition<T>, Change>()
   transitions.forEach((t, i) => {
     let to: any
+    let from: any
     let phase: Phase
     if (t.phase == Phase.Mount) {
-      to = (isFirst && props.initial) || props.enter
+      to = props.enter
       phase = Phase.Enter
+      // The "initial" prop is only used on first render. It always overrides
+      // the "from" prop when defined, and it makes "enter" instant when null.
+      from = props.initial
+      if (is.und(from) || (prevTransitions && !reset)) {
+        from = props.from
+      }
     } else {
       const isDeleted = items.indexOf(t.item) < 0
       if (t.phase < Phase.Leave) {
@@ -86,7 +88,7 @@ export function useTransition<T>(
       // When "to" is a function, it can return (1) an array of "useSpring" props,
       // (2) an async function, or (3) an object with any "useSpring" props.
       to: to = callProp(to, t.item, i),
-      from: phase < Phase.Update ? callProp(props.from, t.item, i) : void 0,
+      from: callProp(from, t.item, i),
       delay: delay += trail,
       config: callProp(props.config, t.item, i),
       ...(is.obj(to) && interpolateTo(to)),
