@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useImperativeHandle, ReactNode } from 'react'
-import { is, toArray, useForceUpdate, useOnce } from 'shared'
+import { is, toArray, useForceUpdate, useOnce, each } from 'shared'
 import { callProp, interpolateTo } from './helpers'
 import { Controller } from './Controller'
 import { now } from 'shared/globals'
@@ -38,13 +38,13 @@ export function useTransition<T>(
 
   // Destroy all transitions on dismount.
   useOnce(() => () => {
-    usedTransitions.current!.forEach(t => t.spring.destroy())
+    each(usedTransitions.current!, t => t.spring.destroy())
   })
 
   // Determine which transitions can be reused.
   const prevKeys: any[] = []
   if (prevTransitions && !reset)
-    prevTransitions.forEach(t => {
+    each(prevTransitions, t => {
       if (is.und(t.expiresBy)) {
         prevKeys.push(keys ? t.key : t.item)
         transitions.push(t)
@@ -54,7 +54,7 @@ export function useTransition<T>(
     })
 
   // Append new transitions for new items.
-  items.forEach((item, i) => {
+  each(items, (item, i) => {
     const key = keys && keys[i]
     if (prevKeys.indexOf(keys ? key : item) < 0) {
       const spring = new Controller()
@@ -74,7 +74,7 @@ export function useTransition<T>(
 
   // Generate changes to apply in useEffect.
   const changes = new Map<Transition<T>, Change>()
-  transitions.forEach((t, i) => {
+  each(transitions, (t, i) => {
     let to: any
     let from: any
     let phase: Phase
@@ -158,14 +158,14 @@ export function useTransition<T>(
           )
         ),
       stop: (finished?: boolean) =>
-        usedTransitions.current!.forEach(t => t.spring.stop(finished)),
+        each(usedTransitions.current!, t => t.spring.stop(finished)),
     }),
     []
   )
 
   useEffect(
     () => {
-      changes.forEach(({ phase, payload }, t) => {
+      each(changes, ({ phase, payload }, t) => {
         t.phase = phase
         if (payload) t.spring.update(payload)
         if (!ref) t.spring.start()
