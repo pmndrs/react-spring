@@ -20,7 +20,7 @@ export function useTransition<T>(
   props: any,
   deps?: any
 ) {
-  const { key, ref, reset, trail = 0, expires = Infinity } = props
+  const { key, ref, reset, sort, trail = 0, expires = Infinity } = props
 
   // Every item has its own transition.
   const items = toArray(data)
@@ -61,6 +61,10 @@ export function useTransition<T>(
       transitions.push({ id: spring.id, key, item, phase: MOUNT, spring })
     }
   })
+
+  if (is.fun(sort)) {
+    transitions.sort((a, b) => sort(a.item, b.item))
+  }
 
   // Track cumulative delay for the "trail" prop.
   let delay = -trail
