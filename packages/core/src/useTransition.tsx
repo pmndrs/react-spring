@@ -20,11 +20,14 @@ export function useTransition<T>(
   props: any,
   deps?: any
 ) {
-  const { ref, reset, trail = 0, expires = Infinity } = props
+  const { key, ref, reset, trail = 0, expires = Infinity } = props
 
   // Every item has its own transition.
   const items = toArray(data)
   const transitions: Transition[] = []
+
+  // Explicit keys are used to associate transitions with immutable items.
+  const keys = is.und(key) ? key : is.fun(key) ? items.map(key) : toArray(key)
 
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<Transition[] | null>(null)
@@ -38,25 +41,25 @@ export function useTransition<T>(
     usedTransitions.current!.forEach(t => t.spring.destroy())
   })
 
-  // Determine which items are new.
-  let newItems = items
-  if (prevTransitions && !reset) {
-    // Reuse old transitions unless expired.
+  // Determine which transitions can be reused.
+  const prevKeys: any[] = []
+  if (prevTransitions && !reset)
     prevTransitions.forEach(t => {
       if (is.und(t.expiresBy)) {
+        prevKeys.push(keys ? t.key : t.item)
         transitions.push(t)
       } else {
         clearTimeout(t.expirationId)
       }
     })
-    const oldItems = transitions.map(t => t.item)
-    newItems = newItems.filter(item => oldItems.indexOf(item) < 0)
-  }
 
   // Append new transitions for new items.
-  newItems.forEach(item => {
-    const spring = new Controller()
-    transitions.push({ id: spring.id, item, phase: Phase.Mount, spring })
+  items.forEach((item, i) => {
+    const key = keys && keys[i]
+    if (prevKeys.indexOf(keys ? key : item) < 0) {
+      const spring = new Controller()
+      transitions.push({ id: spring.id, key, item, phase: MOUNT, spring })
+    }
   })
 
   // Track cumulative delay for the "trail" prop.
@@ -81,7 +84,7 @@ export function useTransition<T>(
         from = props.from
       }
     } else {
-      const isDeleted = items.indexOf(t.item) < 0
+      const isDeleted = (keys || items).indexOf(keys ? t.key : t.item) < 0
       if (t.phase < LEAVE) {
         if (isDeleted) {
           to = props.leave
@@ -185,6 +188,7 @@ interface Change {
 
 interface Transition<T = any> {
   id: number
+  key?: keyof any
   item: T
   phase: Phase
   spring: Controller
