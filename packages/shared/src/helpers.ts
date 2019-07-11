@@ -56,6 +56,12 @@ interface EachFn {
     ctx?: This
   ): void
 
+  <P = any, T = any, This = any>(
+    obj: ReadonlyMap<P, T>,
+    cb: (this: This, value: T, key: P) => void,
+    ctx?: This
+  ): void
+
   <T = any, This = any>(
     arr: readonly T[],
     cb: (this: This, value: T, index: number) => void,
