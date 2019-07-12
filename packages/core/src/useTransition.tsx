@@ -87,15 +87,15 @@ export function useTransition<T>(
         from = props.from
       }
     } else {
-      const isDeleted = keys.indexOf(t.key) < 0
+      const isLeave = keys.indexOf(t.key) < 0
       if (t.phase < LEAVE) {
-        if (isDeleted) {
+        if (isLeave) {
           to = props.leave
           phase = LEAVE
         } else if ((to = props.update)) {
           phase = UPDATE
         } else return
-      } else if (!isDeleted) {
+      } else if (!isLeave) {
         to = props.enter
         phase = ENTER
       } else return
