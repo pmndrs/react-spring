@@ -37,20 +37,23 @@ export function useTransition<T>(
   })
 
   // Destroy all transitions on dismount.
-  useOnce(() => () => {
-    each(usedTransitions.current!, t => t.spring.destroy())
-  })
+  useOnce(() => () =>
+    each(usedTransitions.current!, t => {
+      if (t.expiresBy) clearTimeout(t.expirationId)
+      t.spring.destroy()
+    })
+  )
 
   // Map old indices to new indices.
   const reused: number[] = []
   if (prevTransitions && !reset)
     each(prevTransitions, (t, i) => {
       // Expired transitions are not rendered.
-      if (is.und(t.expiresBy)) {
+      if (t.expiresBy) {
+        clearTimeout(t.expirationId)
+      } else {
         i = reused[i] = keys.indexOf(t.key)
         if (~i) transitions[i] = t
-      } else {
-        clearTimeout(t.expirationId)
       }
     })
 
