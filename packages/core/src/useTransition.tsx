@@ -41,25 +41,44 @@ export function useTransition<T>(
     each(usedTransitions.current!, t => t.spring.destroy())
   })
 
-  // Determine which transitions can be reused.
-  const prevKeys: any[] = []
+  // Map old indices to new indices.
+  const reused: number[] = []
   if (prevTransitions && !reset)
-    each(prevTransitions, t => {
+    each(prevTransitions, (t, i) => {
+      // Expired transitions are not rendered.
       if (is.und(t.expiresBy)) {
-        prevKeys.push(t.key)
-        transitions.push(t)
+        i = reused[i] = keys.indexOf(t.key)
+        if (~i) transitions[i] = t
       } else {
         clearTimeout(t.expirationId)
       }
     })
 
-  // Append new transitions for new items.
+  // Mount new items with fresh transitions.
   each(items, (item, i) => {
-    const key = keys[i]
-    if (prevKeys.indexOf(key) < 0) {
-      transitions.push({ key, item, phase: MOUNT, spring: new Controller() })
-    }
+    transitions[i] ||
+      (transitions[i] = {
+        key: keys[i],
+        item,
+        phase: MOUNT,
+        spring: new Controller(),
+      })
   })
+
+  // Update the item of any transition whose key still exists,
+  // and ensure leaving transitions are rendered until they finish.
+  if (reused.length) {
+    let i = -1
+    each(reused, (keyIndex, prevIndex) => {
+      const t = prevTransitions![prevIndex]
+      if (~keyIndex) {
+        i = transitions.indexOf(t)
+        transitions[i] = { ...t, item: items[keyIndex] }
+      } else if (props.leave) {
+        transitions.splice(++i, 0, t)
+      }
+    })
+  }
 
   if (is.fun(sort)) {
     transitions.sort((a, b) => sort(a.item, b.item))
