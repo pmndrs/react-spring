@@ -27,9 +27,11 @@ const createAnimatedComponent = (Component: any) =>
 
     const forceUpdate = useForceUpdate()
     const nextProps = new AnimatedProps(rawProps, () => {
-      const didUpdate =
-        !!node.current &&
-        G.applyAnimatedValues(node.current, nextProps.getValue(true))
+      if (!node.current) return
+      const didUpdate = G.applyAnimatedValues(
+        node.current,
+        nextProps.getValue(true)
+      )
 
       // Re-render the component when native updates fail.
       if (didUpdate === false) {
