@@ -26,8 +26,8 @@ export function useTransition<T>(
   const items = toArray(data)
   const transitions: Transition[] = []
 
-  // Explicit keys are used to associate transitions with immutable items.
-  const keys = is.und(key) ? key : is.fun(key) ? items.map(key) : toArray(key)
+  // Keys help with reusing transitions between renders.
+  const keys = is.und(key) ? items : is.fun(key) ? items.map(key) : toArray(key)
 
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<Transition[] | null>(null)
@@ -46,7 +46,7 @@ export function useTransition<T>(
   if (prevTransitions && !reset)
     each(prevTransitions, t => {
       if (is.und(t.expiresBy)) {
-        prevKeys.push(keys ? t.key : t.item)
+        prevKeys.push(t.key)
         transitions.push(t)
       } else {
         clearTimeout(t.expirationId)
@@ -55,8 +55,8 @@ export function useTransition<T>(
 
   // Append new transitions for new items.
   each(items, (item, i) => {
-    const key = keys && keys[i]
-    if (prevKeys.indexOf(keys ? key : item) < 0) {
+    const key = keys[i]
+    if (prevKeys.indexOf(key) < 0) {
       const spring = new Controller()
       transitions.push({ id: spring.id, key, item, phase: MOUNT, spring })
     }
@@ -88,7 +88,7 @@ export function useTransition<T>(
         from = props.from
       }
     } else {
-      const isDeleted = (keys || items).indexOf(keys ? t.key : t.item) < 0
+      const isDeleted = keys.indexOf(t.key) < 0
       if (t.phase < LEAVE) {
         if (isDeleted) {
           to = props.leave
@@ -192,7 +192,7 @@ interface Change {
 
 interface Transition<T = any> {
   id: number
-  key?: keyof any
+  key: any
   item: T
   phase: Phase
   spring: Controller
