@@ -57,8 +57,7 @@ export function useTransition<T>(
   each(items, (item, i) => {
     const key = keys[i]
     if (prevKeys.indexOf(key) < 0) {
-      const spring = new Controller()
-      transitions.push({ id: spring.id, key, item, phase: MOUNT, spring })
+      transitions.push({ key, item, phase: MOUNT, spring: new Controller() })
     }
   })
 
@@ -178,7 +177,11 @@ export function useTransition<T>(
     transitions.map(t => {
       const elem: any = render({ ...t.spring.animated }, t.item)
       return elem && elem.type ? (
-        <elem.type {...elem.props} key={t.id} ref={elem.ref} />
+        <elem.type
+          {...elem.props}
+          key={is.str(t.key) || is.num(t.key) ? t.key : t.spring.id}
+          ref={elem.ref}
+        />
       ) : (
         elem
       )
@@ -191,7 +194,6 @@ interface Change {
 }
 
 interface Transition<T = any> {
-  id: number
   key: any
   item: T
   phase: Phase
