@@ -53,3 +53,9 @@ React 16.8+ has global state to support its "hooks" feature, so you need to ensu
     react: path.resolve('node_modules/react'),
   }
   ```
+
+# Publishing
+
+Run `yarn bump` to analyze commits and increment the version of any updated packages.
+
+Run `yarn release` to publish any packages with a new version.
