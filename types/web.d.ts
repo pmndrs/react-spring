@@ -192,15 +192,19 @@ export interface UseTransitionProps<TItem, DS extends object>
   /**
    * Values that apply to elements that are neither entering nor leaving (you can use this to update present elements), or: item => values
    */
-  update?: InferFrom<DS> | InferFrom<DS>[] | ((item: TItem) => InferFrom<DS>)                           
+  update?: InferFrom<DS> | InferFrom<DS>[] | ((item: TItem) => InferFrom<DS>)
   /**
    * Initial (first time) base values, optional (can be null)
    */
-  initial?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>) | null
+  initial?: InferFrom<DS> | ((item: TItem) => InferFrom<DS>) | null
   /**
    * Called when objects have disappeared for good
    */
   onDestroyed?: (isDestroyed: boolean) => void
+  /**
+   * Callback when the animation comes to a still-stand
+   */
+  onRest?: (ds: DS) => void
 }
 
 export interface UseTransitionResult<TItem, DS extends object> {
@@ -224,7 +228,7 @@ export function useTransition<TItem, DS extends object>(
   keys:
     | ((item: TItem) => TransitionKeyProps)
     | ReadonlyArray<TransitionKeyProps>
-    | TransitionKeyProps           
+    | TransitionKeyProps
     | null,
   values: Merge<DS, UseTransitionProps<TItem, DS>>
 ): UseTransitionResult<TItem, AnimatedValue<ForwardedProps<DS>>>[] // result array is safe to modify
