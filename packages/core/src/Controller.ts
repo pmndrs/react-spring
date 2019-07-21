@@ -239,7 +239,7 @@ export class Controller<State extends Indexable = any> {
       if (animated && shouldUpdate && this.animations[key].isNew) {
         // Ensure the initial value is up-to-date.
         if (animated.setValue) {
-          animated.setValue(value)
+          animated.setValue(computeGoalValue(value))
         } else {
           // Derived nodes need to be swapped out.
           animated = null
