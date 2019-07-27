@@ -15,6 +15,15 @@ const UPDATE = 2
 /** This transition will expire after animating */
 const LEAVE = 3
 
+export type UseTransitionProps<T> = { [key: string]: any | T } // TODO
+export type ItemsProp<T> = ReadonlyArray<T> | T | null | undefined
+export type ItemKeys<T> =
+  | ((item: T) => string | number)
+  | ReadonlyArray<string | number>
+  | string
+  | number
+  | null
+
 export function useTransition<T>(
   data: T | readonly T[],
   props: any,
