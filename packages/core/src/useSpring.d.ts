@@ -1,5 +1,11 @@
 import { RefObject } from 'react'
-import { PickAnimated, UnknownProps, OneOrMore, Merge } from './types/common'
+import {
+  PickAnimated,
+  UnknownProps,
+  OneOrMore,
+  Merge,
+  Falsy,
+} from './types/common'
 import {
   ToProp,
   SpringProps,
@@ -36,7 +42,7 @@ export interface UseSpringProps<Props extends object = {}>
    *
    * The `reset` prop also uses these values.
    */
-  from?: Partial<PickAnimated<Props>>
+  from?: Partial<PickAnimated<Props>> | Falsy
   /**
    * The end values of the current animations.
    *
@@ -44,5 +50,5 @@ export interface UseSpringProps<Props extends object = {}>
    *
    * As an async function, it can create animations on-the-fly.
    */
-  to?: ToProp
+  to?: ToProp | Falsy
 }
