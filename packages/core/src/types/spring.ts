@@ -32,12 +32,8 @@ export type AnimationValues<T extends object> = Remap<
 >
 
 export interface SpringStopFn<T extends object = any> {
-  /** Stop all animations and delays */
-  (finished?: boolean): void
   /** Stop the animations and delays of the given keys */
   (...keys: StringKeys<T>[]): void
-  /** Stop the animations and delays of the given keys */
-  (finished: boolean, ...keys: StringKeys<T>[]): void
 }
 
 /**

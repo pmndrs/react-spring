@@ -15,7 +15,6 @@ export const is = {
   str: (a: unknown): a is string => typeof a === 'string',
   num: (a: unknown): a is number => typeof a === 'number',
   und: (a: unknown): a is undefined => a === void 0,
-  boo: (a: unknown): a is boolean => typeof a === 'boolean',
 }
 
 interface EachFn {

@@ -127,25 +127,21 @@ export class Controller<State extends Indexable = any> {
   }
 
   /**
-   * Flush the update queue.
-   * If the queue is empty, try starting the frameloop.
+   * Flush the update queue, and call `onEnd` when they have settled.
+   *
+   * The `onEnd` callback does **not** wait for unsettled updates from previous `start` calls.
    */
   start(onEnd?: OnEnd) {
     if (this.queue.length) this._flush(onEnd)
-    else this._start(onEnd)
+    else if (onEnd) onEnd()
     return this
   }
 
   /** Stop one animation or all animations */
-  stop(...keys: StringKeys<State>[]): this
-  stop(finished?: boolean, ...keys: StringKeys<State>[]): this
-  stop(...keys: any[]) {
-    let finished = false
-    if (is.boo(keys[0])) [finished, ...keys] = keys
-
+  stop(...keys: StringKeys<State>[]) {
     // Stop animations by key
     if (keys.length) {
-      for (const key of keys as StringKeys<State>[]) {
+      for (const key of keys) {
         const index = this.configs.findIndex(config => key === config.key)
         this._stopAnimation(key)
         this.configs[index] = this.animations[key]
@@ -160,7 +156,7 @@ export class Controller<State extends Indexable = any> {
       this.configs = Object.values(this.animations) as any
 
       // Exit the frameloop
-      this._stop(finished)
+      this._stop()
     }
     return this
   }
@@ -205,7 +201,7 @@ export class Controller<State extends Indexable = any> {
       })
     }
     if (idle) {
-      this._stop(true)
+      this._stop()
     }
   }
 
@@ -257,12 +253,6 @@ export class Controller<State extends Indexable = any> {
     }
   }
 
-  // Listen for all animations to end.
-  private _onEnd(onEnd: OnEnd) {
-    if (this.runCount) this.onEndQueue.push(onEnd)
-    else onEnd(true)
-  }
-
   // Add this controller to the frameloop.
   private _start(onEnd?: OnEnd) {
     if (this.idle) {
@@ -270,11 +260,11 @@ export class Controller<State extends Indexable = any> {
         this.idle = false
         G.frameLoop.start(this)
       } else if (onEnd) {
-        return onEnd(true)
+        return onEnd()
       }
     }
     if (onEnd) {
-      this._onEnd(onEnd)
+      this.onEndQueue.push(onEnd)
     }
   }
 
@@ -298,14 +288,19 @@ export class Controller<State extends Indexable = any> {
   }
 
   // Remove this controller from the frameloop, and notify any listeners.
-  private _stop(finished?: boolean) {
+  private _stop() {
     this.idle = true
     G.frameLoop.stop(this)
+
+    const { onRest } = this.props
+    if (is.fun(onRest)) {
+      onRest(this.merged)
+    }
 
     const { onEndQueue } = this
     if (onEndQueue.length) {
       this.onEndQueue = []
-      each(onEndQueue, onEnd => onEnd(finished))
+      each(onEndQueue, onEnd => onEnd())
     }
   }
 
@@ -314,21 +309,15 @@ export class Controller<State extends Indexable = any> {
     const queue = this.queue.reduce(reduceDelays, [])
     this.queue.length = 0
 
-    // Track the number of active `_run` calls.
+    // Track the number of unsettled updates.
     let runsLeft = Object.keys(queue).length
     this.runCount += runsLeft
 
-    // Never assume that the last update always finishes last, since that's
-    // not true when 2+ async updates have indeterminate durations.
-    const onRunEnd: OnEnd = finished => {
+    // Any run can finish last.
+    const onRunEnd = () => {
       this.runCount--
-      if (--runsLeft) return
-      if (onEnd) onEnd(finished)
-      if (!this.runCount && finished) {
-        const { onRest } = this.props
-        if (is.fun(onRest)) {
-          onRest(this.merged)
-        }
+      if (!--runsLeft && onEnd) {
+        onEnd()
       }
     }
 
@@ -352,7 +341,7 @@ export class Controller<State extends Indexable = any> {
     } else if (this._diff(props)) {
       this._animate(props)._start(onEnd)
     } else {
-      this._onEnd(onEnd)
+      onEnd()
     }
   }
 
@@ -366,13 +355,13 @@ export class Controller<State extends Indexable = any> {
     // Async scripts can be declaratively cancelled.
     if (props.cancel === true) {
       this.props.asyncTo = void 0
-      return onEnd(false)
+      return onEnd()
     }
 
     // Never run more than one script at a time
     const { timestamp } = props
     if (!this._diff({ asyncTo: to, timestamp })) {
-      return onEnd(false)
+      return onEnd()
     }
 
     const isCancelled = () =>
@@ -404,9 +393,7 @@ export class Controller<State extends Indexable = any> {
       )
     }
 
-    queue
-      .catch(err => err !== this && console.error(err))
-      .then(() => onEnd(!isCancelled()))
+    queue.catch(err => err !== this && console.error(err)).then(onEnd)
   }
 
   // Merge every fresh prop. Returns true if one or more props changed.
