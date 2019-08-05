@@ -156,7 +156,9 @@ export class Controller<State extends Indexable = any> {
       this.configs = Object.values(this.animations) as any
 
       // Exit the frameloop
-      this._stop()
+      if (!this.idle) {
+        this._stop()
+      }
     }
     return this
   }
