@@ -558,10 +558,7 @@ export class Controller<State extends Indexable = any> {
         // Animatable strings use interpolation
         const isInterpolated = isAnimatableString(value)
         if (isInterpolated) {
-          const output: any[] = [
-            props.reset ? fromValue : animated.getValue(),
-            goalValue,
-          ]
+          const output: any[] = [props.reset ? fromValue : currValue, goalValue]
           let input = animatedValues[0]
           if (input) {
             input.setValue(0, false)
