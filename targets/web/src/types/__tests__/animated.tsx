@@ -97,4 +97,13 @@ describe('animated component', () => {
     scrollTop.setValue(20);
     expect(wrapper.scrollTop).toBe(20);
   });
+
+  it('accepts transform function and x/y/z as style keys', () => {
+    const AnimatedDiv = animated('div');
+    const { queryByTestId } = render(
+      <AnimatedDiv style={{ x: 10 }} data-testid="wrapper"></AnimatedDiv>
+    );
+    const wrapper: any = queryByTestId('wrapper')!;
+    expect(wrapper.style.transform).toBe('translate3d(10px,0,0)');
+  });
 });
