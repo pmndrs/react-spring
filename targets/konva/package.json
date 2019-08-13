@@ -14,7 +14,6 @@
   },
   "devDependencies": {
     "konva": "~2.6.0",
-    "react": "~16.8.0",
     "react-konva": "~16.8.0"
   },
   "scripts": {

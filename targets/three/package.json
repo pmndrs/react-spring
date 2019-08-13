@@ -13,7 +13,6 @@
     "three": ">=0.104"
   },
   "devDependencies": {
-    "react": "~16.8.0",
     "react-three-fiber": "~2.0.0",
     "three": "~0.104.0"
   },

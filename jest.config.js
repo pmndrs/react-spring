@@ -36,18 +36,22 @@ function createConfig(rootDir) {
   const { compilerOptions } = fs.readJsonSync(
     path.join(rootDir, 'tsconfig.json')
   )
+  compilerOptions.allowJs = true
   compilerOptions.noEmitOnError = false
   return {
     rootDir,
     transform: {
-      '.+\\.(ts|tsx)$': 'ts-jest',
+      '.+\\.(js|ts|tsx)$': 'ts-jest',
     },
     testMatch,
-    testEnvironment: 'node',
+    testEnvironment: 'jsdom',
     testPathIgnorePatterns: ['.+/(types|__snapshots__)/.+'],
     modulePathIgnorePatterns: ['dist'],
     moduleFileExtensions: ['ts', 'tsx', 'js'],
-    moduleNameMapper: getModuleNameMapper(compilerOptions),
+    moduleNameMapper: {
+      ...getModuleNameMapper(compilerOptions),
+      '^react$': '<rootDir>/../../node_modules/react',
+    },
     collectCoverageFrom: ['src/**/*'],
     coverageDirectory: './coverage',
     coverageReporters: ['json', 'html', 'text'],
