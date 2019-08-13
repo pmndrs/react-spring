@@ -16,9 +16,7 @@ export type Solve<T> = T
 export type Remap<T> = Solve<{ [P in keyof T]: T[P] }>
 
 /** Override the property types of `A` with `B` and merge any new properties */
-export type Merge<A, B> = Solve<
-  { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
->
+export type Merge<A, B> = Remap<Omit<A, keyof B> & B>
 
 /** Return the keys of `T` with values that are assignable to `U` */
 export type AssignableKeys<T, U> = T extends object
