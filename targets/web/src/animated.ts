@@ -1,6 +1,6 @@
 import { withAnimated, extendAnimated } from '@react-spring/animated'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { SpringValue, ElementType, ComponentPropsWithRef } from 'shared'
+import { SpringValue, ElementType, ComponentPropsWithRef, Merge } from 'shared'
 import { elements, JSXElements } from './elements'
 
 type DOMComponents = {
@@ -23,7 +23,7 @@ export { animated as a }
 export type AnimatedComponent<
   T extends ElementType
 > = ForwardRefExoticComponent<
-  AnimatedProps<ComponentPropsWithRef<T>> & {
+  AnimatedProps<Merge<ComponentPropsWithRef<T>, { style?: StyleProps }>> & {
     scrollTop?: SpringValue<number> | number
     scrollLeft?: SpringValue<number> | number
   }
@@ -36,10 +36,12 @@ export type AnimatedProps<Props extends object> = {
     : AnimatedProp<Props[P]>)
 }
 
-type CSSPropertyNames = keyof CSSProperties
-type CSSValidProperties<T extends object> = {
-  [P in keyof T & CSSPropertyNames]: T[P] extends CSSProperties[P] ? P : never
-}[keyof T & CSSPropertyNames]
+type StyleProps = Merge<CSSProperties, TransformProps>
+type StylePropKeys = keyof StyleProps
+
+type ValidStyleProps<T extends object> = {
+  [P in keyof T & StylePropKeys]: T[P] extends StyleProps[P] ? P : never
+}[keyof T & StylePropKeys]
 
 // The animated prop value of a React element
 type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
@@ -48,7 +50,7 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
     : DT extends void
     ? undefined
     : DT extends object
-    ? [CSSValidProperties<DT>] extends [never]
+    ? [ValidStyleProps<DT>] extends [never]
       ? DT extends ReadonlyArray<any>
         ? AnimatedStyles<DT>
         : DT
@@ -60,7 +62,7 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
 type AnimatedStyles<T extends ReadonlyArray<any>> = {
   [P in keyof T]: [T[P]] extends [infer DT]
     ? DT extends object
-      ? [CSSValidProperties<DT>] extends [never]
+      ? [ValidStyleProps<DT>] extends [never]
         ? DT extends ReadonlyArray<any>
           ? AnimatedStyles<DT>
           : DT
@@ -88,3 +90,50 @@ type AnimatedObject<T extends object> =
 type AnimatedLeaf<T> = [T] extends [object]
   ? never
   : SpringValue<Exclude<T, object | void>>
+
+type Angle = number | string
+type Length = number | string
+
+type TransformProps = {
+  transform?: string
+  x?: Length
+  y?: Length
+  z?: Length
+  translate?: Length | [Length, Length]
+  translateX?: Length
+  translateY?: Length
+  translateZ?: Length
+  translate3d?: [Length, Length, Length]
+  rotate?: Angle
+  rotateX?: Angle
+  rotateY?: Angle
+  rotateZ?: Angle
+  rotate3d?: [number, number, number, Angle]
+  scale?: number | [number, number]
+  scaleX?: number
+  scaleY?: number
+  scaleZ?: number
+  scale3d?: [number, number, number]
+  skew?: Angle | [Angle, Angle]
+  skewX?: Angle
+  skewY?: Angle
+  matrix?: [number, number, number, number, number, number]
+  matrix3d?: [
+    number, // a1
+    number,
+    number,
+    number,
+    number, // a2
+    number,
+    number,
+    number,
+    number, // a3
+    number,
+    number,
+    number,
+    number, // a4
+    number,
+    number,
+    number
+  ]
+}
