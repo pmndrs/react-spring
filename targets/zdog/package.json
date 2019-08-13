@@ -14,7 +14,6 @@
     "zdog": ">=1.0"
   },
   "devDependencies": {
-    "react": "~16.8.0",
     "react-dom": "~16.8.0",
     "react-zdog": "~1.0.0",
     "zdog": "~1.0.0"

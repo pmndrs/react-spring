@@ -12,9 +12,9 @@
     "react-dom": ">=16.8"
   },
   "devDependencies": {
-    "react": "~16.8.0",
-    "react-dom": "~16.8.0",
-    "react-testing-library": "~7.0.0"
+    "@testing-library/jest-dom": "^4.0.0",
+    "@testing-library/react": "^9.1.1",
+    "react-dom": "~16.9.0"
   },
   "scripts": {
     "build": "rollup -c"
