@@ -12,7 +12,6 @@ import {
 } from 'shared'
 import { deprecateInterpolate } from 'shared/deprecations'
 import { Animated } from './Animated'
-import { to } from './interpolate'
 import { toPayload, addChild, removeChild } from './AnimatedObject'
 
 export class AnimatedInterpolation<
@@ -36,7 +35,7 @@ export class AnimatedInterpolation<
   }
 
   to<T extends Animatable>(...args: InterpolatorArgs<Out, T>): SpringValue<T> {
-    return (to as any)(this, ...args)
+    return new AnimatedInterpolation(this, args as any)
   }
 
   interpolate<T extends Animatable>(
