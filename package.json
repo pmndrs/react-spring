@@ -35,7 +35,7 @@
   "scripts": {
     "build": "bic",
     "bump": "lerna version && yarn --force",
-    "clean": "lerna exec --parallel --no-bail -- rimraf dist .rpt2_cache .bic_cache .size-snapshot.json",
+    "clean": "lerna exec --parallel --no-bail -- rimraf node_modules dist .rpt2_cache .bic_cache .size-snapshot.json",
     "prepare": "node ./scripts/prepare.js && bic",
     "release": "lerna publish",
     "test": "jest",
