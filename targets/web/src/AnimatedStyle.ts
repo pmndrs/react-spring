@@ -7,7 +7,6 @@ import {
   AnimatedValue,
   isAnimated,
   to,
-  interpolate,
 } from '@react-spring/animated'
 
 /** The transform-functions
@@ -170,7 +169,7 @@ export class AnimatedStyle extends AnimatedObject {
     // interpolation of all the props, using the transform functions we defined
     // above
     if (props.length > 0) {
-      style.transform = interpolate(props, (...args) => {
+      style.transform = to(props, (...args) => {
         let transform = ''
         let identity = true
         for (let i = 0; i < args.length; i++) {
