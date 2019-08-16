@@ -52,6 +52,8 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is
     : DT extends ReadonlyArray<any>
     ? TransformArray extends DT
       ? AnimatedTransform
+      : DT extends ReadonlyArray<number | string>
+      ? AnimatedObject<DT>
       : AnimatedStyles<DT>
     : DT extends object
     ? [AssignableKeys<DT, ViewStyle>] extends [never]
@@ -80,13 +82,17 @@ export type AnimatedStyle<T> = [T, T] extends [infer T, infer DT] // T is a unio
     : [DT] extends [never]
     ? never
     : DT extends object
-    ? {
-        [P in keyof DT]: P extends 'transform'
-          ? AnimatedTransform
-          : AnimatedStyle<DT[P]>
-      }
+    ? AnimatedObject<DT>
     : DT | AnimatedLeaf<T>
   : never
+
+type AnimatedObject<T extends object> =
+  | (T extends ReadonlyArray<number | string> ? SpringValue<T> : never)
+  | {
+      [P in keyof T]: P extends 'transform'
+        ? AnimatedTransform
+        : AnimatedStyle<T[P]>
+    }
 
 type Indices<T> = Extract<keyof T, number>
 
