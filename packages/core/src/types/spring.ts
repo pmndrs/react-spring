@@ -28,7 +28,7 @@ export type SpringValues<T extends object> = AnimationValues<PickAnimated<T>>
 export type AnimationValues<T extends object> = Remap<
   { [key: string]: SpringValue<any> } & ({} extends Required<T>
     ? unknown
-    : { [P in keyof T]: SpringValue<T[P]> })
+    : { [P in keyof T]: SpringValue<Exclude<T[P], void>> })
 >
 
 export interface SpringStopFn<T extends object = any> {
