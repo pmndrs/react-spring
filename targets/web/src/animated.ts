@@ -76,9 +76,13 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
     : [DT] extends [never]
     ? never
     : DT extends object
-    ? { [P in keyof DT]: AnimatedStyle<DT[P]> }
+    ? AnimatedObject<DT>
     : DT | AnimatedLeaf<T>
   : never
+
+type AnimatedObject<T extends object> =
+  | { [P in keyof T]: AnimatedStyle<T[P]> }
+  | (T extends ReadonlyArray<number | string> ? SpringValue<T> : never)
 
 // An animated value that is not an object
 type AnimatedLeaf<T> = [T] extends [object]
