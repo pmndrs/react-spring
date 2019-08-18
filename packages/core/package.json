@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/core",
-  "version": "9.0.0-beta.32",
+  "version": "9.0.0-beta.33",
   "main": "src/index.ts",
   "scripts": {
     "build": "rollup -c",
