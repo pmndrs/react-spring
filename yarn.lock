@@ -1864,60 +1864,60 @@
     url-template "^2.0.8"
 
 "@react-spring/addons@link:packages/addons":
-  version "9.0.0-beta.31"
+  version "9.0.0-beta.32"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     use-memo-one "^1.1.0"
 
 "@react-spring/animated@link:packages/animated":
-  version "9.0.0-beta.31"
+  version "9.0.0-beta.32"
   dependencies:
     "@react-spring/shared" "link:packages/shared"
     tiny-invariant "^1.0.4"
 
 "@react-spring/core@link:packages/core":
-  version "9.0.0-beta.31"
+  version "9.0.0-beta.32"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
-  version "9.0.0-beta.31"
+  version "9.0.0-beta.32"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "9.0.0-beta.31"
+  version "9.0.0-beta.32"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/shared@link:packages/shared":
-  version "9.0.0-beta.31"
+  version "9.0.0-beta.32"
   dependencies:
     tiny-invariant "^1.0.4"
 
 "@react-spring/three@link:targets/three":
-  version "9.0.0-beta.31"
+  version "9.0.0-beta.32"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/web@link:targets/web":
-  version "9.0.0-beta.31"
+  version "9.0.0-beta.32"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/zdog@link:targets/zdog":
-  version "9.0.0-beta.31"
+  version "9.0.0-beta.32"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -3791,7 +3791,7 @@ dateformat@^3.0.0:
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
   integrity sha512-jyCETtSl3VMZMWeRo7iY1FL19ges1t55hMo5yaam4Jrsm5EPL89UQkoQRyiI+Yf4k8r2ZpdngkV8hr1lIdjb3Q==
 
-debug@2.6.9, debug@^2.2.0, debug@^2.3.3:
+debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.4.4:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   integrity sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
@@ -4620,12 +4620,12 @@ find-cache-dir@^2.0.0, find-cache-dir@^2.1.0:
     make-dir "^2.0.0"
     pkg-dir "^3.0.0"
 
-find-module-bin@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/find-module-bin/-/find-module-bin-1.1.0.tgz#5f465cf4b2431deb184b3ebaee8ad6c9c5af8523"
-  integrity sha512-v53mIFOiuump1BSkwURrLblQm+LpWDVQOkQdph/xLPRrbyCU48RryPUSYxih6+gkAdNw9AkqWL7OXUhmE1ddmg==
+find-module-bin@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/find-module-bin/-/find-module-bin-0.0.2.tgz#99ef84fb548aedae3bfe4da14b61846cd9888666"
+  integrity sha1-me+E+1SK7a47/k2hS2GEbNmIhmY=
   dependencies:
-    debug "^4.1.1"
+    debug "^2.4.4"
     global-paths "^1.0.0"
 
 find-up@^1.0.0:

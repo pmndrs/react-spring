@@ -14,9 +14,9 @@
     }
   },
   "dist/addons.cjs.js": {
-    "bundled": 301,
-    "minified": 248,
-    "gzipped": 191
+    "bundled": 316,
+    "minified": 263,
+    "gzipped": 202
   },
   "dist/konva.js": {
     "bundled": 36,
@@ -33,9 +33,9 @@
     }
   },
   "dist/konva.cjs.js": {
-    "bundled": 297,
-    "minified": 244,
-    "gzipped": 187
+    "bundled": 312,
+    "minified": 259,
+    "gzipped": 198
   },
   "dist/native.js": {
     "bundled": 37,
@@ -52,9 +52,9 @@
     }
   },
   "dist/native.cjs.js": {
-    "bundled": 301,
-    "minified": 248,
-    "gzipped": 187
+    "bundled": 316,
+    "minified": 263,
+    "gzipped": 200
   },
   "dist/three.js": {
     "bundled": 36,
@@ -71,9 +71,9 @@
     }
   },
   "dist/three.cjs.js": {
-    "bundled": 297,
-    "minified": 244,
-    "gzipped": 187
+    "bundled": 312,
+    "minified": 259,
+    "gzipped": 198
   },
   "dist/universal.js": {
     "bundled": 35,
@@ -90,9 +90,9 @@
     }
   },
   "dist/universal.cjs.js": {
-    "bundled": 293,
-    "minified": 240,
-    "gzipped": 185
+    "bundled": 308,
+    "minified": 255,
+    "gzipped": 196
   },
   "dist/web.js": {
     "bundled": 34,
@@ -109,9 +109,9 @@
     }
   },
   "dist/web.cjs.js": {
-    "bundled": 289,
-    "minified": 236,
-    "gzipped": 185
+    "bundled": 304,
+    "minified": 251,
+    "gzipped": 196
   },
   "dist/zdog.js": {
     "bundled": 35,
@@ -128,8 +128,8 @@
     }
   },
   "dist/zdog.cjs.js": {
-    "bundled": 293,
-    "minified": 240,
-    "gzipped": 186
+    "bundled": 308,
+    "minified": 255,
+    "gzipped": 197
   }
 }
