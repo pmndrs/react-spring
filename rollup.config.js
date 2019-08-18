@@ -7,7 +7,6 @@ import dts from 'rollup-plugin-dts'
 import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import { terser } from 'rollup-plugin-terser'
-import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
 const external = id => !id.startsWith('.') && !id.startsWith(root)
@@ -72,7 +71,6 @@ export const esmBundle = config => ({
         '>1%, not dead, not ie 11, not op_mini all'
       )
     ),
-    sizeSnapshot(),
     config.minify && terser(),
   ],
 })
@@ -92,7 +90,6 @@ export const cjsBundle = config => ({
     resolve({ extensions }),
     ts({ check: false }),
     babel(getBabelOptions({ useESModules: false })),
-    sizeSnapshot(),
     config.minify && terser(),
   ],
 })
