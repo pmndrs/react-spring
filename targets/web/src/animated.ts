@@ -1,7 +1,14 @@
 import { withAnimated, extendAnimated } from '@react-spring/animated'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { SpringValue, ElementType, ComponentPropsWithRef, Merge } from 'shared'
+import { SpringValue, ElementType, Merge } from 'shared'
 import { elements, JSXElements } from './elements'
+
+// Avoid https://github.com/microsoft/TypeScript/issues/29949
+type ComponentPropsWithRef<
+  T extends ElementType
+> = T extends React.ComponentClass<infer P>
+  ? React.PropsWithoutRef<P> & { ref?: any }
+  : React.PropsWithRef<React.ComponentProps<T>>
 
 type DOMComponents = {
   [Tag in JSXElements]: AnimatedComponent<Tag>
@@ -23,10 +30,12 @@ export { animated as a }
 export type AnimatedComponent<
   T extends ElementType
 > = ForwardRefExoticComponent<
-  AnimatedProps<Merge<ComponentPropsWithRef<T>, { style?: StyleProps }>> & {
-    scrollTop?: SpringValue<number> | number
-    scrollLeft?: SpringValue<number> | number
-  }
+  AnimatedProps<
+    Merge<
+      ComponentPropsWithRef<T>,
+      { style?: StyleProps; scrollTop?: number; scrollLeft?: number }
+    >
+  >
 >
 
 /** The props of an `animated()` component */
