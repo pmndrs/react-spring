@@ -212,8 +212,9 @@ export class FrameLoop {
         active = true
       }
 
-      animated.setValue(position)
-      animated.lastPosition = position
+      const roundPosition = roundToStep(position, config.step)
+      animated.setValue(roundPosition)
+      animated.lastPosition = animated.done ? roundPosition : position
     }
 
     if (changes && changed) {
@@ -222,4 +223,24 @@ export class FrameLoop {
 
     return active
   }
+}
+
+function roundToStep(n: number, step?: number) {
+  if (step) {
+    n = Math.round(n / step) * step
+    const p = getPrecision(step)
+    if (p) {
+      const q = Math.pow(10, p)
+      return Math.round(q * n + q / 1e16) / q
+    }
+  }
+  return n
+}
+
+function getPrecision(n: number) {
+  if (n % 1) {
+    const s = String(n)
+    return s.length - s.indexOf('.') - 1
+  }
+  return 0
 }

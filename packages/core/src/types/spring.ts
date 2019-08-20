@@ -99,7 +99,7 @@ export interface SpringConfig {
   velocity?: number
   clamp?: boolean
   precision?: number
-  delay?: number
+  step?: number
   decay?: number | boolean
   duration?: number
   easing?: EasingFunction
