@@ -12,6 +12,9 @@ export abstract class Animated {
   /** Returns all values contained by this node. Pass true for only the animated values. */
   abstract getValue(animated?: boolean): any
 
+  /** Returns all goal values contained by this node. Pass true for only the animated values. */
+  abstract getGoalValue(animated?: boolean): any
+
   /** Returns the set of `AnimatedValue` nodes contained by this node. */
   getPayload(): ReadonlySet<AnimatedValue> {
     return this.payload!

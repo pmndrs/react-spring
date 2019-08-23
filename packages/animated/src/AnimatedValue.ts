@@ -11,6 +11,7 @@ export class AnimatedValue<T = unknown> extends Animated
   private views = new Set<AnimatedProps>()
 
   value: T
+  goalValue: T
   startPosition!: number
   lastPosition!: number
   lastVelocity?: number
@@ -21,6 +22,7 @@ export class AnimatedValue<T = unknown> extends Animated
   constructor(value: T) {
     super()
     this.value = value
+    this.goalValue = value
     this.payload = new Set([this])
     if (is.num(value)) {
       this.startPosition = value
@@ -30,6 +32,10 @@ export class AnimatedValue<T = unknown> extends Animated
 
   getValue() {
     return this.value
+  }
+
+  getGoalValue() {
+    return this.goalValue
   }
 
   setValue(value: T, flush?: boolean) {

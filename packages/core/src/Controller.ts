@@ -620,6 +620,8 @@ export class Controller<State extends Indexable = any> {
           }
         }
 
+        updateGoalValue(animated, goalValue)
+
         // Only change the "config" of updated animations.
         const config: SpringConfig =
           callProp(props.config, key) ||
@@ -716,6 +718,7 @@ export class Controller<State extends Indexable = any> {
     // The current value becomes the goal value,
     // which ensures the integrity of the diffing algorithm.
     const goalValue = animated.getValue()
+    updateGoalValue(animated, goalValue)
     if (this.props.to) {
       this.props.to[key] = goalValue
     }
@@ -800,6 +803,16 @@ function computeGoalValue<T>(value: T): T {
         output: [value, value],
       })(1)
     : value
+}
+
+// Update the goal value of animated
+function updateGoalValue(animated: Animated, goalValue: any) {
+  if (animated instanceof AnimatedArray) {
+    const nodes = animated.getPayload()
+    each(nodes, node => (node.goalValue = goalValue))
+  } else if (animated instanceof AnimatedValue) {
+    animated.goalValue = goalValue
+  }
 }
 
 // Compare animatable values

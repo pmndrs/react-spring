@@ -17,6 +17,10 @@ export class AnimatedArray extends AnimatedObject
     return this.source.map(node => node.getValue(animated))
   }
 
+  getGoalValue(animated?: boolean) {
+    return this.source.map(node => node.getGoalValue(animated))
+  }
+
   setValue(value: any, flush?: boolean) {
     const nodes = this.payload
     if (is.arr(value)) {

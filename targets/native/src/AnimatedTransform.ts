@@ -25,6 +25,16 @@ export class AnimatedTransform extends Animated {
     })
   }
 
+  getGoalValue() {
+    return this.source.map(transform => {
+      const obj: any = {}
+      each(transform, (val, key) => {
+        obj[key] = isAnimated(val) ? val.getGoalValue() : val
+      })
+      return obj
+    })
+  }
+
   updatePayload(prev: Animated, next: Animated) {
     const source = [...this.source]
     each(source, (transform, i) => {

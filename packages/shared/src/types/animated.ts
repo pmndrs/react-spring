@@ -24,6 +24,10 @@ export interface SpringValue<T = any> {
    */
   getValue(): T
   /**
+   * Get the animated goal value.
+   */
+  getGoalValue(): T
+  /**
    * Interpolate the value with a custom interpolation function,
    * a configuration object, or keyframe-like ranges.
    *

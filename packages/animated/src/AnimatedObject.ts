@@ -21,6 +21,18 @@ export class AnimatedObject extends Animated {
     return obj
   }
 
+  getGoalValue(animated?: boolean) {
+    const obj: any = {}
+    each(this.source, (val, key) => {
+      if (isAnimated(val)) {
+        obj[key] = val.getGoalValue(animated)
+      } else if (!animated) {
+        obj[key] = val
+      }
+    })
+    return obj
+  }
+
   updatePayload(prev: Animated, next: Animated) {
     const source = { ...this.source }
     each(source, (val, key) => {

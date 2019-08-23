@@ -34,6 +34,13 @@ export class AnimatedInterpolation<
     return (this.calc as any)(...args)
   }
 
+  getGoalValue(animated?: boolean): Out {
+    const args = is.arr(this.source)
+      ? this.source.map(node => node.getGoalValue(animated))
+      : toArray(this.source.getGoalValue(animated))
+    return (this.calc as any)(...args)
+  }
+
   to<T extends Animatable>(...args: InterpolatorArgs<Out, T>): SpringValue<T> {
     return new AnimatedInterpolation(this, args as any)
   }
