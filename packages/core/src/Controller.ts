@@ -58,12 +58,6 @@ type CachedProps<State extends object> = Merge<
   }
 >
 
-type Options<State extends object> = {
-  initial: CachedProps<State>
-  set: CachedProps<State>
-  next: CachedProps<State>
-}
-
 type OptionKey =
   | 'onAnimate'
   | 'onStart'
@@ -72,7 +66,7 @@ type OptionKey =
   | 'immediate'
   | 'config'
 
-const options: OptionKey[] = [
+const optionKeys: OptionKey[] = [
   'onAnimate',
   'onStart',
   'onFrame',
@@ -104,7 +98,10 @@ export class Controller<State extends Indexable = any> {
   onEndQueue: OnEnd[] = []
   cancelledAt = 0
 
-  options: Options<State> = { initial: {}, set: {}, next: {} }
+  options: CachedProps<State> = {}
+  initialOptions: CachedProps<State> = {}
+  setOptions: CachedProps<State> = {}
+  nextOptions: CachedProps<State> = {}
 
   constructor(props?: Partial<State> & PendingProps<State>) {
     if (props) this.update(props).start()
@@ -322,7 +319,7 @@ export class Controller<State extends Indexable = any> {
     this.idle = true
     G.frameLoop.stop(this)
 
-    const onRest = this._getOptions('onRest')
+    const { onRest } = this.options
     if (is.fun(onRest)) {
       onRest(this.merged)
     }
@@ -366,11 +363,16 @@ export class Controller<State extends Indexable = any> {
 
   // Update the props and animations
   private _run(props: CachedProps<State>, onEnd: OnEnd) {
-    if (!this.props.to) this.options.initial = this._retrieveOptions(props)
-    else if (props.async) this.options.next = this._retrieveOptions(props)
-    else {
-      this.options.set = this._retrieveOptions(props)
-      this.options.next = {}
+    const options = this._retrieveOptions(props)
+    if (!this.props.to) {
+      this.initialOptions = options
+      this.options = this.initialOptions
+    } else if (props.async === true) {
+      const { onAnimate, onStart, onRest, ...set } = this.setOptions
+      this.options = { ...set, ...options }
+    } else {
+      this.setOptions = { ...this.initialOptions, ...options }
+      this.options = this.setOptions
     }
 
     if (is.arr(props.to) || is.fun(props.to)) {
@@ -430,28 +432,26 @@ export class Controller<State extends Indexable = any> {
       )
     }
 
-    queue.catch(err => err !== this && console.error(err)).then(onEnd)
-  }
-
-  private _getOptions<K extends OptionKey>(key: K): CachedProps<State>[K] {
-    return (
-      this.options.next[key] ||
-      this.options.set[key] ||
-      this.options.initial[key]
-    )
+    queue
+      .catch(err => err !== this && console.error(err))
+      .then(() => {
+        const { onRest } = this.setOptions
+        if (is.fun(onRest)) {
+          onRest(this.merged)
+        }
+      })
+      .then(onEnd)
   }
 
   private _retrieveOptions(props: CachedProps<State>): CachedProps<State> {
     const cb: CachedProps<State> = {}
     if (props) {
-      options.forEach(key => {
+      optionKeys.forEach(key => {
         if (key in props) {
           cb[key] = props[key]
-          delete props[key]
         }
       })
     }
-
     return cb
   }
 
@@ -461,6 +461,8 @@ export class Controller<State extends Indexable = any> {
   private _diff({
     timestamp,
     delay,
+    config,
+    immediate,
     reverse,
     attach,
     async,
@@ -514,7 +516,7 @@ export class Controller<State extends Indexable = any> {
     if ('reset' in props) this.props.reset = false
     if ('cancel' in props) this.props.cancel = void 0
 
-    this.props.onFrame = this._getOptions('onFrame')
+    this.props.onFrame = this.options.onFrame
 
     return changed
   }
@@ -528,7 +530,7 @@ export class Controller<State extends Indexable = any> {
   private _animate(props: PendingProps<State>) {
     const { from = emptyObj, to = emptyObj, parent } = this.props
 
-    const onAnimate = this._getOptions('onAnimate')
+    const { onAnimate } = this.options
 
     if (is.fun(onAnimate)) {
       onAnimate(props as any, this as any)
@@ -601,7 +603,7 @@ export class Controller<State extends Indexable = any> {
         isAttaching ||
         !isEqual(goalValue, state.isNew ? currValue : state.goalValue)
       ) {
-        const immediate = !!callProp(this._getOptions('immediate'), key)
+        const immediate = !!callProp(this.options.immediate, key)
 
         const isActive = animatedValues.some(node => !node.done)
         const fromValue = !is.und(from[key])
@@ -672,8 +674,7 @@ export class Controller<State extends Indexable = any> {
         }
 
         // Only change the "config" of updated animations.
-        const config: SpringConfig =
-          callProp(this._getOptions('config')) || emptyObj
+        const config: SpringConfig = callProp(this.options.config) || emptyObj
 
         if (!(immediate || G.skipAnimation)) {
           started.push(key)
@@ -711,7 +712,7 @@ export class Controller<State extends Indexable = any> {
     if (changed) {
       if (started.length) {
         this._attach(started)
-        const onStart = this._getOptions('onStart')
+        const { onStart } = this.options
         if (is.fun(onStart))
           each(started, key => {
             onStart(this.animations[key] as any)
