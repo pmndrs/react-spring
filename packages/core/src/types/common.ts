@@ -104,4 +104,5 @@ export interface ReservedProps {
   onDestroyed?: any
   timestamp?: any
   attach?: any
+  async?: boolean
 }

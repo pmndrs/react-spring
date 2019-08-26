@@ -56,6 +56,7 @@ function getForwardProps<Props extends ReservedProps>(
     onDestroyed,
     timestamp,
     attach,
+    async,
     ...forward
   } = props
   return forward
