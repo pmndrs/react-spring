@@ -184,7 +184,6 @@ export class FrameLoop {
           position = position + (velocity * 1) / 1000
         }
 
-        animated.lastTime = time
         animated.lastVelocity = velocity
 
         // Conditions for stopping the spring animation
@@ -214,6 +213,7 @@ export class FrameLoop {
 
       animated.setValue(position)
       animated.lastPosition = position
+      animated.lastTime = time
     }
 
     if (changes && changed) {
