@@ -162,6 +162,10 @@ export class FrameLoop {
           (velocity / (1 - decay)) *
             (1 - Math.exp(-(1 - decay) * (time - startTime)))
 
+        // derivative of position
+        animated.lastVelocity =
+          velocity * Math.exp(-(1 - decay) * (time - startTime))
+
         finished = Math.abs(animated.lastPosition - position) < 0.1
         if (finished) to = position
       }
