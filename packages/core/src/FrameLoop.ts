@@ -132,6 +132,12 @@ export class FrameLoop {
 
       const from: any = config.fromValues[i]
       const startTime = animated.startTime!
+      const lastTime = animated.lastTime !== void 0 ? animated.lastTime : time
+      const x0 = to - from // initial displacement of the spring at t = 0
+
+      let deltaTime = time - lastTime
+      if (deltaTime > 64) deltaTime = 64
+      animated.elapsedTime! += deltaTime
 
       // Break animation when string values are involved
       if (typeof from === 'string' || typeof to === 'string') {
@@ -142,15 +148,19 @@ export class FrameLoop {
 
       let finished = false
       let position = animated.lastPosition
-      let velocity = Array.isArray(config.initialVelocity)
+      let velocity = 0.0
+
+      // initial velocity
+      const v0 = Array.isArray(config.initialVelocity)
         ? config.initialVelocity[i]
         : config.initialVelocity
 
       // Duration easing
       if (config.duration !== void 0) {
         position =
-          from +
-          config.easing!((time - startTime) / config.duration) * (to - from)
+          from + config.easing!((time - startTime) / config.duration) * x0
+
+        velocity = (position - animated.lastPosition) / deltaTime
 
         finished = time >= startTime + config.duration
       }
@@ -159,36 +169,74 @@ export class FrameLoop {
         const decay = config.decay === true ? 0.998 : config.decay
         position =
           from +
-          (velocity / (1 - decay)) *
-            (1 - Math.exp(-(1 - decay) * (time - startTime)))
+          (v0 / (1 - decay)) *
+            (1 - Math.exp(-(1 - decay) * animated.elapsedTime))
 
         // derivative of position
-        animated.lastVelocity =
-          velocity * Math.exp(-(1 - decay) * (time - startTime))
+        velocity = v0 * Math.exp(-(1 - decay) * animated.elapsedTime)
 
         finished = Math.abs(animated.lastPosition - position) < 0.1
         if (finished) to = position
       }
       // Spring easing
       else {
-        let lastTime = animated.lastTime !== void 0 ? animated.lastTime : time
-        if (animated.lastVelocity !== void 0) {
-          velocity = animated.lastVelocity
-        }
+        // from https://github.com/skevy/wobble/blob/develop/src/index.ts
 
-        // If we lost a lot of frames just jump to the end.
-        if (time > lastTime + 64) lastTime = time
-        // http://gafferongames.com/game-physics/fix-your-timestep/
-        const numSteps = Math.floor(time - lastTime)
-        for (let n = 0; n < numSteps; ++n) {
-          const force = -config.tension! * (position - to)
-          const damping = -config.friction! * velocity
-          const acceleration = (force + damping) / config.mass!
-          velocity = velocity + (acceleration * 1) / 1000
-          position = position + (velocity * 1) / 1000
-        }
+        const c = config.friction!
+        const m = config.mass!
+        const k = config.tension!
 
-        animated.lastVelocity = velocity
+        const zeta = c / (2 * Math.sqrt(k * m)) // damping ratio (dimensionless)
+        const w0 = Math.sqrt(k / m) / 1000 // undamped angular frequency of the oscillator (rad/ms)
+        const w1 = w0 * Math.sqrt(1.0 - zeta * zeta) // exponential decay
+        const w2 = w0 * Math.sqrt(zeta * zeta - 1.0) // frequency of damped oscillation
+
+        const t = animated.elapsedTime
+        if (zeta < 1) {
+          // Under damped
+          const envelope = Math.exp(-zeta * w0 * t)
+          position =
+            to -
+            envelope *
+              (((v0 + zeta * w0 * x0) / w1) * Math.sin(w1 * t) +
+                x0 * Math.cos(w1 * t))
+          // This looks crazy -- it's actually just the derivative of the
+          // position function
+          velocity =
+            zeta *
+              w0 *
+              envelope *
+              ((Math.sin(w1 * t) * (-v0 + zeta * w0 * x0)) / w1 +
+                x0 * Math.cos(w1 * t)) -
+            envelope *
+              (Math.cos(w1 * t) * (-v0 + zeta * w0 * x0) -
+                w1 * x0 * Math.sin(w1 * t))
+        } else if (zeta === 1) {
+          // Critically damped
+          const envelope = Math.exp(-w0 * t)
+          position = to - envelope * (x0 + (-v0 + w0 * x0) * t)
+          velocity = envelope * (-v0 * (t * w0 - 1) + t * x0 * (w0 * w0))
+        } else {
+          // Overdamped
+          const envelope = Math.exp(-zeta * w0 * t)
+          position =
+            to -
+            (envelope *
+              ((v0 + zeta * w0 * x0) * Math.sinh(w2 * t) +
+                w2 * x0 * Math.cosh(w2 * t))) /
+              w2
+          velocity =
+            (envelope *
+              zeta *
+              w0 *
+              (Math.sinh(w2 * t) * (v0 + zeta * w0 * x0) +
+                x0 * w2 * Math.cosh(w2 * t))) /
+              w2 -
+            (envelope *
+              (w2 * Math.cosh(w2 * t) * (v0 + zeta * w0 * x0) +
+                w2 * w2 * x0 * Math.sinh(w2 * t))) /
+              w2
+        }
 
         // Conditions for stopping the spring animation
         const isOvershooting =
@@ -199,9 +247,7 @@ export class FrameLoop {
             : false
         const isVelocity = Math.abs(velocity) <= config.precision!
         const isDisplacement =
-          config.tension !== 0
-            ? Math.abs(to - position) <= config.precision!
-            : true
+          k !== 0 ? Math.abs(to - position) <= config.precision! : true
 
         finished = isOvershooting || (isVelocity && isDisplacement)
       }
@@ -217,6 +263,7 @@ export class FrameLoop {
 
       animated.setValue(position)
       animated.lastPosition = position
+      animated.lastVelocity = velocity
       animated.lastTime = time
     }
 
