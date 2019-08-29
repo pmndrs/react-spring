@@ -125,34 +125,47 @@ export class FrameLoop {
       const target: any = to instanceof Animated ? to : null
       if (target) to = target.getValue()
 
-      // Jump to end value for immediate animations
-      if (config.immediate) {
-        animated.setValue(to)
-        animated.done = true
-        continue
-      }
-
       const from: any = config.fromValues[i]
-      const startTime = animated.startTime!
 
-      // Break animation when string values are involved
-      if (typeof from === 'string' || typeof to === 'string') {
+      // Jump to end value for immediate animations
+      if (
+        config.immediate ||
+        typeof from === 'string' ||
+        typeof to === 'string'
+      ) {
         animated.setValue(to)
         animated.done = true
         continue
       }
+
+      const startTime = animated.startTime!
+      const lastTime = animated.lastTime !== void 0 ? animated.lastTime : time
+
+      let deltaTime = time - lastTime
+
+      // http://gafferongames.com/game-physics/fix-your-timestep/
+      if (deltaTime > 64) {
+        deltaTime = 64
+      }
+
+      animated.elapsedTime! += deltaTime
+
+      const v0 = Array.isArray(config.initialVelocity)
+        ? config.initialVelocity[i]
+        : config.initialVelocity
 
       let finished = false
       let position = animated.lastPosition
-      let velocity = Array.isArray(config.initialVelocity)
-        ? config.initialVelocity[i]
-        : config.initialVelocity
+
+      let velocity: number
 
       // Duration easing
       if (config.duration !== void 0) {
         position =
           from +
-          config.easing!((time - startTime) / config.duration) * (to - from)
+          config.easing!(animated.elapsedTime! / config.duration) * (to - from)
+
+        velocity = (position - animated.lastPosition) / deltaTime
 
         finished = time >= startTime + config.duration
       }
@@ -161,50 +174,50 @@ export class FrameLoop {
         const decay = config.decay === true ? 0.998 : config.decay
         position =
           from +
-          (velocity / (1 - decay)) *
-            (1 - Math.exp(-(1 - decay) * (time - startTime)))
+          (v0 / (1 - decay)) *
+            (1 - Math.exp(-(1 - decay) * animated.elapsedTime!))
+
+        // derivative of position
+        velocity = v0 * Math.exp(-(1 - decay) * animated.elapsedTime!)
 
         finished = Math.abs(animated.lastPosition - position) < 0.1
         if (finished) to = position
       }
       // Spring easing
       else {
-        let lastTime = animated.lastTime !== void 0 ? animated.lastTime : time
-        if (animated.lastVelocity !== void 0) {
-          velocity = animated.lastVelocity
-        }
-
-        // If we lost a lot of frames just jump to the end.
-        if (time > lastTime + 64) lastTime = time
-        // http://gafferongames.com/game-physics/fix-your-timestep/
-        const numSteps = Math.floor(time - lastTime)
+        velocity =
+          animated.lastVelocity !== void 0 ? animated.lastVelocity : v0 * 1000
+        const dt = 1
+        const numSteps = Math.floor(deltaTime) / dt
         for (let n = 0; n < numSteps; ++n) {
           const force = -config.tension! * (position - to)
           const damping = -config.friction! * velocity
           const acceleration = (force + damping) / config.mass!
-          velocity = velocity + (acceleration * 1) / 1000
-          position = position + (velocity * 1) / 1000
+          velocity = velocity + (acceleration * dt) / 1000
+          position = position + (velocity * dt) / 1000
         }
 
-        animated.lastTime = time
-        animated.lastVelocity = velocity
-
         // Conditions for stopping the spring animation
-        const isOvershooting =
-          config.clamp && config.tension !== 0
-            ? from < to
-              ? position > to
-              : position < to
-            : false
+        const isBouncing = config.clamp
+          ? from < to
+            ? position > to && velocity > 0
+            : position < to && velocity < 0
+          : false
+
+        if (isBouncing) {
+          velocity =
+            -velocity * (typeof config.clamp! === 'number' ? config.clamp! : 0)
+        }
+
         const isVelocity = Math.abs(velocity) <= config.precision!
         const isDisplacement =
           config.tension !== 0
             ? Math.abs(to - position) <= config.precision!
             : true
 
-        finished = isOvershooting || (isVelocity && isDisplacement)
+        finished =
+          (isBouncing && velocity === 0) || (isVelocity && isDisplacement)
       }
-
       // Trails aren't done until their parents conclude
       if (finished && !(target && !target.done)) {
         // Ensure that we end up with a round value
@@ -216,6 +229,8 @@ export class FrameLoop {
 
       animated.setValue(position)
       animated.lastPosition = position
+      animated.lastVelocity = velocity
+      animated.lastTime = time
     }
 
     if (changes && changed) {
