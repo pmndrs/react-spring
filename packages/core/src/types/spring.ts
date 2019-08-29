@@ -97,7 +97,7 @@ export interface SpringConfig {
   tension?: number
   friction?: number
   velocity?: number
-  clamp?: boolean
+  clamp?: number | boolean
   precision?: number
   delay?: number
   decay?: number | boolean
@@ -177,6 +177,7 @@ export interface ActiveAnimation<T = unknown, P extends string = string>
   config: SpringConfig
   initialVelocity: number
   immediate: boolean
+  w0: number
   toValues: Arrify<T>
   fromValues: Arrify<T>
 }
