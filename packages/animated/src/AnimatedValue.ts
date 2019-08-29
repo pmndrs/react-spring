@@ -13,19 +13,16 @@ export class AnimatedValue<T = unknown> extends Animated
   value: T
   startPosition!: number
   lastPosition!: number
-  lastVelocity?: number
-  startTime?: number
-  lastTime?: number
-  done = false
+  lastVelocity!: number | null
+  startTime!: number
+  elapsedTime!: number
+  done!: boolean
 
   constructor(value: T) {
     super()
     this.value = value
     this.payload = new Set([this])
-    if (is.num(value)) {
-      this.startPosition = value
-      this.lastPosition = value
-    }
+    this.reset(false)
   }
 
   getValue() {
@@ -59,9 +56,11 @@ export class AnimatedValue<T = unknown> extends Animated
     if (is.num(this.value)) {
       this.startPosition = this.value
       this.lastPosition = this.value
-      this.lastVelocity = isActive ? this.lastVelocity : undefined
-      this.lastTime = isActive ? this.lastTime : undefined
+      if (!isActive) {
+        this.lastVelocity = null
+      }
       this.startTime = G.now()
+      this.elapsedTime = 0
     }
     this.done = false
     this.views.clear()

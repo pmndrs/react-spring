@@ -25,7 +25,7 @@ export let createStringInterpolator: (
 
 /** Provide a custom `FrameLoop` instance */
 export let frameLoop: {
-  update: () => boolean
+  update: (time?: number) => boolean
   controllers: Map<number, any>
   start(controller: any): void
   stop(controller: any): void
