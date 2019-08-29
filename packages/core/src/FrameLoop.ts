@@ -4,7 +4,7 @@ import { FrameRequestCallback } from 'shared/types'
 import { Controller, FrameUpdate } from './Controller'
 import { ActiveAnimation } from './types/spring'
 
-type FrameUpdater = (this: FrameLoop) => boolean
+type FrameUpdater = (this: FrameLoop, time?: number) => boolean
 type FrameListener = (this: FrameLoop, updates: FrameUpdate[]) => void
 type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
@@ -38,6 +38,8 @@ export class FrameLoop {
    */
   requestFrame: RequestFrameFn
 
+  lastTime?: number
+
   constructor({
     update,
     onFrame,
@@ -62,34 +64,44 @@ export class FrameLoop {
 
     this.update =
       (update && update.bind(this)) ||
-      (() => {
+      ((time?: number) => {
         if (this.idle) {
           return false
         }
 
-        // Update the animations.
-        const updates: FrameUpdate[] = []
-        for (const id of Array.from(this.controllers.keys())) {
-          let idle = true
-          const ctrl = this.controllers.get(id)!
-          const changes: FrameUpdate[2] = ctrl.props.onFrame ? [] : null
-          for (const config of ctrl.configs) {
-            if (config.idle) continue
-            if (this.advance(config, changes)) {
-              idle = false
+        time = time !== void 0 ? time : performance.now()
+        this.lastTime = this.lastTime !== void 0 ? this.lastTime : time
+        let dt = time - this.lastTime!
+
+        // http://gafferongames.com/game-physics/fix-your-timestep/
+        if (dt > 64) dt = 64
+
+        if (dt > 0) {
+          // Update the animations.
+          const updates: FrameUpdate[] = []
+          for (const id of Array.from(this.controllers.keys())) {
+            let idle = true
+            const ctrl = this.controllers.get(id)!
+            const changes: FrameUpdate[2] = ctrl.props.onFrame ? [] : null
+            for (const config of ctrl.configs) {
+              if (config.idle) continue
+              if (this.advance(dt, config, changes)) {
+                idle = false
+              }
+            }
+            if (idle || changes) {
+              updates.push([id, idle, changes])
             }
           }
-          if (idle || changes) {
-            updates.push([id, idle, changes])
+
+          // Notify the controllers!
+          this.onFrame(updates)
+          this.lastTime = time
+
+          // Are we done yet?
+          if (!this.controllers.size) {
+            return !(this.idle = true)
           }
-        }
-
-        // Notify the controllers!
-        this.onFrame(updates)
-
-        // Are we done yet?
-        if (!this.controllers.size) {
-          return !(this.idle = true)
         }
 
         // Keep going.
@@ -102,6 +114,7 @@ export class FrameLoop {
     this.controllers.set(ctrl.id, ctrl)
     if (this.idle) {
       this.idle = false
+      this.lastTime = undefined
       this.requestFrame(this.update)
     }
   }
@@ -111,9 +124,11 @@ export class FrameLoop {
   }
 
   /** Advance an animation forward one frame. */
-  advance(config: ActiveAnimation, changes: FrameUpdate[2]): boolean {
-    const time = G.now()
-
+  advance(
+    dt: number,
+    config: ActiveAnimation,
+    changes: FrameUpdate[2]
+  ): boolean {
     let active = false
     let changed = false
     for (let i = 0; i < config.animatedValues.length; i++) {
@@ -125,86 +140,90 @@ export class FrameLoop {
       const target: any = to instanceof Animated ? to : null
       if (target) to = target.getValue()
 
-      // Jump to end value for immediate animations
-      if (config.immediate) {
-        animated.setValue(to)
-        animated.done = true
-        continue
-      }
-
       const from: any = config.fromValues[i]
-      const startTime = animated.startTime!
 
-      // Break animation when string values are involved
-      if (typeof from === 'string' || typeof to === 'string') {
+      // Jump to end value for immediate animations
+      if (
+        config.immediate ||
+        typeof from === 'string' ||
+        typeof to === 'string'
+      ) {
         animated.setValue(to)
         animated.done = true
         continue
       }
+
+      const startTime = animated.startTime
+      const elapsed = (animated.elapsedTime += dt)
+
+      const v0 = Array.isArray(config.initialVelocity)
+        ? config.initialVelocity[i]
+        : config.initialVelocity
+
+      const precision =
+        config.precision || Math.min(1, Math.abs(to - from) * 0.001)
 
       let finished = false
       let position = animated.lastPosition
-      let velocity = Array.isArray(config.initialVelocity)
-        ? config.initialVelocity[i]
-        : config.initialVelocity
+
+      let velocity: number
 
       // Duration easing
       if (config.duration !== void 0) {
         position =
-          from +
-          config.easing!((time - startTime) / config.duration) * (to - from)
+          from + config.easing!(elapsed / config.duration) * (to - from)
 
-        finished = time >= startTime + config.duration
+        velocity = (position - animated.lastPosition) / dt
+
+        finished = G.now() >= startTime + config.duration
       }
       // Decay easing
       else if (config.decay) {
         const decay = config.decay === true ? 0.998 : config.decay
-        position =
-          from +
-          (velocity / (1 - decay)) *
-            (1 - Math.exp(-(1 - decay) * (time - startTime)))
+        const e = Math.exp(-(1 - decay) * elapsed)
+
+        position = from + (v0 / (1 - decay)) * (1 - e)
+        // derivative of position
+        velocity = v0 * e
 
         finished = Math.abs(animated.lastPosition - position) < 0.1
         if (finished) to = position
       }
       // Spring easing
       else {
-        let lastTime = animated.lastTime !== void 0 ? animated.lastTime : time
-        if (animated.lastVelocity !== void 0) {
-          velocity = animated.lastVelocity
-        }
+        velocity = animated.lastVelocity == null ? v0 : animated.lastVelocity
 
-        // If we lost a lot of frames just jump to the end.
-        if (time > lastTime + 64) lastTime = time
-        // http://gafferongames.com/game-physics/fix-your-timestep/
-        const numSteps = Math.floor(time - lastTime)
+        const step = 0.05 / config.w0
+        const numSteps = Math.ceil(dt / step)
+
         for (let n = 0; n < numSteps; ++n) {
-          const force = -config.tension! * (position - to)
-          const damping = -config.friction! * velocity
-          const acceleration = (force + damping) / config.mass!
-          velocity = velocity + (acceleration * 1) / 1000
-          position = position + (velocity * 1) / 1000
+          const springForce = -config.tension! * 0.000001 * (position - to)
+          const dampingForce = -config.friction! * 0.001 * velocity
+          const acceleration = (springForce + dampingForce) / config.mass! // pt/ms^2
+          velocity = velocity + acceleration * step // pt/ms
+          position = position + velocity * step
         }
-
-        animated.lastTime = time
-        animated.lastVelocity = velocity
 
         // Conditions for stopping the spring animation
-        const isOvershooting =
-          config.clamp && config.tension !== 0
+        const isBouncing =
+          config.clamp !== false && config.tension !== 0
             ? from < to
-              ? position > to
-              : position < to
+              ? position > to && velocity > 0
+              : position < to && velocity < 0
             : false
-        const isVelocity = Math.abs(velocity) <= config.precision!
+
+        if (isBouncing) {
+          velocity =
+            -velocity * (config.clamp === true ? 0 : (config.clamp as any))
+        }
+
+        const isVelocity = Math.abs(velocity) <= precision
         const isDisplacement =
-          config.tension !== 0
-            ? Math.abs(to - position) <= config.precision!
-            : true
+          config.tension !== 0 ? Math.abs(to - position) <= precision : true
 
-        finished = isOvershooting || (isVelocity && isDisplacement)
+        finished =
+          (isBouncing && velocity === 0) || (isVelocity && isDisplacement)
       }
-
       // Trails aren't done until their parents conclude
       if (finished && !(target && !target.done)) {
         // Ensure that we end up with a round value
@@ -216,6 +235,7 @@ export class FrameLoop {
 
       animated.setValue(position)
       animated.lastPosition = position
+      animated.lastVelocity = velocity
     }
 
     if (changes && changed) {
