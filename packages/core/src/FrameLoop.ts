@@ -187,12 +187,15 @@ export class FrameLoop {
       else {
         velocity =
           animated.lastVelocity !== void 0 ? animated.lastVelocity : v0 * 1000
-        const dt = 1
-        const numSteps = Math.floor(deltaTime) / dt
+
+        const freq = Math.sqrt(config.tension! / config.mass!) * (2 * Math.PI)
+        const dt = 300 / freq
+        const numSteps = Math.ceil(deltaTime / dt)
+
         for (let n = 0; n < numSteps; ++n) {
-          const force = -config.tension! * (position - to)
-          const damping = -config.friction! * velocity
-          const acceleration = (force + damping) / config.mass!
+          const springForce = -config.tension! * (position - to)
+          const dampingForce = -config.friction! * velocity
+          const acceleration = (springForce + dampingForce) / config.mass!
           velocity = velocity + (acceleration * dt) / 1000
           position = position + (velocity * dt) / 1000
         }
