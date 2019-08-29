@@ -16,6 +16,7 @@ export class AnimatedValue<T = unknown> extends Animated
   lastVelocity?: number
   startTime?: number
   lastTime?: number
+  elapsedTime?: number
   done = false
 
   constructor(value: T) {
@@ -60,8 +61,9 @@ export class AnimatedValue<T = unknown> extends Animated
       this.startPosition = this.value
       this.lastPosition = this.value
       this.lastVelocity = isActive ? this.lastVelocity : undefined
-      this.lastTime = isActive ? this.lastTime : undefined
       this.startTime = G.now()
+      this.lastTime = isActive ? this.lastTime : this.startTime
+      this.elapsedTime = isActive ? this.elapsedTime : 0
     }
     this.done = false
     this.views.clear()
