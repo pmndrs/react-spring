@@ -185,16 +185,17 @@ export class FrameLoop {
       else {
         velocity = animated.lastVelocity !== void 0 ? animated.lastVelocity : v0
 
-        const freq = Math.sqrt(config.tension! / config.mass!) * (2 * Math.PI)
-        const dt = 300 / freq
+        const w0 = Math.sqrt(config.tension! / config.mass!)
+
+        const dt = 100 / w0
         const numSteps = Math.ceil(deltaTime / dt)
 
         for (let n = 0; n < numSteps; ++n) {
           const springForce = -config.tension! * (position - to)
-          const dampingForce = -config.friction! * velocity
+          const dampingForce = -config.friction! * (velocity * 1000)
           const acceleration = (springForce + dampingForce) / config.mass!
-          velocity = velocity + (acceleration * dt) / 1000
-          position = position + (velocity * dt) / 1000
+          velocity = velocity + (acceleration * dt) / (1000 * 1000)
+          position = position + velocity * dt
         }
 
         // Conditions for stopping the spring animation
