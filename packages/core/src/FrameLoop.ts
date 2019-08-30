@@ -183,8 +183,7 @@ export class FrameLoop {
       }
       // Spring easing
       else {
-        velocity =
-          animated.lastVelocity !== void 0 ? animated.lastVelocity : v0 * 1000
+        velocity = animated.lastVelocity !== void 0 ? animated.lastVelocity : v0
 
         const freq = Math.sqrt(config.tension! / config.mass!) * (2 * Math.PI)
         const dt = 300 / freq
