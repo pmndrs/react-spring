@@ -172,13 +172,11 @@ export class FrameLoop {
       // Decay easing
       else if (config.decay) {
         const decay = config.decay === true ? 0.998 : config.decay
-        position =
-          from +
-          (v0 / (1 - decay)) *
-            (1 - Math.exp(-(1 - decay) * animated.elapsedTime!))
+        const e = Math.exp(-(1 - decay) * animated.elapsedTime!)
 
+        position = from + (v0 / (1 - decay)) * (1 - e)
         // derivative of position
-        velocity = v0 * Math.exp(-(1 - decay) * animated.elapsedTime!)
+        velocity = v0 * e
 
         finished = Math.abs(animated.lastPosition - position) < 0.1
         if (finished) to = position
