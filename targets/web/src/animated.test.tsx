@@ -179,6 +179,7 @@ describe('animated component', () => {
           z,
           scale: 1,
           skewX: 0,
+          transformOrigin: 'bottom center',
           rotate3d: [1, 0, 0, '0deg'],
         }}
         data-testid="wrapper"
@@ -186,5 +187,23 @@ describe('animated component', () => {
     )
     const wrapper: any = queryByTestId('wrapper')!
     expect(wrapper.style.transform).toBe('none')
+  })
+
+  it('preserves transform-style and transform-origin properties', () => {
+    const { queryByTestId } = render(
+      <a.div
+        style={{
+          transformOrigin: 'bottom center',
+          transformStyle: 'preserve-3d',
+          transform: 'translateX(40px)',
+          scale: [1, 2],
+        }}
+        data-testid="wrapper"
+      />
+    )
+    const wrapper: any = queryByTestId('wrapper')!
+    expect(wrapper.style.transformOrigin).toBe('bottom center')
+    expect(wrapper.style.transformStyle).toBe('preserve-3d')
+    expect(wrapper.style.transform).toBe('translateX(40px) scale(1,2)')
   })
 })

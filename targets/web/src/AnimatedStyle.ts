@@ -15,14 +15,7 @@ import {
  * animated. Perspective has been left out as it would conflict with the
  * non-transform perspective style.
  */
-const domTransforms = [
-  'transform',
-  'matrix',
-  'translate',
-  'scale',
-  'rotate',
-  'skew',
-]
+const domTransforms = ['matrix', 'translate', 'scale', 'rotate', 'skew']
 
 // x, y, z and translate will get 'px' as unit default
 const pxDefaults = ['x', 'y', 'z', 'translate']
@@ -139,17 +132,18 @@ export class AnimatedStyle extends AnimatedObject {
       ])
     }
 
-    // then for each style key that matches the transform functions class
-    // supports, we add the input value to the props and the interpolation
-    // transform function
+    // then for each style key that matches the supported transform functions,
+    // we add the input value to the props and the interpolation transform
+    // function
     each(style, (value, key) => {
-      if (domTransforms.some(transform => key.startsWith(transform))) {
+      if (key === 'transform') {
+        props.push(ensureAnimated(value))
+        transforms.push((transform: string) => [transform, transform === ''])
+      } else if (domTransforms.some(transform => key.startsWith(transform))) {
         const unit = getUnit(key)
         props.push(ensureAnimated(value))
         transforms.push(
-          key === 'transform'
-            ? (transform: string) => [transform, transform === '']
-            : key === 'rotate3d'
+          key === 'rotate3d'
             ? ([x, y, z, deg]) => [
                 `rotate3d(${x},${y},${z},${mergeUnit(deg, unit)})`,
                 isTransformIdentity(key, deg),

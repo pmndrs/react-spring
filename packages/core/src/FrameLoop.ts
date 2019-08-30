@@ -79,7 +79,9 @@ export class FrameLoop {
               idle = false
             }
           }
-          updates.push([id, idle, changes])
+          if (idle || changes) {
+            updates.push([id, idle, changes])
+          }
         }
 
         // Notify the controllers!
