@@ -644,6 +644,7 @@ export class Controller<State extends Indexable = any> {
           animated,
           animatedValues: Array.from(animated.getPayload()),
           immediate,
+          progress: config.progress || 0,
           duration: config.duration,
           easing: withDefault(config.easing, linear),
           decay: config.decay,
