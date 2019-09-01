@@ -199,11 +199,12 @@ export class FrameLoop {
         }
 
         // Conditions for stopping the spring animation
-        const isBouncing = config.clamp
-          ? from < to
-            ? position > to && velocity > 0
-            : position < to && velocity < 0
-          : false
+        const isBouncing =
+          config.clamp !== false && config.tension !== 0
+            ? from < to
+              ? position > to && velocity > 0
+              : position < to && velocity < 0
+            : false
 
         if (isBouncing) {
           velocity =
