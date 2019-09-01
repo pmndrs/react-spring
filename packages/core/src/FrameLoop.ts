@@ -191,10 +191,10 @@ export class FrameLoop {
         const numSteps = Math.ceil(deltaTime / dt)
 
         for (let n = 0; n < numSteps; ++n) {
-          const springForce = -config.tension! * (position - to)
-          const dampingForce = -config.friction! * (velocity * 1000)
-          const acceleration = (springForce + dampingForce) / config.mass!
-          velocity = velocity + (acceleration * dt) / (1000 * 1000)
+          const springForce = (-config.tension! / 1000000) * (position - to)
+          const dampingForce = (-config.friction! / 1000) * velocity
+          const acceleration = (springForce + dampingForce) / config.mass! // pt/ms^2
+          velocity = velocity + acceleration * dt // pt/ms
           position = position + velocity * dt
         }
 
