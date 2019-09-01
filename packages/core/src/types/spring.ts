@@ -101,6 +101,7 @@ export interface SpringConfig {
   precision?: number
   delay?: number
   decay?: number | boolean
+  progress?: number
   duration?: number
   easing?: EasingFunction
 }
