@@ -153,7 +153,6 @@ export class FrameLoop {
         continue
       }
 
-      const startTime = animated.startTime
       const elapsed = (animated.elapsedTime += dt)
 
       const v0 = Array.isArray(config.initialVelocity)
@@ -170,12 +169,13 @@ export class FrameLoop {
 
       // Duration easing
       if (config.duration !== void 0) {
-        position =
-          from + config.easing!(elapsed / config.duration) * (to - from)
+        let p = config.progress!
+        p += (1 - p) * Math.min(1, elapsed / config.duration)
 
+        position = from + config.easing!(p) * (to - from)
         velocity = (position - animated.lastPosition) / dt
 
-        finished = G.now() >= startTime + config.duration
+        finished = p == 1
       }
       // Decay easing
       else if (config.decay) {
