@@ -69,7 +69,7 @@ export class FrameLoop {
           return false
         }
 
-        time = time !== void 0 ? time : Date.now()
+        time = time !== void 0 ? time : performance.now()
         this.lastTime = this.lastTime !== void 0 ? this.lastTime : time
         let dt = time - this.lastTime!
 
