@@ -636,6 +636,8 @@ export class Controller<State extends Indexable = any> {
           toArray(isInterpolated ? 1 : goalValue)
 
         changed = true
+        const tension = withDefault(config.tension, 170)
+        const mass = withDefault(config.mass, 1)
         this.animations[key] = {
           key,
           idle: false,
@@ -649,9 +651,10 @@ export class Controller<State extends Indexable = any> {
           progress: config.progress || 0,
           easing: withDefault(config.easing, linear),
           decay: config.decay,
-          mass: withDefault(config.mass, 1),
-          tension: withDefault(config.tension, 170),
+          mass,
+          tension,
           friction: withDefault(config.friction, 26),
+          w0: Math.sqrt(tension / mass) / 1000, // angular frequency in rad/ms
           initialVelocity: withDefault(config.velocity, 0),
           clamp: withDefault(config.clamp, false),
           precision: withDefault(config.precision, 0.005),
