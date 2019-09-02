@@ -71,12 +71,12 @@ export class FrameLoop {
 
         time = time !== void 0 ? time : Date.now()
         this.lastTime = this.lastTime !== void 0 ? this.lastTime : time
-        let step = time - this.lastTime!
+        let dt = time - this.lastTime!
 
         // http://gafferongames.com/game-physics/fix-your-timestep/
-        if (step > 64) step = 64
+        if (dt > 64) dt = 64
 
-        if (step > 0) {
+        if (dt > 0) {
           // Update the animations.
           const updates: FrameUpdate[] = []
           for (const id of Array.from(this.controllers.keys())) {
@@ -85,7 +85,7 @@ export class FrameLoop {
             const changes: FrameUpdate[2] = ctrl.props.onFrame ? [] : null
             for (const config of ctrl.configs) {
               if (config.idle) continue
-              if (this.advance(step, config, changes)) {
+              if (this.advance(dt, config, changes)) {
                 idle = false
               }
             }
@@ -125,7 +125,7 @@ export class FrameLoop {
 
   /** Advance an animation forward one frame. */
   advance(
-    step: number,
+    dt: number,
     config: ActiveAnimation,
     changes: FrameUpdate[2]
   ): boolean {
@@ -153,7 +153,7 @@ export class FrameLoop {
         continue
       }
 
-      const elapsed = (animated.elapsedTime += step)
+      const elapsed = (animated.elapsedTime += dt)
 
       const v0 = Array.isArray(config.initialVelocity)
         ? config.initialVelocity[i]
@@ -170,7 +170,7 @@ export class FrameLoop {
         p += (1 - p) * Math.min(1, elapsed / config.duration)
 
         position = from + config.easing!(p) * (to - from)
-        velocity = (position - animated.lastPosition) / step
+        velocity = (position - animated.lastPosition) / dt
 
         finished = p == 1
       }
@@ -190,15 +190,15 @@ export class FrameLoop {
       else {
         velocity = animated.lastVelocity == null ? v0 : animated.lastVelocity
 
-        const dt = 0.05 / config.w0
-        const numSteps = Math.ceil(step / dt)
+        const step = 0.05 / config.w0
+        const numSteps = Math.ceil(dt / step)
 
         for (let n = 0; n < numSteps; ++n) {
           const springForce = (-config.tension! / 1000000) * (position - to)
           const dampingForce = (-config.friction! / 1000) * velocity
           const acceleration = (springForce + dampingForce) / config.mass! // pt/ms^2
-          velocity = velocity + acceleration * dt // pt/ms
-          position = position + velocity * dt
+          velocity = velocity + acceleration * step // pt/ms
+          position = position + velocity * step
         }
 
         // Conditions for stopping the spring animation
