@@ -4,7 +4,7 @@ import { FrameRequestCallback } from 'shared/types'
 import { Controller, FrameUpdate } from './Controller'
 import { ActiveAnimation } from './types/spring'
 
-type FrameUpdater = (this: FrameLoop, time: number) => boolean
+type FrameUpdater = (this: FrameLoop, time?: number) => boolean
 type FrameListener = (this: FrameLoop, updates: FrameUpdate[]) => void
 type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
