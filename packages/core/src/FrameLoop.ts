@@ -4,7 +4,7 @@ import { FrameRequestCallback } from 'shared/types'
 import { Controller, FrameUpdate } from './Controller'
 import { ActiveAnimation } from './types/spring'
 
-type FrameUpdater = (this: FrameLoop) => boolean
+type FrameUpdater = (this: FrameLoop, time: number) => boolean
 type FrameListener = (this: FrameLoop, updates: FrameUpdate[]) => void
 type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
@@ -38,6 +38,8 @@ export class FrameLoop {
    */
   requestFrame: RequestFrameFn
 
+  lastTime?: number
+
   constructor({
     update,
     onFrame,
@@ -62,10 +64,17 @@ export class FrameLoop {
 
     this.update =
       (update && update.bind(this)) ||
-      (() => {
+      ((time?: number) => {
         if (this.idle) {
           return false
         }
+
+        time = time !== void 0 ? time : Date.now()
+        this.lastTime = this.lastTime !== void 0 ? this.lastTime : time
+        let step = time - this.lastTime!
+
+        // http://gafferongames.com/game-physics/fix-your-timestep/
+        if (step > 64) step = 64
 
         // Update the animations.
         const updates: FrameUpdate[] = []
@@ -75,7 +84,7 @@ export class FrameLoop {
           const changes: FrameUpdate[2] = ctrl.props.onFrame ? [] : null
           for (const config of ctrl.configs) {
             if (config.idle) continue
-            if (this.advance(config, changes)) {
+            if (this.advance(step, config, changes)) {
               idle = false
             }
           }
@@ -86,6 +95,7 @@ export class FrameLoop {
 
         // Notify the controllers!
         this.onFrame(updates)
+        this.lastTime = time
 
         // Are we done yet?
         if (!this.controllers.size) {
@@ -102,6 +112,7 @@ export class FrameLoop {
     this.controllers.set(ctrl.id, ctrl)
     if (this.idle) {
       this.idle = false
+      this.lastTime = undefined
       this.requestFrame(this.update)
     }
   }
@@ -111,9 +122,11 @@ export class FrameLoop {
   }
 
   /** Advance an animation forward one frame. */
-  advance(config: ActiveAnimation, changes: FrameUpdate[2]): boolean {
-    const time = G.now()
-
+  advance(
+    step: number,
+    config: ActiveAnimation,
+    changes: FrameUpdate[2]
+  ): boolean {
     let active = false
     let changed = false
     for (let i = 0; i < config.animatedValues.length; i++) {
@@ -138,15 +151,7 @@ export class FrameLoop {
         continue
       }
 
-      let deltaTime =
-        animated.lastTime !== void 0 ? time - animated.lastTime : 0
-
-      // http://gafferongames.com/game-physics/fix-your-timestep/
-      if (deltaTime > 64) {
-        deltaTime = 64
-      }
-
-      const elapsed = (animated.elapsedTime! += deltaTime)
+      const elapsed = (animated.elapsedTime! += step)
 
       const v0 = Array.isArray(config.initialVelocity)
         ? config.initialVelocity[i]
@@ -164,7 +169,7 @@ export class FrameLoop {
           (1 - config.progress!) * Math.min(1, elapsed / config.duration)
 
         position = from + config.easing!(progress) * (to - from)
-        velocity = (position - animated.lastPosition) / deltaTime
+        velocity = (position - animated.lastPosition) / step
 
         finished = progress == 1
       }
@@ -187,7 +192,7 @@ export class FrameLoop {
         const w0 = Math.sqrt(config.tension! / config.mass!)
 
         const dt = 100 / w0
-        const numSteps = Math.ceil(deltaTime / dt)
+        const numSteps = Math.ceil(step / dt)
 
         for (let n = 0; n < numSteps; ++n) {
           const springForce = (-config.tension! / 1000000) * (position - to)
@@ -231,7 +236,6 @@ export class FrameLoop {
       animated.setValue(position)
       animated.lastPosition = position
       animated.lastVelocity = velocity
-      animated.lastTime = time
     }
 
     if (changes && changed) {

@@ -13,7 +13,6 @@ export class AnimatedValue<T = unknown> extends Animated
   startPosition!: number
   lastPosition!: number
   lastVelocity?: number
-  lastTime?: number
   elapsedTime?: number
   done = false
 
@@ -59,7 +58,6 @@ export class AnimatedValue<T = unknown> extends Animated
       this.startPosition = this.value
       this.lastPosition = this.value
       this.lastVelocity = isActive ? this.lastVelocity : undefined
-      this.lastTime = isActive ? this.lastTime : undefined
       this.elapsedTime = 0
     }
     this.done = false
