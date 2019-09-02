@@ -138,15 +138,14 @@ export class FrameLoop {
         continue
       }
 
-      let deltaTime =
-        animated.lastTime !== void 0 ? time - animated.lastTime : 0
+      let deltaTime = time - animated.lastTime || 1
 
       // http://gafferongames.com/game-physics/fix-your-timestep/
       if (deltaTime > 64) {
         deltaTime = 64
       }
 
-      const elapsed = (animated.elapsedTime! += deltaTime)
+      const elapsed = (animated.elapsedTime += deltaTime)
 
       const v0 = Array.isArray(config.initialVelocity)
         ? config.initialVelocity[i]
@@ -158,15 +157,14 @@ export class FrameLoop {
       let velocity: number
 
       // Duration easing
-      if (config.duration !== void 0) {
-        const progress =
-          config.progress! +
-          (1 - config.progress!) * Math.min(1, elapsed / config.duration)
+      if (config.duration != null) {
+        let p = config.progress!
+        p += (1 - p) * Math.min(1, elapsed / config.duration)
 
-        position = from + config.easing!(progress) * (to - from)
+        position = from + config.easing!(p) * (to - from)
         velocity = (position - animated.lastPosition) / deltaTime
 
-        finished = progress == 1
+        finished = p == 1
       }
       // Decay easing
       else if (config.decay) {
@@ -182,7 +180,7 @@ export class FrameLoop {
       }
       // Spring easing
       else {
-        velocity = animated.lastVelocity !== void 0 ? animated.lastVelocity : v0
+        velocity = animated.lastVelocity == null ? v0 : animated.lastVelocity
 
         const w0 = Math.sqrt(config.tension! / config.mass!)
 

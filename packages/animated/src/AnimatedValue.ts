@@ -3,6 +3,7 @@ import { AnimatedProps } from './AnimatedProps'
 import { to } from './interpolate'
 import { Animated } from './Animated'
 import { deprecateInterpolate } from 'shared/deprecations'
+import * as G from 'shared/globals'
 
 /** An animated number or a native attribute value */
 export class AnimatedValue<T = unknown> extends Animated
@@ -12,19 +13,16 @@ export class AnimatedValue<T = unknown> extends Animated
   value: T
   startPosition!: number
   lastPosition!: number
-  lastVelocity?: number
-  lastTime?: number
-  elapsedTime?: number
-  done = false
+  lastVelocity!: number | null
+  lastTime!: number
+  elapsedTime!: number
+  done!: boolean
 
   constructor(value: T) {
     super()
     this.value = value
     this.payload = new Set([this])
-    if (is.num(value)) {
-      this.startPosition = value
-      this.lastPosition = value
-    }
+    this.reset(false)
   }
 
   getValue() {
@@ -58,8 +56,10 @@ export class AnimatedValue<T = unknown> extends Animated
     if (is.num(this.value)) {
       this.startPosition = this.value
       this.lastPosition = this.value
-      this.lastVelocity = isActive ? this.lastVelocity : undefined
-      this.lastTime = isActive ? this.lastTime : undefined
+      if (!isActive) {
+        this.lastVelocity = null
+        this.lastTime = G.now()
+      }
       this.elapsedTime = 0
     }
     this.done = false
