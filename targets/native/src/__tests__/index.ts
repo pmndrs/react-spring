@@ -1,6 +1,6 @@
 import { assert, _, test, describe } from 'spec.ts';
 import { AnimatedProps, SpringValue } from '..';
-import { AnimatedTransformProp } from 'src/animated';
+import { AnimatedTransform } from 'src/animated';
 import { ViewStyle } from 'react-native';
 
 describe('AnimatedProps', () => {
@@ -42,7 +42,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style?: {
-          transform: AnimatedTransformProp;
+          transform: AnimatedTransform;
         };
       }
     );
@@ -58,6 +58,50 @@ describe('AnimatedProps', () => {
       _ as {
         foo: { bar: number };
         bar?: number | { foo: number } | SpringValue<number>;
+      }
+    );
+  });
+
+  test('array of mixed numbers/strings', () => {
+    type Props = AnimatedProps<{
+      path: Array<number | string>;
+    }>;
+    assert(
+      _ as Props,
+      _ as {
+        path:
+          | SpringValue<Array<number | string>>
+          | Array<number | string | SpringValue<number | string>>;
+      }
+    );
+  });
+
+  test('one number or array of numbers', () => {
+    type Props = AnimatedProps<{
+      path: number | number[];
+    }>;
+    assert(
+      _ as Props,
+      _ as {
+        path:
+          | number
+          | SpringValue<number | number[]>
+          | Array<number | SpringValue<number>>;
+      }
+    );
+  });
+
+  test('array of numbers or array of strings', () => {
+    type Props = AnimatedProps<{
+      path: number[] | string[];
+    }>;
+    assert(
+      _ as Props,
+      _ as {
+        path:
+          | SpringValue<number[] | string[]>
+          | Array<number | SpringValue<number>>
+          | Array<string | SpringValue<string>>;
       }
     );
   });

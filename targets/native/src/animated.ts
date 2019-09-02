@@ -49,18 +49,20 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is
     ? never
     : DT extends void
     ? undefined
+    : DT extends ReadonlyArray<number | string>
+    ? AnimatedArray<DT> | AnimatedLeaf<T>
     : DT extends ReadonlyArray<any>
     ? TransformArray extends DT
       ? AnimatedTransform
-      : DT extends ReadonlyArray<number | string>
-      ? AnimatedObject<DT>
       : AnimatedStyles<DT>
-    : DT extends object
-    ? [AssignableKeys<DT, ViewStyle>] extends [never]
-      ? DT
-      : AnimatedStyle<DT>
-    : DT | AnimatedLeaf<T>
+    : [AssignableKeys<DT, ViewStyle>] extends [never]
+    ? DT | AnimatedLeaf<T>
+    : AnimatedStyle<DT>
   : never
+
+type AnimatedArray<T extends ReadonlyArray<number | string>> = {
+  [P in keyof T]: T[P] | SpringValue<T[P]>
+}
 
 // An animated array of style objects
 type AnimatedStyles<T extends ReadonlyArray<any>> = {
@@ -82,30 +84,30 @@ export type AnimatedStyle<T> = [T, T] extends [infer T, infer DT] // T is a unio
     : [DT] extends [never]
     ? never
     : DT extends object
-    ? AnimatedObject<DT>
+    ? {
+        [P in keyof T]: P extends 'transform'
+          ? AnimatedTransform
+          : AnimatedStyle<T[P]>
+      }
     : DT | AnimatedLeaf<T>
   : never
-
-type AnimatedObject<T extends object> =
-  | (T extends ReadonlyArray<number | string> ? SpringValue<T> : never)
-  | {
-      [P in keyof T]: P extends 'transform'
-        ? AnimatedTransform
-        : AnimatedStyle<T[P]>
-    }
 
 type Indices<T> = Extract<keyof T, number>
 
 type TransformArray = Exclude<ViewStyle['transform'], void>
 
 // An animated array of transform objects
-type AnimatedTransform = {
+export type AnimatedTransform = {
   [P in Indices<TransformArray>]: TransformArray[P] extends infer T
     ? { [P in keyof T]: T[P] | AnimatedLeaf<T[P]> }
     : never
 }
 
-// An animated value that is not an object
-type AnimatedLeaf<T> = [T] extends [object]
-  ? never
-  : SpringValue<Exclude<T, object | void>>
+// An animated primitive (or an array of them)
+type AnimatedLeaf<T> =
+  | Exclude<T, object | void>
+  | Extract<T, ReadonlyArray<number | string>> extends infer U
+  ? [U] extends [never]
+    ? never
+    : SpringValue<U>
+  : never
