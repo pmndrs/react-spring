@@ -71,35 +71,37 @@ export class FrameLoop {
 
         time = time !== void 0 ? time : Date.now()
         this.lastTime = this.lastTime !== void 0 ? this.lastTime : time
-        let step = time - this.lastTime! || 1
+        let step = time - this.lastTime!
 
         // http://gafferongames.com/game-physics/fix-your-timestep/
         if (step > 64) step = 64
 
-        // Update the animations.
-        const updates: FrameUpdate[] = []
-        for (const id of Array.from(this.controllers.keys())) {
-          let idle = true
-          const ctrl = this.controllers.get(id)!
-          const changes: FrameUpdate[2] = ctrl.props.onFrame ? [] : null
-          for (const config of ctrl.configs) {
-            if (config.idle) continue
-            if (this.advance(step, config, changes)) {
-              idle = false
+        if (step > 0) {
+          // Update the animations.
+          const updates: FrameUpdate[] = []
+          for (const id of Array.from(this.controllers.keys())) {
+            let idle = true
+            const ctrl = this.controllers.get(id)!
+            const changes: FrameUpdate[2] = ctrl.props.onFrame ? [] : null
+            for (const config of ctrl.configs) {
+              if (config.idle) continue
+              if (this.advance(step, config, changes)) {
+                idle = false
+              }
+            }
+            if (idle || changes) {
+              updates.push([id, idle, changes])
             }
           }
-          if (idle || changes) {
-            updates.push([id, idle, changes])
+
+          // Notify the controllers!
+          this.onFrame(updates)
+          this.lastTime = time
+
+          // Are we done yet?
+          if (!this.controllers.size) {
+            return !(this.idle = true)
           }
-        }
-
-        // Notify the controllers!
-        this.onFrame(updates)
-        this.lastTime = time
-
-        // Are we done yet?
-        if (!this.controllers.size) {
-          return !(this.idle = true)
         }
 
         // Keep going.
