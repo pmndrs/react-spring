@@ -18,6 +18,7 @@
     }
   ],
   "settings": {
+    "typescript.tsdk": "node_modules/typescript/lib",
     "files.exclude": {
       "**/.bic_cache": true,
       "**/.rpt2_cache": true,
