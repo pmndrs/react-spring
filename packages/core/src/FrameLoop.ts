@@ -189,9 +189,7 @@ export class FrameLoop {
       else {
         velocity = animated.lastVelocity !== void 0 ? animated.lastVelocity : v0
 
-        const w0 = Math.sqrt(config.tension! / config.mass!)
-
-        const dt = 100 / w0
+        const dt = 0.05 / config.w0
         const numSteps = Math.ceil(step / dt)
 
         for (let n = 0; n < numSteps; ++n) {
