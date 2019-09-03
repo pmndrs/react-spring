@@ -70,6 +70,7 @@ export class Controller<State extends Indexable = any> {
   destroyed = false
   props: CachedProps<State> = {}
   queue: any[] = []
+  changed!: Set<string>
   timestamps: Indexable<number> = {}
   values: State = {} as any
   merged: State = {} as any
@@ -410,7 +411,7 @@ export class Controller<State extends Indexable = any> {
     attach,
     ...props
   }: PendingProps<State> & Indexable) {
-    let changed = false
+    let changed = new Set<string>()
 
     // Generalized diffing algorithm
     const diffProp = (keys: string[], value: any, owner: any) => {
@@ -426,10 +427,9 @@ export class Controller<State extends Indexable = any> {
         const oldTimestamp = this.timestamps[keyPath]
         if (is.und(oldTimestamp) || timestamp! >= oldTimestamp) {
           this.timestamps[keyPath] = timestamp!
-          const oldValue = owner[lastKey]
-          if (!isEqual(value, oldValue)) {
-            changed = true
+          if (!isEqual(value, owner[lastKey])) {
             owner[lastKey] = value
+            changed.add(keyPath)
           }
         }
       }
@@ -458,12 +458,8 @@ export class Controller<State extends Indexable = any> {
     if ('reset' in props) this.props.reset = false
     if ('cancel' in props) this.props.cancel = void 0
 
-    return changed
-  }
-
-  // Return true if the given prop was changed by this update
-  private _isModified(props: PendingProps<State>, prop: string) {
-    return this.timestamps[prop] === props.timestamp
+    this.changed = changed
+    return !!changed.size
   }
 
   // Update the animation configs. The given props override any default props.
@@ -481,7 +477,7 @@ export class Controller<State extends Indexable = any> {
     }
 
     let isPrevented = (_: string) => false
-    if (props.cancel && this._isModified(props, 'cancel')) {
+    if (props.cancel && this.changed.has('cancel')) {
       // Stop all animations when `cancel` is true
       if (props.cancel === true) {
         this.stop()
@@ -510,7 +506,7 @@ export class Controller<State extends Indexable = any> {
     const started: string[] = []
 
     // Attach when a new "parent" controller exists.
-    const isAttaching = parent && this._isModified(props, 'parent')
+    const isAttaching = parent && this.changed.has('parent')
 
     // Reduces input { key: value } pairs into animation objects
     for (const key in this.merged) {
