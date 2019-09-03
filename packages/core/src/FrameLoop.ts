@@ -159,7 +159,7 @@ export class FrameLoop {
         ? config.initialVelocity[i]
         : config.initialVelocity
 
-      const precision = config.precision || Math.abs(to - from) / 1000 || 0.05
+      const precision = config.precision || Math.abs(to - from) / 1000 || 0.005
 
       console.log(precision)
 
