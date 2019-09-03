@@ -159,9 +159,8 @@ export class FrameLoop {
         ? config.initialVelocity[i]
         : config.initialVelocity
 
-      const precision = config.precision || Math.abs(to - from) / 1000 || 0.005
-
-      console.log(precision)
+      const precision =
+        config.precision || Math.min(1, Math.abs(to - from) / 1000)
 
       let finished = false
       let position = animated.lastPosition
