@@ -120,8 +120,6 @@ test('imperative mode', () => {
 
   test('stop()', () => {
     stop();
-    stop(true);
-    stop(true, 'foo');
     stop('foo');
     stop('foo', 'bar');
   });
@@ -162,7 +160,7 @@ test('spring refs', () => {
   const ref = useRef<SpringHandle>(null);
   useSpring({ foo: 1, ref });
   ref.current!.start();
-  ref.current!.stop(true, 'foo', 'bar');
+  ref.current!.stop('foo', 'bar');
   ref.current!.stop();
 });
 

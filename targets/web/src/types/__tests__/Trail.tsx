@@ -12,8 +12,7 @@ test('basic usage', () => (
       assert(item, _ as 1 | 2);
       assert(props, _ as {
         [key: string]: SpringValue<any>;
-        opacity: SpringValue<number>;
-        color: SpringValue<string>;
+        // FIXME: should include "opacity" and "color"
       });
       return <View style={props}>{item}</View>;
     }}

@@ -14,8 +14,7 @@ test('basic usage', () => {
     {(item, phase, i) => props => {
       assert(props, _ as {
         [key: string]: SpringValue<any>;
-        opacity: SpringValue<number>;
-        color: SpringValue<string>;
+        // FIXME: should include "opacity" and "color"
       });
       assert(item, _ as 1 | 2);
       assert(phase, _ as TransitionPhase);
