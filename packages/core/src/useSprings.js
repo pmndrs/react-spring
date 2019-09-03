@@ -41,11 +41,22 @@ export const useSprings = (length, propsArg, deps) => {
       update: props => {
         const isFn = is.fun(props)
         const isArr = is.arr(props)
-        state.springs.forEach((spring, i) => {
-          spring.update(
-            isFn ? callProp(props, i, spring) : isArr ? props[i] : props
-          )
-          if (!state.ref) spring.start()
+        return new Promise(resolve => {
+          const { springs, ref } = state
+
+          let endCount = 0
+          const onEnd = () => ++endCount < springs.length || resolve()
+
+          springs.forEach((spring, i) => {
+            spring.update(
+              isFn ? callProp(props, i, spring) : isArr ? props[i] : props
+            )
+            if (!ref) {
+              spring.start(onEnd)
+            } else {
+              spring.onEndQueue.push(onEnd)
+            }
+          })
         })
       },
       /** Stop one key or all keys from animating */
