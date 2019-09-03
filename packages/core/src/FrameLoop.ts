@@ -159,6 +159,10 @@ export class FrameLoop {
         ? config.initialVelocity[i]
         : config.initialVelocity
 
+      const precision = config.precision || Math.abs(to - from) / 1000 || 0.05
+
+      console.log(precision)
+
       let finished = false
       let position = animated.lastPosition
 
@@ -214,11 +218,9 @@ export class FrameLoop {
             -velocity * (typeof config.clamp! === 'number' ? config.clamp! : 0)
         }
 
-        const isVelocity = Math.abs(velocity) <= config.precision!
+        const isVelocity = Math.abs(velocity) <= precision
         const isDisplacement =
-          config.tension !== 0
-            ? Math.abs(to - position) <= config.precision!
-            : true
+          config.tension !== 0 ? Math.abs(to - position) <= precision : true
 
         finished =
           (isBouncing && velocity === 0) || (isVelocity && isDisplacement)

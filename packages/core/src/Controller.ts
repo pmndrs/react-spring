@@ -657,7 +657,7 @@ export class Controller<State extends Indexable = any> {
           w0: Math.sqrt(tension / mass) / 1000, // angular frequency in rad/ms
           initialVelocity: withDefault(config.velocity, 0),
           clamp: withDefault(config.clamp, false),
-          precision: withDefault(config.precision, 0.005),
+          precision: config.precision,
           config,
         }
       }
