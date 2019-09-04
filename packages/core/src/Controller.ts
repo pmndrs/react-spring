@@ -500,8 +500,8 @@ export class Controller<State extends Indexable = any> {
     // Merge `from` values with `to` values
     this.merged = freeze({ ...from, ...to })
 
-    // True if any animation was updated
-    let changed = false
+    // All changed animations are stored here
+    const changed: string[] = []
 
     // The animations that are starting or restarting
     const started: string[] = []
@@ -532,7 +532,7 @@ export class Controller<State extends Indexable = any> {
       if (!props.reset && !isAttaching && isEqual(goalValue, currValue)) {
         // The animation might be stopped already.
         if (!state.idle) {
-          changed = true
+          changed.push(key)
           this._stopAnimation(key)
         }
         continue
@@ -623,6 +623,7 @@ export class Controller<State extends Indexable = any> {
           callProp(this.props.config, key) ||
           emptyObj
 
+        changed.push(key)
         if (!(immediate || G.skipAnimation)) {
           started.push(key)
         }
@@ -632,7 +633,6 @@ export class Controller<State extends Indexable = any> {
           (parent && parent.getPayload(key)) ||
           toArray(isInterpolated ? 1 : goalValue)
 
-        changed = true
         this.animations[key] = {
           key,
           idle: false,
@@ -656,9 +656,10 @@ export class Controller<State extends Indexable = any> {
       }
     }
 
-    if (changed) {
+    if (changed.length) {
+      this._attach(changed)
+
       if (started.length) {
-        this._attach(started)
         if (is.fun(onStart))
           each(started, key => {
             onStart(this.animations[key] as any)
