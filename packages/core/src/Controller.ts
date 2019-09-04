@@ -279,6 +279,7 @@ export class Controller<State extends Indexable = any> {
       const attached = keys.filter(key => {
         const payload = c.getPayload(key)
         if (payload) {
+          c.animations[key].idle = false
           each(payload, node => node.done && node.reset(true))
           return true
         }
