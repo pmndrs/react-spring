@@ -583,7 +583,7 @@ export class Controller<State extends Indexable = any> {
             continue
           }
           if (immediate) {
-            input.setValue(1, false)
+            input.setValue(1)
           }
         } else {
           // Convert values into Animated nodes (reusing nodes whenever possible)
@@ -612,7 +612,7 @@ export class Controller<State extends Indexable = any> {
             continue
           }
           if (immediate) {
-            animated.setValue!(goalValue, false)
+            animated.setValue!(goalValue)
           }
         }
 
