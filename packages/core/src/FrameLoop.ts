@@ -160,7 +160,7 @@ export class FrameLoop {
         : config.initialVelocity
 
       const precision =
-        config.precision || Math.min(1, Math.abs(to - from) / 1000)
+        config.precision || Math.min(1, Math.abs(to - from) * 0.001)
 
       let finished = false
       let position = animated.lastPosition
@@ -197,8 +197,8 @@ export class FrameLoop {
         const numSteps = Math.ceil(dt / step)
 
         for (let n = 0; n < numSteps; ++n) {
-          const springForce = (-config.tension! / 1000000) * (position - to)
-          const dampingForce = (-config.friction! / 1000) * velocity
+          const springForce = -config.tension! * 0.000001 * (position - to)
+          const dampingForce = -config.friction! * 0.001 * velocity
           const acceleration = (springForce + dampingForce) / config.mass! // pt/ms^2
           velocity = velocity + acceleration * step // pt/ms
           position = position + velocity * step
