@@ -73,10 +73,9 @@ export class FrameLoop {
         this.lastTime = this.lastTime !== void 0 ? this.lastTime : time
         let dt = time - this.lastTime!
 
-        // http://gafferongames.com/game-physics/fix-your-timestep/
-        if (dt > 64) dt = 64
-
         if (dt > 0) {
+          // http://gafferongames.com/game-physics/fix-your-timestep/
+          if (dt > 64) dt = 64
           // Update the animations.
           const updates: FrameUpdate[] = []
           for (const id of Array.from(this.controllers.keys())) {
