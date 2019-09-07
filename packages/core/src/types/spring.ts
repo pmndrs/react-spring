@@ -1,7 +1,5 @@
-import { Animatable, EasingFunction, SpringValue, RawValues } from 'shared'
-import { AnimatedValue, Animated } from '@react-spring/animated'
+import { Animatable, Indexable, EasingFunction } from 'shared'
 import {
-  Arrify,
   Merge,
   OneOrMore,
   PickAnimated,
@@ -10,8 +8,9 @@ import {
   UnknownProps,
 } from './common'
 import { Controller } from '../Controller'
+import { Spring, OnStart, OnRest, OnChange } from '../Spring'
 
-export { Animatable, SpringValue, RawValues }
+export { Animatable }
 
 /**
  * The map of `Animated` objects passed into `animated()` components.
@@ -26,9 +25,9 @@ export type SpringValues<T extends object> = AnimationValues<PickAnimated<T>>
  * The `T` parameter should only contain animated props.
  */
 export type AnimationValues<T extends object> = Remap<
-  { [key: string]: SpringValue<any> } & ({} extends Required<T>
+  { [key: string]: Spring<any> } & ({} extends Required<T>
     ? unknown
-    : { [P in keyof T]: SpringValue<Exclude<T[P], void>> })
+    : { [P in keyof T]: Spring<Exclude<T[P], void>> })
 >
 
 export interface SpringStopFn<T extends object = any> {
@@ -96,7 +95,7 @@ export interface SpringConfig {
   mass?: number
   tension?: number
   friction?: number
-  velocity?: number
+  velocity?: number | number[]
   clamp?: number | boolean
   precision?: number
   delay?: number
@@ -128,61 +127,6 @@ export type ToProp<T extends object = {}> =
   | ReadonlyArray<UnknownPartial<T> & AnimationProps<T>>
   | SpringAsyncFn<T>
 
-export type Animation<T = unknown, P extends string = string> =
-  | IdleAnimation<T, P>
-  | ActiveAnimation<T, P>
-
-/** The array of animation configs for a set of animated props */
-export type AnimationList<State extends object> = Animation<
-  State[StringKeys<State>],
-  StringKeys<State>
->[]
-
-/** The dictionary of animation configs for a set of animated props */
-export type AnimationMap<State extends object> = {
-  [P in StringKeys<State>]: Animation<State[P], P>
-}
-
-/** The dictionary of animated nodes for a set of animated props */
-export type AnimatedNodes<State extends object> = {
-  [P in StringKeys<State>]: Animation<State[P]>['animated']
-}
-
-/** These properties exist in every animation config. */
-interface AnimationConfig<T = unknown, P extends string = string> {
-  key: P
-  isNew?: boolean
-  goalValue: T
-  animatedValues: AnimatedValue[]
-  // Note: This type is not 100% accurate, but it makes TypeScript happy.
-  animated: Animated &
-    SpringValue<T> & {
-      /**
-       * Set the animated value. The `flush` argument is true by default.
-       */
-      setValue?: (newValue: T, flush?: boolean) => void
-    }
-}
-
-/** An animation ignored by the frameloop */
-export interface IdleAnimation<T = unknown, P extends string = string>
-  extends AnimationConfig<T, P> {
-  idle: true
-}
-
-/** An animation being executed by the frameloop */
-export interface ActiveAnimation<T = unknown, P extends string = string>
-  extends AnimationConfig<T, P>,
-    Omit<SpringConfig, 'velocity'> {
-  idle: false
-  config: SpringConfig
-  initialVelocity: number
-  immediate: boolean
-  w0: number
-  toValues: Arrify<T>
-  fromValues: Arrify<T>
-}
-
 /**
  * Animation-related props
  *
@@ -191,7 +135,8 @@ export interface ActiveAnimation<T = unknown, P extends string = string>
  * Note: The `onFrame` and `onRest` props do *not* have entirely accurate
  * argument types, because the ambiguity helps with inference.
  */
-export interface AnimationProps<T extends object = {}> extends AnimationEvents {
+export interface AnimationProps<T extends object = Indexable>
+  extends AnimationEvents {
   /**
    * Configure the spring behavior for each key.
    */
@@ -199,7 +144,7 @@ export interface AnimationProps<T extends object = {}> extends AnimationEvents {
   /**
    * Milliseconds to wait before applying the other props.
    */
-  delay?: number
+  delay?: number | ((key: keyof T) => number)
   /**
    * When true, props jump to their goal values instead of animating.
    */
@@ -217,6 +162,10 @@ export interface AnimationProps<T extends object = {}> extends AnimationEvents {
    * Swap the `to` and `from` props.
    */
   reverse?: boolean
+  /**
+   * Prevent an update from being cancelled.
+   */
+  force?: boolean
 }
 
 /**
@@ -235,11 +184,15 @@ export interface AnimationEvents<T extends object = {}> {
   /**
    * Called when an animation is about to start
    */
-  onStart?: (animation: ActiveAnimation) => void
+  onStart?: OnStart<T>
   /**
    * Called when all animations come to a stand-still
    */
-  onRest?: (restValues: Readonly<T & UnknownProps>) => void
+  onRest?: OnRest<T>
+  /**
+   * Called when a key/value pair is changed
+   */
+  onChange?: OnChange<T>
   /**
    * Called on every frame when animations are active
    */

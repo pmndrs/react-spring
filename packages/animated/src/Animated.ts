@@ -1,43 +1,33 @@
 import { AnimatedValue } from './AnimatedValue'
-export const animatedTag = Symbol.for('isAnimated')
+import { Dependency } from './Dependency'
 
-export const isAnimated = (val: any): val is Animated =>
-  !!(val && val[animatedTag])
+const tag = Symbol.for('animated')
 
-export abstract class Animated {
-  protected [animatedTag] = true
-  protected children = new Set<Animated>()
-  protected payload?: Set<AnimatedValue>
+/** Returns true for `Animated` nodes. Returns false for `Spring` objects. */
+export const isAnimated = (value: any): value is Animated =>
+  !!(value && value[tag])
 
-  /** Returns all values contained by this node. Pass true for only the animated values. */
-  abstract getValue(animated?: boolean): any
+export abstract class Animated<T = any> {
+  readonly [tag] = true
 
-  /** Returns the set of `AnimatedValue` nodes contained by this node. */
-  getPayload(): ReadonlySet<AnimatedValue> {
+  /** The cache of animated numbers */
+  protected payload?: Payload
+
+  /** Returns every value of the node. Pass true for only the animated values. */
+  abstract getValue(animated?: boolean): T
+
+  /** Returns every animated number used by this node. */
+  getPayload(): Payload {
     return this.payload!
   }
 
-  /** Replace an `AnimatedValue` node in the payload. */
-  abstract updatePayload(prev: Animated, next: Animated): void
+  /** The `AnimatedProps` class sets this before initializing */
+  static context: TreeContext | null = null
+}
 
-  /** Returns the set of animated nodes that depend on this node. */
-  getChildren(): ReadonlySet<Animated> {
-    return this.children
-  }
+export type Payload = readonly AnimatedValue<number>[]
 
-  addChild(child: Animated) {
-    this.children.size || this._attach()
-    this.children.add(child)
-  }
-
-  removeChild(child: Animated) {
-    this.children.delete(child)
-    this.children.size || this._detach()
-  }
-
-  /** Called when this node goes from 0 children to 1+ children. */
-  abstract _attach(): void
-
-  /** Called when this node goes from 1+ children to 0 children. */
-  abstract _detach(): void
+export type TreeContext = {
+  /** The value streams in the tree */
+  dependencies: Set<Dependency>
 }

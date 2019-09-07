@@ -48,7 +48,7 @@ export function normalizeColor(color: number | string) {
   if ((match = matchers.hex6.exec(color)))
     return parseInt(match[1] + 'ff', 16) >>> 0
 
-  if (G.colorNames && G.colorNames[color] !== void 0) {
+  if (G.colorNames && G.colorNames[color] !== undefined) {
     return G.colorNames[color]
   }
 

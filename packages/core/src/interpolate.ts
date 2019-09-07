@@ -1,0 +1,56 @@
+import {
+  Constrain,
+  OneOrMore,
+  Animatable,
+  ExtrapolateType,
+  InterpolatorConfig,
+  InterpolatorFn,
+} from 'shared/types'
+import { deprecateInterpolate } from 'shared/deprecations'
+import { Dependency } from '@react-spring/animated'
+import { To } from './To'
+
+/** Map the value of one or more dependencies */
+export const to: Interpolator = (source: any, ...args: [any]) =>
+  new To(source, args)
+
+/** @deprecated Use the `to` export instead */
+export const interpolate: Interpolator = (source: any, ...args: [any]) => {
+  deprecateInterpolate()
+  return new To(source, args)
+}
+
+/** Extract the raw value types that are being interpolated */
+export type Interpolated<T extends ReadonlyArray<any>> = {
+  [P in keyof T]: T[P] extends { get(): infer U } ? U : never
+}
+
+/**
+ * This interpolates one or more `Dependency` objects.
+ * The exported `interpolate` function uses this type.
+ */
+export interface Interpolator {
+  // Single parent
+  <In, Out>(parent: Dependency<In>, interpolator: InterpolatorFn<In, Out>): To<
+    Out
+  >
+
+  // Tuple of parents
+  <In extends ReadonlyArray<Dependency>, Out>(
+    parents: In,
+    interpolator: (...args: Interpolated<In>) => Out
+  ): To<Out>
+
+  // Interpolation config
+  <Out>(parents: OneOrMore<Dependency>, config: InterpolatorConfig<Out>): To<
+    Animatable<Out>
+  >
+
+  // Range shortcuts
+  <Out>(
+    parents: OneOrMore<Dependency<number>>,
+    range: readonly number[],
+    output: readonly Constrain<Out, Animatable>[],
+    extrapolate?: ExtrapolateType
+  ): To<Animatable<Out>>
+}

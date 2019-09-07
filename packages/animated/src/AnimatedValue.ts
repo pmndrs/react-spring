@@ -1,103 +1,42 @@
-import { Animatable, SpringValue, InterpolatorArgs, is, each } from 'shared'
-import { AnimatedProps } from './AnimatedProps'
-import { to } from './interpolate'
+import { is } from 'shared'
 import { Animated } from './Animated'
-import { deprecateInterpolate } from 'shared/deprecations'
 
 /** An animated number or a native attribute value */
-export class AnimatedValue<T = unknown> extends Animated
-  implements SpringValue<T> {
-  private views = new Set<AnimatedProps>()
-
-  value: T
-  startPosition!: number
+export class AnimatedValue<T = any> extends Animated {
+  done!: boolean
+  elapsedTime!: number
   lastPosition!: number
   lastVelocity!: number | null
-  elapsedTime!: number
-  done!: boolean
 
-  constructor(value: T) {
+  constructor(protected _value: T) {
     super()
-    this.value = value
-    this.payload = new Set([this])
-    this.reset(false)
+    this.reset()
+  }
+
+  static create<T>(from: T, _to?: T | null) {
+    return new AnimatedValue(from)
+  }
+
+  getPayload() {
+    return [this] as const
   }
 
   getValue() {
-    return this.value
+    return this._value
   }
 
-  setValue(value: T, flush?: boolean) {
-    this.value = value
-    if (flush !== false) {
-      if (!this.views.size) {
-        collectViews(this, this.views)
-      }
-      each(this.views, view => view.update())
-    }
+  setValue(value: T) {
+    this._value = value
   }
 
-  to<Out extends Animatable>(
-    ...args: InterpolatorArgs<T, Out>
-  ): SpringValue<Out> {
-    return (to as any)(this, ...args)
-  }
-
-  interpolate<Out extends Animatable>(
-    ...args: InterpolatorArgs<T, Out>
-  ): SpringValue<Out> {
-    deprecateInterpolate()
-    return this.to(...args)
-  }
-
-  reset(isActive: boolean) {
-    if (is.num(this.value)) {
-      this.startPosition = this.value
-      this.lastPosition = this.value
+  reset(isActive?: boolean, _goal?: T) {
+    this.done = false
+    if (is.num(this._value)) {
+      this.elapsedTime = 0
+      this.lastPosition = this._value
       if (!isActive) {
         this.lastVelocity = null
       }
-      this.elapsedTime = 0
     }
-    this.done = false
-    this.views.clear()
-  }
-
-  // This is never called for AnimatedValue nodes.
-  updatePayload: any
-
-  // Do nothing for either of these.
-  _attach() {}
-  _detach() {}
-}
-
-/**
- * This library works by building a directed acyclic graph of dependencies
- * transparently whenever you render your Animated components.
- *
- *               new Animated.Value(0)
- *     .interpolate()        .interpolate()    new Animated.Value(1)
- *         opacity               translateY      scale
- *          style                         transform
- *         View#234                         style
- *                                         View#123
- *
- * A) Top Down phase
- * When an AnimatedValue is updated, we recursively go down through this
- * graph in order to find leaf nodes: the components that depend on our value.
- *
- * B) Bottom Up phase
- * When a view is flagged as needing an update, we recursively go back up
- * in order to build the new props that it needs. This two-phase process is
- * necessary because some props (eg: "transform") can have multiple parents.
- */
-function collectViews(
-  node: Animated | AnimatedProps,
-  views: Set<AnimatedProps>
-) {
-  if ('update' in node) {
-    views.add(node)
-  } else {
-    each(node.getChildren(), child => collectViews(child, views))
   }
 }

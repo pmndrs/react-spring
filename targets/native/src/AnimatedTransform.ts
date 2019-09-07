@@ -2,58 +2,42 @@ import { each } from 'shared'
 import {
   Animated,
   isAnimated,
-  addChild,
-  removeChild,
+  Payload,
   AnimatedValue,
+  AnimatedObject,
 } from '@react-spring/animated'
 
 type Transform = { [key: string]: string | number | Animated }
 
-export class AnimatedTransform extends Animated {
-  constructor(protected source: Transform[]) {
-    super()
-    this.payload = toPayload(source)
+type Source = Transform[] | null
+
+export class AnimatedTransform extends AnimatedObject {
+  protected source!: Source
+  constructor(source: Source) {
+    super(source)
   }
 
   getValue() {
-    return this.source.map(transform => {
-      const obj: any = {}
-      each(transform, (val, key) => {
-        obj[key] = isAnimated(val) ? val.getValue() : val
-      })
-      return obj
-    })
+    return this.source
+      ? this.source.map(source => {
+          const transform: any = {}
+          each(source, (source, key) => {
+            transform[key] = isAnimated(source) ? source.getValue() : source
+          })
+          return transform
+        })
+      : []
   }
 
-  updatePayload(prev: Animated, next: Animated) {
-    const source = [...this.source]
-    each(source, (transform, i) => {
-      const key = Object.keys(transform)[0]
-      if (transform[key] === prev) {
-        source[i] = { [key]: next }
-      }
-    })
+  setValue(source: Source) {
     this.source = source
-    this.payload = toPayload(source)
+    this.payload = this._makePayload(source)
   }
 
-  _attach() {
-    each(this.source, transform => each(transform, addChild, this))
+  protected _makePayload(source: Source) {
+    if (!source) return []
+    const payload = new Set<AnimatedValue>()
+    each(source, transform => each(transform, this._addToPayload, payload))
+    return Array.from(payload)
   }
-
-  _detach() {
-    each(this.source, transform => each(transform, removeChild, this))
-  }
-}
-
-function toPayload(source: Transform[]) {
-  const payload = new Set<AnimatedValue>()
-  each(source, transform =>
-    each(transform, val => {
-      if (isAnimated(val)) {
-        each(val.getPayload(), node => payload.add(node))
-      }
-    })
-  )
-  return payload
 }

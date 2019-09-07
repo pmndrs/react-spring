@@ -1,22 +1,22 @@
 import * as G from 'shared/globals'
-import { Animated } from '@react-spring/animated'
+import { is, each } from 'shared'
+import { isDependency } from '@react-spring/animated'
 import { FrameRequestCallback } from 'shared/types'
-import { Controller, FrameUpdate } from './Controller'
-import { ActiveAnimation } from './types/spring'
+import { Spring } from './Spring'
 
 type FrameUpdater = (this: FrameLoop, time?: number) => boolean
-type FrameListener = (this: FrameLoop, updates: FrameUpdate[]) => void
+type FrameListener = (this: FrameLoop) => void
 type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
 export class FrameLoop {
   /**
-   * On each frame, these controllers are searched for values to animate.
+   * The animated springs
    */
-  controllers = new Map<number, Controller>()
+  springs = new Set<Spring>()
   /**
-   * True when no controllers are animating.
+   * True when at least one spring is animating.
    */
-  idle = true
+  active = true
   /**
    * Process the next animation frame.
    *
@@ -27,17 +27,15 @@ export class FrameLoop {
   update: FrameUpdater
   /**
    * This is called at the end of every frame.
-   *
-   * The listener is passed an array of key-value pairs for each controller that
-   * was updated in the most recent frame. The indices are directly mapped to
-   * the `controllers` array, so empty arrays may exist.
    */
-  onFrame: FrameListener
+  onFrame?: FrameListener
   /**
    * The `requestAnimationFrame` function or a custom scheduler.
    */
   requestFrame: RequestFrameFn
-
+  /**
+   * The timestamp of the most recent frame
+   */
   lastTime?: number
 
   constructor({
@@ -53,127 +51,105 @@ export class FrameLoop {
       // The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
       requestFrame || (fn => (void 0, G.requestAnimationFrame)(fn))
 
-    this.onFrame =
-      (onFrame && onFrame.bind(this)) ||
-      (updates => {
-        updates.forEach(update => {
-          const ctrl = this.controllers.get(update[0])
-          if (ctrl) ctrl.onFrame(update)
-        })
-      })
+    this.onFrame = onFrame
 
     this.update =
       (update && update.bind(this)) ||
       ((time?: number) => {
-        if (this.idle) {
+        if (!this.active) {
           return false
         }
 
-        time = time !== void 0 ? time : performance.now()
-        this.lastTime = this.lastTime !== void 0 ? this.lastTime : time
-        let dt = time - this.lastTime!
+        if (is.und(time)) time = performance.now()
+        let dt = is.und(this.lastTime) ? 0 : time - this.lastTime
 
         // http://gafferongames.com/game-physics/fix-your-timestep/
         if (dt > 64) dt = 64
 
         if (dt > 0) {
           // Update the animations.
-          const updates: FrameUpdate[] = []
-          for (const id of Array.from(this.controllers.keys())) {
-            let idle = true
-            const ctrl = this.controllers.get(id)!
-            const changes: FrameUpdate[2] = ctrl.props.onFrame ? [] : null
-            for (const config of ctrl.configs) {
-              if (config.idle) continue
-              if (this.advance(dt, config, changes)) {
-                idle = false
-              }
-            }
-            if (idle || changes) {
-              updates.push([id, idle, changes])
-            }
+          runTopological(
+            Array.from(this.springs),
+            spring => spring.idle || this.advance(dt, spring)
+          )
+          if (this.onFrame) {
+            this.onFrame()
           }
-
-          // Notify the controllers!
-          this.onFrame(updates)
-          this.lastTime = time
-
-          // Are we done yet?
-          if (!this.controllers.size) {
-            return !(this.idle = true)
+          if (!this.springs.size) {
+            this.lastTime = undefined
+            return (this.active = false)
           }
         }
 
-        // Keep going.
+        this.lastTime = time
         this.requestFrame(this.update)
         return true
       })
   }
 
-  start(ctrl: Controller) {
-    this.controllers.set(ctrl.id, ctrl)
-    if (this.idle) {
-      this.idle = false
-      this.lastTime = undefined
+  /**
+   * Start animating the given spring
+   */
+  start(spring: Spring) {
+    this.springs.add(spring)
+    if (!this.active) {
+      this.active = true
       this.requestFrame(this.update)
     }
   }
 
-  stop(ctrl: Controller) {
-    this.controllers.delete(ctrl.id)
+  /**
+   * Stop animating the given spring
+   */
+  stop(spring: Spring) {
+    this.springs.delete(spring)
   }
 
-  /** Advance an animation forward one frame. */
-  advance(
-    dt: number,
-    config: ActiveAnimation,
-    changes: FrameUpdate[2]
-  ): boolean {
-    let active = false
+  /**
+   * Advance an animation forward one frame.
+   */
+  advance(dt: number, spring: Spring) {
+    let idle = true
     let changed = false
-    for (let i = 0; i < config.animatedValues.length; i++) {
-      const animated = config.animatedValues[i]
-      if (animated.done) continue
+
+    const anim = spring.animation!
+    const parent = isDependency(anim.to) && anim.to
+    const payload = parent && parent.node.getPayload()
+
+    anim.values.forEach((node, i) => {
+      if (node.done) return
       changed = true
 
-      let to: any = config.toValues[i]
-      const target: any = to instanceof Animated ? to : null
-      if (target) to = target.getValue()
-
-      const from: any = config.fromValues[i]
+      let to: number = payload ? payload[i].getValue() : anim.toValues![i]
 
       // Jump to end value for immediate animations
-      if (
-        config.immediate ||
-        typeof from === 'string' ||
-        typeof to === 'string'
-      ) {
-        animated.setValue(to)
-        animated.done = true
-        continue
+      if (anim.immediate) {
+        node.setValue(to)
+        node.done = true
+        return
       }
 
-      const elapsed = (animated.elapsedTime += dt)
+      const elapsed = (node.elapsedTime += dt)
 
-      const v0 = Array.isArray(config.initialVelocity)
-        ? config.initialVelocity[i]
-        : config.initialVelocity
+      const from = anim.fromValues[i]
+      const config = anim.config
 
+      const v0 = is.arr(config.velocity) ? config.velocity[i] : config.velocity
       const precision =
         config.precision || Math.min(1, Math.abs(to - from) * 0.001)
 
-      let finished = false
-      let position = animated.lastPosition
-
+      let position = node.lastPosition
       let velocity: number
+      let finished: boolean
 
       // Duration easing
-      if (config.duration !== void 0) {
-        let p = config.progress!
-        p += (1 - p) * Math.min(1, elapsed / config.duration)
+      if (!is.und(config.duration)) {
+        let p = config.progress
+        if (config.duration <= 0) p = 1
+        else p += (1 - p) * Math.min(1, elapsed / config.duration)
 
-        position = from + config.easing!(p) * (to - from)
-        velocity = (position - animated.lastPosition) / dt
+        position = from + config.easing(p) * (to - from)
+        velocity = (position - node.lastPosition) / dt
 
         finished = p == 1
       }
@@ -186,20 +162,20 @@ export class FrameLoop {
         // derivative of position
         velocity = v0 * e
 
-        finished = Math.abs(animated.lastPosition - position) < 0.1
+        finished = Math.abs(node.lastPosition - position) < 0.1
         if (finished) to = position
       }
       // Spring easing
       else {
-        velocity = animated.lastVelocity == null ? v0 : animated.lastVelocity
+        velocity = node.lastVelocity == null ? v0 : node.lastVelocity
 
         const step = 0.05 / config.w0
         const numSteps = Math.ceil(dt / step)
 
         for (let n = 0; n < numSteps; ++n) {
-          const springForce = -config.tension! * 0.000001 * (position - to)
-          const dampingForce = -config.friction! * 0.001 * velocity
-          const acceleration = (springForce + dampingForce) / config.mass! // pt/ms^2
+          const springForce = -config.tension * 0.000001 * (position - to)
+          const dampingForce = -config.friction * 0.001 * velocity
+          const acceleration = (springForce + dampingForce) / config.mass // pt/ms^2
           velocity = velocity + acceleration * step // pt/ms
           position = position + velocity * step
         }
@@ -214,7 +190,7 @@ export class FrameLoop {
 
         if (isBouncing) {
           velocity =
-            -velocity * (config.clamp === true ? 0 : (config.clamp as any))
+            -velocity * (config.clamp === true ? 0 : (config.clamp as number))
         }
 
         const isVelocity = Math.abs(velocity) <= precision
@@ -224,24 +200,47 @@ export class FrameLoop {
         finished =
           (isBouncing && velocity === 0) || (isVelocity && isDisplacement)
       }
+
       // Trails aren't done until their parents conclude
-      if (finished && !(target && !target.done)) {
-        // Ensure that we end up with a round value
-        if (animated.value !== to) position = to
-        animated.done = true
+      if (finished && !(payload && payload.some(node => !node.done))) {
+        position = parent ? to : anim.to
+        node.done = true
       } else {
-        active = true
+        idle = false
       }
 
-      animated.setValue(position)
-      animated.lastPosition = position
-      animated.lastVelocity = velocity
+      node.setValue(position)
+      node.lastPosition = position
+      node.lastVelocity = velocity
+    })
+
+    // Notify observers.
+    if (changed) {
+      spring._onChange(spring.get(), idle)
     }
 
-    if (changes && changed) {
-      changes.push([config.key, config.animated.getValue()])
+    // Exit the frameloop.
+    if (idle) {
+      spring._finish()
     }
-
-    return active
   }
+}
+
+function runTopological(
+  springs: Spring[],
+  action: (spring: Spring, id: number) => void
+) {
+  const visited: true[] = []
+  each(springs, function run(spring: Spring, i: number) {
+    if (visited[i]) return
+    visited[i] = true
+
+    const { to } = spring
+    if (to instanceof Spring) {
+      const i = springs.indexOf(to)
+      if (~i) run(to, i)
+    }
+
+    action(spring, spring.id)
+  })
 }

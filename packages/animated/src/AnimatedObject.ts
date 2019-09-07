@@ -1,59 +1,63 @@
 import { Indexable, each } from 'shared'
-import { Animated, isAnimated } from './Animated'
+import { Animated, isAnimated, Payload } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
+import { isDependency } from './Dependency'
+
+type Source = Indexable | null
 
 export class AnimatedObject extends Animated {
-  protected payload!: Set<AnimatedValue>
-  constructor(protected source: Indexable) {
+  protected source!: Source
+  protected payload!: Payload
+  constructor(source: Source = null) {
     super()
-    this.payload = toPayload(source)
+    this.setValue(source)
   }
 
-  getValue(animated?: boolean) {
-    const obj: any = {}
-    each(this.source, (val, key) => {
-      if (isAnimated(val)) {
-        obj[key] = val.getValue(animated)
+  getValue(animated?: boolean): Source {
+    if (!this.source) return null
+    const values: Indexable = {}
+    each(this.source, (source, key) => {
+      if (isAnimated(source)) {
+        values[key] = source.getValue(animated)
+      } else if (isDependency(source)) {
+        values[key] = source.get()
       } else if (!animated) {
-        obj[key] = val
+        values[key] = source
       }
     })
-    return obj
+    return values
   }
 
-  updatePayload(prev: Animated, next: Animated) {
-    const source = { ...this.source }
-    each(source, (val, key) => {
-      if (val === prev) source[key] = next
-    })
+  /** Replace the raw object data */
+  setValue(source: Source) {
     this.source = source
-    this.payload = toPayload(source)
+    this.payload = this._makePayload(source)
   }
 
-  _attach() {
-    each(this.source, addChild, this)
-  }
-
-  _detach() {
-    each(this.source, removeChild, this)
-  }
-}
-
-/** Convert an array or object to a flat payload */
-export function toPayload(source: Indexable) {
-  const payload = new Set<AnimatedValue>()
-  each(source, val => {
-    if (isAnimated(val)) {
-      each(val.getPayload(), node => payload.add(node))
+  reset(isActive?: boolean, _goal?: Indexable) {
+    if (this.payload) {
+      each(this.payload, node => node.reset(isActive))
     }
-  })
-  return payload
-}
+  }
 
-export function addChild(this: Animated, parent: any) {
-  if (isAnimated(parent)) parent.addChild(this)
-}
+  /** Create a payload set. */
+  protected _makePayload(source: Source) {
+    if (!source) return []
+    const payload = new Set<AnimatedValue>()
+    each(source, this._addToPayload, payload)
+    return Array.from(payload)
+  }
 
-export function removeChild(this: Animated, parent: any) {
-  if (isAnimated(parent)) parent.removeChild(this)
+  /** Add to a payload set. */
+  protected _addToPayload(this: Set<AnimatedValue>, source: any) {
+    if (isDependency(source)) {
+      if (Animated.context) {
+        Animated.context.dependencies.add(source)
+      }
+      source = source.node
+    }
+    if (isAnimated(source)) {
+      each(source.getPayload(), node => this.add(node))
+    }
+  }
 }
