@@ -1,49 +1,35 @@
-import { Animatable, SpringValue } from './animated'
-import { Arrify } from './common'
+import { Arrify, Constrain, Animatable } from '../types'
 
 export type EasingFunction = (t: number) => number
 
 export type ExtrapolateType = 'identity' | 'clamp' | 'extend'
 
-/** These types can be interpolated */
-export type Interpolatable = ReadonlyArray<number | string>
+export interface InterpolatorFactory {
+  <In, Out>(interpolator: InterpolatorFn<In, Out>): typeof interpolator
 
-/**
- * Interpolate the value with a custom interpolation function,
- * a configuration object or keyframe-like ranges.
- *
- * @example
- *
- * interpolate(alpha => `rgba(255, 165, 0, ${alpha})`)
- * interpolate({ range: [0, 1], output: ['yellow', 'red'], extrapolate: 'clamp' })
- * interpolate([0, 0.25, 1], ['yellow', 'orange', 'red'])
- */
-export interface Interpolator<In extends ReadonlyArray<any> = any[]> {
-  <Out extends Animatable = Animatable>(
+  <Out>(config: InterpolatorConfig<Out>): (input: number) => Animatable<Out>
+
+  <Out>(
     range: readonly number[],
-    output: readonly Out[],
+    output: readonly Constrain<Out, Animatable>[],
     extrapolate?: ExtrapolateType
-  ): SpringValue<Animatable<Out>>
+  ): (input: number) => Animatable<Out>
 
-  <Out extends Animatable = Animatable>(
-    config: InterpolatorConfig<Out> | InterpolatorFn<In, Out>
-  ): SpringValue<Out>
+  <In, Out>(...args: InterpolatorArgs<In, Out>): InterpolatorFn<In, Out>
 }
 
-// Parameters<Interpolation> is insufficient 😢
-export type InterpolatorArgs<In = any, Out extends Animatable = Animatable> =
-  | [InterpolatorConfig<Out> | InterpolatorFn<Arrify<In>, Out>]
-  | [readonly number[], readonly Out[], (ExtrapolateType | undefined)?]
+export type InterpolatorArgs<In = any, Out = any> =
+  | [InterpolatorFn<Arrify<In>, Out>]
+  | [InterpolatorConfig<Out>]
+  | [
+      readonly number[],
+      readonly Constrain<Out, Animatable>[],
+      (ExtrapolateType | undefined)?
+    ]
 
-/**
- * An "interpolator" transforms an animated value. Animated arrays are spread
- * into the interpolator.
- */
-export type InterpolatorFn<In extends ReadonlyArray<any> = any[], Out = any> = (
-  ...input: In
-) => Out
+export type InterpolatorFn<In, Out> = (...inputs: Arrify<In>) => Out
 
-export type InterpolatorConfig<Out extends Animatable = Animatable> = {
+export type InterpolatorConfig<Out = Animatable> = {
   /**
    * What happens when the spring goes below its target value.
    *
@@ -92,7 +78,7 @@ export type InterpolatorConfig<Out extends Animatable = Animatable> = {
   /**
    * Output values from the interpolation function. Should match the length of the `range` array.
    */
-  output: readonly Out[]
+  output: readonly Constrain<Out, Animatable>[]
 
   /**
    * Transformation to apply to the value before interpolation.

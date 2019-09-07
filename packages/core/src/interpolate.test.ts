@@ -1,5 +1,4 @@
-import { AnimatedValue, AnimatedArray, to } from '.'
-import { SpringValue } from 'shared'
+import { AnimatedValue, AnimatedArray, to } from '../../animated/src'
 import { assert, _ } from 'spec.ts'
 
 jest.mock('./interpolate')
@@ -51,7 +50,7 @@ describe('AnimatedValue interpolation options', () => {
       [0, 2, 4, 6, 8],
       [10, 20, 30, 40, 50]
     )
-    assert(value, _ as SpringValue<number>)
+    assert(value, _ as Spring<number>)
     expect(value.getValue()).toBe(20)
   })
 

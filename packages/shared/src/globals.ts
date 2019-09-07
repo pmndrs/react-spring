@@ -1,4 +1,4 @@
-import { SpringInterpolator, InterpolatorConfig } from './types'
+import { InterpolatorConfig } from './types'
 import { ElementType } from 'react'
 
 declare const window: {
@@ -14,9 +14,6 @@ export let defaultElement: string | ElementType
 
 /** Provide custom logic for native updates */
 export let applyAnimatedValues: (node: any, props: any) => boolean | void
-
-/** Provide a custom `interpolate` function */
-export let createAnimatedInterpolation: SpringInterpolator
 
 /** Provide custom logic for string interpolation */
 export let createStringInterpolator: (
@@ -73,7 +70,6 @@ export interface AnimatedGlobals {
   getComponentProps?: typeof getComponentProps
   applyAnimatedValues?: typeof applyAnimatedValues
   createStringInterpolator?: typeof createStringInterpolator
-  createAnimatedInterpolation?: typeof createAnimatedInterpolation
   createAnimatedTransform?: typeof createAnimatedTransform
   createAnimatedStyle?: typeof createAnimatedStyle
   requestAnimationFrame?: typeof requestAnimationFrame
@@ -90,7 +86,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     getComponentProps,
     applyAnimatedValues,
     createStringInterpolator,
-    createAnimatedInterpolation,
     createAnimatedTransform,
     createAnimatedStyle,
     requestAnimationFrame,
@@ -105,7 +100,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       getComponentProps,
       applyAnimatedValues,
       createStringInterpolator,
-      createAnimatedInterpolation,
       createAnimatedTransform,
       createAnimatedStyle,
       requestAnimationFrame,
@@ -118,7 +112,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
 function pluckDefined(globals: any) {
   const defined: any = {}
   for (const key in globals) {
-    if (globals[key] !== void 0) defined[key] = globals[key]
+    if (globals[key] !== undefined) defined[key] = globals[key]
   }
   return defined
 }

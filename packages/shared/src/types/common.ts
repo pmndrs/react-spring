@@ -26,3 +26,11 @@ export type AssignableKeys<T, U> = T extends object
       }[Extract<keyof T, keyof U>]
     : never
   : never
+
+/** Give "any" its own class */
+declare class Any {
+  _: never
+}
+
+/** Better type errors for overloads with generic types */
+export type Constrain<T, U> = [T] extends [Any] ? U : [T] extends [U] ? T : U
