@@ -30,7 +30,6 @@ export {
   UnknownProps,
 } from './types/common'
 
-export { interpolate, to, isAnimated } from '@react-spring/animated'
 export { createInterpolator } from 'shared'
 
 export * from 'shared/types/animated'

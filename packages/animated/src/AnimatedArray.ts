@@ -1,52 +1,41 @@
-import { is, Animatable, SpringValue, InterpolatorArgs, each } from 'shared'
-import { deprecateInterpolate } from 'shared/deprecations'
-import { Animated } from './Animated'
-import { AnimatedObject, toPayload } from './AnimatedObject'
-import { to } from './interpolate'
-import invariant from 'tiny-invariant'
+import { needsInterpolation, each } from 'shared'
+import { AnimatedObject } from './AnimatedObject'
+import { AnimatedString } from './AnimatedString'
+import { AnimatedValue } from './AnimatedValue'
+
+type Source = (AnimatedValue | AnimatedString)[]
 
 /** An array of animated nodes */
-export class AnimatedArray extends AnimatedObject
-  implements SpringValue<any[]> {
-  protected source!: Animated[]
-  constructor(source: Animated[]) {
+export class AnimatedArray extends AnimatedObject {
+  protected source!: Source
+  constructor(source: Source) {
     super(source)
   }
 
-  getValue(animated?: boolean) {
-    return this.source.map(node => node.getValue(animated))
+  static create(from: any[], to?: any[]) {
+    return new AnimatedArray(makeAnimated(from, to))
   }
 
-  setValue(value: any, flush?: boolean) {
-    const nodes = this.payload
-    if (is.arr(value)) {
-      invariant(value.length == nodes.size)
-      let i = 0
-      each(nodes, node => node.setValue(value[i++], flush))
+  getValue() {
+    return this.source.map(node => node.getValue())
+  }
+
+  setValue(newValue: any[]) {
+    // Reuse the payload when lengths are equal.
+    if (newValue.length == this.payload!.length) {
+      each(this.payload, (node, i) => node.setValue(newValue[i]))
     } else {
-      each(nodes, node => node.setValue(value, flush))
+      // Remake the payload when length changes.
+      this.source = makeAnimated(newValue)
+      this.payload = this._makePayload(this.source)
     }
   }
-
-  to<Out extends Animatable>(
-    ...args: InterpolatorArgs<any[], Out>
-  ): SpringValue<Out> {
-    return (to as any)(this, ...args)
-  }
-
-  interpolate<Out extends Animatable>(
-    ...args: InterpolatorArgs<any[], Out>
-  ): SpringValue<Out> {
-    deprecateInterpolate()
-    return this.to(...args)
-  }
-
-  updatePayload(prev: Animated, next: Animated) {
-    const source = [...this.source]
-    each(source, (val, index) => {
-      if (val === prev) source[index] = next
-    })
-    this.source = source
-    this.payload = toPayload(source)
-  }
 }
+
+const makeAnimated = (from: any[], to = from) =>
+  from.map((from, i) =>
+    (needsInterpolation(from) ? AnimatedString : AnimatedValue).create(
+      from,
+      to[i]
+    )
+  )

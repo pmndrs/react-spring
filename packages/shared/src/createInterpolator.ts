@@ -6,38 +6,21 @@ import {
   EasingFunction,
   ExtrapolateType,
   InterpolatorConfig,
-  Interpolatable,
+  InterpolatorFactory,
 } from './types'
 
-interface InterpolatorFactory {
-  <In extends Interpolatable, Out extends Animatable>(
-    interpolator: InterpolatorFn<In, Out>
-  ): typeof interpolator
-
-  <In extends Interpolatable, Out extends Animatable>(
-    config: InterpolatorConfig<Out>
-  ): (input: number) => Animatable<Out>
-
-  <Out extends Animatable>(
-    range: readonly number[],
-    output: readonly Out[],
-    extrapolate?: ExtrapolateType
-  ): (input: number) => Animatable<Out>
-}
-
-export const createInterpolator: InterpolatorFactory = <
-  Out extends Animatable = Animatable
->(
+export const createInterpolator: InterpolatorFactory = (
   range:
     | readonly number[]
-    | InterpolatorFn<any[], Out>
-    | InterpolatorConfig<Out>,
+    | InterpolatorFn<any[], any>
+    | InterpolatorConfig<any>,
   output?: readonly Animatable[],
   extrapolate?: ExtrapolateType
 ) => {
   if (is.fun(range)) {
     return range
   }
+
   if (is.arr(range)) {
     return createInterpolator({
       range,
@@ -45,9 +28,11 @@ export const createInterpolator: InterpolatorFactory = <
       extrapolate,
     })
   }
+
   if (is.str(range.output[0])) {
     return G.createStringInterpolator(range as any) as any
   }
+
   const config = range as InterpolatorConfig<number>
   const outputRange = config.output
   const inputRange = config.range || [0, 1]
