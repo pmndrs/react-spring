@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react'
-import { Indexable, OneOrMore } from './types'
+import { Indexable, Arrify } from './types'
+import * as G from './globals'
 
 interface IsArray {
   <T>(a: T): a is T & readonly any[]
@@ -14,8 +15,15 @@ export const is = {
   fun: (a: unknown): a is Function => typeof a === 'function',
   str: (a: unknown): a is string => typeof a === 'string',
   num: (a: unknown): a is number => typeof a === 'number',
-  und: (a: unknown): a is undefined => a === void 0,
+  und: (a: unknown): a is undefined => a === undefined,
 }
+
+// Not all strings can be animated (eg: {display: "none"})
+export const needsInterpolation = (value: unknown): value is string =>
+  is.str(value) &&
+  (value[0] == '#' ||
+    /\d/.test(value) ||
+    !!(G.colorNames && G.colorNames[value]))
 
 interface EachFn {
   <T = any, This = any>(
@@ -46,8 +54,8 @@ export const each: EachFn = (obj: Indexable, cb: any, ctx: any) => {
   }
 }
 
-export const toArray = <T>(a?: OneOrMore<T>): T[] =>
-  is.und(a) ? [] : Array.isArray(a) ? a : [a]
+export const toArray = <T>(a: T): Arrify<Exclude<T, void>> =>
+  is.und(a) ? [] : is.arr(a) ? (a as any) : [a]
 
 export const useOnce = (effect: React.EffectCallback) => useEffect(effect, [])
 

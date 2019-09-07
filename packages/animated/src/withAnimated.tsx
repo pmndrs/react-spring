@@ -1,6 +1,7 @@
 import React, { forwardRef, useRef, Ref, useEffect } from 'react'
-import { is, useForceUpdate, useOnce, ElementType } from 'shared'
+import { is, useForceUpdate, ElementType, each } from 'shared'
 import { AnimatedProps } from './AnimatedProps'
+import { Dependency } from './Dependency'
 import * as G from 'shared/globals'
 
 // For storing the animated version on the original component
@@ -22,16 +23,22 @@ export const withAnimated: WithAnimated = (Component: any) =>
 
 const createAnimatedComponent = (Component: any) =>
   forwardRef((rawProps: any, ref: Ref<any>) => {
-    const node = useRef<any>(null)
-    const props = useRef<AnimatedProps | null>(null)
+    const instanceRef = useRef<any>(null)
+    const hasInstance: boolean =
+      // Function components must use "forwardRef" to avoid being
+      // re-rendered on every animation frame.
+      !is.fun(Component) || Component.prototype.isReactComponent
 
     const forceUpdate = useForceUpdate()
-    const nextProps = new AnimatedProps(rawProps, () => {
-      if (!node.current) return
-      const didUpdate = G.applyAnimatedValues(
-        node.current,
-        nextProps.getValue(true)
-      )
+    const props = new AnimatedProps(() => {
+      const instance = instanceRef.current
+      if (hasInstance && !instance) {
+        return // The wrapped component forgot to forward its ref.
+      }
+
+      const didUpdate = instance
+        ? G.applyAnimatedValues(instance, props.getValue(true))
+        : false
 
       // Re-render the component when native updates fail.
       if (didUpdate === false) {
@@ -39,31 +46,25 @@ const createAnimatedComponent = (Component: any) =>
       }
     })
 
+    const dependencies = new Set<Dependency>()
+    props.setValue(rawProps, { dependencies })
+
     useEffect(() => {
-      const prevProps = props.current
-      props.current = nextProps
-
-      // To avoid causing a cascade of detachment, we must detach
-      // the old props only *after* the new props are attached.
-      nextProps._attach()
-      if (prevProps) {
-        prevProps._detach()
-      }
+      each(dependencies, dep => dep.addChild(props))
+      return () => each(dependencies, dep => dep.removeChild(props))
     })
 
-    // Ensure the latest props are detached on unmount.
-    useOnce(() => () => {
-      props.current!._detach()
-    })
-
-    // Functions cannot have refs (see #569)
-    const refFn =
-      !is.fun(Component) || Component.prototype.isReactComponent
-        ? (value: any) => (node.current = updateRef(ref, value))
-        : void 0
-
-    rawProps = G.getComponentProps(nextProps.getValue())
-    return <Component {...rawProps} ref={refFn} />
+    return (
+      <Component
+        {...G.getComponentProps(props.getValue())}
+        ref={
+          hasInstance &&
+          ((value: any) => {
+            instanceRef.current = updateRef(ref, value)
+          })
+        }
+      />
+    )
   })
 
 function updateRef<T>(ref: Ref<T>, value: T) {
