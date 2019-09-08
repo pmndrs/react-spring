@@ -214,6 +214,7 @@ export class FrameLoop {
         if (isBouncing) {
           velocity =
             -velocity * (typeof config.clamp! === 'number' ? config.clamp! : 0)
+          position = to
         }
 
         const isVelocity = Math.abs(velocity) <= precision
