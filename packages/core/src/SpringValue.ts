@@ -18,32 +18,42 @@ import {
 import invariant from 'tiny-invariant'
 import * as G from 'shared/globals'
 
+import {
+  AnimatedNode,
+  AnimatedType,
+  AnimationRange,
+  AnimationProps,
+} from './types/animated'
+import { SpringConfig, Animatable, RangeProps } from './types/spring'
 import { Indexable, Merge } from './types/common'
-import { SpringConfig, Animatable, AnimationProps } from './types/spring'
 import { callProp } from './helpers'
 import { config } from './constants'
 import { To } from './To'
 
 /** Called before the given props are applied */
-export type OnAnimate<T> = (props: PendingProps, spring: Spring<T>) => void
+export type OnAnimate<T = unknown> = (
+  props: PendingProps<T>,
+  spring: SpringValue<T>
+) => void
 
 /** Called before the animation is added to the frameloop */
-export type OnStart<T> = (spring: Spring<T>) => void
+export type OnStart<T = unknown> = (spring: SpringValue<T>) => void
 
 /** Called whenever the animated value is changed */
-export type OnChange<T> = (value: T, spring?: Spring<T>) => void
+export type OnChange<T = unknown> = (value: T, spring: SpringValue<T>) => void
 
 /** Called once the animation comes to a halt */
-export type OnRest<T> = (result: AnimationResult<T>) => void
+export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
 
-export type AnimationResult<T> = {
+/** The object passed to `onRest` props */
+export type AnimationResult<T = unknown> = {
   finished: boolean
   value: T
-  spring?: Spring<T>
+  spring?: SpringValue<T>
 }
 
 /** An animation being executed by the frameloop */
-export interface Animation<T = any> {
+export interface Animation<T = unknown> {
   values: readonly AnimatedValue[]
   to: T | Dependency<T>
   toValues: readonly number[] | null
@@ -67,19 +77,21 @@ export interface Animation<T = any> {
   onChange?: OnChange<T>
   onRest?: Array<OnRest<T>>
   promise: Promise<AnimationResult<T>>
-  owner: Spring<T>
+  owner: SpringValue<T>
 }
 
-/** Pending props for a single `Spring` object */
-export type PendingProps<T = any> = Merge<
-  AnimationProps,
+/** Props that can have default values */
+export type DefaultProps<T = unknown> = Pick<
+  PendingProps<T>,
+  'config' | 'immediate' | 'onAnimate' | 'onStart' | 'onChange' | 'onRest'
+>
+
+/** Pending props for a single `SpringValue` object */
+export type PendingProps<T = unknown> = Merge<
+  AnimationProps<T>,
   {
-    to?: Animatable<T> | Dependency<T> | Indexable
-    from?: Animatable<T> | Dependency<T> | Indexable
-    cancel?: boolean
-    onAnimate?: OnAnimate<T>
-    onStart?: OnStart<T>
-    onChange?: OnChange<T>
+    to?: RangeProps<T>['to']
+    from?: RangeProps<T>['from']
     onRest?: OnRest<T> | null
   }
 >
@@ -102,27 +114,19 @@ const defaultConfig: SpringConfig = {
   easing: t => t,
 }
 
-/** An observer of a `Spring` value */
-type Observer<T> = OnChange<T> | Spring<T> | AnimatedProps
-
-type AnimatedNode = AnimatedValue | AnimatedString | AnimatedArray
-type AnimatedNodeType = Function & {
-  create: (from: any, goal?: any) => AnimatedNode
-}
-
-type AnimationRange<T> = {
-  to: T | Dependency<T> | undefined
-  from: T | Dependency<T> | undefined
-}
+/** An observer of a `SpringValue` */
+type SpringObserver<T = any> = OnChange<T> | SpringValue<T> | AnimatedProps
 
 /** An opaque animatable value */
-export class Spring<T = any, P extends string = string> extends Dependency<T> {
+export class SpringValue<T = any, P extends string = string> extends Dependency<
+  T
+> {
   /** @internal The animated node. Never mutate this directly */
-  node!: AnimatedNode
+  node!: AnimatedNode<T>
   /** @internal The animation state. Never mutate this directly */
   animation?: Animation<T>
   /** The default props */
-  defaultProps: PendingProps<T>
+  defaultProps: DefaultProps<T>
   /** The lifecycle phase of this spring */
   protected _phase = CREATED
   /** The queue of pending props */
@@ -132,9 +136,9 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
   /** Cancel any update from before this timestamp */
   protected _deadline = 0
   /** Objects that want to know when this spring changes */
-  protected _children = new Set<Observer<T>>()
+  protected _children = new Set<SpringObserver<T>>()
 
-  constructor(readonly key: P, defaults?: PendingProps<T>) {
+  constructor(readonly key: P, defaults?: DefaultProps<T>) {
     super()
     this.defaultProps = defaults ? Object.setPrototypeOf({}, defaults) : {}
   }
@@ -148,16 +152,19 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
     return this.node.getValue() as any
   }
 
+  /** Set the current value, while stopping the current animation */
   set(value: T, notify = true) {
     invariant(this._phase > DISPOSED)
     this.node.setValue(value)
     if (notify) {
       this._onChange(value)
     }
+    this._stop()
+    return this
   }
 
   /** Create a spring that maps our value to another value */
-  to<Out>(...args: InterpolatorArgs<T, Out>): Spring<Out, 'to'> {
+  to<Out>(...args: InterpolatorArgs<T, Out>): SpringValue<Out, 'to'> {
     invariant(this._phase > DISPOSED)
     return new To(this, args)
   }
@@ -168,36 +175,50 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
     return this.to(...args)
   }
 
+  animate(props: PendingProps<T>): Promise<AnimationResult<T>>
+
+  animate(
+    to: Animatable<T>,
+    props?: PendingProps<T>
+  ): Promise<AnimationResult<T>>
+
   /** Update this value's animation using the given props. */
-  update(props: PendingProps<T>) {
+  animate(to: PendingProps<T> | Animatable<T>, props?: PendingProps<T>) {
     invariant(this._phase > DISPOSED)
-    const range = this.getRange(props)
+
+    // TODO: animate(to, props)
+    if (is.obj(to)) {
+      props = to
+    } else {
+      props = { ...props, to }
+    }
 
     // Ensure the initial value can be accessed by animated components.
+    const range = this.getRange(props)
     if (!this.node) {
-      this.node = this.createNode(range)
+      this.node = this.createNode(range)!
     }
 
     return new Promise<AnimationResult<T>>(resolve => {
       const timestamp = G.now()
       const update = () => {
-        this._update(range, props, timestamp, resolve)
+        this._update(range, props!, timestamp, resolve)
       }
 
-      const delay = callProp(props.delay, this.key)
+      const delay = callProp(props!.delay, this.key)
       if (delay && delay > 0) setTimeout(update, delay)
       else update()
     })
   }
 
   /** Push props into the pending queue. */
-  push(props: PendingProps<T>) {
+  update(props: PendingProps<T>) {
     const queue = this._queue || (this._queue = [])
     queue.push(props)
 
     // Ensure the initial value can be accessed by animated components.
     if (!this.node) {
-      this.node = this.createNode(this.getRange(props))
+      this.node = this.createNode(this.getRange(props))!
     }
   }
 
@@ -205,7 +226,7 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
   start(): Promise<AnimationResult<T>[]> {
     const queue = this._queue || []
     this._queue = []
-    return Promise.all(queue.map(props => this.update(props)))
+    return Promise.all(queue.map(props => this.animate(props)))
   }
 
   /**
@@ -230,6 +251,7 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
     if (anim) {
       this._finish(anim.to)
     }
+    return this
   }
 
   /** Prevent future animations, and stop the current animation */
@@ -247,17 +269,20 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
   }
 
   /** @internal Pluck the `to` and `from` props */
-  getRange(props: PendingProps<T>): AnimationRange<T> {
+  getRange(props: PendingProps<T>) {
     const { to, from } = props
     return {
       to: !is.obj(to) || isDependency(to) ? to : to[this.key],
       from: !is.obj(from) || isDependency(from) ? from : from[this.key],
-    }
+    } as AnimationRange<T>
   }
 
   /** @internal Create an `Animated` node from a set of `to` and `from` props */
   createNode({ to, from }: AnimationRange<T>) {
-    return this._getNodeType(is.und(to) ? from : to).create(computeGoal(from))
+    const value = is.und(to) ? from : to
+    return is.und(value)
+      ? value
+      : this._getNodeType(value).create(computeGoal(from))
   }
 
   /** @internal */
@@ -269,15 +294,16 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
   }
 
   /** @internal */
-  addChild(child: Observer<T>): void {
+  addChild(child: SpringObserver<T>): void {
     this._children.add(child)
   }
 
   /** @internal */
-  removeChild(child: Observer<T>): void {
+  removeChild(child: SpringObserver<T>): void {
     this._children.delete(child)
   }
 
+  /** Return true when the given prop has the newest timestamp */
   protected _diff(prop: string, timestamp: number) {
     const timestamps = this._timestamps || (this._timestamps = {})
     if (timestamp >= timestamps[prop] || 0) {
@@ -287,7 +313,8 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
     return false
   }
 
-  protected _getNodeType(value: any): AnimatedNodeType {
+  /** Return the `Animated` node constructor for a given value */
+  protected _getNodeType(value: T | Dependency<T>): AnimatedType<T> {
     const parent = isDependency(value) ? value : null
     const parentType = parent && (parent.node.constructor as any)
     return parentType == AnimatedString
@@ -300,6 +327,7 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
             : AnimatedValue)
   }
 
+  /** Update the internal `animation` object */
   protected _update(
     { to, from }: AnimationRange<T>,
     props: PendingProps<T>,
@@ -311,8 +339,20 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
       return
     }
 
+    /** Get the value of a prop, or its default value */
+    const get = <K extends keyof DefaultProps>(prop: K): DefaultProps<T>[K] =>
+      prop in props ? props[prop] : this.defaultProps[prop]
+
+    const onAnimate = get('onAnimate')
+    if (onAnimate) {
+      onAnimate(props, this)
+    }
+
+    const { key } = this
+    const { cancel, reset } = props
+
     // TODO: should this logic be moved to Controller?
-    if (props.cancel) {
+    if (cancel && (cancel === true || toArray(cancel).includes(key))) {
       this.stop(timestamp)
       return
     }
@@ -334,7 +374,7 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
     // Write or read the "from" prop
     if (!is.und(from) && diff('from')) {
       anim.from = from
-    } else if (props.reset) {
+    } else if (reset) {
       from = anim.from
     }
 
@@ -355,8 +395,6 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
     else if (isDependency(from)) {
       from = from.get()
     }
-
-    const { key } = this
 
     const changed = props.force || !isEqual(to, anim.to)
     const isActive = this._phase == ACTIVE
@@ -389,21 +427,19 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
       }
     }
 
+    // The `FrameLoop` decides our goal value when `to` is a dependency.
     let goal: any = isDependency(to) ? null : computeGoal(to)
 
-    // Update our internal Animated node.
+    // Update our internal `Animated` node.
     let node = this.node
-    let nodeType: AnimatedNodeType
+    let nodeType: AnimatedType<T>
     if (changed) {
-      nodeType = this._getNodeType(to)
-
-      // Create a new Animated node if necessary.
-      if (node instanceof nodeType) {
-        node.reset(isActive, goal)
-      } else {
-        this.node = node = nodeType.create(computeGoal(from), goal)
-        anim.values = node.getPayload()
-      }
+      nodeType = this._getNodeType(to!)
+      invariant(
+        node.constructor == nodeType,
+        `Cannot animate to the given "to" prop, because the current value has a different type`
+      )
+      node.reset(isActive, goal)
     } else {
       nodeType = node.constructor as any
     }
@@ -417,20 +453,16 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
       anim.toValues = isDependency(to) ? null : toArray(goal)
     }
 
-    if (props.reset || this._phase == CREATED) {
+    if (reset || this._phase == CREATED) {
       // Assume "from" has been converted to a number.
       anim.fromValues = toArray(from as any)
     } else if (changed) {
       anim.fromValues = node.getPayload().map(node => node.getValue())
     }
 
-    /** Get the value of a prop, or its default value */
-    const get = <P extends keyof PendingProps>(prop: P): PendingProps<T>[P] =>
-      prop in props ? props[prop] : this.defaultProps[prop]
-
     // Event props are provided per update.
     if (changed) {
-      anim.onChange = get('onChange')
+      anim.onChange = get('onChange') as any
 
       // The "onRest" prop is always first in the queue.
       const restQueue: OnRest<T>[] = (anim.onRest = [])
@@ -441,7 +473,7 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
       })
     }
 
-    let started = props.reset || changed
+    let started = reset || changed
     if (started) {
       const isAnimatable = is.num(to) || isDependency(to)
       anim.immediate = !isAnimatable || !!callProp(get('immediate'), key)
@@ -483,7 +515,7 @@ export class Spring<T = any, P extends string = string> extends Dependency<T> {
 
     // Clone "_children" so it can be safely mutated by the loop.
     for (const observer of Array.from(this._children)) {
-      if (observer instanceof Spring) {
+      if (observer instanceof SpringValue) {
         observer._onParentChange(value, finished)
       } else if (!finished) {
         if (observer instanceof AnimatedProps) {
