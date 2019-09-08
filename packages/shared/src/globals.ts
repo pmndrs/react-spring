@@ -1,4 +1,4 @@
-import { InterpolatorConfig } from './types'
+import { InterpolatorConfig, FrameRequestCallback } from './types'
 import { ElementType } from 'react'
 
 declare const window: {
@@ -23,9 +23,10 @@ export let createStringInterpolator: (
 /** Provide a custom `FrameLoop` instance */
 export let frameLoop: {
   update: (time?: number) => boolean
-  controllers: Map<number, any>
-  start(controller: any): void
-  stop(controller: any): void
+  springs: Set<any>
+  onFrame(cb: FrameRequestCallback): () => void
+  start(spring: any): void
+  stop(spring: any): void
 }
 
 //

@@ -7,7 +7,6 @@ type Source = Indexable | null
 
 export class AnimatedObject extends Animated {
   protected source!: Source
-  protected payload!: Payload
   constructor(source: Source = null) {
     super()
     this.setValue(source)
@@ -42,10 +41,11 @@ export class AnimatedObject extends Animated {
 
   /** Create a payload set. */
   protected _makePayload(source: Source) {
-    if (!source) return []
-    const payload = new Set<AnimatedValue>()
-    each(source, this._addToPayload, payload)
-    return Array.from(payload)
+    if (source) {
+      const payload = new Set<AnimatedValue>()
+      each(source, this._addToPayload, payload)
+      return Array.from(payload)
+    }
   }
 
   /** Add to a payload set. */

@@ -1,5 +1,5 @@
 import { Animatable } from 'shared/types'
-import { Spring } from 'src/Spring'
+import { SpringValue } from 'src/SpringValue'
 
 /**
  * Interpolate the value with a custom interpolation function,
@@ -16,9 +16,9 @@ export interface Interpolator<In extends ReadonlyArray<any> = any[]> {
     range: readonly number[],
     output: readonly Out[],
     extrapolate?: ExtrapolateType
-  ): Spring<Animatable<Out>>
+  ): SpringValue<Animatable<Out>>
 
   <Out extends Animatable = Animatable>(
     config: InterpolatorConfig<Out> | InterpolatorFn<In, Out>
-  ): Spring<Out>
+  ): SpringValue<Out>
 }

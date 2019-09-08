@@ -1,11 +1,12 @@
 import { ReactNode } from 'react'
-import { SpringValues, AnimationProps } from './types/spring'
-import { TransitionPhase, Merge, NoInfer } from './types/common'
 import { UseTransitionProps, ItemsProp, ItemKeys } from './useTransition'
-import { UseSpringProps, InferProps } from './useSpring'
+import { TransitionPhase, Merge, NoInfer } from './types/common'
+import { SpringValues, RangeProps } from './types/spring'
+import { AnimationProps } from './types/animated'
+import { UseSpringProps } from './useSpring'
 
 export declare const Spring: <Props extends object>(
-  props: InferProps<Props> &
+  props: RangeProps<Props> &
     AnimationProps<NoInfer<Props>> & {
       children: (props: SpringValues<NoInfer<Props>>) => ReactNode
     }
