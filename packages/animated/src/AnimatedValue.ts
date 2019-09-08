@@ -1,5 +1,5 @@
 import { is } from 'shared'
-import { Animated } from './Animated'
+import { Animated, Payload } from './Animated'
 
 /** An animated number or a native attribute value */
 export class AnimatedValue<T = any> extends Animated {
@@ -17,8 +17,8 @@ export class AnimatedValue<T = any> extends Animated {
     return new AnimatedValue(from)
   }
 
-  getPayload() {
-    return [this] as const
+  getPayload(): Payload {
+    return [this]
   }
 
   getValue() {

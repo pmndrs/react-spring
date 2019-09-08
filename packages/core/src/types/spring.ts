@@ -1,93 +1,204 @@
-import { Animatable, Indexable, EasingFunction } from 'shared'
-import {
-  Merge,
-  OneOrMore,
-  PickAnimated,
-  Remap,
-  StringKeys,
-  UnknownProps,
-} from './common'
+import { Dependency } from '@react-spring/animated'
+import { Animatable, EasingFunction, Falsy, Indexable, OneOrMore } from 'shared'
+import { AnimationResult, SpringValue } from '../SpringValue'
+import { PickAnimated, UnknownProps } from './common'
+import { AnimationProps } from './animated'
 import { Controller } from '../Controller'
-import { Spring, OnStart, OnRest, OnChange } from '../Spring'
 
 export { Animatable }
 
 /**
- * The map of `Animated` objects passed into `animated()` components.
- *
- * The `T` parameter is the props object passed to `useSpring` or similar.
+ * The set of `SpringValue` objects returned by a `useSpring` call (or similar).
  */
-export type SpringValues<T extends object> = AnimationValues<PickAnimated<T>>
+export type SpringValues<Props extends object> = Indexable<
+  SpringValue | undefined
+> &
+  (PickAnimated<Props> extends infer T
+    ? {} extends Required<T>
+      ? unknown
+      : {
+          [P in keyof T & string]:
+            | SpringValue<Exclude<T[P], void>, P>
+            | Extract<T[P], void>
+        }
+    : never)
 
 /**
- * The map of `Animated` objects passed into `animated()` components.
+ * The `to` prop in async form.
  *
- * The `T` parameter should only contain animated props.
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
  */
-export type AnimationValues<T extends object> = Remap<
-  { [key: string]: Spring<any> } & ({} extends Required<T>
-    ? unknown
-    : { [P in keyof T]: Spring<Exclude<T[P], void>> })
->
+export type AsyncTo<T, P extends string = string> =
+  | ReadonlyArray<SpringUpdate<T, P>>
+  | SpringAsyncFn<T, P>
 
-export interface SpringStopFn<T extends object = any> {
-  /** Stop the animations and delays of the given keys */
-  (...keys: StringKeys<T>[]): void
+export type UnknownPartial<T> = UnknownProps &
+  ({} extends Required<T> ? unknown : Partial<T>)
+
+/**
+ * A value or set of values that can be animated from/to.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export type GoalValue<T, P extends string = string> = Animatable<
+  T
+> extends infer Value
+  ? [Value] extends [never]
+    ? UnknownPartial<T>
+    : Value | Dependency<Value> | { [K in P]: Value | Dependency<Value> }
+  : never
+
+/**
+ * The `to` prop's possible types.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export type ToProp<T, P extends string = string> =
+  | GoalValue<T, P>
+  | AsyncTo<T, P>
+  | Falsy
+
+/**
+ * The `from` prop's possible types.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export type FromProp<T, P extends string = string> = GoalValue<T, P> | Falsy
+
+/**
+ * The `from` and `to` props.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export interface RangeProps<T = unknown, P extends string = string> {
+  /**
+   * The start values of the first animations.
+   *
+   * The `reset` prop also uses these values.
+   */
+  from?: FromProp<T, P>
+  /**
+   * The end values of the next animations.
+   *
+   *     to: { width: 100, height: 100 }
+   *
+   * ---
+   * To chain animations together, pass an array of updates:
+   *
+   *     to: [{ width: 100 }, { width: 0, delay: 100 }]
+   *
+   * ---
+   * For scripted animations, pass an async function:
+   *
+   *     to: async (update) => {
+   *       await update({ width: 100 })
+   *       await update({ width: 0, delay: 100 })
+   *     }
+   */
+  to?: ToProp<T, P>
 }
 
 /**
- * An imperative update to the props of a spring.
+ * The props of a `useSpring` call or its async `update` function.
  *
- * The `T` parameter should only contain animated props.
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
  */
-export type SpringUpdate<T extends object = {}> = Partial<T> &
-  SpringProps<{ to: T }> &
-  UnknownProps
+export type SpringProps<
+  T = unknown,
+  P extends string = string
+> = AnimationProps<T> &
+  RangeProps<T, P> &
+  (Animatable<T> extends never ? UnknownPartial<T> : unknown)
 
 /**
- * Imperative API for updating the props of a spring.
+ * An update to the props of a spring.
  *
- * The `T` parameter should only contain animated props.
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
  */
-export interface SpringUpdateFn<T extends object = {}> {
+export type SpringUpdate<T, P extends string = string> = Animatable<
+  T
+> extends infer Value
+  ? [Value] extends [never]
+    ? SpringProps<T, P>
+    : Value | SpringProps<Value, P>
+  : never
+
+/**
+ * Update the props of a spring.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export interface SpringUpdateFn<T, P extends string = string> {
   /** Update the props of a spring */
-  (props: SpringUpdate<T>): Promise<void>
+  (props: SpringUpdate<T, P>): Promise<
+    Animatable<T> extends never ? AnimationResult[] : AnimationResult<T>
+  >
 }
 
 /**
- * Imperative API for the useSprings hook, allowing to update individually or over the array
+ * Stop every animating `SpringValue` at its current value.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export type SpringStopFn<T> = Animatable<T> extends never
+  ? ((keys: OneOrMore<string>) => void)
+  : (() => void)
+
+/**
+ * Update the props of each spring, individually or all at once.
  *
  * The `T` parameter should only contain animated props.
  */
-export interface SpringsUpdateFn<T extends object = {}> {
-  /** Update the props of a spring */
+export interface SpringsUpdateFn<T extends Indexable> {
   (
     props:
-      | SpringUpdate<T>
-      | SpringUpdate<T>[]
-      | ((index: number, spring: Controller<T>) => SpringUpdate<T>)
-  ): void
+      | OneOrMore<SpringUpdate<T>>
+      | ((index: number, ctrl: Controller<T>) => SpringUpdate<T> | null)
+  ): Promise<AnimationResult[][]>
 }
 
 /**
  * An async function that can update or cancel the animations of a spring.
  *
- * The `T` parameter should only contain animated props.
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
  */
-export interface SpringAsyncFn<T extends object = {}> {
-  (next: SpringUpdateFn<T>, stop: SpringStopFn<T>): Promise<void>
+export interface SpringAsyncFn<T, P extends string = string> {
+  (next: SpringUpdateFn<T, P>, stop: SpringStopFn<T>): Promise<void>
 }
 
 /**
- * Imperative animation controller
+ * The object attached to the `ref` prop by the `useSpring` hook.
  *
- * Created by `useSpring` or `useSprings` for the `ref` prop
+ * The `T` parameter must be a set of animated values (as an object type).
  */
-export interface SpringHandle {
+export interface SpringHandle<T extends Indexable = Indexable> {
   /** Start any pending animations */
-  start: () => void
+  start: () => Promise<AnimationResult[]>
   /** Stop one or more animations */
-  stop: SpringStopFn
+  stop: SpringStopFn<T>
+}
+
+/**
+ * The object attached to the `ref` prop by the `useSprings` hook.
+ *
+ * The `Props` type is inferred by the `useSprings` hook.
+ */
+export interface SpringsHandle<T extends Indexable = Indexable> {
+  get: (i: number) => Controller<T>
+  controllers: Controller[]
+  update: SpringsUpdateFn<T>
+  start: () => Promise<AnimationResult[][]>
+  stop: SpringStopFn<T>
 }
 
 /** Spring animation config */
@@ -98,103 +209,8 @@ export interface SpringConfig {
   velocity?: number | number[]
   clamp?: number | boolean
   precision?: number
-  delay?: number
   decay?: number | boolean
   progress?: number
   duration?: number
   easing?: EasingFunction
-}
-
-/**
- * Animation-related props
- *
- * The `T` parameter is the props object passed to `useSpring` or similar.
- */
-export type SpringProps<T extends object> = Merge<
-  AnimationProps<PickAnimated<T>>,
-  AnimationEvents<PickAnimated<T>>
->
-
-type UnknownPartial<T extends object> = UnknownProps & Partial<T>
-
-/**
- * The `to` prop type.
- *
- * The `T` parameter should only contain animated props.
- */
-export type ToProp<T extends object = {}> =
-  | UnknownPartial<T>
-  | ReadonlyArray<UnknownPartial<T> & AnimationProps<T>>
-  | SpringAsyncFn<T>
-
-/**
- * Animation-related props
- *
- * The `T` parameter should only contain animated props.
- *
- * Note: The `onFrame` and `onRest` props do *not* have entirely accurate
- * argument types, because the ambiguity helps with inference.
- */
-export interface AnimationProps<T extends object = Indexable>
-  extends AnimationEvents {
-  /**
-   * Configure the spring behavior for each key.
-   */
-  config?: SpringConfig | ((key: keyof T) => SpringConfig)
-  /**
-   * Milliseconds to wait before applying the other props.
-   */
-  delay?: number | ((key: keyof T) => number)
-  /**
-   * When true, props jump to their goal values instead of animating.
-   */
-  immediate?: boolean | ((key: keyof T) => boolean)
-  /**
-   * Cancel all animations by using `true`, or some animations by using a key
-   * or an array of keys.
-   */
-  cancel?: boolean | OneOrMore<keyof T>
-  /**
-   * Start the next animations at their values in the `from` prop.
-   */
-  reset?: boolean
-  /**
-   * Swap the `to` and `from` props.
-   */
-  reverse?: boolean
-  /**
-   * Prevent an update from being cancelled.
-   */
-  force?: boolean
-}
-
-/**
- * The event props of an animation.
- *
- * The `T` parameter should only contain animated props.
- */
-export interface AnimationEvents<T extends object = {}> {
-  /**
-   * Called when a controller is told to animate
-   */
-  onAnimate?: (
-    props: AnimationProps<T & UnknownProps>,
-    controller: Controller<T & UnknownProps>
-  ) => void
-  /**
-   * Called when an animation is about to start
-   */
-  onStart?: OnStart<T>
-  /**
-   * Called when all animations come to a stand-still
-   */
-  onRest?: OnRest<T>
-  /**
-   * Called when a key/value pair is changed
-   */
-  onChange?: OnChange<T>
-  /**
-   * Called on every frame when animations are active
-   */
-  onFrame?: (currentValues: Readonly<T & UnknownProps>) => void
 }

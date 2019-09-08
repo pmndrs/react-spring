@@ -1,19 +1,17 @@
 import { InterpolatorArgs, OneOrMore, InterpolatorFn } from 'shared/types'
 import { AnimatedValue, Dependency } from '@react-spring/animated'
 import { createInterpolator, toArray, is, each } from 'shared'
-import { Spring } from './Spring'
+import { SpringValue } from './SpringValue'
 
 /**
  * `To` springs are memoized interpolators that react to their dependencies.
  *  The memoized result is updated whenever a dependency changes.
  */
-export class To<In = any, Out = any> extends Spring<Out, 'to'> {
+export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
   /** @internal The sources providing input values */
   source: OneOrMore<Dependency> | null
   /** @internal The function that maps inputs values to output */
   calc: InterpolatorFn<In, Out>
-  /** @internal This node caches the tween output. Use the `get` method instead of this. */
-  node: AnimatedValue<Out>
 
   constructor(source: OneOrMore<Dependency>, args: InterpolatorArgs<In, Out>) {
     super('to')

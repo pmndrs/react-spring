@@ -2,21 +2,29 @@ import * as G from 'shared/globals'
 import { is, each } from 'shared'
 import { isDependency } from '@react-spring/animated'
 import { FrameRequestCallback } from 'shared/types'
-import { Spring } from './Spring'
+import { SpringValue } from './SpringValue'
 
 type FrameUpdater = (this: FrameLoop, time?: number) => boolean
-type FrameListener = (this: FrameLoop) => void
 type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
 export class FrameLoop {
   /**
    * The animated springs
    */
-  springs = new Set<Spring>()
+  springs = new Set<SpringValue>()
+
   /**
    * True when at least one spring is animating.
    */
   active = true
+
+  /**
+   * The timestamp of the most recent frame.
+   *
+   * Equals `undefined` if nothing is animating.
+   */
+  lastTime?: number
+
   /**
    * Process the next animation frame.
    *
@@ -25,33 +33,28 @@ export class FrameLoop {
    * This advances any `Controller` instances added to it with the `start` function.
    */
   update: FrameUpdater
+
   /**
    * This is called at the end of every frame.
    */
-  onFrame?: FrameListener
+  private _currFrameQueue = new Set<FrameRequestCallback>()
+  private _nextFrameQueue = new Set<FrameRequestCallback>()
+
   /**
    * The `requestAnimationFrame` function or a custom scheduler.
    */
-  requestFrame: RequestFrameFn
-  /**
-   * The timestamp of the most recent frame
-   */
-  lastTime?: number
+  private _requestFrame: RequestFrameFn
 
   constructor({
     update,
-    onFrame,
     requestFrame,
   }: {
     update?: FrameUpdater
-    onFrame?: FrameListener
     requestFrame?: RequestFrameFn
   } = {}) {
-    this.requestFrame =
+    this._requestFrame =
       // The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
       requestFrame || (fn => (void 0, G.requestAnimationFrame)(fn))
-
-    this.onFrame = onFrame
 
     this.update =
       (update && update.bind(this)) ||
@@ -72,8 +75,12 @@ export class FrameLoop {
             Array.from(this.springs),
             spring => spring.idle || this.advance(dt, spring)
           )
-          if (this.onFrame) {
-            this.onFrame()
+          const onFrameQueue = this._currFrameQueue
+          if (onFrameQueue.size) {
+            this._currFrameQueue = this._nextFrameQueue
+            this._nextFrameQueue = onFrameQueue
+            onFrameQueue.forEach(onFrame => onFrame())
+            onFrameQueue.clear()
           }
           if (!this.springs.size) {
             this.lastTime = undefined
@@ -82,33 +89,43 @@ export class FrameLoop {
         }
 
         this.lastTime = time
-        this.requestFrame(this.update)
+        this._requestFrame(this.update)
         return true
       })
   }
 
   /**
+   * Call a function on every frame, after all springs have been updated.
+   *
+   * Call the returned function to stop listening.
+   */
+  onFrame(cb: FrameRequestCallback) {
+    this._currFrameQueue.add(cb)
+    return () => this._currFrameQueue.delete(cb)
+  }
+
+  /**
    * Start animating the given spring
    */
-  start(spring: Spring) {
+  start(spring: SpringValue) {
     this.springs.add(spring)
     if (!this.active) {
       this.active = true
-      this.requestFrame(this.update)
+      this._requestFrame(this.update)
     }
   }
 
   /**
    * Stop animating the given spring
    */
-  stop(spring: Spring) {
+  stop(spring: SpringValue) {
     this.springs.delete(spring)
   }
 
   /**
    * Advance an animation forward one frame.
    */
-  advance(dt: number, spring: Spring) {
+  advance(dt: number, spring: SpringValue) {
     let idle = true
     let changed = false
 
@@ -227,16 +244,16 @@ export class FrameLoop {
 }
 
 function runTopological(
-  springs: Spring[],
-  action: (spring: Spring, id: number) => void
+  springs: SpringValue[],
+  action: (spring: SpringValue, id: number) => void
 ) {
   const visited: true[] = []
-  each(springs, function run(spring: Spring, i: number) {
+  each(springs, function run(spring: SpringValue, i: number) {
     if (visited[i]) return
     visited[i] = true
 
     const { to } = spring
-    if (to instanceof Spring) {
+    if (to instanceof SpringValue) {
       const i = springs.indexOf(to)
       if (~i) run(to, i)
     }
