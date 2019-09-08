@@ -3,7 +3,7 @@ import { Dependency } from './Dependency'
 
 const tag = Symbol.for('animated')
 
-/** Returns true for `Animated` nodes. Returns false for `Spring` objects. */
+/** Returns true for `Animated` nodes. Returns false for `SpringValue` objects. */
 export const isAnimated = (value: any): value is Animated =>
   !!(value && value[tag])
 
@@ -18,14 +18,14 @@ export abstract class Animated<T = any> {
 
   /** Returns every animated number used by this node. */
   getPayload(): Payload {
-    return this.payload!
+    return this.payload || []
   }
 
   /** The `AnimatedProps` class sets this before initializing */
   static context: TreeContext | null = null
 }
 
-export type Payload = readonly AnimatedValue<number>[]
+export type Payload = readonly AnimatedValue[]
 
 export type TreeContext = {
   /** The value streams in the tree */

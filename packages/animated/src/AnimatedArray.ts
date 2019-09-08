@@ -3,39 +3,46 @@ import { AnimatedObject } from './AnimatedObject'
 import { AnimatedString } from './AnimatedString'
 import { AnimatedValue } from './AnimatedValue'
 
-type Source = (AnimatedValue | AnimatedString)[]
+type Value = number | string
+type Source = AnimatedValue<Value>[]
 
 /** An array of animated nodes */
-export class AnimatedArray extends AnimatedObject {
+export class AnimatedArray<
+  T extends ReadonlyArray<Value> = Value[]
+> extends AnimatedObject {
   protected source!: Source
-  constructor(source: Source) {
-    super(source)
+  constructor(from: T, to?: T) {
+    super(null)
+    super.setValue(this._makeAnimated(from, to))
   }
 
-  static create(from: any[], to?: any[]) {
-    return new AnimatedArray(makeAnimated(from, to))
+  static create<T extends ReadonlyArray<Value>>(from: T, to?: T) {
+    return new AnimatedArray(from, to)
   }
 
-  getValue() {
-    return this.source.map(node => node.getValue())
+  getValue(): T {
+    return this.source.map(node => node.getValue()) as any
   }
 
-  setValue(newValue: any[]) {
+  setValue(newValue: T) {
+    const payload = this.getPayload()
     // Reuse the payload when lengths are equal.
-    if (newValue.length == this.payload!.length) {
-      each(this.payload, (node, i) => node.setValue(newValue[i]))
+    if (newValue.length == payload.length) {
+      each(payload, (node, i) => node.setValue(newValue[i]))
     } else {
       // Remake the payload when length changes.
-      this.source = makeAnimated(newValue)
+      this.source = this._makeAnimated(newValue)
       this.payload = this._makePayload(this.source)
     }
   }
-}
 
-const makeAnimated = (from: any[], to = from) =>
-  from.map((from, i) =>
-    (needsInterpolation(from) ? AnimatedString : AnimatedValue).create(
-      from,
-      to[i]
+  /** Convert the `from` and `to` values to an array of `Animated` nodes */
+  protected _makeAnimated(from: T, to = from) {
+    return from.map((from, i) =>
+      (needsInterpolation(from) ? AnimatedString : AnimatedValue).create(
+        from,
+        to[i]
+      )
     )
-  )
+  }
+}

@@ -17,10 +17,10 @@ export {
   SpringConfig,
   SpringHandle,
   SpringProps,
-  SpringStopFn,
+  StopSpring as SpringStopFn,
   SpringUpdate,
-  SpringUpdateFn,
-  SpringsUpdateFn,
+  AnimateSpring as SpringUpdateFn,
+  AnimateSprings as SpringsUpdateFn,
 } from './types/spring'
 
 export {
