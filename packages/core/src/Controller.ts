@@ -1,47 +1,66 @@
-import { is, each, OneOrMore, toArray } from 'shared'
-import { interpolateTo, InterpolateTo } from './helpers'
-import { AsyncTo, SpringProps } from './types/spring'
-import { Indexable, Falsy } from './types/common'
-import { SpringValue } from './SpringValue'
+import { is, each, OneOrMore, toArray, UnknownProps } from 'shared'
 import * as G from 'shared/globals'
+
+import { interpolateTo } from './helpers'
+import { runAsync, RunAsyncState } from './runAsync'
+import { Indexable, Falsy } from './types/common'
+import { SpringProps } from './types/spring'
+import { SpringValue } from './SpringValue'
 
 /** The latest values of a `Controller` object */
 type LatestValues<State extends Indexable> = Partial<State>
 
 /** The props that are cached by `Controller` objects */
-type CachedProps<State extends Indexable> = {
-  to?: AsyncTo<State>
+interface CachedProps<State extends Indexable> extends RunAsyncState<State> {
   onFrame?: (frame: LatestValues<State>) => void
 }
 
 let nextId = 1
-export class Controller<State extends Indexable = any> {
+export class Controller<State extends Indexable = {}> {
   id = nextId++
 
-  /** The current props stored for this controller. This does *not* contain  */
+  /** The prop cache for state keeping  */
   props: CachedProps<State> = {}
+
+  /** The default props inherited by every spring. */
+  defaultProps = {}
 
   /** The spring values that manage their animations */
   springs: Indexable<SpringValue> = {}
 
-  /** The current values from the most recent animation frame */
+  /** The values that changed in the last animation frame */
   frame: LatestValues<State> = {}
 
-  /** Stop the frame listener */
-  private _stop: () => void
-
   constructor(props?: SpringProps<State>) {
-    this._stop = G.frameLoop.onFrame(this._onFrame.bind(this))
     this._onChange = this._onChange.bind(this)
+    this._onFrame = this._onFrame.bind(this)
     if (props) {
       this.update(props).start()
     }
   }
 
+  /** Get the latest values of every spring */
+  get(): State & UnknownProps
+
+  /** Get the latest value of a spring by key */
+  get<P extends keyof State>(key: P): State[P]
+
+  /** @internal */
+  get(key?: string) {
+    if (is.und(key)) {
+      const values: any = {}
+      each(this.springs, (spring, key) => {
+        values[key] = spring.get()
+      })
+      return values
+    }
+    return this.springs[key].get()
+  }
+
   /** Push an update onto the queue of each value. */
   update(propsArg: SpringProps<State> | Falsy) {
     if (!propsArg) return this
-    const props = interpolateTo(propsArg)
+    const props: any = interpolateTo(propsArg)
     const { from, to } = props
 
     // Collect every key in "to" and "from" to create "SpringValue" objects with.
@@ -81,7 +100,14 @@ export class Controller<State extends Indexable = any> {
 
     // TODO: respect "delay" prop if its a number
     if (is.arr(to) || is.fun(to)) {
-      this._runAsync(to, props)
+      runAsync(
+        to,
+        props,
+        this.props,
+        () => this.get(),
+        props => this.update(props as any).start(),
+        this.stop.bind(this) as any
+      )
     }
 
     return this
@@ -89,12 +115,16 @@ export class Controller<State extends Indexable = any> {
 
   /**
    * Flush the update queue of every spring, and resolve the returned promise
-   * once all updates have finished (if ever).
+   * once all updates have finished (or cancelled).
    */
-  start() {
-    return Promise.all(
+  async start() {
+    const results = await Promise.all(
       Object.values(this.springs).map(spring => spring.start())
     )
+    return {
+      finished: results.every(result => result.finished),
+      value: this.get(),
+    }
   }
 
   /** Stop one animation, some animations, or all animations */
@@ -104,93 +134,28 @@ export class Controller<State extends Indexable = any> {
     } else {
       each(this.springs, spring => spring.stop())
     }
-    return this
   }
 
   /** Destroy every spring in this controller */
   dispose() {
-    this._stop()
     each(this.springs, spring => spring.dispose())
     this.springs = {}
+    this.frame = {}
   }
 
   /** @internal Attached as an observer to every spring */
   protected _onChange(value: any, spring: SpringValue) {
     this.frame[spring.key as keyof State] = value
+    G.frameLoop.onFrame(this._onFrame)
   }
 
   /** @internal Called at the end of every animation frame */
   private _onFrame() {
-    const { frame } = this
-    if (Object.keys(frame).length) {
+    if (Object.keys(this.frame).length) {
       if (this.props.onFrame) {
-        this.props.onFrame(frame)
+        this.props.onFrame(this.frame)
       }
       this.frame = {}
     }
-  }
-
-  // Start an async chain or an async script.
-  private async _runAsync(
-    to: AsyncTo<State>,
-    props: InterpolateTo<SpringProps<State>>
-  ) {
-    // Async scripts can be declaratively cancelled.
-    if (props.cancel === true) {
-      this.props.to = undefined
-      return
-    }
-
-    // Equal async "to" props are no-ops.
-    if (to === this.props) {
-      return // TODO: should this return the same promise?
-    }
-
-    const isCancelled = () => to !== this.props.to
-
-    let last: Promise<any>
-    const next = (props: SpringProps<State>) => {
-      if (isCancelled()) throw this
-      const { to } = props
-      if (is.fun(to) || is.arr(to)) {
-        const parentTo = this.props.to
-        last = this._runAsync(to, props).then(() => {
-          if (to == this.props.to) {
-            this.props.to = parentTo
-          }
-        })
-      } else {
-        last = this.update(props).start()
-      }
-      return last.then(() => {
-        if (isCancelled()) throw this
-      })
-    }
-
-    let queue = Promise.resolve()
-
-    // Async sequence
-    if (is.arr(to)) {
-      queue = queue.then(async () => {
-        for (const props of to) {
-          if (props) {
-            await next(props)
-          }
-        }
-      })
-    }
-
-    // Async script
-    else if (is.fun(to)) {
-      queue = queue.then(() =>
-        to(next, this.stop.bind(this))
-          // Always wait for the last update.
-          .then(() => last)
-      )
-    }
-
-    return queue.catch(err => {
-      if (err !== this) console.error(err)
-    })
   }
 }

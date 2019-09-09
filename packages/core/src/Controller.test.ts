@@ -50,27 +50,27 @@ describe('async "to" prop', () => {
   it('acts strangely without the "from" prop', async () => {
     const ctrl = new Controller<{ x: number }>({
       to: async update => {
-        // The animated node does not exist yet!
-        expect(ctrl.animated.x).toBeUndefined()
+        // The spring does not exist yet!
+        expect(ctrl.springs.x).toBeUndefined()
 
         // Any values passed here are treated as "from" values,
         // because no "from" prop was ever given.
         let promise = update({ x: 1 })
-        // Now the animated node exists!
-        expect(ctrl.animated.x).toBeDefined()
-        // But the animation is idle!
-        expect(ctrl.animations.x.idle).toBeTruthy()
+        // Now the spring exists!
+        expect(ctrl.springs.x).toBeDefined()
+        // But the spring is idle!
+        expect(ctrl.springs.x.idle).toBeTruthy()
         await promise
 
         // This call *will* start an animation!
         promise = update({ x: 2 })
-        expect(ctrl.animations.x.idle).toBeFalsy()
+        expect(ctrl.springs.x.idle).toBeFalsy()
         await promise
       },
     })
 
-    // Animated nodes are not created synchronously!
-    expect(ctrl.animated).toEqual({})
+    // Springs are not created synchronously!
+    expect(ctrl.springs).toEqual({})
 
     // Since we call `update` twice, frames are generated!
     expect(await getAsyncFrames(ctrl)).toMatchSnapshot()
@@ -100,7 +100,7 @@ async function getAsyncFrames<T extends object>(
     frames.push(values)
   }
   let steps = 0
-  while (ctrl.runCount) {
+  while (Globals.frameLoop.active) {
     mockRaf.step()
     await Promise.resolve()
     if (++steps > 1e5) {

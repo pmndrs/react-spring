@@ -48,7 +48,7 @@ export interface Interpolator {
 
   // Range shortcuts
   <Out>(
-    parents: OneOrMore<Dependency<number>>,
+    parents: OneOrMore<Dependency<number>> | Dependency<number[]>,
     range: readonly number[],
     output: readonly Constrain<Out, Animatable>[],
     extrapolate?: ExtrapolateType

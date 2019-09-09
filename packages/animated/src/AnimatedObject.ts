@@ -1,5 +1,5 @@
 import { Indexable, each } from 'shared'
-import { Animated, isAnimated, Payload } from './Animated'
+import { Animated, isAnimated } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
 import { isDependency } from './Dependency'
 

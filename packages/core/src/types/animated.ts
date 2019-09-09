@@ -65,30 +65,30 @@ export interface AnimationProps<T = unknown> extends AnimationEvents<T> {
  * The `T` parameter can be a set of animated properties (as an object type)
  * or a primitive type for a single animated value.
  */
-export interface AnimationEvents<T = unknown> {
+export type AnimationEvents<T = unknown> = {
   /**
    * Called when a controller is told to animate
    */
-  onAnimate?: OnAnimate<AnimationValue<T>>
+  onAnimate?: OnAnimate<Animate<T>>
   /**
    * Called when an animation is about to start
    */
-  onStart?: OnStart<AnimationValue<T>>
+  onStart?: OnStart<Animate<T>>
   /**
    * Called when all animations come to a stand-still
    */
-  onRest?: OnRest<AnimationValue<T>>
+  onRest?: OnRest<Animate<T>>
   /**
    * Called when a key/value pair is changed
    */
-  onChange?: OnChange<AnimationValue<T>>
+  onChange?: OnChange<Animate<T>>
   /**
    * Called on every frame when animations are active
    */
-  onFrame?: Animatable<T> extends never
-    ? (frame: UnknownProps & Partial<T>) => void
-    : never
+  onFrame?: [T] extends [Animatable]
+    ? never
+    : (frame: UnknownProps & Partial<T>) => void
 }
 
-/** Coerce an non-animatable value into an animatable value */
-type AnimationValue<T> = Animatable<T> extends never ? unknown : Animatable<T>
+/** Force a type to be animatable */
+export type Animate<T> = [T] extends [Animatable] ? Animatable<T> : Animatable
