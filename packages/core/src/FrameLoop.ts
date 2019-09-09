@@ -246,7 +246,7 @@ export class FrameLoop {
 
 function runTopological(
   springs: SpringValue[],
-  action: (spring: SpringValue, id: number) => void
+  action: (spring: SpringValue) => void
 ) {
   const visited: true[] = []
   springs.forEach(function run(spring: SpringValue, i: number) {
@@ -259,6 +259,6 @@ function runTopological(
       if (~i) run(to, i)
     }
 
-    action(spring, spring.id)
+    action(spring)
   })
 }
