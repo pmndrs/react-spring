@@ -343,7 +343,6 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
     const { key } = this
     const { cancel, reset } = props
 
-    // TODO: should this logic be moved to Controller?
     if (cancel && (cancel === true || toArray(cancel).includes(key))) {
       this.stop(timestamp)
       return

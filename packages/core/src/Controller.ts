@@ -98,7 +98,6 @@ export class Controller<State extends Indexable = {}> {
       })
     }
 
-    // TODO: respect "delay" prop if its a number
     if (is.arr(to) || is.fun(to)) {
       runAsync(
         to,
