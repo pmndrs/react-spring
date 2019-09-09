@@ -22,9 +22,9 @@ export let createStringInterpolator: (
 
 /** Provide a custom `FrameLoop` instance */
 export let frameLoop: {
+  active: boolean
   update: (time?: number) => boolean
-  springs: Set<any>
-  onFrame(cb: FrameRequestCallback): () => void
+  onFrame(cb: FrameRequestCallback): void
   start(spring: any): void
   stop(spring: any): void
 }

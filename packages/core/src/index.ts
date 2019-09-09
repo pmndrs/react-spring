@@ -5,22 +5,22 @@ export * from './useTrail'
 export * from './useTransition'
 
 export * from './legacy'
+export * from './interpolate'
 export * from './globals'
 export * from './constants'
 export * from './Controller'
 export * from './FrameLoop'
 
 export {
-  AnimationEvents,
-  AnimationProps,
   SpringAsyncFn,
   SpringConfig,
   SpringHandle,
+  SpringsHandle,
   SpringProps,
-  StopSpring as SpringStopFn,
+  SpringStopFn,
   SpringUpdate,
-  AnimateSpring as SpringUpdateFn,
-  AnimateSprings as SpringsUpdateFn,
+  SpringUpdateFn,
+  SpringsUpdateFn,
 } from './types/spring'
 
 export {

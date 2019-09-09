@@ -1,7 +1,8 @@
-import * as G from 'shared/globals'
-import { is, each } from 'shared'
-import { isDependency } from '@react-spring/animated'
 import { FrameRequestCallback } from 'shared/types'
+import { isDependency } from '@react-spring/animated'
+import { is } from 'shared'
+import * as G from 'shared/globals'
+
 import { SpringValue } from './SpringValue'
 
 type FrameUpdater = (this: FrameLoop, time?: number) => boolean
@@ -34,15 +35,14 @@ export class FrameLoop {
    */
   update: FrameUpdater
 
-  /**
-   * This is called at the end of every frame.
-   */
-  private _currFrameQueue = new Set<FrameRequestCallback>()
-  private _nextFrameQueue = new Set<FrameRequestCallback>()
+  // These queues are swapped at the end of every frame,
+  // after the current queue is drained.
+  private _queues = [
+    new Set<FrameRequestCallback>(),
+    new Set<FrameRequestCallback>(),
+  ]
 
-  /**
-   * The `requestAnimationFrame` function or a custom scheduler.
-   */
+  // The `requestAnimationFrame` function or a custom scheduler.
   private _requestFrame: RequestFrameFn
 
   constructor({
@@ -75,13 +75,17 @@ export class FrameLoop {
             Array.from(this.springs),
             spring => spring.idle || this.advance(dt, spring)
           )
-          const onFrameQueue = this._currFrameQueue
+
+          // Notify frame listeners.
+          const queues = this._queues
+          const onFrameQueue = queues[0]
           if (onFrameQueue.size) {
-            this._currFrameQueue = this._nextFrameQueue
-            this._nextFrameQueue = onFrameQueue
+            queues[0] = queues[1]
+            queues[1] = onFrameQueue
             onFrameQueue.forEach(onFrame => onFrame())
             onFrameQueue.clear()
           }
+
           if (!this.springs.size) {
             this.lastTime = undefined
             return (this.active = false)
@@ -95,13 +99,11 @@ export class FrameLoop {
   }
 
   /**
-   * Call a function on every frame, after all springs have been updated.
-   *
-   * Call the returned function to stop listening.
+   * Schedule a function to run at the end of the current frame,
+   * after all springs have been updated.
    */
   onFrame(cb: FrameRequestCallback) {
-    this._currFrameQueue.add(cb)
-    return () => this._currFrameQueue.delete(cb)
+    this._queues[0].add(cb)
   }
 
   /**
@@ -220,7 +222,6 @@ export class FrameLoop {
 
       // Trails aren't done until their parents conclude
       if (finished && !(payload && payload.some(node => !node.done))) {
-        position = parent ? to : anim.to
         node.done = true
       } else {
         idle = false
@@ -238,7 +239,7 @@ export class FrameLoop {
 
     // Exit the frameloop.
     if (idle) {
-      spring._finish()
+      spring.finish()
     }
   }
 }
@@ -248,7 +249,7 @@ function runTopological(
   action: (spring: SpringValue, id: number) => void
 ) {
   const visited: true[] = []
-  each(springs, function run(spring: SpringValue, i: number) {
+  springs.forEach(function run(spring: SpringValue, i: number) {
     if (visited[i]) return
     visited[i] = true
 

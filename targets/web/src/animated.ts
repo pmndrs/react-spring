@@ -1,6 +1,10 @@
-import { withAnimated, extendAnimated } from '@react-spring/animated'
+import {
+  Dependency,
+  withAnimated,
+  extendAnimated,
+} from '@react-spring/animated'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { SpringValue, ElementType, ComponentPropsWithRef, Merge } from 'shared'
+import { ElementType, ComponentPropsWithRef, Merge } from 'shared'
 import { elements, JSXElements } from './elements'
 
 type DOMComponents = {
@@ -24,8 +28,8 @@ export type AnimatedComponent<
   T extends ElementType
 > = ForwardRefExoticComponent<
   AnimatedProps<Merge<ComponentPropsWithRef<T>, { style?: StyleProps }>> & {
-    scrollTop?: SpringValue<number> | number
-    scrollLeft?: SpringValue<number> | number
+    scrollTop?: Dependency<number> | number
+    scrollLeft?: Dependency<number> | number
   }
 >
 
@@ -84,12 +88,12 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
 
 type AnimatedObject<T extends object> =
   | { [P in keyof T]: AnimatedStyle<T[P]> }
-  | (T extends ReadonlyArray<number | string> ? SpringValue<T> : never)
+  | (T extends ReadonlyArray<number | string> ? Dependency<T> : never)
 
 // An animated value that is not an object
 type AnimatedLeaf<T> = [T] extends [object]
   ? never
-  : SpringValue<Exclude<T, object | void>>
+  : Dependency<Exclude<T, object | void>>
 
 type Angle = number | string
 type Length = number | string
