@@ -163,8 +163,8 @@ export type SpringStopFn<T> = [T] extends [Animatable]
 export interface SpringsUpdateFn<T extends Indexable> {
   (
     props:
-      | OneOrMore<SpringUpdate<T>>
-      | ((index: number, ctrl: Controller<T>) => SpringUpdate<T> | null)
+      | OneOrMore<SpringProps<T>>
+      | ((index: number, ctrl: Controller<T>) => SpringProps<T> | null)
   ): SpringsHandle<T>
 }
 
