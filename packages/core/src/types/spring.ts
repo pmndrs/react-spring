@@ -1,8 +1,15 @@
 import { Dependency } from '@react-spring/animated'
-import { Animatable, EasingFunction, Falsy, Indexable, OneOrMore } from 'shared'
+import {
+  Animatable,
+  EasingFunction,
+  Falsy,
+  Indexable,
+  OneOrMore,
+  UnknownPartial,
+} from 'shared'
 import { AnimationResult, SpringValue } from '../SpringValue'
-import { PickAnimated, UnknownProps } from './common'
 import { AnimationProps } from './animated'
+import { PickAnimated } from './common'
 import { Controller } from '../Controller'
 
 export { Animatable }
@@ -32,9 +39,6 @@ export type SpringValues<Props extends object> = Indexable<
 export type AsyncTo<T, P extends string = string> =
   | ReadonlyArray<SpringUpdate<T, P>>
   | SpringAsyncFn<T, P>
-
-export type UnknownPartial<T> = UnknownProps &
-  ({} extends Required<T> ? unknown : Partial<T>)
 
 /**
  * A value or set of values that can be animated from/to.
@@ -138,9 +142,7 @@ export type SpringUpdate<T, P extends string = string> = Animatable<
  */
 export interface SpringUpdateFn<T, P extends string = string> {
   /** Update the props of a spring */
-  (props: SpringUpdate<T, P>): Promise<
-    Animatable<T> extends never ? AnimationResult[] : AnimationResult<T>
-  >
+  (props: SpringUpdate<T, P>): Promise<AnimationResult<T>>
 }
 
 /**
@@ -149,9 +151,9 @@ export interface SpringUpdateFn<T, P extends string = string> {
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringStopFn<T> = Animatable<T> extends never
-  ? ((keys: OneOrMore<string>) => void)
-  : (() => void)
+export type SpringStopFn<T> = [T] extends [Animatable]
+  ? ((timestamp?: number) => void)
+  : ((keys?: OneOrMore<string>) => void)
 
 /**
  * Update the props of each spring, individually or all at once.
@@ -163,7 +165,7 @@ export interface SpringsUpdateFn<T extends Indexable> {
     props:
       | OneOrMore<SpringUpdate<T>>
       | ((index: number, ctrl: Controller<T>) => SpringUpdate<T> | null)
-  ): Promise<AnimationResult[][]>
+  ): SpringsHandle<T>
 }
 
 /**
@@ -191,13 +193,13 @@ export interface SpringHandle<T extends Indexable = Indexable> {
 /**
  * The object attached to the `ref` prop by the `useSprings` hook.
  *
- * The `Props` type is inferred by the `useSprings` hook.
+ * The `T` parameter should only contain animated props.
  */
 export interface SpringsHandle<T extends Indexable = Indexable> {
   get: (i: number) => Controller<T>
-  controllers: Controller[]
+  controllers: Controller<T>[]
   update: SpringsUpdateFn<T>
-  start: () => Promise<AnimationResult[][]>
+  start: () => Promise<AnimationResult[]>
   stop: SpringStopFn<T>
 }
 

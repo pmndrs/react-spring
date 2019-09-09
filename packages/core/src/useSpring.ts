@@ -1,5 +1,5 @@
 import { RefObject } from 'react'
-import { is, Remap, Falsy } from 'shared'
+import { is } from 'shared'
 import {
   SpringHandle,
   SpringValues,
@@ -8,59 +8,42 @@ import {
   SpringProps,
 } from './types/spring'
 import { useSprings } from './useSprings'
-import { FrameValues } from './types/common'
-
-type RangeProps<From, To> = {
-  from?: From
-  to?: To
-}
-
-type Join<From, To> = Remap<
-  (From extends Falsy ? {} : From) &
-    (To extends Falsy | Function | ReadonlyArray<any> ? {} : To)
->
+import { FrameValues, Tween } from './types/common'
 
 /**
  * The props that `useSpring` recognizes.
  */
-export type UseSpringProps<From = unknown, To = unknown> = RangeProps<
-  From,
-  To
-> &
-  SpringProps<Join<From, To>>
-
-type G = UseSpringProps['to']
+export type UseSpringProps<From = unknown, To = unknown> = {
+  from?: From
+  to?: To
+} & SpringProps<Tween<From, To>> & {
+    /**
+     * Used to access the imperative API.
+     *
+     * Animations never auto-start when `ref` is defined.
+     */
+    ref?: RefObject<SpringHandle<Tween<From, To>>>
+  }
 
 /**
  * Animate one or more named values.
  */
-export function useSpring<Props extends object, From, To>(
-  props: Props &
-    UseSpringProps<From, To> & {
-      /**
-       * Used to access the imperative API.
-       *
-       * Animations never auto-start when `ref` is defined.
-       */
-      ref?: RefObject<SpringHandle<Join<From, To>>>
-    },
+export function useSpring<From, To>(
+  props: UseSpringProps<From, To>,
   deps?: any[]
-): SpringValues<Props>
+): SpringValues<Tween<From, To>>
 
-export function useSpring<Props extends object, From, To>(
-  props: () => Props & UseSpringProps<From, To>,
+export function useSpring<From, To>(
+  props: () => UseSpringProps<From, To>,
   deps?: any[]
 ): [
-  SpringValues<Props>,
-  SpringUpdateFn<FrameValues<Props>>,
-  SpringStopFn<FrameValues<Props>>
+  SpringValues<Tween<From, To>>,
+  SpringUpdateFn<FrameValues<Tween<From, To>>>,
+  SpringStopFn<FrameValues<Tween<From, To>>>
 ]
 
-export function useSpring<Props extends object>(
-  props: Props,
-  deps?: any[]
-): any {
+export function useSpring(props: any, deps?: any[]): any {
   const isFn = is.fun(props)
-  const [result, set, stop] = useSprings<Props>(1, isFn ? props : [props], deps)
+  const [result, set, stop] = useSprings(1, isFn ? props : [props], deps)
   return isFn ? [result[0], set, stop] : result
 }

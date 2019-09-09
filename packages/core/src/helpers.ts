@@ -1,4 +1,4 @@
-import { is, Merge, Remap, each } from 'shared'
+import { is, Merge, each } from 'shared'
 import { ReservedProps, ForwardProps } from './types/common'
 
 declare const process:
@@ -65,13 +65,12 @@ function getForwardProps<Props extends ReservedProps>(
   return forward
 }
 
-export type InterpolateTo<T extends object> = Remap<
-  Merge<{ to: ForwardProps<T> }, Pick<T, keyof T & keyof ReservedProps>>
+export type InterpolateTo<T extends object> = Merge<
+  { to: ForwardProps<T> },
+  Pick<T, keyof T & keyof ReservedProps>
 >
 
-export function interpolateTo<T extends ReservedProps>(
-  props: T
-): InterpolateTo<T> {
+export function interpolateTo<T extends object>(props: T): InterpolateTo<T> {
   const to = getForwardProps(props)
   const out: any = { to }
   each(props, (val, key) => key in to || (out[key] = val))
