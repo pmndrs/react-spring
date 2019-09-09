@@ -16,7 +16,7 @@ interface CachedProps<State extends Indexable> extends RunAsyncState<State> {
 }
 
 let nextId = 1
-export class Controller<State extends Indexable = {}> {
+export class Controller<State extends Indexable = UnknownProps> {
   id = nextId++
 
   /** The prop cache for state keeping  */
