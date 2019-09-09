@@ -16,7 +16,7 @@ import {
 const domTransforms = ['matrix', 'translate', 'scale', 'rotate', 'skew']
 
 // adds a unit to the value when the value is unit-less (ie a number)
-const mergeUnit = (value: number | string, unit: string): string | 0 =>
+const addUnit = (value: number | string, unit: string): string | 0 =>
   is.num(value) && value !== 0 ? value + unit : value
 
 type Value = number | string
@@ -111,12 +111,9 @@ export class AnimatedStyle extends AnimatedObject {
       props.push(xyz)
 
       // we add the interpolation function to our transform array
-      transforms.push(([vx, vy, vz]: Value[]) => [
-        `translate3d(${mergeUnit(vx, 'px')},${mergeUnit(vy, 'px')},${mergeUnit(
-          vz,
-          'px'
-        )})`,
-        isValueIdentity([vx, vy, vz], 0),
+      transforms.push(([x, y, z]: Value[]) => [
+        `translate3d(${addUnit(x, 'px')},${addUnit(y, 'px')},${addUnit(z, 'px')})`, // prettier-ignore
+        isValueIdentity([x, y, z], 0),
       ])
     }
 
@@ -133,18 +130,17 @@ export class AnimatedStyle extends AnimatedObject {
           : /^(rotate|skew)/.test(key)
           ? 'deg'
           : ''
-
         props.push(ensureAnimated(value))
         transforms.push(
           key === 'rotate3d'
             ? ([x, y, z, deg]) => [
-                `rotate3d(${x},${y},${z},${mergeUnit(deg, unit)})`,
+                `rotate3d(${x},${y},${z},${addUnit(deg, unit)})`,
                 isTransformIdentity(key, deg),
               ]
             : (arg: StyleValue) => [
                 is.arr(arg)
-                  ? `${key}(${arg.map(v => mergeUnit(v, unit)).join(',')})`
-                  : `${key}(${mergeUnit(arg, unit)})`,
+                  ? `${key}(${arg.map(v => addUnit(v, unit)).join(',')})`
+                  : `${key}(${addUnit(arg, unit)})`,
                 isTransformIdentity(key, arg),
               ]
         )
