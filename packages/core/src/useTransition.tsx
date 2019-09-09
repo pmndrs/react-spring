@@ -1,8 +1,16 @@
-import React, { useEffect, useRef, useImperativeHandle, ReactNode } from 'react'
-import { is, toArray, useForceUpdate, useOnce, each } from 'shared'
-import { callProp, interpolateTo } from './helpers'
-import { Controller } from './Controller'
+import React, {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  ReactNode,
+  useMemo,
+} from 'react'
+import { is, toArray, useForceUpdate, useOnce, each, OneOrMore } from 'shared'
 import { now } from 'shared/globals'
+
+import { callProp, interpolateTo } from './helpers'
+import { SpringHandle } from './types/spring'
+import { Controller } from './Controller'
 
 // TODO: convert to "const enum" once Babel supports it
 type Phase = number
@@ -24,19 +32,22 @@ export type ItemKeys<T> =
   | number
   | null
 
-export function useTransition<T>(
-  data: T | readonly T[],
-  props: any,
-  deps?: any
-) {
+export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
   const { key, ref, reset, sort, trail = 0, expires = Infinity } = props
 
   // Every item has its own transition.
-  const items = toArray(data)
+  const items = toArray<unknown>(data)
   const transitions: Transition[] = []
 
   // Keys help with reusing transitions between renders.
-  const keys = is.und(key) ? items : is.fun(key) ? items.map(key) : toArray(key)
+  // The `key` prop can be undefined (which means the items themselves are used
+  // as keys), or a function (which maps each item to its key), or an array of
+  // keys (which are assigned to each item by index).
+  const keys: any[] = is.und(key)
+    ? items
+    : is.fun(key)
+    ? items.map(key)
+    : toArray(key)
 
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<Transition[] | null>(null)
@@ -49,7 +60,7 @@ export function useTransition<T>(
   useOnce(() => () =>
     each(usedTransitions.current!, t => {
       if (t.expiresBy) clearTimeout(t.expirationId)
-      t.spring.destroy()
+      t.ctrl.dispose()
     })
   )
 
@@ -73,7 +84,7 @@ export function useTransition<T>(
         key: keys[i],
         item,
         phase: MOUNT,
-        spring: new Controller(),
+        ctrl: new Controller(),
       })
   })
 
@@ -132,6 +143,7 @@ export function useTransition<T>(
       } else return
     }
 
+    // The payload is used to update the spring props once the current render is committed.
     const payload: any = {
       // When "to" is a function, it can return (1) an array of "useSpring" props,
       // (2) an async function, or (3) an object with any "useSpring" props.
@@ -154,7 +166,7 @@ export function useTransition<T>(
         } else {
           // Postpone dismounts while other controllers are active.
           const transitions = usedTransitions.current!
-          if (transitions.every(t => t.spring.idle)) {
+          if (transitions.every(t => t.ctrl.idle)) {
             forceUpdate()
           } else if (expires < Infinity) {
             t.expirationId = setTimeout(forceUpdate, expires)
@@ -171,34 +183,44 @@ export function useTransition<T>(
     if (t.phase > MOUNT) {
       change.payload = payload
     } else {
-      t.spring.update(payload)
+      t.ctrl.update(payload)
     }
   })
 
-  useImperativeHandle(
-    ref,
-    () => ({
+  const api = useMemo(
+    (): SpringHandle => ({
       get controllers() {
-        return usedTransitions.current!.map(t => t.spring)
+        return usedTransitions.current!.map(t => t.ctrl)
       },
-      start: () =>
-        Promise.all(
-          usedTransitions.current!.map(
-            t => new Promise(done => t.spring.start(done))
+      update(props) {
+        each(usedTransitions.current!, (t, i) =>
+          t.ctrl.update(
+            is.fun(props) ? props(i, t.ctrl) : is.arr(props) ? props[i] : props
           )
-        ),
-      stop: (finished?: boolean) =>
-        each(usedTransitions.current!, t => t.spring.stop(finished)),
+        )
+        return api
+      },
+      async start() {
+        const transitions = usedTransitions.current!
+        const results = await Promise.all(transitions.map(t => t.ctrl.start()))
+        return {
+          value: results.map(result => result.value),
+          finished: results.every(result => result.finished),
+        }
+      },
+      stop: keys => each(usedTransitions.current!, t => t.ctrl.stop(keys)),
     }),
     []
   )
+
+  useImperativeHandle(ref, () => api)
 
   useEffect(
     () => {
       each(changes, ({ phase, payload }, t) => {
         t.phase = phase
-        if (payload) t.spring.update(payload)
-        if (!ref) t.spring.start()
+        if (payload) t.ctrl.update(payload)
+        if (!ref) t.ctrl.start()
       })
     },
     reset ? void 0 : deps
@@ -206,11 +228,11 @@ export function useTransition<T>(
 
   return (render: (props: any, item: T) => ReactNode) =>
     transitions.map(t => {
-      const elem: any = render({ ...t.spring.animated }, t.item)
+      const elem: any = render({ ...t.ctrl.springs }, t.item)
       return elem && elem.type ? (
         <elem.type
           {...elem.props}
-          key={is.str(t.key) || is.num(t.key) ? t.key : t.spring.id}
+          key={is.str(t.key) || is.num(t.key) ? t.key : t.ctrl.id}
           ref={elem.ref}
         />
       ) : (
@@ -227,8 +249,8 @@ interface Change {
 interface Transition<T = any> {
   key: any
   item: T
+  ctrl: Controller
   phase: Phase
-  spring: Controller
   /** Destroy no later than this date */
   expiresBy?: number
   expirationId?: number
