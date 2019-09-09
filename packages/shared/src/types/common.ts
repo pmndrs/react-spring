@@ -3,7 +3,7 @@ export type Indexable<T = any> = { [key: string]: T }
 export type OneOrMore<T> = T | readonly T[]
 
 /** Ensure each type of `T` is an array */
-export type Arrify<T> = T extends ReadonlyArray<any> ? T : Readonly<[T]>
+export type Arrify<T> = T extends ReadonlyArray<any> ? T : ReadonlyArray<T>
 
 export type Falsy = false | null | undefined
 
