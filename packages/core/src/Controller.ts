@@ -124,10 +124,10 @@ export class Controller<State extends Indexable = UnknownProps> {
 
   /** Stop one animation, some animations, or all animations */
   stop(keys?: OneOrMore<string>) {
-    if (arguments.length) {
-      each(toArray(keys), key => this.springs[key].stop())
-    } else {
+    if (is.und(keys)) {
       each(this.springs, spring => spring.stop())
+    } else {
+      each(toArray(keys), key => this.springs[key].stop())
     }
   }
 
