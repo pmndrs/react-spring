@@ -1,22 +1,33 @@
-import { useMemo, useRef, useImperativeHandle, useEffect } from 'react'
-import { is, each, usePrev, useOnce } from 'shared'
-import { callProp, fillArray } from './helpers'
+import { useMemo, useRef, useEffect, RefObject } from 'react'
+import { is, each, usePrev, useOnce, Merge } from 'shared'
 import { useMemoOne } from 'use-memo-one'
-import { Controller } from './Controller'
+
 import {
-  SpringUpdate,
   SpringStopFn,
   SpringValues,
   SpringsUpdateFn,
-  SpringProps,
   SpringsHandle,
 } from './types/spring'
+import { FrameValues, Tween } from './types/common'
+import { callProp, fillArray } from './helpers'
 import { UseSpringProps } from './useSpring'
-import { FrameValues } from './types/common'
+import { Controller } from './Controller'
+
+export type UseSpringsProps<From = unknown, To = unknown> = Merge<
+  UseSpringProps<From, To>,
+  {
+    /**
+     * Used to access the imperative API.
+     *
+     * Animations never auto-start when `ref` is defined.
+     */
+    ref?: RefObject<SpringsHandle<Tween<From, To>>>
+  }
+>
 
 export function useSprings<Props extends object, From, To>(
   length: number,
-  props: (i: number) => Props & UseSpringProps<From, To>,
+  props: (i: number) => Props & UseSpringsProps<From, To>,
   deps?: any[]
 ): [
   SpringValues<Props>[],
@@ -24,9 +35,9 @@ export function useSprings<Props extends object, From, To>(
   SpringStopFn<FrameValues<Props>>
 ]
 
-export function useSprings<Props extends object>(
+export function useSprings<Props extends object, From, To>(
   length: number,
-  props: ReadonlyArray<Props & UseSpringProps<Props>>,
+  props: ReadonlyArray<Props & UseSpringsProps<From, To>>,
   deps?: any[]
 ): SpringValues<Props>[]
 
@@ -46,32 +57,24 @@ export function useSprings(length: number, propsArg: any, deps?: any[]): any {
     [length]
   )
 
-  const state = useRef({
-    ctrls,
-    ref: isFn ? props[0] && props[0].ref : null,
-  }).current
+  const ref = isFn ? props[0] && props[0].ref : null
+  const state = useRef({ ctrls, ref }).current
 
   const api = useMemo(
-    (): SpringsHandle<object> => ({
+    (): SpringsHandle => ({
       get: i => state.ctrls[i],
       get controllers() {
         return state.ctrls
       },
       /** Update the spring controllers */
       update: props => {
-        const isFn = is.fun(props)
-        const isArr = is.arr(props)
-
-        const update = async (ctrl, i) => {
-          await ctrl
-            .update(isFn ? callProp(props, i, ctrl) : isArr ? props[i] : props)
-            .start()
-        }
-
         const { ctrls, ref } = state
-        if (state.ref) {
-          return Promise.all(ctrls.map(update))
-        }
+        each(ctrls, (ctrl, i) => {
+          ctrl.update(
+            is.fun(props) ? props(i, ctrl) : is.arr(props) ? props[i] : props
+          )
+          if (!ref) ctrl.start()
+        })
         return api
       },
       /** Apply any pending updates */
@@ -89,18 +92,18 @@ export function useSprings(length: number, propsArg: any, deps?: any[]): any {
       state.ctrls = ctrls
       state.ref = ref
       if (!ref) {
-        each(springs, s => s.start())
+        each(ctrls, ctrl => ctrl.start())
       }
     } else if (!isFn) {
-      update(props)
+      api.update(props)
     }
   }, deps)
 
   // Destroy the controllers on unmount
   useOnce(() => () => {
-    each(state.springs, s => s.dispose())
+    each(state.ctrls, ctrl => ctrl.dispose())
   })
 
-  const values = springs.map(s => ({ ...s.values }))
-  return isFn ? [values, update, stop] : values
+  const values = ctrls.map(ctrl => ({ ...ctrl.springs }))
+  return isFn ? [values, api.update, api.stop] : values
 }

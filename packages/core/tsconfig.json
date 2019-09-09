@@ -11,7 +11,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noErrorTruncation": true,
+    // "noErrorTruncation": true,
     "paths": {
       "shared": ["./node_modules/@react-spring/shared/src"],
       "shared/*": ["./node_modules/@react-spring/shared/src/*"]

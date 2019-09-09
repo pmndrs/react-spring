@@ -8,9 +8,9 @@ export class AnimatedStyle extends AnimatedObject {
     super(style || null)
   }
 
-  setValue(style: Style) {
+  setValue(style: Style | null) {
     super.setValue(
-      style.transform && G.createAnimatedTransform
+      style && style.transform && G.createAnimatedTransform
         ? { ...style, transform: G.createAnimatedTransform(style.transform) }
         : style
     )

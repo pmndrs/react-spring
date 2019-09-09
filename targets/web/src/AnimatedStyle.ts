@@ -1,12 +1,10 @@
-import { SpringValue, each, is } from 'shared'
-
+import { each, is } from 'shared'
+import { to } from '@react-spring/core'
 import {
   AnimatedObject,
-  Animated,
   AnimatedArray,
   AnimatedValue,
   isAnimated,
-  to,
 } from '@react-spring/animated'
 
 /** The transform-functions
@@ -17,26 +15,13 @@ import {
  */
 const domTransforms = ['matrix', 'translate', 'scale', 'rotate', 'skew']
 
-// x, y, z and translate will get 'px' as unit default
-const pxDefaults = ['x', 'y', 'z', 'translate']
-// rotate and skew will get 'deg' as unit default
-const dgDefaults = ['rotate', 'skew']
-
 // adds a unit to the value when the value is unit-less (ie a number)
 const mergeUnit = (value: number | string, unit: string): string | 0 =>
   is.num(value) && value !== 0 ? value + unit : value
 
-// gets the default unit for a key
-const getUnit = (key: string) =>
-  pxDefaults.some(name => key.startsWith(name))
-    ? 'px'
-    : dgDefaults.some(name => key.startsWith(name))
-    ? 'deg'
-    : ''
-
 type Value = number | string
 type StyleValue = Value | Value[]
-type AnimatedValueType = Animated & { to: any; interpolate: any }
+type AnimatedValueType = AnimatedArray | AnimatedValue
 
 /**
  * Returns the right Animated object based on the value type.
@@ -52,7 +37,7 @@ const ensureAnimated = (
   value: AnimatedValueType | StyleValue = 0
 ): AnimatedValueType =>
   is.arr(value) && value.some(isAnimated)
-    ? new AnimatedArray(value.map(ensureAnimated))
+    ? new AnimatedArray(value)
     : isAnimated(value)
     ? value
     : new AnimatedValue(value)
@@ -101,6 +86,9 @@ type Style = object & {
 }
 type Transform = (arg: any) => [string, boolean]
 
+// TODO: create "SpringTransform" class that extends "SpringValue"
+//       then assign an instance of it to "style.transform" in "AnimatedStyle#setValue"
+
 /**
  * This AnimatedStyle will simplify animated components transforms by
  * interpolating all transform function passed as keys in the style object
@@ -108,7 +96,7 @@ type Transform = (arg: any) => [string, boolean]
  */
 export class AnimatedStyle extends AnimatedObject {
   constructor({ x, y, z, ...style } = {} as Style) {
-    const props: SpringValue[] = []
+    const props: AnimatedValueType[] = []
 
     // transforms will be an array of functions applied to the props. Each function
     // will return the interpolated transformed string, and a flag indicating if the
@@ -124,10 +112,10 @@ export class AnimatedStyle extends AnimatedObject {
 
       // we add the interpolation function to our transform array
       transforms.push(([vx, vy, vz]: Value[]) => [
-        `translate3d(${mergeUnit(vx, getUnit('x'))},${mergeUnit(
-          vy,
-          getUnit('y')
-        )},${mergeUnit(vz, getUnit('z'))})`,
+        `translate3d(${mergeUnit(vx, 'px')},${mergeUnit(vy, 'px')},${mergeUnit(
+          vz,
+          'px'
+        )})`,
         isValueIdentity([vx, vy, vz], 0),
       ])
     }
@@ -140,7 +128,12 @@ export class AnimatedStyle extends AnimatedObject {
         props.push(ensureAnimated(value))
         transforms.push((transform: string) => [transform, transform === ''])
       } else if (domTransforms.some(transform => key.startsWith(transform))) {
-        const unit = getUnit(key)
+        const unit = /^translate/.test(key)
+          ? 'px'
+          : /^(rotate|skew)/.test(key)
+          ? 'deg'
+          : ''
+
         props.push(ensureAnimated(value))
         transforms.push(
           key === 'rotate3d'

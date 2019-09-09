@@ -2,7 +2,6 @@ import { each } from 'shared'
 import {
   Animated,
   isAnimated,
-  Payload,
   AnimatedValue,
   AnimatedObject,
 } from '@react-spring/animated'

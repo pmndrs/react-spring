@@ -26,6 +26,7 @@ import {
 } from './types/animated'
 import { SpringConfig, Animatable, RangeProps } from './types/spring'
 import { Indexable, Merge } from './types/common'
+import { runAsync, AsyncResult, RunAsyncState } from './runAsync'
 import { callProp } from './helpers'
 import { config } from './constants'
 import { To } from './To'
@@ -46,11 +47,11 @@ export type OnChange<T = unknown> = (value: T, spring: SpringValue<T>) => void
 export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
 
 /** The object passed to `onRest` props */
-export type AnimationResult<T = unknown> = {
+export type AnimationResult<T = unknown> = Readonly<{
   finished: boolean
   value: T
   spring?: SpringValue<T>
-}
+}>
 
 /** An animation being executed by the frameloop */
 export interface Animation<T = unknown> {
@@ -76,7 +77,6 @@ export interface Animation<T = unknown> {
   immediate: boolean
   onChange?: OnChange<T>
   onRest?: Array<OnRest<T>>
-  promise: Promise<AnimationResult<T>>
   owner: SpringValue<T>
 }
 
@@ -93,6 +93,9 @@ export type PendingProps<T = unknown> = Merge<
     to?: RangeProps<T>['to']
     from?: RangeProps<T>['from']
     onRest?: OnRest<T> | null
+    onStart?: OnStart<T>
+    onChange?: OnChange<T>
+    onAnimate?: OnAnimate<T>
   }
 >
 
@@ -133,6 +136,8 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
   protected _queue?: PendingProps<T>[]
   /** The last time each prop changed */
   protected _timestamps?: Indexable<number>
+  /** The prop cache for async state */
+  protected _asyncProps?: RunAsyncState<T, P>
   /** Cancel any update from before this timestamp */
   protected _deadline = 0
   /** Objects that want to know when this spring changes */
@@ -148,13 +153,11 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
   }
 
   get(): T {
-    invariant(this._phase > DISPOSED)
     return this.node.getValue() as any
   }
 
   /** Set the current value, while stopping the current animation */
   set(value: T, notify = true) {
-    invariant(this._phase > DISPOSED)
     this.node.setValue(value)
     if (notify) {
       this._onChange(value)
@@ -163,35 +166,43 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
     return this
   }
 
+  /**
+   * Skip to the end of the current animation.
+   *
+   * All `onRest` callbacks are passed `{finished: true}`
+   */
+  finish(to?: T | Dependency<T>) {
+    if (this.animation) {
+      if (is.und(to)) to = this.animation.to
+      if (!is.und(to)) {
+        this.set(isDependency(to) ? to.get() : to)
+      }
+      this._stop(true)
+    }
+    return this
+  }
+
   /** Create a spring that maps our value to another value */
   to<Out>(...args: InterpolatorArgs<T, Out>): SpringValue<Out, 'to'> {
-    invariant(this._phase > DISPOSED)
+    this._notDisposed('to')
     return new To(this, args)
   }
 
   /** @deprecated Use the `to` method instead. */
   interpolate<Out>(...args: InterpolatorArgs<T, Out>) {
     deprecateInterpolate()
-    return this.to(...args)
+    this._notDisposed('interpolate')
+    return new To(this, args)
   }
 
-  animate(props: PendingProps<T>): Promise<AnimationResult<T>>
+  animate(props: PendingProps<T>): AsyncResult<T>
 
-  animate(
-    to: Animatable<T>,
-    props?: PendingProps<T>
-  ): Promise<AnimationResult<T>>
+  animate(to: Animatable<T>, props?: PendingProps<T>): AsyncResult<T>
 
   /** Update this value's animation using the given props. */
-  animate(to: PendingProps<T> | Animatable<T>, props?: PendingProps<T>) {
-    invariant(this._phase > DISPOSED)
-
-    // TODO: animate(to, props)
-    if (is.obj(to)) {
-      props = to
-    } else {
-      props = { ...props, to }
-    }
+  animate(to: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
+    this._notDisposed('animate')
+    const props = is.obj(to) ? to : ({ ...arg2, to: to } as any)
 
     // Ensure the initial value can be accessed by animated components.
     const range = this.getRange(props)
@@ -199,20 +210,32 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
       this.node = this.createNode(range)!
     }
 
+    if (is.fun(props.to) || is.arr(props.to)) {
+      return runAsync(
+        props.to,
+        props,
+        this._asyncProps || (this._asyncProps = {}),
+        () => this.get(),
+        this.animate.bind(this) as any,
+        this.stop.bind(this) as any
+      )
+    }
+
     return new Promise<AnimationResult<T>>(resolve => {
       const timestamp = G.now()
       const update = () => {
-        this._update(range, props!, timestamp, resolve)
+        this._animate(range, props, timestamp, resolve)
       }
 
-      const delay = callProp(props!.delay, this.key)
-      if (delay && delay > 0) setTimeout(update, delay)
+      const delay = callProp(props.delay, this.key)
+      if (delay > 0) setTimeout(update, delay)
       else update()
     })
   }
 
   /** Push props into the pending queue. */
   update(props: PendingProps<T>) {
+    this._notDisposed('update')
     const queue = this._queue || (this._queue = [])
     queue.push(props)
 
@@ -220,36 +243,43 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
     if (!this.node) {
       this.node = this.createNode(this.getRange(props))!
     }
+    return this
   }
 
   /** Update this value's animation using the queue of pending props. */
-  start(): Promise<AnimationResult<T>[]> {
+  async start(): AsyncResult<T> {
+    this._notDisposed('start')
     const queue = this._queue || []
     this._queue = []
-    return Promise.all(queue.map(props => this.animate(props)))
+
+    let lastResult: AnimationResult<T> | undefined
+    await Promise.all(
+      queue.map(async props => {
+        lastResult = await this.animate(props)
+      })
+    )
+
+    return (
+      lastResult || {
+        finished: true,
+        value: this.get(),
+        spring: this as any,
+      }
+    )
   }
 
   /**
    * Stop the animation on its next frame, and prevent updates from before the
-   * `timestamp` argument.
+   * `timestamp` argument, which defaults to the current time.
    */
   stop(timestamp = G.now()) {
-    invariant(this._phase > DISPOSED)
-    this._deadline = timestamp
-    const anim = this.animation
-    if (anim) {
-      this._animateTo(this.get())
-      this._stop()
-    }
-    return this
-  }
-
-  /** Skip to the end of the current animation */
-  finish() {
-    invariant(this._phase > DISPOSED)
-    const anim = this.animation
-    if (anim) {
-      this._finish(anim.to)
+    if (this._phase > DISPOSED) {
+      this._deadline = timestamp
+      const anim = this.animation
+      if (anim) {
+        this._animateTo(this.get())
+        this._stop()
+      }
     }
     return this
   }
@@ -268,49 +298,11 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
     return () => this._children.delete(fn)
   }
 
-  /** @internal Pluck the `to` and `from` props */
-  getRange(props: PendingProps<T>) {
-    const { to, from } = props
-    return {
-      to: !is.obj(to) || isDependency(to) ? to : to[this.key],
-      from: !is.obj(from) || isDependency(from) ? from : from[this.key],
-    } as AnimationRange<T>
-  }
-
-  /** @internal Create an `Animated` node from a set of `to` and `from` props */
-  createNode({ to, from }: AnimationRange<T>) {
-    const value = is.und(to) ? from : to
-    return is.und(value)
-      ? value
-      : this._getNodeType(value).create(computeGoal(from))
-  }
-
-  /** @internal */
-  get hasChildren() {
-    return !!(
-      this._children.size ||
-      (this.animation && this.animation.onChange)
+  protected _notDisposed(name: string) {
+    invariant(
+      this._phase > DISPOSED,
+      `The "${name}" method is disabled for disposed "${this.constructor.name}" objects`
     )
-  }
-
-  /** @internal */
-  addChild(child: SpringObserver<T>): void {
-    this._children.add(child)
-  }
-
-  /** @internal */
-  removeChild(child: SpringObserver<T>): void {
-    this._children.delete(child)
-  }
-
-  /** Return true when the given prop has the newest timestamp */
-  protected _diff(prop: string, timestamp: number) {
-    const timestamps = this._timestamps || (this._timestamps = {})
-    if (timestamp >= timestamps[prop] || 0) {
-      timestamps[prop] = timestamp
-      return true
-    }
-    return false
   }
 
   /** Return the `Animated` node constructor for a given value */
@@ -328,7 +320,7 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
   }
 
   /** Update the internal `animation` object */
-  protected _update(
+  protected _animate(
     { to, from }: AnimationRange<T>,
     props: PendingProps<T>,
     timestamp: number,
@@ -362,7 +354,14 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
     this.animation = anim as Animation<T>
 
     /** Return true if our prop can be used */
-    const diff = (prop: string) => this._diff(prop, timestamp)
+    const timestamps = this._timestamps || (this._timestamps = {})
+    const diff = (prop: string) => {
+      if (timestamp >= timestamps[prop] || 0) {
+        timestamps[prop] = timestamp
+        return true
+      }
+      return false
+    }
 
     // Write or read the "to" prop
     if (!is.und(to) && diff('to')) {
@@ -462,15 +461,23 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
 
     // Event props are provided per update.
     if (changed) {
-      anim.onChange = get('onChange') as any
+      anim.onChange = get('onChange')
+
+      // Call the "onRest" callback for an unfinished animation.
+      const onRestQueue: OnRest<T>[] = anim.onRest || []
+      if (onRestQueue.length > 1) {
+        const result: AnimationResult<T> = {
+          finished: false,
+          value: this.get(),
+          spring: this,
+        }
+        for (let i = 1; i < onRestQueue.length; i++) {
+          onRestQueue[i](result)
+        }
+      }
 
       // The "onRest" prop is always first in the queue.
-      const restQueue: OnRest<T>[] = (anim.onRest = [])
-      restQueue[0] = get('onRest') || noop
-      restQueue[1] = onRest
-      anim.promise = new Promise(resolve => {
-        restQueue[2] = resolve
-      })
+      anim.onRest = [get('onRest') || noop, onRest]
     }
 
     let started = reset || changed
@@ -484,7 +491,7 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
     }
 
     if (G.skipAnimation) {
-      return this._finish(to)
+      return this.finish(to)
     }
 
     if (!isActive && started) {
@@ -531,20 +538,10 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
   protected _onParentChange(value: any, finished: boolean) {
     if (this.animation!.immediate) {
       if (finished) {
-        this._finish(value)
+        this.finish(value)
       } else {
         this.set(value)
       }
-    }
-  }
-
-  /** @internal */
-  public _finish(to?: T | Dependency<T>) {
-    if (this.animation) {
-      if (!is.und(to)) {
-        this.set(isDependency(to) ? to.get() : to)
-      }
-      this._stop(true)
     }
   }
 
@@ -565,6 +562,41 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
       const result = { value: this.get(), finished, spring: this }
       each(onRestQueue, onRest => onRest(result))
     }
+  }
+
+  /** @internal Pluck the `to` and `from` props */
+  getRange(props: PendingProps<T>) {
+    const { to, from } = props
+    return {
+      to: !is.obj(to) || isDependency(to) ? to : to[this.key],
+      from: !is.obj(from) || isDependency(from) ? from : from[this.key],
+    } as AnimationRange<T>
+  }
+
+  /** @internal Create an `Animated` node from a set of `to` and `from` props */
+  createNode({ to, from }: AnimationRange<T>) {
+    const value = is.und(from) ? to : from
+    if (!is.und(value)) {
+      return this._getNodeType(value).create(computeGoal(from))
+    }
+  }
+
+  /** @internal */
+  get hasChildren() {
+    return !!(
+      this._children.size ||
+      (this.animation && this.animation.onChange)
+    )
+  }
+
+  /** @internal */
+  addChild(child: SpringObserver<T>): void {
+    this._children.add(child)
+  }
+
+  /** @internal */
+  removeChild(child: SpringObserver<T>): void {
+    this._children.delete(child)
   }
 }
 
