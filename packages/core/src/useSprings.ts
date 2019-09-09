@@ -66,7 +66,6 @@ export function useSprings(length: number, propsArg: any, deps?: any[]): any {
       get controllers() {
         return state.ctrls
       },
-      /** Update the spring controllers */
       update: props => {
         const { ctrls, ref } = state
         each(ctrls, (ctrl, i) => {
@@ -77,9 +76,13 @@ export function useSprings(length: number, propsArg: any, deps?: any[]): any {
         })
         return api
       },
-      /** Apply any pending updates */
-      start: () => Promise.all(state.ctrls.map(ctrl => ctrl.start())),
-      /** Stop one key or all keys from animating */
+      async start() {
+        const results = await Promise.all(state.ctrls.map(ctrl => ctrl.start()))
+        return {
+          value: results.map(result => result.value),
+          finished: results.every(result => result.finished),
+        }
+      },
       stop: keys => each(state.ctrls, ctrl => ctrl.stop(keys)),
     }),
     []
