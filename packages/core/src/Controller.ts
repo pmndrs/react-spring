@@ -40,21 +40,12 @@ export class Controller<State extends Indexable = {}> {
   }
 
   /** Get the latest values of every spring */
-  get(): State & UnknownProps
-
-  /** Get the latest value of a spring by key */
-  get<P extends keyof State>(key: P): State[P]
-
-  /** @internal */
-  get(key?: string) {
-    if (is.und(key)) {
-      const values: any = {}
-      each(this.springs, (spring, key) => {
-        values[key] = spring.get()
-      })
-      return values
-    }
-    return this.springs[key].get()
+  get(): State & UnknownProps {
+    const values: any = {}
+    each(this.springs, (spring, key) => {
+      values[key] = spring.get()
+    })
+    return values
   }
 
   /** Push an update onto the queue of each value. */
