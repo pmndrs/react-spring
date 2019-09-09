@@ -39,7 +39,7 @@ export type Constrain<T, U> = [T] extends [Any] ? U : [T] extends [U] ? T : U
 export type ObjectType<T> = T extends {} ? T : {}
 
 /** Intersected with other object types to allow for unknown properties */
-export type UnknownProps = { [key: string]: unknown }
+export type UnknownProps = Indexable<unknown>
 
 export type UnknownPartial<T> = UnknownProps &
   ({} extends Required<T> ? unknown : Partial<T>)
