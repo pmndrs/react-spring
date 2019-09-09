@@ -6,6 +6,7 @@ import {
   Indexable,
   OneOrMore,
   UnknownPartial,
+  UnknownProps,
 } from 'shared'
 import { AnimationResult, SpringValue } from '../SpringValue'
 import { AnimationProps } from './animated'
@@ -183,10 +184,11 @@ export interface SpringAsyncFn<T, P extends string = string> {
  *
  * The `T` parameter must be a set of animated values (as an object type).
  */
-export interface SpringHandle<T extends Indexable = Indexable> {
-  /** Start any pending animations */
-  start: () => Promise<AnimationResult[]>
-  /** Stop one or more animations */
+export interface SpringHandle<T extends Indexable = UnknownProps> {
+  get: () => T & UnknownProps
+  controller: Controller<T>
+  update: SpringsUpdateFn<T>
+  start: () => Promise<AnimationResult<T>>
   stop: SpringStopFn<T>
 }
 
@@ -195,11 +197,11 @@ export interface SpringHandle<T extends Indexable = Indexable> {
  *
  * The `T` parameter should only contain animated props.
  */
-export interface SpringsHandle<T extends Indexable = Indexable> {
+export interface SpringsHandle<T extends Indexable = UnknownProps> {
   get: (i: number) => Controller<T>
-  controllers: Controller<T>[]
+  controllers: readonly Controller<T>[]
   update: SpringsUpdateFn<T>
-  start: () => Promise<AnimationResult[]>
+  start: () => Promise<AnimationResult<T[]>>
   stop: SpringStopFn<T>
 }
 
