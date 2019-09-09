@@ -253,7 +253,7 @@ function runTopological(
     if (visited[i]) return
     visited[i] = true
 
-    const { to } = spring
+    const { to } = spring.animation!
     if (to instanceof SpringValue) {
       const i = springs.indexOf(to)
       if (~i) run(to, i)
