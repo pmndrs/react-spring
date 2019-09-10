@@ -62,7 +62,6 @@ export function useSprings(length: number, propsArg: any, deps?: any[]): any {
 
   const api = useMemo(
     (): SpringsHandle => ({
-      get: i => state.ctrls[i],
       get controllers() {
         return state.ctrls
       },
