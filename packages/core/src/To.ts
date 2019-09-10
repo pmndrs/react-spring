@@ -27,7 +27,10 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
 
     // By default, update immediately when a source changes.
     this.animation = { owner: this, immediate: true } as any
-    each(toArray(source), source => source.addChild(this))
+    each(toArray(source), source => {
+      this.priority = Math.max(this.priority || 0, (source.priority || 0) + 1)
+      source.addChild(this)
+    })
   }
 
   _animateTo(value: Out | FluidValue<Out>) {
@@ -50,6 +53,19 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
   onParentChange(_value: any, finished: boolean) {
     // TODO: only compute once per frame
     super.onParentChange(this._compute(), finished)
+  }
+
+  /** @internal */
+  onParentPriorityChange(priority: number) {
+    if (this.source) {
+      let max = 0
+      each(
+        toArray(this.source),
+        source => source && (max = Math.max(max, (source.priority || 0) + 1))
+      )
+      priority = max
+    }
+    super.onParentPriorityChange(priority)
   }
 }
 
