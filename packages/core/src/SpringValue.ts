@@ -212,16 +212,16 @@ export class SpringValue<T = any, P extends string = string>
   }
 
   /** Create a spring that maps our value to another value */
-  to<Out>(...args: InterpolatorArgs<T, Out>): SpringValue<Out, 'to'> {
+  to<Out>(...args: InterpolatorArgs<T, Out>) {
     this._checkDisposed('to')
-    return new To(this, args)
+    return G.to(this, args) as To<T, Out>
   }
 
   /** @deprecated Use the `to` method instead. */
   interpolate<Out>(...args: InterpolatorArgs<T, Out>) {
     deprecateInterpolate()
     this._checkDisposed('interpolate')
-    return new To(this, args)
+    return G.to(this, args) as To<T, Out>
   }
 
   animate(props: PendingProps<T>): AsyncResult<T>
