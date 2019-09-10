@@ -1,5 +1,5 @@
 import { useMemo, RefObject, useLayoutEffect } from 'react'
-import { is, each, usePrev, useOnce, Merge } from 'shared'
+import { is, each, usePrev, useOnce, Merge, OneOrMore } from 'shared'
 import { useMemoOne } from 'use-memo-one'
 
 import {
@@ -37,7 +37,7 @@ export function useSprings<Props extends object, From, To>(
 
 export function useSprings<Props extends object, From, To>(
   length: number,
-  props: ReadonlyArray<Props & UseSpringsProps<From, To>>,
+  props: OneOrMore<Props & UseSpringsProps<From, To>>,
   deps?: any[]
 ): SpringValues<Props>[]
 
