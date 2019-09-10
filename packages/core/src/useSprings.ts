@@ -6,7 +6,7 @@ import {
   SpringStopFn,
   SpringValues,
   SpringsUpdateFn,
-  SpringsHandle,
+  SpringHandle,
   SpringProps,
 } from './types/spring'
 import { FrameValues, Tween } from './types/common'
@@ -22,7 +22,7 @@ export type UseSpringsProps<From = unknown, To = unknown> = Merge<
      *
      * Animations never auto-start when `ref` is defined.
      */
-    ref?: RefObject<SpringsHandle<Tween<From, To>>>
+    ref?: RefObject<SpringHandle<Tween<From, To>>>
   }
 >
 
@@ -48,7 +48,7 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
 
   // The "ref" prop is taken from the props of the first spring only.
   // The ref is assumed to *never* change after the first render.
-  let ref: RefObject<SpringsHandle> | undefined
+  let ref: RefObject<SpringHandle> | undefined
 
   const ctrls: Controller[] = useMemoOne(() => [], [])
   const updates: SpringProps[] = []
@@ -79,7 +79,7 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
   }, deps)
 
   const api = useMemo(
-    (): SpringsHandle => ({
+    (): SpringHandle => ({
       get controllers() {
         return ctrls
       },
