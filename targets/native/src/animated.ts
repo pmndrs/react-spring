@@ -1,11 +1,12 @@
-import { AssignableKeys, ElementType, ComponentPropsWithRef } from 'shared'
-import {
-  Dependency,
-  withAnimated,
-  extendAnimated,
-} from '@react-spring/animated'
-import { Text, View, Image, ViewStyle } from 'react-native'
 import { ForwardRefExoticComponent } from 'react'
+import { Text, View, Image, ViewStyle } from 'react-native'
+import { withAnimated, extendAnimated } from '@react-spring/animated'
+import {
+  AssignableKeys,
+  ElementType,
+  ComponentPropsWithRef,
+  FluidValue,
+} from 'shared'
 
 // These are converted into `animated` components
 const elements = {
@@ -60,7 +61,7 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is
   : never
 
 type AnimatedArray<T extends ReadonlyArray<number | string>> = {
-  [P in keyof T]: T[P] | Dependency<T[P]>
+  [P in keyof T]: T[P] | FluidValue<T[P]>
 }
 
 // An animated array of style objects
@@ -108,5 +109,5 @@ type AnimatedLeaf<T> =
   | Extract<T, ReadonlyArray<number | string>> extends infer U
   ? [U] extends [never]
     ? never
-    : Dependency<U>
+    : FluidValue<U>
   : never

@@ -1,12 +1,12 @@
+import { FluidObserver } from 'shared'
 import { Animated, TreeContext } from './Animated'
 import { AnimatedObject } from './AnimatedObject'
-import { Dependency } from './Dependency'
 import * as G from 'shared/globals'
 
 type Props = object & { style?: any }
 
-export class AnimatedProps extends AnimatedObject {
-  dependencies!: Dependency[]
+export class AnimatedProps extends AnimatedObject implements FluidObserver {
+  dirty = false
 
   constructor(public update: () => void) {
     super(null)
@@ -23,4 +23,18 @@ export class AnimatedProps extends AnimatedObject {
     )
     Animated.context = null
   }
+
+  /** @internal */
+  onParentChange() {
+    if (!this.dirty) {
+      this.dirty = true
+      G.frameLoop.onFrame(() => {
+        this.dirty = false
+        this.update()
+      })
+    }
+  }
+
+  /** @internal */
+  onParentPriorityChange() {}
 }

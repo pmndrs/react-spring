@@ -1,7 +1,7 @@
-import { Indexable, each } from 'shared'
+import { Indexable, each, isFluidValue } from 'shared'
 import { Animated, isAnimated } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
-import { isDependency } from './Dependency'
+import { isAnimationValue } from './AnimationValue'
 
 type Source = Indexable | null
 
@@ -18,7 +18,7 @@ export class AnimatedObject extends Animated {
     each(this.source, (source, key) => {
       if (isAnimated(source)) {
         values[key] = source.getValue(animated)
-      } else if (isDependency(source)) {
+      } else if (isFluidValue(source)) {
         values[key] = source.get()
       } else if (!animated) {
         values[key] = source
@@ -50,11 +50,13 @@ export class AnimatedObject extends Animated {
 
   /** Add to a payload set. */
   protected _addToPayload(this: Set<AnimatedValue>, source: any) {
-    if (isDependency(source)) {
+    if (isFluidValue(source)) {
       if (Animated.context) {
         Animated.context.dependencies.add(source)
       }
-      source = source.node
+      if (isAnimationValue(source)) {
+        source = source.node
+      }
     }
     if (isAnimated(source)) {
       each(source.getPayload(), node => this.add(node))

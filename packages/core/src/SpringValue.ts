@@ -6,14 +6,16 @@ import {
   EasingFunction,
   toArray,
   InterpolatorArgs,
+  FluidObserver,
+  isFluidValue,
+  FluidValue,
 } from 'shared'
 import {
-  Dependency,
-  isDependency,
+  AnimationValue,
+  isAnimationValue,
   AnimatedValue,
   AnimatedString,
   AnimatedArray,
-  AnimatedProps,
 } from '@react-spring/animated'
 import invariant from 'tiny-invariant'
 import * as G from 'shared/globals'
@@ -56,9 +58,9 @@ export type AnimationResult<T = unknown> = Readonly<{
 /** An animation being executed by the frameloop */
 export interface Animation<T = unknown> {
   values: readonly AnimatedValue[]
-  to: T | Dependency<T>
+  to: T | FluidValue<T>
   toValues: readonly number[] | null
-  from: T | Dependency<T>
+  from: T | FluidValue<T>
   fromValues: readonly number[]
   config: {
     w0: number
@@ -118,12 +120,12 @@ const defaultConfig: SpringConfig = {
 }
 
 /** An observer of a `SpringValue` */
-type SpringObserver<T = any> = OnChange<T> | SpringValue<T> | AnimatedProps
+type SpringObserver<T = any> = OnChange<T> | FluidObserver<T>
 
 /** An opaque animatable value */
-export class SpringValue<T = any, P extends string = string> extends Dependency<
-  T
-> {
+export class SpringValue<T = any, P extends string = string>
+  extends AnimationValue<T>
+  implements FluidObserver<T> {
   /** @internal The animated node. Never mutate this directly */
   node!: AnimatedNode<T>
   /** @internal The animation state. Never mutate this directly */
@@ -171,11 +173,11 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
    *
    * All `onRest` callbacks are passed `{finished: true}`
    */
-  finish(to?: T | Dependency<T>) {
+  finish(to?: T | FluidValue<T>) {
     if (this.animation) {
       if (is.und(to)) to = this.animation.to
       if (!is.und(to)) {
-        this.set(isDependency(to) ? to.get() : to)
+        this.set(isFluidValue(to) ? to.get() : to)
       }
       this._stop(true)
     }
@@ -298,6 +300,21 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
     return () => this._children.delete(fn)
   }
 
+  /** @internal */
+  onParentChange(value: any, finished: boolean) {
+    // The "FrameLoop" handles everything other than immediate animation.
+    if (this.animation!.immediate) {
+      if (finished) {
+        this.finish(value)
+      } else {
+        this.set(value)
+      }
+    }
+  }
+
+  /** @internal */
+  onParentPriorityChange(priority: number) {}
+
   protected _notDisposed(name: string) {
     invariant(
       this._phase > DISPOSED,
@@ -306,9 +323,12 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
   }
 
   /** Return the `Animated` node constructor for a given value */
-  protected _getNodeType(value: T | Dependency<T>): AnimatedType<T> {
-    const parent = isDependency(value) ? value : null
+  protected _getNodeType(value: T | FluidValue<T>): AnimatedType<T> {
+    const parent = isAnimationValue(value) ? value : null
     const parentType = parent && (parent.node.constructor as any)
+    if (!parent && isFluidValue(value)) {
+      value = value.get()
+    }
     return parentType == AnimatedString
       ? AnimatedValue
       : parentType ||
@@ -390,7 +410,7 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
       from = this.get()
     }
     // Start from the current value of another Spring.
-    else if (isDependency(from)) {
+    else if (isFluidValue(from)) {
       from = from.get()
     }
 
@@ -426,7 +446,7 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
     }
 
     // The `FrameLoop` decides our goal value when `to` is a dependency.
-    let goal: any = isDependency(to) ? null : computeGoal(to)
+    let goal: any = isFluidValue(to) ? null : computeGoal(to)
 
     // Update our internal `Animated` node.
     let node = this.node
@@ -448,7 +468,7 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
     }
 
     if (changed) {
-      anim.toValues = isDependency(to) ? null : toArray(goal)
+      anim.toValues = isFluidValue(to) ? null : toArray(goal)
     }
 
     if (reset || this._phase == CREATED) {
@@ -481,8 +501,8 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
 
     let started = reset || changed
     if (started) {
-      const isAnimatable = is.num(to) || isDependency(to)
-      anim.immediate = !isAnimatable || !!callProp(get('immediate'), key)
+      const canAnimate = is.num(to) || isFluidValue(to)
+      anim.immediate = !canAnimate || !!callProp(get('immediate'), key)
       if ((started = !anim.immediate)) {
         const onStart = get('onStart')
         if (onStart) onStart(this)
@@ -500,13 +520,13 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
   }
 
   /** Update the `animation.to` value, which might be a dependency */
-  protected _animateTo(value: T | Dependency) {
+  protected _animateTo(value: T | FluidValue<T>) {
     const anim = this.animation!
-    if (isDependency(anim.to)) {
+    if (isFluidValue(anim.to)) {
       anim.to.removeChild(this)
     }
     anim.to = value
-    if (isDependency(value)) {
+    if (isFluidValue(value)) {
       value.addChild(this)
     }
   }
@@ -521,25 +541,10 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
 
     // Clone "_children" so it can be safely mutated by the loop.
     for (const observer of Array.from(this._children)) {
-      if (observer instanceof SpringValue) {
-        observer._onParentChange(value, finished)
+      if ('onParentChange' in observer) {
+        observer.onParentChange(value, finished, this)
       } else if (!finished) {
-        if (observer instanceof AnimatedProps) {
-          observer.update()
-        } else {
-          observer(value, this)
-        }
-      }
-    }
-  }
-
-  /** Called when a dependency has its value changed */
-  protected _onParentChange(value: any, finished: boolean) {
-    if (this.animation!.immediate) {
-      if (finished) {
-        this.finish(value)
-      } else {
-        this.set(value)
+        observer(value, this)
       }
     }
   }
@@ -567,8 +572,8 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
   getRange(props: PendingProps<T>) {
     const { to, from } = props
     return {
-      to: !is.obj(to) || isDependency(to) ? to : to[this.key],
-      from: !is.obj(from) || isDependency(from) ? from : from[this.key],
+      to: !is.obj(to) || isFluidValue(to) ? to : to[this.key],
+      from: !is.obj(from) || isFluidValue(from) ? from : from[this.key],
     } as AnimationRange<T>
   }
 
@@ -600,10 +605,10 @@ export class SpringValue<T = any, P extends string = string> extends Dependency<
 }
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
-function computeGoal<T>(value: T | Dependency<T>): T {
+function computeGoal<T>(value: T | FluidValue<T>): T {
   return is.arr(value)
     ? value.map(computeGoal)
-    : isDependency(value)
+    : isFluidValue(value)
     ? computeGoal(value.get())
     : needsInterpolation(value)
     ? (G.createStringInterpolator as any)({

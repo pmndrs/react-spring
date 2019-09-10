@@ -1,5 +1,10 @@
-import { InterpolatorArgs, OneOrMore, InterpolatorFn } from 'shared/types'
-import { AnimatedValue, Dependency } from '@react-spring/animated'
+import {
+  InterpolatorArgs,
+  OneOrMore,
+  InterpolatorFn,
+  FluidValue,
+} from 'shared/types'
+import { AnimatedValue } from '@react-spring/animated'
 import { createInterpolator, toArray, is, each } from 'shared'
 import { SpringValue } from './SpringValue'
 
@@ -8,12 +13,13 @@ import { SpringValue } from './SpringValue'
  *  The memoized result is updated whenever a dependency changes.
  */
 export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
-  /** @internal The sources providing input values */
-  source: OneOrMore<Dependency> | null
-  /** @internal The function that maps inputs values to output */
+  /** The sources providing input values */
+  source: OneOrMore<FluidValue> | null
+
+  /** The function that maps inputs values to output */
   calc: InterpolatorFn<In, Out>
 
-  constructor(source: OneOrMore<Dependency>, args: InterpolatorArgs<In, Out>) {
+  constructor(source: OneOrMore<FluidValue>, args: InterpolatorArgs<In, Out>) {
     super('to')
     this.source = source
     this.calc = createInterpolator(...args)
@@ -24,10 +30,10 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
     each(toArray(source), source => source.addChild(this))
   }
 
-  _animateTo(value: Out | Dependency<Out>) {
+  _animateTo(value: Out | FluidValue<Out>) {
     if (this.source) {
       each(toArray(this.source), source => source.removeChild(this))
-      this._onParentChange = super._onParentChange
+      this.onParentChange = super.onParentChange
       this.source = null
     }
     super._animateTo(value)
@@ -40,9 +46,10 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
     return this.calc(...inputs)
   }
 
-  // TODO: only compute once per frame
-  protected _onParentChange(_value: any, finished: boolean) {
-    super._onParentChange(this._compute(), finished)
+  /** @internal */
+  onParentChange(_value: any, finished: boolean) {
+    // TODO: only compute once per frame
+    super.onParentChange(this._compute(), finished)
   }
 }
 

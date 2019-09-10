@@ -1,3 +1,19 @@
+/** @internal A value that changes over time (possibly every frame) */
+export interface FluidValue<T = any> {
+  get: () => T
+  priority?: number
+  addChild: (child: FluidObserver) => void
+  removeChild: (child: FluidObserver) => void
+}
+
+/** @internal An object that observes a `FluidNode` over time */
+export interface FluidObserver<T = any> {
+  /** A fluid value has changed */
+  onParentChange(value: T, finished: boolean, parent: FluidValue<T>): void
+  /** A fluid value had its priority changed */
+  onParentPriorityChange(priority: number, parent: FluidValue<T>): void
+}
+
 /** These types can be animated */
 export type Animatable<T = any> = T extends number
   ? number

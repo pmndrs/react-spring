@@ -1,6 +1,6 @@
 import { FrameRequestCallback } from 'shared/types'
-import { isDependency } from '@react-spring/animated'
-import { is } from 'shared'
+import { isAnimationValue } from '@react-spring/animated'
+import { is, isFluidValue } from 'shared'
 import * as G from 'shared/globals'
 
 import { SpringValue } from './SpringValue'
@@ -132,14 +132,18 @@ export class FrameLoop {
     let changed = false
 
     const anim = spring.animation!
-    const parent = isDependency(anim.to) && anim.to
-    const payload = parent && parent.node.getPayload()
+    const parent = isFluidValue(anim.to) && anim.to
+    const payload = isAnimationValue(parent) && parent.node.getPayload()
 
     anim.values.forEach((node, i) => {
       if (node.done) return
       changed = true
 
-      let to: number = payload ? payload[i].getValue() : anim.toValues![i]
+      let to: number = payload
+        ? payload[i].getValue()
+        : parent
+        ? toArray(parent.get())[i]
+        : anim.toValues![i]
 
       // Jump to end value for immediate animations
       if (anim.immediate) {

@@ -1,14 +1,11 @@
 import * as Zdog from 'react-zdog'
 import {
-  Dependency,
-  withAnimated,
-  extendAnimated,
-} from '@react-spring/animated'
-import {
   ElementType,
   ComponentPropsWithRef,
   ForwardRefExoticComponent,
 } from 'react'
+import { withAnimated, extendAnimated } from '@react-spring/animated'
+import { FluidValue } from 'shared'
 
 type ZdogExports = typeof Zdog
 
@@ -87,4 +84,4 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
 // An animated value that is not an object
 type AnimatedLeaf<T> = [T] extends [object]
   ? never
-  : Dependency<Exclude<T, object | void>>
+  : FluidValue<Exclude<T, object | void>>

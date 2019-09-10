@@ -1,12 +1,8 @@
-import { OneOrMore, Animatable } from '@react-spring/shared'
-import {
-  AnimatedArray,
-  AnimatedValue,
-  Dependency,
-} from '@react-spring/animated'
-import { UnknownProps } from './common'
+import { OneOrMore, Animatable, FluidValue } from '@react-spring/shared'
+import { AnimatedArray, AnimatedValue } from '@react-spring/animated'
 import { OnStart, OnRest, OnChange, OnAnimate } from '../SpringValue'
 import { SpringConfig } from './spring'
+import { UnknownProps } from './common'
 
 export type AnimatedNode<T> =
   | AnimatedValue<T>
@@ -17,8 +13,8 @@ export type AnimatedType<T> = Function & {
 }
 
 export type AnimationRange<T> = {
-  to: T | Dependency<T> | undefined
-  from: T | Dependency<T> | undefined
+  to: T | FluidValue<T> | undefined
+  from: T | FluidValue<T> | undefined
 }
 
 /**
