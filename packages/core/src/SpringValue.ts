@@ -101,14 +101,18 @@ export type PendingProps<T = unknown> = Merge<
   }
 >
 
+// TODO: use "const enum" when Babel supports it
+type Phase = number & { __type: 'Phase' }
 /** The spring cannot be animated */
-const DISPOSED = 0
+const DISPOSED = 0 as Phase
 /** The spring has not animated yet */
-const CREATED = 1
-/** The spring is animating */
-const ACTIVE = 2
+const CREATED = 1 as Phase
 /** The spring has animated before */
-const IDLE = 3
+const IDLE = 2 as Phase
+/** The spring is frozen in time */
+const PAUSED = 3 as Phase
+/** The spring is animating */
+const ACTIVE = 4 as Phase
 
 const noop = () => {}
 
@@ -126,7 +130,7 @@ export type SpringObserver<T = any> = OnChange<T> | FluidObserver<T>
 export class SpringValue<T = any, P extends string = string>
   extends AnimationValue<T>
   implements FluidObserver<T> {
-  static phases = { DISPOSED, CREATED, IDLE, ACTIVE }
+  static phases = { DISPOSED, CREATED, IDLE, PAUSED, ACTIVE }
   /** @internal The animated node. Never mutate this directly */
   node!: AnimatedNode<T>
   /** @internal Determines order of animations on each frame */
@@ -175,6 +179,20 @@ export class SpringValue<T = any, P extends string = string>
     }
     this._stop()
     return this
+  }
+
+  /**
+   * Freeze the active animation in time.
+   * This does nothing when not animating.
+   *
+   * Call `start` to unpause.
+   */
+  pause() {
+    this._notDisposed('pause')
+    if (this.is(ACTIVE)) {
+      this._phase = PAUSED
+      G.frameLoop.stop(this)
+    }
   }
 
   /**
@@ -227,6 +245,7 @@ export class SpringValue<T = any, P extends string = string>
         props,
         this._asyncProps || (this._asyncProps = {}),
         () => this.get(),
+        () => this.is(PAUSED),
         this.animate.bind(this) as any,
         this.stop.bind(this) as any
       )
@@ -257,9 +276,24 @@ export class SpringValue<T = any, P extends string = string>
     return this
   }
 
-  /** Update this value's animation using the queue of pending props. */
+  /**
+   * Update this value's animation using the queue of pending props,
+   * and unpause the current animation (if one is frozen).
+   */
   async start(): AsyncResult<T> {
     this._notDisposed('start')
+
+    // Unpause if possible.
+    if (this.is(PAUSED)) {
+      this._phase = ACTIVE
+      G.frameLoop.start(this)
+
+      const asyncProps = this._asyncProps
+      if (asyncProps && asyncProps.asyncTo) {
+        asyncProps.unpause!()
+      }
+    }
+
     const queue = this._queue || []
     this._queue = []
 
