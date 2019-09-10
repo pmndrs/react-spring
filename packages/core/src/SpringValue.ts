@@ -329,6 +329,11 @@ export class SpringValue<T = any, P extends string = string>
     return this
   }
 
+  /** Restart the animation. */
+  reset() {
+    this.animate({ reset: true })
+  }
+
   /** Prevent future animations, and stop the current animation */
   dispose() {
     if (!this.is(DISPOSED)) {
