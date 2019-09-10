@@ -169,7 +169,7 @@ export interface SpringsUpdateFn<T extends Indexable> {
     props:
       | OneOrMore<SpringProps<T>>
       | ((index: number, ctrl: Controller<T>) => SpringProps<T> | null)
-  ): SpringsHandle<T>
+  ): SpringHandle<T>
 }
 
 /**
@@ -183,23 +183,11 @@ export interface SpringAsyncFn<T, P extends string = string> {
 }
 
 /**
- * The object attached to the `ref` prop by the `useSpring` hook.
- *
- * The `T` parameter must be a set of animated values (as an object type).
- */
-export interface SpringHandle<T extends Indexable = UnknownProps> {
-  controller: Controller<T>
-  update: SpringsUpdateFn<T>
-  start: () => Promise<AnimationResult<T>>
-  stop: SpringStopFn<T>
-}
-
-/**
  * The object attached to the `ref` prop by the `useSprings` hook.
  *
  * The `T` parameter should only contain animated props.
  */
-export interface SpringsHandle<T extends Indexable = UnknownProps> {
+export interface SpringHandle<T extends Indexable = UnknownProps> {
   controllers: readonly Controller<T>[]
   update: SpringsUpdateFn<T>
   start: () => Promise<AnimationResult<T[]>>
