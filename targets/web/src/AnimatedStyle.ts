@@ -1,11 +1,14 @@
-import { each, is } from 'shared'
-import { to } from '@react-spring/core'
 import {
-  AnimatedObject,
-  AnimatedArray,
-  AnimatedValue,
-  isAnimated,
-} from '@react-spring/animated'
+  each,
+  is,
+  Indexable,
+  FluidValue,
+  OneOrMore,
+  isFluidValue,
+  toArray,
+} from 'shared'
+import { AnimatedObject, AnimatedValue } from '@react-spring/animated'
+import { SpringValue, SpringObserver } from '@react-spring/core'
 
 /** The transform-functions
  * (https://developer.mozilla.org/fr/docs/Web/CSS/transform-function)
@@ -13,81 +16,37 @@ import {
  * animated. Perspective has been left out as it would conflict with the
  * non-transform perspective style.
  */
-const domTransforms = ['matrix', 'translate', 'scale', 'rotate', 'skew']
+const domTransforms = /^(matrix|translate|scale|rotate|skew)/
 
-// adds a unit to the value when the value is unit-less (ie a number)
-const addUnit = (value: number | string, unit: string): string | 0 =>
-  is.num(value) && value !== 0 ? value + unit : value
+// These keys have "px" units by default
+const pxTransforms = /^(translate)/
+
+// These keys have "deg" units by default
+const degTransforms = /^(rotate|skew)/
 
 type Value = number | string
-type StyleValue = Value | Value[]
-type AnimatedValueType = AnimatedArray | AnimatedValue
 
-/**
- * Returns the right Animated object based on the value type.
- *
- * x: AnimatedValue         --> x
- * 40px                     --> AnimatedValue(40px)
- * [40, 30]                 --> AnimatedValue([40,30])
- * [40, y: AnimatedValue]   --> AnimatedArray([AnimatedValue(40), y])
- *
- * @param value
- */
-const ensureAnimated = (
-  value: AnimatedValueType | StyleValue = 0
-): AnimatedValueType =>
-  is.arr(value) && value.some(isAnimated)
-    ? new AnimatedArray(value)
-    : isAnimated(value)
-    ? value
-    : new AnimatedValue(value)
+/** Add a unit to the value when the value is unit-less (eg: a number) */
+const addUnit = (value: Value, unit: string): string | 0 =>
+  is.num(value) && value !== 0 ? value + unit : value
 
 /**
  * Checks if the input value matches the identity value.
  *
- * isValueIdentity(0, 0)              --> true
- * isValueIdentity('0px', 0)          --> true
- * isValueIdentity([0, '0px', 0], 0)  --> true
- *
- * @param styleValue
- * @param id
+ *     isValueIdentity(0, 0)              // => true
+ *     isValueIdentity('0px', 0)          // => true
+ *     isValueIdentity([0, '0px', 0], 0)  // => true
  */
-const isValueIdentity = (styleValue: StyleValue, id: number): boolean =>
-  is.arr(styleValue)
-    ? styleValue.every(v => isValueIdentity(v, id))
-    : is.num(styleValue)
-    ? styleValue === id
-    : parseFloat(styleValue) === id
+const isValueIdentity = (value: OneOrMore<Value>, id: number): boolean =>
+  is.arr(value)
+    ? value.every(v => isValueIdentity(v, id))
+    : is.num(value)
+    ? value === id
+    : parseFloat(value) === id
 
-/**
- * Checks if the style value is the identity for a given key.
- *
- * isTransformIdentity('scale', 1)               --> true
- * isTransformIdentity('scale', [1,1])
- * isTransformIdentity('rotate3d', [1,1,1,0])    --> true
- * isTransformIdentity('x', 0)                   --> true
- *
- * @param key
- * @param styleValue
- */
-const isTransformIdentity = (key: string, styleValue: StyleValue): boolean =>
-  key === 'rotate3d'
-    ? isValueIdentity(is.arr(styleValue) ? styleValue[3] : styleValue, 0)
-    : key.startsWith('scale')
-    ? isValueIdentity(styleValue, 1)
-    : isValueIdentity(styleValue, 0)
-
-type Style = object & {
-  transform?: any
-  x?: any
-  y?: any
-  z?: any
-  [k: string]: string
-}
-type Transform = (arg: any) => [string, boolean]
-
-// TODO: create "SpringTransform" class that extends "SpringValue"
-//       then assign an instance of it to "style.transform" in "AnimatedStyle#setValue"
+/** Coerce any `FluidValue` to its current value */
+const getValue = <T>(value: T | FluidValue<T>) =>
+  isFluidValue(value) ? value.get() : value
 
 /**
  * This AnimatedStyle will simplify animated components transforms by
@@ -95,77 +54,107 @@ type Transform = (arg: any) => [string, boolean]
  * including shortcuts such as x, y and z for translateX/Y/Z
  */
 export class AnimatedStyle extends AnimatedObject {
-  constructor({ x, y, z, ...style } = {} as Style) {
-    const props: AnimatedValueType[] = []
+  constructor(style: Indexable) {
+    style.transform = new SpringTransform(style)
+    super(style)
+  }
+}
 
-    // transforms will be an array of functions applied to the props. Each function
-    // will return the interpolated transformed string, and a flag indicating if the
-    // interpolation result is an identity transform of its own
-    const transforms: Transform[] = []
+class SpringTransform extends SpringValue<string, 'transform'> {
+  /**
+   * An array of arrays that contains the values (static or fluid)
+   * used by each transform function.
+   */
+  private _inputs: (Value | FluidValue<Value>)[][] = []
 
-    // first we deal with x, y, z to group them into a single translate3d
+  /**
+   * An array of functions that take a list of values (static or fluid)
+   * and returns (1) a CSS transform string and (2) a boolean that's true
+   * when the transform has no effect (eg: an identity transform).
+   */
+  private _transforms: ((value: any) => [string, boolean])[] = []
+
+  constructor(style: Indexable) {
+    super('transform')
+    this._process(style)
+    this.node = new AnimatedValue(this._compute())
+    each(this._inputs, input =>
+      each(input, value => isFluidValue(value) && value.addChild(this))
+    )
+  }
+
+  dispose() {
+    each(this._inputs, input =>
+      each(input, value => isFluidValue(value) && value.removeChild(this))
+    )
+    super.dispose()
+  }
+
+  /** @internal */
+  onParentChange() {
+    this.set(this._compute())
+  }
+
+  /** @internal */
+  removeChild(observer: SpringObserver<string>) {
+    super.removeChild(observer)
+    if (!this._children.size) {
+      this.dispose()
+    }
+  }
+
+  protected _process({ x, y, z, ...style }: Indexable) {
+    const inputs = this._inputs
+    const transforms = this._transforms
+
+    // Combine x/y/z into translate3d
     if (x || y || z) {
-      // xyz should be an AnimatedValue or AnimatedArray
-      const xyz = ensureAnimated([x || 0, y || 0, z || 0])
-      // we add it to the array of Animated objects that will be interpolated
-      props.push(xyz)
-
-      // we add the interpolation function to our transform array
-      transforms.push(([x, y, z]: Value[]) => [
-        `translate3d(${addUnit(x, 'px')},${addUnit(y, 'px')},${addUnit(z, 'px')})`, // prettier-ignore
-        isValueIdentity([x, y, z], 0),
+      inputs.push([x || 0, y || 0, z || 0])
+      transforms.push((xyz: Value[]) => [
+        `translate3d(${xyz.map(v => addUnit(v, 'px')).join(',')})`, // prettier-ignore
+        isValueIdentity(xyz, 0),
       ])
     }
 
-    // then for each style key that matches the supported transform functions,
-    // we add the input value to the props and the interpolation transform
-    // function
+    // Pluck any other transform-related props
     each(style, (value, key) => {
       if (key === 'transform') {
-        props.push(ensureAnimated(value))
+        inputs.push([value || ''])
         transforms.push((transform: string) => [transform, transform === ''])
-      } else if (domTransforms.some(transform => key.startsWith(transform))) {
-        const unit = /^translate/.test(key)
+      } else if (domTransforms.test(key)) {
+        delete style[key]
+        if (is.und(value)) return
+
+        const unit = pxTransforms.test(key)
           ? 'px'
-          : /^(rotate|skew)/.test(key)
+          : degTransforms.test(key)
           ? 'deg'
           : ''
-        props.push(ensureAnimated(value))
+
+        inputs.push(toArray(value))
         transforms.push(
           key === 'rotate3d'
-            ? ([x, y, z, deg]) => [
+            ? ([x, y, z, deg]: [number, number, number, Value]) => [
                 `rotate3d(${x},${y},${z},${addUnit(deg, unit)})`,
-                isTransformIdentity(key, deg),
+                isValueIdentity(deg, 0),
               ]
-            : (arg: StyleValue) => [
-                is.arr(arg)
-                  ? `${key}(${arg.map(v => addUnit(v, unit)).join(',')})`
-                  : `${key}(${addUnit(arg, unit)})`,
-                isTransformIdentity(key, arg),
+            : (input: Value[]) => [
+                `${key}(${input.map(v => addUnit(v, unit)).join(',')})`,
+                isValueIdentity(input, key.startsWith('scale') ? 1 : 0),
               ]
         )
-        delete style[key]
       }
     })
+  }
 
-    // finally, we set the transform key of the animated style to the
-    // interpolation of all the props, using the transform functions we defined
-    // above
-    if (props.length > 0) {
-      style.transform = to(props, (...args) => {
-        let transform = ''
-        let identity = true
-        for (let i = 0; i < args.length; i++) {
-          const [t, id] = transforms[i](args[i])
-          transform += ' ' + t
-          identity = identity && id
-        }
-        // if the identity flag was true for all transforms, we set the transform
-        // to none, otherwise we return the concatenated transform string
-        return identity ? 'none' : transform
-      })
-    }
-
-    super(style)
+  protected _compute() {
+    let transform = ''
+    let identity = true
+    each(this._inputs, (input, i) => {
+      const [t, id] = this._transforms[i](input.map(getValue))
+      transform += ' ' + t
+      identity = identity && id
+    })
+    return identity ? 'none' : transform
   }
 }
