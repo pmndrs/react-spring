@@ -102,9 +102,11 @@ export class FrameLoop {
   /**
    * Schedule a function to run at the end of the current frame,
    * after all springs have been updated.
+   *
+   * Pass `true` as the 2nd argument to run at the end of the **next** frame.
    */
-  onFrame(cb: FrameRequestCallback) {
-    this._queues[0].add(cb)
+  onFrame(cb: FrameRequestCallback, next?: boolean) {
+    this._queues[next ? 1 : 0].add(cb)
   }
 
   /**
