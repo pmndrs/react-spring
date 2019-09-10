@@ -1,11 +1,12 @@
+import { AnimatedValue } from '@react-spring/animated'
+import { createInterpolator, toArray, is, each } from 'shared'
 import {
   InterpolatorArgs,
   OneOrMore,
   InterpolatorFn,
   FluidValue,
 } from 'shared/types'
-import { AnimatedValue } from '@react-spring/animated'
-import { createInterpolator, toArray, is, each } from 'shared'
+
 import { SpringValue } from './SpringValue'
 
 /**
@@ -68,5 +69,3 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
     super.onParentPriorityChange(priority)
   }
 }
-
-createInterpolator([0, 1], [1, 0])

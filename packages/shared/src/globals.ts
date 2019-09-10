@@ -1,4 +1,10 @@
-import { InterpolatorConfig, FrameRequestCallback } from './types'
+import {
+  InterpolatorConfig,
+  FrameRequestCallback,
+  InterpolatorArgs,
+  FluidValue,
+  OneOrMore,
+} from './types'
 import { ElementType } from 'react'
 
 declare const window: {
@@ -33,6 +39,11 @@ export let frameLoop: {
 // Optional
 //
 
+export let to: <In, Out>(
+  source: OneOrMore<FluidValue>,
+  args: InterpolatorArgs<In, Out>
+) => FluidValue<Out>
+
 export let now = () => Date.now()
 
 /** Provide custom color names for interpolation */
@@ -63,6 +74,7 @@ export let cancelAnimationFrame: typeof window.cancelAnimationFrame =
 //
 
 export interface AnimatedGlobals {
+  to?: typeof to
   now?: typeof now
   frameLoop?: typeof frameLoop
   colorNames?: typeof colorNames
@@ -79,6 +91,7 @@ export interface AnimatedGlobals {
 
 export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
   ({
+    to,
     now,
     frameLoop,
     colorNames,
@@ -93,6 +106,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     cancelAnimationFrame,
   } = Object.assign(
     {
+      to,
       now,
       frameLoop,
       colorNames,
