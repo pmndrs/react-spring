@@ -120,7 +120,7 @@ const defaultConfig: SpringConfig = {
 }
 
 /** An observer of a `SpringValue` */
-type SpringObserver<T = any> = OnChange<T> | FluidObserver<T>
+export type SpringObserver<T = any> = OnChange<T> | FluidObserver<T>
 
 /** An opaque animatable value */
 export class SpringValue<T = any, P extends string = string>

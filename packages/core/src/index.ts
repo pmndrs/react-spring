@@ -6,8 +6,10 @@ export * from './useTransition'
 
 export * from './legacy'
 export * from './interpolate'
-export * from './globals'
 export * from './constants'
+export * from './globals'
+
+export * from './SpringValue'
 export * from './Controller'
 export * from './FrameLoop'
 
