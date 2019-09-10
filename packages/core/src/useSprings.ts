@@ -27,7 +27,7 @@ export type UseSpringsProps<From = unknown, To = unknown> = Merge<
 
 export function useSprings<Props extends object, From, To>(
   length: number,
-  props: (i: number) => Props & UseSpringsProps<From, To>,
+  props: (i: number, ctrl: Controller) => Props & UseSpringsProps<From, To>,
   deps?: any[]
 ): [
   SpringValues<Props>[],
