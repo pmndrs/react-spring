@@ -5,9 +5,9 @@ import {
   ExtrapolateType,
   InterpolatorConfig,
   InterpolatorFn,
+  FluidValue,
 } from 'shared/types'
 import { deprecateInterpolate } from 'shared/deprecations'
-import { Dependency } from '@react-spring/animated'
 import { To } from './To'
 
 /** Map the value of one or more dependencies */
@@ -26,29 +26,29 @@ export type Interpolated<T extends ReadonlyArray<any>> = {
 }
 
 /**
- * This interpolates one or more `Dependency` objects.
+ * This interpolates one or more `FluidValue` objects.
  * The exported `interpolate` function uses this type.
  */
 export interface Interpolator {
   // Single parent
-  <In, Out>(parent: Dependency<In>, interpolator: InterpolatorFn<In, Out>): To<
+  <In, Out>(parent: FluidValue<In>, interpolator: InterpolatorFn<In, Out>): To<
     Out
   >
 
   // Tuple of parents
-  <In extends ReadonlyArray<Dependency>, Out>(
+  <In extends ReadonlyArray<FluidValue>, Out>(
     parents: In,
     interpolator: (...args: Interpolated<In>) => Out
   ): To<Out>
 
   // Interpolation config
-  <Out>(parents: OneOrMore<Dependency>, config: InterpolatorConfig<Out>): To<
+  <Out>(parents: OneOrMore<FluidValue>, config: InterpolatorConfig<Out>): To<
     Animatable<Out>
   >
 
   // Range shortcuts
   <Out>(
-    parents: OneOrMore<Dependency<number>> | Dependency<number[]>,
+    parents: OneOrMore<FluidValue<number>> | FluidValue<number[]>,
     range: readonly number[],
     output: readonly Constrain<Out, Animatable>[],
     extrapolate?: ExtrapolateType

@@ -1,7 +1,7 @@
 import React, { forwardRef, useRef, Ref, useEffect } from 'react'
 import { is, useForceUpdate, ElementType, each } from 'shared'
+import { AnimationValue } from './AnimationValue'
 import { AnimatedProps } from './AnimatedProps'
-import { Dependency } from './Dependency'
 import * as G from 'shared/globals'
 
 // For storing the animated version on the original component
@@ -46,7 +46,7 @@ const createAnimatedComponent = (Component: any) =>
       }
     })
 
-    const dependencies = new Set<Dependency>()
+    const dependencies = new Set<AnimationValue>()
     props.setValue(rawProps, { dependencies })
 
     useEffect(() => {

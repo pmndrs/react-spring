@@ -1,10 +1,11 @@
-import {
-  Dependency,
-  withAnimated,
-  extendAnimated,
-} from '@react-spring/animated'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { AssignableKeys, ElementType, ComponentPropsWithRef } from 'shared'
+import { withAnimated, extendAnimated } from '@react-spring/animated'
+import {
+  AssignableKeys,
+  ElementType,
+  ComponentPropsWithRef,
+  FluidValue,
+} from 'shared'
 import { KonvaExports, KonvaElements, elements } from './elements'
 
 type CreateAnimated = <T extends ElementType>(
@@ -77,4 +78,4 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
 // An animated value that is not an object
 type AnimatedLeaf<T> = [T] extends [object]
   ? never
-  : Dependency<Exclude<T, object | void>>
+  : FluidValue<Exclude<T, object | void>>

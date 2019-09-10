@@ -1,14 +1,16 @@
+import { FluidValue, defineHidden } from 'shared'
 import { AnimatedValue } from './AnimatedValue'
-import { Dependency } from './Dependency'
 
-const tag = Symbol.for('animated')
+export const AnimatedType = '__$AnimatedType'
 
 /** Returns true for `Animated` nodes. Returns false for `SpringValue` objects. */
 export const isAnimated = (value: any): value is Animated =>
-  !!(value && value[tag])
+  !!(value && value[AnimatedType])
 
 export abstract class Animated<T = any> {
-  readonly [tag] = true
+  constructor() {
+    defineHidden(this, AnimatedType, 1)
+  }
 
   /** The cache of animated numbers */
   protected payload?: Payload
@@ -28,6 +30,5 @@ export abstract class Animated<T = any> {
 export type Payload = readonly AnimatedValue[]
 
 export type TreeContext = {
-  /** The value streams in the tree */
-  dependencies: Set<Dependency>
+  dependencies: Set<FluidValue>
 }
