@@ -1,6 +1,6 @@
 import { FrameRequestCallback } from 'shared/types'
 import { isAnimationValue } from '@react-spring/animated'
-import { is, isFluidValue } from 'shared'
+import { is, isFluidValue, toArray, each } from 'shared'
 import * as G from 'shared/globals'
 
 import { SpringValue } from './SpringValue'
@@ -12,7 +12,7 @@ export class FrameLoop {
   /**
    * The animated springs
    */
-  springs = new Set<SpringValue>()
+  springs: SpringValue[] = []
 
   /**
    * True when at least one spring is animating.
@@ -71,10 +71,9 @@ export class FrameLoop {
 
         if (dt > 0) {
           // Update the animations.
-          runTopological(
-            Array.from(this.springs),
-            spring => spring.idle || this.advance(dt, spring)
-          )
+          each(this.springs, spring => {
+            if (!spring.idle) this.advance(dt, spring)
+          })
 
           // Notify frame listeners.
           const queues = this._queues
@@ -86,7 +85,7 @@ export class FrameLoop {
             onFrameQueue.clear()
           }
 
-          if (!this.springs.size) {
+          if (!this.springs.length) {
             this.lastTime = undefined
             return (this.active = false)
           }
@@ -107,10 +106,15 @@ export class FrameLoop {
   }
 
   /**
-   * Start animating the given spring
+   * Start animating the given spring.
+   *
+   * Beware: Never `start` the same spring twice (without `stop` between).
    */
   start(spring: SpringValue) {
-    this.springs.add(spring)
+    const { springs } = this
+    let i = springs.findIndex(s => s.priority > spring.priority)
+    if (i < 0) i = springs.length
+    springs.splice(i, 0, spring)
     if (!this.active) {
       this.active = true
       this._requestFrame(this.update)
@@ -121,7 +125,9 @@ export class FrameLoop {
    * Stop animating the given spring
    */
   stop(spring: SpringValue) {
-    this.springs.delete(spring)
+    const { springs } = this
+    const i = springs.indexOf(spring)
+    if (~i) springs.splice(i, 1)
   }
 
   /**
@@ -246,23 +252,4 @@ export class FrameLoop {
       spring.finish()
     }
   }
-}
-
-function runTopological(
-  springs: SpringValue[],
-  action: (spring: SpringValue) => void
-) {
-  const visited: true[] = []
-  springs.forEach(function run(spring: SpringValue, i: number) {
-    if (visited[i]) return
-    visited[i] = true
-
-    const { to } = spring.animation!
-    if (to instanceof SpringValue) {
-      const i = springs.indexOf(to)
-      if (~i) run(to, i)
-    }
-
-    action(spring)
-  })
 }
