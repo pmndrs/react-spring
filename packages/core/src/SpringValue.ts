@@ -131,18 +131,18 @@ export class SpringValue<T = any, P extends string = string>
   extends AnimationValue<T>
   implements FluidObserver<T> {
   static phases = { DISPOSED, CREATED, IDLE, PAUSED, ACTIVE }
-  /** @internal The animated node. Never mutate this directly */
-  node!: AnimatedNode<T>
-  /** @internal Determines order of animations on each frame */
-  priority = 0
-  /** @internal The animation state. Never mutate this directly */
+  /** The animation state */
   animation?: Animation<T>
   /** The default props */
   defaultProps: DefaultProps<T>
+  /** The queue of pending props */
+  queue?: PendingProps<T>[]
+  /** @internal The animated node. Do not touch! */
+  node!: AnimatedNode<T>
+  /** @internal Determines order of animations on each frame */
+  priority = 0
   /** The lifecycle phase of this spring */
   protected _phase = CREATED
-  /** The queue of pending props */
-  protected _queue?: PendingProps<T>[]
   /** The last time each prop changed */
   protected _timestamps?: Indexable<number>
   /** The prop cache for async state */
@@ -266,7 +266,7 @@ export class SpringValue<T = any, P extends string = string>
   /** Push props into the pending queue. */
   update(props: PendingProps<T>) {
     this._notDisposed('update')
-    const queue = this._queue || (this._queue = [])
+    const queue = this.queue || (this.queue = [])
     queue.push(props)
 
     // Ensure the initial value can be accessed by animated components.
@@ -294,8 +294,8 @@ export class SpringValue<T = any, P extends string = string>
       }
     }
 
-    const queue = this._queue || []
-    this._queue = []
+    const queue = this.queue || []
+    this.queue = []
 
     let lastResult: AnimationResult<T> | undefined
     await Promise.all(
