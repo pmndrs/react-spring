@@ -128,6 +128,8 @@ export class SpringValue<T = any, P extends string = string>
   implements FluidObserver<T> {
   /** @internal The animated node. Never mutate this directly */
   node!: AnimatedNode<T>
+  /** @internal Determines order of animations on each frame */
+  priority = 0
   /** @internal The animation state. Never mutate this directly */
   animation?: Animation<T>
   /** The default props */
@@ -313,12 +315,14 @@ export class SpringValue<T = any, P extends string = string>
   }
 
   /** @internal */
-  onParentPriorityChange(priority: number) {}
+  onParentPriorityChange(priority: number) {
+    this._setPriority(priority)
+  }
 
   protected _notDisposed(name: string) {
     invariant(
       this._phase > DISPOSED,
-      `The "${name}" method is disabled for disposed "${this.constructor.name}" objects`
+      `Cannot call "${name}" of disposed "${this.constructor.name}" object`
     )
   }
 
@@ -528,6 +532,18 @@ export class SpringValue<T = any, P extends string = string>
     anim.to = value
     if (isFluidValue(value)) {
       value.addChild(this)
+      this._setPriority((value.priority || 0) + 1)
+    } else {
+      this._setPriority(0)
+    }
+  }
+
+  protected _setPriority(priority: number) {
+    this.priority = priority
+    for (const observer of Array.from(this._children)) {
+      if ('onParentPriorityChange' in observer) {
+        observer.onParentPriorityChange(priority, this)
+      }
     }
   }
 
