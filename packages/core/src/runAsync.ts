@@ -13,8 +13,13 @@ import { AnimationResult } from './SpringValue'
 export type AsyncResult<T> = Promise<AnimationResult<T>>
 
 export interface RunAsyncState<T, P extends string = string> {
+  /** The async function or array of spring props */
   asyncTo?: AsyncTo<T, P>
+  /** Resolves when the current `asyncTo` finishes or gets cancelled. */
   promise?: AsyncResult<T>
+  /** Call this to unpause the current `asyncTo` function or array. */
+  unpause?: () => void
+  /** The last time we saw a matching `cancel` prop. */
   cancel?: number
 }
 
@@ -26,6 +31,7 @@ export async function runAsync<T, P extends string = string>(
   props: SpringProps<T, P>,
   state: RunAsyncState<T, P>,
   getValue: () => T,
+  getPaused: () => boolean,
   update: SpringUpdateFn<T, P>,
   stop: SpringStopFn<T>
 ): AsyncResult<T> {
@@ -59,34 +65,45 @@ export async function runAsync<T, P extends string = string>(
     const isCancelled = () =>
       to !== state.asyncTo || timestamp < (state.cancel || 0)
 
-    let last: AsyncResult<T> | undefined
-    // Never convert this to an async function, because we always
-    // want the first "isCancelled" check to throw synchronously.
-    const animate = (props: SpringUpdate<T, P>) => {
+    const handleInterrupts = async () => {
       if (isCancelled()) {
         throw cancelToken
       }
-      const { to } = props as any
-      if (is.fun(to) || is.arr(to)) {
-        const parentTo = state.asyncTo
-        last = runAsync(to, props as any, state, getValue, update, stop).then(
-          result => {
+      if (getPaused()) {
+        await new Promise(resolve => {
+          state.unpause = resolve
+        })
+        state.unpause = undefined
+      }
+    }
+
+    let last: AsyncResult<T> | undefined
+    const animate = (props: SpringUpdate<T, P>) =>
+      handleInterrupts().then(async () => {
+        const { to } = props as any
+        if (is.fun(to) || is.arr(to)) {
+          const parentTo = state.asyncTo
+          last = runAsync(
+            to,
+            props as any,
+            state,
+            getValue,
+            getPaused,
+            update,
+            stop
+          ).then(result => {
             if (state.asyncTo == null) {
               state.asyncTo = parentTo
             }
             return result
-          }
-        )
-      } else {
-        last = update(props)
-      }
-      return last.then(result => {
-        if (isCancelled()) {
-          throw cancelToken
+          })
+        } else {
+          last = update(props)
         }
+        const result = await last
+        await handleInterrupts()
         return result
       })
-    }
 
     try {
       // Async sequence

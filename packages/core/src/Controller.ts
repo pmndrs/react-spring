@@ -100,6 +100,7 @@ export class Controller<State extends Indexable = UnknownProps> {
         props,
         this.props,
         () => this.get(),
+        () => false, // TODO: add pausing to Controller
         props => this.update(props as any).start(),
         this.stop.bind(this) as any
       )
