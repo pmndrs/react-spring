@@ -17,7 +17,6 @@ export {
   SpringAsyncFn,
   SpringConfig,
   SpringHandle,
-  SpringsHandle,
   SpringProps,
   SpringStopFn,
   SpringUpdate,

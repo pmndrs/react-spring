@@ -1,11 +1,11 @@
 import { RefObject } from 'react'
 import { is } from 'shared'
 import {
-  SpringHandle,
   SpringValues,
   SpringUpdateFn,
   SpringStopFn,
   SpringProps,
+  SpringHandle,
 } from './types/spring'
 import { useSprings } from './useSprings'
 import { FrameValues, Tween } from './types/common'
