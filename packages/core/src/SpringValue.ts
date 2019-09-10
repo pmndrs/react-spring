@@ -188,7 +188,7 @@ export class SpringValue<T = any, P extends string = string>
    * Call `start` to unpause.
    */
   pause() {
-    this._notDisposed('pause')
+    this._checkDisposed('pause')
     if (this.is(ACTIVE)) {
       this._phase = PAUSED
       G.frameLoop.stop(this)
@@ -213,14 +213,14 @@ export class SpringValue<T = any, P extends string = string>
 
   /** Create a spring that maps our value to another value */
   to<Out>(...args: InterpolatorArgs<T, Out>): SpringValue<Out, 'to'> {
-    this._notDisposed('to')
+    this._checkDisposed('to')
     return new To(this, args)
   }
 
   /** @deprecated Use the `to` method instead. */
   interpolate<Out>(...args: InterpolatorArgs<T, Out>) {
     deprecateInterpolate()
-    this._notDisposed('interpolate')
+    this._checkDisposed('interpolate')
     return new To(this, args)
   }
 
@@ -230,7 +230,7 @@ export class SpringValue<T = any, P extends string = string>
 
   /** Update this value's animation using the given props. */
   animate(to: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
-    this._notDisposed('animate')
+    this._checkDisposed('animate')
     const props = is.obj(to) ? to : ({ ...arg2, to: to } as any)
 
     // Ensure the initial value can be accessed by animated components.
@@ -265,7 +265,7 @@ export class SpringValue<T = any, P extends string = string>
 
   /** Push props into the pending queue. */
   update(props: PendingProps<T>) {
-    this._notDisposed('update')
+    this._checkDisposed('update')
     const queue = this.queue || (this.queue = [])
     queue.push(props)
 
@@ -281,7 +281,7 @@ export class SpringValue<T = any, P extends string = string>
    * and unpause the current animation (if one is frozen).
    */
   async start(): AsyncResult<T> {
-    this._notDisposed('start')
+    this._checkDisposed('start')
 
     // Unpause if possible.
     if (this.is(PAUSED)) {
@@ -365,7 +365,7 @@ export class SpringValue<T = any, P extends string = string>
     this._setPriority(priority)
   }
 
-  protected _notDisposed(name: string) {
+  protected _checkDisposed(name: string) {
     invariant(
       !this.is(DISPOSED),
       `Cannot call "${name}" of disposed "${this.constructor.name}" object`
