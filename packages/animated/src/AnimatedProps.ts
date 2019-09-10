@@ -6,6 +6,7 @@ import * as G from 'shared/globals'
 type Props = object & { style?: any }
 
 export class AnimatedProps extends AnimatedObject implements FluidObserver {
+  /** Equals true when a re-render is scheduled for "end of frame" */
   dirty = false
 
   constructor(public update: () => void) {
