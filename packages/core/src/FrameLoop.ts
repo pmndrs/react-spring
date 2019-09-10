@@ -77,12 +77,14 @@ export class FrameLoop {
 
           // Notify frame listeners.
           const queues = this._queues
-          const onFrameQueue = queues[0]
-          if (onFrameQueue.size) {
+          const queue = queues[0]
+          if (queue.size) {
+            // Run and clear the queue.
+            queue.forEach(onFrame => onFrame())
+            queue.clear()
+            // Swap the queues.
             queues[0] = queues[1]
-            queues[1] = onFrameQueue
-            onFrameQueue.forEach(onFrame => onFrame())
-            onFrameQueue.clear()
+            queues[1] = queue
           }
 
           if (!this.springs.length) {
