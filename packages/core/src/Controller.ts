@@ -132,6 +132,11 @@ export class Controller<State extends Indexable = UnknownProps> {
     }
   }
 
+  /** Restart every animation. */
+  reset() {
+    each(this.springs, spring => spring.reset())
+  }
+
   /** Destroy every spring in this controller */
   dispose() {
     each(this.springs, spring => spring.dispose())
