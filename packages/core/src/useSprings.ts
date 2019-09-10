@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, RefObject, useLayoutEffect } from 'react'
+import { useMemo, RefObject, useLayoutEffect } from 'react'
 import { is, each, usePrev, useOnce, Merge } from 'shared'
 import { useMemoOne } from 'use-memo-one'
 
@@ -10,7 +10,6 @@ import {
   SpringProps,
 } from './types/spring'
 import { FrameValues, Tween } from './types/common'
-import { callProp, fillArray } from './helpers'
 import { UseSpringProps } from './useSpring'
 import { Controller } from './Controller'
 
