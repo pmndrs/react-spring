@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, RefObject } from 'react'
+import { useMemo, useRef, useEffect, RefObject, useLayoutEffect } from 'react'
 import { is, each, usePrev, useOnce, Merge } from 'shared'
 import { useMemoOne } from 'use-memo-one'
 
@@ -7,6 +7,7 @@ import {
   SpringValues,
   SpringsUpdateFn,
   SpringsHandle,
+  SpringProps,
 } from './types/spring'
 import { FrameValues, Tween } from './types/common'
 import { callProp, fillArray } from './helpers'
@@ -41,32 +42,48 @@ export function useSprings<Props extends object, From, To>(
   deps?: any[]
 ): SpringValues<Props>[]
 
-export function useSprings(length: number, propsArg: any, deps?: any[]): any {
-  const isLengthChanged = length !== usePrev(length)
-  const isFn = is.fun(propsArg)
+export function useSprings(length: number, props: unknown, deps?: any[]): any {
+  const propsFn = is.fun(props) && props
+  const propsArr = is.arr(props) && props
 
-  const props = is.arr(propsArg) ? propsArg : []
-  const ctrls = useMemoOne(
-    () =>
-      fillArray(length, i => {
-        const s = new Controller()
-        const p = props[i] || (props[i] = callProp(propsArg, i, s))
-        return s.update(p)
-      }),
-    // Stop all animations when `length` changes.
-    [length]
-  )
+  // The "ref" prop is taken from the props of the first spring only.
+  // The ref is assumed to *never* change after the first render.
+  let ref: RefObject<SpringsHandle> | undefined
 
-  const ref = isFn ? props[0] && props[0].ref : null
-  const state = useRef({ ctrls, ref }).current
+  const ctrls: Controller[] = useMemoOne(() => [], [])
+  const updates: SpringProps[] = []
+  useMemoOne(() => {
+    const prevLength = usePrev(length) || 0
+    if (prevLength > length) {
+      for (let i = length; i < prevLength; i++) {
+        ctrls[i].dispose()
+      }
+    }
+    ctrls.length = length
+    for (let i = 0; i < length; i++) {
+      const ctrl = ctrls[i] || (ctrls[i] = new Controller())
+      const update = propsArr ? propsArr[i] : propsFn ? propsFn(i, ctrl) : props
+      if (update) {
+        if (i == 0 && update.ref) {
+          ref = update.ref
+        }
+        if (i < prevLength) {
+          updates[i] = update
+        } else {
+          // Update new controllers immediately, so their
+          // spring values exist during first render.
+          ctrl.update(update)
+        }
+      }
+    }
+  }, deps)
 
   const api = useMemo(
     (): SpringsHandle => ({
       get controllers() {
-        return state.ctrls
+        return ctrls
       },
       update: props => {
-        const { ctrls, ref } = state
         each(ctrls, (ctrl, i) => {
           ctrl.update(
             is.fun(props) ? props(i, ctrl) : is.arr(props) ? props[i] : props
@@ -76,36 +93,28 @@ export function useSprings(length: number, propsArg: any, deps?: any[]): any {
         return api
       },
       async start() {
-        const results = await Promise.all(state.ctrls.map(ctrl => ctrl.start()))
+        const results = await Promise.all(ctrls.map(ctrl => ctrl.start()))
         return {
           value: results.map(result => result.value),
           finished: results.every(result => result.finished),
         }
       },
-      stop: keys => each(state.ctrls, ctrl => ctrl.stop(keys)),
+      stop: keys => each(ctrls, ctrl => ctrl.stop(keys)),
     }),
     []
   )
 
-  // Once mounted, update the local state and start any animations.
-  useEffect(() => {
-    if (isLengthChanged) {
-      each(state.ctrls, ctrl => ctrl.dispose())
-      state.ctrls = ctrls
-      state.ref = ref
-      if (!ref) {
-        each(ctrls, ctrl => ctrl.start())
-      }
-    } else if (!isFn) {
-      api.update(props)
+  useLayoutEffect(() => {
+    each(updates, (update, i) => ctrls[i].update(update))
+    if (!ref) {
+      each(ctrls, ctrl => ctrl.start())
     }
   }, deps)
 
-  // Destroy the controllers on unmount
   useOnce(() => () => {
-    each(state.ctrls, ctrl => ctrl.dispose())
+    each(ctrls, ctrl => ctrl.dispose())
   })
 
   const values = ctrls.map(ctrl => ({ ...ctrl.springs }))
-  return isFn ? [values, api.update, api.stop] : values
+  return propsFn ? [values, api.update, api.stop] : values
 }
