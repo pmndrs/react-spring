@@ -1,11 +1,12 @@
-import {
-  Dependency,
-  withAnimated,
-  extendAnimated,
-} from '@react-spring/animated'
-import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { AssignableKeys, ComponentPropsWithRef, ElementType } from 'shared'
 import * as THREE from 'three'
+import { CSSProperties, ForwardRefExoticComponent } from 'react'
+import { withAnimated, extendAnimated } from '@react-spring/animated'
+import {
+  AssignableKeys,
+  ComponentPropsWithRef,
+  ElementType,
+  FluidValue,
+} from 'shared'
 
 // TODO: Support type-checking for `animated` props
 type ThreeComponents = { [key: string]: ElementType }
@@ -79,4 +80,4 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
 // An animated value that is not an object
 type AnimatedLeaf<T> = [T] extends [object]
   ? never
-  : Dependency<Exclude<T, object | void>>
+  : FluidValue<Exclude<T, object | void>>

@@ -1,4 +1,4 @@
-import { Dependency } from '@react-spring/animated'
+import { AnimatedParent } from '@react-spring/animated'
 import {
   Animatable,
   EasingFunction,
@@ -52,7 +52,10 @@ export type GoalValue<T, P extends string = string> = Animatable<
 > extends infer Value
   ? [Value] extends [never]
     ? UnknownPartial<T>
-    : Value | Dependency<Value> | { [K in P]: Value | Dependency<Value> }
+    :
+        | Value
+        | AnimatedParent<Value>
+        | { [K in P]: Value | AnimatedParent<Value> }
   : never
 
 /**
