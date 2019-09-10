@@ -1,4 +1,4 @@
-import { useMemo, RefObject, useLayoutEffect } from 'react'
+import { useMemo, RefObject, useLayoutEffect, useImperativeHandle } from 'react'
 import { is, each, usePrev, useOnce, Merge, OneOrMore } from 'shared'
 import { useMemoOne } from 'use-memo-one'
 
@@ -106,6 +106,8 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
     }),
     []
   )
+
+  useImperativeHandle(ref, () => api)
 
   useLayoutEffect(() => {
     each(updates, (update, i) => ctrls[i].update(update))
