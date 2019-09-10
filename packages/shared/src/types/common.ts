@@ -7,7 +7,9 @@ export type Arrify<T> = T extends ReadonlyArray<any> ? T : ReadonlyArray<T>
 
 export type Falsy = false | null | undefined
 
-export type OnEnd = () => void
+export type AnyFn<In extends ReadonlyArray<any> = any[], Out = any> = (
+  ...args: In
+) => Out
 
 /** For solving generic types */
 export type Solve<T> = T
