@@ -126,6 +126,7 @@ export type SpringObserver<T = any> = OnChange<T> | FluidObserver<T>
 export class SpringValue<T = any, P extends string = string>
   extends AnimationValue<T>
   implements FluidObserver<T> {
+  static phases = { DISPOSED, CREATED, IDLE, ACTIVE }
   /** @internal The animated node. Never mutate this directly */
   node!: AnimatedNode<T>
   /** @internal Determines order of animations on each frame */
@@ -153,9 +154,15 @@ export class SpringValue<T = any, P extends string = string>
   }
 
   get idle() {
-    return this._phase != ACTIVE
+    return !this.is(ACTIVE)
   }
 
+  /** Check the current phase */
+  is(phase: Phase) {
+    return this._phase == phase
+  }
+
+  /** Get the current value */
   get(): T {
     return this.node.getValue() as any
   }
@@ -176,8 +183,8 @@ export class SpringValue<T = any, P extends string = string>
    * All `onRest` callbacks are passed `{finished: true}`
    */
   finish(to?: T | FluidValue<T>) {
-    if (this.animation) {
-      if (is.und(to)) to = this.animation.to
+    if (this.is(ACTIVE)) {
+      if (is.und(to)) to = this.animation!.to
       if (!is.und(to)) {
         this.set(isFluidValue(to) ? to.get() : to)
       }
@@ -277,7 +284,7 @@ export class SpringValue<T = any, P extends string = string>
    * `timestamp` argument, which defaults to the current time.
    */
   stop(timestamp = G.now()) {
-    if (this._phase > DISPOSED) {
+    if (!this.is(DISPOSED)) {
       this._deadline = timestamp
       const anim = this.animation
       if (anim) {
@@ -290,7 +297,7 @@ export class SpringValue<T = any, P extends string = string>
 
   /** Prevent future animations, and stop the current animation */
   dispose() {
-    if (this._phase > DISPOSED) {
+    if (!this.is(DISPOSED)) {
       this.stop()
       this._phase = DISPOSED
     }
@@ -321,7 +328,7 @@ export class SpringValue<T = any, P extends string = string>
 
   protected _notDisposed(name: string) {
     invariant(
-      this._phase > DISPOSED,
+      !this.is(DISPOSED),
       `Cannot call "${name}" of disposed "${this.constructor.name}" object`
     )
   }
@@ -419,7 +426,7 @@ export class SpringValue<T = any, P extends string = string>
     }
 
     const changed = props.force || !isEqual(to, anim.to)
-    const isActive = this._phase == ACTIVE
+    const isActive = this.is(ACTIVE)
 
     // Only use the default "config" prop on first animation.
     let config = props.config as Animation['config']
@@ -475,7 +482,7 @@ export class SpringValue<T = any, P extends string = string>
       anim.toValues = isFluidValue(to) ? null : toArray(goal)
     }
 
-    if (reset || this._phase == CREATED) {
+    if (reset || this.is(CREATED)) {
       // Assume "from" has been converted to a number.
       anim.fromValues = toArray(from as any)
     } else if (changed) {
@@ -567,7 +574,7 @@ export class SpringValue<T = any, P extends string = string>
 
   /** Stop without calling `node.setValue` */
   protected _stop(finished = false) {
-    if (this._phase == ACTIVE) {
+    if (this.is(ACTIVE)) {
       this._phase = IDLE
       G.frameLoop.stop(this)
 
