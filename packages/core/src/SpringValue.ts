@@ -343,6 +343,10 @@ export class SpringValue<T = any, P extends string = string>
   /** Prevent future animations, and stop the current animation */
   dispose() {
     if (!this.is(DISPOSED)) {
+      if (this.animation) {
+        // Prevent "onRest" calls when disposed.
+        this.animation.onRest = undefined
+      }
       this.stop()
       this._phase = DISPOSED
     }
