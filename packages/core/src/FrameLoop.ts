@@ -70,9 +70,9 @@ export class FrameLoop {
         if (dt > 64) dt = 64
 
         if (dt > 0) {
-          // Update the animations.
-          each(this.springs, spring => {
-            if (!spring.idle) this.advance(dt, spring)
+          // Advance the springs. Ignore mutations to the "springs" array.
+          each([...this.springs], spring => {
+            spring.idle || this.advance(dt, spring)
           })
 
           // Notify frame listeners.
