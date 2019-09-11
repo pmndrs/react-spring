@@ -36,7 +36,7 @@ export async function runAsync<T, P extends string = string>(
   stop: SpringStopFn<T>
 ): AsyncResult<T> {
   const timestamp = G.now()
-  if (is.num(props.delay)) {
+  if (is.num(props.delay) && props.delay > 0) {
     await sleep(props.delay)
   }
   if (props.cancel === true) {
