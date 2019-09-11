@@ -146,16 +146,16 @@ export class Controller<State extends Indexable = UnknownProps> {
 
   /** @internal Attached as an observer to every spring */
   protected _onChange(value: any, spring: SpringValue) {
-    this.frame[spring.key as keyof State] = value
-    G.frameLoop.onFrame(this._onFrame)
+    if (this.props.onFrame) {
+      this.frame[spring.key as keyof State] = value
+      G.frameLoop.onFrame(this._onFrame)
+    }
   }
 
   /** @internal Called at the end of every animation frame */
   private _onFrame() {
     if (Object.keys(this.frame).length) {
-      if (this.props.onFrame) {
-        this.props.onFrame(this.frame)
-      }
+      this.props.onFrame!(this.frame)
       this.frame = {}
     }
   }
