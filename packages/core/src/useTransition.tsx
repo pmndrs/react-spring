@@ -8,8 +8,8 @@ import React, {
 import { is, toArray, useForceUpdate, useOnce, each, OneOrMore } from 'shared'
 import { now } from 'shared/globals'
 
-import { callProp, interpolateTo } from './helpers'
-import { SpringHandle } from './types/spring'
+import { DEFAULT_PROPS, callProp, interpolateTo } from './helpers'
+import { SpringHandle, SpringProps } from './types/spring'
 import { Controller } from './Controller'
 
 // TODO: convert to "const enum" once Babel supports it
@@ -113,6 +113,13 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
   // Expired transitions use this to dismount.
   const forceUpdate = useForceUpdate()
 
+  const defaultProps: any = {}
+  each(DEFAULT_PROPS, prop => {
+    if (/function|object/.test(typeof props[prop])) {
+      defaultProps[prop] = props[prop]
+    }
+  })
+
   // Generate changes to apply in useEffect.
   const changes = new Map<Transition<T>, Change>()
   each(transitions, (t, i) => {
@@ -144,20 +151,21 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
     }
 
     // The payload is used to update the spring props once the current render is committed.
-    const payload: any = {
+    const payload = {
+      ...defaultProps,
       // When "to" is a function, it can return (1) an array of "useSpring" props,
       // (2) an async function, or (3) an object with any "useSpring" props.
       to: to = callProp(to, t.item, i),
       from: callProp(from, t.item, i),
       delay: delay += trail,
-      config: callProp(props.config, t.item, i),
+      config: callProp(props.config || defaultProps.config, t.item, i),
       ...(is.obj(to) && interpolateTo(to)),
-    }
+    } as SpringProps
 
     const { onRest } = payload
-    payload.onRest = (values: any) => {
+    payload.onRest = result => {
       if (is.fun(onRest)) {
-        onRest(values)
+        onRest(result)
       }
       if (t.phase == LEAVE) {
         t.expiresBy = now() + expires
