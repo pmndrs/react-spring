@@ -459,8 +459,7 @@ export class SpringValue<T = any, P extends string = string>
     }
 
     // The "reverse" prop only affects one update.
-    const reverse = !is.und(props.reverse) && props.reverse
-    if (reverse) [to, from] = [from, to]
+    if (props.reverse) [to, from] = [from, to]
 
     // Use the current value when "from" is undefined.
     if (is.und(from)) {
