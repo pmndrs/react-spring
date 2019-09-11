@@ -61,7 +61,7 @@ export async function runAsync<T, P extends string = string>(
   }
   state.asyncTo = to
   return (state.promise = (async (): AsyncResult<T> => {
-    const cancelToken = Symbol.for('spring:async:cancel')
+    const cancelToken = Symbol.for('cancel')
     const isCancelled = () =>
       to !== state.asyncTo || timestamp < (state.cancel || 0)
 
