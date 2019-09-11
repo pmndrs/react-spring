@@ -49,10 +49,6 @@ export interface AnimationProps<T = unknown> extends AnimationEvents<T> {
    * Swap the `to` and `from` props.
    */
   reverse?: boolean
-  /**
-   * Prevent an update from being cancelled.
-   */
-  force?: boolean
 }
 
 /**
