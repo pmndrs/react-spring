@@ -1,4 +1,5 @@
 import { interpolateTo, reconcileDeleted } from './helpers'
+import { ReservedProps } from './types/common'
 
 describe('helpers', () => {
   it('interpolateTo', () => {
@@ -10,7 +11,7 @@ describe('helpers', () => {
       config: 'config',
       onStart: 'onStart',
     }
-    const excludeProps = {
+    const excludeProps: Required<ReservedProps> = {
       children: undefined,
       config: undefined,
       from: undefined,
@@ -24,7 +25,6 @@ describe('helpers', () => {
       lazy: undefined,
       items: undefined,
       trail: undefined,
-      unique: undefined,
       initial: undefined,
       enter: undefined,
       leave: undefined,
@@ -33,9 +33,6 @@ describe('helpers', () => {
       onStart: undefined,
       onRest: undefined,
       onFrame: undefined,
-      onDestroyed: undefined,
-      timestamp: undefined,
-      attach: undefined,
     }
     expect(
       interpolateTo({
