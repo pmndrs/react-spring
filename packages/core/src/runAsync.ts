@@ -109,6 +109,7 @@ export async function runAsync<T, P extends string = string>(
         return result
       })
 
+    let result: { finished: boolean; value: T }
     try {
       // Async sequence
       if (is.arr(to)) {
@@ -120,7 +121,7 @@ export async function runAsync<T, P extends string = string>(
       else if (is.fun(to)) {
         await to(animate as any, stop)
       }
-      return {
+      result = {
         finished: true,
         value: getValue(),
       }
@@ -129,7 +130,7 @@ export async function runAsync<T, P extends string = string>(
         state.promise = undefined
         throw err
       }
-      return {
+      result = {
         finished: false,
         value: getValue(),
       }
@@ -138,5 +139,9 @@ export async function runAsync<T, P extends string = string>(
         state.asyncTo = undefined
       }
     }
+    if (props.onRest) {
+      props.onRest(result as any)
+    }
+    return result
   })())
 }
