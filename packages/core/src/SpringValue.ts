@@ -237,7 +237,7 @@ export class SpringValue<T = any, P extends string = string>
   /** Update this value's animation using the given props. */
   animate(to: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
     this._checkDisposed('animate')
-    const props = is.obj(to) ? to : ({ ...arg2, to: to } as any)
+    const props = is.obj(to) ? to : ({ ...arg2, to } as any)
 
     // Ensure the initial value can be accessed by animated components.
     const range = this.getRange(props)
