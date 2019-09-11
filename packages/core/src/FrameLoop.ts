@@ -17,7 +17,7 @@ export class FrameLoop {
   /**
    * True when at least one spring is animating.
    */
-  active = true
+  active = false
 
   /**
    * The timestamp of the most recent frame.
