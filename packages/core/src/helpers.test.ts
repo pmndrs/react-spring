@@ -21,6 +21,7 @@ describe('helpers', () => {
       cancel: undefined,
       reverse: undefined,
       immediate: undefined,
+      default: undefined,
       delay: undefined,
       lazy: undefined,
       items: undefined,
