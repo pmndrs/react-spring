@@ -77,6 +77,7 @@ export interface ReservedProps {
   cancel?: any
   reverse?: any
   immediate?: any
+  default?: any
   delay?: any
   lazy?: any
   items?: any
