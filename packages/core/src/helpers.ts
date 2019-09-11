@@ -44,7 +44,6 @@ function getForwardProps<Props extends ReservedProps>(
     lazy,
     items,
     trail,
-    unique,
     initial,
     enter,
     leave,
@@ -53,9 +52,6 @@ function getForwardProps<Props extends ReservedProps>(
     onStart,
     onRest,
     onFrame,
-    onDestroyed,
-    timestamp,
-    attach,
     ...forward
   } = props
   return forward

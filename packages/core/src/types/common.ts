@@ -81,7 +81,6 @@ export interface ReservedProps {
   lazy?: any
   items?: any
   trail?: any
-  unique?: any
   initial?: any
   enter?: any
   leave?: any
@@ -90,7 +89,4 @@ export interface ReservedProps {
   onStart?: any
   onRest?: any
   onFrame?: any
-  onDestroyed?: any
-  timestamp?: any
-  attach?: any
 }
