@@ -442,11 +442,13 @@ export class SpringValue<T = any, P extends string = string>
       return false
     }
 
+    const prevTo = anim.to
+
     // Write or read the "to" prop
     if (!is.und(to) && diff('to')) {
       this._animateTo(to)
     } else {
-      to = anim.to
+      to = prevTo
     }
 
     // Write or read the "from" prop
@@ -474,7 +476,7 @@ export class SpringValue<T = any, P extends string = string>
       from = from.get()
     }
 
-    const changed = props.force || !isEqual(to, anim.to)
+    const changed = !(is.und(to) || isEqual(to, prevTo))
     const isActive = this.is(ACTIVE)
 
     // Only use the default "config" prop on first animation.
