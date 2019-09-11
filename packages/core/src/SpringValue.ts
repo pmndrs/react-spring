@@ -268,13 +268,13 @@ export class SpringValue<T = any, P extends string = string>
 
     return new Promise<AnimationResult<T>>(resolve => {
       const timestamp = G.now()
-      const update = () => {
+      const animate = () => {
         this._animate(range, props, timestamp, resolve)
       }
 
       const delay = callProp(props.delay, this.key)
-      if (delay > 0) setTimeout(update, delay)
-      else update()
+      if (delay > 0) setTimeout(animate, delay)
+      else animate()
     })
   }
 
