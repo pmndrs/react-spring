@@ -435,7 +435,7 @@ export class SpringValue<T = any, P extends string = string>
     /** Return true if our prop can be used */
     const timestamps = this._timestamps || (this._timestamps = {})
     const diff = (prop: string) => {
-      if (timestamp >= timestamps[prop] || 0) {
+      if (timestamp >= (timestamps[prop] || 0)) {
         timestamps[prop] = timestamp
         return true
       }
