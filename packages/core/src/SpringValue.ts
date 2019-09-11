@@ -204,10 +204,14 @@ export class SpringValue<T = any, P extends string = string>
    */
   finish(to?: T | FluidValue<T>) {
     if (this.is(ACTIVE)) {
-      if (is.und(to)) to = this.animation!.to
-      if (!is.und(to)) {
-        this.set(isFluidValue(to) ? to.get() : to)
+      if (is.und(to)) {
+        to = this.animation!.to
       }
+      if (isFluidValue(to)) {
+        to = to.get()
+      }
+      this.node.setValue(to)
+      this._onChange(to, true)
       this._stop(true)
     }
     return this
