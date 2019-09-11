@@ -565,13 +565,13 @@ export class SpringValue<T = any, P extends string = string>
       if (onStart) onStart(this)
     }
 
-    if (G.skipAnimation) {
-      return this.finish(to)
-    }
-
     if (!isActive && started) {
       this._phase = ACTIVE
-      G.frameLoop.start(this)
+      if (G.skipAnimation) {
+        this.finish(to)
+      } else {
+        G.frameLoop.start(this)
+      }
     }
   }
 
