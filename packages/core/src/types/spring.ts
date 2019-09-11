@@ -1,4 +1,3 @@
-import { AnimatedParent } from '@react-spring/animated'
 import {
   Animatable,
   EasingFunction,
@@ -7,6 +6,7 @@ import {
   OneOrMore,
   UnknownPartial,
   UnknownProps,
+  FluidValue,
 } from 'shared'
 import { AnimationResult, SpringValue } from '../SpringValue'
 import { AnimationProps } from './animated'
@@ -38,8 +38,8 @@ export type SpringValues<Props extends object> = Indexable<
  * or a primitive type for a single animated value.
  */
 export type AsyncTo<T, P extends string = string> =
-  | ReadonlyArray<SpringUpdate<T, P>>
-  | SpringAsyncFn<T, P>
+  // HACK: Wrap a generic mapped type around "SpringUpdate" to allow circular types.
+  ReadonlyArray<{ [U in P]: SpringUpdate<T, P> }[P]> | SpringAsyncFn<T, P>
 
 /**
  * A value or set of values that can be animated from/to.
@@ -52,10 +52,7 @@ export type GoalValue<T, P extends string = string> = Animatable<
 > extends infer Value
   ? [Value] extends [never]
     ? UnknownPartial<T>
-    :
-        | Value
-        | AnimatedParent<Value>
-        | { [K in P]: Value | AnimatedParent<Value> }
+    : Value | FluidValue<Value> | { [K in P]: Value | FluidValue<Value> }
   : never
 
 /**
@@ -130,13 +127,9 @@ export type SpringProps<
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringUpdate<T, P extends string = string> = Animatable<
-  T
-> extends infer Value
-  ? [Value] extends [never]
-    ? SpringProps<T, P>
-    : Value | SpringProps<Value, P>
-  : never
+export type SpringUpdate<T, P extends string = string> =
+  | SpringProps<T, P>
+  | ([T] extends [Animatable] ? T | FluidValue<T> | AsyncTo<T, P> : never)
 
 /**
  * Update the props of a spring.
@@ -144,10 +137,19 @@ export type SpringUpdate<T, P extends string = string> = Animatable<
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export interface SpringUpdateFn<T, P extends string = string> {
-  /** Update the props of a spring */
-  (props: SpringUpdate<T, P>): Promise<AnimationResult<T>>
-}
+export type SpringUpdateFn<T, P extends string = string> = [T] extends [
+  Animatable
+]
+  ? {
+      (props: SpringProps<T, P>): Promise<AnimationResult<T>>
+      (
+        to: T | FluidValue<T> | AsyncTo<T, P>,
+        props?: SpringProps<T, P>
+      ): Promise<AnimationResult<T>>
+    }
+  : {
+      (props: SpringProps<T, P>): Promise<AnimationResult<T>>
+    }
 
 /**
  * Stop every animating `SpringValue` at its current value.
