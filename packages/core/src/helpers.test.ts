@@ -25,6 +25,8 @@ describe('helpers', () => {
       lazy: undefined,
       items: undefined,
       trail: undefined,
+      sort: undefined,
+      expires: undefined,
       initial: undefined,
       enter: undefined,
       leave: undefined,

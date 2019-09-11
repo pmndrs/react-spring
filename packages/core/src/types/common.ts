@@ -81,6 +81,8 @@ export interface ReservedProps {
   lazy?: any
   items?: any
   trail?: any
+  sort?: any
+  expires?: any
   initial?: any
   enter?: any
   leave?: any
