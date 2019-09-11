@@ -49,6 +49,10 @@ export interface AnimationProps<T = unknown> extends AnimationEvents<T> {
    * Swap the `to` and `from` props.
    */
   reverse?: boolean
+  /**
+   * Override the default props with this update.
+   */
+  default?: boolean
 }
 
 /**
