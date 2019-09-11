@@ -76,8 +76,8 @@ class SpringTransform extends SpringValue<string, 'transform'> {
 
   constructor(style: Indexable) {
     super('transform')
-    this._process(style)
-    this.node = new AnimatedValue(this._compute())
+    this._parseStyle(style)
+    this.node = new AnimatedValue(this._getValue())
     each(this._inputs, input =>
       each(input, value => isFluidValue(value) && value.addChild(this))
     )
@@ -92,7 +92,7 @@ class SpringTransform extends SpringValue<string, 'transform'> {
 
   /** @internal */
   onParentChange() {
-    this.set(this._compute())
+    this.set(this._getValue())
   }
 
   /** @internal */
@@ -103,7 +103,7 @@ class SpringTransform extends SpringValue<string, 'transform'> {
     }
   }
 
-  protected _process({ x, y, z, ...style }: Indexable) {
+  protected _parseStyle({ x, y, z, ...style }: Indexable) {
     const inputs = this._inputs
     const transforms = this._transforms
 
@@ -147,7 +147,7 @@ class SpringTransform extends SpringValue<string, 'transform'> {
     })
   }
 
-  protected _compute() {
+  protected _getValue() {
     let transform = ''
     let identity = true
     each(this._inputs, (input, i) => {
