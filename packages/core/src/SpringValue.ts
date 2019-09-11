@@ -116,11 +116,13 @@ const ACTIVE = 4 as Phase
 
 const noop = () => {}
 
-const defaultConfig: SpringConfig = {
+const BASE_CONFIG: SpringConfig = {
   ...config.default,
+  mass: 1,
   velocity: 0,
   progress: 0,
   easing: t => t,
+  clamp: false,
 }
 
 /** An observer of a `SpringValue` */
@@ -478,7 +480,7 @@ export class SpringValue<T = any, P extends string = string>
     if (config && (diff('config') || changed)) {
       config = callProp(config as any, key)
       if (config) {
-        config = { ...defaultConfig, ...config }
+        config = { ...BASE_CONFIG, ...config }
 
         // Cache the angular frequency in rad/ms
         config.w0 = Math.sqrt(config.tension / config.mass) / 1000
