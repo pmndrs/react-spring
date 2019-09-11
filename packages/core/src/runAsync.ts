@@ -78,14 +78,18 @@ export async function runAsync<T, P extends string = string>(
     }
 
     let last: AsyncResult<T> | undefined
-    const animate = (props: SpringUpdate<T, P>) =>
+    // TODO: remove "& any" when negated types are released
+    const animate = (props: SpringUpdate<T, P> & any) =>
       handleInterrupts().then(async () => {
-        const { to } = props as any
+        if (!is.obj(props)) {
+          props = { to: props }
+        }
+        const { to } = props
         if (is.fun(to) || is.arr(to)) {
           const parentTo = state.asyncTo
           last = runAsync(
             to,
-            props as any,
+            props,
             state,
             getValue,
             getPaused,
@@ -114,7 +118,7 @@ export async function runAsync<T, P extends string = string>(
       }
       // Async script
       else if (is.fun(to)) {
-        await to(animate, stop)
+        await to(animate as any, stop)
       }
       return {
         finished: true,
