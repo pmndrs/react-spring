@@ -558,12 +558,11 @@ export class SpringValue<T = any, P extends string = string>
 
     let started = reset || changed
     if (started) {
-      const canAnimate = is.num(to) || isFluidValue(to)
-      anim.immediate = !canAnimate || !!callProp(get('immediate'), key)
-      if ((started = !anim.immediate)) {
-        const onStart = get('onStart')
-        if (onStart) onStart(this)
-      }
+      anim.immediate =
+        !(is.num(goal) || isFluidValue(to)) || !!callProp(get('immediate'), key)
+
+      const onStart = get('onStart')
+      if (onStart) onStart(this)
     }
 
     if (G.skipAnimation) {
