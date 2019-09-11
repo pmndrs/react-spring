@@ -179,8 +179,10 @@ export class SpringValue<T = any, P extends string = string>
   }
 
   /** Get the current value */
-  get(): T {
-    return this.node.getValue() as any
+  get(): T
+  get<P extends keyof Animation>(prop: P): Animation<T>[P] | undefined
+  get(prop?: keyof Animation) {
+    return prop ? this.animation && this.animation[prop] : this.node.getValue()
   }
 
   /** Set the current value, while stopping the current animation */
