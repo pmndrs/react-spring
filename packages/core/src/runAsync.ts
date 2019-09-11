@@ -1,4 +1,4 @@
-import { is } from '@react-spring/shared'
+import { is, each } from '@react-spring/shared'
 import * as G from 'shared/globals'
 
 import {
@@ -8,7 +8,7 @@ import {
   SpringStopFn,
   SpringProps,
 } from './types/spring'
-import { AnimationResult } from './SpringValue'
+import { AnimationResult, DEFAULT_PROPS } from './SpringValue'
 
 export type AsyncResult<T> = Promise<AnimationResult<T>>
 
@@ -77,12 +77,28 @@ export async function runAsync<T, P extends string = string>(
       }
     }
 
+    let defaultProps: SpringProps<T, P> | undefined
+    each(DEFAULT_PROPS, prop => {
+      if (prop == 'onRest') return
+      if (typeof props[prop] == 'object') {
+        defaultProps = defaultProps || ({} as SpringProps<T, P>)
+        defaultProps[prop] = props[prop] as any
+      }
+    })
+
     let last: AsyncResult<T> | undefined
     // TODO: remove "& any" when negated types are released
     const animate = (props: SpringUpdate<T, P> & any) =>
       handleInterrupts().then(async () => {
         if (!is.obj(props)) {
           props = { to: props }
+        }
+        if (defaultProps) {
+          each(defaultProps, (value, prop) => {
+            if (is.und(props[prop])) {
+              props[prop] = value
+            }
+          })
         }
         const { to } = props
         if (is.fun(to) || is.arr(to)) {

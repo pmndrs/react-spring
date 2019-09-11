@@ -22,9 +22,6 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** The prop cache for state keeping  */
   props: CachedProps<State> = {}
 
-  /** The default props inherited by every spring. */
-  defaultProps = {}
-
   /** The spring values that manage their animations */
   springs: Indexable<SpringValue> = {}
 
@@ -59,51 +56,21 @@ export class Controller<State extends Indexable = UnknownProps> {
     const props: any = interpolateTo(propsArg)
     const { from, to } = props
 
-    // Collect every key in "to" and "from" to create "SpringValue" objects with.
-    const keys = new Set<string>()
-    const addValidKeys = (obj: Indexable) =>
-      each(Object.keys(obj), key => {
-        if (!is.und(obj[key])) keys.add(key)
-      })
-
-    if (is.obj(to)) {
-      addValidKeys(to)
-    } else {
-      props.to = undefined
-    }
-
-    if (is.obj(from)) {
-      addValidKeys(from)
-    } else {
-      props.from = undefined
-    }
-
-    if (keys.size) {
-      each(keys, key => {
-        let spring = this.springs[key]
-        if (!spring) {
-          // TODO: pass default props?
-          this.springs[key] = spring = new SpringValue(key)
-          spring.addChild(this._onChange)
-        }
-        spring.update(props)
-      })
-    } else {
-      each(this.springs, spring => {
-        spring.update(props)
-      })
-    }
-
     if (is.arr(to) || is.fun(to)) {
-      runAsync(
+      // Ensure springs have initial values.
+      if (from) this._update({ from })
+      // Start the async animation.
+      runAsync<State>(
         to,
         props,
         this.props,
         () => this.get(),
         () => false, // TODO: add pausing to Controller
-        props => this.update(props as any).start(),
+        ((props: any) => this.update(props).start()) as any,
         this.stop.bind(this) as any
       )
+    } else {
+      this._update(props)
     }
 
     return this
@@ -142,6 +109,44 @@ export class Controller<State extends Indexable = UnknownProps> {
     each(this.springs, spring => spring.dispose())
     this.springs = {}
     this.frame = {}
+  }
+
+  /** Update springs whose keys are defined in the `from` or `to` prop */
+  protected _update(props: SpringProps<State> & any) {
+    // TODO: remove "& any" above when negated types are released
+    const { from, to } = props
+
+    // Collect every key in "to" and "from" to create "SpringValue" objects with.
+    const keys = new Set<string>()
+    const addValidKeys = (obj: Indexable) =>
+      each(Object.keys(obj), key => {
+        if (!is.und(obj[key])) keys.add(key)
+      })
+
+    if (is.obj(to)) {
+      addValidKeys(to)
+    } else {
+      props.to = undefined
+    }
+
+    if (from) {
+      addValidKeys(from)
+    }
+
+    if (keys.size) {
+      each(keys, key => {
+        let spring = this.springs[key]
+        if (!spring) {
+          this.springs[key] = spring = new SpringValue(key)
+          spring.addChild(this._onChange)
+        }
+        spring.update(props)
+      })
+    } else {
+      each(this.springs, spring => {
+        spring.update(props)
+      })
+    }
   }
 
   /** @internal Attached as an observer to every spring */
