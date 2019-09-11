@@ -531,7 +531,7 @@ export class SpringValue<T = any, P extends string = string>
       anim.toValues = isFluidValue(to) ? null : toArray(goal)
     }
 
-    if (reset || this.is(CREATED)) {
+    if (reset) {
       // Assume "from" has been converted to a number.
       anim.fromValues = toArray(from as any)
     } else if (changed) {
