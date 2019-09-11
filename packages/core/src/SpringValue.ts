@@ -50,7 +50,8 @@ export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
 
 /** The object passed to `onRest` props */
 export type AnimationResult<T = unknown> = Readonly<{
-  finished: boolean
+  /** When false, the animation was interrupted. When null, no animation ever started. */
+  finished: boolean | null
   value: T
   spring?: SpringValue<T>
 }>
@@ -312,20 +313,17 @@ export class SpringValue<T = any, P extends string = string>
     const queue = this.queue || []
     this.queue = []
 
-    let lastResult: AnimationResult<T> | undefined
     await Promise.all(
       queue.map(async props => {
-        lastResult = await this.animate(props)
+        await this.animate(props)
       })
     )
 
-    return (
-      lastResult || {
-        finished: true,
-        value: this.get(),
-        spring: this as any,
-      }
-    )
+    return {
+      finished: true,
+      value: this.get(),
+      spring: this,
+    }
   }
 
   /**
@@ -592,6 +590,13 @@ export class SpringValue<T = any, P extends string = string>
       } else {
         G.frameLoop.start(this)
       }
+    } else if (!started) {
+      // Gotta resolve the promise.
+      onRest({
+        finished: null,
+        value: this.get(),
+        spring: this,
+      })
     }
   }
 
