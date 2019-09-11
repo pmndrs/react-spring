@@ -462,11 +462,6 @@ export class SpringValue<T = any, P extends string = string>
     const reverse = !is.und(props.reverse) && props.reverse
     if (reverse) [to, from] = [from, to]
 
-    // Ensure "to" is not undefined.
-    if (is.und(to)) {
-      to = from
-    }
-
     // Use the current value when "from" is undefined.
     if (is.und(from)) {
       from = this.get()
