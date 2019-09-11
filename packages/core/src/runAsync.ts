@@ -80,7 +80,7 @@ export async function runAsync<T, P extends string = string>(
     let defaultProps: SpringProps<T, P> | undefined
     each(DEFAULT_PROPS, prop => {
       if (prop == 'onRest') return
-      if (typeof props[prop] == 'object') {
+      if (/function|object/.test(typeof props[prop])) {
         defaultProps = defaultProps || ({} as SpringProps<T, P>)
         defaultProps[prop] = props[prop] as any
       }
