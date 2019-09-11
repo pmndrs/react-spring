@@ -520,6 +520,7 @@ export class SpringValue<T = any, P extends string = string>
         `Cannot animate to the given "to" prop, because the current value has a different type`
       )
       node.reset(isActive, goal)
+      anim.values = node.getPayload()
     } else {
       nodeType = node.constructor as any
     }
