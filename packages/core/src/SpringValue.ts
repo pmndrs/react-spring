@@ -82,10 +82,20 @@ export interface Animation<T = unknown> {
   owner: SpringValue<T>
 }
 
+/** These props can have default values */
+export const DEFAULT_PROPS = [
+  'config',
+  'immediate',
+  'onAnimate',
+  'onStart',
+  'onChange',
+  'onRest',
+] as const
+
 /** Props that can have default values */
 export type DefaultProps<T = unknown> = Pick<
   PendingProps<T>,
-  'config' | 'immediate' | 'onAnimate' | 'onStart' | 'onChange' | 'onRest'
+  (typeof DEFAULT_PROPS)[number]
 >
 
 /** Pending props for a single `SpringValue` object */
@@ -135,8 +145,6 @@ export class SpringValue<T = any, P extends string = string>
   static phases = { DISPOSED, CREATED, IDLE, PAUSED, ACTIVE }
   /** The animation state */
   animation?: Animation<T>
-  /** The default props */
-  defaultProps: DefaultProps<T>
   /** The queue of pending props */
   queue?: PendingProps<T>[]
   /** @internal The animated node. Do not touch! */
@@ -149,14 +157,15 @@ export class SpringValue<T = any, P extends string = string>
   protected _timestamps?: Indexable<number>
   /** The prop cache for async state */
   protected _asyncProps?: RunAsyncState<T, P>
+  /** Some props have customizable default values */
+  protected _defaultProps: DefaultProps<T> = {}
   /** Cancel any update from before this timestamp */
   protected _deadline = 0
   /** Objects that want to know when this spring changes */
   protected _children = new Set<SpringObserver<T>>()
 
-  constructor(readonly key: P, defaults?: DefaultProps<T>) {
+  constructor(readonly key: P) {
     super()
-    this.defaultProps = defaults ? Object.setPrototypeOf({}, defaults) : {}
   }
 
   get idle() {
@@ -411,13 +420,27 @@ export class SpringValue<T = any, P extends string = string>
       return
     }
 
+    const defaultProps = this._defaultProps
+
     /** Get the value of a prop, or its default value */
     const get = <K extends keyof DefaultProps>(prop: K): DefaultProps<T>[K] =>
-      prop in props ? props[prop] : this.defaultProps[prop]
+      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
     const onAnimate = get('onAnimate')
     if (onAnimate) {
       onAnimate(props, this)
+    }
+
+    if (props.default) {
+      each(DEFAULT_PROPS, prop => {
+        if (prop in props) {
+          const value = props[prop] as any
+          // Default props can only be null, an object, or a function.
+          if (typeof value == 'object') {
+            defaultProps[prop] = value
+          }
+        }
+      })
     }
 
     const { key } = this
@@ -474,30 +497,27 @@ export class SpringValue<T = any, P extends string = string>
     const isActive = this.is(ACTIVE)
 
     // Only use the default "config" prop on first animation.
-    let config = props.config as Animation['config']
-    if (!config && !anim.config) {
-      config = callProp(this.defaultProps.config as any, key)
-    }
+    let config = callProp(
+      props.config || anim.config || defaultProps.config,
+      key
+    ) as Animation['config']
 
-    // The "config" prop can be updated without cancelling out configs from
-    // delayed updates, but only if the delayed update has a new goal value.
-    if (config && (diff('config') || changed)) {
-      config = callProp(config as any, key)
-      if (config) {
-        config = { ...BASE_CONFIG, ...config }
+    // Delayed updates force their "config" prop whenever the animation has a
+    // new end value, even if the config was changed between delay start/end.
+    if ((config || !anim.config) && (changed || diff('config'))) {
+      config = { ...BASE_CONFIG, ...config }
 
-        // Cache the angular frequency in rad/ms
-        config.w0 = Math.sqrt(config.tension / config.mass) / 1000
+      // Cache the angular frequency in rad/ms
+      config.w0 = Math.sqrt(config.tension / config.mass) / 1000
 
-        if (
-          anim.config &&
-          is.und(config.decay) == is.und(anim.config.decay) &&
-          is.und(config.duration) == is.und(anim.config.duration)
-        ) {
-          Object.assign(anim.config, config)
-        } else {
-          anim.config = config
-        }
+      if (
+        anim.config &&
+        is.und(config.decay) == is.und(anim.config.decay) &&
+        is.und(config.duration) == is.und(anim.config.duration)
+      ) {
+        Object.assign(anim.config, config)
+      } else {
+        anim.config = config
       }
     }
 

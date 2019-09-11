@@ -65,8 +65,13 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
     ctrls.length = length
     for (let i = 0; i < length; i++) {
       const ctrl = ctrls[i] || (ctrls[i] = new Controller())
-      const update = propsArr ? propsArr[i] : propsFn ? propsFn(i, ctrl) : props
+      const update = propsArr
+        ? propsArr[i]
+        : propsFn
+        ? propsFn(i, ctrl)
+        : { ...props }
       if (update) {
+        update.default = true
         if (i == 0 && update.ref) {
           ref = update.ref
         }
@@ -89,7 +94,11 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
       update: props => {
         each(ctrls, (ctrl, i) => {
           ctrl.update(
-            is.fun(props) ? props(i, ctrl) : is.arr(props) ? props[i] : props
+            is.fun(props)
+              ? props(i, ctrl)
+              : is.arr(props)
+              ? props[i]
+              : { ...props }
           )
           if (!ref) ctrl.start()
         })
