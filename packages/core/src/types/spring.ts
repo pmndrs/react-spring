@@ -119,7 +119,7 @@ export type SpringProps<
   P extends string = string
 > = AnimationProps<T> &
   RangeProps<T, P> &
-  (Animatable<T> extends never ? UnknownPartial<T> : unknown)
+  ([T] extends [Animatable] ? unknown : UnknownPartial<T>)
 
 /**
  * An update to the props of a spring.
