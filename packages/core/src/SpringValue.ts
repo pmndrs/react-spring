@@ -35,7 +35,7 @@ import {
 } from './runAsync'
 import { SpringConfig, Animatable, RangeProps } from './types/spring'
 import { Indexable, Merge } from './types/common'
-import { callProp, DEFAULT_PROPS, DefaultProps } from './helpers'
+import { callProp, DEFAULT_PROPS, DefaultProps, matchProp } from './helpers'
 import { config } from './constants'
 import { To } from './To'
 
@@ -566,7 +566,7 @@ export class SpringValue<T = any, P extends string = string>
     if (started) {
       anim.immediate =
         !(is.num(goal) || isFluidValue(to)) ||
-        !!callProp(get('immediate'), this.key)
+        !!matchProp(get('immediate'), this.key)
 
       const onStart = get('onStart')
       if (onStart) onStart(this)
