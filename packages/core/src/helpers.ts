@@ -22,6 +22,33 @@ export function callProp<T>(
   return is.fun(value) ? value(...args) : value
 }
 
+const RESERVED_PROPS: Required<ReservedProps> = {
+  children: 1,
+  config: 1,
+  from: 1,
+  to: 1,
+  ref: 1,
+  reset: 1,
+  cancel: 1,
+  reverse: 1,
+  immediate: 1,
+  default: 1,
+  delay: 1,
+  lazy: 1,
+  items: 1,
+  trail: 1,
+  sort: 1,
+  expires: 1,
+  initial: 1,
+  enter: 1,
+  leave: 1,
+  update: 1,
+  onAnimate: 1,
+  onStart: 1,
+  onRest: 1,
+  onFrame: 1,
+}
+
 /**
  * Extract any properties whose keys are *not* reserved for customizing your
  * animations. All hooks use this function, which means `useTransition` props
@@ -30,30 +57,12 @@ export function callProp<T>(
 function getForwardProps<Props extends ReservedProps>(
   props: Props
 ): ForwardProps<Props> {
-  const {
-    children,
-    config,
-    from,
-    to,
-    ref,
-    reset,
-    cancel,
-    reverse,
-    immediate,
-    delay,
-    lazy,
-    items,
-    trail,
-    initial,
-    enter,
-    leave,
-    update,
-    onAnimate,
-    onStart,
-    onRest,
-    onFrame,
-    ...forward
-  } = props
+  const forward: any = {}
+  each(props, (value, prop) => {
+    if (!RESERVED_PROPS[prop as keyof ReservedProps]) {
+      forward[prop] = value
+    }
+  })
   return forward
 }
 
