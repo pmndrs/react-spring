@@ -546,7 +546,7 @@ export class SpringValue<T = any, P extends string = string>
     if (changed) {
       anim.onChange = get('onChange')
 
-      // Call the "onRest" callback for an unfinished animation.
+      // Resolve the promise for unfinished animations.
       const onRestQueue: OnRest<T>[] = anim.onRest || []
       if (onRestQueue.length > 1) {
         const result: AnimationResult<T> = {
@@ -554,6 +554,7 @@ export class SpringValue<T = any, P extends string = string>
           spring: this,
           cancelled: true,
         }
+        // Skip the "onRest" prop, as the animation is still active.
         for (let i = 1; i < onRestQueue.length; i++) {
           onRestQueue[i](result)
         }
