@@ -5,16 +5,6 @@ declare const process:
   | { env: { [key: string]: string | undefined } }
   | undefined
 
-export function fillArray<T>(length: number, mapIndex: (index: number) => T) {
-  const arr = []
-  for (let i = 0; i < length; i++) arr.push(mapIndex(i))
-  return arr
-}
-
-export function withDefault<T, DT>(value: T, defaultValue: DT) {
-  return value == null ? defaultValue : value!
-}
-
 export function callProp<T>(
   value: T,
   ...args: AnyFn extends T ? Parameters<Extract<T, AnyFn>> : unknown[]
