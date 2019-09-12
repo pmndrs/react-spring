@@ -24,10 +24,10 @@ export class AnimatedArray<
     return this.source.map(node => node.getValue()) as any
   }
 
-  setValue(newValue: T) {
+  setValue(newValue: T | null) {
     const payload = this.getPayload()
     // Reuse the payload when lengths are equal.
-    if (newValue.length == payload.length) {
+    if (newValue && newValue.length == payload.length) {
       each(payload, (node, i) => node.setValue(newValue[i]))
     } else {
       // Remake the payload when length changes.
@@ -37,12 +37,14 @@ export class AnimatedArray<
   }
 
   /** Convert the `from` and `to` values to an array of `Animated` nodes */
-  protected _makeAnimated(from: T, to = from) {
-    return from.map((from, i) =>
-      (needsInterpolation(from) ? AnimatedString : AnimatedValue).create(
-        from,
-        to[i]
-      )
-    )
+  protected _makeAnimated(from: T | null, to: T = from!) {
+    return from
+      ? from.map((from, i) =>
+          (needsInterpolation(from) ? AnimatedString : AnimatedValue).create(
+            from,
+            to[i]
+          )
+        )
+      : []
   }
 }
