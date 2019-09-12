@@ -1,4 +1,4 @@
-import { is, Merge, each, AnyFn } from 'shared'
+import { is, Merge, each, AnyFn, toArray, OneOrMore } from 'shared'
 import { ReservedProps, ForwardProps } from './types/common'
 
 declare const process:
@@ -21,6 +21,32 @@ export function callProp<T>(
 ): T extends AnyFn<any, infer U> ? U : T {
   return is.fun(value) ? value(...args) : value
 }
+
+export type MatchProp = boolean | OneOrMore<string> | ((key: string) => boolean)
+
+/** Try to coerce the given value into a boolean using the given key */
+export const matchProp = (
+  value: MatchProp | undefined,
+  key: string | undefined
+) =>
+  value === true ||
+  !!(
+    key &&
+    value &&
+    (is.fun(value) ? value(key) : toArray(value).includes(key))
+  )
+
+export type DefaultProps = (typeof DEFAULT_PROPS)[number]
+
+/** These props can have default values */
+export const DEFAULT_PROPS = [
+  'config',
+  'immediate',
+  'onAnimate',
+  'onStart',
+  'onChange',
+  'onRest',
+] as const
 
 const RESERVED_PROPS: Required<ReservedProps> = {
   children: 1,

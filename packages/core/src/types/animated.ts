@@ -1,8 +1,9 @@
-import { OneOrMore, Animatable, FluidValue } from '@react-spring/shared'
+import { Animatable, FluidValue } from 'shared'
 import { AnimatedArray, AnimatedValue } from '@react-spring/animated'
 import { OnStart, OnRest, OnChange, OnAnimate } from '../SpringValue'
 import { SpringConfig } from './spring'
 import { UnknownProps } from './common'
+import { MatchProp } from '../helpers'
 
 export type AnimatedNode<T> =
   | AnimatedValue<T>
@@ -40,11 +41,11 @@ export interface AnimationProps<T = unknown> extends AnimationEvents<T> {
    * Cancel all animations by using `true`, or some animations by using a key
    * or an array of keys.
    */
-  cancel?: boolean | OneOrMore<string>
+  cancel?: MatchProp
   /**
    * Start the next animations at their values in the `from` prop.
    */
-  reset?: boolean
+  reset?: MatchProp
   /**
    * Swap the `to` and `from` props.
    */
