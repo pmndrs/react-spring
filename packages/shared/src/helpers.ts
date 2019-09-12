@@ -50,9 +50,9 @@ interface EachFn {
     ctx?: This
   ): void
 
-  <T = any, This = any>(
-    obj: Indexable<T>,
-    cb: (this: This, value: T, key: string) => void,
+  <T extends Indexable = any, This = any>(
+    obj: T,
+    cb: (this: This, value: T[keyof T], key: keyof T) => void,
     ctx?: This
   ): void
 }
