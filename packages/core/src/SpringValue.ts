@@ -56,6 +56,20 @@ export type AnimationResult<T = unknown> = Readonly<{
   spring?: SpringValue<T>
 }>
 
+export interface AnimationConfig {
+  w0: number
+  mass: number
+  tension: number
+  friction: number
+  velocity: number | number[]
+  precision?: number
+  easing: EasingFunction
+  progress: number
+  duration?: number
+  clamp?: boolean | number
+  decay?: boolean | number
+}
+
 /** An animation being executed by the frameloop */
 export interface Animation<T = unknown> {
   values: readonly AnimatedValue[]
@@ -63,19 +77,7 @@ export interface Animation<T = unknown> {
   toValues: readonly number[] | null
   from: T | FluidValue<T>
   fromValues: readonly number[]
-  config: {
-    w0: number
-    mass: number
-    tension: number
-    friction: number
-    velocity: number | number[]
-    precision?: number
-    easing: EasingFunction
-    progress: number
-    duration?: number
-    clamp?: boolean | number
-    decay?: boolean | number
-  }
+  config: AnimationConfig
   reverse?: boolean
   immediate: boolean
   onChange?: OnChange<T>
