@@ -552,7 +552,7 @@ export class SpringValue<T = any, P extends string = string>
       // Assume "from" has been converted to a number.
       anim.fromValues = toArray(from as any)
     } else if (changed) {
-      anim.fromValues = node.getPayload().map(node => node.getValue())
+      anim.fromValues = node.getPayload().map(node => node.lastPosition)
     }
 
     // Event props are provided per update.
