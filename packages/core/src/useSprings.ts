@@ -55,8 +55,8 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
 
   const ctrls: Controller[] = useMemoOne(() => [], [])
   const updates: SpringProps[] = []
+  const prevLength = usePrev(length) || 0
   useMemoOne(() => {
-    const prevLength = usePrev(length) || 0
     if (prevLength > length) {
       for (let i = length; i < prevLength; i++) {
         ctrls[i].dispose()
