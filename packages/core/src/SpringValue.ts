@@ -495,31 +495,29 @@ export class SpringValue<T = any, P extends string = string>
       from = from.get()
     }
 
+    const active = this.is(ACTIVE)
     const changed = !(is.und(to) || isEqual(to, prevTo))
-    const isActive = this.is(ACTIVE)
+    const started = changed || props.reset
 
-    // Only use the default "config" prop on first animation.
-    let config = callProp(
-      props.config || anim.config || defaultProps.config,
-      key
-    ) as Animation['config']
+    // Reset the config whenever the animation is reset or its goal value
+    // is changed; otherwise, merge the config into the existing one.
+    if (started || !anim.config || props.config) {
+      let config = {
+        ...callProp(defaultProps.config, this.key),
+        ...callProp(props.config, this.key),
+      } as AnimationConfig
 
-    // Delayed updates force their "config" prop whenever the animation has a
-    // new end value, even if the config was changed between delay start/end.
-    if ((config || !anim.config) && (changed || diff('config'))) {
-      config = { ...BASE_CONFIG, ...config }
+      // Never merge configs when the goal value has changed.
+      if (started || canMergeConfigs(config, anim.config)) {
+        if (started) {
+          anim.config = config = { ...BASE_CONFIG, ...config }
+        } else {
+          // Merge into the existing config.
+          Object.assign(anim.config, config)
+        }
 
-      // Cache the angular frequency in rad/ms
-      config.w0 = Math.sqrt(config.tension / config.mass) / 1000
-
-      if (
-        anim.config &&
-        is.und(config.decay) == is.und(anim.config.decay) &&
-        is.und(config.duration) == is.und(anim.config.duration)
-      ) {
-        Object.assign(anim.config, config)
-      } else {
-        anim.config = config
+        // Cache the angular frequency in rad/ms
+        config.w0 = Math.sqrt(config.tension / config.mass) / 1000
       }
     }
 
@@ -535,7 +533,7 @@ export class SpringValue<T = any, P extends string = string>
         node.constructor == nodeType,
         `Cannot animate to the given "to" prop, because the current value has a different type`
       )
-      node.reset(isActive, goal)
+      node.reset(active, goal)
       anim.values = node.getPayload()
     } else {
       nodeType = node.constructor as any
@@ -578,7 +576,6 @@ export class SpringValue<T = any, P extends string = string>
       anim.onRest = [get('onRest') || noop, onRest]
     }
 
-    let started = reset || changed
     if (started) {
       anim.immediate =
         !(is.num(goal) || isFluidValue(to)) || !!callProp(get('immediate'), key)
@@ -587,7 +584,7 @@ export class SpringValue<T = any, P extends string = string>
       if (onStart) onStart(this)
     }
 
-    if (!isActive && started) {
+    if (!active && started) {
       this._phase = ACTIVE
       if (G.skipAnimation) {
         this.finish(to)
@@ -699,6 +696,18 @@ export class SpringValue<T = any, P extends string = string>
   removeChild(child: SpringObserver<T>): void {
     this._children.delete(child)
   }
+}
+
+// Merge configs when the existence of "decay" or "duration" has not changed.
+function canMergeConfigs(
+  src: AnimationConfig,
+  dest: AnimationConfig | undefined
+) {
+  return (
+    !!dest &&
+    is.und(src.decay) == is.und(dest.decay) &&
+    is.und(src.duration) == is.und(dest.duration)
+  )
 }
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
