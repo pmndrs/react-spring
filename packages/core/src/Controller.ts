@@ -1,32 +1,52 @@
 import { is, each, OneOrMore, toArray, UnknownProps } from 'shared'
 import * as G from 'shared/globals'
 
+import { SpringValue } from './SpringValue'
 import { interpolateTo } from './helpers'
-import { runAsync, RunAsyncState } from './runAsync'
+import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
 import { Indexable, Falsy } from './types/common'
 import { SpringProps } from './types/spring'
-import { SpringValue } from './SpringValue'
 
 /** The latest values of a `Controller` object */
 type LatestValues<State extends Indexable> = Partial<State>
 
+type OnFrame<State extends Indexable> = (frame: LatestValues<State>) => void
+
 /** The props that are cached by `Controller` objects */
 interface CachedProps<State extends Indexable> extends RunAsyncState<State> {
-  onFrame?: (frame: LatestValues<State>) => void
+  onFrame?: OnFrame<State>
+}
+
+/** An update that hasn't been applied yet */
+type PendingProps<State extends Indexable> = SpringProps<State> & {
+  keys: string[]
+}
+
+/** Default props for the `Controller` class */
+type DefaultProps<State extends Indexable> = {
+  onFrame?: OnFrame<State>
 }
 
 let nextId = 1
+let lastAsyncId = 0
+
 export class Controller<State extends Indexable = UnknownProps> {
   readonly id = nextId++
-
-  /** The prop cache for state keeping  */
-  props: CachedProps<State> = {}
 
   /** The spring values that manage their animations */
   springs: Indexable<SpringValue> = {}
 
   /** The values that changed in the last animation frame */
   frame: LatestValues<State> = {}
+
+  /** The current props for the controller only */
+  props: CachedProps<State> = {}
+
+  /** Fallback values for undefined props */
+  defaultProps: DefaultProps<State> = {}
+
+  /** The queue of pending props */
+  queue: PendingProps<State>[] = []
 
   constructor(props?: SpringProps<State>) {
     this._onChange = this._onChange.bind(this)
@@ -54,40 +74,83 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** Push an update onto the queue of each value. */
   update(propsArg: SpringProps<State> | Falsy) {
     if (!propsArg) return this
-    const props: any = interpolateTo(propsArg)
-    const { from, to } = props
 
+    // This returns a new object every time.
+    const props: any = interpolateTo(propsArg)
+    const keys = (props.keys = extractKeys(props, this.springs))
+
+    let { from, to } = props
+
+    // Avoid sending async "to" prop to springs.
     if (is.arr(to) || is.fun(to)) {
-      // Ensure springs have initial values.
-      if (from) this._update({ from })
-      // Start the async animation.
-      runAsync<State>(
-        to,
-        props,
-        this.props,
-        () => this.get(),
-        () => false, // TODO: add pausing to Controller
-        ((props: any) => this.update(props).start()) as any,
-        this.stop.bind(this) as any
-      )
-    } else {
-      this._update(props)
+      to = undefined
     }
 
+    // Ensure springs have an initial value.
+    if (from || to) {
+      this._update({ keys, from, to } as any)
+    }
+
+    // Use our own queue, instead of each spring's queue.
+    this.queue.push(props)
     return this
   }
 
   /**
-   * Flush the update queue of every spring, and resolve the returned promise
-   * once all updates have finished (or cancelled).
+   * Start the queued animations for every spring, and resolve the returned
+   * promise once all queued animations have finished or been cancelled.
    */
   async start() {
-    const results = await Promise.all(
-      Object.values(this.springs).map(spring => spring.start())
-    )
+    const queue = this.queue
+    this.queue = []
+
+    const promises: AsyncResult[] = []
+    each(queue, props => {
+      const { to, onFrame, keys } = props
+      const asyncTo = (is.arr(to) || is.fun(to)) && to
+      if (asyncTo) {
+        props.to = undefined
+      }
+      promises.push(
+        // Send updates to every affected key.
+        ...keys.map(key => this.springs[key].animate(props as any)),
+        // Schedule controller-only props.
+        scheduleProps(++lastAsyncId, props, this.props, (props, resolve) => {
+          if (!props.cancel) {
+            // Never reuse "onFrame" from a previous update.
+            this.props.onFrame = onFrame || this.defaultProps.onFrame
+            if (onFrame && props.default) {
+              this.defaultProps.onFrame = onFrame
+            }
+          }
+
+          // Start, replace, or cancel the async animation.
+          if (asyncTo) {
+            resolve(
+              runAsync<State>(
+                asyncTo,
+                props,
+                this.props,
+                () => this.get(),
+                () => false, // TODO: add pausing to Controller
+                ((props: any) => this.update(props).start()) as any,
+                this.stop.bind(this) as any
+              )
+            )
+          } else {
+            resolve({
+              value: 0, // This value gets ignored.
+              finished: !props.cancel,
+            })
+          }
+        })
+      )
+    })
+
+    const results = await Promise.all(promises)
     return {
-      finished: results.every(result => result.finished),
       value: this.get(),
+      finished: results.every(result => result.finished),
     }
   }
 
@@ -103,51 +166,26 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** Restart every animation. */
   reset() {
     each(this.springs, spring => spring.reset())
+    // TODO: restart async "to" prop
   }
 
   /** Destroy every spring in this controller */
   dispose() {
+    this.props.asyncTo = undefined
     each(this.springs, spring => spring.dispose())
     this.springs = {}
-    this.frame = {}
   }
 
-  /** Update springs whose keys are defined in the `from` or `to` prop */
-  protected _update(props: SpringProps<State> & any) {
-    // TODO: remove "& any" above when negated types are released
-    const { from, to } = props
-
-    // Collect every key in "to" and "from" to create "SpringValue" objects with.
-    const keys = new Set<string>()
-    const addValidKeys = (obj: Indexable) =>
-      each(Object.keys(obj), key => {
-        if (!is.und(obj[key])) keys.add(key)
-      })
-
-    if (is.obj(to)) {
-      addValidKeys(to)
-    } else {
-      props.to = undefined
-    }
-
-    if (from) {
-      addValidKeys(from)
-    }
-
-    if (keys.size) {
-      each(keys, key => {
-        let spring = this.springs[key]
-        if (!spring) {
-          this.springs[key] = spring = new SpringValue(key)
-          spring.addChild(this._onChange)
-        }
-        spring.update(props)
-      })
-    } else {
-      each(this.springs, spring => {
-        spring.update(props)
-      })
-    }
+  /** Send an update to any spring whose key exists in `props.keys` */
+  protected _update(props: PendingProps<State>) {
+    each(props.keys, key => {
+      let spring = this.springs[key]
+      if (!spring) {
+        this.springs[key] = spring = new SpringValue(key)
+        spring.addChild(this._onChange)
+      }
+      spring.update(props as any)
+    })
   }
 
   /** @internal Attached as an observer to every spring */
@@ -165,4 +203,23 @@ export class Controller<State extends Indexable = UnknownProps> {
       this.frame = {}
     }
   }
+}
+
+/** Determine which keys should receive an update */
+function extractKeys(props: SpringProps, springs: Indexable<SpringValue>) {
+  const keys = new Set<string>()
+  const extract = (obj: object) =>
+    each(obj, (value, key) => {
+      if (!is.und(value)) {
+        keys.add(key)
+      }
+    })
+
+  const { from, to } = props as any
+  if (is.obj(to)) extract(to)
+  if (from) extract(from)
+
+  // When neither "from" or "to" have a key with a defined value,
+  // return the keys for every existing spring.
+  return keys.size ? Array.from(keys) : Object.keys(springs)
 }

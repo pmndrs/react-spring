@@ -26,10 +26,16 @@ import {
   AnimationRange,
   AnimationProps,
 } from './types/animated'
+import {
+  runAsync,
+  scheduleProps,
+  AsyncResult,
+  RunAsyncState,
+  RunAsyncProps,
+} from './runAsync'
 import { SpringConfig, Animatable, RangeProps } from './types/spring'
 import { Indexable, Merge } from './types/common'
-import { runAsync, AsyncResult, RunAsyncState } from './runAsync'
-import { callProp } from './helpers'
+import { callProp, DEFAULT_PROPS, DefaultProps } from './helpers'
 import { config } from './constants'
 import { To } from './To'
 
@@ -49,11 +55,13 @@ export type OnChange<T = unknown> = (value: T, spring: SpringValue<T>) => void
 export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
 
 /** The object passed to `onRest` props */
-export type AnimationResult<T = unknown> = Readonly<{
-  /** When false, the animation was interrupted. When null, no animation ever started. */
-  finished: boolean | null
+export type AnimationResult<T = any> = Readonly<{
   value: T
   spring?: SpringValue<T>
+  /** When falsy, the animation did not reach its end value. */
+  finished?: boolean
+  /** When true, the animation was cancelled before it could finish. */
+  cancelled?: boolean
 }>
 
 export interface AnimationConfig {
@@ -84,22 +92,6 @@ export interface Animation<T = unknown> {
   onRest?: Array<OnRest<T>>
   owner: SpringValue<T>
 }
-
-/** These props can have default values */
-export const DEFAULT_PROPS = [
-  'config',
-  'immediate',
-  'onAnimate',
-  'onStart',
-  'onChange',
-  'onRest',
-] as const
-
-/** Props that can have default values */
-export type DefaultProps<T = unknown> = Pick<
-  PendingProps<T>,
-  (typeof DEFAULT_PROPS)[number]
->
 
 /** Pending props for a single `SpringValue` object */
 export type PendingProps<T = unknown> = Merge<
@@ -156,19 +148,20 @@ export class SpringValue<T = any, P extends string = string>
   priority = 0
   /** The lifecycle phase of this spring */
   protected _phase = CREATED
+  /** The state for `runAsync` calls */
+  protected _state: RunAsyncState<T, P>
   /** The last time each prop changed */
   protected _timestamps?: Indexable<number>
-  /** The prop cache for async state */
-  protected _asyncProps?: RunAsyncState<T, P>
   /** Some props have customizable default values */
-  protected _defaultProps: DefaultProps<T> = {}
+  protected _defaultProps: PendingProps<T> = {}
   /** Cancel any update from before this timestamp */
-  protected _deadline = 0
+  protected _lastAsyncId = 0
   /** Objects that want to know when this spring changes */
   protected _children = new Set<SpringObserver<T>>()
 
   constructor(readonly key: P) {
     super()
+    this._state = { key }
   }
 
   get idle() {
@@ -251,7 +244,7 @@ export class SpringValue<T = any, P extends string = string>
   /** Update this value's animation using the given props. */
   animate(to: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
     this._checkDisposed('animate')
-    const props = is.obj(to) ? to : ({ ...arg2, to } as any)
+    const props: any = is.obj(to) ? to : { ...arg2, to }
 
     // Ensure the initial value can be accessed by animated components.
     const range = this.getRange(props)
@@ -259,28 +252,35 @@ export class SpringValue<T = any, P extends string = string>
       this.node = this.createNode(range)!
     }
 
-    if (is.fun(props.to) || is.arr(props.to)) {
-      return runAsync(
-        props.to,
-        props,
-        this._asyncProps || (this._asyncProps = {}),
-        () => this.get(),
-        () => this.is(PAUSED),
-        this.animate.bind(this) as any,
-        this.stop.bind(this) as any
-      )
-    }
-
-    return new Promise<AnimationResult<T>>(resolve => {
-      const timestamp = G.now()
-      const animate = () => {
-        this._animate(range, props, timestamp, resolve)
+    const timestamp = G.now()
+    return scheduleProps<T, AnimationResult<T>>(
+      ++this._lastAsyncId,
+      props,
+      this._state,
+      (props, resolve) => {
+        const { to } = props
+        if (is.arr(to) || is.fun(to)) {
+          resolve(
+            runAsync(
+              to as any,
+              props,
+              this._state,
+              () => this.get(),
+              () => this.is(PAUSED),
+              this.animate.bind(this) as any,
+              this.stop.bind(this) as any
+            )
+          )
+        } else if (props.cancel) {
+          resolve({
+            value: this.get(),
+            cancelled: true,
+          })
+        } else {
+          this._animate(range, props, timestamp, resolve)
+        }
       }
-
-      const delay = callProp(props.delay, this.key)
-      if (delay > 0) setTimeout(animate, delay)
-      else animate()
-    })
+    )
   }
 
   /** Push props into the pending queue. */
@@ -308,9 +308,8 @@ export class SpringValue<T = any, P extends string = string>
       this._phase = ACTIVE
       G.frameLoop.start(this)
 
-      const asyncProps = this._asyncProps
-      if (asyncProps && asyncProps.asyncTo) {
-        asyncProps.unpause!()
+      if (this._state.asyncTo) {
+        this._state.unpause!()
       }
     }
 
@@ -331,12 +330,11 @@ export class SpringValue<T = any, P extends string = string>
   }
 
   /**
-   * Stop the animation on its next frame, and prevent updates from before the
-   * `timestamp` argument, which defaults to the current time.
+   * Stop the current animation, and cancel any delayed updates.
    */
-  stop(timestamp = G.now()) {
+  stop() {
     if (!this.is(DISPOSED)) {
-      this._deadline = timestamp
+      this._state.cancelId = this._lastAsyncId
       const anim = this.animation
       if (anim) {
         this._animateTo(this.get())
@@ -413,19 +411,14 @@ export class SpringValue<T = any, P extends string = string>
   /** Update the internal `animation` object */
   protected _animate(
     { to, from }: AnimationRange<T>,
-    props: PendingProps<T>,
+    props: RunAsyncProps<T>,
     timestamp: number,
     onRest: OnRest<T>
   ) {
-    // Might be cancelled before start.
-    if (timestamp < this._deadline) {
-      return
-    }
-
     const defaultProps = this._defaultProps
 
     /** Get the value of a prop, or its default value */
-    const get = <K extends keyof DefaultProps>(prop: K): DefaultProps<T>[K] =>
+    const get = <K extends DefaultProps>(prop: K): PendingProps<T>[K] =>
       !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
     const onAnimate = get('onAnimate')
@@ -445,20 +438,14 @@ export class SpringValue<T = any, P extends string = string>
       })
     }
 
-    const { key } = this
-    const { cancel, reset } = props
-
-    if (cancel && (cancel === true || toArray(cancel).includes(key))) {
-      this.stop(timestamp)
-      return
-    }
-
     // Cast from a partial type.
     const anim: Partial<Animation<T>> = this.animation || { owner: this }
     this.animation = anim as Animation<T>
 
-    /** Return true if our prop can be used */
+    /** Where per-prop timestamps are kept */
     const timestamps = this._timestamps || (this._timestamps = {})
+
+    /** Return true if our prop can be used. This only affects delayed props. */
     const diff = (prop: string) => {
       if (timestamp >= (timestamps[prop] || 0)) {
         timestamps[prop] = timestamp
@@ -479,7 +466,7 @@ export class SpringValue<T = any, P extends string = string>
     // Write or read the "from" prop
     if (!is.und(from) && diff('from')) {
       anim.from = from
-    } else if (reset) {
+    } else if (props.reset) {
       from = anim.from
     }
 
@@ -548,7 +535,7 @@ export class SpringValue<T = any, P extends string = string>
       anim.toValues = isFluidValue(to) ? null : toArray(goal)
     }
 
-    if (reset) {
+    if (props.reset) {
       // Assume "from" has been converted to a number.
       anim.fromValues = toArray(from as any)
     } else if (changed) {
@@ -563,9 +550,9 @@ export class SpringValue<T = any, P extends string = string>
       const onRestQueue: OnRest<T>[] = anim.onRest || []
       if (onRestQueue.length > 1) {
         const result: AnimationResult<T> = {
-          finished: false,
           value: this.get(),
           spring: this,
+          cancelled: true,
         }
         for (let i = 1; i < onRestQueue.length; i++) {
           onRestQueue[i](result)
@@ -578,7 +565,8 @@ export class SpringValue<T = any, P extends string = string>
 
     if (started) {
       anim.immediate =
-        !(is.num(goal) || isFluidValue(to)) || !!callProp(get('immediate'), key)
+        !(is.num(goal) || isFluidValue(to)) ||
+        !!callProp(get('immediate'), this.key)
 
       const onStart = get('onStart')
       if (onStart) onStart(this)
@@ -594,7 +582,7 @@ export class SpringValue<T = any, P extends string = string>
     } else if (!started) {
       // Gotta resolve the promise.
       onRest({
-        finished: null,
+        finished: true,
         value: this.get(),
         spring: this,
       })
@@ -643,7 +631,7 @@ export class SpringValue<T = any, P extends string = string>
     }
   }
 
-  /** Stop without calling `node.setValue` */
+  /** Exit the frameloop and notify `onRest` listeners */
   protected _stop(finished = false) {
     if (this.is(ACTIVE)) {
       this._phase = IDLE
