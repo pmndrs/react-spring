@@ -32,6 +32,7 @@ export class Controller<State extends Indexable = UnknownProps> {
     this._onChange = this._onChange.bind(this)
     this._onFrame = this._onFrame.bind(this)
     if (props) {
+      props.default = true
       this.update(props).start()
     }
   }
