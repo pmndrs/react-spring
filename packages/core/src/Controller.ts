@@ -37,9 +37,9 @@ export class Controller<State extends Indexable = UnknownProps> {
     }
   }
 
-  /** Equals true when all springs are not animating */
+  /** Equals true when no springs are animating */
   get idle() {
-    return Object.values(this.springs).every(s => s.idle)
+    return !this.props.promise && Object.values(this.springs).every(s => s.idle)
   }
 
   /** Get the latest values of every spring */
