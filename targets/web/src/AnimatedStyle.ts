@@ -92,6 +92,7 @@ class SpringTransform extends SpringValue<string, 'transform'> {
 
   /** @internal */
   onParentChange() {
+    // TODO: only call "_getValue" once per frame max
     this.set(this._getValue())
   }
 
