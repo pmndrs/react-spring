@@ -150,7 +150,7 @@ export class FrameLoop {
       changed = true
 
       let to: number = payload
-        ? payload[i].getValue()
+        ? payload[i].lastPosition
         : parent
         ? toArray(parent.get())[i]
         : anim.toValues![i]
