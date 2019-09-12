@@ -36,7 +36,7 @@ export interface AnimationProps<T = unknown> extends AnimationEvents<T> {
   /**
    * When true, props jump to their goal values instead of animating.
    */
-  immediate?: boolean | ((key: string) => boolean)
+  immediate?: MatchProp
   /**
    * Cancel all animations by using `true`, or some animations by using a key
    * or an array of keys.
