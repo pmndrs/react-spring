@@ -463,6 +463,11 @@ export class SpringValue<T = any, P extends string = string>
       to = prevTo
     }
 
+    // On first animation, make "from" equal "to" by default.
+    if (is.und(from || anim.from)) {
+      from = to
+    }
+
     // Write or read the "from" prop
     if (!is.und(from) && diff('from')) {
       anim.from = from
