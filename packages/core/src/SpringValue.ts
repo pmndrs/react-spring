@@ -516,7 +516,9 @@ export class SpringValue<T = any, P extends string = string>
       anim.fromValues = node.getPayload().map(node => node.lastPosition)
     }
 
-    const started = props.reset || (changed && !isEqual(from, to))
+    const started = props.reset
+      ? !isEqual(to, from)
+      : changed && !isEqual(to, this.get())
 
     // Reset the config whenever the animation is reset or its goal value
     // is changed; otherwise, merge the config into the existing one.
