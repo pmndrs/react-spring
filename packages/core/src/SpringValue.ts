@@ -664,8 +664,8 @@ export class SpringValue<T = any, P extends string = string>
 
   /** Enter the frameloop */
   protected _start() {
-    const anim = this.animation!
-    if (!this.is(ACTIVE) && !anim.immediate) {
+    const anim = this.animation
+    if (anim && !anim.immediate && !this.is(ACTIVE)) {
       this._phase = ACTIVE
 
       if (G.skipAnimation) {
