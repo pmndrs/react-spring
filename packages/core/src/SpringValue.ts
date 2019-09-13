@@ -486,7 +486,7 @@ export class SpringValue<T = any, P extends string = string>
         node.constructor == nodeType,
         `Cannot animate to the given "to" prop, because the current value has a different type`
       )
-      node.reset(this.is(ACTIVE), goal)
+      this._reset(goal)
     } else {
       nodeType = node.constructor as any
     }
@@ -652,6 +652,16 @@ export class SpringValue<T = any, P extends string = string>
     }
   }
 
+  /** Reset our node, and the nodes of every descendant spring */
+  protected _reset(goal = computeGoal(this.animation!.to)) {
+    this.node.reset(this.is(ACTIVE), goal)
+    each(this._children, child => {
+      if (child instanceof SpringValue) {
+        child._reset(goal)
+      }
+    })
+  }
+
   /** Enter the frameloop */
   protected _start() {
     const anim = this.animation!
@@ -661,14 +671,14 @@ export class SpringValue<T = any, P extends string = string>
       if (G.skipAnimation) {
         this.finish(anim.to)
       } else {
-        each(this.node.getPayload(), node => (node.done = false))
         G.frameLoop.start(this)
 
         // Tell animatable children to enter the frameloop.
-        each(
-          this._children,
-          child => child instanceof SpringValue && child._start()
-        )
+        each(this._children, child => {
+          if (child instanceof SpringValue) {
+            child._start()
+          }
+        })
       }
     }
   }
