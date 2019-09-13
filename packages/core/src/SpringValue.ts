@@ -722,14 +722,6 @@ export class SpringValue<T = any, P extends string = string>
   }
 
   /** @internal */
-  get hasChildren() {
-    return !!(
-      this._children.size ||
-      (this.animation && this.animation.onChange)
-    )
-  }
-
-  /** @internal */
   addChild(child: SpringObserver<T>): void {
     this._children.add(child)
   }
