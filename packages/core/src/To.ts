@@ -34,7 +34,7 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
     })
   }
 
-  _animateTo(value: Out | FluidValue<Out>) {
+  protected _animateTo(value: Out | FluidValue<Out>) {
     if (this.source) {
       each(toArray(this.source), source => source.removeChild(this))
       this.onParentChange = super.onParentChange
