@@ -460,7 +460,7 @@ export class SpringValue<T = any, P extends string = string>
     }
 
     // On first animation, make "from" equal "to" by default.
-    if (is.und(from || anim.from)) {
+    if (is.und(from) && is.und(anim.from)) {
       from = to
     }
 
