@@ -66,6 +66,6 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
       )
       priority = max
     }
-    super.onParentPriorityChange(priority)
+    this._setPriority(priority)
   }
 }
