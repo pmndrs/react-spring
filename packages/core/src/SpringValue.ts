@@ -659,7 +659,9 @@ export class SpringValue<T = any, P extends string = string>
       })
 
       const onRestQueue = anim.onRest!
-      anim.onRest = undefined
+
+      // Preserve the "onRest" prop.
+      anim.onRest = [onRestQueue[0]]
 
       const result = { value: this.get(), finished, spring: this }
       each(onRestQueue, onRest => onRest(result))
