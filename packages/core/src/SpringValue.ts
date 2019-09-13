@@ -488,7 +488,7 @@ export class SpringValue<T = any, P extends string = string>
 
     // Reset the config whenever the animation is reset or its goal value
     // is changed; otherwise, merge the config into the existing one.
-    if (started || !anim.config || props.config) {
+    if (started || (props.config && anim.config)) {
       let config = {
         ...callProp(defaultProps.config, this.key),
         ...callProp(props.config, this.key),
