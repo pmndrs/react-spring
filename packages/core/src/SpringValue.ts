@@ -484,7 +484,7 @@ export class SpringValue<T = any, P extends string = string>
 
     const active = this.is(ACTIVE)
     const changed = !(is.und(to) || isEqual(to, prevTo))
-    const started = changed || props.reset
+    const started = props.reset || (changed && !isEqual(from, to))
 
     // Reset the config whenever the animation is reset or its goal value
     // is changed; otherwise, merge the config into the existing one.
