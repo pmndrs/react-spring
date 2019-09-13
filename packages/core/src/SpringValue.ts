@@ -381,7 +381,7 @@ export class SpringValue<T = any, P extends string = string>
 
   /** @internal */
   onParentPriorityChange(priority: number) {
-    this._setPriority(priority)
+    this._setPriority(priority + 1)
   }
 
   protected _checkDisposed(name: string) {
