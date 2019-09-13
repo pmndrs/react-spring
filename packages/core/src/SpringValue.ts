@@ -414,7 +414,7 @@ export class SpringValue<T = any, P extends string = string>
     props: RunAsyncProps<T>,
     timestamp: number,
     onRest: OnRest<T>
-  ) {
+  ): void {
     const defaultProps = this._defaultProps
 
     /** Get the value of a prop, or its default value */
@@ -424,16 +424,6 @@ export class SpringValue<T = any, P extends string = string>
     const onAnimate = get('onAnimate')
     if (onAnimate) {
       onAnimate(props, this)
-    }
-
-    // Update the default props.
-    if (props.default) {
-      each(DEFAULT_PROPS, prop => {
-        // Default props can only be null, an object, or a function.
-        if (/function|object/.test(typeof props[prop])) {
-          defaultProps[prop] = props[prop] as any
-        }
-      })
     }
 
     // Cast from a partial type.
@@ -452,7 +442,7 @@ export class SpringValue<T = any, P extends string = string>
       return false
     }
 
-    const prevTo = anim.to
+    const { to: prevTo, from: prevFrom } = anim
 
     // Write or read the "to" prop
     if (!is.und(to) && diff('to')) {
@@ -485,8 +475,47 @@ export class SpringValue<T = any, P extends string = string>
       from = from.get()
     }
 
-    const active = this.is(ACTIVE)
     const changed = !(is.und(to) || isEqual(to, prevTo))
+
+    // The `FrameLoop` decides our goal value when `to` is a dependency.
+    let goal: any = isFluidValue(to) ? null : computeGoal(to)
+
+    // Update our internal `Animated` node.
+    let node = this.node
+    let nodeType: AnimatedType<T>
+    if (changed) {
+      nodeType = this._getNodeType(to!)
+      invariant(
+        node.constructor == nodeType,
+        `Cannot animate to the given "to" prop, because the current value has a different type`
+      )
+      node.reset(this.is(ACTIVE), goal)
+    } else {
+      nodeType = node.constructor as any
+    }
+
+    if (nodeType == AnimatedString) {
+      from = 0 as any
+      goal = 1
+    }
+
+    // Keep the current value in sync with the "from" prop when appropriate.
+    if (props.reset || (this.is(CREATED) && !isEqual(anim.from, prevFrom))) {
+      node.setValue(from as T)
+      anim.values = node.getPayload()
+    }
+
+    // Update the "toValues" and "fromValues" used by the frameloop.
+    if (changed) {
+      anim.toValues = isFluidValue(to) ? null : toArray(goal)
+    }
+    if (props.reset) {
+      // Assume "from" has been converted to a number.
+      anim.fromValues = toArray(from as any)
+    } else if (changed) {
+      anim.fromValues = node.getPayload().map(node => node.lastPosition)
+    }
+
     const started = props.reset || (changed && !isEqual(from, to))
 
     // Reset the config whenever the animation is reset or its goal value
@@ -511,95 +540,65 @@ export class SpringValue<T = any, P extends string = string>
       }
     }
 
-    // The `FrameLoop` decides our goal value when `to` is a dependency.
-    let goal: any = isFluidValue(to) ? null : computeGoal(to)
-
-    // Update our internal `Animated` node.
-    let node = this.node
-    let nodeType: AnimatedType<T>
-    if (changed) {
-      nodeType = this._getNodeType(to!)
-      invariant(
-        node.constructor == nodeType,
-        `Cannot animate to the given "to" prop, because the current value has a different type`
-      )
-      node.reset(active, goal)
-    } else {
-      nodeType = node.constructor as any
+    // Update the default props.
+    if (props.default) {
+      each(DEFAULT_PROPS, prop => {
+        // Default props can only be null, an object, or a function.
+        if (/function|object/.test(typeof props[prop])) {
+          defaultProps[prop] = props[prop] as any
+        }
+      })
     }
 
-    if (nodeType == AnimatedString) {
-      from = 0 as any
-      goal = 1
+    if (!started) {
+      // The "onRest" argument resolves the "animate" promise.
+      return onRest({
+        finished: true,
+        value: this.get(),
+        spring: this,
+      })
     }
 
-    // Keep the current value in sync with the "from" prop when appropriate.
-    if (props.reset || (this.is(CREATED) && !isEqual(anim.from, prevFrom))) {
-      node.setValue(from as any)
-      anim.values = node.getPayload()
-    }
-
-    // Update the "toValues" and "fromValues" used by the frameloop.
-    if (changed) {
-      anim.toValues = isFluidValue(to) ? null : toArray(goal)
-    }
-
-    if (props.reset) {
-      // Assume "from" has been converted to a number.
-      anim.fromValues = toArray(from as any)
-    } else if (changed) {
-      anim.fromValues = node.getPayload().map(node => node.lastPosition)
-    }
+    anim.immediate =
+      !(is.num(goal) || is.arr(goal) || isFluidValue(to)) ||
+      !!matchProp(get('immediate'), this.key)
 
     // Event props are provided per update.
-    if (changed) {
-      anim.onChange = get('onChange')
+    anim.onChange = get('onChange')
 
-      // Resolve the promise for unfinished animations.
-      const onRestQueue: OnRest<T>[] = anim.onRest || []
-      if (onRestQueue.length > 1) {
-        const result: AnimationResult<T> = {
-          value: this.get(),
-          spring: this,
-          cancelled: true,
-        }
-        // Skip the "onRest" prop, as the animation is still active.
-        for (let i = 1; i < onRestQueue.length; i++) {
-          onRestQueue[i](result)
-        }
+    // Resolve the promise for unfinished animations.
+    const onRestQueue: OnRest<T>[] = anim.onRest || []
+    if (onRestQueue.length > 1) {
+      const result: AnimationResult<T> = {
+        value: this.get(),
+        spring: this,
+        cancelled: true,
       }
-
-      // The "onRest" prop is always first in the queue.
-      anim.onRest = [get('onRest') || noop, onRest]
+      // Skip the "onRest" prop, as the animation is still active.
+      for (let i = 1; i < onRestQueue.length; i++) {
+        onRestQueue[i](result)
+      }
     }
 
-    if (started) {
-      anim.immediate =
-        !(is.num(goal) || is.arr(goal) || isFluidValue(to)) ||
-        !!matchProp(get('immediate'), this.key)
+    // The "onRest" prop is always first in the queue.
+    anim.onRest = [get('onRest') || noop, onRest]
 
-      const onStart = get('onStart')
-      if (onStart) onStart(this)
+    const onStart = get('onStart')
+    if (onStart) {
+      onStart(this)
     }
 
-    if (!active && started) {
+    if (!this.is(ACTIVE)) {
       this._phase = ACTIVE
       if (G.skipAnimation) {
         this.finish(to)
       } else {
         G.frameLoop.start(this)
       }
-    } else if (!started) {
-      // Gotta resolve the promise.
-      onRest({
-        finished: true,
-        value: this.get(),
-        spring: this,
-      })
     }
   }
 
-  /** Update the `animation.to` value, which might be a dependency */
+  /** Update the `animation.to` value, which might be a `FluidValue` */
   protected _animateTo(value: T | FluidValue<T>) {
     const anim = this.animation!
     if (isFluidValue(anim.to)) {
