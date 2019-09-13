@@ -118,7 +118,7 @@ class SpringTransform extends SpringValue<string, 'transform'> {
     }
 
     // Pluck any other transform-related props
-    each(style, (value, key) => {
+    each(style, (value, key: any) => {
       if (key === 'transform') {
         inputs.push([value || ''])
         transforms.push((transform: string) => [transform, transform === ''])
