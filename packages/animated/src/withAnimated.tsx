@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, Ref, useEffect } from 'react'
+import React, { forwardRef, useRef, Ref, useLayoutEffect } from 'react'
 import { is, useForceUpdate, ElementType, each } from 'shared'
 import { AnimationValue } from './AnimationValue'
 import { AnimatedProps } from './AnimatedProps'
@@ -49,7 +49,7 @@ const createAnimatedComponent = (Component: any) =>
     const dependencies = new Set<AnimationValue>()
     props.setValue(rawProps, { dependencies })
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       each(dependencies, dep => dep.addChild(props))
       return () => each(dependencies, dep => dep.removeChild(props))
     })
