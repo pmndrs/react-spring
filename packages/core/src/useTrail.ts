@@ -1,4 +1,6 @@
+import { useLayoutEffect } from 'react'
 import { is } from 'shared'
+
 import { useSprings } from './useSprings'
 import { UseSpringProps } from './useSpring'
 import { SpringValues, SpringStopFn, SpringsUpdateFn } from './types/spring'
@@ -22,7 +24,6 @@ export function useTrail<Props extends object, From, To>(
   SpringStopFn<FrameValues<Props>>
 ]
 
-// TODO: support "props.reverse"
 export function useTrail(length: number, propsArg: unknown, deps?: any[]) {
   const propsFn = is.fun(propsArg) && propsArg
 
@@ -30,29 +31,31 @@ export function useTrail(length: number, propsArg: unknown, deps?: any[]) {
     deps = [] // Skip updates after first render.
   }
 
-  let prevCtrl: Controller | undefined
+  const ctrls: Controller[] = []
   const result = useSprings(
     length,
     (i, ctrl) => {
-      const props = propsFn ? propsFn(i, ctrl) : { ...propsArg }
-      if (prevCtrl) {
-        props.to = prevCtrl.springs
-      }
-      prevCtrl = ctrl
-      return props
+      ctrls[i] = ctrl
+      return getProps(propsArg, i, ctrl) as any
     },
     deps
   )
 
+  useLayoutEffect(() => {
+    const reverse = is.obj(propsArg) && propsArg.reverse
+    for (let i = 0; i < ctrls.length; i++) {
+      const parent = ctrls[i + (reverse ? 1 : -1)]
+      if (parent) ctrls[i].update({ to: parent.springs }).start()
+    }
+  }, deps)
+
   const update = result[1]
   result[1] = propsArg => {
-    let prevCtrl: Controller | undefined
+    const reverse = is.obj(propsArg) && propsArg.reverse
     return update((i, ctrl) => {
-      let props = getProps(propsArg, i, ctrl)!
-      if (prevCtrl) {
-        props.to = prevCtrl.springs
-      }
-      prevCtrl = ctrl
+      const props = getProps(propsArg, i, ctrl)!
+      const parent = ctrls[i + (reverse ? 1 : -1)]
+      if (parent) props.to = parent.springs
       return props
     })
   }
