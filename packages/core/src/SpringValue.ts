@@ -604,6 +604,7 @@ export class SpringValue<T = any, P extends string = string>
   protected _animateTo(value: T | FluidValue<T>) {
     const anim = this.animation!
     if (isFluidValue(anim.to)) {
+      if (value == anim.to) return
       anim.to.removeChild(this)
     }
     anim.to = value
