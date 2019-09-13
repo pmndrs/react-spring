@@ -32,7 +32,7 @@ export let frameLoop: {
   update: (time?: number) => boolean
   onFrame(cb: FrameRequestCallback): void
   start(spring: any): void
-  stop(spring: any): void
+  stop(spring: any): typeof frameLoop
 }
 
 //
