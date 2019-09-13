@@ -426,14 +426,12 @@ export class SpringValue<T = any, P extends string = string>
       onAnimate(props, this)
     }
 
+    // Update the default props.
     if (props.default) {
       each(DEFAULT_PROPS, prop => {
-        if (prop in props) {
-          const value = props[prop] as any
-          // Default props can only be null, an object, or a function.
-          if (typeof value == 'object') {
-            defaultProps[prop] = value
-          }
+        // Default props can only be null, an object, or a function.
+        if (/function|object/.test(typeof props[prop])) {
+          defaultProps[prop] = props[prop] as any
         }
       })
     }
