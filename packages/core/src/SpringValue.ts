@@ -571,7 +571,7 @@ export class SpringValue<T = any, P extends string = string>
 
     if (started) {
       anim.immediate =
-        !(is.num(goal) || isFluidValue(to)) ||
+        !(is.num(goal) || is.arr(goal) || isFluidValue(to)) ||
         !!matchProp(get('immediate'), this.key)
 
       const onStart = get('onStart')
