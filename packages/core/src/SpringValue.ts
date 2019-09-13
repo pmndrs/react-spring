@@ -524,7 +524,6 @@ export class SpringValue<T = any, P extends string = string>
         `Cannot animate to the given "to" prop, because the current value has a different type`
       )
       node.reset(active, goal)
-      anim.values = node.getPayload()
     } else {
       nodeType = node.constructor as any
     }
@@ -534,6 +533,13 @@ export class SpringValue<T = any, P extends string = string>
       goal = 1
     }
 
+    // Keep the current value in sync with the "from" prop when appropriate.
+    if (props.reset || (this.is(CREATED) && !isEqual(anim.from, prevFrom))) {
+      node.setValue(from as any)
+      anim.values = node.getPayload()
+    }
+
+    // Update the "toValues" and "fromValues" used by the frameloop.
     if (changed) {
       anim.toValues = isFluidValue(to) ? null : toArray(goal)
     }
