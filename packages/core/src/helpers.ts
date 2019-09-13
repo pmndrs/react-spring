@@ -1,9 +1,14 @@
 import { is, Merge, each, AnyFn, toArray, OneOrMore } from 'shared'
 import { ReservedProps, ForwardProps } from './types/common'
+import { useMemoOne } from 'use-memo-one'
 
 declare const process:
   | { env: { [key: string]: string | undefined } }
   | undefined
+
+// @see https://github.com/alexreardon/use-memo-one/pull/10
+export const useMemo: typeof useMemoOne = (create, deps) =>
+  useMemoOne(create, deps || [{}])
 
 export function callProp<T>(
   value: T,
