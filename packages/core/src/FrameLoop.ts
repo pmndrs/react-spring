@@ -146,9 +146,6 @@ export class FrameLoop {
     const parent = isFluidValue(anim.to) && anim.to
     const payload = isAnimationValue(parent) && parent.node.getPayload()
 
-    // Parents must finish before their children.
-    const canFinish = !(payload && payload.some(node => !node.done))
-
     anim.values.forEach((node, i) => {
       if (node.done) return
       changed = true
@@ -158,6 +155,8 @@ export class FrameLoop {
         : parent
         ? toArray(parent.get())[i]
         : anim.toValues![i]
+
+      const canFinish = !payload || payload[i].done
 
       // Jump to end value for immediate animations
       if (anim.immediate) {
