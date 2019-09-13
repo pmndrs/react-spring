@@ -132,6 +132,7 @@ export class FrameLoop {
     const { springs } = this
     const i = springs.indexOf(spring)
     if (~i) springs.splice(i, 1)
+    return this
   }
 
   /**
