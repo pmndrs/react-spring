@@ -1,6 +1,6 @@
 import { useMemo, RefObject, useLayoutEffect, useImperativeHandle } from 'react'
 import { is, each, usePrev, useOnce, Merge, OneOrMore } from 'shared'
-import { useMemoOne } from 'use-memo-one'
+import { useMemo as useMemoOne } from './helpers'
 
 import {
   SpringStopFn,
