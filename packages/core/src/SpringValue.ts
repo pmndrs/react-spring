@@ -616,6 +616,7 @@ export class SpringValue<T = any, P extends string = string>
   }
 
   protected _setPriority(priority: number) {
+    if (this.priority == priority) return
     this.priority = priority
     if (this.is(ACTIVE)) {
       // Re-enter the frameloop so our new priority is used.
