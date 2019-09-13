@@ -508,7 +508,7 @@ export class SpringValue<T = any, P extends string = string>
 
     // Keep the current value in sync with the "from" prop when appropriate.
     if (props.reset || (this.is(CREATED) && !isEqual(anim.from, prevFrom))) {
-      node.setValue(from as T)
+      node.setValue((value = from as T))
       anim.values = node.getPayload()
     }
 
