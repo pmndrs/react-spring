@@ -612,6 +612,10 @@ export class SpringValue<T = any, P extends string = string>
 
   protected _setPriority(priority: number) {
     this.priority = priority
+    if (this.is(ACTIVE)) {
+      // Re-enter the frameloop so our new priority is used.
+      G.frameLoop.stop(this).start(this)
+    }
     for (const observer of Array.from(this._children)) {
       if ('onParentPriorityChange' in observer) {
         observer.onParentPriorityChange(priority, this)
