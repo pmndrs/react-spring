@@ -35,7 +35,7 @@ export function useTrail(length: number, propsArg: unknown, deps?: any[]) {
     (i, ctrl) => {
       const props = propsFn ? propsFn(i, ctrl) : { ...propsArg }
       if (props) {
-        if (prevCtrl && !props.to) {
+        if (prevCtrl) {
           props.to = prevCtrl.springs
         }
         prevCtrl = ctrl
