@@ -306,7 +306,7 @@ export class SpringValue<T = any, P extends string = string>
     // Unpause if possible.
     if (this.is(PAUSED)) {
       this._phase = ACTIVE
-      G.frameLoop.start(this)
+      this._start()
 
       if (this._state.asyncTo) {
         this._state.unpause!()
@@ -594,13 +594,8 @@ export class SpringValue<T = any, P extends string = string>
       onStart(this)
     }
 
-    if (!this.is(ACTIVE)) {
-      this._phase = ACTIVE
-      if (G.skipAnimation) {
-        this.finish(to)
-      } else {
-        G.frameLoop.start(this)
-      }
+    if (!parent || !isEqual(value, parent.get())) {
+      this._start()
     }
   }
 
@@ -648,6 +643,27 @@ export class SpringValue<T = any, P extends string = string>
         observer.onParentChange(value, finished, this)
       } else if (!finished) {
         observer(value, this)
+      }
+    }
+  }
+
+  /** Enter the frameloop */
+  protected _start() {
+    const anim = this.animation!
+    if (!this.is(ACTIVE) && !anim.immediate) {
+      this._phase = ACTIVE
+
+      if (G.skipAnimation) {
+        this.finish(anim.to)
+      } else {
+        each(this.node.getPayload(), node => (node.done = false))
+        G.frameLoop.start(this)
+
+        // Tell animatable children to enter the frameloop.
+        each(
+          this._children,
+          child => child instanceof SpringValue && child._start()
+        )
       }
     }
   }
