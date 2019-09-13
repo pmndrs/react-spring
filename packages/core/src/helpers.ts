@@ -26,6 +26,14 @@ export const matchProp = (
     (is.fun(value) ? value(key) : toArray(value).includes(key))
   )
 
+type AnyProps<T, Arg = never> = OneOrMore<T> | ((i: number, arg: Arg) => T)
+
+export const getProps = <T, Arg = never>(
+  props: AnyProps<T, Arg>,
+  i: number,
+  arg: Arg
+) => (is.fun(props) ? props(i, arg) : is.arr(props) ? props[i] : { ...props })
+
 export type DefaultProps = (typeof DEFAULT_PROPS)[number]
 
 /** These props can have default values */

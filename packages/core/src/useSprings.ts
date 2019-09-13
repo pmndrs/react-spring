@@ -12,6 +12,7 @@ import {
 import { FrameValues, Tween } from './types/common'
 import { UseSpringProps } from './useSpring'
 import { Controller } from './Controller'
+import { getProps } from './helpers'
 
 export type UseSpringsProps<From = unknown, To = unknown> = Merge<
   UseSpringProps<From, To>,
@@ -93,13 +94,7 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
       },
       update: props => {
         each(ctrls, (ctrl, i) => {
-          ctrl.update(
-            is.fun(props)
-              ? props(i, ctrl)
-              : is.arr(props)
-              ? props[i]
-              : { ...props }
-          )
+          ctrl.update(getProps(props, i, ctrl))
           if (!ref) ctrl.start()
         })
         return api

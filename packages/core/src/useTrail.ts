@@ -4,6 +4,7 @@ import { UseSpringProps } from './useSpring'
 import { SpringValues, SpringStopFn, SpringsUpdateFn } from './types/spring'
 import { FrameValues } from './types/common'
 import { Controller } from './Controller'
+import { getProps } from './helpers'
 
 export function useTrail<Props extends object, From, To>(
   length: number,
@@ -44,6 +45,19 @@ export function useTrail(length: number, propsArg: unknown, deps?: any[]) {
     },
     deps
   )
+
+  const update = result[1]
+  result[1] = propsArg => {
+    let prevCtrl: Controller | undefined
+    return update((i, ctrl) => {
+      let props = getProps(propsArg, i, ctrl)!
+      if (prevCtrl) {
+        props.to = prevCtrl.springs
+      }
+      prevCtrl = ctrl
+      return props
+    })
+  }
 
   return propsFn ? result : result[0]
 }
