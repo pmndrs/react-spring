@@ -466,19 +466,11 @@ export class SpringValue<T = any, P extends string = string>
     // The "reverse" prop only affects one update.
     if (props.reverse) [to, from] = [from, to]
 
-    // Use the current value when "from" is undefined.
-    if (is.und(from)) {
-      from = this.get()
-    }
-    // Start from the current value of another Spring.
-    else if (isFluidValue(from)) {
-      from = from.get()
-    }
-
     const changed = !(is.und(to) || isEqual(to, prevTo))
+    const parent = isFluidValue(to) && to
 
     // The `FrameLoop` decides our goal value when `to` is a dependency.
-    let goal: any = isFluidValue(to) ? null : computeGoal(to)
+    let goal: any = parent ? null : computeGoal(to)
 
     // Update our internal `Animated` node.
     let node = this.node
@@ -494,9 +486,19 @@ export class SpringValue<T = any, P extends string = string>
       nodeType = node.constructor as any
     }
 
+    let value = this.get()
+
     if (nodeType == AnimatedString) {
       from = 0 as any
       goal = 1
+    }
+    // Use the current value when "from" is undefined.
+    else if (is.und(from)) {
+      from = value
+    }
+    // Start from the current value of another Spring.
+    else if (isFluidValue(from)) {
+      from = from.get()
     }
 
     // Keep the current value in sync with the "from" prop when appropriate.
@@ -507,18 +509,19 @@ export class SpringValue<T = any, P extends string = string>
 
     // Update the "toValues" and "fromValues" used by the frameloop.
     if (changed) {
-      anim.toValues = isFluidValue(to) ? null : toArray(goal)
+      anim.toValues = parent ? null : toArray(goal)
     }
     if (props.reset) {
       // Assume "from" has been converted to a number.
       anim.fromValues = toArray(from as any)
     } else if (changed) {
+      // Use each node's last position as the from value.
       anim.fromValues = node.getPayload().map(node => node.lastPosition)
     }
 
     const started = props.reset
       ? !isEqual(to, from)
-      : changed && !isEqual(to, this.get())
+      : changed && !isEqual(to, value)
 
     // Reset the config whenever the animation is reset or its goal value
     // is changed; otherwise, merge the config into the existing one.
@@ -555,14 +558,14 @@ export class SpringValue<T = any, P extends string = string>
     if (!started) {
       // Resolve the "animate" promise.
       return resolve({
-        finished: true,
-        value: this.get(),
+        value,
         spring: this,
+        finished: true,
       })
     }
 
     anim.immediate =
-      !(is.num(goal) || is.arr(goal) || isFluidValue(to)) ||
+      !(parent || is.num(goal) || is.arr(goal)) ||
       !!matchProp(get('immediate'), this.key)
 
     // Event props are provided per update.
@@ -572,7 +575,7 @@ export class SpringValue<T = any, P extends string = string>
     const onRestQueue: OnRest<T>[] = anim.onRest || []
     if (onRestQueue.length > 1) {
       const result: AnimationResult<T> = {
-        value: this.get(),
+        value,
         spring: this,
         cancelled: true,
       }
