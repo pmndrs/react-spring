@@ -449,6 +449,9 @@ export class SpringValue<T = any, P extends string = string>
 
     const { to: prevTo, from: prevFrom } = anim
 
+    // The "reverse" prop only affects one update.
+    if (props.reverse) [to, from] = [from, to]
+
     // Write or read the "to" prop
     if (!is.und(to) && diff('to')) {
       this._animateTo(to)
@@ -467,9 +470,6 @@ export class SpringValue<T = any, P extends string = string>
     } else if (props.reset) {
       from = anim.from
     }
-
-    // The "reverse" prop only affects one update.
-    if (props.reverse) [to, from] = [from, to]
 
     const changed = !(is.und(to) || isEqual(to, prevTo))
     const parent = isFluidValue(to) && to
