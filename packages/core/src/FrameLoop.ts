@@ -146,6 +146,9 @@ export class FrameLoop {
     const parent = isFluidValue(anim.to) && anim.to
     const payload = isAnimationValue(parent) && parent.node.getPayload()
 
+    // Parents must finish before their children.
+    const canFinish = !(payload && payload.some(node => !node.done))
+
     anim.values.forEach((node, i) => {
       if (node.done) return
       changed = true
@@ -159,7 +162,7 @@ export class FrameLoop {
       // Jump to end value for immediate animations
       if (anim.immediate) {
         node.setValue(to)
-        node.done = true
+        node.done = canFinish
         return
       }
 
@@ -236,7 +239,7 @@ export class FrameLoop {
       }
 
       // Trails aren't done until their parents conclude
-      if (finished && !(payload && payload.some(node => !node.done))) {
+      if (finished && canFinish) {
         node.done = true
       } else {
         idle = false
