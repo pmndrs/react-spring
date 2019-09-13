@@ -413,7 +413,7 @@ export class SpringValue<T = any, P extends string = string>
     { to, from }: AnimationRange<T>,
     props: RunAsyncProps<T>,
     timestamp: number,
-    onRest: OnRest<T>
+    resolve: OnRest<T>
   ): void {
     const defaultProps = this._defaultProps
 
@@ -553,8 +553,8 @@ export class SpringValue<T = any, P extends string = string>
     }
 
     if (!started) {
-      // The "onRest" argument resolves the "animate" promise.
-      return onRest({
+      // Resolve the "animate" promise.
+      return resolve({
         finished: true,
         value: this.get(),
         spring: this,
@@ -583,7 +583,8 @@ export class SpringValue<T = any, P extends string = string>
     }
 
     // The "onRest" prop is always first in the queue.
-    anim.onRest = [get('onRest') || noop, onRest]
+    const onRest = (!anim.immediate && get('onRest')) || noop
+    anim.onRest = [onRest, resolve]
 
     const onStart = get('onStart')
     if (onStart) {
