@@ -342,7 +342,7 @@ export class SpringValue<T = any, P extends string = string>
       this._state.cancelId = this._lastAsyncId
       const anim = this.animation
       if (anim) {
-        this._animateTo(this.get())
+        this._to(this.get())
         this._stop()
       }
     }
@@ -459,7 +459,7 @@ export class SpringValue<T = any, P extends string = string>
 
     // Write or read the "to" prop
     if (!is.und(to) && diff('to')) {
-      this._animateTo(to)
+      this._to(to)
     } else {
       to = prevTo
     }
@@ -610,7 +610,7 @@ export class SpringValue<T = any, P extends string = string>
   }
 
   /** Update the `animation.to` value, which might be a `FluidValue` */
-  protected _animateTo(value: T | FluidValue<T>) {
+  protected _to(value: T | FluidValue<T>) {
     const anim = this.animation!
     if (isFluidValue(anim.to)) {
       if (value == anim.to) return
