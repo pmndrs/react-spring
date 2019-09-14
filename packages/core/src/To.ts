@@ -75,15 +75,11 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
   }
 
   /** @internal */
-  onParentPriorityChange(priority: number) {
-    if (this.source) {
-      let max = 0
-      each(
-        toArray(this.source),
-        source => source && (max = Math.max(max, (source.priority || 0) + 1))
-      )
-      priority = max
-    }
-    this._setPriority(priority)
+  onParentPriorityChange(_priority: number) {
+    const reducer = (max: number, source: FluidValue | undefined) =>
+      source ? Math.max(max, (source.priority || 0) + 1) : max
+
+    const max = toArray(this.source).reduce(reducer, 0)
+    this._setPriority(max)
   }
 }
