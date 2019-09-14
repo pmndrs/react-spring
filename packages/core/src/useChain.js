@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { each } from 'shared'
 
 /** API
@@ -6,7 +6,7 @@ import { each } from 'shared'
  */
 
 export function useChain(refs, timeSteps, timeFrame = 1000) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (timeSteps) {
       let prevDelay = 0
       each(refs, (ref, i) => {
