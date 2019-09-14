@@ -91,5 +91,6 @@ export interface ReservedProps {
   onAnimate?: any
   onStart?: any
   onRest?: any
+  onChange?: any
   onFrame?: any
 }
