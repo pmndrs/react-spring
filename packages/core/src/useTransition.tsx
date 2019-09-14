@@ -43,7 +43,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
   // The `key` prop can be undefined (which means the items themselves are used
   // as keys), or a function (which maps each item to its key), or an array of
   // keys (which are assigned to each item by index).
-  const keys: any[] = is.und(key)
+  const keys: readonly any[] = is.und(key)
     ? items
     : is.fun(key)
     ? items.map(key)
