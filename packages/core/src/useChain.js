@@ -45,8 +45,6 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
             each(controllers, (ctrl, i) => ctrl.queue.push(...updates[i]))
             return start()
           })
-        } else {
-          console.warn('useChain ref has no animations:', ref)
         }
       })
     }
