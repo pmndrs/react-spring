@@ -48,65 +48,27 @@ const isValueIdentity = (value: OneOrMore<Value>, id: number): boolean =>
 const getValue = <T>(value: T | FluidValue<T>) =>
   isFluidValue(value) ? value.get() : value
 
+type Inputs = (Value | FluidValue<Value>)[][]
+type Transforms = ((value: any) => [string, boolean])[]
+
 /**
  * This AnimatedStyle will simplify animated components transforms by
  * interpolating all transform function passed as keys in the style object
  * including shortcuts such as x, y and z for translateX/Y/Z
  */
 export class AnimatedStyle extends AnimatedObject {
-  constructor(style: Indexable) {
-    style.transform = new SpringTransform(style)
-    super(style)
-  }
-}
-
-class SpringTransform extends SpringValue<string, 'transform'> {
-  /**
-   * An array of arrays that contains the values (static or fluid)
-   * used by each transform function.
-   */
-  private _inputs: (Value | FluidValue<Value>)[][] = []
-
-  /**
-   * An array of functions that take a list of values (static or fluid)
-   * and returns (1) a CSS transform string and (2) a boolean that's true
-   * when the transform has no effect (eg: an identity transform).
-   */
-  private _transforms: ((value: any) => [string, boolean])[] = []
-
-  constructor(style: Indexable) {
-    super('transform')
-    this._parseStyle(style)
-    this.node = new AnimatedValue(this._getValue())
-    each(this._inputs, input =>
-      each(input, value => isFluidValue(value) && value.addChild(this))
-    )
-  }
-
-  dispose() {
-    each(this._inputs, input =>
-      each(input, value => isFluidValue(value) && value.removeChild(this))
-    )
-    super.dispose()
-  }
-
-  /** @internal */
-  onParentChange() {
-    // TODO: only call "_getValue" once per frame max
-    this.set(this._getValue())
-  }
-
-  /** @internal */
-  removeChild(observer: SpringObserver<string>) {
-    super.removeChild(observer)
-    if (!this._children.size) {
-      this.dispose()
-    }
-  }
-
-  protected _parseStyle({ x, y, z, ...style }: Indexable) {
-    const inputs = this._inputs
-    const transforms = this._transforms
+  constructor({ x, y, z, ...style }: Indexable) {
+    /**
+     * An array of arrays that contains the values (static or fluid)
+     * used by each transform function.
+     */
+    const inputs: Inputs = []
+    /**
+     * An array of functions that take a list of values (static or fluid)
+     * and returns (1) a CSS transform string and (2) a boolean that's true
+     * when the transform has no effect (eg: an identity transform).
+     */
+    const transforms: Transforms = []
 
     // Combine x/y/z into translate3d
     if (x || y || z) {
@@ -146,13 +108,56 @@ class SpringTransform extends SpringValue<string, 'transform'> {
         )
       }
     })
+
+    if (inputs.length) {
+      style.transform = new SpringTransform(inputs, transforms)
+    }
+
+    super(style)
+  }
+}
+
+class SpringTransform extends SpringValue<string, 'transform'> {
+  constructor(readonly inputs: Inputs, readonly transforms: Transforms) {
+    super('transform')
+    this.node = new AnimatedValue(this._compute())
   }
 
-  protected _getValue() {
+  /** @internal */
+  onParentChange() {
+    // TODO: only compute once per frame max
+    this.set(this._compute())
+  }
+
+  /** @internal */
+  addChild(observer: SpringObserver<string>) {
+    // Start observing our inputs once we have an observer.
+    if (!this._children.size) {
+      each(this.inputs, input =>
+        each(input, value => isFluidValue(value) && value.addChild(this))
+      )
+    }
+
+    super.addChild(observer)
+  }
+
+  /** @internal */
+  removeChild(observer: SpringObserver<string>) {
+    super.removeChild(observer)
+
+    // Stop observing our inputs once we have no observers.
+    if (!this._children.size) {
+      each(this.inputs, input =>
+        each(input, value => isFluidValue(value) && value.removeChild(this))
+      )
+    }
+  }
+
+  protected _compute() {
     let transform = ''
     let identity = true
-    each(this._inputs, (input, i) => {
-      const [t, id] = this._transforms[i](input.map(getValue))
+    each(this.inputs, (input, i) => {
+      const [t, id] = this.transforms[i](input.map(getValue))
       transform += ' ' + t
       identity = identity && id
     })
