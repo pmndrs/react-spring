@@ -10,10 +10,7 @@ import {
 } from './types'
 
 export const createInterpolator: InterpolatorFactory = (
-  range:
-    | readonly number[]
-    | InterpolatorFn<any[], any>
-    | InterpolatorConfig<any>,
+  range: readonly number[] | InterpolatorFn<any, any> | InterpolatorConfig<any>,
   output?: readonly Animatable[],
   extrapolate?: ExtrapolateType
 ) => {
