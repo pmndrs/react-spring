@@ -9,6 +9,7 @@
   "dependencies": {
     "@react-spring/animated": "link:../animated",
     "@react-spring/shared": "link:../shared",
+    "tiny-invariant": "^1.0.6",
     "use-memo-one": "^1.1.0"
   },
   "publishConfig": {
