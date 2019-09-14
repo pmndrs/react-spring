@@ -211,13 +211,18 @@ export class SpringValue<T = any, P extends string = string>
    */
   finish(to?: T | FluidValue<T>) {
     if (this.is(ACTIVE)) {
-      if (is.und(to)) {
-        to = this.animation!.to
+      const anim = this.animation!
+
+      // Decay animations finish when their velocity hits zero,
+      // so their goal value is implicit.
+      if (anim.config.decay) {
+        to = this.node.getValue()
+      } else {
+        if (is.und(to)) to = this.animation!.to
+        if (isFluidValue(to)) to = to.get()
+        this.node.setValue(to)
       }
-      if (isFluidValue(to)) {
-        to = to.get()
-      }
-      this.node.setValue(to)
+
       this._onChange(to, true)
       this._stop(true)
     }
