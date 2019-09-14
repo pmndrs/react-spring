@@ -28,10 +28,6 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
 
     // By default, update immediately when a source changes.
     this.animation = { owner: this, immediate: true } as any
-    each(toArray(source), source => {
-      this.priority = Math.max(this.priority || 0, (source.priority || 0) + 1)
-      source.addChild(this)
-    })
   }
 
   protected _animateTo(value: Out | FluidValue<Out>) {
@@ -48,6 +44,32 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
       ? this.source.map(node => node.get())
       : toArray(this.source!.get())
     return this.calc(...inputs)
+  }
+
+  /** @internal */
+  addChild(observer: FluidObserver<Out>) {
+    // Start observing our "source" once we have an observer.
+    if (!this._children.size) {
+      let priority = 0
+      each(toArray(this.source), source => {
+        priority = Math.max(priority, (source.priority || 0) + 1)
+        source.addChild(this)
+      })
+      this._setPriority(priority)
+    }
+
+    super.addChild(observer)
+  }
+
+  removeChild(observer: FluidObserver<Out>) {
+    super.removeChild(observer)
+
+    // Stop observing our "source" once we have no observers.
+    if (!this._children.size) {
+      each(toArray(this.source), source => {
+        source.removeChild(this)
+      })
+    }
   }
 
   /** @internal */
