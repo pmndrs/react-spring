@@ -1,9 +1,9 @@
 import React, {
-  useEffect,
   useRef,
+  useMemo,
+  useLayoutEffect,
   useImperativeHandle,
   ReactNode,
-  useMemo,
 } from 'react'
 import { is, toArray, useForceUpdate, useOnce, each, OneOrMore } from 'shared'
 import { now } from 'shared/globals'
@@ -52,7 +52,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<Transition[] | null>(null)
   const prevTransitions = usedTransitions.current
-  useEffect(() => {
+  useLayoutEffect(() => {
     usedTransitions.current = transitions
   })
 
@@ -223,7 +223,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
 
   useImperativeHandle(ref, () => api)
 
-  useEffect(
+  useLayoutEffect(
     () => {
       each(changes, ({ phase, payload }, t) => {
         t.phase = phase
