@@ -729,7 +729,7 @@ export class SpringValue<T = any, P extends string = string>
   createNode({ to, from }: AnimationRange<T>) {
     const value = is.und(from) ? to : from
     if (!is.und(value)) {
-      return this._getNodeType(value).create(computeGoal(from))
+      return this._getNodeType(value).create(computeGoal(value))
     }
   }
 
