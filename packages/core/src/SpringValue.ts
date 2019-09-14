@@ -673,18 +673,21 @@ export class SpringValue<T = any, P extends string = string>
     if (anim && !this.is(ACTIVE)) {
       this._phase = ACTIVE
 
-      if (G.skipAnimation) {
-        this.finish(anim.to)
-      } else {
-        G.frameLoop.start(this)
-
-        // Tell animatable children to enter the frameloop.
-        each(this._children, child => {
-          if (child instanceof SpringValue) {
-            child._start()
-          }
-        })
+      // Animations without a config cannot enter the frameloop.
+      if (anim.config) {
+        if (G.skipAnimation) {
+          this.finish(anim.to)
+        } else {
+          G.frameLoop.start(this)
+        }
       }
+
+      // Tell animatable children to enter the frameloop.
+      each(this._children, child => {
+        if (child instanceof SpringValue) {
+          child._start()
+        }
+      })
     }
   }
 
@@ -692,20 +695,24 @@ export class SpringValue<T = any, P extends string = string>
   protected _stop(finished = false) {
     if (this.is(ACTIVE)) {
       this._phase = IDLE
-      G.frameLoop.stop(this)
 
       const anim = this.animation!
-      each(anim.values, node => {
-        node.done = true
-      })
 
-      const onRestQueue = anim.onRest!
+      if (anim.config) {
+        G.frameLoop.stop(this)
 
-      // Preserve the "onRest" prop.
-      anim.onRest = [onRestQueue[0]]
+        each(anim.values, node => {
+          node.done = true
+        })
 
-      const result = { value: this.get(), finished, spring: this }
-      each(onRestQueue, onRest => onRest(result))
+        const onRestQueue = anim.onRest!
+
+        // Preserve the "onRest" prop.
+        anim.onRest = [onRestQueue[0]]
+
+        const result = { value: this.get(), spring: this, finished }
+        each(onRestQueue, onRest => onRest(result))
+      }
     }
   }
 
