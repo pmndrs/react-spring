@@ -16,15 +16,15 @@ import { SpringValue } from './SpringValue'
  *  The memoized result is updated whenever a dependency changes.
  */
 export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
-  /** The sources providing input values */
-  source: OneOrMore<FluidValue> | null
-
   /** The function that maps inputs values to output */
-  calc: InterpolatorFn<In, Out>
+  readonly calc: InterpolatorFn<In, Out>
 
-  constructor(source: OneOrMore<FluidValue>, args: InterpolatorArgs<In, Out>) {
+  constructor(
+    /** The source of input values */
+    readonly source: OneOrMore<FluidValue>,
+    args: InterpolatorArgs<In, Out>
+  ) {
     super('to')
-    this.source = source
     this.calc = createInterpolator(...args)
     this.node = new AnimatedValue(this._compute())
 
