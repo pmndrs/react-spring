@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { each } from 'shared'
 
 /** API
  *  useChain(references, timeSteps, timeFrame)
@@ -8,7 +9,7 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
   useEffect(() => {
     if (timeSteps) {
       let prevDelay = 0
-      refs.forEach((ref, i) => {
+      each(refs, (ref, i) => {
         if (!ref.current) return
 
         const { controllers } = ref.current
@@ -19,15 +20,15 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
           if (isNaN(delay)) delay = prevDelay
           else prevDelay = delay
 
-          controllers.forEach(ctrl => {
-            ctrl.queue.forEach(props => (props.delay += delay))
+          each(controllers, ctrl => {
+            each(ctrl.queue, props => (props.delay += delay))
             ctrl.start()
           })
         }
       })
     } else {
       let p = Promise.resolve()
-      refs.forEach(ref => {
+      each(refs, ref => {
         const { controllers, start } = ref.current || {}
         if (controllers && controllers.length) {
           // Take the queue of each controller
@@ -39,7 +40,7 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
 
           // Apply the queue when the previous ref stops animating
           p = p.then(() => {
-            controllers.forEach((ctrl, i) => ctrl.queue.push(...updates[i]))
+            each(controllers, (ctrl, i) => ctrl.queue.push(...updates[i]))
             return start()
           })
         } else {
