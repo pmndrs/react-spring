@@ -6,6 +6,7 @@ import {
   InterpolatorFn,
   FluidValue,
   Arrify,
+  FluidObserver,
 } from 'shared/types'
 
 import { SpringValue } from './SpringValue'
