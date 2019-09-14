@@ -21,7 +21,9 @@ export function useChain(refs, timeSteps, timeFrame = 1000) {
           else prevDelay = delay
 
           each(controllers, ctrl => {
-            each(ctrl.queue, props => (props.delay += delay))
+            each(ctrl.queue, props => {
+              props.delay = delay + (props.delay || 0)
+            })
             ctrl.start()
           })
         }
