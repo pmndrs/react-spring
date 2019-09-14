@@ -75,6 +75,7 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   onAnimate: 1,
   onStart: 1,
   onRest: 1,
+  onChange: 1,
   onFrame: 1,
 }
 
