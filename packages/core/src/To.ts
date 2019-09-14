@@ -27,17 +27,12 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
     this.calc = createInterpolator(...args)
     this.node = new AnimatedValue(this._compute())
 
-    // By default, update immediately when a source changes.
+    // Update immediately when a source changes.
     this.animation = { owner: this, immediate: true } as any
   }
 
-  protected _animateTo(value: Out | FluidValue<Out>) {
-    if (this.source) {
-      each(toArray(this.source), source => source.removeChild(this))
-      this.onParentChange = super.onParentChange
-      this.source = null
-    }
-    super._animateTo(value)
+  protected _animate() {
+    throw Error('Cannot animate a "To" spring')
   }
 
   protected _compute() {
