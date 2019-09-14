@@ -5,6 +5,7 @@ import {
   OneOrMore,
   InterpolatorFn,
   FluidValue,
+  Arrify,
 } from 'shared/types'
 
 import { SpringValue } from './SpringValue'
@@ -40,9 +41,9 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
   }
 
   protected _compute() {
-    const inputs = is.arr(this.source)
+    const inputs: Arrify<In> = is.arr(this.source)
       ? this.source.map(node => node.get())
-      : toArray(this.source!.get())
+      : (toArray(this.source!.get()) as any)
     return this.calc(...inputs)
   }
 
