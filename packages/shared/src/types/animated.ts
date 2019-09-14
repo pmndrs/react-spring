@@ -6,7 +6,7 @@ export interface FluidValue<T = any> {
   removeChild: (child: FluidObserver) => void
 }
 
-/** @internal An object that observes a `FluidNode` over time */
+/** @internal An object that observes a `FluidValue` over time */
 export interface FluidObserver<T = any> {
   /** A fluid value has changed */
   onParentChange(value: T, finished: boolean, parent: FluidValue<T>): void
