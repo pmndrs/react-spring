@@ -199,7 +199,7 @@ export class SpringValue<T = any, P extends string = string>
    */
   pause() {
     this._checkDisposed('pause')
-    if (this.is(ACTIVE)) {
+    if (!this.idle) {
       this._phase = PAUSED
       G.frameLoop.stop(this)
     }
@@ -211,7 +211,7 @@ export class SpringValue<T = any, P extends string = string>
    * All `onRest` callbacks are passed `{finished: true}`
    */
   finish(to?: T | FluidValue<T>) {
-    if (this.is(ACTIVE)) {
+    if (!this.idle) {
       const anim = this.animation!
 
       // Decay animations finish when their velocity hits zero,
@@ -385,7 +385,7 @@ export class SpringValue<T = any, P extends string = string>
     }
     // When our parent is not a spring, it won't tell us to enter the frameloop
     // because it never does so itself. Instead, we must react to value changes.
-    else if (!this.is(ACTIVE) && !isEqual(value, this.get())) {
+    else if (this.idle && !isEqual(value, this.get())) {
       this._start()
     }
   }
@@ -629,7 +629,7 @@ export class SpringValue<T = any, P extends string = string>
   protected _setPriority(priority: number) {
     if (this.priority == priority) return
     this.priority = priority
-    if (this.is(ACTIVE)) {
+    if (!this.idle) {
       // Re-enter the frameloop so our new priority is used.
       G.frameLoop.stop(this).start(this)
     }
@@ -660,7 +660,7 @@ export class SpringValue<T = any, P extends string = string>
 
   /** Reset our node, and the nodes of every descendant spring */
   protected _reset(goal = computeGoal(this.animation!.to)) {
-    this.node.reset(this.is(ACTIVE), goal)
+    this.node.reset(!this.idle, goal)
     each(this._children, child => {
       if (child instanceof SpringValue) {
         child._reset(goal)
@@ -670,8 +670,8 @@ export class SpringValue<T = any, P extends string = string>
 
   /** Enter the frameloop */
   protected _start() {
-    const anim = this.animation
-    if (anim && !this.is(ACTIVE)) {
+    const anim = this.animation!
+    if (anim && this.idle) {
       this._phase = ACTIVE
 
       // Animations without a config cannot enter the frameloop.
@@ -694,7 +694,7 @@ export class SpringValue<T = any, P extends string = string>
 
   /** Exit the frameloop and notify `onRest` listeners */
   protected _stop(finished = false) {
-    if (this.is(ACTIVE)) {
+    if (!this.idle) {
       this._phase = IDLE
 
       const anim = this.animation!
