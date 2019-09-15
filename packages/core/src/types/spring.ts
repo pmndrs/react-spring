@@ -196,15 +196,61 @@ export interface SpringHandle<T extends Indexable = UnknownProps> {
   stop: SpringStopFn<T>
 }
 
-/** Spring animation config */
 export interface SpringConfig {
+  /**
+   * Higher mass means more friction is required to slow down.
+   *
+   * Defaults to 1, which works fine most of the time.
+   */
   mass?: number
+  /**
+   * With higher tension, the spring will resist bouncing and try harder to stop at its end value.
+   *
+   * When tension is zero, no animation occurs.
+   */
   tension?: number
+  /**
+   * The frequency response.
+   *
+   * An alternative to `tension` that describes the speed of an undamped spring.
+   */
   speed?: number
+  /**
+   * The damping ratio coefficient, or just the damping ratio when `speed` is defined.
+   *
+   * When `speed` is defined, this value should be between 0 and 1.
+   *
+   * Higher friction means the spring will slow down faster.
+   */
   friction?: number
+  /**
+   * The initial velocity of one or more values.
+   */
   velocity?: number | number[]
+  /**
+   * The smallest velocity before the animation is considered "not moving".
+   *
+   * When undefined, `precision` is used instead.
+   */
   restVelocity?: number
+  /**
+   * The coefficient of restitution.
+   *
+   * When `true` or `0`, the spring avoids overshooting by ending abruptly at its
+   * final value.
+   *
+   * When a positive number, the spring bounces instead of overshooting. The
+   * number is used to multiply the inverted velocity. So a value of `0.5` would
+   * chop the velocity in half on each bounce.
+   */
   clamp?: number | boolean
+  /**
+   * The smallest distance from a value before that distance is essentially zero.
+   *
+   * This helps in deciding when a spring is "at rest". The spring must be within
+   * this distance from its final value, and its velocity must be lower than this
+   * value too (unless `restVelocity` is defined).
+   */
   precision?: number
   decay?: number | boolean
   progress?: number
