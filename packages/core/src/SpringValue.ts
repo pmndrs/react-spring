@@ -217,10 +217,10 @@ export class SpringValue<T = any, P extends string = string>
 
       // Decay animations finish when their velocity hits zero,
       // so their goal value is implicit.
-      if (anim.config.decay) {
-        to = this.node.getValue()
+      if (is.und(to) && anim.config.decay) {
+        to = value
       } else {
-        if (is.und(to)) to = this.animation!.to
+        if (is.und(to)) to = anim.to
         if (isFluidValue(to)) to = to.get()
         if (!isEqual(value, to)) {
           this.node.setValue(to)
