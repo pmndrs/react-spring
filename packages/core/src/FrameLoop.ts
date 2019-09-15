@@ -114,6 +114,7 @@ export class FrameLoop {
    */
   onFrame(cb: FrameRequestCallback, next?: boolean) {
     this._queues[next && this.updating ? 1 : 0].add(cb)
+    this._start()
   }
 
   /**
@@ -126,6 +127,10 @@ export class FrameLoop {
     let i = springs.findIndex(s => s.priority > spring.priority)
     if (i < 0) i = springs.length
     springs.splice(i, 0, spring)
+    this._start()
+  }
+
+  protected _start() {
     if (!this.active) {
       this.active = true
       this._requestFrame(this.update)
