@@ -200,6 +200,7 @@ export interface SpringHandle<T extends Indexable = UnknownProps> {
 export interface SpringConfig {
   mass?: number
   tension?: number
+  speed?: number
   friction?: number
   velocity?: number | number[]
   restVelocity?: number
