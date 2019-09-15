@@ -553,8 +553,8 @@ export class SpringValue<T = any, P extends string = string>
       goal = 1
     }
 
-    // The current value must equal the "from" value on reset
-    // and before the first animation.
+    // Ensure the current value equals the "from" value when reset
+    // and when the "from" value is updated before the first animation.
     if (
       reset ||
       (this.is(CREATED) &&
@@ -562,21 +562,6 @@ export class SpringValue<T = any, P extends string = string>
     ) {
       node.setValue((value = from as T))
     }
-
-    // The "fromValues" must be updated whenever an animation starts.
-    if (started) {
-      this._reset()
-      anim.values = node.getPayload()
-      anim.toValues = parent ? null : toArray(goal)
-      anim.fromValues = anim.values.map(node => node.lastPosition)
-    }
-
-    anim.immediate =
-      !(parent || is.num(goal) || is.arr(goal)) ||
-      !!matchProp(get('immediate'), this.key)
-
-    // The "onRest" prop is never called for immediate animations.
-    const onRest = (!anim.immediate && get('onRest')) || noop
 
     // Event props are replaced on every update.
     anim.onStart = get('onStart')
@@ -601,8 +586,21 @@ export class SpringValue<T = any, P extends string = string>
       })
     }
 
-    // Resolve the promise for unfinished animations.
     const onRestQueue = anim.onRest
+
+    // The "onRest" prop is always first in the queue.
+    anim.onRest = [get('onRest') || noop, resolve]
+
+    this._reset()
+
+    anim.values = node.getPayload()
+    anim.toValues = parent ? null : toArray(goal)
+    anim.fromValues = anim.values.map(node => node.lastPosition)
+    anim.immediate =
+      !(parent || is.num(goal) || is.arr(goal)) ||
+      !!matchProp(get('immediate'), this.key)
+
+    // Resolve the promise for unfinished animations.
     if (onRestQueue && onRestQueue.length > 1) {
       const result: AnimationResult<T> = {
         value,
@@ -614,9 +612,6 @@ export class SpringValue<T = any, P extends string = string>
         onRestQueue[i](result)
       }
     }
-
-    // The "onRest" prop is always first in the queue.
-    anim.onRest = [onRest, resolve]
 
     this._start()
   }
