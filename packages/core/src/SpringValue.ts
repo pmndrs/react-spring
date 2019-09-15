@@ -68,6 +68,7 @@ export interface AnimationConfig {
   w0: number
   mass: number
   tension: number
+  speed?: number
   friction: number
   velocity: number | number[]
   restVelocity?: number
@@ -506,6 +507,14 @@ export class SpringValue<T = any, P extends string = string>
         Object.assign(anim.config, config)
       } else {
         anim.config = config = { ...BASE_CONFIG, ...config }
+      }
+
+      // When "speed" is provided, we derive "tension" and "friction" from it.
+      if (!is.und(config.speed)) {
+        config.tension = Math.pow((2 * Math.PI) / config.speed, 2) * config.mass
+        // Note: We treat "friction" as the *damping ratio* instead of as its coefficient.
+        config.friction =
+          (4 * Math.PI * config.friction * config.mass) / config.speed
       }
 
       // Cache the angular frequency in rad/ms
