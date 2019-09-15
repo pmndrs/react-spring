@@ -82,6 +82,7 @@ export interface AnimationConfig {
 
 /** An animation being executed by the frameloop */
 export interface Animation<T = unknown> {
+  changed: boolean
   values: readonly AnimatedValue[]
   to: T | FluidValue<T>
   toValues: readonly number[] | null
@@ -652,10 +653,19 @@ export class SpringValue<T = any, P extends string = string>
 
   /** @internal */
   public _onChange(value: T, finished = false) {
-    // Notify the "onChange" prop first.
     const anim = this.animation
-    if (anim && anim.onChange) {
-      anim.onChange(value, this)
+    if (anim) {
+      if (!anim.changed) {
+        anim.changed = true
+        // The "onStart" prop is called on the first change after entering the
+        // frameloop, but never for immediate animations.
+        if (anim.onStart && !anim.immediate) {
+          anim.onStart(this)
+        }
+      }
+      if (anim.onChange) {
+        anim.onChange(value, this)
+      }
     }
 
     // Clone "_children" so it can be safely mutated by the loop.
@@ -686,10 +696,8 @@ export class SpringValue<T = any, P extends string = string>
 
       // Animations without "onRest" cannot enter the frameloop.
       if (anim.onRest) {
-        // The "onStart" prop is never called for immediate animations.
-        if (anim.onStart && !anim.immediate) {
-          anim.onStart(this)
-        }
+        anim.changed = false
+
         // The "skipAnimation" global avoids the frameloop.
         if (G.skipAnimation) {
           this.finish(anim.to)
@@ -715,15 +723,20 @@ export class SpringValue<T = any, P extends string = string>
       const anim = this.animation!
       const onRestQueue = anim.onRest
 
-      // Animations without "onRest" cannot enter the frameloop.
+      // Animations without "onRest" never enter the frameloop.
       if (onRestQueue) {
         G.frameLoop.stop(this)
         each(anim.values, node => {
           node.done = true
         })
 
-        // Preserve the "onRest" prop.
+        // Preserve the "onRest" prop between animations.
         anim.onRest = [onRestQueue[0]]
+
+        // Never call the "onRest" prop for immediate or no-op animations.
+        if (anim.immediate || !anim.changed) {
+          onRestQueue[0] = noop
+        }
 
         const result = { value: this.get(), spring: this, finished }
         each(onRestQueue, onRest => onRest(result))
