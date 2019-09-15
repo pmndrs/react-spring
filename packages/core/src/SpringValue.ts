@@ -481,7 +481,7 @@ export class SpringValue<T = any, P extends string = string>
       from = from.get()
     }
 
-    const reset = props.reset && !is.und(from)
+    const reset = props.reset && !is.und(from) && !is.und(to)
     const changed = !is.und(to) && !isEqual(to, prevTo)
     const parent = isFluidValue(to) && to
 
