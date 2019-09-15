@@ -3,7 +3,7 @@ import { Animated, Payload } from './Animated'
 
 /** An animated number or a native attribute value */
 export class AnimatedValue<T = any> extends Animated {
-  done!: boolean
+  done = true
   elapsedTime!: number
   lastPosition!: number
   lastVelocity?: number | null
@@ -11,7 +11,9 @@ export class AnimatedValue<T = any> extends Animated {
 
   constructor(protected _value: T) {
     super()
-    this.reset()
+    if (is.num(this._value)) {
+      this.lastPosition = this._value
+    }
   }
 
   static create<T>(from: T, _to?: T | null) {
