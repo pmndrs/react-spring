@@ -278,6 +278,7 @@ export class SpringValue<T = any, P extends string = string>
             )
           )
         } else if (props.cancel) {
+          this.stop()
           resolve({
             value: this.get(),
             cancelled: true,
