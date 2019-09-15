@@ -89,6 +89,7 @@ export interface Animation<T = unknown> {
   config: AnimationConfig
   reverse?: boolean
   immediate: boolean
+  onStart?: OnStart<T>
   onChange?: OnChange<T>
   onRest?: Array<OnRest<T>>
   owner: SpringValue<T>
@@ -461,103 +462,122 @@ export class SpringValue<T = any, P extends string = string>
     // The "reverse" prop only affects one update.
     if (props.reverse) [to, from] = [from, to]
 
-    // Write or read the "to" prop
     if (!is.und(to) && diff('to')) {
       this._to(to)
     } else {
       to = prevTo
     }
 
-    // On first animation, make "from" equal "to" by default.
-    if (is.und(from) && is.und(anim.from)) {
-      from = to
-    }
-
-    // Write or read the "from" prop
     if (!is.und(from) && diff('from')) {
       anim.from = from
-    } else if (props.reset) {
+    } else {
       from = anim.from
     }
+    if (is.und(from)) {
+      from = to
+    }
+    if (isFluidValue(from)) {
+      from = from.get()
+    }
 
-    const changed = !(is.und(to) || isEqual(to, prevTo))
+    const reset = props.reset && !is.und(from)
+    const changed = !is.und(to) && !isEqual(to, prevTo)
     const parent = isFluidValue(to) && to
 
-    // The `FrameLoop` decides our goal value when `to` is a dependency.
+    /** The current value */
+    let value = reset ? from! : this.get()
+
+    /** When true, this spring must be in the frameloop. */
+    let started =
+      !is.und(to) &&
+      (parent
+        ? !isEqual(value, parent.get())
+        : (changed || reset) && !isEqual(value, to))
+
+    // The "config" prop either overwrites or merges into the existing config.
+    let config = props.config as AnimationConfig
+    if (config || started || !anim.config) {
+      config = {
+        ...callProp(defaultProps.config, this.key),
+        ...callProp(config, this.key),
+      }
+
+      if (!started && canMergeConfigs(config, anim.config)) {
+        Object.assign(anim.config, config)
+      } else {
+        anim.config = config = { ...BASE_CONFIG, ...config }
+      }
+
+      // Cache the angular frequency in rad/ms
+      config.w0 = Math.sqrt(config.tension / config.mass) / 1000
+    } else {
+      config = anim.config
+    }
+
+    // Always start animations with velocity.
+    if (!started && this.idle && (config.decay || !is.und(to))) {
+      const { velocity } = config
+      if (toArray(velocity).some(v => v !== 0)) {
+        started = true
+      }
+    }
+
+    /**
+     * The final value of the animation.
+     *
+     * The `FrameLoop` decides our goal value when a `parent` exists.
+     */
     let goal: any = parent ? null : computeGoal(to)
 
-    // Update our internal `Animated` node.
+    // Reset our internal `Animated` node if starting.
     let node = this.node
     let nodeType: AnimatedType<T>
     if (changed) {
       nodeType = this._getNodeType(to!)
       invariant(
-        node.constructor == nodeType,
+        nodeType == node.constructor,
         `Cannot animate to the given "to" prop, because the current value has a different type`
       )
-      this._reset(goal)
     } else {
       nodeType = node.constructor as any
     }
 
-    let value = this.get()
+    if (started) {
+      this._reset(goal)
+    }
 
     if (nodeType == AnimatedString) {
       from = 0 as any
       goal = 1
     }
-    // Use the current value when "from" is undefined.
-    else if (is.und(from)) {
-      from = value
-    }
-    // Start from the current value of another Spring.
-    else if (isFluidValue(from)) {
-      from = from.get()
-    }
 
-    // Keep the current value in sync with the "from" prop when appropriate.
-    if (props.reset || (this.is(CREATED) && !isEqual(anim.from, prevFrom))) {
+    // The current value must equal the "from" value on reset
+    // and before the first animation.
+    if (
+      reset ||
+      (this.is(CREATED) &&
+        (!is.und(anim.from) && !isEqual(anim.from, prevFrom)))
+    ) {
       node.setValue((value = from as T))
+    }
+
+    // The "fromValues" must be updated whenever an animation starts.
+    if (started) {
       anim.values = node.getPayload()
-    }
-
-    // Update the "toValues" and "fromValues" used by the frameloop.
-    if (changed) {
       anim.toValues = parent ? null : toArray(goal)
-    }
-    if (props.reset) {
-      // Assume "from" has been converted to a number.
-      anim.fromValues = toArray(from as any)
-    } else if (changed) {
-      // Use each node's last position as the from value.
-      anim.fromValues = node.getPayload().map(node => node.lastPosition)
+      anim.fromValues = anim.values.map(node => node.lastPosition)
     }
 
-    const started = props.reset
-      ? !isEqual(to, from)
-      : changed && !isEqual(to, value)
+    anim.immediate =
+      !(parent || is.num(goal) || is.arr(goal)) ||
+      !!matchProp(get('immediate'), this.key)
 
-    // Reset the config whenever the animation is reset or its goal value
-    // is changed; otherwise, merge the config into the existing one.
-    if (started || (props.config && anim.config)) {
-      let config = {
-        ...callProp(defaultProps.config, this.key),
-        ...callProp(props.config, this.key),
-      } as AnimationConfig
+    // The "onRest" prop is never called for immediate animations.
+    const onRest = (!anim.immediate && get('onRest')) || noop
 
-      // Never merge configs when the goal value has changed.
-      if (started || canMergeConfigs(config, anim.config)) {
-        if (started) {
-          anim.config = config = { ...BASE_CONFIG, ...config }
-        } else {
-          // Merge into the existing config.
-          Object.assign(anim.config, config)
-        }
-
-        // Cache the angular frequency in rad/ms
-        config.w0 = Math.sqrt(config.tension / config.mass) / 1000
-      }
-    }
+    // Event props are replaced on every update.
+    anim.onStart = get('onStart')
+    anim.onChange = get('onChange')
 
     // Update the default props.
     if (props.default) {
@@ -578,16 +598,9 @@ export class SpringValue<T = any, P extends string = string>
       })
     }
 
-    anim.immediate =
-      !(parent || is.num(goal) || is.arr(goal)) ||
-      !!matchProp(get('immediate'), this.key)
-
-    // Event props are provided per update.
-    anim.onChange = get('onChange')
-
     // Resolve the promise for unfinished animations.
-    const onRestQueue: OnRest<T>[] = anim.onRest || []
-    if (onRestQueue.length > 1) {
+    const onRestQueue = anim.onRest
+    if (onRestQueue && onRestQueue.length > 1) {
       const result: AnimationResult<T> = {
         value,
         spring: this,
@@ -600,17 +613,9 @@ export class SpringValue<T = any, P extends string = string>
     }
 
     // The "onRest" prop is always first in the queue.
-    const onRest = (!anim.immediate && get('onRest')) || noop
     anim.onRest = [onRest, resolve]
 
-    const onStart = get('onStart')
-    if (onStart) {
-      onStart(this)
-    }
-
-    if (!parent || !isEqual(value, parent.get())) {
-      this._start()
-    }
+    this._start()
   }
 
   /** Update the `animation.to` value, which might be a `FluidValue` */
@@ -677,8 +682,13 @@ export class SpringValue<T = any, P extends string = string>
     if (anim && this.idle) {
       this._phase = ACTIVE
 
-      // Animations without a config cannot enter the frameloop.
-      if (anim.config) {
+      // Animations without "onRest" cannot enter the frameloop.
+      if (anim.onRest) {
+        // The "onStart" prop is never called for immediate animations.
+        if (anim.onStart && !anim.immediate) {
+          anim.onStart(this)
+        }
+        // The "skipAnimation" global avoids the frameloop.
         if (G.skipAnimation) {
           this.finish(anim.to)
         } else {
@@ -701,15 +711,14 @@ export class SpringValue<T = any, P extends string = string>
       this._phase = IDLE
 
       const anim = this.animation!
+      const onRestQueue = anim.onRest
 
-      if (anim.config) {
+      // Animations without "onRest" cannot enter the frameloop.
+      if (onRestQueue) {
         G.frameLoop.stop(this)
-
         each(anim.values, node => {
           node.done = true
         })
-
-        const onRestQueue = anim.onRest!
 
         // Preserve the "onRest" prop.
         anim.onRest = [onRestQueue[0]]
