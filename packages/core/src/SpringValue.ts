@@ -551,10 +551,6 @@ export class SpringValue<T = any, P extends string = string>
       nodeType = node.constructor as any
     }
 
-    if (started) {
-      this._reset(goal)
-    }
-
     if (nodeType == AnimatedString) {
       from = 0 as any
       goal = 1
@@ -572,6 +568,7 @@ export class SpringValue<T = any, P extends string = string>
 
     // The "fromValues" must be updated whenever an animation starts.
     if (started) {
+      this._reset()
       anim.values = node.getPayload()
       anim.toValues = parent ? null : toArray(goal)
       anim.fromValues = anim.values.map(node => node.lastPosition)
