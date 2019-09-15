@@ -36,6 +36,9 @@ export class FrameLoop {
    */
   update: FrameUpdater
 
+  /** Equals true when a frame is being processed. */
+  updating = false
+
   // These queues are swapped at the end of every frame,
   // after the current queue is drained.
   private _queues = [
@@ -64,6 +67,8 @@ export class FrameLoop {
           return false
         }
 
+        this.updating = true
+
         if (is.und(time)) time = performance.now()
         let dt = is.und(this.lastTime) ? 0 : time - this.lastTime
 
@@ -88,6 +93,7 @@ export class FrameLoop {
             queues[1] = queue
           }
 
+          this.updating = false
           if (!this.springs.length) {
             this.lastTime = undefined
             return (this.active = false)
@@ -107,7 +113,7 @@ export class FrameLoop {
    * Pass `true` as the 2nd argument to run at the end of the **next** frame.
    */
   onFrame(cb: FrameRequestCallback, next?: boolean) {
-    this._queues[next ? 1 : 0].add(cb)
+    this._queues[next && this.updating ? 1 : 0].add(cb)
   }
 
   /**
