@@ -202,6 +202,7 @@ export interface SpringConfig {
   tension?: number
   friction?: number
   velocity?: number | number[]
+  restVelocity?: number
   clamp?: number | boolean
   precision?: number
   decay?: number | boolean
