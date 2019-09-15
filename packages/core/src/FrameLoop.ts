@@ -242,8 +242,7 @@ export class FrameLoop {
         /** The smallest distance from a value before being treated like said value. */
         const precision =
           config.precision ||
-          (from != to && Math.min(1, Math.abs(to - from) * 0.001)) ||
-          0.005
+          (from == to ? 0.005 : Math.min(1, Math.abs(to - from) * 0.001))
 
         /** The velocity at which movement is essentially none */
         const restVelocity = config.restVelocity || precision
