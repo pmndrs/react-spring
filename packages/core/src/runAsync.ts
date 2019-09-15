@@ -165,14 +165,13 @@ export function scheduleProps<T, U>(
       // Might be cancelled during delay.
       if (asyncId <= (state.cancelId || 0)) {
         cancel = true
-        reset = false
       } else {
         cancel = matchProp(cancel, state.key)
-        reset = !cancel && matchProp(reset, state.key)
-        if (cancel || reset) {
+        if (cancel) {
           state.cancelId = asyncId
         }
       }
+      reset = !cancel && matchProp(reset, state.key)
       try {
         action({ ...props, asyncId, cancel, reset }, resolve)
       } catch (err) {
