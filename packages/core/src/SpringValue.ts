@@ -390,7 +390,7 @@ export class SpringValue<T = any, P extends string = string>
     }
     // When our parent is not a spring, it won't tell us to enter the frameloop
     // because it never does so itself. Instead, we must react to value changes.
-    else if (this.idle && !isEqual(value, this.get())) {
+    else if (this.idle) {
       this._start()
     }
   }
@@ -489,11 +489,7 @@ export class SpringValue<T = any, P extends string = string>
     let value = reset ? from! : this.get()
 
     /** When true, this spring must be in the frameloop. */
-    let started =
-      !is.und(to) &&
-      (parent
-        ? !isEqual(value, parent.get())
-        : (changed || reset) && !isEqual(value, to))
+    let started = parent || ((changed || reset) && !isEqual(value, to))
 
     // The "config" prop either overwrites or merges into the existing config.
     let config = props.config as AnimationConfig
