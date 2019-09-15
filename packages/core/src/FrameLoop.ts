@@ -160,7 +160,6 @@ export class FrameLoop {
 
     anim.values.forEach((node, i) => {
       if (node.done) return
-      changed = true
 
       let to: number = payload
         ? payload[i].lastPosition
@@ -181,7 +180,10 @@ export class FrameLoop {
 
       // Jump to end value for immediate animations.
       if (anim.immediate) {
-        node.setValue(to)
+        if (to !== node.lastPosition) {
+          changed = true
+          node.setValue(to)
+        }
         node.done = canFinish
         return
       }
@@ -290,9 +292,12 @@ export class FrameLoop {
         `Found NaN value while advancing "${spring.key}" animation`
       )
 
-      node.setValue(position)
-      node.lastPosition = position
-      node.lastVelocity = velocity
+      if (position !== node.lastPosition) {
+        changed = true
+        node.setValue(position)
+        node.lastPosition = position
+        node.lastVelocity = velocity
+      }
 
       if (finished && canFinish) {
         node.done = true
