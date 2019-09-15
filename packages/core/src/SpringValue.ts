@@ -311,7 +311,6 @@ export class SpringValue<T = any, P extends string = string>
 
     // Unpause if possible.
     if (this.is(PAUSED)) {
-      this._phase = ACTIVE
       this._start()
 
       if (this._state.asyncTo) {
