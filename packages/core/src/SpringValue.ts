@@ -70,6 +70,7 @@ export interface AnimationConfig {
   tension: number
   friction: number
   velocity: number | number[]
+  restVelocity?: number
   precision?: number
   easing: EasingFunction
   progress: number

@@ -168,9 +168,18 @@ export class FrameLoop {
         ? toArray(parent.get())[i]
         : anim.toValues![i]
 
+      // Parent springs must finish before their children can.
       const canFinish = !payload || payload[i].done
 
-      // Jump to end value for immediate animations
+      const { config } = anim
+
+      // Loose springs never move.
+      if (config.tension == 0) {
+        node.done = true
+        return
+      }
+
+      // Jump to end value for immediate animations.
       if (anim.immediate) {
         node.setValue(to)
         node.done = canFinish
@@ -178,17 +187,12 @@ export class FrameLoop {
       }
 
       const elapsed = (node.elapsedTime += dt)
-
       const from = anim.fromValues[i]
-      const config = anim.config
-
       const v0 = is.arr(config.velocity) ? config.velocity[i] : config.velocity
-      const precision =
-        config.precision || Math.min(1, Math.abs(to - from) * 0.001)
 
       let position = node.lastPosition
       let velocity: number
-      let finished: boolean
+      let finished!: boolean
 
       // Duration easing
       if (!is.und(config.duration)) {
@@ -201,6 +205,7 @@ export class FrameLoop {
 
         finished = p == 1
       }
+
       // Decay easing
       else if (config.decay) {
         const decay = config.decay === true ? 0.998 : config.decay
@@ -213,47 +218,72 @@ export class FrameLoop {
         finished = Math.abs(node.lastPosition - position) < 0.1
         if (finished) to = position
       }
+
       // Spring easing
       else {
         velocity = node.lastVelocity == null ? v0 : node.lastVelocity
+        if (node.v0 == null) {
+          node.v0 = v0
+        }
+
+        /**
+         * Coefficient of restitution.
+         *
+         * Set to zero to stop the animation at its end value.
+         * Set to a positive number to multiply the inverted velocity of a bounce animation.
+         */
+        const clamp =
+          config.clamp !== false
+            ? config.clamp === true
+              ? 0
+              : config.clamp!
+            : -1
+
+        /** The smallest distance from a value before being treated like said value. */
+        const precision =
+          config.precision ||
+          (from != to && Math.min(1, Math.abs(to - from) * 0.001)) ||
+          0.005
+
+        /** The velocity at which movement is essentially none */
+        const restVelocity = config.restVelocity || precision
+
+        /** Equals true when the velocity is considered moving */
+        let isMoving!: boolean
+
+        /** Equals true when the velocity is being deflected or clamped */
+        let isBouncing!: boolean
 
         const step = 0.05 / config.w0
         const numSteps = Math.ceil(dt / step)
-
         for (let n = 0; n < numSteps; ++n) {
+          isMoving = Math.abs(velocity) > restVelocity
+
+          if (!isMoving) {
+            finished = Math.abs(to - position) <= precision
+            if (finished) {
+              break
+            }
+          }
+
+          isBouncing =
+            clamp >= 0 &&
+            (position == to ||
+              position > to == (from == to ? node.v0 > 0 : from > to))
+
+          // Invert the velocity with a magnitude, or clamp it.
+          if (isBouncing) {
+            velocity = clamp * -velocity
+            position = to
+          }
+
           const springForce = -config.tension * 0.000001 * (position - to)
           const dampingForce = -config.friction * 0.001 * velocity
           const acceleration = (springForce + dampingForce) / config.mass // pt/ms^2
+
           velocity = velocity + acceleration * step // pt/ms
           position = position + velocity * step
         }
-
-        // Conditions for stopping the spring animation
-        const isBouncing =
-          config.clamp !== false && config.tension !== 0
-            ? from < to
-              ? position > to && velocity > 0
-              : position < to && velocity < 0
-            : false
-
-        if (isBouncing) {
-          velocity =
-            -velocity * (config.clamp === true ? 0 : (config.clamp as number))
-        }
-
-        const isVelocity = Math.abs(velocity) <= precision
-        const isDisplacement =
-          config.tension !== 0 ? Math.abs(to - position) <= precision : true
-
-        finished =
-          (isBouncing && velocity === 0) || (isVelocity && isDisplacement)
-      }
-
-      // Trails aren't done until their parents conclude
-      if (finished && canFinish) {
-        node.done = true
-      } else {
-        idle = false
       }
 
       invariant(
@@ -264,6 +294,12 @@ export class FrameLoop {
       node.setValue(position)
       node.lastPosition = position
       node.lastVelocity = velocity
+
+      if (finished && canFinish) {
+        node.done = true
+      } else {
+        idle = false
+      }
     })
 
     // Notify observers.

@@ -6,7 +6,8 @@ export class AnimatedValue<T = any> extends Animated {
   done!: boolean
   elapsedTime!: number
   lastPosition!: number
-  lastVelocity!: number | null
+  lastVelocity?: number | null
+  v0?: number | null
 
   constructor(protected _value: T) {
     super()
@@ -35,7 +36,7 @@ export class AnimatedValue<T = any> extends Animated {
       this.elapsedTime = 0
       this.lastPosition = this._value
       if (!isActive) {
-        this.lastVelocity = null
+        this.v0 = this.lastVelocity = null
       }
     }
   }
