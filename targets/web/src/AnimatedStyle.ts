@@ -7,8 +7,11 @@ import {
   isFluidValue,
   toArray,
 } from 'shared'
-import { AnimatedObject, AnimatedValue } from '@react-spring/animated'
-import { SpringValue, SpringObserver } from '@react-spring/core'
+import {
+  AnimatedObject,
+  AnimatedValue,
+  AnimationValue,
+} from '@react-spring/animated'
 
 /** The transform-functions
  * (https://developer.mozilla.org/fr/docs/Web/CSS/transform-function)
@@ -48,7 +51,7 @@ const isValueIdentity = (value: OneOrMore<Value>, id: number): boolean =>
 const getValue = <T>(value: T | FluidValue<T>) =>
   isFluidValue(value) ? value.get() : value
 
-type Inputs = (Value | FluidValue<Value>)[][]
+type Inputs = ReadonlyArray<Value | FluidValue<Value>>[]
 type Transforms = ((value: any) => [string, boolean])[]
 
 /**
@@ -117,40 +120,17 @@ export class AnimatedStyle extends AnimatedObject {
   }
 }
 
-class SpringTransform extends SpringValue<string, 'transform'> {
+class SpringTransform extends AnimationValue<string> {
+  node: AnimatedValue<string>
+
   constructor(readonly inputs: Inputs, readonly transforms: Transforms) {
-    super('transform')
+    super()
     this.node = new AnimatedValue(this._compute())
   }
 
-  /** @internal */
-  onParentChange() {
-    // TODO: only compute once per frame max
-    this.set(this._compute())
-  }
-
-  /** @internal */
-  addChild(observer: SpringObserver<string>) {
-    // Start observing our inputs once we have an observer.
-    if (!this._children.size) {
-      each(this.inputs, input =>
-        each(input, value => isFluidValue(value) && value.addChild(this))
-      )
-    }
-
-    super.addChild(observer)
-  }
-
-  /** @internal */
-  removeChild(observer: SpringObserver<string>) {
-    super.removeChild(observer)
-
-    // Stop observing our inputs once we have no observers.
-    if (!this._children.size) {
-      each(this.inputs, input =>
-        each(input, value => isFluidValue(value) && value.removeChild(this))
-      )
-    }
+  // Required by `AnimationValue` but never used.
+  get idle() {
+    return true
   }
 
   protected _compute() {
@@ -162,5 +142,29 @@ class SpringTransform extends SpringValue<string, 'transform'> {
       identity = identity && id
     })
     return identity ? 'none' : transform
+  }
+
+  /** @internal */
+  protected _attach() {
+    // Start observing our inputs once we have an observer.
+    each(this.inputs, input =>
+      each(input, value => isFluidValue(value) && value.addChild(this))
+    )
+  }
+
+  /** @internal */
+  protected _detach() {
+    // Stop observing our inputs once we have no observers.
+    each(this.inputs, input =>
+      each(input, value => isFluidValue(value) && value.removeChild(this))
+    )
+  }
+
+  /** @internal */
+  onParentChange() {
+    // TODO: only compute once per frame max
+    const value = this._compute()
+    this.node.setValue(value)
+    this._onChange(value, true)
   }
 }

@@ -1,4 +1,8 @@
-import { AnimatedValue } from '@react-spring/animated'
+import {
+  AnimatedValue,
+  AnimationValue,
+  isAnimationValue,
+} from '@react-spring/animated'
 import { createInterpolator, toArray, is, each } from 'shared'
 import {
   InterpolatorArgs,
@@ -8,14 +12,17 @@ import {
   Arrify,
   FluidObserver,
 } from 'shared/types'
-
-import { SpringValue } from './SpringValue'
+import { isEqual } from './helpers'
 
 /**
  * `To` springs are memoized interpolators that react to their dependencies.
  *  The memoized result is updated whenever a dependency changes.
  */
-export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
+export class To<In = any, Out = any> extends AnimationValue<Out>
+  implements FluidObserver {
+  /** @internal */
+  readonly node: AnimatedValue<Out>
+
   /** The function that maps inputs values to output */
   readonly calc: InterpolatorFn<In, Out>
 
@@ -24,16 +31,13 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
     readonly source: OneOrMore<FluidValue>,
     args: InterpolatorArgs<In, Out>
   ) {
-    super('to')
+    super()
     this.calc = createInterpolator(...args)
     this.node = new AnimatedValue(this._compute())
-
-    // Update immediately when a source changes.
-    this.animation = { owner: this, immediate: true } as any
   }
 
-  protected _animate() {
-    throw Error('Cannot animate a "To" spring')
+  get idle() {
+    return this.node.done
   }
 
   protected _compute() {
@@ -43,44 +47,46 @@ export class To<In = any, Out = any> extends SpringValue<Out, 'to'> {
     return this.calc(...inputs)
   }
 
-  /** @internal */
-  addChild(observer: FluidObserver<Out>) {
+  protected _attach() {
     // Start observing our "source" once we have an observer.
-    if (!this._children.size) {
-      let priority = 0
-      each(toArray(this.source), source => {
-        priority = Math.max(priority, (source.priority || 0) + 1)
-        source.addChild(this)
-      })
-      this._setPriority(priority)
-    }
-
-    super.addChild(observer)
+    let priority = 0
+    each(toArray(this.source), source => {
+      priority = Math.max(priority, (source.priority || 0) + 1)
+      source.addChild(this)
+    })
+    this.priority = priority
   }
 
-  removeChild(observer: FluidObserver<Out>) {
-    super.removeChild(observer)
-
+  protected _detach() {
     // Stop observing our "source" once we have no observers.
-    if (!this._children.size) {
-      each(toArray(this.source), source => {
-        source.removeChild(this)
-      })
-    }
+    each(toArray(this.source), source => {
+      source.removeChild(this)
+    })
   }
 
   /** @internal */
-  onParentChange(_value: any, finished: boolean) {
+  onParentChange(_value: any, idle: boolean) {
+    this.node.done =
+      idle &&
+      // We're not idle until every source is idle.
+      (idle = toArray(this.source).every(
+        source => !isAnimationValue(source) || source.idle
+      ))
+
     // TODO: only compute once per frame
-    super.onParentChange(this._compute(), finished)
+    const value = this._compute()
+    if (!isEqual(value, this.get())) {
+      this.node.setValue(value)
+      this._onChange(value, idle)
+    }
   }
 
   /** @internal */
   onParentPriorityChange(_priority: number) {
-    const reducer = (max: number, source: FluidValue | undefined) =>
-      source ? Math.max(max, (source.priority || 0) + 1) : max
-
-    const max = toArray(this.source).reduce(reducer, 0)
-    this._setPriority(max)
+    // Set our priority to 1 + the highest parent.
+    this.priority = toArray(this.source).reduce(
+      (max, source) => Math.max(max, (source.priority || 0) + 1),
+      0
+    )
   }
 }
