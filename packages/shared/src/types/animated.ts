@@ -8,9 +8,9 @@ export interface FluidValue<T = any> {
 
 /** @internal An object that observes a `FluidValue` over time */
 export interface FluidObserver<T = any> {
-  /** A fluid value has changed */
-  onParentChange(value: T, finished: boolean, parent: FluidValue<T>): void
-  /** A fluid value had its priority changed */
+  /** An observed `FluidValue` had its value changed */
+  onParentChange(value: T, idle: boolean, parent: FluidValue<T>): void
+  /** An observed `FluidValue` had its priority changed */
   onParentPriorityChange(priority: number, parent: FluidValue<T>): void
 }
 
