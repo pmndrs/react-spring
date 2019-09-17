@@ -6,7 +6,6 @@ import {
   EasingFunction,
   toArray,
   InterpolatorArgs,
-  FluidObserver,
   isFluidValue,
   FluidValue,
 } from 'shared'
@@ -16,6 +15,7 @@ import {
   AnimatedValue,
   AnimatedString,
   AnimatedArray,
+  OnChange,
 } from '@react-spring/animated'
 import invariant from 'tiny-invariant'
 import * as G from 'shared/globals'
@@ -35,7 +35,7 @@ import {
 } from './runAsync'
 import { SpringConfig, Animatable, RangeProps } from './types/spring'
 import { Indexable, Merge } from './types/common'
-import { callProp, DEFAULT_PROPS, DefaultProps, matchProp } from './helpers'
+import { callProp, DEFAULT_PROPS, DefaultProps, matchProp, isEqual } from './helpers'
 import { config } from './constants'
 import { To } from './To'
 
@@ -47,9 +47,6 @@ export type OnAnimate<T = unknown> = (
 
 /** Called before the animation is added to the frameloop */
 export type OnStart<T = unknown> = (spring: SpringValue<T>) => void
-
-/** Called whenever the animated value is changed */
-export type OnChange<T = unknown> = (value: T, spring: SpringValue<T>) => void
 
 /** Called once the animation comes to a halt */
 export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
@@ -134,22 +131,15 @@ const BASE_CONFIG: SpringConfig = {
   clamp: false,
 }
 
-/** An observer of a `SpringValue` */
-export type SpringObserver<T = any> = OnChange<T> | FluidObserver<T>
-
 /** An opaque animatable value */
-export class SpringValue<T = any, P extends string = string>
-  extends AnimationValue<T>
-  implements FluidObserver<T> {
+export class SpringValue<T = any> extends AnimationValue<T> {
   static phases = { DISPOSED, CREATED, IDLE, PAUSED, ACTIVE }
   /** The animation state */
   animation?: Animation<T>
   /** The queue of pending props */
   queue?: PendingProps<T>[]
   /** @internal The animated node. Do not touch! */
-  node!: AnimatedNode<T>
-  /** @internal Determines order of animations on each frame */
-  priority = 0
+  node!: AnimationValue<T>['node']
   /** The lifecycle phase of this spring */
   protected _phase = CREATED
   /** The state for `runAsync` calls */
@@ -160,11 +150,9 @@ export class SpringValue<T = any, P extends string = string>
   protected _defaultProps: PendingProps<T> = {}
   /** Cancel any update from before this timestamp */
   protected _lastAsyncId = 0
-  /** Objects that want to know when this spring changes */
-  protected _children = new Set<SpringObserver<T>>()
 
-  constructor(readonly key: P) {
-    super()
+  constructor(key: keyof any) {
+    super(key)
     this._state = { key }
   }
 
@@ -175,13 +163,6 @@ export class SpringValue<T = any, P extends string = string>
   /** Check the current phase */
   is(phase: Phase) {
     return this._phase == phase
-  }
-
-  /** Get the current value */
-  get(): T
-  get<P extends keyof Animation>(prop: P): Animation<T>[P] | undefined
-  get(prop?: keyof Animation) {
-    return prop ? this.animation && this.animation[prop] : this.node.getValue()
   }
 
   /** Set the current value, while stopping the current animation */
@@ -380,10 +361,10 @@ export class SpringValue<T = any, P extends string = string>
   }
 
   /** @internal */
-  onParentChange(value: any, finished: boolean) {
+  onParentChange(value: any, idle: boolean) {
     // The "FrameLoop" handles everything other than immediate animation.
     if (this.animation!.immediate) {
-      if (finished) {
+      if (idle) {
         this.finish(value)
       } else {
         this.set(value)
@@ -394,11 +375,6 @@ export class SpringValue<T = any, P extends string = string>
     else if (this.idle) {
       this._start()
     }
-  }
-
-  /** @internal */
-  onParentPriorityChange(priority: number) {
-    this._setPriority(priority + 1)
   }
 
   protected _checkDisposed(name: string) {
@@ -626,27 +602,13 @@ export class SpringValue<T = any, P extends string = string>
     anim.to = value
     if (isFluidValue(value)) {
       value.addChild(this)
-      this._setPriority((value.priority || 0) + 1)
+      this.priority = (value.priority || 0) + 1
     } else {
-      this._setPriority(0)
+      this.priority = 0
     }
   }
 
-  protected _setPriority(priority: number) {
-    if (this.priority == priority) return
-    this.priority = priority
-    if (!this.idle) {
-      // Re-enter the frameloop so our new priority is used.
-      G.frameLoop.stop(this).start(this)
-    }
-    for (const observer of Array.from(this._children)) {
-      if ('onParentPriorityChange' in observer) {
-        observer.onParentPriorityChange(priority, this)
-      }
-    }
-  }
-
-  /** @internal */
+  /** @internal Called by the frameloop */
   public _onChange(value: T, finished = false) {
     const anim = this.animation
     if (anim) {
@@ -662,25 +624,19 @@ export class SpringValue<T = any, P extends string = string>
         anim.onChange(value, this)
       }
     }
+    super._onChange(value, finished)
+  }
 
-    // Clone "_children" so it can be safely mutated by the loop.
-    for (const observer of Array.from(this._children)) {
-      if ('onParentChange' in observer) {
-        observer.onParentChange(value, finished, this)
-      } else if (!finished) {
-        observer(value, this)
-      }
+  protected _onPriorityChange(priority: number) {
+      // Re-enter the frameloop so our new priority is used.
+      G.frameLoop.stop(this).start(this)
     }
+    super._onPriorityChange(priority)
   }
 
   /** Reset our node, and the nodes of every descendant spring */
   protected _reset(goal = computeGoal(this.animation!.to)) {
-    this.node.reset(!this.idle, goal)
-    each(this._children, child => {
-      if (child instanceof SpringValue) {
-        child._reset(goal)
-      }
-    })
+    super._reset(goal)
   }
 
   /** Enter the frameloop */
@@ -755,16 +711,6 @@ export class SpringValue<T = any, P extends string = string>
       return this._getNodeType(value).create(computeGoal(value))
     }
   }
-
-  /** @internal */
-  addChild(child: SpringObserver<T>): void {
-    this._children.add(child)
-  }
-
-  /** @internal */
-  removeChild(child: SpringObserver<T>): void {
-    this._children.delete(child)
-  }
 }
 
 // Merge configs when the existence of "decay" or "duration" has not changed.
@@ -791,16 +737,4 @@ function computeGoal<T>(value: T | FluidValue<T>): T {
         output: [value, value],
       })(1)
     : value
-}
-
-// Compare animatable values
-function isEqual(a: any, b: any) {
-  if (is.arr(a)) {
-    if (!is.arr(b) || a.length !== b.length) return false
-    for (let i = 0; i < a.length; i++) {
-      if (a[i] !== b[i]) return false
-    }
-    return true
-  }
-  return a === b
 }
