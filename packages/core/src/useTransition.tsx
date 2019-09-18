@@ -113,6 +113,12 @@ export function useTransition(
 ): TransitionFn {
   const { key, ref, reset, sort, trail = 0, expires = Infinity } = props
 
+  if ('keys' in props) {
+    console.warn(
+      'Unknown prop "keys" was passed to useTransition. Did you mean "key"?'
+    )
+  }
+
   // Every item has its own transition.
   const items = toArray(data)
   const transitions: TransitionState[] = []
