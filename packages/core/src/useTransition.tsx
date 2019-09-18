@@ -4,40 +4,118 @@ import React, {
   useLayoutEffect,
   useImperativeHandle,
   ReactNode,
+  RefObject,
 } from 'react'
-import { is, toArray, useForceUpdate, useOnce, each, OneOrMore } from 'shared'
+import {
+  is,
+  toArray,
+  useForceUpdate,
+  useOnce,
+  each,
+  OneOrMore,
+  Falsy,
+  Indexable,
+  Merge,
+} from 'shared'
 import { now } from 'shared/globals'
 
 import { DEFAULT_PROPS, callProp, interpolateTo } from './helpers'
-import { SpringHandle, SpringProps } from './types/spring'
-import { Controller } from './Controller'
+import { SpringHandle, AsyncTo, FromProp, SpringValues } from './types/spring'
+import { Controller, ControllerProps } from './Controller'
+import { AnimationProps, AnimationEvents } from './types/animated'
+import { UseSpringProps } from './useSpring'
+import { PickAnimated } from './types/common'
 
 // TODO: convert to "const enum" once Babel supports it
-type Phase = number
+export type Phase = number & { __type: 'TransitionPhase' }
 /** This transition is being mounted */
-const MOUNT = 0
+const MOUNT = 0 as Phase
 /** This transition is entering or has entered */
-const ENTER = 1
+const ENTER = 1 as Phase
 /** This transition had its animations updated */
-const UPDATE = 2
+const UPDATE = 2 as Phase
 /** This transition will expire after animating */
-const LEAVE = 3
+const LEAVE = 3 as Phase
 
-export type UseTransitionProps<T> = { [key: string]: any | T } // TODO
-export type ItemsProp<T> = ReadonlyArray<T> | T | null | undefined
-export type ItemKeys<T> =
-  | ((item: T) => string | number)
-  | ReadonlyArray<string | number>
-  | string
-  | number
-  | null
+type UnknownProps = Indexable<any>
 
-export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
+type PhaseProp<Item> =
+  | Falsy
+  | OneOrMore<UseSpringProps>
+  | ((
+      item: Item,
+      index: number
+    ) => UseSpringProps | AsyncTo<UnknownProps> | Falsy)
+
+type PhaseProps<Item = any, From = {}> = {
+  from?: From &
+    (
+      | FromProp<UnknownProps>
+      | ((item: Item, index: number) => FromProp<UnknownProps>))
+  initial?: From &
+    (
+      | FromProp<UnknownProps>
+      | ((item: Item, index: number) => FromProp<UnknownProps>))
+  enter?: PhaseProp<Item>
+  update?: PhaseProp<Item>
+  leave?: PhaseProp<Item>
+}
+
+type Key = string | number
+
+export type ItemKeys<T> = Key | ReadonlyArray<Key> | ((item: T) => Key) | null
+
+export type UseTransitionProps<Item = any> = Merge<
+  AnimationProps & AnimationEvents,
+  {
+    /**
+     * Used to access the imperative API.
+     *
+     * Animations never auto-start when `ref` is defined.
+     */
+    ref?: RefObject<TransitionHandle>
+    key?: ItemKeys<Item>
+    sort?: (a: Item, b: Item) => number
+    trail?: number
+    expires?: number
+  }
+>
+
+/** The imperative `ref` API */
+export type TransitionHandle = Merge<
+  SpringHandle,
+  {
+    update(props: ControllerProps): TransitionHandle
+  }
+>
+
+/** The function returned by `useTransition` */
+export interface TransitionFn<Item = any, State extends object = any> {
+  (
+    render: (
+      values: SpringValues<State>,
+      item: Item,
+      transition: TransitionState<Item>
+    ) => ReactNode
+  ): ReactNode[]
+}
+
+export function useTransition<Item, From, Props extends object>(
+  data: OneOrMore<Item>,
+  props: Props & PhaseProps<Item, From> & UseTransitionProps<Item>,
+  deps?: any[]
+): TransitionFn<Item, PickAnimated<Props>>
+
+export function useTransition(
+  data: unknown,
+  props: PhaseProps & UseTransitionProps,
+  deps?: any[]
+): TransitionFn {
   const { key, ref, reset, sort, trail = 0, expires = Infinity } = props
 
   // Every item has its own transition.
-  const items = toArray<unknown>(data)
-  const transitions: Transition[] = []
+  const items = toArray(data)
+  const transitions: TransitionState[] = []
 
   // Keys help with reusing transitions between renders.
   // The `key` prop can be undefined (which means the items themselves are used
@@ -50,7 +128,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
     : toArray(key)
 
   // The "onRest" callbacks need a ref to the latest transitions.
-  const usedTransitions = useRef<Transition[] | null>(null)
+  const usedTransitions = useRef<TransitionState[] | null>(null)
   const prevTransitions = usedTransitions.current
   useLayoutEffect(() => {
     usedTransitions.current = transitions
@@ -59,7 +137,9 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
   // Destroy all transitions on dismount.
   useOnce(() => () =>
     each(usedTransitions.current!, t => {
-      if (t.expiresBy) clearTimeout(t.expirationId)
+      if (t.expiresBy != null) {
+        clearTimeout(t.expirationId)
+      }
       t.ctrl.dispose()
     })
   )
@@ -69,7 +149,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
   if (prevTransitions && !reset)
     each(prevTransitions, (t, i) => {
       // Expired transitions are not rendered.
-      if (t.expiresBy) {
+      if (t.expiresBy != null) {
         clearTimeout(t.expirationId)
       } else {
         i = reused[i] = keys.indexOf(t.key)
@@ -113,7 +193,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
   // Expired transitions use this to dismount.
   const forceUpdate = useForceUpdate()
 
-  const defaultProps: any = {}
+  const defaultProps = {} as UnknownProps
   each(DEFAULT_PROPS, prop => {
     if (/function|object/.test(typeof props[prop])) {
       defaultProps[prop] = props[prop]
@@ -121,7 +201,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
   })
 
   // Generate changes to apply in useEffect.
-  const changes = new Map<Transition<T>, Change>()
+  const changes = new Map<TransitionState, Change>()
   each(transitions, (t, i) => {
     let to: any
     let from: any
@@ -151,7 +231,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
     }
 
     // The payload is used to update the spring props once the current render is committed.
-    const payload = {
+    const payload: ControllerProps = {
       ...defaultProps,
       // When "to" is a function, it can return (1) an array of "useSpring" props,
       // (2) an async function, or (3) an object with any "useSpring" props.
@@ -160,7 +240,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
       delay: delay += trail,
       config: callProp(props.config || defaultProps.config, t.item, i),
       ...(is.obj(to) && interpolateTo(to)),
-    } as SpringProps
+    }
 
     const { onRest } = payload
     payload.onRest = result => {
@@ -176,7 +256,9 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
           const transitions = usedTransitions.current!
           if (transitions.every(t => t.ctrl.idle)) {
             forceUpdate()
-          } else if (expires < Infinity) {
+          }
+          // When `expires` is infinite, postpone dismount until next render.
+          else if (expires < Infinity) {
             t.expirationId = setTimeout(forceUpdate, expires)
           }
         }
@@ -196,7 +278,7 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
   })
 
   const api = useMemo(
-    (): SpringHandle => ({
+    (): TransitionHandle => ({
       get controllers() {
         return usedTransitions.current!.map(t => t.ctrl)
       },
@@ -234,9 +316,9 @@ export function useTransition<T>(data: OneOrMore<T>, props: any, deps?: any) {
     reset ? void 0 : deps
   )
 
-  return (render: (props: any, item: T) => ReactNode) =>
+  return render =>
     transitions.map(t => {
-      const elem: any = render({ ...t.ctrl.springs }, t.item)
+      const elem: any = render(t.ctrl.springs, t.item, t)
       return elem && elem.type ? (
         <elem.type
           {...elem.props}
@@ -254,9 +336,9 @@ interface Change {
   payload?: any
 }
 
-interface Transition<T = any> {
+export interface TransitionState<Item = any> {
   key: any
-  item: T
+  item: Item
   ctrl: Controller
   phase: Phase
   /** Destroy no later than this date */
