@@ -1,4 +1,4 @@
-import { ObjectType, UnknownProps, ObjectFromUnion } from 'shared'
+import { ObjectType, UnknownProps, ObjectFromUnion, FluidValue } from 'shared'
 
 export * from 'shared/types/common'
 
@@ -32,6 +32,11 @@ export type PickAnimated<Props extends object, Fwd = true> = unknown &
 export type FrameValues<Props extends object> = UnknownProps &
   PickAnimated<Props, false>
 
+/** Unwrap any `FluidValue` object types */
+export type RawValues<T extends object> = {
+  [P in keyof T]: T[P] extends FluidValue<infer U> ? U : T[P]
+}
+
 /**
  * Pick the values of the `to` prop. Forward props are *not* included.
  */
@@ -59,26 +64,29 @@ export type FromValues<Props extends object> = ForwardProps<
 /**
  * Extract a union of animated values from a set of `useTransition` props.
  */
-export type TransitionValues<Props extends object> = ForwardProps<
-  ObjectFromUnion<
-    ObjectType<
-      Props[TransitionPhase & keyof Props] extends infer T
-        ? T extends ReadonlyArray<infer U>
-          ? U
-          : T extends ((...args: any[]) => infer U)
-          ? U extends ReadonlyArray<infer T>
-            ? T
-            : U
-          : T
-        : never
+export type TransitionValues<Props extends object> = unknown &
+  ForwardProps<
+    ObjectFromUnion<
+      ObjectType<
+        Props[TransitionPhase & keyof Props] extends infer T
+          ? T extends ReadonlyArray<infer Element>
+            ? Element
+            : T extends ((...args: any[]) => infer Return)
+            ? Return extends ReadonlyArray<infer ReturnElement>
+              ? ReturnElement
+              : Return
+            : T
+          : never
+      >
     >
   >
->
 
 /**
  * Extract the custom props that are treated like `to` values
  */
-export type ForwardProps<T extends object> = Omit<T, keyof ReservedProps>
+export type ForwardProps<T extends object> = RawValues<
+  Omit<T, keyof ReservedProps>
+>
 
 /**
  * Property names that are reserved for animation config
