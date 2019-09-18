@@ -1,28 +1,31 @@
 import { useLayoutEffect } from 'react'
-import { is } from 'shared'
+import { is, UnknownProps } from 'shared'
 
-import { useSprings } from './useSprings'
-import { UseSpringProps } from './useSpring'
+import { PickAnimated, Valid } from './types/common'
 import { SpringValues, SpringStopFn, SpringsUpdateFn } from './types/spring'
-import { FrameValues } from './types/common'
+import { UseSpringProps } from './useSpring'
 import { Controller } from './Controller'
+import { useSprings } from './useSprings'
 import { getProps } from './helpers'
 
-export function useTrail<Props extends object, From, To>(
+export function useTrail<Props extends object>(
   length: number,
-  props: Props & UseSpringProps<From, To>,
-  deps?: any[]
-): SpringValues<Props>[]
-
-export function useTrail<Props extends object, From, To>(
-  length: number,
-  props: (i: number, ctrl: Controller) => Props & UseSpringProps<From, To>,
+  props: (
+    i: number,
+    ctrl: Controller
+  ) => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps?: any[]
 ): [
   SpringValues<Props>[],
-  SpringsUpdateFn<FrameValues<Props>>,
-  SpringStopFn<FrameValues<Props>>
+  SpringsUpdateFn<PickAnimated<Props>>,
+  SpringStopFn<UnknownProps>
 ]
+
+export function useTrail<Props extends object>(
+  length: number,
+  props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
+  deps?: any[]
+): SpringValues<Props>[]
 
 export function useTrail(length: number, propsArg: unknown, deps?: any[]) {
   const propsFn = is.fun(propsArg) && propsArg

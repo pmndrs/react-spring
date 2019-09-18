@@ -1,28 +1,34 @@
-import { is, each } from 'shared'
+import { is, each, Merge, AnyKey } from 'shared'
 
 import {
   AsyncTo,
-  SpringUpdate,
   SpringUpdateFn,
   SpringStopFn,
   SpringProps,
+  SpringTo,
 } from './types/spring'
-import { AnimationResult, PendingProps } from './SpringValue'
+import { AnimationResult } from './types/animated'
 import { matchProp, DEFAULT_PROPS } from './helpers'
+import { PendingProps, SpringValue } from './SpringValue'
 
 export type AsyncResult<T = any> = Promise<AnimationResult<T>>
 
-export type RunAsyncProps<T> = PendingProps<T> & {
-  asyncId: number
-  cancel: boolean
-  reset: boolean
-}
+export type RunAsyncProps<T = any> = unknown &
+  Merge<
+    PendingProps<T>,
+    {
+      asyncId: number
+      cancel: boolean
+      reset: boolean
+      onAnimate?: (props: RunAsyncProps<T>, spring: SpringValue<T>) => void
+    }
+  >
 
-export interface RunAsyncState<T, P extends string = string> {
+export interface RunAsyncState<T> {
   /** The spring name */
-  key?: P | undefined
+  key?: keyof any
   /** The async function or array of spring props */
-  asyncTo?: AsyncTo<T, P>
+  asyncTo?: AsyncTo<T>
   /** Resolves when the current `asyncTo` finishes or gets cancelled. */
   promise?: AsyncResult<T>
   /** Call this to unpause the current `asyncTo` function or array. */
@@ -31,19 +37,27 @@ export interface RunAsyncState<T, P extends string = string> {
   cancelId?: number
 }
 
+/** Default props for a `SpringValue` object */
+export type DefaultProps = {
+  [D in (typeof DEFAULT_PROPS)[number]]?: RunAsyncProps[D]
+}
+
 /**
  * Start an async chain or an async script.
  *
  * You should always wrap `runAsync` calls with `scheduleProps` so that
  * you have access to `RunAsyncProps` instead of the usual `SpringProps`.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
  */
-export async function runAsync<T, P extends string = string>(
-  to: AsyncTo<T, P>,
+export async function runAsync<T>(
+  to: AsyncTo<T>,
   props: RunAsyncProps<T>,
-  state: RunAsyncState<T, P>,
+  state: RunAsyncState<T>,
   getValue: () => T,
   getPaused: () => boolean,
-  update: SpringUpdateFn<T, P>,
+  update: SpringUpdateFn<any>,
   stop: SpringStopFn<T>
 ): AsyncResult<T> {
   if (props.cancel) {
@@ -78,28 +92,37 @@ export async function runAsync<T, P extends string = string>(
       }
     }
 
-    const defaultProps: any = {}
+    const defaultProps: DefaultProps = {}
     each(DEFAULT_PROPS, prop => {
       if (prop == 'onRest') return
       if (/function|object/.test(typeof props[prop])) {
-        defaultProps[prop] = props[prop]
+        defaultProps[prop] = props[prop] as any
       }
     })
 
-    // TODO: remove "& any" when negated types are released
-    const animate = (props: SpringUpdate<T, P> & any) =>
+    const animate = (
+      arg1: SpringTo<T> | SpringProps<T>,
+      arg2?: SpringProps<T>
+    ) =>
       handleInterrupts().then(async () => {
-        props = is.obj(props) ? { ...props } : { to: props }
+        type AnimateProps = SpringProps<T> & typeof defaultProps
+        const props: AnimateProps = is.obj(arg1)
+          ? { ...arg1 }
+          : { ...arg2, to: arg1 as any }
+
         each(defaultProps, (value, prop) => {
           if (is.und(props[prop])) {
-            props[prop] = value
+            props[prop] = value as any
           }
         })
+
         const parentTo = state.asyncTo
         const result = await update(props)
+
         if (state.asyncTo == null) {
           state.asyncTo = parentTo
         }
+
         await handleInterrupts()
         return result
       })
@@ -145,15 +168,19 @@ export async function runAsync<T, P extends string = string>(
 // scheduleProps(props, state, action)
 //
 
-export function scheduleProps<T, U>(
+/**
+ * Pass props to your action when any delay is finished and the
+ * props weren't cancelled before then.
+ */
+export function scheduleProps<Props extends SpringProps, Result>(
   asyncId: number,
-  props: SpringProps<T>,
-  state: { key?: string; cancelId?: number },
+  props: Props,
+  state: { key?: AnyKey; cancelId?: number },
   action: (
-    props: RunAsyncProps<T>,
-    resolve: (result: U | Promise<U>) => void
+    props: Props & RunAsyncProps,
+    resolve: (result: Result | Promise<Result>) => void
   ) => void
-): Promise<U> {
+): Promise<Result> {
   return new Promise((resolve, reject) => {
     let { delay, cancel, reset } = props
 

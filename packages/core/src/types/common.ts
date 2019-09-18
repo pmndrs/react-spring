@@ -1,9 +1,11 @@
-import { ObjectType, UnknownProps, ObjectFromUnion, Falsy } from 'shared'
+import { ObjectType, UnknownProps, ObjectFromUnion } from 'shared'
 
 export * from 'shared/types/common'
 
-export type Tween<From, To> = (From extends Falsy ? {} : ObjectType<From>) &
-  (To extends Falsy | Function | ReadonlyArray<any> ? {} : ObjectType<To>)
+/** Map the `T` object type and replace any properties that cannot be assigned to `U` with `never` */
+export type Valid<T extends object, U extends object> = {
+  [P in keyof T & keyof U]: T[P] extends U[P] ? U[P] : never
+}
 
 /** The phases of a `useTransition` item */
 export type TransitionPhase = 'initial' | 'enter' | 'update' | 'leave'
@@ -15,17 +17,13 @@ export type TransitionPhase = 'initial' | 'enter' | 'update' | 'leave'
  *
  * ...as well as any forward props.
  */
-export type PickAnimated<
-  Props extends object,
-  AndForward = true
-> = ObjectFromUnion<
-  | FromValues<Props>
-  | (TransitionPhase & keyof Props extends never
-      ?
-          | ToValues<Props>
-          | (AndForward extends true ? ForwardProps<Props> : never)
-      : TransitionValues<Props>)
->
+export type PickAnimated<Props extends object, Fwd = true> = unknown &
+  ObjectFromUnion<
+    | FromValues<Props>
+    | (TransitionPhase & keyof Props extends never
+        ? ToValues<Props, Fwd>
+        : TransitionValues<Props>)
+  >
 
 /**
  * Pick the values that appear in the `onFrame` prop.
@@ -37,13 +35,19 @@ export type FrameValues<Props extends object> = UnknownProps &
 /**
  * Pick the values of the `to` prop. Forward props are *not* included.
  */
-export type ToValues<Props extends object> = Props extends { to?: infer To }
-  ? ForwardProps<
-      To extends ReadonlyArray<infer T> | ((...args: any[]) => infer T)
-        ? ObjectType<T>
-        : ObjectType<To>
-    >
-  : never
+export type ToValues<Props extends object, AndForward = true> = unknown &
+  (AndForward extends true ? ForwardProps<Props> : unknown) &
+  (Props extends { to?: infer To }
+    ? To extends Function
+      ? unknown
+      : To extends ReadonlyArray<infer T>
+      ? T extends object
+        ? {
+            [P in keyof Props]: PickAnimated<T, AndForward>
+          }[keyof Props]
+        : unknown
+      : ForwardProps<ObjectType<To>>
+    : unknown)
 
 /**
  * Pick the values of the `from` prop.
@@ -55,8 +59,20 @@ export type FromValues<Props extends object> = ForwardProps<
 /**
  * Extract a union of animated values from a set of `useTransition` props.
  */
-type TransitionValues<Props extends object> = ForwardProps<
-  ObjectFromUnion<ObjectType<Props[TransitionPhase & keyof Props]>>
+export type TransitionValues<Props extends object> = ForwardProps<
+  ObjectFromUnion<
+    ObjectType<
+      Props[TransitionPhase & keyof Props] extends infer T
+        ? T extends ReadonlyArray<infer U>
+          ? U
+          : T extends ((...args: any[]) => infer U)
+          ? U extends ReadonlyArray<infer T>
+            ? T
+            : U
+          : T
+        : never
+    >
+  >
 >
 
 /**

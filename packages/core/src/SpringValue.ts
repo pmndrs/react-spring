@@ -3,7 +3,6 @@ import {
   is,
   each,
   needsInterpolation,
-  EasingFunction,
   toArray,
   InterpolatorArgs,
   isFluidValue,
@@ -20,11 +19,16 @@ import {
 import invariant from 'tiny-invariant'
 import * as G from 'shared/globals'
 
+import { Indexable } from './types/common'
+import { SpringConfig, Animatable, SpringProps, AsyncTo } from './types/spring'
 import {
-  AnimatedNode,
   AnimatedType,
+  Animation,
   AnimationRange,
-  AnimationProps,
+  AnimationResult,
+  OnRest,
+  AnimationConfig,
+  AnimationEvents,
 } from './types/animated'
 import {
   runAsync,
@@ -33,79 +37,19 @@ import {
   RunAsyncState,
   RunAsyncProps,
 } from './runAsync'
-import { SpringConfig, Animatable, RangeProps } from './types/spring'
-import { Indexable, Merge } from './types/common'
-import { callProp, DEFAULT_PROPS, DefaultProps, matchProp, isEqual } from './helpers'
+import { callProp, DEFAULT_PROPS, matchProp, isEqual } from './helpers'
 import { config } from './constants'
 import { To } from './To'
 
-/** Called before the given props are applied */
-export type OnAnimate<T = unknown> = (
-  props: PendingProps<T>,
-  spring: SpringValue<T>
-) => void
-
-/** Called before the animation is added to the frameloop */
-export type OnStart<T = unknown> = (spring: SpringValue<T>) => void
-
-/** Called once the animation comes to a halt */
-export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
-
-/** The object passed to `onRest` props */
-export type AnimationResult<T = any> = Readonly<{
-  value: T
-  spring?: SpringValue<T>
-  /** When falsy, the animation did not reach its end value. */
-  finished?: boolean
-  /** When true, the animation was cancelled before it could finish. */
-  cancelled?: boolean
-}>
-
-export interface AnimationConfig {
-  w0: number
-  mass: number
-  tension: number
-  speed?: number
-  friction: number
-  velocity: number | number[]
-  restVelocity?: number
-  precision?: number
-  easing: EasingFunction
-  progress: number
-  duration?: number
-  clamp?: boolean | number
-  decay?: boolean | number
+/** Default props for a `SpringValue` object */
+export type DefaultProps<T = unknown> = {
+  [D in (typeof DEFAULT_PROPS)[number]]?: PendingProps<T>[D]
 }
 
-/** An animation being executed by the frameloop */
-export interface Animation<T = unknown> {
-  changed: boolean
-  values: readonly AnimatedValue[]
-  to: T | FluidValue<T>
-  toValues: readonly number[] | null
-  from: T | FluidValue<T>
-  fromValues: readonly number[]
-  config: AnimationConfig
-  reverse?: boolean
-  immediate: boolean
-  onStart?: OnStart<T>
-  onChange?: OnChange<T>
-  onRest?: Array<OnRest<T>>
-  owner: SpringValue<T>
-}
-
-/** Pending props for a single `SpringValue` object */
-export type PendingProps<T = unknown> = Merge<
-  AnimationProps<T>,
-  {
-    to?: RangeProps<T>['to']
-    from?: RangeProps<T>['from']
-    onRest?: OnRest<T> | null
-    onStart?: OnStart<T>
-    onChange?: OnChange<T>
-    onAnimate?: OnAnimate<T>
-  }
->
+/** Pending props for a `SpringValue` object */
+export type PendingProps<T = unknown> = unknown &
+  SpringProps<T> &
+  AnimationEvents<T>
 
 // TODO: use "const enum" when Babel supports it
 type Phase = number & { __type: 'Phase' }
@@ -135,7 +79,7 @@ const BASE_CONFIG: SpringConfig = {
 export class SpringValue<T = any> extends AnimationValue<T> {
   static phases = { DISPOSED, CREATED, IDLE, PAUSED, ACTIVE }
   /** The animation state */
-  animation?: Animation<T>
+  animation: Animation<T> = { owner: this } as any
   /** The queue of pending props */
   queue?: PendingProps<T>[]
   /** @internal The animated node. Do not touch! */
@@ -143,15 +87,15 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** The lifecycle phase of this spring */
   protected _phase = CREATED
   /** The state for `runAsync` calls */
-  protected _state: RunAsyncState<T, P>
+  protected _state: RunAsyncState<T>
   /** The last time each prop changed */
   protected _timestamps?: Indexable<number>
   /** Some props have customizable default values */
-  protected _defaultProps: PendingProps<T> = {}
+  protected _defaultProps = {} as PendingProps<T>
   /** Cancel any update from before this timestamp */
   protected _lastAsyncId = 0
 
-  constructor(key: keyof any) {
+  constructor(key?: keyof any) {
     super(key)
     this._state = { key }
   }
@@ -196,12 +140,11 @@ export class SpringValue<T = any> extends AnimationValue<T> {
    */
   finish(to?: T | FluidValue<T>) {
     if (!this.idle) {
-      const anim = this.animation!
       const value = this.get()
-
-      // Decay animations finish when their velocity hits zero,
-      // so their goal value is implicit.
+      const anim = this.animation
       if (is.und(to) && anim.config.decay) {
+        // Decay animations finish when their velocity hits zero,
+        // so their goal value is implicit.
         to = value
       } else {
         if (is.und(to)) to = anim.to
@@ -237,7 +180,9 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** Update this value's animation using the given props. */
   animate(to: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
     this._checkDisposed('animate')
-    const props: any = is.obj(to) ? to : { ...arg2, to }
+
+    // The first argument is never cloned.
+    const props: PendingProps<T> = is.obj(to) ? (to as any) : { ...arg2, to }
 
     // Ensure the initial value can be accessed by animated components.
     const range = this.getRange(props)
@@ -246,7 +191,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
 
     const timestamp = G.now()
-    return scheduleProps<T, AnimationResult<T>>(
+    return scheduleProps(
       ++this._lastAsyncId,
       props,
       this._state,
@@ -254,8 +199,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
         const { to } = props
         if (is.arr(to) || is.fun(to)) {
           resolve(
-            runAsync(
-              to as any,
+            runAsync<T>(
+              to as AsyncTo<T>,
               props,
               this._state,
               () => this.get(),
@@ -363,7 +308,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** @internal */
   onParentChange(value: any, idle: boolean) {
     // The "FrameLoop" handles everything other than immediate animation.
-    if (this.animation!.immediate) {
+    if (this.animation.immediate) {
       if (idle) {
         this.finish(value)
       } else {
@@ -411,17 +356,16 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     const defaultProps = this._defaultProps
 
     /** Get the value of a prop, or its default value */
-    const get = <K extends DefaultProps>(prop: K): PendingProps<T>[K] =>
+    const get = <K extends keyof DefaultProps>(prop: K) =>
       !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
     const onAnimate = get('onAnimate')
     if (onAnimate) {
-      onAnimate(props, this)
+      onAnimate(props as any, this)
     }
 
     // Cast from a partial type.
-    const anim: Partial<Animation<T>> = this.animation || { owner: this }
-    this.animation = anim as Animation<T>
+    const anim: Partial<Animation<T>> = this.animation
 
     /** Where per-prop timestamps are kept */
     const timestamps = this._timestamps || (this._timestamps = {})
@@ -471,9 +415,10 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     // The "config" prop either overwrites or merges into the existing config.
     let config = props.config as AnimationConfig
     if (config || started || !anim.config) {
+      const key = this.key || ''
       config = {
-        ...callProp(defaultProps.config, this.key),
-        ...callProp(config, this.key),
+        ...callProp(defaultProps.config, key),
+        ...callProp(config, key),
       }
 
       if (!started && canMergeConfigs(config, anim.config)) {
@@ -594,7 +539,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
   /** Update the `animation.to` value, which might be a `FluidValue` */
   protected _to(value: T | FluidValue<T>) {
-    const anim = this.animation!
+    const anim = this.animation
     if (isFluidValue(anim.to)) {
       if (value == anim.to) return
       anim.to.removeChild(this)
@@ -628,6 +573,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   }
 
   protected _onPriorityChange(priority: number) {
+    if (!this.idle) {
       // Re-enter the frameloop so our new priority is used.
       G.frameLoop.stop(this).start(this)
     }
@@ -635,17 +581,17 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   }
 
   /** Reset our node, and the nodes of every descendant spring */
-  protected _reset(goal = computeGoal(this.animation!.to)) {
+  protected _reset(goal = computeGoal(this.animation.to)) {
     super._reset(goal)
   }
 
   /** Enter the frameloop */
   protected _start() {
-    const anim = this.animation!
-    if (anim && this.idle) {
+    if (this.idle) {
       this._phase = ACTIVE
 
       // Animations without "onRest" cannot enter the frameloop.
+      const anim = this.animation
       if (anim.onRest) {
         anim.changed = false
 
@@ -671,7 +617,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     if (!this.idle) {
       this._phase = IDLE
 
-      const anim = this.animation!
+      const anim = this.animation
       const onRestQueue = anim.onRest
 
       // Animations without "onRest" never enter the frameloop.
@@ -696,12 +642,13 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   }
 
   /** @internal Pluck the `to` and `from` props */
-  getRange(props: PendingProps<T>) {
-    const { to, from } = props
+  getRange(props: PendingProps<T>): AnimationRange<T> {
+    const { to, from } = props as any
+    const key = this.key || ''
     return {
-      to: !is.obj(to) || isFluidValue(to) ? to : to[this.key],
-      from: !is.obj(from) || isFluidValue(from) ? from : from[this.key],
-    } as AnimationRange<T>
+      to: !is.obj(to) || isFluidValue(to) ? to : to[key],
+      from: !is.obj(from) || isFluidValue(from) ? from : from[key],
+    }
   }
 
   /** @internal Create an `Animated` node from a set of `to` and `from` props */

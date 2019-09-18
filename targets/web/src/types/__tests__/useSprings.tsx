@@ -14,7 +14,7 @@ test('pass an array', () => {
     })
   );
   assert(springs, _ as Array<{
-    [key: string]: SpringValue<any>;
+    [key: string]: SpringValue<any> | undefined;
     opacity: SpringValue<number>;
   }>);
 });
@@ -24,8 +24,9 @@ test('pass a function', () => {
     assert(i, _ as number);
     return { opacity: i };
   });
+  type State = { opacity: number };
   assert(springs, _ as Array<{
-    [key: string]: SpringValue<any>;
+    [key: string]: SpringValue<any> | undefined;
     opacity: SpringValue<number>;
   }>);
   set({ opacity: 1 });
@@ -33,8 +34,6 @@ test('pass a function', () => {
   set((_index: number, _spring: Controller<{ opacity: number }>) => {
     return _ as SpringUpdate<{ opacity?: number }>;
   });
-  assert(set, _ as SpringsUpdateFn<{
-    opacity: number;
-  }>);
-  assert(stop, _ as SpringStopFn);
+  assert(set, _ as SpringsUpdateFn<State>);
+  assert(stop, _ as SpringStopFn<State>);
 });

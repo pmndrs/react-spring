@@ -1,6 +1,12 @@
 import React from 'react';
 import { assert, test, _ } from 'spec.ts';
-import { animated, Spring, SpringValue } from '../..';
+import { animated, Spring } from '../..';
+import {
+  AnimationResult,
+  SpringValues,
+  SpringUpdateFn,
+} from '@react-spring/core';
+import { Indexable } from '@react-spring/shared';
 
 const View = animated('div');
 
@@ -8,18 +14,16 @@ test('basic usage', () => {
   <Spring
     from={{ opacity: 0 }}
     to={{ opacity: 1, color: 'blue' }}
-    onRest={values => {
-      assert(values, _ as Readonly<{
-        [key: string]: unknown;
-        // FIXME: should include "opacity" and "color"
-      }>);
+    onRest={result => {
+      assert(result, _ as AnimationResult<unknown>);
     }}>
-    {props => {
-      assert(props, _ as {
-        [key: string]: SpringValue<any>;
-        // FIXME: should include "opacity" and "color"
-      });
-      return <View style={props} />;
+    {values => {
+      assert(values, _ as SpringValues<{
+        // FIXME: should include these
+        // opacity: number;
+        // color?: string;
+      }>);
+      return <View style={values} />;
     }}
   </Spring>;
 });
@@ -27,11 +31,15 @@ test('basic usage', () => {
 test('async "to" prop', () => {
   <Spring
     from={{ opacity: 0 }}
-    to={async update => {
-      // ...
+    to={async next => {
+      assert(next, _ as SpringUpdateFn<Indexable>); // FIXME: should include "opacity"
     }}>
-    {props => {
-      // ...
+    {values => {
+      assert(values, _ as SpringValues<{
+        // FIXME: should include this
+        // opacity: number;
+      }>);
+      return <View style={values} />;
     }}
   </Spring>;
 });
