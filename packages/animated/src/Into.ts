@@ -1,9 +1,4 @@
-import {
-  AnimatedValue,
-  AnimationValue,
-  isAnimationValue,
-} from '@react-spring/animated'
-import { createInterpolator, toArray, is, each } from 'shared'
+import { createInterpolator, toArray, is, isEqual, each } from 'shared'
 import {
   InterpolatorArgs,
   OneOrMore,
@@ -12,13 +7,15 @@ import {
   Arrify,
   FluidObserver,
 } from 'shared/types'
-import { isEqual } from './helpers'
+
+import { AnimatedValue } from './AnimatedValue'
+import { AnimationValue, isAnimationValue } from './AnimationValue'
 
 /**
- * `To` springs are memoized interpolators that react to their dependencies.
+ * `Into` springs are memoized interpolators that react to their dependencies.
  *  The memoized result is updated whenever a dependency changes.
  */
-export class To<In = any, Out = any> extends AnimationValue<Out>
+export class Into<In = any, Out = any> extends AnimationValue<Out>
   implements FluidObserver {
   /** @internal */
   readonly node: AnimatedValue<Out>
