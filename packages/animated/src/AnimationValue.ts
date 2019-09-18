@@ -1,3 +1,4 @@
+import { deprecateInterpolate } from 'shared/deprecations'
 import {
   FluidValue,
   FluidObserver,
@@ -5,9 +6,13 @@ import {
   defineHidden,
   is,
   each,
+  InterpolatorArgs,
 } from 'shared'
+import * as G from 'shared/globals'
+
 import { AnimatedValue } from './AnimatedValue'
 import { AnimatedArray } from './AnimatedArray'
+import { Into } from './Into'
 
 export const isAnimationValue = (value: any): value is AnimationValue =>
   (value && value[FluidType]) == 2
@@ -58,6 +63,17 @@ export abstract class AnimationValue<T = any>
   /** Get the current value */
   get() {
     return this.node.getValue()
+  }
+
+  /** Create a spring that maps our value to another value */
+  to<Out>(...args: InterpolatorArgs<T, Out>) {
+    return G.to(this, args) as Into<T, Out>
+  }
+
+  /** @deprecated Use the `to` method instead. */
+  interpolate<Out>(...args: InterpolatorArgs<T, Out>) {
+    deprecateInterpolate()
+    return G.to(this, args) as Into<T, Out>
   }
 
   /** @internal */

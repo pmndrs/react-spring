@@ -1,10 +1,9 @@
-import { deprecateInterpolate } from 'shared/deprecations'
 import {
   is,
   each,
-  needsInterpolation,
+  isEqual,
   toArray,
-  InterpolatorArgs,
+  needsInterpolation,
   isFluidValue,
   FluidValue,
 } from 'shared'
@@ -37,9 +36,8 @@ import {
   RunAsyncState,
   RunAsyncProps,
 } from './runAsync'
-import { callProp, DEFAULT_PROPS, matchProp, isEqual } from './helpers'
+import { callProp, DEFAULT_PROPS, matchProp } from './helpers'
 import { config } from './constants'
-import { To } from './To'
 
 /** Default props for a `SpringValue` object */
 export type DefaultProps<T = unknown> = {
@@ -158,19 +156,6 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       this._stop(true)
     }
     return this
-  }
-
-  /** Create a spring that maps our value to another value */
-  to<Out>(...args: InterpolatorArgs<T, Out>) {
-    this._checkDisposed('to')
-    return G.to(this, args) as To<T, Out>
-  }
-
-  /** @deprecated Use the `to` method instead. */
-  interpolate<Out>(...args: InterpolatorArgs<T, Out>) {
-    deprecateInterpolate()
-    this._checkDisposed('interpolate')
-    return G.to(this, args) as To<T, Out>
   }
 
   animate(props: PendingProps<T>): AsyncResult<T>

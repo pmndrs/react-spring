@@ -1,12 +1,11 @@
 import { assert, _ } from 'spec.ts'
 import { SpringValue } from './SpringValue'
-import { to } from './interpolate'
-import { To } from './To'
+import { to, Into } from './interpolate'
 
 jest.mock('./interpolate')
 
 function spring<T>(value: T): SpringValue<T> {
-  return new SpringValue('').update({ from: { value } }) as any
+  return new SpringValue().update({ from: { value } })
 }
 
 describe('AnimatedValue interpolation options', () => {
@@ -52,7 +51,7 @@ describe('AnimatedValue interpolation options', () => {
       [0, 2, 4, 6, 8],
       [10, 20, 30, 40, 50]
     )
-    assert(value, _ as To<number>)
+    assert(value, _ as Into<number>)
     expect(value.get()).toBe(20)
   })
 
@@ -62,7 +61,7 @@ describe('AnimatedValue interpolation options', () => {
       assert(b, _ as string)
       return `t(${a}, ${b})`
     })
-    assert(value, _ as To<string>)
+    assert(value, _ as Into<string>)
     expect(value.get()).toBe('t(5, text)')
   })
 
