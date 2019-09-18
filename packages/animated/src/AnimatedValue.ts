@@ -37,9 +37,8 @@ export class AnimatedValue<T = any> extends Animated {
     if (is.num(this._value)) {
       this.elapsedTime = 0
       this.lastPosition = this._value
-      if (!isActive) {
-        this.v0 = this.lastVelocity = null
-      }
+      if (!isActive) this.lastVelocity = null
+      this.v0 = null
     }
   }
 }
