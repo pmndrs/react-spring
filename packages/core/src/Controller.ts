@@ -241,7 +241,9 @@ export class Controller<State extends Indexable = UnknownProps> {
 /** Determine which keys should receive an update */
 function extractKeys(props: ControllerProps, springs: Indexable<SpringValue>) {
   const keys = new Set<AnyKey>()
-  const extract = (obj: Indexable) =>
+
+  /** Collect keys with a defined value */
+  const getDefinedKeys = (obj: Indexable) =>
     each(obj, (value, key) => {
       if (!is.und(value)) {
         keys.add(key)
@@ -249,8 +251,8 @@ function extractKeys(props: ControllerProps, springs: Indexable<SpringValue>) {
     })
 
   const { from, to } = props
-  if (is.obj(to)) extract(to)
-  if (from) extract(from)
+  if (is.obj(to)) getDefinedKeys(to)
+  if (from) getDefinedKeys(from)
 
   // When neither "from" or "to" have a key with a defined value,
   // return the keys for every existing spring.
