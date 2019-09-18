@@ -1,52 +1,53 @@
 import React from 'react';
 import { assert, test, _ } from 'spec.ts';
-import {
-  animated,
-  useTransition,
-  ItemTransition,
-  SpringValue,
-  SpringUpdateFn,
-} from '../..';
+import { SpringValues } from '@react-spring/core';
+import { animated, useTransition, SpringUpdateFn } from '../..';
 
 const View = animated('div');
 
 const items = [1, 2] as [1, 2];
 
 test('infer animated from these props', () => {
-  const [transition] = useTransition(items, null, {
+  const transition = useTransition(items, {
     from: { a: 1 },
     enter: { b: 1 },
     leave: { c: 1 },
     update: { d: 1 },
     initial: { e: 1 },
   });
-  assert(transition.props, _ as {
-    [key: string]: SpringValue<any>;
-    a: SpringValue<number>;
-    b: SpringValue<number>;
-    c: SpringValue<number>;
-    d: SpringValue<number>;
-    e: SpringValue<number>;
+  transition((style, item) => {
+    assert(style, _ as SpringValues<{
+      a: number;
+      b: number;
+      c: number;
+      d: number;
+      e: number;
+    }>);
+    assert(item, _ as 1 | 2);
+    return null;
   });
 });
 
 test('basic usage', () => {
-  const transitions = useTransition(items, null, {
+  const transition = useTransition(items, {
     from: { opacity: 0 },
     enter: [{ opacity: 1 }, { color: 'red' }],
     leave: { opacity: 0 },
   });
 
   // You typically map transition objects into JSX elements.
-  return transitions.map(transition => {
-    type T = ItemTransition<1 | 2, { opacity: number; color: string }>;
-    assert(transition, _ as T);
-    return <View style={transition.props}>{transition.item}</View>;
+  return transition((style, item) => {
+    assert(style, _ as SpringValues<{
+      opacity?: number; // FIXME: "opacity" should never be undefined because it exists in "from"
+      color?: string;
+    }>);
+    assert(item, _ as 1 | 2);
+    return <View style={style}>{item}</View>;
   });
 });
 
 test('with function props', () => {
-  const transitions = useTransition(items, null, {
+  const transition = useTransition(items, {
     from: item => {
       assert(item, _ as 1 | 2);
       return { width: 0, height: 0 };
@@ -57,15 +58,18 @@ test('with function props', () => {
     },
     leave: { width: '0%', opacity: 0 },
   });
-  assert(transitions[0].props, _ as {
-    [key: string]: SpringValue<any>;
-    width: SpringValue<string | number>;
-    height: SpringValue<string | number>;
-    opacity: SpringValue<number>;
+  transition((style, item) => {
+    assert(style, _ as SpringValues<{
+      width: string | number;
+      height: string;
+      opacity: number;
+    }>);
+    assert(item, _ as 1 | 2);
+    return null;
   });
 
   test('return an async function', () => {
-    useTransition(items, null, {
+    useTransition(items, {
       update: item => async next => {
         assert(item, _ as 1 | 2);
         assert(next, _ as SpringUpdateFn); // FIXME: should be "SpringUpdateFn<{ opacity: number, ... }>"

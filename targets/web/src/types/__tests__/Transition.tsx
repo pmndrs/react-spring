@@ -1,7 +1,7 @@
 import React from 'react';
 import { assert, test, _ } from 'spec.ts';
-import { Transition, animated, SpringValue, TransitionPhase } from '../..';
-import { SpringValues } from '@react-spring/core';
+import { SpringValues, Transition, TransitionPhase } from '@react-spring/core';
+import { animated } from '../..';
 
 const View = animated('div');
 
