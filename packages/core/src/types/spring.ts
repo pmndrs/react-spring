@@ -7,29 +7,31 @@ import {
   UnknownPartial,
   UnknownProps,
   FluidValue,
+  Remap,
 } from 'shared'
-import { AnimationResult, SpringValue } from '../SpringValue'
-import { AnimationProps } from './animated'
+import { Controller, ControllerProps } from '../Controller'
+import { SpringValue } from '../SpringValue'
+import { AsyncResult } from '../runAsync'
+import { AnimationProps, AnimationEvents } from './animated'
 import { PickAnimated } from './common'
-import { Controller } from '../Controller'
 
 export { Animatable }
 
 /**
  * The set of `SpringValue` objects returned by a `useSpring` call (or similar).
  */
-export type SpringValues<Props extends object> = Indexable<
-  SpringValue | undefined
-> &
-  (PickAnimated<Props> extends infer T
-    ? {} extends Required<T>
-      ? unknown
-      : {
-          [P in keyof T & string]:
-            | SpringValue<Exclude<T[P], void>, P>
-            | Extract<T[P], void>
-        }
-    : never)
+export type SpringValues<Props extends object = Indexable> = Remap<
+  Indexable<SpringValue | undefined> &
+    (PickAnimated<Props> extends infer T
+      ? {} extends Required<T>
+        ? unknown
+        : {
+            [P in keyof T & string]:
+              | SpringValue<Exclude<T[P], void>>
+              | Extract<T[P], void>
+          }
+      : never)
+>
 
 /**
  * The `to` prop in async form.
@@ -39,7 +41,7 @@ export type SpringValues<Props extends object> = Indexable<
  */
 export type AsyncTo<T, P extends string = string> =
   // HACK: Wrap a generic mapped type around "SpringUpdate" to allow circular types.
-  ReadonlyArray<{ [U in P]: SpringUpdate<T, P> }[P]> | SpringAsyncFn<T, P>
+  ReadonlyArray<{ [U in P]: SpringUpdate<T, P> }[P]> | SpringAsyncFn<T>
 
 /**
  * A value or set of values that can be animated from/to.
@@ -47,12 +49,10 @@ export type AsyncTo<T, P extends string = string> =
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type GoalValue<T, P extends string = string> = Animatable<
-  T
-> extends infer Value
-  ? [Value] extends [never]
-    ? UnknownPartial<T>
-    : Value | FluidValue<Value> | { [K in P]: Value | FluidValue<Value> }
+export type GoalValue<T> = T extends Animatable
+  ? T | FluidValue<T> | UnknownProps
+  : T extends object
+  ? UnknownPartial<FluidProps<T>>
   : never
 
 /**
@@ -61,10 +61,7 @@ export type GoalValue<T, P extends string = string> = Animatable<
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type ToProp<T, P extends string = string> =
-  | GoalValue<T, P>
-  | AsyncTo<T, P>
-  | Falsy
+export type ToProp<T> = GoalValue<T> | AsyncTo<T> | Falsy
 
 /**
  * The `from` prop's possible types.
@@ -72,7 +69,7 @@ export type ToProp<T, P extends string = string> =
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type FromProp<T, P extends string = string> = GoalValue<T, P> | Falsy
+export type FromProp<T> = GoalValue<T> | Falsy
 
 /**
  * The `from` and `to` props.
@@ -80,13 +77,13 @@ export type FromProp<T, P extends string = string> = GoalValue<T, P> | Falsy
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export interface RangeProps<T = unknown, P extends string = string> {
+export interface RangeProps<T = any> {
   /**
    * The start values of the first animations.
    *
    * The `reset` prop also uses these values.
    */
-  from?: FromProp<T, P>
+  from?: FromProp<T>
   /**
    * The end values of the next animations.
    *
@@ -105,7 +102,7 @@ export interface RangeProps<T = unknown, P extends string = string> {
    *       await update({ width: 0, delay: 100 })
    *     }
    */
-  to?: ToProp<T, P>
+  to?: ToProp<T>
 }
 
 /**
@@ -114,12 +111,12 @@ export interface RangeProps<T = unknown, P extends string = string> {
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringProps<
-  T = unknown,
-  P extends string = string
-> = AnimationProps<T> &
-  RangeProps<T, P> &
-  ([T] extends [Animatable] ? unknown : UnknownPartial<T>)
+export type SpringProps<T = any> = AnimationProps & RangeProps<T>
+
+/** Add the `FluidValue` type to every property */
+export type FluidProps<T> = T extends object
+  ? { [P in keyof T]: T[P] | FluidValue<T[P]> }
+  : unknown
 
 /**
  * An update to the props of a spring.
@@ -127,9 +124,12 @@ export type SpringProps<
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringUpdate<T, P extends string = string> =
-  | SpringProps<T, P>
-  | ([T] extends [Animatable] ? T | FluidValue<T> | AsyncTo<T, P> : never)
+export type SpringUpdate<T = any, P extends string = string> =
+  | SpringProps<T> & AnimationEvents
+  | SpringTo<T, P>
+
+export type SpringTo<T = any, P extends string = string> = unknown &
+  ([T] extends [Animatable] ? T | FluidValue<T> | AsyncTo<T, P> : never)
 
 /**
  * Update the props of a spring.
@@ -137,18 +137,17 @@ export type SpringUpdate<T, P extends string = string> =
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringUpdateFn<T, P extends string = string> = [T] extends [
-  Animatable
-]
+export type SpringUpdateFn<T> = [T] extends [Animatable]
   ? {
-      (props: SpringProps<T, P>): Promise<AnimationResult<T>>
-      (
-        to: T | FluidValue<T> | AsyncTo<T, P>,
-        props?: SpringProps<T, P>
-      ): Promise<AnimationResult<T>>
+      (to: SpringTo<T>, props?: SpringProps<T>): AsyncResult<T>
+      (props: SpringProps<T>): AsyncResult<T>
+    }
+  : [T] extends [object]
+  ? {
+      (props: ControllerProps<T>): AsyncResult<T>
     }
   : {
-      (props: SpringProps<T, P>): Promise<AnimationResult<T>>
+      (props: SpringProps<T>): AsyncResult<T>
     }
 
 /**
@@ -157,21 +156,26 @@ export type SpringUpdateFn<T, P extends string = string> = [T] extends [
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringStopFn<T> = [T] extends [Animatable]
-  ? ((timestamp?: number) => void)
-  : ((keys?: OneOrMore<string>) => void)
+export type SpringStopFn<T> = T extends object
+  ? T extends ReadonlyArray<number | string>
+    ? (() => void)
+    : ((keys?: OneOrMore<string>) => void)
+  : (() => void)
 
 /**
  * Update the props of each spring, individually or all at once.
  *
  * The `T` parameter should only contain animated props.
  */
-export interface SpringsUpdateFn<T extends Indexable> {
+export interface SpringsUpdateFn<State extends Indexable> {
   (
     props:
-      | OneOrMore<SpringProps<T>>
-      | ((index: number, ctrl: Controller<T>) => SpringProps<T> | null)
-  ): SpringHandle<T>
+      | OneOrMore<ControllerProps<State>>
+      | ((
+          index: number,
+          ctrl: Controller<State>
+        ) => ControllerProps<State> | null)
+  ): SpringHandle<State>
 }
 
 /**
@@ -180,8 +184,8 @@ export interface SpringsUpdateFn<T extends Indexable> {
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export interface SpringAsyncFn<T, P extends string = string> {
-  (next: SpringUpdateFn<T, P>, stop: SpringStopFn<T>): Promise<void>
+export interface SpringAsyncFn<T> {
+  (next: SpringUpdateFn<T>, stop: SpringStopFn<T>): Promise<void> | undefined
 }
 
 /**
@@ -189,10 +193,10 @@ export interface SpringAsyncFn<T, P extends string = string> {
  *
  * The `T` parameter should only contain animated props.
  */
-export interface SpringHandle<T extends Indexable = UnknownProps> {
+export interface SpringHandle<T extends Indexable = any> {
   controllers: readonly Controller<T>[]
   update: SpringsUpdateFn<T>
-  start: () => Promise<AnimationResult<T[]>>
+  start: () => AsyncResult<T[]>
   stop: SpringStopFn<T>
 }
 

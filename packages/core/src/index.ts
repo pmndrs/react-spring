@@ -22,7 +22,10 @@ export {
   SpringUpdate,
   SpringUpdateFn,
   SpringsUpdateFn,
+  SpringValues,
 } from './types/spring'
+
+export { AnimationResult } from './types/animated'
 
 export {
   ForwardProps,
@@ -31,7 +34,7 @@ export {
   UnknownProps,
 } from './types/common'
 
-export { isAnimationValue } from '@react-spring/animated'
+export { isAnimationValue, AnimationValue } from '@react-spring/animated'
 export { createInterpolator, isFluidValue, makeFluidValue } from 'shared'
 
 export * from 'shared/types/animated'

@@ -1,5 +1,6 @@
 import { assert, _, test } from 'spec.ts';
-import { FrameValues, ForwardProps, Remap } from '../common';
+import { PickAnimated, ForwardProps, Remap } from '../common';
+import { SpringUpdateFn } from '../spring';
 
 type ReservedProps = {
   config: 1;
@@ -43,15 +44,15 @@ test('ForwardProps', () => {
 
 test('PickAnimated', () => {
   // No props
-  type A1 = FrameValues<{}>;
+  type A1 = PickAnimated<{}>;
   assert(_ as A1, _ as {});
 
   // Forward props only
-  type A3 = FrameValues<UserProps>;
+  type A3 = PickAnimated<UserProps>;
   assert(_ as A3, _ as UserProps);
 
   // Forward props and "from" prop
-  type A4 = FrameValues<{
+  type A4 = PickAnimated<{
     foo: 1;
     width: 1;
     from: { bar: 1; width: 2 };
@@ -59,14 +60,14 @@ test('PickAnimated', () => {
   assert(_ as A4, _ as Remap<UserProps & { width: 1 | 2 }>);
 
   // "to" and "from" props
-  type A5 = FrameValues<{
+  type A5 = PickAnimated<{
     to: { foo: 1; width: 1 };
     from: { bar: 1; width: 2 };
   }>;
   assert(_ as A5, _ as Remap<UserProps & { width: 1 | 2 }>);
 
   // "useTransition" props
-  type A6 = FrameValues<{
+  type A6 = PickAnimated<{
     from: { a: 1 };
     initial: { b: 1 };
     enter: { c: 1 };
@@ -85,7 +86,7 @@ test('PickAnimated', () => {
   );
 
   // Same keys in each phase
-  type A7 = FrameValues<{
+  type A7 = PickAnimated<{
     from: { a: 1 };
     enter: { a: 2 };
     leave: { a: 3 };
@@ -96,6 +97,29 @@ test('PickAnimated', () => {
     _ as A7,
     _ as {
       a: 1 | 2 | 3 | 4 | 5;
+    }
+  );
+
+  // Async "to" chain
+  type A8 = PickAnimated<{
+    to: [{ a: 1 }, { a: 2 }];
+  }>;
+  assert(
+    _ as A8,
+    _ as {
+      a: 1 | 2;
+    }
+  );
+
+  // Async "to" script
+  type A9 = PickAnimated<{
+    from: { a: 1 };
+    to: (next: SpringUpdateFn<any>) => void;
+  }>;
+  assert(
+    _ as A9,
+    _ as {
+      a: 1;
     }
   );
 });

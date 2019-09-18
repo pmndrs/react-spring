@@ -5,6 +5,7 @@ import { isAnimationValue } from './AnimationValue'
 
 type Source = Indexable | null
 
+/** An object containing `Animated` nodes */
 export class AnimatedObject extends Animated {
   protected source!: Source
   constructor(source: Source = null) {

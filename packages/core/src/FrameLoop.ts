@@ -289,7 +289,7 @@ export class FrameLoop {
 
       invariant(
         !Number.isNaN(position),
-        `Found NaN value while advancing "${spring.key}" animation`
+        `Found NaN value while advancing "${spring.key as any}" animation`
       )
 
       if (position !== node.lastPosition) {
