@@ -59,9 +59,6 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** The values that changed in the last animation frame */
   frame: UnknownPartial<State> = {}
 
-  /** The current props for the controller only */
-  props: CachedProps<State> = {}
-
   /** Fallback values for undefined props */
   defaultProps: DefaultProps<State> = {}
 
@@ -70,6 +67,9 @@ export class Controller<State extends Indexable = UnknownProps> {
 
   /** The spring values that manage their animations */
   private _springs: Indexable<SpringValue> = {}
+
+  /** The current controller-only props (eg: `onFrame` and async state) */
+  protected _props: CachedProps<State> = {}
 
   constructor(props?: ControllerProps<State>) {
     this._onChange = this._onChange.bind(this)
@@ -83,7 +83,7 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** Equals true when no springs are animating */
   get idle() {
     return (
-      !this.props.promise && Object.values(this._springs).every(s => s.idle)
+      !this._props.promise && Object.values(this._springs).every(s => s.idle)
     )
   }
 
@@ -149,10 +149,10 @@ export class Controller<State extends Indexable = UnknownProps> {
         // Send updates to every affected key.
         ...keys.map(key => this._springs[key].animate(props as any)),
         // Schedule controller-only props.
-        scheduleProps(++lastAsyncId, props, this.props, (props, resolve) => {
+        scheduleProps(++lastAsyncId, props, this._props, (props, resolve) => {
           if (!props.cancel) {
             // Never reuse "onFrame" from a previous update.
-            this.props.onFrame = onFrame || this.defaultProps.onFrame
+            this._props.onFrame = onFrame || this.defaultProps.onFrame
             if (onFrame && props.default) {
               this.defaultProps.onFrame = onFrame
             }
@@ -164,7 +164,7 @@ export class Controller<State extends Indexable = UnknownProps> {
               runAsync<State>(
                 asyncTo,
                 props,
-                this.props,
+                this._props,
                 () => this.get(),
                 () => false, // TODO: add pausing to Controller
                 ((props: any) => this.update(props).start()) as any,
@@ -205,7 +205,7 @@ export class Controller<State extends Indexable = UnknownProps> {
 
   /** Destroy every spring in this controller */
   dispose() {
-    this.props.asyncTo = undefined
+    this._props.asyncTo = undefined
     each(this._springs, spring => spring.dispose())
     this._springs = {}
   }
@@ -223,7 +223,7 @@ export class Controller<State extends Indexable = UnknownProps> {
 
   /** @internal Attached as an observer to every spring */
   protected _onChange(value: any, spring: AnimationValue) {
-    if (this.props.onFrame) {
+    if (this._props.onFrame) {
       this.frame[spring.key as keyof State] = value
       G.frameLoop.onFrame(this._onFrame)
     }
@@ -232,7 +232,7 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** @internal Called at the end of every animation frame */
   private _onFrame() {
     if (Object.keys(this.frame).length) {
-      this.props.onFrame!(this.frame)
+      this._props.onFrame!(this.frame)
       this.frame = {}
     }
   }
