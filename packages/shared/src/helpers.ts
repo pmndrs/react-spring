@@ -30,6 +30,18 @@ export const is = {
   und: (a: unknown): a is undefined => a === undefined,
 }
 
+/** Compare animatable values */
+export function isEqual(a: any, b: any) {
+  if (is.arr(a)) {
+    if (!is.arr(b) || a.length !== b.length) return false
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false
+    }
+    return true
+  }
+  return a === b
+}
+
 // Not all strings can be animated (eg: {display: "none"})
 export const needsInterpolation = (value: unknown): value is string =>
   is.str(value) &&

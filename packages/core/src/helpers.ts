@@ -10,18 +10,6 @@ declare const process:
 export const useMemo: typeof useMemoOne = (create, deps) =>
   useMemoOne(create, deps || [{}])
 
-/** Compare animatable values */
-export function isEqual(a: any, b: any) {
-  if (is.arr(a)) {
-    if (!is.arr(b) || a.length !== b.length) return false
-    for (let i = 0; i < a.length; i++) {
-      if (a[i] !== b[i]) return false
-    }
-    return true
-  }
-  return a === b
-}
-
 export function callProp<T>(
   value: T,
   ...args: AnyFn extends T ? Parameters<Extract<T, AnyFn>> : unknown[]
