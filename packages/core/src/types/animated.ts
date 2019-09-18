@@ -51,6 +51,10 @@ export interface AnimationConfig {
   duration?: number
   clamp?: boolean | number
   decay?: boolean | number
+  /**
+   * Round to the nearest multiple of `step`.
+   */
+  step?: number
 }
 
 /** An animation being executed by the frameloop */
