@@ -1,4 +1,4 @@
-export type Indexable<T = any> = { [key: string]: T }
+export type Indexable<T = any> = { [key: string]: T; [i: number]: T }
 
 export type OneOrMore<T> = T | readonly T[]
 
@@ -13,6 +13,8 @@ export type Arrify<T> = [T, T] extends [infer T, infer DT]
 
 export type Falsy = false | null | undefined
 
+export type AnyKey = keyof any
+
 export type AnyFn<In extends ReadonlyArray<any> = any[], Out = any> = (
   ...args: In
 ) => Out
@@ -24,7 +26,16 @@ export type Solve<T> = T
 export type Remap<T> = Solve<{ [P in keyof T]: T[P] }>
 
 /** Override the property types of `A` with `B` and merge any new properties */
-export type Merge<A, B> = Omit<A, keyof B> & B
+export type Merge<A, B> = { [P in keyof A]: P extends keyof B ? B[P] : A[P] } &
+  Omit<B, keyof A>
+
+/** Same as `Merge<A, B>` except the property descriptions from `B` override those of `A` */
+export type Overwrite<A, B> = Omit<A, keyof B> & B
+
+/** An object partial with the same type for every value */
+export type KeyedPartial<K extends string | number, T> = {
+  [P in K]?: T
+}
 
 /** Return the keys of `T` with values that are assignable to `U` */
 export type AssignableKeys<T, U> = T extends object
@@ -49,8 +60,7 @@ export type ObjectType<T> = T extends {} ? T : {}
 /** Intersected with other object types to allow for unknown properties */
 export type UnknownProps = Indexable<unknown>
 
-export type UnknownPartial<T> = UnknownProps &
-  ({} extends Required<T> ? unknown : Partial<T>)
+export type UnknownPartial<T> = UnknownProps & Partial<T>
 
 /** Extract string keys from an object type */
 export type StringKeys<T> = T extends object ? Extract<keyof T, string> : string

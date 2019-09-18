@@ -1,16 +1,35 @@
-import { is, each, OneOrMore, toArray, UnknownProps } from 'shared'
+import {
+  is,
+  each,
+  OneOrMore,
+  toArray,
+  UnknownProps,
+  UnknownPartial,
+  AnyKey,
+} from 'shared'
 import * as G from 'shared/globals'
 
-import { SpringValue } from './SpringValue'
-import { interpolateTo } from './helpers'
-import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
+import { SpringProps, FluidProps } from './types/spring'
+import { AnimationEvents } from './types/animated'
 import { Indexable, Falsy } from './types/common'
-import { SpringProps } from './types/spring'
+import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
+import { interpolateTo } from './helpers'
+import { SpringValue } from './SpringValue'
+import { AnimationValue } from '@react-spring/animated'
 
-/** The latest values of a `Controller` object */
-type LatestValues<State extends Indexable> = Partial<State>
+/** A callback that receives the changed values for each frame. */
+export type OnFrame<State extends Indexable> = (
+  frame: UnknownPartial<State>
+) => void
 
-type OnFrame<State extends Indexable> = (frame: LatestValues<State>) => void
+export type ControllerProps<State extends Indexable = UnknownProps> = {
+  /**
+   * Called on every frame when animations are active
+   */
+  onFrame?: OnFrame<State>
+} & SpringProps<State> &
+  UnknownPartial<FluidProps<State>> &
+  AnimationEvents<unknown>
 
 /** The props that are cached by `Controller` objects */
 interface CachedProps<State extends Indexable> extends RunAsyncState<State> {
@@ -18,7 +37,7 @@ interface CachedProps<State extends Indexable> extends RunAsyncState<State> {
 }
 
 /** An update that hasn't been applied yet */
-type PendingProps<State extends Indexable> = SpringProps<State> & {
+type PendingProps<State extends Indexable> = ControllerProps<State> & {
   keys: string[]
 }
 
@@ -37,7 +56,7 @@ export class Controller<State extends Indexable = UnknownProps> {
   springs: Indexable<SpringValue> = {}
 
   /** The values that changed in the last animation frame */
-  frame: LatestValues<State> = {}
+  frame: UnknownPartial<State> = {}
 
   /** The current props for the controller only */
   props: CachedProps<State> = {}
@@ -48,7 +67,7 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** The queue of pending props */
   queue: PendingProps<State>[] = []
 
-  constructor(props?: SpringProps<State>) {
+  constructor(props?: ControllerProps<State>) {
     this._onChange = this._onChange.bind(this)
     this._onFrame = this._onFrame.bind(this)
     if (props) {
@@ -72,7 +91,7 @@ export class Controller<State extends Indexable = UnknownProps> {
   }
 
   /** Push an update onto the queue of each value. */
-  update(propsArg: SpringProps<State> | Falsy) {
+  update(propsArg: ControllerProps<State> | Falsy) {
     if (!propsArg) return this
 
     // This returns a new object every time.
@@ -189,7 +208,7 @@ export class Controller<State extends Indexable = UnknownProps> {
   }
 
   /** @internal Attached as an observer to every spring */
-  protected _onChange(value: any, spring: SpringValue) {
+  protected _onChange(value: any, spring: AnimationValue) {
     if (this.props.onFrame) {
       this.frame[spring.key as keyof State] = value
       G.frameLoop.onFrame(this._onFrame)
@@ -206,16 +225,16 @@ export class Controller<State extends Indexable = UnknownProps> {
 }
 
 /** Determine which keys should receive an update */
-function extractKeys(props: SpringProps, springs: Indexable<SpringValue>) {
-  const keys = new Set<string>()
-  const extract = (obj: object) =>
+function extractKeys(props: ControllerProps, springs: Indexable<SpringValue>) {
+  const keys = new Set<AnyKey>()
+  const extract = (obj: Indexable) =>
     each(obj, (value, key) => {
       if (!is.und(value)) {
         keys.add(key)
       }
     })
 
-  const { from, to } = props as any
+  const { from, to } = props
   if (is.obj(to)) extract(to)
   if (from) extract(from)
 
