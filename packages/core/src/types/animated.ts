@@ -49,7 +49,18 @@ export interface AnimationConfig {
   easing: EasingFunction
   progress: number
   duration?: number
-  clamp?: boolean | number
+  /**
+   * Avoid overshooting by ending abruptly at the goal value.
+   */
+  clamp?: boolean
+  /**
+   * When above zero, the spring will bounce instead of overshooting when
+   * exceeding its goal value. Its velocity is multiplied by `-1 + bounce`
+   * whenever its current value equals or exceeds its goal. For example,
+   * setting `bounce` to `0.5` chops the velocity in half on each bounce,
+   * in addition to any friction.
+   */
+  bounce?: number
   decay?: boolean | number
   /**
    * Round to the nearest multiple of `step`.
