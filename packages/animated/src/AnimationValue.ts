@@ -54,8 +54,8 @@ export abstract class AnimationValue<T = any>
     return this._priority
   }
   set priority(priority: number) {
-    if (this.priority != priority) {
-      this.priority = priority
+    if (this._priority != priority) {
+      this._priority = priority
       this._onPriorityChange(priority)
     }
   }
