@@ -46,14 +46,15 @@ type DefaultProps<State extends Indexable> = {
   onFrame?: OnFrame<State>
 }
 
+/** Map an object type to allow `SpringValue` for any property */
+export type Springify<T> = Indexable<SpringValue<unknown> | undefined> &
+  { [P in keyof T]: T[P] | SpringValue<T[P]> }
+
 let nextId = 1
 let lastAsyncId = 0
 
 export class Controller<State extends Indexable = UnknownProps> {
   readonly id = nextId++
-
-  /** The spring values that manage their animations */
-  springs: Indexable<SpringValue> = {}
 
   /** The values that changed in the last animation frame */
   frame: UnknownPartial<State> = {}
@@ -67,6 +68,9 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** The queue of pending props */
   queue: PendingProps<State>[] = []
 
+  /** The spring values that manage their animations */
+  private _springs: Indexable<SpringValue> = {}
+
   constructor(props?: ControllerProps<State>) {
     this._onChange = this._onChange.bind(this)
     this._onFrame = this._onFrame.bind(this)
@@ -78,16 +82,27 @@ export class Controller<State extends Indexable = UnknownProps> {
 
   /** Equals true when no springs are animating */
   get idle() {
-    return !this.props.promise && Object.values(this.springs).every(s => s.idle)
+    return (
+      !this.props.promise && Object.values(this._springs).every(s => s.idle)
+    )
   }
 
   /** Get the latest values of every spring */
-  get(): State & UnknownProps {
-    const values: any = {}
-    each(this.springs, (spring, key) => {
-      values[key] = spring.get()
-    })
-    return values
+  get(): State & UnknownProps
+  /** Get a `SpringValue` by its key */
+  get<P extends keyof State>(key: P): SpringValue<State[P]>
+  /** Get a `SpringValue` by its key */
+  get(key: keyof any): SpringValue<unknown> | undefined
+  /** @internal */
+  get(key?: keyof any) {
+    if (is.und(key)) {
+      const values: any = {}
+      each(this._springs, (spring, key) => {
+        values[key] = spring.get()
+      })
+      return values
+    }
+    return this._springs[key as any]
   }
 
   /** Push an update onto the queue of each value. */
@@ -96,7 +111,7 @@ export class Controller<State extends Indexable = UnknownProps> {
 
     // This returns a new object every time.
     const props: any = interpolateTo(propsArg)
-    const keys = (props.keys = extractKeys(props, this.springs))
+    const keys = (props.keys = extractKeys(props, this._springs))
 
     let { from, to } = props
 
@@ -132,7 +147,7 @@ export class Controller<State extends Indexable = UnknownProps> {
       }
       promises.push(
         // Send updates to every affected key.
-        ...keys.map(key => this.springs[key].animate(props as any)),
+        ...keys.map(key => this._springs[key].animate(props as any)),
         // Schedule controller-only props.
         scheduleProps(++lastAsyncId, props, this.props, (props, resolve) => {
           if (!props.cancel) {
@@ -176,30 +191,30 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** Stop one animation, some animations, or all animations */
   stop(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
-      each(this.springs, spring => spring.stop())
+      each(this._springs, spring => spring.stop())
     } else {
-      each(toArray(keys), key => this.springs[key].stop())
+      each(toArray(keys), key => this._springs[key].stop())
     }
   }
 
   /** Restart every animation. */
   reset() {
-    each(this.springs, spring => spring.reset())
+    each(this._springs, spring => spring.reset())
     // TODO: restart async "to" prop
   }
 
   /** Destroy every spring in this controller */
   dispose() {
     this.props.asyncTo = undefined
-    each(this.springs, spring => spring.dispose())
-    this.springs = {}
+    each(this._springs, spring => spring.dispose())
+    this._springs = {}
   }
 
   /** Send an update to any spring whose key exists in `props.keys` */
   protected _setSprings(keys: any[], from?: object, to?: object) {
     each(keys, key => {
-      if (!this.springs[key]) {
-        const spring = (this.springs[key] = new SpringValue(key))
+      if (!this._springs[key]) {
+        const spring = (this._springs[key] = new SpringValue(key))
         spring.addChild(this._onChange)
         spring.setNodeWithProps({ from, to })
       }
