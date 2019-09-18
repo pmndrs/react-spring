@@ -190,7 +190,13 @@ export class FrameLoop {
 
       const elapsed = (node.elapsedTime += dt)
       const from = anim.fromValues[i]
-      const v0 = is.arr(config.velocity) ? config.velocity[i] : config.velocity
+
+      const v0 =
+        node.v0 != null
+          ? node.v0
+          : (node.v0 = is.arr(config.velocity)
+              ? config.velocity[i]
+              : config.velocity)
 
       let position = node.lastPosition
       let velocity: number
@@ -224,9 +230,6 @@ export class FrameLoop {
       // Spring easing
       else {
         velocity = node.lastVelocity == null ? v0 : node.lastVelocity
-        if (node.v0 == null) {
-          node.v0 = v0
-        }
 
         /**
          * Coefficient of restitution.
@@ -270,7 +273,7 @@ export class FrameLoop {
           isBouncing =
             clamp >= 0 &&
             (position == to ||
-              position > to == (from == to ? node.v0 > 0 : from > to))
+              position > to == (from == to ? v0 > 0 : from < to))
 
           // Invert the velocity with a magnitude, or clamp it.
           if (isBouncing) {

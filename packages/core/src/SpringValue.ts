@@ -410,6 +410,9 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     /** When true, this spring must be in the frameloop. */
     let started = parent || ((changed || reset) && !isEqual(value, to))
 
+    /** The initial velocity before this `animate` call. */
+    const lastVelocity = anim.config ? anim.config.velocity : 0
+
     // The "config" prop either overwrites or merges into the existing config.
     let config = props.config as AnimationConfig
     if (config || started || !anim.config) {
@@ -440,11 +443,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
 
     // Always start animations with velocity.
-    if (!started && this.idle && (config.decay || !is.und(to))) {
-      const { velocity } = config
-      if (toArray(velocity).some(v => v !== 0)) {
-        started = true
-      }
+    if (!started && (config.decay || !is.und(to))) {
+      started = !isEqual(config.velocity, lastVelocity)
     }
 
     /**
