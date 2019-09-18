@@ -638,8 +638,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
   /** @internal Create an `Animated` node from a set of `to` and `from` props */
   createNode({ to, from }: AnimationRange<T>) {
-    const value = is.und(from) ? to : from
-    if (!is.und(value)) {
+    const value = from != null ? from : to
+    if (value != null) {
       return this._getNodeType(value).create(computeGoal(value))
     }
   }
