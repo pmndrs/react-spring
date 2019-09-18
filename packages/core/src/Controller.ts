@@ -107,7 +107,7 @@ export class Controller<State extends Indexable = UnknownProps> {
 
     // Ensure springs have an initial value.
     if (from || to) {
-      this._update({ keys, from, to } as any)
+      this._setSprings(keys, from, to)
     }
 
     // Use our own queue, instead of each spring's queue.
@@ -196,14 +196,13 @@ export class Controller<State extends Indexable = UnknownProps> {
   }
 
   /** Send an update to any spring whose key exists in `props.keys` */
-  protected _update(props: PendingProps<State>) {
-    each(props.keys, key => {
-      let spring = this.springs[key]
-      if (!spring) {
-        this.springs[key] = spring = new SpringValue(key)
+  protected _setSprings(keys: any[], from?: object, to?: object) {
+    each(keys, key => {
+      if (!this.springs[key]) {
+        const spring = (this.springs[key] = new SpringValue(key))
         spring.addChild(this._onChange)
+        spring.setNodeWithProps({ from, to })
       }
-      spring.update(props as any)
     })
   }
 

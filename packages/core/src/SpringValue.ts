@@ -170,10 +170,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     const props: PendingProps<T> = is.obj(to) ? (to as any) : { ...arg2, to }
 
     // Ensure the initial value can be accessed by animated components.
-    const range = this.getRange(props)
-    if (!this.node) {
-      this.node = this.createNode(range)!
-    }
+    const range = this.setNodeWithProps(props)
 
     const timestamp = G.now()
     return scheduleProps(
@@ -210,13 +207,12 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** Push props into the pending queue. */
   update(props: PendingProps<T>) {
     this._checkDisposed('update')
-    const queue = this.queue || (this.queue = [])
-    queue.push(props)
 
     // Ensure the initial value can be accessed by animated components.
-    if (!this.node) {
-      this.node = this.createNode(this.getRange(props))!
-    }
+    this.setNodeWithProps(props)
+
+    const queue = this.queue || (this.queue = [])
+    queue.push(props)
     return this
   }
 
@@ -305,6 +301,23 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     else if (this.idle) {
       this._start()
     }
+  }
+
+  /**
+   * @internal
+   * Analyze the given `props` to determine which data type is being animated.
+   * Then, create an `Animated` node for that data type and make it our `node`.
+   * If we already have a `node`, do nothing but return the `{from, to}` range.
+   */
+  setNodeWithProps(props: PendingProps<T>) {
+    const range = this._getRange(props)
+    if (!this.node) {
+      const value = range.from != null ? range.from : range.to
+      if (value != null) {
+        this.node = this._getNodeType(value).create(computeGoal(value))
+      }
+    }
+    return range
   }
 
   protected _checkDisposed(name: string) {
@@ -626,21 +639,13 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
   }
 
-  /** @internal Pluck the `to` and `from` props */
-  getRange(props: PendingProps<T>): AnimationRange<T> {
+  /** Pluck the `to` and `from` props */
+  protected _getRange(props: PendingProps<T>): AnimationRange<T> {
     const { to, from } = props as any
     const key = this.key || ''
     return {
       to: !is.obj(to) || isFluidValue(to) ? to : to[key],
       from: !is.obj(from) || isFluidValue(from) ? from : from[key],
-    }
-  }
-
-  /** @internal Create an `Animated` node from a set of `to` and `from` props */
-  createNode({ to, from }: AnimationRange<T>) {
-    const value = from != null ? from : to
-    if (value != null) {
-      return this._getNodeType(value).create(computeGoal(value))
     }
   }
 }
