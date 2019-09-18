@@ -1,7 +1,7 @@
 {
   "name": "@react-spring/lerna",
   "private": true,
-  "description": "Cross-platform animation engine",
+  "description": "Cross-platform animation engine for React",
   "keywords": [
     "animated",
     "animation",
