@@ -38,17 +38,73 @@ export type AnimationResult<T = any> = Readonly<{
 }>
 
 export interface AnimationConfig {
+  /** @internal */
   w0: number
+  /**
+   * Higher mass means more friction is required to slow down.
+   *
+   * Defaults to 1, which works fine most of the time.
+   */
   mass: number
+  /**
+   * With higher tension, the spring will resist bouncing and try harder to stop at its end value.
+   *
+   * When tension is zero, no animation occurs.
+   */
   tension: number
+  /**
+   * The frequency response.
+   *
+   * An alternative to `tension` that describes the speed of an undamped spring.
+   */
   speed?: number
+  /**
+   * The damping ratio coefficient, or just the damping ratio when `speed` is defined.
+   *
+   * When `speed` is defined, this value should be between 0 and 1.
+   *
+   * Higher friction means the spring will slow down faster.
+   */
   friction: number
+  /**
+   * The initial velocity of one or more values.
+   */
   velocity: number | number[]
+  /**
+   * The smallest velocity before the animation is considered "not moving".
+   *
+   * When undefined, `precision` is used instead.
+   */
   restVelocity?: number
+  /**
+   * The smallest distance from a value before that distance is essentially zero.
+   *
+   * This helps in deciding when a spring is "at rest". The spring must be within
+   * this distance from its final value, and its velocity must be lower than this
+   * value too (unless `restVelocity` is defined).
+   */
   precision?: number
-  easing: EasingFunction
+  /**
+   * For `duration` animations only. Note: The `duration` is not affected
+   * by this property.
+   *
+   * Defaults to `0`, which means "start from the beginning".
+   *
+   * Setting to `1+` makes an immediate animation.
+   *
+   * Setting to `0.5` means "start from the middle of the easing function".
+   *
+   * Any number `>= 0` and `<= 1` makes sense here.
+   */
   progress: number
+  /**
+   * Animation length in number of milliseconds.
+   */
   duration?: number
+  /**
+   * The animation curve.
+   */
+  easing: EasingFunction
   /**
    * Avoid overshooting by ending abruptly at the goal value.
    */
@@ -61,6 +117,16 @@ export interface AnimationConfig {
    * in addition to any friction.
    */
   bounce?: number
+  /**
+   * "Decay animations" decelerate without an explicit goal value.
+   * Useful for scrolling animations.
+   *
+   * Use `true` for the default exponential decay factor (`0.998`).
+   *
+   * When a `number` between `0` and `1` is given, a lower number makes the
+   * animation slow down faster. And setting to `1` would make an unending
+   * animation.
+   */
   decay?: boolean | number
   /**
    * Round to the nearest multiple of `step`.
