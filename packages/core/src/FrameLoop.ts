@@ -231,19 +231,6 @@ export class FrameLoop {
       else {
         velocity = node.lastVelocity == null ? v0 : node.lastVelocity
 
-        /**
-         * Coefficient of restitution.
-         *
-         * Set to zero to stop the animation at its end value.
-         * Set to a positive number to multiply the inverted velocity of a bounce animation.
-         */
-        const clamp =
-          config.clamp !== false
-            ? config.clamp === true
-              ? 0
-              : config.clamp!
-            : -1
-
         /** The smallest distance from a value before being treated like said value. */
         const precision =
           config.precision ||
@@ -252,11 +239,18 @@ export class FrameLoop {
         /** The velocity at which movement is essentially none */
         const restVelocity = config.restVelocity || precision
 
-        /** Equals true when the velocity is considered moving */
+        // Bouncing is opt-in (not to be confused with overshooting)
+        const bounceFactor = config.clamp ? 0 : config.bounce!
+        const canBounce = !is.und(bounceFactor)
+
+        /** When `true`, the value is increasing over time */
+        const isGrowing = from == to ? node.v0 > 0 : from < to
+
+        /** When `true`, the velocity is considered moving */
         let isMoving!: boolean
 
-        /** Equals true when the velocity is being deflected or clamped */
-        let isBouncing!: boolean
+        /** When `true`, the velocity is being deflected or clamped */
+        let isBouncing = false
 
         const step = 0.05 / config.w0
         const numSteps = Math.ceil(dt / step)
@@ -270,15 +264,14 @@ export class FrameLoop {
             }
           }
 
-          isBouncing =
-            clamp >= 0 &&
-            (position == to ||
-              position > to == (from == to ? v0 > 0 : from < to))
+          if (canBounce) {
+            isBouncing = position == to || position > to == isGrowing
 
-          // Invert the velocity with a magnitude, or clamp it.
-          if (isBouncing) {
-            velocity = clamp * -velocity
-            position = to
+            // Invert the velocity with a magnitude, or clamp it.
+            if (isBouncing) {
+              velocity = -velocity * bounceFactor
+              position = to
+            }
           }
 
           const springForce = -config.tension * 0.000001 * (position - to)
