@@ -1,11 +1,7 @@
 import { assert, test, _ } from 'spec.ts';
 import React, { useRef } from 'react';
-import {
-  UnknownProps,
-  SpringValues,
-  AnimationResult,
-} from '@react-spring/core';
-import { Indexable } from '@react-spring/shared';
+import { SpringValues, AnimationResult } from '@react-spring/core';
+import { UnknownPartial } from '@react-spring/shared';
 import { RunAsyncProps } from '@react-spring/core/src/runAsync';
 import {
   animated,
@@ -137,7 +133,10 @@ test('imperative mode', () => {
         assert(spring, _ as SpringValue<unknown>);
       },
       onFrame(values) {
-        assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { foo: number }"
+        assert(values, _ as UnknownPartial<{
+          // FIXME: should include this
+          // foo: number
+        }>);
       },
       onRest(result) {
         assert(result, _ as AnimationResult<unknown>);
@@ -166,7 +165,10 @@ test('basic config', () => {
       assert(spring, _ as SpringValue<unknown>);
     },
     onFrame(values) {
-      assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { width: number }"
+      assert(values, _ as UnknownPartial<{
+        // FIXME: should include this
+        // width: number
+      }>);
     },
     onRest(result) {
       assert(result, _ as AnimationResult<unknown>);
@@ -180,7 +182,7 @@ test('basic config', () => {
 test('function as "to" prop', () => {
   const props = useSpring({
     to: async next => {
-      assert(next, _ as SpringUpdateFn<Indexable>);
+      assert(next, _ as SpringUpdateFn<{}>);
 
       // Unknown keys can be animated.
       await next({ width: '100%' });
@@ -201,10 +203,13 @@ test('function as "to" prop', () => {
     const props = useSpring({
       from: { foo: 1 },
       to: async next => {
-        assert(next, _ as SpringUpdateFn<Indexable>); // FIXME: should be "SpringUpdateFn<{ foo: number }>"
+        assert(next, _ as SpringUpdateFn<{
+          // FIXME: should include this
+          // foo: number
+        }>);
         await next({
-          onRest(values) {
-            assert(values, _ as Readonly<UnknownProps>); // FIXME: should be "UnknownProps & { foo: number }"
+          onRest(result) {
+            assert(result, _ as AnimationResult<unknown>); // FIXME: should be "UnknownProps & { foo: number }"
           },
         });
       },

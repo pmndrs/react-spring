@@ -8,8 +8,8 @@ import {
   SpringHandle,
 } from './types/spring'
 import { PickAnimated, Valid } from './types/common'
+import { ControllerProps } from './Controller'
 import { useSprings } from './useSprings'
-import { ControllerProps } from 'src'
 
 /**
  * The props that `useSpring` recognizes.
@@ -31,7 +31,7 @@ export type UseSpringProps<Props extends object = any> = unknown &
  */
 export function useSpring<Props extends UnknownProps>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps
-): SpringValues<Props>
+): SpringValues<PickAnimated<Props>>
 
 /**
  * When the `deps` argument exists, you get the `update` and `stop` function.
@@ -40,7 +40,7 @@ export function useSpring<Props extends UnknownProps>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps: any[] | undefined
 ): [
-  SpringValues<Props>,
+  SpringValues<PickAnimated<Props>>,
   SpringUpdateFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
@@ -55,7 +55,7 @@ export function useSpring<Props extends UnknownProps>(
   props: () => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps?: any[]
 ): [
-  SpringValues<Props>,
+  SpringValues<PickAnimated<Props>>,
   SpringUpdateFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]

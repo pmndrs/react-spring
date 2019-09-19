@@ -45,7 +45,7 @@ export abstract class AnimationValue<T = any>
   protected _priority = 0
   protected _children = new Set<AnimationObserver<T>>()
 
-  constructor(readonly key?: keyof any) {
+  constructor(readonly key?: string) {
     defineHidden(this, FluidType, 2)
   }
 

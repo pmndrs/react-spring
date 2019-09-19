@@ -6,7 +6,6 @@ import {
   SpringValues,
   SpringUpdateFn,
 } from '@react-spring/core';
-import { Indexable } from '@react-spring/shared';
 
 const View = animated('div');
 
@@ -32,7 +31,10 @@ test('async "to" prop', () => {
   <Spring
     from={{ opacity: 0 }}
     to={async next => {
-      assert(next, _ as SpringUpdateFn<Indexable>); // FIXME: should include "opacity"
+      assert(next, _ as SpringUpdateFn<{
+        // FIXME: should include this
+        // opacity: number;
+      }>);
     }}>
     {values => {
       assert(values, _ as SpringValues<{
