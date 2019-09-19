@@ -79,11 +79,11 @@ describe('async "to" prop', () => {
 
 function getFrames<T extends object>(ctrl: Controller<T>): T[] {
   const frames: any[] = []
-  ctrl.props.onFrame = values => {
+  ctrl['_props'].onFrame = values => {
     frames.push(values)
   }
   let steps = 0
-  while (ctrl.runCount) {
+  while (!ctrl.idle) {
     mockRaf.step()
     if (++steps > 1e5) {
       break // Prevent infinite loops
@@ -96,11 +96,11 @@ async function getAsyncFrames<T extends object>(
   ctrl: Controller<T>
 ): Promise<T[]> {
   const frames: any[] = []
-  ctrl.props.onFrame = values => {
+  ctrl['_props'].onFrame = values => {
     frames.push(values)
   }
   let steps = 0
-  while (Globals.frameLoop.active) {
+  while (!ctrl.idle) {
     mockRaf.step()
     await Promise.resolve()
     if (++steps > 1e5) {
