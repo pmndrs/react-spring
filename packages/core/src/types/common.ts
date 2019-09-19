@@ -1,4 +1,10 @@
-import { ObjectType, UnknownProps, ObjectFromUnion, FluidValue } from 'shared'
+import {
+  ObjectType,
+  UnknownProps,
+  ObjectFromUnion,
+  FluidValue,
+  Constrain,
+} from 'shared'
 
 export * from 'shared/types/common'
 
@@ -67,16 +73,19 @@ export type FromValues<Props extends object> = ForwardProps<
 export type TransitionValues<Props extends object> = unknown &
   ForwardProps<
     ObjectFromUnion<
-      ObjectType<
-        Props[TransitionPhase & keyof Props] extends infer T
-          ? T extends ReadonlyArray<infer Element>
-            ? Element
-            : T extends ((...args: any[]) => infer Return)
-            ? Return extends ReadonlyArray<infer ReturnElement>
-              ? ReturnElement
-              : Return
-            : T
-          : never
+      Constrain<
+        ObjectType<
+          Props[TransitionPhase & keyof Props] extends infer T
+            ? T extends ReadonlyArray<infer Element>
+              ? Element
+              : T extends ((...args: any[]) => infer Return)
+              ? Return extends ReadonlyArray<infer ReturnElement>
+                ? ReturnElement
+                : Return
+              : T
+            : never
+        >,
+        {}
       >
     >
   >
@@ -85,7 +94,7 @@ export type TransitionValues<Props extends object> = unknown &
  * Extract the custom props that are treated like `to` values
  */
 export type ForwardProps<T extends object> = RawValues<
-  Omit<T, keyof ReservedProps>
+  Omit<Constrain<T, {}>, keyof ReservedProps>
 >
 
 /**
