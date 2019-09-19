@@ -1,4 +1,4 @@
-import { is, each, Merge, AnyKey } from 'shared'
+import { is, each, Merge } from 'shared'
 
 import {
   AsyncTo,
@@ -26,7 +26,7 @@ export type RunAsyncProps<T = any> = unknown &
 
 export interface RunAsyncState<T> {
   /** The spring name */
-  key?: keyof any
+  key?: string
   /** The async function or array of spring props */
   asyncTo?: AsyncTo<T>
   /** Resolves when the current `asyncTo` finishes or gets cancelled. */
@@ -175,7 +175,7 @@ export async function runAsync<T>(
 export function scheduleProps<Props extends SpringProps, Result>(
   asyncId: number,
   props: Props,
-  state: { key?: AnyKey; cancelId?: number },
+  state: { key?: string; cancelId?: number },
   action: (
     props: Props & RunAsyncProps,
     resolve: (result: Result | Promise<Result>) => void

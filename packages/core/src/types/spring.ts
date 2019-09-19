@@ -1,6 +1,6 @@
 import {
+  Any,
   Animatable,
-  EasingFunction,
   Falsy,
   Indexable,
   OneOrMore,
@@ -13,24 +13,21 @@ import { Controller, ControllerProps } from '../Controller'
 import { SpringValue } from '../SpringValue'
 import { AsyncResult } from '../runAsync'
 import { AnimationProps, AnimationEvents, AnimationConfig } from './animated'
-import { PickAnimated } from './common'
 
-export { Animatable }
+/** Map an object type to allow `SpringValue` for any property */
+export type Springify<T> = Indexable<SpringValue<unknown> | undefined> &
+  { [P in keyof T]: T[P] | SpringValue<T[P]> }
 
 /**
  * The set of `SpringValue` objects returned by a `useSpring` call (or similar).
  */
-export type SpringValues<Props extends object = Indexable> = Remap<
-  Indexable<SpringValue | undefined> &
-    (PickAnimated<Props> extends infer T
-      ? {} extends Required<T>
-        ? unknown
-        : {
-            [P in keyof T & string]:
-              | SpringValue<Exclude<T[P], void>>
-              | Extract<T[P], void>
-          }
-      : never)
+export type SpringValues<T extends object = any> = Remap<
+  Indexable<SpringValue<unknown> | undefined> &
+    ([T] extends [Any]
+      ? unknown // Ignore "T = any"
+      : {
+          [P in keyof T]: SpringValue<Exclude<T[P], void>> | Extract<T[P], void>
+        })
 >
 
 /**
@@ -125,7 +122,13 @@ export type FluidProps<T> = T extends object
  * or a primitive type for a single animated value.
  */
 export type SpringUpdate<T = any, P extends string = string> =
-  | SpringProps<T> & AnimationEvents
+  | SpringProps<T> &
+      AnimationEvents &
+      (T extends object
+        ? T extends ReadonlyArray<any>
+          ? unknown
+          : UnknownProps
+        : unknown)
   | SpringTo<T, P>
 
 export type SpringTo<T = any, P extends string = string> = unknown &

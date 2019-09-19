@@ -7,6 +7,7 @@ import {
   OneOrMore,
   Valid,
   Falsy,
+  PickAnimated,
 } from './types/common'
 import { SpringValues, RangeProps } from './types/spring'
 import { AnimationProps, AnimationEvents } from './types/animated'
@@ -18,7 +19,7 @@ import { UseSpringProps } from './useSpring'
 
 type SpringComponentProps<Props extends object = any> = unknown &
   UseSpringProps<Props> & {
-    children: (values: SpringValues<NoInfer<Props>>) => ReactNode
+    children: (values: SpringValues<PickAnimated<Props>>) => ReactNode
   }
 
 /**
@@ -40,7 +41,7 @@ type TrailComponentProps<Item, Props extends object = any> = unknown &
     children: (
       item: NoInfer<Item>,
       index: number
-    ) => ((values: SpringValues<Props>) => ReactNode) | Falsy
+    ) => ((values: SpringValues<PickAnimated<Props>>) => ReactNode) | Falsy
   }
 
 export declare const Trail: <Item, Props extends object>(
@@ -61,7 +62,7 @@ type TransitionComponentProps<Item, Props extends object = any> = unknown &
       item: NoInfer<Item>,
       phase: TransitionPhase,
       index: number
-    ) => ((values: SpringValues<Props>) => ReactNode) | false | null | undefined
+    ) => ((values: SpringValues<PickAnimated<Props>>) => ReactNode) | Falsy
   }
 
 export declare const Transition: <Item, Props extends object>(

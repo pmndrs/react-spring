@@ -6,6 +6,7 @@ import {
   needsInterpolation,
   isFluidValue,
   FluidValue,
+  Animatable,
 } from 'shared'
 import {
   AnimationValue,
@@ -19,7 +20,7 @@ import invariant from 'tiny-invariant'
 import * as G from 'shared/globals'
 
 import { Indexable } from './types/common'
-import { SpringConfig, Animatable, SpringProps, AsyncTo } from './types/spring'
+import { SpringConfig, SpringProps, AsyncTo } from './types/spring'
 import {
   AnimatedType,
   Animation,
@@ -93,7 +94,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** Cancel any update from before this timestamp */
   protected _lastAsyncId = 0
 
-  constructor(key?: keyof any) {
+  constructor(key?: string) {
     super(key)
     this._state = { key }
   }

@@ -1,4 +1,4 @@
-import { Animatable, FluidValue, EasingFunction, AnyKey } from 'shared'
+import { Animatable, FluidValue, EasingFunction } from 'shared'
 import { AnimatedValue, AnimationValue, OnChange } from '@react-spring/animated'
 
 import { MatchProp } from '../helpers'
@@ -151,13 +151,8 @@ export interface Animation<T = unknown> {
   owner: SpringValue<T>
 }
 
-/**
- * Animation-related props
- *
- * The `T` parameter can be a set of animated properties (as an object type)
- * or a primitive type for a single animated value.
- */
-export interface AnimationProps<P extends AnyKey = AnyKey> {
+/** `SpringProps` without `to` or `from` */
+export interface AnimationProps<P extends string = string> {
   /**
    * Configure the spring behavior for each key.
    */

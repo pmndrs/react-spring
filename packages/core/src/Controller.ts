@@ -5,11 +5,10 @@ import {
   toArray,
   UnknownProps,
   UnknownPartial,
-  AnyKey,
 } from 'shared'
 import * as G from 'shared/globals'
 
-import { SpringProps, FluidProps } from './types/spring'
+import { SpringProps, FluidProps, SpringValues } from './types/spring'
 import { AnimationEvents } from './types/animated'
 import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
@@ -28,8 +27,8 @@ export type ControllerProps<State extends Indexable = UnknownProps> = {
    */
   onFrame?: OnFrame<State>
 } & SpringProps<State> &
-  UnknownPartial<FluidProps<State>> &
-  AnimationEvents<unknown>
+  AnimationEvents<unknown> &
+  UnknownPartial<FluidProps<State>>
 
 /** The props that are cached by `Controller` objects */
 interface CachedProps<State extends Indexable> extends RunAsyncState<State> {
@@ -45,10 +44,6 @@ type PendingProps<State extends Indexable> = ControllerProps<State> & {
 type DefaultProps<State extends Indexable> = {
   onFrame?: OnFrame<State>
 }
-
-/** Map an object type to allow `SpringValue` for any property */
-export type Springify<T> = Indexable<SpringValue<unknown> | undefined> &
-  { [P in keyof T]: T[P] | SpringValue<T[P]> }
 
 let nextId = 1
 let lastAsyncId = 0
@@ -94,8 +89,8 @@ export class Controller<State extends Indexable = UnknownProps> {
 
   /** Get an existing `SpringValue` object by its key. */
   get<P extends keyof State>(key: P): SpringValue<State[P]>
-  get(key: keyof any): SpringValue<unknown> | undefined
-  get(key: keyof any) {
+  get(key: string): SpringValue<unknown> | undefined
+  get(key: string) {
     return this._springs[key as any]
   }
 
@@ -243,13 +238,13 @@ export class Controller<State extends Indexable = UnknownProps> {
 
 /** Determine which keys should receive an update */
 function extractKeys(props: ControllerProps, springs: Indexable<SpringValue>) {
-  const keys = new Set<AnyKey>()
+  const keys = new Set<string>()
 
   /** Collect keys with a defined value */
   const getDefinedKeys = (obj: Indexable) =>
     each(obj, (value, key) => {
       if (!is.und(value)) {
-        keys.add(key)
+        keys.add(key as string)
       }
     })
 
