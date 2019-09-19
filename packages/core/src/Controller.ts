@@ -65,11 +65,11 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** The queue of pending props */
   queue: PendingProps<State>[] = []
 
-  /** The spring values that manage their animations */
-  private _springs: Indexable<SpringValue> = {}
-
   /** The current controller-only props (eg: `onFrame` and async state) */
   protected _props: CachedProps<State> = {}
+
+  /** The spring values that manage their animations */
+  protected _springs: Indexable<SpringValue> = {}
 
   constructor(props?: ControllerProps<State>) {
     this._onChange = this._onChange.bind(this)
@@ -87,21 +87,15 @@ export class Controller<State extends Indexable = UnknownProps> {
     )
   }
 
-  /** Get the latest values of every spring */
-  get(): State & UnknownProps
-  /** Get a `SpringValue` by its key */
+  /** Get all existing `SpringValue` objects. This clones the internal store. */
+  get springs() {
+    return { ...this._springs } as SpringValues<State>
+  }
+
+  /** Get an existing `SpringValue` object by its key. */
   get<P extends keyof State>(key: P): SpringValue<State[P]>
-  /** Get a `SpringValue` by its key */
   get(key: keyof any): SpringValue<unknown> | undefined
-  /** @internal */
-  get(key?: keyof any) {
-    if (is.und(key)) {
-      const values: any = {}
-      each(this._springs, (spring, key) => {
-        values[key] = spring.get()
-      })
-      return values
-    }
+  get(key: keyof any) {
     return this._springs[key as any]
   }
 
@@ -165,7 +159,7 @@ export class Controller<State extends Indexable = UnknownProps> {
                 asyncTo,
                 props,
                 this._props,
-                () => this.get(),
+                this._get.bind(this),
                 () => false, // TODO: add pausing to Controller
                 ((props: any) => this.update(props).start()) as any,
                 this.stop.bind(this) as any
@@ -183,7 +177,7 @@ export class Controller<State extends Indexable = UnknownProps> {
 
     const results = await Promise.all(promises)
     return {
-      value: this.get(),
+      value: this._get(),
       finished: results.every(result => result.finished),
     }
   }
@@ -208,6 +202,15 @@ export class Controller<State extends Indexable = UnknownProps> {
     this._props.asyncTo = undefined
     each(this._springs, spring => spring.dispose())
     this._springs = {}
+  }
+
+  /** Get the current value of every spring */
+  protected _get() {
+    const values: any = {}
+    each(this._springs, (spring, key) => {
+      values[key] = spring.get()
+    })
+    return values
   }
 
   /** Send an update to any spring whose key exists in `props.keys` */
