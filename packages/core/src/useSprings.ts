@@ -126,6 +126,6 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
     each(ctrls, ctrl => ctrl.dispose())
   })
 
-  const values = ctrls.map(ctrl => ({ ...ctrl.springs }))
+  const values = ctrls.map(ctrl => ctrl.springs)
   return propsFn ? [values, api.update, api.stop] : values
 }
