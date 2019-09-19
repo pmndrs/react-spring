@@ -28,7 +28,7 @@ export function useSprings<
 >(
   length: number,
   props: P & UseSpringsProps<Props>[]
-): SpringValues<Props>[]
+): SpringValues<PickAnimated<Props>>[]
 
 /**
  * When the `deps` argument exists, you get the `update` and `stop` function.
@@ -41,7 +41,7 @@ export function useSprings<
   props: P & UseSpringsProps<Props>[],
   deps: any[] | undefined
 ): [
-  SpringValues<Props>[],
+  SpringValues<PickAnimated<Props>>[],
   SpringsUpdateFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
@@ -57,15 +57,18 @@ export function useSprings<Props extends object>(
   props: (i: number, ctrl: Controller) => Props & UseSpringsProps<Props>,
   deps?: any[]
 ): [
-  SpringValues<Props>[],
+  SpringValues<PickAnimated<Props>>[],
   SpringsUpdateFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
 
 /** @internal */
-export function useSprings(length: number, props: unknown, deps?: any[]): any {
+export function useSprings(
+  length: number,
+  props: any[] | ((i: number, ctrl: Controller) => any),
+  deps?: any[]
+): any {
   const propsFn = is.fun(props) && props
-  const propsArr = is.arr(props) && props
 
   if (propsFn && arguments.length < 3) {
     deps = [] // Skip updates after first render.
@@ -87,11 +90,10 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
     ctrls.length = length
     for (let i = 0; i < length; i++) {
       const ctrl = ctrls[i] || (ctrls[i] = new Controller())
-      const update: UseSpringProps<any> = propsArr
-        ? propsArr[i]
-        : propsFn
+      const update: UseSpringProps<any> = propsFn
         ? propsFn(i, ctrl)
-        : { ...props }
+        : (props as any)[i]
+
       if (update) {
         update.default = true
         if (i == 0 && update.ref) {

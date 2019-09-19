@@ -16,7 +16,7 @@ export function useTrail<Props extends object>(
   ) => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps?: any[]
 ): [
-  SpringValues<Props>[],
+  SpringValues<PickAnimated<Props>>[],
   SpringsUpdateFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
@@ -25,7 +25,7 @@ export function useTrail<Props extends object>(
   length: number,
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps?: any[]
-): SpringValues<Props>[]
+): SpringValues<PickAnimated<Props>>[]
 
 export function useTrail(length: number, propsArg: unknown, deps?: any[]) {
   const propsFn = is.fun(propsArg) && propsArg

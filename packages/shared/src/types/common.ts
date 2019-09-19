@@ -13,8 +13,6 @@ export type Arrify<T> = [T, T] extends [infer T, infer DT]
 
 export type Falsy = false | null | undefined
 
-export type AnyKey = keyof any
-
 export type AnyFn<In extends ReadonlyArray<any> = any[], Out = any> = (
   ...args: In
 ) => Out
@@ -47,7 +45,7 @@ export type AssignableKeys<T, U> = T extends object
   : never
 
 /** Give "any" its own class */
-declare class Any {
+export declare class Any {
   _: never
 }
 
