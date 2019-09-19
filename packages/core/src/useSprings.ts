@@ -19,21 +19,39 @@ export type UseSpringsProps<Props extends object = any> = Merge<
   }
 >
 
-export function useSprings<Props extends object>(
-  length: number,
-  props: Props & UseSpringsProps<Props>,
-  deps?: any[]
-): SpringValues<Props>[]
-
+/**
+ * Animations are updated on re-render.
+ */
 export function useSprings<
   P extends object[],
   Props extends object = P[number]
 >(
   length: number,
-  props: P & UseSpringsProps<P[number]>[],
-  deps?: any[]
+  props: P & UseSpringsProps<Props>[]
 ): SpringValues<Props>[]
 
+/**
+ * When the `deps` argument exists, you get the `update` and `stop` function.
+ */
+export function useSprings<
+  P extends object[],
+  Props extends object = P[number]
+>(
+  length: number,
+  props: P & UseSpringsProps<Props>[],
+  deps: any[] | undefined
+): [
+  SpringValues<Props>[],
+  SpringsUpdateFn<PickAnimated<Props>>,
+  SpringStopFn<UnknownProps>
+]
+
+/**
+ * When the `deps` argument exists, the `props` function is called whenever
+ * the `deps` change on re-render.
+ *
+ * Without the `deps` argument, the `props` function is only called once.
+ */
 export function useSprings<Props extends object>(
   length: number,
   props: (i: number, ctrl: Controller) => Props & UseSpringsProps<Props>,
@@ -44,6 +62,7 @@ export function useSprings<Props extends object>(
   SpringStopFn<UnknownProps>
 ]
 
+/** @internal */
 export function useSprings(length: number, props: unknown, deps?: any[]): any {
   const propsFn = is.fun(props) && props
   const propsArr = is.arr(props) && props
@@ -127,5 +146,7 @@ export function useSprings(length: number, props: unknown, deps?: any[]): any {
   })
 
   const values = ctrls.map(ctrl => ctrl.springs)
-  return propsFn ? [values, api.update, api.stop] : values
+  return propsFn || arguments.length == 3
+    ? [values, api.update, api.stop]
+    : values
 }
