@@ -1,6 +1,6 @@
 import { FrameRequestCallback } from 'shared/types'
 import { isAnimationValue } from '@react-spring/animated'
-import { is, isFluidValue, toArray, each } from 'shared'
+import { is, isFluidValue, toArray } from 'shared'
 import * as G from 'shared/globals'
 
 import { SpringValue } from './SpringValue'
