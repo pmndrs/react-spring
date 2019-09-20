@@ -1,11 +1,23 @@
 import React, { forwardRef } from 'react'
 import { render, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import { AnimatedValue, AnimatedArray } from '@react-spring/animated'
-import { SpringValue } from '@react-spring/core'
+import createMockRaf, { MockRaf } from 'mock-raf'
+import { FrameLoop, SpringValue, Animatable } from '@react-spring/core'
 import { a } from '.'
+import * as Globals from 'shared/globals'
 
 afterEach(cleanup)
+
+let mockRaf: MockRaf
+beforeEach(() => {
+  mockRaf = createMockRaf()
+  Globals.assign({
+    performanceNow: mockRaf.now,
+    requestAnimationFrame: mockRaf.raf,
+    cancelAnimationFrame: mockRaf.cancel,
+    frameLoop: new FrameLoop(),
+  })
+})
 
 describe('animated component', () => {
   it('creates an HTML element from a tag name', () => {
@@ -28,10 +40,10 @@ describe('animated component', () => {
       </h2>
     ))
     const AnimatedName = a(Name)
-    const child = new AnimatedValue('Animated Text')
-    const name = new AnimatedValue('name')
+    const child = spring('Animated Text')
+    const name = spring('name')
     const { queryByTitle } = render(
-      <AnimatedName name={name as SpringValue<string>} other="test">
+      <AnimatedName name={name} other="test">
         {child}
       </AnimatedName>
     )
@@ -41,14 +53,15 @@ describe('animated component', () => {
   })
 
   it('accepts Animated values in style prop', () => {
-    const opacity = new AnimatedValue<number>(0)
+    const opacity = spring(0)
     const { queryByText } = render(
       <a.div style={{ opacity, color: 'red' }}>Text</a.div>
     )
     const div: any = queryByText('Text')!
     expect(div).toBeTruthy()
     expect(div.style.opacity).toBe('0')
-    opacity.setValue(1)
+    opacity.set(1)
+    mockRaf.step()
     expect(div.style.opacity).toBe('1')
   })
 
@@ -62,7 +75,7 @@ describe('animated component', () => {
       </h2>
     ))
     const AnimatedName = a(Name)
-    const opacity = new AnimatedValue(0.5)
+    const opacity = spring(0.5)
     const { queryByText } = render(
       <AnimatedName
         style={{
@@ -75,16 +88,17 @@ describe('animated component', () => {
     const div: any = queryByText('Text')!
     expect(div).toBeTruthy()
     expect(div.style.opacity).toBe('0.5')
-    opacity.setValue(1)
+    opacity.set(1)
+    mockRaf.step()
     expect(div.style.opacity).toBe('1')
   })
 
   it('accepts scrollTop and scrollLeft properties', () => {
-    const scrollTop = new AnimatedValue(0)
+    const scrollTop = spring(0)
     const { queryByTestId } = render(
       <a.div
-        scrollTop={scrollTop as SpringValue<number>}
-        scrollLeft={new AnimatedValue(0) as SpringValue<number>}
+        scrollTop={scrollTop}
+        scrollLeft={0}
         style={{ height: 100 }}
         data-testid="wrapper">
         <div style={{ height: 200 }} />
@@ -93,7 +107,8 @@ describe('animated component', () => {
     const wrapper: any = queryByTestId('wrapper')!
     expect(wrapper.scrollTop).toBe(0)
     expect(wrapper.scrollLeft).toBe(0)
-    scrollTop.setValue(20)
+    scrollTop.set(20)
+    mockRaf.step()
     expect(wrapper.scrollTop).toBe(20)
   })
 
@@ -122,16 +137,9 @@ describe('animated component', () => {
   })
 
   it('accepts Animated values or Animated arrays as attributes', () => {
-    const scale = new AnimatedValue(2)
-    const translate: any = new AnimatedArray([
-      new AnimatedValue(10),
-      new AnimatedValue(20),
-    ])
-    const translate3d: [
-      AnimatedValue<number>,
-      AnimatedValue<number>,
-      string
-    ] = [new AnimatedValue(30), new AnimatedValue(40), '50px']
+    const scale = spring(2)
+    const translate = spring([10, 20] as const)
+    const translate3d = [spring(30), spring(40), '50px'] as const
 
     const { queryByTestId } = render(
       <a.div style={{ scale, translate, translate3d }} data-testid="wrapper" />
@@ -170,7 +178,7 @@ describe('animated component', () => {
   })
 
   it('applies `transform:none` when identity transform is detected', () => {
-    const z = new AnimatedValue(0)
+    const z = spring(0)
     const { queryByTestId } = render(
       <a.div
         style={{
@@ -207,3 +215,7 @@ describe('animated component', () => {
     expect(wrapper.style.transform).toBe('translateX(40px) scale(1,2)')
   })
 })
+
+function spring<T>(value: T): SpringValue<Animatable<T>> {
+  return new SpringValue('value').update({ from: { value } })
+}
