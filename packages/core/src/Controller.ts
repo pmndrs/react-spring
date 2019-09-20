@@ -5,10 +5,11 @@ import {
   toArray,
   UnknownProps,
   UnknownPartial,
+  FluidProps,
 } from 'shared'
 import * as G from 'shared/globals'
 
-import { SpringProps, FluidProps, SpringValues } from './types/spring'
+import { SpringProps, SpringValues } from './types/spring'
 import { AnimationEvents } from './types/animated'
 import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
