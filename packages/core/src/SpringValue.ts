@@ -267,6 +267,15 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
   }
 
+  /** @internal Called by the frameloop */
+  onFrame(idle: boolean, changed: boolean) {
+    if (idle) {
+      this.finish()
+    } else if (changed) {
+      this._onChange(this.get())
+    }
+  }
+
   /**
    * @internal
    * Analyze the given `value` to determine which data type is being animated.
@@ -580,8 +589,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     return true
   }
 
-  /** @internal Called by the frameloop */
-  public _onChange(value: T, finished = false) {
+  /** Notify change observers */
+  protected _onChange(value: T, finished = false) {
     const anim = this.animation
     if (anim) {
       if (!anim.changed) {
