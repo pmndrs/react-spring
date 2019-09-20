@@ -456,12 +456,12 @@ export class SpringValue<T = any> extends AnimationValue<T> {
         anim.config = config = { ...BASE_CONFIG, ...config }
       }
 
-      // When "speed" is provided, we derive "tension" and "friction" from it.
-      if (!is.und(config.speed)) {
-        config.tension = Math.pow((2 * Math.PI) / config.speed, 2) * config.mass
-        // Note: We treat "friction" as the *damping ratio* instead of as its coefficient.
+      // Derive "tension" and "friction" from "frequency" and "damping".
+      if (!is.und(config.frequency)) {
+        const damping = is.und(config.damping) ? 1 : config.damping
+        config.tension = Math.pow(config.frequency, 2) * config.mass
         config.friction =
-          (4 * Math.PI * config.friction * config.mass) / config.speed
+          (damping * Math.sqrt(config.tension * config.mass)) / 0.5
       }
 
       // Cache the angular frequency in rad/ms
