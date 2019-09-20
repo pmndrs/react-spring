@@ -173,12 +173,14 @@ export class Controller<State extends Indexable = UnknownProps> {
     } else {
       each(toArray(keys), key => this._springs[key].stop())
     }
+    return this
   }
 
   /** Restart every animation. */
   reset() {
     each(this._springs, spring => spring.reset())
     // TODO: restart async "to" prop
+    return this
   }
 
   /** Destroy every spring in this controller */
