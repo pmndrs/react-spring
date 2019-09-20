@@ -53,11 +53,22 @@ export interface AnimationConfig {
    */
   tension: number
   /**
-   * The frequency response.
+   * The natural frequency (in seconds), which dictates the number of bounces
+   * per second when no damping exists.
    *
-   * An alternative to `tension` that describes the speed of an undamped spring.
+   * When defined, `tension` is derived from this, and `friction` is derived
+   * from `tension` and `damping`.
    */
-  speed?: number
+  frequency?: number
+  /**
+   * The damping ratio, which dictates how the spring slows down.
+   *
+   * Set to `0` to never slow down. Set to `1` to slow down without bouncing.
+   * Between `0` and `1` is for you to explore.
+   *
+   * Defaults to `1` when `frequency` is defined.
+   */
+  damping?: number
   /**
    * The damping ratio coefficient, or just the damping ratio when `speed` is defined.
    *
