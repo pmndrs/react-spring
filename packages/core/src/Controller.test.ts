@@ -48,29 +48,29 @@ it('can animate an array of numbers', () => {
 
 describe('async "to" prop', () => {
   it('acts strangely without the "from" prop', async () => {
-    const ctrl = new Controller<{ x: number }>({
-      to: async update => {
-        // The spring does not exist yet!
-        expect(ctrl.get('x')).toBeUndefined()
+    const ctrl = new Controller<{ x: number }>()
+    ctrl
+      .update({
+        to: async update => {
+          // The spring does not exist yet!
+          expect(ctrl.get('x')).toBeUndefined()
 
-        // Any values passed here are treated as "from" values,
-        // because no "from" prop was ever given.
-        let promise = update({ x: 1 })
-        // Now the spring exists!
-        expect(ctrl.get('x')).toBeDefined()
-        // But the spring is idle!
-        expect(ctrl.get('x').idle).toBeTruthy()
-        await promise
+          // Any values passed here are treated as "from" values,
+          // because no "from" prop was ever given.
+          let promise = update({ x: 1 })
+          // Now the spring exists!
+          expect(ctrl.get('x')).toBeDefined()
+          // But the spring is idle!
+          expect(ctrl.get('x').idle).toBeTruthy()
+          await promise
 
-        // This call *will* start an animation!
-        promise = update({ x: 2 })
-        expect(ctrl.get('x').idle).toBeFalsy()
-        await promise
-      },
-    })
-
-    // Springs are not created synchronously!
-    expect(ctrl.springs).toEqual({})
+          // This call *will* start an animation!
+          promise = update({ x: 2 })
+          expect(ctrl.get('x').idle).toBeFalsy()
+          await promise
+        },
+      })
+      .start()
 
     // Since we call `update` twice, frames are generated!
     expect(await getAsyncFrames(ctrl)).toMatchSnapshot()
