@@ -159,7 +159,7 @@ export class FrameLoop {
 
     const anim = spring.animation!
     const parent = isFluidValue(anim.to) && anim.to
-    const payload = isAnimationValue(parent) && parent.node.getPayload()
+    const payload = isAnimationValue(parent) && parent.node!.getPayload()
 
     anim.values.forEach((node, i) => {
       if (node.done) return
