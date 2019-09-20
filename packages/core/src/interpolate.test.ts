@@ -2,10 +2,8 @@ import { assert, _ } from 'spec.ts'
 import { SpringValue } from './SpringValue'
 import { to, Into } from './interpolate'
 
-jest.mock('./interpolate')
-
 function spring<T>(value: T): SpringValue<T> {
-  return new SpringValue().update({ from: { value } })
+  return new SpringValue('value').update({ from: { value } })
 }
 
 describe('AnimatedValue interpolation options', () => {
