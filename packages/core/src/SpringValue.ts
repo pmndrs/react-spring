@@ -597,22 +597,20 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   }
 
   /** Notify change observers */
-  protected _onChange(value: T, finished = false) {
+  protected _onChange(value: T, idle = false) {
     const anim = this.animation
-    if (anim) {
-      if (!anim.changed) {
-        anim.changed = true
-        // The "onStart" prop is called on the first change after entering the
-        // frameloop, but never for immediate animations.
-        if (anim.onStart && !anim.immediate) {
-          anim.onStart(this)
-        }
-      }
-      if (anim.onChange) {
-        anim.onChange(value, this)
+    if (!anim.changed) {
+      anim.changed = true
+      // The "onStart" prop is called on the first change after entering the
+      // frameloop, but never for immediate animations.
+      if (anim.onStart && !anim.immediate) {
+        anim.onStart(this)
       }
     }
-    super._onChange(value, finished)
+    if (anim.onChange) {
+      anim.onChange(value, this)
+    }
+    super._onChange(value, idle)
   }
 
   protected _onPriorityChange(priority: number) {
