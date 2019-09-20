@@ -20,7 +20,7 @@ import invariant from 'tiny-invariant'
 import * as G from 'shared/globals'
 
 import { Indexable } from './types/common'
-import { SpringConfig, SpringProps, AsyncTo } from './types/spring'
+import { SpringConfig, SpringProps } from './types/spring'
 import {
   AnimatedType,
   Animation,
@@ -157,52 +157,6 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     return this
   }
 
-  animate(props: PendingProps<T>): AsyncResult<T>
-
-  animate(to: Animatable<T>, props?: PendingProps<T>): AsyncResult<T>
-
-  /** Update this value's animation using the given props. */
-  animate(to: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
-    this._checkDisposed('animate')
-
-    // The first argument is never cloned.
-    const props: PendingProps<T> = is.obj(to) ? (to as any) : { ...arg2, to }
-
-    // Ensure the initial value can be accessed by animated components.
-    const range = this.setNodeWithProps(props)
-
-    const timestamp = G.now()
-    return scheduleProps(
-      ++this._lastAsyncId,
-      props,
-      this._state,
-      (props, resolve) => {
-        const { to } = props
-        if (is.arr(to) || is.fun(to)) {
-          resolve(
-            runAsync<T>(
-              to as AsyncTo<T>,
-              props,
-              this._state,
-              () => this.get(),
-              () => this.is(PAUSED),
-              this.animate.bind(this) as any,
-              this.stop.bind(this) as any
-            )
-          )
-        } else if (props.cancel) {
-          this.stop()
-          resolve({
-            value: this.get(),
-            cancelled: true,
-          })
-        } else {
-          this._animate(range, props, timestamp, resolve)
-        }
-      }
-    )
-  }
-
   /** Push props into the pending queue. */
   update(props: PendingProps<T>) {
     this._checkDisposed('update')
@@ -218,8 +172,17 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /**
    * Update this value's animation using the queue of pending props,
    * and unpause the current animation (if one is frozen).
+   *
+   * When arguments are passed, a new animation is created, and the
+   * queued animations are left alone.
    */
-  async start(): AsyncResult<T> {
+  start(): AsyncResult<T>
+
+  start(props: PendingProps<T>): AsyncResult<T>
+
+  start(to: Animatable<T>, props?: PendingProps<T>): AsyncResult<T>
+
+  async start(to?: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
     this._checkDisposed('start')
 
     // Unpause if possible.
@@ -231,15 +194,15 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       }
     }
 
-    const queue = this.queue || []
-    this.queue = []
+    let queue: PendingProps<T>[]
+    if (!is.und(to)) {
+      queue = [is.obj(to) ? (to as any) : { ...arg2, to }]
+    } else {
+      queue = this.queue || []
+      this.queue = []
+    }
 
-    await Promise.all(
-      queue.map(async props => {
-        await this.animate(props)
-      })
-    )
-
+    await Promise.all(queue.map(props => this._animate(props)))
     return {
       finished: true,
       value: this.get(),
@@ -264,7 +227,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
   /** Restart the animation. */
   reset() {
-    this.animate({ reset: true })
+    this._animate({ reset: true })
   }
 
   /** Prevent future animations, and stop the current animation */
@@ -351,8 +314,55 @@ export class SpringValue<T = any> extends AnimationValue<T> {
             : AnimatedValue)
   }
 
+  /** Pluck the `to` and `from` props */
+  protected _getRange(props: PendingProps<T>): AnimationRange<T> {
+    const { to, from } = props as any
+    const key = this.key || ''
+    return {
+      to: !is.obj(to) || isFluidValue(to) ? to : to[key],
+      from: !is.obj(from) || isFluidValue(from) ? from : from[key],
+    }
+  }
+
+  /** Update this value's animation using the given props. */
+  protected _animate(props: PendingProps<T>): AsyncResult<T> {
+    // Ensure the initial value can be accessed by animated components.
+    const range = this.setNodeWithProps(props)
+
+    const timestamp = G.now()
+    return scheduleProps(
+      ++this._lastAsyncId,
+      props,
+      this._state,
+      (props: RunAsyncProps<T>, resolve) => {
+        const { to } = props
+        if (is.arr(to) || is.fun(to)) {
+          resolve(
+            runAsync(
+              to,
+              props,
+              this._state,
+              () => this.get(),
+              () => this.is(PAUSED),
+              this.start.bind(this),
+              this.stop.bind(this) as any
+            )
+          )
+        } else if (props.cancel) {
+          this.stop()
+          resolve({
+            value: this.get(),
+            cancelled: true,
+          })
+        } else {
+          this._update(range, props, timestamp, resolve)
+        }
+      }
+    )
+  }
+
   /** Update the internal `animation` object */
-  protected _animate(
+  protected _update(
     { to, from }: AnimationRange<T>,
     props: RunAsyncProps<T>,
     timestamp: number,
@@ -657,16 +667,6 @@ export class SpringValue<T = any> extends AnimationValue<T> {
         const result = { value: this.get(), spring: this, finished }
         each(onRestQueue, onRest => onRest(result))
       }
-    }
-  }
-
-  /** Pluck the `to` and `from` props */
-  protected _getRange(props: PendingProps<T>): AnimationRange<T> {
-    const { to, from } = props as any
-    const key = this.key || ''
-    return {
-      to: !is.obj(to) || isFluidValue(to) ? to : to[key],
-      from: !is.obj(from) || isFluidValue(from) ? from : from[key],
     }
   }
 }
