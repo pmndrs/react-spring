@@ -421,9 +421,6 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     } else {
       from = anim.from
     }
-    if (is.und(from)) {
-      from = to
-    }
     if (isFluidValue(from)) {
       from = from.get()
     }
@@ -434,6 +431,9 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
     /** The current value */
     let value = reset ? from! : this.get()
+    if (is.und(from)) {
+      from = value
+    }
 
     /** When true, this spring must be in the frameloop. */
     let started = parent || ((changed || reset) && !isEqual(value, to))
