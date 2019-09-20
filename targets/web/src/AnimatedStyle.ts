@@ -47,10 +47,6 @@ const isValueIdentity = (value: OneOrMore<Value>, id: number): boolean =>
     ? value === id
     : parseFloat(value) === id
 
-/** Coerce any `FluidValue` to its current value */
-const getValue = <T>(value: T | FluidValue<T>) =>
-  isFluidValue(value) ? value.get() : value
-
 type Inputs = ReadonlyArray<Value | FluidValue<Value>>[]
 type Transforms = ((value: any) => [string, boolean])[]
 
@@ -120,6 +116,10 @@ export class AnimatedStyle extends AnimatedObject {
   }
 }
 
+/** Coerce any `FluidValue` to its current value */
+const getValue = <T>(value: T | FluidValue<T>) =>
+  isFluidValue(value) ? value.get() : value
+
 class SpringTransform extends AnimationValue<string> {
   node: AnimatedValue<string>
 
@@ -137,7 +137,10 @@ class SpringTransform extends AnimationValue<string> {
     let transform = ''
     let identity = true
     each(this.inputs, (input, i) => {
-      const [t, id] = this.transforms[i](input.map(getValue))
+      const arg1 = getValue(input[0])
+      const [t, id] = this.transforms[i](
+        is.arr(arg1) ? arg1 : input.map(getValue)
+      )
       transform += ' ' + t
       identity = identity && id
     })
