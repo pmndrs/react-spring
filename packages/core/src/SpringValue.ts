@@ -110,9 +110,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
   /** Set the current value, while stopping the current animation */
   set(value: T, notify = true) {
-    this.node.setValue(value)
-    if (notify) {
-      this._onChange(value)
+    if (this._set(value) && notify) {
+      super._onChange(value, true)
     }
     this._stop()
     return this
@@ -148,8 +147,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       } else {
         if (is.und(to)) to = anim.to
         if (isFluidValue(to)) to = to.get()
-        if (!isEqual(value, to)) {
-          this.node.setValue(to)
+        if (this._set(to)) {
           this._onChange(to, true)
         }
       }
@@ -306,6 +304,17 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
   /**
    * @internal
+   * Analyze the given `value` to determine which data type is being animated.
+   * Then, create an `Animated` node for that data type and make it our `node`.
+   */
+  setNodeWithValue(value: any) {
+    if (value != null) {
+      this.node = this._getNodeType(value).create(computeGoal(value))
+    }
+  }
+
+  /**
+   * @internal
    * Analyze the given `props` to determine which data type is being animated.
    * Then, create an `Animated` node for that data type and make it our `node`.
    * If we already have a `node`, do nothing but return the `{from, to}` range.
@@ -313,10 +322,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   setNodeWithProps(props: PendingProps<T>) {
     const range = this._getRange(props)
     if (!this.node) {
-      const value = range.from != null ? range.from : range.to
-      if (value != null) {
-        this.node = this._getNodeType(value).create(computeGoal(value))
-      }
+      this.setNodeWithValue(range.from != null ? range.from : range.to)
     }
     return range
   }
@@ -456,7 +462,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     let goal: any = parent ? null : computeGoal(to)
 
     // Reset our internal `Animated` node if starting.
-    let node = this.node
+    let node = this.node!
     let nodeType: AnimatedType<T>
     if (changed) {
       nodeType = this._getNodeType(to!)
@@ -550,6 +556,20 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     } else {
       this.priority = 0
     }
+  }
+
+  /** Set the current value and our `node` if necessary. The `_onChange` method is *not* called. */
+  protected _set(value: T) {
+    if (this.node) {
+      const oldValue = this.node.getValue()
+      if (isEqual(value, oldValue)) {
+        return false
+      }
+      this.node.setValue(value)
+    } else {
+      this.setNodeWithValue(value)
+    }
+    return true
   }
 
   /** @internal Called by the frameloop */
