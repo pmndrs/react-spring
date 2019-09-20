@@ -1,4 +1,4 @@
-import { is, Merge, each, AnyFn, toArray, OneOrMore, AnyKey } from 'shared'
+import { is, Merge, each, AnyFn, toArray, OneOrMore } from 'shared'
 import { ReservedProps, ForwardProps } from './types/common'
 import { useMemoOne } from 'use-memo-one'
 
@@ -17,13 +17,13 @@ export function callProp<T>(
   return is.fun(value) ? value(...args) : value
 }
 
-export type MatchProp<P extends AnyKey = AnyKey> =
+export type MatchProp<P extends string = string> =
   | boolean
   | OneOrMore<P>
   | ((key: P) => boolean)
 
 /** Try to coerce the given value into a boolean using the given key */
-export const matchProp = <P extends AnyKey = AnyKey>(
+export const matchProp = <P extends string = string>(
   value: MatchProp<P> | undefined,
   key: P | undefined
 ) =>
