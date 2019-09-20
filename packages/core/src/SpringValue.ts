@@ -51,17 +51,23 @@ export type PendingProps<T = unknown> = unknown &
   AnimationEvents<T>
 
 // TODO: use "const enum" when Babel supports it
-type Phase = number & { __type: 'Phase' }
+type Phase =
+  | typeof DISPOSED
+  | typeof CREATED
+  | typeof IDLE
+  | typeof PAUSED
+  | typeof ACTIVE
+
 /** The spring cannot be animated */
-const DISPOSED = 0 as Phase
+const DISPOSED = 'DISPOSED'
 /** The spring has not animated yet */
-const CREATED = 1 as Phase
+const CREATED = 'CREATED'
 /** The spring has animated before */
-const IDLE = 2 as Phase
+const IDLE = 'IDLE'
 /** The spring is frozen in time */
-const PAUSED = 3 as Phase
+const PAUSED = 'PAUSED'
 /** The spring is animating */
-const ACTIVE = 4 as Phase
+const ACTIVE = 'ACTIVE'
 
 const noop = () => {}
 
@@ -76,7 +82,6 @@ const BASE_CONFIG: SpringConfig = {
 
 /** An opaque animatable value */
 export class SpringValue<T = any> extends AnimationValue<T> {
-  static phases = { DISPOSED, CREATED, IDLE, PAUSED, ACTIVE }
   /** The animation state */
   animation: Animation<T> = { owner: this } as any
   /** The queue of pending props */
