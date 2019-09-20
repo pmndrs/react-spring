@@ -337,7 +337,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** Return the `Animated` node constructor for a given value */
   protected _getNodeType(value: T | FluidValue<T>): AnimatedType<T> {
     const parent = isAnimationValue(value) ? value : null
-    const parentType = parent && (parent.node.constructor as any)
+    const parentType = parent && parent.node && (parent.node.constructor as any)
     if (!parent && isFluidValue(value)) {
       value = value.get()
     }
