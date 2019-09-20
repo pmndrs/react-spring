@@ -72,7 +72,7 @@ export class Controller<State extends Indexable = UnknownProps> {
     this._onFrame = this._onFrame.bind(this)
     if (props) {
       props.default = true
-      this.update(props).start()
+      this.start(props)
     }
   }
 
@@ -96,40 +96,28 @@ export class Controller<State extends Indexable = UnknownProps> {
   }
 
   /** Push an update onto the queue of each value. */
-  update(propsArg: ControllerProps<State> | Falsy) {
-    if (!propsArg) return this
-
-    // This returns a new object every time.
-    const props: any = interpolateTo(propsArg)
-    const keys = (props.keys = extractKeys(props, this._springs))
-
-    let { from, to } = props
-
-    // Avoid sending async "to" prop to springs.
-    if (is.arr(to) || is.fun(to)) {
-      to = undefined
-    }
-
-    // Ensure springs have an initial value.
-    if (from || to) {
-      this._setSprings(keys, from, to)
-    }
-
-    // Use our own queue, instead of each spring's queue.
-    this.queue.push(props)
+  update(props: ControllerProps<State> | Falsy) {
+    if (props) this.queue.push(this._update(props))
     return this
   }
 
   /**
    * Start the queued animations for every spring, and resolve the returned
    * promise once all queued animations have finished or been cancelled.
+   *
+   * When you pass a queue (instead of nothing), that queue is used instead of
+   * the queued animations added with the `update` method, which are left alone.
    */
-  async start() {
-    const queue = this.queue
-    this.queue = []
+  async start(queue?: OneOrMore<ControllerProps<State>>) {
+    if (queue) {
+      queue = toArray<any>(queue).map(props => this._update(props))
+    } else {
+      queue = this.queue
+      this.queue = []
+    }
 
     const promises: AsyncResult[] = []
-    each(queue, props => {
+    each(queue as PendingProps<State>[], props => {
       const { to, onFrame, keys } = props
       const asyncTo = (is.arr(to) || is.fun(to)) && to
       if (asyncTo) {
@@ -137,7 +125,7 @@ export class Controller<State extends Indexable = UnknownProps> {
       }
       promises.push(
         // Send updates to every affected key.
-        ...keys.map(key => this._springs[key].animate(props as any)),
+        ...keys.map(key => this._springs[key].start(props as any)),
         // Schedule controller-only props.
         scheduleProps(++lastAsyncId, props, this._props, (props, resolve) => {
           if (!props.cancel) {
@@ -157,7 +145,7 @@ export class Controller<State extends Indexable = UnknownProps> {
                 this._props,
                 this._get.bind(this),
                 () => false, // TODO: add pausing to Controller
-                ((props: any) => this.update(props).start()) as any,
+                this.start.bind(this) as any,
                 this.stop.bind(this) as any
               )
             )
@@ -209,7 +197,7 @@ export class Controller<State extends Indexable = UnknownProps> {
     return values
   }
 
-  /** Send an update to any spring whose key exists in `props.keys` */
+  /** Create a spring for every given key, and ensure they have `Animated` nodes. */
   protected _setSprings(keys: any[], from?: object, to?: object) {
     each(keys, key => {
       if (!this._springs[key]) {
@@ -218,6 +206,26 @@ export class Controller<State extends Indexable = UnknownProps> {
         spring.setNodeWithProps({ from, to })
       }
     })
+  }
+
+  /** Prepare an update with the given props. */
+  protected _update(propsArg: ControllerProps<State>) {
+    const props: PendingProps<State> = interpolateTo(propsArg) as any
+    const keys = (props.keys = extractKeys(props, this._springs))
+
+    let { from, to } = props as any
+
+    // Avoid sending async "to" prop to springs.
+    if (is.arr(to) || is.fun(to)) {
+      to = undefined
+    }
+
+    // Create our springs and give them values.
+    if (from || to) {
+      this._setSprings(keys, from, to)
+    }
+
+    return props
   }
 
   /** @internal Attached as an observer to every spring */
