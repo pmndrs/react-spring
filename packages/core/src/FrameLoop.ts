@@ -306,15 +306,7 @@ export class FrameLoop {
       }
     })
 
-    // Notify observers.
-    if (changed) {
-      spring._onChange(spring.get(), idle)
-    }
-
-    // Exit the frameloop.
-    if (idle) {
-      spring.finish()
-    }
+    spring.onFrame(idle, changed)
   }
 }
 
