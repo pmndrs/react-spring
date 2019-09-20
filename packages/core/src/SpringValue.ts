@@ -407,7 +407,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       from = from.get()
     }
 
-    const reset = props.reset && !is.und(from) && !is.und(to)
+    const reset = props.reset && !is.und(from)
     const changed = !is.und(to) && !isEqual(to, prevTo)
     const parent = isFluidValue(to) && to
 
