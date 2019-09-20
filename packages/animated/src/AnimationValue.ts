@@ -126,7 +126,7 @@ export abstract class AnimationValue<T = any>
 
   /** Reset our node and the nodes of every descendant */
   protected _reset(goal?: T) {
-    this.node.reset(!this.idle, goal)
+    this.node!.reset(!this.idle, goal)
     each(this._children, observer => {
       if (isAnimationValue(observer)) {
         observer._reset(goal)
