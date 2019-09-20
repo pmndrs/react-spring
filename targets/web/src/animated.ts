@@ -1,6 +1,12 @@
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
 import { withAnimated, extendAnimated } from '@react-spring/animated'
-import { ElementType, ComponentPropsWithRef, Merge, FluidValue } from 'shared'
+import {
+  ElementType,
+  ComponentPropsWithRef,
+  Merge,
+  FluidValue,
+  FluidProps,
+} from 'shared'
 import { elements, JSXElements } from './elements'
 
 type DOMComponents = {
@@ -23,10 +29,11 @@ export { animated as a }
 export type AnimatedComponent<
   T extends ElementType
 > = ForwardRefExoticComponent<
-  AnimatedProps<Merge<ComponentPropsWithRef<T>, { style?: StyleProps }>> & {
-    scrollTop?: FluidValue<number> | number
-    scrollLeft?: FluidValue<number> | number
-  }
+  AnimatedProps<Merge<ComponentPropsWithRef<T>, { style?: StyleProps }>> &
+    FluidProps<{
+      scrollTop?: number
+      scrollLeft?: number
+    }>
 >
 
 /** The props of an `animated()` component */
