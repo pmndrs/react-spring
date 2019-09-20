@@ -67,10 +67,13 @@ export async function runAsync<T>(
       cancelled: true,
     }
   }
-  // Unchanged "to" prop is a no-op (except with "reset: true")
+  // Wait for the previous async animation to be cancelled.
   else if (props.reset) {
     await state.promise
-  } else if (to === state.asyncTo) {
+  }
+  // Async animations are only replaced when "props.to" changes
+  // or when "props.reset" equals true.
+  else if (to === state.asyncTo) {
     return state.promise!
   }
   state.asyncTo = to
@@ -79,18 +82,6 @@ export async function runAsync<T>(
     const cancelToken = Symbol.for('cancel')
     const isCancelled = () =>
       to !== state.asyncTo || asyncId < (state.cancelId || 0)
-
-    const handleInterrupts = async () => {
-      if (isCancelled()) {
-        throw cancelToken
-      }
-      if (getPaused()) {
-        await new Promise(resolve => {
-          state.unpause = resolve
-        })
-        state.unpause = undefined
-      }
-    }
 
     const defaultProps: DefaultProps = {}
     each(DEFAULT_PROPS, prop => {
@@ -103,29 +94,42 @@ export async function runAsync<T>(
     const animate = (
       arg1: SpringTo<T> | SpringProps<T>,
       arg2?: SpringProps<T>
-    ) =>
-      handleInterrupts().then(async () => {
-        type AnimateProps = SpringProps<T> & typeof defaultProps
-        const props: AnimateProps = is.obj(arg1)
-          ? { ...arg1 }
-          : { ...arg2, to: arg1 as any }
+    ) => {
+      if (isCancelled()) {
+        throw cancelToken
+      }
 
-        each(defaultProps, (value, prop) => {
-          if (is.und(props[prop])) {
-            props[prop] = value as any
-          }
-        })
+      type AnimateProps = SpringProps<T> & typeof defaultProps
+      const props: AnimateProps = is.obj(arg1)
+        ? { ...arg1 }
+        : { ...arg2, to: arg1 as any }
 
-        const parentTo = state.asyncTo
-        const result = await update(props)
+      each(defaultProps, (value, prop) => {
+        if (is.und(props[prop])) {
+          props[prop] = value as any
+        }
+      })
 
+      const parentTo = state.asyncTo
+      return update(props).then(async result => {
         if (state.asyncTo == null) {
           state.asyncTo = parentTo
         }
 
-        await handleInterrupts()
+        if (isCancelled()) {
+          throw cancelToken
+        }
+
+        if (getPaused()) {
+          await new Promise(resolve => {
+            state.unpause = resolve
+          })
+          state.unpause = undefined
+        }
+
         return result
       })
+    }
 
     let result: AnimationResult<T>
     try {
