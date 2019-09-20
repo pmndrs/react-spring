@@ -77,35 +77,39 @@ describe('async "to" prop', () => {
   })
 })
 
+/** Collect all frames synchronously */
 function getFrames<T extends object>(ctrl: Controller<T>): T[] {
   const frames: any[] = []
-  ctrl['_props'].onFrame = values => {
-    frames.push(values)
-  }
+  const onFrame = (frame: any) => frames.push(frame)
+
   let steps = 0
   while (!ctrl.idle) {
+    ctrl['_props'].onFrame = onFrame
     mockRaf.step()
     if (++steps > 1e5) {
-      break // Prevent infinite loops
+      throw Error('Infinite loop detected')
     }
   }
+
   return frames
 }
 
+/** Wait one microtask tick between frames */
 async function getAsyncFrames<T extends object>(
   ctrl: Controller<T>
 ): Promise<T[]> {
   const frames: any[] = []
-  ctrl['_props'].onFrame = values => {
-    frames.push(values)
-  }
+  const onFrame = (frame: any) => frames.push(frame)
+
   let steps = 0
   while (!ctrl.idle) {
+    ctrl['_props'].onFrame = onFrame
     mockRaf.step()
     await Promise.resolve()
     if (++steps > 1e5) {
       throw Error('Infinite loop detected')
     }
   }
+
   return frames
 }
