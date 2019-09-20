@@ -149,7 +149,6 @@ export async function runAsync<T>(
       }
     } catch (err) {
       if (err !== cancelToken) {
-        state.promise = undefined
         throw err
       }
       result = {
@@ -157,6 +156,7 @@ export async function runAsync<T>(
         cancelled: true,
       }
     } finally {
+      state.promise = undefined
       if (to == state.asyncTo) {
         state.asyncTo = undefined
       }
