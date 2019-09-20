@@ -25,7 +25,7 @@ export class FrameLoop {
    *
    * Equals `undefined` if nothing is animating.
    */
-  lastTime?: number
+  lastTime!: number
 
   /**
    * Process the next animation frame.
@@ -67,15 +67,16 @@ export class FrameLoop {
           return false
         }
 
-        this.updating = true
-
-        if (is.und(time)) time = performance.now()
-        let dt = is.und(this.lastTime) ? 0 : time - this.lastTime
-
-        // http://gafferongames.com/game-physics/fix-your-timestep/
-        if (dt > 64) dt = 64
-
+        if (is.und(time)) {
+          time = G.performanceNow()
+        }
+        let dt = time - this.lastTime
         if (dt > 0) {
+          // http://gafferongames.com/game-physics/fix-your-timestep/
+          if (dt > 64) dt = 64
+
+          this.updating = true
+
           // Advance the springs. Ignore mutations to the "springs" array.
           each([...this.springs], spring => {
             spring.idle || this.advance(dt, spring)
@@ -94,8 +95,8 @@ export class FrameLoop {
           }
 
           this.updating = false
+
           if (!this.springs.length) {
-            this.lastTime = undefined
             return (this.active = false)
           }
         }
@@ -133,6 +134,7 @@ export class FrameLoop {
   protected _start() {
     if (!this.active) {
       this.active = true
+      this.lastTime = G.performanceNow()
       this._requestFrame(this.update)
     }
   }
