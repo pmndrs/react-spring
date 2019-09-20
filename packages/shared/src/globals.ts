@@ -44,7 +44,13 @@ export let to: <In, Out>(
   args: InterpolatorArgs<In, Out>
 ) => FluidValue<Out>
 
+/** Used for timestamps in milliseconds. Read more [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now) */
 export let now = () => Date.now()
+
+declare const performance: { now: () => number }
+
+/** Used to measure frame length. Read more [here](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) */
+export let performanceNow = () => performance.now()
 
 /** Provide custom color names for interpolation */
 export let colorNames: { [key: string]: number } | null = null as any
@@ -80,6 +86,7 @@ export interface AnimatedGlobals {
   colorNames?: typeof colorNames
   skipAnimation?: typeof skipAnimation
   defaultElement?: typeof defaultElement
+  performanceNow?: typeof performanceNow
   getComponentProps?: typeof getComponentProps
   applyAnimatedValues?: typeof applyAnimatedValues
   createStringInterpolator?: typeof createStringInterpolator
@@ -97,6 +104,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     colorNames,
     skipAnimation,
     defaultElement,
+    performanceNow,
     getComponentProps,
     applyAnimatedValues,
     createStringInterpolator,
@@ -112,6 +120,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       colorNames,
       skipAnimation,
       defaultElement,
+      performanceNow,
       getComponentProps,
       applyAnimatedValues,
       createStringInterpolator,
