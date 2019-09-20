@@ -14,6 +14,11 @@ export interface FluidObserver<T = any> {
   onParentPriorityChange(priority: number, parent: FluidValue<T>): void
 }
 
+/** Add the `FluidValue` type to every property */
+export type FluidProps<T> = T extends object
+  ? { [P in keyof T]: T[P] | FluidValue<T[P]> }
+  : unknown
+
 /** These types can be animated */
 export type Animatable<T = any> = T extends number
   ? number

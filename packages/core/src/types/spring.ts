@@ -7,6 +7,7 @@ import {
   UnknownPartial,
   UnknownProps,
   FluidValue,
+  FluidProps,
   Remap,
 } from 'shared'
 import { Controller, ControllerProps } from '../Controller'
@@ -109,11 +110,6 @@ export interface RangeProps<T = any> {
  * or a primitive type for a single animated value.
  */
 export type SpringProps<T = any> = AnimationProps & RangeProps<T>
-
-/** Add the `FluidValue` type to every property */
-export type FluidProps<T> = T extends object
-  ? { [P in keyof T]: T[P] | FluidValue<T[P]> }
-  : unknown
 
 /**
  * An update to the props of a spring.
