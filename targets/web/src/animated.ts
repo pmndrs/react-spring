@@ -91,7 +91,7 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
 
 type AnimatedObject<T extends object> =
   | { [P in keyof T]: AnimatedStyle<T[P]> }
-  | (T extends ReadonlyArray<number | string> ? FluidValue<T> : never)
+  | (T extends ReadonlyArray<number | string> ? FluidValue<Readonly<T>> : never)
 
 // An animated value that is not an object
 type AnimatedLeaf<T> = [T] extends [object]
@@ -106,26 +106,26 @@ type TransformProps = {
   x?: Length
   y?: Length
   z?: Length
-  translate?: Length | [Length, Length]
+  translate?: Length | readonly [Length, Length]
   translateX?: Length
   translateY?: Length
   translateZ?: Length
-  translate3d?: [Length, Length, Length]
+  translate3d?: readonly [Length, Length, Length]
   rotate?: Angle
   rotateX?: Angle
   rotateY?: Angle
   rotateZ?: Angle
-  rotate3d?: [number, number, number, Angle]
-  scale?: number | [number, number]
+  rotate3d?: readonly [number, number, number, Angle]
+  scale?: number | readonly [number, number]
   scaleX?: number
   scaleY?: number
   scaleZ?: number
-  scale3d?: [number, number, number]
-  skew?: Angle | [Angle, Angle]
+  scale3d?: readonly [number, number, number]
+  skew?: Angle | readonly [Angle, Angle]
   skewX?: Angle
   skewY?: Angle
-  matrix?: [number, number, number, number, number, number]
-  matrix3d?: [
+  matrix?: readonly [number, number, number, number, number, number]
+  matrix3d?: readonly [
     number, // a1
     number,
     number,
