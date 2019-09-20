@@ -77,10 +77,11 @@ export class FrameLoop {
 
           this.updating = true
 
-          // Advance the springs. Ignore mutations to the "springs" array.
-          each([...this.springs], spring => {
-            spring.idle || this.advance(dt, spring)
-          })
+          const { springs } = this
+          if (springs.length)
+            [...springs].forEach(spring => {
+              spring.idle || this.advance(dt, spring)
+            })
 
           // Notify frame listeners.
           const queues = this._queues
