@@ -41,6 +41,7 @@ export abstract class AnimationValue<T = any>
   abstract node:
     | AnimatedValue<T>
     | (T extends ReadonlyArray<any> ? AnimatedArray<T> : never)
+    | undefined
 
   protected _priority = 0
   protected _children = new Set<AnimationObserver<T>>()
@@ -61,8 +62,10 @@ export abstract class AnimationValue<T = any>
   }
 
   /** Get the current value */
-  get() {
-    return this.node.getValue()
+  get(): T {
+    // The node doesn't exist until the first update, which normally isn't an
+    // issue but it can be for tests.
+    return this.node && (this.node.getValue() as any)
   }
 
   /** Create a spring that maps our value to another value */
