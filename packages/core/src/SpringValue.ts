@@ -124,7 +124,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
    * Call `start` to unpause.
    */
   pause() {
-    this._checkDisposed('pause')
+    checkDisposed(this, 'pause')
     if (!this.idle) {
       this._phase = PAUSED
       G.frameLoop.stop(this)
@@ -159,7 +159,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
   /** Push props into the pending queue. */
   update(props: PendingProps<T>) {
-    this._checkDisposed('update')
+    checkDisposed(this, 'update')
 
     // Ensure the initial value can be accessed by animated components.
     this.setNodeWithProps(props)
@@ -183,7 +183,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   start(to: Animatable<T>, props?: PendingProps<T>): AsyncResult<T>
 
   async start(to?: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
-    this._checkDisposed('start')
+    checkDisposed(this, 'start')
 
     // Unpause if possible.
     if (this.is(PAUSED)) {
@@ -288,13 +288,6 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       this.setNodeWithValue(range.from != null ? range.from : range.to)
     }
     return range
-  }
-
-  protected _checkDisposed(name: string) {
-    invariant(
-      !this.is(DISPOSED),
-      `Cannot call "${name}" of disposed "${this.constructor.name}" object`
-    )
   }
 
   /** Return the `Animated` node constructor for a given value */
@@ -669,6 +662,14 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       }
     }
   }
+}
+
+// TODO: makes this tree-shakeable
+function checkDisposed(spring: SpringValue, name: string) {
+  invariant(
+    !spring.is(DISPOSED),
+    `Cannot call "${name}" of disposed "${spring.constructor.name}" object`
+  )
 }
 
 // Merge configs when the existence of "decay" or "duration" has not changed.
