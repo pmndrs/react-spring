@@ -1,8 +1,8 @@
 {
   "include": ["src"],
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
     "lib": ["dom", "es2017"],
