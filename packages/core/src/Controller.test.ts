@@ -21,8 +21,8 @@ it('can animate a number', () => {
   const frames = getFrames(ctrl)
   expect(frames).toMatchSnapshot()
 
-  // The first frame should be the from value.
-  expect(frames[0]).toEqual({ x: 0 })
+  // The first frame should *not* be the from value.
+  expect(frames[0]).not.toEqual({ x: 0 })
 
   // The last frame should be the goal value.
   expect(frames.slice(-1)[0]).toEqual({ x: 100 })
