@@ -138,20 +138,22 @@ export class SpringValue<T = any> extends AnimationValue<T> {
    */
   finish(to?: T | FluidValue<T>) {
     if (!this.idle) {
-      const value = this.get()
       const anim = this.animation
-      if (is.und(to) && anim.config.decay) {
-        // Decay animations finish when their velocity hits zero,
-        // so their goal value is implicit.
-        to = value
-      } else {
-        if (is.und(to)) to = anim.to
-        if (isFluidValue(to)) to = to.get()
-        if (this._set(to)) {
-          this._onChange(to, true)
-        }
+
+      // Decay animations have an implicit goal.
+      if (!anim.config.decay && is.und(to)) {
+        to = anim.to
       }
 
+      // Set the value if we can.
+      if (!is.und(to)) {
+        this._set(to)
+      }
+
+      // Always call "_onChange" so observers get a "finished" event.
+      this._onChange(this.get(), true)
+
+      // Exit the frameloop.
       this._stop(true)
     }
     return this
@@ -562,7 +564,10 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   }
 
   /** Set the current value and our `node` if necessary. The `_onChange` method is *not* called. */
-  protected _set(value: T) {
+  protected _set(value: T | FluidValue<T>) {
+    if (isFluidValue(value)) {
+      value = value.get()
+    }
     if (this.node) {
       const oldValue = this.node.getValue()
       if (isEqual(value, oldValue)) {
