@@ -91,14 +91,14 @@ export const ParallaxLayer = React.memo(
         setPosition(height, scrollTop, immediate = false) {
           const targetScroll = Math.floor(offset) * height
           const distance = height * offset + targetScroll * speed
-          ctrl.update({
+          ctrl.start({
             translate: -(scrollTop * speed) + distance,
             config: parent.config,
             immediate,
           })
         },
         setHeight(height, immediate = false) {
-          ctrl.update({
+          ctrl.start({
             space: height * factor,
             config: parent.config,
             immediate,
@@ -120,11 +120,13 @@ export const ParallaxLayer = React.memo(
       }
     })
 
-    const translate3d = ctrl.animated.translate.interpolate(
-      horizontal
-        ? x => `translate3d(${x}px,0,0)`
-        : y => `translate3d(0,${y}px,0)`
-    )
+    const translate3d = ctrl
+      .get('translate')
+      .to(
+        horizontal
+          ? x => `translate3d(${x}px,0,0)`
+          : y => `translate3d(0,${y}px,0)`
+      )
 
     return (
       <AnimatedView
@@ -135,7 +137,7 @@ export const ParallaxLayer = React.memo(
           backgroundRepeat: 'no-repeat',
           willChange: 'transform',
           [horizontal ? 'height' : 'width']: '100%',
-          [horizontal ? 'width' : 'height']: ctrl.animated.space,
+          [horizontal ? 'width' : 'height']: ctrl.get('space'),
           WebkitTransform: translate3d,
           MsTransform: translate3d,
           transform: translate3d,
@@ -224,8 +226,7 @@ export const Parallax = React.memo(
       const scrollType = getScrollType(horizontal)
 
       state.offset = offset
-      state.controller.stop()
-      state.controller.update({
+      state.controller.stop().start({
         scroll: offset * state.space,
         config,
         onFrame({ scroll }) {
