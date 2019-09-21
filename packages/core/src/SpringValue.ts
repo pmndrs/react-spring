@@ -224,11 +224,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   stop() {
     if (!this.is(DISPOSED)) {
       this._state.cancelId = this._lastAsyncId
-      const anim = this.animation
-      if (anim) {
-        this._to(this.get())
-        this._stop()
-      }
+      this._to(this.get())
+      this._stop()
     }
     return this
   }
