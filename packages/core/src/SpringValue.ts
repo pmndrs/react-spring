@@ -255,8 +255,9 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
   /** @internal */
   onParentChange(value: any, idle: boolean) {
+    const anim = this.animation
     // The "FrameLoop" handles everything other than immediate animation.
-    if (this.animation.immediate) {
+    if (anim.immediate) {
       if (idle) {
         this.finish(value)
       } else {
@@ -266,6 +267,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     // When our parent is not a spring, it won't tell us to enter the frameloop
     // because it never does so itself. Instead, we must react to value changes.
     else if (this.idle) {
+      anim.fromValues = anim.values.map(node => node.lastPosition)
       this._start()
     }
   }
@@ -529,11 +531,6 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       })
     }
 
-    const onRestQueue = anim.onRest
-
-    // The "onRest" prop is always first in the queue.
-    anim.onRest = [get('onRest') || noop, resolve]
-
     this._reset()
 
     anim.values = node.getPayload()
@@ -542,6 +539,11 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     anim.immediate =
       !(parent || is.num(goal) || is.arr(goal)) ||
       !!matchProp(get('immediate'), this.key)
+
+    const onRestQueue = anim.onRest
+
+    // The "onRest" prop is always first in the queue.
+    anim.onRest = [get('onRest') || noop, resolve]
 
     // Resolve the promise for unfinished animations.
     if (onRestQueue && onRestQueue.length > 1) {
