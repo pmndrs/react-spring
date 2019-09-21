@@ -82,7 +82,7 @@ const BASE_CONFIG: SpringConfig = {
 /** An opaque animatable value */
 export class SpringValue<T = any> extends AnimationValue<T> {
   /** The animation state */
-  animation: Animation<T> = { owner: this } as any
+  animation: Animation<T> = { value: this } as any
   /** The queue of pending props */
   queue?: PendingProps<T>[]
   /** @internal The animated node. Do not touch! */

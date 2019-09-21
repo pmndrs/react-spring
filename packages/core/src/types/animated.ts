@@ -148,6 +148,7 @@ export interface AnimationConfig {
 /** An animation being executed by the frameloop */
 export interface Animation<T = unknown> {
   changed: boolean
+  value: SpringValue<T>
   values: readonly AnimatedValue[]
   to: T | FluidValue<T>
   toValues: readonly number[] | null
@@ -159,7 +160,6 @@ export interface Animation<T = unknown> {
   onStart?: OnStart<T>
   onChange?: OnChange<T>
   onRest?: Array<OnRest<T>>
-  owner: SpringValue<T>
 }
 
 /** `SpringProps` without `to` or `from` */
