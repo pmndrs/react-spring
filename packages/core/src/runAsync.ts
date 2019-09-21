@@ -81,7 +81,7 @@ export async function runAsync<T>(
     const { asyncId } = props
     const cancelToken = Symbol.for('cancel')
     const isCancelled = () =>
-      to !== state.asyncTo || asyncId < (state.cancelId || 0)
+      to !== state.asyncTo || asyncId <= (state.cancelId || 0)
 
     const defaultProps: DefaultProps = {}
     each(DEFAULT_PROPS, prop => {
