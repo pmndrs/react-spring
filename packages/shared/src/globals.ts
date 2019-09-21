@@ -30,7 +30,8 @@ export let createStringInterpolator: (
 export let frameLoop: {
   active: boolean
   update: (time?: number) => boolean
-  onFrame(cb: FrameRequestCallback): void
+  onFrame(cb: FrameRequestCallback, next?: boolean): void
+  onWrite(cb: FrameRequestCallback): void
   start(spring: any): void
   stop(spring: any): typeof frameLoop
 }

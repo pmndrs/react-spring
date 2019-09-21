@@ -38,15 +38,21 @@ export class FrameLoop {
   /** Equals true when a frame is being processed. */
   updating = false
 
+  /** Equals true when writing to native attributes. */
+  writing = false
+
   // These queues are swapped at the end of every frame,
   // after the current queue is drained.
-  private _queues = [
+  protected _queues = [
     new Set<FrameRequestCallback>(),
     new Set<FrameRequestCallback>(),
   ]
 
+  /** `onWrite` callbacks are flushed on every frame, after `onFrame` callbacks are flushed. */
+  protected _writes = new Set<FrameRequestCallback>()
+
   // The `requestAnimationFrame` function or a custom scheduler.
-  private _requestFrame: RequestFrameFn
+  protected _requestFrame: RequestFrameFn
 
   constructor({
     update,
@@ -94,6 +100,14 @@ export class FrameLoop {
             queues[1] = queue
           }
 
+          const writes = this._writes
+          if (writes.size) {
+            this.writing = true
+            writes.forEach(write => write(time))
+            this.writing = false
+            writes.clear()
+          }
+
           this.updating = false
 
           if (!this.springs.length) {
@@ -116,6 +130,21 @@ export class FrameLoop {
   onFrame(cb: FrameRequestCallback, next?: boolean) {
     this._queues[next && this.updating ? 1 : 0].add(cb)
     this._start()
+  }
+
+  /**
+   * Schedule a function run at the end of the current frame,
+   * after all `onFrame` callbacks have been called.
+   *
+   * Calling `onWrite` from inside an `onWrite` callback simply
+   * calls the nested write immediately.
+   */
+  onWrite(cb: FrameRequestCallback) {
+    if (this.writing) {
+      cb(this.lastTime)
+    } else {
+      this._writes.add(cb)
+    }
   }
 
   /**
