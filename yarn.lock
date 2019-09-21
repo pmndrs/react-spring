@@ -1885,7 +1885,6 @@
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
-    tiny-invariant "^1.0.6"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
@@ -1904,8 +1903,6 @@
 
 "@react-spring/shared@link:packages/shared":
   version "9.0.0-beta.33"
-  dependencies:
-    tiny-invariant "^1.0.4"
 
 "@react-spring/three@link:targets/three":
   version "9.0.0-beta.33"
@@ -9301,11 +9298,6 @@ time-stamp@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/time-stamp/-/time-stamp-1.1.0.tgz#764a5a11af50561921b133f3b44e618687e0f5c3"
   integrity sha1-dkpaEa9QVhkhsTPztE5hhofg9cM=
-
-tiny-invariant@^1.0.4, tiny-invariant@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.6.tgz#b3f9b38835e36a41c843a3b0907a5a7b3755de73"
-  integrity sha512-FOyLWWVjG+aC0UqG76V53yAWdXfH8bO6FNmyZOuUrzDzK8DI3/JRY25UD7+g49JWM1LXwymsKERB+DzI0dTEQA==
 
 tmp@^0.0.33:
   version "0.0.33"
