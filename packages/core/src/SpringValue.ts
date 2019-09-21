@@ -16,7 +16,6 @@ import {
   AnimatedArray,
   OnChange,
 } from '@react-spring/animated'
-import invariant from 'tiny-invariant'
 import * as G from 'shared/globals'
 
 import { Indexable } from './types/common'
@@ -487,10 +486,11 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     let nodeType: AnimatedType<T>
     if (changed) {
       nodeType = this._getNodeType(to!)
-      invariant(
-        nodeType == node.constructor,
-        `Cannot animate to the given "to" prop, because the current value has a different type`
-      )
+      if (nodeType !== node.constructor) {
+        throw Error(
+          `Cannot animate to the given "to" prop, because the current value has a different type`
+        )
+      }
     } else {
       nodeType = node.constructor as any
     }
@@ -685,10 +685,11 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
 // TODO: makes this tree-shakeable
 function checkDisposed(spring: SpringValue, name: string) {
-  invariant(
-    !spring.is(DISPOSED),
-    `Cannot call "${name}" of disposed "${spring.constructor.name}" object`
-  )
+  if (spring.is(DISPOSED)) {
+    throw Error(
+      `Cannot call "${name}" of disposed "${spring.constructor.name}" object`
+    )
+  }
 }
 
 // Merge configs when the existence of "decay" or "duration" has not changed.
