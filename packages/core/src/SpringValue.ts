@@ -92,7 +92,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<T>
   /** The last time each prop changed */
-  protected _timestamps?: Indexable<number>
+  protected _timestamps: Indexable<number> = {}
   /** Some props have customizable default values */
   protected _defaultProps = {} as PendingProps<T>
   /** Cancel any update from before this timestamp */
@@ -389,8 +389,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     // Cast from a partial type.
     const anim: Partial<Animation<T>> = this.animation
 
-    /** Where per-prop timestamps are kept */
-    const timestamps = this._timestamps || (this._timestamps = {})
+    const timestamps = this._timestamps
 
     /** Return true if our prop can be used. This only affects delayed props. */
     const diff = (prop: string) => {
