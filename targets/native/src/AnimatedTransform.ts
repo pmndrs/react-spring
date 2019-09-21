@@ -1,10 +1,5 @@
-import { each } from 'shared'
-import {
-  Animated,
-  isAnimated,
-  AnimatedValue,
-  AnimatedObject,
-} from '@react-spring/animated'
+import { each, isFluidValue } from 'shared'
+import { Animated, AnimatedValue, AnimatedObject } from '@react-spring/animated'
 
 type Transform = { [key: string]: string | number | Animated }
 
@@ -21,7 +16,7 @@ export class AnimatedTransform extends AnimatedObject {
       ? this.source.map(source => {
           const transform: any = {}
           each(source, (source, key) => {
-            transform[key] = isAnimated(source) ? source.getValue() : source
+            transform[key] = isFluidValue(source) ? source.get() : source
           })
           return transform
         })
