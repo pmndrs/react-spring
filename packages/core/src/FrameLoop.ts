@@ -297,6 +297,7 @@ export class FrameLoop {
         const nearestStep = roundToStep(position, config.step)
         node.setValue(nearestStep)
         node.lastPosition = node.done ? nearestStep : position
+        node.lastVelocity = velocity
       }
 
       if (finished && canFinish) {
