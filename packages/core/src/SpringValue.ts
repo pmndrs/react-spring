@@ -531,6 +531,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       })
     }
 
+    // This must come *before* "fromValues" is set,
+    // because it updates "node.lastPosition"
     this._reset()
 
     anim.values = node.getPayload()
