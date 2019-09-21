@@ -1,7 +1,6 @@
 import { createInterpolator } from './createInterpolator'
 import { InterpolatorConfig } from './types/interpolation'
 import { colorToRgba } from './colorToRgba'
-import invariant from 'tiny-invariant'
 import * as G from './globals'
 
 // Problem: https://github.com/animatedjs/animated/pull/102
@@ -50,7 +49,9 @@ export const createStringInterpolator = (
   // Convert ["1px 2px", "0px 0px"] into [[1, 0], [2, 0]]
   const outputRanges = keyframes[0].map((_, i) =>
     keyframes.map(values => {
-      invariant(i in values, 'The arity of each "output" value must be equal')
+      if (!(i in values)) {
+        throw Error('The arity of each "output" value must be equal')
+      }
       return values[i]
     })
   )

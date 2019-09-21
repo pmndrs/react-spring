@@ -4,7 +4,6 @@ import { is, isFluidValue, toArray } from 'shared'
 import * as G from 'shared/globals'
 
 import { SpringValue } from './SpringValue'
-import invariant from 'tiny-invariant'
 
 type FrameUpdater = (this: FrameLoop, time?: number) => boolean
 type RequestFrameFn = (cb: FrameRequestCallback) => number | void
@@ -286,10 +285,11 @@ export class FrameLoop {
         }
       }
 
-      invariant(
-        !Number.isNaN(position),
-        `Found NaN value while advancing "${spring.key as any}" animation`
-      )
+      if (Number.isNaN(position)) {
+        throw Error(
+          `Found NaN value while advancing "${spring.key as any}" animation`
+        )
+      }
 
       if (position !== node.lastPosition) {
         changed = true
