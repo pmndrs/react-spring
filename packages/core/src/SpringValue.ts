@@ -114,9 +114,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
   /** Set the current value, while stopping the current animation */
   set(value: T | FluidValue<T>) {
-    // Notify change observers when the value changes
-    // and when an animation is being stopped.
-    if (this._set(value) || !this.idle) {
+    if (this._set(value) && this.idle) {
+      // Since "_stop" calls "_onChange" only when not idle, we need this.
       this._onChange(this.get(), true)
     }
     this._stop()
