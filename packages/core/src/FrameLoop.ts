@@ -211,11 +211,11 @@ export class FrameLoop {
 
       // Jump to end value for immediate animations.
       if (anim.immediate) {
+        node.done = canFinish
         if (to !== node.lastPosition) {
           changed = true
           node.setValue(to)
         }
-        node.done = canFinish
         return
       }
 
