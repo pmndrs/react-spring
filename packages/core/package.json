@@ -13,5 +13,8 @@
   },
   "publishConfig": {
     "directory": "dist"
+  },
+  "devDependencies": {
+    "typescript-snapshots-plugin": "^1.7.0"
   }
 }
