@@ -63,18 +63,19 @@ export class Into<In = any, Out = any> extends AnimationValue<Out>
 
   /** @internal */
   onParentChange(_value: any, idle: boolean) {
-    this.node.done =
-      idle &&
+    const { node } = this
+    if (idle && !node.done) {
       // We're not idle until every source is idle.
-      (idle = toArray(this.source).every(
+      node.done = toArray(this.source).every(
         source => !isAnimationValue(source) || source.idle
-      ))
+      )
+    }
 
-    // TODO: only compute once per frame
+    // TODO: only compute once per frame (note: we'll need to call "onParentChange")
     const value = this._compute()
     if (!isEqual(value, this.get())) {
-      this.node.setValue(value)
-      this._onChange(value, idle)
+      node.setValue(value)
+      this._onChange(value, node.done)
     }
   }
 
