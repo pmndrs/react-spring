@@ -320,38 +320,18 @@ export class FrameLoop {
         )
       }
 
-      if (position !== node.lastPosition) {
-        changed = true
-
-        const nearestStep = roundToStep(position, config.step)
-        node.setValue(nearestStep)
-        node.lastPosition = node.done ? nearestStep : position
-        node.lastVelocity = velocity
-      }
-
       if (finished && canFinish) {
         node.done = true
       } else {
         idle = false
       }
+
+      node.lastVelocity = velocity
+      if (node.setValue(position, config.step)) {
+        changed = true
+      }
     })
 
     spring.onFrame(idle, changed)
   }
-}
-
-function roundToStep(n: number, step?: number) {
-  if (step) {
-    n = Math.round(n / step) * step
-    let p = 0
-    if (n % 1) {
-      const s = String(n)
-      p = s.length - s.indexOf('.') - 1
-    }
-    if (p) {
-      const q = Math.pow(10, p)
-      return Math.round(q * n + q / 1e16) / q
-    }
-  }
-  return n
 }
