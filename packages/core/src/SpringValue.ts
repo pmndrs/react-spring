@@ -155,9 +155,6 @@ export class SpringValue<T = any> extends AnimationValue<T> {
         this._set(to)
       }
 
-      // Always call "_onChange" so observers get a "finished" event.
-      this._onChange(this.get(), true)
-
       // Exit the frameloop.
       this._stop(true)
     }
@@ -656,6 +653,9 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   protected _stop(finished = false) {
     if (!this.idle) {
       this._phase = IDLE
+
+      // Always let change observers know when a spring becomes idle.
+      this._onChange(this.get(), true)
 
       const anim = this.animation
       const onRestQueue = anim.onRest
