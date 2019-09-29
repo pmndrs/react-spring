@@ -580,12 +580,12 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     if (isFluidValue(value)) {
       value = value.get()
     }
-    if (this.node) {
-      const oldValue = this.node.getValue()
-      if (isEqual(value, oldValue)) {
+    const { node } = this
+    if (node) {
+      if (isEqual(value, node.getValue())) {
         return false
       }
-      this.node.setValue(value)
+      node.setValue(value)
     } else {
       this.setNodeWithValue(value)
     }
