@@ -19,6 +19,7 @@ describe('helpers', () => {
       ref: undefined,
       loop: undefined,
       reset: undefined,
+      pause: undefined,
       cancel: undefined,
       reverse: undefined,
       immediate: undefined,
