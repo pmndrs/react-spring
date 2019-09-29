@@ -22,6 +22,8 @@ const RN_PKG = /\/(native|addons|core|animated)$/
 // Packages with no "dist" folder
 const rawPackages = ['packages/envinfo']
 
+const lernaJson = fs.readJsonSync('lerna.json')
+
 // Read all "package.json" modules in advance.
 const readPackages = rootJson =>
   crawl('.', {
@@ -71,6 +73,7 @@ async function prepare() {
       'keywords',
       'bugs',
     ])
+    pkg.version = lernaJson.version
     pkg.publishConfig = rootJson.publishConfig
     setHomepage(pkg)
     setEntryModules(pkg)

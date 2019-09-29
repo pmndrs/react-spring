@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/web",
-  "version": "9.0.0-beta.34",
+  "version": "next",
   "main": "src/index.ts",
   "dependencies": {
     "@react-spring/animated": "link:../../packages/animated",
