@@ -35,6 +35,9 @@ export const matchProp = (
     (is.fun(value) ? value(key) : toArray(value).includes(key))
   )
 
+export const concatFn = <T extends AnyFn>(first: T | undefined, last: T) =>
+  first ? (...args: Parameters<T>) => (first(...args), last(...args)) : last
+
 type AnyProps<T, Arg = never> = OneOrMore<T> | ((i: number, arg: Arg) => T)
 
 export const getProps = <T, Arg = never>(
@@ -47,6 +50,7 @@ export const getProps = <T, Arg = never>(
 
 /** These props can have default values */
 export const DEFAULT_PROPS = [
+  'pause',
   'config',
   'immediate',
   'onDelayEnd',
@@ -64,6 +68,7 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   ref: 1,
   loop: 1,
   reset: 1,
+  pause: 1,
   cancel: 1,
   reverse: 1,
   immediate: 1,

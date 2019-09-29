@@ -306,7 +306,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
    */
   pause() {
     checkDisposed(this, 'pause')
-    this._phase = PAUSED
+    if (!this.is(PAUSED)) {
+      this._phase = PAUSED
+      callProp(this._state.pause)
+    }
   }
 
   /** Resume the animation if paused. */
@@ -314,10 +317,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     checkDisposed(this, 'resume')
     if (this.is(PAUSED)) {
       this._start()
-
-      if (this._state.asyncTo) {
-        this._state.unpause!()
-      }
+      callProp(this._state.unpause)
     }
   }
 
@@ -434,7 +434,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (event.type == 'change') {
       if (!this.is(ACTIVE)) {
         this._reset()
-        this._start()
+        if (!this.is(PAUSED)) {
+          this._start()
+        }
       }
     } else if (event.type == 'priority') {
       this.priority = event.priority + 1
@@ -510,6 +512,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Schedule an animation to run after an optional delay */
   protected _update(props: SpringUpdate<T>, isLoop?: boolean): AsyncResult<T> {
+    const defaultProps = this._defaultProps
+
+    // The default `pause` prop overrides all updates.
+    if (defaultProps.pause) {
+      props.pause = true
+    }
+
     // Ensure the initial value can be accessed by animated components.
     const range = this._prepareNode(props)
 
@@ -608,8 +617,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     if (props.default) {
       each(DEFAULT_PROPS, prop => {
-        // Default props can only be null, an object, or a function.
-        if (/^(function|object)$/.test(typeof props[prop])) {
+        if (prop in props) {
           defaultProps[prop] = props[prop] as any
         }
       })
@@ -773,10 +781,15 @@ export class SpringValue<T = any> extends FrameValue<T> {
       node.setValue(value)
     }
 
+    const paused = props.pause
+    if (paused) {
+      this.pause()
+    }
+
     if (hasAsyncTo) {
-      return resolve(
+      resolve(
         runAsync(
-          props.to as any,
+          props.to,
           props,
           this._state,
           () => this.get(),
@@ -787,9 +800,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
       )
     }
 
-    if (started) {
-      // Unpause the async animation if one exists.
-      this.resume()
+    // Start an animation
+    else if (started) {
+      if (!paused) {
+        // Unpause the async animation if one exists.
+        this.resume()
+      }
 
       if (reset) {
         // Must be idle for "onStart" to be called again.
@@ -797,7 +813,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
 
       this._reset()
-      this._start()
+
+      if (paused) {
+        this._phase = PAUSED
+      } else {
+        this._start()
+      }
     }
 
     // Postpone promise resolution until the animation is finished,
