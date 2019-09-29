@@ -1869,57 +1869,57 @@
     universal-user-agent "^4.0.0"
 
 "@react-spring/addons@link:packages/addons":
-  version "9.0.0-beta.33"
+  version "9.0.0-canary.809.2.49361198"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     use-memo-one "^1.1.0"
 
 "@react-spring/animated@link:packages/animated":
-  version "9.0.0-beta.33"
+  version "9.0.0-canary.809.2.49361198"
   dependencies:
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/core@link:packages/core":
-  version "9.0.0-beta.33"
+  version "9.0.0-canary.809.2.49361198"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
-  version "9.0.0-beta.33"
+  version "9.0.0-canary.809.2.49361198"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "9.0.0-beta.33"
+  version "9.0.0-canary.809.2.49361198"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/shared@link:packages/shared":
-  version "9.0.0-beta.33"
+  version "9.0.0-canary.809.2.49361198"
 
 "@react-spring/three@link:targets/three":
-  version "9.0.0-beta.33"
+  version "9.0.0-canary.809.2.49361198"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/web@link:targets/web":
-  version "9.0.0-beta.34"
+  version "9.0.0-canary.809.2.49361198"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
     "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/zdog@link:targets/zdog":
-  version "9.0.0-beta.33"
+  version "9.0.0-canary.809.2.49361198"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -3086,7 +3086,7 @@ commander@mateodelnorte/commander.js:
   version "2.15.1"
   resolved "https://codeload.github.com/mateodelnorte/commander.js/tar.gz/9060bf880b791cf39245d425f1e8a41a55616781"
   dependencies:
-    find-module-bin "0.0.2"
+    find-module-bin "^1.0.0"
 
 commander@~2.13.0:
   version "2.13.0"
@@ -3672,11 +3672,6 @@ envinfo@^5.7.0:
   version "5.12.1"
   resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-5.12.1.tgz#83068c33e0972eb657d6bc69a6df30badefb46ef"
   integrity sha512-pwdo0/G3CIkQ0y6PCXq4RdkvId2elvtPCJMG0konqlrfkWQbf1DWeH9K2b/cvu2YgGvPPTOnonZxXM1gikFu1w==
-
-envinfo@^7.3.1:
-  version "7.3.1"
-  resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-7.3.1.tgz#892e42f7bf858b3446d9414ad240dbaf8da52f09"
-  integrity sha512-GvXiDTqLYrORVSCuJCsWHPXF5BFvoWMQA9xX4YVjPT1jyS3aZEHUBwjzxU/6LTPF9ReHgVEbX7IEN5UvSXHw/A==
 
 err-code@^1.0.0:
   version "1.1.2"
