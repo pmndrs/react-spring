@@ -26,8 +26,15 @@ export class AnimatedString extends AnimatedValue<Value> {
   }
 
   setValue(value: Value) {
-    this._string = is.num(value) ? null : value
-    this._value = is.num(value) ? value : 1
+    if (!is.num(value)) {
+      this._string = value
+      this._value = 1
+    } else if (super.setValue(value)) {
+      this._string = null
+    } else {
+      return false
+    }
+    return true
   }
 
   reset(isActive?: boolean, goal?: string) {
