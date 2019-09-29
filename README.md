@@ -16,6 +16,10 @@ This library represents a modern approach to animation. It is very much inspired
 
     npm install react-spring
 
+Try the beta for [v9.0.0](https://github.com/react-spring/react-spring/pull/632):
+
+    npm install react-spring@next
+
 ### Documentation and Examples
 
 More info about the project can be found [here](https://www.react-spring.io).
