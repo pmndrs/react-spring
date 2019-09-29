@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "0.0.0",
+  "version": "9.0.0-canary.809.1.aa2db98.0",
   "main": "src/web.ts",
   "dependencies": {
     "@react-spring/addons": "link:../addons",
