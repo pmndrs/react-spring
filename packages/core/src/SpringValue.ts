@@ -257,7 +257,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       if (idle) {
         this.finish(value)
       } else {
-        this.set(value)
+        this._set(value)
       }
     }
     // When our parent is not a spring, it won't tell us to enter the frameloop
