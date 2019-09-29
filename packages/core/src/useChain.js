@@ -1,12 +1,11 @@
-import { useLayoutEffect } from 'react'
-import { each } from 'shared'
+import { each, useIsomorphicLayoutEffect } from 'shared'
 
 /** API
  *  useChain(references, timeSteps, timeFrame)
  */
 
 export function useChain(refs, timeSteps, timeFrame = 1000) {
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (timeSteps) {
       let prevDelay = 0
       each(refs, (ref, i) => {
