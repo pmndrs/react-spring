@@ -249,14 +249,15 @@ async function prepare() {
       pkg[key] = fields[key]
     })
 
-  log(``)
+  log('')
+  log(chalk.yellow(lernaJson.version))
+  log('')
   await Promise.all(
     Object.keys(packages).map(name => {
       const pkg = packages[name]
       log(chalk.cyan(name))
-      log(`  rootDir: %O`, pkg.dir)
-      log(`  version: %O`, pkg.version)
-      log(``)
+      log('./' + pkg.dir)
+      log('')
       return preparePackage(pkg)
     })
   )
