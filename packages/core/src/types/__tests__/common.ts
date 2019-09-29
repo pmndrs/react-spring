@@ -1,22 +1,9 @@
 import { assert, _, test } from 'spec.ts';
-import { PickAnimated, ForwardProps, Remap } from '../common';
+import { PickAnimated, ForwardProps, Remap, ReservedProps } from '../common';
 import { SpringUpdateFn } from '../spring';
 
-type ReservedProps = {
-  config: 1;
-  from: {};
-  to: {};
-  ref: 1;
-  cancel: 1;
-  reset: 1;
-  reverse: 1;
-  immediate: 1;
-  delay: 1;
-  lazy: 1;
-  onAnimate: 1;
-  onStart: 1;
-  onRest: 1;
-  onFrame: 1;
+type SystemProps = {
+  [P in keyof ReservedProps]-?: P extends 'from' | 'to' ? {} : 1;
 };
 
 type UserProps = {
@@ -26,11 +13,11 @@ type UserProps = {
 
 test('ForwardProps', () => {
   // With reserved props, no forward props
-  type P1 = ForwardProps<ReservedProps>;
+  type P1 = ForwardProps<SystemProps>;
   assert(_ as P1, _ as {});
 
   // With reserved and forward props
-  type P2 = ForwardProps<ReservedProps & UserProps>;
+  type P2 = ForwardProps<SystemProps & UserProps>;
   assert(_ as P2, _ as UserProps);
 
   // With forward props, no reserved props
