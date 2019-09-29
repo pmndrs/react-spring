@@ -253,7 +253,7 @@ export function useTransition(
       if (is.fun(onRest)) {
         onRest(result)
       }
-      if (t.phase == LEAVE) {
+      if (t.phase == LEAVE && t.ctrl.idle) {
         t.expiresBy = now() + expires
         if (expires <= 0) {
           forceUpdate()
