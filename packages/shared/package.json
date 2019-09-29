@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/shared",
-  "version": "next",
+  "version": "0.0.0",
   "description": "Globals and shared modules",
   "main": "src/index.ts",
   "scripts": {
