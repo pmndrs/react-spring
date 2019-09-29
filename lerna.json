@@ -17,7 +17,6 @@
       "push": false
     },
     "publish": {
-      "bump": "from-package",
       "contents": "dist",
       "ignoreScripts": true
     }
