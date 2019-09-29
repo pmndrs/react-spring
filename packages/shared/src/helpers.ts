@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from 'react'
+import { useEffect, useLayoutEffect, useReducer, useRef } from 'react'
 import { Indexable, Arrify, FluidValue } from './types'
 import * as G from './globals'
 
@@ -93,3 +93,17 @@ export function usePrev<T>(value: T): T | undefined {
   })
   return prevRef.current
 }
+
+declare const window: any
+
+/**
+ * React calls `console.warn` when using `useLayoutEffect` on the server.
+ * To get around it, we can conditionally `useEffect` on the server (no-op) and
+ * `useLayoutEffect` on the client.
+ */
+export const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' &&
+  typeof window.document !== 'undefined' &&
+  typeof window.document.createElement !== 'undefined'
+    ? useLayoutEffect
+    : useEffect

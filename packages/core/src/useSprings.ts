@@ -1,5 +1,13 @@
-import { useMemo, RefObject, useLayoutEffect, useImperativeHandle } from 'react'
-import { is, each, usePrev, useOnce, UnknownProps, Merge } from 'shared'
+import { useMemo, RefObject, useImperativeHandle } from 'react'
+import {
+  is,
+  each,
+  usePrev,
+  useOnce,
+  useIsomorphicLayoutEffect,
+  UnknownProps,
+  Merge,
+} from 'shared'
 
 import {
   SpringStopFn,
@@ -136,7 +144,7 @@ export function useSprings(
 
   useImperativeHandle(ref, () => api)
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     each(updates, (update, i) => ctrls[i].update(update))
     if (!ref) {
       each(ctrls, ctrl => ctrl.start())
