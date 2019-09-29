@@ -326,7 +326,7 @@ export class FrameLoop {
       }
 
       node.lastVelocity = velocity
-      if (node.setValue(position, config.step)) {
+      if (node.setValue(position, config.round)) {
         changed = true
       }
     })
