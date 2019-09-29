@@ -1,5 +1,4 @@
-import { useLayoutEffect } from 'react'
-import { is, UnknownProps } from 'shared'
+import { is, useIsomorphicLayoutEffect, UnknownProps } from 'shared'
 
 import { PickAnimated, Valid } from './types/common'
 import { SpringValues, SpringStopFn, SpringsUpdateFn } from './types/spring'
@@ -44,7 +43,7 @@ export function useTrail(length: number, propsArg: unknown, deps?: any[]) {
     deps
   )
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const reverse = is.obj(propsArg) && propsArg.reverse
     for (let i = 0; i < ctrls.length; i++) {
       const parent = ctrls[i + (reverse ? 1 : -1)]
