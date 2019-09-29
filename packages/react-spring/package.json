@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "next",
+  "version": "0.0.0",
   "main": "src/web.ts",
   "dependencies": {
     "@react-spring/addons": "link:../addons",
