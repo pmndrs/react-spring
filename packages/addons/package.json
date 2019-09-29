@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/addons",
-  "version": "9.0.0-beta.33",
+  "version": "next",
   "main": "src/index.ts",
   "dependencies": {
     "@react-spring/animated": "link:../animated",
