@@ -14,6 +14,12 @@ export interface OpaqueAnimation {
   advance(dt: number): void
 }
 
+export interface Timeout {
+  time: number
+  handler: () => void
+  cancel: () => void
+}
+
 /**
  * FrameLoop executes its animations in order of lowest priority first.
  * Animations are released once idle. The loop is paused while no animations
@@ -38,7 +44,7 @@ export class FrameLoop {
    * `ms` delay is completed. When the delay is `<= 0`, the handler is
    * invoked immediately.
    */
-  setTimeout: (handler: Function, ms: number) => void
+  setTimeout: (handler: () => void, ms: number) => Timeout
 
   /**
    * Execute a function once after all animations have updated.
@@ -110,18 +116,23 @@ export class FrameLoop {
       }
     }
 
-    interface Timeout {
-      time: number
-      handler: Function
-    }
-
     const timeoutQueue: Timeout[] = []
 
     this.setTimeout = (handler, ms) => {
       const time = G.now() + ms
+      const cancel = () => {
+        const index = timeoutQueue.findIndex(t => t.cancel == cancel)
+        if (index >= 0) {
+          timeoutQueue.splice(index, 1)
+        }
+      }
+
       const index = findIndex(timeoutQueue, t => t.time > time)
-      timeoutQueue.splice(index, 0, { time, handler })
+      const timeout = { time, handler, cancel }
+      timeoutQueue.splice(index, 0, timeout)
+
       kickoff()
+      return timeout
     }
 
     // Process the current frame.

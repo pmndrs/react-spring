@@ -226,6 +226,11 @@ export interface AnimationProps<T = any> {
    */
   cancel?: MatchProp<StringKeys<T>>
   /**
+   * Pause all animations by using `true`, or some animations by using a key
+   * or an array of keys.
+   */
+  pause?: MatchProp<StringKeys<T>>
+  /**
    * Start the next animations at their values in the `from` prop.
    */
   reset?: MatchProp<StringKeys<T>>
@@ -267,6 +272,7 @@ export interface ReservedProps {
   to?: any
   ref?: any
   loop?: any
+  pause?: any
   reset?: any
   cancel?: any
   reverse?: any
