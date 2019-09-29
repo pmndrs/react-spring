@@ -140,9 +140,11 @@ export interface AnimationConfig {
    */
   decay?: boolean | number
   /**
-   * Round to the nearest multiple of `step`.
+   * While animating, round to the nearest multiple of this number.
+   * The `from` and `to` values are never rounded, as well as any value
+   * passed to the `set` method of an animated value.
    */
-  step?: number
+  round?: number
 }
 
 /** An animation being executed by the frameloop */
