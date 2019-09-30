@@ -125,7 +125,7 @@ export const getBabelOptions = ({ useESModules }, targets) => ({
   plugins: [
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
-    ['@babel/plugin-transform-runtime', { regenerator: false, useESModules }],
+    ['@babel/plugin-transform-runtime', { useESModules }],
   ],
 })
 
