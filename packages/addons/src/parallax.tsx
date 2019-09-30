@@ -238,7 +238,7 @@ export const Parallax = React.memo(
       if (!state.busy) {
         state.busy = true
         state.current = event.target[getScrollType(horizontal)]
-        requestAnimationFrame(() => {
+        requestAnimationFrame.call(window, () => {
           state.layers.forEach(layer =>
             layer.setPosition(state.space, state.current)
           )
@@ -253,7 +253,7 @@ export const Parallax = React.memo(
 
       const onResize = () => {
         const update = () => state.update()
-        requestAnimationFrame(update)
+        requestAnimationFrame.call(window, update)
         setTimeout(update, 150) // Some browsers don't fire on maximize!
       }
 
