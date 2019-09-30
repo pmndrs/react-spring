@@ -13,7 +13,7 @@
     "version": {
       "changelog": false,
       "conventionalCommits": true,
-      "message": "chore: ship it 🚀",
+      "message": "%v",
       "push": false
     },
     "publish": {
