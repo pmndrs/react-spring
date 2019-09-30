@@ -37,7 +37,7 @@ import {
   RunAsyncProps,
 } from './runAsync'
 import { callProp, DEFAULT_PROPS, matchProp } from './helpers'
-import { config } from './constants'
+import { config as configs } from './constants'
 
 /** Default props for a `SpringValue` object */
 export type DefaultProps<T = unknown> = {
@@ -71,7 +71,7 @@ const ACTIVE = 'ACTIVE'
 const noop = () => {}
 
 const BASE_CONFIG: SpringConfig = {
-  ...config.default,
+  ...configs.default,
   mass: 1,
   velocity: 0,
   progress: 0,
