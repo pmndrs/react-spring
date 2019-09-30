@@ -201,20 +201,20 @@ export class FrameLoop {
       // Parent springs must finish before their children can.
       const canFinish = !payload || payload[i].done
 
-      const { config } = anim
-
-      // Loose springs never move.
-      if (config.tension == 0) {
-        node.done = true
-        return
-      }
-
       // Jump to end value for immediate animations.
       if (anim.immediate) {
         node.done = canFinish
         if (node.setValue(to)) {
           changed = true
         }
+        return
+      }
+
+      const { config } = anim
+
+      // Loose springs never move.
+      if (config.tension == 0) {
+        node.done = true
         return
       }
 
