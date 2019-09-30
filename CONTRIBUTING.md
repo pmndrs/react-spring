@@ -56,6 +56,14 @@ React 16.8+ has global state to support its "hooks" feature, so you need to ensu
 
 # Publishing
 
-Run `yarn bump` to analyze commits and increment the version of any updated packages.
+To publish a new version:
 
-Run `yarn release` to publish any packages with a new version.
+```
+yarn release
+```
+
+To publish a **canary** version:
+
+```
+yarn release --canary
+```
