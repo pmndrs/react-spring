@@ -429,7 +429,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
 
     /** When true, this spring must be in the frameloop. */
-    let started = parent || ((changed || reset) && !isEqual(value, to))
+    let started = !!parent || ((changed || reset) && !isEqual(value, to))
 
     /** The initial velocity before this `animate` call. */
     const lastVelocity = anim.config ? anim.config.velocity : 0
@@ -468,13 +468,6 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       started = !isEqual(config.velocity, lastVelocity)
     }
 
-    /**
-     * The final value of the animation.
-     *
-     * The `FrameLoop` decides our goal value when a `parent` exists.
-     */
-    let goal: any = parent ? null : computeGoal(to)
-
     // Reset our internal `Animated` node if starting.
     let node = this.node!
     let nodeType: AnimatedType<T>
@@ -488,6 +481,10 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     } else {
       nodeType = node.constructor as any
     }
+
+    // The final value of our animation, excluding the "to" value.
+    // The "FrameLoop" decides our goal value when "parent" exists.
+    let goal: any = parent ? null : computeGoal(to)
 
     if (nodeType == AnimatedString) {
       from = 0 as any
