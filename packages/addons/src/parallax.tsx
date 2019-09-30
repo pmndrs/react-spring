@@ -5,7 +5,7 @@ import React, {
   useEffect,
   CSSProperties,
 } from 'react'
-import { requestAnimationFrame, defaultElement as View } from 'shared/globals'
+import { frameLoop, defaultElement as View } from 'shared/globals'
 import { Controller, SpringConfig, config as configs } from '@react-spring/core'
 import { withAnimated } from '@react-spring/animated'
 import { useMemoOne } from 'use-memo-one'
@@ -239,7 +239,7 @@ export const Parallax = React.memo(
       if (!state.busy) {
         state.busy = true
         state.current = event.target[getScrollType(horizontal)]
-        requestAnimationFrame(() => {
+        frameLoop.onFrame(() => {
           state.layers.forEach(layer =>
             layer.setPosition(state.space, state.current)
           )
@@ -254,7 +254,7 @@ export const Parallax = React.memo(
 
       const onResize = () => {
         const update = () => state.update()
-        requestAnimationFrame(update)
+        frameLoop.onFrame(update)
         setTimeout(update, 150) // Some browsers don't fire on maximize!
       }
 
