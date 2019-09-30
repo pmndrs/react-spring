@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/zdog",
-  "version": "9.0.0-canary.809.2.49361198",
+  "version": "9.0.0-canary.809.3.a66b280",
   "main": "src/index.ts",
   "dependencies": {
     "@react-spring/animated": "link:../../packages/animated",
