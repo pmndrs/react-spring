@@ -1,7 +1,7 @@
 import { assert, test, _ } from 'spec.ts';
 import React, { useRef } from 'react';
 import { SpringValues, AnimationResult } from '@react-spring/core';
-import { UnknownPartial } from '@react-spring/shared';
+import { UnknownPartial } from 'shared';
 import { RunAsyncProps } from '@react-spring/core/src/runAsync';
 import {
   animated,

@@ -7,7 +7,7 @@
     "build": "rollup -c"
   },
   "dependencies": {
-    "@react-spring/shared": "link:../shared"
+    "shared": "link:../shared"
   },
   "publishConfig": {
     "directory": "dist"

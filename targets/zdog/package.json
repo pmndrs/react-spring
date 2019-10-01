@@ -5,7 +5,7 @@
   "dependencies": {
     "@react-spring/animated": "link:../../packages/animated",
     "@react-spring/core": "link:../../packages/core",
-    "@react-spring/shared": "link:../../packages/shared"
+    "shared": "link:../../packages/shared"
   },
   "peerDependencies": {
     "react": ">=16.8",
