@@ -1,6 +1,14 @@
-import { ForwardRefExoticComponent } from 'react'
-import { Text, View, Image, ViewStyle } from 'react-native'
+import { ForwardRefExoticComponent, Component, ReactNode } from 'react'
 import { withAnimated, extendAnimated } from '@react-spring/animated'
+import {
+  Text,
+  View,
+  Image,
+  ViewProps,
+  ViewStyle,
+  NativeMethodsMixin,
+  Constructor,
+} from 'react-native'
 import {
   AssignableKeys,
   ElementType,
@@ -8,9 +16,14 @@ import {
   FluidValue,
 } from 'shared'
 
+declare class ViewComponent extends Component<
+  // @types/react-native forgot to add "children" to the "View" component??
+  ViewProps & { children?: ReactNode }
+> {}
+
 // These are converted into `animated` components
 const elements = {
-  View,
+  View: View as Constructor<NativeMethodsMixin> & typeof ViewComponent,
   Text,
   Image,
 }
