@@ -40,7 +40,7 @@ export class Into<In = any, Out = any> extends AnimationValue<Out>
   protected _compute() {
     const inputs: Arrify<In> = is.arr(this.source)
       ? this.source.map(node => node.get())
-      : (toArray(this.source!.get()) as any)
+      : (toArray(this.source.get()) as any)
     return this.calc(...inputs)
   }
 
