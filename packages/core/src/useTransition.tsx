@@ -63,7 +63,7 @@ type PhaseProps<Item = any, From = {}> = {
 
 type Key = string | number
 
-export type ItemKeys<T> = Key | ReadonlyArray<Key> | ((item: T) => Key) | null
+export type ItemKeys<T = any> = OneOrMore<Key> | ((item: T) => Key) | null
 
 export type UseTransitionProps<Item = any> = Merge<
   AnimationProps & AnimationEvents,
@@ -100,6 +100,13 @@ export interface TransitionFn<Item = any, State extends object = any> {
   ): ReactNode[]
 }
 
+function getKeys(
+  items: readonly any[],
+  { key, keys = key }: { key?: ItemKeys; keys?: ItemKeys }
+): readonly any[] {
+  return is.und(keys) ? items : is.fun(keys) ? items.map(keys) : toArray(keys)
+}
+
 export function useTransition<Item, From, Props extends object>(
   data: OneOrMore<Item>,
   props: Props & PhaseProps<Item, From> & UseTransitionProps<Item>,
@@ -111,13 +118,7 @@ export function useTransition(
   props: PhaseProps & UseTransitionProps,
   deps?: any[]
 ): TransitionFn {
-  const { key, ref, reset, sort, trail = 0, expires = Infinity } = props
-
-  if ('keys' in props) {
-    console.warn(
-      'Unknown prop "keys" was passed to useTransition. Did you mean "key"?'
-    )
-  }
+  const { ref, reset, sort, trail = 0, expires = Infinity } = props
 
   // Every item has its own transition.
   const items = toArray(data)
@@ -127,11 +128,7 @@ export function useTransition(
   // The `key` prop can be undefined (which means the items themselves are used
   // as keys), or a function (which maps each item to its key), or an array of
   // keys (which are assigned to each item by index).
-  const keys: readonly any[] = is.und(key)
-    ? items
-    : is.fun(key)
-    ? items.map(key)
-    : toArray(key)
+  const keys = getKeys(items, props)
 
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<TransitionState[] | null>(null)
