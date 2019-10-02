@@ -35,7 +35,12 @@ export {
 } from './types/common'
 
 export { isAnimationValue, AnimationValue } from '@react-spring/animated'
-export { createInterpolator, isFluidValue, makeFluidValue } from 'shared'
+export {
+  Animatable,
+  createInterpolator,
+  isFluidValue,
+  makeFluidValue,
+} from 'shared'
 
 export * from 'shared/types/animated'
 export * from 'shared/types/interpolation'
