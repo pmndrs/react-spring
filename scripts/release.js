@@ -11,6 +11,7 @@ sade('release', true)
   .describe('Release a version')
   .option('--canary', 'Release the last commit without a tag')
   .option('--no-commit', 'Release the current version as-is')
+  .option('--no-clean', 'Skip "yarn clean" for faster publishing')
   .action(opts => {
     process.chdir(path.dirname(__dirname))
     return opts.canary ? publishCanary(opts) : publish()
@@ -49,7 +50,7 @@ async function publishCanary(opts) {
     version = `${version}-canary.${pr}.${build}.${commit}`
     exec(`${lernaBin} version ${version} --yes`)
 
-    updateLockfile()
+    updateLockfile(opts)
   }
 
   // Publish the canary with a temporary tag.
@@ -57,9 +58,9 @@ async function publishCanary(opts) {
   exec(`${lernaBin} exec -- ${publishCmd}`)
 }
 
-function updateLockfile() {
+function updateLockfile(opts = {}) {
   // Ensure "yarn.lock" is up-to-date.
-  exec(`yarn clean`)
+  if (opts.clean !== false) exec(`yarn clean`)
   exec(`yarn --force`)
 
   // Merge the "yarn.lock" changes into the version commit.
