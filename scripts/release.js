@@ -6,7 +6,7 @@ const path = require('path')
 
 const lernaBin = './node_modules/.bin/lerna'
 
-sade('release', true)
+const cli = sade('release', true)
   .version('1.0.0')
   .describe('Release a version')
   .option('--canary', 'Release the last commit without a tag')
@@ -16,15 +16,15 @@ sade('release', true)
     process.chdir(path.dirname(__dirname))
     return opts.canary ? publishCanary(opts) : publish()
   })
-  .parse(process.argv)
-  .catch(err => {
-    if (!err.command) {
-      console.error(err)
-    } else if (err.stderr) {
-      console.error(err.stderr)
-    }
-    process.exit(1)
-  })
+
+Promise.resolve(cli.parse(process.argv)).catch(err => {
+  if (!err.command) {
+    console.error(err)
+  } else if (err.stderr) {
+    console.error(err.stderr)
+  }
+  process.exit(1)
+})
 
 async function publish() {
   exec(`${lernaBin} version`)
