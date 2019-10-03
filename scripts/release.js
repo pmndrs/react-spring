@@ -66,9 +66,6 @@ function updateLockfile(opts = {}) {
   // Merge the "yarn.lock" changes into the version commit.
   exec(`git add yarn.lock`)
   exec(`git commit --amend --no-edit`)
-
-  // Ensure the "dist" directories are in good condition.
-  exec(`yarn prepare`)
 }
 
 function exec(cmd, { silent } = {}) {
