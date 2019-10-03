@@ -8,6 +8,7 @@ import {
   ViewStyle,
   NativeMethodsMixin,
   Constructor,
+  RecursiveArray,
 } from 'react-native'
 import {
   AssignableKeys,
@@ -78,17 +79,20 @@ type AnimatedArray<T extends ReadonlyArray<number | string>> = {
 }
 
 // An animated array of style objects
-type AnimatedStyles<T extends ReadonlyArray<any>> = {
-  [P in keyof T]: [T[P]] extends [infer DT] // DT is a distributed union
-    ? DT extends ReadonlyArray<any>
-      ? AnimatedStyles<DT>
-      : DT extends object
-      ? [AssignableKeys<DT, ViewStyle>] extends [never]
-        ? AnimatedProp<DT>
-        : { [P in keyof DT]: AnimatedProp<DT[P]> }
-      : DT
-    : never
-}
+type AnimatedStyles<T extends ReadonlyArray<any>> = unknown &
+  T extends RecursiveArray<infer U>
+  ? { [P in keyof T]: RecursiveArray<AnimatedProp<U>> }[keyof T]
+  : {
+      [P in keyof T]: [T[P]] extends [infer DT] // DT is a distributed union
+        ? DT extends ReadonlyArray<any>
+          ? AnimatedStyles<DT>
+          : DT extends object
+          ? [AssignableKeys<DT, ViewStyle>] extends [never]
+            ? AnimatedProp<DT>
+            : { [P in keyof DT]: AnimatedProp<DT[P]> }
+          : DT
+        : never
+    }
 
 // An animated object of style attributes
 export type AnimatedStyle<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is a distributed union
