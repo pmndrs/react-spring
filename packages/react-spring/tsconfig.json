@@ -12,8 +12,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
-      "shared": ["../shared/dist"],
-      "shared/*": ["../shared/dist/*"]
+      "shared": ["../shared/src"],
+      "shared/*": ["../shared/src/*"]
     },
     "preserveSymlinks": true,
     "skipLibCheck": true,
