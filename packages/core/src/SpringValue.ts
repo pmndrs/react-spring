@@ -254,7 +254,9 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     // Enter the frameloop when a parent changes.
     if (this.idle) {
       const anim = this.animation
-      anim.fromValues = anim.values.map(node => node.lastPosition)
+      if (!anim.immediate) {
+        anim.fromValues = anim.values.map(node => node.lastPosition)
+      }
       this._start()
     }
   }
@@ -521,6 +523,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       !(parent || is.num(goal) || is.arr(goal)) ||
       !!matchProp(get('immediate'), this.key)
 
+    // Avoid calling this before "immediate" is set
     this._reset()
 
     const onRestQueue = anim.onRest
@@ -606,7 +609,9 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   protected _reset(goal?: T) {
     const anim = this.animation
     super._reset(is.und(goal) ? computeGoal(anim.to) : goal)
-    anim.fromValues = anim.values.map(node => node.lastPosition)
+    if (!anim.immediate) {
+      anim.fromValues = anim.values.map(node => node.lastPosition)
+    }
   }
 
   /** Enter the frameloop */
