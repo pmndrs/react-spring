@@ -81,6 +81,8 @@ const BASE_CONFIG: SpringConfig = {
 
 /** An opaque animatable value */
 export class SpringValue<T = any> extends AnimationValue<T> {
+  /** The property name used when `to` or `from` is an object. Useful when debugging too. */
+  key?: string
   /** The animation state */
   animation: Animation<T> = { value: this } as any
   /** The queue of pending props */
@@ -90,7 +92,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** The lifecycle phase of this spring */
   protected _phase = CREATED
   /** The state for `runAsync` calls */
-  protected _state: RunAsyncState<T>
+  protected _state: RunAsyncState<T> = {}
   /** The last time each prop changed */
   protected _timestamps: Indexable<number> = {}
   /** Some props have customizable default values */
@@ -98,9 +100,13 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** Cancel any update from before this timestamp */
   protected _lastAsyncId = 0
 
-  constructor(key?: string) {
-    super(key)
-    this._state = { key }
+  constructor(from: Exclude<T, object>, props?: PendingProps<T>)
+  constructor(props?: PendingProps<T>)
+  constructor(arg1?: any, arg2?: any) {
+    super()
+    if (arguments.length) {
+      this.start(is.obj(arg1) ? arg1 : { ...arg2, from: arg1 })
+    }
   }
 
   get idle() {

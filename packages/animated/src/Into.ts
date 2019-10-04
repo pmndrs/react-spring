@@ -17,6 +17,9 @@ import { AnimationValue, isAnimationValue } from './AnimationValue'
  */
 export class Into<In = any, Out = any> extends AnimationValue<Out>
   implements FluidObserver {
+  /** Useful for debugging. */
+  key?: string
+
   /** @internal */
   readonly node: AnimatedValue<Out>
 

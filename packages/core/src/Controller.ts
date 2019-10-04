@@ -208,7 +208,8 @@ export class Controller<State extends Indexable = UnknownProps> {
   protected _setSprings(keys: any[], from?: object, to?: object) {
     each(keys, key => {
       if (!this._springs[key]) {
-        const spring = (this._springs[key] = new SpringValue(key))
+        const spring = (this._springs[key] = new SpringValue())
+        spring.key = key
         spring.addChild(this._onChange)
         spring.setNodeWithProps({ from, to })
       }
