@@ -515,16 +515,13 @@ export class SpringValue<T = any> extends AnimationValue<T> {
       })
     }
 
-    // This must come *before* "fromValues" is set,
-    // because it updates "node.lastPosition"
-    this._reset()
-
     anim.values = node.getPayload()
     anim.toValues = parent ? null : toArray(goal)
-    anim.fromValues = anim.values.map(node => node.lastPosition)
     anim.immediate =
       !(parent || is.num(goal) || is.arr(goal)) ||
       !!matchProp(get('immediate'), this.key)
+
+    this._reset()
 
     const onRestQueue = anim.onRest
 
@@ -606,8 +603,10 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   }
 
   /** Reset our node, and the nodes of every descendant spring */
-  protected _reset(goal = computeGoal(this.animation.to)) {
-    super._reset(goal)
+  protected _reset(goal?: T) {
+    const anim = this.animation
+    super._reset(is.und(goal) ? computeGoal(anim.to) : goal)
+    anim.fromValues = anim.values.map(node => node.lastPosition)
   }
 
   /** Enter the frameloop */
