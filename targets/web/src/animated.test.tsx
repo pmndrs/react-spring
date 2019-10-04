@@ -217,5 +217,5 @@ describe('animated component', () => {
 })
 
 function spring<T>(value: T): SpringValue<Animatable<T>> {
-  return new SpringValue('value').set(value)
+  return new SpringValue(value)
 }

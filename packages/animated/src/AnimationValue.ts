@@ -37,6 +37,7 @@ export abstract class AnimationValue<T = any>
   implements FluidValue<T>, FluidObserver {
   readonly id = nextId++
 
+  abstract key?: string
   abstract idle: boolean
   abstract node:
     | AnimatedValue<T>
@@ -46,7 +47,7 @@ export abstract class AnimationValue<T = any>
   protected _priority = 0
   protected _children = new Set<AnimationObserver<T>>()
 
-  constructor(readonly key?: string) {
+  constructor() {
     defineHidden(this, FluidType, 2)
   }
 
