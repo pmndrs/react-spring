@@ -79,6 +79,11 @@ export abstract class AnimationValue<T = any>
     return G.to(this, args) as Into<T, Out>
   }
 
+  toJSON() {
+    // Avoid circular JSON ("animation.value" is a circular reference)
+    return { id: this.id, key: this.key, constructor: this.constructor }
+  }
+
   /** @internal */
   addChild(child: AnimationObserver<T>): void {
     if (!this._children.size) this._attach()
