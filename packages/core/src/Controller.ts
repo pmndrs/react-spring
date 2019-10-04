@@ -62,7 +62,7 @@ export class Controller<State extends Indexable = UnknownProps> {
   queue: PendingProps<State>[] = []
 
   /** The current controller-only props (eg: `onFrame` and async state) */
-  protected _props: CachedProps<State> = {}
+  protected _state: CachedProps<State> = {}
 
   /** The spring values that manage their animations */
   protected _springs: Indexable<SpringValue> = {}
@@ -79,7 +79,7 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** Equals true when no springs are animating */
   get idle() {
     return (
-      !this._props.promise && Object.values(this._springs).every(s => s.idle)
+      !this._state.promise && Object.values(this._springs).every(s => s.idle)
     )
   }
 
@@ -123,7 +123,7 @@ export class Controller<State extends Indexable = UnknownProps> {
       if (asyncTo) {
         props.to = undefined
       }
-      const state = this._props
+      const state = this._state
       promises.push(
         // Send updates to every affected key.
         ...keys.map(key => this._springs[key].start(props as any)),
@@ -190,7 +190,7 @@ export class Controller<State extends Indexable = UnknownProps> {
 
   /** Destroy every spring in this controller */
   dispose() {
-    this._props.asyncTo = undefined
+    this._state.asyncTo = undefined
     each(this._springs, spring => spring.dispose())
     this._springs = {}
   }
@@ -237,7 +237,7 @@ export class Controller<State extends Indexable = UnknownProps> {
 
   /** @internal Attached as an observer to every spring */
   protected _onChange(value: any, spring: AnimationValue) {
-    if (this._props.onFrame) {
+    if (this._state.onFrame) {
       this.frame[spring.key as keyof State] = value
       G.frameLoop.onFrame(this._onFrame)
     }
@@ -246,7 +246,7 @@ export class Controller<State extends Indexable = UnknownProps> {
   /** @internal Called at the end of every animation frame */
   private _onFrame() {
     if (Object.keys(this.frame).length) {
-      this._props.onFrame!(this.frame)
+      this._state.onFrame!(this.frame)
       this.frame = {}
     }
   }
