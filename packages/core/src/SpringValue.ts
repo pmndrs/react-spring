@@ -250,19 +250,10 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   }
 
   /** @internal */
-  onParentChange(value: any, idle: boolean) {
-    const anim = this.animation
-    // The "FrameLoop" handles everything other than immediate animation.
-    if (anim.immediate) {
-      if (idle) {
-        this.finish(value)
-      } else {
-        this._set(value)
-      }
-    }
-    // When our parent is not a spring, it won't tell us to enter the frameloop
-    // because it never does so itself. Instead, we must react to value changes.
-    else if (this.idle) {
+  onParentChange(_value: any, _idle: boolean) {
+    // Enter the frameloop when a parent changes.
+    if (this.idle) {
+      const anim = this.animation
       anim.fromValues = anim.values.map(node => node.lastPosition)
       this._start()
     }
