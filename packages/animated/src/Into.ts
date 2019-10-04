@@ -46,12 +46,19 @@ export class Into<In = any, Out = any> extends AnimationValue<Out>
 
   protected _attach() {
     // Start observing our "source" once we have an observer.
+    let idle = true
     let priority = 0
     each(toArray(this.source), source => {
+      if (isAnimationValue(source) && !source.idle) {
+        idle = false
+      }
       priority = Math.max(priority, (source.priority || 0) + 1)
       source.addChild(this)
     })
     this.priority = priority
+    if (!idle) {
+      this.node.reset(!this.node.done)
+    }
   }
 
   protected _detach() {
