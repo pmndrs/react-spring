@@ -25,8 +25,6 @@ export type RunAsyncProps<T = any> = unknown &
   >
 
 export interface RunAsyncState<T> {
-  /** The spring name */
-  key?: string
   /** The async function or array of spring props */
   asyncTo?: AsyncTo<T>
   /** Resolves when the current `asyncTo` finishes or gets cancelled. */
@@ -178,12 +176,22 @@ export async function runAsync<T>(
  */
 export function scheduleProps<Props extends SpringProps, Result>(
   asyncId: number,
-  props: Props,
-  state: { key?: string; cancelId?: number },
-  action: (
-    props: Props & RunAsyncProps,
-    resolve: (result: Result | Promise<Result>) => void
-  ) => void
+  {
+    key,
+    props,
+    state,
+    action,
+  }: {
+    key?: string
+    props: Props
+    state: {
+      cancelId?: number
+    }
+    action: (
+      props: Props & RunAsyncProps,
+      resolve: (result: Result | Promise<Result>) => void
+    ) => void
+  }
 ): Promise<Result> {
   return new Promise((resolve, reject) => {
     let { delay, cancel, reset } = props
@@ -197,12 +205,12 @@ export function scheduleProps<Props extends SpringProps, Result>(
       if (asyncId <= (state.cancelId || 0)) {
         cancel = true
       } else {
-        cancel = matchProp(cancel, state.key)
+        cancel = matchProp(cancel, key)
         if (cancel) {
           state.cancelId = asyncId
         }
       }
-      reset = !cancel && matchProp(reset, state.key)
+      reset = !cancel && matchProp(reset, key)
       try {
         action({ ...props, asyncId, cancel, reset }, resolve)
       } catch (err) {
