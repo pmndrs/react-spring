@@ -327,19 +327,20 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     // Ensure the initial value can be accessed by animated components.
     const range = this.setNodeWithProps(props)
 
+    const state = this._state
     const timestamp = G.now()
-    return scheduleProps(
-      ++this._lastAsyncId,
+    return scheduleProps(++this._lastAsyncId, {
+      key: this.key,
       props,
-      this._state,
-      (props: RunAsyncProps<T>, resolve) => {
+      state,
+      action: (props: RunAsyncProps<T>, resolve) => {
         const { to } = props
         if (is.arr(to) || is.fun(to)) {
           resolve(
             runAsync(
               to,
               props,
-              this._state,
+              state,
               () => this.get(),
               () => this.is(PAUSED),
               this.start.bind(this),
@@ -355,8 +356,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
         } else {
           this._update(range, props, timestamp, resolve)
         }
-      }
-    )
+      },
+    })
   }
 
   /** Update the internal `animation` object */

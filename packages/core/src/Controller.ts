@@ -123,38 +123,43 @@ export class Controller<State extends Indexable = UnknownProps> {
       if (asyncTo) {
         props.to = undefined
       }
+      const state = this._props
       promises.push(
         // Send updates to every affected key.
         ...keys.map(key => this._springs[key].start(props as any)),
         // Schedule controller-only props.
-        scheduleProps(++lastAsyncId, props, this._props, (props, resolve) => {
-          if (!props.cancel) {
-            // Never reuse "onFrame" from a previous update.
-            this._props.onFrame = onFrame || this.defaultProps.onFrame
-            if (onFrame && props.default) {
-              this.defaultProps.onFrame = onFrame
+        scheduleProps(++lastAsyncId, {
+          props,
+          state,
+          action: (props, resolve) => {
+            if (!props.cancel) {
+              // Never reuse "onFrame" from a previous update.
+              state.onFrame = onFrame || this.defaultProps.onFrame
+              if (onFrame && props.default) {
+                this.defaultProps.onFrame = onFrame
+              }
             }
-          }
 
-          // Start, replace, or cancel the async animation.
-          if (asyncTo) {
-            resolve(
-              runAsync<State>(
-                asyncTo,
-                props,
-                this._props,
-                this._get.bind(this),
-                () => false, // TODO: add pausing to Controller
-                this.start.bind(this) as any,
-                this.stop.bind(this) as any
+            // Start, replace, or cancel the async animation.
+            if (asyncTo) {
+              resolve(
+                runAsync<State>(
+                  asyncTo,
+                  props,
+                  state,
+                  this._get.bind(this),
+                  () => false, // TODO: add pausing to Controller
+                  this.start.bind(this) as any,
+                  this.stop.bind(this) as any
+                )
               )
-            )
-          } else {
-            resolve({
-              value: 0, // This value gets ignored.
-              finished: !props.cancel,
-            })
-          }
+            } else {
+              resolve({
+                value: 0, // This value gets ignored.
+                finished: !props.cancel,
+              })
+            }
+          },
         })
       )
     })
