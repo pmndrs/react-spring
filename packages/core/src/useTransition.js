@@ -64,14 +64,15 @@ export function useTransition(input, keyTransform, props) {
   useImperativeHandle(ref, () => ({
     start: () =>
       Promise.all(
-        Array.from(state.current.instances).map(
+        Array.from(
+          state.current.instances,
           ([, c]) => new Promise(r => c.start(r))
         )
       ),
     stop: finished =>
-      Array.from(state.current.instances).forEach(([, c]) => c.stop(finished)),
+      void Array.from(state.current.instances, ([, c]) => c.stop(finished)),
     get controllers() {
-      return Array.from(state.current.instances).map(([, c]) => c)
+      return Array.from(state.current.instances, ([, c]) => c)
     },
   }))
 
@@ -128,7 +129,7 @@ export function useTransition(input, keyTransform, props) {
     state.current.mounted = mounted.current = true
     return () => {
       state.current.mounted = mounted.current = false
-      Array.from(state.current.instances).map(([, c]) => c.destroy())
+      Array.from(state.current.instances, ([, c]) => c.destroy())
       state.current.instances.clear()
     }
   })
