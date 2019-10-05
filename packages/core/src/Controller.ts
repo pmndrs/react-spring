@@ -9,25 +9,25 @@ import {
 } from 'shared'
 import * as G from 'shared/globals'
 
-import { SpringProps, SpringValues } from './types/spring'
+import { SpringUpdate, SpringValues } from './types/spring'
 import { AnimationEvents } from './types/animated'
 import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
 import { interpolateTo } from './helpers'
 import { SpringValue } from './SpringValue'
-import { AnimationValue } from '@react-spring/animated'
+import { FrameValue } from './FrameValue'
 
 /** A callback that receives the changed values for each frame. */
 export type OnFrame<State extends Indexable> = (
   frame: UnknownPartial<State>
 ) => void
 
-export type ControllerProps<State extends Indexable = UnknownProps> = {
+export type ControllerProps<State extends Indexable = Indexable> = {
   /**
    * Called on every frame when animations are active
    */
   onFrame?: OnFrame<State>
-} & SpringProps<State> &
+} & SpringUpdate<State> &
   AnimationEvents<unknown> &
   UnknownPartial<FluidProps<State>>
 
@@ -49,7 +49,8 @@ type DefaultProps<State extends Indexable> = {
 let nextId = 1
 let lastAsyncId = 0
 
-export class Controller<State extends Indexable = UnknownProps> {
+export class Controller<State extends Indexable = UnknownProps>
+  implements FrameValue.Observer {
   readonly id = nextId++
 
   /** The values that changed in the last animation frame */
@@ -68,7 +69,6 @@ export class Controller<State extends Indexable = UnknownProps> {
   protected _springs: Indexable<SpringValue> = {}
 
   constructor(props?: ControllerProps<State>) {
-    this._onChange = this._onChange.bind(this)
     this._onFrame = this._onFrame.bind(this)
     if (props) {
       props.default = true
@@ -210,7 +210,7 @@ export class Controller<State extends Indexable = UnknownProps> {
       if (!this._springs[key]) {
         const spring = (this._springs[key] = new SpringValue())
         spring.key = key
-        spring.addChild(this._onChange)
+        spring.addChild(this)
         spring.setNodeWithProps({ from, to })
       }
     })
@@ -236,16 +236,16 @@ export class Controller<State extends Indexable = UnknownProps> {
     return props
   }
 
-  /** @internal Attached as an observer to every spring */
-  protected _onChange(value: any, spring: AnimationValue) {
-    if (this._state.onFrame) {
-      this.frame[spring.key as keyof State] = value
+  /** @internal */
+  onParentChange(event: FrameValue.Event) {
+    if (this._state.onFrame && event.type == 'change') {
+      this.frame[event.parent.key as keyof State] = event.value
       G.frameLoop.onFrame(this._onFrame)
     }
   }
 
   /** @internal Called at the end of every animation frame */
-  private _onFrame() {
+  protected _onFrame() {
     if (Object.keys(this.frame).length) {
       this._state.onFrame!(this.frame)
       this.frame = {}

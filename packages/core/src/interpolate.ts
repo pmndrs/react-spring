@@ -1,4 +1,3 @@
-import { Into } from '@react-spring/animated'
 import {
   Constrain,
   OneOrMore,
@@ -7,18 +6,17 @@ import {
   InterpolatorConfig,
   InterpolatorFn,
   FluidValue,
-} from 'shared/types'
+} from 'shared'
 import { deprecateInterpolate } from 'shared/deprecations'
-
-export { Into }
+import { Interpolation } from './Interpolation'
 
 /** Map the value of one or more dependencies */
 export const to: Interpolator = (source: any, ...args: [any]) =>
-  new Into(source, args)
+  new Interpolation(source, args)
 
 /** @deprecated Use the `to` export instead */
 export const interpolate: Interpolator = (source: any, ...args: [any]) => (
-  deprecateInterpolate(), new Into(source, args)
+  deprecateInterpolate(), new Interpolation(source, args)
 )
 
 /** Extract the raw value types that are being interpolated */
@@ -35,18 +33,19 @@ export interface Interpolator {
   <In, Out>(
     parent: FluidValue<In>,
     interpolator: InterpolatorFn<In, Out>
-  ): Into<Out>
+  ): Interpolation<Out>
 
   // Tuple of parents
   <In extends ReadonlyArray<FluidValue>, Out>(
     parents: In,
     interpolator: (...args: Interpolated<In>) => Out
-  ): Into<Out>
+  ): Interpolation<Out>
 
   // Interpolation config
-  <Out>(parents: OneOrMore<FluidValue>, config: InterpolatorConfig<Out>): Into<
-    Animatable<Out>
-  >
+  <Out>(
+    parents: OneOrMore<FluidValue>,
+    config: InterpolatorConfig<Out>
+  ): Interpolation<Animatable<Out>>
 
   // Range shortcuts
   <Out>(
@@ -54,5 +53,5 @@ export interface Interpolator {
     range: readonly number[],
     output: readonly Constrain<Out, Animatable>[],
     extrapolate?: ExtrapolateType
-  ): Into<Animatable<Out>>
+  ): Interpolation<Animatable<Out>>
 }

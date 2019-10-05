@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react'
 import { render, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import createMockRaf, { MockRaf } from 'mock-raf'
-import { FrameLoop, SpringValue, Animatable } from '@react-spring/core'
+import { SpringValue, Animatable } from 'react-spring'
 import { a } from '.'
 import * as Globals from 'shared/globals'
 
@@ -15,7 +15,6 @@ beforeEach(() => {
     performanceNow: mockRaf.now,
     requestAnimationFrame: mockRaf.raf,
     cancelAnimationFrame: mockRaf.cancel,
-    frameLoop: new FrameLoop(),
   })
 })
 

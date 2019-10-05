@@ -9,15 +9,16 @@ export * from './interpolate'
 export * from './constants'
 export * from './globals'
 
-export * from './SpringValue'
 export * from './Controller'
-export * from './FrameLoop'
+export * from './SpringValue'
+export * from './Interpolation'
+export * from './FrameValue'
 
 export {
-  SpringAsyncFn,
+  AsyncUpdate,
+  AsyncUpdateFn,
   SpringConfig,
   SpringHandle,
-  SpringProps,
   SpringStopFn,
   SpringUpdate,
   SpringUpdateFn,
@@ -25,6 +26,7 @@ export {
   SpringValues,
 } from './types/spring'
 
+export { AsyncResult } from './runAsync'
 export { AnimationResult } from './types/animated'
 
 export {
@@ -34,13 +36,7 @@ export {
   UnknownProps,
 } from './types/common'
 
-export { isAnimationValue, AnimationValue } from '@react-spring/animated'
-export {
-  Animatable,
-  createInterpolator,
-  isFluidValue,
-  makeFluidValue,
-} from 'shared'
+export { FrameLoop, Animatable, createInterpolator } from 'shared'
 
 export * from 'shared/types/animated'
 export * from 'shared/types/interpolation'

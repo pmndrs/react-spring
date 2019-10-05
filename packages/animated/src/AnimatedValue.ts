@@ -54,12 +54,13 @@ export class AnimatedValue<T = any> extends Animated {
     return true
   }
 
-  reset(isActive?: boolean, _goal?: T) {
+  reset() {
+    const { done } = this
     this.done = false
     if (is.num(this._value)) {
       this.elapsedTime = 0
       this.lastPosition = this._value
-      if (!isActive) this.lastVelocity = null
+      if (done) this.lastVelocity = null
       this.v0 = null
     }
   }

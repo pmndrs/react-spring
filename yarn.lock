@@ -1865,55 +1865,50 @@
 "@react-spring/addons@link:packages/addons":
   version "9.0.0-canary.809.5.f01ecc2"
   dependencies:
-    "@react-spring/animated" "link:packages/animated"
-    "@react-spring/core" "link:packages/core"
+    animated "link:packages/animated"
+    core "link:packages/core"
     use-memo-one "^1.1.0"
-
-"@react-spring/animated@link:packages/animated":
-  version "9.0.0-canary.809.5.f01ecc2"
-  dependencies:
-    shared "link:packages/shared"
 
 "@react-spring/core@link:packages/core":
   version "9.0.0-canary.809.5.f01ecc2"
   dependencies:
-    "@react-spring/animated" "link:packages/animated"
+    animated "link:packages/animated"
     shared "link:packages/shared"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
   version "9.0.0-canary.809.5.f01ecc2"
   dependencies:
-    "@react-spring/animated" "link:packages/animated"
-    "@react-spring/core" "link:packages/core"
+    animated "link:packages/animated"
+    core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
   version "9.0.0-canary.809.5.f01ecc2"
   dependencies:
-    "@react-spring/animated" "link:packages/animated"
-    "@react-spring/core" "link:packages/core"
+    animated "link:packages/animated"
+    core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/three@link:targets/three":
   version "9.0.0-canary.809.5.f01ecc2"
   dependencies:
-    "@react-spring/animated" "link:packages/animated"
-    "@react-spring/core" "link:packages/core"
+    animated "link:packages/animated"
+    core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/web@link:targets/web":
   version "9.0.0-canary.809.5.f01ecc2"
   dependencies:
-    "@react-spring/animated" "link:packages/animated"
-    "@react-spring/core" "link:packages/core"
+    animated "link:packages/animated"
+    core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/zdog@link:targets/zdog":
   version "9.0.0-canary.809.5.f01ecc2"
   dependencies:
-    "@react-spring/animated" "link:packages/animated"
-    "@react-spring/core" "link:packages/core"
+    animated "link:packages/animated"
+    core "link:packages/core"
     shared "link:packages/shared"
 
 "@sheerun/mutationobserver-shim@^0.3.2":
@@ -2188,6 +2183,10 @@ ajv@^6.5.5:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
+
+"animated@link:packages/animated":
+  version "0.0.0"
+  uid ""
 
 ansi-256-colors@^1.1.0:
   version "1.1.0"
@@ -3078,7 +3077,7 @@ commander@^2.11.0, commander@^2.20.0, commander@^2.9.0, commander@~2.20.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.1.tgz#3863ce3ca92d0831dcf2a102f5fb4b5926afd0f9"
   integrity sha512-cCuLsMhJeWQ/ZpsFTbE765kvVfoeSddc4nU3up4fV+fDBcfUXnbITJ+JzhkdjzOqhURjZgujxaioam4RM9yGUg==
 
-"commander@github:mateodelnorte/commander.js":
+commander@mateodelnorte/commander.js:
   version "2.15.1"
   resolved "https://codeload.github.com/mateodelnorte/commander.js/tar.gz/9060bf880b791cf39245d425f1e8a41a55616781"
   dependencies:
@@ -3296,6 +3295,10 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
+
+"core@link:packages/core":
+  version "0.0.0"
+  uid ""
 
 cosmiconfig@^5.0.5, cosmiconfig@^5.0.7, cosmiconfig@^5.1.0:
   version "5.2.1"
@@ -4191,6 +4194,11 @@ findup-sync@^4.0.0:
     is-glob "^4.0.0"
     micromatch "^4.0.2"
     resolve-dir "^1.0.1"
+
+fluids@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/fluids/-/fluids-0.1.0.tgz#76fd48347cfb3cb5e48a834b69c92d3984595c49"
+  integrity sha512-Gg2JSw5YUerW1y7mPlEpITCJ1YKfhXE5QtK6emRHzRKHMmh6fBJ388yM2s/cQVElkCbbFmqNwGJUkk4LlM/k8w==
 
 flush-write-stream@^1.0.0:
   version "1.1.1"

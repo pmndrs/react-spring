@@ -1,5 +1,5 @@
 import { invalidate, applyProps, addEffect } from 'react-three-fiber'
-import { Globals, FrameLoop, update } from '@react-spring/core'
+import { Globals, FrameLoop, update } from 'core'
 import { createStringInterpolator } from 'shared/stringInterpolation'
 import colorNames from 'shared/colors'
 
@@ -8,11 +8,11 @@ if (addEffect) addEffect(update)
 
 Globals.assign({
   defaultElement: 'group',
-  frameLoop: addEffect && new FrameLoop({ requestFrame: invalidate }),
+  frameLoop: addEffect && new FrameLoop(invalidate),
   applyAnimatedValues: applyProps,
   createStringInterpolator,
   colorNames,
 })
 
 export * from './animated'
-export * from '@react-spring/core'
+export * from 'core'

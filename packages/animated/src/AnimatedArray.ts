@@ -1,4 +1,4 @@
-import { needsInterpolation, each } from 'shared'
+import { isAnimatedString, each } from 'shared'
 import { AnimatedObject } from './AnimatedObject'
 import { AnimatedString } from './AnimatedString'
 import { AnimatedValue } from './AnimatedValue'
@@ -40,7 +40,7 @@ export class AnimatedArray<
   protected _makeAnimated(from: T | null, to: T = from!) {
     return from
       ? from.map((from, i) =>
-          (needsInterpolation(from) ? AnimatedString : AnimatedValue).create(
+          (isAnimatedString(from) ? AnimatedString : AnimatedValue).create(
             from,
             to[i]
           )

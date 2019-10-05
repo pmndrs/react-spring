@@ -1,7 +1,9 @@
 import React from 'react';
 import { assert, test, _ } from 'spec.ts';
-import { SpringValues } from '@react-spring/core';
-import { animated, useTransition, SpringUpdateFn } from '../..';
+import { SpringValues, ControllerProps, AsyncResult } from 'core';
+import { Indexable } from 'shared';
+
+import { animated, useTransition } from '../..';
 
 const View = animated('div');
 
@@ -38,8 +40,8 @@ test('basic usage', () => {
   // You typically map transition objects into JSX elements.
   return transition((style, item) => {
     assert(style, _ as SpringValues<{
-      opacity?: number; // FIXME: "opacity" should never be undefined because it exists in "from"
-      color?: string;
+      opacity: number | undefined; // FIXME: "opacity" should never be undefined because it exists in "from"
+      color: string | undefined;
     }>);
     assert(item, _ as 1 | 2);
     return <View style={style}>{item}</View>;
@@ -72,7 +74,9 @@ test('with function props', () => {
     useTransition(items, {
       update: item => async next => {
         assert(item, _ as 1 | 2);
-        assert(next, _ as SpringUpdateFn); // FIXME: should be "SpringUpdateFn<{ opacity: number, ... }>"
+        assert(next, _ as {
+          (props: ControllerProps): AsyncResult<Indexable>;
+        }); // FIXME: should be "SpringUpdateFn<{ opacity: number, ... }>"
       },
     });
   });

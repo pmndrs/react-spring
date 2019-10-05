@@ -1,5 +1,5 @@
 import { assert, test, _ } from 'spec.ts';
-import { SpringValues, SpringsUpdateFn } from '@react-spring/core';
+import { SpringValues, SpringsUpdateFn } from 'core';
 import { useTrail, SpringStopFn } from '../..';
 
 test('basic usage', () => {

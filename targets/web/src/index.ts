@@ -1,4 +1,4 @@
-import { Globals } from '@react-spring/core'
+import { Globals } from 'core'
 import { applyAnimatedValues } from './applyAnimatedValues'
 import { createStringInterpolator } from 'shared/stringInterpolation'
 import { AnimatedStyle } from './AnimatedStyle'
@@ -14,4 +14,4 @@ Globals.assign({
 })
 
 export * from './animated'
-export * from '@react-spring/core'
+export * from 'core'

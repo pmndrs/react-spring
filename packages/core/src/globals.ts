@@ -1,11 +1,12 @@
 import { createStringInterpolator } from 'shared/stringInterpolation'
-import { FrameLoop } from './FrameLoop'
+import { Interpolation } from './Interpolation'
 import { Globals } from 'shared'
 
+// Sane defaults
 Globals.assign({
-  frameLoop: new FrameLoop(),
-  createStringInterpolator,
   applyAnimatedValues: () => false,
+  createStringInterpolator,
+  to: (source, args) => new Interpolation(source, args),
 })
 
 export { Globals }

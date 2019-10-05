@@ -1,15 +1,6 @@
 import { useEffect, useLayoutEffect, useReducer, useRef } from 'react'
-import { Indexable, Arrify, FluidValue } from './types'
+import { Indexable, Arrify } from './types'
 import * as G from './globals'
-
-export const FluidType = '__$FluidType'
-
-/** Let the given object be observed by any `FluidObserver` */
-export const makeFluidValue = <T extends Indexable>(value: T): T =>
-  Object.defineProperty(value, FluidType, { value: 1, writable: true })
-
-export const isFluidValue = (value: any): value is FluidValue =>
-  (value && value[FluidType]) > 0
 
 export const defineHidden = (obj: any, key: any, value: any) =>
   Object.defineProperty(obj, key, { value, writable: true, configurable: true })
@@ -43,7 +34,7 @@ export function isEqual(a: any, b: any) {
 }
 
 // Not all strings can be animated (eg: {display: "none"})
-export const needsInterpolation = (value: unknown): value is string =>
+export const isAnimatedString = (value: unknown): value is string =>
   is.str(value) &&
   (value[0] == '#' ||
     /\d/.test(value) ||
