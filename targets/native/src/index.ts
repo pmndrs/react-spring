@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native'
 import { AnimatedTransform } from './AnimatedTransform'
-import { AnimatedStyle, AnimatedObject } from '@react-spring/animated'
+import { AnimatedStyle, AnimatedObject } from 'animated'
 import { createStringInterpolator } from 'shared/stringInterpolation'
 import { is, Globals } from 'shared'
 import colorNames from 'shared/colors'
@@ -22,4 +22,4 @@ Globals.assign({
 })
 
 export * from './animated'
-export * from '@react-spring/core'
+export * from 'core'

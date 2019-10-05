@@ -1,14 +1,15 @@
 import React, { forwardRef, useRef, Ref } from 'react'
 import {
   is,
+  each,
   useForceUpdate,
   useIsomorphicLayoutEffect,
   ElementType,
-  each,
+  FluidConfig,
 } from 'shared'
-import { AnimationValue } from './AnimationValue'
-import { AnimatedProps } from './AnimatedProps'
 import * as G from 'shared/globals'
+
+import { AnimatedProps } from './AnimatedProps'
 
 // For storing the animated version on the original component
 const cacheKey = Symbol.for('AnimatedComponent')
@@ -52,7 +53,7 @@ const createAnimatedComponent = (Component: any) =>
       }
     })
 
-    const dependencies = new Set<AnimationValue>()
+    const dependencies = new Set<FluidConfig>()
     props.setValue(rawProps, { dependencies })
 
     useIsomorphicLayoutEffect(() => {

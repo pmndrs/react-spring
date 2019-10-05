@@ -1,5 +1,5 @@
 import { ForwardRefExoticComponent, ComponentClass, ReactNode } from 'react'
-import { withAnimated, extendAnimated } from '@react-spring/animated'
+import { withAnimated, extendAnimated } from 'core'
 import {
   Text,
   View,

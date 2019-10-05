@@ -1,11 +1,8 @@
-import {
-  InterpolatorConfig,
-  FrameRequestCallback,
-  InterpolatorArgs,
-  FluidValue,
-  OneOrMore,
-} from './types'
 import { ElementType } from 'react'
+import { FluidValue } from 'fluids'
+
+import { InterpolatorConfig, InterpolatorArgs, OneOrMore } from './types'
+import { FrameLoop } from './FrameLoop'
 
 declare const window: {
   requestAnimationFrame: (cb: (time: number) => void) => number
@@ -27,14 +24,7 @@ export let createStringInterpolator: (
 ) => (input: number) => string
 
 /** Provide a custom `FrameLoop` instance */
-export let frameLoop: {
-  active: boolean
-  update: (time?: number) => boolean
-  onFrame(cb: FrameRequestCallback, next?: boolean): void
-  onWrite(cb: FrameRequestCallback): void
-  start(spring: any): void
-  stop(spring: any): typeof frameLoop
-}
+export let frameLoop = new FrameLoop()
 
 //
 // Optional

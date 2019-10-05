@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { withAnimated, extendAnimated } from '@react-spring/animated'
+import { withAnimated, extendAnimated } from 'core'
 import {
   AssignableKeys,
   ComponentPropsWithRef,

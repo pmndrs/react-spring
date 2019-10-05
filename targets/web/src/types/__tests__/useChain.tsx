@@ -1,6 +1,6 @@
 import { test } from 'spec.ts';
 import { RefObject } from 'react';
-import { SpringHandle } from '@react-spring/core';
+import { SpringHandle } from 'core';
 import { useChain } from '../..';
 
 const refs: RefObject<SpringHandle>[] = [];

@@ -37,13 +37,13 @@ export class AnimatedString extends AnimatedValue<Value> {
     return true
   }
 
-  reset(isActive?: boolean, goal?: string) {
+  reset(goal?: string) {
     if (goal) {
       this._toString = createInterpolator({
         output: [this.getValue(), goal],
       })
     }
     this._value = 0
-    super.reset(isActive)
+    super.reset()
   }
 }

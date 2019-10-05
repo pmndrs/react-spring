@@ -6,8 +6,8 @@ import React, {
   CSSProperties,
 } from 'react'
 import { frameLoop, defaultElement as View } from 'shared/globals'
-import { Controller, SpringConfig, config as configs } from '@react-spring/core'
-import { withAnimated } from '@react-spring/animated'
+import { Controller, SpringConfig, config as configs } from 'core'
+import { withAnimated } from 'animated'
 import { useMemoOne } from 'use-memo-one'
 import { useOnce } from 'shared'
 

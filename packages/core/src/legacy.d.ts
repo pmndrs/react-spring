@@ -2,15 +2,13 @@ import { ReactNode } from 'react'
 import { UseTransitionProps, ItemKeys } from './useTransition'
 import {
   TransitionPhase,
-  Merge,
   NoInfer,
   OneOrMore,
   Valid,
   Falsy,
   PickAnimated,
 } from './types/common'
-import { SpringValues, RangeProps } from './types/spring'
-import { AnimationProps, AnimationEvents } from './types/animated'
+import { SpringValues } from './types/spring'
 import { UseSpringProps } from './useSpring'
 
 //

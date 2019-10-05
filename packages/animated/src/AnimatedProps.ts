@@ -1,12 +1,13 @@
-import { FluidObserver } from 'shared'
+import { FluidObserver, FluidEvent } from 'shared'
+import * as G from 'shared/globals'
+
 import { Animated, TreeContext } from './Animated'
 import { AnimatedObject } from './AnimatedObject'
-import * as G from 'shared/globals'
 
 type Props = object & { style?: any }
 
 export class AnimatedProps extends AnimatedObject implements FluidObserver {
-  /** Equals true when a re-render is scheduled for "end of frame" */
+  /** Equals true when an update is scheduled for "end of frame" */
   dirty = false
 
   constructor(public update: () => void) {
@@ -27,8 +28,8 @@ export class AnimatedProps extends AnimatedObject implements FluidObserver {
   }
 
   /** @internal */
-  onParentChange() {
-    if (!this.dirty) {
+  onParentChange({ type }: FluidEvent) {
+    if (!this.dirty && type === 'change') {
       this.dirty = true
       G.frameLoop.onFrame(() => {
         this.dirty = false
@@ -36,7 +37,4 @@ export class AnimatedProps extends AnimatedObject implements FluidObserver {
       })
     }
   }
-
-  /** @internal */
-  onParentPriorityChange() {}
 }

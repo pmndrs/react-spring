@@ -1,22 +1,33 @@
 import { FluidValue, defineHidden } from 'shared'
 import { AnimatedValue } from './AnimatedValue'
 
-export const AnimatedType = '__$AnimatedType'
+const $node: any = Symbol.for('Animated:node')
 
-/** Returns true for `Animated` nodes. Returns false for `SpringValue` objects. */
 export const isAnimated = (value: any): value is Animated =>
-  !!(value && value[AnimatedType])
+  value instanceof Animated
+
+/** Get the owner's `Animated` node. */
+export const getAnimated = (owner: any): Animated | undefined =>
+  owner && owner[$node]
+
+/** Set the owner's `Animated` node. */
+export const setAnimated = (owner: any, node: Animated) =>
+  defineHidden(owner, $node, node)
+
+/** Get every `AnimatedValue` in the owner's `Animated` node. */
+export const getPayload = (owner: any): AnimatedValue[] | undefined =>
+  owner && owner[$node] && owner[$node].getPayload()
 
 export abstract class Animated<T = any> {
-  constructor() {
-    defineHidden(this, AnimatedType, 1)
-  }
-
   /** The cache of animated numbers */
   protected payload?: Payload
 
   /** Returns every value of the node. Pass true for only the animated values. */
   abstract getValue(animated?: boolean): T
+
+  abstract setValue(value: T): void
+
+  abstract reset(): void
 
   /** Returns every animated number used by this node. */
   getPayload(): Payload {

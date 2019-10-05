@@ -1,17 +1,15 @@
+import { AnimatedObject } from 'animated'
 import {
-  each,
   is,
-  Indexable,
-  FluidValue,
-  OneOrMore,
-  isFluidValue,
+  each,
   toArray,
+  Indexable,
+  OneOrMore,
+  FluidValue,
+  FluidEvent,
+  FluidObserver,
+  getFluidConfig,
 } from 'shared'
-import {
-  AnimatedObject,
-  AnimatedValue,
-  AnimationValue,
-} from '@react-spring/animated'
 
 /** The transform-functions
  * (https://developer.mozilla.org/fr/docs/Web/CSS/transform-function)
@@ -109,7 +107,7 @@ export class AnimatedStyle extends AnimatedObject {
     })
 
     if (inputs.length) {
-      style.transform = new SpringTransform(inputs, transforms)
+      style.transform = new FluidTransform(inputs, transforms)
     }
 
     super(style)
@@ -117,23 +115,25 @@ export class AnimatedStyle extends AnimatedObject {
 }
 
 /** Coerce any `FluidValue` to its current value */
-const getValue = <T>(value: T | FluidValue<T>) =>
-  isFluidValue(value) ? value.get() : value
+const getValue = <T>(value: T | FluidValue<T>) => {
+  const config = getFluidConfig(value)
+  return config ? config.get() : value
+}
 
-class SpringTransform extends AnimationValue<string> {
-  node: AnimatedValue<string>
+/** @internal */
+class FluidTransform extends FluidValue<string> implements FluidObserver {
+  protected _value: string | null = null
+  protected _children = new Set<FluidObserver>()
 
   constructor(readonly inputs: Inputs, readonly transforms: Transforms) {
     super()
-    this.node = new AnimatedValue(this._compute())
   }
 
-  // Required by `AnimationValue` but never used.
-  get idle() {
-    return true
+  get() {
+    return this._value || (this._value = this._get())
   }
 
-  protected _compute() {
+  protected _get() {
     let transform = ''
     let identity = true
     each(this.inputs, (input, i) => {
@@ -147,27 +147,38 @@ class SpringTransform extends AnimationValue<string> {
     return identity ? 'none' : transform
   }
 
-  /** @internal */
-  protected _attach() {
-    // Start observing our inputs once we have an observer.
-    each(this.inputs, input =>
-      each(input, value => isFluidValue(value) && value.addChild(this))
-    )
+  addChild(child: FluidObserver) {
+    if (!this._children.size) {
+      // Start observing our inputs once we have an observer.
+      each(this.inputs, input =>
+        each(input, value => {
+          const config = getFluidConfig(value)
+          if (config) config.addChild(this)
+        })
+      )
+    }
+    this._children.add(child)
   }
 
-  /** @internal */
-  protected _detach() {
-    // Stop observing our inputs once we have no observers.
-    each(this.inputs, input =>
-      each(input, value => isFluidValue(value) && value.removeChild(this))
-    )
+  removeChild(child: FluidObserver) {
+    this._children.delete(child)
+    if (!this._children.size) {
+      // Stop observing our inputs once we have no observers.
+      each(this.inputs, input =>
+        each(input, value => {
+          const config = getFluidConfig(value)
+          if (config) config.removeChild(this)
+        })
+      )
+    }
   }
 
-  /** @internal */
-  onParentChange() {
-    // TODO: only compute once per frame max
-    const value = this._compute()
-    this.node.setValue(value)
-    this._onChange(value, true)
+  onParentChange(event: FluidEvent) {
+    if (event.type == 'change') {
+      this._value = null
+    }
+    each(this._children, child => {
+      child.onParentChange(event)
+    })
   }
 }

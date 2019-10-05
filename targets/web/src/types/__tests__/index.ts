@@ -1,6 +1,8 @@
 import { assert, _, test, describe } from 'spec.ts';
-import { AnimatedProps, SpringValue } from '../..';
+import { FluidValue } from 'shared';
 import { CSSProperties } from 'react';
+
+import { AnimatedProps } from '../..';
 
 describe('AnimatedProps', () => {
   test('width prop', () => {
@@ -11,7 +13,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style?: {
-          width?: number | string | SpringValue<number | string>;
+          width?: number | string | FluidValue<number | string>;
         };
       }
     );
@@ -26,7 +28,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style: {
-          wordWrap: WordWrap | SpringValue<Exclude<WordWrap, void>>;
+          wordWrap: WordWrap | FluidValue<Exclude<WordWrap, void>>;
         };
       }
     );
@@ -41,7 +43,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         ref: { current: any };
-        foo: number | SpringValue<number>;
+        foo: number | FluidValue<number>;
       }
     );
   });
@@ -56,7 +58,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style?: {
-          transform: string | SpringValue<string>;
+          transform: string | FluidValue<string>;
         };
       }
     );
@@ -71,7 +73,7 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         foo: { bar: number };
-        bar?: number | { foo: number } | SpringValue<number>;
+        bar?: number | { foo: number } | FluidValue<number>;
       }
     );
   });
@@ -84,8 +86,8 @@ describe('AnimatedProps', () => {
       _ as Props,
       _ as {
         style: [
-          { width: number | SpringValue<number> },
-          [{ height: number | SpringValue<number> }],
+          { width: number | FluidValue<number> },
+          [{ height: number | FluidValue<number> }],
           false
         ];
       }

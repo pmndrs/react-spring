@@ -3,8 +3,8 @@
   "version": "9.0.0-canary.809.5.f01ecc2",
   "main": "src/index.ts",
   "dependencies": {
-    "@react-spring/animated": "link:../animated",
-    "@react-spring/core": "link:../core",
+    "animated": "link:../animated",
+    "core": "link:../core",
     "use-memo-one": "^1.1.0"
   },
   "peerDependencies": {

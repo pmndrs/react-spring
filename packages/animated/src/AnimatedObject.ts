@@ -1,7 +1,6 @@
-import { Indexable, each, isFluidValue } from 'shared'
+import { Indexable, each, getFluidConfig } from 'shared'
 import { Animated, isAnimated } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
-import { isAnimationValue } from './AnimationValue'
 
 type Source = Indexable | null
 
@@ -19,10 +18,13 @@ export class AnimatedObject extends Animated {
     each(this.source, (source, key) => {
       if (isAnimated(source)) {
         values[key] = source.getValue(animated)
-      } else if (isFluidValue(source)) {
-        values[key] = source.get()
-      } else if (!animated) {
-        values[key] = source
+      } else {
+        const config = getFluidConfig(source)
+        if (config) {
+          values[key] = config.get()
+        } else if (!animated) {
+          values[key] = source
+        }
       }
     })
     return values
@@ -34,9 +36,9 @@ export class AnimatedObject extends Animated {
     this.payload = this._makePayload(source)
   }
 
-  reset(isActive?: boolean, _goal?: Indexable) {
+  reset() {
     if (this.payload) {
-      each(this.payload, node => node.reset(isActive))
+      each(this.payload, node => node.reset())
     }
   }
 
@@ -51,16 +53,13 @@ export class AnimatedObject extends Animated {
 
   /** Add to a payload set. */
   protected _addToPayload(this: Set<AnimatedValue>, source: any) {
-    if (isFluidValue(source)) {
-      if (Animated.context) {
-        Animated.context.dependencies.add(source)
-      }
-      if (isAnimationValue(source)) {
-        source = source.node
-      }
+    const config = getFluidConfig(source)
+    if (config && Animated.context) {
+      Animated.context.dependencies.add(source)
     }
-    if (isAnimated(source)) {
-      each(source.getPayload(), node => this.add(node))
+    const node: Animated = isAnimated(source.node) && source.node
+    if (node) {
+      each(node.getPayload(), node => this.add(node))
     }
   }
 }

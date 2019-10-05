@@ -6,8 +6,8 @@
     "build": "rollup -c"
   },
   "dependencies": {
-    "@react-spring/animated": "link:../../packages/animated",
-    "@react-spring/core": "link:../../packages/core",
+    "animated": "link:../../packages/animated",
+    "core": "link:../../packages/core",
     "shared": "link:../../packages/shared"
   },
   "peerDependencies": {

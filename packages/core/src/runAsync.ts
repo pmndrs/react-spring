@@ -4,7 +4,7 @@ import {
   AsyncTo,
   SpringUpdateFn,
   SpringStopFn,
-  SpringProps,
+  SpringUpdate,
   SpringTo,
 } from './types/spring'
 import { AnimationResult } from './types/animated'
@@ -90,14 +90,14 @@ export async function runAsync<T>(
     })
 
     const animate = (
-      arg1: SpringTo<T> | SpringProps<T>,
-      arg2?: SpringProps<T>
+      arg1: SpringTo<T> | SpringUpdate<T>,
+      arg2?: SpringUpdate<T>
     ) => {
       if (isCancelled()) {
         throw cancelToken
       }
 
-      type AnimateProps = SpringProps<T> & typeof defaultProps
+      type AnimateProps = SpringUpdate<T> & typeof defaultProps
       const props: AnimateProps = is.obj(arg1)
         ? { ...arg1 }
         : { ...arg2, to: arg1 as any }
@@ -174,7 +174,7 @@ export async function runAsync<T>(
  * Pass props to your action when any delay is finished and the
  * props weren't cancelled before then.
  */
-export function scheduleProps<Props extends SpringProps, Result>(
+export function scheduleProps<Props extends SpringUpdate, Result>(
   asyncId: number,
   {
     key,

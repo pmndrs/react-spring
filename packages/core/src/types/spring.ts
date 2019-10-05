@@ -10,10 +10,12 @@ import {
   FluidProps,
   Remap,
 } from 'shared'
+
+import { AnimationProps, AnimationEvents } from './animated'
 import { Controller, ControllerProps } from '../Controller'
+import { AnimationConfig } from '../Animation'
 import { SpringValue } from '../SpringValue'
 import { AsyncResult } from '../runAsync'
-import { AnimationProps, AnimationEvents, AnimationConfig } from './animated'
 
 /** Map an object type to allow `SpringValue` for any property */
 export type Springify<T> = Indexable<SpringValue<unknown> | undefined> &
@@ -30,16 +32,6 @@ export type SpringValues<T extends object = any> = Remap<
           [P in keyof T]: SpringValue<Exclude<T[P], void>> | Extract<T[P], void>
         })
 >
-
-/**
- * The `to` prop in async form.
- *
- * The `T` parameter can be a set of animated values (as an object type)
- * or a primitive type for a single animated value.
- */
-export type AsyncTo<T, P extends string = string> =
-  // HACK: Wrap a generic mapped type around "SpringUpdate" to allow circular types.
-  ReadonlyArray<{ [U in P]: SpringUpdate<T, P> }[P]> | SpringAsyncFn<T>
 
 /**
  * A value or set of values that can be animated from/to.
@@ -109,26 +101,36 @@ export interface RangeProps<T = any> {
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringProps<T = any> = AnimationProps & RangeProps<T>
+export type SpringUpdate<T = any> = AnimationProps & RangeProps<T>
 
 /**
- * An update to the props of a spring.
+ * The parameter types of an async `update` function.
  *
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringUpdate<T = any, P extends string = string> =
-  | SpringProps<T> &
+export type AsyncUpdate<T = any, P extends string = string> =
+  | SpringTo<T, P>
+  | SpringUpdate<T> &
       AnimationEvents &
       (T extends object
         ? T extends ReadonlyArray<any>
           ? unknown
           : UnknownProps
         : unknown)
-  | SpringTo<T, P>
 
 export type SpringTo<T = any, P extends string = string> = unknown &
   ([T] extends [Animatable] ? T | FluidValue<T> | AsyncTo<T, P> : never)
+
+/**
+ * The `to` prop in async form.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export type AsyncTo<T, P extends string = string> =
+  // HACK: Wrap a generic mapped type around "SpringUpdate" to allow circular types.
+  ReadonlyArray<{ [U in P]: AsyncUpdate<T, P> }[P]> | AsyncUpdateFn<T>
 
 /**
  * Update the props of a spring.
@@ -138,16 +140,26 @@ export type SpringTo<T = any, P extends string = string> = unknown &
  */
 export type SpringUpdateFn<T> = [T] extends [Animatable]
   ? {
-      (to: SpringTo<T>, props?: SpringProps<T>): AsyncResult<T>
-      (props: SpringProps<T>): AsyncResult<T>
+      (to: SpringTo<T>, props?: SpringUpdate<T>): AsyncResult<T>
+      (props: SpringUpdate<T>): AsyncResult<T>
     }
   : [T] extends [object]
   ? {
       (props: ControllerProps<T>): AsyncResult<T>
     }
   : {
-      (props: SpringProps<T>): AsyncResult<T>
+      (props: SpringUpdate<T>): AsyncResult<T>
     }
+
+/**
+ * An async function that can update or cancel the animations of a spring.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export interface AsyncUpdateFn<T> {
+  (next: SpringUpdateFn<T>, stop: SpringStopFn<T>): Promise<void> | undefined
+}
 
 /**
  * Stop every animating `SpringValue` at its current value.
@@ -175,16 +187,6 @@ export interface SpringsUpdateFn<State extends Indexable> {
           ctrl: Controller<State>
         ) => ControllerProps<State> | null)
   ): SpringHandle<State>
-}
-
-/**
- * An async function that can update or cancel the animations of a spring.
- *
- * The `T` parameter can be a set of animated values (as an object type)
- * or a primitive type for a single animated value.
- */
-export interface SpringAsyncFn<T> {
-  (next: SpringUpdateFn<T>, stop: SpringStopFn<T>): Promise<void> | undefined
 }
 
 /**

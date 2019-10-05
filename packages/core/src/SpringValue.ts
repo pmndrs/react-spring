@@ -3,30 +3,29 @@ import {
   each,
   isEqual,
   toArray,
-  needsInterpolation,
-  isFluidValue,
   FluidValue,
+  getFluidConfig,
+  isAnimatedString,
   Animatable,
 } from 'shared'
 import {
-  AnimationValue,
-  isAnimationValue,
+  AnimatedType,
   AnimatedValue,
   AnimatedString,
   AnimatedArray,
-  OnChange,
-} from '@react-spring/animated'
+  getPayload,
+  getAnimated,
+  setAnimated,
+} from 'animated'
 import * as G from 'shared/globals'
 
 import { Indexable } from './types/common'
-import { SpringConfig, SpringProps } from './types/spring'
+import { SpringUpdate } from './types/spring'
+import { Animation, AnimationConfig } from './Animation'
 import {
-  AnimatedType,
-  Animation,
   AnimationRange,
   AnimationResult,
   OnRest,
-  AnimationConfig,
   AnimationEvents,
 } from './types/animated'
 import {
@@ -37,7 +36,7 @@ import {
   RunAsyncProps,
 } from './runAsync'
 import { callProp, DEFAULT_PROPS, matchProp } from './helpers'
-import { config as configs } from './constants'
+import { FrameValue, isFrameValue } from './FrameValue'
 
 /** Default props for a `SpringValue` object */
 export type DefaultProps<T = unknown> = {
@@ -46,7 +45,7 @@ export type DefaultProps<T = unknown> = {
 
 /** Pending props for a `SpringValue` object */
 export type PendingProps<T = unknown> = unknown &
-  SpringProps<T> &
+  SpringUpdate<T> &
   AnimationEvents<T>
 
 // TODO: use "const enum" when Babel supports it
@@ -70,25 +69,16 @@ const ACTIVE = 'ACTIVE'
 
 const noop = () => {}
 
-const BASE_CONFIG: SpringConfig = {
-  ...configs.default,
-  mass: 1,
-  velocity: 0,
-  progress: 0,
-  easing: t => t,
-  clamp: false,
-}
+declare const console: { warn: Function }
 
 /** An opaque animatable value */
-export class SpringValue<T = any> extends AnimationValue<T> {
+export class SpringValue<T = any> extends FrameValue<T> {
   /** The property name used when `to` or `from` is an object. Useful when debugging too. */
   key?: string
   /** The animation state */
-  animation: Animation<T> = { value: this } as any
+  animation = new Animation()
   /** The queue of pending props */
   queue?: PendingProps<T>[]
-  /** @internal The animated node. Do not touch! */
-  node!: AnimationValue<T>['node']
   /** The lifecycle phase of this spring */
   protected _phase = CREATED
   /** The state for `runAsync` calls */
@@ -111,6 +101,166 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
   get idle() {
     return !this.is(ACTIVE)
+  }
+
+  /** Advance the current animation by a number of milliseconds */
+  advance(dt: number) {
+    let idle = true
+    let changed = false
+
+    const anim = this.animation
+    const payload = getPayload(anim.to)
+
+    let { toValues } = anim
+    if (!payload) {
+      const toConfig = getFluidConfig(anim.to)
+      if (toConfig) toValues = toArray(toConfig.get())
+    }
+
+    anim.values.forEach((node, i) => {
+      if (node.done) return
+
+      // The "anim.toValues" array must exist when no parent exists.
+      let to = payload ? payload[i].lastPosition : toValues![i]
+
+      // Parent springs must finish before their children can.
+      const canFinish = !payload || payload[i].done
+
+      // Jump to end value for immediate animations.
+      if (anim.immediate) {
+        node.done = canFinish
+        if (node.setValue(to)) {
+          changed = true
+        }
+        return
+      }
+
+      const { config } = anim
+
+      // Loose springs never move.
+      if (config.tension == 0) {
+        node.done = true
+        return
+      }
+
+      const elapsed = (node.elapsedTime += dt)
+      const from = anim.fromValues[i]
+
+      const v0 =
+        node.v0 != null
+          ? node.v0
+          : (node.v0 = is.arr(config.velocity)
+              ? config.velocity[i]
+              : config.velocity)
+
+      let position = node.lastPosition
+      let velocity: number
+      let finished!: boolean
+
+      // Duration easing
+      if (!is.und(config.duration)) {
+        let p = config.progress || 0
+        if (config.duration <= 0) p = 1
+        else p += (1 - p) * Math.min(1, elapsed / config.duration)
+
+        position = from + config.easing(p) * (to - from)
+        velocity = (position - node.lastPosition) / dt
+
+        finished = p == 1
+      }
+
+      // Decay easing
+      else if (config.decay) {
+        const decay = config.decay === true ? 0.998 : config.decay
+        const e = Math.exp(-(1 - decay) * elapsed)
+
+        position = from + (v0 / (1 - decay)) * (1 - e)
+        // derivative of position
+        velocity = v0 * e
+
+        finished = Math.abs(node.lastPosition - position) < 0.1
+        if (finished) to = position
+      }
+
+      // Spring easing
+      else {
+        velocity = node.lastVelocity == null ? v0 : node.lastVelocity
+
+        /** The smallest distance from a value before being treated like said value. */
+        const precision =
+          config.precision ||
+          (from == to ? 0.005 : Math.min(1, Math.abs(to - from) * 0.001))
+
+        /** The velocity at which movement is essentially none */
+        const restVelocity = config.restVelocity || precision
+
+        // Bouncing is opt-in (not to be confused with overshooting)
+        const bounceFactor = config.clamp ? 0 : config.bounce!
+        const canBounce = !is.und(bounceFactor)
+
+        /** When `true`, the value is increasing over time */
+        const isGrowing = from == to ? node.v0 > 0 : from < to
+
+        /** When `true`, the velocity is considered moving */
+        let isMoving!: boolean
+
+        /** When `true`, the velocity is being deflected or clamped */
+        let isBouncing = false
+
+        const step = 0.05 / config.w0
+        const numSteps = Math.ceil(dt / step)
+        for (let n = 0; n < numSteps; ++n) {
+          isMoving = Math.abs(velocity) > restVelocity
+
+          if (!isMoving) {
+            finished = Math.abs(to - position) <= precision
+            if (finished) {
+              break
+            }
+          }
+
+          if (canBounce) {
+            isBouncing = position == to || position > to == isGrowing
+
+            // Invert the velocity with a magnitude, or clamp it.
+            if (isBouncing) {
+              velocity = -velocity * bounceFactor
+              position = to
+            }
+          }
+
+          const springForce = -config.tension * 0.000001 * (position - to)
+          const dampingForce = -config.friction * 0.001 * velocity
+          const acceleration = (springForce + dampingForce) / config.mass // pt/ms^2
+
+          velocity = velocity + acceleration * step // pt/ms
+          position = position + velocity * step
+        }
+      }
+
+      if (Number.isNaN(position)) {
+        console.warn(`Got NaN while animating:`, this)
+        return this.finish()
+      }
+
+      if (finished && canFinish) {
+        node.done = true
+      } else {
+        idle = false
+      }
+
+      node.lastVelocity = velocity
+      if (node.setValue(position, config.round)) {
+        changed = true
+      }
+    })
+
+    if (idle) {
+      this.finish()
+    } else if (changed) {
+      this._onChange(this.get())
+    }
+    return idle
   }
 
   /** Check the current phase */
@@ -136,10 +286,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
    */
   pause() {
     checkDisposed(this, 'pause')
-    if (!this.idle) {
-      this._phase = PAUSED
-      G.frameLoop.stop(this)
-    }
+    this._phase = PAUSED
   }
 
   /**
@@ -249,41 +396,29 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
   }
 
-  /** Observe value changes. To stop observing, call the returned function. */
-  onChange(fn: OnChange<T>): () => void {
-    this._children.add(fn)
-    return () => this._children.delete(fn)
-  }
-
   /** @internal */
-  onParentChange(_value: any, _idle: boolean) {
-    // Enter the frameloop when a parent changes.
-    if (this.idle) {
+  onParentChange(event: FrameValue.Event) {
+    super.onParentChange(event)
+    if (this.idle && event.type == 'change') {
       const anim = this.animation
       if (!anim.immediate) {
         anim.fromValues = anim.values.map(node => node.lastPosition)
       }
+      // Enter the frameloop when a parent changes.
       this._start()
-    }
-  }
-
-  /** @internal Called by the frameloop */
-  onFrame(idle: boolean, changed: boolean) {
-    if (idle) {
-      this.finish()
-    } else if (changed) {
-      this._onChange(this.get())
+    } else if (event.type == 'priority') {
+      this.priority = event.priority + 1
     }
   }
 
   /**
-   * @internal
    * Analyze the given `value` to determine which data type is being animated.
    * Then, create an `Animated` node for that data type and make it our `node`.
    */
-  setNodeWithValue(value: any) {
+  protected _ensureAnimated(value: any) {
     if (value != null) {
-      this.node = this._getNodeType(value).create(computeGoal(value))
+      const nodeType = this._getNodeType(value)
+      setAnimated(this, nodeType.create(computeGoal(value)))
     }
   }
 
@@ -295,27 +430,24 @@ export class SpringValue<T = any> extends AnimationValue<T> {
    */
   setNodeWithProps(props: PendingProps<T>) {
     const range = this._getRange(props)
-    if (!this.node) {
-      this.setNodeWithValue(range.from != null ? range.from : range.to)
+    if (!getAnimated(this)) {
+      this._ensureAnimated(range.from != null ? range.from : range.to)
     }
     return range
   }
 
   /** Return the `Animated` node constructor for a given value */
-  protected _getNodeType(value: T | FluidValue<T>): AnimatedType<T> {
-    const parent = isAnimationValue(value) ? value : null
-    const parentType = parent && parent.node && (parent.node.constructor as any)
-    if (!parent && isFluidValue(value)) {
-      value = value.get()
+  protected _getNodeType(value: T | FluidValue<T>): AnimatedType {
+    const parentNode = getAnimated(value)
+    if (parentNode) {
+      const parentType = parentNode.constructor as any
+      return parentType == AnimatedString ? AnimatedValue : parentType
     }
-    return parentType == AnimatedString
-      ? AnimatedValue
-      : parentType ||
-          (is.arr(value)
-            ? AnimatedArray
-            : needsInterpolation(value)
-            ? AnimatedString
-            : AnimatedValue)
+    return is.arr(value)
+      ? AnimatedArray
+      : isAnimatedString(value)
+      ? AnimatedString
+      : AnimatedValue
   }
 
   /** Pluck the `to` and `from` props */
@@ -323,12 +455,12 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     const { to, from } = props as any
     const key = this.key || ''
     return {
-      to: !is.obj(to) || isFluidValue(to) ? to : to[key],
-      from: !is.obj(from) || isFluidValue(from) ? from : from[key],
+      to: !is.obj(to) || getFluidConfig(to) ? to : to[key],
+      from: !is.obj(from) || getFluidConfig(from) ? from : from[key],
     }
   }
 
-  /** Update this value's animation using the given props. */
+  /** Schedule an animation to run after an optional delay */
   protected _animate(props: PendingProps<T>): AsyncResult<T> {
     // Ensure the initial value can be accessed by animated components.
     const range = this.setNodeWithProps(props)
@@ -366,7 +498,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     })
   }
 
-  /** Update the internal `animation` object */
+  /** Update the current animation */
   protected _update(
     { to, from }: AnimationRange<T>,
     props: RunAsyncProps<T>,
@@ -385,7 +517,7 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
 
     // Cast from a partial type.
-    const anim: Partial<Animation<T>> = this.animation
+    const anim = this.animation
 
     const timestamps = this._timestamps
 
@@ -414,54 +546,42 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     } else {
       from = anim.from
     }
-    if (isFluidValue(from)) {
-      from = from.get()
+
+    const toConfig = getFluidConfig(to)
+    const fromConfig = getFluidConfig(from)
+
+    if (fromConfig) {
+      from = fromConfig.get()
     }
 
     const reset = props.reset && !is.und(from)
     const changed = !is.und(to) && !isEqual(to, prevTo)
-    const parent = isFluidValue(to) && to
 
     /** The current value */
-    let value = reset ? from! : this.get()
+    let value = reset ? (from as T) : this.get()
     if (is.und(from)) {
       from = value
     }
 
     /** When true, this spring must be in the frameloop. */
-    let started = !!parent || ((changed || reset) && !isEqual(value, to))
+    let started = !!toConfig || ((changed || reset) && !isEqual(value, to))
 
     /** The initial velocity before this `animate` call. */
     const lastVelocity = anim.config ? anim.config.velocity : 0
 
     // The "config" prop either overwrites or merges into the existing config.
-    let config = props.config as AnimationConfig
-    if (config || started || !anim.config) {
-      const key = this.key || ''
-      config = {
-        ...callProp(defaultProps.config, key),
-        ...callProp(config, key),
+    if (!anim.config || props.config || started) {
+      const config = {
+        ...callProp(defaultProps.config, this.key!),
+        ...callProp(props.config, this.key!),
       }
-
-      if (!started && canMergeConfigs(config, anim.config)) {
-        Object.assign(anim.config, config)
-      } else {
-        anim.config = config = { ...BASE_CONFIG, ...config }
+      if (!canMergeConfigs(config, anim.config)) {
+        anim.config = new AnimationConfig()
       }
-
-      // Derive "tension" and "friction" from "frequency" and "damping".
-      if (!is.und(config.frequency)) {
-        const damping = is.und(config.damping) ? 1 : config.damping
-        config.tension = Math.pow(config.frequency, 2) * config.mass
-        config.friction =
-          (damping * Math.sqrt(config.tension * config.mass)) / 0.5
-      }
-
-      // Cache the angular frequency in rad/ms
-      config.w0 = Math.sqrt(config.tension / config.mass) / 1000
-    } else {
-      config = anim.config
+      anim.config.merge(config)
     }
+
+    const { config } = anim
 
     // Always start animations with velocity.
     if (!started && (config.decay || !is.und(to))) {
@@ -469,8 +589,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
 
     // Reset our internal `Animated` node if starting.
-    let node = this.node!
-    let nodeType: AnimatedType<T>
+    let node = getAnimated(this)!
+    let nodeType: AnimatedType
     if (changed) {
       nodeType = this._getNodeType(to!)
       if (nodeType !== node.constructor) {
@@ -483,8 +603,8 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
 
     // The final value of our animation, excluding the "to" value.
-    // The "FrameLoop" decides our goal value when "parent" exists.
-    let goal: any = parent ? null : computeGoal(to)
+    // Our goal value is dynamic when "toConfig" exists.
+    let goal: any = toConfig ? null : computeGoal(to)
 
     if (nodeType == AnimatedString) {
       from = 0 as any
@@ -525,9 +645,10 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     }
 
     anim.values = node.getPayload()
-    anim.toValues = parent ? null : toArray(goal)
+    anim.toValues = toConfig ? null : toArray(goal)
     anim.immediate =
-      !(parent || is.num(goal) || is.arr(goal)) ||
+      // Sometimes the value is not animatable.
+      !(toConfig || is.num(goal) || is.arr(goal)) ||
       !!matchProp(get('immediate'), this.key)
 
     // Avoid calling this before "immediate" is set
@@ -557,33 +678,42 @@ export class SpringValue<T = any> extends AnimationValue<T> {
   /** Update the `animation.to` value, which might be a `FluidValue` */
   protected _to(value: T | FluidValue<T>) {
     const anim = this.animation
-    if (isFluidValue(anim.to)) {
-      if (value == anim.to) return
-      anim.to.removeChild(this)
+    if (value === anim.to) return
+
+    let config = getFluidConfig(anim.to)
+    if (config) {
+      config.removeChild(this)
     }
+
     anim.to = value
-    if (isFluidValue(value)) {
-      value.addChild(this)
-      this.priority = (value.priority || 0) + 1
-    } else {
-      this.priority = 0
+
+    let priority = 0
+    if ((config = getFluidConfig(value))) {
+      config.addChild(this)
+      if (isFrameValue(value)) {
+        priority = (value.priority || 0) + 1
+      }
     }
+    this.priority = priority
   }
 
   /** Set the current value and our `node` if necessary. The `_onChange` method is *not* called. */
   protected _set(value: T | FluidValue<T>) {
-    if (isFluidValue(value)) {
-      value = value.get()
+    const config = getFluidConfig(value)
+    if (config) {
+      value = config.get()
     }
-    const { node } = this
+
+    const node = getAnimated(this)!
     if (node) {
       if (isEqual(value, node.getValue())) {
         return false
       }
       node.setValue(value)
     } else {
-      this.setNodeWithValue(value)
+      this._ensureAnimated(value)
     }
+
     return true
   }
 
@@ -604,18 +734,16 @@ export class SpringValue<T = any> extends AnimationValue<T> {
     super._onChange(value, idle)
   }
 
-  protected _onPriorityChange(priority: number) {
-    if (!this.idle) {
-      // Re-enter the frameloop so our new priority is used.
-      G.frameLoop.stop(this).start(this)
-    }
-    super._onPriorityChange(priority)
-  }
-
   /** Reset our node, and the nodes of every descendant spring */
   protected _reset(goal?: T) {
     const anim = this.animation
-    super._reset(is.und(goal) ? computeGoal(anim.to) : goal)
+    if (is.und(goal)) {
+      goal = computeGoal(anim.to)
+    }
+
+    getAnimated(this)!.reset()
+    super._reset(goal)
+
     if (!anim.immediate) {
       anim.fromValues = anim.values.map(node => node.lastPosition)
     }
@@ -661,7 +789,6 @@ export class SpringValue<T = any> extends AnimationValue<T> {
 
       // Animations without "onRest" never enter the frameloop.
       if (onRestQueue) {
-        G.frameLoop.stop(this)
         each(anim.values, node => {
           node.done = true
         })
@@ -675,7 +802,9 @@ export class SpringValue<T = any> extends AnimationValue<T> {
         }
 
         const result = { value: this.get(), spring: this, finished }
-        each(onRestQueue, onRest => onRest(result))
+        each(onRestQueue, onRest => {
+          onRest(result)
+        })
       }
     }
   }
@@ -692,26 +821,28 @@ function checkDisposed(spring: SpringValue, name: string) {
 
 // Merge configs when the existence of "decay" or "duration" has not changed.
 function canMergeConfigs(
-  src: AnimationConfig,
+  src: Partial<AnimationConfig>,
   dest: AnimationConfig | undefined
 ) {
   return (
     !!dest &&
     is.und(src.decay) == is.und(dest.decay) &&
-    is.und(src.duration) == is.und(dest.duration)
+    is.und(src.duration) == is.und(dest.duration) &&
+    is.und(src.frequency) == is.und(dest.frequency)
   )
 }
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
 function computeGoal<T>(value: T | FluidValue<T>): T {
-  return is.arr(value)
+  const config = getFluidConfig(value)
+  return config
+    ? computeGoal(config.get())
+    : is.arr(value)
     ? value.map(computeGoal)
-    : isFluidValue(value)
-    ? computeGoal(value.get())
-    : needsInterpolation(value)
-    ? (G.createStringInterpolator as any)({
+    : isAnimatedString(value)
+    ? (G.createStringInterpolator({
         range: [0, 1],
-        output: [value, value],
-      })(1)
+        output: [value, value] as any,
+      })(1) as any)
     : value
 }

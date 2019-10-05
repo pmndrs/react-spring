@@ -13,4 +13,4 @@ Globals.assign({
 })
 
 export * from './animated'
-export * from '@react-spring/core'
+export * from 'core'

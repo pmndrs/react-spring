@@ -8,5 +8,8 @@
   },
   "publishConfig": {
     "directory": "dist"
+  },
+  "dependencies": {
+    "fluids": "^0.1.0"
   }
 }
