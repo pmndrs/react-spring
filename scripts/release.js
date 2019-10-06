@@ -32,6 +32,7 @@ async function publish(opts) {
   exec(`${lernaBin} version`)
   process.on('exit', () => {
     if (opts.dry) {
+      deleteTag(exec('git describe --exact-match --abbrev=0', { silent: true }))
       undoCommit()
     }
   })
@@ -60,7 +61,10 @@ async function publishCanary(opts) {
   let version = await ask('Version', match[1])
 
   const pr = await ask('PR number', match[2])
-  const build = await ask('Build number', Number(match[3] || 0) + 1)
+  const build = await ask(
+    'Build number',
+    pr !== match[2] ? 1 : Number(match[3] || 0) + 1
+  )
 
   const head = exec('git rev-parse HEAD', { silent: true }).stdout
   const commit = await ask('Commit hash', head.slice(0, 7))
@@ -70,12 +74,17 @@ async function publishCanary(opts) {
   exec(`${lernaBin} version ${version} --yes`)
   process.on('exit', () => {
     if (opts.dry) {
+      deleteTag('v' + version)
       undoCommit(commit => commit == version)
     }
   })
 
   updateLockfile(opts)
   publishUntagged()
+}
+
+function deleteTag(tag) {
+  exec(`git tag -d '${tag}'`)
 }
 
 function updateLockfile(opts = {}) {
