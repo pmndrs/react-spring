@@ -19,21 +19,23 @@ export const getPayload = (owner: any): AnimatedValue[] | undefined =>
   owner && owner[$node] && owner[$node].getPayload()
 
 export abstract class Animated<T = any> {
-  /** The cache of animated numbers */
+  /** The cache of animated values */
   protected payload?: Payload
 
-  /** Returns every value of the node. Pass true for only the animated values. */
   constructor() {
     setAnimated(this, this)
   }
 
+  /** Get the current value. Pass `true` for only animated values. */
   abstract getValue(animated?: boolean): T
 
+  /** Set the current value. */
   abstract setValue(value: T): void
 
+  /** Reset any animation state. */
   abstract reset(goal?: T): void
 
-  /** Returns every animated number used by this node. */
+  /** Get every `AnimatedValue` used by this node. */
   getPayload(): Payload {
     return this.payload || []
   }
