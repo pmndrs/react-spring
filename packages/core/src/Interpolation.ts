@@ -118,7 +118,11 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   /** @internal */
   onParentChange(event: FrameValue.Event) {
     if (event.type == 'change') {
-      if (event.idle && !this.idle) {
+      if (this.idle) {
+        this.advance()
+      }
+      // Leave the frameloop when all parent values are done animating.
+      else if (event.idle) {
         this.idle = toArray(this.source).every(
           (source: any) => source.idle !== false
         )
