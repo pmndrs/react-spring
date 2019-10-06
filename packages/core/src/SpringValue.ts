@@ -766,12 +766,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         }
       }
 
-      // Tell animatable children to enter the frameloop.
-      each(this._children, child => {
-        if (child instanceof SpringValue) {
-          child._start()
-        }
-      })
+      super._start()
     }
   }
 
