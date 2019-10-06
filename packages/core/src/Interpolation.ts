@@ -123,6 +123,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
           (source: any) => source.idle !== false
         )
         if (this.idle) {
+          this.advance()
           each(getPayload(this)!, node => {
             node.done = true
           })
