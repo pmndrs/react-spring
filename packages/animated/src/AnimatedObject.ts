@@ -1,5 +1,5 @@
 import { Indexable, each, getFluidConfig } from 'shared'
-import { Animated, isAnimated } from './Animated'
+import { Animated, isAnimated, getPayload } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
 
 type Source = Indexable | null
@@ -57,9 +57,9 @@ export class AnimatedObject extends Animated {
     if (config && Animated.context) {
       Animated.context.dependencies.add(source)
     }
-    const node: Animated = isAnimated(source.node) && source.node
-    if (node) {
-      each(node.getPayload(), node => this.add(node))
+    const payload = getPayload(source)
+    if (payload) {
+      each(payload, node => this.add(node))
     }
   }
 }
