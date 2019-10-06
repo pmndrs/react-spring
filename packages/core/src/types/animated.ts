@@ -5,6 +5,10 @@ import { RunAsyncProps } from '../runAsync'
 import { SpringValue } from '../SpringValue'
 import { SpringConfig } from './spring'
 
+export type Velocity<T = any> = T extends ReadonlyArray<number | string>
+  ? number[]
+  : number
+
 export type AnimationRange<T> = {
   to: T | FluidValue<T> | undefined
   from: T | FluidValue<T> | undefined
