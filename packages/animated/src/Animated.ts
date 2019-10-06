@@ -4,7 +4,7 @@ import { AnimatedValue } from './AnimatedValue'
 const $node: any = Symbol.for('Animated:node')
 
 export const isAnimated = (value: any): value is Animated =>
-  value instanceof Animated
+  !!value && value[$node] === value
 
 /** Get the owner's `Animated` node. */
 export const getAnimated = (owner: any): Animated | undefined =>
@@ -23,6 +23,10 @@ export abstract class Animated<T = any> {
   protected payload?: Payload
 
   /** Returns every value of the node. Pass true for only the animated values. */
+  constructor() {
+    setAnimated(this, this)
+  }
+
   abstract getValue(animated?: boolean): T
 
   abstract setValue(value: T): void
