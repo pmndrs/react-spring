@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { withAnimated, extendAnimated } from 'core'
+import { withAnimated, extendAnimated } from 'animated'
 import {
   AssignableKeys,
   ComponentPropsWithRef,
