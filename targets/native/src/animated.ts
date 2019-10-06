@@ -1,5 +1,5 @@
 import { ForwardRefExoticComponent, ComponentClass, ReactNode } from 'react'
-import { withAnimated, extendAnimated } from 'core'
+import { withAnimated, extendAnimated } from 'animated'
 import {
   Text,
   View,

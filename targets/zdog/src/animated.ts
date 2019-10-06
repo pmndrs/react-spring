@@ -4,7 +4,7 @@ import {
   ComponentPropsWithRef,
   ForwardRefExoticComponent,
 } from 'react'
-import { withAnimated, extendAnimated } from 'core'
+import { withAnimated, extendAnimated } from 'animated'
 import { FluidValue } from 'shared'
 
 type ZdogExports = typeof Zdog
