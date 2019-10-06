@@ -800,9 +800,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
           onRestQueue[0] = noop
         }
 
-        const result = { value: this.get(), spring: this, finished }
-        each(onRestQueue, onRest => {
-          onRest(result)
+        G.batchedUpdates(() => {
+          const result = { value: this.get(), spring: this, finished }
+          each(onRestQueue, onRest => {
+            onRest(result)
+          })
         })
       }
     }
