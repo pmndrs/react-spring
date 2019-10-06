@@ -17,9 +17,8 @@ let nextId = 1
  * Its underlying value can be accessed and even observed.
  */
 export abstract class FrameValue<T = any>
-  implements
-    FluidValue<T, FrameValue.Event<T>>,
-    FluidObserver<FrameValue.Event> {
+  extends FluidValue<T, FrameValue.Event<T>>
+  implements FluidObserver<FrameValue.Event> {
   readonly id = nextId++
 
   abstract key?: string
