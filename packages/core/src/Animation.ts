@@ -10,8 +10,7 @@ const emptyArray: readonly any[] = []
 const defaultConfig = constants.config.default
 
 /** Accelerate until halfway, then decelerate */
-const easeInOutQuad = (t: number) =>
-  t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+const linear = (t: number) => t
 
 /** An animation being executed by the frameloop */
 export class Animation<T = any> {
@@ -119,7 +118,7 @@ export class AnimationConfig {
    *
    * Defaults to quadratic ease-in-out.
    */
-  easing = easeInOutQuad
+  easing = linear
 
   /**
    * Avoid overshooting by ending abruptly at the goal value.
