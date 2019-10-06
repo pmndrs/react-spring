@@ -3,6 +3,7 @@ import { FluidValue } from 'fluids'
 
 import { InterpolatorConfig, InterpolatorArgs, OneOrMore } from './types'
 import { FrameLoop } from './FrameLoop'
+import { noop } from './helpers'
 
 declare const window: {
   requestAnimationFrame: (cb: (time: number) => void) => number
@@ -64,7 +65,7 @@ export let requestAnimationFrame: typeof window.requestAnimationFrame =
   typeof window !== 'undefined' ? window.requestAnimationFrame : () => -1
 
 export let cancelAnimationFrame: typeof window.cancelAnimationFrame =
-  typeof window !== 'undefined' ? window.cancelAnimationFrame : () => {}
+  typeof window !== 'undefined' ? window.cancelAnimationFrame : noop
 
 //
 // Configuration
