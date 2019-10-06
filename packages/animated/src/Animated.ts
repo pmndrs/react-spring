@@ -31,7 +31,7 @@ export abstract class Animated<T = any> {
 
   abstract setValue(value: T): void
 
-  abstract reset(): void
+  abstract reset(goal?: T): void
 
   /** Returns every animated number used by this node. */
   getPayload(): Payload {
