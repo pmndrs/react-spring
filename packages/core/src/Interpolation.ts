@@ -105,6 +105,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
     this.priority = priority
     if (!idle) {
       this._reset()
+      this._start()
     }
   }
 
