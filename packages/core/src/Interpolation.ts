@@ -119,13 +119,14 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   onParentChange(event: FrameValue.Event) {
     if (event.type == 'change') {
       if (event.idle && !this.idle) {
-        const idle = toArray(this.source).every(
+        this.idle = toArray(this.source).every(
           (source: any) => source.idle !== false
         )
-        if (idle)
+        if (this.idle) {
           each(getPayload(this)!, node => {
             node.done = true
           })
+        }
       }
     } else if (event.type == 'priority') {
       // Set our priority to 1 + the highest parent.
