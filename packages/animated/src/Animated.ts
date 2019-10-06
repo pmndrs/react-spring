@@ -3,11 +3,11 @@ import { AnimatedValue } from './AnimatedValue'
 
 const $node: any = Symbol.for('Animated:node')
 
-export const isAnimated = (value: any): value is Animated =>
+export const isAnimated = <T = any>(value: any): value is Animated<T> =>
   !!value && value[$node] === value
 
 /** Get the owner's `Animated` node. */
-export const getAnimated = (owner: any): Animated | undefined =>
+export const getAnimated = <T = any>(owner: any): Animated<T> | undefined =>
   owner && owner[$node]
 
 /** Set the owner's `Animated` node. */
