@@ -740,7 +740,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       goal = computeGoal(anim.to)
     }
 
-    getAnimated(this)!.reset()
+    getAnimated(this)!.reset(goal)
     super._reset(goal)
 
     if (!anim.immediate) {
