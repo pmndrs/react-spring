@@ -1,6 +1,7 @@
 import {
   is,
   each,
+  noop,
   isEqual,
   toArray,
   FluidValue,
@@ -66,8 +67,6 @@ const IDLE = 'IDLE'
 const PAUSED = 'PAUSED'
 /** The spring is animating */
 const ACTIVE = 'ACTIVE'
-
-const noop = () => {}
 
 declare const console: { warn: Function }
 

@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useReducer, useRef } from 'react'
 import { Indexable, Arrify } from './types'
 import * as G from './globals'
 
+export const noop = () => {}
+
 export const defineHidden = (obj: any, key: any, value: any) =>
   Object.defineProperty(obj, key, { value, writable: true, configurable: true })
 
