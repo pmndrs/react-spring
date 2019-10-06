@@ -50,16 +50,21 @@ export class FrameLoop {
     // The active animations for the current frame, sorted by lowest priority first
     let animations: OpaqueAnimation[] = []
 
-    // The priority of the currently advancing animation
+    // The priority of the currently advancing animation.
+    // To protect against a race condition whenever a frame is being processed,
+    // where the filtering of `animations` is corrupted with a shifting index,
+    // causing animations to potentially advance 2x faster than intended.
     let priority = 0
 
     // Animations starting on the next frame
     const startQueue = new Set<OpaqueAnimation>()
 
-    // Flushed after all animations are updated
+    // Flushed after all animations are updated.
+    // Used to dispatch events to an "onFrame" prop, for example.
     const frameQueue = new Set<FrameRequestCallback>()
 
-    // Flushed at the very end of each frame
+    // Flushed at the very end of each frame.
+    // Used to avoid layout thrashing in @react-spring/web, for example.
     const writeQueue = new Set<FrameRequestCallback>()
 
     // Add an animation to the frameloop
@@ -98,7 +103,7 @@ export class FrameLoop {
         }
 
         // Animations can be added while the frameloop is updating,
-        // but they need a higher priority to be start on this frame.
+        // but they need a higher priority to be started on this frame.
         if (animations.length) {
           animations = animations.filter(animation => {
             priority = animation.priority
@@ -119,7 +124,6 @@ export class FrameLoop {
           frameQueue.clear()
         }
 
-        // Writes are batched to avoid layout thrashing.
         if (writeQueue.size) {
           writing = true
           writeQueue.forEach(write => write(time))
