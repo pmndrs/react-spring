@@ -16,15 +16,12 @@ declare const window: {
 
 export let defaultElement: string | ElementType
 
-/** Provide custom logic for native updates */
 export let applyAnimatedValues: (node: any, props: any) => boolean | void
 
-/** Provide custom logic for string interpolation */
 export let createStringInterpolator: (
   config: InterpolatorConfig<string>
 ) => (input: number) => string
 
-/** Provide a custom `FrameLoop` instance */
 export let frameLoop = new FrameLoop()
 
 //
@@ -36,27 +33,20 @@ export let to: <In, Out>(
   args: InterpolatorArgs<In, Out>
 ) => FluidValue<Out>
 
-/** Used for timestamps in milliseconds. Read more [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now) */
 export let now = () => Date.now()
 
 declare const performance: { now: () => number }
 
-/** Used to measure frame length. Read more [here](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) */
 export let performanceNow = () => performance.now()
 
-/** Provide custom color names for interpolation */
 export let colorNames: { [key: string]: number } | null = null as any
 
-/** Make all animations instant and skip the frameloop entirely */
 export let skipAnimation = false
 
-/** Intercept props before they're passed to an animated component */
 export let getComponentProps = (props: any) => props
 
-/** Wrap the `style` prop with an animated node */
 export let createAnimatedStyle: ((style: any) => any) | null = null as any
 
-/** Wrap the `transform` prop with an animated node */
 export let createAnimatedTransform:
   | ((transform: any) => any)
   | null = null as any
@@ -67,7 +57,6 @@ export let requestAnimationFrame: typeof window.requestAnimationFrame =
 export let cancelAnimationFrame: typeof window.cancelAnimationFrame =
   typeof window !== 'undefined' ? window.cancelAnimationFrame : noop
 
-/** Event props are called with `batchedUpdates` to reduce extraneous renders */
 export let batchedUpdates = (callback: () => void) => callback()
 
 //
@@ -75,20 +64,35 @@ export let batchedUpdates = (callback: () => void) => callback()
 //
 
 export interface AnimatedGlobals {
+  /** Returns a new `Interpolation` object */
   to?: typeof to
+  /** Used for timestamps in milliseconds. Read more [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now) */
   now?: typeof now
+  /** Provide a custom `FrameLoop` instance */
   frameLoop?: typeof frameLoop
+  /** Provide custom color names for interpolation */
   colorNames?: typeof colorNames
+  /** Make all animations instant and skip the frameloop entirely */
   skipAnimation?: typeof skipAnimation
+  /** The `div` element equivalent for the current platform */
   defaultElement?: typeof defaultElement
+  /** Used to measure frame length. Read more [here](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) */
   performanceNow?: typeof performanceNow
+  /** Intercept props before they're passed to an animated component */
   getComponentProps?: typeof getComponentProps
+  /** Provide custom logic for native updates */
   applyAnimatedValues?: typeof applyAnimatedValues
+  /** Provide custom logic for string interpolation */
   createStringInterpolator?: typeof createStringInterpolator
+  /** Wrap the `transform` prop with an animated node */
   createAnimatedTransform?: typeof createAnimatedTransform
+  /** Wrap the `style` prop with an animated node */
   createAnimatedStyle?: typeof createAnimatedStyle
+  /** Schedule a function to run on the next frame */
   requestAnimationFrame?: typeof requestAnimationFrame
+  /** Prevent a scheduled function from running on the next frame */
   cancelAnimationFrame?: typeof cancelAnimationFrame
+  /** Event props are called with `batchedUpdates` to reduce extraneous renders */
   batchedUpdates?: typeof batchedUpdates
 }
 
