@@ -1,8 +1,9 @@
 import { Globals } from 'core'
-import { applyAnimatedValues } from './applyAnimatedValues'
+import { unstable_batchedUpdates } from 'react-dom'
 import { createStringInterpolator } from 'shared/stringInterpolation'
-import { AnimatedStyle } from './AnimatedStyle'
 import colorNames from 'shared/colors'
+import { applyAnimatedValues } from './applyAnimatedValues'
+import { AnimatedStyle } from './AnimatedStyle'
 
 Globals.assign({
   defaultElement: 'div',
@@ -11,6 +12,7 @@ Globals.assign({
   createStringInterpolator,
   createAnimatedStyle: style => new AnimatedStyle(style),
   getComponentProps: ({ scrollTop, scrollLeft, ...props }) => props,
+  batchedUpdates: unstable_batchedUpdates,
 })
 
 export * from './animated'
