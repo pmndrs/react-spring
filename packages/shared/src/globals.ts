@@ -67,6 +67,9 @@ export let requestAnimationFrame: typeof window.requestAnimationFrame =
 export let cancelAnimationFrame: typeof window.cancelAnimationFrame =
   typeof window !== 'undefined' ? window.cancelAnimationFrame : noop
 
+/** Event props are called with `batchedUpdates` to reduce extraneous renders */
+export let batchedUpdates = (callback: () => void) => callback()
+
 //
 // Configuration
 //
@@ -86,6 +89,7 @@ export interface AnimatedGlobals {
   createAnimatedStyle?: typeof createAnimatedStyle
   requestAnimationFrame?: typeof requestAnimationFrame
   cancelAnimationFrame?: typeof cancelAnimationFrame
+  batchedUpdates?: typeof batchedUpdates
 }
 
 export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
@@ -104,6 +108,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     createAnimatedStyle,
     requestAnimationFrame,
     cancelAnimationFrame,
+    batchedUpdates,
   } = Object.assign(
     {
       to,
@@ -120,6 +125,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       createAnimatedStyle,
       requestAnimationFrame,
       cancelAnimationFrame,
+      batchedUpdates,
     },
     pluckDefined(globals)
   ))
