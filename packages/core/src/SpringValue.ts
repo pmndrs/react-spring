@@ -206,7 +206,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
         /** When `true`, the velocity is being deflected or clamped */
         let isBouncing = false
 
-        const step = 0.05 / config.w0
+        //const step = 0.05 / config.w0
+        const step = 1 // 1ms
         const numSteps = Math.ceil(dt / step)
         for (let n = 0; n < numSteps; ++n) {
           isMoving = Math.abs(velocity) > restVelocity
