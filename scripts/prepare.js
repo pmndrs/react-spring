@@ -175,17 +175,22 @@ async function prepare() {
     const deps = pkg.dependencies
     if (deps) {
       const names = Object.keys(packages)
-      for (const depName in deps) {
-        const dep = packages[depName]
+      for (let localId in deps) {
+        const localVersion = deps[localId]
+        const depId = localVersion.startsWith('link:')
+          ? fs.readJsonSync(resolve(pkg.dir, localVersion.slice(5), PJ)).name
+          : localId
+
+        const dep = packages[depId]
         if (dep) {
-          const version = packages[depName].version
-          deps[depName] =
+          const version = packages[depId].version
+          deps[localId] =
             (/-(canary|beta)\./.test(version) ? '' : '^') + version
 
           // Link "dist" packages together.
           const linkDir = join(pkg.dir, DIST, 'node_modules')
-          const linkPath = join(linkDir, depName)
-          const depIndex = names.findIndex(name => name === depName)
+          const linkPath = join(linkDir, localId)
+          const depIndex = names.findIndex(name => name === localId)
           const depPath = join(dep.dir, DIST)
           fs.removeSync(linkPath)
           fs.ensureSymlinkSync(depPath, linkPath)
