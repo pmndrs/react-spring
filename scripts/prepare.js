@@ -183,9 +183,11 @@ async function prepare() {
 
         const dep = packages[depId]
         if (dep) {
-          const version = packages[depId].version
+          const { version } = packages[depId]
           deps[localId] =
-            (/-(canary|beta)\./.test(version) ? '' : '^') + version
+            (localId == depId ? '' : `npm:${depId}@`) +
+            (/-(canary|beta)\./.test(version) ? '' : '^') +
+            version
 
           // Link "dist" packages together.
           const linkDir = join(pkg.dir, DIST, 'node_modules')
