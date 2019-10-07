@@ -138,7 +138,7 @@ export abstract class FrameValue<T = any>
   }
 }
 
-export namespace FrameValue {
+export declare namespace FrameValue {
   /** A parent changed its value */
   interface ChangeEvent<T = any> {
     type: 'change'
