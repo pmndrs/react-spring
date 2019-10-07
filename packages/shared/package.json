@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/shared",
-  "version": "9.0.0-canary.808.3.225e0b1",
+  "version": "9.0.0-canary.808.4.e67bf81",
   "description": "Globals and shared modules",
   "main": "src/index.ts",
   "scripts": {
