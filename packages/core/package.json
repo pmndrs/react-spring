@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/core",
-  "version": "9.0.0-canary.808.2.958e7ba",
+  "version": "9.0.0-canary.808.3.225e0b1",
   "main": "src/index.ts",
   "scripts": {
     "build": "rollup -c",

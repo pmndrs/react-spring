@@ -1863,49 +1863,49 @@
     universal-user-agent "^4.0.0"
 
 "@react-spring/addons@link:packages/addons":
-  version "9.0.0-canary.808.2.958e7ba"
+  version "9.0.0-canary.808.3.225e0b1"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
     use-memo-one "^1.1.0"
 
 "@react-spring/core@link:packages/core":
-  version "9.0.0-canary.808.2.958e7ba"
+  version "9.0.0-canary.808.3.225e0b1"
   dependencies:
     animated "link:packages/animated"
     shared "link:packages/shared"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
-  version "9.0.0-canary.808.2.958e7ba"
+  version "9.0.0-canary.808.3.225e0b1"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "9.0.0-canary.808.2.958e7ba"
+  version "9.0.0-canary.808.3.225e0b1"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/three@link:targets/three":
-  version "9.0.0-canary.808.2.958e7ba"
+  version "9.0.0-canary.808.3.225e0b1"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/web@link:targets/web":
-  version "9.0.0-canary.808.2.958e7ba"
+  version "9.0.0-canary.808.3.225e0b1"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/zdog@link:targets/zdog":
-  version "9.0.0-canary.808.2.958e7ba"
+  version "9.0.0-canary.808.3.225e0b1"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
