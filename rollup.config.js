@@ -129,15 +129,54 @@ export const getBabelOptions = ({ useESModules }, targets) => ({
   ],
 })
 
-const rewritePaths = (opts = {}) => modulePath => {
-  if (modulePath.startsWith('shared')) {
-    return '@react-spring/' + modulePath
+const pkgCache = Object.create(null)
+const readPackageJson = dir =>
+  pkgCache[dir] ||
+  (pkgCache[dir] = fs.readJsonSync(path.join(dir, 'package.json')))
+
+const pkg = fs.readJsonSync(path.resolve('package.json'))
+const rewritePaths = (opts = {}) => {
+  const deps = pkg.dependencies
+
+  const locals = Object.entries(deps).filter(
+    entry => entry[1].startsWith('link:') && (entry[1] = entry[1].slice(5))
+  )
+  const localPkgs = locals.reduce((pkgs, [name, version]) => {
+    pkgs[name] = readPackageJson(path.resolve(version))
+    return pkgs
+  }, Object.create(null))
+
+  const resolveLocal = modulePath => {
+    for (const [name, version] of locals) {
+      if (modulePath == name || modulePath.startsWith(name + '/')) {
+        const dep = localPkgs[name]
+        return modulePath.replace(name, dep.name)
+      }
+    }
   }
-  if (opts.cjs) {
-    const name = packageNames.find(name => name === modulePath)
-    if (name) return path.join(name, packages[name].main)
+
+  return modulePath => {
+    let depId = resolveLocal(modulePath)
+    if (!depId) return modulePath
+
+    // Some modules are built with "tsc" and thus have no ".cjs" variant
+    if (modulePath.startsWith('shared')) {
+      return depId
+    }
+
+    if (opts.cjs) {
+      const name = packageNames.find(name => name === depId)
+      if (name) {
+        depId = path.join(name, packages[name].main)
+      }
+    }
+
+    if (depId !== modulePath) {
+      console.log('FROM => %O : TO => %O', modulePath, depId)
+    }
+
+    return depId
   }
-  return modulePath
 }
 
 const rewriteSourcePaths = config => {
