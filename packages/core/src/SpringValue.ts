@@ -127,7 +127,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
       // Jump to end value for immediate animations.
       if (anim.immediate) {
-        node.done = canFinish
+        node.done = canFinish || (idle = false)
         if (node.setValue(to)) {
           changed = true
         }
