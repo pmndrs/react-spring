@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/addons",
-  "version": "9.0.0-canary.808.1.ae166ee",
+  "version": "9.0.0-canary.808.2.958e7ba",
   "main": "src/index.ts",
   "dependencies": {
     "animated": "link:../animated",
