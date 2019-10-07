@@ -44,11 +44,11 @@ async function publishCanary(opts) {
   // Publish the canary with a temporary tag.
   const publishUntagged = () =>
     exec(`
-    ${lernaBin} exec
-      -- cd dist
-      && npm publish ${opts.dry ? '--dry-run' : '--tag tmp'}
-      ${opts.dry ? '' : '&& npm dist-tag rm \\$LERNA_PACKAGE_NAME tmp'}
-  `)
+      ${lernaBin} exec
+        -- cd dist
+        && npm publish ${opts.dry ? '--dry-run' : '--tag tmp'}
+        ${opts.dry ? '' : '&& npm dist-tag rm \\$LERNA_PACKAGE_NAME tmp'}
+    `)
 
   if (opts.commit === false) {
     return publishUntagged()

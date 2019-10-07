@@ -77,8 +77,7 @@ async function prepare() {
     pkg.publishConfig = rootJson.publishConfig
     setHomepage(pkg)
     setEntryModules(pkg)
-    await publishSources(pkg)
-    upgradeLocals(pkg)
+    await rewriteLocalDeps(pkg)
     useOwnFiles(pkg, ['README.md', '@types'])
     useFiles(pkg, ['LICENSE'])
     deleteFields(pkg, deletions[pkg.name])
@@ -140,7 +139,7 @@ async function prepare() {
 
   // Publish the source code for sourcemaps and for bundlers
   // (like Metro) that ignore pre-existing sourcemaps.
-  const publishSources = async pkg => {
+  const copySourceFiles = async (pkg, rewritePath) => {
     if (pkg.name == 'react-spring') return
     if (pkg.name.endsWith('shared')) return
     const srcDir = join(pkg.dir, SRC)
@@ -158,11 +157,8 @@ async function prepare() {
     })
     files.forEach(file => {
       let content = fs.readFileSync(join(srcDir, file), 'utf8')
-      if (/\.[tj]sx?$/.test(file)) {
-        content = rewritePaths(
-          content,
-          path => path.startsWith('shared') && `${RS}/${path}`
-        )
+      if (rewritePath && /\.[tj]sx?$/.test(file)) {
+        content = rewritePaths(content, rewritePath)
       }
       const distPath = join(distDir, file)
       fs.ensureDirSync(dirname(distPath))
@@ -170,24 +166,47 @@ async function prepare() {
     })
   }
 
-  // Update the versions of "@react-spring/*" dependencies.
-  const upgradeLocals = pkg => {
+  // Read the package.json of a local dependency
+  const readLocalDep = (pkg, localVersion) => {
+    if (localVersion.startsWith('link:')) {
+      const pkgJsonPath = resolve(pkg.dir, localVersion.slice(5), PJ)
+      return fs.readJsonSync(pkgJsonPath)
+    }
+  }
+
+  // Rename dependency aliases to their full "@react-spring/xxx" name,
+  // and replace "link:" versions with actual versions
+  const rewriteLocalDeps = async pkg => {
+    await copySourceFiles(pkg, path => {
+      const deps = pkg.dependencies
+      if (deps) {
+        for (const localId in deps) {
+          const dep = readLocalDep(pkg, deps[localId])
+          if (!dep) continue
+          if (path == localId || path.startsWith(localId + '/')) {
+            return path.replace(localId, dep.name)
+          }
+        }
+      }
+    })
+
+    // Replace "link:" versions with (A) exact versions for canary and beta releases,
+    // or with (B) caret ranges for actual releases.
+    const exactRE = /-(canary|beta)\./
     const deps = pkg.dependencies
     if (deps) {
       const names = Object.keys(packages)
       for (let localId in deps) {
         const localVersion = deps[localId]
-        const depId = localVersion.startsWith('link:')
-          ? fs.readJsonSync(resolve(pkg.dir, localVersion.slice(5), PJ)).name
-          : localId
+        const { name: depId } = readLocalDep(pkg, localVersion) || {}
 
         const dep = packages[depId]
         if (dep) {
           const { version } = packages[depId]
-          deps[localId] =
-            (localId == depId ? '' : `npm:${depId}@`) +
-            (/-(canary|beta)\./.test(version) ? '' : '^') +
-            version
+          deps[depId] = (exactRE.test(version) ? '' : '^') + version
+          if (localId !== depId) {
+            delete deps[localId]
+          }
 
           // Link "dist" packages together.
           const linkDir = join(pkg.dir, DIST, 'node_modules')
