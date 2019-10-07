@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/animated",
-  "version": "9.0.0-canary.808.2.958e7ba",
+  "version": "9.0.0-canary.808.3.225e0b1",
   "description": "Animated component props for React",
   "main": "src/index.ts",
   "scripts": {
