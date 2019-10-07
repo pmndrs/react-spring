@@ -153,11 +153,12 @@ export class AnimationConfig {
    */
   round?: number = none
 
+  /* might be reintroduced later */
   /**
    * @internal
    * The angular frequency in rad/ms
    */
-  w0 = 0
+  // w0 = 0
 
   /**
    * Partially overwrite the existing config.
@@ -171,7 +172,8 @@ export class AnimationConfig {
       this.friction = (damping * Math.sqrt(this.tension * mass)) / 0.5
     }
 
+    /* might be reintroduced later */
     // Cache the angular frequency in rad/ms
-    this.w0 = Math.sqrt(this.tension / mass) / 1000
+    // this.w0 = Math.sqrt(this.tension / mass) / 1000
   }
 }
