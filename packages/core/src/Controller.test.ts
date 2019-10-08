@@ -80,7 +80,7 @@ function getFrames<T extends object>(ctrl: Controller<T>): T[] {
 
   let steps = 0
   while (!ctrl.idle) {
-    ctrl['_props'].onFrame = onFrame
+    ctrl['_state'].onFrame = onFrame
     mockRaf.step()
     if (++steps > 1e5) {
       throw Error('Infinite loop detected')
@@ -99,7 +99,7 @@ async function getAsyncFrames<T extends object>(
 
   let steps = 0
   while (!ctrl.idle) {
-    ctrl['_props'].onFrame = onFrame
+    ctrl['_state'].onFrame = onFrame
     mockRaf.step()
     await Promise.resolve()
     if (++steps > 1e5) {

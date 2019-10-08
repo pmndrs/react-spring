@@ -1,6 +1,12 @@
+import { Interpolation } from './Interpolation'
+import * as Globals from 'shared/globals'
+Globals.assign({
+  to: (...args) => new Interpolation(...args),
+})
+
 import { assert, _ } from 'spec.ts'
 import { SpringValue } from './SpringValue'
-import { to, Into } from './interpolate'
+import { to } from './interpolate'
 
 function spring<T>(value: T): SpringValue<T> {
   return new SpringValue(value)
@@ -49,7 +55,7 @@ describe('AnimatedValue interpolation options', () => {
       [0, 2, 4, 6, 8],
       [10, 20, 30, 40, 50]
     )
-    assert(value, _ as Into<number>)
+    assert(value, _ as Interpolation<number>)
     expect(value.get()).toBe(20)
   })
 
@@ -59,7 +65,7 @@ describe('AnimatedValue interpolation options', () => {
       assert(b, _ as string)
       return `t(${a}, ${b})`
     })
-    assert(value, _ as Into<string>)
+    assert(value, _ as Interpolation<string>)
     expect(value.get()).toBe('t(5, text)')
   })
 
