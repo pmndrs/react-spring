@@ -9,6 +9,7 @@ import {
   FluidEvent,
   FluidObserver,
   getFluidConfig,
+  getFluidValue,
 } from 'shared'
 
 /** The transform-functions
@@ -114,12 +115,6 @@ export class AnimatedStyle extends AnimatedObject {
   }
 }
 
-/** Coerce any `FluidValue` to its current value */
-const getValue = <T>(value: T | FluidValue<T>) => {
-  const config = getFluidConfig(value)
-  return config ? config.get() : value
-}
-
 /** @internal */
 class FluidTransform extends FluidValue<string> implements FluidObserver {
   protected _value: string | null = null
@@ -137,9 +132,9 @@ class FluidTransform extends FluidValue<string> implements FluidObserver {
     let transform = ''
     let identity = true
     each(this.inputs, (input, i) => {
-      const arg1 = getValue(input[0])
+      const arg1 = getFluidValue(input[0])
       const [t, id] = this.transforms[i](
-        is.arr(arg1) ? arg1 : input.map(getValue)
+        is.arr(arg1) ? arg1 : input.map(getFluidValue)
       )
       transform += ' ' + t
       identity = identity && id
