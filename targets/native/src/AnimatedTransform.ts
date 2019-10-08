@@ -1,4 +1,4 @@
-import { each, getFluidConfig } from 'shared'
+import { each, getFluidValue } from 'shared'
 import { Animated, AnimatedValue, AnimatedObject } from 'animated'
 
 type Transform = { [key: string]: string | number | Animated }
@@ -16,8 +16,7 @@ export class AnimatedTransform extends AnimatedObject {
       ? this.source.map(source => {
           const transform: any = {}
           each(source, (source, key) => {
-            const config = getFluidConfig(source)
-            transform[key] = config ? config.get() : source
+            transform[key] = getFluidValue(source)
           })
           return transform
         })
