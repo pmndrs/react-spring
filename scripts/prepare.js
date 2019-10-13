@@ -20,16 +20,13 @@ const RS = '@react-spring'
 // Packages compatible with react-native
 const RN_PKG = /\/(native|addons|core|animated)$/
 
-// Packages with no "dist" folder
-const rawPackages = ['packages/envinfo']
-
 const lernaJson = fs.readJsonSync('lerna.json')
 
 // Read all "package.json" modules in advance.
 const readPackages = rootJson =>
   crawl('.', {
     only: rootJson.workspaces.packages.map(path => join(path, PJ)),
-    skip: ['.*', 'node_modules'].concat(rawPackages),
+    skip: ['.*', 'node_modules'],
   }).reduce((packages, pkgJsonPath) => {
     const pkgDir = dirname(pkgJsonPath)
     const pkg = fs.readJsonSync(pkgJsonPath)
