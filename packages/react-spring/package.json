@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "9.0.0-canary.808.5.5cdf687",
+  "version": "9.0.0-canary.808.6.a1d7e01",
   "main": "src/web.ts",
   "dependencies": {
     "@react-spring/core": "link:../core",
