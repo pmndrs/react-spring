@@ -171,9 +171,9 @@ const rewritePaths = (opts = {}) => {
       }
     }
 
-    if (depId !== modulePath) {
-      console.log('FROM => %O : TO => %O', modulePath, depId)
-    }
+    // if (depId !== modulePath) {
+    //   console.log('FROM => %O : TO => %O', modulePath, depId)
+    // }
 
     return depId
   }
