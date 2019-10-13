@@ -1,10 +1,9 @@
 {
-  "name": "@react-spring/addons",
+  "name": "@react-spring/parallax",
   "version": "9.0.0-canary.808.4.e67bf81",
-  "main": "src/index.ts",
+  "main": "src/parallax.ts",
   "dependencies": {
-    "animated": "link:../animated",
-    "core": "link:../core",
+    "@react-spring/web": "link:../../targets/web",
     "shared": "link:../shared",
     "use-memo-one": "^1.1.0"
   },

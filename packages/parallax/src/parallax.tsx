@@ -6,25 +6,15 @@ import React, {
   CSSProperties,
 } from 'react'
 import { frameLoop, defaultElement as View } from 'shared/globals'
-import { Controller, SpringConfig, config as configs } from 'core'
-import { withAnimated } from 'animated'
+import {
+  a,
+  Controller,
+  SpringConfig,
+  config as configs,
+} from '@react-spring/web'
 import { useMemoOne } from 'use-memo-one'
 import { useOnce } from 'shared'
 
-declare const window: {
-  addEventListener(
-    name: string,
-    fn: (event: any) => void,
-    capture?: boolean
-  ): void
-  removeEventListener(
-    name: string,
-    fn: (event: any) => void,
-    capture?: boolean
-  ): void
-}
-
-const AnimatedView = withAnimated(View)
 const ParentContext = React.createContext<any>(null)
 
 function getScrollType(horizontal: boolean) {
@@ -34,12 +24,12 @@ function getScrollType(horizontal: boolean) {
 const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
 const START_TRANSLATE = 'translate(0px,0px)'
 
-interface IParallaxLayer {
+export interface IParallaxLayer {
   setHeight(height: number, immediate?: boolean): void
   setPosition(height: number, scrollTop: number, immediate?: boolean): void
 }
 
-interface IParallax {
+export interface IParallax {
   config: ConfigProp
   busy: boolean
   space: number
@@ -54,7 +44,7 @@ interface IParallax {
 
 type ViewProps = React.ComponentPropsWithoutRef<'div'>
 
-interface ParallaxLayerProps extends ViewProps {
+export interface ParallaxLayerProps extends ViewProps {
   horizontal?: boolean
   /** Size of a page, (1=100%, 1.5=1 and 1/2, ...) */
   factor?: number
@@ -129,7 +119,7 @@ export const ParallaxLayer = React.memo(
       )
 
     return (
-      <AnimatedView
+      <a.div
         {...rest}
         style={{
           position: 'absolute',
@@ -138,8 +128,6 @@ export const ParallaxLayer = React.memo(
           willChange: 'transform',
           [horizontal ? 'height' : 'width']: '100%',
           [horizontal ? 'width' : 'height']: ctrl.get('space'),
-          WebkitTransform: translate3d,
-          MsTransform: translate3d,
           transform: translate3d,
           ...rest.style,
         }}
@@ -151,7 +139,7 @@ export const ParallaxLayer = React.memo(
 
 type ConfigProp = SpringConfig | ((key: string) => SpringConfig)
 
-interface ParallaxProps extends ViewProps {
+export interface ParallaxProps extends ViewProps {
   /** Determines the total space of the inner content where each page takes 100% of the visible container */
   pages: number
   config?: ConfigProp
