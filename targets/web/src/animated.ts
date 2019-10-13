@@ -116,7 +116,9 @@ type TransformProps = {
   rotateY?: Angle
   rotateZ?: Angle
   rotate3d?: readonly [number, number, number, Angle]
-  scale?: number | readonly [number, number]
+  // Note: "string" is not really supported by "scale", but this lets us
+  // spread React.CSSProperties into an animated style object.
+  scale?: number | readonly [number, number] | string
   scaleX?: number
   scaleY?: number
   scaleZ?: number
