@@ -84,7 +84,7 @@ async function publishCanary(opts) {
 }
 
 function deleteTag(tag) {
-  exec(`git tag -d '${tag}'`)
+  exec(`git tag -d ${tag}`)
 }
 
 function updateLockfile(opts = {}) {
