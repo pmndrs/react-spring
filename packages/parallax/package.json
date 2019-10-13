@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/parallax",
-  "version": "9.0.0-canary.808.4.e67bf81",
+  "version": "9.0.0-canary.808.5.5cdf687",
   "main": "src/parallax.ts",
   "dependencies": {
     "@react-spring/web": "link:../../targets/web",
