@@ -22,11 +22,20 @@ type WithAnimated = {
   [key: string]: any
 }
 
-export const withAnimated: WithAnimated = (Component: any) =>
-  is.str(Component)
+export const withAnimated: WithAnimated = (Component: any) => {
+  const animated = is.str(Component)
     ? createAnimatedComponent(Component)
     : Component[cacheKey] ||
       (Component[cacheKey] = createAnimatedComponent(Component))
+
+  animated.displayName = `Animated(${
+    is.str(Component)
+      ? Component
+      : Component.displayName || Component.name || 'Anonymous'
+  })`
+
+  return animated
+}
 
 const createAnimatedComponent = (Component: any) =>
   forwardRef((rawProps: any, ref: Ref<any>) => {
