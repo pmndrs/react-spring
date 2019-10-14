@@ -72,15 +72,27 @@ async function publishCanary(opts) {
   // Create the version commit.
   version = `${version}-canary.${pr}.${build}.${commit}`
   exec(`${lernaBin} version ${version} --yes`)
+
+  let finished = false
   process.on('exit', () => {
-    if (opts.dry) {
+    if (opts.dry || !finished) {
       deleteTag('v' + version)
       undoCommit(commit => commit == version)
     }
   })
 
+  if (!opts.dry) {
+    exec(`
+      ${lernaBin} exec
+        -- cd dist && npm pack --dry-run
+    `)
+    const ready = await ask('Ready to publish?', true)
+    if (!ready) return
+  }
+
   updateLockfile(opts)
   publishUntagged()
+  finished = true
 }
 
 function deleteTag(tag) {
@@ -130,7 +142,7 @@ function exec(cmd, { silent } = {}) {
 
 async function ask(message, initial) {
   const { value } = await prompt({
-    type: 'input',
+    type: typeof initial == 'boolean' ? 'confirm' : 'input',
     name: 'value',
     message,
     initial,
