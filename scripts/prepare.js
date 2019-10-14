@@ -78,7 +78,7 @@ async function prepare() {
     await installDistDeps(pkg)
     await rewriteLocalDeps(pkg)
     useOwnFiles(pkg, ['README.md', '@types'])
-    useFiles(pkg, ['LICENSE'])
+    useFiles(pkg, ['LICENSE', '.npmignore'])
     deleteFields(pkg, deletions[pkg.name])
     // assignFields(pkg, overrides[pkg.name])
     savePackage(pkg)
