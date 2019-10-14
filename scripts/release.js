@@ -83,9 +83,12 @@ async function publishCanary(opts) {
 
   if (!opts.dry) {
     exec(`
-      ${lernaBin} exec
-        -- cd dist && npm pack --dry-run
+      ${lernaBin} exec --concurrency 1 --stream
+        -- cd dist
+        && npm pack --dry-run
+        && cat package.json
     `)
+    console.log('\n')
     const ready = await ask('Ready to publish?', true)
     if (!ready) return
   }
