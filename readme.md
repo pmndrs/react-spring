@@ -22,6 +22,8 @@ Try the beta for [v9.0.0](https://github.com/react-spring/react-spring/pull/632)
 
 ### Documentation and Examples
 
+![demo](https://user-images.githubusercontent.com/6365230/66731446-9c2e9080-ee81-11e9-83c6-1cc3df5c32c4.gif)
+
 More info about the project can be found [here](https://www.react-spring.io).
 
 Examples and tutorials can be found [here](https://www.react-spring.io/docs/hooks/basics).
