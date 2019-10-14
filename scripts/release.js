@@ -81,6 +81,8 @@ async function publishCanary(opts) {
     }
   })
 
+  updateLockfile(opts)
+
   if (!opts.dry) {
     exec(`
       ${lernaBin} exec --concurrency 1 --stream
@@ -93,7 +95,6 @@ async function publishCanary(opts) {
     if (!ready) return
   }
 
-  updateLockfile(opts)
   publishUntagged()
   finished = true
 }
