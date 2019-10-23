@@ -9,8 +9,13 @@ Globals.assign({
   defaultElement: View,
   colorNames,
   createStringInterpolator,
-  applyAnimatedValues: (instance, props) =>
-    instance.setNativeProps ? instance.setNativeProps(props) : false,
+  applyAnimatedValues(instance, props) {
+    if (is.und(props.children) && instance.setNativeProps) {
+      instance.setNativeProps(props)
+      return true
+    }
+    return false
+  },
   createAnimatedTransform: transform => new AnimatedTransform(transform),
   createAnimatedStyle(styles) {
     styles = StyleSheet.flatten(styles)
