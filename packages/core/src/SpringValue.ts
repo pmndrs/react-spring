@@ -567,18 +567,17 @@ export class SpringValue<T = any> extends FrameValue<T> {
       from = value
     }
 
-    /** When true, this spring must be in the frameloop. */
-    let started = !!toConfig || ((changed || reset) && !isEqual(value, to))
-
-    /** The initial velocity before this `animate` call. */
+    /** The initial velocity before this `_update` call. */
     const lastVelocity = anim.config ? anim.config.velocity : 0
 
-    // The "config" prop either overwrites or merges into the existing config.
-    if (!anim.config || props.config || started) {
+    // Ensure "anim.config" exists, and update it when "props.config" is
+    // truthy and when the "to" value changes.
+    if (!anim.config || props.config) {
       const config = {
         ...callProp(defaultProps.config, this.key!),
         ...callProp(props.config, this.key!),
       }
+      // The "config" prop either overwrites or merges into the existing config.
       if (!canMergeConfigs(config, anim.config)) {
         anim.config = new AnimationConfig()
       }
@@ -587,7 +586,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     const { config } = anim
 
-    // Always start animations with velocity.
+    /** When true, animation is imminent (assuming no interruptions). */
+    let started = !!toConfig || ((changed || reset) && !isEqual(value, to))
+
+    // Animations with an explicit "velocity" are always started.
     if (!started && (config.decay || !is.und(to))) {
       started = !isEqual(config.velocity, lastVelocity)
     }
