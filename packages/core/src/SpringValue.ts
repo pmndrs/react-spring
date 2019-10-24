@@ -664,17 +664,19 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // The "onRest" prop is always first in the queue.
     anim.onRest = [get('onRest') || noop, resolve]
 
-    // Resolve the promise for unfinished animations.
+    // Resolve the promises of unfinished animations.
     if (onRestQueue && onRestQueue.length > 1) {
-      const result: AnimationResult<T> = {
-        value,
-        spring: this,
-        cancelled: true,
-      }
-      // Skip the "onRest" prop, as the animation is still active.
-      for (let i = 1; i < onRestQueue.length; i++) {
-        onRestQueue[i](result)
-      }
+      G.batchedUpdates(() => {
+        const result: AnimationResult<T> = {
+          value,
+          spring: this,
+          cancelled: true,
+        }
+        // Skip the "onRest" prop, as the animation is still active.
+        for (let i = 1; i < onRestQueue.length; i++) {
+          onRestQueue[i](result)
+        }
+      })
     }
 
     this._start()
