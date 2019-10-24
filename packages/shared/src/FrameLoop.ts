@@ -102,34 +102,36 @@ export class FrameLoop {
           startQueue.clear()
         }
 
-        // Animations can be added while the frameloop is updating,
-        // but they need a higher priority to be started on this frame.
-        if (animations.length) {
-          animations = animations.filter(animation => {
-            priority = animation.priority
+        G.batchedUpdates(() => {
+          // Animations can be added while the frameloop is updating,
+          // but they need a higher priority to be started on this frame.
+          if (animations.length) {
+            animations = animations.filter(animation => {
+              priority = animation.priority
 
-            // Animations may go idle before the next frame.
-            if (!animation.idle) {
-              animation.advance(dt)
-            }
+              // Animations may go idle before the next frame.
+              if (!animation.idle) {
+                animation.advance(dt)
+              }
 
-            // Remove idle animations.
-            return !animation.idle
-          })
-          priority = 0
-        }
+              // Remove idle animations.
+              return !animation.idle
+            })
+            priority = 0
+          }
 
-        if (frameQueue.size) {
-          frameQueue.forEach(onFrame => onFrame(time))
-          frameQueue.clear()
-        }
+          if (frameQueue.size) {
+            frameQueue.forEach(onFrame => onFrame(time))
+            frameQueue.clear()
+          }
 
-        if (writeQueue.size) {
-          writing = true
-          writeQueue.forEach(write => write(time))
-          writeQueue.clear()
-          writing = false
-        }
+          if (writeQueue.size) {
+            writing = true
+            writeQueue.forEach(write => write(time))
+            writeQueue.clear()
+            writing = false
+          }
+        })
 
         if (!animations.length) {
           idle = true
