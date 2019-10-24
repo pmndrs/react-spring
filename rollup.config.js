@@ -8,6 +8,12 @@ import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
 const external = id => !id.startsWith('.') && !id.startsWith(root)
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
+const globals = {
+  react: 'React',
+  'react-dom': 'ReactDOM',
+  'prop-types': 'PropTypes',
+  'react-spring': 'ReactSpring',
+}
 const getBabelOptions = ({ useESModules }, targets) => ({
   babelrc: false,
   extensions,
@@ -57,16 +63,46 @@ function createCjsConfig(entry, out) {
   }
 }
 
-function createConfig(entry, out) {
-  return [createBasicConfig(entry, out, 'esm'), createCjsConfig(entry, out)]
+function createUmdConfig(entry, out, name) {
+  return name
+    ? {
+        input: `./src/${entry}/index`,
+        output: {
+          file: `dist/${out}.umd.js`,
+          format: 'umd',
+          name,
+          globals,
+        },
+        external: Object.keys(globals),
+        plugins: [
+          babel(getBabelOptions({ useESModules: true })),
+          sizeSnapshot(),
+          resolve({ extensions }),
+          commonjs({ include: '**/node_modules/**' }),
+          uglify(),
+        ],
+      }
+    : null
 }
 
-function createCjs(entry, out) {
-  return [createBasicConfig(entry, out, 'cjs'), createCjsConfig(entry, out)]
+function createConfig(entry, out, name = null) {
+  return [
+    createBasicConfig(entry, out, 'esm'),
+    createCjsConfig(entry, out),
+    name && createUmdConfig(entry, out, name),
+  ].filter(c => c)
+}
+
+function createCjs(entry, out, name) {
+  return [
+    createBasicConfig(entry, out, 'cjs'),
+    createCjsConfig(entry, out),
+    name && createUmdConfig(entry, out, name),
+  ].filter(c => c)
 }
 
 export default [
-  ...createConfig('targets/web', 'web'),
+  ...createConfig('targets/web', 'web', 'ReactSpring'),
   ...createConfig('targets/native', 'native'),
   ...createConfig('targets/universal', 'universal'),
   ...createConfig('targets/konva', 'konva'),
