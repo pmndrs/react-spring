@@ -26,64 +26,43 @@ const getBabelOptions = ({ useESModules }, targets) => ({
   ],
 })
 
+function createBasicConfig(entry, out, format, sizeSnap = true) {
+  return {
+    input: `./src/${entry}/index`,
+    output: { file: `dist/${out}.js`, format },
+    external,
+    plugins: [
+      babel(
+        getBabelOptions(
+          { useESModules: true },
+          '>1%, not dead, not ie 11, not op_mini all'
+        )
+      ),
+      sizeSnap && sizeSnapshot(),
+      resolve({ extensions }),
+    ],
+  }
+}
+
+function createCjsConfig(entry, out) {
+  return {
+    input: `./src/${entry}/index`,
+    output: { file: `dist/${out}.cjs.js`, format: 'cjs' },
+    external,
+    plugins: [
+      babel(getBabelOptions({ useESModules: false })),
+      sizeSnapshot(),
+      resolve({ extensions }),
+    ],
+  }
+}
+
 function createConfig(entry, out) {
-  return [
-    {
-      input: `./src/${entry}/index`,
-      output: { file: `dist/${out}.js`, format: 'esm' },
-      external,
-      plugins: [
-        babel(
-          getBabelOptions(
-            { useESModules: true },
-            '>1%, not dead, not ie 11, not op_mini all'
-          )
-        ),
-        sizeSnapshot(),
-        resolve({ extensions }),
-      ],
-    },
-    {
-      input: `./src/${entry}/index`,
-      output: { file: `dist/${out}.cjs.js`, format: 'cjs' },
-      external,
-      plugins: [
-        babel(getBabelOptions({ useESModules: false })),
-        sizeSnapshot(),
-        resolve({ extensions }),
-      ],
-    },
-  ]
+  return [createBasicConfig(entry, out, 'esm'), createCjsConfig(entry, out)]
 }
 
 function createCjs(entry, out) {
-  return [
-    {
-      input: `./src/${entry}/index`,
-      output: { file: `dist/${out}.js`, format: 'cjs' },
-      external,
-      plugins: [
-        babel(
-          getBabelOptions(
-            { useESModules: true },
-            '>1%, not dead, not ie 11, not op_mini all'
-          )
-        ),
-        sizeSnapshot(),
-        resolve({ extensions }),
-      ],
-    },
-    {
-      input: `./src/${entry}/index`,
-      output: { file: `dist/${out}.cjs.js`, format: 'cjs' },
-      external,
-      plugins: [
-        babel(getBabelOptions({ useESModules: false })),
-        sizeSnapshot(),
-        resolve({ extensions }),
-      ],
-    },
-  ]
+  return [createBasicConfig(entry, out, 'cjs'), createCjsConfig(entry, out)]
 }
 
 export default [
@@ -93,20 +72,7 @@ export default [
   ...createConfig('targets/konva', 'konva'),
   ...createConfig('targets/three', 'three'),
   ...createConfig('targets/zdog', 'zdog'),
-  {
-    input: `./src/targets/cookbook/index`,
-    output: { file: `dist/cookbook.js`, format: 'esm' },
-    external,
-    plugins: [
-      babel(
-        getBabelOptions(
-          { useESModules: true },
-          '>1%, not dead, not ie 11, not op_mini all'
-        )
-      ),
-      resolve({ extensions }),
-    ],
-  },
+  createBasicConfig('targets/cookbook', 'cookbook', 'esm', false),
   ...createCjs('renderprops/targets/web', 'renderprops'),
   ...createCjs('renderprops/addons', 'renderprops-addons'),
   ...createCjs('renderprops/targets/native', 'renderprops-native'),
