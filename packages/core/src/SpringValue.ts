@@ -113,7 +113,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
     let { toValues } = anim
     if (!payload) {
       const toConfig = getFluidConfig(anim.to)
-      if (toConfig) toValues = toArray(toConfig.get())
+      if (toConfig) {
+        toValues = toArray(toConfig.get())
+      }
     }
 
     anim.values.forEach((node, i) => {
@@ -547,6 +549,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
       from = anim.from
     }
 
+    // These are fluid configs, not animation configs.
+    // Fluid configs let us animate from/to dynamic values.
     const toConfig = getFluidConfig(to)
     const fromConfig = getFluidConfig(from)
 
@@ -636,11 +640,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     if (!started) {
-      // Resolve the "animate" promise.
       return resolve({
         value,
-        spring: this,
         finished: true,
+        spring: this,
       })
     }
 
