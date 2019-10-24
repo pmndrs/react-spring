@@ -361,10 +361,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
       this.queue = []
     }
 
-    await Promise.all(queue.map(props => this._animate(props)))
+    const results = await Promise.all(queue.map(props => this._animate(props)))
     return {
-      finished: true,
       value: this.get(),
+      finished: results.every(result => result.finished),
       spring: this,
     }
   }
