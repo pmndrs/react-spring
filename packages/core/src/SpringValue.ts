@@ -272,11 +272,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Set the current value, while stopping the current animation */
   set(value: T | FluidValue<T>) {
-    if (this._set(value) && this.idle) {
-      // Since "_stop" calls "_onChange" only when not idle, we need this.
-      this._onChange(this.get(), true)
-    }
-    this._stop()
+    G.batchedUpdates(() => {
+      if (this._set(value) && this.idle) {
+        // Since "_stop" calls "_onChange" only when not idle, we need this.
+        this._onChange(this.get(), true)
+      }
+      this._stop()
+    })
     return this
   }
 
@@ -311,7 +313,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
 
       // Exit the frameloop.
-      this._stop(true)
+      G.batchedUpdates(() => this._stop(true))
     }
     return this
   }
@@ -376,7 +378,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (!this.is(DISPOSED)) {
       this._state.cancelId = this._lastAsyncId
       this._to(this.get())
-      this._stop()
+      G.batchedUpdates(() => this._stop())
     }
     return this
   }
@@ -803,11 +805,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
           onRestQueue[0] = noop
         }
 
-        G.batchedUpdates(() => {
-          const result = { value: this.get(), spring: this, finished }
-          each(onRestQueue, onRest => {
-            onRest(result)
-          })
+        const result = { value: this.get(), spring: this, finished }
+        each(onRestQueue, onRest => {
+          onRest(result)
         })
       }
     }
