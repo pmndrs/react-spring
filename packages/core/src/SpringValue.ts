@@ -661,22 +661,24 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // Avoid calling this before "immediate" is set
     this._reset()
 
-    const onRestQueue = anim.onRest
+    const onRestQueue = anim.onRest || []
+    const onRest =
+      props.onRest || (reset && onRestQueue[0]) || defaultProps.onRest
 
     // The "onRest" prop is always first in the queue.
-    anim.onRest = [get('onRest') || noop, resolve]
+    anim.onRest = [onRest || noop, resolve]
 
     // Resolve the promises of unfinished animations.
-    if (onRestQueue && onRestQueue.length > 1) {
+    let onRestIndex = reset ? 0 : 1
+    if (onRestIndex < onRestQueue.length) {
       G.batchedUpdates(() => {
         const result: AnimationResult<T> = {
           value,
           spring: this,
           cancelled: true,
         }
-        // Skip the "onRest" prop, as the animation is still active.
-        for (let i = 1; i < onRestQueue.length; i++) {
-          onRestQueue[i](result)
+        for (; onRestIndex < onRestQueue.length; onRestIndex++) {
+          onRestQueue[onRestIndex](result)
         }
       })
     }
