@@ -104,8 +104,8 @@
     "react-dom": ">= 16.8.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.3.1",
-    "prop-types": "^15.5.8"
+    "@babel/runtime": "^7.6.3",
+    "prop-types": "^15.7.2"
   },
   "jest": {
     "testPathIgnorePatterns": [
