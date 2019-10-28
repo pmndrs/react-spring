@@ -10,40 +10,60 @@ import {
 import * as G from 'shared/globals'
 
 import { SpringUpdate, SpringValues } from './types/spring'
-import { AnimationEvents } from './types/animated'
+import { AnimationEvents, AnimationResult } from './types/animated'
 import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
-import { interpolateTo } from './helpers'
+import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
+import { interpolateTo, callProp } from './helpers'
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
+
+const EVENT_NAMES = ['onFrame', 'onStart', 'onRest'] as const
 
 /** A callback that receives the changed values for each frame. */
 export type OnFrame<State extends Indexable> = (
   frame: UnknownPartial<State>
 ) => void
 
-export type ControllerProps<State extends Indexable = Indexable> = {
+/** An event prop for the `Controller` class */
+type EventProp<T extends any[] = []> =
+  | (() => void)
+  | { [key: string]: (...args: T) => void }
+
+/** All event props supported by the `Controller` class */
+export type EventProps<State extends Indexable> = {
   /**
    * Called on every frame when animations are active
    */
   onFrame?: OnFrame<State>
-} & SpringUpdate<State> &
+  /**
+   * Called when the # of animating values exceeds 0
+   *
+   * Also accepts an object for per-key events
+   */
+  onStart?: EventProp<[SpringValue]>
+  /**
+   * Called when the # of animating values hits 0
+   *
+   * Also accepts an object for per-key events
+   */
+  onRest?: EventProp<[AnimationResult]>
+}
+
+export type ControllerProps<State extends Indexable = Indexable> = unknown &
+  EventProps<State> &
+  SpringUpdate<State> &
   AnimationEvents<unknown> &
   UnknownPartial<FluidProps<State>>
 
 /** The props that are cached by `Controller` objects */
-interface CachedProps<State extends Indexable> extends RunAsyncState<State> {
-  onFrame?: OnFrame<State>
-}
+interface CachedProps<State extends Indexable>
+  extends EventProps<State>,
+    RunAsyncState<State> {}
 
 /** An update that hasn't been applied yet */
 type PendingProps<State extends Indexable> = ControllerProps<State> & {
   keys: string[]
-}
-
-/** Default props for the `Controller` class */
-type DefaultProps<State extends Indexable> = {
-  onFrame?: OnFrame<State>
 }
 
 let nextId = 1
@@ -53,16 +73,22 @@ export class Controller<State extends Indexable = UnknownProps>
   implements FrameValue.Observer {
   readonly id = nextId++
 
-  /** The values that changed in the last animation frame */
-  frame: UnknownPartial<State> = {}
-
-  /** Fallback values for undefined props */
-  defaultProps: DefaultProps<State> = {}
-
   /** The queue of pending props */
   queue: PendingProps<State>[] = []
 
-  /** The current controller-only props (eg: `onFrame` and async state) */
+  /** Fallback values for undefined props */
+  defaultProps: EventProps<State> = {}
+
+  /** The combined phase of our spring values */
+  protected _phase: SpringPhase = CREATED
+
+  /** The values currently being animated */
+  protected _active = new Set<FrameValue>()
+
+  /** The animated state that changed in the last animation frame */
+  protected _frame: UnknownPartial<State> = {}
+
+  /** Event handlers and async state are stored here */
   protected _state: CachedProps<State> = {}
 
   /** The spring values that manage their animations */
@@ -78,9 +104,7 @@ export class Controller<State extends Indexable = UnknownProps>
 
   /** Equals true when no springs are animating */
   get idle() {
-    return (
-      !this._state.promise && Object.values(this._springs).every(s => s.idle)
-    )
+    return !(this._state.promise || this._active.size)
   }
 
   /** Get all existing `SpringValue` objects. This clones the internal store. */
@@ -118,7 +142,7 @@ export class Controller<State extends Indexable = UnknownProps>
 
     const promises: AsyncResult[] = []
     each(queue as PendingProps<State>[], props => {
-      const { to, onFrame, keys } = props
+      const { to, keys } = props
       const asyncTo = (is.arr(to) || is.fun(to)) && to
       if (asyncTo) {
         props.to = undefined
@@ -133,11 +157,14 @@ export class Controller<State extends Indexable = UnknownProps>
           state,
           action: (props, resolve) => {
             if (!props.cancel) {
-              // Never reuse "onFrame" from a previous update.
-              state.onFrame = onFrame || this.defaultProps.onFrame
-              if (onFrame && props.default) {
-                this.defaultProps.onFrame = onFrame
-              }
+              const { defaultProps } = this
+              each(EVENT_NAMES, key => {
+                const value = props[key]
+                if (value && props.default) {
+                  defaultProps[key] = value
+                }
+                state[key] = value || defaultProps[key]
+              })
             }
 
             // Start, replace, or cancel the async animation.
@@ -238,17 +265,31 @@ export class Controller<State extends Indexable = UnknownProps>
 
   /** @internal */
   onParentChange(event: FrameValue.Event) {
-    if (this._state.onFrame && event.type == 'change') {
-      this.frame[event.parent.key as keyof State] = event.value
-      G.frameLoop.onFrame(this._onFrame)
+    if (event.type == 'change') {
+      const state = this._state
+      if (state.onFrame) {
+        this._frame[event.parent.key as keyof State] = event.value
+      }
+      this._active[event.idle ? 'delete' : 'add'](event.parent)
+      if (EVENT_NAMES.some(key => is.fun(state[key]))) {
+        G.frameLoop.onFrame(this._onFrame)
+      }
     }
   }
 
   /** @internal Called at the end of every animation frame */
   protected _onFrame() {
-    if (Object.keys(this.frame).length) {
-      this._state.onFrame!(this.frame)
-      this.frame = {}
+    const { onFrame, onStart, onRest } = this._state
+
+    const isActive = this._active.size > 0
+    if (isActive !== (this._phase == ACTIVE)) {
+      this._phase = isActive ? ACTIVE : IDLE
+      callProp(isActive ? onStart : onRest)
+    }
+
+    if (onFrame) {
+      onFrame(this._frame)
+      this._frame = {}
     }
   }
 }
