@@ -28,6 +28,7 @@ import {
   AnimationResult,
   OnRest,
   AnimationEvents,
+  EventProp,
 } from './types/animated'
 import {
   runAsync,
@@ -38,6 +39,14 @@ import {
 } from './runAsync'
 import { callProp, DEFAULT_PROPS, matchProp } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
+import {
+  SpringPhase,
+  CREATED,
+  IDLE,
+  ACTIVE,
+  PAUSED,
+  DISPOSED,
+} from './SpringPhase'
 
 /** Default props for a `SpringValue` object */
 export type DefaultProps<T = unknown> = {
@@ -49,28 +58,8 @@ export type PendingProps<T = unknown> = unknown &
   SpringUpdate<T> &
   AnimationEvents<T>
 
-// TODO: use "const enum" when Babel supports it
-type Phase =
-  | typeof DISPOSED
-  | typeof CREATED
-  | typeof IDLE
-  | typeof PAUSED
-  | typeof ACTIVE
-
-/** The spring cannot be animated */
-const DISPOSED = 'DISPOSED'
-/** The spring has not animated yet */
-const CREATED = 'CREATED'
-/** The spring has animated before */
-const IDLE = 'IDLE'
-/** The spring is frozen in time */
-const PAUSED = 'PAUSED'
-/** The spring is animating */
-const ACTIVE = 'ACTIVE'
-
 declare const console: { warn: Function }
 
-/** An opaque animatable value */
 export class SpringValue<T = any> extends FrameValue<T> {
   /** The property name used when `to` or `from` is an object. Useful when debugging too. */
   key?: string
@@ -79,7 +68,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** The queue of pending props */
   queue?: PendingProps<T>[]
   /** The lifecycle phase of this spring */
-  protected _phase = CREATED
+  protected _phase: SpringPhase = CREATED
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<T> = {}
   /** The last time each prop changed */
@@ -266,7 +255,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /** Check the current phase */
-  is(phase: Phase) {
+  is(phase: SpringPhase) {
     return this._phase == phase
   }
 
@@ -510,22 +499,17 @@ export class SpringValue<T = any> extends FrameValue<T> {
     resolve: OnRest<T>
   ): void {
     const defaultProps = this._defaultProps
+    const timestamps = this._timestamps
 
     /** Get the value of a prop, or its default value */
     const get = <K extends keyof DefaultProps>(prop: K) =>
       !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
-    const onAnimate = get('onAnimate')
-    if (onAnimate) {
-      onAnimate(props as any, this)
-    }
-
-    // Cast from a partial type.
-    const anim = this.animation
-
-    const timestamps = this._timestamps
-
-    /** Return true if our prop can be used. This only affects delayed props. */
+    /**
+     * Delayed `_update` calls perform diffing on certain props
+     * to know if they were updated during the delay. In that case,
+     * the prop is ignored, but other props may still apply.
+     */
     const diff = (prop: string) => {
       if (timestamp >= (timestamps[prop] || 0)) {
         timestamps[prop] = timestamp
@@ -534,6 +518,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
       return false
     }
 
+    const onAnimate = get('onAnimate')
+    if (onAnimate) {
+      onAnimate(props as any, this)
+    }
+
+    const { key, animation: anim } = this
     const { to: prevTo, from: prevFrom } = anim
 
     // The "reverse" prop only affects one update.
@@ -576,8 +566,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // truthy and when the "to" value changes.
     if (!anim.config || props.config) {
       const config = {
-        ...callProp(defaultProps.config, this.key!),
-        ...callProp(props.config, this.key!),
+        ...callProp(defaultProps.config, key!),
+        ...callProp(props.config, key!),
       }
       // The "config" prop either overwrites or merges into the existing config.
       if (!canMergeConfigs(config, anim.config)) {
@@ -630,7 +620,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     // Event props are replaced on every update.
-    anim.onStart = get('onStart')
+    anim.onStart = coerceEventProp(get('onStart'), key)
     anim.onChange = get('onChange')
 
     // Update the default props.
@@ -656,14 +646,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
     anim.immediate =
       // Sometimes the value is not animatable.
       !(toConfig || is.num(goal) || is.arr(goal)) ||
-      !!matchProp(get('immediate'), this.key)
+      !!matchProp(get('immediate'), key)
 
     // Avoid calling this before "immediate" is set
     this._reset()
 
     const onRestQueue = anim.onRest || []
-    const onRest =
-      props.onRest || (reset && onRestQueue[0]) || defaultProps.onRest
+    const onRest = coerceEventProp(
+      props.onRest || (reset && onRestQueue[0]) || defaultProps.onRest,
+      key
+    )
 
     // The "onRest" prop is always first in the queue.
     anim.onRest = [onRest || noop, resolve]
@@ -851,4 +843,12 @@ function computeGoal<T>(value: T | FluidValue<T>): T {
         output: [value, value] as any,
       })(1) as any)
     : value
+}
+
+/** Coerce an event prop to an event handler */
+function coerceEventProp<T extends Function>(
+  prop: EventProp<T> | undefined,
+  key: string | undefined
+) {
+  return is.fun(prop) ? prop : key && prop ? prop[key] : undefined
 }

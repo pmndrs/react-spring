@@ -1,4 +1,4 @@
-import { Animatable, FluidValue } from 'shared'
+import { Animatable, FluidValue, Indexable } from 'shared'
 
 import { MatchProp } from '../helpers'
 import { RunAsyncProps } from '../runAsync'
@@ -72,6 +72,8 @@ export interface AnimationProps<P extends string = string> {
   default?: boolean
 }
 
+export type EventProp<T> = T | Indexable<T>
+
 /**
  * The event props of a `SpringValue` animation.
  *
@@ -86,11 +88,11 @@ export type AnimationEvents<T = unknown> = {
   /**
    * Called when an animation moves for the first time
    */
-  onStart?: OnStart<T>
+  onStart?: EventProp<OnStart<T>>
   /**
    * Called when all animations come to a stand-still
    */
-  onRest?: OnRest<T>
+  onRest?: EventProp<OnRest<T>>
   /**
    * Called when a key/value pair is changed
    */
