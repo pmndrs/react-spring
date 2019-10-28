@@ -63,18 +63,25 @@ declare const console: { warn: Function }
 export class SpringValue<T = any> extends FrameValue<T> {
   /** The property name used when `to` or `from` is an object. Useful when debugging too. */
   key?: string
+
   /** The animation state */
   animation = new Animation()
+
   /** The queue of pending props */
   queue?: PendingProps<T>[]
+
   /** The lifecycle phase of this spring */
   protected _phase: SpringPhase = CREATED
+
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<T> = {}
+
   /** The last time each prop changed */
   protected _timestamps: Indexable<number> = {}
+
   /** Some props have customizable default values */
   protected _defaultProps = {} as PendingProps<T>
+
   /** Cancel any update from before this timestamp */
   protected _lastAsyncId = 0
 
@@ -681,23 +688,23 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** Update the `animation.to` value, which might be a `FluidValue` */
   protected _to(value: T | FluidValue<T>) {
     const anim = this.animation
-    if (value === anim.to) return
-
-    let config = getFluidConfig(anim.to)
-    if (config) {
-      config.removeChild(this)
-    }
-
-    anim.to = value
-
-    let priority = 0
-    if ((config = getFluidConfig(value))) {
-      config.addChild(this)
-      if (isFrameValue(value)) {
-        priority = (value.priority || 0) + 1
+    if (value !== anim.to) {
+      let config = getFluidConfig(anim.to)
+      if (config) {
+        config.removeChild(this)
       }
+
+      anim.to = value
+
+      let priority = 0
+      if ((config = getFluidConfig(value))) {
+        config.addChild(this)
+        if (isFrameValue(value)) {
+          priority = (value.priority || 0) + 1
+        }
+      }
+      this.priority = priority
     }
-    this.priority = priority
   }
 
   /** Set the current value and our `node` if necessary. The `_onChange` method is *not* called. */
