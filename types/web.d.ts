@@ -214,7 +214,7 @@ export interface UseTransitionResult<TItem, DS extends object> {
   props: AnimatedValue<ForwardedProps<DS>>
 }
 
-export function useTransition<TItem, DS extends CSSProperties>(
+export function useTransition<TItem, DS extends object>(
   items: ReadonlyArray<TItem> | TItem | null | undefined,
   keys:
     | ((item: TItem) => TransitionKeyProps)
