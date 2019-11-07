@@ -217,8 +217,6 @@ function diffItems({ first, prevProps, ...state }, props) {
             ...current[key],
             slot,
             destroyed: true,
-            left: _keys[Math.max(0, keyIndex - 1)],
-            right: _keys[Math.min(_keys.length, keyIndex + 1)],
             trail: (delay = delay + trail),
             config: callProp(config, item, slot),
             to: callProp(leave, item),
@@ -245,17 +243,9 @@ function diffItems({ first, prevProps, ...state }, props) {
       }
     }
   }
-  let out = keys.map(key => current[key])
-
-  // This tries to restore order for deleted items by finding their last known siblings
-  // only using the left sibling to keep order placement consistent for all deleted items
-  deleted.forEach(({ left, right, ...item }) => {
-    let pos
-    // Was it the element on the left, if yes, move there ...
-    if ((pos = out.findIndex(t => t.originalKey === left)) !== -1) pos += 1
-    // And if nothing else helps, move it to the start ¯\_(ツ)_/¯
-    pos = Math.max(0, pos)
-    out = [...out.slice(0, pos), item, ...out.slice(pos)]
+  let out = [...keys.map(key => current[key]), ...deleted]
+  out.sort((a, b) => {
+    return _keys.indexOf(a.originalKey) - _keys.indexOf(b.originalKey)
   })
 
   return {
