@@ -104,7 +104,7 @@ export interface HooksBaseProps
   native?: never
   // there is an undocumented onKeyframesHalt which passes the controller instance,
   // so it also cannot be typed unless Controller types are written
-  ref?: React.RefObject<ReactSpringHook>
+  ref?: RefObject<ReactSpringHook>
 }
 
 export interface UseSpringBaseProps extends HooksBaseProps {
