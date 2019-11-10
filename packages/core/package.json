@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "animated": "link:../animated",
+    "react-layout-effect": "^1.0.1",
     "shared": "link:../shared",
     "use-memo-one": "^1.1.0"
   },
