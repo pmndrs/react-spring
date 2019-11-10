@@ -5,11 +5,11 @@ import React, {
   ReactNode,
   RefObject,
 } from 'react'
+import { useLayoutEffect } from 'react-layout-effect'
 import {
   is,
   toArray,
   useForceUpdate,
-  useIsomorphicLayoutEffect,
   useOnce,
   each,
   OneOrMore,
@@ -133,7 +133,7 @@ export function useTransition(
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<TransitionState[] | null>(null)
   const prevTransitions = usedTransitions.current
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     usedTransitions.current = transitions
   })
 
@@ -308,7 +308,7 @@ export function useTransition(
 
   useImperativeHandle(ref, () => api)
 
-  useIsomorphicLayoutEffect(
+  useLayoutEffect(
     () => {
       each(changes, ({ phase, payload }, t) => {
         t.phase = phase

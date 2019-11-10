@@ -1,12 +1,6 @@
 import React, { forwardRef, useRef, Ref } from 'react'
-import {
-  is,
-  each,
-  useForceUpdate,
-  useIsomorphicLayoutEffect,
-  ElementType,
-  FluidConfig,
-} from 'shared'
+import { useLayoutEffect } from 'react-layout-effect'
+import { is, each, useForceUpdate, ElementType, FluidConfig } from 'shared'
 import * as G from 'shared/globals'
 
 import { AnimatedProps } from './AnimatedProps'
@@ -65,7 +59,7 @@ const createAnimatedComponent = (Component: any) =>
     const dependencies = new Set<FluidConfig>()
     props.setValue(rawProps, { dependencies })
 
-    useIsomorphicLayoutEffect(() => {
+    useLayoutEffect(() => {
       each(dependencies, dep => dep.addChild(props))
       return () => each(dependencies, dep => dep.removeChild(props))
     })

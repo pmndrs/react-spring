@@ -7895,6 +7895,11 @@ react-konva@~16.8.0:
     react-reconciler "^0.20.4"
     scheduler "^0.13.6"
 
+react-layout-effect@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/react-layout-effect/-/react-layout-effect-1.0.1.tgz#c88e840c00884ad297270e249908d5f7d051ade4"
+  integrity sha512-5woLG3+CtRJtfZzBekmM2Dk0u2HAamoaNeXfmxIu0fBkMXkgOxD4A0SrW0+pm4lFv2JqJa2fHj/epesYD29f5Q==
+
 react-native@~0.58.0:
   version "0.58.6"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.58.6.tgz#a6d273cd2f51b0e3b141dad5f19622e0000497b3"
