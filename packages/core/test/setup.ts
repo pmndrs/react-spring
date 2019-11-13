@@ -1,5 +1,5 @@
 import createMockRaf from 'mock-raf'
-import { isEqual, is } from 'shared'
+import { isEqual, is, FrameLoop } from 'shared'
 
 import { Globals, SpringValue, Controller } from '..'
 import { computeGoal } from '../src/helpers'
@@ -11,6 +11,7 @@ beforeEach(() => {
     performanceNow: mockRaf.now,
     requestAnimationFrame: mockRaf.raf,
     cancelAnimationFrame: mockRaf.cancel,
+    frameLoop: new FrameLoop(),
   })
 })
 
