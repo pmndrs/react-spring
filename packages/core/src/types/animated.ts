@@ -84,7 +84,7 @@ export type AnimationEvents<T = unknown> = {
   /**
    * Called when a controller is told to animate
    */
-  onAnimate?: OnAnimate<T>
+  onAnimate?: EventProp<OnAnimate<T>>
   /**
    * Called when an animation moves for the first time
    */
@@ -96,7 +96,7 @@ export type AnimationEvents<T = unknown> = {
   /**
    * Called when a key/value pair is changed
    */
-  onChange?: OnChange<T>
+  onChange?: EventProp<OnChange<T>>
 }
 
 /** Force a type to be animatable */
