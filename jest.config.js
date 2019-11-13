@@ -43,7 +43,10 @@ function createConfig(rootDir) {
     transform: {
       '.+\\.(js|ts|tsx)$': 'ts-jest',
     },
-    setupFilesAfterEnv: [path.join(__dirname, 'packages/core/test/setup.ts')],
+    setupFilesAfterEnv:
+      rootDir.indexOf('shared') < 0
+        ? [path.join(__dirname, 'packages/core/test/setup.ts')]
+        : [],
     testMatch,
     testEnvironment: 'jsdom',
     testPathIgnorePatterns: ['.+/(types|__snapshots__)/.+'],
