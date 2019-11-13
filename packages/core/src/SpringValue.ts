@@ -586,7 +586,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const { config } = anim
 
     /** When true, animation is imminent (assuming no interruptions). */
-    let started = !!toConfig || ((changed || reset) && !isEqual(value, to))
+    let started =
+      !!toConfig ||
+      !!getFluidConfig(prevTo) ||
+      ((changed || reset) && !isEqual(value, to))
 
     // Animations with an explicit "velocity" are always started.
     if (!started && (config.decay || !is.und(to))) {
