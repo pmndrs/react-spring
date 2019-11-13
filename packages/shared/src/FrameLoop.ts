@@ -12,6 +12,8 @@ export interface OpaqueAnimation {
 
 /** Create a frameloop singleton */
 export class FrameLoop {
+  idle = true
+
   /**
    * Start a new animation, or reorder an active animation in
    * the animations array in response to a priority change.
@@ -41,7 +43,6 @@ export class FrameLoop {
     // The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
     requestFrame: RequestFrameFn = fn => (void 0, G.requestAnimationFrame)(fn)
   ) {
-    let idle = true
     let writing = false
 
     // The most recent framestamp
@@ -78,8 +79,8 @@ export class FrameLoop {
 
     // Start the frameloop
     const kickoff = () => {
-      if (idle) {
-        idle = false
+      if (this.idle) {
+        this.idle = false
         lastTime = G.performanceNow()
         requestFrame(update)
       }
@@ -87,7 +88,7 @@ export class FrameLoop {
 
     // Process the current frame
     const update = (this.update = time => {
-      if (idle) return
+      if (this.idle) return
       if (is.und(time)) {
         time = G.performanceNow()
       }
@@ -134,7 +135,7 @@ export class FrameLoop {
         })
 
         if (!animations.length) {
-          idle = true
+          this.idle = true
           return
         }
       }
