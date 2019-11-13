@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useReducer, useRef } from 'react'
+import { useEffect, useReducer, useRef } from 'react'
 import { Indexable, Arrify } from './types'
 import * as G from './globals'
 
@@ -82,7 +82,7 @@ export const toArray = <T>(a: T): Arrify<Exclude<T, void>> =>
 
 export const useOnce = (effect: React.EffectCallback) => useEffect(effect, [])
 
-export const useForceUpdate = () => useReducer(() => ({}), 0)[1] as (() => void)
+export const useForceUpdate = () => useReducer(() => ({}), 0)[1] as () => void
 
 /** Use a value from the previous render */
 export function usePrev<T>(value: T): T | undefined {
