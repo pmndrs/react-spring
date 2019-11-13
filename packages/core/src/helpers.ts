@@ -1,6 +1,18 @@
-import { is, Merge, each, AnyFn, toArray, OneOrMore } from 'shared'
-import { ReservedProps, ForwardProps } from './types/common'
 import { useMemoOne } from 'use-memo-one'
+import {
+  is,
+  each,
+  toArray,
+  getFluidConfig,
+  isAnimatedString,
+  AnyFn,
+  Merge,
+  OneOrMore,
+  FluidValue,
+} from 'shared'
+import * as G from 'shared/globals'
+
+import { ReservedProps, ForwardProps } from './types/common'
 
 declare const process:
   | { env: { [key: string]: string | undefined } }
@@ -117,4 +129,19 @@ export function freeze<T extends object>(obj: T): T {
     return Object.freeze(obj)
   }
   return obj
+}
+
+// Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
+export function computeGoal<T>(value: T | FluidValue<T>): T {
+  const config = getFluidConfig(value)
+  return config
+    ? computeGoal(config.get())
+    : is.arr(value)
+    ? value.map(computeGoal)
+    : isAnimatedString(value)
+    ? (G.createStringInterpolator({
+        range: [0, 1],
+        output: [value, value] as any,
+      })(1) as any)
+    : value
 }

@@ -37,7 +37,7 @@ import {
   RunAsyncState,
   RunAsyncProps,
 } from './runAsync'
-import { callProp, DEFAULT_PROPS, matchProp } from './helpers'
+import { callProp, computeGoal, DEFAULT_PROPS, matchProp } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
 import {
   SpringPhase,
@@ -835,21 +835,6 @@ function canMergeConfigs(
     is.und(src.duration) == is.und(dest.duration) &&
     is.und(src.frequency) == is.und(dest.frequency)
   )
-}
-
-// Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
-function computeGoal<T>(value: T | FluidValue<T>): T {
-  const config = getFluidConfig(value)
-  return config
-    ? computeGoal(config.get())
-    : is.arr(value)
-    ? value.map(computeGoal)
-    : isAnimatedString(value)
-    ? (G.createStringInterpolator({
-        range: [0, 1],
-        output: [value, value] as any,
-      })(1) as any)
-    : value
 }
 
 /** Coerce an event prop to an event handler */
