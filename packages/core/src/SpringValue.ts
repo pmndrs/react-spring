@@ -525,13 +525,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
       return false
     }
 
-    const onAnimate = get('onAnimate')
+    const { key, animation: anim } = this
+    const { to: prevTo, from: prevFrom } = anim
+
+    const onAnimate = coerceEventProp(get('onAnimate'), key)
     if (onAnimate) {
       onAnimate(props as any, this)
     }
-
-    const { key, animation: anim } = this
-    const { to: prevTo, from: prevFrom } = anim
 
     // The "reverse" prop only affects one update.
     if (props.reverse) [to, from] = [from, to]
@@ -631,7 +631,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Event props are replaced on every update.
     anim.onStart = coerceEventProp(get('onStart'), key)
-    anim.onChange = get('onChange')
+    anim.onChange = coerceEventProp(get('onChange'), key)
 
     // Update the default props.
     if (props.default) {
