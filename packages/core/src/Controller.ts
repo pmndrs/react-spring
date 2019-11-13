@@ -136,7 +136,7 @@ export class Controller<State extends Indexable = UnknownProps>
 
   /** Push an update onto the queue of each value. */
   update(props: ControllerProps<State> | Falsy) {
-    if (props) this.queue.push(this._update(props))
+    if (props) this.queue.push(this._prepareUpdate(props))
     return this
   }
 
@@ -149,7 +149,7 @@ export class Controller<State extends Indexable = UnknownProps>
    */
   start(queue?: OneOrMore<ControllerProps<State>>) {
     if (queue) {
-      queue = toArray<any>(queue).map(props => this._update(props))
+      queue = toArray<any>(queue).map(props => this._prepareUpdate(props))
     } else {
       queue = this.queue
       this.queue = []
@@ -265,9 +265,9 @@ export class Controller<State extends Indexable = UnknownProps>
   }
 
   /** Prepare an update with the given props. */
-  protected _update(propsArg: ControllerProps<State>) {
+  protected _prepareUpdate(propsArg: ControllerProps<State>) {
     const props: PendingProps<State> = interpolateTo(propsArg) as any
-    const keys = (props.keys = extractKeys(props, this._springs))
+    props.keys = extractKeys(props, this._springs)
 
     let { from, to } = props as any
 
@@ -278,7 +278,7 @@ export class Controller<State extends Indexable = UnknownProps>
 
     // Create our springs and give them values.
     if (from || to) {
-      this._setSprings(keys, from, to)
+      this._setSprings(props.keys, from, to)
     }
 
     return props
