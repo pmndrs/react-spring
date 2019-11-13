@@ -159,7 +159,7 @@ export async function runAsync<T>(
         state.asyncTo = undefined
       }
     }
-    if (props.onRest) {
+    if (is.fun(props.onRest)) {
       props.onRest(result as any)
     }
     return result
