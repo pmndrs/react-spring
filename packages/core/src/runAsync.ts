@@ -37,7 +37,7 @@ export interface RunAsyncState<T> {
 
 /** Default props for a `SpringValue` object */
 export type DefaultProps = {
-  [D in (typeof DEFAULT_PROPS)[number]]?: RunAsyncProps[D]
+  [D in typeof DEFAULT_PROPS[number]]?: RunAsyncProps[D]
 }
 
 /**

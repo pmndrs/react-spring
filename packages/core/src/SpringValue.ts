@@ -50,7 +50,7 @@ import {
 
 /** Default props for a `SpringValue` object */
 export type DefaultProps<T = unknown> = {
-  [D in (typeof DEFAULT_PROPS)[number]]?: PendingProps<T>[D]
+  [D in typeof DEFAULT_PROPS[number]]?: PendingProps<T>[D]
 }
 
 /** Pending props for a `SpringValue` object */
@@ -623,8 +623,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // and when the "from" value is updated before the first animation.
     if (
       reset ||
-      (this.is(CREATED) &&
-        (!is.und(anim.from) && !isEqual(anim.from, prevFrom)))
+      (this.is(CREATED) && !is.und(anim.from) && !isEqual(anim.from, prevFrom))
     ) {
       node.setValue((value = from as T))
     }

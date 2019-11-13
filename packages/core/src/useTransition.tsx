@@ -51,11 +51,13 @@ type PhaseProps<Item = any, From = {}> = {
   from?: From &
     (
       | FromProp<UnknownProps>
-      | ((item: Item, index: number) => FromProp<UnknownProps>))
+      | ((item: Item, index: number) => FromProp<UnknownProps>)
+    )
   initial?: From &
     (
       | FromProp<UnknownProps>
-      | ((item: Item, index: number) => FromProp<UnknownProps>))
+      | ((item: Item, index: number) => FromProp<UnknownProps>)
+    )
   enter?: PhaseProp<Item>
   update?: PhaseProp<Item>
   leave?: PhaseProp<Item>
