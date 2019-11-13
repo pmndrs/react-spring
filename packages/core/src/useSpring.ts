@@ -63,6 +63,10 @@ export function useSpring<Props extends UnknownProps>(
 /** @internal */
 export function useSpring(props: any, deps?: any[]): any {
   const isFn = is.fun(props)
-  const [[values], update, stop] = useSprings(1, isFn ? props : [props], deps)
+  const [[values], update, stop] = useSprings(
+    1,
+    isFn ? props : [props],
+    isFn ? deps || [] : deps
+  )
   return isFn || arguments.length == 2 ? [values, update, stop] : values
 }
