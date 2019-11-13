@@ -1,18 +1,4 @@
-import createMockRaf, { MockRaf } from 'mock-raf'
-import * as Globals from 'shared/globals'
-
 import { Controller } from './Controller'
-
-let mockRaf: MockRaf
-beforeEach(() => {
-  mockRaf = createMockRaf()
-  Globals.assign({
-    now: mockRaf.now,
-    performanceNow: mockRaf.now,
-    requestAnimationFrame: mockRaf.raf,
-    cancelAnimationFrame: mockRaf.cancel,
-  })
-})
 
 it('can animate a number', () => {
   const ctrl = new Controller({ x: 0 })
@@ -72,40 +58,3 @@ describe('async "to" prop', () => {
     expect(await getAsyncFrames(ctrl)).toMatchSnapshot()
   })
 })
-
-/** Collect all frames synchronously */
-function getFrames<T extends object>(ctrl: Controller<T>): T[] {
-  const frames: any[] = []
-  const onFrame = (frame: any) => frames.push(frame)
-
-  let steps = 0
-  while (!ctrl.idle) {
-    ctrl['_state'].onFrame = onFrame
-    mockRaf.step()
-    if (++steps > 1e5) {
-      throw Error('Infinite loop detected')
-    }
-  }
-
-  return frames
-}
-
-/** Wait one microtask tick between frames */
-async function getAsyncFrames<T extends object>(
-  ctrl: Controller<T>
-): Promise<T[]> {
-  const frames: any[] = []
-  const onFrame = (frame: any) => frames.push(frame)
-
-  let steps = 0
-  while (!ctrl.idle) {
-    ctrl['_state'].onFrame = onFrame
-    mockRaf.step()
-    await Promise.resolve()
-    if (++steps > 1e5) {
-      throw Error('Infinite loop detected')
-    }
-  }
-
-  return frames
-}
