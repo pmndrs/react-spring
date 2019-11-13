@@ -32,9 +32,17 @@ global.advanceUntilIdle = () => {
 // TODO: support "value" as an array or animatable string
 global.advanceUntilValue = (spring, value) => {
   const goal = computeGoal(value)
-  let lastValue = spring.get()
+
+  let lastValue: any
   advanceUntil(() => {
     const value = spring.get()
+    expect(value).not.toBe(lastValue)
+
+    if (lastValue == null) {
+      lastValue = value
+      return false
+    }
+
     const stop = is.num(goal)
       ? goal > lastValue
         ? goal <= value
