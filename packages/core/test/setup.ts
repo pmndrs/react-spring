@@ -19,7 +19,7 @@ global.advanceUntil = test => {
   let steps = 0
   while (!test()) {
     mockRaf.step()
-    if (++steps > 1e5) {
+    if (++steps > 5e4) {
       throw Error('Infinite loop detected')
     }
   }
