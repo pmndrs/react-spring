@@ -55,45 +55,26 @@ global.advanceUntilValue = (spring, value) => {
 }
 
 global.getFrames = (arg: SpringValue | Controller) => {
-  const ctrl = arg instanceof Controller ? arg : null
-  const spring = arg instanceof SpringValue ? arg : null
-  const frames: any[] = []
-
-  const onChange: any = spring
-    ? spring.animation.onChange
-    : ctrl!['_state'].onFrame
-
-  const observer = (frame: any) => {
-    frames.push(frame)
-    if (onChange) {
-      onChange(frame)
-    }
-  }
-
-  if (spring) {
-    expect(spring.animation.values).not.toEqual([])
-    spring.animation.onChange = observer
-  } else {
-    ctrl!['_state'].onFrame = observer
-  }
+  const { frames, testIdle, reset } = getTestHelpers(arg)
+  // expect(spring.animation.values).not.toEqual([])
 
   let steps = 0
-  while (!arg.idle) {
+  while (!testIdle()) {
     mockRaf.step()
     if (++steps > 1e5) {
       throw Error('Infinite loop detected')
     }
   }
 
+  reset()
   return frames
 }
 
 global.getAsyncFrames = async ctrl => {
-  const frames: any[] = []
-  ctrl['_state'].onFrame = frame => frames.push(frame)
+  const { frames, testIdle, reset } = getTestHelpers(ctrl)
 
   let steps = 0
-  while (!ctrl.idle) {
+  while (!testIdle()) {
     mockRaf.step()
     await Promise.resolve()
     if (++steps > 1e5) {
@@ -101,5 +82,46 @@ global.getAsyncFrames = async ctrl => {
     }
   }
 
+  reset()
   return frames
+}
+
+function getTestHelpers(arg: Controller<any> | SpringValue<any>) {
+  const frames: any[] = []
+
+  const ctrl = arg instanceof Controller ? arg : null
+  if (ctrl) {
+    const { onFrame } = ctrl['_state']
+    ctrl['_state'].onFrame = (frame: any) => {
+      frames.push(frame)
+      if (onFrame) onFrame(frame)
+    }
+    return {
+      frames,
+      testIdle: () =>
+        !ctrl['_state'].promise &&
+        Object.values(ctrl.springs).every(spring => spring!.idle),
+      reset() {
+        ctrl['_state'].onFrame = onFrame
+      },
+    }
+  }
+
+  const spring = arg instanceof SpringValue ? arg : null
+  if (spring) {
+    const onChange = spring['_onChange']
+    spring['_onChange'] = (value, idle) => {
+      frames.push(value)
+      onChange.call(spring, value, idle)
+    }
+    return {
+      frames,
+      testIdle: () => spring.idle && !spring['_state'].promise,
+      reset() {
+        spring['_onChange'] = onChange
+      },
+    }
+  }
+
+  throw Error('Invalid argument')
 }
