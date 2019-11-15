@@ -118,8 +118,7 @@ export class Controller<State extends Indexable = UnknownProps>
   constructor(props?: ControllerProps<State>) {
     this._onFrame = this._onFrame.bind(this)
     if (props) {
-      props.default = true
-      this.start(props)
+      this.start({ ...props, default: true })
     }
   }
 
