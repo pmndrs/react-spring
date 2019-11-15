@@ -11,11 +11,17 @@ import {
 import * as G from 'shared/globals'
 
 import { SpringUpdate, SpringValues } from './types/spring'
-import { OnAnimate, OnRest, OnStart, OnChange } from './types/animated'
+import {
+  OnAnimate,
+  OnRest,
+  OnStart,
+  OnChange,
+  AnimationResult,
+} from './types/animated'
 import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
-import { interpolateTo, callProp } from './helpers'
+import { interpolateTo } from './helpers'
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 
@@ -106,8 +112,8 @@ export class Controller<State extends Indexable = UnknownProps>
   /** The spring values that manage their animations */
   protected _springs: Indexable<SpringValue> = {}
 
-  /** The promise for the current set of animations */
-  protected _promise?: AsyncResult<State>
+  /** The last animation result of each spring value */
+  protected _results = new Map<SpringValue, AnimationResult>()
 
   constructor(props?: ControllerProps<State>) {
     this._onFrame = this._onFrame.bind(this)
@@ -157,17 +163,22 @@ export class Controller<State extends Indexable = UnknownProps>
 
     const promises: AsyncResult[] = []
     each(queue as PendingProps<State>[], props => {
-      const { to, keys } = props
+      const { to, keys, onRest } = props
 
       const asyncTo = (is.arr(to) || is.fun(to)) && to
       if (asyncTo) {
         props.to = undefined
       }
 
+      if (is.fun(onRest)) {
+        props.onRest = result => {
+          this._results.set(result.spring!, result)
+        }
+      }
+
       // Send updates to every affected key.
       each(keys, key => {
-        const promise = this._springs[key].start(props as any)
-        promises.push(promise)
+        promises.push(this._springs[key].start(props))
       })
 
       // Schedule controller-only props.
@@ -178,6 +189,8 @@ export class Controller<State extends Indexable = UnknownProps>
           state,
           action: (props, resolve) => {
             if (!props.cancel) {
+              props.onRest = onRest
+
               each(EVENT_NAMES, key => {
                 const value: any = props[key] || this.defaultProps[key]
                 if (value && props.default) {
@@ -213,10 +226,10 @@ export class Controller<State extends Indexable = UnknownProps>
       )
     })
 
-    return (this._promise = Promise.all(promises).then(results => ({
+    return Promise.all(promises).then(results => ({
       value: this._get(),
       finished: results.every(result => result.finished),
-    })))
+    }))
   }
 
   /** Stop one animation, some animations, or all animations */
@@ -292,10 +305,19 @@ export class Controller<State extends Indexable = UnknownProps>
     if (isActive !== (this._phase == ACTIVE)) {
       this._phase = isActive ? ACTIVE : IDLE
       if (isActive) {
-        callProp(onStart)
-      } else {
-        if (onRest) this._promise!.then(onRest)
-        this._promise = undefined
+        if (onStart) onStart()
+      } else if (onRest) {
+        const result = {
+          value: this._get(),
+          finished: true,
+          cancelled: false,
+        }
+        each(this._results, ({ finished, cancelled }) => {
+          if (!finished) result.finished = false
+          if (cancelled) result.cancelled = true
+        })
+        this._results.clear()
+        onRest(result)
       }
     }
 
