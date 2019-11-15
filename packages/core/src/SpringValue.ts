@@ -783,7 +783,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
   }
 
-  /** Exit the frameloop and notify `onRest` listeners */
+  /**
+   * Exit the frameloop and notify `onRest` listeners.
+   *
+   * Always wrap `_stop` calls with `batchedUpdates`.
+   */
   protected _stop(finished = false) {
     if (!this.idle) {
       this._phase = IDLE
