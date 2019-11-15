@@ -117,9 +117,9 @@ export class Controller<State extends Indexable = UnknownProps>
     }
   }
 
-  /** Equals true when no springs are animating */
+  /** Equals `true` when no spring values are animating. */
   get idle() {
-    return !this._promise
+    return !this._active.size
   }
 
   /** Get all existing `SpringValue` objects. This clones the internal store. */
