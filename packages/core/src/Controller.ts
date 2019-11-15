@@ -223,6 +223,7 @@ export class Controller<State extends Indexable = UnknownProps>
               resolve({
                 value: 0, // This value gets ignored.
                 finished: !props.cancel,
+                cancelled: props.cancel,
               })
             }
           },
