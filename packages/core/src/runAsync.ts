@@ -76,10 +76,17 @@ export async function runAsync<T>(
   }
   state.asyncTo = to
   return (state.promise = (async (): AsyncResult<T> => {
+    let result!: AnimationResult
+
     const { asyncId } = props
-    const cancelToken = Symbol.for('cancel')
-    const isCancelled = () =>
-      to !== state.asyncTo || asyncId <= (state.cancelId || 0)
+    const checkFailConditions = () => {
+      if (to !== state.asyncTo) {
+        throw (result = { value: getValue(), finished: false })
+      }
+      if (asyncId <= (state.cancelId || 0)) {
+        throw (result = { value: getValue(), cancelled: true })
+      }
+    }
 
     const defaultProps: DefaultProps = {}
     each(DEFAULT_PROPS, prop => {
@@ -93,9 +100,7 @@ export async function runAsync<T>(
       arg1: SpringTo<T> | SpringUpdate<T>,
       arg2?: SpringUpdate<T>
     ) => {
-      if (isCancelled()) {
-        throw cancelToken
-      }
+      checkFailConditions()
 
       type AnimateProps = SpringUpdate<T> & typeof defaultProps
       const props: AnimateProps = is.obj(arg1)
@@ -114,9 +119,7 @@ export async function runAsync<T>(
           state.asyncTo = parentTo
         }
 
-        if (isCancelled()) {
-          throw cancelToken
-        }
+        checkFailConditions()
 
         if (getPaused()) {
           await new Promise(resolve => {
@@ -129,7 +132,6 @@ export async function runAsync<T>(
       })
     }
 
-    let result: AnimationResult<T>
     try {
       // Async sequence
       if (is.arr(to)) {
@@ -146,12 +148,8 @@ export async function runAsync<T>(
         finished: true,
       }
     } catch (err) {
-      if (err !== cancelToken) {
+      if (err !== result) {
         throw err
-      }
-      result = {
-        value: getValue(),
-        cancelled: true,
       }
     } finally {
       state.promise = undefined
@@ -159,10 +157,12 @@ export async function runAsync<T>(
         state.asyncTo = undefined
       }
     }
+
     if (is.fun(props.onRest)) {
-      props.onRest(result as any)
+      props.onRest(result)
     }
-    return result
+
+    return result!
   })())
 }
 

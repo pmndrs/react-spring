@@ -676,7 +676,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         const result: AnimationResult<T> = {
           value,
           spring: this,
-          cancelled: true,
+          finished: false,
         }
         for (; onRestIndex < onRestQueue.length; onRestIndex++) {
           onRestQueue[onRestIndex](result)
