@@ -163,13 +163,16 @@ export class Controller<State extends Indexable = UnknownProps>
 
     const promises: AsyncResult[] = []
     each(queue as PendingProps<State>[], props => {
-      const { to, keys, onRest } = props
+      const { to, keys, onStart, onRest } = props
 
       const asyncTo = (is.arr(to) || is.fun(to)) && to
       if (asyncTo) {
         props.to = undefined
       }
 
+      if (is.fun(onStart)) {
+        props.onStart = undefined
+      }
       if (is.fun(onRest)) {
         props.onRest = result => {
           this._results.set(result.spring!, result)
@@ -189,6 +192,7 @@ export class Controller<State extends Indexable = UnknownProps>
           state,
           action: (props, resolve) => {
             if (!props.cancel) {
+              props.onStart = onStart
               props.onRest = onRest
 
               each(EVENT_NAMES, key => {
