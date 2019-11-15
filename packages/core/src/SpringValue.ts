@@ -90,7 +90,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
   constructor(arg1?: any, arg2?: any) {
     super()
     if (arguments.length) {
-      this.start(is.obj(arg1) ? arg1 : { ...arg2, from: arg1 })
+      const props = is.obj(arg1) ? { ...arg1 } : { ...arg2, from: arg1 }
+      props.default = true
+      this.start(props)
     }
   }
 
