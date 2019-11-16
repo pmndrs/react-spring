@@ -168,8 +168,8 @@ export class AnimationConfig {
 
     // Derive "tension" and "friction" from "frequency" and "damping".
     if (!is.und(frequency)) {
-      this.tension = Math.pow(frequency, 2) * mass
-      this.friction = (damping * Math.sqrt(this.tension * mass)) / 0.5
+      this.tension = Math.pow((2 * Math.PI) / frequency, 2) * mass
+      this.friction = (4 * Math.PI * damping * mass) / frequency
     }
 
     /* might be reintroduced later */
