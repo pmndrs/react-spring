@@ -12,7 +12,7 @@ import {
   colorNames,
   interpolation as interp,
   now,
-  forceImmediate,
+  skipAnimation,
 } from './Globals'
 
 type FinishedCallback = (finished?: boolean) => void
@@ -210,7 +210,7 @@ class Controller<P extends any = {}> {
       ;[from, to] = [to, from]
     }
 
-    if (forceImmediate) {
+    if (skipAnimation) {
       immediate = true
     }
 

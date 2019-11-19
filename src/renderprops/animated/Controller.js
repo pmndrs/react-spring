@@ -1,7 +1,7 @@
 import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 import AnimatedArray from './AnimatedArray'
-import { now, colorNames, forceImmediate } from './Globals'
+import { now, colorNames, skipAnimation } from './Globals'
 import { addController, removeController } from './FrameLoop'
 import {
   interpolateTo,
@@ -52,7 +52,7 @@ export default class Controller {
       ;[from, to] = [to, from]
     }
 
-    if (forceImmediate) {
+    if (skipAnimation) {
       immediate = true
     }
 
