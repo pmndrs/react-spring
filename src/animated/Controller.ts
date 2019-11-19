@@ -8,7 +8,12 @@ import {
 import AnimatedValue from './AnimatedValue'
 import AnimatedValueArray from './AnimatedValueArray'
 import { start, stop } from './FrameLoop'
-import { colorNames, interpolation as interp, now } from './Globals'
+import {
+  colorNames,
+  interpolation as interp,
+  now,
+  forceImmediate,
+} from './Globals'
 
 type FinishedCallback = (finished?: boolean) => void
 
@@ -203,6 +208,10 @@ class Controller<P extends any = {}> {
     // Reverse values when requested
     if (reverse) {
       ;[from, to] = [to, from]
+    }
+
+    if (forceImmediate) {
+      immediate = true
     }
 
     // This will collect all props that were ever set, reset merged props when necessary

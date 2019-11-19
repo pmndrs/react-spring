@@ -1,7 +1,7 @@
 import Animated from './Animated'
 import AnimatedValue from './AnimatedValue'
 import AnimatedArray from './AnimatedArray'
-import { now, colorNames } from './Globals'
+import { now, colorNames, forceImmediate } from './Globals'
 import { addController, removeController } from './FrameLoop'
 import {
   interpolateTo,
@@ -51,6 +51,11 @@ export default class Controller {
     if (reverse) {
       ;[from, to] = [to, from]
     }
+
+    if (forceImmediate) {
+      immediate = true
+    }
+
     this.hasChanged = false
     // Attachment handling, trailed springs can "attach" themselves to a previous spring
     let target = attach && attach(this)

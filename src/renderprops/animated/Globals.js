@@ -9,6 +9,7 @@ export let interpolation = undefined
 export let now = () => Date.now()
 export let defaultElement = undefined
 export let createAnimatedStyle = undefined
+export let forceImmediate = false
 
 export const injectApplyAnimatedValues = (fn, transform) =>
   (applyAnimatedValues = { fn, transform })
@@ -21,3 +22,4 @@ export const injectNow = nowFn => (now = nowFn)
 export const injectDefaultElement = el => (defaultElement = el)
 export const injectCreateAnimatedStyle = factory =>
   (createAnimatedStyle = factory)
+export const injectForceImmediate = force => (forceImmediate = force)

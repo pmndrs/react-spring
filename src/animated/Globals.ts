@@ -73,3 +73,8 @@ export let manualFrameloop: any
 export function injectManualFrameloop(callback: any) {
   manualFrameloop = callback
 }
+
+export let forceImmediate = false
+export function injectForceImmediate(skip: boolean) {
+  forceImmediate = skip
+}
