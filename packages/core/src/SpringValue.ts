@@ -404,7 +404,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (this.idle && event.type == 'change') {
       const anim = this.animation
       if (!anim.immediate) {
-        anim.fromValues = anim.values.map(node => node.lastPosition)
+        anim.fromValues = anim.values.map(node => {
+          node.done = false
+          return node.lastPosition
+        })
       }
       // Enter the frameloop when a parent changes.
       this._start()
