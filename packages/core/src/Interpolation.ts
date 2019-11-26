@@ -120,10 +120,11 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   /** @internal */
   onParentChange(event: FrameValue.Event) {
     if (event.type == 'change') {
+      // Stay idle when a non-animated parent is changed.
       if (this.idle) {
         this.advance()
       }
-      // Leave the frameloop when all parent values are done animating.
+      // Leave the frameloop when all parents are done animating.
       else if (event.idle) {
         this.idle = toArray(this.source).every(
           (source: any) => source.idle !== false
@@ -135,8 +136,11 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
           })
         }
       }
-    } else if (event.type == 'priority') {
-      // Set our priority to 1 + the highest parent.
+    }
+
+    // Ensure our priority is greater than all parents, which means
+    // our value won't be updated until our parents have updated.
+    else if (event.type == 'priority') {
       this.priority = toArray(this.source).reduce(
         (max, source: any) => Math.max(max, (source.priority || 0) + 1),
         0
