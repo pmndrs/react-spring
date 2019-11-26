@@ -29,6 +29,7 @@ import {
   OnRest,
   AnimationEvents,
   EventProp,
+  Velocity,
 } from './types/animated'
 import {
   runAsync,
@@ -98,6 +99,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   get idle() {
     return !this.is(ACTIVE)
+  }
+
+  get velocity() {
+    const node = getAnimated(this)!
+    return (node instanceof AnimatedValue
+      ? node.lastVelocity || 0
+      : node.getPayload().map(node => node.lastVelocity || 0)) as Velocity<T>
   }
 
   /** Advance the current animation by a number of milliseconds */

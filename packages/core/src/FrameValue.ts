@@ -1,10 +1,9 @@
 import { each, InterpolatorArgs, FluidValue, FluidObserver } from 'shared'
-import { getAnimated, AnimatedValue } from 'animated'
+import { getAnimated } from 'animated'
 import { deprecateInterpolate } from 'shared/deprecations'
 import * as G from 'shared/globals'
 
 import { Interpolation } from './Interpolation'
-import { Velocity } from './types/animated'
 
 export const isFrameValue = (value: any): value is FrameValue =>
   value instanceof FrameValue
@@ -35,13 +34,6 @@ export abstract class FrameValue<T = any>
       this._priority = priority
       this._onPriorityChange(priority)
     }
-  }
-
-  get velocity() {
-    const node = getAnimated(this)!
-    return (node instanceof AnimatedValue
-      ? node.lastVelocity || 0
-      : node.getPayload().map(node => node.lastVelocity || 0)) as Velocity<T>
   }
 
   /** Get the current value */
