@@ -69,11 +69,18 @@ export abstract class FrameValue<T = any>
   }
 
   /** @internal */
-  onParentChange(event: FrameValue.Event) {
-    if (event.type == 'reset') {
-      this._reset(event.goal)
-    } else if (event.type == 'start') {
-      this._start()
+  onParentChange({ type }: FrameValue.Event) {
+    if (this.idle) {
+      // Start animating when a parent does.
+      if (type == 'start') {
+        this._reset()
+        this._start()
+      }
+    }
+    // Reset our animation state when a parent does, but only when
+    // our animation is active.
+    else if (type == 'reset') {
+      this._reset()
     }
   }
 
@@ -83,16 +90,27 @@ export abstract class FrameValue<T = any>
   /** Called when the last child is removed. */
   protected _detach() {}
 
-  /** Reset the animation state of this value and every descendant */
-  protected _reset(goal?: T) {
+  /**
+   * Reset our animation state (eg: start values, velocity, etc)
+   * and tell our children to do the same.
+   *
+   * This is called when our goal value is changed during (or before)
+   * an animation.
+   */
+  protected _reset() {
     this._emit({
       type: 'reset',
       parent: this,
-      goal,
     })
   }
 
-  /** Enter the frameloop if possible */
+  /**
+   * Start animating if possible.
+   *
+   * Note: Be sure to call `_reset` first, or the animation will break.
+   * This method would like to call `_reset` for you, but that would
+   * interfere with paused animations.
+   */
   protected _start() {
     this._emit({
       type: 'start',
@@ -145,10 +163,9 @@ export declare namespace FrameValue {
     priority: number
   }
 
-  /** A parent reset its animation state */
-  interface ResetEvent<T = any> {
+  /** A parent reset the internal state of its current animation */
+  interface ResetEvent {
     type: 'reset'
-    goal: T | undefined
   }
 
   /** A parent entered the frameloop */
@@ -160,8 +177,9 @@ export declare namespace FrameValue {
   export type Event<T = any> = { parent: FrameValue<T> } & (
     | ChangeEvent<T>
     | PriorityEvent
-    | ResetEvent<T>
-    | StartEvent)
+    | ResetEvent
+    | StartEvent
+  )
 
   /** An object that handles `FrameValue` events */
   export type Observer<T = any> = FluidObserver<Event<T>>

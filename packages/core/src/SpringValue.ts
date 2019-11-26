@@ -410,14 +410,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   onParentChange(event: FrameValue.Event) {
     super.onParentChange(event)
     if (this.idle && event.type == 'change') {
-      const anim = this.animation
-      if (!anim.immediate) {
-        anim.fromValues = anim.values.map(node => {
-          node.done = false
-          return node.lastPosition
-        })
-      }
-      // Enter the frameloop when a parent changes.
+      this._reset()
       this._start()
     } else if (event.type == 'priority') {
       this.priority = event.priority + 1
@@ -670,9 +663,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       !(toConfig || is.num(goal) || is.arr(goal)) ||
       !!matchProp(get('immediate'), key)
 
-    // Avoid calling this before "immediate" is set
-    this._reset()
-
     const onRestQueue = anim.onRest || []
     const onRest = coerceEventProp(
       props.onRest || (reset && onRestQueue[0]) || defaultProps.onRest,
@@ -697,6 +687,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
       })
     }
 
+    // Allow for an "onStart" call and "start" event.
+    if (reset) {
+      this._phase = IDLE
+    }
+
+    this._reset()
     this._start()
   }
 
@@ -759,40 +755,34 @@ export class SpringValue<T = any> extends FrameValue<T> {
     super._onChange(value, idle)
   }
 
-  /** Reset our node, and the nodes of every descendant spring */
-  protected _reset(goal?: T) {
+  protected _reset() {
     const anim = this.animation
-    if (is.und(goal)) {
-      goal = computeGoal(anim.to)
-    }
 
-    getAnimated(this)!.reset(goal)
-    super._reset(goal)
+    // Reset the state of each Animated node.
+    getAnimated(this)!.reset(computeGoal(anim.to))
 
     if (!anim.immediate) {
       anim.fromValues = anim.values.map(node => node.lastPosition)
+      if (this.idle) {
+        anim.changed = false
+      }
     }
+
+    super._reset()
   }
 
-  /** Enter the frameloop */
   protected _start() {
     if (this.idle) {
       this._phase = ACTIVE
 
-      // Animations without "onRest" cannot enter the frameloop.
-      const anim = this.animation
-      if (anim.onRest) {
-        anim.changed = false
-
-        // The "skipAnimation" global avoids the frameloop.
-        if (G.skipAnimation) {
-          this.finish(anim.to)
-        } else {
-          G.frameLoop.start(this)
-        }
-      }
-
       super._start()
+
+      // The "skipAnimation" global avoids the frameloop.
+      if (G.skipAnimation) {
+        this.finish()
+      } else {
+        G.frameLoop.start(this)
+      }
     }
   }
 
