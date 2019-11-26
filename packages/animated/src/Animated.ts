@@ -23,6 +23,7 @@ export abstract class Animated<T = any> {
   protected payload?: Payload
 
   constructor() {
+    // This makes "isAnimated" return true.
     setAnimated(this, this)
   }
 
