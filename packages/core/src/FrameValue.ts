@@ -113,6 +113,7 @@ export abstract class FrameValue<T = any>
   /** Notify observers of a change to our priority */
   protected _onPriorityChange(priority: number) {
     if (!this.idle) {
+      // Make the frameloop aware of our new priority.
       G.frameLoop.start(this)
     }
     this._emit({
