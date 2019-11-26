@@ -72,23 +72,22 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
     return this.calc(...inputs)
   }
 
-  protected _start() {
-    if (this.idle) {
-      this.idle = false
-      super._start()
-
-      if (G.skipAnimation) {
-        this.idle = true
-        this.advance()
-      } else {
-        G.frameLoop.start(this)
-      }
-    }
-  }
-
   protected _reset() {
     each(getPayload(this)!, node => node.reset())
     super._reset()
+  }
+
+  protected _start() {
+    this.idle = false
+
+    super._start()
+
+    if (G.skipAnimation) {
+      this.idle = true
+      this.advance()
+    } else {
+      G.frameLoop.start(this)
+    }
   }
 
   protected _attach() {
