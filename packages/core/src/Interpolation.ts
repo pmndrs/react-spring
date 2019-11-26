@@ -119,8 +119,16 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
 
   /** @internal */
   onParentChange(event: FrameValue.Event) {
-    if (event.type == 'change') {
-      // Stay idle when a non-animated parent is changed.
+    // Ensure our start value respects our parent values, in case
+    // any of their animations were restarted with the "reset" prop.
+    if (event.type == 'start') {
+      this.advance()
+    }
+    // Change events are useful for (1) reacting to non-animated parents
+    // and (2) reacting to the last change in a parent animation.
+    else if (event.type == 'change') {
+      // If we're idle, we know for sure that this change is *not*
+      // caused by an animation.
       if (this.idle) {
         this.advance()
       }
@@ -137,7 +145,6 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
         }
       }
     }
-
     // Ensure our priority is greater than all parents, which means
     // our value won't be updated until our parents have updated.
     else if (event.type == 'priority') {
