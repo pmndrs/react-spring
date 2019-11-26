@@ -113,6 +113,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
     each(toArray(this.source), source => {
       source.removeChild(this)
     })
+    // This removes us from the frameloop.
     this.idle = true
   }
 
