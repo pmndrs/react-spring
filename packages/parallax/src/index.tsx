@@ -107,13 +107,11 @@ export const ParallaxLayer = React.memo(
         }
       })
 
-      const translate3d = ctrl
-        .get('translate')
-        .to(
-          horizontal
-            ? x => `translate3d(${x}px,0,0)`
-            : y => `translate3d(0,${y}px,0)`
-        )
+      const translate3d = ctrl.springs.translate.to(
+        horizontal
+          ? x => `translate3d(${x}px,0,0)`
+          : y => `translate3d(0,${y}px,0)`
+      )
 
       return (
         <a.div
@@ -124,7 +122,7 @@ export const ParallaxLayer = React.memo(
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
             [horizontal ? 'height' : 'width']: '100%',
-            [horizontal ? 'width' : 'height']: ctrl.get('space'),
+            [horizontal ? 'width' : 'height']: ctrl.springs.space,
             WebkitTransform: translate3d,
             msTransform: translate3d,
             transform: translate3d,
@@ -219,7 +217,7 @@ export const Parallax = React.memo(
       state.controller.stop().start({
         scroll: offset * state.space,
         config,
-        onFrame({ scroll }) {
+        onFrame({ scroll }: any) {
           container[scrollType] = scroll
         },
       })
