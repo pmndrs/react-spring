@@ -70,10 +70,6 @@ export type ControllerProps<State extends Indexable = Indexable> = unknown &
   SpringUpdate<State> &
   UnknownPartial<FluidProps<State>>
 
-/** The props that are cached by `Controller` objects */
-type CachedProps<State extends Indexable> = RunAsyncState<State> &
-  NarrowValues<EventProps<State>, Function>
-
 /** An update that hasn't been applied yet */
 type PendingProps<State extends Indexable> = ControllerProps<State> & {
   keys: string[]
@@ -90,10 +86,10 @@ export class Controller<State extends Indexable = UnknownProps>
   queue: PendingProps<State>[] = []
 
   /** Fallback values for undefined props */
-  defaultProps: EventProps<State> = {}
+  protected _defaultProps: Indexable = {}
 
   /** These props are used by all future spring values */
-  protected _initialProps?: any
+  protected _initialProps?: Indexable
 
   /** The combined phase of our spring values */
   protected _phase: SpringPhase = CREATED
@@ -105,7 +101,7 @@ export class Controller<State extends Indexable = UnknownProps>
   protected _frame: UnknownPartial<State> = {}
 
   /** Event handlers and async state are stored here */
-  protected _state: CachedProps<State> = {}
+  protected _state: Indexable & RunAsyncState<State> = {}
 
   /** The spring values that manage their animations */
   protected _springs: Indexable<SpringValue> = {}
@@ -201,12 +197,20 @@ export class Controller<State extends Indexable = UnknownProps>
               props.onRest = onRest
 
               each(BATCHED_EVENTS, key => {
-                const value: any = props[key] || this.defaultProps[key]
-                if (value && props.default) {
-                  this.defaultProps[key] = value
-                }
+                const value: any = props[key]
                 if (is.fun(value)) {
-                  this._state[key] = value
+                  if (props.default) {
+                    this._defaultProps[key] = value
+                  }
+                  // The "onStart" and "onRest" props are reset to their
+                  // default values once called.
+                  this._state[key] =
+                    key == 'onFrame'
+                      ? value
+                      : (arg?: any) => {
+                          this._state[key] = this._defaultProps[key]
+                          value(arg)
+                        }
                 }
               })
             }
@@ -313,18 +317,23 @@ export class Controller<State extends Indexable = UnknownProps>
       this._phase = isActive ? ACTIVE : IDLE
       if (isActive) {
         if (onStart) onStart()
-      } else if (onRest) {
-        const result = {
-          value: this._get(),
-          finished: true,
-          cancelled: false,
+      } else {
+        // Reset the "onFrame" prop when done animating.
+        this._state.onFrame = this._defaultProps.onFrame
+
+        if (onRest) {
+          const result = {
+            value: this._get(),
+            finished: true,
+            cancelled: false,
+          }
+          each(this._results, ({ finished, cancelled }) => {
+            if (!finished) result.finished = false
+            if (cancelled) result.cancelled = true
+          })
+          this._results.clear()
+          onRest(result)
         }
-        each(this._results, ({ finished, cancelled }) => {
-          if (!finished) result.finished = false
-          if (cancelled) result.cancelled = true
-        })
-        this._results.clear()
-        onRest(result)
       }
     }
 
