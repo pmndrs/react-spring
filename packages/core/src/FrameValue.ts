@@ -118,7 +118,7 @@ export abstract class FrameValue<T = any>
     })
   }
 
-  /** Notify observers of a change to our value */
+  /** Tell our children about our new value */
   protected _onChange(value: T, idle = false) {
     this._emit({
       type: 'change',
@@ -128,7 +128,7 @@ export abstract class FrameValue<T = any>
     })
   }
 
-  /** Notify observers of a change to our priority */
+  /** Tell our children about our new priority */
   protected _onPriorityChange(priority: number) {
     if (!this.idle) {
       // Make the frameloop aware of our new priority.
