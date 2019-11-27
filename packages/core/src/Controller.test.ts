@@ -2,7 +2,7 @@ import { Controller } from './Controller'
 
 it('can animate a number', () => {
   const ctrl = new Controller({ x: 0 })
-  ctrl.update({ x: 100 }).start()
+  ctrl.start({ x: 100 })
 
   const frames = getFrames(ctrl)
   expect(frames).toMatchSnapshot()
@@ -17,7 +17,7 @@ it('can animate a number', () => {
 it('can animate an array of numbers', () => {
   const config = { precision: 0.005 }
   const ctrl = new Controller<{ x: [number, number] }>({ x: [1, 2], config })
-  ctrl.update({ x: [5, 10] }).start()
+  ctrl.start({ x: [5, 10] })
 
   const frames = getFrames(ctrl)
   expect(frames).toMatchSnapshot()
