@@ -98,7 +98,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   get idle() {
-    return !this.is(ACTIVE)
+    return !this.is(ACTIVE) && !this._state.promise
   }
 
   get velocity() {
@@ -279,7 +279,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** Set the current value, while stopping the current animation */
   set(value: T | FluidValue<T>) {
     G.batchedUpdates(() => {
-      if (this._set(value) && this.idle) {
+      if (this._set(value) && !this.is(ACTIVE)) {
         // Since "_stop" only calls "_onChange" when not idle, we need this.
         this._onChange(this.get(), true)
       }
@@ -305,7 +305,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * All `onRest` callbacks are passed `{finished: true}`
    */
   finish(to?: T | FluidValue<T>) {
-    if (!this.idle) {
+    if (this.is(ACTIVE)) {
       const anim = this.animation
 
       // Decay animations have an implicit goal.
@@ -409,9 +409,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** @internal */
   onParentChange(event: FrameValue.Event) {
     super.onParentChange(event)
-    if (this.idle && event.type == 'change') {
-      this._reset()
-      this._start()
+    if (event.type == 'change') {
+      if (!this.is(ACTIVE)) {
+        this._reset()
+        this._start()
+      }
     } else if (event.type == 'priority') {
       this.priority = event.priority + 1
     }
@@ -767,7 +769,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     if (!anim.immediate) {
       anim.fromValues = anim.values.map(node => node.lastPosition)
-      if (this.idle) {
+      if (!this.is(ACTIVE)) {
         anim.changed = false
       }
     }
@@ -776,7 +778,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   protected _start() {
-    if (this.idle) {
+    if (!this.is(ACTIVE)) {
       this._phase = ACTIVE
 
       super._start()
@@ -796,7 +798,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * Always wrap `_stop` calls with `batchedUpdates`.
    */
   protected _stop(finished = false) {
-    if (!this.idle) {
+    if (this.is(ACTIVE)) {
       this._phase = IDLE
 
       // Always let change observers know when a spring becomes idle.
