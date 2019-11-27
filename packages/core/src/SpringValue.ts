@@ -280,7 +280,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   set(value: T | FluidValue<T>) {
     G.batchedUpdates(() => {
       if (this._set(value) && this.idle) {
-        // Since "_stop" calls "_onChange" only when not idle, we need this.
+        // Since "_stop" only calls "_onChange" when not idle, we need this.
         this._onChange(this.get(), true)
       }
       this._stop()
@@ -738,20 +738,22 @@ export class SpringValue<T = any> extends FrameValue<T> {
     return true
   }
 
-  /** Notify change observers */
   protected _onChange(value: T, idle = false) {
     const anim = this.animation
+
+    // The "onStart" prop is called on the first change after entering the
+    // frameloop, but never for immediate animations.
     if (!anim.changed && !idle) {
       anim.changed = true
-      // The "onStart" prop is called on the first change after entering the
-      // frameloop, but never for immediate animations.
       if (anim.onStart) {
         anim.onStart(this)
       }
     }
+
     if (anim.onChange) {
       anim.onChange(value, this)
     }
+
     super._onChange(value, idle)
   }
 
