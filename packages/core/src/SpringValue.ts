@@ -801,14 +801,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
       this._onChange(this.get(), true)
 
       const anim = this.animation
+      each(anim.values, node => {
+        node.done = true
+      })
+
+      // The "onRest" queue won't exist when we're being disposed.
       const onRestQueue = anim.onRest
-
-      // Animations without "onRest" never enter the frameloop.
       if (onRestQueue) {
-        each(anim.values, node => {
-          node.done = true
-        })
-
         // Preserve the "onRest" prop between animations.
         anim.onRest = [onRestQueue[0]]
 
