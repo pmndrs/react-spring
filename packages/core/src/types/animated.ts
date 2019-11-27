@@ -27,17 +27,17 @@ export type OnStart<T = unknown> = (spring: SpringValue<T>) => void
 export type OnChange<T = unknown> = (value: T, source: SpringValue<T>) => void
 
 /** Called once the animation comes to a halt */
-export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
+export type OnRest<T = unknown> = (result: Readonly<AnimationResult<T>>) => void
 
 /** The object passed to `onRest` props */
-export type AnimationResult<T = any> = Readonly<{
+export type AnimationResult<T = any> = {
   value: T
   spring?: SpringValue<T>
   /** When falsy, the animation did not reach its end value. */
   finished?: boolean
   /** When true, the animation was cancelled before it could finish. */
   cancelled?: boolean
-}>
+}
 
 /** `SpringProps` without `to` or `from` */
 export interface AnimationProps<P extends string = string> {

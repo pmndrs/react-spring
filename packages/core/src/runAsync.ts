@@ -11,7 +11,7 @@ import { AnimationResult } from './types/animated'
 import { matchProp, DEFAULT_PROPS } from './helpers'
 import { PendingProps, SpringValue } from './SpringValue'
 
-export type AsyncResult<T = any> = Promise<AnimationResult<T>>
+export type AsyncResult<T = any> = Promise<Readonly<AnimationResult<T>>>
 
 export type RunAsyncProps<T = any> = unknown &
   Merge<
