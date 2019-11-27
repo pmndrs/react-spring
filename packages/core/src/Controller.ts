@@ -97,9 +97,6 @@ export class Controller<State extends Indexable = UnknownProps>
   /** The values currently being animated */
   protected _active = new Set<FrameValue>()
 
-  /** The animated state that changed in the last animation frame */
-  protected _frame: UnknownPartial<State> = {}
-
   /** Event handlers and async state are stored here */
   protected _state: Indexable & RunAsyncState<State> = {}
 
@@ -313,42 +310,42 @@ export class Controller<State extends Indexable = UnknownProps>
     const { onFrame, onStart, onRest } = this._state
 
     const isActive = this._active.size > 0
-    if (isActive !== (this._phase == ACTIVE)) {
+    const wasActive = this._phase == ACTIVE
+    if (isActive !== wasActive) {
       this._phase = isActive ? ACTIVE : IDLE
-      if (isActive) {
-        if (onStart) onStart()
-      } else {
-        // Reset the "onFrame" prop when done animating.
-        this._state.onFrame = this._defaultProps.onFrame
-
-        if (onRest) {
-          const result = {
-            value: this._get(),
-            finished: true,
-            cancelled: false,
-          }
-          each(this._results, ({ finished, cancelled }) => {
-            if (!finished) result.finished = false
-            if (cancelled) result.cancelled = true
-          })
-          this._results.clear()
-          onRest(result)
-        }
+      if (isActive && onStart) {
+        onStart()
       }
     }
 
+    const frame = onFrame || onRest ? this._get() : null
     if (onFrame) {
-      onFrame(this._frame)
-      this._frame = {}
+      onFrame(frame)
+    }
+
+    if (!isActive) {
+      // Reset the "onFrame" prop when done animating.
+      this._state.onFrame = this._defaultProps.onFrame
+
+      if (onRest) {
+        const result = {
+          value: frame,
+          finished: true,
+          cancelled: false,
+        }
+        each(this._results, ({ finished, cancelled }) => {
+          if (!finished) result.finished = false
+          if (cancelled) result.cancelled = true
+        })
+        this._results.clear()
+        onRest(result)
+      }
     }
   }
 
   /** @internal */
   onParentChange(event: FrameValue.Event) {
     if (event.type == 'change') {
-      if (this._state.onFrame) {
-        this._frame[event.parent.key as keyof State] = event.value
-      }
       this._active[event.idle ? 'delete' : 'add'](event.parent)
       G.frameLoop.onFrame(this._onFrame)
     }
