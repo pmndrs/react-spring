@@ -34,8 +34,8 @@ describe('helpers', () => {
       update: undefined,
       onAnimate: undefined,
       onStart: undefined,
+      onChange: undefined,
       onRest: undefined,
-      onFrame: undefined,
     }
     expect(
       interpolateTo({

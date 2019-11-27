@@ -25,19 +25,10 @@ import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 
 /** Events batched by the `Controller` class */
-const BATCHED_EVENTS = ['onFrame', 'onStart', 'onRest'] as const
-
-/** A callback that receives the changed values for each frame. */
-export type OnFrame<State extends Indexable> = (
-  frame: UnknownPartial<State>
-) => void
+const BATCHED_EVENTS = ['onStart', 'onChange', 'onRest'] as const
 
 /** All event props supported by the `Controller` class */
 export interface EventProps<State extends Indexable> {
-  /**
-   * Called on every frame when animations are active
-   */
-  onFrame?: OnFrame<State>
   /**
    * Called when the # of animating values exceeds 0
    *
@@ -51,17 +42,17 @@ export interface EventProps<State extends Indexable> {
    */
   onRest?: OnRest<State> | Indexable<OnRest>
   /**
-   * Called whenever an animation is updated
+   * Called whenever an animation gets new props
    *
    * Also accepts an object for per-key events
    */
   onAnimate?: OnAnimate | Indexable<OnAnimate>
   /**
-   * Called for every change to a key/value pair
+   * Called once per frame when animations are active
    *
    * Also accepts an object for per-key events
    */
-  onChange?: OnChange | Indexable<OnChange>
+  onChange?: ((frame: State & UnknownProps) => void) | Indexable<OnChange>
 }
 
 export type ControllerProps<State extends Indexable = Indexable> = unknown &
@@ -84,9 +75,6 @@ export class Controller<State extends Indexable = UnknownProps>
   /** The queue of pending props */
   queue: PendingProps<State>[] = []
 
-  /** Fallback values for undefined props */
-  protected _defaultProps: Indexable = {}
-
   /** These props are used by all future spring values */
   protected _initialProps?: Indexable
 
@@ -97,13 +85,17 @@ export class Controller<State extends Indexable = UnknownProps>
   protected _active = new Set<FrameValue>()
 
   /** Event handlers and async state are stored here */
-  protected _state: Indexable & RunAsyncState<State> = {}
+  protected _state: RunAsyncState<State> = {}
 
   /** The spring values that manage their animations */
   protected _springs: Indexable<SpringValue> = {}
 
-  /** The last animation result of each spring value */
-  protected _results = new Map<SpringValue, AnimationResult>()
+  /** The event queues that are flushed once per frame maximum */
+  protected _events = {
+    onStart: new Set<Function>(),
+    onChange: new Set<Function>(),
+    onRest: new Map<OnRest, AnimationResult>(),
+  }
 
   constructor(props?: ControllerProps<State>) {
     this._onFrame = this._onFrame.bind(this)
@@ -160,21 +152,37 @@ export class Controller<State extends Indexable = UnknownProps>
 
     const promises: AsyncResult[] = []
     each(queue as PendingProps<State>[], props => {
-      const { to, keys, onStart, onRest } = props
+      const { to, keys } = props
 
       const asyncTo = (is.arr(to) || is.fun(to)) && to
       if (asyncTo) {
         props.to = undefined
       }
 
-      if (is.fun(onStart)) {
-        props.onStart = undefined
-      }
-      if (is.fun(onRest)) {
-        props.onRest = result => {
-          this._results.set(result.spring!, result)
+      // Batched events are queued by individual spring values.
+      each(BATCHED_EVENTS, key => {
+        const handler: any = props[key]
+        if (is.fun(handler)) {
+          const queue = this._events[key]
+          props[key] =
+            queue instanceof Set
+              ? () => queue.add(handler)
+              : ((({ finished, cancelled }: AnimationResult) => {
+                  const result = queue.get(handler)
+                  if (result) {
+                    if (!finished) result.finished = false
+                    if (cancelled) result.cancelled = true
+                  } else {
+                    // The "value" is set before the "handler" is called.
+                    queue.set(handler, {
+                      value: null,
+                      finished,
+                      cancelled,
+                    })
+                  }
+                }) as any)
         }
-      }
+      })
 
       // Send updates to every affected key.
       each(keys, key => {
@@ -188,31 +196,9 @@ export class Controller<State extends Indexable = UnknownProps>
           props,
           state,
           action: (props, resolve) => {
-            if (!props.cancel) {
-              props.onStart = onStart
-              props.onRest = onRest
-
-              each(BATCHED_EVENTS, key => {
-                const value: any = props[key]
-                if (is.fun(value)) {
-                  if (props.default) {
-                    this._defaultProps[key] = value
-                  }
-                  // The "onStart" and "onRest" props are reset to their
-                  // default values once called.
-                  this._state[key] =
-                    key == 'onFrame'
-                      ? value
-                      : (arg?: any) => {
-                          this._state[key] = this._defaultProps[key]
-                          value(arg)
-                        }
-                }
-              })
-            }
-
             // Start, replace, or cancel the async animation.
             if (asyncTo) {
+              props.onRest = undefined
               resolve(
                 runAsync<State>(
                   asyncTo,
@@ -306,39 +292,24 @@ export class Controller<State extends Indexable = UnknownProps>
 
   /** @internal Called at the end of every animation frame */
   protected _onFrame() {
-    const { onFrame, onStart, onRest } = this._state
+    const { onStart, onChange, onRest } = this._events
 
     const isActive = this._active.size > 0
-    const wasActive = this._phase == ACTIVE
-    if (isActive !== wasActive) {
-      this._phase = isActive ? ACTIVE : IDLE
-      if (isActive && onStart) {
-        onStart()
-      }
+    if (isActive && this._phase != ACTIVE) {
+      this._phase = ACTIVE
+      flush(onStart, onStart => onStart())
     }
 
-    const frame = onFrame || onRest ? this._get() : null
-    if (onFrame) {
-      onFrame(frame)
-    }
+    const values = (onChange.size || (!isActive && onRest.size)) && this._get()
+    flush(onChange, onChange => onChange(values))
 
+    // The "onRest" queue is only flushed when all springs are idle.
     if (!isActive) {
-      // Reset the "onFrame" prop when done animating.
-      this._state.onFrame = this._defaultProps.onFrame
-
-      if (onRest) {
-        const result = {
-          value: frame,
-          finished: true,
-          cancelled: false,
-        }
-        each(this._results, ({ finished, cancelled }) => {
-          if (!finished) result.finished = false
-          if (cancelled) result.cancelled = true
-        })
-        this._results.clear()
+      this._phase = IDLE
+      flush(onRest, (result, onRest) => {
+        result.value = values
         onRest(result)
-      }
+      })
     }
   }
 
@@ -370,4 +341,17 @@ function extractKeys(props: ControllerProps, springs: Indexable<SpringValue>) {
   // When neither "from" or "to" have a key with a defined value,
   // return the keys for every existing spring.
   return keys.size ? Array.from(keys) : Object.keys(springs)
+}
+
+/** Basic helper for clearing a queue after processing it */
+function flush<P, T>(
+  queue: Map<P, T>,
+  iterator: (value: T, key: P) => void
+): void
+function flush<T>(queue: Set<T>, iterator: (value: T) => void): void
+function flush(queue: any, iterator: any) {
+  if (queue.size) {
+    each(queue, iterator)
+    queue.clear()
+  }
 }
