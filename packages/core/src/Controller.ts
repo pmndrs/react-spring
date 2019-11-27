@@ -62,7 +62,7 @@ export type ControllerProps<State extends Indexable = Indexable> = unknown &
 
 /** An update that hasn't been applied yet */
 type PendingProps<State extends Indexable> = ControllerProps<State> & {
-  keys: string[]
+  keys: Set<string>
 }
 
 let nextId = 1
@@ -71,6 +71,9 @@ let lastAsyncId = 0
 export class Controller<State extends Indexable = UnknownProps>
   implements FrameValue.Observer {
   readonly id = nextId++
+
+  /** The animated values */
+  springs: SpringValues<State> = {} as any
 
   /** The queue of pending props */
   queue: PendingProps<State>[] = []
@@ -86,9 +89,6 @@ export class Controller<State extends Indexable = UnknownProps>
 
   /** Event handlers and async state are stored here */
   protected _state: RunAsyncState<State> = {}
-
-  /** The spring values that manage their animations */
-  protected _springs: Indexable<SpringValue> = {}
 
   /** The event queues that are flushed once per frame maximum */
   protected _events = {
@@ -113,20 +113,17 @@ export class Controller<State extends Indexable = UnknownProps>
   get idle() {
     return (
       !this._state.promise &&
-      Object.values(this._springs).every(spring => spring.idle)
+      Object.values(this.springs as Indexable<SpringValue>).every(
+        spring => spring.idle
+      )
     )
   }
 
-  /** Get all existing `SpringValue` objects. This clones the internal store. */
-  get springs() {
-    return { ...this._springs } as SpringValues<State>
-  }
-
-  /** Get an existing `SpringValue` object by its key. */
-  get<P extends keyof State>(key: P): SpringValue<State[P]>
-  get(key: string): SpringValue<unknown> | undefined
-  get(key: string) {
-    return this._springs[key as any]
+  /** Get the current values of our springs */
+  get(): State & UnknownProps {
+    const values: any = {}
+    this.each((spring, key) => (values[key] = spring.get()))
+    return values
   }
 
   /** Push an update onto the queue of each value. */
@@ -185,8 +182,9 @@ export class Controller<State extends Indexable = UnknownProps>
       })
 
       // Send updates to every affected key.
-      each(keys, key => {
-        promises.push(this._springs[key].start(props))
+      const springs = this.springs as Indexable<SpringValue>
+      each(keys.size ? keys : Object.keys(springs), key => {
+        promises.push(springs[key].start(props))
       })
 
       // Schedule controller-only props.
@@ -204,7 +202,7 @@ export class Controller<State extends Indexable = UnknownProps>
                   asyncTo,
                   props,
                   state,
-                  this._get.bind(this),
+                  this.get.bind(this),
                   () => false, // TODO: add pausing to Controller
                   this.start.bind(this) as any,
                   this.stop.bind(this) as any
@@ -223,7 +221,7 @@ export class Controller<State extends Indexable = UnknownProps>
     })
 
     return Promise.all(promises).then(results => ({
-      value: this._get(),
+      value: this.get(),
       finished: results.every(result => result.finished),
     }))
   }
@@ -231,41 +229,36 @@ export class Controller<State extends Indexable = UnknownProps>
   /** Stop one animation, some animations, or all animations */
   stop(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
-      each(this._springs, spring => spring.stop())
+      this.each(spring => spring.stop())
     } else {
-      each(toArray(keys), key => this._springs[key].stop())
+      const springs = this.springs as Indexable<SpringValue>
+      each(toArray(keys), key => springs[key].stop())
     }
     return this
   }
 
   /** Restart every animation. */
   reset() {
-    each(this._springs, spring => spring.reset())
+    this.each(spring => spring.reset())
     // TODO: restart async "to" prop
     return this
+  }
+
+  /** Call a function once per spring value */
+  each(iterator: (spring: SpringValue, key: string) => void) {
+    each(this.springs, iterator as any)
   }
 
   /** Destroy every spring in this controller */
   dispose() {
     this._state.asyncTo = undefined
-    each(this._springs, spring => spring.dispose())
-    this._springs = {}
-  }
-
-  /** Get the current value of every spring */
-  protected _get() {
-    const values: any = {}
-    each(this._springs, (spring, key) => {
-      values[key] = spring.get()
-    })
-    return values
+    this.each(spring => spring.dispose())
+    this.springs = {} as any
   }
 
   /** Prepare an update with the given props. */
   protected _prepareUpdate(propsArg: ControllerProps<State>) {
     const props: PendingProps<State> = interpolateTo(propsArg) as any
-    props.keys = extractKeys(props, this._springs)
-
     let { from, to } = props as any
 
     // Avoid sending async "to" prop to springs.
@@ -273,13 +266,21 @@ export class Controller<State extends Indexable = UnknownProps>
       to = undefined
     }
 
+    // Each update only affects the springs whose keys have defined values.
+    const keys = (props.keys = new Set<string>())
+    const findDefined = (values: any) =>
+      values &&
+      each(values, (value, key) => value != null && keys.add(key as any))
+
+    findDefined(from)
+    findDefined(to)
+
     // Create our springs and give them values.
-    if (from || to) {
-      each(props.keys, key => {
-        if (!this._springs[key]) {
-          const spring = (this._springs[key] = new SpringValue(
-            this._initialProps
-          ))
+    const springs = this.springs as Indexable<SpringValue>
+    if (keys.size) {
+      each(keys, key => {
+        if (!springs[key]) {
+          const spring = (springs[key] = new SpringValue(this._initialProps))
           spring.key = key
           spring.addChild(this)
           spring.setNodeWithProps({ from, to })
@@ -300,7 +301,7 @@ export class Controller<State extends Indexable = UnknownProps>
       flush(onStart, onStart => onStart())
     }
 
-    const values = (onChange.size || (!isActive && onRest.size)) && this._get()
+    const values = (onChange.size || (!isActive && onRest.size)) && this.get()
     flush(onChange, onChange => onChange(values))
 
     // The "onRest" queue is only flushed when all springs are idle.
@@ -320,27 +321,6 @@ export class Controller<State extends Indexable = UnknownProps>
       G.frameLoop.onFrame(this._onFrame)
     }
   }
-}
-
-/** Determine which keys should receive an update */
-function extractKeys(props: ControllerProps, springs: Indexable<SpringValue>) {
-  const keys = new Set<string>()
-
-  /** Collect keys with a defined value */
-  const getDefinedKeys = (obj: Indexable) =>
-    each(obj, (value, key) => {
-      if (!is.und(value)) {
-        keys.add(key as string)
-      }
-    })
-
-  const { from, to } = props
-  if (is.obj(to)) getDefinedKeys(to)
-  if (from) getDefinedKeys(from)
-
-  // When neither "from" or "to" have a key with a defined value,
-  // return the keys for every existing spring.
-  return keys.size ? Array.from(keys) : Object.keys(springs)
 }
 
 /** Basic helper for clearing a queue after processing it */
