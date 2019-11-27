@@ -808,8 +808,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // The "onRest" queue won't exist when we're being disposed.
       const onRestQueue = anim.onRest
       if (onRestQueue) {
-        // Preserve the "onRest" prop between animations.
-        anim.onRest = [onRestQueue[0]]
+        // Preserve the "onRest" prop when the goal is dynamic.
+        if (!anim.toValues) {
+          anim.onRest = [onRestQueue[0]]
+        }
 
         // Never call the "onRest" prop for immediate or no-op animations.
         if (anim.immediate || !anim.changed) {
