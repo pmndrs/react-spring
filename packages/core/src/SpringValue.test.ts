@@ -1,4 +1,5 @@
 import { SpringValue } from './SpringValue'
+import { FrameValue } from './FrameValue'
 
 const frameLength = 1000 / 60
 
@@ -73,31 +74,65 @@ describe('SpringValue', () => {
     })
   })
 
-  describe('when our target is another SpringValue', () => {
-    it('animates toward the current value', () => {
-      const spring = new SpringValue(0)
-      const target = new SpringValue(1)
+  describeTarget('another SpringValue', from => {
+    const node = new SpringValue(from)
+    return {
+      node,
+      set: node.set.bind(node),
+      start: node.start.bind(node),
+      reset: node.reset.bind(node),
+    }
+  })
 
-      spring.start({ to: target })
-      expect(spring.priority).toBeGreaterThan(target.priority)
+  describeTarget('an Interpolation', from => {
+    const parent = new SpringValue(from - 1)
+    const node = parent.to(n => n + 1)
+    return {
+      node,
+      set: n => parent.set(n - 1),
+      start: n => parent.start(n - 1),
+      reset: parent.reset.bind(parent),
+    }
+  })
+})
+
+/** The minimum requirements for testing a dynamic target */
+type OpaqueTarget = {
+  node: FrameValue
+  set: (value: number) => any
+  start: (value: number) => Promise<any>
+  reset: () => void
+}
+
+function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
+  let spring: SpringValue
+  let target: OpaqueTarget
+  beforeEach(() => {
+    spring = new SpringValue(0)
+    target = create(1)
+  })
+
+  describe('when our target is ' + name, () => {
+    it('animates toward the current value', () => {
+      spring.start({ to: target.node })
+      expect(spring.priority).toBeGreaterThan(target.node.priority)
       expect(spring.animation).toMatchObject({
-        to: target,
+        to: target.node,
         toValues: null,
       })
 
       advanceUntilIdle()
-      expect(spring.get()).toBe(1)
+      expect(spring.get()).toBe(target.node.get())
     })
 
-    it('can change its target while animating', () => {
-      const spring = new SpringValue(0)
-      const target = new SpringValue(1)
+    it.todo('preserves its "onRest" prop between animations')
 
-      spring.start({ to: target })
-      advanceUntilValue(spring, 0.5)
+    it('can change its target while animating', () => {
+      spring.start({ to: target.node })
+      advanceUntilValue(spring, target.node.get() / 2)
 
       spring.start(0)
-      expect(spring.priority).toBe(target.priority)
+      expect(spring.priority).toBe(0)
       expect(spring.animation).toMatchObject({
         to: 0,
         toValues: [0],
@@ -109,47 +144,63 @@ describe('SpringValue', () => {
 
     describe('when target is done animating', () => {
       it('keeps animating until the target is reached', () => {
-        const spring = new SpringValue(0)
-        const target = new SpringValue(1)
+        spring.start({ to: target.node })
+        target.start(1.1)
 
-        spring.start({ to: target })
-        target.start({ to: 1.1 })
-
-        advanceUntil(() => target.idle)
+        advanceUntil(() => target.node.idle)
         expect(spring.idle).toBeFalsy()
 
         advanceUntilIdle()
         expect(spring.idle).toBeTruthy()
-        expect(spring.get()).toBe(1.1)
+        expect(spring.get()).toBe(target.node.get())
       })
     })
 
     describe('when target animates after we go idle', () => {
       it('starts animating', () => {
-        const spring = new SpringValue(0)
-        const target = new SpringValue(1)
-
-        spring.start({ to: target })
+        spring.start({ to: target.node })
         advanceUntil(() => spring.idle)
 
-        target.start({ to: 2 })
+        target.start(2)
         expect(getFrames(spring).length).toBeGreaterThan(1)
-        expect(spring.get()).toBe(2)
+        expect(spring.get()).toBe(target.node.get())
       })
     })
 
     describe('when target has its value set (not animated)', () => {
       it('animates toward the new value', () => {
-        const spring = new SpringValue(0)
-        const target = new SpringValue(1)
-
-        spring.start({ to: target })
+        spring.start({ to: target.node })
         advanceUntilIdle()
 
         target.set(2)
         expect(getFrames(spring).length).toBeGreaterThan(1)
-        expect(spring.get()).toBe(2)
+        expect(spring.get()).toBe(target.node.get())
       })
     })
+
+    describe('when target resets its animation', () => {
+      it('keeps animating', () => {
+        spring.start({ to: target.node })
+        target.start(2)
+
+        advanceUntilValue(target.node, 1.5)
+        expect(target.node.idle).toBeFalsy()
+
+        target.reset()
+        expect(target.node.get()).toBe(1)
+
+        const frames = getFrames(spring)
+        expect(frames.length).toBeGreaterThan(1)
+        expect(spring.get()).toBe(target.node.get())
+      })
+    })
+
+    describe('when animating a string', () => {
+      it.todo('animates as expected')
+    })
+
+    describe('when animating an array', () => {
+      it.todo('animates as expected')
+    })
   })
-})
+}
