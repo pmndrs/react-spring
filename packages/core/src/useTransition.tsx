@@ -323,7 +323,7 @@ export function useTransition(
 
   return render =>
     transitions.map(t => {
-      const elem: any = render(t.ctrl.springs, t.item, t)
+      const elem: any = render({ ...t.ctrl.springs }, t.item, t)
       return elem && elem.type ? (
         <elem.type
           {...elem.props}
