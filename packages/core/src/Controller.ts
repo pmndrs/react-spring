@@ -97,6 +97,9 @@ export class Controller<State extends Indexable = UnknownProps>
   /** Fallback values for undefined props */
   defaultProps: EventProps<State> = {}
 
+  /** These props are used by all future spring values */
+  protected _initialProps?: any
+
   /** The combined phase of our spring values */
   protected _phase: SpringPhase = CREATED
 
@@ -118,7 +121,9 @@ export class Controller<State extends Indexable = UnknownProps>
   constructor(props?: ControllerProps<State>) {
     this._onFrame = this._onFrame.bind(this)
     if (props) {
-      this.start({ ...props, default: true })
+      const { to, ...initialProps } = interpolateTo(props as any)
+      this._initialProps = initialProps
+      if (to) this.start({ to })
     }
   }
 
@@ -269,18 +274,6 @@ export class Controller<State extends Indexable = UnknownProps>
     return values
   }
 
-  /** Create a spring for every given key, and ensure they have `Animated` nodes. */
-  protected _setSprings(keys: any[], from?: object, to?: object) {
-    each(keys, key => {
-      if (!this._springs[key]) {
-        const spring = (this._springs[key] = new SpringValue())
-        spring.key = key
-        spring.addChild(this)
-        spring.setNodeWithProps({ from, to })
-      }
-    })
-  }
-
   /** Prepare an update with the given props. */
   protected _prepareUpdate(propsArg: ControllerProps<State>) {
     const props: PendingProps<State> = interpolateTo(propsArg) as any
@@ -295,7 +288,16 @@ export class Controller<State extends Indexable = UnknownProps>
 
     // Create our springs and give them values.
     if (from || to) {
-      this._setSprings(props.keys, from, to)
+      each(props.keys, key => {
+        if (!this._springs[key]) {
+          const spring = (this._springs[key] = new SpringValue(
+            this._initialProps
+          ))
+          spring.key = key
+          spring.addChild(this)
+          spring.setNodeWithProps({ from, to })
+        }
+      })
     }
 
     return props
