@@ -511,18 +511,55 @@ export class SpringValue<T = any> extends FrameValue<T> {
     timestamp: number,
     resolve: OnRest<T>
   ): void {
+    const { key, animation: anim } = this
+
     const defaultProps = this._defaultProps
-    const timestamps = this._timestamps
+    if (props.default) {
+      each(DEFAULT_PROPS, prop => {
+        // Default props can only be null, an object, or a function.
+        if (/function|object/.test(typeof props[prop])) {
+          defaultProps[prop] = props[prop] as any
+        }
+      })
+    }
+
+    /** The initial velocity before this `_update` call. */
+    const lastVelocity = anim.config ? anim.config.velocity : 0
+
+    // Ensure "anim.config" exists, using the "config" prop.
+    if (!anim.config || props.config) {
+      const config = {
+        ...callProp(defaultProps.config, key!),
+        // Avoid calling the "config" prop twice when "default" is true.
+        ...(!props.default && callProp(props.config, key!)),
+      }
+      // The "config" prop either overwrites or merges into the existing config.
+      if (!canMergeConfigs(config, anim.config)) {
+        anim.config = new AnimationConfig()
+      }
+      anim.config.merge(config)
+    }
+
+    // This instance might not have its Animated node yet. For example,
+    // the constructor can be given props without a "to" or "from" value.
+    const node = getAnimated(this)
+    if (!node) {
+      return
+    }
 
     /** Get the value of a prop, or its default value */
     const get = <K extends keyof DefaultProps>(prop: K) =>
       !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
-    /**
-     * Delayed `_update` calls perform diffing on certain props
-     * to know if they were updated during the delay. In that case,
-     * the prop is ignored, but other props may still apply.
-     */
+    const onAnimate = coerceEventProp(get('onAnimate'), key)
+    if (onAnimate) {
+      onAnimate(props, this)
+    }
+
+    // Any updates using the "delay" prop can have certain props ignored
+    // if a non-delayed update defines the same props. This is detected
+    // with timestamp diffing of the applicable props.
+    const timestamps = this._timestamps
     const diff = (prop: string) => {
       if (timestamp >= (timestamps[prop] || 0)) {
         timestamps[prop] = timestamp
@@ -531,13 +568,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       return false
     }
 
-    const { key, animation: anim } = this
     const { to: prevTo, from: prevFrom } = anim
-
-    const onAnimate = coerceEventProp(get('onAnimate'), key)
-    if (onAnimate) {
-      onAnimate(props as any, this)
-    }
 
     // The "reverse" prop only affects one update.
     if (props.reverse) [to, from] = [from, to]
@@ -572,38 +603,19 @@ export class SpringValue<T = any> extends FrameValue<T> {
       from = value
     }
 
-    /** The initial velocity before this `_update` call. */
-    const lastVelocity = anim.config ? anim.config.velocity : 0
-
-    // Ensure "anim.config" exists, and update it when "props.config" is
-    // truthy and when the "to" value changes.
-    if (!anim.config || props.config) {
-      const config = {
-        ...callProp(defaultProps.config, key!),
-        ...callProp(props.config, key!),
-      }
-      // The "config" prop either overwrites or merges into the existing config.
-      if (!canMergeConfigs(config, anim.config)) {
-        anim.config = new AnimationConfig()
-      }
-      anim.config.merge(config)
-    }
-
-    const { config } = anim
-
     /** When true, animation is imminent (assuming no interruptions). */
     let started =
       !!toConfig ||
       !!getFluidConfig(prevTo) ||
       ((changed || reset) && !isEqual(value, to))
 
-    // Animations with an explicit "velocity" are always started.
+    const { config } = anim
     if (!started && (config.decay || !is.und(to))) {
+      // Start the animation if its velocity is explicitly changed.
       started = !isEqual(config.velocity, lastVelocity)
     }
 
-    // Reset our internal `Animated` node if starting.
-    let node = getAnimated(this)!
+    // Ensure our Animated node is compatible with the "to" prop.
     let nodeType: AnimatedType
     if (changed) {
       nodeType = this._getNodeType(to!)
@@ -637,16 +649,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // Event props are replaced on every update.
     anim.onStart = coerceEventProp(get('onStart'), key)
     anim.onChange = coerceEventProp(get('onChange'), key)
-
-    // Update the default props.
-    if (props.default) {
-      each(DEFAULT_PROPS, prop => {
-        // Default props can only be null, an object, or a function.
-        if (/function|object/.test(typeof props[prop])) {
-          defaultProps[prop] = props[prop] as any
-        }
-      })
-    }
 
     if (!started) {
       return resolve({
