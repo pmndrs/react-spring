@@ -44,6 +44,12 @@ export const isAnimatedString = (value: unknown): value is string =>
 
 interface EachFn {
   <T = any, This = any>(
+    arr: readonly T[],
+    cb: (this: This, value: T, index: number) => void,
+    ctx?: This
+  ): void
+
+  <T = any, This = any>(
     obj: ReadonlySet<T> | readonly T[],
     cb: (this: This, value: T) => void,
     ctx?: This
@@ -52,12 +58,6 @@ interface EachFn {
   <P = any, T = any, This = any>(
     obj: ReadonlyMap<P, T>,
     cb: (this: This, value: T, key: P) => void,
-    ctx?: This
-  ): void
-
-  <T = any, This = any>(
-    arr: readonly T[],
-    cb: (this: This, value: T, index: number) => void,
     ctx?: This
   ): void
 
