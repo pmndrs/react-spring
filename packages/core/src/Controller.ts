@@ -25,13 +25,8 @@ import { interpolateTo } from './helpers'
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 
-const EVENT_NAMES = [
-  'onFrame',
-  'onStart',
-  'onRest',
-  'onChange',
-  'onAnimate',
-] as const
+/** Events batched by the `Controller` class */
+const BATCHED_EVENTS = ['onFrame', 'onStart', 'onRest'] as const
 
 /** A callback that receives the changed values for each frame. */
 export type OnFrame<State extends Indexable> = (
@@ -199,7 +194,7 @@ export class Controller<State extends Indexable = UnknownProps>
               props.onStart = onStart
               props.onRest = onRest
 
-              each(EVENT_NAMES, key => {
+              each(BATCHED_EVENTS, key => {
                 const value: any = props[key] || this.defaultProps[key]
                 if (value && props.default) {
                   this.defaultProps[key] = value
