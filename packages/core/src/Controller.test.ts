@@ -61,4 +61,34 @@ describe('Controller', () => {
       expect(await getAsyncFrames(ctrl)).toMatchSnapshot()
     })
   })
+
+  describe('when the "onStart" prop is defined', () => {
+    it('is called once per "start" call maximum', () => {
+      const ctrl = new Controller({ x: 0, y: 0 })
+
+      const onStart = jest.fn()
+      ctrl.start({
+        x: 1,
+        y: 1,
+        onStart,
+      })
+
+      advanceUntilIdle()
+      expect(onStart).toBeCalledTimes(1)
+    })
+
+    it('can be different per key', () => {
+      const ctrl = new Controller({ x: 0, y: 0 })
+
+      const onStart1 = jest.fn()
+      ctrl.start({ x: 1, onStart: onStart1 })
+
+      const onStart2 = jest.fn()
+      ctrl.start({ y: 1, onStart: onStart2 })
+
+      advanceUntilIdle()
+      expect(onStart1).toBeCalledTimes(1)
+      expect(onStart2).toBeCalledTimes(1)
+    })
+  })
 })
