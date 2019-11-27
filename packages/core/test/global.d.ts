@@ -1,12 +1,12 @@
 import { MockRaf } from 'mock-raf'
-import { Controller, SpringValue } from '..'
+import { Controller, SpringValue, FrameValue } from '..'
 
 declare global {
   let mockRaf: MockRaf
 
   let advanceUntil: (test: () => boolean) => void
   let advanceUntilIdle: () => void
-  let advanceUntilValue: <T>(spring: SpringValue<T>, value: T) => void
+  let advanceUntilValue: <T>(spring: FrameValue<T>, value: T) => void
 
   /** Collect all frames synchronously */
   let getFrames: {
