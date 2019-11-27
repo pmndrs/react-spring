@@ -36,22 +36,24 @@ describe('Controller', () => {
   describe('when the "to" prop is an async function', () => {
     it('acts strangely without the "from" prop', async () => {
       const ctrl = new Controller<{ x: number }>()
+
+      const { springs } = ctrl
       ctrl.start({
         to: async update => {
           // The spring does not exist yet!
-          expect(ctrl.get('x')).toBeUndefined()
+          expect(springs.x).toBeUndefined()
 
           // Any values passed here are treated as "from" values,
           // because no "from" prop was ever given.
           update({ x: 1 })
           // Now the spring exists!
-          expect(ctrl.get('x')).toBeDefined()
+          expect(springs.x).toBeDefined()
           // But the spring is idle!
-          expect(ctrl.get('x').idle).toBeTruthy()
+          expect(springs.x.idle).toBeTruthy()
 
           // This call *will* start an animation!
           update({ x: 2 })
-          expect(ctrl.get('x').idle).toBeFalsy()
+          expect(springs.x.idle).toBeFalsy()
         },
       })
 

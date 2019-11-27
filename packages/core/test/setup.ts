@@ -54,74 +54,33 @@ global.advanceUntilValue = (spring, value) => {
   })
 }
 
-global.getFrames = (arg: SpringValue | Controller) => {
-  const { frames, testIdle, reset } = getTestHelpers(arg)
-  // expect(spring.animation.values).not.toEqual([])
+global.getFrames = (ctrl: SpringValue | Controller) => {
+  const frames: any[] = []
 
   let steps = 0
-  while (!testIdle()) {
+  while (!ctrl.idle) {
     mockRaf.step()
+    frames.push(ctrl.get())
     if (++steps > 1e5) {
       throw Error('Infinite loop detected')
     }
   }
 
-  reset()
   return frames
 }
 
 global.getAsyncFrames = async ctrl => {
-  const { frames, testIdle, reset } = getTestHelpers(ctrl)
+  const frames: any[] = []
 
   let steps = 0
-  while (!testIdle()) {
+  while (!ctrl.idle) {
     mockRaf.step()
+    frames.push(ctrl.get())
     await Promise.resolve()
     if (++steps > 1e5) {
       throw Error('Infinite loop detected')
     }
   }
 
-  reset()
   return frames
-}
-
-function getTestHelpers(arg: Controller<any> | SpringValue<any>) {
-  const frames: any[] = []
-
-  const ctrl = arg instanceof Controller ? arg : null
-  if (ctrl) {
-    const { onFrame } = ctrl['_state']
-    ctrl['_state'].onFrame = (frame: any) => {
-      frames.push(frame)
-      if (onFrame) onFrame(frame)
-    }
-    return {
-      frames,
-      testIdle: () =>
-        !ctrl['_state'].promise &&
-        Object.values(ctrl.springs).every(spring => spring!.idle),
-      reset() {
-        ctrl['_state'].onFrame = onFrame
-      },
-    }
-  }
-
-  const spring = arg instanceof SpringValue ? arg : null
-  if (spring) {
-    const onChange = spring['_onChange']
-    spring['_onChange'] = (value, idle) => {
-      frames.push(value)
-      onChange.call(spring, value, idle)
-    }
-    return {
-      frames,
-      testIdle: () => spring.idle && !spring['_state'].promise,
-      reset() {
-        spring['_onChange'] = onChange
-      },
-    }
-  }
-
-  throw Error('Invalid argument')
 }
