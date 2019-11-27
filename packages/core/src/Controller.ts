@@ -6,7 +6,6 @@ import {
   UnknownProps,
   UnknownPartial,
   FluidProps,
-  NarrowValues,
 } from 'shared'
 import * as G from 'shared/globals'
 

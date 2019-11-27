@@ -35,11 +35,6 @@ export type KeyedPartial<K extends string | number, T> = {
   [P in K]?: T
 }
 
-/** Narrow the value type of each key/value pair in `T` to be assignable to the `Constraint` type. */
-export type NarrowValues<T, Constraint> = {
-  [P in keyof T]: Extract<T[P], Constraint>
-}
-
 /** Return the keys of `T` with values that are assignable to `U` */
 export type AssignableKeys<T, U> = T extends object
   ? U extends object
