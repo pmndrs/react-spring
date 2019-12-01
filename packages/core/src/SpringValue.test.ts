@@ -40,6 +40,22 @@ describe('SpringValue', () => {
 })
 
 function describeProps() {
+  describeToProp()
+  describeFromProp()
+  describeResetProp()
+  describeImmediateProp()
+  describeConfigProp()
+}
+
+function describeToProp() {
+  describe('when "to" prop is changed', () => {
+    it.todo('resolves the "start" promise with (finished: false)')
+    it.todo('avoids calling the "onStart" prop')
+    it.todo('avoids calling the "onRest" prop')
+  })
+}
+
+function describeFromProp() {
   describe('when "from" prop is changed', () => {
     describe('before the first animation', () => {
       it('updates the current value', () => {})
@@ -48,25 +64,21 @@ function describeProps() {
       it.todo('does nothing unless "reset" is true')
     })
   })
+}
 
-  describe('when "to" prop is changed', () => {
-    it.todo('resolves the "start" promise with (finished: false)')
-    it.todo('avoids calling the "onStart" prop')
-    it.todo('avoids calling the "onRest" prop')
-  })
-
+function describeResetProp() {
   describe('when "reset" prop is true', () => {
     it.todo('resolves the "start" promise with (finished: false)')
     it.todo('calls the "onRest" prop with (finished: false)')
   })
+}
 
+function describeImmediateProp() {
   describe('when "immediate" prop is true', () => {
     it.todo('still resolves the "start" promise')
     it.todo('never calls the "onStart" prop')
     it.todo('never calls the "onRest" prop')
   })
-
-  describeConfigProp()
 }
 
 function describeConfigProp() {
