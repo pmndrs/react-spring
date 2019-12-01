@@ -4,7 +4,7 @@ import { FrameValue } from './FrameValue'
 const frameLength = 1000 / 60
 
 describe('SpringValue', () => {
-  it('can animate from 0 to 1 with linear easing', () => {
+  it('can animate a number', async () => {
     const spring = new SpringValue(0)
     spring.start(1, {
       config: { duration: 10 * frameLength },
@@ -12,6 +12,44 @@ describe('SpringValue', () => {
     await advanceUntilIdle()
     const frames = getFrames(spring)
     expect(frames).toMatchSnapshot()
+  })
+
+  it('animates a number the same as a numeric string', async () => {
+    const spring1 = new SpringValue(0)
+    spring1.start(10)
+
+    await advanceUntilIdle()
+    const frames = getFrames(spring1).map(n => n + 'px')
+
+    const spring2 = new SpringValue('0px')
+    spring2.start('10px')
+
+    await advanceUntilIdle()
+    expect(frames).toEqual(getFrames(spring2))
+  })
+
+  it('can animate a string', async () => {
+    const spring = new SpringValue()
+    spring.start({
+      to: '10px 20px',
+      from: '0px 0px',
+      config: { duration: 10 * frameLength },
+    })
+    await advanceUntilIdle()
+    const frames = getFrames(spring)
+    expect(frames).toMatchSnapshot()
+  })
+
+  it('can animate an array of numbers', async () => {
+    const spring = new SpringValue()
+    spring.start({
+      to: [10, 20],
+      from: [0, 0],
+      config: { duration: 10 * frameLength },
+    })
+    await advanceUntilIdle()
+    const frames = getFrames(spring)
+    expect(frames).not.toEqual([])
   })
 
   describeProps()
