@@ -14,11 +14,15 @@ declare global {
     <T>(spring: SpringValue<T>, preserve?: boolean): T[]
   }
 
+  /** Count the number of bounces in a spring animation */
+  let countBounces: (spring: SpringValue<number>) => number
+
   const global: {
     mockRaf: typeof mockRaf
     advanceUntil: typeof advanceUntil
     advanceUntilIdle: typeof advanceUntilIdle
     advanceUntilValue: typeof advanceUntilValue
+    countBounces: typeof countBounces
     getFrames: typeof getFrames
   }
 }

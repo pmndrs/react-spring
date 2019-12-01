@@ -39,6 +39,19 @@ global.getFrames = (target: SpringValue | Controller, preserve?: boolean) => {
   return frames || []
 }
 
+global.countBounces = spring => {
+  const { to, from } = spring.animation
+  let prev = from
+  let count = 0
+  getFrames(spring, true).forEach(value => {
+    if (value !== to && value > to !== prev > to) {
+      count += 1
+    }
+    prev = value
+  })
+  return count
+}
+
 global.advanceUntil = async test => {
   let steps = 0
   while (!test()) {
