@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SpringValue can animate from 0 to 1 with linear easing 1`] = `
+exports[`SpringValue can animate a number 1`] = `
 Array [
   0.09999999999999999,
   0.19999999999999998,
@@ -15,3 +15,21 @@ Array [
   1,
 ]
 `;
+
+exports[`SpringValue can animate a string 1`] = `
+Array [
+  "0.9999999999999999px 1.9999999999999998px",
+  "1.9999999999999998px 3.9999999999999996px",
+  "3px 6px",
+  "3.9999999999999996px 7.999999999999999px",
+  "5px 10px",
+  "6px 12px",
+  "7.000000000000001px 14.000000000000002px",
+  "7.999999999999999px 15.999999999999998px",
+  "9px 18px",
+  "9.999999999999998px 19.999999999999996px",
+  "10px 20px",
+]
+`;
+
+exports[`SpringValue can animate an array of numbers 1`] = `Array []`;
