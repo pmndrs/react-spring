@@ -4,18 +4,15 @@ import { Controller, SpringValue, FrameValue } from '..'
 declare global {
   let mockRaf: MockRaf
 
-  let advanceUntil: (test: () => boolean) => void
-  let advanceUntilIdle: () => void
-  let advanceUntilValue: <T>(spring: FrameValue<T>, value: T) => void
+  let advanceUntil: (test: () => boolean) => Promise<void>
+  let advanceUntilIdle: () => Promise<void>
+  let advanceUntilValue: <T>(spring: FrameValue<T>, value: T) => Promise<void>
 
-  /** Collect all frames synchronously */
+  /** Take an array of values (one per animation frame) from internal test storage  */
   let getFrames: {
-    <T extends object>(ctrl: Controller<T>): T[]
-    <T>(spring: SpringValue<T>): T[]
+    <T extends object>(ctrl: Controller<T>, preserve?: boolean): T[]
+    <T>(spring: SpringValue<T>, preserve?: boolean): T[]
   }
-
-  /** Wait one microtask tick between frames */
-  let getAsyncFrames: <T extends object>(ctrl: Controller<T>) => Promise<T[]>
 
   const global: {
     mockRaf: typeof mockRaf
@@ -23,6 +20,5 @@ declare global {
     advanceUntilIdle: typeof advanceUntilIdle
     advanceUntilValue: typeof advanceUntilValue
     getFrames: typeof getFrames
-    getAsyncFrames: typeof getAsyncFrames
   }
 }
