@@ -99,6 +99,33 @@ function describeProps() {
     it.todo('never calls the "onStart" prop')
     it.todo('never calls the "onRest" prop')
   })
+
+  describeConfigProp()
+}
+
+function describeConfigProp() {
+  describe('the "config" prop', () => {
+    describe('when "damping" is 1.0', () => {
+      it('should prevent bouncing', async () => {
+        const spring = new SpringValue(0)
+        spring.start(1, {
+          config: { frequency: 1.5, damping: 1 },
+        })
+        await advanceUntilIdle()
+        expect(countBounces(spring)).toBe(0)
+      })
+    })
+    describe('when "damping" is less than 1.0', () => {
+      it('should bounce', async () => {
+        const spring = new SpringValue(0)
+        spring.start(1, {
+          config: { frequency: 1.5, damping: 1 },
+        })
+        await advanceUntilIdle()
+        expect(countBounces(spring)).toBeGreaterThan(0)
+      })
+    })
+  })
 }
 
 /** The minimum requirements for testing a dynamic target */
