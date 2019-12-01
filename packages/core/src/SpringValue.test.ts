@@ -14,31 +14,7 @@ describe('SpringValue', () => {
     expect(frames).toMatchSnapshot()
   })
 
-  describe('when "from" prop is changed', () => {
-    describe('before the first animation', () => {
-      it.todo('updates the current value')
-    })
-    describe('after the first animation', () => {
-      it.todo('does nothing unless "reset" is true')
-    })
-  })
-
-  describe('when "to" prop is changed', () => {
-    it.todo('resolves the "start" promise with (finished: false)')
-    it.todo('avoids calling the "onStart" prop')
-    it.todo('avoids calling the "onRest" prop')
-  })
-
-  describe('when "reset" prop is true', () => {
-    it.todo('resolves the "start" promise with (finished: false)')
-    it.todo('calls the "onRest" prop with (finished: false)')
-  })
-
-  describe('when "immediate" prop is true', () => {
-    it.todo('still resolves the "start" promise')
-    it.todo('never calls the "onStart" prop')
-    it.todo('never calls the "onRest" prop')
-  })
+  describeProps()
 
   describe('"set" method', () => {
     it('stops the active animation', async () => {
@@ -96,6 +72,34 @@ describe('SpringValue', () => {
     }
   })
 })
+
+function describeProps() {
+  describe('when "from" prop is changed', () => {
+    describe('before the first animation', () => {
+      it('updates the current value', () => {})
+    })
+    describe('after the first animation', () => {
+      it.todo('does nothing unless "reset" is true')
+    })
+  })
+
+  describe('when "to" prop is changed', () => {
+    it.todo('resolves the "start" promise with (finished: false)')
+    it.todo('avoids calling the "onStart" prop')
+    it.todo('avoids calling the "onRest" prop')
+  })
+
+  describe('when "reset" prop is true', () => {
+    it.todo('resolves the "start" promise with (finished: false)')
+    it.todo('calls the "onRest" prop with (finished: false)')
+  })
+
+  describe('when "immediate" prop is true', () => {
+    it.todo('still resolves the "start" promise')
+    it.todo('never calls the "onStart" prop')
+    it.todo('never calls the "onRest" prop')
+  })
+}
 
 /** The minimum requirements for testing a dynamic target */
 type OpaqueTarget = {
