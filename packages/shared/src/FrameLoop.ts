@@ -2,6 +2,8 @@ import { FrameRequestCallback } from './types'
 import { is } from './helpers'
 import * as G from './globals'
 
+declare const process: any
+
 export type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
 export interface OpaqueAnimation {
@@ -12,8 +14,6 @@ export interface OpaqueAnimation {
 
 /** Create a frameloop singleton */
 export class FrameLoop {
-  idle = true
-
   /**
    * Start a new animation, or reorder an active animation in
    * the animations array in response to a priority change.
@@ -39,10 +39,15 @@ export class FrameLoop {
    */
   onWrite: (cb: FrameRequestCallback) => void
 
+  // Exposed for testing.
+  protected _idle!: boolean
+  protected _animations!: OpaqueAnimation[]
+
   constructor(
     // The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
     requestFrame: RequestFrameFn = fn => (void 0, G.requestAnimationFrame)(fn)
   ) {
+    let idle = true
     let writing = false
 
     // The most recent framestamp
@@ -79,8 +84,8 @@ export class FrameLoop {
 
     // Start the frameloop
     const kickoff = () => {
-      if (this.idle) {
-        this.idle = false
+      if (idle) {
+        idle = false
         lastTime = G.performanceNow()
         requestFrame(update)
       }
@@ -88,7 +93,7 @@ export class FrameLoop {
 
     // Process the current frame
     const update = (this.update = time => {
-      if (this.idle) return
+      if (idle) return
       if (is.und(time)) {
         time = G.performanceNow()
       }
@@ -135,7 +140,7 @@ export class FrameLoop {
         })
 
         if (!animations.length) {
-          this.idle = true
+          idle = true
           return
         }
       }
@@ -164,6 +169,14 @@ export class FrameLoop {
     this.onWrite = cb => {
       if (writing) cb(lastTime)
       else writeQueue.add(cb)
+    }
+
+    // Expose internals for testing.
+    if (process.env.NODE_ENV !== 'production') {
+      Object.defineProperties(this, {
+        _idle: { get: () => idle },
+        _animations: { get: () => animations },
+      })
     }
   }
 }

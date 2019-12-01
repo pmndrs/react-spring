@@ -1,10 +1,11 @@
 import { Controller } from './Controller'
 
 describe('Controller', () => {
-  it('can animate a number', () => {
+  it('can animate a number', async () => {
     const ctrl = new Controller({ x: 0 })
     ctrl.start({ x: 100 })
 
+    await advanceUntilIdle()
     const frames = getFrames(ctrl)
     expect(frames).toMatchSnapshot()
 
@@ -15,11 +16,12 @@ describe('Controller', () => {
     expect(frames.slice(-1)[0]).toEqual({ x: 100 })
   })
 
-  it('can animate an array of numbers', () => {
+  it('can animate an array of numbers', async () => {
     const config = { precision: 0.005 }
     const ctrl = new Controller<{ x: [number, number] }>({ x: [1, 2], config })
     ctrl.start({ x: [5, 10] })
 
+    await advanceUntilIdle()
     const frames = getFrames(ctrl)
     expect(frames).toMatchSnapshot()
 
@@ -57,13 +59,15 @@ describe('Controller', () => {
         },
       })
 
+      await advanceUntilIdle()
+
       // Since we call `update` twice, frames are generated!
-      expect(await getAsyncFrames(ctrl)).toMatchSnapshot()
+      expect(getFrames(ctrl)).toMatchSnapshot()
     })
   })
 
   describe('when the "onStart" prop is defined', () => {
-    it('is called once per "start" call maximum', () => {
+    it('is called once per "start" call maximum', async () => {
       const ctrl = new Controller({ x: 0, y: 0 })
 
       const onStart = jest.fn()
@@ -73,11 +77,11 @@ describe('Controller', () => {
         onStart,
       })
 
-      advanceUntilIdle()
+      await advanceUntilIdle()
       expect(onStart).toBeCalledTimes(1)
     })
 
-    it('can be different per key', () => {
+    it('can be different per key', async () => {
       const ctrl = new Controller({ x: 0, y: 0 })
 
       const onStart1 = jest.fn()
@@ -86,7 +90,7 @@ describe('Controller', () => {
       const onStart2 = jest.fn()
       ctrl.start({ y: 1, onStart: onStart2 })
 
-      advanceUntilIdle()
+      await advanceUntilIdle()
       expect(onStart1).toBeCalledTimes(1)
       expect(onStart2).toBeCalledTimes(1)
     })

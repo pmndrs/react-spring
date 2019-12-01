@@ -4,7 +4,11 @@ import { isEqual, is, FrameLoop } from 'shared'
 import { Globals, SpringValue, Controller } from '..'
 import { computeGoal } from '../src/helpers'
 
+let frameCache: WeakMap<any, any[]>
+
 beforeEach(() => {
+  frameCache = new WeakMap()
+
   global.mockRaf = createMockRaf()
   Globals.assign({
     now: mockRaf.now,
@@ -15,10 +19,45 @@ beforeEach(() => {
   })
 })
 
-global.advanceUntil = test => {
+global.getFrames = (target: SpringValue | Controller, preserve?: boolean) => {
+  let frames = frameCache.get(target)!
+  if (!preserve) {
+    frameCache.delete(target)
+  }
+  if (!frames && target instanceof Controller) {
+    frames = []
+    target.each(spring => {
+      getFrames(spring, preserve).forEach((value, i) => {
+        const frame = frames[i] || (frames[i] = {})
+        frame[spring.key!] = value
+      })
+    })
+    if (preserve) {
+      frameCache.set(target, frames)
+    }
+  }
+  return frames || []
+}
+
+global.advanceUntil = async test => {
   let steps = 0
   while (!test()) {
+    // Clone the animation array before stepping, because idle animations
+    // will be removed before "mockRaf.step" returns.
+    const animations = Array.from(
+      Globals.frameLoop['_animations']
+    ) as SpringValue[]
+
     mockRaf.step()
+    animations.forEach(animation => {
+      let frames = frameCache.get(animation)
+      if (!frames) {
+        frameCache.set(animation, (frames = []))
+      }
+      frames.push(animation.get())
+    })
+
+    await Promise.resolve()
     if (++steps > 5e4) {
       throw Error('Infinite loop detected')
     }
@@ -26,7 +65,7 @@ global.advanceUntil = test => {
 }
 
 global.advanceUntilIdle = () => {
-  advanceUntil(() => Globals.frameLoop.idle)
+  return advanceUntil(() => Globals.frameLoop['_idle'])
 }
 
 // TODO: support "value" as an array or animatable string
@@ -34,7 +73,7 @@ global.advanceUntilValue = (spring, value) => {
   const goal = computeGoal(value)
 
   let lastValue: any
-  advanceUntil(() => {
+  return advanceUntil(() => {
     const value = spring.get()
     expect(value).not.toBe(lastValue)
 
@@ -52,35 +91,4 @@ global.advanceUntilValue = (spring, value) => {
     lastValue = value
     return stop
   })
-}
-
-global.getFrames = (ctrl: SpringValue | Controller) => {
-  const frames: any[] = []
-
-  let steps = 0
-  while (!ctrl.idle) {
-    mockRaf.step()
-    frames.push(ctrl.get())
-    if (++steps > 1e5) {
-      throw Error('Infinite loop detected')
-    }
-  }
-
-  return frames
-}
-
-global.getAsyncFrames = async ctrl => {
-  const frames: any[] = []
-
-  let steps = 0
-  while (!ctrl.idle) {
-    mockRaf.step()
-    frames.push(ctrl.get())
-    await Promise.resolve()
-    if (++steps > 1e5) {
-      throw Error('Infinite loop detected')
-    }
-  }
-
-  return frames
 }
