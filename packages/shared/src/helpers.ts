@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Indexable, Arrify } from './types'
 import * as G from './globals'
 
@@ -82,7 +82,19 @@ export const toArray = <T>(a: T): Arrify<Exclude<T, void>> =>
 
 export const useOnce = (effect: React.EffectCallback) => useEffect(effect, [])
 
-export const useForceUpdate = () => useReducer(() => ({}), 0)[1] as () => void
+/** Return a function that re-renders this component, if still mounted */
+export const useForceUpdate = () => {
+  const update = useState<any>(0)[1]
+  const unmounted = useRef(false)
+  useOnce(() => () => {
+    unmounted.current = true
+  })
+  return () => {
+    if (!unmounted.current) {
+      update({})
+    }
+  }
+}
 
 /** Use a value from the previous render */
 export function usePrev<T>(value: T): T | undefined {
