@@ -12,6 +12,17 @@ const defaultConfig = constants.config.default
 /** Accelerate until halfway, then decelerate */
 const linear = (t: number) => t
 
+// Merge configs only when this returns true.
+const canMergeConfigs = (
+  src: Partial<AnimationConfig>,
+  dest: AnimationConfig | undefined
+) =>
+  !!dest &&
+  is.und(src.decay) == is.und(dest.decay) &&
+  is.und(src.duration) == is.und(dest.duration) &&
+  is.und(src.damping) == is.und(dest.damping) &&
+  is.und(src.frequency) == is.und(dest.frequency)
+
 /** An animation being executed by the frameloop */
 export class Animation<T = any> {
   changed = false
@@ -26,6 +37,26 @@ export class Animation<T = any> {
   onStart?: OnStart<T> = none
   onChange?: OnChange<T> = none
   onRest?: Array<OnRest<T>> = none
+
+  /**
+   * Partially overwrite the existing config.
+   */
+  mergeConfig(props: Partial<AnimationConfig>) {
+    let { config } = this
+    if (!canMergeConfigs(props, config)) {
+      this.config = config = new AnimationConfig()
+    }
+
+    Object.assign(config, props)
+
+    const { mass, frequency, damping } = config
+    if (!is.und(frequency)) {
+      const guardedFrequency = frequency <= 0 ? 0.01 : frequency
+      const guardedDamping = damping < 0 ? 0 : damping
+      config.tension = Math.pow((2 * Math.PI) / guardedFrequency, 2) * mass
+      config.friction = (4 * Math.PI * guardedDamping * mass) / guardedFrequency
+    }
+  }
 }
 
 export class AnimationConfig {
@@ -152,30 +183,4 @@ export class AnimationConfig {
    * passed to the `set` method of an animated value.
    */
   round?: number = none
-
-  /* might be reintroduced later */
-  /**
-   * @internal
-   * The angular frequency in rad/ms
-   */
-  // w0 = 0
-
-  /**
-   * Partially overwrite the existing config.
-   */
-  merge(config: Partial<AnimationConfig>) {
-    const { mass, frequency, damping } = Object.assign(this, config)
-
-    // Derive "tension" and "friction" from "frequency" and "damping".
-    if (!is.und(frequency)) {
-      const guardedFrequency = frequency <= 0 ? 0.01 : frequency
-      const guardedDamping = damping < 0 ? 0 : damping
-      this.tension = Math.pow((2 * Math.PI) / guardedFrequency, 2) * mass
-      this.friction = (4 * Math.PI * guardedDamping * mass) / guardedFrequency
-    }
-
-    /* might be reintroduced later */
-    // Cache the angular frequency in rad/ms
-    // this.w0 = Math.sqrt(this.tension / mass) / 1000
-  }
 }
