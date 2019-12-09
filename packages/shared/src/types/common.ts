@@ -58,7 +58,7 @@ export type ObjectType<T> = T extends {} ? T : {}
 /** Intersected with other object types to allow for unknown properties */
 export type UnknownProps = Indexable<unknown>
 
-export type UnknownPartial<T> = UnknownProps & Partial<T>
+export type UnknownPartial<T = {}> = UnknownProps & Partial<T>
 
 /** Extract string keys from an object type */
 export type StringKeys<T> = T extends object ? Extract<keyof T, string> : string
