@@ -201,7 +201,7 @@ export class Controller<State extends Indexable = UnknownProps>
             if (asyncTo) {
               props.onRest = undefined
               resolve(
-                runAsync<State>(
+                runAsync<any>(
                   asyncTo,
                   props,
                   state,
