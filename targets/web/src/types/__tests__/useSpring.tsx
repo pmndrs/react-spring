@@ -241,10 +241,10 @@ test('array as "to" prop', () => {
   });
 });
 
-test('with "onAnimate" prop', () => {
+test('with "onProps" prop', () => {
   useSpring({
     width: 0,
-    onAnimate(props, spring) {
+    onProps(props, spring) {
       assert(props, _ as RunAsyncProps<unknown>);
       assert(spring, _ as SpringValue<unknown>);
     },
