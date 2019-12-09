@@ -22,7 +22,7 @@ import * as G from 'shared/globals'
 
 import { Indexable } from './types/common'
 import { SpringUpdate } from './types/spring'
-import { Animation, AnimationConfig } from './Animation'
+import { Animation } from './Animation'
 import {
   AnimationRange,
   AnimationResult,
@@ -528,18 +528,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
     /** The initial velocity before this `_update` call. */
     const lastVelocity = anim.config ? anim.config.velocity : 0
 
-    // Ensure "anim.config" exists, using the "config" prop.
-    if (!anim.config || props.config) {
-      const config = {
-        ...callProp(defaultProps.config, key!),
-        // Avoid calling the "config" prop twice when "default" is true.
-        ...(!props.default && callProp(props.config, key!)),
-      }
-      // The "config" prop either overwrites or merges into the existing config.
-      if (!canMergeConfigs(config, anim.config)) {
-        anim.config = new AnimationConfig()
-      }
-      anim.config.merge(config)
+    if (props.config) {
+      // Avoid calling the "config" prop twice when "default" is true.
+      const newConfig = !props.default && callProp(props.config, key!)
+      const defaultConfig = callProp(defaultProps.config, key!)
+      anim.mergeConfig({ ...defaultConfig, ...newConfig })
     }
 
     // This instance might not have its Animated node yet. For example,
@@ -836,19 +829,6 @@ function checkDisposed(spring: SpringValue, name: string) {
       `Cannot call "${name}" of disposed "${spring.constructor.name}" object`
     )
   }
-}
-
-// Merge configs when the existence of "decay" or "duration" has not changed.
-function canMergeConfigs(
-  src: Partial<AnimationConfig>,
-  dest: AnimationConfig | undefined
-) {
-  return (
-    !!dest &&
-    is.und(src.decay) == is.und(dest.decay) &&
-    is.und(src.duration) == is.und(dest.duration) &&
-    is.und(src.frequency) == is.und(dest.frequency)
-  )
 }
 
 /** Coerce an event prop to an event handler */
