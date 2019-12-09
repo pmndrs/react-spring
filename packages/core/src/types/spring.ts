@@ -111,13 +111,13 @@ export type SpringUpdate<T = any> = AnimationProps & RangeProps<T>
  */
 export type AsyncUpdate<T = any, P extends string = string> =
   | SpringTo<T, P>
-  | SpringUpdate<T> &
+  | (SpringUpdate<T> &
       AnimationEvents &
       (T extends object
         ? T extends ReadonlyArray<any>
           ? unknown
           : UnknownProps
-        : unknown)
+        : unknown))
 
 export type SpringTo<T = any, P extends string = string> = unknown &
   ([T] extends [Animatable] ? T | FluidValue<T> | AsyncTo<T, P> : never)
@@ -169,9 +169,9 @@ export interface AsyncUpdateFn<T> {
  */
 export type SpringStopFn<T> = T extends object
   ? T extends ReadonlyArray<number | string>
-    ? (() => void)
-    : ((keys?: OneOrMore<string>) => void)
-  : (() => void)
+    ? () => void
+    : (keys?: OneOrMore<string>) => void
+  : () => void
 
 /**
  * Update the props of each spring, individually or all at once.
