@@ -78,7 +78,7 @@ export type TransitionValues<Props extends object> = unknown &
           Props[TransitionPhase & keyof Props] extends infer T
             ? T extends ReadonlyArray<infer Element>
               ? Element
-              : T extends ((...args: any[]) => infer Return)
+              : T extends (...args: any[]) => infer Return
               ? Return extends ReadonlyArray<infer ReturnElement>
                 ? ReturnElement
                 : Return

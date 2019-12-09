@@ -54,7 +54,7 @@ export interface EventProps<State extends Indexable> {
    *
    * Also accepts an object for per-key events
    */
-  onChange?: ((frame: State & UnknownProps) => void) | Indexable<OnChange>
+  onChange?: ((values: UnknownPartial<State>) => void) | Indexable<OnChange>
 }
 
 export type ControllerProps<State extends Indexable = Indexable> = unknown &
