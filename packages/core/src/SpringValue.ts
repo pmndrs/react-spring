@@ -369,7 +369,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       this.queue = []
     }
 
-    const results = await Promise.all(queue.map(props => this._animate(props)))
+    const results = await Promise.all(queue.map(props => this._update(props)))
     return {
       value: this.get(),
       finished: results.every(result => result.finished),
@@ -391,7 +391,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Restart the animation. */
   reset() {
-    this._animate({ reset: true })
+    this._update({ reset: true })
   }
 
   /** Prevent future animations, and stop the current animation */
@@ -469,7 +469,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /** Schedule an animation to run after an optional delay */
-  protected _animate(props: PendingProps<T>): AsyncResult<T> {
+  protected _update(props: PendingProps<T>): AsyncResult<T> {
     // Ensure the initial value can be accessed by animated components.
     const range = this.setNodeWithProps(props)
 
@@ -500,14 +500,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
             cancelled: true,
           })
         } else {
-          this._update(range, props, timestamp, resolve)
+          this._merge(range, props, timestamp, resolve)
         }
       },
     })
   }
 
-  /** Update the current animation */
-  protected _update(
+  /** Merge props into the current animation */
+  protected _merge(
     { to, from }: AnimationRange<T>,
     props: RunAsyncProps<T>,
     timestamp: number,
