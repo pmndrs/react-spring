@@ -546,11 +546,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const get = <K extends keyof DefaultProps>(prop: K) =>
       !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
-    const onAnimate = coerceEventProp(get('onAnimate'), key)
-    if (onAnimate) {
-      onAnimate(props, this)
-    }
-
     // Any updates using the "delay" prop can have certain props ignored
     // if a non-delayed update defines the same props. This is detected
     // with timestamp diffing of the applicable props.
@@ -641,9 +636,23 @@ export class SpringValue<T = any> extends FrameValue<T> {
       node.setValue((value = from as T))
     }
 
+    if (started) {
+      anim.values = node.getPayload()
+      anim.toValues = toConfig ? null : toArray(goal)
+      anim.immediate =
+        // Sometimes the value is not animatable.
+        !(toConfig || is.num(goal) || is.arr(goal)) ||
+        !!matchProp(get('immediate'), key)
+    }
+
     // Event props are replaced on every update.
     anim.onStart = coerceEventProp(get('onStart'), key)
     anim.onChange = coerceEventProp(get('onChange'), key)
+
+    const onProps = coerceEventProp(get('onProps'), key)
+    if (onProps) {
+      onProps(props, this)
+    }
 
     if (!started) {
       return resolve({
@@ -652,13 +661,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
         spring: this,
       })
     }
-
-    anim.values = node.getPayload()
-    anim.toValues = toConfig ? null : toArray(goal)
-    anim.immediate =
-      // Sometimes the value is not animatable.
-      !(toConfig || is.num(goal) || is.arr(goal)) ||
-      !!matchProp(get('immediate'), key)
 
     const onRestQueue = anim.onRest || []
     const onRest = coerceEventProp(

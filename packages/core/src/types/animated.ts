@@ -14,9 +14,12 @@ export type AnimationRange<T> = {
   from: T | FluidValue<T> | undefined
 }
 
-/** Called before the given props are applied */
-export type OnAnimate<T = unknown> = (
-  props: RunAsyncProps<T>,
+/**
+ * Called after an animation is updated by new props,
+ * even if the animation remains idle.
+ */
+export type OnProps<T = unknown> = (
+  props: Readonly<RunAsyncProps<T>>,
   spring: SpringValue<T>
 ) => void
 
@@ -82,9 +85,10 @@ export type EventProp<T> = T | Indexable<T>
  */
 export type AnimationEvents<T = unknown> = {
   /**
-   * Called when a controller is told to animate
+   * Called after an animation is updated by new props,
+   * even if the animation remains idle.
    */
-  onAnimate?: EventProp<OnAnimate<T>>
+  onProps?: EventProp<OnProps<T>>
   /**
    * Called when an animation moves for the first time
    */

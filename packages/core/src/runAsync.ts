@@ -9,7 +9,7 @@ import {
 } from './types/spring'
 import { AnimationResult } from './types/animated'
 import { matchProp, DEFAULT_PROPS } from './helpers'
-import { PendingProps, SpringValue } from './SpringValue'
+import { PendingProps } from './SpringValue'
 
 export type AsyncResult<T = any> = Promise<Readonly<AnimationResult<T>>>
 
@@ -20,7 +20,6 @@ export type RunAsyncProps<T = any> = unknown &
       asyncId: number
       cancel: boolean
       reset: boolean
-      onAnimate?: (props: RunAsyncProps<T>, spring: SpringValue<T>) => void
     }
   >
 

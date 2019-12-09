@@ -11,7 +11,7 @@ import * as G from 'shared/globals'
 
 import { SpringUpdate, SpringValues } from './types/spring'
 import {
-  OnAnimate,
+  OnProps,
   OnRest,
   OnStart,
   OnChange,
@@ -42,11 +42,12 @@ export interface EventProps<State extends Indexable> {
    */
   onRest?: OnRest<State> | Indexable<OnRest>
   /**
-   * Called whenever an animation gets new props
+   * Called after an animation is updated by new props.
+   * Useful for manipulation
    *
    * Also accepts an object for per-key events
    */
-  onAnimate?: OnAnimate | Indexable<OnAnimate>
+  onProps?: OnProps | Indexable<OnProps>
   /**
    * Called once per frame when animations are active
    *
