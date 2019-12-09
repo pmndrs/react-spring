@@ -23,7 +23,10 @@ export type OnProps<T = unknown> = (
   spring: SpringValue<T>
 ) => void
 
-/** Called before the animation is added to the frameloop */
+/**
+ * Called before the first frame of every animation.
+ * From inside the `requestAnimationFrame` callback.
+ */
 export type OnStart<T = unknown> = (spring: SpringValue<T>) => void
 
 /** Called when a `SpringValue` changes */
@@ -90,15 +93,15 @@ export type AnimationEvents<T = unknown> = {
    */
   onProps?: EventProp<OnProps<T>>
   /**
-   * Called when an animation moves for the first time
+   * Called when an animation moves for the first time.
    */
   onStart?: EventProp<OnStart<T>>
   /**
-   * Called when all animations come to a stand-still
+   * Called when all animations come to a stand-still.
    */
   onRest?: EventProp<OnRest<T>>
   /**
-   * Called when a key/value pair is changed
+   * Called when a spring has its value changed.
    */
   onChange?: EventProp<OnChange<T>>
 }
