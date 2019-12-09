@@ -9,13 +9,14 @@ import {
 } from 'shared'
 import * as G from 'shared/globals'
 
-import { SpringUpdate, SpringValues } from './types/spring'
+import { SpringValues, RangeProps } from './types/spring'
 import {
   OnProps,
   OnRest,
   OnStart,
   OnChange,
   AnimationResult,
+  AnimationProps,
 } from './types/animated'
 import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
@@ -57,8 +58,9 @@ export interface EventProps<State extends Indexable> {
 }
 
 export type ControllerProps<State extends Indexable = Indexable> = unknown &
-  EventProps<State> &
-  SpringUpdate<State> &
+  RangeProps<FluidProps<State>> &
+  EventProps<UnknownPartial<State>> &
+  AnimationProps &
   UnknownPartial<FluidProps<State>>
 
 /** An update that hasn't been applied yet */
