@@ -6,6 +6,7 @@ import {
   toArray,
   FluidValue,
   getFluidConfig,
+  getFluidValue,
   isAnimatedString,
   Animatable,
 } from 'shared'
@@ -99,6 +100,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   get idle() {
     return !this.is(ACTIVE) && !this._state.promise
+  }
+
+  get goal() {
+    return getFluidValue(this.animation.to)
   }
 
   get velocity() {
