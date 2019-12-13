@@ -195,7 +195,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
             (from == to ? 0.005 : Math.min(1, Math.abs(to - from) * 0.001))
 
           /** The velocity at which movement is essentially none */
-          const restVelocity = config.restVelocity || precision
+          const restVelocity = config.restVelocity || precision / 10
 
           // Bouncing is opt-in (not to be confused with overshooting)
           const bounceFactor = config.clamp ? 0 : config.bounce!
