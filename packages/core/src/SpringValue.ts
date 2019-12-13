@@ -68,7 +68,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   key?: string
 
   /** The animation state */
-  animation = new Animation()
+  animation = new Animation<T>()
 
   /** The queue of pending props */
   queue?: PendingProps<T>[]
