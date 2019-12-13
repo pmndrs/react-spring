@@ -531,13 +531,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const lastVelocity = anim.config.velocity
 
     if (props.config) {
-      // Avoid calling the "config" prop twice when "default" is true.
-      const config = callProp(props.config, key!)
-      const defaultConfig = props.default
-        ? undefined
-        : callProp(defaultProps.config, key!)
-
-      anim.config = mergeConfig(anim.config, config, defaultConfig)
+      mergeConfig(
+        anim.config,
+        callProp(props.config, key!),
+        // Avoid calling the "config" prop twice when "default" is true.
+        props.default ? undefined : callProp(defaultProps.config, key!)
+      )
     }
 
     // This instance might not have its Animated node yet. For example,
