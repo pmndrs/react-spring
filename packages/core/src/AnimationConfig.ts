@@ -130,51 +130,19 @@ export class AnimationConfig {
   round?: number
 }
 
-const isMassConfig = (config: Partial<AnimationConfig>) =>
-  !is.und(config.mass) ||
-  !is.und(config.tension) ||
-  !is.und(config.friction) ||
-  !is.und(config.frequency) ||
-  !is.und(config.damping)
-
-const canMergeConfig = (
-  config: Partial<AnimationConfig>,
-  props: Partial<AnimationConfig>
-) =>
-  !is.und(config.duration)
-    ? is.und(props.decay) && !isMassConfig(props)
-    : is.und(props.duration) &&
-      (is.und(config.decay) ? is.und(props.decay) : !isMassConfig(props))
-
 export function mergeConfig(
   config: AnimationConfig,
   newConfig: Partial<AnimationConfig>,
   defaultConfig?: Partial<AnimationConfig>
 ) {
-  if (!canMergeConfig(config, newConfig)) {
-    config = new AnimationConfig()
-  }
-
   if (defaultConfig) {
-    if (!canMergeConfig(defaultConfig, newConfig)) {
-      const {
-        mass,
-        tension,
-        friction,
-        decay,
-        duration,
-        frequency,
-        damping,
-        ...restConfig
-      } = defaultConfig
-
-      defaultConfig = restConfig
-    }
-
-    Object.assign(config, defaultConfig, newConfig)
-  } else {
-    Object.assign(config, newConfig)
+    defaultConfig = { ...defaultConfig }
+    sanitizeConfig(defaultConfig, newConfig)
+    newConfig = { ...defaultConfig, ...newConfig }
   }
+
+  sanitizeConfig(config, newConfig)
+  Object.assign(config, newConfig)
 
   let { mass, frequency, damping } = config
   if (!is.und(frequency)) {
@@ -185,4 +153,29 @@ export function mergeConfig(
   }
 
   return config
+}
+
+// Prevent a config from accidentally overriding new props.
+// This depends on which "config" props take precedence when defined.
+function sanitizeConfig(
+  config: Partial<AnimationConfig>,
+  props: Partial<AnimationConfig>
+) {
+  if (!is.und(props.decay)) {
+    config.duration = undefined
+  } else {
+    const isTensionConfig = !is.und(props.tension) || !is.und(props.friction)
+    if (
+      isTensionConfig ||
+      !is.und(props.frequency) ||
+      !is.und(props.damping) ||
+      !is.und(props.mass)
+    ) {
+      config.duration = undefined
+      config.decay = undefined
+    }
+    if (isTensionConfig) {
+      config.frequency = undefined
+    }
+  }
 }
