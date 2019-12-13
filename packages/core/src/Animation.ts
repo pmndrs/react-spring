@@ -3,8 +3,6 @@ import { FluidValue, is } from 'shared'
 import * as constants from './constants'
 import { OnRest, OnStart, OnChange } from './types/animated'
 
-const none: any = undefined
-
 const emptyArray: readonly any[] = []
 
 const defaultConfig = constants.config.default
@@ -27,16 +25,17 @@ const canMergeConfigs = (
 export class Animation<T = any> {
   changed = false
   values: readonly AnimatedValue[] = emptyArray
-  to: T | FluidValue<T> = none
   toValues: readonly number[] | null = null
-  from: T | FluidValue<T> = none
   fromValues: readonly number[] = emptyArray
+
+  to!: T | FluidValue<T>
+  from!: T | FluidValue<T>
   config = new AnimationConfig()
   reverse = false
   immediate = false
-  onStart?: OnStart<T> = none
-  onChange?: OnChange<T> = none
-  onRest?: Array<OnRest<T>> = none
+  onStart?: OnStart<T>
+  onChange?: OnChange<T>
+  onRest?: Array<OnRest<T>>
 
   /**
    * Partially overwrite the existing config.
@@ -83,7 +82,7 @@ export class AnimationConfig {
    * When defined, `tension` is derived from this, and `friction` is derived
    * from `tension` and `damping`.
    */
-  frequency?: number = none
+  frequency?: number
 
   /**
    * The damping ratio, which dictates how the spring slows down.
@@ -114,7 +113,7 @@ export class AnimationConfig {
    *
    * When undefined, `precision` is used instead.
    */
-  restVelocity?: number = none
+  restVelocity?: number
 
   /**
    * The smallest distance from a value before that distance is essentially zero.
@@ -123,7 +122,7 @@ export class AnimationConfig {
    * this distance from its final value, and its velocity must be lower than this
    * value too (unless `restVelocity` is defined).
    */
-  precision?: number = none
+  precision?: number
 
   /**
    * For `duration` animations only. Note: The `duration` is not affected
@@ -137,12 +136,12 @@ export class AnimationConfig {
    *
    * Any number `>= 0` and `<= 1` makes sense here.
    */
-  progress?: number = none
+  progress?: number
 
   /**
    * Animation length in number of milliseconds.
    */
-  duration?: number = none
+  duration?: number
 
   /**
    * The animation curve. Only used when `duration` is defined.
@@ -163,7 +162,7 @@ export class AnimationConfig {
    * setting `bounce` to `0.5` chops the velocity in half on each bounce,
    * in addition to any friction.
    */
-  bounce?: number = none
+  bounce?: number
 
   /**
    * "Decay animations" decelerate without an explicit goal value.
@@ -175,12 +174,12 @@ export class AnimationConfig {
    * animation slow down faster. And setting to `1` would make an unending
    * animation.
    */
-  decay?: boolean | number = none
+  decay?: boolean | number
 
   /**
    * While animating, round to the nearest multiple of this number.
    * The `from` and `to` values are never rounded, as well as any value
    * passed to the `set` method of an animated value.
    */
-  round?: number = none
+  round?: number
 }
