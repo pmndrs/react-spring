@@ -130,14 +130,21 @@ export class AnimationConfig {
   round?: number
 }
 
-// Merge configs only when this returns true.
+const isMassConfig = (config: Partial<AnimationConfig>) =>
+  !is.und(config.mass) ||
+  !is.und(config.tension) ||
+  !is.und(config.friction) ||
+  !is.und(config.frequency) ||
+  !is.und(config.damping)
+
 const canMergeConfig = (
   config: Partial<AnimationConfig>,
   props: Partial<AnimationConfig>
 ) =>
-  is.und(config.decay) == is.und(props.decay) &&
-  is.und(config.duration) == is.und(props.duration) &&
-  is.und(config.frequency) == (is.und(props.frequency) && is.und(props.damping))
+  !is.und(config.duration)
+    ? is.und(props.decay) && !isMassConfig(props)
+    : is.und(props.duration) &&
+      (is.und(config.decay) ? is.und(props.decay) : !isMassConfig(props))
 
 export function mergeConfig(
   config: AnimationConfig,
