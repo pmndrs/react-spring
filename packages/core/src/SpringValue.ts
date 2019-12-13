@@ -120,9 +120,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
     let changed = false
 
     const anim = this.animation
-    const payload = getPayload(anim.to)
+    let { config, toValues } = anim
 
-    let { toValues } = anim
+    const payload = getPayload(anim.to)
     if (!payload) {
       const toConfig = getFluidConfig(anim.to)
       if (toConfig) {
@@ -136,134 +136,130 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // The "anim.toValues" array must exist when no parent exists.
       let to = payload ? payload[i].lastPosition : toValues![i]
 
+      let finished = anim.immediate
+      let position = to
+
+      if (!finished) {
+        position = node.lastPosition
+
+        // Loose springs never move.
+        if (config.tension <= 0) {
+          node.done = true
+          return
+        }
+
+        const elapsed = (node.elapsedTime += dt)
+        const from = anim.fromValues[i]
+
+        const v0 =
+          node.v0 != null
+            ? node.v0
+            : (node.v0 = is.arr(config.velocity)
+                ? config.velocity[i]
+                : config.velocity)
+
+        let velocity: number
+
+        // Duration easing
+        if (!is.und(config.duration)) {
+          let p = config.progress || 0
+          if (config.duration <= 0) p = 1
+          else p += (1 - p) * Math.min(1, elapsed / config.duration)
+
+          position = from + config.easing(p) * (to - from)
+          velocity = (position - node.lastPosition) / dt
+
+          finished = p == 1
+        }
+
+        // Decay easing
+        else if (config.decay) {
+          const decay = config.decay === true ? 0.998 : config.decay
+          const e = Math.exp(-(1 - decay) * elapsed)
+
+          position = from + (v0 / (1 - decay)) * (1 - e)
+          // derivative of position
+          velocity = v0 * e
+
+          finished = Math.abs(node.lastPosition - position) < 0.1
+          if (finished) to = position
+        }
+
+        // Spring easing
+        else {
+          velocity = node.lastVelocity == null ? v0 : node.lastVelocity
+
+          /** The smallest distance from a value before being treated like said value. */
+          const precision =
+            config.precision ||
+            (from == to ? 0.005 : Math.min(1, Math.abs(to - from) * 0.001))
+
+          /** The velocity at which movement is essentially none */
+          const restVelocity = config.restVelocity || precision
+
+          // Bouncing is opt-in (not to be confused with overshooting)
+          const bounceFactor = config.clamp ? 0 : config.bounce!
+          const canBounce = !is.und(bounceFactor)
+
+          /** When `true`, the value is increasing over time */
+          const isGrowing = from == to ? node.v0 > 0 : from < to
+
+          /** When `true`, the velocity is considered moving */
+          let isMoving!: boolean
+
+          /** When `true`, the velocity is being deflected or clamped */
+          let isBouncing = false
+
+          const step = 1 // 1ms
+          const numSteps = Math.ceil(dt / step)
+          for (let n = 0; n < numSteps; ++n) {
+            isMoving = Math.abs(velocity) > restVelocity
+
+            if (!isMoving) {
+              finished = Math.abs(to - position) <= precision
+              if (finished) {
+                break
+              }
+            }
+
+            if (canBounce) {
+              isBouncing = position == to || position > to == isGrowing
+
+              // Invert the velocity with a magnitude, or clamp it.
+              if (isBouncing) {
+                velocity = -velocity * bounceFactor
+                position = to
+              }
+            }
+
+            const springForce = -config.tension * 0.000001 * (position - to)
+            const dampingForce = -config.friction * 0.001 * velocity
+            const acceleration = (springForce + dampingForce) / config.mass // pt/ms^2
+
+            velocity = velocity + acceleration * step // pt/ms
+            position = position + velocity * step
+          }
+        }
+
+        node.lastVelocity = velocity
+
+        if (Number.isNaN(position)) {
+          console.warn(`Got NaN while animating:`, this)
+          finished = true
+        }
+      }
+
       // Parent springs must finish before their children can.
-      const canFinish = !payload || payload[i].done
-
-      // Jump to end value for immediate animations.
-      if (anim.immediate) {
-        node.done = canFinish || (idle = false)
-        if (node.setValue(to)) {
-          changed = true
-        }
-        return
+      if (payload && !payload[i].done) {
+        finished = false
       }
 
-      const { config } = anim
-
-      // Loose springs never move.
-      if (config.tension == 0) {
-        node.done = true
-        return
-      }
-
-      const elapsed = (node.elapsedTime += dt)
-      const from = anim.fromValues[i]
-
-      const v0 =
-        node.v0 != null
-          ? node.v0
-          : (node.v0 = is.arr(config.velocity)
-              ? config.velocity[i]
-              : config.velocity)
-
-      let position = node.lastPosition
-      let velocity: number
-      let finished!: boolean
-
-      // Duration easing
-      if (!is.und(config.duration)) {
-        let p = config.progress || 0
-        if (config.duration <= 0) p = 1
-        else p += (1 - p) * Math.min(1, elapsed / config.duration)
-
-        position = from + config.easing(p) * (to - from)
-        velocity = (position - node.lastPosition) / dt
-
-        finished = p == 1
-      }
-
-      // Decay easing
-      else if (config.decay) {
-        const decay = config.decay === true ? 0.998 : config.decay
-        const e = Math.exp(-(1 - decay) * elapsed)
-
-        position = from + (v0 / (1 - decay)) * (1 - e)
-        // derivative of position
-        velocity = v0 * e
-
-        finished = Math.abs(node.lastPosition - position) < 0.1
-        if (finished) to = position
-      }
-
-      // Spring easing
-      else {
-        velocity = node.lastVelocity == null ? v0 : node.lastVelocity
-
-        /** The smallest distance from a value before being treated like said value. */
-        const precision =
-          config.precision ||
-          (from == to ? 0.005 : Math.min(1, Math.abs(to - from) * 0.001))
-
-        /** The velocity at which movement is essentially none */
-        const restVelocity = config.restVelocity || precision
-
-        // Bouncing is opt-in (not to be confused with overshooting)
-        const bounceFactor = config.clamp ? 0 : config.bounce!
-        const canBounce = !is.und(bounceFactor)
-
-        /** When `true`, the value is increasing over time */
-        const isGrowing = from == to ? node.v0 > 0 : from < to
-
-        /** When `true`, the velocity is considered moving */
-        let isMoving!: boolean
-
-        /** When `true`, the velocity is being deflected or clamped */
-        let isBouncing = false
-
-        //const step = 0.05 / config.w0
-        const step = 1 // 1ms
-        const numSteps = Math.ceil(dt / step)
-        for (let n = 0; n < numSteps; ++n) {
-          isMoving = Math.abs(velocity) > restVelocity
-
-          if (!isMoving) {
-            finished = Math.abs(to - position) <= precision
-            if (finished) {
-              break
-            }
-          }
-
-          if (canBounce) {
-            isBouncing = position == to || position > to == isGrowing
-
-            // Invert the velocity with a magnitude, or clamp it.
-            if (isBouncing) {
-              velocity = -velocity * bounceFactor
-              position = to
-            }
-          }
-
-          const springForce = -config.tension * 0.000001 * (position - to)
-          const dampingForce = -config.friction * 0.001 * velocity
-          const acceleration = (springForce + dampingForce) / config.mass // pt/ms^2
-
-          velocity = velocity + acceleration * step // pt/ms
-          position = position + velocity * step
-        }
-      }
-
-      if (Number.isNaN(position)) {
-        console.warn(`Got NaN while animating:`, this)
-        return this.finish()
-      }
-
-      if (finished && canFinish) {
+      if (finished) {
         node.done = true
       } else {
         idle = false
       }
 
-      node.lastVelocity = velocity
       if (node.setValue(position, config.round)) {
         changed = true
       }
