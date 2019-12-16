@@ -28,12 +28,13 @@ export type SpringValues<T extends object = any> = Remap<
   Indexable<SpringValue<unknown> | undefined> &
     ([T] extends [Any]
       ? unknown // Ignore "T = any"
-      : {
-          [P in keyof T]:
-            | SpringValue<Exclude<T[P], FluidValue | void>>
-            | Extract<T[P], void>
-        })
+      : { [P in keyof T]: SpringWrap<T[P]> })
 >
+
+// Wrap a type with `SpringValue`
+type SpringWrap<T> = [Exclude<T, FluidValue>] extends [object | void]
+  ? never // Object literals cannot be animated.
+  : SpringValue<Exclude<T, FluidValue | void>> | Extract<T, void>
 
 /**
  * A value or set of values that can be animated from/to.
