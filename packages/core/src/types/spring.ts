@@ -13,7 +13,7 @@ import {
 
 import { AnimationProps, AnimationEvents } from './animated'
 import { Controller, ControllerProps } from '../Controller'
-import { AnimationConfig } from '../Animation'
+import { AnimationConfig } from '../AnimationConfig'
 import { SpringValue } from '../SpringValue'
 import { AsyncResult } from '../runAsync'
 
