@@ -29,7 +29,9 @@ export type SpringValues<T extends object = any> = Remap<
     ([T] extends [Any]
       ? unknown // Ignore "T = any"
       : {
-          [P in keyof T]: SpringValue<Exclude<T[P], void>> | Extract<T[P], void>
+          [P in keyof T]:
+            | SpringValue<Exclude<T[P], FluidValue | void>>
+            | Extract<T[P], void>
         })
 >
 
