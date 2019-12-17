@@ -108,12 +108,19 @@ function getForwardProps<Props extends ReservedProps>(
   return forward
 }
 
-export type InterpolateTo<T extends object> = Merge<
+/**
+ * Move all non-reserved props into the `to` prop.
+ */
+export type InferTo<T extends object> = Merge<
   { to: ForwardProps<T> },
   Pick<T, keyof T & keyof ReservedProps>
 >
 
-export function interpolateTo<T extends object>(props: T): InterpolateTo<T> {
+/**
+ * Clone the given `props` and move all non-reserved props
+ * into the `to` prop.
+ */
+export function inferTo<T extends object>(props: T): InferTo<T> {
   const to = getForwardProps(props)
   const out: any = { to }
   each(props, (val, key) => key in to || (out[key] = val))

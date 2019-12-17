@@ -1,4 +1,4 @@
-import { interpolateTo } from './helpers'
+import { inferTo } from './helpers'
 import { ReservedProps } from './types/common'
 
 describe('helpers', () => {
@@ -38,7 +38,7 @@ describe('helpers', () => {
       onRest: undefined,
     }
     expect(
-      interpolateTo({
+      inferTo({
         ...forwardProps,
         ...restProps,
         ...excludeProps,

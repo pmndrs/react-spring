@@ -36,6 +36,7 @@ export {
   UnknownProps,
 } from './types/common'
 
+export { inferTo, InferTo } from './helpers'
 export { FrameLoop, Animatable, createInterpolator } from 'shared'
 
 export * from 'shared/types/animated'
