@@ -640,13 +640,21 @@ export class SpringValue<T = any> extends FrameValue<T> {
       node.setValue((value = from as T))
     }
 
+    const immediate =
+      // Sometimes the value is not animatable.
+      !(toConfig || is.num(goal) || is.arr(goal)) ||
+      !!matchProp(get('immediate'), key)
+
+    if (immediate !== anim.immediate) {
+      anim.immediate = immediate
+      if (!is.und(to)) {
+        started = true
+      }
+    }
+
     if (started) {
       anim.values = node.getPayload()
       anim.toValues = toConfig ? null : toArray(goal)
-      anim.immediate =
-        // Sometimes the value is not animatable.
-        !(toConfig || is.num(goal) || is.arr(goal)) ||
-        !!matchProp(get('immediate'), key)
     }
 
     // Event props are replaced on every update.

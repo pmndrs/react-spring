@@ -116,6 +116,22 @@ function describeImmediateProp() {
     it.todo('still resolves the "start" promise')
     it.todo('never calls the "onStart" prop')
     it.todo('never calls the "onRest" prop')
+
+    it('stops animating', async () => {
+      const spring = new SpringValue(0)
+      spring.start(2)
+      await advanceUntilValue(spring, 1)
+
+      // Use "immediate" to emulate the "stop" method. (see #884)
+      const value = spring.get()
+      spring.start(value, { immediate: true })
+
+      // The "immediate" prop waits until the next frame before going idle.
+      mockRaf.step()
+
+      expect(spring.idle).toBeTruthy()
+      expect(spring.get()).toBe(value)
+    })
   })
 }
 
