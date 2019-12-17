@@ -75,7 +75,6 @@ async function prepare() {
     pkg.publishConfig = rootJson.publishConfig
     setHomepage(pkg)
     setEntryModules(pkg)
-    await installDistDeps(pkg)
     await rewriteLocalDeps(pkg)
     useOwnFiles(pkg, ['README.md', '@types'])
     useFiles(pkg, ['LICENSE', '.npmignore'])
@@ -99,35 +98,6 @@ async function prepare() {
         '#readme',
         `/tree/master/${pkg.dir}#readme`
       )
-    }
-  }
-
-  // For manually testing the "dist" directories
-  const installDistDeps = async pkg => {
-    const deps = pkg.dependencies
-    const distDeps = { ...deps }
-    if (deps) {
-      for (const [alias, value] of Object.entries(deps)) {
-        if (value.startsWith('link:')) {
-          const link = value.slice(5)
-          const target = resolve(pkg.dir, link)
-          const { name } = await fs.readJson(join(target, PJ))
-          const distLink = relative(pkg.dir, join(target, DIST))
-          distDeps[name] = 'link:../' + distLink
-          delete distDeps[alias]
-        }
-      }
-      pkg.dependencies = distDeps
-      savePackage(pkg)
-    }
-    try {
-      const cwd = join(pkg.dir, DIST)
-      await fs.remove(join(cwd, 'node_modules'))
-      await fs.remove(join(cwd, 'yarn.lock'))
-      await execa('yarn', ['--prod'], { cwd })
-    } finally {
-      pkg.dependencies = deps
-      savePackage(pkg)
     }
   }
 
