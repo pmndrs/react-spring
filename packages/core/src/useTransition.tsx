@@ -19,7 +19,7 @@ import {
 } from 'shared'
 import { now } from 'shared/globals'
 
-import { DEFAULT_PROPS, callProp, interpolateTo } from './helpers'
+import { DEFAULT_PROPS, callProp, inferTo } from './helpers'
 import { SpringHandle, AsyncTo, FromProp, SpringValues } from './types/spring'
 import { Controller, ControllerProps } from './Controller'
 import { AnimationProps, AnimationEvents } from './types/animated'
@@ -244,7 +244,7 @@ export function useTransition(
       from: callProp(from, t.item, i),
       delay: delay += trail,
       config: callProp(props.config || defaultProps.config, t.item, i),
-      ...(is.obj(to) && interpolateTo(to)),
+      ...(is.obj(to) && inferTo(to)),
     }
 
     const { onRest } = payload

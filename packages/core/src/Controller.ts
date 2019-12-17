@@ -21,7 +21,7 @@ import {
 import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
-import { interpolateTo } from './helpers'
+import { inferTo } from './helpers'
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 
@@ -103,7 +103,7 @@ export class Controller<State extends Indexable = UnknownProps>
   constructor(props?: ControllerProps<State>) {
     this._onFrame = this._onFrame.bind(this)
     if (props) {
-      const { to, ...initialProps } = interpolateTo(props as any)
+      const { to, ...initialProps } = inferTo(props as any)
       this._initialProps = initialProps
       if (to) this.start({ to })
     }
@@ -261,7 +261,7 @@ export class Controller<State extends Indexable = UnknownProps>
 
   /** Prepare an update with the given props. */
   protected _prepareUpdate(propsArg: ControllerProps<State>) {
-    const props: PendingProps<State> = interpolateTo(propsArg) as any
+    const props: PendingProps<State> = inferTo(propsArg) as any
     let { from, to } = props as any
 
     // Avoid sending async "to" prop to springs.
