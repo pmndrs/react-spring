@@ -32,7 +32,7 @@ describe('helpers', () => {
       enter: undefined,
       leave: undefined,
       update: undefined,
-      onAnimate: undefined,
+      onProps: undefined,
       onStart: undefined,
       onChange: undefined,
       onRest: undefined,
