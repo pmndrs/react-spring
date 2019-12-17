@@ -661,6 +661,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     anim.onStart = coerceEventProp(get('onStart'), key)
     anim.onChange = coerceEventProp(get('onChange'), key)
 
+    // By this point, every prop should be merged. (except "onRest")
     const onProps = coerceEventProp(get('onProps'), key)
     if (onProps) {
       onProps(props, this)
