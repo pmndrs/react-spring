@@ -1886,7 +1886,7 @@
     "@types/node" ">= 8"
 
 "@react-spring/core@link:packages/core":
-  version "9.0.0-canary.808.12.11b2708"
+  version "9.0.0-canary.808.13.719834d"
   dependencies:
     animated "link:packages/animated"
     react-layout-effect "^1.0.1"
@@ -1894,35 +1894,35 @@
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
-  version "9.0.0-canary.808.12.11b2708"
+  version "9.0.0-canary.808.13.719834d"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
-  version "9.0.0-canary.808.12.11b2708"
+  version "9.0.0-canary.808.13.719834d"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/three@link:targets/three":
-  version "9.0.0-canary.808.12.11b2708"
+  version "9.0.0-canary.808.13.719834d"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/web@link:targets/web":
-  version "9.0.0-canary.808.12.11b2708"
+  version "9.0.0-canary.808.13.719834d"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
     shared "link:packages/shared"
 
 "@react-spring/zdog@link:targets/zdog":
-  version "9.0.0-canary.808.12.11b2708"
+  version "9.0.0-canary.808.13.719834d"
   dependencies:
     animated "link:packages/animated"
     core "link:packages/core"
