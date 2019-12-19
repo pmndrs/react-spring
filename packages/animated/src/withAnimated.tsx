@@ -91,11 +91,13 @@ function updateRef<T>(ref: Ref<T>, value: T) {
  */
 export const extendAnimated = (
   withAnimated: WithAnimated,
-  components: AnimatableComponent[],
+  components: AnimatableComponent[] | { [key: string]: AnimatableComponent },
   lowercase?: boolean
 ): any => {
-  components.forEach(Component => {
-    let key = getDisplayName(Component)!
+  each(components, (Component, key) => {
+    if (!is.str(key)) {
+      key = getDisplayName(Component)!
+    }
     if (lowercase) {
       key = key[0].toLowerCase() + key.slice(1)
     }

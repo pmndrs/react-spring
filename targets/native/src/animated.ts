@@ -36,7 +36,7 @@ type CreateAnimated = <T extends ElementType>(
 
 export const animated: CreateAnimated & NativeComponents = extendAnimated(
   withAnimated,
-  Object.values(elements)
+  elements
 )
 
 export { animated as a }
