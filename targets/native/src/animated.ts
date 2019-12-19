@@ -7,6 +7,7 @@ import {
   ViewProps,
   ViewStyle,
   RecursiveArray,
+  TextProps,
 } from 'react-native'
 import {
   AssignableKeys,
@@ -21,7 +22,10 @@ const elements = {
     // @types/react-native forgot to add "children" to the "View" component??
     ViewProps & { children?: ReactNode }
   >,
-  Text,
+  Text: Text as ComponentClass<
+    // @types/react-native forgot to add "children" to the "Text" component??
+    TextProps & { children?: ReactNode }
+  >,
   Image,
 }
 
