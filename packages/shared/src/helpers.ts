@@ -42,38 +42,32 @@ export const isAnimatedString = (value: unknown): value is string =>
     /\d/.test(value) ||
     !!(G.colorNames && G.colorNames[value]))
 
-interface EachFn {
-  <T = any, This = any>(
-    arr: readonly T[],
-    cb: (this: This, value: T, index: number) => void,
-    ctx?: This
-  ): void
-
-  <T = any, This = any>(
-    obj: ReadonlySet<T> | readonly T[],
-    cb: (this: This, value: T) => void,
-    ctx?: This
-  ): void
-
-  <P = any, T = any, This = any>(
-    obj: ReadonlyMap<P, T>,
-    cb: (this: This, value: T, key: P) => void,
-    ctx?: This
-  ): void
-
-  <T extends Indexable = any, This = any>(
-    obj: T,
-    cb: (this: This, value: T[keyof T], key: keyof T) => void,
-    ctx?: This
-  ): void
+type Eachable<Value, Key> = {
+  forEach: (cb: (value: Value, key: Key) => void, ctx?: any) => void
 }
 
+type InferKey<T extends object> = T extends Eachable<any, infer Key>
+  ? Key
+  : string
+
+type InferValue<T extends object> = T extends
+  | Eachable<infer Value, any>
+  | { [key: string]: infer Value }
+  ? Value
+  : never
+
 /** An unsafe object/array/set iterator that allows for better minification */
-export const each: EachFn = (obj: Indexable, cb: any, ctx: any) => {
+export const each = <T extends object, This>(
+  obj: T & { forEach?: Function },
+  cb: (this: This, value: InferValue<T>, key: InferKey<T>) => void,
+  ctx?: This
+) => {
   if (is.fun(obj.forEach)) {
     obj.forEach(cb, ctx)
   } else {
-    Object.keys(obj).forEach(key => cb.call(ctx, obj[key], key))
+    Object.keys(obj).forEach(key =>
+      cb.call(ctx!, (obj as any)[key], key as any)
+    )
   }
 }
 
