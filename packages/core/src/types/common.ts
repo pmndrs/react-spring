@@ -4,14 +4,24 @@ import {
   ObjectFromUnion,
   FluidValue,
   Constrain,
+  Remap,
+  Any,
 } from 'shared'
 
 export * from 'shared/types/common'
 
-/** Map the `T` object type and replace any properties that cannot be assigned to `U` with `never` */
-export type Valid<T extends object, U extends object> = {
-  [P in keyof T & keyof U]: T[P] extends U[P] ? U[P] : never
-}
+/** Replace the type of each `T` property with `never` (unless compatible with `U`) */
+export type Valid<T, U> = NeverProps<T, InvalidKeys<T, U>>
+
+/** Replace the type of each `P` property with `never` */
+type NeverProps<T, P extends keyof T> = Remap<
+  Pick<T, Exclude<keyof T, P>> & { [K in P]: never }
+>
+
+/** Return a union type of every key whose `T` value is incompatible with its `U` value */
+type InvalidKeys<T, U> = {
+  [P in keyof T & keyof U]: T[P] extends U[P] ? never : P
+}[keyof T & keyof U]
 
 /** The phases of a `useTransition` item */
 export type TransitionPhase = 'initial' | 'enter' | 'update' | 'leave'
