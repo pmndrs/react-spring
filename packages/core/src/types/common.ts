@@ -34,12 +34,14 @@ export type TransitionPhase = 'initial' | 'enter' | 'update' | 'leave'
  * ...as well as any forward props.
  */
 export type PickAnimated<Props extends object, Fwd = true> = unknown &
-  ObjectFromUnion<
-    | FromValues<Props>
-    | (TransitionPhase & keyof Props extends never
-        ? ToValues<Props, Fwd>
-        : TransitionValues<Props>)
-  >
+  ([Props] extends [Any]
+    ? any // Preserve "any" instead of resolving to "{}"
+    : ObjectFromUnion<
+        | FromValues<Props>
+        | (TransitionPhase & keyof Props extends never
+            ? ToValues<Props, Fwd>
+            : TransitionValues<Props>)
+      >)
 
 /**
  * Pick the values that appear in the `onFrame` prop.
