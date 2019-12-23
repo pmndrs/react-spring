@@ -54,9 +54,9 @@ export type AnimatedComponent<
 
 /** The props of an `animated()` component */
 export type AnimatedProps<Props extends object> = {
-  [P in keyof Props]: (P extends 'ref' | 'key'
+  [P in keyof Props]: P extends 'ref' | 'key'
     ? Props[P]
-    : AnimatedProp<Props[P]>)
+    : AnimatedProp<Props[P]>
 }
 
 // The animated prop value of a React element
