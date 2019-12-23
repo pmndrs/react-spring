@@ -93,10 +93,14 @@ type AnimatedObject<T extends object> =
   | { [P in keyof T]: AnimatedStyle<T[P]> }
   | (T extends ReadonlyArray<number | string> ? FluidValue<Readonly<T>> : never)
 
-// An animated value that is not an object
-type AnimatedLeaf<T> = [T] extends [object]
-  ? never
-  : FluidValue<Exclude<T, object | void>>
+// An animated primitive (or an array of them)
+type AnimatedLeaf<T> =
+  | Exclude<T, object | void>
+  | Extract<T, ReadonlyArray<number | string>> extends infer U
+  ? [U] extends [never]
+    ? never
+    : FluidValue<U | Exclude<T, object | void>>
+  : never
 
 type Angle = number | string
 type Length = number | string
