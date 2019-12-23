@@ -126,5 +126,5 @@ type AnimatedLeaf<T> =
   | Extract<T, ReadonlyArray<number | string>> extends infer U
   ? [U] extends [never]
     ? never
-    : FluidValue<U>
+    : FluidValue<U | Exclude<T, object | void>>
   : never
