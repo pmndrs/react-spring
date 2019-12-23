@@ -83,6 +83,7 @@ test('infer animated array', () => {
   const props = useSpring({
     to: { foo: [0, 0] },
   });
+  assert(props.foo, _ as number[]);
   assert(
     props,
     _ as SpringValues<{
