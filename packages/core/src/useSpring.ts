@@ -29,14 +29,14 @@ export type UseSpringProps<Props extends object = any> = unknown &
 /**
  * Animations are updated on re-render.
  */
-export function useSpring<Props extends UnknownProps>(
+export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps
 ): SpringValues<PickAnimated<Props>>
 
 /**
  * When the `deps` argument exists, you get the `update` and `stop` function.
  */
-export function useSpring<Props extends UnknownProps>(
+export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps: any[] | undefined
 ): [
@@ -51,7 +51,7 @@ export function useSpring<Props extends UnknownProps>(
  *
  * Without the `deps` argument, the `props` function is only called once.
  */
-export function useSpring<Props extends UnknownProps>(
+export function useSpring<Props extends object>(
   props: () => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps?: any[]
 ): [
