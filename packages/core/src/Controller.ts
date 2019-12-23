@@ -6,6 +6,7 @@ import {
   UnknownProps,
   UnknownPartial,
   FluidProps,
+  Remap,
 } from 'shared'
 import * as G from 'shared/globals'
 
@@ -57,11 +58,12 @@ export interface EventProps<State extends Indexable> {
   onChange?: ((values: UnknownPartial<State>) => void) | Indexable<OnChange>
 }
 
-export type ControllerProps<State extends Indexable = Indexable> = unknown &
+export type ControllerProps<State extends Indexable = Indexable> = Remap<
   RangeProps<FluidProps<State>> &
-  EventProps<UnknownPartial<State>> &
-  AnimationProps &
-  UnknownPartial<FluidProps<State>>
+    EventProps<UnknownPartial<State>> &
+    AnimationProps &
+    UnknownPartial<FluidProps<State>>
+>
 
 /** An update that hasn't been applied yet */
 type PendingProps<State extends Indexable> = ControllerProps<State> & {
