@@ -1,12 +1,15 @@
 import { assert, test, _ } from 'spec.ts';
 import { useSprings, SpringStopFn } from '../..';
-import { Controller, ControllerProps } from 'core';
 import {
+  Controller,
+  ControllerProps,
   SpringsUpdateFn,
   SpringValues,
-} from '@react-spring/core/src/types/spring';
+} from 'core';
 
 const items: string[] = [];
+
+type State = { opacity: number };
 
 test('pass an array', () => {
   const springs = useSprings(
@@ -16,11 +19,7 @@ test('pass an array', () => {
       return { opacity: 1 / Number(item) };
     })
   );
-  assert(springs, _ as Array<
-    SpringValues<{
-      opacity: number;
-    }>
-  >);
+  assert(springs, _ as Array<SpringValues<State>>);
 });
 
 test('pass a function', () => {
@@ -28,17 +27,15 @@ test('pass a function', () => {
     assert(i, _ as number);
     return { opacity: i };
   });
-  type State = { opacity: number };
-  assert(springs, _ as Array<
-    SpringValues<{
-      opacity: number;
-    }>
-  >);
+
+  assert(springs, _ as Array<SpringValues<State>>);
+
   set({ opacity: 1 });
   set([{ opacity: 1 }, { opacity: 0.5 }]);
-  set((_index: number, _spring: Controller<{ opacity: number }>) => {
-    return _ as ControllerProps<{ opacity?: number }>;
+  set((_index: number, _spring: Controller<State>) => {
+    return _ as ControllerProps<State>;
   });
+
   assert(set, _ as SpringsUpdateFn<State>);
   assert(stop, _ as SpringStopFn<State>);
 });
