@@ -264,7 +264,7 @@ export class Controller<State extends Indexable = UnknownProps>
   /** Prepare an update with the given props. */
   protected _prepareUpdate(propsArg: UnknownPartial<ControllerProps<State>>) {
     const props: PendingProps<State> = inferTo(propsArg) as any
-    let { from, to } = props as any
+    let { from, to, reverse, delay } = props as any
 
     // Avoid sending async "to" prop to springs.
     if (is.arr(to) || is.fun(to)) {
@@ -284,12 +284,14 @@ export class Controller<State extends Indexable = UnknownProps>
     const springs = this.springs as Indexable<SpringValue>
     if (keys.size) {
       each(keys, key => {
-        if (!springs[key]) {
-          const spring = (springs[key] = new SpringValue(this._initialProps))
+        let spring = springs[key]
+        if (!spring) {
+          spring = springs[key] = new SpringValue(this._initialProps)
           spring.key = key
           spring.addChild(this)
-          spring.setNodeWithProps({ from, to })
         }
+        // Ensure the spring is using its latest "from" value.
+        spring['_prepareNode']({ from, to, reverse, delay })
       })
     }
 
