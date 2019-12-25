@@ -550,9 +550,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const get = <K extends keyof DefaultProps>(prop: K) =>
       !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
-    // Any updates using the "delay" prop can have certain props ignored
-    // if a non-delayed update defines the same props. This is detected
-    // with timestamp diffing of the applicable props.
+    // Every update has a timestamp attached to it (before any delay
+    // begins), and some props use their timestamp to know if they
+    // were updated before their update finished its delay.
     const timestamps = this._timestamps
     const diff = (prop: string) => {
       if (timestamp >= (timestamps[prop] || 0)) {
@@ -564,20 +564,17 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     const { to: prevTo, from: prevFrom } = anim
 
-    // The "reverse" prop only affects one update.
+    // Use the previous "to" and "from" props if undefined.
+    if (is.und(to)) to = prevTo
+    if (is.und(from)) from = prevFrom
+
+    // The "reverse" prop only swaps "to" and "from" when "reverse"
+    // is defined and its previous value (true/false) is different.
     if (props.reverse) [to, from] = [from, to]
 
-    if (!is.und(to) && diff('to')) {
-      this._to(to)
-    } else {
-      to = prevTo
-    }
-
-    if (!is.und(from) && diff('from')) {
-      anim.from = from
-    } else {
-      from = anim.from
-    }
+    // Update the "to" and "from" props.
+    if (!is.und(to) && diff('to')) this._to(to)
+    if (!is.und(from) && diff('from')) anim.from = from
 
     // These are fluid configs, not animation configs.
     // Fluid configs let us animate from/to dynamic values.
