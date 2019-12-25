@@ -594,18 +594,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       from = value
     }
 
-    /** When true, animation is imminent (assuming no interruptions). */
-    let started =
-      !!toConfig ||
-      !!getFluidConfig(prevTo) ||
-      ((changed || reset) && !isEqual(value, to))
-
-    const { config } = anim
-    if (!started && (config.decay || !is.und(to))) {
-      // Start the animation if its velocity is explicitly changed.
-      started = !isEqual(config.velocity, lastVelocity)
-    }
-
     // Ensure our Animated node is compatible with the "to" prop.
     let nodeType: AnimatedType
     if (changed) {
@@ -635,6 +623,18 @@ export class SpringValue<T = any> extends FrameValue<T> {
       (this.is(CREATED) && !is.und(anim.from) && !isEqual(anim.from, prevFrom))
     ) {
       node.setValue((value = from as T))
+    }
+
+    /** When true, animation is imminent (assuming no interruptions). */
+    let started =
+      !!toConfig ||
+      !!getFluidConfig(prevTo) ||
+      ((changed || reset) && !isEqual(value, to))
+
+    const { config } = anim
+    if (!started && (config.decay || !is.und(to))) {
+      // Start the animation if its velocity is explicitly changed.
+      started = !isEqual(config.velocity, lastVelocity)
     }
 
     const immediate =
