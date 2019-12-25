@@ -654,11 +654,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
       started = !isEqual(config.velocity, lastVelocity)
     }
 
-    const immediate =
-      // Sometimes the value is not animatable.
-      !(toConfig || is.num(goal) || is.arr(goal)) ||
-      !!matchProp(get('immediate'), key)
-
+    // At this point, the "goal" is only a string when it cannot be animated.
+    const immediate = is.str(goal) || !!matchProp(get('immediate'), key)
     if (immediate !== anim.immediate) {
       anim.immediate = immediate
       if (!is.und(to)) {
