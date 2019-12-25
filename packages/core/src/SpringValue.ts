@@ -447,9 +447,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // exists and keeps its value in sync with the "from" prop.
     if (this.is(CREATED)) {
       if (reverse) [to, from] = [from, to]
+      from = getFluidValue(from)
       const node = this._updateNode(
         // The "to" prop is ignored when "delay" exists.
-        is.und(from) && is.und(delay) ? to : from
+        is.und(from) && is.und(delay) ? getFluidValue(to) : from
       )
       if (node && !is.und(from)) {
         node.setValue(from)
