@@ -269,14 +269,14 @@ type OpaqueTarget = {
 }
 
 function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
-  let spring: SpringValue
-  let target: OpaqueTarget
-  beforeEach(() => {
-    spring = new SpringValue(0)
-    target = create(1)
-  })
-
   describe('when our target is ' + name, () => {
+    let spring: SpringValue
+    let target: OpaqueTarget
+    beforeEach(() => {
+      spring = new SpringValue(0)
+      target = create(1)
+    })
+
     it('animates toward the current value', async () => {
       spring.start({ to: target.node })
       expect(spring.priority).toBeGreaterThan(target.node.priority)
