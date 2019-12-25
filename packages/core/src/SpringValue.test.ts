@@ -81,6 +81,7 @@ function describeProps() {
   describeToProp()
   describeFromProp()
   describeResetProp()
+  describeReverseProp()
   describeImmediateProp()
   describeConfigProp()
 }
@@ -108,6 +109,68 @@ function describeResetProp() {
   describe('when "reset" prop is true', () => {
     it.todo('resolves the "start" promise with (finished: false)')
     it.todo('calls the "onRest" prop with (finished: false)')
+  })
+}
+
+function describeReverseProp() {
+  describe('when "reverse" prop is true', () => {
+    it('swaps the "to" and "from" props', async () => {
+      const spring = new SpringValue<number>()
+      spring.start({ from: 0, to: 1, reverse: true })
+
+      await advanceUntilIdle()
+      expect(getFrames(spring)).toMatchSnapshot()
+    })
+
+    it('works when "to" and "from" were set by an earlier update', async () => {
+      // TODO: remove the need for "<number>"
+      const spring = new SpringValue<number>({ from: 0, to: 1 })
+      await advanceUntilValue(spring, 0.5)
+
+      spring.start({ reverse: true })
+      expect(spring.animation).toMatchObject({
+        from: 1,
+        to: 0,
+      })
+
+      await advanceUntilIdle()
+      expect(getFrames(spring)).toMatchSnapshot()
+    })
+
+    it('works when "from" was set by an earlier update', async () => {
+      const spring = new SpringValue(0)
+      expect(spring.animation.from).toBe(0)
+      spring.start({ to: 1, reverse: true })
+
+      await advanceUntilIdle()
+      expect(getFrames(spring)).toMatchSnapshot()
+    })
+
+    it('works when "from" is undefined', () => {
+      const spring = new SpringValue<number>()
+      spring.start({ to: 1, reverse: true })
+
+      const { from, to } = spring.animation
+      expect(from).toBe(1)
+      expect(to).toBeUndefined()
+    })
+
+    it('preserves the reversal for future updates', async () => {
+      const spring = new SpringValue(0)
+      spring.start({ to: 1, reverse: true })
+      expect(spring.animation).toMatchObject({
+        to: 0,
+        from: 1,
+      })
+
+      await advanceUntilIdle()
+
+      spring.start({ to: 2 })
+      expect(spring.animation).toMatchObject({
+        to: 2,
+        from: 1,
+      })
+    })
   })
 }
 
