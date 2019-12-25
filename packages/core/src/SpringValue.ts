@@ -638,10 +638,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Ensure the current value equals the "from" value when reset
     // and when the "from" value is updated before the first animation.
-    if (
-      reset ||
-      (this.is(CREATED) && !is.und(anim.from) && !isEqual(anim.from, prevFrom))
-    ) {
+    if (reset || (this.is(CREATED) && !isEqual(anim.from, prevFrom))) {
       node.setValue((value = from as T))
     }
 
