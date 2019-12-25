@@ -335,7 +335,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     checkDisposed(this, 'update')
 
     // Ensure the initial value can be accessed by animated components.
-    this.setNodeWithProps(props)
+    this._prepareNode(props)
 
     const queue = this.queue || (this.queue = [])
     queue.push(props)
@@ -425,29 +425,55 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
   }
 
-  /**
-   * Analyze the given `value` to determine which data type is being animated.
-   * Then, create an `Animated` node for that data type and make it our `node`.
-   */
-  protected _ensureAnimated(value: any) {
-    if (value != null) {
-      const nodeType = this._getNodeType(value)
-      setAnimated(this, nodeType.create(computeGoal(value)))
+  protected _prepareNode({
+    to,
+    from,
+    reverse,
+    delay,
+  }: {
+    to?: any
+    from?: any
+    reverse?: boolean
+    delay?: number
+  }) {
+    const key = this.key || ''
+
+    to = !is.obj(to) || getFluidConfig(to) ? to : to[key]
+    from = !is.obj(from) || getFluidConfig(from) ? from : from[key]
+
+    const range = { to, from }
+
+    // Before ever animating, this method ensures an `Animated` node
+    // exists and keeps its value in sync with the "from" prop.
+    if (this.is(CREATED)) {
+      if (reverse) [to, from] = [from, to]
+      const node = this._updateNode(
+        // The "to" prop is ignored when "delay" exists.
+        is.und(from) && is.und(delay) ? to : from
+      )
+      if (node && !is.und(from)) {
+        node.setValue(from)
+      }
     }
+
+    return range
   }
 
   /**
-   * @internal
-   * Analyze the given `props` to determine which data type is being animated.
-   * Then, create an `Animated` node for that data type and make it our `node`.
-   * If we already have a `node`, do nothing but return the `{from, to}` range.
+   * Create an `Animated` node if none exists or the given value has an
+   * incompatible type. Do nothing if `value` is undefined.
+   *
+   * The newest `Animated` node is returned.
    */
-  setNodeWithProps(props: PendingProps<T>) {
-    const range = this._getRange(props)
-    if (!getAnimated(this)) {
-      this._ensureAnimated(range.from != null ? range.from : range.to)
+  protected _updateNode(value: any) {
+    let node = getAnimated(this)
+    if (!is.und(value)) {
+      const nodeType = this._getNodeType(value)
+      if (!node || node.constructor !== nodeType) {
+        setAnimated(this, (node = nodeType.create(value)))
+      }
     }
-    return range
+    return node
   }
 
   /** Return the `Animated` node constructor for a given value */
@@ -464,20 +490,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
       : AnimatedValue
   }
 
-  /** Pluck the `to` and `from` props */
-  protected _getRange(props: PendingProps<T>): AnimationRange<T> {
-    const { to, from } = props as any
-    const key = this.key || ''
-    return {
-      to: !is.obj(to) || getFluidConfig(to) ? to : to[key],
-      from: !is.obj(from) || getFluidConfig(from) ? from : from[key],
-    }
-  }
-
   /** Schedule an animation to run after an optional delay */
   protected _update(props: PendingProps<T>): AsyncResult<T> {
     // Ensure the initial value can be accessed by animated components.
-    const range = this.setNodeWithProps(props)
+    const range = this._prepareNode(props)
 
     const state = this._state
     const timestamp = G.now()
@@ -737,18 +753,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (config) {
       value = config.get()
     }
-
-    const node = getAnimated(this)!
+    const node = getAnimated(this)
+    const oldValue = node && node.getValue()
     if (node) {
-      if (isEqual(value, node.getValue())) {
-        return false
-      }
       node.setValue(value)
     } else {
-      this._ensureAnimated(value)
+      this._updateNode(value)
     }
-
-    return true
+    return !isEqual(value, oldValue)
   }
 
   protected _onChange(value: T, idle = false) {
