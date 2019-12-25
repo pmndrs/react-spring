@@ -63,6 +63,10 @@ export type PendingProps<T = unknown> = unknown &
 
 declare const console: { warn: Function }
 
+/**
+ * Only numbers, strings, and arrays of numbers/strings are supported.
+ * Non-animatable strings are also supported.
+ */
 export class SpringValue<T = any> extends FrameValue<T> {
   /** The property name used when `to` or `from` is an object. Useful when debugging too. */
   key?: string
