@@ -15,7 +15,6 @@
       "shared": ["./node_modules/shared/src"],
       "shared/*": ["./node_modules/shared/src/*"]
     },
-    "plugins": [{ "name": "typescript-snapshots-plugin" }],
     "preserveSymlinks": true,
     "sourceMap": true,
     "strict": true,
