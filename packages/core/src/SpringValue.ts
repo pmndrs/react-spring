@@ -859,7 +859,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 }
 
-// TODO: makes this tree-shakeable
 function checkDisposed(spring: SpringValue, name: string) {
   if (spring.is(DISPOSED)) {
     throw Error(
