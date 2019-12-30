@@ -285,9 +285,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** Set the current value, while stopping the current animation */
   set(value: T | FluidValue<T>) {
     G.batchedUpdates(() => {
-      if (this._set(value) && !this.is(ACTIVE)) {
-        // Since "_stop" only calls "_onChange" when not idle, we need this.
-        this._onChange(this.get(), true)
+      if (this._set(value)) {
+        // Ensure change observers are notified. When active,
+        // the "_stop" method handles this.
+        if (!this.is(ACTIVE)) {
+          return this._onChange(this.get(), true)
+        }
       }
       this._stop()
     })
