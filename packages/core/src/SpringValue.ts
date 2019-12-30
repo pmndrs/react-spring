@@ -667,6 +667,17 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
 
+    // Check for an active animation whose "to" prop equals its current value.
+    // If the animation is pending (waiting for its first frame), stop it.
+    // Otherwise, ensure the animation is never interrupted.
+    if (changed && this.is(ACTIVE) && isEqual(value, getFluidValue(to))) {
+      if (anim.changed) {
+        started = true
+      } else if (!started) {
+        this._stop()
+      }
+    }
+
     if (started) {
       anim.values = node.getPayload()
       anim.toValues = toConfig ? null : toArray(goal)
