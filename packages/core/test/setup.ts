@@ -57,8 +57,8 @@ global.advanceUntil = async test => {
   while (!test()) {
     // Clone the animation array before stepping, because idle animations
     // will be removed before "mockRaf.step" returns.
-    const animations = Array.from(
-      Globals.frameLoop['_animations']
+    const animations = Globals.frameLoop['_animations'].filter(
+      anim => !anim.idle
     ) as SpringValue[]
 
     mockRaf.step()
@@ -75,6 +75,10 @@ global.advanceUntil = async test => {
       throw Error('Infinite loop detected')
     }
   }
+}
+
+global.advance = (n = 1) => {
+  return advanceUntil(() => --n < 0)
 }
 
 global.advanceUntilIdle = () => {
