@@ -92,6 +92,33 @@ function describeToProp() {
     it.todo('avoids calling the "onStart" prop')
     it.todo('avoids calling the "onRest" prop')
   })
+
+  describe('when "to" prop equals current value', () => {
+    it('cancels any pending animation', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1)
+
+      // Prevent the animation to 1 (which hasn't started yet)
+      spring.start(0)
+
+      await advanceUntilIdle()
+      expect(getFrames(spring)).toEqual([])
+    })
+
+    it('avoids interrupting an active animation', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1)
+      await advance()
+
+      const goal = spring.get()
+      spring.start(goal)
+      expect(spring.idle).toBeFalsy()
+
+      await advanceUntilIdle()
+      expect(spring.get()).toBe(goal)
+      expect(getFrames(spring)).toMatchSnapshot()
+    })
+  })
 }
 
 function describeFromProp() {
