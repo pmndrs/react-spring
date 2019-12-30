@@ -27,15 +27,15 @@ import { UseSpringProps } from './useSpring'
 import { PickAnimated } from './types/common'
 
 // TODO: convert to "const enum" once Babel supports it
-export type Phase = number & { __type: 'TransitionPhase' }
+export type TransitionPhase = number & { t: 'TransitionPhase' }
 /** This transition is being mounted */
-const MOUNT = 0 as Phase
+const MOUNT = 0 as TransitionPhase
 /** This transition is entering or has entered */
-const ENTER = 1 as Phase
+const ENTER = 1 as TransitionPhase
 /** This transition had its animations updated */
-const UPDATE = 2 as Phase
+const UPDATE = 2 as TransitionPhase
 /** This transition will expire after animating */
-const LEAVE = 3 as Phase
+const LEAVE = 3 as TransitionPhase
 
 type PhaseProp<Item> =
   | Falsy
@@ -208,7 +208,7 @@ export function useTransition(
   each(transitions, (t, i) => {
     let to: any
     let from: any
-    let phase: Phase
+    let phase: TransitionPhase
     if (t.phase == MOUNT) {
       to = props.enter
       phase = ENTER
@@ -335,7 +335,7 @@ export function useTransition(
 }
 
 interface Change {
-  phase: Phase
+  phase: TransitionPhase
   payload?: any
 }
 
@@ -343,7 +343,7 @@ export interface TransitionState<Item = any> {
   key: any
   item: Item
   ctrl: Controller
-  phase: Phase
+  phase: TransitionPhase
   /** Destroy no later than this date */
   expiresBy?: number
   expirationId?: number
