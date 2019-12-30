@@ -14,8 +14,8 @@ import {
   each,
   OneOrMore,
   Falsy,
-  Indexable,
   Merge,
+  UnknownProps,
 } from 'shared'
 import { now } from 'shared/globals'
 
@@ -37,15 +37,13 @@ const UPDATE = 2 as Phase
 /** This transition will expire after animating */
 const LEAVE = 3 as Phase
 
-type UnknownProps = Indexable<any>
-
 type PhaseProp<Item> =
   | Falsy
-  | OneOrMore<UseSpringProps>
+  | OneOrMore<UseSpringProps & UnknownProps>
   | ((
       item: Item,
       index: number
-    ) => UseSpringProps | AsyncTo<UnknownProps> | Falsy)
+    ) => (UseSpringProps & UnknownProps) | AsyncTo<UnknownProps> | Falsy)
 
 type PhaseProps<Item = any, From = {}> = {
   from?: From &
