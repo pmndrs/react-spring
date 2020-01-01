@@ -19,12 +19,18 @@ import {
 } from 'shared'
 import { now } from 'shared/globals'
 
-import { DEFAULT_PROPS, callProp, inferTo } from './helpers'
-import { SpringHandle, AsyncTo, FromProp, SpringValues } from './types/spring'
-import { Controller, ControllerProps } from './Controller'
-import { AnimationProps, AnimationEvents } from './types/animated'
-import { UseSpringProps } from './useSpring'
+import {
+  SpringHandle,
+  AsyncTo,
+  FromProp,
+  SpringValues,
+  SpringConfig,
+} from './types/spring'
 import { PickAnimated } from './types/common'
+import { AnimationProps, AnimationEvents } from './types/animated'
+import { DEFAULT_PROPS, callProp, inferTo } from './helpers'
+import { Controller, ControllerProps } from './Controller'
+import { UseSpringProps } from './useSpring'
 
 // TODO: convert to "const enum" once Babel supports it
 export type TransitionPhase = number & { t: 'TransitionPhase' }
@@ -78,6 +84,9 @@ export type UseTransitionProps<Item = any> = Merge<
     sort?: (a: Item, b: Item) => number
     trail?: number
     expires?: number
+    config?:
+      | SpringConfig
+      | ((item: Item, index: number) => AnimationProps['config'])
   }
 >
 
@@ -241,7 +250,7 @@ export function useTransition(
       to: to = callProp(to, t.item, i),
       from: callProp(from, t.item, i),
       delay: delay += trail,
-      config: callProp(props.config || defaultProps.config, t.item, i),
+      config: callProp(props.config || (defaultProps.config as any), t.item, i),
       ...(is.obj(to) && inferTo(to)),
     }
 
