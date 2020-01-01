@@ -182,11 +182,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
           const e = Math.exp(-(1 - decay) * elapsed)
 
           position = from + (v0 / (1 - decay)) * (1 - e)
+          finished = Math.abs(node.lastPosition - position) < 0.1
+
           // derivative of position
           velocity = v0 * e
-
-          finished = Math.abs(node.lastPosition - position) < 0.1
-          if (finished) to = position
         }
 
         // Spring easing
