@@ -48,7 +48,7 @@ type Eachable<Value, Key> = {
 
 type InferKey<T extends object> = T extends Eachable<any, infer Key>
   ? Key
-  : string
+  : Extract<keyof T, string>
 
 type InferValue<T extends object> = T extends
   | Eachable<infer Value, any>
