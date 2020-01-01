@@ -550,12 +550,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
       })
     }
 
-    /** The initial velocity before this `_update` call. */
-    const lastVelocity = anim.config.velocity
+    const { config } = anim
+    const { decay, velocity } = config
 
     if (props.config) {
       mergeConfig(
-        anim.config,
+        config,
         callProp(props.config, key!),
         // Avoid calling the "config" prop twice when "default" is true.
         props.default ? undefined : callProp(defaultProps.config, key!)
@@ -645,16 +645,23 @@ export class SpringValue<T = any> extends FrameValue<T> {
       node.setValue((value = from as T))
     }
 
-    /** When true, animation is imminent (assuming no interruptions). */
-    let started =
-      !!toConfig ||
-      !!getFluidConfig(prevTo) ||
-      ((changed || reset) && !isEqual(value, to))
-
-    const { config } = anim
-    if (!started && (config.decay || !is.und(to))) {
-      // Start the animation if its velocity is explicitly changed.
-      started = !isEqual(config.velocity, lastVelocity)
+    let started = false
+    let finished = false
+    if (toConfig) {
+      // When the goal value is fluid, we don't know if its value
+      // will change before the next animation frame, so it always
+      // starts the animation to be safe.
+      started = true
+    } else {
+      if (changed || reset) {
+        finished = isEqual(value, getFluidValue(to))
+        started = !finished
+      }
+      if (!started && (config.decay || !is.und(to))) {
+        started = !(
+          isEqual(config.decay, decay) && isEqual(config.velocity, velocity)
+        )
+      }
     }
 
     // At this point, the "goal" is only a string when it cannot be animated.
@@ -666,18 +673,22 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
 
-    // Check for an active animation whose "to" prop equals its current value.
-    // If the animation is pending (waiting for its first frame), stop it.
-    // Otherwise, ensure the animation is never interrupted.
-    if (changed && this.is(ACTIVE) && isEqual(value, getFluidValue(to))) {
+    // When an active animation changes its goal to its current value:
+    if (finished && this.is(ACTIVE)) {
+      // When the animation has already changed its value, avoid what
+      // would be experienced as an unnatural stop.
       if (anim.changed) {
         started = true
-      } else if (!started) {
+      }
+      // Prevent the animation when its first frame is pending.
+      else if (!started) {
         this._stop()
       }
     }
 
-    if (started) {
+    // Make sure our "toValues" are updated even if our previous
+    // "to" prop is a fluid value whose current value is also ours.
+    if (started || getFluidConfig(prevTo)) {
       anim.values = node.getPayload()
       anim.toValues = toConfig ? null : toArray(goal)
     }
