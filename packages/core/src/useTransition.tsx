@@ -104,7 +104,8 @@ export interface TransitionFn<Item = any, State extends object = any> {
     render: (
       values: SpringValues<State>,
       item: Item,
-      transition: TransitionState<Item>
+      transition: TransitionState<Item>,
+      index: number
     ) => ReactNode
   ): ReactNode[]
 }
@@ -329,8 +330,8 @@ export function useTransition(
   )
 
   return render =>
-    transitions.map(t => {
-      const elem: any = render({ ...t.ctrl.springs }, t.item, t)
+    transitions.map((t, i) => {
+      const elem: any = render({ ...t.ctrl.springs }, t.item, t, i)
       return elem && elem.type ? (
         <elem.type
           {...elem.props}
