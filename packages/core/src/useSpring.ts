@@ -27,6 +27,21 @@ export type UseSpringProps<Props extends object = any> = unknown &
   : never
 
 /**
+ * When the `deps` argument exists, the `props` function is called whenever
+ * the `deps` change on re-render.
+ *
+ * Without the `deps` argument, the `props` function is only called once.
+ */
+export function useSpring<Props extends object>(
+  props: () => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
+  deps?: any[]
+): [
+  SpringValues<PickAnimated<Props>>,
+  SpringUpdateFn<PickAnimated<Props>>,
+  SpringStopFn<UnknownProps>
+]
+
+/**
  * Animations are updated on re-render.
  */
 export function useSpring<Props extends object>(
@@ -39,21 +54,6 @@ export function useSpring<Props extends object>(
 export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps: any[] | undefined
-): [
-  SpringValues<PickAnimated<Props>>,
-  SpringUpdateFn<PickAnimated<Props>>,
-  SpringStopFn<UnknownProps>
-]
-
-/**
- * When the `deps` argument exists, the `props` function is called whenever
- * the `deps` change on re-render.
- *
- * Without the `deps` argument, the `props` function is only called once.
- */
-export function useSpring<Props extends object>(
-  props: () => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
-  deps?: any[]
 ): [
   SpringValues<PickAnimated<Props>>,
   SpringUpdateFn<PickAnimated<Props>>,
