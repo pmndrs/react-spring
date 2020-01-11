@@ -115,25 +115,19 @@ global.advanceUntilIdle = () => {
 
 // TODO: support "value" as an array or animatable string
 global.advanceUntilValue = (spring, value) => {
+  const from = computeGoal(spring.get())
   const goal = computeGoal(value)
 
-  let lastValue: any
   return advanceUntil(() => {
     const frames = getFrames(spring, true)
-    const value = frames.length ? frames[frames.length - 1] : spring.get()
-
-    if (lastValue == null) {
-      lastValue = value
-      return false
-    }
+    const value = frames.length ? frames[frames.length - 1] : from
 
     const stop = is.num(goal)
-      ? goal > lastValue
+      ? goal > from
         ? goal <= value
         : goal >= value
       : isEqual(value, goal)
 
-    lastValue = value
     return stop
   })
 }
