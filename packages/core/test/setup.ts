@@ -119,8 +119,8 @@ global.advanceUntilValue = (spring, value) => {
 
   let lastValue: any
   return advanceUntil(() => {
-    const value = spring.get()
-    expect(value).not.toBe(lastValue)
+    const frames = getFrames(spring, true)
+    const value = frames.length ? frames[frames.length - 1] : spring.get()
 
     if (lastValue == null) {
       lastValue = value
