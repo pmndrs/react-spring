@@ -5,9 +5,16 @@ import { isEqual, is, FrameLoop } from 'shared'
 import { Globals, SpringValue, Controller } from '..'
 import { computeGoal } from '../src/helpers'
 
+// Allow indefinite tests, since we limit the number of animation frames
+// per "advanceUntil" call to 1000. This keeps the "isRunning" variable
+// from interfering with the debugger.
+jest.setTimeout(6e8)
+
+let isRunning = false
 let frameCache: WeakMap<any, any[]>
 
 beforeEach(() => {
+  isRunning = true
   frameCache = new WeakMap()
 
   global.mockRaf = createMockRaf()
@@ -18,6 +25,10 @@ beforeEach(() => {
     cancelAnimationFrame: mockRaf.cancel,
     frameLoop: new FrameLoop(),
   })
+})
+
+afterEach(() => {
+  isRunning = false
 })
 
 global.getFrames = (target: SpringValue | Controller, preserve?: boolean) => {
@@ -55,7 +66,7 @@ global.countBounces = spring => {
 
 global.advanceUntil = async test => {
   let steps = 0
-  while (!test()) {
+  while (isRunning && !test()) {
     // Clone the animation array before stepping, because idle animations
     // will be removed before "mockRaf.step" returns.
     const animations = Globals.frameLoop['_animations'].filter(
