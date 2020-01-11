@@ -29,6 +29,9 @@ beforeEach(() => {
 
 afterEach(() => {
   isRunning = false
+
+  // Clear the frameloop.
+  Globals.frameLoop['_animations'].length = 0
 })
 
 global.getFrames = (target: SpringValue | Controller, preserve?: boolean) => {
