@@ -1,4 +1,5 @@
 import createMockRaf from 'mock-raf'
+import { flushMicroTasks } from 'flush-microtasks'
 import { isEqual, is, FrameLoop } from 'shared'
 
 import { Globals, SpringValue, Controller } from '..'
@@ -70,7 +71,7 @@ global.advanceUntil = async test => {
       frames.push(animation.get())
     })
 
-    await Promise.resolve()
+    await flushMicroTasks()
     if (++steps > 5e4) {
       throw Error('Infinite loop detected')
     }
