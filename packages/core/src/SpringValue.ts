@@ -693,6 +693,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
       anim.toValues = toConfig ? null : toArray(goal)
     }
 
+    if (started) {
+      anim.loop = props.loop
+    }
+
     // Event props are replaced on every update.
     anim.onStart = coerceEventProp(get('onStart'), key)
     anim.onChange = coerceEventProp(get('onChange'), key)
@@ -864,6 +868,17 @@ export class SpringValue<T = any> extends FrameValue<T> {
         each(onRestQueue, onRest => {
           onRest(result)
         })
+      }
+
+      if (finished) {
+        const loop = callProp(anim.loop, this.key!)
+        if (loop) {
+          this.start({
+            loop: anim.loop,
+            reset: true,
+            delay: (loop !== true && loop.delay) || 0,
+          })
+        }
       }
     }
   }

@@ -70,6 +70,7 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   from: 1,
   to: 1,
   ref: 1,
+  loop: 1,
   reset: 1,
   cancel: 1,
   reverse: 1,
