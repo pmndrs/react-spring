@@ -2,7 +2,7 @@ import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { isEqual, is, FrameLoop } from 'shared'
 
-import { Globals, SpringValue, Controller } from '..'
+import { Globals, SpringValue, Controller, FrameValue } from '..'
 import { computeGoal } from '../src/helpers'
 
 // Allow indefinite tests, since we limit the number of animation frames
@@ -33,6 +33,19 @@ afterEach(() => {
   // Clear the frameloop.
   Globals.frameLoop['_animations'].length = 0
 })
+
+// This observes every SpringValue animation when "advanceUntil" is used.
+// Any changes between frames are not recorded.
+const frameObserver = {
+  onParentChange(event: FrameValue.Event) {
+    const spring = event.parent
+    if (event.type == 'change') {
+      let frames = frameCache.get(spring)
+      if (!frames) frameCache.set(spring, (frames = []))
+      frames.push(event.value)
+    }
+  },
+}
 
 global.getFrames = (target: SpringValue | Controller, preserve?: boolean) => {
   let frames = frameCache.get(target)!
@@ -72,18 +85,18 @@ global.advanceUntil = async test => {
   while (isRunning && !test()) {
     // Clone the animation array before stepping, because idle animations
     // will be removed before "mockRaf.step" returns.
-    const animations = Globals.frameLoop['_animations'].filter(
-      anim => !anim.idle
-    ) as SpringValue[]
+    const anims: SpringValue[] = []
+    for (const anim of Globals.frameLoop['_animations']) {
+      if (!anim.idle && anim instanceof SpringValue) {
+        anim.addChild(frameObserver)
+        anims.push(anim)
+      }
+    }
 
     mockRaf.step()
-    animations.forEach(animation => {
-      let frames = frameCache.get(animation)
-      if (!frames) {
-        frameCache.set(animation, (frames = []))
-      }
-      frames.push(animation.get())
-    })
+    for (const anim of anims) {
+      anim.removeChild(frameObserver)
+    }
 
     await flushMicroTasks()
     if (++steps > 1e3) {
