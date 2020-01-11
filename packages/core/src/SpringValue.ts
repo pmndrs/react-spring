@@ -482,11 +482,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** Return the `Animated` node constructor for a given value */
   protected _getNodeType(value: T | FluidValue<T>): AnimatedType {
     const parentNode = getAnimated(value)
-    if (parentNode) {
-      const parentType = parentNode.constructor as any
-      return parentType == AnimatedString ? AnimatedValue : parentType
-    }
-    return is.arr(value)
+    return parentNode
+      ? (parentNode.constructor as any)
+      : is.arr(value)
       ? AnimatedArray
       : isAnimatedString(value)
       ? AnimatedString
