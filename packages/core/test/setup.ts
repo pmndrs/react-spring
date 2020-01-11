@@ -86,7 +86,7 @@ global.advanceUntil = async test => {
     })
 
     await flushMicroTasks()
-    if (++steps > 5e4) {
+    if (++steps > 1e3) {
       throw Error('Infinite loop detected')
     }
   }
