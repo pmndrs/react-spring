@@ -84,6 +84,7 @@ function describeProps() {
   describeReverseProp()
   describeImmediateProp()
   describeConfigProp()
+  describeLoopProp()
 }
 
 function describeToProp() {
@@ -246,6 +247,106 @@ function describeConfigProp() {
         await advanceUntilIdle()
         expect(countBounces(spring)).toBeGreaterThan(0)
       })
+    })
+  })
+}
+
+function describeLoopProp() {
+  describe('the "loop" prop', () => {
+    beforeEach(() => jest.useFakeTimers())
+    afterEach(() => jest.useRealTimers())
+
+    it('resets the animation once finished', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1, {
+        loop: true,
+        config: { duration: frameLength * 3 },
+      })
+
+      await advanceUntilValue(spring, 1)
+      const firstRun = getFrames(spring)
+      expect(firstRun).toMatchSnapshot()
+
+      // The loop resets the value before the next frame.
+      // FIXME: Reset on next frame instead?
+      expect(spring.get()).toBe(0)
+
+      await advanceUntilValue(spring, 1)
+      expect(getFrames(spring)).toEqual(firstRun)
+    })
+
+    it('can pass a custom delay', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1, { loop: { delay: 1000 } })
+
+      await advanceUntilValue(spring, 1)
+      expect(spring.get()).toBe(1)
+
+      jest.runAllTimers()
+      expect(spring.get()).toBe(0)
+
+      await advanceUntilValue(spring, 1)
+      expect(spring.get()).toBe(1)
+    })
+
+    it('supports deferred evaluation', async () => {
+      const spring = new SpringValue(0)
+
+      let loop: any = true
+      spring.start(1, { loop: () => loop })
+
+      await advanceUntilValue(spring, 1)
+      expect(spring.idle).toBeFalsy()
+      expect(spring.get()).toBe(0)
+
+      loop = { delay: 1000 }
+      await advanceUntilValue(spring, 1)
+      expect(spring.idle).toBeTruthy()
+      expect(spring.get()).toBe(1)
+
+      jest.runAllTimers()
+      expect(spring.idle).toBeFalsy()
+      expect(spring.get()).toBe(0)
+
+      loop = false
+      await advanceUntilValue(spring, 1)
+      expect(spring.idle).toBeTruthy()
+      expect(spring.get()).toBe(1)
+    })
+
+    it('does not affect earlier updates', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1)
+
+      await advanceUntilValue(spring, 0.5)
+      spring.start({ loop: true })
+
+      await advanceUntilValue(spring, 1)
+      expect(spring.idle).toBeTruthy()
+    })
+
+    it('does not affect later updates', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1, { loop: true })
+
+      await advanceUntilValue(spring, 0.5)
+      spring.start(2)
+
+      await advanceUntilValue(spring, 2)
+      expect(spring.idle).toBeTruthy()
+    })
+
+    it('can be combined with the "reset" prop', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1)
+
+      await advanceUntilIdle()
+      spring.start({ reset: true, loop: true })
+      expect(spring.get()).toBe(0)
+
+      await advanceUntilValue(spring, 1)
+      expect(spring.get()).toBe(0)
+      expect(spring.idle).toBeFalsy()
     })
   })
 }
