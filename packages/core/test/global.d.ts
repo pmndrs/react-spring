@@ -12,7 +12,7 @@ declare global {
   /** Take an array of values (one per animation frame) from internal test storage  */
   let getFrames: {
     <T extends object>(ctrl: Controller<T>, preserve?: boolean): T[]
-    <T>(spring: SpringValue<T>, preserve?: boolean): T[]
+    <T>(spring: FrameValue<T>, preserve?: boolean): T[]
   }
 
   /** Count the number of bounces in a spring animation */
