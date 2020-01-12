@@ -21,7 +21,7 @@ export type AnyFn<In extends ReadonlyArray<any> = any[], Out = any> = (
 export type Solve<T> = T
 
 /** For resolving object intersections */
-export type Remap<T> = Solve<{ [P in keyof T]: T[P] }>
+export type Remap<T> = {} & { [P in keyof T]: T[P] }
 
 /** Override the property types of `A` with `B` and merge any new properties */
 export type Merge<A, B> = Remap<
