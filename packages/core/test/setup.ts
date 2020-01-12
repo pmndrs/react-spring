@@ -126,9 +126,10 @@ global.advanceUntilValue = (spring, value) => {
   const from = computeGoal(spring.get())
   const goal = computeGoal(value)
 
+  const offset = getFrames(spring, true).length
   return advanceUntil(() => {
     const frames = getFrames(spring, true)
-    const value = frames.length ? frames[frames.length - 1] : from
+    const value = frames.length - offset > 0 ? frames[frames.length - 1] : from
 
     const stop = is.num(goal)
       ? goal > from
