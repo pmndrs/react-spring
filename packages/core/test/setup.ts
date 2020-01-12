@@ -1,6 +1,7 @@
 import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { isEqual, is, FrameLoop } from 'shared'
+import colorNames from 'shared/colors'
 
 import { Globals, Controller, FrameValue } from '..'
 import { computeGoal } from '../src/helpers'
@@ -24,6 +25,7 @@ beforeEach(() => {
     requestAnimationFrame: mockRaf.raf,
     cancelAnimationFrame: mockRaf.cancel,
     frameLoop: new FrameLoop(),
+    colorNames,
   })
 })
 
