@@ -445,6 +445,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     to = !is.obj(to) || getFluidConfig(to) ? to : to[key]
     from = !is.obj(from) || getFluidConfig(from) ? from : from[key]
 
+    // Create the range now to avoid "reverse" logic.
     const range = { to, from }
 
     // Before ever animating, this method ensures an `Animated` node
@@ -587,16 +588,15 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     const { to: prevTo, from: prevFrom } = anim
 
-    // Use the previous "to" and "from" props if undefined.
+    // Default to the previous range.
     if (is.und(to)) to = prevTo
     if (is.und(from)) from = prevFrom
 
-    // The "reverse" prop only swaps "to" and "from" when "reverse"
-    // is defined and its previous value (true/false) is different.
+    // Flip the current range if "reverse" is true.
     if (props.reverse) [to, from] = [from, to]
     anim.reverse = !!props.reverse
 
-    // Update the "to" and "from" props.
+    // Save the "to" and "from" props.
     if (!is.und(to) && diff('to')) this._to(to)
     if (!is.und(from) && diff('from')) anim.from = from
 
