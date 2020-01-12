@@ -813,7 +813,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const anim = this.animation
 
     // Reset the state of each Animated node.
-    getAnimated(this)!.reset(computeGoal(anim.to))
+    getAnimated(this)!.reset(anim.to)
 
     if (!anim.immediate) {
       anim.fromValues = anim.values.map(node => node.lastPosition)
