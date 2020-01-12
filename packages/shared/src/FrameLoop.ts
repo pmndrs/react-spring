@@ -75,11 +75,13 @@ export class FrameLoop {
 
     // Add an animation to the frameloop
     const start = (animation: OpaqueAnimation) => {
-      const index = animations.findIndex(
-        other => other.priority > animation.priority
-      )
-      animations.splice(~index ? index : animations.length, 0, animation)
-      kickoff()
+      let index = animations.indexOf(animation)
+      if (index < 0) {
+        index = animations.findIndex(
+          other => other.priority > animation.priority
+        )
+        animations.splice(~index ? index : animations.length, 0, animation)
+      }
     }
 
     // Start the frameloop
@@ -150,14 +152,11 @@ export class FrameLoop {
     })
 
     this.start = animation => {
-      const index = animations.indexOf(animation)
-      if (~index) {
-        animations.splice(index, 1)
-      }
       if (priority > animation.priority) {
         startQueue.add(animation)
       } else {
         start(animation)
+        kickoff()
       }
     }
 
