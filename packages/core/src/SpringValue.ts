@@ -299,12 +299,22 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /**
    * Freeze the active animation in time.
    * This does nothing when not animating.
-   *
-   * Call `start` to unpause.
    */
   pause() {
     checkDisposed(this, 'pause')
     this._phase = PAUSED
+  }
+
+  /** Resume the animation if paused. */
+  resume() {
+    checkDisposed(this, 'resume')
+    if (this.is(PAUSED)) {
+      this._start()
+
+      if (this._state.asyncTo) {
+        this._state.unpause!()
+      }
+    }
   }
 
   /**
@@ -313,6 +323,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * All `onRest` callbacks are passed `{finished: true}`
    */
   finish(to?: T | FluidValue<T>) {
+    this.resume()
     if (this.is(ACTIVE)) {
       const anim = this.animation
 
@@ -359,15 +370,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   async start(to?: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
     checkDisposed(this, 'start')
-
-    // Unpause if possible.
-    if (this.is(PAUSED)) {
-      this._start()
-
-      if (this._state.asyncTo) {
-        this._state.unpause!()
-      }
-    }
 
     let queue: PendingProps<T>[]
     if (!is.und(to)) {
@@ -737,6 +739,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
       })
     }
 
+    this.resume()
+
     // Allow for an "onStart" call and "start" event.
     if (reset) {
       this._phase = IDLE
@@ -840,6 +844,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * Always wrap `_stop` calls with `batchedUpdates`.
    */
   protected _stop(finished = false) {
+    this.resume()
     if (this.is(ACTIVE)) {
       this._phase = IDLE
 
