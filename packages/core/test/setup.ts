@@ -2,7 +2,7 @@ import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { isEqual, is, FrameLoop } from 'shared'
 
-import { Globals, SpringValue, Controller, FrameValue } from '..'
+import { Globals, Controller, FrameValue } from '..'
 import { computeGoal } from '../src/helpers'
 
 // Allow indefinite tests, since we limit the number of animation frames
@@ -47,24 +47,26 @@ const frameObserver = {
   },
 }
 
-global.getFrames = (target: SpringValue | Controller, preserve?: boolean) => {
+global.getFrames = (target, preserve) => {
   let frames = frameCache.get(target)!
   if (!preserve) {
     frameCache.delete(target)
   }
-  if (!frames && target instanceof Controller) {
+  if (!frames) {
     frames = []
-    target.each(spring => {
-      getFrames(spring, preserve).forEach((value, i) => {
-        const frame = frames[i] || (frames[i] = {})
-        frame[spring.key!] = value
+    if (target instanceof Controller) {
+      target.each(spring => {
+        getFrames(spring, preserve).forEach((value, i) => {
+          const frame = frames[i] || (frames[i] = {})
+          frame[spring.key!] = value
+        })
       })
-    })
-    if (preserve) {
-      frameCache.set(target, frames)
+      if (preserve) {
+        frameCache.set(target, frames)
+      }
     }
   }
-  return frames || []
+  return frames
 }
 
 global.countBounces = spring => {

@@ -10,10 +10,10 @@ declare global {
   let advanceUntilValue: <T>(spring: FrameValue<T>, value: T) => Promise<void>
 
   /** Take an array of values (one per animation frame) from internal test storage  */
-  let getFrames: {
-    <T extends object>(ctrl: Controller<T>, preserve?: boolean): T[]
-    <T>(spring: FrameValue<T>, preserve?: boolean): T[]
-  }
+  let getFrames: <T>(
+    target: FrameValue<T> | Controller<Extract<T, object>>,
+    preserve?: boolean
+  ) => T[]
 
   /** Count the number of bounces in a spring animation */
   let countBounces: (spring: SpringValue<number>) => number
