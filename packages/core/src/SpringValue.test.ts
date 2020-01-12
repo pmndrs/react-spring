@@ -348,6 +348,21 @@ function describeLoopProp() {
       expect(spring.get()).toBe(0)
       expect(spring.idle).toBeFalsy()
     })
+
+    it('can be combined with the "reverse" prop', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1, { config: { duration: frameLength * 3 } })
+
+      await advanceUntilIdle()
+      spring.start({
+        loop: true,
+        reverse: true,
+      })
+
+      await advanceUntilValue(spring, 0)
+      await advanceUntilValue(spring, 1)
+      expect(getFrames(spring)).toMatchSnapshot()
+    })
   })
 }
 

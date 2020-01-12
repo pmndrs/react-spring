@@ -32,6 +32,20 @@ Array [
 
 exports[`SpringValue can animate an array of numbers 1`] = `Array []`;
 
+exports[`SpringValue the "loop" prop can be combined with the "reverse" prop 1`] = `
+Array [
+  0.33334,
+  0.66668,
+  1,
+  0.66666,
+  0.33331999999999995,
+  0,
+  0.33334,
+  0.66668,
+  1,
+]
+`;
+
 exports[`SpringValue the "loop" prop resets the animation once finished 1`] = `
 Array [
   0.33334,
