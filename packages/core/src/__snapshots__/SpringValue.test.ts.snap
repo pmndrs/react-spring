@@ -2,37 +2,43 @@
 
 exports[`SpringValue can animate a number 1`] = `
 Array [
-  0.09999999999999999,
-  0.19999999999999998,
-  0.3,
-  0.39999999999999997,
-  0.5,
-  0.6,
-  0.7000000000000001,
-  0.7999999999999999,
-  0.8999999999999999,
-  0.9999999999999998,
+  0.100002,
+  0.200004,
+  0.300006,
+  0.400008,
+  0.50001,
+  0.600012,
+  0.700014,
+  0.800016,
+  0.900018,
   1,
 ]
 `;
 
 exports[`SpringValue can animate a string 1`] = `
 Array [
-  "0.9999999999999999px 1.9999999999999998px",
-  "1.9999999999999998px 3.9999999999999996px",
-  "3px 6px",
-  "3.9999999999999996px 7.999999999999999px",
-  "5px 10px",
-  "6px 12px",
-  "7.000000000000001px 14.000000000000002px",
-  "7.999999999999999px 15.999999999999998px",
-  "9px 18px",
-  "9.999999999999998px 19.999999999999996px",
+  "1.00002px 2.00004px",
+  "2.00004px 4.00008px",
+  "3.00006px 6.00012px",
+  "4.00008px 8.00016px",
+  "5.0001px 10.0002px",
+  "6.00012px 12.00024px",
+  "7.00014px 14.00028px",
+  "8.00016px 16.00032px",
+  "9.00018px 18.00036px",
   "10px 20px",
 ]
 `;
 
 exports[`SpringValue can animate an array of numbers 1`] = `Array []`;
+
+exports[`SpringValue the "loop" prop resets the animation once finished 1`] = `
+Array [
+  0.33334,
+  0.66668,
+  1,
+]
+`;
 
 exports[`SpringValue when "reverse" prop is true swaps the "to" and "from" props 1`] = `
 Array [
