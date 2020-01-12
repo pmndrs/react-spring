@@ -234,3 +234,37 @@ Array [
   0.022634843307857987,
 ]
 `;
+
+exports[`SpringValue when our target is an Interpolation when animating a string animates as expected 1`] = `
+Array [
+  "rgba(255, 170, 0, 1)",
+  "rgba(255, 85, 0, 1)",
+  "red",
+  "rgba(255, 85, 0, 1)",
+  "rgba(255, 170, 0, 1)",
+  "yellow",
+  "rgba(255, 170, 0, 1)",
+  "rgba(255, 85, 0, 1)",
+  "red",
+  "rgba(255, 85, 0, 1)",
+  "rgba(255, 170, 0, 1)",
+  "yellow",
+]
+`;
+
+exports[`SpringValue when our target is another SpringValue when animating a string animates as expected 1`] = `
+Array [
+  "rgba(255, 170, 0, 1)",
+  "rgba(255, 85, 0, 1)",
+  "red",
+  "rgba(255, 85, 0, 1)",
+  "rgba(255, 170, 0, 1)",
+  "yellow",
+  "rgba(255, 170, 0, 1)",
+  "rgba(255, 85, 0, 1)",
+  "red",
+  "rgba(255, 85, 0, 1)",
+  "rgba(255, 170, 0, 1)",
+  "yellow",
+]
+`;

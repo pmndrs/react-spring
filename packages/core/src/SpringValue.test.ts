@@ -509,7 +509,23 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
     })
 
     describe('when animating a string', () => {
-      it.todo('animates as expected')
+      it('animates as expected', async () => {
+        const spring = new SpringValue('yellow')
+        spring.start('red', {
+          config: { duration: frameLength * 3 },
+        })
+
+        await advanceUntilIdle()
+        spring.start({
+          loop: true,
+          reverse: true,
+        })
+
+        await advanceUntilValue(spring, 'yellow')
+        await advanceUntilValue(spring, 'red')
+        await advanceUntilValue(spring, 'yellow')
+        expect(getFrames(spring)).toMatchSnapshot()
+      })
     })
 
     describe('when animating an array', () => {
