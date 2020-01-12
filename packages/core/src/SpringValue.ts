@@ -594,6 +594,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // The "reverse" prop only swaps "to" and "from" when "reverse"
     // is defined and its previous value (true/false) is different.
     if (props.reverse) [to, from] = [from, to]
+    anim.reverse = !!props.reverse
 
     // Update the "to" and "from" props.
     if (!is.und(to) && diff('to')) this._to(to)
@@ -879,8 +880,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
         if (loop) {
           this.start({
             loop: anim.loop,
-            reset: true,
             delay: (loop !== true && loop.delay) || 0,
+            reverse: anim.reverse,
+            reset: !anim.reverse,
           })
         }
       }

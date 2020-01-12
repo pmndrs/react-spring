@@ -16,6 +16,7 @@ export class Animation<T = any> {
   from!: T | FluidValue<T>
   config = new AnimationConfig()
   immediate = false
+  reverse = false
   loop?: AnimationProps['loop']
   onStart?: OnStart<T>
   onChange?: OnChange<T>
