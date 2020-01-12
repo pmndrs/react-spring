@@ -121,10 +121,9 @@ export async function runAsync<T>(
         checkFailConditions()
 
         if (getPaused()) {
-          await new Promise(resolve => {
+          state.unpause = await new Promise(resolve => {
             state.unpause = resolve
           })
-          state.unpause = undefined
         }
 
         return result
