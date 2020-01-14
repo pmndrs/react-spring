@@ -46,7 +46,7 @@ class Controller<P extends any = {}> {
 
   /** update(props)
    *  This function filters input props and creates an array of tasks which are executed in .start()
-   *  Each task is allowed to carry a delay, which means it can execute asnychroneously */
+   *  Each task is allowed to carry a delay, which means it can execute asynchronously */
   update(args?: P) {
     //this._id = n + this.id
 
