@@ -37,7 +37,8 @@ const createAnimatedComponent = (Component: any) =>
     const hasInstance: boolean =
       // Function components must use "forwardRef" to avoid being
       // re-rendered on every animation frame.
-      !is.fun(Component) || Component.prototype.isReactComponent
+      !is.fun(Component) ||
+      (Component.prototype && Component.prototype.isReactComponent)
 
     const forceUpdate = useForceUpdate()
     const props = new AnimatedProps(() => {
