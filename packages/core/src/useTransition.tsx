@@ -312,6 +312,8 @@ export function useTransition(
         }
       },
       stop: keys => each(usedTransitions.current!, t => t.ctrl.stop(keys)),
+      pause: keys => each(usedTransitions.current!, t => t.ctrl.pause(keys)),
+      resume: keys => each(usedTransitions.current!, t => t.ctrl.resume(keys)),
     }),
     []
   )

@@ -177,6 +177,30 @@ export type SpringStopFn<T> = T extends object
   : () => void
 
 /**
+ * Pause animating `SpringValue`.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export type SpringPauseFn<T> = T extends object
+  ? T extends ReadonlyArray<number | string>
+    ? () => void
+    : (keys?: OneOrMore<string>) => void
+  : () => void
+
+/**
+ * Resume paused `SpringValue`.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export type SpringResumeFn<T> = T extends object
+  ? T extends ReadonlyArray<number | string>
+    ? () => void
+    : (keys?: OneOrMore<string>) => void
+  : () => void
+
+/**
  * Update the props of each spring, individually or all at once.
  *
  * The `T` parameter should only contain animated props.
@@ -202,6 +226,8 @@ export interface SpringHandle<T extends Indexable = any> {
   update: SpringsUpdateFn<T>
   start: () => AsyncResult<T[]>
   stop: SpringStopFn<T>
+  pause: SpringPauseFn<T>
+  resume: SpringResumeFn<T>
 }
 
 export type SpringConfig = Partial<Omit<AnimationConfig, 'w0'>>

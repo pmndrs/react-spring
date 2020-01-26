@@ -131,6 +131,8 @@ export function useSprings(
         }
       },
       stop: keys => each(ctrls, ctrl => ctrl.stop(keys)),
+      pause: keys => each(ctrls, ctrl => ctrl.pause(keys)),
+      resume: keys => each(ctrls, ctrl => ctrl.resume(keys)),
     }),
     []
   )
