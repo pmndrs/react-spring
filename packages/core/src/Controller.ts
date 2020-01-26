@@ -242,6 +242,28 @@ export class Controller<State extends Indexable = UnknownProps>
     return this
   }
 
+  /** Freeze the active animation in time */
+  pause(keys?: OneOrMore<string>) {
+    if (is.und(keys)) {
+      this.each(spring => spring.pause())
+    } else {
+      const springs = this.springs as Indexable<SpringValue>
+      each(toArray(keys), key => springs[key].pause())
+    }
+    return this
+  }
+
+  /** Resume the animation if paused. */
+  resume(keys?: OneOrMore<string>) {
+    if (is.und(keys)) {
+      this.each(spring => spring.resume())
+    } else {
+      const springs = this.springs as Indexable<SpringValue>
+      each(toArray(keys), key => springs[key].resume())
+    }
+    return this
+  }
+
   /** Restart every animation. */
   reset() {
     this.each(spring => spring.reset())
