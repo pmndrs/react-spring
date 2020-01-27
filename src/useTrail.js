@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect } from 'react'
+import { useRef, useMemo, useEffect, useImperativeHandle } from 'react'
 import { callProp, is } from './shared/helpers'
 import { useSprings } from './useSprings'
 
@@ -11,7 +11,7 @@ export const useTrail = (length, props) => {
   const mounted = useRef(false)
   const isFn = is.fun(props)
   const updateProps = callProp(props)
-  const instances = useRef()
+  const instances = useRef([])
 
   const [result, set, pause] = useSprings(length, (i, ctrl) => {
     if (i === 0) instances.current = []
@@ -42,6 +42,16 @@ export const useTrail = (length, props) => {
   useEffect(() => void (mounted.current && !isFn && updateCtrl(props)))
   // Update mounted flag and destroy controller on unmount
   useEffect(() => void (mounted.current = true), [])
+
+  // Set up ref handlers for useChain
+  useImperativeHandle(updateProps.ref, () => ({
+    start: () =>
+      Promise.all(instances.current.map(c => new Promise(r => c.start(r)))),
+    stop: finished => instances.current.forEach(c => c.stop(finished)),
+    get controllers() {
+      return instances.current
+    },
+  }))
 
   return isFn ? [result, updateCtrl, pause] : result
 }
