@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/three",
-  "version": "9.0.0-canary.808.14.192785c",
+  "version": "9.0.0-canary.808.15.d4e5904",
   "main": "src/index.ts",
   "dependencies": {
     "animated": "link:../../packages/animated",
