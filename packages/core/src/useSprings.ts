@@ -71,10 +71,6 @@ export function useSprings(
 ): any {
   const propsFn = is.fun(props) && props
 
-  if (propsFn && arguments.length < 3) {
-    deps = [] // Skip updates after first render.
-  }
-
   // The "ref" prop is taken from the props of the first spring only.
   // The ref is assumed to *never* change after the first render.
   let ref: RefObject<SpringHandle> | undefined
@@ -109,7 +105,7 @@ export function useSprings(
         }
       }
     }
-  }, deps)
+  }, (deps || []).concat(length))
 
   const api = useMemo(
     (): SpringHandle => ({
