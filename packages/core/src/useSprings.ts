@@ -1,4 +1,4 @@
-import { useMemo, RefObject, useImperativeHandle } from 'react'
+import { useMemo, RefObject, useImperativeHandle, useState } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import { is, each, usePrev, useOnce, UnknownProps, Merge } from 'shared'
 
@@ -70,23 +70,36 @@ export function useSprings(
   deps?: any[]
 ): any {
   const propsFn = is.fun(props) && props
-  if (deps) deps = deps.concat(length)
+  if (propsFn && !deps) deps = []
 
   // The "ref" prop is taken from the props of the first spring only.
   // The ref is assumed to *never* change after the first render.
   let ref: RefObject<SpringHandle> | undefined
 
-  const ctrls: Controller[] = useMemoOne(() => [], [])
+  const [ctrls] = useState<Controller[]>([])
   const updates: ControllerProps[] = []
   const prevLength = usePrev(length) || 0
+
+  // Create new controllers when "length" increases, and destroy
+  // the affected controllers when "length" decreases.
   useMemoOne(() => {
+    // Note: Length changes are unsafe in React concurrent mode.
     if (prevLength > length) {
       for (let i = length; i < prevLength; i++) {
         ctrls[i].dispose()
       }
     }
     ctrls.length = length
-    for (let i = 0; i < length; i++) {
+    getUpdates(prevLength, length)
+  }, [length])
+
+  // Update existing controllers when "deps" are changed.
+  useMemoOne(() => {
+    getUpdates(0, prevLength)
+  }, deps)
+
+  function getUpdates(startIndex: number, endIndex: number) {
+    for (let i = startIndex; i < endIndex; i++) {
       const ctrl = ctrls[i] || (ctrls[i] = new Controller())
       const update: UseSpringProps<any> = propsFn
         ? propsFn(i, ctrl)
@@ -106,7 +119,19 @@ export function useSprings(
         }
       }
     }
-  }, deps)
+  }
+
+  // Controllers are not updated until the commit phase.
+  useLayoutEffect(() => {
+    each(updates, (update, i) => ctrls[i].update(update))
+    if (!ref) {
+      each(ctrls, ctrl => ctrl.start())
+    }
+  })
+
+  useOnce(() => () => {
+    each(ctrls, ctrl => ctrl.dispose())
+  })
 
   const api = useMemo(
     (): SpringHandle => ({
@@ -136,20 +161,8 @@ export function useSprings(
 
   useImperativeHandle(ref, () => api)
 
-  const isRenderDriven = !propsFn && arguments.length < 3
-  if (isRenderDriven) deps = undefined
-
-  useLayoutEffect(() => {
-    each(updates, (update, i) => ctrls[i].update(update))
-    if (!ref) {
-      each(ctrls, ctrl => ctrl.start())
-    }
-  }, deps)
-
-  useOnce(() => () => {
-    each(ctrls, ctrl => ctrl.dispose())
-  })
-
   const values = ctrls.map(ctrl => ({ ...ctrl.springs }))
-  return isRenderDriven ? values : [values, api.update, api.stop]
+  return propsFn || arguments.length == 3
+    ? [values, api.update, api.stop]
+    : values
 }
