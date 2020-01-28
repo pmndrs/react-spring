@@ -70,6 +70,7 @@ export function useSprings(
   deps?: any[]
 ): any {
   const propsFn = is.fun(props) && props
+  if (deps) deps = deps.concat(length)
 
   // The "ref" prop is taken from the props of the first spring only.
   // The ref is assumed to *never* change after the first render.
@@ -105,7 +106,7 @@ export function useSprings(
         }
       }
     }
-  }, (deps || []).concat(length))
+  }, deps)
 
   const api = useMemo(
     (): SpringHandle => ({
@@ -135,6 +136,9 @@ export function useSprings(
 
   useImperativeHandle(ref, () => api)
 
+  const isRenderDriven = !propsFn && arguments.length < 3
+  if (isRenderDriven) deps = undefined
+
   useLayoutEffect(() => {
     each(updates, (update, i) => ctrls[i].update(update))
     if (!ref) {
@@ -147,7 +151,5 @@ export function useSprings(
   })
 
   const values = ctrls.map(ctrl => ({ ...ctrl.springs }))
-  return propsFn || arguments.length == 3
-    ? [values, api.update, api.stop]
-    : values
+  return isRenderDriven ? values : [values, api.update, api.stop]
 }
