@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/web",
-  "version": "9.0.0-canary.808.16.68edca3",
+  "version": "9.0.0-canary.808.17.55c5691",
   "main": "src/index.ts",
   "dependencies": {
     "animated": "link:../../packages/animated",
