@@ -288,19 +288,24 @@ export class Controller<State extends Indexable = UnknownProps>
     const props: PendingProps<State> = inferTo(propsArg) as any
     let { from, to, reverse, delay } = props as any
 
-    // Avoid sending async "to" prop to springs.
-    if (is.arr(to) || is.fun(to)) {
-      to = undefined
-    }
-
     // Each update only affects the springs whose keys have defined values.
     const keys = (props.keys = new Set<string>())
-    const findDefined = (values: any) =>
-      values &&
-      each(values, (value, key) => value != null && keys.add(key as any))
 
-    findDefined(from)
-    findDefined(to)
+    if (from) {
+      findDefined(from, keys)
+    } else {
+      // Falsy values are ignored.
+      props.from = from = undefined
+    }
+
+    if (is.obj(to)) {
+      findDefined(to, keys)
+    } else {
+      // Falsy values are ignored.
+      if (!to) props.to = undefined
+      // Avoid passing functions/arrays to SpringValue objects.
+      to = undefined
+    }
 
     // Create our springs and give them values.
     const springs = this.springs as Indexable<SpringValue>
@@ -350,6 +355,11 @@ export class Controller<State extends Indexable = UnknownProps>
       G.frameLoop.onFrame(this._onFrame)
     }
   }
+}
+
+/** Find keys with defined values */
+function findDefined(values: any, keys: Set<string>) {
+  each(values, (value, key) => value != null && keys.add(key as any))
 }
 
 /** Basic helper for clearing a queue after processing it */
