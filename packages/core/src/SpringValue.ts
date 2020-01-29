@@ -673,13 +673,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     // At this point, the "goal" is only a string when it cannot be animated.
-    const immediate = is.str(goal) || !!matchProp(get('immediate'), key)
-    if (immediate !== anim.immediate) {
-      anim.immediate = immediate
-      if (!is.und(to)) {
-        started = true
-      }
-    }
+    anim.immediate = is.str(goal) || !!matchProp(get('immediate'), key)
 
     // When an active animation changes its goal to its current value:
     if (finished && this.is(ACTIVE)) {
