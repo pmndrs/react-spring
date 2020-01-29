@@ -609,11 +609,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
       from = fromConfig.get()
     }
 
-    const changed = !is.und(to) && !isEqual(to, prevTo)
+    const hasTo = !is.und(to)
+    const hasToChanged = hasTo && !isEqual(to, prevTo)
 
     // Ensure our Animated node is compatible with the "to" prop.
     let nodeType: AnimatedType
-    if (changed) {
+    if (hasToChanged) {
       nodeType = this._getNodeType(to!)
       if (nodeType !== node.constructor) {
         throw Error(
@@ -641,9 +642,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
       from = value
     }
 
+    // The "from" prop is only used [when the "reset" prop is true] or
+    // [when the "from" prop changes before the first animation begins].
+    const usingFrom =
+      reset || (this.is(CREATED) && !isEqual(anim.from, prevFrom))
+
     // Ensure the current value equals the "from" value when reset
     // and when the "from" value is updated before the first animation.
-    if (reset || (this.is(CREATED) && !isEqual(anim.from, prevFrom))) {
+    if (usingFrom) {
       node.setValue((value = from as T))
     }
 
@@ -655,11 +661,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // starts the animation to be safe.
       started = true
     } else {
-      if (changed || reset) {
+      if (hasToChanged || (hasTo && usingFrom)) {
         finished = isEqual(value, getFluidValue(to))
         started = !finished
       }
-      if (!started && (config.decay || !is.und(to))) {
+      if (!started && (hasTo || config.decay)) {
         started = !(
           isEqual(config.decay, decay) && isEqual(config.velocity, velocity)
         )
