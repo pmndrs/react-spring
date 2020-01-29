@@ -125,7 +125,15 @@ function describeToProp() {
 function describeFromProp() {
   describe('when "from" prop is changed', () => {
     describe('before the first animation', () => {
-      it('updates the current value', () => {})
+      it('updates the current value', () => {
+        const spring = new SpringValue<number>({ from: 1, to: 1 })
+        expect(spring.idle).toBeTruthy()
+        expect(spring.get()).toBe(1)
+
+        spring.start({ from: 0 })
+        expect(spring.idle).toBeFalsy()
+        expect(spring.get()).toBe(0)
+      })
     })
     describe('after the first animation', () => {
       it.todo('does nothing unless "reset" is true')
