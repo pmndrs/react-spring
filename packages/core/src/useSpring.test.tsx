@@ -7,7 +7,7 @@ import { SpringValue } from './SpringValue'
 
 describe('useSpring', () => {
   let springs: Indexable<SpringValue>
-  let animate: SpringUpdateFn<any>
+  let animate: SpringUpdateFn<UnknownProps>
   let stop: SpringStopFn<any>
 
   // Call the "useSpring" hook and update local variables.
