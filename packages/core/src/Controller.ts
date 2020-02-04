@@ -58,7 +58,7 @@ export interface EventProps<State extends Indexable> {
   onChange?: ((values: UnknownPartial<State>) => void) | Indexable<OnChange>
 }
 
-export type ControllerProps<State extends Indexable = Indexable> = Remap<
+export type ControllerProps<State extends Indexable = UnknownProps> = Remap<
   FluidProps<State> &
     RangeProps<State> &
     EventProps<UnknownPartial<State>> &
