@@ -36,6 +36,8 @@ export type TransitionPhase = 'initial' | 'enter' | 'update' | 'leave'
 export type PickAnimated<Props extends object, Fwd = true> = unknown &
   ([Props] extends [Any]
     ? any // Preserve "any" instead of resolving to "{}"
+    : UnknownProps extends Props
+    ? UnknownProps
     : ObjectFromUnion<
         | FromValues<Props>
         | (TransitionPhase & keyof Props extends never
