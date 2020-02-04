@@ -4,7 +4,7 @@ export * from './useSprings'
 export * from './useTrail'
 export * from './useTransition'
 
-export * from './legacy'
+export * from './components'
 export * from './interpolate'
 export * from './constants'
 export * from './globals'

@@ -8,12 +8,14 @@ import { Controller } from './Controller'
 import { useSprings } from './useSprings'
 import { getProps } from './helpers'
 
+export type UseTrailProps<Props extends object = any> = UseSpringProps<Props>
+
 export function useTrail<Props extends object>(
   length: number,
   props: (
     i: number,
     ctrl: Controller
-  ) => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
+  ) => UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps?: any[]
 ): [
   SpringValues<PickAnimated<Props>>[],
@@ -23,7 +25,7 @@ export function useTrail<Props extends object>(
 
 export function useTrail<Props extends object>(
   length: number,
-  props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
+  props: UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps?: any[]
 ): SpringValues<PickAnimated<Props>>[]
 
