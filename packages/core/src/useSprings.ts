@@ -1,6 +1,14 @@
-import { useMemo, RefObject, useImperativeHandle, useState } from 'react'
+import { useMemo, useImperativeHandle, useState } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
-import { is, each, usePrev, useOnce, UnknownProps, Merge } from 'shared'
+import {
+  is,
+  each,
+  usePrev,
+  useOnce,
+  RefProp,
+  UnknownProps,
+  Merge,
+} from 'shared'
 
 import {
   SpringStopFn,
@@ -16,7 +24,7 @@ import { getProps, useMemo as useMemoOne } from './helpers'
 export type UseSpringsProps<Props extends object = any> = Merge<
   UseSpringProps<Props>,
   {
-    ref?: RefObject<SpringHandle<PickAnimated<Props>>>
+    ref?: RefProp<SpringHandle<PickAnimated<Props>>>
   }
 >
 
@@ -74,7 +82,7 @@ export function useSprings(
 
   // The "ref" prop is taken from the props of the first spring only.
   // The ref is assumed to *never* change after the first render.
-  let ref: RefObject<SpringHandle> | undefined
+  let ref: RefProp<SpringHandle> | undefined
 
   const [ctrls] = useState<Controller[]>([])
   const updates: ControllerProps[] = []

@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useMemo,
-  useImperativeHandle,
-  ReactNode,
-  RefObject,
-} from 'react'
+import React, { useRef, useMemo, useImperativeHandle, ReactNode } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import {
   is,
@@ -14,6 +8,7 @@ import {
   each,
   OneOrMore,
   Falsy,
+  RefProp,
   Merge,
   UnknownProps,
 } from 'shared'
@@ -79,7 +74,7 @@ export type UseTransitionProps<Item = any> = Merge<
      *
      * Animations never auto-start when `ref` is defined.
      */
-    ref?: RefObject<TransitionHandle>
+    ref?: RefProp<TransitionHandle>
     key?: ItemKeys<Item>
     sort?: (a: Item, b: Item) => number
     trail?: number

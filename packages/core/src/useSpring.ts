@@ -1,5 +1,4 @@
-import { RefObject } from 'react'
-import { is, UnknownProps } from 'shared'
+import { is, RefProp, UnknownProps } from 'shared'
 
 import {
   SpringValues,
@@ -22,7 +21,7 @@ export type UseSpringProps<Props extends object = any> = unknown &
        *
        * Animations never auto-start when `ref` is defined.
        */
-      ref?: RefObject<SpringHandle<State>>
+      ref?: RefProp<SpringHandle<State>>
     }
   : never
 
