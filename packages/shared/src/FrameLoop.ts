@@ -12,7 +12,11 @@ export interface OpaqueAnimation {
   advance(dt: number): void
 }
 
-/** Create a frameloop singleton */
+/**
+ * FrameLoop executes its animations in order of lowest priority first.
+ * Animations are released once idle. The loop is paused while no animations
+ * exist.
+ */
 export class FrameLoop {
   /**
    * Start a new animation, or reorder an active animation in
