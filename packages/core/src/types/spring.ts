@@ -146,7 +146,7 @@ export type AsyncTo<T, P extends string = string> =
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringUpdateFn<T> = [T] extends [Animatable]
+export type SpringUpdateFn<T = unknown> = [T] extends [Animatable]
   ? {
       (to: SpringTo<T>, props?: SpringUpdate<T>): AsyncResult<T>
       (props: SpringUpdate<T>): AsyncResult<T>
@@ -165,7 +165,7 @@ export type SpringUpdateFn<T> = [T] extends [Animatable]
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export interface AsyncUpdateFn<T> {
+export interface AsyncUpdateFn<T = unknown> {
   (next: SpringUpdateFn<T>, stop: SpringStopFn<T>): Promise<void> | undefined
 }
 
@@ -175,7 +175,7 @@ export interface AsyncUpdateFn<T> {
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringStopFn<T> = T extends object
+export type SpringStopFn<T = unknown> = T extends object
   ? T extends ReadonlyArray<number | string>
     ? () => void
     : (keys?: OneOrMore<string>) => void
@@ -187,7 +187,7 @@ export type SpringStopFn<T> = T extends object
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringPauseFn<T> = T extends object
+export type SpringPauseFn<T = unknown> = T extends object
   ? T extends ReadonlyArray<number | string>
     ? () => void
     : (keys?: OneOrMore<string>) => void
@@ -199,7 +199,7 @@ export type SpringPauseFn<T> = T extends object
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringResumeFn<T> = T extends object
+export type SpringResumeFn<T = unknown> = T extends object
   ? T extends ReadonlyArray<number | string>
     ? () => void
     : (keys?: OneOrMore<string>) => void
@@ -210,7 +210,7 @@ export type SpringResumeFn<T> = T extends object
  *
  * The `T` parameter should only contain animated props.
  */
-export interface SpringsUpdateFn<State extends Indexable> {
+export interface SpringsUpdateFn<State extends Indexable = UnknownProps> {
   (
     props:
       | OneOrMore<ControllerProps<State>>
