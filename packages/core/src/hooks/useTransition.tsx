@@ -21,11 +21,11 @@ import {
   FromProp,
   SpringValues,
   SpringConfig,
-} from './types/spring'
-import { Valid, PickAnimated } from './types/common'
-import { AnimationProps, AnimationEvents } from './types/animated'
-import { DEFAULT_PROPS, callProp, inferTo } from './helpers'
-import { Controller, ControllerProps } from './Controller'
+} from '../types/spring'
+import { Valid, PickAnimated } from '../types/common'
+import { AnimationProps, AnimationEvents } from '../types/animated'
+import { DEFAULT_PROPS, callProp, inferTo } from '../helpers'
+import { Controller, ControllerProps } from '../Controller'
 import { UseSpringProps } from './useSpring'
 
 /** This transition is being mounted */

@@ -3,8 +3,8 @@ import { NoInfer, is, Falsy } from 'shared'
 
 import { Valid, PickAnimated } from '../types/common'
 import { SpringValues } from '../types/spring'
-import { UseSpringProps } from '../useSpring'
-import { useTrail } from '../useTrail'
+import { UseSpringProps } from '../hooks/useSpring'
+import { useTrail } from '../hooks/useTrail'
 
 export type TrailComponentProps<Item, Props extends object = any> = unknown &
   UseSpringProps<Props> & {

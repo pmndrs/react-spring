@@ -1,13 +1,13 @@
-import { is, RefProp, UnknownProps } from 'shared'
+import { is, RefProp, UnknownProps, Remap } from 'shared'
 
 import {
   SpringValues,
   SpringUpdateFn,
   SpringStopFn,
   SpringHandle,
-} from './types/spring'
-import { PickAnimated, Valid } from './types/common'
-import { ControllerProps } from './Controller'
+} from '../types/spring'
+import { PickAnimated, Valid } from '../types/common'
+import { ControllerProps } from '../Controller'
 import { useSprings } from './useSprings'
 
 /**
@@ -15,14 +15,16 @@ import { useSprings } from './useSprings'
  */
 export type UseSpringProps<Props extends object = any> = unknown &
   PickAnimated<Props> extends infer State
-  ? ControllerProps<State> & {
-      /**
-       * Used to access the imperative API.
-       *
-       * Animations never auto-start when `ref` is defined.
-       */
-      ref?: RefProp<SpringHandle<State>>
-    }
+  ? Remap<
+      ControllerProps<State> & {
+        /**
+         * Used to access the imperative API.
+         *
+         * Animations never auto-start when `ref` is defined.
+         */
+        ref?: RefProp<SpringHandle<State>>
+      }
+    >
   : never
 
 /**

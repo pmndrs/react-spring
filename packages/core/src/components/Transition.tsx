@@ -4,10 +4,10 @@ import { NoInfer, OneOrMore } from 'shared'
 import { PickAnimated, Valid } from '../types/common'
 import {
   UseTransitionProps,
-  ItemKeys,
   useTransition,
   TransitionFn,
-} from '../useTransition'
+  ItemKeys,
+} from '../hooks/useTransition'
 
 export type TransitionRenderProp<
   Item = any,

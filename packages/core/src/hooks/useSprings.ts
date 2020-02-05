@@ -15,11 +15,11 @@ import {
   SpringValues,
   SpringsUpdateFn,
   SpringHandle,
-} from './types/spring'
-import { PickAnimated } from './types/common'
+} from '../types/spring'
+import { PickAnimated } from '../types/common'
 import { UseSpringProps } from './useSpring'
-import { Controller, ControllerProps } from './Controller'
-import { getProps, useMemo as useMemoOne } from './helpers'
+import { Controller, ControllerProps } from '../Controller'
+import { getProps, useMemo as useMemoOne } from '../helpers'
 
 export type UseSpringsProps<Props extends object = any> = Merge<
   UseSpringProps<Props>,
