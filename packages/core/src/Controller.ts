@@ -107,7 +107,7 @@ export class Controller<State extends Indexable = UnknownProps>
     if (props) {
       const { to, ...initialProps } = inferTo(props as any)
       this._initialProps = initialProps
-      if (to) this.start({ to })
+      if (to) this.start({ to } as any)
     }
   }
 
@@ -144,11 +144,12 @@ export class Controller<State extends Indexable = UnknownProps>
    * When you pass a queue (instead of nothing), that queue is used instead of
    * the queued animations added with the `update` method, which are left alone.
    */
-  start(queue?: OneOrMore<UnknownPartial<ControllerProps<State>>>) {
-    if (queue) {
-      queue = toArray<any>(queue).map(props => this._prepareUpdate(props))
-    } else {
-      queue = this.queue
+  start(props?: OneOrMore<UnknownPartial<ControllerProps<State>>>) {
+    const queue = props
+      ? toArray<any>(props).map(props => this._prepareUpdate(props))
+      : this.queue
+
+    if (!props) {
       this.queue = []
     }
 
