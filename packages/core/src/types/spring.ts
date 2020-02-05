@@ -235,4 +235,7 @@ export interface SpringHandle<T extends Indexable = UnknownProps> {
   resume: SpringResumeFn<T>
 }
 
-export type SpringConfig = Partial<Omit<AnimationConfig, 'w0'>>
+/**
+ * The object type of the `config` prop.
+ */
+export type SpringConfig = Partial<AnimationConfig>
