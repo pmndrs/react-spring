@@ -1,4 +1,6 @@
-export type Indexable<T = any> = { [key: string]: T; [i: number]: T }
+export interface Indexable<T = any> {
+  [key: string]: T
+}
 
 export type OneOrMore<T> = T | readonly T[]
 
@@ -57,7 +59,7 @@ export type Constrain<T, U> = [T] extends [Any] ? U : [T] extends [U] ? T : U
 export type ObjectType<T> = T extends {} ? T : {}
 
 /** Intersected with other object types to allow for unknown properties */
-export type UnknownProps = Indexable<unknown>
+export interface UnknownProps extends Indexable<unknown> {}
 
 export type UnknownPartial<T = {}> = UnknownProps & Partial<T>
 
