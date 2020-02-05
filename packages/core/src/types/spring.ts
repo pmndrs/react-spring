@@ -48,7 +48,9 @@ type SpringWrap<T> = [
 export type GoalValue<T> = T extends Animatable
   ? T | FluidValue<T> | UnknownProps
   : T extends object
-  ? UnknownPartial<FluidProps<T>>
+  ? UnknownProps extends T
+    ? UnknownProps
+    : UnknownPartial<FluidProps<T>>
   : never
 
 /**
