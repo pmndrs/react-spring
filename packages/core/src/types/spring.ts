@@ -32,7 +32,10 @@ export type SpringValues<T extends object = any> = Remap<
 >
 
 // Wrap a type with `SpringValue`
-type SpringWrap<T> = [Exclude<T, FluidValue>] extends [object | void]
+type SpringWrap<T> = [
+  Exclude<T, FluidValue>,
+  Extract<T, readonly any[]> // Arrays are animated.
+] extends [object | void, never]
   ? never // Object literals cannot be animated.
   : SpringValue<Exclude<T, FluidValue | void>> | Extract<T, void>
 
