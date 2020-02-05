@@ -11,15 +11,24 @@ test('basic usage', () => {
     from={{ opacity: 0 }}
     to={{ opacity: 1, color: 'blue' }}
     onRest={result => {
-      assert(result, _ as Readonly<AnimationResult<UnknownPartial>>);
+      assert(
+        result,
+        _ as Readonly<
+          AnimationResult<
+            UnknownPartial<{
+              opacity: number;
+              color: string;
+            }>
+          >
+        >
+      );
     }}>
     {values => {
       assert(
         values,
         _ as SpringValues<{
-          // FIXME: should include these
-          // opacity: number;
-          // color?: string;
+          opacity: number;
+          color: string;
         }>
       );
       return <View style={values} />;
@@ -27,15 +36,14 @@ test('basic usage', () => {
   </Spring>;
 });
 
-test('async "to" prop', () => {
+test('with async function as "to" prop', () => {
   <Spring
     from={{ opacity: 0 }}
     to={async next => {
       assert(
         next,
         _ as SpringUpdateFn<{
-          // FIXME: should include this
-          // opacity: number;
+          opacity: number;
         }>
       );
     }}>
@@ -43,8 +51,36 @@ test('async "to" prop', () => {
       assert(
         values,
         _ as SpringValues<{
-          // FIXME: should include this
-          // opacity: number;
+          opacity: number;
+        }>
+      );
+      return <View style={values} />;
+    }}
+  </Spring>;
+});
+
+test('with array as "to" prop', () => {
+  <Spring
+    from={{ opacity: 0 }}
+    to={[
+      { opacity: 1 },
+      {
+        // Scripted animation inside an animation chain
+        to: async next => {
+          assert(
+            next,
+            _ as SpringUpdateFn<{
+              opacity: number;
+            }>
+          );
+        },
+      },
+    ]}>
+    {values => {
+      assert(
+        values,
+        _ as SpringValues<{
+          opacity: number;
         }>
       );
       return <View style={values} />;
