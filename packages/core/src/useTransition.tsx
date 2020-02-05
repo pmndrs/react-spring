@@ -22,7 +22,7 @@ import {
   SpringValues,
   SpringConfig,
 } from './types/spring'
-import { PickAnimated } from './types/common'
+import { Valid, PickAnimated } from './types/common'
 import { AnimationProps, AnimationEvents } from './types/animated'
 import { DEFAULT_PROPS, callProp, inferTo } from './helpers'
 import { Controller, ControllerProps } from './Controller'
@@ -46,6 +46,18 @@ export function useTransition<Item, Props extends object>(
     | UseTransitionProps<Item>
     | (Props & Valid<Props, UseTransitionProps<Item>>)
 ): TransitionFn<Item, PickAnimated<Props>>
+
+export function useTransition<Item, Props extends object>(
+  data: OneOrMore<Item>,
+  props:
+    | UseTransitionProps<Item>
+    | (Props & Valid<Props, UseTransitionProps<Item>>),
+  deps: any[] | undefined
+): [
+  TransitionFn<Item, PickAnimated<Props>>,
+  TransitionHandle['update'],
+  TransitionHandle['stop']
+]
 
 export function useTransition(
   data: unknown,
@@ -255,7 +267,7 @@ export function useTransition(
     reset ? void 0 : deps
   )
 
-  return render =>
+  const renderTransitions: TransitionFn = render =>
     transitions.map((t, i) => {
       const elem: any = render({ ...t.ctrl.springs }, t.item, t, i)
       return elem && elem.type ? (
@@ -268,6 +280,10 @@ export function useTransition(
         elem
       )
     })
+
+  return arguments.length == 3
+    ? ([renderTransitions, api.update, api.stop] as const)
+    : renderTransitions
 }
 
 export type UseTransitionProps<Item = any> = Merge<
