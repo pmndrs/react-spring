@@ -1,12 +1,12 @@
 import { useLayoutEffect } from 'react-layout-effect'
 import { is, UnknownProps } from 'shared'
 
-import { PickAnimated, Valid } from './types/common'
-import { SpringValues, SpringStopFn, SpringsUpdateFn } from './types/spring'
+import { PickAnimated, Valid } from '../types/common'
+import { SpringValues, SpringStopFn, SpringsUpdateFn } from '../types/spring'
 import { UseSpringProps } from './useSpring'
-import { Controller } from './Controller'
+import { Controller } from '../Controller'
 import { useSprings } from './useSprings'
-import { getProps } from './helpers'
+import { getProps } from '../helpers'
 
 export type UseTrailProps<Props extends object = any> = UseSpringProps<Props>
 

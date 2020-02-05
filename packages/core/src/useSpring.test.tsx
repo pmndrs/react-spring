@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import { useSpring } from './useSpring'
-import { is, Indexable } from 'shared'
+import { useSpring } from './hooks/useSpring'
+import { is, Indexable, UnknownProps } from 'shared'
 import { SpringStopFn, SpringUpdateFn } from './types/spring'
 import { SpringValue } from './SpringValue'
 

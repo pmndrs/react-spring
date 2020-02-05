@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 
 import { PickAnimated, Valid } from '../types/common'
 import { SpringValues } from '../types/spring'
-import { UseSpringProps, useSpring } from '../useSpring'
+import { UseSpringProps, useSpring } from '../hooks/useSpring'
 
 export type SpringComponentProps<Props extends object = any> = unknown &
   UseSpringProps<Props> & {

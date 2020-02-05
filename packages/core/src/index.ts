@@ -1,9 +1,4 @@
-export * from './useChain'
-export * from './useSpring'
-export * from './useSprings'
-export * from './useTrail'
-export * from './useTransition'
-
+export * from './hooks'
 export * from './components'
 export * from './interpolate'
 export * from './constants'
