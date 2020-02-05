@@ -59,7 +59,7 @@ export interface EventProps<State extends Indexable = UnknownProps> {
 }
 
 export type ControllerProps<State extends Indexable = UnknownProps> = Remap<
-  FluidProps<State> &
+  Partial<FluidProps<State>> &
     RangeProps<State> &
     EventProps<UnknownPartial<State>> &
     AnimationProps
