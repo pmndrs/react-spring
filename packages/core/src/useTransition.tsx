@@ -11,6 +11,7 @@ import {
   RefProp,
   Merge,
   UnknownProps,
+  Indexable,
 } from 'shared'
 import { now } from 'shared/globals'
 
@@ -38,91 +39,19 @@ const UPDATE = 2 as TransitionPhase
 /** This transition will expire after animating */
 const LEAVE = 3 as TransitionPhase
 
-type PhaseProp<Item> =
-  | Falsy
-  | OneOrMore<UseSpringProps & UnknownProps>
-  | ((
-      item: Item,
-      index: number
-    ) => (UseSpringProps & UnknownProps) | AsyncTo<UnknownProps> | Falsy)
 
-type PhaseProps<Item = any, From = {}> = {
-  from?: From &
-    (
-      | FromProp<UnknownProps>
-      | ((item: Item, index: number) => FromProp<UnknownProps>)
-    )
-  initial?: From &
-    (
-      | FromProp<UnknownProps>
-      | ((item: Item, index: number) => FromProp<UnknownProps>)
-    )
-  enter?: PhaseProp<Item>
-  update?: PhaseProp<Item>
-  leave?: PhaseProp<Item>
-}
-
-type Key = string | number
-
-export type ItemKeys<T = any> = OneOrMore<Key> | ((item: T) => Key) | null
-
-export type UseTransitionProps<Item = any> = Merge<
-  AnimationProps & AnimationEvents,
-  {
-    /**
-     * Used to access the imperative API.
-     *
-     * Animations never auto-start when `ref` is defined.
-     */
-    ref?: RefProp<TransitionHandle>
-    key?: ItemKeys<Item>
-    sort?: (a: Item, b: Item) => number
-    trail?: number
-    expires?: number
-    config?:
-      | SpringConfig
-      | ((item: Item, index: number) => AnimationProps['config'])
-  }
->
-
-/** The imperative `ref` API */
-export type TransitionHandle = Merge<
-  SpringHandle,
-  {
-    update(props: ControllerProps): TransitionHandle
-  }
->
-
-/** The function returned by `useTransition` */
-export interface TransitionFn<Item = any, State extends object = any> {
-  (
-    render: (
-      values: SpringValues<State>,
-      item: Item,
-      transition: TransitionState<Item>,
-      index: number
-    ) => ReactNode
-  ): ReactNode[]
-}
-
-function getKeys(
-  items: readonly any[],
-  { key, keys = key }: { key?: ItemKeys; keys?: ItemKeys }
-): readonly any[] {
-  return is.und(keys) ? items : is.fun(keys) ? items.map(keys) : toArray(keys)
-}
-
-export function useTransition<Item, From, Props extends object>(
+export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
-  props: Props & PhaseProps<Item, From> & UseTransitionProps<Item>,
-  deps?: any[]
+  props:
+    | UseTransitionProps<Item>
+    | (Props & Valid<Props, UseTransitionProps<Item>>)
 ): TransitionFn<Item, PickAnimated<Props>>
 
 export function useTransition(
   data: unknown,
-  props: PhaseProps & UseTransitionProps,
+  props: UseTransitionProps,
   deps?: any[]
-): TransitionFn {
+) {
   const { ref, reset, sort, trail = 0, expires = Infinity } = props
 
   // Every item has its own transition.
@@ -341,9 +270,54 @@ export function useTransition(
     })
 }
 
-interface Change {
-  phase: TransitionPhase
-  payload?: any
+export type UseTransitionProps<Item = any> = Merge<
+  AnimationProps & AnimationEvents,
+  {
+    from?: TransitionFrom<Item>
+    initial?: TransitionFrom<Item>
+    enter?: TransitionTo<Item>
+    update?: TransitionTo<Item>
+    leave?: TransitionTo<Item>
+    key?: ItemKeys<Item>
+    sort?: (a: Item, b: Item) => number
+    trail?: number
+    expires?: number
+    config?:
+      | SpringConfig
+      | ((item: Item, index: number) => AnimationProps['config'])
+    /**
+     * Used to access the imperative API.
+     *
+     * Animations never auto-start when `ref` is defined.
+     */
+    ref?: RefProp<TransitionHandle>
+  }
+>
+
+export type ItemKeys<T = any> = OneOrMore<Key> | ((item: T) => Key) | null
+
+/** Control the transition springs without re-rendering. */
+export type TransitionHandle<State extends Indexable = UnknownProps> = Merge<
+  SpringHandle<State>,
+  {
+    update: (
+      props:
+        | OneOrMore<ControllerProps<State>>
+        | ((index: number, ctrl: Controller<State>) => ControllerProps<State>)
+    ) => TransitionHandle<State>
+  }
+>
+
+/** The function returned by `useTransition` */
+export interface TransitionFn<Item = any, State extends object = any> {
+  (
+    render: (
+      values: SpringValues<State>,
+      item: Item,
+      transition: TransitionState<Item>,
+      index: number
+    ) => ReactNode
+  ): ReactNode[]
 }
 
 export interface TransitionState<Item = any> {
@@ -354,4 +328,34 @@ export interface TransitionState<Item = any> {
   /** Destroy no later than this date */
   expiresBy?: number
   expirationId?: number
+}
+
+//
+// Internal
+//
+
+type Key = string | number
+
+type TransitionFrom<Item> =
+  | FromProp<UnknownProps>
+  | ((item: Item, index: number) => FromProp<UnknownProps>)
+
+type TransitionTo<Item> =
+  | Falsy
+  | OneOrMore<UseSpringProps<UnknownProps>>
+  | ((
+      item: Item,
+      index: number
+    ) => UseSpringProps<UnknownProps> | AsyncTo<UnknownProps> | Falsy)
+
+interface Change {
+  phase: TransitionPhase
+  payload?: any
+}
+
+function getKeys(
+  items: readonly any[],
+  { key, keys = key }: { key?: ItemKeys; keys?: ItemKeys }
+): readonly any[] {
+  return is.und(keys) ? items : is.fun(keys) ? items.map(keys) : toArray(keys)
 }
