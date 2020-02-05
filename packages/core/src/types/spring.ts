@@ -226,7 +226,7 @@ export interface SpringsUpdateFn<State extends Indexable> {
  *
  * The `T` parameter should only contain animated props.
  */
-export interface SpringHandle<T extends Indexable = any> {
+export interface SpringHandle<T extends Indexable = UnknownProps> {
   controllers: readonly Controller<T>[]
   update: SpringsUpdateFn<T>
   start: () => AsyncResult<T[]>
