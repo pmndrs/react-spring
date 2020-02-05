@@ -124,7 +124,7 @@ export type AsyncUpdate<T = any, P extends string = string> =
       (T extends object
         ? T extends ReadonlyArray<any>
           ? unknown
-          : UnknownProps
+          : UnknownPartial<FluidProps<T>>
         : unknown))
 
 export type SpringTo<T = any, P extends string = string> = unknown &
