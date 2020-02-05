@@ -138,7 +138,9 @@ export type SpringTo<T = any, P extends string = string> = unknown &
  */
 export type AsyncTo<T, P extends string = string> =
   // HACK: Wrap a generic mapped type around "SpringUpdate" to allow circular types.
-  ReadonlyArray<{ [U in P]: AsyncUpdate<T, P> }[P]> | AsyncUpdateFn<T>
+  | ReadonlyArray<{ [U in P]: AsyncUpdate<T, P> }[P]>
+  | AsyncUpdateFn<T>
+  | Function
 
 /**
  * Update the props of a spring.
