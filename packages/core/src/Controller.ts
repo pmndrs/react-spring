@@ -30,7 +30,7 @@ import { FrameValue } from './FrameValue'
 const BATCHED_EVENTS = ['onStart', 'onChange', 'onRest'] as const
 
 /** All event props supported by the `Controller` class */
-export interface EventProps<State extends Indexable> {
+export interface EventProps<State extends Indexable = UnknownProps> {
   /**
    * Called when the # of animating values exceeds 0
    *
