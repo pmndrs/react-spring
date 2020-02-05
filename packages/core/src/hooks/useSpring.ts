@@ -2,7 +2,7 @@ import { is, RefProp, UnknownProps, Remap } from 'shared'
 
 import {
   SpringValues,
-  SpringUpdateFn,
+  SpringsUpdateFn,
   SpringStopFn,
   SpringHandle,
 } from '../types/spring'
@@ -38,7 +38,7 @@ export function useSpring<Props extends object>(
   deps?: any[]
 ): [
   SpringValues<PickAnimated<Props>>,
-  SpringUpdateFn<PickAnimated<Props>>,
+  SpringsUpdateFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
 
@@ -57,17 +57,19 @@ export function useSpring<Props extends object>(
   deps: any[] | undefined
 ): [
   SpringValues<PickAnimated<Props>>,
-  SpringUpdateFn<PickAnimated<Props>>,
+  SpringsUpdateFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
 
 /** @internal */
-export function useSpring(props: any, deps?: any[]): any {
+export function useSpring(props: any, deps?: any[]) {
   const isFn = is.fun(props)
   const [[values], update, stop] = useSprings(
     1,
     isFn ? props : [props],
     isFn ? deps || [] : deps
   )
-  return isFn || arguments.length == 2 ? [values, update, stop] : values
+  return isFn || arguments.length == 2
+    ? ([values, update, stop] as const)
+    : values
 }
