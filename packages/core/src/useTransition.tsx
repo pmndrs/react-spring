@@ -28,17 +28,21 @@ import { DEFAULT_PROPS, callProp, inferTo } from './helpers'
 import { Controller, ControllerProps } from './Controller'
 import { UseSpringProps } from './useSpring'
 
-// TODO: convert to "const enum" once Babel supports it
-export type TransitionPhase = number & { t: 'TransitionPhase' }
 /** This transition is being mounted */
-const MOUNT = 0 as TransitionPhase
+const MOUNT = 'mount'
 /** This transition is entering or has entered */
-const ENTER = 1 as TransitionPhase
+const ENTER = 'enter'
 /** This transition had its animations updated */
-const UPDATE = 2 as TransitionPhase
+const UPDATE = 'update'
 /** This transition will expire after animating */
-const LEAVE = 3 as TransitionPhase
+const LEAVE = 'leave'
 
+// TODO: convert to "const enum" once Babel supports it
+export type TransitionPhase =
+  | typeof MOUNT
+  | typeof ENTER
+  | typeof UPDATE
+  | typeof LEAVE
 
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
@@ -166,7 +170,7 @@ export function useTransition(
       }
     } else {
       const isLeave = keys.indexOf(t.key) < 0
-      if (t.phase < LEAVE) {
+      if (t.phase != LEAVE) {
         if (isLeave) {
           to = props.leave
           phase = LEAVE
