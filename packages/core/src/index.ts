@@ -15,6 +15,8 @@ export {
   SpringConfig,
   SpringHandle,
   SpringStopFn,
+  SpringPauseFn,
+  SpringResumeFn,
   SpringUpdate,
   SpringUpdateFn,
   SpringsUpdateFn,
