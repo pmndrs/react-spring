@@ -109,16 +109,14 @@ export type AnimatedStyle<T> = [T, T] extends [infer T, infer DT] // T is a unio
     : DT | AnimatedLeaf<T>
   : never
 
-type Indices<T> = Extract<keyof T, number>
-
 type TransformArray = Exclude<ViewStyle['transform'], void>
 
 // An animated array of transform objects
-export type AnimatedTransform = {
-  [P in Indices<TransformArray>]: TransformArray[P] extends infer T
-    ? { [P in keyof T]: T[P] | AnimatedLeaf<T[P]> }
+export type AnimatedTransform = Array<
+  TransformArray[number] extends infer T
+    ? { [P in keyof T]: T[P] | FluidValue<T[P]> }
     : never
-}
+>
 
 // An animated primitive (or an array of them)
 type AnimatedLeaf<T> =
