@@ -137,10 +137,22 @@ export type SpringTo<T = any, P extends string = string> = unknown &
  * or a primitive type for a single animated value.
  */
 export type AsyncTo<T, P extends string = string> =
+  | AsyncUpdateFn<T>
   // HACK: Wrap a generic mapped type around "SpringUpdate" to allow circular types.
   | ReadonlyArray<{ [U in P]: AsyncUpdate<T, P> }[P]>
-  | AsyncUpdateFn<T>
+  // HACK: Fix type inference of untyped inline functions.
   | Function
+
+/**
+ * An async function that can update or cancel the animations of a spring.
+ *
+ * The `T` parameter can be a set of animated values (as an object type)
+ * or a primitive type for a single animated value.
+ */
+export type AsyncUpdateFn<T = unknown> = (
+  next: SpringUpdateFn<T>,
+  stop: SpringStopFn<T>
+) => Promise<void> | undefined
 
 /**
  * Update the props of a spring.
@@ -154,25 +166,34 @@ export type SpringUpdateFn<T = unknown> = [T] extends [Animatable]
       (props: SpringUpdate<T>): AsyncResult<T>
     }
   : [T] extends [object]
-  ? {
-      (props: ControllerProps<T>): AsyncResult<T>
-    }
-  : {
-      (props: SpringUpdate<T>): AsyncResult<T>
-    }
+  ? (props: ControllerProps<T>) => AsyncResult<T>
+  : (props: SpringUpdate<T>) => AsyncResult<T>
+
+export type SpringUpdates<State extends Indexable = UnknownProps> =
+  | OneOrMore<ControllerProps<State>>
+  | ((index: number, ctrl: Controller<State>) => ControllerProps<State> | null)
 
 /**
- * An async function that can update or cancel the animations of a spring.
+ * Update the props of each spring, individually or all at once.
  *
- * The `T` parameter can be a set of animated values (as an object type)
- * or a primitive type for a single animated value.
+ * The `T` parameter should only contain animated props.
  */
-export interface AsyncUpdateFn<T = unknown> {
-  (next: SpringUpdateFn<T>, stop: SpringStopFn<T>): Promise<void> | undefined
-}
+export type SpringsUpdateFn<T extends Indexable = UnknownProps> = unknown &
+  ((props: SpringUpdates<T>) => SpringHandle<T>)
+
+/**
+ * Start the animation described by the `props` argument.
+ *
+ * If nothing is passed, flush the `update` queue.
+ */
+export type SpringStartFn<State = unknown> = (
+  props?: SpringUpdates<State>
+) => AsyncResult<State[]>
 
 /**
  * Stop every animating `SpringValue` at its current value.
+ *
+ * Pass one or more keys to stop selectively.
  *
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
@@ -208,30 +229,14 @@ export type SpringResumeFn<T = unknown> = T extends object
   : () => void
 
 /**
- * Update the props of each spring, individually or all at once.
- *
- * The `T` parameter should only contain animated props.
- */
-export interface SpringsUpdateFn<State extends Indexable = UnknownProps> {
-  (
-    props:
-      | OneOrMore<ControllerProps<State>>
-      | ((
-          index: number,
-          ctrl: Controller<State>
-        ) => ControllerProps<State> | null)
-  ): SpringHandle<State>
-}
-
-/**
  * The object attached to the `ref` prop by the `useSprings` hook.
  *
  * The `T` parameter should only contain animated props.
  */
 export interface SpringHandle<T extends Indexable = UnknownProps> {
-  controllers: readonly Controller<T>[]
+  controllers: ReadonlyArray<Controller<T>>
   update: SpringsUpdateFn<T>
-  start: () => AsyncResult<T[]>
+  start: SpringStartFn<T>
   stop: SpringStopFn<T>
   pause: SpringPauseFn<T>
   resume: SpringResumeFn<T>
