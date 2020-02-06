@@ -662,7 +662,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       started = true
     } else {
       if (hasToChanged || (hasTo && usingFrom)) {
-        finished = isEqual(value, getFluidValue(to))
+        finished = isEqual(computeGoal(value), computeGoal(to))
         started = !finished
       }
       if (!started && (hasTo || config.decay)) {
