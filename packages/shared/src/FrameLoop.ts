@@ -92,22 +92,23 @@ export class FrameLoop {
     const kickoff = () => {
       if (idle) {
         idle = false
-        lastTime = G.performanceNow()
-        requestFrame(update)
+
+        // To minimize frame skips, the frameloop never stops.
+        if (lastTime == 0) {
+          lastTime = G.performanceNow()
+          requestFrame(update)
+        }
       }
     }
 
     // Process the current frame
     const update = (this.update = time => {
-      if (idle) return
       if (is.und(time)) {
         time = G.performanceNow()
       }
-
-      let dt = time - lastTime
-      if (dt > 0) {
+      if (!idle && time > lastTime) {
         // http://gafferongames.com/game-physics/fix-your-timestep/
-        if (dt > 64) dt = 64
+        const dt = Math.min(64, time - lastTime)
 
         if (startQueue.size) {
           startQueue.forEach(start)
@@ -147,10 +148,8 @@ export class FrameLoop {
 
         if (!animations.length) {
           idle = true
-          return
         }
       }
-
       lastTime = time
       requestFrame(update)
     })
