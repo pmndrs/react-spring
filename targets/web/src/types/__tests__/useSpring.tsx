@@ -1,54 +1,38 @@
 import { assert, test, _ } from 'spec.ts';
 import React, { useRef } from 'react';
-import { SpringValues, AnimationResult } from 'core';
-import { UnknownPartial } from 'shared';
 import { RunAsyncProps } from '@react-spring/core/src/runAsync';
 import {
   animated,
   useSpring,
   SpringValue,
+  SpringValues,
   SpringHandle,
   SpringStopFn,
   SpringUpdateFn,
+  SpringsUpdateFn,
+  AnimationResult,
 } from '../..';
+
+type State = { width: number };
 
 test('infer return type via forward prop', () => {
   const props = useSpring({ width: 0, delay: 1000 });
-  assert(
-    props,
-    _ as SpringValues<{
-      width: number;
-    }>
-  );
+  assert(props, _ as SpringValues<State>);
 
   test('using with "animated()" component', () => {
-    const Test = animated((_: { style: { width: number } }) => null);
+    const Test = animated((_: { style: State }) => null);
     return <Test style={props} />;
   });
 });
 
 test('infer return type via "from" prop', () => {
-  const props = useSpring({
-    from: { width: 0 },
-  });
-  assert(
-    props,
-    _ as SpringValues<{
-      width: number;
-    }>
-  );
+  const props = useSpring({ from: { width: 0 } });
+  assert(props, _ as SpringValues<State>);
 });
 
 test('infer return type via "to" prop', () => {
-  const props = useSpring({
-    to: { width: 0 },
-  });
-  assert(
-    props,
-    _ as SpringValues<{
-      width: number;
-    }>
-  );
+  const props = useSpring({ to: { width: 0 } });
+  assert(props, _ as SpringValues<State>);
 });
 
 test('infer return type via "from" and "to" props', () => {
@@ -83,7 +67,7 @@ test('infer animated array', () => {
   const props = useSpring({
     to: { foo: [0, 0] },
   });
-  assert(props.foo, _ as number[]);
+  assert(props.foo, _ as SpringValue<number[]>);
   assert(
     props,
     _ as SpringValues<{
@@ -100,30 +84,38 @@ test('infer animated array', () => {
   });
 });
 
-test('imperative mode', () => {
+test('imperative mode (inferred)', () => {
   const [props, update, stop] = useSpring(() => ({
-    foo: 0,
+    width: 0,
     onRest(event) {
-      assert(event, _ as Readonly<AnimationResult<UnknownPartial>>);
+      // FIXME: should include {foo: number}
+      assert(event, _ as Readonly<AnimationResult>);
     },
   }));
 
-  type Foo = { foo: number };
-  assert(props, _ as SpringValues<Foo>);
-  assert(update, _ as SpringUpdateFn<Foo>);
-  assert(stop, _ as SpringStopFn<Foo>);
+  assert(props, _ as SpringValues<State>);
+  assert(update, _ as SpringsUpdateFn<State>);
+  assert(stop, _ as SpringStopFn<State>);
+});
+
+test('imperative mode', () => {
+  const [props, update, stop] = useSpring<State>(() => ({
+    width: 0,
+    onRest(event) {
+      // FIXME: should include {foo: number}
+      assert(event, _ as Readonly<AnimationResult>);
+    },
+  }));
+
+  assert(props, _ as SpringValues<State>);
+  assert(update, _ as SpringsUpdateFn<State>);
+  assert(stop, _ as SpringStopFn<State>);
 
   test('update()', () => {
-    // Update an existing animated key
-    update({ foo: 100 });
-
-    // Add an animated key
-    update({ bar: 100 });
-
-    // With event listener
     update({
+      width: 100,
       onRest(result) {
-        assert(result, _ as Readonly<AnimationResult<UnknownPartial<Foo>>>);
+        assert(result, _ as Readonly<AnimationResult<State>>);
       },
     });
   });
@@ -157,14 +149,12 @@ test('imperative mode', () => {
       onChange(values) {
         assert(
           values,
-          _ as UnknownPartial<{
-            // FIXME: should include this
-            // foo: number
-          }>
+          _ as any // FIXME: should be {foo: number}
         );
       },
       onRest(result) {
-        assert(result, _ as Readonly<AnimationResult<UnknownPartial>>);
+        // FIXME: should include {foo: number}
+        assert(result, _ as Readonly<AnimationResult>);
       },
     }));
     assert(
@@ -195,14 +185,12 @@ test('basic config', () => {
     onChange(values) {
       assert(
         values,
-        _ as UnknownPartial<{
-          // FIXME: should include this
-          // width: number
-        }>
+        _ as any // FIXME: should be {width: number}
       );
     },
     onRest(result) {
-      assert(result, _ as Readonly<AnimationResult<UnknownPartial>>);
+      // FIXME: should include {width: number}
+      assert(result, _ as Readonly<AnimationResult>);
     },
   });
   assert(
@@ -214,85 +202,39 @@ test('basic config', () => {
 });
 
 test('function as "to" prop', () => {
+  type State = { width: number };
+
   const props = useSpring({
+    from: { width: 0 },
     to: async next => {
-      assert(next, _ as SpringUpdateFn<{}>);
-
-      // Unknown keys can be animated.
-      await next({ width: '100%' });
-
+      assert(next, _ as SpringUpdateFn<State>);
       await next({
-        foo: 100,
+        width: 100,
         delay: 1000,
         config: { duration: 1000 },
         onRest(result) {
-          assert(result, _ as Readonly<AnimationResult<UnknownPartial>>);
+          assert(result, _ as Readonly<AnimationResult<State>>);
         },
       });
     },
   });
-  assert(props, _ as SpringValues);
 
-  test('with "from" prop', () => {
-    const props = useSpring({
-      from: { foo: 1 },
-      to: async next => {
-        assert(
-          next,
-          _ as SpringUpdateFn<{
-            // FIXME: should include this
-            // foo: number
-          }>
-        );
-        await next({
-          onRest(result) {
-            // FIXME: should be "UnknownPartial<{ foo: number }>" instead of "UnknownPartial"
-            assert(result, _ as Readonly<AnimationResult<UnknownPartial>>);
-          },
-        });
-      },
-    });
-    assert(
-      props,
-      _ as SpringValues<{
-        foo: number;
-      }>
-    );
-  });
+  assert(props, _ as SpringValues<State>);
 });
 
 test('array as "to" prop', () => {
-  // ⚠️ Animated keys are not inferred when "to" is an array (unless "from" exists)
   const props = useSpring({
-    to: [{ opacity: 1 }, { opacity: 0 }],
-    foo: 0, // ️️⚠️ This key is ignored because "to" exists
+    from: { width: 0 },
+    to: [{ width: 100 }, { width: 0 }],
   });
-  assert(
-    props,
-    _ as SpringValues<{
-      opacity: number;
-    }>
-  );
-
-  test('with "from" prop', () => {
-    const props = useSpring({
-      to: [{ opacity: 1 }, { opacity: 0 }],
-      from: { opacity: 0 },
-    });
-    assert(
-      props,
-      _ as SpringValues<{
-        opacity: number;
-      }>
-    );
-  });
+  assert(props, _ as SpringValues<State>);
 });
 
 test('with "onProps" prop', () => {
   useSpring({
     width: 0,
     onProps(props, spring) {
-      assert(props, _ as RunAsyncProps<unknown>);
+      assert(props, _ as Readonly<RunAsyncProps<unknown>>);
       assert(spring, _ as SpringValue<unknown>);
     },
   });
