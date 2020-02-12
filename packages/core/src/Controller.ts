@@ -4,7 +4,6 @@ import {
   OneOrMore,
   toArray,
   UnknownProps,
-  UnknownPartial,
   FluidProps,
   Remap,
 } from 'shared'
@@ -55,13 +54,13 @@ export interface EventProps<State extends Indexable = UnknownProps> {
    *
    * Also accepts an object for per-key events
    */
-  onChange?: ((values: UnknownPartial<State>) => void) | Indexable<OnChange>
+  onChange?: ((values: State) => void) | Indexable<OnChange>
 }
 
 export type ControllerProps<State extends Indexable = UnknownProps> = Remap<
-  Partial<FluidProps<State>> &
+  FluidProps<Partial<State>> &
     RangeProps<State> &
-    EventProps<UnknownPartial<State>> &
+    EventProps<State> &
     AnimationProps
 >
 
@@ -132,8 +131,8 @@ export class Controller<State extends Indexable = UnknownProps>
   }
 
   /** Push an update onto the queue of each value. */
-  update(props: UnknownPartial<ControllerProps<State>> | Falsy) {
     if (props) this.queue.push(this._prepareUpdate(props))
+  update(props: ControllerProps<State> | Falsy) {
     return this
   }
 
@@ -144,7 +143,7 @@ export class Controller<State extends Indexable = UnknownProps>
    * When you pass a queue (instead of nothing), that queue is used instead of
    * the queued animations added with the `update` method, which are left alone.
    */
-  start(props?: OneOrMore<UnknownPartial<ControllerProps<State>>>) {
+  start(props?: OneOrMore<ControllerProps<State>>) {
     const queue = props
       ? toArray<any>(props).map(props => this._prepareUpdate(props))
       : this.queue
@@ -285,7 +284,7 @@ export class Controller<State extends Indexable = UnknownProps>
   }
 
   /** Prepare an update with the given props. */
-  protected _prepareUpdate(propsArg: UnknownPartial<ControllerProps<State>>) {
+  protected _prepareUpdate(propsArg: ControllerProps<State>) {
     const props: PendingProps<State> = inferTo(propsArg) as any
     let { from, to, reverse, delay } = props as any
 
