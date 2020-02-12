@@ -4,7 +4,6 @@ import {
   Falsy,
   Indexable,
   OneOrMore,
-  UnknownPartial,
   UnknownProps,
   FluidValue,
   FluidProps,
@@ -24,12 +23,9 @@ export type Springify<T> = Indexable<SpringValue<unknown> | undefined> &
 /**
  * The set of `SpringValue` objects returned by a `useSpring` call (or similar).
  */
-export type SpringValues<T extends object = any> = Remap<
-  Indexable<SpringValue<unknown> | undefined> &
-    ([T] extends [Any]
-      ? unknown // Ignore "T = any"
-      : { [P in keyof T]: SpringWrap<T[P]> })
->
+export type SpringValues<T extends object = any> = [T] extends [Any]
+  ? Indexable<SpringValue<unknown> | undefined> // Special case: "any"
+  : { [P in keyof T]: SpringWrap<T[P]> }
 
 // Wrap a type with `SpringValue`
 type SpringWrap<T> = [
@@ -48,9 +44,7 @@ type SpringWrap<T> = [
 export type GoalValue<T> = T extends Animatable
   ? T | FluidValue<T> | UnknownProps
   : T extends object
-  ? UnknownProps extends T
-    ? UnknownProps
-    : UnknownPartial<FluidProps<T>>
+  ? FluidProps<Partial<T>>
   : never
 
 /**
@@ -124,7 +118,7 @@ export type AsyncUpdate<T = any, P extends string = string> =
       (T extends object
         ? T extends ReadonlyArray<any>
           ? unknown
-          : UnknownPartial<FluidProps<T>>
+          : FluidProps<Partial<T>>
         : unknown))
 
 export type SpringTo<T = any, P extends string = string> = unknown &
