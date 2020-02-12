@@ -25,7 +25,12 @@ import {
 import { Valid, PickAnimated } from '../types/common'
 import { AnimationProps, AnimationEvents } from '../types/animated'
 import { DEFAULT_PROPS, callProp, inferTo } from '../helpers'
-import { Controller, ControllerProps } from '../Controller'
+import {
+  Controller,
+  ControllerProps,
+  getSprings,
+  setSprings,
+} from '../Controller'
 import { UseSpringProps } from './useSpring'
 
 /** This transition is being mounted */
@@ -218,16 +223,8 @@ export function useTransition(
       }
     }
 
-    const change: Change = { phase }
-    changes.set(t, change)
-
-    // To ensure all Animated nodes exist during render,
-    // the payload must be applied immediately for new items.
-    if (t.phase > MOUNT) {
-      change.payload = payload
-    } else {
-      t.ctrl.update(payload)
-    }
+    const springs = getSprings(t.ctrl, payload)
+    changes.set(t, { phase, springs, payload })
   })
 
   const api = useMemo(
@@ -262,10 +259,11 @@ export function useTransition(
 
   useLayoutEffect(
     () => {
-      each(changes, ({ phase, payload }, t) => {
+      each(changes, ({ phase, springs, payload }, t) => {
         t.phase = phase
-        if (payload) t.ctrl.update(payload)
-        if (!ref) t.ctrl.start()
+        setSprings(t.ctrl, springs)
+        if (ref) t.ctrl.update(payload)
+        else t.ctrl.start(payload)
       })
     },
     reset ? void 0 : deps
@@ -273,7 +271,8 @@ export function useTransition(
 
   const renderTransitions: TransitionFn = render =>
     transitions.map((t, i) => {
-      const elem: any = render({ ...t.ctrl.springs }, t.item, t, i)
+      const { springs } = changes.get(t) || t.ctrl
+      const elem: any = render({ ...springs }, t.item, t, i)
       return elem && elem.type ? (
         <elem.type
           {...elem.props}
@@ -370,7 +369,8 @@ type TransitionTo<Item> =
 
 interface Change {
   phase: TransitionPhase
-  payload?: any
+  springs: SpringValues<UnknownProps>
+  payload: ControllerProps
 }
 
 function getKeys(

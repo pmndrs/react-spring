@@ -181,7 +181,7 @@ export type SpringsUpdateFn<T extends Indexable = UnknownProps> = unknown &
  * If nothing is passed, flush the `update` queue.
  */
 export type SpringStartFn<State = unknown> = (
-  props?: SpringUpdates<State>
+  props?: SpringUpdates<State> | null
 ) => AsyncResult<State[]>
 
 /**

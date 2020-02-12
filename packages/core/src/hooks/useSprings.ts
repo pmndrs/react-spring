@@ -1,4 +1,4 @@
-import { useMemo, useImperativeHandle, useState } from 'react'
+import { useMemo, useState, useRef } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import {
   is,
@@ -8,6 +8,7 @@ import {
   RefProp,
   UnknownProps,
   Merge,
+  useForceUpdate,
 } from 'shared'
 
 import {
@@ -18,7 +19,14 @@ import {
 } from '../types/spring'
 import { PickAnimated } from '../types/common'
 import { UseSpringProps } from './useSpring'
-import { Controller, ControllerProps } from '../Controller'
+import {
+  Controller,
+  getSprings,
+  flushUpdateQueue,
+  FlushFn,
+  createUpdateProps,
+  setSprings,
+} from '../Controller'
 import { getProps, useMemo as useMemoOne } from '../helpers'
 
 export type UseSpringsProps<Props extends object = any> = Merge<
@@ -80,23 +88,60 @@ export function useSprings(
   const propsFn = is.fun(props) && props
   if (propsFn && !deps) deps = []
 
-  // The "ref" prop is taken from the props of the first spring only.
-  // The ref is assumed to *never* change after the first render.
-  let ref: RefProp<SpringHandle> | undefined
+  interface State {
+    // The controllers used for applying updates.
+    ctrls: Controller[]
+    // The queue of changes to make on commit.
+    queue: Array<() => void>
+    // The flush function used by controllers.
+    flush: FlushFn<UnknownProps>
+  }
 
-  const [ctrls] = useState<Controller[]>([])
-  const updates: ControllerProps[] = []
+  // Set to 0 to prevent sync flush.
+  const layoutId = useRef(0)
+  const forceUpdate = useForceUpdate()
+
+  // State is updated on commit.
+  const [state] = useState(
+    (): State => ({
+      ctrls: [],
+      queue: [],
+      flush(ctrl, updates) {
+        const springs = getSprings(ctrl, updates)
+
+        // Flushing is postponed until the component's commit phase
+        // if a spring was created since the last commit.
+        const canFlushSync =
+          layoutId.current > 0 &&
+          !state.queue.length &&
+          !Object.keys(springs).some(key => !ctrl.springs[key])
+
+        return canFlushSync
+          ? flushUpdateQueue(ctrl, updates)
+          : new Promise<any>(resolve => {
+              setSprings(ctrl, springs)
+              state.queue.push(() => {
+                resolve(flushUpdateQueue(ctrl, updates))
+              })
+              forceUpdate()
+            })
+      },
+    })
+  )
+
+  // The imperative API ref from the props of the first controller.
+  const refProp = useRef<RefProp<SpringHandle>>()
+
+  const ctrls = [...state.ctrls]
+  const updates: any[] = []
+
+  // Cache old controllers to dispose in the commit phase.
   const prevLength = usePrev(length) || 0
+  const disposed = ctrls.slice(length, prevLength)
 
   // Create new controllers when "length" increases, and destroy
   // the affected controllers when "length" decreases.
   useMemoOne(() => {
-    // Note: Length changes are unsafe in React concurrent mode.
-    if (prevLength > length) {
-      for (let i = length; i < prevLength; i++) {
-        ctrls[i].dispose()
-      }
-    }
     ctrls.length = length
     getUpdates(prevLength, length)
   }, [length])
@@ -108,68 +153,107 @@ export function useSprings(
 
   function getUpdates(startIndex: number, endIndex: number) {
     for (let i = startIndex; i < endIndex; i++) {
-      const ctrl = ctrls[i] || (ctrls[i] = new Controller())
-      const update: UseSpringProps<any> = propsFn
+      const ctrl = ctrls[i] || (ctrls[i] = new Controller(null, state.flush))
+
+      let update: UseSpringProps<any> = propsFn
         ? propsFn(i, ctrl)
         : (props as any)[i]
 
       if (update) {
+        update = updates[i] = createUpdateProps(update)
         update.default = true
-        if (i == 0 && update.ref) {
-          ref = update.ref
-        }
-        if (i < prevLength) {
-          updates[i] = update
-        } else {
-          // Update new controllers immediately, so their
-          // spring values exist during first render.
-          ctrl.update(update)
+        if (i == 0) {
+          refProp.current = update.ref
+          update.ref = undefined
         }
       }
     }
   }
 
-  // Controllers are not updated until the commit phase.
-  useLayoutEffect(() => {
-    each(updates, (update, i) => ctrls[i].update(update))
-    if (!ref) {
-      each(ctrls, ctrl => ctrl.start())
-    }
-  })
-
-  useOnce(() => () => {
-    each(ctrls, ctrl => ctrl.dispose())
-  })
-
   const api = useMemo(
     (): SpringHandle => ({
       get controllers() {
-        return ctrls
+        return state.ctrls
       },
       update: props => {
-        each(ctrls, (ctrl, i) => {
-          ctrl.update(getProps(props, i, ctrl))
-          if (!ref) ctrl.start()
+        each(state.ctrls, (ctrl, i) => {
+          const update = getProps(props, i, ctrl)
+          if (refProp.current) {
+            ctrl.update(update)
+          } else {
+            ctrl.start(update)
+          }
         })
         return api
       },
-      async start() {
-        const results = await Promise.all(ctrls.map(ctrl => ctrl.start()))
+      start: async props => {
+        const results = await Promise.all(
+          state.ctrls.map((ctrl, i) => ctrl.start(getProps(props, i, ctrl)))
+        )
         return {
           value: results.map(result => result.value),
           finished: results.every(result => result.finished),
         }
       },
-      stop: keys => each(ctrls, ctrl => ctrl.stop(keys)),
-      pause: keys => each(ctrls, ctrl => ctrl.pause(keys)),
-      resume: keys => each(ctrls, ctrl => ctrl.resume(keys)),
+      stop: keys => each(state.ctrls, ctrl => ctrl.stop(keys)),
+      pause: keys => each(state.ctrls, ctrl => ctrl.pause(keys)),
+      resume: keys => each(state.ctrls, ctrl => ctrl.resume(keys)),
     }),
     []
   )
 
-  useImperativeHandle(ref, () => api)
+  // New springs are created during render so users can pass them to
+  // their animated components, but new springs aren't cached until the
+  // commit phase (see the `useLayoutEffect` callback below).
+  const springs = ctrls.map((ctrl, i) => getSprings(ctrl, updates[i]))
 
-  const values = ctrls.map(ctrl => ({ ...ctrl.springs }))
+  useLayoutEffect(() => {
+    layoutId.current++
+
+    // Replace the cached controllers.
+    state.ctrls = ctrls
+
+    // Update the ref prop.
+    if (refProp.current) {
+      refProp.current.current = api
+    }
+
+    // Flush the commit queue.
+    const { queue } = state
+    if (queue.length) {
+      state.queue = []
+      each(queue, cb => cb())
+    }
+
+    // Dispose unused controllers.
+    each(disposed, ctrl => ctrl.dispose())
+
+    // Update existing controllers.
+    each(ctrls, (ctrl, i) => {
+      setSprings(ctrl, springs[i])
+
+      // Apply updates created during render.
+      const update = updates[i]
+      if (update) {
+        // Start animating unless a ref exists.
+        if (refProp.current) {
+          ctrl.queue.push(update)
+        } else {
+          ctrl.start(update)
+        }
+      }
+    })
+  })
+
+  // Dispose all controllers on unmount.
+  useOnce(() => () => {
+    each(state.ctrls, ctrl => ctrl.dispose())
+  })
+
+  // Return a deep copy of the `springs` array so the caller can
+  // safely mutate it during render.
+  const values = springs.map(x => ({ ...x }))
+
   return propsFn || arguments.length == 3
     ? [values, api.update, api.stop]
     : values
