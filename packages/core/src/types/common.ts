@@ -125,6 +125,7 @@ export interface ReservedProps {
   immediate?: any
   default?: any
   delay?: any
+  keys?: any
   items?: any
   trail?: any
   sort?: any

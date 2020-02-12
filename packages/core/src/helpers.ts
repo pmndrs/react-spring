@@ -79,6 +79,7 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   immediate: 1,
   default: 1,
   delay: 1,
+  keys: 1,
   items: 1,
   trail: 1,
   sort: 1,
