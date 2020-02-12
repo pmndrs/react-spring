@@ -20,7 +20,7 @@ export type UseSpringProps<Props extends object = any> = unknown &
         /**
          * Used to access the imperative API.
          *
-         * Animations never auto-start when `ref` is defined.
+         * When defined, the render animation won't auto-start.
          */
         ref?: RefProp<SpringHandle<State>>
       }
@@ -28,10 +28,8 @@ export type UseSpringProps<Props extends object = any> = unknown &
   : never
 
 /**
- * When the `deps` argument exists, the `props` function is called whenever
- * the `deps` change on re-render.
- *
- * Without the `deps` argument, the `props` function is only called once.
+ * The `props` function is only called on the first render, unless
+ * `deps` change (when defined). State is inferred from forward props.
  */
 export function useSpring<Props extends object>(
   props: () => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
@@ -43,14 +41,14 @@ export function useSpring<Props extends object>(
 ]
 
 /**
- * Animations are updated on re-render.
+ * Updated on every render, with state inferred from forward props.
  */
 export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps
 ): SpringValues<PickAnimated<Props>>
 
 /**
- * When the `deps` argument exists, you get the `update` and `stop` function.
+ * Updated only when `deps` change, with state inferred from forwad props.
  */
 export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
