@@ -49,10 +49,12 @@ export const matchProp = <P extends string = string>(
 type AnyProps<T, Arg = never> = OneOrMore<T> | ((i: number, arg: Arg) => T)
 
 export const getProps = <T, Arg = never>(
-  props: AnyProps<T, Arg>,
+  props: AnyProps<T, Arg> | null | undefined,
   i: number,
   arg: Arg
-) => (is.fun(props) ? props(i, arg) : is.arr(props) ? props[i] : { ...props })
+) =>
+  props &&
+  (is.fun(props) ? props(i, arg) : is.arr(props) ? props[i] : { ...props })
 
 /** These props can have default values */
 export const DEFAULT_PROPS = [
