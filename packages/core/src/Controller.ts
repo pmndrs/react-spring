@@ -100,7 +100,7 @@ export class Controller<State extends Indexable = UnknownProps>
   /** The values currently being animated */
   protected _active = new Set<FrameValue>()
 
-  /** Event handlers and async state are stored here */
+  /** State used by the `runAsync` function */
   protected _state: RunAsyncState<State> = {}
 
   /** The event queues that are flushed once per frame maximum */
