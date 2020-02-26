@@ -1,8 +1,14 @@
 import { is } from 'shared'
 import { config as configs } from './constants'
 
-const defaultConfig = configs.default
 const linear = (t: number) => t
+const defaults: any = {
+  ...configs.default,
+  mass: 1,
+  damping: 1,
+  easing: linear,
+  clamp: false,
+}
 
 export class AnimationConfig {
   /**
@@ -10,7 +16,7 @@ export class AnimationConfig {
    *
    * When tension is zero, no animation occurs.
    */
-  tension: number = defaultConfig.tension
+  tension!: number
 
   /**
    * The damping ratio coefficient, or just the damping ratio when `speed` is defined.
@@ -19,7 +25,7 @@ export class AnimationConfig {
    *
    * Higher friction means the spring will slow down faster.
    */
-  friction: number = defaultConfig.friction
+  friction!: number
 
   /**
    * The natural frequency (in seconds), which dictates the number of bounces
@@ -40,14 +46,14 @@ export class AnimationConfig {
    *
    * Defaults to 1
    */
-  damping = 1
+  damping!: number
 
   /**
    * Higher mass means more friction is required to slow down.
    *
    * Defaults to 1, which works fine most of the time.
    */
-  mass = 1
+  mass!: number
 
   /**
    * The initial velocity of one or more values.
@@ -94,12 +100,12 @@ export class AnimationConfig {
    *
    * Defaults to quadratic ease-in-out.
    */
-  easing = linear
+  easing!: (t: number) => number
 
   /**
    * Avoid overshooting by ending abruptly at the goal value.
    */
-  clamp = false
+  clamp!: boolean
 
   /**
    * When above zero, the spring will bounce instead of overshooting when
@@ -128,12 +134,22 @@ export class AnimationConfig {
    * passed to the `set` method of an animated value.
    */
   round?: number
+
+  constructor() {
+    Object.assign(this, defaults)
+  }
 }
 
 export function mergeConfig(
   config: AnimationConfig,
   newConfig: Partial<AnimationConfig>,
   defaultConfig?: Partial<AnimationConfig>
+): typeof config
+
+export function mergeConfig(
+  config: any,
+  newConfig: object,
+  defaultConfig?: object
 ) {
   if (defaultConfig) {
     defaultConfig = { ...defaultConfig }
@@ -143,6 +159,12 @@ export function mergeConfig(
 
   sanitizeConfig(config, newConfig)
   Object.assign(config, newConfig)
+
+  for (const key in defaults) {
+    if (config[key] == null) {
+      config[key] = defaults[key]
+    }
+  }
 
   let { mass, frequency, damping } = config
   if (!is.und(frequency)) {
