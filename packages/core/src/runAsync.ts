@@ -8,7 +8,7 @@ import {
   SpringTo,
 } from './types/spring'
 import { AnimationResult } from './types/animated'
-import { matchProp, DEFAULT_PROPS } from './helpers'
+import { matchProp, DEFAULT_PROPS, callProp } from './helpers'
 import { PendingProps } from './SpringValue'
 
 export type AsyncResult<T = any> = Promise<Readonly<AnimationResult<T>>>
@@ -42,8 +42,7 @@ export type DefaultProps = {
 /**
  * Start an async chain or an async script.
  *
- * You should always wrap `runAsync` calls with `scheduleProps` so that
- * you have access to `RunAsyncProps` instead of the usual `SpringProps`.
+ * Always call `runAsync` in the action callback of a `scheduleProps` call.
  *
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
@@ -160,7 +159,15 @@ export async function runAsync<T>(
       props.onRest(result)
     }
 
-    return result!
+    if (result.finished) {
+      // TODO: support { delay: 1000 } return value
+      const loop = callProp(props.loop)
+      if (loop) {
+        return runAsync(to, props, state, getValue, getPaused, update, stop)
+      }
+    }
+
+    return result
   })())
 }
 

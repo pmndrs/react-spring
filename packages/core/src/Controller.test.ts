@@ -95,4 +95,42 @@ describe('Controller', () => {
       expect(onStart2).toBeCalledTimes(1)
     })
   })
+
+  describe('when "loop" is used with async "to" prop', () => {
+    it('calls the "to" function repeatedly', async () => {
+      const ctrl = new Controller({ t: 0 })
+      const { t } = ctrl.springs
+
+      let loop = true
+      let times = 2
+
+      // Note: This example is silly, since you could use a for-loop
+      // to more easily achieve the same result, but it tests the ability
+      // to halt a looping script via the "loop" function prop.
+      ctrl.start({
+        loop: () => loop,
+        to: async next => {
+          await next({ t: 1 })
+          await next({ t: 0 })
+
+          if (times--) return
+          loop = false
+        },
+      })
+
+      await advanceUntilValue(t, 1)
+      expect(t.idle).toBeFalsy()
+
+      for (let i = 0; i < 2; i++) {
+        await advanceUntilValue(t, 0)
+        expect(t.idle).toBeFalsy()
+
+        await advanceUntilValue(t, 1)
+        expect(t.idle).toBeFalsy()
+      }
+
+      await advanceUntilValue(t, 0)
+      expect(t.idle).toBeTruthy()
+    })
+  })
 })
