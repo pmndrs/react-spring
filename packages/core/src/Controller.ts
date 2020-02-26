@@ -29,32 +29,34 @@ import { FrameValue } from './FrameValue'
 const BATCHED_EVENTS = ['onStart', 'onChange', 'onRest'] as const
 
 /** All event props supported by the `Controller` class */
-export interface EventProps<State extends Indexable = UnknownProps> {
+export type EventProps<State extends object> = {
   /**
    * Called when the # of animating values exceeds 0
    *
    * Also accepts an object for per-key events
    */
-  onStart?: (() => void) | Indexable<OnStart>
+  onStart?: (() => void) | { [P in keyof State]?: OnStart<State[P]> }
   /**
    * Called when the # of animating values hits 0
    *
    * Also accepts an object for per-key events
    */
-  onRest?: OnRest<State> | Indexable<OnRest>
+  onRest?: OnRest<State> | { [P in keyof State]?: OnRest<State[P]> }
   /**
    * Called after an animation is updated by new props.
    * Useful for manipulation
    *
    * Also accepts an object for per-key events
    */
-  onProps?: OnProps | Indexable<OnProps>
+  onProps?: OnProps<State> | { [P in keyof State]?: OnProps<State[P]> }
   /**
    * Called once per frame when animations are active
    *
    * Also accepts an object for per-key events
    */
-  onChange?: ((values: State) => void) | Indexable<OnChange>
+  onChange?:
+    | ((values: State) => void)
+    | { [P in keyof State]?: OnChange<State[P]> }
 }
 
 export type ControllerProps<State extends Indexable = UnknownProps> = Remap<
