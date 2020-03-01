@@ -433,12 +433,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
     to,
     from,
     reverse,
-    delay,
   }: {
     to?: any
     from?: any
     reverse?: boolean
-    delay?: number
   }) {
     const key = this.key || ''
 
@@ -453,10 +451,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (this.is(CREATED)) {
       if (reverse) [to, from] = [from, to]
       from = getFluidValue(from)
-      const node = this._updateNode(
-        // The "to" prop is ignored when "delay" exists.
-        is.und(from) && is.und(delay) ? getFluidValue(to) : from
-      )
+
+      const node = this._updateNode(is.und(from) ? getFluidValue(to) : from)
       if (node && !is.und(from)) {
         node.setValue(from)
       }
