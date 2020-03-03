@@ -204,25 +204,27 @@ export function useTransition(
       if (is.fun(onRest)) {
         onRest(result)
       }
-      if (t.phase == LEAVE && t.ctrl.idle) {
-        const expiry = callProp(expires, t.item)
-        if (expiry === false) return
+      if (t.ctrl.idle) {
+        const transitions = usedTransitions.current!
+        const idle = transitions.every(t => t.ctrl.idle)
+        if (t.phase == LEAVE) {
+          const expiry = callProp(expires, t.item)
+          if (expiry !== false) {
+            const expiryMs = expiry === true ? 0 : expiry
+            t.expired = true
 
-        const expiryMs = expiry === true ? 0 : expiry
-        t.expired = true
-
-        if (expires <= 0) {
+            // Force update once the expiration delay ends.
+            if (!idle && expiryMs > 0) {
+              // The maximum timeout is 2^31-1
+              if (expiryMs <= 0x7fffffff)
+                t.expirationId = setTimeout(forceUpdate, expiryMs)
+              return
+            }
+          }
+        }
+        // Force update once idle and expired items exist.
+        if (idle && transitions.some(t => t.expired)) {
           forceUpdate()
-        } else {
-          // Postpone dismounts while other controllers are active.
-          const transitions = usedTransitions.current!
-          if (transitions.every(t => t.ctrl.idle)) {
-            forceUpdate()
-          }
-          // When `expires` is infinite, postpone dismount until next render.
-          else if (expires < Infinity) {
-            t.expirationId = setTimeout(forceUpdate, expiryMs)
-          }
         }
       }
     }
