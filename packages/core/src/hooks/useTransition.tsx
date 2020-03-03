@@ -13,7 +13,6 @@ import {
   UnknownProps,
   Indexable,
 } from 'shared'
-import { now } from 'shared/globals'
 
 import {
   SpringHandle,
@@ -73,7 +72,7 @@ export function useTransition(
   props: UseTransitionProps,
   deps?: any[]
 ) {
-  const { ref, reset, sort, trail = 0, expires = Infinity } = props
+  const { ref, reset, sort, trail = 0, expires = true } = props
 
   // Every item has its own transition.
   const items = toArray(data)
@@ -95,7 +94,7 @@ export function useTransition(
   // Destroy all transitions on dismount.
   useOnce(() => () =>
     each(usedTransitions.current!, t => {
-      if (t.expiresBy != null) {
+      if (t.expired) {
         clearTimeout(t.expirationId)
       }
       t.ctrl.dispose()
@@ -107,7 +106,7 @@ export function useTransition(
   if (prevTransitions && !reset)
     each(prevTransitions, (t, i) => {
       // Expired transitions are not rendered.
-      if (t.expiresBy != null) {
+      if (t.expired) {
         clearTimeout(t.expirationId)
       } else {
         i = reused[i] = keys.indexOf(t.key)
@@ -206,7 +205,12 @@ export function useTransition(
         onRest(result)
       }
       if (t.phase == LEAVE && t.ctrl.idle) {
-        t.expiresBy = now() + expires
+        const expiry = callProp(expires, t.item)
+        if (expiry === false) return
+
+        const expiryMs = expiry === true ? 0 : expiry
+        t.expired = true
+
         if (expires <= 0) {
           forceUpdate()
         } else {
@@ -217,7 +221,7 @@ export function useTransition(
           }
           // When `expires` is infinite, postpone dismount until next render.
           else if (expires < Infinity) {
-            t.expirationId = setTimeout(forceUpdate, expires)
+            t.expirationId = setTimeout(forceUpdate, expiryMs)
           }
         }
       }
@@ -300,7 +304,17 @@ export type UseTransitionProps<Item = any> = Merge<
     key?: ItemKeys<Item>
     sort?: (a: Item, b: Item) => number
     trail?: number
-    expires?: number
+    /**
+     * When `true` or `<= 0`, each item is unmounted immediately after its
+     * `leave` animation is finished.
+     *
+     * When `false`, items are never unmounted.
+     *
+     * When `> 0`, this prop is used in a `setTimeout` call that forces a
+     * rerender if the component that called `useTransition` doesn't rerender
+     * on its own after an item's `leave` animation is finished.
+     */
+    expires?: boolean | number | ((item: Item) => boolean | number)
     config?:
       | SpringConfig
       | ((item: Item, index: number) => AnimationProps['config'])
@@ -344,8 +358,7 @@ export interface TransitionState<Item = any> {
   item: Item
   ctrl: Controller
   phase: TransitionPhase
-  /** Destroy no later than this date */
-  expiresBy?: number
+  expired?: boolean
   expirationId?: number
 }
 
