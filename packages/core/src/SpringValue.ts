@@ -497,11 +497,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     const state = this._state
     const timestamp = G.now()
-    return scheduleProps(++this._lastAsyncId, {
+    return scheduleProps<T>(++this._lastAsyncId, {
       key: this.key,
       props,
       state,
-      action: (props: RunAsyncProps<T>, resolve) => {
+      action: (props, resolve) => {
         const { to } = props
         if (is.arr(to) || is.fun(to)) {
           resolve(

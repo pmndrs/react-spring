@@ -8,7 +8,7 @@ import {
   SpringTo,
 } from './types/spring'
 import { AnimationResult } from './types/animated'
-import { matchProp, DEFAULT_PROPS, callProp } from './helpers'
+import { matchProp, DEFAULT_PROPS, callProp, MatchProp } from './helpers'
 import { PendingProps } from './SpringValue'
 
 export type AsyncResult<T = any> = Promise<Readonly<AnimationResult<T>>>
@@ -175,29 +175,30 @@ export async function runAsync<T>(
 // scheduleProps(props, state, action)
 //
 
-/**
- * Pass props to your action when any delay is finished and the
- * props weren't cancelled before then.
- */
-export function scheduleProps<Props extends SpringUpdate, Result>(
-  asyncId: number,
-  {
-    key,
-    props,
-    state,
-    action,
-  }: {
-    key?: string
-    props: Props
-    state: {
-      cancelId?: number
-    }
-    action: (
-      props: Props & RunAsyncProps,
-      resolve: (result: Result | Promise<Result>) => void
-    ) => void
+interface ScheduledProps<T> {
+  key?: string
+  props: {
+    cancel?: MatchProp
+    delay?: number | ((key: string) => number)
+    reset?: MatchProp
   }
-): Promise<Result> {
+  state: {
+    cancelId?: number
+  }
+  action: (
+    props: RunAsyncProps<T>,
+    resolve: (result: AnimationResult<T> | AsyncResult<T>) => void
+  ) => void
+}
+
+/**
+ * Pass a copy of the given props to an `action` after any delay is finished
+ * and the props weren't cancelled before then.
+ */
+export function scheduleProps<T>(
+  asyncId: number,
+  { key, props, state, action }: ScheduledProps<T>
+): AsyncResult<T> {
   return new Promise((resolve, reject) => {
     let { delay, cancel, reset } = props
 
