@@ -7,7 +7,6 @@ import {
   UnknownProps,
   FluidValue,
   FluidProps,
-  Remap,
 } from 'shared'
 
 import { AnimationProps, AnimationEvents } from './animated'
