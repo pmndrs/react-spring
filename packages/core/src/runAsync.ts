@@ -8,7 +8,7 @@ import {
   SpringTo,
 } from './types/spring'
 import { AnimationResult } from './types/animated'
-import { matchProp, DEFAULT_PROPS, callProp, MatchProp } from './helpers'
+import { matchProp, DEFAULT_PROPS, MatchProp } from './helpers'
 import { PendingProps } from './SpringValue'
 
 export type AsyncResult<T = any> = Promise<Readonly<AnimationResult<T>>>
@@ -157,14 +157,6 @@ export async function runAsync<T>(
 
     if (is.fun(props.onRest)) {
       props.onRest(result)
-    }
-
-    if (result.finished) {
-      // TODO: support { delay: 1000 } return value
-      const loop = callProp(props.loop)
-      if (loop) {
-        return runAsync(to, props, state, getValue, getPaused, update, stop)
-      }
     }
 
     return result
