@@ -525,6 +525,25 @@ export class SpringValue<T = any> extends FrameValue<T> {
           this._merge(range, props, timestamp, resolve)
         }
       },
+    }).then(result => {
+      if (props.loop && result.finished) {
+        const loop = callProp(props.loop)
+        if (loop) {
+          const { to } = props
+          const delay = loop !== true && loop.delay
+          return this._update({
+            ...props,
+            delay: is.num(delay) ? delay : props.delay,
+            // The "reverse" prop will remain true (if true) and the "to/from"
+            // props must be undefined to allow reversing both ways. For an
+            // async "to" prop, the "reverse" prop is ignored.
+            to: is.arr(to) || is.fun(to) ? to : undefined,
+            from: undefined,
+            reset: !props.reverse,
+          })
+        }
+      }
+      return result
     })
   }
 
@@ -689,10 +708,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (started || getFluidConfig(prevTo)) {
       anim.values = node.getPayload()
       anim.toValues = toConfig ? null : toArray(goal)
-    }
-
-    if (started) {
-      anim.loop = props.loop
     }
 
     // Event props are replaced on every update.
@@ -869,18 +884,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
         each(onRestQueue, onRest => {
           onRest(result)
         })
-      }
-
-      if (finished) {
-        const loop = callProp(anim.loop, this.key!)
-        if (loop) {
-          this.start({
-            loop: anim.loop,
-            delay: (loop !== true && loop.delay) || 0,
-            reverse: anim.reverse,
-            reset: !anim.reverse,
-          })
-        }
       }
     }
   }

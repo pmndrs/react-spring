@@ -76,7 +76,7 @@ export interface AnimationProps<P extends string = string> {
   /**
    * Replay animations after they're finished.
    */
-  loop?: boolean | AnimationLoop | ((key: string) => boolean | AnimationLoop)
+  loop?: boolean | AnimationLoop | (() => boolean | AnimationLoop)
   /**
    * Swap the `to` and `from` props.
    */

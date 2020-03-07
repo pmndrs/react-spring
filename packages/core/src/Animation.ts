@@ -17,7 +17,6 @@ export class Animation<T = any> {
   config = new AnimationConfig()
   immediate = false
   reverse = false
-  loop?: AnimationProps['loop']
   onStart?: OnStart<T>
   onChange?: OnChange<T>
   onRest?: Array<OnRest<T>>
