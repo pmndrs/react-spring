@@ -206,17 +206,17 @@ export function scheduleProps<Props extends SpringUpdate, Result>(
     } else run()
 
     function run() {
-      // Might be cancelled during delay.
-      if (asyncId <= (state.cancelId || 0)) {
-        cancel = true
-      } else {
-        cancel = matchProp(cancel, key)
-        if (cancel) {
-          state.cancelId = asyncId
-        }
-      }
-      reset = !cancel && matchProp(reset, key)
       try {
+        // Might have been cancelled during its delay.
+        if (asyncId <= (state.cancelId || 0)) {
+          cancel = true
+        } else {
+          cancel = matchProp(cancel, key)
+          if (cancel) {
+            state.cancelId = asyncId
+          }
+        }
+        reset = !cancel && matchProp(reset, key)
         action({ ...props, asyncId, cancel, reset }, resolve)
       } catch (err) {
         reject(err)
