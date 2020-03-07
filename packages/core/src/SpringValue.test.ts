@@ -322,17 +322,6 @@ function describeLoopProp() {
       expect(spring.get()).toBe(1)
     })
 
-    it('does not affect earlier updates', async () => {
-      const spring = new SpringValue(0)
-      spring.start(1)
-
-      await advanceUntilValue(spring, 0.5)
-      spring.start({ loop: true })
-
-      await advanceUntilValue(spring, 1)
-      expect(spring.idle).toBeTruthy()
-    })
-
     it('does not affect later updates', async () => {
       const spring = new SpringValue(0)
       spring.start(1, { loop: true })
