@@ -33,7 +33,7 @@ export type UseSpringProps<Props extends object = any> = unknown &
  */
 export function useSpring<Props extends object>(
   props: () => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
-  deps?: any[]
+  deps: readonly any[] | undefined
 ): [
   SpringValues<PickAnimated<Props>>,
   SpringsUpdateFn<PickAnimated<Props>>,
@@ -52,7 +52,7 @@ export function useSpring<Props extends object>(
  */
 export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
-  deps: any[] | undefined
+  deps: readonly any[] | undefined
 ): [
   SpringValues<PickAnimated<Props>>,
   SpringsUpdateFn<PickAnimated<Props>>,
@@ -60,7 +60,7 @@ export function useSpring<Props extends object>(
 ]
 
 /** @internal */
-export function useSpring(props: any, deps?: any[]) {
+export function useSpring(props: any, deps?: readonly any[]) {
   const isFn = is.fun(props)
   const [[values], update, stop] = useSprings(
     1,

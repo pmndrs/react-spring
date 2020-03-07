@@ -56,7 +56,7 @@ export function useSprings<
 >(
   length: number,
   props: P & UseSpringsProps<Props>[],
-  deps: any[] | undefined
+  deps: readonly any[] | undefined
 ): [
   SpringValues<PickAnimated<Props>>[],
   SpringsUpdateFn<PickAnimated<Props>>,
@@ -72,7 +72,7 @@ export function useSprings<
 export function useSprings<Props extends object>(
   length: number,
   props: (i: number, ctrl: Controller) => Props & UseSpringsProps<Props>,
-  deps?: any[]
+  deps?: readonly any[]
 ): [
   SpringValues<PickAnimated<Props>>[],
   SpringsUpdateFn<PickAnimated<Props>>,
