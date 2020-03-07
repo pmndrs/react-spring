@@ -21,7 +21,7 @@ import {
 import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
-import { inferTo } from './helpers'
+import { inferTo, callProp } from './helpers'
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 
@@ -68,7 +68,8 @@ export type ControllerProps<State extends Indexable = UnknownProps> = Remap<
 
 /** An update that hasn't been applied yet */
 type PendingProps<State extends Indexable> = ControllerProps<State> & {
-  keys: Set<string>
+  /** The keys affected by this update. When null, all keys are affected. */
+  keys: string[] | null
 }
 
 /** The flush function that handles `start` calls */
@@ -276,97 +277,121 @@ function flush(queue: any, iterator: any) {
   }
 }
 
+/**
+ * Warning: Props might be mutated.
+ */
 export function flushUpdateQueue(
   ctrl: Controller<any>,
   queue: PendingProps<any>[]
 ) {
-  const promises: AsyncResult[] = []
-  each(queue, props => {
-    const { to, keys } = props as { to: any; keys: Set<string> }
+  return Promise.all(queue.map(props => flushUpdate(ctrl, props))).then(
+    results => ({
+      value: ctrl.get(),
+      finished: results.every(finished => finished),
+    })
+  )
+}
 
-    const asyncTo = (is.arr(to) || is.fun(to)) && to
-    if (asyncTo) {
-      props.to = undefined
+/**
+ * Warning: Props might be mutated.
+ */
+export function flushUpdate(ctrl: Controller<any>, props: PendingProps<any>) {
+  const { to, loop } = props
+
+  const asyncTo = is.arr(to) || is.fun(to) ? to : undefined
+  if (asyncTo) {
+    props.to = undefined
+  }
+
+  // Looping must be handled in this function, or else the values
+  // would end up looping out-of-sync in many common cases.
+  if (loop) {
+    props.loop = false
+  }
+
+  // Batched events are queued by individual spring values.
+  each(BATCHED_EVENTS, key => {
+    const handler: any = props[key]
+    if (is.fun(handler)) {
+      const queue = ctrl['_events'][key]
+      props[key] =
+        queue instanceof Set
+          ? () => queue.add(handler)
+          : ((({ finished, cancelled }: AnimationResult) => {
+              const result = queue.get(handler)
+              if (result) {
+                if (!finished) result.finished = false
+                if (cancelled) result.cancelled = true
+              } else {
+                // The "value" is set before the "handler" is called.
+                queue.set(handler, {
+                  value: null,
+                  finished,
+                  cancelled,
+                })
+              }
+            }) as any)
     }
+  })
 
-    // Batched events are queued by individual spring values.
-    each(BATCHED_EVENTS, key => {
-      const handler: any = props[key]
-      if (is.fun(handler)) {
-        const queue = ctrl['_events'][key]
-        props[key] =
-          queue instanceof Set
-            ? () => queue.add(handler)
-            : ((({ finished, cancelled }: AnimationResult) => {
-                const result = queue.get(handler)
-                if (result) {
-                  if (!finished) result.finished = false
-                  if (cancelled) result.cancelled = true
-                } else {
-                  // The "value" is set before the "handler" is called.
-                  queue.set(handler, {
-                    value: null,
-                    finished,
-                    cancelled,
-                  })
-                }
-              }) as any)
-      }
-    })
+  const keys = props.keys || Object.keys(ctrl.springs)
+  const promises = keys.map(key => ctrl.springs[key]!.start(props as any))
 
-    // Send updates to every affected key.
-    const springs = ctrl.springs
-    each(keys.size ? keys : Object.keys(springs), key => {
-      promises.push(springs[key]!.start(props))
-    })
-
-    // Schedule controller-only props.
+  // Schedule the "asyncTo" if defined.
+  if (asyncTo) {
     const state = ctrl['_state']
     promises.push(
       scheduleProps(++lastAsyncId, {
         props,
         state,
-        action: (props, resolve) => {
+        action(props, resolve) {
           // Start, replace, or cancel the async animation.
-          if (asyncTo) {
-            props.onRest = undefined
-            resolve(
-              runAsync<any>(
-                asyncTo,
-                props,
-                state,
-                ctrl.get.bind(ctrl),
-                () => false, // TODO: add pausing to Controller
-                ctrl.start.bind(ctrl) as any,
-                ctrl.stop.bind(ctrl)
-              )
+          props.onRest = undefined
+          resolve(
+            runAsync<any>(
+              asyncTo,
+              props,
+              state,
+              ctrl.get.bind(ctrl),
+              () => false, // TODO: add pausing to Controller
+              ctrl.start.bind(ctrl) as any,
+              ctrl.stop.bind(ctrl)
             )
-          } else {
-            resolve({
-              value: 0, // This value gets ignored.
-              finished: !props.cancel,
-              cancelled: props.cancel,
-            })
-          }
+          )
         },
       })
     )
-  })
+  }
 
-  return Promise.all(promises).then(results => ({
-    value: ctrl.get(),
-    finished: results.every(result => result.finished),
-  }))
+  return Promise.all(promises).then(results => {
+    const finished = results.every(result => result.finished)
+    if (finished) {
+      const looped = callProp(loop)
+      if (looped) {
+        const delay = looped !== true && looped.delay
+        return flushUpdate(ctrl, {
+          ...props,
+          loop,
+          delay: is.num(delay) ? delay : props.delay,
+          // The "reverse" prop will remain true (if true) and the "to/from"
+          // props must be undefined to allow reversing both ways. For an
+          // async "to" prop, the "reverse" prop is ignored.
+          to: asyncTo,
+          from: undefined,
+          reset: !props.reverse,
+        })
+      }
+    }
+    return finished
+  })
 }
 
 export function createUpdateProps(props: any) {
-  if (props.keys) return props
-  props = inferTo(props)
+  if ('keys' in props) return props
+  const { to, from } = (props = inferTo(props))
 
   // Collect the keys affected by this update.
-  const keys = (props.keys = new Set<string>())
-
-  const { to, from } = props
+  const keys = new Set<string>()
 
   if (from) {
     findDefined(from, keys)
@@ -382,6 +407,7 @@ export function createUpdateProps(props: any) {
     props.to = undefined
   }
 
+  props.keys = keys.size ? Array.from(keys) : null
   return props
 }
 
@@ -445,8 +471,10 @@ function prepareSprings(
   props: PendingProps<any>,
   create: (key: string) => SpringValue
 ) {
-  each(props.keys, key => {
-    const spring = springs[key] || (springs[key] = create(key))
-    spring['_prepareNode'](props)
-  })
+  if (props.keys) {
+    each(props.keys, key => {
+      const spring = springs[key] || (springs[key] = create(key))
+      spring['_prepareNode'](props)
+    })
+  }
 }
