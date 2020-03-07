@@ -96,6 +96,28 @@ describe('Controller', () => {
     })
   })
 
+  describe('when "loop" is used with multiple values', () => {
+    it('loops all values at the same time', async () => {
+      const ctrl = new Controller()
+
+      ctrl.start({
+        to: { x: 1, y: 1 },
+        from: { x: 0, y: 0 },
+        config: key => ({ frequency: key == 'x' ? 0.3 : 1 }),
+        loop: true,
+      })
+
+      const { x, y } = ctrl.springs
+      for (let i = 0; i < 2; i++) {
+        await advanceUntilValue(y, 1)
+
+        // Both values should equal their "from" value at the same time.
+        expect(x.get()).toBe(x.animation.from)
+        expect(y.get()).toBe(y.animation.from)
+      }
+    })
+  })
+
   describe('when "loop" is used with async "to" prop', () => {
     it('calls the "to" function repeatedly', async () => {
       const ctrl = new Controller({ t: 0 })
