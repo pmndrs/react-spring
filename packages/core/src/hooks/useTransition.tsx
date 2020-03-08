@@ -150,17 +150,17 @@ export function useTransition(
   // Expired transitions use this to dismount.
   const forceUpdate = useForceUpdate()
 
-  const defaultProps = {} as UnknownProps
+  const defaultProps = {} as ControllerProps
   each(DEFAULT_PROPS, prop => {
     if (/function|object/.test(typeof props[prop])) {
-      defaultProps[prop] = props[prop]
+      defaultProps[prop] = props[prop] as any
     }
   })
 
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
   each(transitions, (t, i) => {
-    let to: any
+    let to: TransitionTo<any>
     let from: any
     let phase: TransitionPhase
     if (t.phase == MOUNT) {
@@ -187,16 +187,21 @@ export function useTransition(
       } else return
     }
 
+    // When "to" is a function, it can return (1) an array of "useSpring" props,
+    // (2) an async function, or (3) an object with any "useSpring" props.
+    to = is.obj(to) ? inferTo(to) : { to: callProp(to, t.item, i) }
+
+    if (!to.config) {
+      const config = props.config || defaultProps.config
+      to.config = callProp(config, t.item, i)
+    }
+
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerProps = {
       ...defaultProps,
-      // When "to" is a function, it can return (1) an array of "useSpring" props,
-      // (2) an async function, or (3) an object with any "useSpring" props.
-      to: to = callProp(to, t.item, i),
       from: callProp(from, t.item, i),
       delay: delay += trail,
-      config: callProp(props.config || (defaultProps.config as any), t.item, i),
-      ...(is.obj(to) && inferTo(to)),
+      ...to,
     }
 
     const { onRest } = payload
