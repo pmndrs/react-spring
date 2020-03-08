@@ -19,12 +19,12 @@ import {
 } from '../types/spring'
 import { PickAnimated } from '../types/common'
 import { UseSpringProps } from './useSpring'
+import { createUpdate } from '../SpringValue'
 import {
   Controller,
   getSprings,
   flushUpdateQueue,
   FlushFn,
-  createUpdateProps,
   setSprings,
 } from '../Controller'
 import { getProps, useMemo as useMemoOne } from '../helpers'
@@ -160,7 +160,7 @@ export function useSprings(
         : (props as any)[i]
 
       if (update) {
-        update = updates[i] = createUpdateProps(update)
+        update = updates[i] = createUpdate(update)
         update.default = true
         if (i == 0) {
           refProp.current = update.ref

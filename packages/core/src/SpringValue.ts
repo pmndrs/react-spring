@@ -533,7 +533,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       },
     }).then(result => {
       if (props.loop && result.finished) {
-        const nextProps = getPropsForLoop(props)
+        const nextProps = createLoopUpdate(props)
         if (nextProps) {
           return this._update(nextProps)
         }
@@ -899,7 +899,7 @@ function coerceEventProp<T extends Function>(
   return is.fun(prop) ? prop : key && prop ? prop[key] : undefined
 }
 
-export function getPropsForLoop<T extends { loop?: any; to?: any }>(
+export function createLoopUpdate<T extends { loop?: any; to?: any }>(
   props: T,
   loop = props.loop,
   to = props.to
@@ -923,7 +923,46 @@ export function getPropsForLoop<T extends { loop?: any; to?: any }>(
       from: undefined,
 
       // The "loop" prop can return any "useSpring" props.
-      ...(loopRet !== true && inferTo(loopRet)),
+      ...(loopRet !== true && createUpdate(loopRet)),
     }
   }
+}
+
+/**
+ * Return a new object based on the given `props`.
+ *
+ * - All unreserved props are moved into the `to` prop object.
+ * - The `to` and `from` props are deleted when falsy.
+ * - The `keys` prop is set to an array of affected keys,
+ *   or `null` if all keys are affected.
+ */
+export function createUpdate(props: any) {
+  const { to, from } = (props = inferTo(props))
+
+  // Collect the keys affected by this update.
+  const keys = new Set<string>()
+
+  if (from) {
+    findDefined(from, keys)
+  } else {
+    // Falsy values are deleted to avoid merging issues.
+    delete props.from
+  }
+
+  if (is.obj(to)) {
+    findDefined(to, keys)
+  } else if (!to) {
+    // Falsy values are deleted to avoid merging issues.
+    delete props.to
+  }
+
+  // The "keys" prop helps in applying updates to affected keys only.
+  props.keys = keys.size ? Array.from(keys) : null
+
+  return props
+}
+
+/** Find keys with defined values */
+function findDefined(values: any, keys: Set<string>) {
+  each(values, (value, key) => value != null && keys.add(key as any))
 }
