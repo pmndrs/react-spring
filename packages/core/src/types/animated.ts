@@ -45,10 +45,7 @@ export type AnimationResult<T = any> = {
   cancelled?: boolean
 }
 
-/** Configuration for a looping animation */
-export interface AnimationLoop {
-  delay?: number
-}
+export type LoopProp<T extends object> = boolean | T | (() => boolean | T)
 
 /** `SpringProps` without `to` or `from` */
 export interface AnimationProps<P extends string = string> {
@@ -73,10 +70,6 @@ export interface AnimationProps<P extends string = string> {
    * Start the next animations at their values in the `from` prop.
    */
   reset?: MatchProp<P>
-  /**
-   * Replay animations after they're finished.
-   */
-  loop?: boolean | AnimationLoop | (() => boolean | AnimationLoop)
   /**
    * Swap the `to` and `from` props.
    */

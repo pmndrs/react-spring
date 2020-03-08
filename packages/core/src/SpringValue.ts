@@ -40,7 +40,13 @@ import {
   RunAsyncState,
   RunAsyncProps,
 } from './runAsync'
-import { callProp, computeGoal, DEFAULT_PROPS, matchProp } from './helpers'
+import {
+  callProp,
+  computeGoal,
+  DEFAULT_PROPS,
+  matchProp,
+  inferTo,
+} from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
 import {
   SpringPhase,
@@ -527,20 +533,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
       },
     }).then(result => {
       if (props.loop && result.finished) {
-        const loop = callProp(props.loop)
-        if (loop) {
-          const { to } = props
-          const delay = loop !== true && loop.delay
-          return this._update({
-            ...props,
-            delay: is.num(delay) ? delay : props.delay,
-            // The "reverse" prop will remain true (if true) and the "to/from"
-            // props must be undefined to allow reversing both ways. For an
-            // async "to" prop, the "reverse" prop is ignored.
-            to: is.arr(to) || is.fun(to) ? to : undefined,
-            from: undefined,
-            reset: !props.reverse,
-          })
+        const nextProps = getPropsForLoop(props)
+        if (nextProps) {
+          return this._update(nextProps)
         }
       }
       return result
@@ -903,4 +898,33 @@ function coerceEventProp<T extends Function>(
   key: string | undefined
 ) {
   return is.fun(prop) ? prop : key && prop ? prop[key] : undefined
+}
+
+export function getPropsForLoop<T extends { loop?: any; to?: any }>(
+  props: T,
+  loop = props.loop,
+  to = props.to
+): T | undefined {
+  let loopRet = callProp(loop)
+  if (loopRet) {
+    return {
+      ...props,
+      loop,
+
+      // Restart at the "from" values unless "to" is defined.
+      reset: loopRet === true || is.und(loopRet.to),
+
+      // Avoid updating default props when looping.
+      default: false,
+
+      // The "reverse" prop will remain true (if true) and the "to/from"
+      // props must be undefined to allow reversing both ways. For an
+      // async "to" prop, the "reverse" prop is ignored.
+      to: is.arr(to) || is.fun(to) ? to : undefined,
+      from: undefined,
+
+      // The "loop" prop can return any "useSpring" props.
+      ...(loopRet !== true && inferTo(loopRet)),
+    }
+  }
 }

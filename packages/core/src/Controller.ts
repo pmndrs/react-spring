@@ -17,12 +17,13 @@ import {
   OnChange,
   AnimationResult,
   AnimationProps,
+  LoopProp,
 } from './types/animated'
 import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
-import { inferTo, callProp } from './helpers'
-import { SpringValue } from './SpringValue'
+import { inferTo } from './helpers'
+import { SpringValue, getPropsForLoop } from './SpringValue'
 import { FrameValue } from './FrameValue'
 
 /** Events batched by the `Controller` class */
@@ -63,7 +64,9 @@ export type ControllerProps<State extends Indexable = UnknownProps> = Remap<
   FluidProps<Partial<State>> &
     RangeProps<State> &
     EventProps<State> &
-    AnimationProps
+    AnimationProps & {
+      loop?: LoopProp<ControllerProps<State>>
+    }
 >
 
 /** An update that hasn't been applied yet */
@@ -294,8 +297,17 @@ export function flushUpdateQueue(
 
 /**
  * Warning: Props might be mutated.
+ *
+ * Process a single set of props using the given controller.
+ *
+ * The returned promise resolves to `true` once the update is
+ * applied and any animations it starts are finished without being
+ * stopped or cancelled.
  */
-export function flushUpdate(ctrl: Controller<any>, props: PendingProps<any>) {
+export function flushUpdate(
+  ctrl: Controller<any>,
+  props: PendingProps<any>
+): Promise<boolean> {
   const { to, loop } = props
 
   const asyncTo = is.arr(to) || is.fun(to) ? to : undefined
@@ -365,21 +377,10 @@ export function flushUpdate(ctrl: Controller<any>, props: PendingProps<any>) {
 
   return Promise.all(promises).then(results => {
     const finished = results.every(result => result.finished)
-    if (finished) {
-      const looped = callProp(loop)
-      if (looped) {
-        const delay = looped !== true && looped.delay
-        return flushUpdate(ctrl, {
-          ...props,
-          loop,
-          delay: is.num(delay) ? delay : props.delay,
-          // The "reverse" prop will remain true (if true) and the "to/from"
-          // props must be undefined to allow reversing both ways. For an
-          // async "to" prop, the "reverse" prop is ignored.
-          to: asyncTo,
-          from: undefined,
-          reset: !props.reverse,
-        })
+    if (finished && loop) {
+      const nextProps = getPropsForLoop(props, loop, to)
+      if (nextProps) {
+        return flushUpdate(ctrl, nextProps)
       }
     }
     return finished
