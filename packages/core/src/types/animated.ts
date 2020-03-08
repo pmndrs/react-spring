@@ -80,7 +80,7 @@ export interface AnimationProps<P extends string = string> {
   default?: boolean
 }
 
-export type EventProp<T> = T | Indexable<T>
+export type EventProp<T> = T | Indexable<T | undefined>
 
 /**
  * The event props of a `SpringValue` animation.
