@@ -604,7 +604,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Flip the current range if "reverse" is true.
     if (props.reverse) [to, from] = [from, to]
-    anim.reverse = !!props.reverse
 
     // Save the "to" and "from" props.
     if (!is.und(to) && diff('to')) this._to(to)
