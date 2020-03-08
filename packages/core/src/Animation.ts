@@ -16,7 +16,6 @@ export class Animation<T = any> {
   from!: T | FluidValue<T>
   config = new AnimationConfig()
   immediate = false
-  reverse = false
   onStart?: OnStart<T>
   onChange?: OnChange<T>
   onRest?: Array<OnRest<T>>
