@@ -1,6 +1,6 @@
 import { AnimatedValue } from 'animated'
 import { FluidValue } from 'shared'
-import { OnRest, OnStart, OnChange, AnimationProps } from './types/animated'
+import { OnRest, OnStart, OnChange } from './types/animated'
 import { AnimationConfig } from './AnimationConfig'
 
 const emptyArray: readonly any[] = []
