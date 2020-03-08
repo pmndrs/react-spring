@@ -23,7 +23,7 @@ import { Indexable, Falsy } from './types/common'
 import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
 import { inferTo } from './helpers'
-import { SpringValue, getPropsForLoop } from './SpringValue'
+import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import { FrameValue } from './FrameValue'
 
 /** Events batched by the `Controller` class */
@@ -150,7 +150,7 @@ export class Controller<State extends Indexable = UnknownProps>
 
   /** Push an update onto the queue of each value. */
   update(props: ControllerProps<State> | Falsy) {
-    if (props) this.queue.push(createUpdateProps(props))
+    if (props) this.queue.push(createUpdate(props))
     return this
   }
 
@@ -162,11 +162,10 @@ export class Controller<State extends Indexable = UnknownProps>
    * the queued animations added with the `update` method, which are left alone.
    */
   start(props?: OneOrMore<ControllerProps<State>> | null): AsyncResult<State> {
+    const queue = props ? toArray<any>(props).map(createUpdate) : this.queue
     if (!props) {
-      props = this.queue
       this.queue = []
     }
-    const queue = toArray<any>(props).map(createUpdateProps)
     if (this._flush) {
       return this._flush(this, queue)
     }
@@ -260,11 +259,6 @@ export class Controller<State extends Indexable = UnknownProps>
       G.frameLoop.onFrame(this._onFrame)
     }
   }
-}
-
-/** Find keys with defined values */
-function findDefined(values: any, keys: Set<string>) {
-  each(values, (value, key) => value != null && keys.add(key as any))
 }
 
 /** Basic helper for clearing a queue after processing it */
@@ -378,38 +372,13 @@ export function flushUpdate(
   return Promise.all(promises).then(results => {
     const finished = results.every(result => result.finished)
     if (finished && loop) {
-      const nextProps = getPropsForLoop(props, loop, to)
+      const nextProps = createLoopUpdate(props, loop, to)
       if (nextProps) {
         return flushUpdate(ctrl, nextProps)
       }
     }
     return finished
   })
-}
-
-export function createUpdateProps(props: any) {
-  if ('keys' in props) return props
-  const { to, from } = (props = inferTo(props))
-
-  // Collect the keys affected by this update.
-  const keys = new Set<string>()
-
-  if (from) {
-    findDefined(from, keys)
-  } else {
-    // Falsy values are ignored.
-    props.from = undefined
-  }
-
-  if (is.obj(to)) {
-    findDefined(to, keys)
-  } else if (!to) {
-    // Falsy values are ignored.
-    props.to = undefined
-  }
-
-  props.keys = keys.size ? Array.from(keys) : null
-  return props
 }
 
 /**
@@ -425,7 +394,9 @@ export function getSprings<State>(
   if (props) {
     const initialProps = ctrl['_initialProps']
     each(toArray(props), (props: any) => {
-      props = createUpdateProps(props)
+      if (is.und(props.keys)) {
+        props = createUpdate(props)
+      }
       if (!is.obj(props.to)) {
         // Avoid passing array/function to each spring.
         props = { ...props, to: undefined }
