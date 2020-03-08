@@ -9,7 +9,7 @@ import {
   FluidProps,
 } from 'shared'
 
-import { AnimationProps, AnimationEvents } from './animated'
+import { AnimationProps, AnimationEvents, LoopProp } from './animated'
 import { Controller, ControllerProps } from '../Controller'
 import { AnimationConfig } from '../AnimationConfig'
 import { SpringValue } from '../SpringValue'
@@ -102,7 +102,9 @@ export interface RangeProps<T = any> {
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringUpdate<T = any> = AnimationProps & RangeProps<T>
+export interface SpringUpdate<T = any> extends RangeProps<T>, AnimationProps {
+  loop?: LoopProp<SpringUpdate<T>>
+}
 
 /**
  * The parameter types of an async `update` function.
