@@ -382,6 +382,7 @@ type TransitionFrom<Item> =
 type TransitionTo<Item> =
   | Falsy
   | OneOrMore<UseSpringProps<UnknownProps>>
+  | Function // HACK: Fix inference of untyped inline functions.
   | ((
       item: Item,
       index: number
