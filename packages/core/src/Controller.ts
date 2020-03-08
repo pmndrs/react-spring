@@ -122,7 +122,7 @@ export class Controller<State extends Indexable = UnknownProps>
       this._flush = flush
     }
     if (props) {
-      const { to, ...initialProps } = inferTo(props as any)
+      const { to, ...initialProps } = inferTo(props)
       this._initialProps = initialProps
       if (to) this.start({ to } as any)
     }

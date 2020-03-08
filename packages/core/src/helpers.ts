@@ -101,14 +101,20 @@ const RESERVED_PROPS: Required<ReservedProps> = {
  */
 function getForwardProps<Props extends ReservedProps>(
   props: Props
-): ForwardProps<Props> {
+): ForwardProps<Props> | undefined {
   const forward: any = {}
+
+  let count = 0
   each(props, (value, prop) => {
-    if (!RESERVED_PROPS[prop as keyof ReservedProps]) {
+    if (!RESERVED_PROPS[prop]) {
       forward[prop] = value
+      count++
     }
   })
-  return forward
+
+  if (count) {
+    return forward
+  }
 }
 
 /**
@@ -125,9 +131,12 @@ export type InferTo<T extends object> = Merge<
  */
 export function inferTo<T extends object>(props: T): InferTo<T> {
   const to = getForwardProps(props)
-  const out: any = { to }
-  each(props, (val, key) => key in to || (out[key] = val))
-  return out
+  if (to) {
+    const out: any = { to }
+    each(props, (val, key) => key in to || (out[key] = val))
+    return out
+  }
+  return { ...props } as any
 }
 
 export function freeze<T extends object>(obj: T): T {
