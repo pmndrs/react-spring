@@ -1,5 +1,6 @@
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
+import { flushMicroTasks } from 'flush-microtasks'
 
 const frameLength = 1000 / 60
 
@@ -74,6 +75,24 @@ describe('SpringValue', () => {
       start: n => parent.start(n - 1),
       reset: parent.reset.bind(parent),
     }
+  })
+
+  // No-op updates don't change the goal value.
+  describe('no-op updates', () => {
+    it('resolves when the animation is finished', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1)
+
+      // Create a no-op update.
+      const resolve = jest.fn()
+      spring.start(1).then(resolve)
+
+      await flushMicroTasks()
+      expect(resolve).not.toBeCalled()
+
+      await advanceUntilIdle()
+      expect(resolve).toBeCalled()
+    })
   })
 })
 
