@@ -344,7 +344,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
 
       // Exit the frameloop.
-      G.batchedUpdates(() => this._stop(true))
+      G.batchedUpdates(() => this._stop())
     }
     return this
   }
@@ -723,25 +723,25 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     const onRestQueue = anim.onRest || []
-    const onRest = coerceEventProp(
-      props.onRest || (reset && onRestQueue[0]) || defaultProps.onRest,
-      key
-    )
+    const onRest =
+      reset && !props.onRest
+        ? onRestQueue[0]
+        : checkFinishedOnRest(
+            coerceEventProp(props.onRest || defaultProps.onRest, key),
+            goal,
+            this
+          )
 
     // The "onRest" prop is always first in the queue.
-    anim.onRest = [onRest || noop, resolve]
+    anim.onRest = [onRest, checkFinishedOnRest(resolve, goal, this)]
 
-    // Resolve the promises of unfinished animations.
+    // Resolve the promise for the previous update, and call the
+    // "onRest" prop if "reset" equals true.
     let onRestIndex = reset ? 0 : 1
     if (onRestIndex < onRestQueue.length) {
       G.batchedUpdates(() => {
-        const result: AnimationResult<T> = {
-          value,
-          spring: this,
-          finished: false,
-        }
         for (; onRestIndex < onRestQueue.length; onRestIndex++) {
-          onRestQueue[onRestIndex](result)
+          onRestQueue[onRestIndex]()
         }
       })
     }
@@ -850,7 +850,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    *
    * Always wrap `_stop` calls with `batchedUpdates`.
    */
-  protected _stop(finished = false) {
+  protected _stop() {
     this.resume()
     if (this.is(ACTIVE)) {
       this._phase = IDLE
@@ -874,10 +874,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
           onRestQueue[0] = noop
         }
 
-        const result = { value: this.get(), spring: this, finished }
-        each(onRestQueue, onRest => {
-          onRest(result)
-        })
+        each(onRestQueue, onRest => onRest())
       }
     }
   }
@@ -898,6 +895,27 @@ function coerceEventProp<T extends Function>(
 ) {
   return is.fun(prop) ? prop : key && prop ? prop[key] : undefined
 }
+
+/**
+ * The "finished" value is determined by each "onRest" handler,
+ * based on whether the current value equals the goal value that
+ * was calculated at the time the "onRest" handler was set.
+ */
+const checkFinishedOnRest = <T>(
+  onRest: OnRest<T> | undefined,
+  goal: T,
+  spring: SpringValue<T>
+) =>
+  onRest
+    ? () => {
+        const value = spring.get()
+        onRest({
+          value,
+          spring,
+          finished: isEqual(value, goal),
+        })
+      }
+    : noop
 
 export function createLoopUpdate<T extends { loop?: any; to?: any }>(
   props: T,
