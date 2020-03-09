@@ -83,7 +83,7 @@ export function useSprings<Props extends object>(
 export function useSprings(
   length: number,
   props: any[] | ((i: number, ctrl: Controller) => any),
-  deps?: any[]
+  deps?: readonly any[]
 ): any {
   const propsFn = is.fun(props) && props
   if (propsFn && !deps) deps = []

@@ -27,7 +27,6 @@ import { Animation } from './Animation'
 import { mergeConfig } from './AnimationConfig'
 import {
   AnimationRange,
-  AnimationResult,
   OnRest,
   AnimationEvents,
   EventProp,
