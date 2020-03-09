@@ -730,7 +730,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const onRestQueue = anim.onRest || []
     const onRest =
       reset && !props.onRest
-        ? onRestQueue[0]
+        ? onRestQueue[0] || noop
         : checkFinishedOnRest(
             coerceEventProp(props.onRest || defaultProps.onRest, key),
             goal,
