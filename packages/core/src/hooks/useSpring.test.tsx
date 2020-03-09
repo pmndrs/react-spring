@@ -1,9 +1,9 @@
 import React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import { useSpring } from './hooks/useSpring'
+import { useSpring } from './useSpring'
 import { is, Indexable, UnknownProps } from 'shared'
-import { SpringStopFn, SpringsUpdateFn } from './types/spring'
-import { SpringValue } from './SpringValue'
+import { SpringStopFn, SpringsUpdateFn } from '../types/spring'
+import { SpringValue } from '../SpringValue'
 
 describe('useSpring', () => {
   let springs: Indexable<SpringValue>
