@@ -65,7 +65,8 @@ export type ControllerProps<State extends Indexable = UnknownProps> = Remap<
     RangeProps<State> &
     EventProps<State> &
     AnimationProps & {
-      loop?: LoopProp<ControllerProps<State>>
+      // FIXME: Use "ControllerProps<State>" without ruining type inference.
+      loop?: LoopProp<ControllerProps>
     }
 >
 
