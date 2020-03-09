@@ -923,13 +923,14 @@ const checkFinishedOnRest = <T>(
       }
     : noop
 
-export function createLoopUpdate<T extends { loop?: any; to?: any }>(
-  props: T,
+export function createLoopUpdate<T>(
+  props: T & { loop?: any; to?: any; from?: any },
   loop = props.loop,
   to = props.to
 ): T | undefined {
   let loopRet = callProp(loop)
   if (loopRet) {
+    const reverse = loopRet !== true && loopRet.reverse
     return {
       ...props,
       loop,
@@ -940,11 +941,10 @@ export function createLoopUpdate<T extends { loop?: any; to?: any }>(
       // Avoid updating default props when looping.
       default: false,
 
-      // The "reverse" prop will remain true (if true) and the "to/from"
-      // props must be undefined to allow reversing both ways. For an
-      // async "to" prop, the "reverse" prop is ignored.
-      to: is.arr(to) || is.fun(to) ? to : undefined,
-      from: undefined,
+      // The "to" and "from" props must be undefined when looping
+      // with "reverse: true" or else it only reverses once.
+      to: !reverse || is.arr(to) || is.fun(to) ? to : undefined,
+      from: reverse ? undefined : props.from,
 
       // The "loop" prop can return any "useSpring" props.
       ...(loopRet !== true && createUpdate(loopRet)),
