@@ -715,6 +715,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     if (!started) {
+      // Postpone promise resolution until the animation is finished,
+      // so that no-op updates still resolve at the expected time.
+      if (this.is(ACTIVE) && !hasToChanged) {
+        anim.onRest!.push(checkFinishedOnRest(resolve, goal, this))
+        return
+      }
       return resolve({
         value,
         finished: true,
