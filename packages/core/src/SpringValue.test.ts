@@ -371,8 +371,7 @@ function describeLoopProp() {
 
       await advanceUntilIdle()
       spring.start({
-        loop: true,
-        reverse: true,
+        loop: { reverse: true },
       })
 
       await advanceUntilValue(spring, 0)
