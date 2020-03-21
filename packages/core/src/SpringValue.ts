@@ -398,7 +398,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   stop() {
     if (!this.is(DISPOSED)) {
       this._state.cancelId = this._lastAsyncId
-      this._to(this.get())
+      this._focus(this.get())
       G.batchedUpdates(() => this._stop())
     }
     return this
@@ -605,7 +605,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (props.reverse) [to, from] = [from, to]
 
     // Save the "to" and "from" props.
-    if (!is.und(to) && diff('to')) this._to(to)
+    if (!is.und(to) && diff('to')) this._focus(to)
     if (!is.und(from) && diff('from')) anim.from = from
 
     // These are fluid configs, not animation configs.
@@ -763,7 +763,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /** Update the `animation.to` value, which might be a `FluidValue` */
-  protected _to(value: T | FluidValue<T>) {
+  protected _focus(value: T | FluidValue<T>) {
     const anim = this.animation
     if (value !== anim.to) {
       let config = getFluidConfig(anim.to)
