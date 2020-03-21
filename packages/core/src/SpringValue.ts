@@ -587,7 +587,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // begins), and some props use their timestamp to know if they
     // were updated before their update finished its delay.
     const timestamps = this._timestamps
-    const diff = (prop: string) => {
+    const isTimely = (prop: string) => {
       if (timestamp >= (timestamps[prop] || 0)) {
         timestamps[prop] = timestamp
         return true
@@ -605,8 +605,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (props.reverse) [to, from] = [from, to]
 
     // Save the "to" and "from" props.
-    if (!is.und(to) && diff('to')) this._focus(to)
-    if (!is.und(from) && diff('from')) anim.from = from
+    if (!is.und(to) && isTimely('to')) this._focus(to)
+    if (!is.und(from) && isTimely('from')) anim.from = from
 
     // These are fluid configs, not animation configs.
     // Fluid configs let us animate from/to dynamic values.
