@@ -342,8 +342,18 @@ export class SpringValue<T = any> extends FrameValue<T> {
         this._set(to)
       }
 
-      // Exit the frameloop.
-      G.batchedUpdates(() => this._stop())
+      G.batchedUpdates(() => {
+        // Ensure the "onStart" and "onRest" props are called.
+        if (!anim.changed) {
+          anim.changed = true
+          if (anim.onStart) {
+            anim.onStart(this)
+          }
+        }
+
+        // Exit the frameloop.
+        this._stop()
+      })
     }
     return this
   }
