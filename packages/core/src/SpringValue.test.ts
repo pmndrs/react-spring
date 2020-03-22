@@ -1,6 +1,7 @@
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 import { flushMicroTasks } from 'flush-microtasks'
+import { Globals } from 'shared'
 
 const frameLength = 1000 / 60
 
@@ -57,6 +58,7 @@ describe('SpringValue', () => {
 
   describeProps()
   describeMethods()
+  describeGlobals()
 
   describeTarget('another SpringValue', from => {
     const node = new SpringValue(from)
@@ -632,6 +634,28 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
 
     describe('when animating an array', () => {
       it.todo('animates as expected')
+    })
+  })
+}
+
+function describeGlobals() {
+  const defaults = { ...Globals }
+  const resetGlobals = () => Globals.assign(defaults)
+  describe('"skipAnimation" global', () => {
+    afterEach(resetGlobals)
+    it('still calls "onStart", "onChange", and "onRest" props', async () => {
+      const spring = new SpringValue(0)
+
+      const onStart = jest.fn()
+      const onChange = jest.fn()
+      const onRest = jest.fn()
+
+      Globals.assign({ skipAnimation: true })
+      await spring.start(1, { onStart, onChange, onRest })
+
+      expect(onStart).toBeCalledTimes(1)
+      expect(onChange).toBeCalledTimes(1)
+      expect(onRest).toBeCalledTimes(1)
     })
   })
 }
