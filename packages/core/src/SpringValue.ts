@@ -637,7 +637,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       nodeType = this._getNodeType(to!)
       if (nodeType !== node.constructor) {
         throw Error(
-          `Cannot animate to the given "to" prop, because the current value has a different type`
+          `Cannot animate between ${node.constructor.name} and ${nodeType.name}, as the "to" prop suggests`
         )
       }
     } else {
