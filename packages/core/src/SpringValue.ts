@@ -600,9 +600,19 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // Flip the current range if "reverse" is true.
     if (props.reverse) [to, from] = [from, to]
 
+    /** The "to" value exists. */
+    const hasTo = !is.und(to)
+
+    /** The "to" value is changing. */
+    const hasToChanged = hasTo && isTimely('to') && !isEqual(to, prevTo)
+
+    /** The "from" value is changing. */
+    const hasFromChanged =
+      !is.und(from) && isTimely('from') && !isEqual(from, prevFrom)
+
     // Save the "to" and "from" props.
-    if (!is.und(to) && isTimely('to')) this._focus(to)
-    if (!is.und(from) && isTimely('from')) anim.from = from
+    if (hasToChanged) this._focus(to)
+    if (hasFromChanged) anim.from = from
 
     // These are fluid configs, not animation configs.
     // Fluid configs let us animate from/to dynamic values.
@@ -612,9 +622,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (fromConfig) {
       from = fromConfig.get()
     }
-
-    const hasTo = !is.und(to)
-    const hasToChanged = hasTo && !isEqual(to, prevTo)
 
     // Ensure our Animated node is compatible with the "to" prop.
     let nodeType: AnimatedType
