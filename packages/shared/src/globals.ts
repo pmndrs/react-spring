@@ -39,17 +39,15 @@ declare const performance: { now: () => number }
 
 export let performanceNow = () => performance.now()
 
-export let colorNames: { [key: string]: number } | null = null as any
+export let colorNames = null as { [key: string]: number } | null
 
-export let skipAnimation = false
+export let skipAnimation = false as boolean
 
 export let getComponentProps = (props: any) => props
 
-export let createAnimatedStyle: ((style: any) => any) | null = null as any
+export let createAnimatedStyle = null as ((style: any) => any) | null
 
-export let createAnimatedTransform:
-  | ((transform: any) => any)
-  | null = null as any
+export let createAnimatedTransform = null as ((transform: any) => any) | null
 
 export let requestAnimationFrame: typeof window.requestAnimationFrame =
   typeof window !== 'undefined' ? window.requestAnimationFrame : () => -1
