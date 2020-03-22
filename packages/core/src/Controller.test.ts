@@ -118,41 +118,77 @@ describe('Controller', () => {
     })
   })
 
-  describe('when "loop" is used with async "to" prop', () => {
-    it('calls the "to" function repeatedly', async () => {
-      const ctrl = new Controller({ t: 0 })
-      const { t } = ctrl.springs
+  describe('when "loop" is used when "to" is', () => {
+    describe('an async function', () => {
+      it('calls the "to" function repeatedly', async () => {
+        const ctrl = new Controller({ t: 0 })
+        const { t } = ctrl.springs
 
-      let loop = true
-      let times = 2
+        let loop = true
+        let times = 2
 
-      // Note: This example is silly, since you could use a for-loop
-      // to more easily achieve the same result, but it tests the ability
-      // to halt a looping script via the "loop" function prop.
-      ctrl.start({
-        loop: () => loop,
-        to: async next => {
-          await next({ t: 1 })
-          await next({ t: 0 })
+        // Note: This example is silly, since you could use a for-loop
+        // to more easily achieve the same result, but it tests the ability
+        // to halt a looping script via the "loop" function prop.
+        ctrl.start({
+          loop: () => loop,
+          to: async next => {
+            await next({ t: 1 })
+            await next({ t: 0 })
 
-          if (times--) return
-          loop = false
-        },
-      })
-
-      await advanceUntilValue(t, 1)
-      expect(t.idle).toBeFalsy()
-
-      for (let i = 0; i < 2; i++) {
-        await advanceUntilValue(t, 0)
-        expect(t.idle).toBeFalsy()
+            if (times--) return
+            loop = false
+          },
+        })
 
         await advanceUntilValue(t, 1)
         expect(t.idle).toBeFalsy()
-      }
 
-      await advanceUntilValue(t, 0)
-      expect(t.idle).toBeTruthy()
+        for (let i = 0; i < 2; i++) {
+          await advanceUntilValue(t, 0)
+          expect(t.idle).toBeFalsy()
+
+          await advanceUntilValue(t, 1)
+          expect(t.idle).toBeFalsy()
+        }
+
+        await advanceUntilValue(t, 0)
+        expect(t.idle).toBeTruthy()
+      })
+    })
+    describe('an array', () => {
+      it('repeats the chain of updates', async () => {
+        const ctrl = new Controller({ t: 0 })
+        const { t } = ctrl.springs
+
+        let loop = true
+        const promise = ctrl.start({
+          loop: () => {
+            return loop
+          },
+          from: { t: 0 },
+          to: [{ t: 1 }, { t: 2 }],
+          config: { duration: 3000 / 60 },
+        })
+
+        for (let i = 0; i < 3; i++) {
+          await advanceUntilValue(t, 2)
+          expect(t.idle).toBeFalsy()
+
+          // Run the first frame of the next loop.
+          mockRaf.step()
+        }
+
+        loop = false
+
+        await advanceUntilValue(t, 2)
+        expect(t.idle).toBeTruthy()
+
+        expect(await promise).toMatchObject({
+          value: { t: 2 },
+          finished: true,
+        })
+      })
     })
   })
 })
