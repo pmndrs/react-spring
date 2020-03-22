@@ -18,5 +18,5 @@ export class Animation<T = any> {
   immediate = false
   onStart?: OnStart<T>
   onChange?: OnChange<T>
-  onRest?: Array<() => void>
+  onRest: Function[] = []
 }

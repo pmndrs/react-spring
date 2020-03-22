@@ -420,7 +420,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (!this.is(DISPOSED)) {
       if (this.animation) {
         // Prevent "onRest" calls when disposed.
-        this.animation.onRest = undefined
+        this.animation.onRest = []
       }
       this.stop()
       this._phase = DISPOSED
@@ -727,62 +727,71 @@ export class SpringValue<T = any> extends FrameValue<T> {
     anim.onStart = coerceEventProp(get('onStart'), key)
     anim.onChange = coerceEventProp(get('onChange'), key)
 
-    // By this point, every prop should be merged. (except "onRest")
+    // The "reset" prop tries to reuse the old "onRest" prop,
+    // unless you defined a new "onRest" prop.
+    const onRestQueue = anim.onRest
+    const onRest =
+      reset && !props.onRest
+        ? onRestQueue[0] || noop
+        : checkFinishedOnRest(coerceEventProp(get('onRest'), key), goal, this)
+
+    // In most cases, the animation after this one won't reuse our
+    // "onRest" prop. Instead, the _default_ "onRest" prop is used
+    // when the next animation has an undefined "onRest" prop.
+    if (started) {
+      // The "onRest" prop is always first in the queue.
+      anim.onRest = [onRest, checkFinishedOnRest(resolve, goal, this)]
+
+      // Resolve the promise for the previous update, and call the
+      // "onRest" prop if "reset" equals true.
+      let onRestIndex = reset ? 0 : 1
+      if (onRestIndex < onRestQueue.length) {
+        G.batchedUpdates(() => {
+          for (; onRestIndex < onRestQueue.length; onRestIndex++) {
+            onRestQueue[onRestIndex]()
+          }
+        })
+      }
+    }
+
+    // By this point, every prop has been merged.
     const onProps = coerceEventProp(get('onProps'), key)
     if (onProps) {
       onProps(props, this)
     }
 
-    if (!started) {
-      // Postpone promise resolution until the animation is finished,
-      // so that no-op updates still resolve at the expected time.
-      if (this.is(ACTIVE) && !hasToChanged) {
-        anim.onRest!.push(checkFinishedOnRest(resolve, goal, this))
-        return
+    // Update our node even if the animation is idle.
+    if (reset) {
+      node.setValue(value)
+    }
+
+    if (started) {
+      // Unpause the async animation if one exists.
+      this.resume()
+
+      if (reset) {
+        // Must be idle for "onStart" to be called again.
+        this._phase = IDLE
       }
-      return resolve({
+
+      this._reset()
+      this._start()
+    }
+
+    // Postpone promise resolution until the animation is finished,
+    // so that no-op updates still resolve at the expected time.
+    else if (this.is(ACTIVE) && !hasToChanged) {
+      anim.onRest.push(checkFinishedOnRest(resolve, goal, this))
+    }
+
+    // Resolve our promise immediately.
+    else {
+      resolve({
         value,
         finished: true,
         spring: this,
       })
     }
-
-    const onRestQueue = anim.onRest || []
-    const onRest =
-      reset && !props.onRest
-        ? onRestQueue[0] || noop
-        : checkFinishedOnRest(
-            coerceEventProp(props.onRest || defaultProps.onRest, key),
-            goal,
-            this
-          )
-
-    // The "onRest" prop is always first in the queue.
-    anim.onRest = [onRest, checkFinishedOnRest(resolve, goal, this)]
-
-    // Resolve the promise for the previous update, and call the
-    // "onRest" prop if "reset" equals true.
-    let onRestIndex = reset ? 0 : 1
-    if (onRestIndex < onRestQueue.length) {
-      G.batchedUpdates(() => {
-        for (; onRestIndex < onRestQueue.length; onRestIndex++) {
-          onRestQueue[onRestIndex]()
-        }
-      })
-    }
-
-    // Unpause the async animation if one exists.
-    this.resume()
-
-    if (reset) {
-      node.setValue(value)
-
-      // Must be idle for "onStart" to be called again.
-      this._phase = IDLE
-    }
-
-    this._reset()
-    this._start()
   }
 
   /** Update the `animation.to` value, which might be a `FluidValue` */
@@ -891,9 +900,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
         node.done = true
       })
 
-      // The "onRest" queue won't exist when we're being disposed.
       const onRestQueue = anim.onRest
-      if (onRestQueue) {
+      if (onRestQueue.length) {
         // Preserve the "onRest" prop when the goal is dynamic.
         anim.onRest = [anim.toValues ? noop : onRestQueue[0]]
 
