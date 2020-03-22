@@ -752,6 +752,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
         })
       }
     }
+    // The "onRest" prop is updated even if the animation is unchanged.
+    else if (reset || props.onRest) {
+      anim.onRest[0] = onRest
+    }
 
     // By this point, every prop has been merged.
     const onProps = coerceEventProp(get('onProps'), key)
