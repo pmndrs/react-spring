@@ -623,8 +623,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (hasToChanged) this._focus(to)
     if (hasFromChanged) anim.from = from
 
-    // These are fluid configs, not animation configs.
-    // Fluid configs let us animate from/to dynamic values.
+    // Both "from" and "to" can use a fluid config (thanks to http://npmjs.org/fluids).
     const toConfig = getFluidConfig(to)
     const fromConfig = getFluidConfig(from)
 
@@ -676,11 +675,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // When true, the current value has probably changed.
       const hasValueChanged = reset || (this.is(CREATED) && hasFromChanged)
 
+      // When the "to" value or current value are changed,
+      // start animating if not already finished.
       if (hasToChanged || (hasTo && hasValueChanged)) {
         finished = isEqual(computeGoal(value), computeGoal(to))
         started = !finished
       }
 
+      // Changing "decay" or "velocity" can start the animation.
       if (!started && (hasTo || config.decay)) {
         started = !(
           isEqual(config.decay, decay) && isEqual(config.velocity, velocity)
@@ -759,11 +761,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
       })
     }
 
+    // Unpause the async animation if one exists.
     this.resume()
 
-    // Allow for an "onStart" call and "start" event.
     if (reset) {
       node.setValue(value)
+
+      // Must be idle for "onStart" to be called again.
       this._phase = IDLE
     }
 
