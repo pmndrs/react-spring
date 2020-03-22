@@ -351,10 +351,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** Push props into the pending queue. */
   update(props: PendingProps<T>) {
     checkDisposed(this, 'update')
-
-    // Ensure the initial value can be accessed by animated components.
-    this._prepareNode(props)
-
     const queue = this.queue || (this.queue = [])
     queue.push(props)
     return this
