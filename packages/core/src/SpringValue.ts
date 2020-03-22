@@ -705,12 +705,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // When an active animation changes its goal to its current value:
     if (finished && this.is(ACTIVE)) {
-      // When the animation has already changed its value, avoid what
-      // would be experienced as an unnatural stop.
-      if (anim.changed) {
+      // Avoid an abrupt stop unless the animation is being reset.
+      if (anim.changed && !reset) {
         started = true
       }
-      // Prevent the animation when its first frame is pending.
+      // Exit the frameloop if the first frame is still pending.
       else if (!started) {
         this._stop()
       }
