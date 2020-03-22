@@ -539,7 +539,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Merge props into the current animation */
   protected _merge(
-    { to, from }: AnimationRange<T>,
+    range: AnimationRange<T>,
     props: RunAsyncProps<T>,
     timestamp: number,
     resolve: OnRest<T>
@@ -592,10 +592,19 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     const { to: prevTo, from: prevFrom } = anim
+    let { to, from } = range
 
     // Default to the previous range.
     if (is.und(to)) to = prevTo
     if (is.und(from)) from = prevFrom
+
+    /** The "from" prop is defined. */
+    const hasFromProp = !is.und(range.from)
+
+    // Focus the "from" value if changing without a "to" value.
+    if (hasFromProp && is.und(range.to)) {
+      to = from
+    }
 
     // Flip the current range if "reverse" is true.
     if (props.reverse) [to, from] = [from, to]
@@ -636,8 +645,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
       nodeType = node.constructor as any
     }
 
-    // When true, start at the "from" prop.
-    const reset = props.reset && !is.und(from)
+    /** When true, start at the "from" value. */
+    const reset =
+      // Can't reset if no "from" value exists.
+      (props.reset && !is.und(from)) ||
+      // We want { from } to imply { reset: true }
+      // unless default values are being set.
+      (hasFromProp && !props.default)
 
     // The current value
     let value = reset ? (from as T) : this.get()
@@ -649,19 +663,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (nodeType == AnimatedString) {
       from = 0 as any
       goal = 1
-    } else if (is.und(from)) {
-      from = value
-    }
-
-    // The "from" prop is only used [when the "reset" prop is true] or
-    // [when the "from" prop changes before the first animation begins].
-    const usingFrom =
-      reset || (this.is(CREATED) && !isEqual(anim.from, prevFrom))
-
-    // Ensure the current value equals the "from" value when reset
-    // and when the "from" value is updated before the first animation.
-    if (usingFrom) {
-      node.setValue((value = from as T))
     }
 
     let started = false
@@ -672,10 +673,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // starts the animation to be safe.
       started = true
     } else {
-      if (hasToChanged || (hasTo && usingFrom)) {
+      // When true, the current value has probably changed.
+      const hasValueChanged = reset || (this.is(CREATED) && hasFromChanged)
+
+      if (hasToChanged || (hasTo && hasValueChanged)) {
         finished = isEqual(computeGoal(value), computeGoal(to))
         started = !finished
       }
+
       if (!started && (hasTo || config.decay)) {
         started = !(
           isEqual(config.decay, decay) && isEqual(config.velocity, velocity)
@@ -758,6 +763,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Allow for an "onStart" call and "start" event.
     if (reset) {
+      node.setValue(value)
       this._phase = IDLE
     }
 
