@@ -4259,6 +4259,11 @@ fluids@^0.1.0:
   resolved "https://registry.npmjs.org/fluids/-/fluids-0.1.5.tgz#b1f5992434f148e735e9d779f77eebe8d8bae720"
   integrity sha512-mtAiBbJJQVErFBNS++ds/1DpmDV6/B2yw+Ju1tCnZvV4ohnd+ZjZoZlkNC42mo9cfh2thcwDGgZz+bRDsd26iA==
 
+fluids@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.npmjs.org/fluids/-/fluids-0.1.6.tgz#d38e51a3108d445078418072764f07c975d36a52"
+  integrity sha512-KfBiyAzU06O9A1onsS65JAIU1hs36i/IY5nYwBBUJsY5h7TTArvGYNJYzwiz3BLDoKsE53s69iM2k2s/HWgtZg==
+
 flush-microtasks@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/flush-microtasks/-/flush-microtasks-1.0.1.tgz#ed3cf034c71dc222c6a9054af650e2b5e9ba1c94"

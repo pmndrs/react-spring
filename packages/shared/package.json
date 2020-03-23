@@ -10,6 +10,6 @@
     "directory": "dist"
   },
   "dependencies": {
-    "fluids": "^0.1.0"
+    "fluids": "^0.1.6"
   }
 }
