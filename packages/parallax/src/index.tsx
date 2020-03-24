@@ -64,7 +64,8 @@ export const ParallaxLayer = React.memo(
       const ctrl = useMemoOne(() => {
         const targetScroll = Math.floor(offset) * parent.space
         const distance = parent.space * offset + targetScroll * speed
-        return new Controller({
+        type Animated = { space: number; translate: number }
+        return new Controller<Animated>({
           space: parent.space * factor,
           translate: -(parent.current * speed) + distance,
         })
@@ -217,7 +218,7 @@ export const Parallax = React.memo(
       state.controller.stop().start({
         scroll: offset * state.space,
         config,
-        onFrame({ scroll }: any) {
+        onChange({ scroll }: any) {
           container[scrollType] = scroll
         },
       })

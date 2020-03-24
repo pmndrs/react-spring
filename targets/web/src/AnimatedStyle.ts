@@ -3,7 +3,7 @@ import {
   is,
   each,
   toArray,
-  Indexable,
+  Lookup,
   OneOrMore,
   FluidValue,
   FluidEvent,
@@ -55,7 +55,7 @@ type Transforms = ((value: any) => [string, boolean])[]
  * including shortcuts such as x, y and z for translateX/Y/Z
  */
 export class AnimatedStyle extends AnimatedObject {
-  constructor({ x, y, z, ...style }: Indexable) {
+  constructor({ x, y, z, ...style }: Lookup) {
     /**
      * An array of arrays that contains the values (static or fluid)
      * used by each transform function.

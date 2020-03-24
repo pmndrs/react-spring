@@ -6,17 +6,11 @@ import {
   getFluidConfig,
   isAnimatedString,
   AnyFn,
-  Merge,
   OneOrMore,
   FluidValue,
 } from 'shared'
 import * as G from 'shared/globals'
-
-import { ReservedProps, ForwardProps } from './types/common'
-
-declare const process:
-  | { env: { [key: string]: string | undefined } }
-  | undefined
+import { ReservedProps, ForwardProps, InferTo } from './types'
 
 // @see https://github.com/alexreardon/use-memo-one/pull/10
 export const useMemo: typeof useMemoOne = (create, deps) =>
@@ -29,15 +23,10 @@ export function callProp<T>(
   return is.fun(value) ? value(...args) : value
 }
 
-export type MatchProp<P extends string = string> =
-  | boolean
-  | OneOrMore<P>
-  | ((key: P) => boolean)
-
 /** Try to coerce the given value into a boolean using the given key */
-export const matchProp = <P extends string = string>(
-  value: MatchProp<P> | undefined,
-  key: P | undefined
+export const matchProp = (
+  value: boolean | OneOrMore<string> | ((key: any) => boolean) | undefined,
+  key: string | undefined
 ) =>
   value === true ||
   !!(
@@ -118,14 +107,6 @@ function getForwardProps<Props extends ReservedProps>(
 }
 
 /**
- * Move all non-reserved props into the `to` prop.
- */
-export type InferTo<T extends object> = Merge<
-  { to: ForwardProps<T> },
-  Pick<T, keyof T & keyof ReservedProps>
->
-
-/**
  * Clone the given `props` and move all non-reserved props
  * into the `to` prop.
  */
@@ -137,16 +118,6 @@ export function inferTo<T extends object>(props: T): InferTo<T> {
     return out
   }
   return { ...props } as any
-}
-
-export function freeze<T extends object>(obj: T): T {
-  if (
-    typeof process !== 'undefined' &&
-    process.env.NODE_ENV === 'development'
-  ) {
-    return Object.freeze(obj)
-  }
-  return obj
 }
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process

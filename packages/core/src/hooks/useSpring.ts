@@ -1,13 +1,14 @@
 import { is, RefProp, UnknownProps, Remap } from 'shared'
 
 import {
+  ControllerUpdate,
+  PickAnimated,
   SpringValues,
   SpringsUpdateFn,
   SpringStopFn,
   SpringHandle,
-} from '../types/spring'
-import { PickAnimated, Valid } from '../types/common'
-import { ControllerProps } from '../Controller'
+} from '../types'
+import { Valid } from '../types/common'
 import { useSprings } from './useSprings'
 
 /**
@@ -16,7 +17,7 @@ import { useSprings } from './useSprings'
 export type UseSpringProps<Props extends object = any> = unknown &
   PickAnimated<Props> extends infer State
   ? Remap<
-      ControllerProps<State> & {
+      ControllerUpdate<State> & {
         /**
          * Used to access the imperative API.
          *

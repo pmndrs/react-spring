@@ -11,5 +11,8 @@
   },
   "dependencies": {
     "fluids": "^0.1.6"
+  },
+  "devDependencies": {
+    "@alloc/types": "^1.2.1"
   }
 }

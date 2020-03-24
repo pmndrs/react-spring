@@ -1,8 +1,8 @@
-import { Indexable, each, getFluidConfig } from 'shared'
+import { Lookup, each, getFluidConfig } from 'shared'
 import { Animated, isAnimated, getPayload } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
 
-type Source = Indexable | null
+type Source = Lookup | null
 
 /** An object containing `Animated` nodes */
 export class AnimatedObject extends Animated {
@@ -14,7 +14,7 @@ export class AnimatedObject extends Animated {
 
   getValue(animated?: boolean): Source {
     if (!this.source) return null
-    const values: Indexable = {}
+    const values: Lookup = {}
     each(this.source, (source, key) => {
       if (isAnimated(source)) {
         values[key] = source.getValue(animated)

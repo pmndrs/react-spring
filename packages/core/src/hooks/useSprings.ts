@@ -12,19 +12,19 @@ import {
 } from 'shared'
 
 import {
+  ControllerFlushFn,
+  PickAnimated,
   SpringStopFn,
   SpringValues,
   SpringsUpdateFn,
   SpringHandle,
-} from '../types/spring'
-import { PickAnimated } from '../types/common'
+} from '../types'
 import { UseSpringProps } from './useSpring'
 import { createUpdate } from '../SpringValue'
 import {
   Controller,
   getSprings,
   flushUpdateQueue,
-  FlushFn,
   setSprings,
 } from '../Controller'
 import { getProps, useMemo as useMemoOne } from '../helpers'
@@ -94,7 +94,7 @@ export function useSprings(
     // The queue of changes to make on commit.
     queue: Array<() => void>
     // The flush function used by controllers.
-    flush: FlushFn<UnknownProps>
+    flush: ControllerFlushFn<UnknownProps>
   }
 
   // Set to 0 to prevent sync flush.

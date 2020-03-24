@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useImperativeHandle, ReactNode } from 'react'
+import React, { useRef, useMemo, useImperativeHandle } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import {
   is,
@@ -7,46 +7,34 @@ import {
   useOnce,
   each,
   OneOrMore,
-  Falsy,
-  RefProp,
-  Merge,
   UnknownProps,
-  Indexable,
 } from 'shared'
 
 import {
-  SpringHandle,
-  AsyncTo,
-  FromProp,
-  SpringValues,
-  SpringConfig,
-} from '../types/spring'
-import { Valid, PickAnimated } from '../types/common'
-import { AnimationProps, AnimationEvents } from '../types/animated'
+  Change,
+  ControllerUpdate,
+  ItemKeys,
+  PickAnimated,
+  TransitionFn,
+  TransitionHandle,
+  TransitionState,
+  TransitionTo,
+  UseTransitionProps,
+  TransitionDefaultProps,
+} from '../types'
+import { Valid } from '../types/common'
 import { DEFAULT_PROPS, callProp, inferTo } from '../helpers'
+import { Controller, getSprings, setSprings } from '../Controller'
 import {
-  Controller,
-  ControllerProps,
-  getSprings,
-  setSprings,
-} from '../Controller'
-import { UseSpringProps } from './useSpring'
+  ENTER,
+  MOUNT,
+  LEAVE,
+  UPDATE,
+  TransitionPhase,
+} from '../TransitionPhase'
 
-/** This transition is being mounted */
-const MOUNT = 'mount'
-/** This transition is entering or has entered */
-const ENTER = 'enter'
-/** This transition had its animations updated */
-const UPDATE = 'update'
-/** This transition will expire after animating */
-const LEAVE = 'leave'
-
-// TODO: convert to "const enum" once Babel supports it
-export type TransitionPhase =
-  | typeof MOUNT
-  | typeof ENTER
-  | typeof UPDATE
-  | typeof LEAVE
+declare function setTimeout(handler: Function, timeout?: number): number
+declare function clearTimeout(timeoutId: number): void
 
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
@@ -150,7 +138,7 @@ export function useTransition(
   // Expired transitions use this to dismount.
   const forceUpdate = useForceUpdate()
 
-  const defaultProps = {} as ControllerProps
+  const defaultProps = {} as TransitionDefaultProps
   each(DEFAULT_PROPS, prop => {
     if (/function|object/.test(typeof props[prop])) {
       defaultProps[prop] = props[prop] as any
@@ -197,11 +185,11 @@ export function useTransition(
     }
 
     // The payload is used to update the spring props once the current render is committed.
-    const payload: ControllerProps = {
+    const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
       from: callProp(from, t.item, i),
       delay: delay += trail,
-      ...to,
+      ...(to as any),
     }
 
     const { onRest } = payload
@@ -298,100 +286,6 @@ export function useTransition(
   return arguments.length == 3
     ? ([renderTransitions, api.update, api.stop] as const)
     : renderTransitions
-}
-
-export type UseTransitionProps<Item = any> = Merge<
-  AnimationProps & AnimationEvents,
-  {
-    from?: TransitionFrom<Item>
-    initial?: TransitionFrom<Item>
-    enter?: TransitionTo<Item>
-    update?: TransitionTo<Item>
-    leave?: TransitionTo<Item>
-    key?: ItemKeys<Item>
-    sort?: (a: Item, b: Item) => number
-    trail?: number
-    /**
-     * When `true` or `<= 0`, each item is unmounted immediately after its
-     * `leave` animation is finished.
-     *
-     * When `false`, items are never unmounted.
-     *
-     * When `> 0`, this prop is used in a `setTimeout` call that forces a
-     * rerender if the component that called `useTransition` doesn't rerender
-     * on its own after an item's `leave` animation is finished.
-     */
-    expires?: boolean | number | ((item: Item) => boolean | number)
-    config?:
-      | SpringConfig
-      | ((item: Item, index: number) => AnimationProps['config'])
-    /**
-     * Used to access the imperative API.
-     *
-     * Animations never auto-start when `ref` is defined.
-     */
-    ref?: RefProp<TransitionHandle>
-  }
->
-
-export type ItemKeys<T = any> = OneOrMore<Key> | ((item: T) => Key) | null
-
-/** Control the transition springs without re-rendering. */
-export type TransitionHandle<State extends Indexable = UnknownProps> = Merge<
-  SpringHandle<State>,
-  {
-    update: (
-      props:
-        | OneOrMore<ControllerProps<State>>
-        | ((index: number, ctrl: Controller<State>) => ControllerProps<State>)
-    ) => TransitionHandle<State>
-  }
->
-
-/** The function returned by `useTransition` */
-export interface TransitionFn<Item = any, State extends object = any> {
-  (
-    render: (
-      values: SpringValues<State>,
-      item: Item,
-      transition: TransitionState<Item>,
-      index: number
-    ) => ReactNode
-  ): ReactNode[]
-}
-
-export interface TransitionState<Item = any> {
-  key: any
-  item: Item
-  ctrl: Controller
-  phase: TransitionPhase
-  expired?: boolean
-  expirationId?: number
-}
-
-//
-// Internal
-//
-
-type Key = string | number
-
-type TransitionFrom<Item> =
-  | FromProp<UnknownProps>
-  | ((item: Item, index: number) => FromProp<UnknownProps>)
-
-type TransitionTo<Item> =
-  | Falsy
-  | OneOrMore<UseSpringProps<UnknownProps>>
-  | Function // HACK: Fix inference of untyped inline functions.
-  | ((
-      item: Item,
-      index: number
-    ) => UseSpringProps<UnknownProps> | AsyncTo<UnknownProps> | Falsy)
-
-interface Change {
-  phase: TransitionPhase
-  springs: SpringValues<UnknownProps>
-  payload: ControllerProps
 }
 
 function getKeys(

@@ -1,6 +1,6 @@
+import { useSpring, UseSpringProps } from '../hooks/useSpring'
 import { NoInfer, UnknownProps } from '../types/common'
-import { SpringValues, AsyncTo } from '../types/spring'
-import { UseSpringProps, useSpring } from '../hooks/useSpring'
+import { SpringValues, SpringToFn, SpringChain } from '../types'
 
 export type SpringComponentProps<
   State extends object = UnknownProps
@@ -13,7 +13,7 @@ export type SpringComponentProps<
 export function Spring<State extends object>(
   props: {
     from: State
-    to?: AsyncTo<NoInfer<State>>
+    to?: SpringChain<NoInfer<State>> | SpringToFn<NoInfer<State>>
   } & Omit<SpringComponentProps<NoInfer<State>>, 'from' | 'to'>
 ): JSX.Element | null
 

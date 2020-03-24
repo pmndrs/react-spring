@@ -1,8 +1,8 @@
 import { ReactNode } from 'react'
 import { NoInfer, is, Falsy } from 'shared'
 
-import { Valid, PickAnimated } from '../types/common'
-import { SpringValues } from '../types/spring'
+import { Valid } from '../types/common'
+import { PickAnimated, SpringValues } from '../types'
 import { UseSpringProps } from '../hooks/useSpring'
 import { useTrail } from '../hooks/useTrail'
 
@@ -20,7 +20,7 @@ export function Trail<Item, Props extends TrailComponentProps<Item>>({
   children,
   ...props
 }: Props & Valid<Props, TrailComponentProps<Item, Props>>) {
-  const trails = useTrail(items.length, props)
+  const trails: any[] = useTrail(items.length, props)
   return items.map((item, index) => {
     const result = children(item, index)
     return is.fun(result) ? result(trails[index]) : result

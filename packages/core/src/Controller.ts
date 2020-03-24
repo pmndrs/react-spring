@@ -1,105 +1,51 @@
-import {
-  is,
-  each,
-  OneOrMore,
-  toArray,
-  UnknownProps,
-  FluidProps,
-  Remap,
-} from 'shared'
+import { is, each, OneOrMore, toArray, UnknownProps } from 'shared'
 import * as G from 'shared/globals'
 
-import { SpringValues, RangeProps } from './types/spring'
-import {
-  OnProps,
-  OnRest,
-  OnStart,
-  OnChange,
-  AnimationResult,
-  AnimationProps,
-  LoopProp,
-} from './types/animated'
-import { Indexable, Falsy } from './types/common'
-import { runAsync, scheduleProps, RunAsyncState, AsyncResult } from './runAsync'
-import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
+import { Lookup, Falsy } from './types/common'
 import { inferTo } from './helpers'
-import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import { FrameValue } from './FrameValue'
+import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
+import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
+import { runAsync, scheduleProps, RunAsyncState } from './runAsync'
+import {
+  AnimationResult,
+  AsyncResult,
+  ControllerFlushFn,
+  ControllerUpdate,
+  OnRest,
+  SpringValues,
+} from './types'
 
 /** Events batched by the `Controller` class */
 const BATCHED_EVENTS = ['onStart', 'onChange', 'onRest'] as const
 
-/** All event props supported by the `Controller` class */
-export type EventProps<State extends object> = {
-  /**
-   * Called when the # of animating values exceeds 0
-   *
-   * Also accepts an object for per-key events
-   */
-  onStart?: (() => void) | { [P in keyof State]?: OnStart<State[P]> }
-  /**
-   * Called when the # of animating values hits 0
-   *
-   * Also accepts an object for per-key events
-   */
-  onRest?: OnRest<State> | { [P in keyof State]?: OnRest<State[P]> }
-  /**
-   * Called after an animation is updated by new props.
-   * Useful for manipulation
-   *
-   * Also accepts an object for per-key events
-   */
-  onProps?: OnProps<State> | { [P in keyof State]?: OnProps<State[P]> }
-  /**
-   * Called once per frame when animations are active
-   *
-   * Also accepts an object for per-key events
-   */
-  onChange?:
-    | ((values: State) => void)
-    | { [P in keyof State]?: OnChange<State[P]> }
-}
-
-export type ControllerProps<State extends Indexable = UnknownProps> = Remap<
-  FluidProps<Partial<State>> &
-    RangeProps<State> &
-    EventProps<State> &
-    AnimationProps & {
-      // FIXME: Use "ControllerProps<State>" without ruining type inference.
-      loop?: LoopProp<ControllerProps>
-    }
->
-
-/** An update that hasn't been applied yet */
-type PendingProps<State extends Indexable> = ControllerProps<State> & {
-  /** The keys affected by this update. When null, all keys are affected. */
-  keys: string[] | null
-}
-
-/** The flush function that handles `start` calls */
-export type FlushFn<State extends Indexable> = (
-  ctrl: Controller<State>,
-  queue: PendingProps<State>[]
-) => AsyncResult<State>
-
 let nextId = 1
 let lastAsyncId = 0
 
-export class Controller<State extends Indexable = UnknownProps>
+/** Queue of pending updates for a `Controller` instance. */
+export interface ControllerQueue<State extends Lookup = Lookup>
+  extends Array<
+    ControllerUpdate<State> & {
+      /** The keys affected by this update. When null, all keys are affected. */
+      keys: string[] | null
+    }
+  > {}
+
+export class Controller<State extends Lookup = Lookup>
   implements FrameValue.Observer {
   readonly id = nextId++
 
   /** The animated values */
   springs: SpringValues<State> = {} as any
 
-  /** The queue of pending props */
-  queue: PendingProps<State>[] = []
+  /** The queue of props passed to the `update` method. */
+  queue: ControllerQueue<State> = []
 
   /** Custom handler for flushing update queues */
-  protected _flush?: FlushFn<State>
+  protected _flush?: ControllerFlushFn<State>
 
   /** These props are used by all future spring values */
-  protected _initialProps?: Indexable
+  protected _initialProps?: Lookup
 
   /** The combined phase of our spring values */
   protected _phase: SpringPhase = CREATED
@@ -117,7 +63,10 @@ export class Controller<State extends Indexable = UnknownProps>
     onRest: new Map<OnRest, AnimationResult>(),
   }
 
-  constructor(props?: ControllerProps<State> | null, flush?: FlushFn<State>) {
+  constructor(
+    props?: ControllerUpdate<State> | null,
+    flush?: ControllerFlushFn<State>
+  ) {
     this._onFrame = this._onFrame.bind(this)
     if (flush) {
       this._flush = flush
@@ -136,7 +85,7 @@ export class Controller<State extends Indexable = UnknownProps>
   get idle() {
     return (
       !this._state.promise &&
-      Object.values(this.springs as Indexable<SpringValue>).every(
+      Object.values(this.springs as Lookup<SpringValue>).every(
         spring => spring.idle
       )
     )
@@ -150,7 +99,7 @@ export class Controller<State extends Indexable = UnknownProps>
   }
 
   /** Push an update onto the queue of each value. */
-  update(props: ControllerProps<State> | Falsy) {
+  update(props: ControllerUpdate<State> | Falsy) {
     if (props) this.queue.push(createUpdate(props))
     return this
   }
@@ -162,7 +111,7 @@ export class Controller<State extends Indexable = UnknownProps>
    * When you pass a queue (instead of nothing), that queue is used instead of
    * the queued animations added with the `update` method, which are left alone.
    */
-  start(props?: OneOrMore<ControllerProps<State>> | null): AsyncResult<State> {
+  start(props?: OneOrMore<ControllerUpdate<State>> | null): AsyncResult<State> {
     const queue = props ? toArray<any>(props).map(createUpdate) : this.queue
     if (!props) {
       this.queue = []
@@ -183,7 +132,7 @@ export class Controller<State extends Indexable = UnknownProps>
     if (is.und(keys)) {
       this.each(spring => spring.stop())
     } else {
-      const springs = this.springs as Indexable<SpringValue>
+      const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].stop())
     }
     return this
@@ -194,7 +143,7 @@ export class Controller<State extends Indexable = UnknownProps>
     if (is.und(keys)) {
       this.each(spring => spring.pause())
     } else {
-      const springs = this.springs as Indexable<SpringValue>
+      const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].pause())
     }
     return this
@@ -205,7 +154,7 @@ export class Controller<State extends Indexable = UnknownProps>
     if (is.und(keys)) {
       this.each(spring => spring.resume())
     } else {
-      const springs = this.springs as Indexable<SpringValue>
+      const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].resume())
     }
     return this
@@ -280,7 +229,7 @@ function flush(queue: any, iterator: any) {
  */
 export function flushUpdateQueue(
   ctrl: Controller<any>,
-  queue: PendingProps<any>[]
+  queue: ControllerQueue
 ) {
   return Promise.all(queue.map(props => flushUpdate(ctrl, props))).then(
     results => ({
@@ -301,7 +250,7 @@ export function flushUpdateQueue(
  */
 export function flushUpdate(
   ctrl: Controller<any>,
-  props: PendingProps<any>
+  props: ControllerQueue[number]
 ): Promise<boolean> {
   const { to, loop } = props
 
@@ -355,7 +304,7 @@ export function flushUpdate(
           // Start, replace, or cancel the async animation.
           props.onRest = undefined
           resolve(
-            runAsync<any>(
+            runAsync(
               asyncTo,
               props,
               state,
@@ -389,7 +338,7 @@ export function flushUpdate(
  */
 export function getSprings<State>(
   ctrl: Controller<State>,
-  props?: OneOrMore<ControllerProps<State>>
+  props?: OneOrMore<ControllerUpdate<State>>
 ) {
   const springs = { ...ctrl.springs }
   if (props) {
@@ -440,8 +389,8 @@ function createSpring(
 }
 
 function prepareSprings(
-  springs: any,
-  props: PendingProps<any>,
+  springs: SpringValues<Lookup>,
+  props: ControllerQueue[number],
   create: (key: string) => SpringValue
 ) {
   if (props.keys) {
