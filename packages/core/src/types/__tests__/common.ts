@@ -1,6 +1,7 @@
 import { assert, _, test } from 'spec.ts';
-import { PickAnimated, ForwardProps, Remap, ReservedProps } from '../common';
-import { SpringUpdateFn } from '../spring';
+import { Remap } from '../common';
+import { SpringUpdateFn } from '../functions';
+import { PickAnimated, ForwardProps, ReservedProps } from '../props';
 
 type SystemProps = {
   [P in keyof ReservedProps]-?: P extends 'from' | 'to' ? {} : 1;
@@ -89,12 +90,13 @@ test('PickAnimated', () => {
 
   // Async "to" chain
   type A8 = PickAnimated<{
-    to: [{ a: 1 }, { a: 2 }];
+    from: { a: 1 };
+    to: [{ a: 2 }, { a: 3 }];
   }>;
   assert(
     _ as A8,
     _ as {
-      a: 1 | 2;
+      a: 1;
     }
   );
 

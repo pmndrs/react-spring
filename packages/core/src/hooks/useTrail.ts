@@ -1,8 +1,13 @@
 import { useLayoutEffect } from 'react-layout-effect'
 import { is, UnknownProps } from 'shared'
 
-import { PickAnimated, Valid } from '../types/common'
-import { SpringValues, SpringStopFn, SpringsUpdateFn } from '../types/spring'
+import { Valid } from '../types/common'
+import {
+  PickAnimated,
+  SpringStopFn,
+  SpringsUpdateFn,
+  SpringValues,
+} from '../types'
 import { UseSpringProps } from './useSpring'
 import { Controller } from '../Controller'
 import { useSprings } from './useSprings'

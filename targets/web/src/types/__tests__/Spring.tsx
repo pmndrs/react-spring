@@ -1,8 +1,12 @@
 import React from 'react';
 import { assert, test, _ } from 'spec.ts';
 import { animated, Spring } from '../..';
-import { AnimationResult, SpringValues, SpringUpdateFn } from 'core';
-import { UnknownPartial } from 'shared';
+import {
+  AnimationResult,
+  SpringValues,
+  SpringUpdateFn,
+  UnknownProps,
+} from 'core';
 
 const View = animated('div');
 
@@ -15,10 +19,10 @@ test('basic usage', () => {
         result,
         _ as Readonly<
           AnimationResult<
-            UnknownPartial<{
-              opacity: number;
-              color: string;
-            }>
+            UnknownProps & {
+              opacity?: number;
+              color?: string;
+            }
           >
         >
       );

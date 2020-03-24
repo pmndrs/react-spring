@@ -1,42 +1,34 @@
-import { is, each, Merge } from 'shared'
+import { is, each, Pick } from 'shared'
 
+import { matchProp, DEFAULT_PROPS } from './helpers'
 import {
-  AsyncTo,
-  SpringUpdateFn,
+  AnimationResult,
+  AsyncResult,
+  ControllerUpdate,
+  SpringChain,
+  SpringDefaultProps,
+  SpringProps,
   SpringStopFn,
-  SpringUpdate,
-  SpringTo,
-} from './types/spring'
-import { AnimationResult } from './types/animated'
-import { matchProp, DEFAULT_PROPS, MatchProp } from './helpers'
-import { PendingProps } from './SpringValue'
+  SpringToFn,
+} from './types'
 
-export type AsyncResult<T = any> = Promise<Readonly<AnimationResult<T>>>
+declare function setTimeout(handler: Function, timeout?: number): number
 
-export type RunAsyncProps<T = any> = unknown &
-  Merge<
-    PendingProps<T>,
-    {
-      asyncId: number
-      cancel: boolean
-      reset: boolean
-    }
-  >
+export interface RunAsyncProps<T = any> extends SpringProps<T> {
+  asyncId: number
+  cancel: boolean
+  reset: boolean
+}
 
 export interface RunAsyncState<T> {
   /** The async function or array of spring props */
-  asyncTo?: AsyncTo<T>
+  asyncTo?: SpringChain<T> | SpringToFn<T>
   /** Resolves when the current `asyncTo` finishes or gets cancelled. */
   promise?: AsyncResult<T>
   /** Call this to unpause the current `asyncTo` function or array. */
   unpause?: () => void
   /** The last time we saw a matching `cancel` prop. */
   cancelId?: number
-}
-
-/** Default props for a `SpringValue` object */
-export type DefaultProps = {
-  [D in typeof DEFAULT_PROPS[number]]?: RunAsyncProps[D]
 }
 
 /**
@@ -48,12 +40,12 @@ export type DefaultProps = {
  * or a primitive type for a single animated value.
  */
 export async function runAsync<T>(
-  to: AsyncTo<T>,
+  to: SpringChain<T> | SpringToFn<T>,
   props: RunAsyncProps<T>,
   state: RunAsyncState<T>,
   getValue: () => T,
   getPaused: () => boolean,
-  update: SpringUpdateFn<any>,
+  update: (props: any) => AsyncResult<T>,
   stop: SpringStopFn<T>
 ): AsyncResult<T> {
   if (props.cancel) {
@@ -86,7 +78,7 @@ export async function runAsync<T>(
       }
     }
 
-    const defaultProps: DefaultProps = {}
+    const defaultProps: SpringDefaultProps<T> = {}
     each(DEFAULT_PROPS, prop => {
       if (prop == 'onRest') return
       if (/function|object/.test(typeof props[prop])) {
@@ -94,14 +86,11 @@ export async function runAsync<T>(
       }
     })
 
-    const animate = (
-      arg1: SpringTo<T> | SpringUpdate<T>,
-      arg2?: SpringUpdate<T>
-    ) => {
+    // Note: This function cannot be async, because `checkFailConditions` must be sync.
+    const animate: any = (arg1: any, arg2?: any) => {
       checkFailConditions()
 
-      type AnimateProps = SpringUpdate<T> & typeof defaultProps
-      const props: AnimateProps = is.obj(arg1)
+      const props: ControllerUpdate<T> = is.obj(arg1)
         ? { ...arg1 }
         : { ...arg2, to: arg1 as any }
 
@@ -138,7 +127,7 @@ export async function runAsync<T>(
       }
       // Async script
       else if (is.fun(to)) {
-        await to(animate as any, stop)
+        await to(animate, stop)
       }
       result = {
         value: getValue(),
@@ -169,14 +158,8 @@ export async function runAsync<T>(
 
 interface ScheduledProps<T> {
   key?: string
-  props: {
-    cancel?: MatchProp
-    delay?: number | ((key: string) => number)
-    reset?: MatchProp
-  }
-  state: {
-    cancelId?: number
-  }
+  props: Pick<SpringProps<T>, 'cancel' | 'reset' | 'delay'>
+  state: { cancelId?: number }
   action: (
     props: RunAsyncProps<T>,
     resolve: (result: AnimationResult<T> | AsyncResult<T>) => void

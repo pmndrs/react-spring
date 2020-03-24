@@ -18,24 +18,15 @@ import {
   getPayload,
   getAnimated,
   setAnimated,
+  Animated,
 } from 'animated'
 import * as G from 'shared/globals'
 
-import { Indexable } from './types/common'
-import { SpringUpdate } from './types/spring'
 import { Animation } from './Animation'
 import { mergeConfig } from './AnimationConfig'
 import {
-  AnimationRange,
-  OnRest,
-  AnimationEvents,
-  EventProp,
-  Velocity,
-} from './types/animated'
-import {
   runAsync,
   scheduleProps,
-  AsyncResult,
   RunAsyncState,
   RunAsyncProps,
 } from './runAsync'
@@ -55,18 +46,18 @@ import {
   PAUSED,
   DISPOSED,
 } from './SpringPhase'
+import { Lookup } from './types/common'
+import {
+  AnimationRange,
+  AsyncResult,
+  EventProp,
+  OnRest,
+  SpringDefaultProps,
+  SpringUpdate,
+  VelocityProp,
+} from './types'
 
-/** Default props for a `SpringValue` object */
-export type DefaultProps<T = unknown> = {
-  [D in typeof DEFAULT_PROPS[number]]?: PendingProps<T>[D]
-}
-
-/** Pending props for a `SpringValue` object */
-export type PendingProps<T = unknown> = unknown &
-  SpringUpdate<T> &
-  AnimationEvents<T>
-
-declare const console: { warn: Function }
+declare const console: any
 
 /**
  * Only numbers, strings, and arrays of numbers/strings are supported.
@@ -80,7 +71,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   animation = new Animation<T>()
 
   /** The queue of pending props */
-  queue?: PendingProps<T>[]
+  queue?: SpringUpdate<T>[]
 
   /** The lifecycle phase of this spring */
   protected _phase: SpringPhase = CREATED
@@ -89,16 +80,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _state: RunAsyncState<T> = {}
 
   /** The last time each prop changed */
-  protected _timestamps: Indexable<number> = {}
+  protected _timestamps: Lookup<number> = {}
 
   /** Some props have customizable default values */
-  protected _defaultProps = {} as PendingProps<T>
+  protected _defaultProps = {} as SpringDefaultProps<T>
 
   /** Cancel any update from before this timestamp */
   protected _lastAsyncId = 0
 
-  constructor(from: Exclude<T, object>, props?: PendingProps<T>)
-  constructor(props?: PendingProps<T>)
+  constructor(from: Exclude<T, object>, props?: SpringUpdate<T>)
+  constructor(props?: SpringUpdate<T>)
   constructor(arg1?: any, arg2?: any) {
     super()
     if (arguments.length) {
@@ -116,11 +107,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
     return getFluidValue(this.animation.to)
   }
 
-  get velocity() {
+  get velocity(): VelocityProp<T> {
     const node = getAnimated(this)!
     return (node instanceof AnimatedValue
       ? node.lastVelocity || 0
-      : node.getPayload().map(node => node.lastVelocity || 0)) as Velocity<T>
+      : node.getPayload().map(node => node.lastVelocity || 0)) as any
   }
 
   /** Advance the current animation by a number of milliseconds */
@@ -359,7 +350,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /** Push props into the pending queue. */
-  update(props: PendingProps<T>) {
+  update(props: SpringUpdate<T>) {
     checkDisposed(this, 'update')
     const queue = this.queue || (this.queue = [])
     queue.push(props)
@@ -375,14 +366,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
    */
   start(): AsyncResult<T>
 
-  start(props: PendingProps<T>): AsyncResult<T>
+  start(props: SpringUpdate<T>): AsyncResult<T>
 
-  start(to: Animatable<T>, props?: PendingProps<T>): AsyncResult<T>
+  start(to: Animatable<T>, props?: SpringUpdate<T>): AsyncResult<T>
 
-  async start(to?: PendingProps<T> | Animatable<T>, arg2?: PendingProps<T>) {
+  async start(to?: SpringUpdate<T> | Animatable<T>, arg2?: SpringUpdate<T>) {
     checkDisposed(this, 'start')
 
-    let queue: PendingProps<T>[]
+    let queue: SpringUpdate<T>[]
     if (!is.und(to)) {
       queue = [is.obj(to) ? (to as any) : { ...arg2, to }]
     } else {
@@ -478,7 +469,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    *
    * The newest `Animated` node is returned.
    */
-  protected _updateNode(value: any) {
+  protected _updateNode(value: any): Animated | undefined {
     let node = getAnimated(this)
     if (!is.und(value)) {
       const nodeType = this._getNodeType(value)
@@ -502,9 +493,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /** Schedule an animation to run after an optional delay */
-  protected _update(props: PendingProps<T>): AsyncResult<T> {
+  protected _update(props: SpringUpdate<T>): AsyncResult<T> {
     // Ensure the initial value can be accessed by animated components.
     const range = this._prepareNode(props)
+    const { to } = props
 
     const state = this._state
     const timestamp = G.now()
@@ -513,7 +505,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       props,
       state,
       action: (props, resolve) => {
-        const { to } = props
         if (is.arr(to) || is.fun(to)) {
           resolve(
             runAsync(
@@ -586,7 +577,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     /** Get the value of a prop, or its default value */
-    const get = <K extends keyof DefaultProps>(prop: K) =>
+    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
       !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
     // Every update has a timestamp attached to it (before any delay

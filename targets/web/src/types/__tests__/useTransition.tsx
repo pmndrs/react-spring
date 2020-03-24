@@ -1,7 +1,7 @@
 import React from 'react';
 import { assert, test, _ } from 'spec.ts';
-import { SpringValues, ControllerProps, AsyncResult } from 'core';
-import { Indexable } from 'shared';
+import { SpringValues, SpringUpdateFn } from 'core';
+import { Lookup } from 'shared';
 
 import { animated, useTransition } from '../..';
 
@@ -18,13 +18,16 @@ test('infer animated from these props', () => {
     initial: { e: 1 },
   });
   transition((style, item) => {
-    assert(style, _ as SpringValues<{
-      a: number;
-      b: number;
-      c: number;
-      d: number;
-      e: number;
-    }>);
+    assert(
+      style,
+      _ as SpringValues<{
+        a: number;
+        b: number;
+        c: number;
+        d: number;
+        e: number;
+      }>
+    );
     assert(item, _ as 1 | 2);
     return null;
   });
@@ -39,10 +42,13 @@ test('basic usage', () => {
 
   // You typically map transition objects into JSX elements.
   return transition((style, item) => {
-    assert(style, _ as SpringValues<{
-      opacity: number | undefined; // FIXME: "opacity" should never be undefined because it exists in "from"
-      color: string | undefined;
-    }>);
+    assert(
+      style,
+      _ as SpringValues<{
+        opacity: number | undefined; // FIXME: "opacity" should never be undefined because it exists in "from"
+        color: string | undefined;
+      }>
+    );
     assert(item, _ as 1 | 2);
     return <View style={style}>{item}</View>;
   });
@@ -61,11 +67,14 @@ test('with function props', () => {
     leave: { width: '0%', opacity: 0 },
   });
   transition((style, item) => {
-    assert(style, _ as SpringValues<{
-      width: string | number;
-      height: string;
-      opacity: number;
-    }>);
+    assert(
+      style,
+      _ as SpringValues<{
+        width: string | number;
+        height: string;
+        opacity: number;
+      }>
+    );
     assert(item, _ as 1 | 2);
     return null;
   });
@@ -74,9 +83,7 @@ test('with function props', () => {
     useTransition(items, {
       update: item => async next => {
         assert(item, _ as 1 | 2);
-        assert(next, _ as {
-          (props: ControllerProps): AsyncResult<Indexable>;
-        }); // FIXME: should be "SpringUpdateFn<{ opacity: number, ... }>"
+        assert(next, _ as SpringUpdateFn<Lookup>);
       },
     });
   });

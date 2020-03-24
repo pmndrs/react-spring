@@ -2,7 +2,9 @@ import { FrameRequestCallback } from './types'
 import { is } from './helpers'
 import * as G from './globals'
 
-declare const process: any
+declare const process:
+  | { env: { [key: string]: string | undefined } }
+  | undefined
 
 export type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
@@ -174,7 +176,10 @@ export class FrameLoop {
     }
 
     // Expose internals for testing.
-    if (process.env.NODE_ENV !== 'production') {
+    if (
+      typeof process !== 'undefined' &&
+      process.env.NODE_ENV !== 'production'
+    ) {
       Object.defineProperties(this, {
         _idle: { get: () => idle },
         _animations: { get: () => animations },

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Indexable, Arrify } from './types'
+import { Lookup, Arrify } from './types'
 import * as G from './globals'
 
 export const noop = () => {}
@@ -11,7 +11,7 @@ interface IsArray {
   <T>(a: T): a is T & readonly any[]
 }
 
-type PlainObject<T> = Exclude<T & Indexable, Function | readonly any[]>
+type PlainObject<T> = Exclude<T & Lookup, Function | readonly any[]>
 
 export const is = {
   arr: Array.isArray as IsArray,
@@ -74,7 +74,10 @@ export const each = <T extends object, This>(
 export const toArray = <T>(a: T): Arrify<Exclude<T, void>> =>
   is.und(a) ? [] : is.arr(a) ? (a as any) : [a]
 
-export const useOnce = (effect: React.EffectCallback) => useEffect(effect, [])
+// Explicit type annotation fixes TS2742 error.
+type UseOnce = (effect: React.EffectCallback) => void
+
+export const useOnce: UseOnce = effect => useEffect(effect, [])
 
 /** Return a function that re-renders this component, if still mounted */
 export const useForceUpdate = () => {

@@ -5,11 +5,6 @@ import { InterpolatorConfig, InterpolatorArgs, OneOrMore } from './types'
 import { FrameLoop } from './FrameLoop'
 import { noop } from './helpers'
 
-declare const window: {
-  requestAnimationFrame: (cb: (time: number) => void) => number
-  cancelAnimationFrame: (id: number) => void
-}
-
 //
 // Required
 //
@@ -49,10 +44,15 @@ export let createAnimatedStyle = null as ((style: any) => any) | null
 
 export let createAnimatedTransform = null as ((transform: any) => any) | null
 
-export let requestAnimationFrame: typeof window.requestAnimationFrame =
+declare const window: {
+  requestAnimationFrame: (cb: (time: number) => void) => number
+  cancelAnimationFrame: (id: number) => void
+}
+
+export let requestAnimationFrame: (cb: (time: number) => void) => number =
   typeof window !== 'undefined' ? window.requestAnimationFrame : () => -1
 
-export let cancelAnimationFrame: typeof window.cancelAnimationFrame =
+export let cancelAnimationFrame: (id: number) => void =
   typeof window !== 'undefined' ? window.cancelAnimationFrame : noop
 
 export let batchedUpdates = (callback: () => void) => callback()

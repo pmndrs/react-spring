@@ -4,38 +4,16 @@ export * from './interpolate'
 export * from './constants'
 export * from './globals'
 
-export * from './Controller'
-export * from './SpringValue'
-export * from './Interpolation'
-export * from './FrameValue'
+export { Controller } from './Controller'
+export { SpringValue } from './SpringValue'
+export { Interpolation } from './Interpolation'
+export { FrameValue } from './FrameValue'
 
-export {
-  AsyncUpdate,
-  AsyncUpdateFn,
-  SpringConfig,
-  SpringHandle,
-  SpringStartFn,
-  SpringStopFn,
-  SpringPauseFn,
-  SpringResumeFn,
-  SpringUpdate,
-  SpringUpdateFn,
-  SpringsUpdateFn,
-  SpringValues,
-} from './types/spring'
+export { FrameLoop, createInterpolator } from 'shared'
+export { inferTo } from './helpers'
 
-export { AsyncResult } from './runAsync'
-export { AnimationResult } from './types/animated'
-
-export {
-  ForwardProps,
-  ReservedProps,
-  TransitionPhase,
-  UnknownProps,
-} from './types/common'
-
-export { inferTo, InferTo } from './helpers'
-export { FrameLoop, Animatable, createInterpolator } from 'shared'
+export * from './types'
+export { UnknownProps } from './types/common'
 
 export * from 'shared/types/animated'
 export * from 'shared/types/interpolation'
