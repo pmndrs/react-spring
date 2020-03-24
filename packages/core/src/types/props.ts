@@ -296,14 +296,8 @@ export type PickAnimated<Props extends object, Fwd = true> = unknown &
 type ToValues<Props extends object, AndForward = true> = unknown &
   (AndForward extends true ? ForwardProps<Props> : unknown) &
   (Props extends { to?: infer To }
-    ? To extends Function
+    ? To extends Function | ReadonlyArray<any>
       ? unknown
-      : To extends ReadonlyArray<infer T>
-      ? T extends object
-        ? {
-            [P in keyof Props]: PickAnimated<T, AndForward>
-          }[keyof Props]
-        : unknown
       : ForwardProps<ObjectType<To>>
     : unknown)
 
