@@ -48,7 +48,12 @@ export const bundle = ({
     sourcemapExcludeSources,
     sourceRoot,
   }
-  return [esmBundle(config), cjsBundle(config), dtsBundle(config)]
+  return [
+    esmBundle(config),
+    cjsBundle(config),
+    dtsBundle(config, 'es'),
+    dtsBundle(config, 'cjs'),
+  ]
 }
 
 export const esmBundle = config => ({
@@ -94,13 +99,18 @@ export const cjsBundle = config => ({
   ],
 })
 
-export const dtsBundle = config => ({
+export const dtsBundle = (config, format) => ({
   input: config.input,
   output: [
     {
-      file: config.output.replace(/\.js$/, '.d.ts'),
-      format: 'es',
-      paths: rewritePaths(),
+      file: config.output.replace(
+        /\.js$/,
+        (format == 'cjs' ? '.cjs' : '') + '.d.ts'
+      ),
+      format,
+      paths: rewritePaths({
+        cjs: format == 'cjs',
+      }),
     },
   ],
   plugins: [dts()],
