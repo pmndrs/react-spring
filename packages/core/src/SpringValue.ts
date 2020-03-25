@@ -82,11 +82,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** Some props have customizable default values */
   protected _defaultProps = {} as SpringDefaultProps<T>
 
-  /** The `scheduleProps` call that last changed each prop */
-  protected _callIds: Lookup<number> = {}
-
   /** The counter for tracking `scheduleProps` calls */
   protected _lastCallId = 0
+
+  /** The last `scheduleProps` call that changed the `to` prop */
+  protected _lastToId = 0
 
   constructor(from: Exclude<T, object>, props?: SpringUpdate<T>)
   constructor(props?: SpringUpdate<T>)
@@ -546,26 +546,31 @@ export class SpringValue<T = any> extends FrameValue<T> {
   ): void {
     const { key, animation: anim } = this
 
-    /**
-     * Returns true if the given prop wasn't updated before the delay
-     * of the current `_merge` call was finished.
-     */
-    const isMergable = (prop: string) =>
-      props.callId >= (this._callIds[prop] || 0) &&
-      ((this._callIds[prop] = props.callId), true)
-
-    const { to: prevTo, from: prevFrom } = anim
-    let { to, from } = range
-
-    // Default to the previous range.
-    if (is.und(to)) to = prevTo
-    if (is.und(from)) from = prevFrom
+    /** The "to" prop is defined. */
+    const hasToProp = !is.und(range.to)
 
     /** The "from" prop is defined. */
     const hasFromProp = !is.und(range.from)
 
+    // Avoid merging other props if implicitly prevented, except
+    // when both the "to" and "from" props are undefined.
+    if (hasToProp || hasFromProp) {
+      if (props.callId > this._lastToId) {
+        this._lastToId = props.callId
+      } else {
+        return resolve({
+          value: this.get(),
+          // Set "cancel" to prevent "runAsync" call.
+          cancelled: props.cancel = true,
+        })
+      }
+    }
+
+    const { to: prevTo, from: prevFrom } = anim
+    let { to = prevTo, from = prevFrom } = range
+
     // Focus the "from" value if changing without a "to" value.
-    if (hasFromProp && is.und(range.to)) {
+    if (hasFromProp && !hasToProp) {
       to = from
     }
 
@@ -576,17 +581,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const hasTo = !is.und(to)
 
     /** The "from" value is changing. */
-    const hasFromChanged =
-      !is.und(from) && isMergable('from') && !isEqual(from, prevFrom)
+    const hasFromChanged = !isEqual(from, prevFrom)
 
     if (hasFromChanged) {
       anim.from = from
-    }
-
-    // For updates with a defined "to" prop, other props cannot be
-    // merged if the "to" prop has been temporally prevented.
-    if (hasTo && !isMergable('to')) {
-      return
     }
 
     /** The "to" value is changing. */
