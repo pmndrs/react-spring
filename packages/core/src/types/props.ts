@@ -13,12 +13,19 @@ import {
   UnknownProps,
 } from 'shared'
 
+import { DEFAULT_PROPS } from '../helpers'
 import { Controller } from '../Controller'
 import { SpringConfig } from './objects'
 import { StringKeys, RawValues, IsPlainObject } from './common'
 import { TransitionKey, TransitionValues } from './transition'
-import { SpringToFn, OnChange, OnRest, OnStart, OnProps } from './functions'
-import { DEFAULT_PROPS } from '../helpers'
+import {
+  SpringToFn,
+  OnChange,
+  OnRest,
+  OnStart,
+  OnProps,
+  OnDelayEnd,
+} from './functions'
 
 /**
  * Move all non-reserved props into the `to` prop.
@@ -52,6 +59,10 @@ export interface SpringProps<T = any> extends AnimationProps<T> {
   from?: GoalValue<T> | Falsy
   // FIXME: Use "SpringUpdate<T>" once type recursion is good enough.
   loop?: LoopProp<SpringUpdate>
+  /**
+   * Called after any delay has finished.
+   */
+  onDelayEnd?: EventProp<OnDelayEnd<T>>
   /**
    * Called after an animation is updated by new props,
    * even if the animation remains idle.
@@ -144,6 +155,10 @@ export interface ControllerProps<State extends Lookup = Lookup>
   from?: GoalValues<State> | Falsy
   // FIXME: Use "ControllerUpdate<T>" once type recursion is good enough.
   loop?: LoopProp<ControllerUpdate>
+  /**
+   * Called after any delay has finished.
+   */
+  onDelayEnd?: EventProp<OnDelayEnd<State[keyof State]>>
   /**
    * Called when the # of animating values exceeds 0
    *
@@ -267,6 +282,7 @@ export interface ReservedProps {
   enter?: any
   leave?: any
   update?: any
+  onDelayEnd?: any
   onProps?: any
   onStart?: any
   onChange?: any

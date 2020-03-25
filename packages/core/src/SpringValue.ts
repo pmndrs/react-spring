@@ -545,6 +545,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
     resolve: OnRest<T>
   ): void {
     const { key, animation: anim } = this
+    const defaultProps = this._defaultProps
+
+    /** Get the value of a prop, or its default value */
+    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
+      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
+
+    const onDelayEnd = coerceEventProp(get('onDelayEnd'), key!)
+    if (onDelayEnd) {
+      onDelayEnd(props, this)
+    }
 
     /** The "to" prop is defined. */
     const hasToProp = !is.und(range.to)
@@ -603,7 +613,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const hasAsyncTo = resolve == noop
 
     // Default props are handled here, if not in "runAsync".
-    const defaultProps = this._defaultProps
     if (props.default && !hasAsyncTo) {
       each(DEFAULT_PROPS, prop => {
         // Default props can only be null, an object, or a function.
@@ -707,10 +716,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
         this._stop()
       }
     }
-
-    /** Get the value of a prop, or its default value */
-    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
-      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
     if (!hasAsyncTo) {
       // Make sure our "toValues" are updated even if our previous
