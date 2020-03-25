@@ -109,6 +109,7 @@ function describeProps() {
   describeImmediateProp()
   describeConfigProp()
   describeLoopProp()
+  describeDelayProp()
 }
 
 function describeToProp() {
@@ -465,6 +466,38 @@ function describeLoopProp() {
       await advanceUntilValue(spring, 0)
       await advanceUntilValue(spring, 1)
       expect(getFrames(spring)).toMatchSnapshot()
+    })
+  })
+}
+
+function describeDelayProp() {
+  describe('the "delay" prop', () => {
+    beforeEach(() => jest.useFakeTimers())
+    afterEach(() => jest.useRealTimers())
+
+    // "Temporal prevention" means a delayed update can be cancelled by an
+    // earlier update. This removes the need for explicit delay cancellation.
+    it('allows the update to be temporally prevented', async () => {
+      const spring = new SpringValue(0)
+      const anim = spring.animation
+
+      spring.start(1, { config: { duration: 1000 } })
+
+      // This update will be ignored, because the next "start" call updates
+      // the "to" prop before this update's delay is finished. This update
+      // would *not* be ignored be if its "to" prop was undefined.
+      spring.start(2, { delay: 500, immediate: true })
+
+      // This update won't be affected by the previous update.
+      spring.start(0, { delay: 100, config: { duration: 1000 } })
+
+      expect(anim.to).toBe(1)
+      await advanceByTime(100)
+      expect(anim.to).toBe(0)
+
+      await advanceByTime(400)
+      expect(anim.immediate).toBeFalsy()
+      expect(anim.to).toBe(0)
     })
   })
 }
