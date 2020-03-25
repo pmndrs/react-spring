@@ -505,6 +505,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       state,
       action: (props, resolve) => {
         if (is.arr(to) || is.fun(to)) {
+          this._merge(range, props, noop)
           resolve(
             runAsync(
               to,
@@ -603,8 +604,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
       from = fromConfig.get()
     }
 
+    /** The "to" prop is async. */
+    const hasAsyncTo = resolve == noop
+
+    // Default props are handled here, if not in "runAsync".
     const defaultProps = this._defaultProps
-    if (props.default) {
+    if (props.default && !hasAsyncTo) {
       each(DEFAULT_PROPS, prop => {
         // Default props can only be null, an object, or a function.
         if (/^(function|object)$/.test(typeof props[prop])) {
@@ -616,7 +621,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const { config } = anim
     const { decay, velocity } = config
 
-    if (props.config) {
+    // The "runAsync" function treats the "config" prop as a default,
+    // so we must avoid merging it when the "to" prop is async.
+    if (props.config && !hasAsyncTo) {
       mergeConfig(
         config,
         callProp(props.config, key!),
@@ -691,65 +698,65 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
 
-    /** Get the value of a prop, or its default value */
-    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
-      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
-
-    // At this point, the "goal" is only a string when it cannot be animated.
-    anim.immediate = is.str(goal) || !!matchProp(get('immediate'), key)
-
     // When an active animation changes its goal to its current value:
     if (finished && this.is(ACTIVE)) {
       // Avoid an abrupt stop unless the animation is being reset.
       if (anim.changed && !reset) {
         started = true
       }
-      // Exit the frameloop if the first frame is still pending.
+      // Stop the animation before its first frame.
       else if (!started) {
         this._stop()
       }
     }
 
-    // Make sure our "toValues" are updated even if our previous
-    // "to" prop is a fluid value whose current value is also ours.
-    if (started || getFluidConfig(prevTo)) {
-      anim.values = node.getPayload()
-      anim.toValues = toConfig ? null : toArray(goal)
-    }
+    /** Get the value of a prop, or its default value */
+    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
+      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
-    // Event props are replaced on every update.
-    anim.onStart = coerceEventProp(get('onStart'), key)
-    anim.onChange = coerceEventProp(get('onChange'), key)
-
-    // The "reset" prop tries to reuse the old "onRest" prop,
-    // unless you defined a new "onRest" prop.
-    const onRestQueue = anim.onRest
-    const onRest =
-      reset && !props.onRest
-        ? onRestQueue[0] || noop
-        : checkFinishedOnRest(coerceEventProp(get('onRest'), key), goal, this)
-
-    // In most cases, the animation after this one won't reuse our
-    // "onRest" prop. Instead, the _default_ "onRest" prop is used
-    // when the next animation has an undefined "onRest" prop.
-    if (started) {
-      // The "onRest" prop is always first in the queue.
-      anim.onRest = [onRest, checkFinishedOnRest(resolve, goal, this)]
-
-      // Resolve the promise for the previous update, and call the
-      // "onRest" prop if "reset" equals true.
-      let onRestIndex = reset ? 0 : 1
-      if (onRestIndex < onRestQueue.length) {
-        G.batchedUpdates(() => {
-          for (; onRestIndex < onRestQueue.length; onRestIndex++) {
-            onRestQueue[onRestIndex]()
-          }
-        })
+    if (!hasAsyncTo) {
+      // Make sure our "toValues" are updated even if our previous
+      // "to" prop is a fluid value whose current value is also ours.
+      if (started || getFluidConfig(prevTo)) {
+        anim.values = node.getPayload()
+        anim.toValues = toConfig ? null : toArray(goal)
       }
-    }
-    // The "onRest" prop is updated even if the animation is unchanged.
-    else if (reset || props.onRest) {
-      anim.onRest[0] = onRest
+
+      // At this point, the "goal" is only a string when it cannot be animated.
+      anim.immediate = is.str(goal) || !!matchProp(get('immediate'), key)
+
+      anim.onStart = coerceEventProp(get('onStart'), key)
+      anim.onChange = coerceEventProp(get('onChange'), key)
+
+      // The "reset" prop tries to reuse the old "onRest" prop,
+      // unless you defined a new "onRest" prop.
+      const onRestQueue = anim.onRest
+      const onRest =
+        reset && !props.onRest
+          ? onRestQueue[0] || noop
+          : checkFinishedOnRest(coerceEventProp(get('onRest'), key), goal, this)
+
+      // In most cases, the animation after this one won't reuse our
+      // "onRest" prop. Instead, the _default_ "onRest" prop is used
+      // when the next animation has an undefined "onRest" prop.
+      if (started) {
+        anim.onRest = [onRest, checkFinishedOnRest(resolve, goal, this)]
+
+        // Flush the "onRest" queue for the previous animation.
+        let onRestIndex = reset ? 0 : 1
+        if (onRestIndex < onRestQueue.length) {
+          G.batchedUpdates(() => {
+            for (; onRestIndex < onRestQueue.length; onRestIndex++) {
+              onRestQueue[onRestIndex]()
+            }
+          })
+        }
+      }
+      // The "onRest" prop is always first, and it can be updated even
+      // if a new animation is not started by this update.
+      else if (reset || props.onRest) {
+        anim.onRest[0] = onRest
+      }
     }
 
     // By this point, every prop has been merged.
@@ -761,6 +768,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // Update our node even if the animation is idle.
     if (reset) {
       node.setValue(value)
+    }
+
+    if (hasAsyncTo) {
+      return
     }
 
     if (started) {
