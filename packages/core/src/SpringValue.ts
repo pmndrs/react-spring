@@ -577,9 +577,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // Flip the current range if "reverse" is true.
     if (props.reverse) [to, from] = [from, to]
 
-    /** The "to" value exists. */
-    const hasTo = !is.und(to)
-
     /** The "from" value is changing. */
     const hasFromChanged = !isEqual(from, prevFrom)
 
@@ -588,7 +585,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     /** The "to" value is changing. */
-    const hasToChanged = hasTo && !isEqual(to, prevTo)
+    const hasToChanged = !isEqual(to, prevTo)
 
     if (hasToChanged) {
       this._focus(to)
@@ -670,29 +667,29 @@ export class SpringValue<T = any> extends FrameValue<T> {
       goal = 1
     }
 
-    let started = false
+    // When the goal value is fluid, we don't know if its value
+    // will change before the next animation frame, so it always
+    // starts the animation to be safe.
+    let started = !!toConfig
     let finished = false
-    if (toConfig) {
-      // When the goal value is fluid, we don't know if its value
-      // will change before the next animation frame, so it always
-      // starts the animation to be safe.
-      started = true
-    } else {
+
+    if (!started) {
       // When true, the current value has probably changed.
       const hasValueChanged = reset || (this.is(CREATED) && hasFromChanged)
 
       // When the "to" value or current value are changed,
       // start animating if not already finished.
-      if (hasToChanged || (hasTo && hasValueChanged)) {
+      if (hasToChanged || hasValueChanged) {
         finished = isEqual(computeGoal(value), computeGoal(to))
         started = !finished
       }
 
-      // Changing "decay" or "velocity" can start the animation.
-      if (!started && (hasTo || config.decay)) {
-        started = !(
-          isEqual(config.decay, decay) && isEqual(config.velocity, velocity)
-        )
+      // Changing "decay" or "velocity" starts the animation.
+      if (
+        !isEqual(config.decay, decay) ||
+        !isEqual(config.velocity, velocity)
+      ) {
+        started = true
       }
     }
 
