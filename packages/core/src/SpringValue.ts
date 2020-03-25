@@ -609,11 +609,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       from = fromConfig.get()
     }
 
-    /** The "to" prop is async. */
-    const hasAsyncTo = resolve == noop
-
-    // Default props are handled here, if not in "runAsync".
-    if (props.default && !hasAsyncTo) {
+    if (props.default) {
       each(DEFAULT_PROPS, prop => {
         // Default props can only be null, an object, or a function.
         if (/^(function|object)$/.test(typeof props[prop])) {
@@ -621,6 +617,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
         }
       })
     }
+
+    /** The "to" prop is async. */
+    const hasAsyncTo = resolve == noop
 
     const { config } = anim
     const { decay, velocity } = config
