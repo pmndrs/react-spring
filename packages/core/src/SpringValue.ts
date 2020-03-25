@@ -545,39 +545,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
   ): void {
     const { key, animation: anim } = this
 
-    const defaultProps = this._defaultProps
-    if (props.default) {
-      each(DEFAULT_PROPS, prop => {
-        // Default props can only be null, an object, or a function.
-        if (/function|object/.test(typeof props[prop])) {
-          defaultProps[prop] = props[prop] as any
-        }
-      })
-    }
-
-    const { config } = anim
-    const { decay, velocity } = config
-
-    if (props.config) {
-      mergeConfig(
-        config,
-        callProp(props.config, key!),
-        // Avoid calling the "config" prop twice when "default" is true.
-        props.default ? undefined : callProp(defaultProps.config, key!)
-      )
-    }
-
-    // This instance might not have its Animated node yet. For example,
-    // the constructor can be given props without a "to" or "from" value.
-    const node = getAnimated(this)
-    if (!node) {
-      return
-    }
-
-    /** Get the value of a prop, or its default value */
-    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
-      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
-
     // Some props (eg: to, from) use timestamps for the ability to partially
     // cancel a delayed update by setting the props with an earlier update.
     const isTimely = (prop: string) =>
@@ -605,16 +572,26 @@ export class SpringValue<T = any> extends FrameValue<T> {
     /** The "to" value exists. */
     const hasTo = !is.und(to)
 
-    /** The "to" value is changing. */
-    const hasToChanged = hasTo && isTimely('to') && !isEqual(to, prevTo)
-
     /** The "from" value is changing. */
     const hasFromChanged =
       !is.und(from) && isTimely('from') && !isEqual(from, prevFrom)
 
-    // Save the "to" and "from" props.
-    if (hasToChanged) this._focus(to)
-    if (hasFromChanged) anim.from = from
+    if (hasFromChanged) {
+      anim.from = from
+    }
+
+    // For updates with a defined "to" prop, other props cannot be
+    // merged if the "to" prop has been temporally prevented.
+    if (hasTo && !isTimely('to')) {
+      return
+    }
+
+    /** The "to" value is changing. */
+    const hasToChanged = hasTo && !isEqual(to, prevTo)
+
+    if (hasToChanged) {
+      this._focus(to)
+    }
 
     // Both "from" and "to" can use a fluid config (thanks to http://npmjs.org/fluids).
     const toConfig = getFluidConfig(to)
@@ -622,6 +599,35 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     if (fromConfig) {
       from = fromConfig.get()
+    }
+
+    const defaultProps = this._defaultProps
+    if (props.default) {
+      each(DEFAULT_PROPS, prop => {
+        // Default props can only be null, an object, or a function.
+        if (/^(function|object)$/.test(typeof props[prop])) {
+          defaultProps[prop] = props[prop] as any
+        }
+      })
+    }
+
+    const { config } = anim
+    const { decay, velocity } = config
+
+    if (props.config) {
+      mergeConfig(
+        config,
+        callProp(props.config, key!),
+        // Avoid calling the "config" prop twice when "default" is true.
+        props.default ? undefined : callProp(defaultProps.config, key!)
+      )
+    }
+
+    // This instance might not have its Animated node yet. For example,
+    // the constructor can be given props without a "to" or "from" value.
+    const node = getAnimated(this)
+    if (!node) {
+      return
     }
 
     // Ensure our Animated node is compatible with the "to" prop.
@@ -682,6 +688,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
         )
       }
     }
+
+    /** Get the value of a prop, or its default value */
+    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
+      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
     // At this point, the "goal" is only a string when it cannot be animated.
     anim.immediate = is.str(goal) || !!matchProp(get('immediate'), key)
