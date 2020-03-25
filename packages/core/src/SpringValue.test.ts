@@ -267,6 +267,22 @@ function describeDefaultProp() {
           spring.start({ from: 1 })
           expect(spring.animation.to).toBe(1)
         })
+        it('stops the active animation', async () => {
+          const spring = new SpringValue(0)
+
+          // This animation will be stopped.
+          const promise = spring.start({ from: 0, to: 1 })
+          mockRaf.step()
+
+          spring.start({ from: 0 })
+          expect(spring.idle).toBeTruthy()
+          expect(spring.animation.to).toBe(0)
+
+          expect(await promise).toMatchObject({
+            value: 0,
+            finished: false,
+          })
+        })
       })
     })
   })
