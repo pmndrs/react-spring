@@ -631,7 +631,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // the constructor can be given props without a "to" or "from" value.
     const node = getAnimated(this)
     if (!node) {
-      return
+      return resolve({
+        value: undefined as any,
+        finished: true,
+      })
     }
 
     // Ensure our Animated node is compatible with the "to" prop.
