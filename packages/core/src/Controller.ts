@@ -20,7 +20,6 @@ import {
 const BATCHED_EVENTS = ['onStart', 'onChange', 'onRest'] as const
 
 let nextId = 1
-let lastAsyncId = 0
 
 /** Queue of pending updates for a `Controller` instance. */
 export interface ControllerQueue<State extends Lookup = Lookup>
@@ -49,6 +48,9 @@ export class Controller<State extends Lookup = Lookup>
 
   /** The combined phase of our spring values */
   protected _phase: SpringPhase = CREATED
+
+  /** The counter for tracking `scheduleProps` calls */
+  protected _lastCallId = 0
 
   /** The values currently being animated */
   protected _active = new Set<FrameValue>()
@@ -297,7 +299,7 @@ export function flushUpdate(
   if (asyncTo) {
     const state = ctrl['_state']
     promises.push(
-      scheduleProps(++lastAsyncId, {
+      scheduleProps(++ctrl['_lastCallId'], {
         props,
         state,
         action(props, resolve) {

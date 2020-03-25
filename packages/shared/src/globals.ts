@@ -28,11 +28,9 @@ export let to: <In, Out>(
   args: InterpolatorArgs<In, Out>
 ) => FluidValue<Out>
 
-export let now = () => Date.now()
-
 declare const performance: { now: () => number }
 
-export let performanceNow = () => performance.now()
+export let now = () => performance.now()
 
 export let colorNames = null as { [key: string]: number } | null
 
@@ -64,7 +62,7 @@ export let batchedUpdates = (callback: () => void) => callback()
 export interface AnimatedGlobals {
   /** Returns a new `Interpolation` object */
   to?: typeof to
-  /** Used for timestamps in milliseconds. Read more [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now) */
+  /** Used to measure frame length. Read more [here](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) */
   now?: typeof now
   /** Provide a custom `FrameLoop` instance */
   frameLoop?: typeof frameLoop
@@ -74,8 +72,6 @@ export interface AnimatedGlobals {
   skipAnimation?: typeof skipAnimation
   /** The `div` element equivalent for the current platform */
   defaultElement?: typeof defaultElement
-  /** Used to measure frame length. Read more [here](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) */
-  performanceNow?: typeof performanceNow
   /** Intercept props before they're passed to an animated component */
   getComponentProps?: typeof getComponentProps
   /** Provide custom logic for native updates */
@@ -102,7 +98,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     colorNames,
     skipAnimation,
     defaultElement,
-    performanceNow,
     getComponentProps,
     applyAnimatedValues,
     createStringInterpolator,
@@ -119,7 +114,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       colorNames,
       skipAnimation,
       defaultElement,
-      performanceNow,
       getComponentProps,
       applyAnimatedValues,
       createStringInterpolator,

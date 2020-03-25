@@ -97,7 +97,7 @@ export class FrameLoop {
 
         // To minimize frame skips, the frameloop never stops.
         if (lastTime == 0) {
-          lastTime = G.performanceNow()
+          lastTime = G.now()
           requestFrame(update)
         }
       }
@@ -106,7 +106,7 @@ export class FrameLoop {
     // Process the current frame
     const update = (this.update = time => {
       if (is.und(time)) {
-        time = G.performanceNow()
+        time = G.now()
       }
       if (!idle && time > lastTime) {
         // http://gafferongames.com/game-physics/fix-your-timestep/

@@ -21,7 +21,6 @@ beforeEach(() => {
   global.mockRaf = createMockRaf()
   Globals.assign({
     now: mockRaf.now,
-    performanceNow: mockRaf.now,
     requestAnimationFrame: mockRaf.raf,
     cancelAnimationFrame: mockRaf.cancel,
     frameLoop: new FrameLoop(),
