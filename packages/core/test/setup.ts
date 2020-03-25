@@ -118,6 +118,12 @@ global.advance = (n = 1) => {
   return advanceUntil(() => --n < 0)
 }
 
+global.advanceByTime = ms => {
+  let fired = false
+  setTimeout(() => (fired = true), ms)
+  return advanceUntil(() => fired)
+}
+
 global.advanceUntilIdle = () => {
   return advanceUntil(() => Globals.frameLoop['_idle'])
 }
