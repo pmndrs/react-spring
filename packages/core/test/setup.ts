@@ -97,6 +97,7 @@ global.advanceUntil = async test => {
     }
 
     Globals.frameLoop['_animations'].forEach(observe)
+    jest.advanceTimersByTime(1000 / 60)
     mockRaf.step()
 
     // Stop observing after the frame is processed.
