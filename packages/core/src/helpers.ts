@@ -49,6 +49,7 @@ export const getProps = <T, Arg = never>(
 export const DEFAULT_PROPS = [
   'config',
   'immediate',
+  'onDelayEnd',
   'onProps',
   'onStart',
   'onChange',
@@ -77,6 +78,7 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   enter: 1,
   leave: 1,
   update: 1,
+  onDelayEnd: 1,
   onProps: 1,
   onStart: 1,
   onChange: 1,

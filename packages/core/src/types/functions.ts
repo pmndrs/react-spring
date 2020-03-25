@@ -149,3 +149,11 @@ export type OnProps<T = unknown> = (
   props: Readonly<RunAsyncProps<T>>,
   spring: SpringValue<T>
 ) => void
+
+/**
+ * Called after any delay has finished.
+ */
+export type OnDelayEnd<T = unknown> = (
+  props: RunAsyncProps<T>,
+  spring: SpringValue<T>
+) => void
