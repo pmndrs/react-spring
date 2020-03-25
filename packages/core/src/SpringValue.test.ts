@@ -369,9 +369,6 @@ function describeConfigProp() {
 
 function describeLoopProp() {
   describe('the "loop" prop', () => {
-    beforeEach(() => jest.useFakeTimers())
-    afterEach(() => jest.useRealTimers())
-
     it('resets the animation once finished', async () => {
       const spring = new SpringValue(0)
       spring.start(1, {
@@ -472,9 +469,6 @@ function describeLoopProp() {
 
 function describeDelayProp() {
   describe('the "delay" prop', () => {
-    beforeEach(() => jest.useFakeTimers())
-    afterEach(() => jest.useRealTimers())
-
     // "Temporal prevention" means a delayed update can be cancelled by an
     // earlier update. This removes the need for explicit delay cancellation.
     it('allows the update to be temporally prevented', async () => {

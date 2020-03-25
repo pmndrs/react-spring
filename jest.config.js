@@ -53,6 +53,7 @@ function createConfig(rootDir) {
     collectCoverageFrom: ['src/**/*'],
     coverageDirectory: './coverage',
     coverageReporters: ['json', 'html', 'text'],
+    timers: 'fake',
   }
 }
 
