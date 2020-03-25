@@ -499,7 +499,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const { to } = props
 
     const state = this._state
-    const timestamp = G.now()
     return scheduleProps<T>(++this._lastAsyncId, {
       key: this.key,
       props,
@@ -524,7 +523,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
             cancelled: true,
           })
         } else {
-          this._merge(range, props, timestamp, resolve)
+          this._merge(range, props, resolve)
         }
       },
     }).then(result => {
@@ -542,7 +541,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _merge(
     range: AnimationRange<T>,
     props: RunAsyncProps<T>,
-    timestamp: number,
     resolve: OnRest<T>
   ): void {
     const { key, animation: anim } = this
@@ -580,17 +578,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const get = <K extends keyof SpringDefaultProps>(prop: K) =>
       !is.und(props[prop]) ? props[prop] : defaultProps[prop]
 
-    // Every update has a timestamp attached to it (before any delay
-    // begins), and some props use their timestamp to know if they
-    // were updated before their update finished its delay.
-    const timestamps = this._timestamps
-    const isTimely = (prop: string) => {
-      if (timestamp >= (timestamps[prop] || 0)) {
-        timestamps[prop] = timestamp
-        return true
-      }
-      return false
-    }
+    // Some props (eg: to, from) use timestamps for the ability to partially
+    // cancel a delayed update by setting the props with an earlier update.
+    const isTimely = (prop: string) =>
+      props.timestamp >= (this._timestamps[prop] || 0) &&
+      ((this._timestamps[prop] = props.timestamp), true)
 
     const { to: prevTo, from: prevFrom } = anim
     let { to, from } = range

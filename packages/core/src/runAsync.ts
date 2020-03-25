@@ -1,4 +1,5 @@
 import { is, each, Pick } from 'shared'
+import { performanceNow } from 'shared/globals'
 
 import { matchProp, DEFAULT_PROPS } from './helpers'
 import {
@@ -16,6 +17,7 @@ declare function setTimeout(handler: Function, timeout?: number): number
 
 export interface RunAsyncProps<T = any> extends SpringProps<T> {
   asyncId: number
+  timestamp: number
   cancel: boolean
   reset: boolean
 }
@@ -171,6 +173,7 @@ export function scheduleProps<T>(
   asyncId: number,
   { key, props, state, action }: ScheduledProps<T>
 ): AsyncResult<T> {
+  const timestamp = performanceNow()
   return new Promise((resolve, reject) => {
     let { delay, cancel, reset } = props
 
@@ -190,7 +193,7 @@ export function scheduleProps<T>(
           }
         }
         reset = !cancel && matchProp(reset, key)
-        action({ ...props, asyncId, cancel, reset }, resolve)
+        action({ ...props, asyncId, timestamp, cancel, reset }, resolve)
       } catch (err) {
         reject(err)
       }
