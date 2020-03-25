@@ -1,5 +1,4 @@
 import { is, each, Pick } from 'shared'
-import { performanceNow } from 'shared/globals'
 
 import { matchProp, DEFAULT_PROPS } from './helpers'
 import {
@@ -16,8 +15,7 @@ import {
 declare function setTimeout(handler: Function, timeout?: number): number
 
 export interface RunAsyncProps<T = any> extends SpringProps<T> {
-  asyncId: number
-  timestamp: number
+  callId: number
   cancel: boolean
   reset: boolean
 }
@@ -78,12 +76,12 @@ export async function runAsync<T>(
       }
     })
 
-    const { asyncId } = props
+    const { callId } = props
 
     // Note: This function cannot be async, because `checkFailConditions` must be sync.
     const animate: any = (arg1: any, arg2?: any) => {
       // Prevent further animation if cancelled.
-      if (asyncId <= (state.cancelId || 0)) {
+      if (callId <= (state.cancelId || 0)) {
         throw (result = { value: getValue(), cancelled: true })
       }
       // Prevent further animation if another "runAsync" call is active.
@@ -170,10 +168,9 @@ interface ScheduledProps<T> {
  * and the props weren't cancelled before then.
  */
 export function scheduleProps<T>(
-  asyncId: number,
+  callId: number,
   { key, props, state, action }: ScheduledProps<T>
 ): AsyncResult<T> {
-  const timestamp = performanceNow()
   return new Promise((resolve, reject) => {
     let { delay, cancel, reset } = props
 
@@ -184,16 +181,16 @@ export function scheduleProps<T>(
     function run() {
       try {
         // Might have been cancelled during its delay.
-        if (asyncId <= (state.cancelId || 0)) {
+        if (callId <= (state.cancelId || 0)) {
           cancel = true
         } else {
           cancel = matchProp(cancel, key)
           if (cancel) {
-            state.cancelId = asyncId
+            state.cancelId = callId
           }
         }
         reset = !cancel && matchProp(reset, key)
-        action({ ...props, asyncId, timestamp, cancel, reset }, resolve)
+        action({ ...props, callId, cancel, reset }, resolve)
       } catch (err) {
         reject(err)
       }

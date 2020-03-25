@@ -79,14 +79,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<T> = {}
 
-  /** The last time each prop changed */
-  protected _timestamps: Lookup<number> = {}
-
   /** Some props have customizable default values */
   protected _defaultProps = {} as SpringDefaultProps<T>
 
-  /** Cancel any update from before this timestamp */
-  protected _lastAsyncId = 0
+  /** The `scheduleProps` call that last changed each prop */
+  protected _callIds: Lookup<number> = {}
+
+  /** The counter for tracking `scheduleProps` calls */
+  protected _lastCallId = 0
 
   constructor(from: Exclude<T, object>, props?: SpringUpdate<T>)
   constructor(props?: SpringUpdate<T>)
@@ -394,7 +394,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    */
   stop() {
     if (!this.is(DISPOSED)) {
-      this._state.cancelId = this._lastAsyncId
+      this._state.cancelId = this._lastCallId
       this._focus(this.get())
       G.batchedUpdates(() => this._stop())
     }
@@ -499,7 +499,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const { to } = props
 
     const state = this._state
-    return scheduleProps<T>(++this._lastAsyncId, {
+    return scheduleProps<T>(++this._lastCallId, {
       key: this.key,
       props,
       state,
@@ -545,11 +545,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
   ): void {
     const { key, animation: anim } = this
 
-    // Some props (eg: to, from) use timestamps for the ability to partially
-    // cancel a delayed update by setting the props with an earlier update.
-    const isTimely = (prop: string) =>
-      props.timestamp >= (this._timestamps[prop] || 0) &&
-      ((this._timestamps[prop] = props.timestamp), true)
+    /**
+     * Returns true if the given prop wasn't updated before the delay
+     * of the current `_merge` call was finished.
+     */
+    const isMergable = (prop: string) =>
+      props.callId >= (this._callIds[prop] || 0) &&
+      ((this._callIds[prop] = props.callId), true)
 
     const { to: prevTo, from: prevFrom } = anim
     let { to, from } = range
@@ -574,7 +576,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     /** The "from" value is changing. */
     const hasFromChanged =
-      !is.und(from) && isTimely('from') && !isEqual(from, prevFrom)
+      !is.und(from) && isMergable('from') && !isEqual(from, prevFrom)
 
     if (hasFromChanged) {
       anim.from = from
@@ -582,7 +584,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // For updates with a defined "to" prop, other props cannot be
     // merged if the "to" prop has been temporally prevented.
-    if (hasTo && !isTimely('to')) {
+    if (hasTo && !isMergable('to')) {
       return
     }
 
