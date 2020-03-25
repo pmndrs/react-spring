@@ -68,16 +68,6 @@ export async function runAsync<T>(
   return (state.promise = (async (): AsyncResult<T> => {
     let result!: AnimationResult
 
-    const { asyncId } = props
-    const checkFailConditions = () => {
-      if (to !== state.asyncTo) {
-        throw (result = { value: getValue(), finished: false })
-      }
-      if (asyncId <= (state.cancelId || 0)) {
-        throw (result = { value: getValue(), cancelled: true })
-      }
-    }
-
     const defaultProps: SpringDefaultProps<T> = {}
     each(DEFAULT_PROPS, prop => {
       if (prop == 'onRest') return
@@ -86,9 +76,18 @@ export async function runAsync<T>(
       }
     })
 
+    const { asyncId } = props
+
     // Note: This function cannot be async, because `checkFailConditions` must be sync.
     const animate: any = (arg1: any, arg2?: any) => {
-      checkFailConditions()
+      // Prevent further animation if cancelled.
+      if (asyncId <= (state.cancelId || 0)) {
+        throw (result = { value: getValue(), cancelled: true })
+      }
+      // Prevent further animation if another "runAsync" call is active.
+      if (to !== state.asyncTo) {
+        throw (result = { value: getValue(), finished: false })
+      }
 
       const props: ControllerUpdate<T> = is.obj(arg1)
         ? { ...arg1 }
@@ -105,8 +104,6 @@ export async function runAsync<T>(
         if (state.asyncTo == null) {
           state.asyncTo = parentTo
         }
-
-        checkFailConditions()
 
         if (getPaused()) {
           state.unpause = await new Promise(resolve => {
