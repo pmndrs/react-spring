@@ -145,6 +145,23 @@ function describeToProp() {
       expect(getFrames(spring)).toMatchSnapshot()
     })
   })
+
+  describe('when "to" prop is a function', () => {
+    describe('and "from" prop is defined', () => {
+      it('stops the active animation before "to" is called', () => {
+        const spring = new SpringValue({ from: 0, to: 1 })
+        mockRaf.step()
+
+        expect.assertions(1)
+        spring.start({
+          from: 2,
+          to: () => {
+            expect(spring.get()).toBe(2)
+          },
+        })
+      })
+    })
+  })
 }
 
 function describeFromProp() {
