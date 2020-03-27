@@ -319,15 +319,6 @@ function describeReverseProp() {
       expect(getFrames(spring)).toMatchSnapshot()
     })
 
-    it('works when "from" is undefined', () => {
-      const spring = new SpringValue<number>()
-      spring.start({ to: 1, reverse: true })
-
-      const { from, to } = spring.animation
-      expect(from).toBe(1)
-      expect(to).toBeUndefined()
-    })
-
     it('preserves the reversal for future updates', async () => {
       const spring = new SpringValue(0)
       spring.start({ to: 1, reverse: true })
