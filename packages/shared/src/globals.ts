@@ -2,7 +2,7 @@ import { ElementType } from 'react'
 import { FluidValue } from 'fluids'
 
 import { InterpolatorConfig, InterpolatorArgs, OneOrMore } from './types'
-import { FrameLoop } from './FrameLoop'
+import { FrameLoop, OpaqueAnimation } from './FrameLoop'
 import { noop } from './helpers'
 
 //
@@ -55,6 +55,8 @@ export let cancelAnimationFrame: (id: number) => void =
 
 export let batchedUpdates = (callback: () => void) => callback()
 
+export let willAdvance: (animations: OpaqueAnimation[]) => void = noop
+
 //
 // Configuration
 //
@@ -88,6 +90,8 @@ export interface AnimatedGlobals {
   cancelAnimationFrame?: typeof cancelAnimationFrame
   /** Event props are called with `batchedUpdates` to reduce extraneous renders */
   batchedUpdates?: typeof batchedUpdates
+  /** @internal Exposed for testing purposes */
+  willAdvance?: typeof willAdvance
 }
 
 export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
@@ -106,6 +110,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     requestAnimationFrame,
     cancelAnimationFrame,
     batchedUpdates,
+    willAdvance,
   } = Object.assign(
     {
       to,
@@ -122,6 +127,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       requestAnimationFrame,
       cancelAnimationFrame,
       batchedUpdates,
+      willAdvance,
     },
     pluckDefined(globals)
   ))
