@@ -517,12 +517,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
               this.stop.bind(this) as any
             )
           )
-        } else if (props.cancel) {
-          this.stop()
-          resolve({
-            value: this.get(),
-            cancelled: true,
-          })
         } else {
           this._merge(range, props, resolve)
         }
@@ -544,6 +538,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
     props: RunAsyncProps<T>,
     resolve: OnRest<T>
   ): void {
+    // The "cancel" prop cancels all pending delays and it forces the
+    // active animation to stop where it is.
+    if (props.cancel) {
+      this.stop()
+      return resolve({
+        value: this.get(),
+        cancelled: true,
+      })
+    }
+
     const { key, animation: anim } = this
     const defaultProps = this._defaultProps
 
