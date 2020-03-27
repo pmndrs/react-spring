@@ -1,6 +1,7 @@
 import { is, each, Pick } from 'shared'
+import * as G from 'shared/globals'
 
-import { matchProp, DEFAULT_PROPS } from './helpers'
+import { matchProp, DEFAULT_PROPS, callProp } from './helpers'
 import {
   AnimationResult,
   AsyncResult,
@@ -12,12 +13,11 @@ import {
   SpringToFn,
 } from './types'
 
-declare function setTimeout(handler: Function, timeout?: number): number
-
 export interface RunAsyncProps<T = any> extends SpringProps<T> {
   callId: number
   cancel: boolean
   reset: boolean
+  delay: number
 }
 
 export interface RunAsyncState<T> {
@@ -172,13 +172,12 @@ export function scheduleProps<T>(
   { key, props, state, action }: ScheduledProps<T>
 ): AsyncResult<T> {
   return new Promise((resolve, reject) => {
-    let { delay, cancel, reset } = props
-
-    if (is.num(delay) && delay > 0) {
-      setTimeout(run, delay)
-    } else run()
+    const delay = Math.max(0, callProp(props.delay || 0, key))
+    if (delay > 0) G.frameLoop.setTimeout(run, delay)
+    else run()
 
     function run() {
+      let { cancel, reset } = props
       try {
         // Might have been cancelled during its delay.
         if (callId <= (state.cancelId || 0)) {
@@ -190,7 +189,7 @@ export function scheduleProps<T>(
           }
         }
         reset = !cancel && matchProp(reset, key)
-        action({ ...props, callId, cancel, reset }, resolve)
+        action({ ...props, callId, delay, cancel, reset }, resolve)
       } catch (err) {
         reject(err)
       }

@@ -1,5 +1,4 @@
 import { FrameRequestCallback } from './types'
-import { is } from './helpers'
 import * as G from './globals'
 
 declare const process:
@@ -31,7 +30,14 @@ export class FrameLoop {
    *
    * Can be passed to `requestAnimationFrame` without wrapping or binding.
    */
-  update: (time?: number) => void
+  update: () => void
+
+  /**
+   * Invoke the given `handler` on the soonest frame after the given
+   * `ms` delay is completed. When the delay is `<= 0`, the handler is
+   * invoked immediately.
+   */
+  setTimeout: (handler: Function, ms: number) => void
 
   /**
    * Execute a function once after all animations have updated.
@@ -103,19 +109,41 @@ export class FrameLoop {
       }
     }
 
-    // Process the current frame
-    const update = (this.update = time => {
-      if (is.und(time)) {
-        time = G.now()
+    interface Timeout {
+      time: number
+      handler: Function
+    }
+
+    const timeoutQueue: Timeout[] = []
+
+    this.setTimeout = (handler, ms) => {
+      const time = G.now() + ms
+      const index = findIndex(timeoutQueue, t => t.time > time)
+      timeoutQueue.splice(index, 0, { time, handler })
+      kickoff()
+    }
+
+    // Process the current frame.
+    const update = (this.update = () => {
+      const time = G.now()
+
+      // Start animations that were added during last frame.
+      if (startQueue.size) {
+        startQueue.forEach(start)
+        startQueue.clear()
       }
+
+      // Flush the timeout queue.
+      if (timeoutQueue.length) {
+        G.batchedUpdates(() => {
+          const count = findIndex(timeoutQueue, t => t.time > time)
+          timeoutQueue.splice(0, count).forEach(t => t.handler())
+        })
+      }
+
       if (!idle && time > lastTime) {
         // http://gafferongames.com/game-physics/fix-your-timestep/
         const dt = Math.min(64, time - lastTime)
-
-        if (startQueue.size) {
-          startQueue.forEach(start)
-          startQueue.clear()
-        }
 
         G.batchedUpdates(() => {
           // Animations can be added while the frameloop is updating,
@@ -152,6 +180,7 @@ export class FrameLoop {
           idle = true
         }
       }
+
       lastTime = time
       requestFrame(update)
     })
@@ -186,4 +215,10 @@ export class FrameLoop {
       })
     }
   }
+}
+
+/** Like `Array.prototype.findIndex` but returns `arr.length` instead of `-1` */
+function findIndex<T>(arr: T[], test: (value: T) => boolean) {
+  const index = arr.findIndex(test)
+  return index < 0 ? arr.length : index
 }
