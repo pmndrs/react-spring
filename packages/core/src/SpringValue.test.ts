@@ -17,7 +17,7 @@ describe('SpringValue', () => {
   })
 
   it('can animate a string', async () => {
-    const spring = new SpringValue()
+    const spring = new SpringValue<string>()
     spring.start({
       to: '10px 20px',
       from: '0px 0px',
@@ -173,19 +173,16 @@ function describeFromProp() {
 function describeResetProp() {
   describe('when "reset" prop is true', () => {
     it('calls "onRest" before jumping back to its "from" value', async () => {
-      const spring = new SpringValue(0)
-
       const onRest = jest.fn((result: any) => {
-        expect(result.value).toBe(1)
-        expect(spring.get()).toBe(1)
+        expect(result.value).not.toBe(0)
       })
 
-      spring.start(1, { onRest, loop: true })
+      const spring = new SpringValue({ from: 0, to: 1, onRest })
+      mockRaf.step()
 
-      await advanceUntilValue(spring, 1)
+      spring.start({ reset: true })
+
       expect(onRest).toHaveBeenCalled()
-
-      // The spring has been reset.
       expect(spring.get()).toBe(0)
     })
 
@@ -204,14 +201,14 @@ function describeDefaultProp() {
         it('updates the current value', () => {
           const props = { default: true, from: 1, to: 1 }
           const spring = new SpringValue(props)
+
           expect(spring.get()).toBe(1)
           expect(spring.idle).toBeTruthy()
 
           props.from = 0
           spring.start(props)
-          expect(spring.get()).toBe(0)
 
-          // The animation should be started, now that from !== to
+          expect(spring.get()).not.toBe(1)
           expect(spring.idle).toBeFalsy()
         })
       })
@@ -240,7 +237,7 @@ function describeDefaultProp() {
             props.reset = true
             spring.start(props)
 
-            expect(spring.get()).toBe(1)
+            expect(spring.animation.from).toBe(1)
             expect(spring.idle).toBeFalsy()
           })
         })
@@ -428,8 +425,8 @@ function describeLoopProp() {
       await advanceUntilValue(spring, 1)
       expect(spring.get()).toBe(1)
 
-      jest.runAllTimers()
-      expect(spring.get()).toBe(0)
+      mockRaf.step({ time: 1000 })
+      expect(spring.get()).toBeLessThan(1)
 
       await advanceUntilValue(spring, 1)
       expect(spring.get()).toBe(1)
@@ -443,16 +440,16 @@ function describeLoopProp() {
 
       await advanceUntilValue(spring, 1)
       expect(spring.idle).toBeFalsy()
-      expect(spring.get()).toBe(0)
+      expect(spring.get()).toBeLessThan(1)
 
       loop = { delay: 1000 }
       await advanceUntilValue(spring, 1)
       expect(spring.idle).toBeTruthy()
       expect(spring.get()).toBe(1)
 
-      jest.runAllTimers()
+      mockRaf.step({ time: 1000 })
       expect(spring.idle).toBeFalsy()
-      expect(spring.get()).toBe(0)
+      expect(spring.get()).toBeLessThan(1)
 
       loop = false
       await advanceUntilValue(spring, 1)
