@@ -1,12 +1,12 @@
 import React from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { useSpring } from './useSpring'
-import { is, Indexable, UnknownProps } from 'shared'
-import { SpringStopFn, SpringsUpdateFn } from '../types/spring'
+import { is, Lookup, UnknownProps } from 'shared'
+import { SpringStopFn, SpringsUpdateFn } from '../types'
 import { SpringValue } from '../SpringValue'
 
 describe('useSpring', () => {
-  let springs: Indexable<SpringValue>
+  let springs: Lookup<SpringValue>
   let animate: SpringsUpdateFn<UnknownProps>
   let stop: SpringStopFn<any>
 
