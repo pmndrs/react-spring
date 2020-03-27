@@ -547,15 +547,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const { key, animation: anim } = this
     const defaultProps = this._defaultProps
 
-    /** Get the value of a prop, or its default value */
-    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
-      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
-
-    const onDelayEnd = coerceEventProp(get('onDelayEnd'), key!)
-    if (onDelayEnd) {
-      onDelayEnd(props, this)
-    }
-
     /** The "to" prop is defined. */
     const hasToProp = !is.und(range.to)
 
@@ -574,6 +565,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
           cancelled: props.cancel = true,
         })
       }
+    }
+
+    /** Get the value of a prop, or its default value */
+    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
+      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
+
+    // Call "onDelayEnd" before merging props, but after cancellation checks.
+    const onDelayEnd = coerceEventProp(get('onDelayEnd'), key!)
+    if (onDelayEnd) {
+      onDelayEnd(props, this)
     }
 
     const { to: prevTo, from: prevFrom } = anim
