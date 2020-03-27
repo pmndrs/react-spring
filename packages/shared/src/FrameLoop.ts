@@ -53,7 +53,7 @@ export class FrameLoop {
 
   // Exposed for testing.
   protected _idle!: boolean
-  protected _animations!: OpaqueAnimation[]
+  protected _dispose!: () => void
 
   constructor(
     // The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
@@ -149,6 +149,7 @@ export class FrameLoop {
           // Animations can be added while the frameloop is updating,
           // but they need a higher priority to be started on this frame.
           if (animations.length) {
+            G.willAdvance(animations)
             animations = animations.filter(animation => {
               priority = animation.priority
 
@@ -209,9 +210,15 @@ export class FrameLoop {
       typeof process !== 'undefined' &&
       process.env.NODE_ENV !== 'production'
     ) {
+      const dispose = () => {
+        idle = true
+        startQueue.clear()
+        timeoutQueue.length = 0
+        requestFrame = () => {}
+      }
       Object.defineProperties(this, {
         _idle: { get: () => idle },
-        _animations: { get: () => animations },
+        _dispose: { get: () => dispose },
       })
     }
   }

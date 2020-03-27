@@ -30,9 +30,7 @@ beforeEach(() => {
 
 afterEach(() => {
   isRunning = false
-
-  // Clear the frameloop.
-  Globals.frameLoop['_animations'].length = 0
+  Globals.frameLoop['_dispose']()
 })
 
 // This observes every SpringValue animation when "advanceUntil" is used.
@@ -96,7 +94,10 @@ global.advanceUntil = async test => {
       }
     }
 
-    Globals.frameLoop['_animations'].forEach(observe)
+    Globals.assign({
+      willAdvance: animations => animations.forEach(observe),
+    })
+
     jest.advanceTimersByTime(1000 / 60)
     mockRaf.step()
 
