@@ -14,9 +14,9 @@ import {
 import {
   ControllerFlushFn,
   PickAnimated,
+  SpringStartFn,
   SpringStopFn,
   SpringValues,
-  SpringsUpdateFn,
   SpringHandle,
 } from '../types'
 import { UseSpringProps } from './useSpring'
@@ -59,7 +59,7 @@ export function useSprings<
   deps: readonly any[] | undefined
 ): [
   SpringValues<PickAnimated<Props>>[],
-  SpringsUpdateFn<PickAnimated<Props>>,
+  SpringStartFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
 
@@ -75,7 +75,7 @@ export function useSprings<Props extends object>(
   deps?: readonly any[]
 ): [
   SpringValues<PickAnimated<Props>>[],
-  SpringsUpdateFn<PickAnimated<Props>>,
+  SpringStartFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
 
@@ -255,6 +255,6 @@ export function useSprings(
   const values = springs.map(x => ({ ...x }))
 
   return propsFn || arguments.length == 3
-    ? [values, api.update, api.stop]
+    ? [values, api.start, api.stop]
     : values
 }

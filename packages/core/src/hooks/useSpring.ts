@@ -3,10 +3,10 @@ import { is, RefProp, UnknownProps, Remap } from 'shared'
 import {
   ControllerUpdate,
   PickAnimated,
-  SpringValues,
-  SpringsUpdateFn,
-  SpringStopFn,
   SpringHandle,
+  SpringStartFn,
+  SpringStopFn,
+  SpringValues,
 } from '../types'
 import { Valid } from '../types/common'
 import { useSprings } from './useSprings'
@@ -37,7 +37,7 @@ export function useSpring<Props extends object>(
   deps?: readonly any[] | undefined
 ): [
   SpringValues<PickAnimated<Props>>,
-  SpringsUpdateFn<PickAnimated<Props>>,
+  SpringStartFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
 
@@ -56,7 +56,7 @@ export function useSpring<Props extends object>(
   deps: readonly any[] | undefined
 ): [
   SpringValues<PickAnimated<Props>>,
-  SpringsUpdateFn<PickAnimated<Props>>,
+  SpringStartFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
 
