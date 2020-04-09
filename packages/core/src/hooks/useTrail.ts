@@ -4,8 +4,8 @@ import { is, UnknownProps } from 'shared'
 import { Valid } from '../types/common'
 import {
   PickAnimated,
+  SpringStartFn,
   SpringStopFn,
-  SpringsUpdateFn,
   SpringValues,
 } from '../types'
 import { UseSpringProps } from './useSpring'
@@ -24,7 +24,7 @@ export function useTrail<Props extends object>(
   deps?: any[]
 ): [
   SpringValues<PickAnimated<Props>>[],
-  SpringsUpdateFn<PickAnimated<Props>>,
+  SpringStartFn<PickAnimated<Props>>,
   SpringStopFn<UnknownProps>
 ]
 
