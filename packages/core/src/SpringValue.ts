@@ -46,7 +46,6 @@ import {
   PAUSED,
   DISPOSED,
 } from './SpringPhase'
-import { Lookup } from './types/common'
 import {
   AnimationRange,
   AsyncResult,
