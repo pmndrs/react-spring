@@ -83,7 +83,7 @@ export function useTransition(
   useOnce(() => () =>
     each(usedTransitions.current!, t => {
       if (t.expired) {
-        clearTimeout(t.expirationId)
+        clearTimeout(t.expirationId!)
       }
       t.ctrl.dispose()
     })
@@ -95,7 +95,7 @@ export function useTransition(
     each(prevTransitions, (t, i) => {
       // Expired transitions are not rendered.
       if (t.expired) {
-        clearTimeout(t.expirationId)
+        clearTimeout(t.expirationId!)
       } else {
         i = reused[i] = keys.indexOf(t.key)
         if (~i) transitions[i] = t
