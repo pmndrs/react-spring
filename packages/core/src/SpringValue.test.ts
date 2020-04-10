@@ -411,7 +411,9 @@ function describeLoopProp() {
 
     it('can pass a custom delay', async () => {
       const spring = new SpringValue(0)
-      spring.start(1, { loop: { delay: 1000 } })
+      spring.start(1, {
+        loop: { reset: true, delay: 1000 },
+      })
 
       await advanceUntilValue(spring, 1)
       expect(spring.get()).toBe(1)
@@ -433,7 +435,7 @@ function describeLoopProp() {
       expect(spring.idle).toBeFalsy()
       expect(spring.get()).toBeLessThan(1)
 
-      loop = { delay: 1000 }
+      loop = { reset: true, delay: 1000 }
       await advanceUntilValue(spring, 1)
       expect(spring.idle).toBeTruthy()
       expect(spring.get()).toBe(1)
