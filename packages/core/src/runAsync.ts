@@ -3,6 +3,7 @@ import * as G from 'shared/globals'
 
 import { matchProp, DEFAULT_PROPS, callProp } from './helpers'
 import {
+  AnimationResolver,
   AnimationResult,
   AsyncResult,
   ControllerUpdate,
@@ -18,6 +19,7 @@ export interface RunAsyncProps<T = any> extends SpringProps<T> {
   cancel: boolean
   reset: boolean
   delay: number
+  to?: any
 }
 
 export interface RunAsyncState<T> {
@@ -157,10 +159,7 @@ interface ScheduledProps<T> {
   key?: string
   props: Pick<SpringProps<T>, 'cancel' | 'reset' | 'delay'>
   state: { cancelId?: number }
-  action: (
-    props: RunAsyncProps<T>,
-    resolve: (result: AnimationResult<T> | AsyncResult<T>) => void
-  ) => void
+  action: (props: RunAsyncProps<T>, resolve: AnimationResolver<T>) => void
 }
 
 /**
