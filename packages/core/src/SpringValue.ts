@@ -968,25 +968,29 @@ export function createLoopUpdate<T>(
 ): T | undefined {
   let loopRet = callProp(loop)
   if (loopRet) {
-    const reverse = loopRet !== true && loopRet.reverse
-    return {
+    const overrides = loopRet !== true && loopRet
+    const reverse = (overrides || props).reverse
+    const reset = !overrides || overrides.reset
+    return createUpdate({
       ...props,
       loop,
-
-      // Restart at the "from" values unless "to" is defined.
-      reset: loopRet === true || is.und(loopRet.to),
 
       // Avoid updating default props when looping.
       default: false,
 
-      // The "to" and "from" props must be undefined when looping
-      // with "reverse: true" or else it only reverses once.
+      // For the "reverse" prop to loop as expected, the "to" prop
+      // must be undefined. The "reverse" prop is ignored when the
+      // "to" prop is an array or function.
       to: !reverse || is.arr(to) || is.fun(to) ? to : undefined,
-      from: reverse ? undefined : props.from,
 
-      // The "loop" prop can return any "useSpring" props.
-      ...(loopRet !== true && createUpdate(loopRet)),
-    }
+      // Avoid defining the "from" prop if a reset is unwanted.
+      from: reset ? props.from : undefined,
+      reset,
+
+      // The "loop" prop can return a "useSpring" props object to
+      // override any of the original props.
+      ...overrides,
+    })
   }
 }
 
