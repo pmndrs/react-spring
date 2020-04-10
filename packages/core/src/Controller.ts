@@ -121,11 +121,7 @@ export class Controller<State extends Lookup = Lookup>
     if (this._flush) {
       return this._flush(this, queue)
     }
-    each(queue, props => {
-      prepareSprings(this.springs, props, key => {
-        return createSpring(key, this._initialProps, this)
-      })
-    })
+    prepareKeys(this, queue)
     return flushUpdateQueue(this, queue)
   }
 
@@ -326,6 +322,7 @@ export function flushUpdate(
     if (finished && loop) {
       const nextProps = createLoopUpdate(props, loop, to)
       if (nextProps) {
+        prepareKeys(ctrl, [nextProps])
         return flushUpdate(ctrl, nextProps)
       }
     }
@@ -337,8 +334,11 @@ export function flushUpdate(
  * From an array of updates, get the map of `SpringValue` objects
  * by their keys. Springs are created when any update wants to
  * animate a new key.
+ *
+ * Springs created by `getSprings` are neither cached nor observed
+ * until they're given to `setSprings`.
  */
-export function getSprings<State>(
+export function getSprings<State extends Lookup>(
   ctrl: Controller<State>,
   props?: OneOrMore<ControllerUpdate<State>>
 ) {
@@ -390,8 +390,14 @@ function createSpring(
   return spring
 }
 
+/**
+ * Ensure spring objects exist for each defined key.
+ *
+ * Using the `props`, the `Animated` node of each `SpringValue` may
+ * be created or updated.
+ */
 function prepareSprings(
-  springs: SpringValues<Lookup>,
+  springs: SpringValues,
   props: ControllerQueue[number],
   create: (key: string) => SpringValue
 ) {
@@ -401,4 +407,18 @@ function prepareSprings(
       spring['_prepareNode'](props)
     })
   }
+}
+
+/**
+ * Ensure spring objects exist for each defined key, and attach the
+ * `ctrl` to them for observation.
+ *
+ * The queue is expected to contain `createUpdate` results.
+ */
+function prepareKeys(ctrl: Controller<any>, queue: ControllerQueue[number][]) {
+  each(queue, props => {
+    prepareSprings(ctrl.springs, props, key => {
+      return createSpring(key, ctrl['_initialProps'], ctrl)
+    })
+  })
 }
