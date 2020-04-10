@@ -157,3 +157,7 @@ export type OnDelayEnd<T = unknown> = (
   props: RunAsyncProps<T>,
   spring: SpringValue<T>
 ) => void
+
+export type AnimationResolver<T> = (
+  result: AnimationResult<T> | AsyncResult<T>
+) => void

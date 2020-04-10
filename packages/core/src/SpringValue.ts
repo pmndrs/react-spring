@@ -54,6 +54,7 @@ import {
   SpringDefaultProps,
   SpringUpdate,
   VelocityProp,
+  AnimationResolver,
 } from './types'
 
 declare const console: any
@@ -495,30 +496,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _update(props: SpringUpdate<T>): AsyncResult<T> {
     // Ensure the initial value can be accessed by animated components.
     const range = this._prepareNode(props)
-    const { to } = props
 
-    const state = this._state
     return scheduleProps<T>(++this._lastCallId, {
       key: this.key,
       props,
-      state,
+      state: this._state,
       action: (props, resolve) => {
-        if (is.arr(to) || is.fun(to)) {
-          this._merge(range, props, noop)
-          resolve(
-            runAsync(
-              to,
-              props,
-              state,
-              () => this.get(),
-              () => this.is(PAUSED),
-              this.start.bind(this),
-              this.stop.bind(this) as any
-            )
-          )
-        } else {
-          this._merge(range, props, resolve)
-        }
+        this._merge(range, props, resolve)
       },
     }).then(result => {
       if (props.loop && result.finished) {
@@ -535,7 +519,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _merge(
     range: AnimationRange<T>,
     props: RunAsyncProps<T>,
-    resolve: OnRest<T>
+    resolve: AnimationResolver<T>
   ): void {
     // The "cancel" prop cancels all pending delays and it forces the
     // active animation to stop where it is.
@@ -564,8 +548,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       } else {
         return resolve({
           value: this.get(),
-          // Set "cancel" to prevent "runAsync" call.
-          cancelled: props.cancel = true,
+          cancelled: true,
         })
       }
     }
@@ -623,7 +606,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     /** The "to" prop is async. */
-    const hasAsyncTo = resolve == noop
+    const hasAsyncTo = is.arr(props.to) || is.fun(props.to)
 
     const { config } = anim
     const { decay, velocity } = config
@@ -777,7 +760,17 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     if (hasAsyncTo) {
-      return
+      return resolve(
+        runAsync(
+          props.to as any,
+          props,
+          this._state,
+          () => this.get(),
+          () => this.is(PAUSED),
+          this.start.bind(this),
+          this.stop.bind(this) as any
+        )
+      )
     }
 
     if (started) {
