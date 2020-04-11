@@ -108,7 +108,7 @@ export type GoalProp<T> = [T] extends [IsPlainObject<T>]
   : GoalValue<T> | Falsy
 
 /** A set of values for a `Controller` to animate from/to. */
-export type GoalValues<T> = FluidProps<Partial<T>>
+export type GoalValues<T extends Lookup> = FluidProps<Partial<T>>
 
 /**
  * A value that `SpringValue` objects can animate from/to.
