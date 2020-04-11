@@ -7,8 +7,8 @@ import {
   useOnce,
   RefProp,
   UnknownProps,
-  Merge,
   useForceUpdate,
+  Lookup,
 } from 'shared'
 
 import {
@@ -18,6 +18,7 @@ import {
   SpringStopFn,
   SpringValues,
   SpringHandle,
+  ControllerUpdate,
 } from '../types'
 import { UseSpringProps } from './useSpring'
 import { createUpdate } from '../SpringValue'
@@ -29,39 +30,10 @@ import {
 } from '../Controller'
 import { getProps, useMemo as useMemoOne } from '../helpers'
 
-export type UseSpringsProps<Props extends object = any> = Merge<
-  UseSpringProps<Props>,
-  {
-    ref?: RefProp<SpringHandle<PickAnimated<Props>>>
+export type UseSpringsProps<State extends Lookup = Lookup> = unknown &
+  ControllerUpdate<State> & {
+    ref?: RefProp<SpringHandle<State>>
   }
->
-
-/**
- * Animations are updated on re-render.
- */
-export function useSprings<
-  P extends object[],
-  Props extends object = P[number]
->(
-  length: number,
-  props: P & UseSpringsProps<Props>[]
-): SpringValues<PickAnimated<Props>>[]
-
-/**
- * When the `deps` argument exists, you get the `update` and `stop` function.
- */
-export function useSprings<
-  P extends object[],
-  Props extends object = P[number]
->(
-  length: number,
-  props: P & UseSpringsProps<Props>[],
-  deps: readonly any[] | undefined
-): [
-  SpringValues<PickAnimated<Props>>[],
-  SpringStartFn<PickAnimated<Props>>,
-  SpringStopFn<UnknownProps>
-]
 
 /**
  * When the `deps` argument exists, the `props` function is called whenever
@@ -69,15 +41,32 @@ export function useSprings<
  *
  * Without the `deps` argument, the `props` function is only called once.
  */
-export function useSprings<Props extends object>(
+export function useSprings<Props extends UseSpringProps>(
   length: number,
-  props: (i: number, ctrl: Controller) => Props & UseSpringsProps<Props>,
+  props: (i: number, ctrl: Controller) => Props,
   deps?: readonly any[]
-): [
-  SpringValues<PickAnimated<Props>>[],
-  SpringStartFn<PickAnimated<Props>>,
-  SpringStopFn<UnknownProps>
-]
+): PickAnimated<Props> extends infer State
+  ? [SpringValues<State & object>[], SpringStartFn<State>, SpringStopFn<State>]
+  : never
+
+/**
+ * Animations are updated on re-render.
+ */
+export function useSprings<Props extends UseSpringsProps>(
+  length: number,
+  props: Props[] & UseSpringsProps<PickAnimated<Props>>[]
+): SpringValues<PickAnimated<Props>>[]
+
+/**
+ * When the `deps` argument exists, you get the `update` and `stop` function.
+ */
+export function useSprings<Props extends UseSpringsProps>(
+  length: number,
+  props: Props[] & UseSpringsProps<PickAnimated<Props>>[],
+  deps: readonly any[] | undefined
+): PickAnimated<Props> extends infer State
+  ? [SpringValues<State & object>[], SpringStartFn<State>, SpringStopFn<State>]
+  : never
 
 /** @internal */
 export function useSprings(
