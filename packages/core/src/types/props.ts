@@ -95,7 +95,7 @@ export type ToProps<T = any> =
   | { to?: GoalProp<T> }
   | { to?: SpringToFn<T> | Falsy }
   | { to?: SpringChain<T> | Falsy }
-  | (T extends IsPlainObject<T> ? InlineToProps<T> : never)
+  | ([T] extends [IsPlainObject<T>] ? InlineToProps<T> : never)
 
 /**
  * A value or set of values that can be animated from/to.
