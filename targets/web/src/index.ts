@@ -15,6 +15,8 @@ Globals.assign({
   batchedUpdates: unstable_batchedUpdates,
 })
 
+declare const document: any
+
 // Skip animation when the user isn't looking.
 document.addEventListener('visibilitychange', () =>
   Globals.assign({
