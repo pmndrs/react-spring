@@ -46,8 +46,10 @@ export function useTrail(
 ) {
   const propsFn = is.fun(propsArg) && propsArg
 
-  if (propsFn && arguments.length < 3) {
-    deps = [] // Skip updates after first render.
+  // Force springs to update on every render where a props object is
+  // passed without the "deps" argument defined.
+  if (!propsFn && !deps) {
+    deps = [{}]
   }
 
   const ctrls: Controller[] = []
