@@ -31,6 +31,14 @@ export function useTrail<Props extends object>(
   props: UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>)
 ): SpringValues<PickAnimated<Props>>[]
 
+export function useTrail<Props extends object>(
+  length: number,
+  props: UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
+  deps: readonly any[]
+): PickAnimated<Props> extends infer State
+  ? [SpringValues<State & object>[], SpringStartFn<State>, SpringStopFn<State>]
+  : never
+
 export function useTrail(
   length: number,
   propsArg: unknown,
@@ -60,16 +68,18 @@ export function useTrail(
     }
   }, deps)
 
-  const update = result[1]
-  result[1] = propsArg => {
-    const reverse = is.obj(propsArg) && propsArg.reverse
-    return update((i, ctrl) => {
-      const props = getProps(propsArg, i, ctrl)!
-      const parent = ctrls[i + (reverse ? 1 : -1)]
-      if (parent) props.to = parent.springs
-      return props
-    })
+  if (arguments.length == 3) {
+    const update = result[1]
+    result[1] = propsArg => {
+      const reverse = is.obj(propsArg) && propsArg.reverse
+      return update((i, ctrl) => {
+        const props = getProps(propsArg, i, ctrl)!
+        const parent = ctrls[i + (reverse ? 1 : -1)]
+        if (parent) props.to = parent.springs
+        return props
+      })
+    }
+    return result
   }
-
-  return propsFn ? result : result[0]
+  return result[0]
 }
