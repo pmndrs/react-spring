@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react-layout-effect'
-import { is, UnknownProps } from 'shared'
+import { is } from 'shared'
 
 import { Valid } from '../types/common'
 import {
@@ -21,20 +21,21 @@ export function useTrail<Props extends object>(
     i: number,
     ctrl: Controller
   ) => UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
-  deps?: any[]
-): [
-  SpringValues<PickAnimated<Props>>[],
-  SpringStartFn<PickAnimated<Props>>,
-  SpringStopFn<UnknownProps>
-]
+  deps?: readonly any[]
+): PickAnimated<Props> extends infer State
+  ? [SpringValues<State & object>[], SpringStartFn<State>, SpringStopFn<State>]
+  : never
 
 export function useTrail<Props extends object>(
   length: number,
-  props: UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
-  deps?: any[]
+  props: UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>)
 ): SpringValues<PickAnimated<Props>>[]
 
-export function useTrail(length: number, propsArg: unknown, deps?: any[]) {
+export function useTrail(
+  length: number,
+  propsArg: unknown,
+  deps?: readonly any[]
+) {
   const propsFn = is.fun(propsArg) && propsArg
 
   if (propsFn && arguments.length < 3) {
