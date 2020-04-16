@@ -2,12 +2,12 @@ import React from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { useSpring } from './useSpring'
 import { is, Lookup, UnknownProps } from 'shared'
-import { SpringStopFn, SpringsUpdateFn } from '../types'
+import { SpringStopFn, SpringStartFn } from '../types'
 import { SpringValue } from '../SpringValue'
 
 describe('useSpring', () => {
   let springs: Lookup<SpringValue>
-  let animate: SpringsUpdateFn<UnknownProps>
+  let animate: SpringStartFn<UnknownProps>
   let stop: SpringStopFn<any>
 
   // Call the "useSpring" hook and update local variables.
