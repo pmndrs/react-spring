@@ -13,6 +13,7 @@
     "fluids": "^0.1.6"
   },
   "devDependencies": {
-    "@alloc/types": "^1.2.1"
+    "@alloc/types": "^1.2.1",
+    "typescript": "file:../../node_modules/typescript"
   }
 }
