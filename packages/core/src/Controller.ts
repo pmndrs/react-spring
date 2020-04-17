@@ -353,7 +353,7 @@ export function getSprings<State extends Lookup>(
         // Avoid passing array/function to each spring.
         props = { ...props, to: undefined }
       }
-      prepareSprings(springs, props, key => {
+      prepareSprings(springs as any, props, key => {
         return createSpring(key, initialProps)
       })
     })
