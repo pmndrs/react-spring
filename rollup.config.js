@@ -2,10 +2,9 @@ import fs from 'fs-extra'
 import path from 'path'
 import { crawl } from 'recrawl-sync'
 
-import ts from 'rollup-plugin-typescript2'
 import dts from 'rollup-plugin-dts'
 import babel from 'rollup-plugin-babel'
-import resolve from 'rollup-plugin-node-resolve'
+import resolve from '@rollup/plugin-node-resolve'
 import { terser } from 'rollup-plugin-terser'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
@@ -69,7 +68,6 @@ export const esmBundle = config => ({
   external,
   plugins: [
     resolve({ extensions }),
-    ts({ check: false }),
     babel(
       getBabelOptions(
         { useESModules: true },
@@ -93,7 +91,6 @@ export const cjsBundle = config => ({
   external,
   plugins: [
     resolve({ extensions }),
-    ts({ check: false }),
     babel(getBabelOptions({ useESModules: false })),
     config.minify && terser(),
   ],
@@ -129,8 +126,9 @@ export const getBabelOptions = ({ useESModules }, targets) => ({
   extensions: babelExtensions,
   runtimeHelpers: true,
   presets: [
-    ['@babel/preset-env', { loose: true, modules: false, targets }],
+    '@babel/preset-typescript',
     '@babel/preset-react',
+    ['@babel/preset-env', { loose: true, modules: false, targets }],
   ],
   plugins: [
     ['@babel/plugin-proposal-class-properties', { loose: true }],
