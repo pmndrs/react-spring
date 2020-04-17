@@ -9,7 +9,7 @@ import { terser } from 'rollup-plugin-terser'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
 const external = id => !id.startsWith('.') && !id.startsWith(root)
-const extensions = ['.tsx', '.ts', '.js', '.jsx']
+const extensions = ['.tsx', '.ts', '.js']
 const packages = readPackages()
 const packageNames = Object.keys(packages)
 
