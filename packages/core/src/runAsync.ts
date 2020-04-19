@@ -78,7 +78,7 @@ export async function runAsync<T>(
       }
     })
 
-    const { callId } = props
+    const { callId, onRest } = props
 
     // Note: This function cannot be async, because `checkFailConditions` must be sync.
     const animate: any = (arg1: any, arg2?: any) => {
@@ -143,8 +143,10 @@ export async function runAsync<T>(
       }
     }
 
-    if (is.fun(props.onRest)) {
-      props.onRest(result)
+    if (is.fun(onRest)) {
+      G.batchedUpdates(() => {
+        onRest(result)
+      })
     }
 
     return result
