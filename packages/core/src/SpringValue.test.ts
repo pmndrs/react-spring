@@ -18,7 +18,7 @@ describe('SpringValue', () => {
 
   it('can animate a string', async () => {
     const spring = new SpringValue<string>()
-    spring.start({
+    const promise = spring.start({
       to: '10px 20px',
       from: '0px 0px',
       config: { duration: 10 * frameLength },
@@ -26,6 +26,8 @@ describe('SpringValue', () => {
     await advanceUntilIdle()
     const frames = getFrames(spring)
     expect(frames).toMatchSnapshot()
+    const { finished } = await promise
+    expect(finished).toBeTruthy()
   })
 
   // FIXME: This test fails.
