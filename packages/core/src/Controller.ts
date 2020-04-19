@@ -250,7 +250,7 @@ export function flushUpdate(
   ctrl: Controller<any>,
   props: ControllerQueue[number]
 ): Promise<boolean> {
-  const { to, loop } = props
+  const { to, loop, onRest } = props
 
   const asyncTo = is.arr(to) || is.fun(to) ? to : undefined
   if (asyncTo) {
@@ -268,23 +268,27 @@ export function flushUpdate(
     const handler: any = props[key]
     if (is.fun(handler)) {
       const queue = ctrl['_events'][key]
-      props[key] =
-        queue instanceof Set
-          ? () => queue.add(handler)
-          : ((({ finished, cancelled }: AnimationResult) => {
-              const result = queue.get(handler)
-              if (result) {
-                if (!finished) result.finished = false
-                if (cancelled) result.cancelled = true
-              } else {
-                // The "value" is set before the "handler" is called.
-                queue.set(handler, {
-                  value: null,
-                  finished,
-                  cancelled,
-                })
-              }
-            }) as any)
+      if (queue instanceof Set) {
+        props[key] = () => queue.add(handler)
+      } else if (asyncTo) {
+        // The "runAsync" function will call our handler.
+        props[key] = undefined
+      } else {
+        props[key] = (({ finished, cancelled }: AnimationResult) => {
+          const result = queue.get(handler)
+          if (result) {
+            if (!finished) result.finished = false
+            if (cancelled) result.cancelled = true
+          } else {
+            // The "value" is set before the "handler" is called.
+            queue.set(handler, {
+              value: null,
+              finished,
+              cancelled,
+            })
+          }
+        }) as any
+      }
     }
   })
 
@@ -299,8 +303,8 @@ export function flushUpdate(
         props,
         state,
         action(props, resolve) {
+          props.onRest = onRest as any
           // Start, replace, or cancel the async animation.
-          props.onRest = undefined
           resolve(
             runAsync(
               asyncTo,
