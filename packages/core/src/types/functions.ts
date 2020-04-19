@@ -30,7 +30,7 @@ export type ControllerFlushFn<State extends Lookup> = (
  * or a primitive type for a single animated value.
  */
 export interface SpringToFn<T = unknown> extends Function {
-  (update: SpringUpdateFn<T>, stop: SpringStopFn<T>): Promise<any> | void
+  (update: SpringStartFn<T>, stop: SpringStopFn<T>): Promise<any> | void
 }
 
 /**
