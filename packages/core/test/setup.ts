@@ -1,5 +1,7 @@
 import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
+import { act } from '@testing-library/react'
+import * as ReactDOM from 'react-dom'
 import { isEqual, is, FrameLoop } from 'shared'
 import colorNames from 'shared/colors'
 
@@ -23,6 +25,11 @@ beforeEach(() => {
     now: mockRaf.now,
     requestAnimationFrame: mockRaf.raf,
     cancelAnimationFrame: mockRaf.cancel,
+    batchedUpdates: fn => {
+      // This lets our useTransition hook force its component
+      // to update from within an "onRest" handler.
+      ReactDOM.unstable_batchedUpdates(() => act(fn))
+    },
     frameLoop: new FrameLoop(),
     colorNames,
   })
