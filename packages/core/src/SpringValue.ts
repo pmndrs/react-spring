@@ -644,12 +644,19 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // The current value, where the animation starts from.
     const value = reset ? (from as T) : this.get()
 
+    // The animation ends at this value, unless "to" is fluid.
+    const goal = computeGoal<any>(to)
+
+    // Only specific types can be animated to/from.
+    const isAnimatable = is.num(goal) || is.arr(goal) || isAnimatedString(goal)
+
     // When true, the value changes instantly on the next frame.
-    const immediate = !hasAsyncTo && matchProp(get('immediate'), key)
+    const immediate =
+      !hasAsyncTo && (!isAnimatable || matchProp(get('immediate'), key))
 
     if (hasToChanged) {
       if (immediate) {
-        node = this._updateNode(computeGoal(to))!
+        node = this._updateNode(goal)!
       } else {
         const nodeType = this._getNodeType(to)
         if (nodeType !== node.constructor) {
@@ -662,10 +669,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // The type of Animated node for the goal value.
     const goalType = node.constructor
-
-    // The last known value before the animation is finished.
-    // When the "to" value is fluid, this value is unknown.
-    const goal = toConfig ? null : computeGoal<any>(to)
 
     // When the goal value is fluid, we don't know if its value
     // will change before the next animation frame, so it always
