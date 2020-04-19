@@ -731,13 +731,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
       const onRest =
         reset && !props.onRest
           ? onRestQueue[0] || noop
-          : checkFinishedOnRest(coerceEventProp(get('onRest'), key), goal, this)
+          : checkFinishedOnRest(coerceEventProp(get('onRest'), key), this)
 
       // In most cases, the animation after this one won't reuse our
       // "onRest" prop. Instead, the _default_ "onRest" prop is used
       // when the next animation has an undefined "onRest" prop.
       if (started) {
-        anim.onRest = [onRest, checkFinishedOnRest(resolve, goal, this)]
+        anim.onRest = [onRest, checkFinishedOnRest(resolve, this)]
 
         // Flush the "onRest" queue for the previous animation.
         let onRestIndex = reset ? 0 : 1
@@ -797,7 +797,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // Postpone promise resolution until the animation is finished,
     // so that no-op updates still resolve at the expected time.
     else if (this.is(ACTIVE) && !hasToChanged) {
-      anim.onRest.push(checkFinishedOnRest(resolve, goal, this))
+      anim.onRest.push(checkFinishedOnRest(resolve, this))
     }
 
     // Resolve our promise immediately.
@@ -955,12 +955,13 @@ function coerceEventProp<T extends Function>(
  */
 const checkFinishedOnRest = <T>(
   onRest: OnRest<T> | undefined,
-  goal: T,
   spring: SpringValue<T>
-) =>
-  onRest
+) => {
+  const { to } = spring.animation
+  return onRest
     ? () => {
         const value = spring.get()
+        const goal = computeGoal(to)
         onRest({
           value,
           spring,
@@ -968,6 +969,7 @@ const checkFinishedOnRest = <T>(
         })
       }
     : noop
+}
 
 export function createLoopUpdate<T>(
   props: T & { loop?: any; to?: any; from?: any },
