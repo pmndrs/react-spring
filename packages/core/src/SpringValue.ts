@@ -624,25 +624,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // This instance might not have its Animated node yet. For example,
     // the constructor can be given props without a "to" or "from" value.
-    const node = getAnimated(this)
+    let node = getAnimated(this)
     if (!node) {
       return resolve({
         value: undefined as any,
         finished: true,
       })
-    }
-
-    // Ensure our Animated node is compatible with the "to" prop.
-    let nodeType: AnimatedType
-    if (hasToChanged) {
-      nodeType = this._getNodeType(to!)
-      if (nodeType !== node.constructor) {
-        throw Error(
-          `Cannot animate between ${node.constructor.name} and ${nodeType.name}, as the "to" prop suggests`
-        )
-      }
-    } else {
-      nodeType = node.constructor as any
     }
 
     /** When true, start at the "from" value. */
@@ -653,17 +640,31 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // unless default values are being set.
       (hasFromProp && !props.default)
 
-    // The current value
-    let value = reset ? (from as T) : this.get()
+    // The current value, where the animation starts from.
+    const value = reset ? (from as T) : this.get()
 
-    // The final value of our animation, excluding the "to" value.
-    // Our goal value is dynamic when "toConfig" exists.
-    let goal: any = toConfig ? null : computeGoal(to)
+    // When true, the value changes instantly on the next frame.
+    const immediate = !hasAsyncTo && matchProp(get('immediate'), key)
 
-    if (nodeType == AnimatedString) {
-      from = 0 as any
-      goal = 1
+    if (hasToChanged) {
+      if (immediate) {
+        node = this._updateNode(computeGoal(to))!
+      } else {
+        const nodeType = this._getNodeType(to)
+        if (nodeType !== node.constructor) {
+          throw Error(
+            `Cannot animate between ${node.constructor.name} and ${nodeType.name}, as the "to" prop suggests`
+          )
+        }
+      }
     }
+
+    // The type of Animated node for the goal value.
+    const goalType = node.constructor
+
+    // The last known value before the animation is finished.
+    // When the "to" value is fluid, this value is unknown.
+    const goal = toConfig ? null : computeGoal<any>(to)
 
     // When the goal value is fluid, we don't know if its value
     // will change before the next animation frame, so it always
@@ -678,7 +679,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // When the "to" value or current value are changed,
       // start animating if not already finished.
       if (hasToChanged || hasValueChanged) {
-        finished = isEqual(computeGoal(value), computeGoal(to))
+        finished = isEqual(computeGoal(value), goal)
         started = !finished
       }
 
@@ -708,11 +709,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // "to" prop is a fluid value whose current value is also ours.
       if (started || getFluidConfig(prevTo)) {
         anim.values = node.getPayload()
-        anim.toValues = toConfig ? null : toArray(goal)
+        anim.toValues = toConfig
+          ? null
+          : goalType == AnimatedString
+          ? [1]
+          : toArray(goal)
       }
 
-      // At this point, the "goal" is only a string when it cannot be animated.
-      anim.immediate = is.str(goal) || !!matchProp(get('immediate'), key)
+      anim.immediate = immediate
 
       anim.onStart = coerceEventProp(get('onStart'), key)
       anim.onChange = coerceEventProp(get('onChange'), key)
