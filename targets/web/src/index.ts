@@ -15,12 +15,5 @@ Globals.assign({
   batchedUpdates: unstable_batchedUpdates,
 })
 
-// Skip animation when the user isn't looking.
-document.addEventListener('visibilitychange', () =>
-  Globals.assign({
-    skipAnimation: document.visibilityState !== 'visible',
-  })
-)
-
 export * from './animated'
 export * from 'core'
