@@ -383,11 +383,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     const results = await Promise.all(queue.map(props => this._update(props)))
-    return {
-      value: this.get(),
-      finished: results.every(result => result.finished),
-      spring: this,
-    }
+    return results.every(result => result.noop)
+      ? getNoopResult(this.get(), this)
+      : getFinishedResult(
+          this.get(),
+          results.every(result => result.finished),
+          this
+        )
   }
 
   /**
@@ -506,7 +508,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         this._merge(range, props, resolve)
       },
     }).then(result => {
-      if (props.loop && result.finished) {
+      if (props.loop && result.finished && !result.noop) {
         const nextProps = createLoopUpdate(props)
         if (nextProps) {
           return this._update(nextProps)
@@ -526,10 +528,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // active animation to stop where it is.
     if (props.cancel) {
       this.stop()
-      return resolve({
-        value: this.get(),
-        cancelled: true,
-      })
+      return resolve(getCancelledResult(this.get(), this))
     }
 
     const { key, animation: anim } = this
@@ -547,10 +546,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       if (props.callId > this._lastToId) {
         this._lastToId = props.callId
       } else {
-        return resolve({
-          value: this.get(),
-          cancelled: true,
-        })
+        return resolve(getCancelledResult(this.get(), this))
       }
     }
 
@@ -627,10 +623,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // the constructor can be given props without a "to" or "from" value.
     let node = getAnimated(this)
     if (!node) {
-      return resolve({
-        value: undefined as any,
-        finished: true,
-      })
+      return resolve(getFinishedResult(null as any, true, this))
     }
 
     /** When true, start at the "from" value. */
@@ -802,11 +795,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Resolve our promise immediately.
     else {
-      resolve({
-        value,
-        finished: true,
-        spring: this,
-      })
+      resolve(getNoopResult(value, this))
     }
   }
 
@@ -962,14 +951,34 @@ const checkFinishedOnRest = <T>(
     ? () => {
         const value = spring.get()
         const goal = computeGoal(to)
-        onRest({
-          value,
-          spring,
-          finished: isEqual(value, goal),
-        })
+        onRest(getFinishedResult(value, isEqual(value, goal), spring))
       }
     : noop
 }
+
+/** No-op results are for updates that never start an animation. */
+export const getNoopResult = <T>(value: T, spring?: SpringValue<T>) => ({
+  value,
+  noop: true,
+  finished: true,
+  spring,
+})
+
+export const getFinishedResult = <T>(
+  value: T,
+  finished: boolean,
+  spring?: SpringValue<T>
+) => ({
+  value,
+  finished,
+  spring,
+})
+
+export const getCancelledResult = <T>(value: T, spring?: SpringValue<T>) => ({
+  value,
+  cancelled: true,
+  spring,
+})
 
 export function createLoopUpdate<T>(
   props: T & { loop?: any; to?: any; from?: any },

@@ -23,7 +23,9 @@ export interface AnimationRange<T> {
 export interface AnimationResult<T = any> {
   value: T
   spring?: SpringValue<T>
-  /** When falsy, the animation did not reach its end value. */
+  /** When true, no animation ever started. */
+  noop?: boolean
+  /** When true, the animation was neither cancelled nor stopped prematurely. */
   finished?: boolean
   /** When true, the animation was cancelled before it could finish. */
   cancelled?: boolean
