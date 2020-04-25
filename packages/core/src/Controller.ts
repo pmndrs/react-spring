@@ -5,7 +5,12 @@ import { Lookup, Falsy } from './types/common'
 import { inferTo } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
-import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
+import {
+  SpringValue,
+  createLoopUpdate,
+  createUpdate,
+  getFinishedResult,
+} from './SpringValue'
 import { runAsync, scheduleProps, RunAsyncState } from './runAsync'
 import {
   AnimationResult,
@@ -230,10 +235,11 @@ export function flushUpdateQueue(
   queue: ControllerQueue
 ) {
   return Promise.all(queue.map(props => flushUpdate(ctrl, props))).then(
-    results => ({
-      value: ctrl.get(),
-      finished: results.every(finished => finished),
-    })
+    results =>
+      getFinishedResult(
+        ctrl.get(),
+        results.every(finished => finished)
+      )
   )
 }
 
@@ -323,7 +329,7 @@ export function flushUpdate(
 
   return Promise.all(promises).then(results => {
     const finished = results.every(result => result.finished)
-    if (finished && loop) {
+    if (loop && finished && !results.every(result => result.noop)) {
       const nextProps = createLoopUpdate(props, loop, to)
       if (nextProps) {
         prepareKeys(ctrl, [nextProps])

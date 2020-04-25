@@ -191,4 +191,16 @@ describe('Controller', () => {
       })
     })
   })
+
+  describe('when "loop" is used on a noop update', () => {
+    it('does not loop', async () => {
+      const ctrl = new Controller({ t: 0 })
+
+      const loop = jest.fn(() => true)
+      ctrl.start({ t: 0, loop })
+
+      await advanceUntilIdle()
+      expect(loop).toBeCalledTimes(0)
+    })
+  })
 })
