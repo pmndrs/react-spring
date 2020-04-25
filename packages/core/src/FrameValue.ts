@@ -21,7 +21,7 @@ export abstract class FrameValue<T = any>
   readonly id = nextId++
 
   abstract key?: string
-  abstract idle: boolean
+  abstract get idle(): boolean
 
   protected _priority = 0
   protected _children = new Set<FrameValue.Observer<T>>()
