@@ -981,13 +981,13 @@ export const getCancelledResult = <T>(value: T, spring?: SpringValue<T>) => ({
 })
 
 export function createLoopUpdate<T>(
-  props: T & { loop?: any; to?: any; from?: any },
+  props: T & { loop?: any; to?: any; from?: any; reverse?: any },
   loop = props.loop,
   to = props.to
 ): T | undefined {
   let loopRet = callProp(loop)
   if (loopRet) {
-    const overrides = loopRet !== true && loopRet
+    const overrides = loopRet !== true && inferTo(loopRet)
     const reverse = (overrides || props).reverse
     const reset = !overrides || overrides.reset
     return createUpdate({
