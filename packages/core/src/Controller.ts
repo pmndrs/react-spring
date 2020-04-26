@@ -393,8 +393,14 @@ function createSpring(
   initialProps?: UnknownProps,
   observer?: FrameValue.Observer
 ) {
-  const spring = new SpringValue(initialProps)
+  const spring = new SpringValue()
   spring.key = key
+  if (initialProps) {
+    spring.start({
+      ...initialProps,
+      default: true,
+    })
+  }
   if (observer) {
     spring.addChild(observer)
   }
