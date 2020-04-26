@@ -254,7 +254,8 @@ export function flushUpdateQueue(
  */
 export function flushUpdate(
   ctrl: Controller<any>,
-  props: ControllerQueue[number]
+  props: ControllerQueue[number],
+  isLoop?: boolean
 ): Promise<boolean> {
   const { to, loop, onRest } = props
 
@@ -329,11 +330,11 @@ export function flushUpdate(
 
   return Promise.all(promises).then(results => {
     const finished = results.every(result => result.finished)
-    if (loop && finished && !results.every(result => result.noop)) {
+    if (loop && finished && !(isLoop && results.every(result => result.noop))) {
       const nextProps = createLoopUpdate(props, loop, to)
       if (nextProps) {
         prepareKeys(ctrl, [nextProps])
-        return flushUpdate(ctrl, nextProps)
+        return flushUpdate(ctrl, nextProps, true)
       }
     }
     return finished
