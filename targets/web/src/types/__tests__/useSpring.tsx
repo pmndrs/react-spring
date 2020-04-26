@@ -89,7 +89,7 @@ test('imperative mode (inferred)', () => {
     width: 0,
     onRest(event) {
       // FIXME: should include {foo: number}
-      assert(event, _ as Readonly<AnimationResult>);
+      assert(event, _ as AnimationResult);
     },
   }));
 
@@ -103,7 +103,7 @@ test('imperative mode', () => {
     width: 0,
     onRest(event) {
       // FIXME: should include {foo: number}
-      assert(event, _ as Readonly<AnimationResult>);
+      assert(event, _ as AnimationResult);
     },
   }));
 
@@ -115,7 +115,7 @@ test('imperative mode', () => {
     update({
       width: 100,
       onRest(result) {
-        assert(result, _ as Readonly<AnimationResult<State>>);
+        assert(result, _ as AnimationResult<State>);
       },
     });
   });
@@ -154,7 +154,7 @@ test('imperative mode', () => {
       },
       onRest(result) {
         // FIXME: should include {foo: number}
-        assert(result, _ as Readonly<AnimationResult>);
+        assert(result, _ as AnimationResult);
       },
     }));
     assert(
@@ -190,7 +190,7 @@ test('basic config', () => {
     },
     onRest(result) {
       // FIXME: should include {width: number}
-      assert(result, _ as Readonly<AnimationResult>);
+      assert(result, _ as AnimationResult);
     },
   });
   assert(
@@ -213,7 +213,7 @@ test('function as "to" prop', () => {
         delay: 1000,
         config: { duration: 1000 },
         onRest(result) {
-          assert(result, _ as Readonly<AnimationResult<State>>);
+          assert(result, _ as AnimationResult<State>);
         },
       });
     },

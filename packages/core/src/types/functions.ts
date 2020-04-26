@@ -139,7 +139,7 @@ export type OnStart<T = unknown> = (spring: SpringValue<T>) => void
 export type OnChange<T = unknown> = (value: T, source: SpringValue<T>) => void
 
 /** Called once the animation comes to a halt */
-export type OnRest<T = unknown> = (result: Readonly<AnimationResult<T>>) => void
+export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
 
 /**
  * Called after an animation is updated by new props,

@@ -32,7 +32,7 @@ export interface AnimationResult<T = any> {
 }
 
 /** The promised result of an animation. */
-export type AsyncResult<T = any> = Promise<Readonly<AnimationResult<T>>>
+export type AsyncResult<T = any> = Promise<AnimationResult<T>>
 
 /** Map an object type to allow `SpringValue` for any property */
 export type Springify<T> = Lookup<SpringValue<unknown> | undefined> &
