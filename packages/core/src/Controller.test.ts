@@ -96,111 +96,114 @@ describe('Controller', () => {
     })
   })
 
-  describe('when "loop" is used with multiple values', () => {
-    it('loops all values at the same time', async () => {
-      const ctrl = new Controller()
+  describe('the "loop" prop', () => {
+    describe('used with multiple values', () => {
+      it('loops all values at the same time', async () => {
+        const ctrl = new Controller()
 
-      ctrl.start({
-        to: { x: 1, y: 1 },
-        from: { x: 0, y: 0 },
-        config: key => ({ frequency: key == 'x' ? 0.3 : 1 }),
-        loop: true,
-      })
-
-      const { x, y } = ctrl.springs
-      for (let i = 0; i < 2; i++) {
-        await advanceUntilValue(y, 1)
-
-        // Both values should equal their "from" value at the same time.
-        expect(x.get()).toBe(x.animation.from)
-        expect(y.get()).toBe(y.animation.from)
-      }
-    })
-  })
-
-  describe('when "loop" is used when "to" is', () => {
-    describe('an async function', () => {
-      it('calls the "to" function repeatedly', async () => {
-        const ctrl = new Controller({ t: 0 })
-        const { t } = ctrl.springs
-
-        let loop = true
-        let times = 2
-
-        // Note: This example is silly, since you could use a for-loop
-        // to more easily achieve the same result, but it tests the ability
-        // to halt a looping script via the "loop" function prop.
         ctrl.start({
-          loop: () => loop,
-          to: async next => {
-            await next({ t: 1 })
-            await next({ t: 0 })
-
-            if (times--) return
-            loop = false
-          },
+          to: { x: 1, y: 1 },
+          from: { x: 0, y: 0 },
+          config: key => ({ frequency: key == 'x' ? 0.3 : 1 }),
+          loop: true,
         })
 
-        await advanceUntilValue(t, 1)
-        expect(t.idle).toBeFalsy()
-
+        const { x, y } = ctrl.springs
         for (let i = 0; i < 2; i++) {
-          await advanceUntilValue(t, 0)
-          expect(t.idle).toBeFalsy()
+          await advanceUntilValue(y, 1)
+
+          // Both values should equal their "from" value at the same time.
+          expect(x.get()).toBe(x.animation.from)
+          expect(y.get()).toBe(y.animation.from)
+        }
+      })
+    })
+
+    describe('used when "to" is', () => {
+      describe('an async function', () => {
+        it('calls the "to" function repeatedly', async () => {
+          const ctrl = new Controller({ t: 0 })
+          const { t } = ctrl.springs
+
+          let loop = true
+          let times = 2
+
+          // Note: This example is silly, since you could use a for-loop
+          // to more easily achieve the same result, but it tests the ability
+          // to halt a looping script via the "loop" function prop.
+          ctrl.start({
+            loop: () => loop,
+            to: async next => {
+              await next({ t: 1 })
+              await next({ t: 0 })
+
+              if (times--) return
+              loop = false
+            },
+          })
 
           await advanceUntilValue(t, 1)
           expect(t.idle).toBeFalsy()
-        }
 
-        await advanceUntilValue(t, 0)
-        expect(t.idle).toBeTruthy()
-      })
-    })
-    describe('an array', () => {
-      it('repeats the chain of updates', async () => {
-        const ctrl = new Controller({ t: 0 })
-        const { t } = ctrl.springs
+          for (let i = 0; i < 2; i++) {
+            await advanceUntilValue(t, 0)
+            expect(t.idle).toBeFalsy()
 
-        let loop = true
-        const promise = ctrl.start({
-          loop: () => {
-            return loop
-          },
-          from: { t: 0 },
-          to: [{ t: 1 }, { t: 2 }],
-          config: { duration: 3000 / 60 },
+            await advanceUntilValue(t, 1)
+            expect(t.idle).toBeFalsy()
+          }
+
+          await advanceUntilValue(t, 0)
+          expect(t.idle).toBeTruthy()
         })
+      })
 
-        for (let i = 0; i < 3; i++) {
+      describe('an array', () => {
+        it('repeats the chain of updates', async () => {
+          const ctrl = new Controller({ t: 0 })
+          const { t } = ctrl.springs
+
+          let loop = true
+          const promise = ctrl.start({
+            loop: () => {
+              return loop
+            },
+            from: { t: 0 },
+            to: [{ t: 1 }, { t: 2 }],
+            config: { duration: 3000 / 60 },
+          })
+
+          for (let i = 0; i < 3; i++) {
+            await advanceUntilValue(t, 2)
+            expect(t.idle).toBeFalsy()
+
+            // Run the first frame of the next loop.
+            mockRaf.step()
+          }
+
+          loop = false
+
           await advanceUntilValue(t, 2)
-          expect(t.idle).toBeFalsy()
+          expect(t.idle).toBeTruthy()
 
-          // Run the first frame of the next loop.
-          mockRaf.step()
-        }
-
-        loop = false
-
-        await advanceUntilValue(t, 2)
-        expect(t.idle).toBeTruthy()
-
-        expect(await promise).toMatchObject({
-          value: { t: 2 },
-          finished: true,
+          expect(await promise).toMatchObject({
+            value: { t: 2 },
+            finished: true,
+          })
         })
       })
     })
-  })
 
-  describe('when "loop" is used on a noop update', () => {
-    it('does not loop', async () => {
-      const ctrl = new Controller({ t: 0 })
+    describe('used on a noop update', () => {
+      it('does not loop', async () => {
+        const ctrl = new Controller({ t: 0 })
 
-      const loop = jest.fn(() => true)
-      ctrl.start({ t: 0, loop })
+        const loop = jest.fn(() => true)
+        ctrl.start({ t: 0, loop })
 
-      await advanceUntilIdle()
-      expect(loop).toBeCalledTimes(0)
+        await advanceUntilIdle()
+        expect(loop).toBeCalledTimes(0)
+      })
     })
   })
 })
