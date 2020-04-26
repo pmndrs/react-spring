@@ -1,5 +1,7 @@
 import { Controller } from './Controller'
 
+const frameLength = 1000 / 60
+
 describe('Controller', () => {
   it('can animate a number', async () => {
     const ctrl = new Controller({ x: 0 })
@@ -97,6 +99,28 @@ describe('Controller', () => {
   })
 
   describe('the "loop" prop', () => {
+    it('can be combined with the "reverse" prop', async () => {
+      const ctrl = new Controller({
+        t: 1,
+        from: { t: 0 },
+        config: { duration: frameLength * 3 },
+      })
+
+      const { t } = ctrl.springs
+      expect(t.get()).toBe(0)
+
+      await advanceUntilIdle()
+      expect(t.get()).toBe(1)
+
+      ctrl.start({
+        loop: { reverse: true },
+      })
+
+      await advanceUntilValue(t, 0)
+      await advanceUntilValue(t, 1)
+      expect(getFrames(t)).toMatchSnapshot()
+    })
+
     describe('used with multiple values', () => {
       it('loops all values at the same time', async () => {
         const ctrl = new Controller()

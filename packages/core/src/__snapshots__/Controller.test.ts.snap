@@ -406,6 +406,20 @@ Array [
 ]
 `;
 
+exports[`Controller the "loop" prop can be combined with the "reverse" prop 1`] = `
+Array [
+  0.33334,
+  0.66668,
+  1,
+  0.66666,
+  0.33331999999999995,
+  0,
+  0.33334,
+  0.66668,
+  1,
+]
+`;
+
 exports[`Controller when the "to" prop is an async function acts strangely without the "from" prop 1`] = `
 Array [
   Object {
