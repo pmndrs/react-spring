@@ -496,7 +496,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /** Schedule an animation to run after an optional delay */
-  protected _update(props: SpringUpdate<T>): AsyncResult<T> {
+  protected _update(props: SpringUpdate<T>, isLoop?: boolean): AsyncResult<T> {
     // Ensure the initial value can be accessed by animated components.
     const range = this._prepareNode(props)
 
@@ -508,10 +508,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
         this._merge(range, props, resolve)
       },
     }).then(result => {
-      if (props.loop && result.finished && !result.noop) {
+      if (props.loop && result.finished && !(isLoop && result.noop)) {
         const nextProps = createLoopUpdate(props)
         if (nextProps) {
-          return this._update(nextProps)
+          return this._update(nextProps, true)
         }
       }
       return result
