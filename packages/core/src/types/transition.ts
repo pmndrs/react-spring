@@ -121,7 +121,7 @@ export type TransitionHandle<State extends Lookup = UnknownProps> = Merge<
 
 /** The function returned by `useTransition` */
 export interface TransitionFn<Item = any, State extends object = any> {
-  (render: TransitionRenderFn<Item, State>): ReactNode[]
+  (render: TransitionRenderFn<Item, State>): JSX.Element
 }
 
 export interface TransitionRenderFn<Item = any, State extends object = any> {
