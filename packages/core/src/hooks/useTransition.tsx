@@ -268,20 +268,23 @@ export function useTransition(
     reset ? void 0 : deps
   )
 
-  const renderTransitions: TransitionFn = render =>
-    transitions.map((t, i) => {
-      const { springs } = changes.get(t) || t.ctrl
-      const elem: any = render({ ...springs }, t.item, t, i)
-      return elem && elem.type ? (
-        <elem.type
-          {...elem.props}
-          key={is.str(t.key) || is.num(t.key) ? t.key : t.ctrl.id}
-          ref={elem.ref}
-        />
-      ) : (
-        elem
-      )
-    })
+  const renderTransitions: TransitionFn = render => (
+    <>
+      {transitions.map((t, i) => {
+        const { springs } = changes.get(t) || t.ctrl
+        const elem: any = render({ ...springs }, t.item, t, i)
+        return elem && elem.type ? (
+          <elem.type
+            {...elem.props}
+            key={is.str(t.key) || is.num(t.key) ? t.key : t.ctrl.id}
+            ref={elem.ref}
+          />
+        ) : (
+          elem
+        )
+      })}
+    </>
+  )
 
   return arguments.length == 3
     ? ([renderTransitions, api.update, api.stop] as const)
