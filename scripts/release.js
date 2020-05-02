@@ -36,7 +36,7 @@ async function publish(opts) {
       undoCommit()
     }
   })
-  updateLockfile()
+  updateLockfile(opts)
   execDry(`${lernaBin} publish`, opts)
 }
 
