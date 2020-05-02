@@ -41,7 +41,7 @@ export type Springify<T> = Lookup<SpringValue<unknown> | undefined> &
 /**
  * The set of `SpringValue` objects returned by a `useSpring` call (or similar).
  */
-export type SpringValues<T extends object = any> = [T] extends [Any]
+export type SpringValues<T extends Lookup = any> = [T] extends [Any]
   ? Lookup<SpringValue<unknown> | undefined> // Special case: "any"
   : { [P in keyof T]: SpringWrap<T[P]> }
 
