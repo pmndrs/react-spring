@@ -1,6 +1,7 @@
 import { FrameRequestCallback } from './types'
 import * as G from './globals'
 
+declare const console: any
 declare const process:
   | { env: { [key: string]: string | undefined } }
   | undefined
@@ -104,7 +105,7 @@ export class FrameLoop {
         // To minimize frame skips, the frameloop never stops.
         if (lastTime == 0) {
           lastTime = G.now()
-          requestFrame(update)
+          requestFrame(catchErrors(update))
         }
       }
     }
@@ -183,7 +184,7 @@ export class FrameLoop {
       }
 
       lastTime = time
-      requestFrame(update)
+      requestFrame(catchErrors(update))
     })
 
     this.start = animation => {
@@ -228,4 +229,14 @@ export class FrameLoop {
 function findIndex<T>(arr: T[], test: (value: T) => boolean) {
   const index = arr.findIndex(test)
   return index < 0 ? arr.length : index
+}
+
+function catchErrors(effect: () => void) {
+  return () => {
+    try {
+      effect()
+    } catch (e) {
+      console.error(e)
+    }
+  }
 }
