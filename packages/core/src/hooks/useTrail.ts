@@ -1,4 +1,5 @@
 import { useLayoutEffect } from 'react-layout-effect'
+import { useCallbackOne } from 'use-memo-one'
 import { is } from 'shared'
 
 import { Valid } from '../types/common'
@@ -69,7 +70,7 @@ export function useTrail(
 
   if (propsFn || arguments.length == 3) {
     const update = result[1]
-    result[1] = propsArg => {
+    result[1] = useCallbackOne(propsArg => {
       const reverse = is.obj(propsArg) && propsArg.reverse
       return update((i, ctrl) => {
         const props = getProps(propsArg, i, ctrl)!
@@ -77,7 +78,7 @@ export function useTrail(
         if (parent) props.to = parent.springs
         return props
       })
-    }
+    }, deps)
     return result
   }
   return result[0]
