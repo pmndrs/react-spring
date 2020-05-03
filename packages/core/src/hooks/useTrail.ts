@@ -45,12 +45,7 @@ export function useTrail(
   deps?: readonly any[]
 ) {
   const propsFn = is.fun(propsArg) && propsArg
-
-  // Force springs to update on every render where a props object is
-  // passed without the "deps" argument defined.
-  if (!propsFn && !deps) {
-    deps = [{}]
-  }
+  if (propsFn && !deps) deps = []
 
   const ctrls: Controller[] = []
   const result = useSprings(
@@ -59,7 +54,9 @@ export function useTrail(
       ctrls[i] = ctrl
       return getProps(propsArg, i, ctrl) as any
     },
-    deps
+    // Ensure the props function is called when no deps exist.
+    // This works around the 3 argument rule.
+    deps || [{}]
   )
 
   useLayoutEffect(() => {
