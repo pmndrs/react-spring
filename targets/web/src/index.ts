@@ -6,7 +6,6 @@ import { applyAnimatedValues } from './applyAnimatedValues'
 import { AnimatedStyle } from './AnimatedStyle'
 
 Globals.assign({
-  defaultElement: 'div',
   colorNames,
   applyAnimatedValues,
   createStringInterpolator,

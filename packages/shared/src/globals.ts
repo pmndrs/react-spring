@@ -9,8 +9,6 @@ import { noop } from './helpers'
 // Required
 //
 
-export let defaultElement: string | ElementType
-
 export let applyAnimatedValues: (node: any, props: any) => boolean | void
 
 export let createStringInterpolator: (
@@ -72,8 +70,6 @@ export interface AnimatedGlobals {
   colorNames?: typeof colorNames
   /** Make all animations instant and skip the frameloop entirely */
   skipAnimation?: typeof skipAnimation
-  /** The `div` element equivalent for the current platform */
-  defaultElement?: typeof defaultElement
   /** Intercept props before they're passed to an animated component */
   getComponentProps?: typeof getComponentProps
   /** Provide custom logic for native updates */
@@ -101,7 +97,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     frameLoop,
     colorNames,
     skipAnimation,
-    defaultElement,
     getComponentProps,
     applyAnimatedValues,
     createStringInterpolator,
@@ -118,7 +113,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       frameLoop,
       colorNames,
       skipAnimation,
-      defaultElement,
       getComponentProps,
       applyAnimatedValues,
       createStringInterpolator,

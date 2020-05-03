@@ -3,7 +3,6 @@ import { createStringInterpolator } from 'shared/stringInterpolation'
 import colorNames from 'shared/colors'
 
 Globals.assign({
-  defaultElement: 'Group',
   createStringInterpolator,
   colorNames,
   applyAnimatedValues(instance, props) {
