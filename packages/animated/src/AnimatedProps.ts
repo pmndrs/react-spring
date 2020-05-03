@@ -1,8 +1,8 @@
 import { FluidObserver, FluidEvent } from 'shared'
 import * as G from 'shared/globals'
 
-import { Animated, TreeContext } from './Animated'
 import { AnimatedObject } from './AnimatedObject'
+import { TreeContext } from './context'
 
 type Props = object & { style?: any }
 
@@ -17,14 +17,14 @@ export class AnimatedProps extends AnimatedObject implements FluidObserver {
   setValue(props: Props | null, context?: TreeContext) {
     if (!props) return // The constructor passes null.
     if (context) {
-      Animated.context = context
+      TreeContext.current = context
     }
     super.setValue(
       props.style && G.createAnimatedStyle
         ? { ...props, style: G.createAnimatedStyle(props.style) }
         : props
     )
-    Animated.context = null
+    TreeContext.current = null
   }
 
   /** @internal */
