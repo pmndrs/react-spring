@@ -24,7 +24,6 @@ beforeEach(() => {
   Globals.assign({
     now: mockRaf.now,
     requestAnimationFrame: mockRaf.raf,
-    cancelAnimationFrame: mockRaf.cancel,
     batchedUpdates: fn => {
       // This lets our useTransition hook force its component
       // to update from within an "onRest" handler.
