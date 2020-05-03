@@ -1,14 +1,11 @@
-import { invalidate, applyProps, addEffect } from 'react-three-fiber'
-import { Globals, FrameLoop, update } from 'core'
+import { applyProps, addEffect } from 'react-three-fiber'
+import { Globals, FrameLoop } from 'core'
 import { createStringInterpolator } from 'shared/stringInterpolation'
 import colorNames from 'shared/colors'
 
-// Add the update function as a global effect to react-three-fibers update loop
-if (addEffect) addEffect(update)
-
 Globals.assign({
   defaultElement: 'group',
-  frameLoop: addEffect && new FrameLoop(invalidate),
+  frameLoop: addEffect && new FrameLoop(),
   applyAnimatedValues: applyProps,
   createStringInterpolator,
   colorNames,
