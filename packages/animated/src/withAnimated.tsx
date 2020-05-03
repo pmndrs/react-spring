@@ -24,7 +24,7 @@ export const withAnimated = (Component: any, host: HostConfig) =>
       }
 
       const didUpdate = instance
-        ? host.applyAnimatedValues(instance, props.getValue(true))
+        ? host.applyAnimatedValues(instance, props.getValue(true)!)
         : false
 
       // Re-render the component when native updates fail.
@@ -43,7 +43,7 @@ export const withAnimated = (Component: any, host: HostConfig) =>
 
     return (
       <Component
-        {...host.getComponentProps(props.getValue())}
+        {...host.getComponentProps(props.getValue()!)}
         ref={
           hasInstance &&
           ((value: any) => {
