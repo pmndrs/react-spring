@@ -1,4 +1,3 @@
-import { ElementType } from 'react'
 import { FluidValue } from 'fluids'
 
 import { InterpolatorConfig, InterpolatorArgs, OneOrMore } from './types'

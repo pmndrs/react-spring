@@ -6,10 +6,10 @@ import {
   FluidValue,
   FluidProps,
 } from 'shared'
-import { primitives, JSXElements } from './primitives'
+import { Primitives } from './primitives'
 
 type AnimatedPrimitives = {
-  [Tag in JSXElements]: AnimatedComponent<Tag>
+  [Tag in Primitives]: AnimatedComponent<Tag>
 }
 
 /** The type of the `animated()` function */
