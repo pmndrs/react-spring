@@ -4,7 +4,6 @@ import { createStringInterpolator } from 'shared/stringInterpolation'
 import colorNames from 'shared/colors'
 
 Globals.assign({
-  defaultElement: 'group',
   frameLoop: addEffect && new FrameLoop(),
   applyAnimatedValues: applyProps,
   createStringInterpolator,

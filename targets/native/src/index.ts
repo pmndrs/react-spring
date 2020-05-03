@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { AnimatedTransform } from './AnimatedTransform'
 import { AnimatedStyle, AnimatedObject } from 'animated'
 import { createStringInterpolator } from 'shared/stringInterpolation'
@@ -6,7 +6,6 @@ import { is, Globals } from 'shared'
 import colorNames from 'shared/colors'
 
 Globals.assign({
-  defaultElement: View,
   colorNames,
   createStringInterpolator,
   applyAnimatedValues(instance, props) {
