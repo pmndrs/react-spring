@@ -1,6 +1,7 @@
 import { Lookup, each, getFluidConfig } from 'shared'
 import { Animated, isAnimated, getPayload } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
+import { TreeContext } from './context'
 
 type Source = Lookup | null
 
@@ -54,8 +55,8 @@ export class AnimatedObject extends Animated {
   /** Add to a payload set. */
   protected _addToPayload(this: Set<AnimatedValue>, source: any) {
     const config = getFluidConfig(source)
-    if (config && Animated.context) {
-      Animated.context.dependencies.add(source)
+    if (config && TreeContext.current) {
+      TreeContext.current.dependencies.add(source)
     }
     const payload = getPayload(source)
     if (payload) {

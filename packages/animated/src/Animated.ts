@@ -1,4 +1,4 @@
-import { FluidValue, defineHidden } from 'shared'
+import { defineHidden } from 'shared'
 import { AnimatedValue } from './AnimatedValue'
 
 const $node: any = Symbol.for('Animated:node')
@@ -40,13 +40,6 @@ export abstract class Animated<T = any> {
   getPayload(): Payload {
     return this.payload || []
   }
-
-  /** The `AnimatedProps` class sets this before initializing */
-  static context: TreeContext | null = null
 }
 
 export type Payload = readonly AnimatedValue[]
-
-export type TreeContext = {
-  dependencies: Set<FluidValue>
-}
