@@ -1,5 +1,4 @@
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { withAnimated, extendAnimated } from 'animated'
 import {
   ElementType,
   ComponentPropsWithRef,
@@ -7,23 +6,16 @@ import {
   FluidValue,
   FluidProps,
 } from 'shared'
-import { elements, JSXElements } from './elements'
+import { primitives, JSXElements } from './primitives'
 
-type DOMComponents = {
+type AnimatedPrimitives = {
   [Tag in JSXElements]: AnimatedComponent<Tag>
 }
 
-type CreateAnimated = <T extends ElementType>(
-  wrappedComponent: T
-) => AnimatedComponent<T>
-
-// Extend `animated` with every available DOM element
-export const animated: CreateAnimated & DOMComponents = extendAnimated(
-  withAnimated,
-  elements
-)
-
-export { animated as a }
+/** The type of the `animated()` function */
+export type WithAnimated = {
+  <T extends ElementType>(wrappedComponent: T): AnimatedComponent<T>
+} & AnimatedPrimitives
 
 /** The type of an `animated()` component */
 export type AnimatedComponent<

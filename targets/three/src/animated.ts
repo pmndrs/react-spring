@@ -1,30 +1,20 @@
-import * as THREE from 'three'
-import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { withAnimated, extendAnimated } from 'animated'
+import { CSSProperties, ForwardRefExoticComponent, FC } from 'react'
 import {
   AssignableKeys,
   ComponentPropsWithRef,
   ElementType,
   FluidValue,
 } from 'shared'
+import { Primitives } from './primitives'
 
-// TODO: Support type-checking for `animated` props
-type ThreeComponents = { [key: string]: ElementType }
+type AnimatedPrimitives = {
+  [P in Primitives]: AnimatedComponent<FC<JSX.IntrinsicElements[P]>>
+}
 
-const elements = Object.keys(THREE).filter(key => /^[A-Z]/.test(key))
-
-type CreateAnimated = <T extends ElementType>(
-  wrappedComponent: T
-) => AnimatedComponent<T>
-
-// Extend animated with all the available THREE elements
-export const animated: CreateAnimated & ThreeComponents = extendAnimated(
-  withAnimated,
-  [...elements, 'primitive'],
-  true
-)
-
-export { animated as a }
+/** The type of the `animated()` function */
+export type WithAnimated = {
+  <T extends ElementType>(wrappedComponent: T): AnimatedComponent<T>
+} & AnimatedPrimitives
 
 /** The type of an `animated()` component */
 export type AnimatedComponent<

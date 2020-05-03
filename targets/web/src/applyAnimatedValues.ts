@@ -1,4 +1,4 @@
-import { Globals as G } from 'shared'
+import { Globals as G, Lookup } from 'shared'
 
 const isCustomPropRE = /^--/
 
@@ -17,14 +17,11 @@ function dangerousStyleValue(name: string, value: Value) {
   return ('' + value).trim()
 }
 
-const attributeCache: { [key: string]: string } = {}
+const attributeCache: Lookup<string> = {}
 
-type Instance = HTMLDivElement & { style: any; [key: string]: any }
+type Instance = HTMLDivElement & { style?: Lookup }
 
-export function applyAnimatedValues(
-  instance: Instance,
-  props: { [key: string]: any }
-) {
+export function applyAnimatedValues(instance: Instance, props: Lookup) {
   if (!instance.nodeType || !instance.setAttribute) {
     return false
   }

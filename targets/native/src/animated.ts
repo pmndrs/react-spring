@@ -1,49 +1,22 @@
-import { ForwardRefExoticComponent, ComponentClass, ReactNode } from 'react'
-import { withAnimated, extendAnimated } from 'animated'
-import {
-  Text,
-  View,
-  Image,
-  ViewProps,
-  ViewStyle,
-  RecursiveArray,
-  TextProps,
-} from 'react-native'
+import { ForwardRefExoticComponent } from 'react'
+import { ViewStyle, RecursiveArray } from 'react-native'
 import {
   AssignableKeys,
   ElementType,
   ComponentPropsWithRef,
   FluidValue,
 } from 'shared'
+import { primitives } from './primitives'
 
-// These are converted into `animated` components
-const elements = {
-  View: View as ComponentClass<
-    // @types/react-native forgot to add "children" to the "View" component??
-    ViewProps & { children?: ReactNode }
-  >,
-  Text: Text as ComponentClass<
-    // @types/react-native forgot to add "children" to the "Text" component??
-    TextProps & { children?: ReactNode }
-  >,
-  Image,
+type Primitives = typeof primitives
+type AnimatedPrimitives = {
+  [P in keyof Primitives]: AnimatedComponent<Primitives[P]>
 }
 
-type NativeElements = typeof elements
-type NativeComponents = {
-  [P in keyof NativeElements]: AnimatedComponent<NativeElements[P]>
-}
-
-type CreateAnimated = <T extends ElementType>(
-  wrappedComponent: T
-) => AnimatedComponent<T>
-
-export const animated: CreateAnimated & NativeComponents = extendAnimated(
-  withAnimated,
-  elements
-)
-
-export { animated as a }
+/** The type of the `animated()` function */
+export type WithAnimated = {
+  <T extends ElementType>(wrappedComponent: T): AnimatedComponent<T>
+} & AnimatedPrimitives
 
 /** The type of an `animated()` component */
 export type AnimatedComponent<
