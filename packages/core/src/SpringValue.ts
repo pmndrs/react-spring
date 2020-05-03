@@ -41,6 +41,7 @@ import {
   getDefaultProp,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
+import { SpringContext } from './SpringContext'
 import {
   SpringPhase,
   CREATED,
@@ -1051,4 +1052,9 @@ export function createUpdate(props: any) {
 /** Find keys with defined values */
 function findDefined(values: any, keys: Set<string>) {
   each(values, (value, key) => value != null && keys.add(key as any))
+}
+
+/** Update a `SpringValue` with the values from a `SpringContext` object. */
+export function applyContext(spring: SpringValue, context: SpringContext) {
+  spring.start({ default: true, ...context })
 }
