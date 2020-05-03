@@ -1,4 +1,4 @@
-import { Anchor, invalidate, applyProps, addEffect } from 'react-zdog'
+import { invalidate, applyProps, addEffect } from 'react-zdog'
 import { Globals, FrameLoop, update } from 'core'
 import { createStringInterpolator } from 'shared/stringInterpolation'
 import colorNames from 'shared/colors'
@@ -7,7 +7,6 @@ import colorNames from 'shared/colors'
 if (addEffect) addEffect(update)
 
 Globals.assign({
-  defaultElement: Anchor,
   frameLoop: addEffect && new FrameLoop(invalidate),
   applyAnimatedValues: applyProps,
   createStringInterpolator,
