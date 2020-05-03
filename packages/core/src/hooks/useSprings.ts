@@ -20,7 +20,7 @@ import {
   ControllerUpdate,
 } from '../types'
 import { UseSpringProps } from './useSpring'
-import { createUpdate } from '../SpringValue'
+import { createUpdate, applyContext } from '../SpringValue'
 import {
   Controller,
   getSprings,
@@ -28,6 +28,7 @@ import {
   setSprings,
 } from '../Controller'
 import { useMemo as useMemoOne, mergeDefaultProps } from '../helpers'
+import { useSpringContext } from '../SpringContext'
 import { SpringHandle } from '../SpringHandle'
 
 export type UseSpringsProps<State extends Lookup = Lookup> = unknown &
@@ -177,6 +178,7 @@ export function useSprings(
   // commit phase (see the `useLayoutEffect` callback below).
   const springs = ctrls.map((ctrl, i) => getSprings(ctrl, updates[i]))
 
+  const context = useSpringContext()
   useLayoutEffect(() => {
     layoutId.current++
 
@@ -200,7 +202,13 @@ export function useSprings(
 
     // Update existing controllers.
     each(ctrls, (ctrl, i) => {
-      setSprings(ctrl, springs[i])
+      const values = springs[i]
+      setSprings(ctrl, values)
+
+      // Update the default props.
+      for (const key in values) {
+        applyContext(values[key], context)
+      }
 
       // Apply updates created during render.
       const update = updates[i]

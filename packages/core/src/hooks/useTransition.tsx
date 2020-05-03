@@ -26,6 +26,8 @@ import {
 import { Valid } from '../types/common'
 import { callProp, inferTo, mergeDefaultProps } from '../helpers'
 import { Controller, getSprings, setSprings } from '../Controller'
+import { useSpringContext } from '../SpringContext'
+import { applyContext } from '../SpringValue'
 import { SpringHandle } from '../SpringHandle'
 import {
   ENTER,
@@ -233,6 +235,17 @@ export function useTransition(
   }, [])
 
   useImperativeHandle(ref, () => api)
+
+  const context = useSpringContext()
+  useLayoutEffect(() => {
+    // Update the default props of each spring.
+    transitions.forEach(t => {
+      const { springs }: any = t.ctrl
+      for (const key in springs) {
+        applyContext(springs[key], context)
+      }
+    })
+  }, [context])
 
   useLayoutEffect(
     () => {

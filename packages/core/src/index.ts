@@ -7,6 +7,7 @@ export * from './globals'
 export { Controller } from './Controller'
 export { SpringValue } from './SpringValue'
 export { Interpolation } from './Interpolation'
+export { SpringContext } from './SpringContext'
 export { FrameValue } from './FrameValue'
 
 export { FrameLoop, createInterpolator } from 'shared'
