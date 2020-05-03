@@ -8,13 +8,13 @@
     "shared": "link:../../packages/shared"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-three-fiber": ">=2.0",
-    "three": ">=0.104"
+    "react": ">=16.11",
+    "react-three-fiber": ">=3.0",
+    "three": ">=0.115"
   },
   "devDependencies": {
-    "react-three-fiber": "~2.0.0",
-    "three": "~0.104.0"
+    "react-three-fiber": "^3.0.0",
+    "three": "^0.115.0"
   },
   "scripts": {
     "build": "rollup -c"
