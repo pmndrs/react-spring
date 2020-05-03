@@ -42,14 +42,10 @@ export let createAnimatedTransform = null as ((transform: any) => any) | null
 
 declare const window: {
   requestAnimationFrame: (cb: (time: number) => void) => number
-  cancelAnimationFrame: (id: number) => void
 }
 
 export let requestAnimationFrame: (cb: (time: number) => void) => number =
   typeof window !== 'undefined' ? window.requestAnimationFrame : () => -1
-
-export let cancelAnimationFrame: (id: number) => void =
-  typeof window !== 'undefined' ? window.cancelAnimationFrame : noop
 
 export let batchedUpdates = (callback: () => void) => callback()
 
@@ -82,8 +78,6 @@ export interface AnimatedGlobals {
   createAnimatedStyle?: typeof createAnimatedStyle
   /** Schedule a function to run on the next frame */
   requestAnimationFrame?: typeof requestAnimationFrame
-  /** Prevent a scheduled function from running on the next frame */
-  cancelAnimationFrame?: typeof cancelAnimationFrame
   /** Event props are called with `batchedUpdates` to reduce extraneous renders */
   batchedUpdates?: typeof batchedUpdates
   /** @internal Exposed for testing purposes */
@@ -103,7 +97,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     createAnimatedTransform,
     createAnimatedStyle,
     requestAnimationFrame,
-    cancelAnimationFrame,
     batchedUpdates,
     willAdvance,
   } = Object.assign(
@@ -119,7 +112,6 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       createAnimatedTransform,
       createAnimatedStyle,
       requestAnimationFrame,
-      cancelAnimationFrame,
       batchedUpdates,
       willAdvance,
     },
