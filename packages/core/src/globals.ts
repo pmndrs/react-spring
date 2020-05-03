@@ -4,7 +4,6 @@ import { Globals } from 'shared'
 
 // Sane defaults
 Globals.assign({
-  applyAnimatedValues: () => false,
   createStringInterpolator,
   to: (source, args) => new Interpolation(source, args),
 })
