@@ -9,8 +9,6 @@ import { noop } from './helpers'
 // Required
 //
 
-export let applyAnimatedValues: (node: any, props: any) => boolean | void
-
 export let createStringInterpolator: (
   config: InterpolatorConfig<string>
 ) => (input: number) => string
@@ -33,12 +31,6 @@ export let now = () => performance.now()
 export let colorNames = null as { [key: string]: number } | null
 
 export let skipAnimation = false as boolean
-
-export let getComponentProps = (props: any) => props
-
-export let createAnimatedStyle = null as ((style: any) => any) | null
-
-export let createAnimatedTransform = null as ((transform: any) => any) | null
 
 declare const window: {
   requestAnimationFrame: (cb: (time: number) => void) => number
@@ -66,16 +58,8 @@ export interface AnimatedGlobals {
   colorNames?: typeof colorNames
   /** Make all animations instant and skip the frameloop entirely */
   skipAnimation?: typeof skipAnimation
-  /** Intercept props before they're passed to an animated component */
-  getComponentProps?: typeof getComponentProps
-  /** Provide custom logic for native updates */
-  applyAnimatedValues?: typeof applyAnimatedValues
   /** Provide custom logic for string interpolation */
   createStringInterpolator?: typeof createStringInterpolator
-  /** Wrap the `transform` prop with an animated node */
-  createAnimatedTransform?: typeof createAnimatedTransform
-  /** Wrap the `style` prop with an animated node */
-  createAnimatedStyle?: typeof createAnimatedStyle
   /** Schedule a function to run on the next frame */
   requestAnimationFrame?: typeof requestAnimationFrame
   /** Event props are called with `batchedUpdates` to reduce extraneous renders */
@@ -91,11 +75,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
     frameLoop,
     colorNames,
     skipAnimation,
-    getComponentProps,
-    applyAnimatedValues,
     createStringInterpolator,
-    createAnimatedTransform,
-    createAnimatedStyle,
     requestAnimationFrame,
     batchedUpdates,
     willAdvance,
@@ -106,11 +86,7 @@ export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
       frameLoop,
       colorNames,
       skipAnimation,
-      getComponentProps,
-      applyAnimatedValues,
       createStringInterpolator,
-      createAnimatedTransform,
-      createAnimatedStyle,
       requestAnimationFrame,
       batchedUpdates,
       willAdvance,

@@ -1,17 +1,22 @@
-import { invalidate, applyProps, addEffect } from 'react-zdog'
-import { Globals, FrameLoop, update } from 'core'
+import { applyProps } from 'react-zdog'
+import { Globals } from 'core'
+import { createHost } from 'animated'
 import { createStringInterpolator } from 'shared/stringInterpolation'
 import colorNames from 'shared/colors'
-
-// Add the update function as a global effect to react-zdog's update loop
-if (addEffect) addEffect(update)
+import { primitives } from './primitives'
+import { WithAnimated } from './animated'
 
 Globals.assign({
-  frameLoop: addEffect && new FrameLoop(invalidate),
-  applyAnimatedValues: applyProps,
   createStringInterpolator,
   colorNames,
 })
+
+const host = createHost(primitives, {
+  applyAnimatedValues: applyProps,
+})
+
+export const animated = host.animated as WithAnimated
+export { animated as a }
 
 export * from './animated'
 export * from 'core'

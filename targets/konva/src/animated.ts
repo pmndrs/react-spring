@@ -1,28 +1,20 @@
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import { withAnimated, extendAnimated } from 'animated'
 import {
   AssignableKeys,
   ElementType,
   ComponentPropsWithRef,
   FluidValue,
 } from 'shared'
-import { KonvaExports, KonvaElements, elements } from './elements'
+import { KonvaExports, Primitives } from './primitives'
 
-type CreateAnimated = <T extends ElementType>(
-  wrappedComponent: T
-) => AnimatedComponent<T>
-
-type KonvaComponents = {
-  [Tag in KonvaElements]: AnimatedComponent<KonvaExports[Tag]>
+type AnimatedPrimitives = {
+  [P in Primitives]: AnimatedComponent<KonvaExports[P]>
 }
 
-// Extend animated with all the available Konva elements
-export const animated: CreateAnimated & KonvaComponents = extendAnimated(
-  withAnimated,
-  elements
-)
-
-export { animated as a }
+/** The type of the `animated()` function */
+export type WithAnimated = {
+  <T extends ElementType>(wrappedComponent: T): AnimatedComponent<T>
+} & AnimatedPrimitives
 
 /** The type of an `animated()` component */
 export type AnimatedComponent<

@@ -1,14 +1,22 @@
-import { applyProps, addEffect } from 'react-three-fiber'
-import { Globals, FrameLoop } from 'core'
+import { applyProps } from 'react-three-fiber'
+import { Globals } from 'core'
+import { createHost } from 'animated'
 import { createStringInterpolator } from 'shared/stringInterpolation'
 import colorNames from 'shared/colors'
+import { primitives } from './primitives'
+import { WithAnimated } from './animated'
 
 Globals.assign({
-  frameLoop: addEffect && new FrameLoop(),
-  applyAnimatedValues: applyProps,
   createStringInterpolator,
   colorNames,
 })
+
+const host = createHost(primitives, {
+  applyAnimatedValues: applyProps,
+})
+
+export const animated = host.animated as WithAnimated
+export { animated as a }
 
 export * from './animated'
 export * from 'core'

@@ -1,5 +1,5 @@
 export type JSXElements = keyof JSX.IntrinsicElements
-export const elements: JSXElements[] = [
+export const primitives: JSXElements[] = [
   'a',
   'abbr',
   'address',
