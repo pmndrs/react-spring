@@ -70,7 +70,7 @@ export function useTrail(
     }
   }, deps)
 
-  if (arguments.length == 3) {
+  if (propsFn || arguments.length == 3) {
     const update = result[1]
     result[1] = propsArg => {
       const reverse = is.obj(propsArg) && propsArg.reverse
