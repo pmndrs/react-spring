@@ -1,5 +1,5 @@
-import { AnimatedObject } from './AnimatedObject'
-import * as G from 'shared/globals'
+import { AnimatedObject } from 'animated'
+import { AnimatedTransform } from './AnimatedTransform'
 
 type Style = object & { transform?: any }
 
@@ -10,8 +10,8 @@ export class AnimatedStyle extends AnimatedObject {
 
   setValue(style: Style | null) {
     super.setValue(
-      style && style.transform && G.createAnimatedTransform
-        ? { ...style, transform: G.createAnimatedTransform(style.transform) }
+      style && style.transform
+        ? { ...style, transform: new AnimatedTransform(style.transform) }
         : style
     )
   }

@@ -4,48 +4,18 @@ import {
   ComponentPropsWithRef,
   ForwardRefExoticComponent,
 } from 'react'
-import { withAnimated, extendAnimated } from 'animated'
 import { FluidValue } from 'shared'
+import { primitives } from './primitives'
 
-type ZdogExports = typeof Zdog
-
-type ZdogElements = {
-  [P in keyof ZdogExports]: P extends 'Illustration'
-    ? never
-    : ZdogExports[P] extends ElementType
-    ? P
-    : never
-}[keyof ZdogExports]
-
-type ZdogComponents = {
-  [Tag in ZdogElements]: AnimatedComponent<ZdogExports[Tag]>
+type Primitives = typeof primitives[number]
+type AnimatedPrimitives = {
+  [P in Primitives]: AnimatedComponent<typeof Zdog[P]>
 }
 
-const elements: ZdogElements[] = [
-  'Anchor',
-  'Shape',
-  'Group',
-  'Rect',
-  'RoundedRect',
-  'Ellipse',
-  'Polygon',
-  'Hemisphere',
-  'Cylinder',
-  'Cone',
-  'Box',
-]
-
-type CreateAnimated = <T extends ElementType>(
-  wrappedComponent: T
-) => AnimatedComponent<T>
-
-// Extend animated with all the available Zdog elements
-export const animated: CreateAnimated & ZdogComponents = extendAnimated(
-  withAnimated,
-  elements
-)
-
-export { animated as a }
+/** The type of the `animated()` function */
+export type WithAnimated = {
+  <T extends ElementType>(wrappedComponent: T): AnimatedComponent<T>
+} & AnimatedPrimitives
 
 /** The type of an `animated()` component */
 export type AnimatedComponent<

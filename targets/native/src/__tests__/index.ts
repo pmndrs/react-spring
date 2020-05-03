@@ -1,6 +1,5 @@
 import { assert, _, test, describe } from 'spec.ts';
-import { AnimatedProps } from '..';
-import { AnimatedTransform } from '../animated';
+import { AnimatedProps, AnimatedTransform } from '../animated';
 import { FluidProps, FluidValue } from 'shared';
 import { ViewStyle } from 'react-native';
 

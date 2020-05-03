@@ -1,37 +1,13 @@
 import React, { forwardRef, useRef, Ref } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import { is, each, useForceUpdate, ElementType, FluidConfig } from 'shared'
-import * as G from 'shared/globals'
 
 import { AnimatedProps } from './AnimatedProps'
+import { HostConfig } from './createHost'
 
-// For storing the animated version on the original component
-const cacheKey = Symbol.for('AnimatedComponent')
+export type AnimatableComponent = string | Exclude<ElementType, string>
 
-type AnimatableComponent = string | Exclude<ElementType, string>
-
-// A stub type that gets replaced by @react-spring/web and others.
-type WithAnimated = {
-  (Component: AnimatableComponent): any
-  [key: string]: any
-}
-
-export const withAnimated: WithAnimated = (Component: any) => {
-  const animated = is.str(Component)
-    ? createAnimatedComponent(Component)
-    : Component[cacheKey] ||
-      (Component[cacheKey] = createAnimatedComponent(Component))
-
-  animated.displayName = `Animated(${
-    is.str(Component)
-      ? Component
-      : Component.displayName || Component.name || 'Anonymous'
-  })`
-
-  return animated
-}
-
-const createAnimatedComponent = (Component: any) =>
+export const withAnimated = (Component: any, host: HostConfig) =>
   forwardRef((rawProps: any, ref: Ref<any>) => {
     const instanceRef = useRef<any>(null)
     const hasInstance: boolean =
@@ -48,7 +24,7 @@ const createAnimatedComponent = (Component: any) =>
       }
 
       const didUpdate = instance
-        ? G.applyAnimatedValues(instance, props.getValue(true))
+        ? host.applyAnimatedValues(instance, props.getValue(true))
         : false
 
       // Re-render the component when native updates fail.
@@ -58,7 +34,7 @@ const createAnimatedComponent = (Component: any) =>
     })
 
     const dependencies = new Set<FluidConfig>()
-    props.setValue(rawProps, { dependencies })
+    props.setValue(rawProps, { dependencies, host })
 
     useLayoutEffect(() => {
       each(dependencies, dep => dep.addChild(props))
@@ -67,7 +43,7 @@ const createAnimatedComponent = (Component: any) =>
 
     return (
       <Component
-        {...G.getComponentProps(props.getValue())}
+        {...host.getComponentProps(props.getValue())}
         ref={
           hasInstance &&
           ((value: any) => {
@@ -85,31 +61,3 @@ function updateRef<T>(ref: Ref<T>, value: T) {
   }
   return value
 }
-
-/**
- * Pass the given components to `withAnimated` and add the newly animated
- * components to `withAnimated` as properties.
- */
-export const extendAnimated = (
-  withAnimated: WithAnimated,
-  components: AnimatableComponent[] | { [key: string]: AnimatableComponent },
-  lowercase?: boolean
-): any => {
-  each(components, (Component, key) => {
-    if (!is.str(key)) {
-      key = getDisplayName(Component)!
-    }
-    if (lowercase) {
-      key = key[0].toLowerCase() + key.slice(1)
-    }
-    withAnimated[key] = withAnimated(Component)
-  })
-  return withAnimated
-}
-
-const getDisplayName = (arg: AnimatableComponent) =>
-  is.str(arg)
-    ? arg
-    : arg && is.str(arg.displayName)
-    ? arg.displayName
-    : (is.fun(arg) && arg.name) || null

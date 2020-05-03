@@ -3,11 +3,11 @@ import * as konva from 'react-konva'
 
 export type KonvaExports = typeof konva
 
-export type KonvaElements = {
+export type Primitives = {
   [P in keyof KonvaExports]: KonvaExports[P] extends ElementType ? P : never
 }[keyof KonvaExports]
 
-export const elements: KonvaElements[] = [
+export const primitives: Primitives[] = [
   'Arc',
   'Arrow',
   'Circle',
