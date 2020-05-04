@@ -51,6 +51,7 @@ export const getProps = <T, Arg = never>(
 /** These props can have default values */
 export const DEFAULT_PROPS = [
   'pause',
+  'cancel',
   'config',
   'immediate',
   'onDelayEnd',
