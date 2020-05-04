@@ -5,6 +5,7 @@ import { Lookup, Falsy } from './types/common'
 import { inferTo } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
+import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import {
   getCombinedResult,
   AnimationResult,
@@ -88,7 +89,7 @@ export class Controller<State extends Lookup = Lookup>
    */
   get idle() {
     return (
-      !this._state.promise &&
+      !this._state.asyncTo &&
       Object.values(this.springs as Lookup<SpringValue>).every(
         spring => spring.idle
       )
@@ -310,22 +311,12 @@ export function flushUpdate(
         state,
         action(props, resolve) {
           props.onRest = onRest as any
-          resolve(
-            runAsync(
-              asyncTo,
-              props,
-              state,
-              ctrl.get.bind(ctrl),
-              () => false, // TODO: add pausing to Controller
-              ctrl.start.bind(ctrl) as any,
-              ctrl.stop.bind(ctrl)
-            )
-          )
+          resolve(runAsync(asyncTo, props, state, ctrl))
         },
       })
     )
   }
-  // Cancel an active "asyncTo" if desired.
+  // Respect the `cancel` prop when no keys are affected.
   else if (!props.keys && props.cancel === true) {
     cancelAsync(state, ctrl['_lastAsyncId'])
   }

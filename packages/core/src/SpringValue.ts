@@ -107,7 +107,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   get idle() {
-    return !this.is(ACTIVE) && !this._state.promise
+    return !this.is(ACTIVE) && !this._state.asyncTo
   }
 
   get goal() {
@@ -796,17 +796,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     if (hasAsyncTo) {
-      resolve(
-        runAsync(
-          props.to,
-          props,
-          this._state,
-          () => this.get(),
-          () => this.is(PAUSED),
-          this.start.bind(this),
-          this.stop.bind(this) as any
-        )
-      )
+      resolve(runAsync(props.to, props, this._state, this))
     }
 
     // Start an animation
