@@ -95,6 +95,11 @@ export class Controller<State extends Lookup = Lookup>
     )
   }
 
+  /** Check the current phase */
+  is(phase: SpringPhase) {
+    return this._phase == phase
+  }
+
   /** Get the current values of our springs */
   get(): State & UnknownProps {
     const values: any = {}
