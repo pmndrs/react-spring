@@ -4,8 +4,6 @@ import * as G from 'shared/globals'
 import { matchProp, DEFAULT_PROPS, callProp } from './helpers'
 import {
   AnimationResolver,
-  AnimationResult,
-  AsyncResult,
   ControllerUpdate,
   SpringChain,
   SpringDefaultProps,
@@ -13,6 +11,10 @@ import {
   SpringStopFn,
   SpringToFn,
 } from './types'
+import {
+  AnimationResult,
+  AsyncResult,
+} from './AnimationResult'
 
 export interface RunAsyncProps<T = any> extends SpringProps<T> {
   callId: number
