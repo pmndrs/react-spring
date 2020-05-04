@@ -191,9 +191,17 @@ export function scheduleProps<T>(
   { key, props, state, action }: ScheduledProps<T>
 ): AsyncResult<T> {
   return new Promise((resolve, reject) => {
-    const pause = matchProp(props.pause, key)
+    let delay = 0
+    let pause = false
 
-    let delay = Math.max(0, callProp(props.delay || 0, key))
+    let cancel = matchProp(props.cancel, key)
+    if (cancel) {
+      state.cancelId = callId
+      return next()
+    }
+
+    pause = matchProp(props.pause, key)
+    delay = Math.max(0, callProp(props.delay || 0, key))
     if (delay > 0) {
       let timeout: Timeout
       const onPause = () => {
@@ -221,18 +229,12 @@ export function scheduleProps<T>(
       if (delay > 0) {
         state.pause = void 0
       }
-      let { cancel, reset } = props
+      // Maybe cancelled during its delay.
+      if (callId <= (state.cancelId || 0)) {
+        cancel = true
+      }
       try {
-        // Might have been cancelled during its delay.
-        if (callId <= (state.cancelId || 0)) {
-          cancel = true
-        } else {
-          cancel = matchProp(cancel, key)
-          if (cancel) {
-            state.cancelId = callId
-          }
-        }
-        reset = !cancel && matchProp(reset, key)
+        const reset = !cancel && matchProp(props.reset, key)
         action({ ...props, callId, delay, cancel, pause, reset }, resolve)
       } catch (err) {
         reject(err)
