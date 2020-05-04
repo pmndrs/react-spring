@@ -51,13 +51,19 @@ export function useTransition<Item, Props extends object>(
     | UseTransitionProps<Item>
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps: any[] | undefined
-): [TransitionFn<Item, PickAnimated<Props>>, SpringStartFn<T>, SpringStopFn<T>]
+): PickAnimated<Props> extends infer State
+  ? [
+      TransitionFn<Item, State & object>,
+      SpringStartFn<State>,
+      SpringStopFn<State>
+    ]
+  : never
 
 export function useTransition(
   data: unknown,
   props: UseTransitionProps,
   deps?: any[]
-) {
+): any {
   const { ref, reset, sort, trail = 0, expires = true } = props
 
   // Every item has its own transition.
