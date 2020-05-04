@@ -66,6 +66,23 @@ describe('Controller', () => {
       // Since we call `update` twice, frames are generated!
       expect(getFrames(ctrl)).toMatchSnapshot()
     })
+
+    it('can be cancelled', async () => {
+      const ctrl = new Controller({ from: { x: 0 } })
+      ctrl.start({
+        to: async next => {
+          while (true) {
+            await next({ x: 1, reset: true })
+          }
+        },
+      })
+      const { x } = ctrl.springs
+      await advanceUntilValue(x, 0.5)
+      await ctrl.start({
+        cancel: true,
+      })
+      expect(ctrl.idle).toBeTruthy()
+    })
   })
 
   describe('when the "onStart" prop is defined', () => {

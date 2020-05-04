@@ -303,8 +303,8 @@ export function flushUpdate(
   const promises = keys.map(key => ctrl.springs[key]!.start(props as any))
 
   // Schedule the "asyncTo" if defined.
+  const state = ctrl['_state']
   if (asyncTo) {
-    const state = ctrl['_state']
     promises.push(
       scheduleProps(++ctrl['_lastAsyncId'], {
         props,
@@ -325,6 +325,10 @@ export function flushUpdate(
         },
       })
     )
+  }
+  // Cancel an active "asyncTo" if desired.
+  else if (!props.keys && props.cancel === true) {
+    state.cancelId = ctrl['_lastAsyncId']
   }
 
   return Promise.all(promises).then(results => {
