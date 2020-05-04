@@ -383,10 +383,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     const results = await Promise.all(queue.map(props => this._update(props)))
+    const value = this.get()
     return results.every(result => result.noop)
-      ? getNoopResult(this.get(), this)
+      ? getNoopResult(value, this)
+      : results.some(result => result.cancelled)
+      ? getCancelledResult(value, this)
       : getFinishedResult(
-          this.get(),
+          value,
           results.every(result => result.finished),
           this
         )
