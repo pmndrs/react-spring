@@ -4,16 +4,18 @@
   "description": "Globals and shared modules",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -p . --outDir dist/cjs && tsc -p . --module ES6 --outDir dist/esm && cherry-pick --cwd=dist ../src --cjs-dir=cjs --esm-dir=esm"
   },
   "publishConfig": {
     "directory": "dist"
   },
   "dependencies": {
     "@alloc/types": "^1.2.1",
-    "fluids": "^0.1.6"
+    "fluids": "^0.1.6",
+    "tslib": "^1.11.1"
   },
   "devDependencies": {
+    "cherry-pick": "^0.5.0",
     "typescript": "3.8.3"
   }
 }

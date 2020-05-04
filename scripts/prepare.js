@@ -53,7 +53,8 @@ async function prepare() {
   // Entry module overrides
   const entryOverrides = {
     [`${RS}/shared`]: {
-      main: 'index.js',
+      main: 'cjs/index.js',
+      module: 'esm/index.js',
     },
   }
 

@@ -2,6 +2,7 @@
   "include": ["src"],
   "exclude": ["**/*.test.ts"],
   "compilerOptions": {
+    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "esModuleInterop": true,
@@ -14,7 +15,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "dist",
     "preserveSymlinks": true,
     "sourceMap": true,
     "strict": true,
