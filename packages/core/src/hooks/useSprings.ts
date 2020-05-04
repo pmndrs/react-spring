@@ -17,7 +17,6 @@ import {
   SpringStartFn,
   SpringStopFn,
   SpringValues,
-  SpringHandle,
   ControllerUpdate,
 } from '../types'
 import { UseSpringProps } from './useSpring'
@@ -28,7 +27,8 @@ import {
   flushUpdateQueue,
   setSprings,
 } from '../Controller'
-import { getProps, useMemo as useMemoOne } from '../helpers'
+import { useMemo as useMemoOne } from '../helpers'
+import { SpringHandle } from '../SpringHandle'
 
 export type UseSpringsProps<State extends Lookup = Lookup> = unknown &
   ControllerUpdate<State> & {
@@ -159,37 +159,9 @@ export function useSprings(
     }
   }
 
-  const api = useMemo(
-    (): SpringHandle => ({
-      get controllers() {
-        return state.ctrls
-      },
-      update: props => {
-        each(state.ctrls, (ctrl, i) => {
-          const update = getProps(props, i, ctrl)
-          if (refProp.current) {
-            ctrl.update(update)
-          } else {
-            ctrl.start(update)
-          }
-        })
-        return api
-      },
-      start: async props => {
-        const results = await Promise.all(
-          state.ctrls.map((ctrl, i) => ctrl.start(getProps(props, i, ctrl)))
-        )
-        return {
-          value: results.map(result => result.value),
-          finished: results.every(result => result.finished),
-        }
-      },
-      stop: keys => each(state.ctrls, ctrl => ctrl.stop(keys)),
-      pause: keys => each(state.ctrls, ctrl => ctrl.pause(keys)),
-      resume: keys => each(state.ctrls, ctrl => ctrl.resume(keys)),
-    }),
-    []
-  )
+  const api = useMemo(() => {
+    return SpringHandle.create(() => state.ctrls)
+  }, [])
 
   // New springs are created during render so users can pass them to
   // their animated components, but new springs aren't cached until the

@@ -23,8 +23,9 @@ import {
   SpringDefaultProps,
 } from './props'
 import { SpringToFn } from './functions'
-import { SpringValues, SpringConfig, SpringHandle } from './objects'
+import { SpringValues, SpringConfig } from './objects'
 import { TransitionPhase } from '../TransitionPhase'
+import { SpringHandle } from '../SpringHandle'
 import { Controller } from '../Controller'
 
 /** The phases of a `useTransition` item */
@@ -83,7 +84,7 @@ export type UseTransitionProps<Item = any> = Merge<
      *
      * Animations never auto-start when `ref` is defined.
      */
-    ref?: RefProp<TransitionHandle>
+    ref?: RefProp<SpringHandle>
   }
 >
 
@@ -106,18 +107,6 @@ export type TransitionDefaultProps<Item = any> = Pick<
 type Key = string | number
 
 export type ItemKeys<T = any> = OneOrMore<Key> | ((item: T) => Key) | null
-
-/** Control the transition springs without re-rendering. */
-export type TransitionHandle<State extends Lookup = UnknownProps> = Merge<
-  SpringHandle<State>,
-  {
-    update: (
-      props:
-        | OneOrMore<ControllerUpdate<State>>
-        | ((index: number, ctrl: Controller<State>) => ControllerUpdate<State>)
-    ) => TransitionHandle<State>
-  }
->
 
 /** The function returned by `useTransition` */
 export interface TransitionFn<Item = any, State extends object = any> {

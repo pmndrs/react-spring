@@ -15,8 +15,9 @@ import {
   ControllerUpdate,
   ItemKeys,
   PickAnimated,
+  SpringStartFn,
+  SpringStopFn,
   TransitionFn,
-  TransitionHandle,
   TransitionState,
   TransitionTo,
   UseTransitionProps,
@@ -25,6 +26,7 @@ import {
 import { Valid } from '../types/common'
 import { DEFAULT_PROPS, callProp, inferTo } from '../helpers'
 import { Controller, getSprings, setSprings } from '../Controller'
+import { SpringHandle } from '../SpringHandle'
 import {
   ENTER,
   MOUNT,
@@ -49,11 +51,7 @@ export function useTransition<Item, Props extends object>(
     | UseTransitionProps<Item>
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps: any[] | undefined
-): [
-  TransitionFn<Item, PickAnimated<Props>>,
-  TransitionHandle['update'],
-  TransitionHandle['stop']
-]
+): [TransitionFn<Item, PickAnimated<Props>>, SpringStartFn<T>, SpringStopFn<T>]
 
 export function useTransition(
   data: unknown,
@@ -226,33 +224,11 @@ export function useTransition(
     changes.set(t, { phase, springs, payload })
   })
 
-  const api = useMemo(
-    (): TransitionHandle => ({
-      get controllers() {
-        return usedTransitions.current!.map(t => t.ctrl)
-      },
-      update(props) {
-        each(usedTransitions.current!, (t, i) =>
-          t.ctrl.update(
-            is.fun(props) ? props(i, t.ctrl) : is.arr(props) ? props[i] : props
-          )
-        )
-        return api
-      },
-      async start() {
-        const transitions = usedTransitions.current!
-        const results = await Promise.all(transitions.map(t => t.ctrl.start()))
-        return {
-          value: results.map(result => result.value),
-          finished: results.every(result => result.finished),
-        }
-      },
-      stop: keys => each(usedTransitions.current!, t => t.ctrl.stop(keys)),
-      pause: keys => each(usedTransitions.current!, t => t.ctrl.pause(keys)),
-      resume: keys => each(usedTransitions.current!, t => t.ctrl.resume(keys)),
-    }),
-    []
-  )
+  const api = useMemo(() => {
+    return SpringHandle.create(() => {
+      return usedTransitions.current!.map(t => t.ctrl)
+    })
+  }, [])
 
   useImperativeHandle(ref, () => api)
 
@@ -287,7 +263,7 @@ export function useTransition(
   )
 
   return arguments.length == 3
-    ? ([renderTransitions, api.update, api.stop] as const)
+    ? [renderTransitions, api.start, api.stop]
     : renderTransitions
 }
 

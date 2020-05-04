@@ -3,12 +3,12 @@ import { is, RefProp, UnknownProps, Remap } from 'shared'
 import {
   ControllerUpdate,
   PickAnimated,
-  SpringHandle,
   SpringStartFn,
   SpringStopFn,
   SpringValues,
 } from '../types'
 import { Valid } from '../types/common'
+import { SpringHandle } from '../SpringHandle'
 import { useSprings } from './useSprings'
 
 /**

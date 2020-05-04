@@ -1,5 +1,5 @@
 import { RefObject } from 'react'
-import { SpringHandle } from '../types'
+import { SpringHandle } from '../SpringHandle'
 
 export declare function useChain(
   refs: ReadonlyArray<RefObject<SpringHandle>>,
