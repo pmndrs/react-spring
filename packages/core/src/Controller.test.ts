@@ -71,7 +71,7 @@ describe('Controller', () => {
 
     it('can be cancelled', async () => {
       const ctrl = new Controller({ from: { x: 0 } })
-      ctrl.start({
+      const promise = ctrl.start({
         to: async next => {
           while (true) {
             await next({ x: 1, reset: true })
@@ -84,6 +84,7 @@ describe('Controller', () => {
         cancel: true,
       })
       expect(ctrl.idle).toBeTruthy()
+      expect((await promise).cancelled).toBeTruthy()
     })
   })
 
