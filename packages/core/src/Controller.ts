@@ -55,7 +55,7 @@ export class Controller<State extends Lookup = Lookup>
   protected _phase: SpringPhase = CREATED
 
   /** The counter for tracking `scheduleProps` calls */
-  protected _lastCallId = 0
+  protected _lastAsyncId = 0
 
   /** The values currently being animated */
   protected _active = new Set<FrameValue>()
@@ -306,12 +306,11 @@ export function flushUpdate(
   if (asyncTo) {
     const state = ctrl['_state']
     promises.push(
-      scheduleProps(++ctrl['_lastCallId'], {
+      scheduleProps(++ctrl['_lastAsyncId'], {
         props,
         state,
         action(props, resolve) {
           props.onRest = onRest as any
-          // Start, replace, or cancel the async animation.
           resolve(
             runAsync(
               asyncTo,
