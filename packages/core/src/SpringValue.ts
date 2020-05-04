@@ -514,6 +514,15 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _update(props: SpringUpdate<T>, isLoop?: boolean): AsyncResult<T> {
     const defaultProps = this._defaultProps
 
+    // Set the default `cancel` prop first, because it prevents other default
+    // props in this update from being cached.
+    if (props.default && !is.und(props.cancel)) {
+      defaultProps.cancel = props.cancel
+    }
+    // The default `cancel` prop overrides all updates.
+    else if (defaultProps.cancel) {
+      props.cancel = true
+    }
     // The default `pause` prop overrides all updates.
     if (defaultProps.pause) {
       props.pause = true
