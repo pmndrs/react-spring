@@ -11,7 +11,7 @@ describe('useTransition', () => {
   // Call the "useTransition" hook and update local variables.
   const update = createUpdater(({ args }) => {
     transition = toArray(useTransition(...args))[0]
-    rendered = transition((_, item) => item)
+    rendered = transition((_, item) => item).props.children
     return null
   })
 
