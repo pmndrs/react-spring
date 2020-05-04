@@ -5,6 +5,9 @@ import { OnStart, OnChange } from './types'
 
 const emptyArray: readonly any[] = []
 
+/** @internal */
+type OnRest = (cancel?: boolean) => void
+
 /** An animation being executed by the frameloop */
 export class Animation<T = any> {
   changed = false
@@ -18,5 +21,5 @@ export class Animation<T = any> {
   immediate = false
   onStart?: OnStart<T>
   onChange?: OnChange<T>
-  onRest: Function[] = []
+  onRest: OnRest[] = []
 }

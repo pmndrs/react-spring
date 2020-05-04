@@ -397,12 +397,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /**
    * Stop the current animation, and cancel any delayed updates.
+   *
+   * Pass `true` to call `onRest` with `cancelled: true`.
    */
-  stop() {
+  stop(cancel?: boolean) {
     if (!this.is(DISPOSED)) {
       this._state.cancelId = this._lastCallId
       this._focus(this.get())
-      G.batchedUpdates(() => this._stop())
+      G.batchedUpdates(() => this._stop(cancel))
     }
     return this
   }
@@ -530,7 +532,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // The "cancel" prop cancels all pending delays and it forces the
     // active animation to stop where it is.
     if (props.cancel) {
-      this.stop()
+      this.stop(true)
       return resolve(getCancelledResult(this.get(), this))
     }
 
@@ -895,7 +897,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    *
    * Always wrap `_stop` calls with `batchedUpdates`.
    */
-  protected _stop() {
+  protected _stop(cancel?: boolean) {
     this.resume()
     if (this.is(ACTIVE)) {
       this._phase = IDLE
@@ -918,7 +920,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
           onRestQueue[0] = noop
         }
 
-        each(onRestQueue, onRest => onRest())
+        each(onRestQueue, onRest => onRest(cancel))
       }
     }
   }
@@ -951,10 +953,15 @@ const checkFinishedOnRest = <T>(
 ) => {
   const { to } = spring.animation
   return onRest
-    ? () => {
+    ? (cancel?: boolean) => {
         const value = spring.get()
-        const goal = computeGoal(to)
-        onRest(getFinishedResult(value, isEqual(value, goal), spring))
+        if (cancel) {
+          onRest(getCancelledResult(value, spring))
+        } else {
+          const goal = computeGoal(to)
+          const finished = isEqual(value, goal)
+          onRest(getFinishedResult(value, finished, spring))
+        }
       }
     : noop
 }
