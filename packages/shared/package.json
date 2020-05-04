@@ -14,6 +14,6 @@
     "fluids": "^0.1.6"
   },
   "devDependencies": {
-    "typescript": "file:../../node_modules/typescript"
+    "typescript": "3.8.3"
   }
 }
