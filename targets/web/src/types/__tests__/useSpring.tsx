@@ -7,9 +7,9 @@ import {
   SpringValue,
   SpringValues,
   SpringHandle,
+  SpringStartFn,
   SpringStopFn,
   SpringUpdateFn,
-  SpringsUpdateFn,
   AnimationResult,
 } from '../..';
 
@@ -94,7 +94,7 @@ test('imperative mode (inferred)', () => {
   }));
 
   assert(props, _ as SpringValues<State>);
-  assert(update, _ as SpringsUpdateFn<State>);
+  assert(update, _ as SpringStartFn<State>);
   assert(stop, _ as SpringStopFn<State>);
 });
 
@@ -108,7 +108,7 @@ test('imperative mode', () => {
   }));
 
   assert(props, _ as SpringValues<State>);
-  assert(update, _ as SpringsUpdateFn<State>);
+  assert(update, _ as SpringStartFn<State>);
   assert(stop, _ as SpringStopFn<State>);
 
   test('update()', () => {
