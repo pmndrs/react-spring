@@ -1,14 +1,6 @@
-import { Lookup, FluidValue, Any, UnknownProps } from 'shared'
+import { Lookup, FluidValue, Any } from 'shared'
 import { AnimationConfig } from '../AnimationConfig'
 import { SpringValue } from '../SpringValue'
-import { Controller } from '../Controller'
-import {
-  SpringsUpdateFn,
-  SpringStartFn,
-  SpringStopFn,
-  SpringPauseFn,
-  SpringResumeFn,
-} from './functions'
 
 /** The object type of the `config` prop. */
 export type SpringConfig = Partial<AnimationConfig>
@@ -52,17 +44,3 @@ type SpringWrap<T> = [
 ] extends [object | void, never]
   ? never // Object literals cannot be animated.
   : SpringValue<Exclude<T, FluidValue | void>> | Extract<T, void>
-
-/**
- * The object attached to the `ref` prop by the `useSprings` hook.
- *
- * The `T` parameter should only contain animated props.
- */
-export interface SpringHandle<T extends Lookup = UnknownProps> {
-  controllers: ReadonlyArray<Controller<T>>
-  update: SpringsUpdateFn<T>
-  start: SpringStartFn<T>
-  stop: SpringStopFn<T>
-  pause: SpringPauseFn<T>
-  resume: SpringResumeFn<T>
-}

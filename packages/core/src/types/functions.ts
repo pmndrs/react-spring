@@ -1,9 +1,9 @@
-import { OneOrMore, Lookup, Falsy, UnknownProps } from 'shared'
+import { OneOrMore, Lookup, Falsy } from 'shared'
 
 import { Controller, ControllerQueue } from '../Controller'
 import { SpringValue } from '../SpringValue'
 import { RunAsyncProps } from '../runAsync'
-import { AsyncResult, SpringHandle, AnimationResult } from './objects'
+import { AsyncResult, AnimationResult } from '../objects'
 import {
   SpringTo,
   SpringsUpdate,
@@ -71,15 +71,6 @@ interface UpdateValuesFn<State extends Lookup = Lookup>
  */
 interface UpdateValueFn<T = any> extends AnyUpdateFn<T, SpringProps<T>> {
   (props: { to?: GoalValue<T> | Falsy } & SpringProps<T>): AsyncResult<T>
-}
-
-/**
- * Update the props of each spring, individually or all at once.
- *
- * The `T` parameter should only contain animated props.
- */
-export interface SpringsUpdateFn<T extends Lookup = UnknownProps> {
-  (props: SpringsUpdate<T>): SpringHandle<T>
 }
 
 /**
