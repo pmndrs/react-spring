@@ -92,9 +92,9 @@ export interface SpringStartFn<State = unknown> {
  */
 export type SpringStopFn<T = unknown> = T extends object
   ? T extends ReadonlyArray<number | string>
-    ? () => void
+    ? (cancel?: boolean) => void
     : (keys?: OneOrMore<string>) => void
-  : () => void
+  : (cancel?: boolean) => void
 
 /**
  * Pause animating `SpringValue`.
