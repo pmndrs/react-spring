@@ -49,15 +49,17 @@ describe('Controller', () => {
 
           // Any values passed here are treated as "from" values,
           // because no "from" prop was ever given.
-          update({ x: 1 })
+          const p1 = update({ x: 1 })
           // Now the spring exists!
           expect(springs.x).toBeDefined()
           // But the spring is idle!
           expect(springs.x.idle).toBeTruthy()
 
           // This call *will* start an animation!
-          update({ x: 2 })
+          const p2 = update({ x: 2 })
           expect(springs.x.idle).toBeFalsy()
+
+          await Promise.all([p1, p2])
         },
       })
 

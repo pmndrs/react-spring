@@ -271,14 +271,16 @@ function describeDefaultProp() {
 
           // This animation will be stopped.
           const promise = spring.start({ from: 0, to: 1 })
+
           mockRaf.step()
+          const value = spring.get()
 
           spring.start({ from: 0 })
           expect(spring.idle).toBeTruthy()
           expect(spring.animation.to).toBe(0)
 
           expect(await promise).toMatchObject({
-            value: 0,
+            value,
             finished: false,
           })
         })
