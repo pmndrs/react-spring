@@ -6,15 +6,12 @@ import { inferTo } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
 import {
-  SpringValue,
-  createLoopUpdate,
-  createUpdate,
-  getFinishedResult,
-} from './SpringValue'
-import { runAsync, scheduleProps, RunAsyncState } from './runAsync'
-import {
+  getCombinedResult,
   AnimationResult,
   AsyncResult,
+} from './AnimationResult'
+import { runAsync, scheduleProps, RunAsyncState } from './runAsync'
+import {
   ControllerFlushFn,
   ControllerUpdate,
   OnRest,
@@ -234,13 +231,9 @@ export function flushUpdateQueue(
   ctrl: Controller<any>,
   queue: ControllerQueue
 ) {
-  return Promise.all(queue.map(props => flushUpdate(ctrl, props))).then(
-    results =>
-      getFinishedResult(
-        ctrl.get(),
-        results.every(finished => finished)
-      )
-  )
+  return Promise.all(
+    queue.map(props => flushUpdate(ctrl, props))
+  ).then(results => getCombinedResult(ctrl, results))
 }
 
 /**
@@ -256,7 +249,7 @@ export function flushUpdate(
   ctrl: Controller<any>,
   props: ControllerQueue[number],
   isLoop?: boolean
-): Promise<boolean> {
+): AsyncResult {
   const { to, loop, onRest } = props
 
   const asyncTo = is.arr(to) || is.fun(to) ? to : undefined
@@ -332,15 +325,15 @@ export function flushUpdate(
   }
 
   return Promise.all(promises).then(results => {
-    const finished = results.every(result => result.finished)
-    if (loop && finished && !(isLoop && results.every(result => result.noop))) {
+    const result = getCombinedResult<any>(ctrl, results)
+    if (loop && result.finished && !(isLoop && result.noop)) {
       const nextProps = createLoopUpdate(props, loop, to)
       if (nextProps) {
         prepareKeys(ctrl, [nextProps])
         return flushUpdate(ctrl, nextProps, true)
       }
     }
-    return finished
+    return result
   })
 }
 

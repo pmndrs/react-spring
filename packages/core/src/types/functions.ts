@@ -3,7 +3,7 @@ import { OneOrMore, Lookup, Falsy } from 'shared'
 import { Controller, ControllerQueue } from '../Controller'
 import { SpringValue } from '../SpringValue'
 import { RunAsyncProps } from '../runAsync'
-import { AsyncResult, AnimationResult } from '../objects'
+import { AsyncResult, AnimationResult } from '../AnimationResult'
 import {
   SpringTo,
   SpringsUpdate,

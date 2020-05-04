@@ -48,7 +48,6 @@ import {
 } from './SpringPhase'
 import {
   AnimationRange,
-  AsyncResult,
   EventProp,
   OnRest,
   SpringDefaultProps,
@@ -56,6 +55,13 @@ import {
   VelocityProp,
   AnimationResolver,
 } from './types'
+import {
+  AsyncResult,
+  getCombinedResult,
+  getCancelledResult,
+  getFinishedResult,
+  getNoopResult,
+} from './AnimationResult'
 
 declare const console: any
 
@@ -383,16 +389,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     const results = await Promise.all(queue.map(props => this._update(props)))
-    const value = this.get()
-    return results.every(result => result.noop)
-      ? getNoopResult(value, this)
-      : results.some(result => result.cancelled)
-      ? getCancelledResult(value, this)
-      : getFinishedResult(
-          value,
-          results.every(result => result.finished),
-          this
-        )
+    return getCombinedResult(this, results)
   }
 
   /**
@@ -533,7 +530,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // active animation to stop where it is.
     if (props.cancel) {
       this.stop(true)
-      return resolve(getCancelledResult(this.get(), this))
+      return resolve(getCancelledResult(this))
     }
 
     const { key, animation: anim } = this
@@ -551,7 +548,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       if (props.callId > this._lastToId) {
         this._lastToId = props.callId
       } else {
-        return resolve(getCancelledResult(this.get(), this))
+        return resolve(getCancelledResult(this))
       }
     }
 
@@ -628,7 +625,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // the constructor can be given props without a "to" or "from" value.
     let node = getAnimated(this)
     if (!node) {
-      return resolve(getFinishedResult(null as any, true, this))
+      return resolve(getFinishedResult(this, true))
     }
 
     /** When true, start at the "from" value. */
@@ -800,7 +797,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Resolve our promise immediately.
     else {
-      resolve(getNoopResult(value, this))
+      resolve(getNoopResult(this, value))
     }
   }
 
@@ -954,41 +951,16 @@ const checkFinishedOnRest = <T>(
   const { to } = spring.animation
   return onRest
     ? (cancel?: boolean) => {
-        const value = spring.get()
         if (cancel) {
-          onRest(getCancelledResult(value, spring))
+          onRest(getCancelledResult(spring))
         } else {
           const goal = computeGoal(to)
-          const finished = isEqual(value, goal)
-          onRest(getFinishedResult(value, finished, spring))
+          const finished = isEqual(spring.get(), goal)
+          onRest(getFinishedResult(spring, finished))
         }
       }
     : noop
 }
-
-/** No-op results are for updates that never start an animation. */
-export const getNoopResult = <T>(value: T, spring?: SpringValue<T>) => ({
-  value,
-  noop: true,
-  finished: true,
-  spring,
-})
-
-export const getFinishedResult = <T>(
-  value: T,
-  finished: boolean,
-  spring?: SpringValue<T>
-) => ({
-  value,
-  finished,
-  spring,
-})
-
-export const getCancelledResult = <T>(value: T, spring?: SpringValue<T>) => ({
-  value,
-  cancelled: true,
-  spring,
-})
 
 export function createLoopUpdate<T>(
   props: T & { loop?: any; to?: any; from?: any; reverse?: any },
