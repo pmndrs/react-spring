@@ -102,11 +102,7 @@ export type SpringStopFn<T = unknown> = T extends object
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringPauseFn<T = unknown> = T extends object
-  ? T extends ReadonlyArray<number | string>
-    ? () => void
-    : (keys?: OneOrMore<string>) => void
-  : () => void
+export type SpringPauseFn<T = unknown> = SpringStopFn<T>
 
 /**
  * Resume paused `SpringValue`.
@@ -114,11 +110,7 @@ export type SpringPauseFn<T = unknown> = T extends object
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringResumeFn<T = unknown> = T extends object
-  ? T extends ReadonlyArray<number | string>
-    ? () => void
-    : (keys?: OneOrMore<string>) => void
-  : () => void
+export type SpringResumeFn<T = unknown> = SpringStopFn<T>
 
 /**
  * Called before the first frame of every animation.
