@@ -1,11 +1,6 @@
 import { assert, test, _ } from 'spec.ts';
 import { useSprings, SpringStopFn } from '../..';
-import {
-  Controller,
-  ControllerProps,
-  SpringsUpdateFn,
-  SpringValues,
-} from 'core';
+import { Controller, ControllerProps, SpringStartFn, SpringValues } from 'core';
 
 const items: string[] = [];
 
@@ -36,6 +31,6 @@ test('pass a function', () => {
     return _ as ControllerProps<State>;
   });
 
-  assert(set, _ as SpringsUpdateFn<State>);
+  assert(set, _ as SpringStartFn<State>);
   assert(stop, _ as SpringStopFn<State>);
 });
