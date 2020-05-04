@@ -8,10 +8,15 @@ import {
   SpringChain,
   SpringDefaultProps,
   SpringProps,
-  SpringStopFn,
   SpringToFn,
 } from './types'
-import { AnimationResult, AsyncResult } from './AnimationResult'
+import {
+  getCancelledResult,
+  getFinishedResult,
+  AnimationResult,
+  AsyncResult,
+  AnimationTarget,
+} from './AnimationResult'
 
 export interface RunAsyncProps<T = any> extends SpringProps<T> {
   callId: number
@@ -47,17 +52,14 @@ export async function runAsync<T>(
   to: SpringChain<T> | SpringToFn<T>,
   props: RunAsyncProps<T>,
   state: RunAsyncState<T>,
-  getValue: () => T,
-  getPaused: () => boolean,
-  update: (props: any) => AsyncResult<T>,
-  stop: SpringStopFn<T>
+  target: AnimationTarget<T>
 ): AsyncResult<T> {
   if (props.cancel) {
-    state.asyncTo = undefined
-    return {
-      value: getValue(),
-      cancelled: true,
+    // Stop the active `asyncTo` only on "default cancel".
+    if (props.default) {
+      state.asyncTo = undefined
     }
+    return getCancelledResult(target)
   }
   if (props.pause) {
     await new Promise(next => {
@@ -89,17 +91,21 @@ export async function runAsync<T>(
     })
 
     const { callId, onRest } = props
-
-    // Note: This function cannot be async, because `checkFailConditions` must be sync.
-    const animate: any = (arg1: any, arg2?: any) => {
+    const throwInvalidated = () => {
       // Prevent further animation if cancelled.
       if (callId <= (state.cancelId || 0)) {
-        throw (result = { value: getValue(), cancelled: true })
+        throw (result = getCancelledResult(target))
       }
       // Prevent further animation if another "runAsync" call is active.
       if (to !== state.asyncTo) {
-        throw (result = { value: getValue(), finished: false })
+        throw (result = getFinishedResult(target, false))
       }
+    }
+
+    // Note: This function cannot use the `async` keyword, because we want the
+    // `throw` statements to interrupt the caller.
+    const animate: any = (arg1: any, arg2?: any) => {
+      throwInvalidated()
 
       const props: ControllerUpdate<T> = is.obj(arg1)
         ? { ...arg1 }
@@ -112,12 +118,14 @@ export async function runAsync<T>(
       })
 
       const parentTo = state.asyncTo
-      return update(props).then(async result => {
+      return target.start(props).then(async result => {
+        throwInvalidated()
+
         if (state.asyncTo == null) {
           state.asyncTo = parentTo
         }
 
-        if (getPaused()) {
+        if (target.is('PAUSED')) {
           await new Promise(resolve => {
             state.unpause = concatFn(state.unpause, () => {
               state.unpause = void 0
@@ -139,12 +147,9 @@ export async function runAsync<T>(
       }
       // Async script
       else if (is.fun(to)) {
-        await to(animate, stop)
+        await to(animate, target.stop.bind(target) as any)
       }
-      result = {
-        value: getValue(),
-        finished: true,
-      }
+      result = getFinishedResult(target, true)
     } catch (err) {
       if (err !== result) {
         throw err
