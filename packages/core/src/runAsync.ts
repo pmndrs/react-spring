@@ -22,7 +22,6 @@ export interface RunAsyncProps<T = any> extends SpringProps<T> {
   callId: number
   cancel: boolean
   pause: boolean
-  reset: boolean
   delay: number
   to?: any
 }
@@ -182,7 +181,7 @@ export function cancelAsync(state: RunAsyncState<any>, callId: number) {
 
 interface ScheduledProps<T> {
   key?: string
-  props: Pick<SpringProps<T>, 'cancel' | 'pause' | 'reset' | 'delay'>
+  props: Pick<SpringProps<T>, 'cancel' | 'pause' | 'delay'>
   state: RunAsyncState<T>
   action: (props: RunAsyncProps<T>, resolve: AnimationResolver<T>) => void
 }
@@ -239,8 +238,7 @@ export function scheduleProps<T>(
         cancel = true
       }
       try {
-        const reset = !cancel && matchProp(props.reset, key)
-        action({ ...props, callId, delay, cancel, pause, reset }, resolve)
+        action({ ...props, callId, delay, cancel, pause }, resolve)
       } catch (err) {
         reject(err)
       }
