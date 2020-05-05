@@ -791,21 +791,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
       node.setValue(value)
     }
 
-    const paused = props.pause
-    if (paused) {
-      this.pause()
-    }
-
     if (hasAsyncTo) {
       resolve(runAsync(props.to, props, this._state, this))
     }
 
     // Start an animation
     else if (started) {
-      if (!paused) {
-        // Unpause the async animation if one exists.
-        this.resume()
-      }
+      // Unpause the async animation if one exists.
+      this.resume()
 
       if (reset) {
         // Must be idle for "onStart" to be called again.
@@ -813,12 +806,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
 
       this._reset()
-
-      if (paused) {
-        this._phase = PAUSED
-      } else {
-        this._start()
-      }
+      this._start()
     }
 
     // Postpone promise resolution until the animation is finished,
