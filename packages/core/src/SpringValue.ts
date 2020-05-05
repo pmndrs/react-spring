@@ -36,6 +36,7 @@ import {
   computeGoal,
   matchProp,
   inferTo,
+  flush,
   mergeDefaultProps,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
@@ -84,7 +85,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _phase: SpringPhase = CREATED
 
   /** The state for `runAsync` calls */
-  protected _state: RunAsyncState<T> = {}
+  protected _state: RunAsyncState<T> = {
+    pauseQueue: new Set(),
+    resumeQueue: new Set(),
+  }
 
   /** Some props have customizable default values */
   protected _defaultProps = {} as SpringDefaultProps<T>
@@ -308,7 +312,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     checkDisposed(this, 'pause')
     if (!this.is(PAUSED)) {
       this._phase = PAUSED
-      callProp(this._state.pause)
+      flush(this._state.pauseQueue, onPause => onPause())
     }
   }
 
@@ -317,7 +321,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     checkDisposed(this, 'resume')
     if (this.is(PAUSED)) {
       this._start()
-      callProp(this._state.unpause)
+      flush(this._state.resumeQueue, onResume => onResume())
     }
   }
 

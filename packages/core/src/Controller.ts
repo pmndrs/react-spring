@@ -2,7 +2,7 @@ import { is, each, OneOrMore, toArray, UnknownProps } from 'shared'
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
-import { inferTo } from './helpers'
+import { inferTo, flush } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
@@ -59,7 +59,10 @@ export class Controller<State extends Lookup = Lookup>
   protected _active = new Set<FrameValue>()
 
   /** State used by the `runAsync` function */
-  protected _state: RunAsyncState<State> = {}
+  protected _state: RunAsyncState<State> = {
+    pauseQueue: new Set(),
+    resumeQueue: new Set(),
+  }
 
   /** The event queues that are flushed once per frame maximum */
   protected _events = {
@@ -202,7 +205,7 @@ export class Controller<State extends Lookup = Lookup>
     // The "onRest" queue is only flushed when all springs are idle.
     if (!isActive) {
       this._phase = IDLE
-      flush(onRest, (result, onRest) => {
+      flush(onRest, ([onRest, result]) => {
         result.value = values
         onRest(result)
       })
@@ -215,19 +218,6 @@ export class Controller<State extends Lookup = Lookup>
       this._active[event.idle ? 'delete' : 'add'](event.parent)
       G.frameLoop.onFrame(this._onFrame)
     }
-  }
-}
-
-/** Basic helper for clearing a queue after processing it */
-function flush<P, T>(
-  queue: Map<P, T>,
-  iterator: (value: T, key: P) => void
-): void
-function flush<T>(queue: Set<T>, iterator: (value: T) => void): void
-function flush(queue: any, iterator: any) {
-  if (queue.size) {
-    each(queue, iterator)
-    queue.clear()
   }
 }
 
