@@ -168,23 +168,26 @@ export function cancelAsync(state: RunAsyncState<any>, callId: number) {
 }
 
 //
-// scheduleProps(props, state, action)
+// scheduleProps
 //
 
 interface ScheduledProps<T> {
   key?: string
   props: Pick<SpringProps<T>, 'cancel' | 'pause' | 'delay'>
   state: RunAsyncState<T>
-  action: (props: RunAsyncProps<T>, resolve: AnimationResolver<T>) => void
+  actions: {
+    pause: () => void
+    start: (props: RunAsyncProps<T>, resolve: AnimationResolver<T>) => void
+  }
 }
 
 /**
- * Pass a copy of the given props to an `action` after any delay is finished
- * and the props weren't cancelled before then.
+ * This function sets a timeout if the `delay` prop exists. The `cancel` and
+ * `pause` props are both coerced into booleans too.
  */
 export function scheduleProps<T>(
   callId: number,
-  { key, props, state, action }: ScheduledProps<T>
+  { key, props, state, actions }: ScheduledProps<T>
 ): AsyncResult<T> {
   return new Promise((resolve, reject) => {
     let delay = 0
@@ -204,6 +207,7 @@ export function scheduleProps<T>(
     if (delay > 0) {
       if (pause) {
         state.resumeQueue.add(onResume)
+        actions.pause()
       } else {
         timeout = G.frameLoop.setTimeout(onStart, delay)
         state.pauseQueue.add(onPause)
@@ -232,7 +236,7 @@ export function scheduleProps<T>(
       }
 
       try {
-        action({ ...props, callId, delay, cancel, pause }, resolve)
+        actions.start({ ...props, callId, delay, cancel, pause }, resolve)
       } catch (err) {
         reject(err)
       }

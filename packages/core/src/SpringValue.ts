@@ -539,8 +539,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
       key: this.key,
       props,
       state: this._state,
-      action: (props, resolve) => {
-        this._merge(range, props, resolve)
+      actions: {
+        pause: this.pause.bind(this),
+        start: this._merge.bind(this, range),
       },
     }).then(result => {
       if (props.loop && result.finished && !(isLoop && result.noop)) {
