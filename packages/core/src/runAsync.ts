@@ -190,41 +190,39 @@ export function scheduleProps<T>(
   { key, props, state, actions }: ScheduledProps<T>
 ): AsyncResult<T> {
   return new Promise((resolve, reject) => {
-    let delay = 0
+    let delay: number
     let timeout: Timeout
 
     let pause = false
     let cancel = matchProp(props.cancel, key)
 
     if (cancel) {
-      state.cancelId = callId
-      return onStart()
-    }
-
-    pause = matchProp(props.pause, key)
-    delay = Math.max(0, callProp(props.delay || 0, key))
-
-    if (delay > 0) {
+      onStart()
+    } else {
+      delay = Math.max(0, callProp(props.delay || 0, key))
+      pause = matchProp(props.pause, key)
       if (pause) {
         state.resumeQueue.add(onResume)
         actions.pause()
       } else {
-        timeout = G.frameLoop.setTimeout(onStart, delay)
-        state.pauseQueue.add(onPause)
+        onResume()
       }
-    } else {
-      onStart()
     }
 
     function onPause() {
       state.resumeQueue.add(onResume)
       timeout.cancel()
-      delay = Math.max(0, timeout.time - G.now())
+      // Cache the remaining delay.
+      delay = timeout.time - G.now()
     }
 
     function onResume() {
-      state.pauseQueue.add(onPause)
-      timeout = G.frameLoop.setTimeout(onStart, delay)
+      if (delay > 0) {
+        state.pauseQueue.add(onPause)
+        timeout = G.frameLoop.setTimeout(onStart, delay)
+      } else {
+        onStart()
+      }
     }
 
     function onStart() {
