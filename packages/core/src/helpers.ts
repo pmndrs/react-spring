@@ -8,6 +8,7 @@ import {
   AnyFn,
   OneOrMore,
   FluidValue,
+  Lookup,
 } from 'shared'
 import * as G from 'shared/globals'
 import { ReservedProps, ForwardProps, InferTo } from './types'
@@ -47,6 +48,26 @@ export const getProps = <T, Arg = never>(
 ) =>
   props &&
   (is.fun(props) ? props(i, arg) : is.arr(props) ? props[i] : { ...props })
+
+export const mergeDefaultProps = (
+  defaultProps: Lookup,
+  props: Lookup & { default?: boolean | Lookup }
+) => {
+  if (props.default === true) {
+    each(DEFAULT_PROPS, key => {
+      const value = props[key]
+      if (!is.und(value)) {
+        defaultProps[key] = value as any
+      }
+    })
+  } else if (props.default) {
+    each(props.default, (value, key) => {
+      if (!is.und(value)) {
+        defaultProps[key] = value as any
+      }
+    })
+  }
+}
 
 /** These props can have default values */
 export const DEFAULT_PROPS = [

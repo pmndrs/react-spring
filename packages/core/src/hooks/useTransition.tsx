@@ -24,7 +24,7 @@ import {
   TransitionDefaultProps,
 } from '../types'
 import { Valid } from '../types/common'
-import { DEFAULT_PROPS, callProp, inferTo } from '../helpers'
+import { callProp, inferTo, mergeDefaultProps } from '../helpers'
 import { Controller, getSprings, setSprings } from '../Controller'
 import { SpringHandle } from '../SpringHandle'
 import {
@@ -143,11 +143,7 @@ export function useTransition(
   const forceUpdate = useForceUpdate()
 
   const defaultProps = {} as TransitionDefaultProps
-  each(DEFAULT_PROPS, prop => {
-    if (/function|object/.test(typeof props[prop])) {
-      defaultProps[prop] = props[prop] as any
-    }
-  })
+  mergeDefaultProps(defaultProps, props)
 
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()

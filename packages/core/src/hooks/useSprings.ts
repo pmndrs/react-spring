@@ -27,7 +27,7 @@ import {
   flushUpdateQueue,
   setSprings,
 } from '../Controller'
-import { useMemo as useMemoOne } from '../helpers'
+import { useMemo as useMemoOne, mergeDefaultProps } from '../helpers'
 import { SpringHandle } from '../SpringHandle'
 
 export type UseSpringsProps<State extends Lookup = Lookup> = unknown &
@@ -150,7 +150,16 @@ export function useSprings(
 
       if (update) {
         update = updates[i] = createUpdate(update)
-        update.default = true
+        if (!update.default) {
+          // Declarative updates always set the default props.
+          const defaultProps: Lookup = (update.default = {})
+          mergeDefaultProps(defaultProps, update)
+
+          // Avoid forcing `immediate: true` onto imperative updates.
+          if (defaultProps.immediate === true) {
+            defaultProps.immediate = undefined
+          }
+        }
         if (i == 0) {
           refProp.current = update.ref
           update.ref = undefined
