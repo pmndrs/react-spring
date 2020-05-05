@@ -167,6 +167,7 @@ interface ScheduledProps<T> {
   state: RunAsyncState<T>
   actions: {
     pause: () => void
+    resume: () => void
     start: (props: RunAsyncProps<T>, resolve: AnimationResolver<T>) => void
   }
 }
@@ -198,6 +199,7 @@ export function scheduleProps<T>(
         state.resumeQueue.add(onResume)
         actions.pause()
       } else {
+        actions.resume()
         onResume()
       }
     }
