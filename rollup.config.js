@@ -5,6 +5,7 @@ import { crawl } from 'recrawl-sync'
 import dts from 'rollup-plugin-dts'
 import babel from 'rollup-plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
@@ -31,22 +32,24 @@ export const multiBundle = ({
     []
   )
 
-export const bundle = ({
+const getBundleConfig = ({
   input = 'src/index.ts',
   output = 'dist/index.js',
   minify = false,
   sourcemap = true,
   sourcemapExcludeSources = true,
   sourceRoot = path.dirname(input),
-} = {}) => {
-  const config = {
-    input,
-    output,
-    minify,
-    sourcemap,
-    sourcemapExcludeSources,
-    sourceRoot,
-  }
+} = {}) => ({
+  input,
+  output,
+  minify,
+  sourcemap,
+  sourcemapExcludeSources,
+  sourceRoot,
+})
+
+export const bundle = config => {
+  config = getBundleConfig(config)
   return [
     esmBundle(config),
     cjsBundle(config),
@@ -95,6 +98,34 @@ export const cjsBundle = config => ({
     config.minify && terser(),
   ],
 })
+
+// Used for the ".umd" bundle
+const globals = {
+  react: 'React',
+  'react-dom': 'ReactDOM',
+  'prop-types': 'PropTypes',
+  'react-spring': 'ReactSpring',
+}
+
+export const umdBundle = (name, config) => {
+  config = getBundleConfig(config)
+  return {
+    input: config.input,
+    output: {
+      file: config.output.replace(/\.js$/, '.umd.js'),
+      format: 'umd',
+      name,
+      globals,
+    },
+    external: Object.keys(globals),
+    plugins: [
+      resolve({ extensions }),
+      commonjs({ include: /node_modules/ }),
+      babel(getBabelOptions({ useESModules: false })),
+      config.minify && terser(),
+    ],
+  }
+}
 
 export const dtsBundle = (config, format) => ({
   input: config.input,
@@ -178,10 +209,6 @@ const rewritePaths = (opts = {}) => {
         depId = path.join(name, packages[name].main)
       }
     }
-
-    // if (depId !== modulePath) {
-    //   console.log('FROM => %O : TO => %O', modulePath, depId)
-    // }
 
     return depId
   }
