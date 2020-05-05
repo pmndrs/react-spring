@@ -681,7 +681,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // When true, the value changes instantly on the next frame.
     const immediate =
-      !hasAsyncTo && (!isAnimatable || matchProp(get('immediate'), key))
+      !hasAsyncTo &&
+      (!isAnimatable ||
+        matchProp(defaultProps.immediate || props.immediate, key))
 
     if (hasToChanged) {
       if (immediate) {
