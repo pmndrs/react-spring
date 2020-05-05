@@ -49,6 +49,12 @@ export const getProps = <T, Arg = never>(
   props &&
   (is.fun(props) ? props(i, arg) : is.arr(props) ? props[i] : { ...props })
 
+/** Returns `true` if the given prop is having its default value set. */
+export const isDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
+  !is.und(
+    props.default === true ? props[key] : props.default && props.default[key]
+  )
+
 export const mergeDefaultProps = (
   defaultProps: Lookup,
   props: Lookup & { default?: boolean | Lookup }

@@ -2,7 +2,7 @@ import { is, each, OneOrMore, toArray, UnknownProps, noop } from 'shared'
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
-import { inferTo, flush } from './helpers'
+import { inferTo, flush, isDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
@@ -303,7 +303,14 @@ export function flushUpdate(
           pause: noop,
           start(props, resolve) {
             props.onRest = onRest as any
-            resolve(runAsync(asyncTo, props, state, ctrl))
+            if (!props.cancel) {
+              resolve(runAsync(asyncTo, props, state, ctrl))
+            }
+            // Prevent `cancel: true` from ending the current `runAsync` call,
+            // except when the default `cancel` prop is being set.
+            else if (isDefaultProp(props, 'cancel')) {
+              cancelAsync(state, props.callId)
+            }
           },
         },
       })
