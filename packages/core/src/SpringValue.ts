@@ -38,6 +38,7 @@ import {
   inferTo,
   flush,
   mergeDefaultProps,
+  getDefaultProp,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
 import {
@@ -516,21 +517,23 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Schedule an animation to run after an optional delay */
   protected _update(props: SpringUpdate<T>, isLoop?: boolean): AsyncResult<T> {
+    type DefaultProps = typeof defaultProps
     const defaultProps = this._defaultProps
+    const mergeDefaultProp = (key: keyof DefaultProps) => {
+      const value = getDefaultProp(props, key)
+      if (!is.und(value)) {
+        defaultProps[key] = value as any
+      }
+      // For `cancel` and `pause`, a truthy default always wins.
+      if (defaultProps[key]) {
+        props[key] = defaultProps[key] as any
+      }
+    }
 
-    // Set the default `cancel` prop first, because it prevents other default
-    // props in this update from being cached.
-    if (props.default && !is.und(props.cancel)) {
-      defaultProps.cancel = props.cancel
-    }
-    // The default `cancel` prop overrides all updates.
-    else if (defaultProps.cancel) {
-      props.cancel = true
-    }
-    // The default `pause` prop overrides all updates.
-    if (defaultProps.pause) {
-      props.pause = true
-    }
+    // These props are coerced into booleans by the `scheduleProps` function,
+    // so they need their default values processed before then.
+    mergeDefaultProp('cancel')
+    mergeDefaultProp('pause')
 
     // Ensure the initial value can be accessed by animated components.
     const range = this._prepareNode(props)
@@ -596,7 +599,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       onDelayEnd(props, this)
     }
 
-    mergeDefaultProps(defaultProps, props)
+    mergeDefaultProps(defaultProps, props, ['pause', 'cancel'])
 
     const { to: prevTo, from: prevFrom } = anim
     let { to = prevTo, from = prevFrom } = range

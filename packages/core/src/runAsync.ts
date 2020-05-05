@@ -72,10 +72,7 @@ export async function runAsync<T>(
     let result!: AnimationResult
 
     const defaultProps: SpringDefaultProps<T> = {}
-    mergeDefaultProps(defaultProps, props)
-
-    // The `onRest` prop is for `runAsync` to call.
-    defaultProps.onRest = undefined
+    mergeDefaultProps(defaultProps, props, ['onRest'])
 
     const { callId, onRest } = props
     const throwInvalidated = () => {
