@@ -1,7 +1,7 @@
 import { is, each, Pick, Timeout } from 'shared'
 import * as G from 'shared/globals'
 
-import { matchProp, DEFAULT_PROPS, callProp, concatFn } from './helpers'
+import { matchProp, callProp, mergeDefaultProps, concatFn } from './helpers'
 import {
   AnimationResolver,
   ControllerUpdate,
@@ -82,12 +82,10 @@ export async function runAsync<T>(
     let result!: AnimationResult
 
     const defaultProps: SpringDefaultProps<T> = {}
-    each(DEFAULT_PROPS, prop => {
-      if (prop == 'onRest') return
-      if (props[prop]) {
-        defaultProps[prop] = props[prop] as any
-      }
-    })
+    mergeDefaultProps(defaultProps, props)
+
+    // The `onRest` prop is for `runAsync` to call.
+    defaultProps.onRest = undefined
 
     const { callId, onRest } = props
     const throwInvalidated = () => {

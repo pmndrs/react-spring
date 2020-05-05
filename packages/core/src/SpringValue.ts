@@ -34,9 +34,9 @@ import {
 import {
   callProp,
   computeGoal,
-  DEFAULT_PROPS,
   matchProp,
   inferTo,
+  mergeDefaultProps,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
 import {
@@ -591,6 +591,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
       onDelayEnd(props, this)
     }
 
+    mergeDefaultProps(defaultProps, props)
+
     const { to: prevTo, from: prevFrom } = anim
     let { to = prevTo, from = prevFrom } = range
 
@@ -624,14 +626,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       from = fromConfig.get()
     }
 
-    if (props.default) {
-      each(DEFAULT_PROPS, prop => {
-        if (prop in props) {
-          defaultProps[prop] = props[prop] as any
-        }
-      })
-    }
-
     /** The "to" prop is async. */
     const hasAsyncTo = is.arr(props.to) || is.fun(props.to)
 
@@ -644,8 +638,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
       mergeConfig(
         config,
         callProp(props.config, key!),
-        // Avoid calling the "config" prop twice when "default" is true.
-        props.default ? undefined : callProp(defaultProps.config, key!)
+        // Avoid calling the same "config" prop twice.
+        props.config !== defaultProps.config
+          ? callProp(defaultProps.config, key!)
+          : void 0
       )
     }
 
