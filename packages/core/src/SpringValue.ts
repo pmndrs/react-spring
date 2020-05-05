@@ -657,7 +657,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // This instance might not have its Animated node yet. For example,
     // the constructor can be given props without a "to" or "from" value.
     let node = getAnimated(this)
-    if (!node) {
+    if (!node || is.und(to)) {
       return resolve(getFinishedResult(this, true))
     }
 
