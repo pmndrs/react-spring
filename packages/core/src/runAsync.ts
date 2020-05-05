@@ -199,7 +199,7 @@ export function scheduleProps<T>(
     if (cancel) {
       onStart()
     } else {
-      delay = Math.max(0, callProp(props.delay || 0, key))
+      delay = callProp(props.delay || 0, key)
       pause = matchProp(props.pause, key)
       if (pause) {
         state.resumeQueue.add(onResume)
