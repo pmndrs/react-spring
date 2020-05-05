@@ -136,6 +136,7 @@ export class Controller<State extends Lookup = Lookup>
   stop(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
       this.each(spring => spring.stop())
+      cancelAsync(this._state, this._lastAsyncId)
     } else {
       const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].stop())
