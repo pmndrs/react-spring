@@ -1,4 +1,4 @@
-import { is, each, OneOrMore, toArray, UnknownProps } from 'shared'
+import { is, each, OneOrMore, toArray, UnknownProps, noop } from 'shared'
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
@@ -299,9 +299,12 @@ export function flushUpdate(
       scheduleProps(++ctrl['_lastAsyncId'], {
         props,
         state,
-        action(props, resolve) {
-          props.onRest = onRest as any
-          resolve(runAsync(asyncTo, props, state, ctrl))
+        actions: {
+          pause: noop,
+          start(props, resolve) {
+            props.onRest = onRest as any
+            resolve(runAsync(asyncTo, props, state, ctrl))
+          },
         },
       })
     )
