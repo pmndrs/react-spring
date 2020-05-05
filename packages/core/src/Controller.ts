@@ -10,7 +10,7 @@ import {
   AnimationResult,
   AsyncResult,
 } from './AnimationResult'
-import { runAsync, scheduleProps, RunAsyncState } from './runAsync'
+import { runAsync, scheduleProps, RunAsyncState, cancelAsync } from './runAsync'
 import {
   ControllerFlushFn,
   ControllerUpdate,
@@ -326,7 +326,7 @@ export function flushUpdate(
   }
   // Cancel an active "asyncTo" if desired.
   else if (!props.keys && props.cancel === true) {
-    state.cancelId = ctrl['_lastAsyncId']
+    cancelAsync(state, ctrl['_lastAsyncId'])
   }
 
   return Promise.all(promises).then(results => {

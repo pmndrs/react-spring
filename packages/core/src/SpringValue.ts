@@ -29,6 +29,7 @@ import {
   scheduleProps,
   RunAsyncState,
   RunAsyncProps,
+  cancelAsync,
 } from './runAsync'
 import {
   callProp,
@@ -399,8 +400,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
    */
   stop(cancel?: boolean) {
     if (!this.is(DISPOSED)) {
-      this._state.cancelId = this._lastCallId
+      cancelAsync(this._state, this._lastCallId)
+
+      // Ensure the `to` value equals the current value.
       this._focus(this.get())
+
+      // Exit the frameloop and notify `onRest` listeners.
       G.batchedUpdates(() => this._stop(cancel))
     }
     return this

@@ -11,10 +11,7 @@ import {
   SpringStopFn,
   SpringToFn,
 } from './types'
-import {
-  AnimationResult,
-  AsyncResult,
-} from './AnimationResult'
+import { AnimationResult, AsyncResult } from './AnimationResult'
 
 export interface RunAsyncProps<T = any> extends SpringProps<T> {
   callId: number
@@ -153,6 +150,11 @@ export async function runAsync<T>(
 
     return result
   })())
+}
+
+export function cancelAsync(state: RunAsyncState<any>, callId: number) {
+  state.cancelId = callId
+  state.asyncTo = undefined
 }
 
 //
