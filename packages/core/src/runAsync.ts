@@ -53,13 +53,6 @@ export async function runAsync<T>(
   state: RunAsyncState<T>,
   target: AnimationTarget<T>
 ): AsyncResult<T> {
-  if (props.cancel) {
-    // Stop the active `asyncTo` only on "default cancel".
-    if (props.default) {
-      state.asyncTo = undefined
-    }
-    return getCancelledResult(target)
-  }
   if (props.pause) {
     await new Promise(resume => {
       state.resumeQueue.add(resume)
