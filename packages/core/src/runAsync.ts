@@ -182,8 +182,11 @@ interface ScheduledProps<T> {
 }
 
 /**
- * This function sets a timeout if the `delay` prop exists. The `cancel` and
- * `pause` props are both coerced into booleans too.
+ * This function sets a timeout if both the `delay` prop exists and
+ * the `cancel` prop is not `true`.
+ *
+ * The `actions.start` function must handle the `cancel` prop itself,
+ * but the `pause` prop is taken care of.
  */
 export function scheduleProps<T>(
   callId: number,
