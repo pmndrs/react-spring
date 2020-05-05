@@ -436,6 +436,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
   }
 
+  /**
+   * Parse the `to` and `from` range from the given `props` object.
+   *
+   * This also ensures the initial value is available to animated components
+   * during the render phase.
+   */
   protected _prepareNode({
     to,
     from,
