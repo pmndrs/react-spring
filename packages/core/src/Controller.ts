@@ -301,6 +301,7 @@ export function flushUpdate(
         state,
         actions: {
           pause: noop,
+          resume: noop,
           start(props, resolve) {
             props.onRest = onRest as any
             if (!props.cancel) {

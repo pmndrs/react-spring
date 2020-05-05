@@ -544,6 +544,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       state: this._state,
       actions: {
         pause: this.pause.bind(this),
+        resume: this.resume.bind(this),
         start: this._merge.bind(this, range),
       },
     }).then(result => {
@@ -800,13 +801,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Start an animation
     else if (started) {
-      // Unpause the async animation if one exists.
-      this.resume()
-
-      if (reset) {
-        // Must be idle for "onStart" to be called again.
-        this._phase = IDLE
-      }
+      // Must be idle for "onStart" to be called again.
+      if (reset) this._phase = IDLE
 
       this._reset()
       this._start()
