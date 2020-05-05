@@ -241,7 +241,7 @@ export interface AnimationProps<T = any> {
   /**
    * Override the default props with this update.
    */
-  default?: boolean
+  default?: boolean | SpringDefaultProps
 }
 
 /** Default props for a `SpringValue` object */
