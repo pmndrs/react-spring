@@ -1,0 +1,9 @@
+{
+  "name": "umd",
+  "version": "0.0.0",
+  "description": "Example using .umd.js bundle",
+  "private": true,
+  "scripts": {
+    "build": "babel main.jsx --out-file _main.js"
+  }
+}
