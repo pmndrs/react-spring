@@ -150,6 +150,8 @@ export function useTransition(
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
   each(transitions, (t, i) => {
+    const key = t.key
+
     let to: TransitionTo<any>
     let from: any
     let phase: TransitionPhase
@@ -163,7 +165,7 @@ export function useTransition(
         from = props.from
       }
     } else {
-      const isLeave = keys.indexOf(t.key) < 0
+      const isLeave = keys.indexOf(key) < 0
       if (t.phase != LEAVE) {
         if (isLeave) {
           to = props.leave
@@ -196,9 +198,13 @@ export function useTransition(
 
     const { onRest }: { onRest?: any } = payload
     payload.onRest = result => {
+      const t = usedTransitions.current!.find(t => t.key === key)
+      if (!t) return
+
       if (is.fun(onRest)) {
         onRest(result, t)
       }
+
       if (t.ctrl.idle) {
         const transitions = usedTransitions.current!
         const idle = transitions.every(t => t.ctrl.idle)
