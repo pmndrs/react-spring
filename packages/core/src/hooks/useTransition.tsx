@@ -194,10 +194,10 @@ export function useTransition(
       ...(to as any),
     }
 
-    const { onRest } = payload
+    const { onRest }: { onRest?: any } = payload
     payload.onRest = result => {
       if (is.fun(onRest)) {
-        onRest(result)
+        onRest(result, t)
       }
       if (t.ctrl.idle) {
         const transitions = usedTransitions.current!

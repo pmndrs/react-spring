@@ -25,6 +25,7 @@ import {
 import { SpringToFn } from './functions'
 import { SpringValues, SpringConfig } from './objects'
 import { TransitionPhase } from '../TransitionPhase'
+import { AnimationResult } from '../AnimationResult'
 import { SpringHandle } from '../SpringHandle'
 import { Controller } from '../Controller'
 
@@ -79,6 +80,10 @@ export type UseTransitionProps<Item = any> = Merge<
     config?:
       | SpringConfig
       | ((item: Item, index: number) => AnimationProps['config'])
+    onRest?: (
+      result: AnimationResult<UnknownProps>,
+      transition: TransitionState
+    ) => void
     /**
      * Used to access the imperative API.
      *
