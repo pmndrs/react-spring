@@ -6,17 +6,17 @@ const path = require('path')
 
 const lernaBin = './node_modules/.bin/lerna'
 
-const cli = sade('release', true)
+const cli = sade('release [version]', true)
   .version('1.0.0')
   .describe('Release a version')
   .option('--canary', 'Release the last commit without a tag')
   .option('--dry-run, -n', 'Disable side effects for testing')
   .option('--no-commit', 'Release the current version as-is')
   .option('--no-clean', 'Skip "yarn clean" for faster publishing')
-  .action(opts => {
+  .action((version, opts) => {
     opts.dry = !!opts['dry-run']
     process.chdir(path.dirname(__dirname))
-    return opts.canary ? publishCanary(opts) : publish(opts)
+    return opts.canary ? publishCanary(opts) : publish(opts, version)
   })
 
 Promise.resolve(cli.parse(process.argv)).catch(err => {
@@ -28,8 +28,8 @@ Promise.resolve(cli.parse(process.argv)).catch(err => {
   process.exit(1)
 })
 
-async function publish(opts) {
-  exec(`${lernaBin} version`)
+async function publish(opts, version) {
+  exec(`${lernaBin} version ${version}`)
   process.on('exit', () => {
     if (opts.dry) {
       deleteTag(exec('git describe --exact-match --abbrev=0', { silent: true }))
