@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/konva",
-  "version": "9.0.0-canary.808.17.55c5691",
+  "version": "9.0.0-rc.1",
   "main": "src/index.ts",
   "dependencies": {
     "animated": "link:../../packages/animated",
