@@ -196,9 +196,7 @@ export function useSprings(
       setSprings(ctrl, values)
 
       // Update the default props.
-      for (const key in values) {
-        applyContext(values[key], context)
-      }
+      ctrl.start({ default: context })
 
       // Apply updates created during render.
       const update = updates[i]

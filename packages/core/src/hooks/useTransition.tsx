@@ -27,7 +27,6 @@ import { Valid } from '../types/common'
 import { callProp, inferTo, getDefaultProps } from '../helpers'
 import { Controller, getSprings, setSprings } from '../Controller'
 import { useSpringContext } from '../SpringContext'
-import { applyContext } from '../SpringValue'
 import { SpringHandle } from '../SpringHandle'
 import {
   ENTER,
@@ -242,6 +241,16 @@ export function useTransition(
     changes.set(t, { phase, springs, payload })
   })
 
+  // The prop overrides from an ancestor.
+  const context = useSpringContext()
+
+  // Merge the context into each transition.
+  useLayoutEffect(() => {
+    each(transitions, t => {
+      t.ctrl.start({ default: context })
+    })
+  }, [context])
+
   const api = useMemo(() => {
     return SpringHandle.create(() => {
       return usedTransitions.current!.map(t => t.ctrl)
@@ -249,17 +258,6 @@ export function useTransition(
   }, [])
 
   useImperativeHandle(ref, () => api)
-
-  const context = useSpringContext()
-  useLayoutEffect(() => {
-    // Update the default props of each spring.
-    transitions.forEach(t => {
-      const { springs }: any = t.ctrl
-      for (const key in springs) {
-        applyContext(springs[key], context)
-      }
-    })
-  }, [context])
 
   useLayoutEffect(
     () => {
