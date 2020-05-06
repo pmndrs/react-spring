@@ -1,5 +1,5 @@
 import { createInterpolator } from './createInterpolator'
-import { InterpolatorConfig } from './types/interpolation'
+import { InterpolatorConfig } from './types'
 import { colorToRgba } from './colorToRgba'
 import * as G from './globals'
 

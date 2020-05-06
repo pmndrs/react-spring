@@ -2,6 +2,8 @@ import * as Globals from './globals'
 export { Globals }
 
 export * from './types'
+export * from './types.util'
+
 export * from './helpers'
 export * from './FrameLoop'
 export * from './createInterpolator'

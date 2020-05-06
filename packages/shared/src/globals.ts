@@ -1,6 +1,7 @@
 import { FluidValue } from 'fluids'
 
-import { InterpolatorConfig, InterpolatorArgs, OneOrMore } from './types'
+import { OneOrMore } from './types.util'
+import { InterpolatorConfig, InterpolatorArgs } from './types'
 import { FrameLoop, OpaqueAnimation } from './FrameLoop'
 import { noop } from './helpers'
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Lookup, Arrify } from './types'
+import { Lookup, Arrify } from './types.util'
 import * as G from './globals'
 
 export const noop = () => {}

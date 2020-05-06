@@ -17,5 +17,4 @@ export { inferTo } from './helpers'
 export * from './types'
 export { UnknownProps } from './types/common'
 
-export * from 'shared/types/animated'
-export * from 'shared/types/interpolation'
+export * from 'shared/types'

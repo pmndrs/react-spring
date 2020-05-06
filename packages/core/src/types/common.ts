@@ -1,6 +1,6 @@
 import { FluidValue, Remap, Any } from 'shared'
 
-export * from 'shared/types/common'
+export * from 'shared/types.util'
 
 /** Replace the type of each `T` property with `never` (unless compatible with `U`) */
 export type Valid<T, U> = NeverProps<T, InvalidKeys<T, U>>
