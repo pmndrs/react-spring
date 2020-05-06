@@ -15,6 +15,7 @@ export { FrameLoop, createInterpolator } from 'shared'
 export { inferTo } from './helpers'
 
 export * from './types'
+export type { AnimationResult } from './AnimationResult'
 export type { UnknownProps } from './types/common'
 
 export * from 'shared/types'
