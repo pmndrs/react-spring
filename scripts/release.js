@@ -46,7 +46,10 @@ async function publish(opts, version) {
   exec(`${lernaBin} version ${version}`)
   process.on('exit', () => {
     if (opts.dry) {
-      deleteTag(exec('git describe --exact-match --abbrev=0', { silent: true }))
+      const { stdout: tag } = exec('git describe --exact-match --abbrev=0', {
+        silent: true,
+      })
+      deleteTag(tag)
       undoCommit()
     }
   })
