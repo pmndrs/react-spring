@@ -62,25 +62,39 @@ export const getDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
     ? props.default[key]
     : undefined
 
-export const mergeDefaultProps = (
-  defaultProps: Lookup,
-  props: Lookup & { default?: boolean | Lookup },
+/**
+ * Extract the default props from an update.
+ *
+ * When the `default` prop is falsy, this function still behaves as if
+ * `default: true` was used. The `default` prop is always respected when
+ * truthy.
+ */
+export const getDefaultProps = <T extends Lookup>(
+  props: Lookup,
   omitKeys: (string | Falsy)[] = []
 ) => {
-  if (props.default === true) {
-    each(DEFAULT_PROPS, key => {
-      const value = props[key]
-      if (!is.und(value) && !omitKeys.includes(key)) {
-        defaultProps[key] = value as any
-      }
-    })
-  } else if (props.default) {
-    each(props.default, (value, key) => {
-      if (!is.und(value) && !omitKeys.includes(key)) {
-        defaultProps[key] = value as any
-      }
-    })
+  let keys: readonly string[] = DEFAULT_PROPS
+  if (props.default && props.default !== true) {
+    props = props.default
+    keys = Object.keys(props)
   }
+  return keys.reduce<Lookup>((defaults, key) => {
+    const value = props[key]
+    if (!is.und(value) && !omitKeys.includes(key)) {
+      defaults[key] = value
+    }
+    return defaults
+  }, {}) as T
+}
+
+/** Merge the default props of an update into a props cache. */
+export const mergeDefaultProps = (
+  defaultProps: Lookup,
+  props: Lookup,
+  omitKeys?: (string | Falsy)[]
+) => {
+  const overrides = getDefaultProps(props, omitKeys)
+  Object.assign(defaultProps, overrides)
 }
 
 /** These props can have default values */

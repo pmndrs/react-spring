@@ -24,7 +24,7 @@ import {
   TransitionDefaultProps,
 } from '../types'
 import { Valid } from '../types/common'
-import { callProp, inferTo, mergeDefaultProps } from '../helpers'
+import { callProp, inferTo, getDefaultProps } from '../helpers'
 import { Controller, getSprings, setSprings } from '../Controller'
 import { useSpringContext } from '../SpringContext'
 import { applyContext } from '../SpringValue'
@@ -144,8 +144,8 @@ export function useTransition(
   // Expired transitions use this to dismount.
   const forceUpdate = useForceUpdate()
 
-  const defaultProps = {} as TransitionDefaultProps
-  mergeDefaultProps(defaultProps, props)
+  // These props are inherited by every phase change.
+  const defaultProps = getDefaultProps<TransitionDefaultProps>(props)
 
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
