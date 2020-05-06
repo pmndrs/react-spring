@@ -663,11 +663,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     /** When true, start at the "from" value. */
     const reset =
-      // We want { from } to imply { reset: true }
-      // unless default values are being set.
-      (hasFromProp && !props.default) ||
-      // Can't reset if no "from" value exists.
-      (!is.und(from) && matchProp(props.reset, key))
+      // When `reset` is undefined, the `from` prop implies `reset: true`,
+      // except for declarative updates. When `reset` is defined, there
+      // must exist a value to animate from.
+      is.und(props.reset)
+        ? hasFromProp && !props.default
+        : !is.und(from) && matchProp(props.reset, key)
 
     // The current value, where the animation starts from.
     const value = reset ? (from as T) : this.get()
