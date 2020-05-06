@@ -164,7 +164,9 @@ export interface ControllerProps<State extends Lookup = Lookup>
    *
    * Also accepts an object for per-key events
    */
-  onStart?: (() => void) | { [P in keyof State]?: OnStart<State[P]> }
+  onStart?:
+    | ((ctrl: Controller) => void)
+    | { [P in keyof State]?: OnStart<State[P]> }
   /**
    * Called when the # of animating values hits 0
    *

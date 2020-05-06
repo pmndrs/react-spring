@@ -194,7 +194,7 @@ export class Controller<State extends Lookup = Lookup>
     const isActive = this._active.size > 0
     if (isActive && this._phase != ACTIVE) {
       this._phase = ACTIVE
-      flush(onStart, onStart => onStart())
+      flush(onStart, onStart => onStart(this))
     }
 
     const values = (onChange.size || (!isActive && onRest.size)) && this.get()
