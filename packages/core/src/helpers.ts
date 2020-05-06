@@ -9,6 +9,7 @@ import {
   OneOrMore,
   FluidValue,
   Lookup,
+  Falsy,
 } from 'shared'
 import * as G from 'shared/globals'
 import { ReservedProps, ForwardProps, InferTo } from './types'
@@ -64,7 +65,7 @@ export const getDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
 export const mergeDefaultProps = (
   defaultProps: Lookup,
   props: Lookup & { default?: boolean | Lookup },
-  omitKeys: string[] = []
+  omitKeys: (string | Falsy)[] = []
 ) => {
   if (props.default === true) {
     each(DEFAULT_PROPS, key => {

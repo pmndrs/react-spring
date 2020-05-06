@@ -1052,6 +1052,20 @@ export function createUpdate(props: any) {
   return props
 }
 
+/**
+ * A modified version of `createUpdate` meant for declarative APIs.
+ */
+export function declareUpdate(props: any) {
+  const update = createUpdate(props)
+  if (is.und(update.default)) {
+    mergeDefaultProps((update.default = {}), update, [
+      // Avoid forcing `immediate: true` onto imperative updates.
+      update.immediate === true && 'immediate',
+    ])
+  }
+  return update
+}
+
 /** Find keys with defined values */
 function findDefined(values: any, keys: Set<string>) {
   each(values, (value, key) => value != null && keys.add(key as any))
