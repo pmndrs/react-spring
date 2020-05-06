@@ -886,11 +886,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // Reset the state of each Animated node.
     getAnimated(this)!.reset(anim.to)
 
+    // Ensure the `onStart` prop will be called.
+    if (!this.is(ACTIVE)) {
+      anim.changed = false
+    }
+
+    // Use the current values as the from values.
     if (!anim.immediate) {
       anim.fromValues = anim.values.map(node => node.lastPosition)
-      if (!this.is(ACTIVE)) {
-        anim.changed = false
-      }
     }
 
     super._reset()
@@ -934,8 +937,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
         // Preserve the "onRest" prop when the goal is dynamic.
         anim.onRest = [anim.toValues ? noop : onRestQueue[0]]
 
-        // Never call the "onRest" prop for immediate or no-op animations.
-        if (anim.immediate || !anim.changed) {
+        // Never call the "onRest" prop for no-op animations.
+        if (!anim.changed) {
           onRestQueue[0] = noop
         }
 
