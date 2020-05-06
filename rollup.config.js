@@ -157,7 +157,7 @@ export const getBabelOptions = ({ useESModules }, targets) => ({
   extensions: babelExtensions,
   runtimeHelpers: true,
   presets: [
-    ['@babel/preset-env', { loose: true, modules: false, targets }],
+    ['@babel/preset-env', { loose: true, targets }],
     '@babel/preset-typescript',
     '@babel/preset-react',
   ],
