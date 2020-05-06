@@ -79,7 +79,7 @@ export function useTransition(
 
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<TransitionState[] | null>(null)
-  const prevTransitions = usedTransitions.current
+  const prevTransitions = reset ? null : usedTransitions.current
   useLayoutEffect(() => {
     usedTransitions.current = transitions
   })
@@ -96,7 +96,7 @@ export function useTransition(
 
   // Map old indices to new indices.
   const reused: number[] = []
-  if (prevTransitions && !reset)
+  if (prevTransitions)
     each(prevTransitions, (t, i) => {
       // Expired transitions are not rendered.
       if (t.expired) {
@@ -161,7 +161,7 @@ export function useTransition(
       // The "initial" prop is only used on first render. It always overrides
       // the "from" prop when defined, and it makes "enter" instant when null.
       from = props.initial
-      if (is.und(from) || (prevTransitions && !reset)) {
+      if (is.und(from) || prevTransitions) {
         from = props.from
       }
     } else {
