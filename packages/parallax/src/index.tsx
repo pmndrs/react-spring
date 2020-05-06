@@ -1,10 +1,5 @@
-import React, {
-  useContext,
-  useState,
-  useRef,
-  useEffect,
-  CSSProperties,
-} from 'react'
+import * as React from 'react'
+import { useContext, useState, useRef, useEffect, CSSProperties } from 'react'
 import {
   a,
   Controller,

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { assert, test, _ } from 'spec.ts';
 import { SpringValues, Transition, TransitionState } from 'core';
 import { animated } from '../..';

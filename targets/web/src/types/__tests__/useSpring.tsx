@@ -1,5 +1,6 @@
+import * as React from 'react';
+import { useRef } from 'react';
 import { assert, test, _ } from 'spec.ts';
-import React, { useRef } from 'react';
 import { RunAsyncProps } from '@react-spring/core/src/runAsync';
 import {
   animated,
@@ -206,7 +207,7 @@ test('function as "to" prop', () => {
 
   const props = useSpring({
     from: { width: 0 },
-    to: async next => {
+    to: async (next) => {
       assert(next, _ as SpringUpdateFn<State>);
       await next({
         width: 100,

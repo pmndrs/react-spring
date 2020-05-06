@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",

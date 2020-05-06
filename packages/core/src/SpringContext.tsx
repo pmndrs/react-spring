@@ -1,4 +1,5 @@
-import React, { useContext, PropsWithChildren } from 'react'
+import * as React from 'react'
+import { useContext, PropsWithChildren } from 'react'
 import { useMemo } from './helpers'
 
 /**

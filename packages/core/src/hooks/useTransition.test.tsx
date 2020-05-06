@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { RenderResult, render } from '@testing-library/react'
 import { useTransition } from './useTransition'
 import { TransitionFn, UseTransitionProps } from '../types'

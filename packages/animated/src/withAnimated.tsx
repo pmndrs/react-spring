@@ -1,4 +1,5 @@
-import React, { forwardRef, useRef, Ref } from 'react'
+import * as React from 'react'
+import { forwardRef, useRef, Ref } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import { is, each, useForceUpdate, ElementType, FluidConfig } from 'shared'
 

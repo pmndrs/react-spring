@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { assert, test, _ } from 'spec.ts';
 import { SpringValues, SpringUpdateFn } from 'core';
 import { Lookup } from 'shared';
@@ -56,11 +56,11 @@ test('basic usage', () => {
 
 test('with function props', () => {
   const transition = useTransition(items, {
-    from: item => {
+    from: (item) => {
       assert(item, _ as 1 | 2);
       return { width: 0, height: 0 };
     },
-    enter: item => {
+    enter: (item) => {
       assert(item, _ as 1 | 2);
       return { width: item * 100, height: '100%' };
     },
@@ -81,7 +81,7 @@ test('with function props', () => {
 
   test('return an async function', () => {
     useTransition(items, {
-      update: item => async next => {
+      update: (item) => async (next) => {
         assert(item, _ as 1 | 2);
         assert(next, _ as SpringUpdateFn<Lookup>);
       },

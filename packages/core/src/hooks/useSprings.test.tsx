@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { useSprings } from './useSprings'
 import { is, each, Lookup } from 'shared'

@@ -1,4 +1,5 @@
-import React, { useRef, useMemo, useImperativeHandle } from 'react'
+import * as React from 'react'
+import { useRef, useMemo, useImperativeHandle } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import {
   is,

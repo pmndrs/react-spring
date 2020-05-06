@@ -3,9 +3,7 @@
   "exclude": ["**/*.test.ts"],
   "compilerOptions": {
     "importHelpers": true,
-    "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSources": true,
     "jsx": "react",

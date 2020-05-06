@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 
 import { Valid } from '../types/common'
 import { TransitionComponentProps } from '../types'

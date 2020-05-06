@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { assert, test, _ } from 'spec.ts';
 import { animated, Spring } from '../..';
 import { AnimationResult, SpringValues, SpringUpdateFn } from 'core';
@@ -9,7 +9,7 @@ test('basic usage', () => {
   <Spring
     from={{ opacity: 0 }}
     to={{ opacity: 1, color: 'blue' }}
-    onRest={result => {
+    onRest={(result) => {
       assert(
         result,
         _ as Readonly<
@@ -20,7 +20,7 @@ test('basic usage', () => {
         >
       );
     }}>
-    {values => {
+    {(values) => {
       assert(
         values,
         _ as SpringValues<{
@@ -36,7 +36,7 @@ test('basic usage', () => {
 test('with async function as "to" prop', () => {
   <Spring
     from={{ opacity: 0 }}
-    to={async next => {
+    to={async (next) => {
       assert(
         next,
         _ as SpringUpdateFn<{
@@ -44,7 +44,7 @@ test('with async function as "to" prop', () => {
         }>
       );
     }}>
-    {values => {
+    {(values) => {
       assert(
         values,
         _ as SpringValues<{
@@ -63,7 +63,7 @@ test('with array as "to" prop', () => {
       { opacity: 1 },
       {
         // Scripted animation inside an animation chain
-        to: async next => {
+        to: async (next) => {
           assert(
             next,
             _ as SpringUpdateFn<{
@@ -73,7 +73,7 @@ test('with array as "to" prop', () => {
         },
       },
     ]}>
-    {values => {
+    {(values) => {
       assert(
         values,
         _ as SpringValues<{
