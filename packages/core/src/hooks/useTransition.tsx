@@ -265,6 +265,9 @@ export function useTransition(
         setSprings(t.ctrl, springs)
         if (!context.cancel) {
           t.phase = phase
+          if (phase == ENTER) {
+            t.ctrl.start({ default: context })
+          }
           t.ctrl[ref ? 'update' : 'start'](payload)
         }
       })
