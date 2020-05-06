@@ -151,11 +151,12 @@ export function useTransition(
   const changes = new Map<TransitionState, Change>()
   each(transitions, (t, i) => {
     const key = t.key
+    const prevPhase = t.phase
 
     let to: TransitionTo<any>
     let from: any
     let phase: TransitionPhase
-    if (t.phase == MOUNT) {
+    if (prevPhase == MOUNT) {
       to = props.enter
       phase = ENTER
       // The "initial" prop is only used on first render. It always overrides
@@ -166,7 +167,7 @@ export function useTransition(
       }
     } else {
       const isLeave = keys.indexOf(key) < 0
-      if (t.phase != LEAVE) {
+      if (prevPhase != LEAVE) {
         if (isLeave) {
           to = props.leave
           phase = LEAVE
@@ -203,6 +204,13 @@ export function useTransition(
 
       if (is.fun(onRest)) {
         onRest(result, t)
+      }
+
+      // Reset the phase of a cancelled enter/leave transition, so it can
+      // retry the animation on the next render.
+      if (result.cancelled && t.phase != UPDATE) {
+        t.phase = prevPhase
+        return
       }
 
       if (t.ctrl.idle) {
@@ -256,10 +264,11 @@ export function useTransition(
   useLayoutEffect(
     () => {
       each(changes, ({ phase, springs, payload }, t) => {
-        t.phase = phase
         setSprings(t.ctrl, springs)
-        if (ref) t.ctrl.update(payload)
-        else t.ctrl.start(payload)
+        if (!context.cancel) {
+          t.phase = phase
+          t.ctrl[ref ? 'update' : 'start'](payload)
+        }
       })
     },
     reset ? void 0 : deps
