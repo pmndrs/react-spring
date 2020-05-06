@@ -191,7 +191,7 @@ async function prepare() {
 
     // Replace "link:" versions with (A) exact versions for canary and beta releases,
     // or with (B) caret ranges for actual releases.
-    const exactRE = /-(canary|beta)\./
+    const exactRE = /-(rc|canary|beta)\./
     const deps = pkg.dependencies
     if (deps) {
       const names = Object.keys(packages)
