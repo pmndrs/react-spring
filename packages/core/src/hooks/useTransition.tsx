@@ -153,17 +153,10 @@ export function useTransition(
     const prevPhase = t.phase
 
     let to: TransitionTo<any>
-    let from: any
     let phase: TransitionPhase
     if (prevPhase == MOUNT) {
       to = props.enter
       phase = ENTER
-      // The "initial" prop is only used on first render. It always overrides
-      // the "from" prop when defined, and it makes "enter" instant when null.
-      from = props.initial
-      if (is.und(from) || prevTransitions) {
-        from = props.from
-      }
     } else {
       const isLeave = keys.indexOf(key) < 0
       if (prevPhase != LEAVE) {
@@ -191,9 +184,21 @@ export function useTransition(
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
-      from: callProp(from, t.item, i),
       delay: delay += trail,
+      // This prevents implied resets.
+      reset: false,
+      // Merge any phase-specific props.
       ...(to as any),
+    }
+
+    if (phase == ENTER && is.und(payload.from)) {
+      // The `initial` prop is used on the first render of our parent component,
+      // as well as when `reset: true` is passed. It overrides the `from` prop
+      // when defined, and it makes `enter` instant when null.
+      const from =
+        is.und(props.initial) || prevTransitions ? props.from : props.initial
+
+      payload.from = callProp(from, t.item, i)
     }
 
     const { onRest }: { onRest?: any } = payload
