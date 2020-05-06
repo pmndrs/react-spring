@@ -977,7 +977,8 @@ const checkFinishedOnRest = <T>(
           onRest(getCancelledResult(spring))
         } else {
           const goal = computeGoal(to)
-          const finished = isEqual(spring.get(), goal)
+          const value = computeGoal(spring.get())
+          const finished = isEqual(value, goal)
           onRest(getFinishedResult(spring, finished))
         }
       }
