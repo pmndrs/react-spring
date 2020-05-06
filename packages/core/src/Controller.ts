@@ -2,7 +2,7 @@ import { is, each, OneOrMore, toArray, UnknownProps, noop } from 'shared'
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
-import { inferTo, flush, hasDefaultProp } from './helpers'
+import { flush, hasDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
@@ -80,9 +80,7 @@ export class Controller<State extends Lookup = Lookup>
       this._flush = flush
     }
     if (props) {
-      const { to, ...initialProps } = inferTo(props)
-      this._initialProps = initialProps
-      if (to) this.start({ to } as any)
+      this.start(props)
     }
   }
 
@@ -349,7 +347,6 @@ export function getSprings<State extends Lookup>(
 ) {
   const springs = { ...ctrl.springs }
   if (props) {
-    const initialProps = ctrl['_initialProps']
     each(toArray(props), (props: any) => {
       if (is.und(props.keys)) {
         props = createUpdate(props)
@@ -359,7 +356,7 @@ export function getSprings<State extends Lookup>(
         props = { ...props, to: undefined }
       }
       prepareSprings(springs as any, props, key => {
-        return createSpring(key, initialProps)
+        return createSpring(key)
       })
     })
   }
@@ -382,19 +379,9 @@ export function setSprings(
   })
 }
 
-function createSpring(
-  key: string,
-  initialProps?: UnknownProps,
-  observer?: FrameValue.Observer
-) {
+function createSpring(key: string, observer?: FrameValue.Observer) {
   const spring = new SpringValue()
   spring.key = key
-  if (initialProps) {
-    spring.start({
-      ...initialProps,
-      default: true,
-    })
-  }
   if (observer) {
     spring.addChild(observer)
   }
@@ -429,7 +416,7 @@ function prepareSprings(
 function prepareKeys(ctrl: Controller<any>, queue: ControllerQueue[number][]) {
   each(queue, props => {
     prepareSprings(ctrl.springs, props, key => {
-      return createSpring(key, ctrl['_initialProps'], ctrl)
+      return createSpring(key, ctrl)
     })
   })
 }
