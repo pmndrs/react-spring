@@ -15,6 +15,9 @@ const cli = sade('release [version]', true)
   .option('--no-clean', 'Skip "yarn clean" for faster publishing')
   .action((version, opts) => {
     opts.dry = !!opts['dry-run']
+    if (opts.dry) {
+      console.warn('⚠️  NOTE: Dry run mode active.')
+    }
     process.chdir(path.dirname(__dirname))
     return opts.canary ? publishCanary(opts) : publish(opts, version)
   })
