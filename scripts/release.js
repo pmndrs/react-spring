@@ -28,6 +28,17 @@ Promise.resolve(cli.parse(process.argv)).catch(err => {
   process.exit(1)
 })
 
+function confirmPublish() {
+  exec(`
+    ${lernaBin} exec --concurrency 1 --stream
+      -- cd dist
+      && npm pack --dry-run
+      && cat package.json
+  `)
+  console.log('\n')
+  return ask('Ready to publish?', true)
+}
+
 async function publish(opts, version) {
   exec(`${lernaBin} version ${version}`)
   process.on('exit', () => {
@@ -36,8 +47,12 @@ async function publish(opts, version) {
       undoCommit()
     }
   })
+
   updateLockfile(opts)
-  execDry(`${lernaBin} publish`, opts)
+
+  if (await confirmPublish()) {
+    execDry(`${lernaBin} publish`, opts)
+  }
 }
 
 async function publishCanary(opts) {
@@ -83,20 +98,10 @@ async function publishCanary(opts) {
 
   updateLockfile(opts)
 
-  if (!opts.dry) {
-    exec(`
-      ${lernaBin} exec --concurrency 1 --stream
-        -- cd dist
-        && npm pack --dry-run
-        && cat package.json
-    `)
-    console.log('\n')
-    const ready = await ask('Ready to publish?', true)
-    if (!ready) return
+  if (await confirmPublish()) {
+    finished = true
+    publishUntagged()
   }
-
-  publishUntagged()
-  finished = true
 }
 
 function deleteTag(tag) {
