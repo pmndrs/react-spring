@@ -57,7 +57,7 @@ async function publish(opts, version) {
   updateLockfile(opts)
 
   if (await confirmPublish()) {
-    execDry(`${lernaBin} publish`, opts)
+    execDry(`${lernaBin} publish from-package`, opts)
   }
 }
 
