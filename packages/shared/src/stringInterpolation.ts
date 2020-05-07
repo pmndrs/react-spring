@@ -1,3 +1,4 @@
+import { getFluidValue } from 'fluids'
 import { createInterpolator } from './createInterpolator'
 import { InterpolatorConfig } from './types'
 import { colorToRgba } from './colorToRgba'
@@ -40,7 +41,9 @@ export const createStringInterpolator = (
 
   // Convert colors to rgba(...)
   const output = config.output.map(value =>
-    value.replace(colorRegex, colorToRgba).replace(colorNamesRegex, colorToRgba)
+    getFluidValue(value)
+      .replace(colorRegex, colorToRgba)
+      .replace(colorNamesRegex, colorToRgba)
   )
 
   // Convert ["1px 2px", "0px 0px"] into [[1, 2], [0, 0]]
