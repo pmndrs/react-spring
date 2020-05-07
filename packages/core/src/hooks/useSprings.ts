@@ -138,7 +138,7 @@ export function useSprings(
 
   // Update existing controllers when "deps" are changed.
   useMemoOne(() => {
-    getUpdates(0, prevLength)
+    getUpdates(0, Math.min(prevLength, length))
   }, deps)
 
   function getUpdates(startIndex: number, endIndex: number) {
