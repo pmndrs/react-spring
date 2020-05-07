@@ -57,7 +57,8 @@ async function publish(opts, version) {
   updateLockfile(opts)
 
   if (await confirmPublish()) {
-    execDry(`${lernaBin} publish from-package`, opts)
+    const distTag = /-rc\.\d+$/.test(version) ? '--dist-tag next' : ''
+    execDry(`${lernaBin} publish from-package ${distTag}`, opts)
   }
 }
 
