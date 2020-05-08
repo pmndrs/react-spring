@@ -191,17 +191,3 @@ export function computeGoal<T>(value: T | FluidValue<T>): T {
       })(1) as any)
     : value
 }
-
-/** Basic helper for clearing a queue after processing it */
-export function flush<P, T>(
-  queue: Map<P, T>,
-  iterator: (entry: [P, T]) => void
-): void
-export function flush<T>(queue: Set<T>, iterator: (value: T) => void): void
-export function flush(queue: any, iterator: any) {
-  if (queue.size) {
-    const items = Array.from(queue)
-    queue.clear()
-    each(items, iterator)
-  }
-}

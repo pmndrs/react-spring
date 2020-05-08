@@ -1,8 +1,8 @@
-import { is, each, OneOrMore, toArray, UnknownProps, noop } from 'shared'
+import { is, each, flush, OneOrMore, toArray, UnknownProps, noop } from 'shared'
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
-import { flush, hasDefaultProp } from './helpers'
+import { hasDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'

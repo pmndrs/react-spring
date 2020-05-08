@@ -2,6 +2,7 @@ import {
   is,
   each,
   noop,
+  flush,
   isEqual,
   toArray,
   FluidValue,
@@ -36,7 +37,6 @@ import {
   computeGoal,
   matchProp,
   inferTo,
-  flush,
   mergeDefaultProps,
   getDefaultProp,
 } from './helpers'
