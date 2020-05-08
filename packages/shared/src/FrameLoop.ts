@@ -1,5 +1,6 @@
 import { FrameRequestCallback } from './types'
 import * as G from './globals'
+import { noop } from './helpers'
 
 declare const console: any
 declare const process:
@@ -227,7 +228,7 @@ export class FrameLoop {
         idle = true
         startQueue.clear()
         timeoutQueue.length = 0
-        raf = () => {}
+        raf = noop
       }
       Object.defineProperties(this, {
         _idle: { get: () => idle },
