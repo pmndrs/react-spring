@@ -11,4 +11,4 @@ Globals.assign({
 export { Globals }
 
 /** Advance all animations forward one frame */
-export const update = () => Globals.frameLoop.update()
+export const update = () => Globals.frameLoop.advance()

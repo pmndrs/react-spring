@@ -6,6 +6,10 @@ declare const process:
   | { env: { [key: string]: string | undefined } }
   | undefined
 
+// The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
+const requestAnimationFrame: RequestFrameFn = fn =>
+  (void 0, G.requestAnimationFrame)(fn)
+
 export type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
 export interface OpaqueAnimation {
@@ -37,7 +41,7 @@ export class FrameLoop {
    *
    * Can be passed to `requestAnimationFrame` without wrapping or binding.
    */
-  update: () => void
+  advance: () => void
 
   /**
    * Invoke the given `handler` on the soonest frame after the given
@@ -62,10 +66,7 @@ export class FrameLoop {
   protected _idle!: boolean
   protected _dispose!: () => void
 
-  constructor(
-    // The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
-    requestFrame: RequestFrameFn = fn => (void 0, G.requestAnimationFrame)(fn)
-  ) {
+  constructor(raf = requestAnimationFrame) {
     let idle = true
     let writing = false
 
@@ -111,7 +112,7 @@ export class FrameLoop {
         // To minimize frame skips, the frameloop never stops.
         if (lastTime == 0) {
           lastTime = G.now()
-          requestFrame(catchErrors(update))
+          raf(catchErrors(advance))
         }
       }
     }
@@ -136,7 +137,7 @@ export class FrameLoop {
     }
 
     // Process the current frame.
-    const update = (this.update = () => {
+    const advance = (this.advance = () => {
       const time = G.now()
 
       // Start animations that were added during last frame.
@@ -195,7 +196,7 @@ export class FrameLoop {
       }
 
       lastTime = time
-      requestFrame(catchErrors(update))
+      raf(catchErrors(advance))
     })
 
     this.start = animation => {
@@ -226,7 +227,7 @@ export class FrameLoop {
         idle = true
         startQueue.clear()
         timeoutQueue.length = 0
-        requestFrame = () => {}
+        raf = () => {}
       }
       Object.defineProperties(this, {
         _idle: { get: () => idle },
