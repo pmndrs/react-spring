@@ -1,6 +1,5 @@
 import { FrameRequestCallback } from './types'
 import * as G from './globals'
-import { noop } from './helpers'
 
 declare const console: any
 declare const process:
@@ -38,7 +37,7 @@ export class FrameLoop {
   start: (animation: OpaqueAnimation) => void
 
   /**
-   * Advance every active animation forward by one frame.
+   * Advance the animations to the current time.
    */
   advance: () => void
 
@@ -166,6 +165,7 @@ export class FrameLoop {
       if (!idle && time > lastTime) {
         // http://gafferongames.com/game-physics/fix-your-timestep/
         const dt = Math.min(64, time - lastTime)
+        lastTime = time
 
         G.batchedUpdates(() => {
           // Animations can be added while the frameloop is updating,
@@ -198,13 +198,7 @@ export class FrameLoop {
             writing = false
           }
         })
-
-        if (!animations.length) {
-          idle = true
-        }
       }
-
-      lastTime = time
     })
 
     this.start = animation => {
@@ -235,7 +229,6 @@ export class FrameLoop {
         idle = true
         startQueue.clear()
         timeoutQueue.length = 0
-        raf = noop
       }
       Object.defineProperties(this, {
         _idle: { get: () => idle },
