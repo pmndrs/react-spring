@@ -104,6 +104,7 @@ export class FrameLoop {
     }
 
     const loop = () => {
+      if (idle) return
       try {
         advance()
         raf(loop)
