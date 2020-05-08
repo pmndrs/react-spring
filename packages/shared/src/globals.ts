@@ -36,7 +36,7 @@ declare const window: {
   requestAnimationFrame: (cb: (time: number) => void) => number
 }
 
-export let requestAnimationFrame: (cb: (time: number) => void) => number =
+export let requestAnimationFrame: (cb: (time: number) => void) => void =
   typeof window !== 'undefined' ? window.requestAnimationFrame : () => -1
 
 export let batchedUpdates = (callback: () => void) => callback()
