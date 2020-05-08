@@ -73,7 +73,7 @@ export const each = <T extends object, This>(
 export const toArray = <T>(a: T): Arrify<Exclude<T, void>> =>
   is.und(a) ? [] : is.arr(a) ? (a as any) : [a]
 
-/** Basic helper for clearing a queue after processing it */
+/** Copy the `queue`, then iterate it after the `queue` is cleared */
 export function flush<P, T>(
   queue: Map<P, T>,
   iterator: (entry: [P, T]) => void
