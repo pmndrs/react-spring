@@ -38,9 +38,7 @@ export class FrameLoop {
   start: (animation: OpaqueAnimation) => void
 
   /**
-   * Update every active animation.
-   *
-   * Can be passed to `requestAnimationFrame` without wrapping or binding.
+   * Advance every active animation forward by one frame.
    */
   advance: () => void
 
@@ -105,6 +103,15 @@ export class FrameLoop {
       }
     }
 
+    const loop = () => {
+      try {
+        advance()
+        raf(loop)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
     // Start the frameloop
     const kickoff = () => {
       if (idle) {
@@ -113,7 +120,7 @@ export class FrameLoop {
         // To minimize frame skips, the frameloop never stops.
         if (lastTime == 0) {
           lastTime = G.now()
-          raf(catchErrors(advance))
+          raf(loop)
         }
       }
     }
@@ -197,7 +204,6 @@ export class FrameLoop {
       }
 
       lastTime = time
-      raf(catchErrors(advance))
     })
 
     this.start = animation => {
@@ -242,14 +248,4 @@ export class FrameLoop {
 function findIndex<T>(arr: T[], test: (value: T) => boolean) {
   const index = arr.findIndex(test)
   return index < 0 ? arr.length : index
-}
-
-function catchErrors(effect: () => void) {
-  return () => {
-    try {
-      effect()
-    } catch (e) {
-      console.error(e)
-    }
-  }
 }
