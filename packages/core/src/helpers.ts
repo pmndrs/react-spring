@@ -71,31 +71,29 @@ export const getDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
  */
 export const getDefaultProps = <T extends Lookup>(
   props: Lookup,
-  omitKeys: (string | Falsy)[] = []
+  omitKeys: (string | Falsy)[] = [],
+  defaults: Lookup = {} as any
 ) => {
   let keys: readonly string[] = DEFAULT_PROPS
   if (props.default && props.default !== true) {
     props = props.default
     keys = Object.keys(props)
   }
-  return keys.reduce<Lookup>((defaults, key) => {
+  for (const key of keys) {
     const value = props[key]
     if (!is.und(value) && !omitKeys.includes(key)) {
       defaults[key] = value
     }
-    return defaults
-  }, {}) as T
+  }
+  return defaults as T
 }
 
 /** Merge the default props of an update into a props cache. */
 export const mergeDefaultProps = (
-  defaultProps: Lookup,
+  defaults: Lookup,
   props: Lookup,
   omitKeys?: (string | Falsy)[]
-) => {
-  const overrides = getDefaultProps(props, omitKeys)
-  return Object.assign(defaultProps, overrides)
-}
+) => getDefaultProps(props, omitKeys, defaults)
 
 /** These props can have default values */
 export const DEFAULT_PROPS = [
