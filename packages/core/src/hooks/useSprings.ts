@@ -133,15 +133,16 @@ export function useSprings(
   // the affected controllers when "length" decreases.
   useMemoOne(() => {
     ctrls.length = length
-    getUpdates(prevLength, length)
+    declareUpdates(prevLength, length)
   }, [length])
 
   // Update existing controllers when "deps" are changed.
   useMemoOne(() => {
-    getUpdates(0, Math.min(prevLength, length))
+    declareUpdates(0, Math.min(prevLength, length))
   }, deps)
 
-  function getUpdates(startIndex: number, endIndex: number) {
+  /** Fill the `updates` array with declarative updates for the given index range. */
+  function declareUpdates(startIndex: number, endIndex: number) {
     for (let i = startIndex; i < endIndex; i++) {
       const ctrl = ctrls[i] || (ctrls[i] = new Controller(null, state.flush))
 
