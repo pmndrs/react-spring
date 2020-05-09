@@ -5,6 +5,7 @@ import { is, Globals } from 'shared'
 import colorNames from 'shared/colors'
 import { primitives } from './primitives'
 import { WithAnimated } from './animated'
+import { AnimatedStyle } from './AnimatedStyle'
 
 Globals.assign({
   colorNames,
@@ -24,7 +25,7 @@ const host = createHost(primitives, {
     if (is.obj(styles.shadowOffset)) {
       styles.shadowOffset = new AnimatedObject(styles.shadowOffset)
     }
-    return new AnimatedObject(styles)
+    return new AnimatedStyle(styles)
   },
 })
 
