@@ -94,7 +94,7 @@ export const mergeDefaultProps = (
   omitKeys?: (string | Falsy)[]
 ) => {
   const overrides = getDefaultProps(props, omitKeys)
-  Object.assign(defaultProps, overrides)
+  return Object.assign(defaultProps, overrides)
 }
 
 /** These props can have default values */

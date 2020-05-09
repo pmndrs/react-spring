@@ -1061,7 +1061,7 @@ export function createUpdate(props: any) {
 export function declareUpdate(props: any) {
   const update = createUpdate(props)
   if (is.und(update.default)) {
-    mergeDefaultProps((update.default = {}), update, [
+    update.default = mergeDefaultProps({}, update, [
       // Avoid forcing `immediate: true` onto imperative updates.
       update.immediate === true && 'immediate',
     ])
