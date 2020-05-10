@@ -319,10 +319,10 @@ export type PickAnimated<Props extends object, Fwd = true> = unknown &
  */
 type ToValues<Props extends object, AndForward = true> = unknown &
   (AndForward extends true ? ForwardProps<Props> : unknown) &
-  (Props extends { to?: infer To }
-    ? To extends Function | ReadonlyArray<any>
-      ? unknown
-      : ForwardProps<ObjectType<To>>
+  (Props extends { to?: any }
+    ? Exclude<Props['to'], Function | ReadonlyArray<any>> extends infer To
+      ? ForwardProps<[To] extends [object] ? To : Partial<Extract<To, object>>>
+      : never
     : unknown)
 
 /**
