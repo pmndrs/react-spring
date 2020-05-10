@@ -25,13 +25,8 @@ import * as G from 'shared/globals'
 
 import { Animation } from './Animation'
 import { mergeConfig } from './AnimationConfig'
-import {
-  runAsync,
-  scheduleProps,
-  RunAsyncState,
-  RunAsyncProps,
-  cancelAsync,
-} from './runAsync'
+import { scheduleProps } from './scheduleProps'
+import { runAsync, RunAsyncState, RunAsyncProps, cancelAsync } from './runAsync'
 import {
   callProp,
   computeGoal,

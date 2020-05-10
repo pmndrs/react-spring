@@ -11,7 +11,8 @@ import {
   AnimationResult,
   AsyncResult,
 } from './AnimationResult'
-import { runAsync, scheduleProps, RunAsyncState, cancelAsync } from './runAsync'
+import { runAsync, RunAsyncState, cancelAsync } from './runAsync'
+import { scheduleProps } from './scheduleProps'
 import {
   ControllerFlushFn,
   ControllerUpdate,
