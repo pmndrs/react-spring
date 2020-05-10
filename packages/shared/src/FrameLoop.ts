@@ -162,7 +162,7 @@ export class FrameLoop {
         })
       }
 
-      if (!idle && time > lastTime) {
+      if (time > lastTime) {
         // http://gafferongames.com/game-physics/fix-your-timestep/
         const dt = Math.min(64, time - lastTime)
         lastTime = time
