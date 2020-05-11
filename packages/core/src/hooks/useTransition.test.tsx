@@ -77,6 +77,22 @@ describe('useTransition', () => {
       expect(rendered).toEqual([false])
     })
   })
+
+  describe('when "enter" is a function', () => {
+    it('still has its "onRest" prop called', async () => {
+      const onRest = jest.fn()
+      update(true, {
+        from: { x: 0 },
+        enter: () => ({
+          x: 1,
+          onRest,
+        }),
+      })
+
+      await advanceUntilIdle()
+      expect(onRest).toBeCalledTimes(1)
+    })
+  })
 })
 
 function createUpdater(
