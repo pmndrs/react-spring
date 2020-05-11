@@ -130,7 +130,7 @@ global.advanceByTime = ms => {
 }
 
 global.advanceUntilIdle = () => {
-  return advanceUntil(() => Globals.frameLoop['_idle'])
+  return advanceUntil(() => Globals.frameLoop['_animations'].length == 0)
 }
 
 // TODO: support "value" as an array or animatable string

@@ -26,8 +26,7 @@ export interface Timeout {
 
 /**
  * FrameLoop executes its animations in order of lowest priority first.
- * Animations are released once idle. The loop is paused while no animations
- * exist.
+ * Animations are retained until idle.
  */
 export class FrameLoop {
   /**
@@ -61,7 +60,7 @@ export class FrameLoop {
   onWrite: (cb: FrameRequestCallback) => void
 
   // Exposed for testing.
-  protected _idle!: boolean
+  protected _animations!: OpaqueAnimation[]
   protected _dispose!: () => void
 
   constructor(raf = requestAnimationFrame) {
@@ -231,7 +230,7 @@ export class FrameLoop {
         timeoutQueue.length = 0
       }
       Object.defineProperties(this, {
-        _idle: { get: () => idle },
+        _animations: { get: () => animations },
         _dispose: { get: () => dispose },
       })
     }
