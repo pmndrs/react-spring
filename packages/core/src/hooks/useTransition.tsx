@@ -204,7 +204,8 @@ export function useTransition(
 
     const { onRest }: { onRest?: any } = payload
     payload.onRest = result => {
-      const t = usedTransitions.current!.find(t => t.key === key)
+      const transitions = usedTransitions.current!
+      const t = transitions.find(t => t.key === key)
       if (!t) return
 
       if (is.fun(onRest)) {
@@ -219,7 +220,6 @@ export function useTransition(
       }
 
       if (t.ctrl.idle) {
-        const transitions = usedTransitions.current!
         const idle = transitions.every(t => t.ctrl.idle)
         if (t.phase == LEAVE) {
           const expiry = callProp(expires, t.item)
