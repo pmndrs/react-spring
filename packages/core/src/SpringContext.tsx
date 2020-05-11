@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useContext, PropsWithChildren } from 'react'
+import { SpringConfig } from './types'
 import { useMemo } from './helpers'
 
 /**
@@ -13,6 +14,8 @@ export interface SpringContext {
   cancel?: boolean
   /** Force all new and existing animations to be immediate. */
   immediate?: boolean
+  /** Set the default `config` prop for future animations. */
+  config?: SpringConfig
 }
 
 const ctx = React.createContext<SpringContext>({})
@@ -29,6 +32,7 @@ export const SpringContext = ({
     props.pause,
     props.cancel,
     props.immediate,
+    props.config,
   ])
 
   const { Provider } = ctx
