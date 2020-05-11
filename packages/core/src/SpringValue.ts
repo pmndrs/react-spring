@@ -595,7 +595,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
       onDelayEnd(props, this)
     }
 
-    mergeDefaultProps(defaultProps, props, ['pause', 'cancel'])
+    if (props.default) {
+      mergeDefaultProps(defaultProps, props, ['pause', 'cancel'])
+    }
 
     const { to: prevTo, from: prevFrom } = anim
     let { to = prevTo, from = prevFrom } = range
