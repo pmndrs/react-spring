@@ -1,7 +1,7 @@
 import { is, each } from 'shared'
 import * as G from 'shared/globals'
 
-import { mergeDefaultProps } from './helpers'
+import { getDefaultProps } from './helpers'
 import {
   ControllerUpdate,
   SpringChain,
@@ -38,6 +38,17 @@ export interface RunAsyncState<T> {
   cancelId?: number
 }
 
+/** This error is thrown to signal an interrupted async animation. */
+export class AnimationSignal<T = any> extends Error {
+  result!: AnimationResult<T>
+  constructor() {
+    super(
+      'An async animation has been interrupted. You see this error because you ' +
+        'forgot to use `await` or `.catch(...)` on its returned promise.'
+    )
+  }
+}
+
 /**
  * Start an async chain or an async script.
  *
@@ -68,27 +79,57 @@ export async function runAsync<T>(
   }
   state.asyncTo = to
   return (state.promise = (async (): AsyncResult<T> => {
-    let result!: AnimationResult
-
-    const defaultProps: SpringDefaultProps<T> = {}
-    mergeDefaultProps(defaultProps, props, ['onRest'])
-
     const { callId, onRest } = props
-    const throwInvalidated = () => {
-      // Prevent further animation if cancelled.
-      if (callId <= (state.cancelId || 0)) {
-        throw (result = getCancelledResult(target))
+
+    // The default props of any `animate` calls.
+    const defaultProps = getDefaultProps<SpringDefaultProps<T>>(props, [
+      // The `onRest` prop is only called when the `runAsync` promise is resolved.
+      'onRest',
+    ])
+
+    let preventBail!: () => void
+    let bail: (error: any) => void
+
+    // This promise is rejected when the animation is interrupted.
+    const bailPromise = new Promise<void>(
+      (resolve, reject) => ((preventBail = resolve), (bail = reject))
+    )
+
+    // Stop animating when an error is caught.
+    const withBailHandler = <Args extends any[]>(
+      fn: (...args: Args) => AsyncResult<T>
+    ) => (...args: Args) => {
+      const onError = (err: any) => {
+        if (err instanceof AnimationSignal) {
+          bail(err) // Stop animating.
+        }
+        throw err
       }
-      // Prevent further animation if another "runAsync" call is active.
-      if (to !== state.asyncTo) {
-        throw (result = getFinishedResult(target, false))
+      try {
+        return fn(...args).catch(onError)
+      } catch (err) {
+        onError(err)
+      }
+    }
+
+    const bailIfEnded = (bailSignal: AnimationSignal<T>) => {
+      const bailResult =
+        // The `cancel` prop or `stop` method was used.
+        (callId <= (state.cancelId || 0) && getCancelledResult(target)) ||
+        // The async `to` prop was replaced.
+        (to !== state.asyncTo && getFinishedResult(target, false))
+
+      if (bailResult) {
+        bailSignal.result = bailResult
+        throw bailSignal
       }
     }
 
     // Note: This function cannot use the `async` keyword, because we want the
     // `throw` statements to interrupt the caller.
-    const animate: any = (arg1: any, arg2?: any) => {
-      throwInvalidated()
+    const animate: any = withBailHandler((arg1: any, arg2?: any) => {
+      const bailSignal = new AnimationSignal()
+      bailIfEnded(bailSignal)
 
       const props: ControllerUpdate<T> = is.obj(arg1)
         ? { ...arg1 }
@@ -102,7 +143,7 @@ export async function runAsync<T>(
 
       const parentTo = state.asyncTo
       return target.start(props).then(async result => {
-        throwInvalidated()
+        bailIfEnded(bailSignal)
 
         if (state.asyncTo == null) {
           state.asyncTo = parentTo
@@ -116,24 +157,40 @@ export async function runAsync<T>(
 
         return result
       })
-    }
+    })
 
+    let result!: AnimationResult<T>
     try {
+      let animating!: Promise<void>
+
       // Async sequence
       if (is.arr(to)) {
-        for (const props of to) {
-          await animate(props)
-        }
+        animating = (async (queue: any[]) => {
+          for (const props of queue) {
+            await animate(props)
+          }
+        })(to)
       }
+
       // Async script
       else if (is.fun(to)) {
-        await to(animate, target.stop.bind(target) as any)
+        animating = Promise.resolve(
+          to(animate, target.stop.bind(target) as any)
+        )
       }
+
+      await Promise.all([animating.then(preventBail), bailPromise])
       result = getFinishedResult(target, true)
+
+      // Bail handling
     } catch (err) {
-      if (err !== result) {
+      if (err instanceof AnimationSignal) {
+        result = err.result
+      } else {
         throw err
       }
+
+      // Reset the async state.
     } finally {
       state.promise = undefined
       if (to == state.asyncTo) {

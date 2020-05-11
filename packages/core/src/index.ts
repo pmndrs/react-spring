@@ -6,11 +6,12 @@ export * from './globals'
 
 export { Controller } from './Controller'
 export { SpringValue } from './SpringValue'
-export { Interpolation } from './Interpolation'
 export { SpringContext } from './SpringContext'
-export { SpringHandle } from './SpringHandle'
-export { FrameValue } from './FrameValue'
 
+export { FrameValue } from './FrameValue'
+export { SpringHandle } from './SpringHandle'
+export { Interpolation } from './Interpolation'
+export { AnimationSignal } from './runAsync'
 export { FrameLoop, createInterpolator } from 'shared'
 export { inferTo } from './helpers'
 
