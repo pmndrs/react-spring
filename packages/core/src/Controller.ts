@@ -248,45 +248,45 @@ export function flushUpdate(
 ): AsyncResult {
   const { to, loop, onRest } = props
 
-  const asyncTo = is.arr(to) || is.fun(to) ? to : undefined
-  if (asyncTo) {
-    props.to = undefined
-  }
-
   // Looping must be handled in this function, or else the values
   // would end up looping out-of-sync in many common cases.
   if (loop) {
     props.loop = false
   }
 
-  // Batched events are queued by individual spring values.
-  each(BATCHED_EVENTS, key => {
-    const handler: any = props[key]
-    if (is.fun(handler)) {
-      const queue = ctrl['_events'][key]
-      if (queue instanceof Set) {
-        props[key] = () => queue.add(handler)
-      } else if (asyncTo) {
-        // The "runAsync" function will call our handler.
-        props[key] = undefined
-      } else {
-        props[key] = (({ finished, cancelled }: AnimationResult) => {
-          const result = queue.get(handler)
-          if (result) {
-            if (!finished) result.finished = false
-            if (cancelled) result.cancelled = true
-          } else {
-            // The "value" is set before the "handler" is called.
-            queue.set(handler, {
-              value: null,
-              finished,
-              cancelled,
-            })
-          }
-        }) as any
+  const asyncTo = is.arr(to) || is.fun(to) ? to : undefined
+  if (asyncTo) {
+    props.to = undefined
+    props.onRest = undefined
+  } else {
+    // For certain events, use batching to prevent multiple calls per frame.
+    // However, batching is avoided when the `to` prop is async, because any
+    // event props are used as default props instead.
+    each(BATCHED_EVENTS, key => {
+      const handler: any = props[key]
+      if (is.fun(handler)) {
+        const queue = ctrl['_events'][key]
+        if (queue instanceof Set) {
+          props[key] = () => queue.add(handler)
+        } else {
+          props[key] = (({ finished, cancelled }: AnimationResult) => {
+            const result = queue.get(handler)
+            if (result) {
+              if (!finished) result.finished = false
+              if (cancelled) result.cancelled = true
+            } else {
+              // The "value" is set before the "handler" is called.
+              queue.set(handler, {
+                value: null,
+                finished,
+                cancelled,
+              })
+            }
+          }) as any
+        }
       }
-    }
-  })
+    })
+  }
 
   const keys = props.keys || Object.keys(ctrl.springs)
   const promises = keys.map(key => ctrl.springs[key]!.start(props as any))
