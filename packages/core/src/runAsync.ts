@@ -38,17 +38,6 @@ export interface RunAsyncState<T> {
   cancelId?: number
 }
 
-/** This error is thrown to signal an interrupted async animation. */
-export class AnimationSignal<T = any> extends Error {
-  result!: AnimationResult<T>
-  constructor() {
-    super(
-      'An async animation has been interrupted. You see this error because you ' +
-        'forgot to use `await` or `.catch(...)` on its returned promise.'
-    )
-  }
-}
-
 /**
  * Start an async chain or an async script.
  *
@@ -100,7 +89,7 @@ export async function runAsync<T>(
       fn: (...args: Args) => AsyncResult<T>
     ) => (...args: Args) => {
       const onError = (err: any) => {
-        if (err instanceof AnimationSignal) {
+        if (err instanceof BailSignal) {
           bail(err) // Stop animating.
         }
         throw err
@@ -112,7 +101,7 @@ export async function runAsync<T>(
       }
     }
 
-    const bailIfEnded = (bailSignal: AnimationSignal<T>) => {
+    const bailIfEnded = (bailSignal: BailSignal<T>) => {
       const bailResult =
         // The `cancel` prop or `stop` method was used.
         (callId <= (state.cancelId || 0) && getCancelledResult(target)) ||
@@ -128,7 +117,7 @@ export async function runAsync<T>(
     // Note: This function cannot use the `async` keyword, because we want the
     // `throw` statements to interrupt the caller.
     const animate: any = withBailHandler((arg1: any, arg2?: any) => {
-      const bailSignal = new AnimationSignal()
+      const bailSignal = new BailSignal()
       bailIfEnded(bailSignal)
 
       const props: ControllerUpdate<T> = is.obj(arg1)
@@ -184,7 +173,7 @@ export async function runAsync<T>(
 
       // Bail handling
     } catch (err) {
-      if (err instanceof AnimationSignal) {
+      if (err instanceof BailSignal) {
         result = err.result
       } else {
         throw err
@@ -211,4 +200,15 @@ export async function runAsync<T>(
 export function cancelAsync(state: RunAsyncState<any>, callId: number) {
   state.cancelId = callId
   state.asyncTo = undefined
+}
+
+/** This error is thrown to signal an interrupted async animation. */
+export class BailSignal<T = any> extends Error {
+  result!: AnimationResult<T>
+  constructor() {
+    super(
+      'An async animation has been interrupted. You see this error because you ' +
+        'forgot to use `await` or `.catch(...)` on its returned promise.'
+    )
+  }
 }

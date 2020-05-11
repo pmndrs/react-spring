@@ -11,7 +11,7 @@ export { SpringContext } from './SpringContext'
 export { FrameValue } from './FrameValue'
 export { SpringHandle } from './SpringHandle'
 export { Interpolation } from './Interpolation'
-export { AnimationSignal } from './runAsync'
+export { BailSignal } from './runAsync'
 export { FrameLoop, createInterpolator } from 'shared'
 export { inferTo } from './helpers'
 
