@@ -300,6 +300,7 @@ export interface ReservedProps {
   // Internal props
   keys?: any
   callId?: any
+  parentId?: any
 }
 
 /**

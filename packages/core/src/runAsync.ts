@@ -3,7 +3,6 @@ import * as G from 'shared/globals'
 
 import { getDefaultProps } from './helpers'
 import {
-  ControllerUpdate,
   SpringChain,
   SpringDefaultProps,
   SpringProps,
@@ -19,6 +18,7 @@ import {
 
 export interface RunAsyncProps<T = any> extends SpringProps<T> {
   callId: number
+  parentId?: number
   cancel: boolean
   pause: boolean
   delay: number
@@ -26,15 +26,11 @@ export interface RunAsyncProps<T = any> extends SpringProps<T> {
 }
 
 export interface RunAsyncState<T> {
-  /** Functions to be called once paused */
   pauseQueue: Set<Function>
-  /** Functions to be called once resumed */
   resumeQueue: Set<Function>
-  /** The async function or array of spring props */
+  asyncId?: number
   asyncTo?: SpringChain<T> | SpringToFn<T>
-  /** Resolves when the current `asyncTo` finishes or gets cancelled. */
   promise?: AsyncResult<T>
-  /** The last time we saw a matching `cancel` prop. */
   cancelId?: number
 }
 
@@ -57,18 +53,17 @@ export async function runAsync<T>(
       state.resumeQueue.add(resume)
     })
   }
-  // Wait for the previous async animation to be cancelled.
-  if (props.reset) {
-    await state.promise
+
+  const { callId, parentId, onRest } = props
+  const { asyncTo: prevTo, promise: prevPromise } = state
+
+  if (!parentId && to === prevTo && !props.reset) {
+    return prevPromise!
   }
-  // Async animations are only replaced when "props.to" changes
-  // or when "props.reset" equals true.
-  else if (to === state.asyncTo) {
-    return state.promise!
-  }
-  state.asyncTo = to
+
   return (state.promise = (async (): AsyncResult<T> => {
-    const { callId, onRest } = props
+    state.asyncId = callId
+    state.asyncTo = to
 
     // The default props of any `animate` calls.
     const defaultProps = getDefaultProps<SpringDefaultProps<T>>(props, [
@@ -106,7 +101,7 @@ export async function runAsync<T>(
         // The `cancel` prop or `stop` method was used.
         (callId <= (state.cancelId || 0) && getCancelledResult(target)) ||
         // The async `to` prop was replaced.
-        (to !== state.asyncTo && getFinishedResult(target, false))
+        (callId !== state.asyncId && getFinishedResult(target, false))
 
       if (bailResult) {
         bailSignal.result = bailResult
@@ -120,22 +115,16 @@ export async function runAsync<T>(
       const bailSignal = new BailSignal()
       bailIfEnded(bailSignal)
 
-      const props: ControllerUpdate<T> = is.obj(arg1)
-        ? { ...arg1 }
-        : { ...arg2, to: arg1 as any }
+      const props: any = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 }
+      props.parentId = callId
 
-      each(defaultProps, (value, prop) => {
-        if (is.und(props[prop])) {
-          props[prop] = value as any
+      each(defaultProps, (value, key) => {
+        if (is.und(props[key])) {
+          props[key] = value as any
         }
       })
 
-      const parentTo = state.asyncTo
       return target.start(props).then(async result => {
-        if (state.asyncTo == null) {
-          state.asyncTo = parentTo
-        }
-
         bailIfEnded(bailSignal)
 
         if (target.is('PAUSED')) {
@@ -181,9 +170,10 @@ export async function runAsync<T>(
 
       // Reset the async state.
     } finally {
-      state.promise = undefined
-      if (to == state.asyncTo) {
-        state.asyncTo = undefined
+      if (callId == state.asyncId) {
+        state.asyncId = parentId
+        state.asyncTo = parentId ? prevTo : undefined
+        state.promise = parentId ? prevPromise : undefined
       }
     }
 
@@ -199,7 +189,7 @@ export async function runAsync<T>(
 
 export function cancelAsync(state: RunAsyncState<any>, callId: number) {
   state.cancelId = callId
-  state.asyncTo = undefined
+  state.asyncId = state.asyncTo = state.promise = undefined
 }
 
 /** This error is thrown to signal an interrupted async animation. */

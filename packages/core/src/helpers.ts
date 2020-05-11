@@ -141,6 +141,7 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   // Internal props
   keys: 1,
   callId: 1,
+  parentId: 1,
 }
 
 /**
