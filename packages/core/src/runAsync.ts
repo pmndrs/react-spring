@@ -49,12 +49,6 @@ export async function runAsync<T>(
   state: RunAsyncState<T>,
   target: AnimationTarget<T>
 ): AsyncResult<T> {
-  if (props.pause) {
-    await new Promise(resume => {
-      state.resumeQueue.add(resume)
-    })
-  }
-
   const { callId, parentId, onRest } = props
   const { asyncTo: prevTo, promise: prevPromise } = state
 
