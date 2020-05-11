@@ -268,7 +268,6 @@ export type ForwardProps<T extends object> = RawValues<
  * Property names that are reserved for animation config
  */
 export interface ReservedProps {
-  children?: any
   config?: any
   from?: any
   to?: any
@@ -281,20 +280,26 @@ export interface ReservedProps {
   immediate?: any
   default?: any
   delay?: any
-  keys?: any
+  onDelayEnd?: any
+  onProps?: any
+  onStart?: any
+  onChange?: any
+  onRest?: any
+
+  // Transition props
   items?: any
   trail?: any
   sort?: any
   expires?: any
   initial?: any
   enter?: any
-  leave?: any
   update?: any
-  onDelayEnd?: any
-  onProps?: any
-  onStart?: any
-  onChange?: any
-  onRest?: any
+  leave?: any
+  children?: any
+
+  // Internal props
+  keys?: any
+  callId?: any
 }
 
 /**

@@ -109,7 +109,6 @@ export const DEFAULT_PROPS = [
 ] as const
 
 const RESERVED_PROPS: Required<ReservedProps> = {
-  children: 1,
   config: 1,
   from: 1,
   to: 1,
@@ -122,20 +121,26 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   immediate: 1,
   default: 1,
   delay: 1,
-  keys: 1,
+  onDelayEnd: 1,
+  onProps: 1,
+  onStart: 1,
+  onChange: 1,
+  onRest: 1,
+
+  // Transition props
   items: 1,
   trail: 1,
   sort: 1,
   expires: 1,
   initial: 1,
   enter: 1,
-  leave: 1,
   update: 1,
-  onDelayEnd: 1,
-  onProps: 1,
-  onStart: 1,
-  onChange: 1,
-  onRest: 1,
+  leave: 1,
+  children: 1,
+
+  // Internal props
+  keys: 1,
+  callId: 1,
 }
 
 /**
