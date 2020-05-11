@@ -175,7 +175,8 @@ export function useTransition(
 
     // When "to" is a function, it can return (1) an array of "useSpring" props,
     // (2) an async function, or (3) an object with any "useSpring" props.
-    to = is.obj(to) ? inferTo(to) : { to: callProp(to, t.item, i) }
+    to = callProp(to, t.item, i)
+    to = is.obj(to) ? inferTo(to) : { to }
 
     if (!to.config) {
       const config = props.config || defaultProps.config
