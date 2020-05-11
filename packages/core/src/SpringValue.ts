@@ -33,6 +33,7 @@ import {
   matchProp,
   inferTo,
   mergeDefaultProps,
+  getDefaultProps,
   getDefaultProp,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
@@ -1058,7 +1059,7 @@ export function createUpdate(props: any) {
 export function declareUpdate(props: any) {
   const update = createUpdate(props)
   if (is.und(update.default)) {
-    update.default = mergeDefaultProps({}, update, [
+    update.default = getDefaultProps(update, [
       // Avoid forcing `immediate: true` onto imperative updates.
       update.immediate === true && 'immediate',
     ])
