@@ -1,4 +1,5 @@
 import { Controller } from './Controller'
+import { flushMicroTasks } from 'flush-microtasks'
 
 const frameLength = 1000 / 60
 
@@ -38,6 +39,146 @@ describe('Controller', () => {
   })
 
   describe('when the "to" prop is an async function', () => {
+    it('respects the "cancel" prop', async () => {
+      const ctrl = new Controller({ from: { x: 0 } })
+      const promise = ctrl.start({
+        to: async next => {
+          while (true) {
+            await next({ x: 1, reset: true })
+          }
+        },
+      })
+
+      const { x } = ctrl.springs
+      await advanceUntilValue(x, 0.5)
+
+      ctrl.start({ cancel: true })
+      await flushMicroTasks()
+
+      expect(ctrl.idle).toBeTruthy()
+      expect((await promise).cancelled).toBeTruthy()
+    })
+
+    it('respects the "stop" method', async () => {
+      const ctrl = new Controller({ from: { x: 0 } })
+      const promise = ctrl.start({
+        to: async next => {
+          while (true) {
+            await next({ x: 1, reset: true })
+          }
+        },
+      })
+
+      const { x } = ctrl.springs
+      await advanceUntilValue(x, 0.5)
+
+      ctrl.stop()
+
+      expect(ctrl.idle).toBeTruthy()
+      expect((await promise).cancelled).toBeTruthy()
+    })
+
+    describe('when the "to" prop is changed', () => {
+      it('stops the old "to" prop', async () => {
+        const ctrl = new Controller({ from: { x: 0 } })
+
+        let n = 0
+        const promise = ctrl.start({
+          to: async next => {
+            while (++n < 5) {
+              await next({ x: 1, reset: true })
+            }
+          },
+        })
+
+        await advance()
+        expect(n).toBe(1)
+
+        ctrl.start({
+          to: () => {},
+        })
+
+        await advanceUntilIdle()
+        expect(n).toBe(1)
+
+        expect(await promise).toMatchObject({
+          finished: false,
+        })
+      })
+    })
+
+    // This function is the "to" prop's 1st argument.
+    describe('the "animate" function', () => {
+      it('inherits any default props', async () => {
+        const ctrl = new Controller({ from: { x: 0 } })
+        const onStart = jest.fn()
+        ctrl.start({
+          onStart,
+          to: async animate => {
+            expect(onStart).toBeCalledTimes(0)
+            await animate({ x: 1 })
+            expect(onStart).toBeCalledTimes(1)
+            await animate({ x: 0 })
+          },
+        })
+        await advanceUntilIdle()
+        expect(onStart).toBeCalledTimes(2)
+      })
+
+      it('can start its own async animation', async () => {
+        const ctrl = new Controller({ from: { x: 0 } })
+
+        // Call this from inside the nested "to" prop.
+        const nestedFn = jest.fn()
+        // Call this after the nested "to" prop is done.
+        const afterFn = jest.fn()
+
+        ctrl.start({
+          to: async animate => {
+            await animate({
+              to: async animate => {
+                nestedFn()
+                await animate({ x: 1 })
+              },
+            })
+            afterFn()
+          },
+        })
+
+        await advanceUntilIdle()
+        await flushMicroTasks()
+
+        expect(nestedFn).toBeCalledTimes(1)
+        expect(afterFn).toBeCalledTimes(1)
+      })
+    })
+
+    describe('nested async animation', () => {
+      it('stops the parent on bail', async () => {
+        const ctrl = new Controller({ from: { x: 0 } })
+        const { x } = ctrl.springs
+
+        const afterFn = jest.fn()
+        ctrl.start({
+          to: async animate => {
+            await animate({
+              to: async animate => {
+                await animate({ x: 1 })
+              },
+            })
+            afterFn()
+          },
+        })
+
+        await advanceUntilValue(x, 0.5)
+        ctrl.start({ cancel: true })
+        await flushMicroTasks()
+
+        expect(ctrl.idle).toBeTruthy()
+        expect(afterFn).not.toHaveBeenCalled()
+      })
+    })
+
     it('acts strangely without the "from" prop', async () => {
       const ctrl = new Controller<{ x: number }>()
 
@@ -67,24 +208,6 @@ describe('Controller', () => {
 
       // Since we call `update` twice, frames are generated!
       expect(getFrames(ctrl)).toMatchSnapshot()
-    })
-
-    it('can be cancelled', async () => {
-      const ctrl = new Controller({ from: { x: 0 } })
-      const promise = ctrl.start({
-        to: async next => {
-          while (true) {
-            await next({ x: 1, reset: true })
-          }
-        },
-      })
-      const { x } = ctrl.springs
-      await advanceUntilValue(x, 0.5)
-      await ctrl.start({
-        cancel: true,
-      })
-      expect(ctrl.idle).toBeTruthy()
-      expect((await promise).cancelled).toBeTruthy()
     })
   })
 
