@@ -143,11 +143,11 @@ export async function runAsync<T>(
 
       const parentTo = state.asyncTo
       return target.start(props).then(async result => {
-        bailIfEnded(bailSignal)
-
         if (state.asyncTo == null) {
           state.asyncTo = parentTo
         }
+
+        bailIfEnded(bailSignal)
 
         if (target.is('PAUSED')) {
           await new Promise(resume => {
