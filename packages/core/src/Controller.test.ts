@@ -78,6 +78,29 @@ describe('Controller', () => {
       expect((await promise).cancelled).toBeTruthy()
     })
 
+    it('respects the "pause" prop', async () => {
+      const ctrl = new Controller({ from: { x: 0 } })
+      ctrl.start({ pause: true })
+
+      let n = 0
+      ctrl.start({
+        to: async animate => {
+          while (true) {
+            n += 1
+            await animate({ x: 1, reset: true })
+          }
+        },
+      })
+
+      await flushMicroTasks()
+      expect(n).toBe(0)
+
+      ctrl.start({ pause: false })
+
+      await flushMicroTasks()
+      expect(n).toBe(1)
+    })
+
     describe('when the "to" prop is changed', () => {
       it('stops the old "to" prop', async () => {
         const ctrl = new Controller({ from: { x: 0 } })

@@ -13,7 +13,7 @@ import * as G from 'shared/globals'
 import { Lookup, Falsy } from './types/common'
 import { hasDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
-import { SpringPhase, CREATED, ACTIVE, IDLE } from './SpringPhase'
+import { SpringPhase, CREATED, ACTIVE, IDLE, PAUSED } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import {
   getCombinedResult,
@@ -159,6 +159,8 @@ export class Controller<State extends Lookup = Lookup>
   /** Freeze the active animation in time */
   pause(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
+      this._phase = PAUSED
+      flushCalls(this._state.pauseQueue)
       this.each(spring => spring.pause())
     } else {
       const springs = this.springs as Lookup<SpringValue>
@@ -170,6 +172,8 @@ export class Controller<State extends Lookup = Lookup>
   /** Resume the animation if paused. */
   resume(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
+      this._phase = this._active.size ? ACTIVE : IDLE
+      flushCalls(this._state.resumeQueue)
       this.each(spring => spring.resume())
     } else {
       const springs = this.springs as Lookup<SpringValue>
@@ -252,7 +256,7 @@ export function flushUpdateQueue(
  * applied and any animations it starts are finished without being
  * stopped or cancelled.
  */
-export function flushUpdate(
+export async function flushUpdate(
   ctrl: Controller<any>,
   props: ControllerQueue[number],
   isLoop?: boolean
@@ -299,11 +303,29 @@ export function flushUpdate(
     })
   }
 
+  // Handle updates that pause/resume everything.
+  if (!props.keys) {
+    if (props.pause === true) {
+      props.pause = false
+      ctrl.pause()
+    } else if (props.pause === false) {
+      ctrl.resume()
+    }
+  }
+
+  const state = ctrl['_state']
+
+  // Postpone the update until resumed.
+  if (ctrl.is(PAUSED)) {
+    await new Promise(resume => {
+      state.resumeQueue.add(resume)
+    })
+  }
+
   const keys = props.keys || Object.keys(ctrl.springs)
   const promises = keys.map(key => ctrl.springs[key]!.start(props as any))
 
   // Schedule the "asyncTo" if defined.
-  const state = ctrl['_state']
   if (asyncTo) {
     promises.push(
       scheduleProps(++ctrl['_lastAsyncId'], {
@@ -332,17 +354,15 @@ export function flushUpdate(
     cancelAsync(state, ctrl['_lastAsyncId'])
   }
 
-  return Promise.all(promises).then(results => {
-    const result = getCombinedResult<any>(ctrl, results)
-    if (loop && result.finished && !(isLoop && result.noop)) {
-      const nextProps = createLoopUpdate(props, loop, to)
-      if (nextProps) {
-        prepareKeys(ctrl, [nextProps])
-        return flushUpdate(ctrl, nextProps, true)
-      }
+  const result = getCombinedResult<any>(ctrl, await Promise.all(promises))
+  if (loop && result.finished && !(isLoop && result.noop)) {
+    const nextProps = createLoopUpdate(props, loop, to)
+    if (nextProps) {
+      prepareKeys(ctrl, [nextProps])
+      return flushUpdate(ctrl, nextProps, true)
     }
-    return result
-  })
+  }
+  return result
 }
 
 /**
