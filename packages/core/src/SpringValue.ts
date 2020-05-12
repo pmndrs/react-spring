@@ -513,23 +513,20 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Schedule an animation to run after an optional delay */
   protected _update(props: SpringUpdate<T>, isLoop?: boolean): AsyncResult<T> {
-    type DefaultProps = typeof defaultProps
-    const defaultProps = this._defaultProps
-    const mergeDefaultProp = (key: keyof DefaultProps) => {
+    const defaultProps: any = this._defaultProps
+
+    // These props are coerced into booleans by the `scheduleProps` function,
+    // so they need their default values merged before then.
+    each(['cancel', 'pause'] as const, key => {
       const value = getDefaultProp(props, key)
       if (!is.und(value)) {
         defaultProps[key] = value as any
       }
-      // For `cancel` and `pause`, a truthy default always wins.
+      // For these props, truthy default values are preferred.
       if (defaultProps[key]) {
         props[key] = defaultProps[key] as any
       }
-    }
-
-    // These props are coerced into booleans by the `scheduleProps` function,
-    // so they need their default values processed before then.
-    mergeDefaultProp('cancel')
-    mergeDefaultProp('pause')
+    })
 
     // Ensure the initial value can be accessed by animated components.
     const range = this._prepareNode(props)
