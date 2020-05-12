@@ -2,7 +2,6 @@ import {
   is,
   each,
   noop,
-  flush,
   isEqual,
   toArray,
   FluidValue,
@@ -10,6 +9,7 @@ import {
   getFluidValue,
   isAnimatedString,
   Animatable,
+  flushCalls,
 } from 'shared'
 import {
   AnimatedType,
@@ -309,7 +309,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     checkDisposed(this, 'pause')
     if (!this.is(PAUSED)) {
       this._phase = PAUSED
-      flush(this._state.pauseQueue, onPause => onPause())
+      flushCalls(this._state.pauseQueue)
     }
   }
 
@@ -318,7 +318,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     checkDisposed(this, 'resume')
     if (this.is(PAUSED)) {
       this._start()
-      flush(this._state.resumeQueue, onResume => onResume())
+      flushCalls(this._state.resumeQueue)
     }
   }
 

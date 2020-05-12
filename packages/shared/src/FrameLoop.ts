@@ -1,5 +1,5 @@
 import { FrameRequestCallback } from './types'
-import { flush } from './helpers'
+import { flushCalls } from './helpers'
 import * as G from './globals'
 
 declare const console: any
@@ -184,11 +184,11 @@ export class FrameLoop {
             priority = 0
           }
 
-          flush(frameQueue, onFrame => onFrame(time))
+          flushCalls(frameQueue, time)
 
           if (writeQueue.size) {
             writing = true
-            flush(writeQueue, write => write(time))
+            flushCalls(writeQueue, time)
             writing = false
           }
         })

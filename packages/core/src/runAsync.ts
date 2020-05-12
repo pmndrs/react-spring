@@ -26,8 +26,8 @@ export interface RunAsyncProps<T = any> extends SpringProps<T> {
 }
 
 export interface RunAsyncState<T> {
-  pauseQueue: Set<Function>
-  resumeQueue: Set<Function>
+  pauseQueue: Set<() => void>
+  resumeQueue: Set<() => void>
   asyncId?: number
   asyncTo?: SpringChain<T> | SpringToFn<T>
   promise?: AsyncResult<T>

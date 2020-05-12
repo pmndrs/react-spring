@@ -1,4 +1,4 @@
-import { Lookup, Arrify } from './types.util'
+import { Lookup, Arrify, AnyFn } from './types.util'
 import * as G from './globals'
 
 export const noop = () => {}
@@ -86,3 +86,9 @@ export function flush(queue: any, iterator: any) {
     each(items, iterator)
   }
 }
+
+/** Call every function in the queue with the same arguments. */
+export const flushCalls = <T extends AnyFn>(
+  queue: Set<T>,
+  ...args: Parameters<T>
+) => flush(queue, fn => fn(...args))
