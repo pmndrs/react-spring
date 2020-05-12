@@ -1,4 +1,13 @@
-import { is, each, flush, OneOrMore, toArray, UnknownProps, noop } from 'shared'
+import {
+  is,
+  each,
+  flush,
+  OneOrMore,
+  toArray,
+  flushCalls,
+  UnknownProps,
+  noop,
+} from 'shared'
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
@@ -67,8 +76,8 @@ export class Controller<State extends Lookup = Lookup>
 
   /** The event queues that are flushed once per frame maximum */
   protected _events = {
-    onStart: new Set<Function>(),
-    onChange: new Set<Function>(),
+    onStart: new Set<(ctrl: Controller<State>) => void>(),
+    onChange: new Set<(values: object) => void>(),
     onRest: new Map<OnRest, AnimationResult>(),
   }
 
@@ -195,11 +204,13 @@ export class Controller<State extends Lookup = Lookup>
     const isActive = this._active.size > 0
     if (isActive && this._phase != ACTIVE) {
       this._phase = ACTIVE
-      flush(onStart, onStart => onStart(this))
+      flushCalls(onStart, this)
     }
 
-    const values = (onChange.size || (!isActive && onRest.size)) && this.get()
-    flush(onChange, onChange => onChange(values))
+    const values =
+      onChange.size || (!isActive && onRest.size) ? this.get() : null
+
+    flushCalls(onChange, values!)
 
     // The "onRest" queue is only flushed when all springs are idle.
     if (!isActive) {
