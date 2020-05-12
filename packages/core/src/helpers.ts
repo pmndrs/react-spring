@@ -55,7 +55,10 @@ export const hasDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
   !is.und(getDefaultProp(props, key))
 
 /** Get the default value being set for the given `key` */
-export const getDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
+export const getDefaultProp = <T extends Lookup, P extends keyof T>(
+  props: T,
+  key: P
+): T[P] =>
   props.default === true
     ? props[key]
     : props.default
