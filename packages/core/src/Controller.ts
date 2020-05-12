@@ -160,8 +160,10 @@ export class Controller<State extends Lookup = Lookup>
   /** Freeze the active animation in time */
   pause(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
-      this._phase = PAUSED
-      flushCalls(this._state.pauseQueue)
+      if (!this.is(PAUSED)) {
+        this._phase = PAUSED
+        flushCalls(this._state.pauseQueue)
+      }
       this.each(spring => spring.pause())
     } else {
       const springs = this.springs as Lookup<SpringValue>
@@ -173,8 +175,10 @@ export class Controller<State extends Lookup = Lookup>
   /** Resume the animation if paused. */
   resume(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
-      this._phase = this._active.size ? ACTIVE : IDLE
-      flushCalls(this._state.resumeQueue)
+      if (this.is(PAUSED)) {
+        this._phase = this._active.size ? ACTIVE : IDLE
+        flushCalls(this._state.resumeQueue)
+      }
       this.each(spring => spring.resume())
     } else {
       const springs = this.springs as Lookup<SpringValue>
