@@ -11,11 +11,12 @@ import {
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
-import { hasDefaultProp } from './helpers'
+import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE, PAUSED } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import {
+  getCancelledResult,
   getCombinedResult,
   AnimationResult,
   AsyncResult,
@@ -261,7 +262,7 @@ export async function flushUpdate(
   props: ControllerQueue[number],
   isLoop?: boolean
 ): AsyncResult {
-  const { to, loop, onRest } = props
+  const { keys, to, loop, onRest } = props
 
   // Looping must be handled in this function, or else the values
   // would end up looping out-of-sync in many common cases.
@@ -303,30 +304,37 @@ export async function flushUpdate(
     })
   }
 
-  // Handle updates that pause/resume everything.
-  if (!props.keys) {
-    if (props.pause === true) {
-      props.pause = false
+  if (!keys) {
+    let paused = getDefaultProp(props, 'pause')
+    if (paused !== true) {
+      paused = props.pause
+    }
+    if (paused === true) {
       ctrl.pause()
-    } else if (props.pause === false) {
+    } else if (paused === false) {
       ctrl.resume()
     }
   }
 
+  const promises = (keys || Object.keys(ctrl.springs)).map(key =>
+    ctrl.springs[key]!.start(props as any)
+  )
+
   const state = ctrl['_state']
 
-  // Postpone the update until resumed.
+  // This must come *after* the update is sent to each spring, or else
+  // their default `pause` prop wouldn't be updated in time.
   if (ctrl.is(PAUSED)) {
     await new Promise(resume => {
       state.resumeQueue.add(resume)
     })
   }
 
-  const keys = props.keys || Object.keys(ctrl.springs)
-  const promises = keys.map(key => ctrl.springs[key]!.start(props as any))
+  // When true, cancel the current `runAsync` call.
+  const cancel =
+    !keys && (props.cancel === true || getDefaultProp(props, 'cancel') === true)
 
-  // Schedule the "asyncTo" if defined.
-  if (asyncTo) {
+  if (asyncTo || (cancel && state.asyncId)) {
     promises.push(
       scheduleProps(++ctrl['_lastAsyncId'], {
         props,
@@ -335,23 +343,18 @@ export async function flushUpdate(
           pause: noop,
           resume: noop,
           start(props, resolve) {
-            props.onRest = onRest as any
-            if (!props.cancel) {
-              resolve(runAsync(asyncTo, props, state, ctrl))
+            let result: AsyncResult | undefined
+            if (cancel) {
+              cancelAsync(state, ctrl['_lastAsyncId'])
+            } else if (!props.cancel) {
+              props.onRest = onRest as any
+              result = runAsync(asyncTo!, props, state, ctrl)
             }
-            // Prevent `cancel: true` from ending the current `runAsync` call,
-            // except when the default `cancel` prop is being set.
-            else if (hasDefaultProp(props, 'cancel')) {
-              cancelAsync(state, props.callId)
-            }
+            resolve(result || getCancelledResult(ctrl))
           },
         },
       })
     )
-  }
-  // Respect the `cancel` prop when no keys are affected.
-  else if (!props.keys && props.cancel === true) {
-    cancelAsync(state, ctrl['_lastAsyncId'])
   }
 
   const result = getCombinedResult<any>(ctrl, await Promise.all(promises))
