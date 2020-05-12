@@ -1,4 +1,5 @@
 import { FrameRequestCallback } from './types'
+import { flush } from './helpers'
 import * as G from './globals'
 
 declare const console: any
@@ -167,8 +168,6 @@ export class FrameLoop {
         lastTime = time
 
         G.batchedUpdates(() => {
-          // Animations can be added while the frameloop is updating,
-          // but they need a higher priority to be started on this frame.
           if (animations.length) {
             G.willAdvance(animations)
             animations = animations.filter(animation => {
@@ -185,15 +184,11 @@ export class FrameLoop {
             priority = 0
           }
 
-          if (frameQueue.size) {
-            frameQueue.forEach(onFrame => onFrame(time))
-            frameQueue.clear()
-          }
+          flush(frameQueue, onFrame => onFrame(time))
 
           if (writeQueue.size) {
             writing = true
-            writeQueue.forEach(write => write(time))
-            writeQueue.clear()
+            flush(writeQueue, write => write(time))
             writing = false
           }
         })
@@ -201,6 +196,8 @@ export class FrameLoop {
     })
 
     this.start = animation => {
+      // An animation can be added while a frame is being processed,
+      // unless its priority is lower than the animation last updated.
       if (priority > animation.priority) {
         startQueue.add(animation)
       } else {
