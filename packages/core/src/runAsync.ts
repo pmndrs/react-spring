@@ -1,6 +1,7 @@
 import { is, each } from 'shared'
 import * as G from 'shared/globals'
 
+import { PAUSED } from './SpringPhase'
 import { getDefaultProps } from './helpers'
 import {
   SpringChain,
@@ -127,7 +128,7 @@ export async function runAsync<T>(
       return target.start(props).then(async result => {
         bailIfEnded(bailSignal)
 
-        if (target.is('PAUSED')) {
+        if (target.is(PAUSED)) {
           await new Promise(resume => {
             state.resumeQueue.add(resume)
           })
