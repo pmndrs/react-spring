@@ -511,8 +511,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
       : AnimatedValue
   }
 
-  /** Schedule an animation to run after an optional delay */
-  protected _update(props: SpringUpdate<T>, isLoop?: boolean): AsyncResult<T> {
+  /** Every update is processed by this method before merging. */
+  protected _update(
+    { ...props }: SpringUpdate<T>,
+    isLoop?: boolean
+  ): AsyncResult<T> {
     const defaultProps: any = this._defaultProps
 
     // These props are coerced into booleans by the `scheduleProps` function,
