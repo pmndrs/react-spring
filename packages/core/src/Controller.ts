@@ -310,7 +310,7 @@ export async function flushUpdate(
 
   if (!keys) {
     let paused = getDefaultProp(props, 'pause')
-    if (paused !== true) {
+    if (paused !== true && typeof props.pause == 'boolean') {
       paused = props.pause
     }
     if (paused === true) {
