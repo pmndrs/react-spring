@@ -195,3 +195,8 @@ export function computeGoal<T>(value: T | FluidValue<T>): T {
       })(1) as any)
     : value
 }
+
+export function hasProps(props: object) {
+  for (const _ in props) return true
+  return false
+}

@@ -25,7 +25,7 @@ import {
   TransitionDefaultProps,
 } from '../types'
 import { Valid } from '../types/common'
-import { callProp, inferTo, getDefaultProps } from '../helpers'
+import { callProp, inferTo, getDefaultProps, hasProps } from '../helpers'
 import { Controller, getSprings, setSprings } from '../Controller'
 import { useSpringContext } from '../SpringContext'
 import { SpringHandle } from '../SpringHandle'
@@ -250,12 +250,14 @@ export function useTransition(
 
   // The prop overrides from an ancestor.
   const context = useSpringContext()
+  const hasContext = hasProps(context)
 
   // Merge the context into each transition.
   useLayoutEffect(() => {
-    each(transitions, t => {
-      t.ctrl.start({ default: context })
-    })
+    if (hasContext)
+      each(transitions, t => {
+        t.ctrl.start({ default: context })
+      })
   }, [context])
 
   const api = useMemo(() => {
@@ -272,7 +274,7 @@ export function useTransition(
         setSprings(t.ctrl, springs)
         if (!context.cancel) {
           t.phase = phase
-          if (phase == ENTER) {
+          if (hasContext && phase == ENTER) {
             t.ctrl.start({ default: context })
           }
           t.ctrl[ref ? 'update' : 'start'](payload)

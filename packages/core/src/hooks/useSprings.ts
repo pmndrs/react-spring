@@ -27,7 +27,7 @@ import {
   flushUpdateQueue,
   setSprings,
 } from '../Controller'
-import { useMemo as useMemoOne } from '../helpers'
+import { useMemo as useMemoOne, hasProps } from '../helpers'
 import { useSpringContext } from '../SpringContext'
 import { SpringHandle } from '../SpringHandle'
 
@@ -170,6 +170,8 @@ export function useSprings(
   const springs = ctrls.map((ctrl, i) => getSprings(ctrl, updates[i]))
 
   const context = useSpringContext()
+  const hasContext = hasProps(context)
+
   useLayoutEffect(() => {
     layoutId.current++
 
@@ -197,7 +199,9 @@ export function useSprings(
       setSprings(ctrl, values)
 
       // Update the default props.
-      ctrl.start({ default: context })
+      if (hasContext) {
+        ctrl.start({ default: context })
+      }
 
       // Apply updates created during render.
       const update = updates[i]
