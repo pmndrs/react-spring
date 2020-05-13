@@ -74,7 +74,7 @@ export const getDefaultProp = <T extends Lookup, P extends keyof T>(
  */
 export const getDefaultProps = <T extends Lookup>(
   props: Lookup,
-  omitKeys: (string | Falsy)[] = [],
+  omitKeys: readonly (string | Falsy)[] = [],
   defaults: Lookup = {} as any
 ) => {
   let keys: readonly string[] = DEFAULT_PROPS
@@ -95,7 +95,7 @@ export const getDefaultProps = <T extends Lookup>(
 export const mergeDefaultProps = (
   defaults: Lookup,
   props: Lookup,
-  omitKeys?: (string | Falsy)[]
+  omitKeys?: readonly (string | Falsy)[]
 ) => getDefaultProps(props, omitKeys, defaults)
 
 /** These props can have default values */

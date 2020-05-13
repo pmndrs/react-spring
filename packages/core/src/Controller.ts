@@ -11,7 +11,7 @@ import {
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
-import { getDefaultProp } from './helpers'
+import { getDefaultProp, getDefaultProps } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE, PAUSED } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
@@ -267,6 +267,7 @@ export async function flushUpdate(
   isLoop?: boolean
 ): AsyncResult {
   const { keys, to, loop, onRest } = props
+  const defaults = is.obj(props.default) && props.default
 
   // Looping must be handled in this function, or else the values
   // would end up looping out-of-sync in many common cases.
@@ -278,10 +279,14 @@ export async function flushUpdate(
   if (asyncTo) {
     props.to = undefined
     props.onRest = undefined
-  } else {
-    // For certain events, use batching to prevent multiple calls per frame.
-    // However, batching is avoided when the `to` prop is async, because any
-    // event props are used as default props instead.
+    if (defaults) {
+      defaults.onRest = undefined
+    }
+  }
+  // For certain events, use batching to prevent multiple calls per frame.
+  // However, batching is avoided when the `to` prop is async, because any
+  // event props are used as default props instead.
+  else {
     each(BATCHED_EVENTS, key => {
       const handler: any = props[key]
       if (is.fun(handler)) {
@@ -303,6 +308,10 @@ export async function flushUpdate(
               })
             }
           }) as any
+        }
+        // Avoid using a batched `handler` as a default prop.
+        if (defaults) {
+          defaults[key] = props[key] as any
         }
       }
     })
