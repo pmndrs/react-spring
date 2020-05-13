@@ -1,4 +1,4 @@
-import { is, each } from 'shared'
+import { is, each, Falsy } from 'shared'
 import * as G from 'shared/globals'
 
 import { PAUSED } from './SpringPhase'
@@ -26,7 +26,7 @@ export interface RunAsyncProps<T = any> extends SpringProps<T> {
   to?: any
 }
 
-export interface RunAsyncState<T> {
+export interface RunAsyncState<T = any> {
   pauseQueue: Set<() => void>
   resumeQueue: Set<() => void>
   asyncId?: number
@@ -182,9 +182,10 @@ export async function runAsync<T>(
   })())
 }
 
-export function cancelAsync(state: RunAsyncState<any>, callId: number) {
-  state.cancelId = callId
+/** Stop the current `runAsync` call with `finished: false` (or with `cancelled: true` when `cancelId` is defined) */
+export function stopAsync(state: RunAsyncState, cancelId?: number | Falsy) {
   state.asyncId = state.asyncTo = state.promise = undefined
+  if (cancelId) state.cancelId = cancelId
 }
 
 /** This error is thrown to signal an interrupted async animation. */

@@ -26,7 +26,7 @@ import * as G from 'shared/globals'
 import { Animation } from './Animation'
 import { mergeConfig } from './AnimationConfig'
 import { scheduleProps } from './scheduleProps'
-import { runAsync, RunAsyncState, RunAsyncProps, cancelAsync } from './runAsync'
+import { runAsync, RunAsyncState, RunAsyncProps, stopAsync } from './runAsync'
 import {
   callProp,
   computeGoal,
@@ -401,7 +401,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    */
   stop(cancel?: boolean) {
     if (!this.is(DISPOSED)) {
-      cancelAsync(this._state, this._lastCallId)
+      stopAsync(this._state, cancel && this._lastCallId)
 
       // Ensure the `to` value equals the current value.
       this._focus(this.get())

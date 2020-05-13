@@ -21,7 +21,7 @@ import {
   AnimationResult,
   AsyncResult,
 } from './AnimationResult'
-import { runAsync, RunAsyncState, cancelAsync } from './runAsync'
+import { runAsync, RunAsyncState, stopAsync } from './runAsync'
 import { scheduleProps } from './scheduleProps'
 import {
   ControllerFlushFn,
@@ -148,8 +148,8 @@ export class Controller<State extends Lookup = Lookup>
   /** Stop one animation, some animations, or all animations */
   stop(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
+      stopAsync(this._state)
       this.each(spring => spring.stop())
-      cancelAsync(this._state, this._lastAsyncId)
     } else {
       const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].stop())
@@ -349,7 +349,7 @@ export async function flushUpdate(
           start(props, resolve) {
             let result: AsyncResult | undefined
             if (cancel) {
-              cancelAsync(state, ctrl['_lastAsyncId'])
+              stopAsync(state, ctrl['_lastAsyncId'])
             } else if (!props.cancel) {
               props.onRest = onRest as any
               result = runAsync(asyncTo!, props, state, ctrl)
