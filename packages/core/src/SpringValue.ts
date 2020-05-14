@@ -55,6 +55,7 @@ import {
   SpringUpdate,
   VelocityProp,
   AnimationResolver,
+  SpringEventProps,
 } from './types'
 import {
   AsyncResult,
@@ -590,12 +591,18 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
 
-    /** Get the value of a prop, or its default value */
-    const get = <K extends keyof SpringDefaultProps>(prop: K) =>
-      !is.und(props[prop]) ? props[prop] : defaultProps[prop]
+    /** Get the function for a specific event prop */
+    const getEventProp = <K extends keyof SpringEventProps>(prop: K) => {
+      const value = !is.und(props[prop]) ? props[prop] : defaultProps[prop]
+      return (is.fun(value)
+        ? value
+        : key && value
+        ? value[key]
+        : undefined) as Extract<SpringEventProps[K], Function>
+    }
 
     // Call "onDelayEnd" before merging props, but after cancellation checks.
-    const onDelayEnd = coerceEventProp(get('onDelayEnd'), key!)
+    const onDelayEnd = getEventProp('onDelayEnd')
     if (onDelayEnd) {
       onDelayEnd(props, this)
     }
@@ -742,6 +749,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     if (!hasAsyncTo) {
+      anim.immediate = immediate
+
       // Make sure our "toValues" are updated even if our previous
       // "to" prop is a fluid value whose current value is also ours.
       if (started || getFluidConfig(prevTo)) {
@@ -753,10 +762,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
           : toArray(goal)
       }
 
-      anim.immediate = immediate
-
-      anim.onStart = coerceEventProp(get('onStart'), key)
-      anim.onChange = coerceEventProp(get('onChange'), key)
+      anim.onStart = getEventProp('onStart')
+      anim.onChange = getEventProp('onChange')
 
       // The "reset" prop tries to reuse the old "onRest" prop,
       // unless you defined a new "onRest" prop.
@@ -764,7 +771,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       const onRest =
         reset && !props.onRest
           ? onRestQueue[0] || noop
-          : checkFinishedOnRest(coerceEventProp(get('onRest'), key), this)
+          : checkFinishedOnRest(getEventProp('onRest'), this)
 
       // In most cases, the animation after this one won't reuse our
       // "onRest" prop. Instead, the _default_ "onRest" prop is used
@@ -790,7 +797,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     // By this point, every prop has been merged.
-    const onProps = coerceEventProp(get('onProps'), key)
+    const onProps = getEventProp('onProps')
     if (onProps) {
       onProps(props, this)
     }
@@ -948,14 +955,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
   }
-}
-
-/** Coerce an event prop to an event handler */
-function coerceEventProp<T extends Function>(
-  prop: EventProp<T> | undefined,
-  key: string | undefined
-) {
-  return is.fun(prop) ? prop : key && prop ? prop[key] : undefined
 }
 
 /**
