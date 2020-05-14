@@ -201,7 +201,7 @@ export class Controller<State extends Lookup = Lookup>
 
   /** Destroy every spring in this controller */
   dispose() {
-    this._state.asyncTo = undefined
+    stopAsync(this._state)
     this.each(spring => spring.dispose())
     this.springs = {} as any
   }
