@@ -162,7 +162,7 @@ export interface ControllerProps<State extends Lookup = Lookup>
   /**
    * Called after any delay has finished.
    */
-  onDelayEnd?: EventProp<OnDelayEnd<State[keyof State]>>
+  onDelayEnd?: OnDelayEnd | { [P in keyof State]?: OnDelayEnd<State[P]> }
   /**
    * Called when the # of animating values exceeds 0
    *
@@ -185,8 +185,8 @@ export interface ControllerProps<State extends Lookup = Lookup>
   onChange?:
     | ((values: State) => void)
     | { [P in keyof State]?: OnChange<State[P]> }
-  onPause?: EventProp<OnPause<State[keyof State]>>
-  onResume?: EventProp<OnResume<State[keyof State]>>
+  onPause?: OnPause | { [P in keyof State]?: OnPause<State[P]> }
+  onResume?: OnResume | { [P in keyof State]?: OnResume<State[P]> }
   /**
    * Called after an animation is updated by new props.
    * Useful for manipulation
