@@ -11,7 +11,7 @@ import {
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
-import { getDefaultProp, getDefaultProps } from './helpers'
+import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE, PAUSED } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
