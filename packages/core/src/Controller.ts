@@ -13,7 +13,14 @@ import * as G from 'shared/globals'
 import { Lookup, Falsy } from './types/common'
 import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
-import { SpringPhase, CREATED, ACTIVE, IDLE, PAUSED } from './SpringPhase'
+import {
+  SpringPhase,
+  CREATED,
+  ACTIVE,
+  IDLE,
+  PAUSED,
+  DISPOSED,
+} from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import {
   getCancelledResult,
@@ -201,9 +208,12 @@ export class Controller<State extends Lookup = Lookup>
 
   /** Destroy every spring in this controller */
   dispose() {
-    stopAsync(this._state)
-    this.each(spring => spring.dispose())
-    this.springs = {} as any
+    if (!this.is(DISPOSED)) {
+      this._phase = DISPOSED
+      stopAsync(this._state)
+      this.each(spring => spring.dispose())
+      this.springs = null as any
+    }
   }
 
   /** @internal Called at the end of every animation frame */
