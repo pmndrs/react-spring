@@ -525,6 +525,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
   ): AsyncResult<T> {
     const defaultProps: any = this._defaultProps
 
+    // Let the caller inspect every update.
+    const onProps = resolveEventProp(defaultProps, props, 'onProps', this.key)
+    if (onProps) {
+      onProps(props, this)
+    }
+
     // These props are coerced into booleans by the `scheduleProps` function,
     // so they need their default values merged before then.
     each(['cancel', 'pause'] as const, key => {
@@ -594,14 +600,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     /** Get the function for a specific event prop */
-    const getEventProp = <K extends keyof SpringEventProps>(prop: K) => {
-      const value = !is.und(props[prop]) ? props[prop] : defaultProps[prop]
-      return (is.fun(value)
-        ? value
-        : key && value
-        ? value[key]
-        : undefined) as Extract<SpringEventProps[K], Function>
-    }
+    const getEventProp = <K extends keyof SpringEventProps>(prop: K) =>
+      resolveEventProp(defaultProps, props, prop, key)
 
     // Call "onDelayEnd" before merging props, but after cancellation checks.
     const onDelayEnd = getEventProp('onDelayEnd')
@@ -799,12 +799,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       else if (reset || props.onRest) {
         anim.onRest[0] = onRest
       }
-    }
-
-    // By this point, every prop has been merged.
-    const onProps = getEventProp('onProps')
-    if (onProps) {
-      onProps(props, this)
     }
 
     // Update our node even if the animation is idle.
@@ -1070,4 +1064,15 @@ export function declareUpdate(props: any) {
 /** Find keys with defined values */
 function findDefined(values: any, keys: Set<string>) {
   each(values, (value, key) => value != null && keys.add(key as any))
+}
+
+/** Coerce an event prop into a function */
+function resolveEventProp<T extends SpringEventProps, P extends keyof T>(
+  defaultProps: T,
+  props: T,
+  prop: P,
+  key?: string
+): Extract<T[P], Function> {
+  const value: any = !is.und(props[prop]) ? props[prop] : defaultProps[prop]
+  return is.fun(value) ? value : key && value ? value[key] : undefined
 }
