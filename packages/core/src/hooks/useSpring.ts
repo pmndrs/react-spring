@@ -33,7 +33,9 @@ export type UseSpringProps<Props extends object = any> = unknown &
  * `deps` change (when defined). State is inferred from forward props.
  */
 export function useSpring<Props extends object>(
-  props: () => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
+  props:
+    | Function
+    | (() => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps),
   deps?: readonly any[] | undefined
 ): [
   SpringValues<PickAnimated<Props>>,
