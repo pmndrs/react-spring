@@ -25,6 +25,8 @@ import {
   OnStart,
   OnProps,
   OnDelayEnd,
+  OnPause,
+  OnResume,
 } from './functions'
 
 /**
@@ -73,13 +75,15 @@ export interface SpringProps<T = any> extends AnimationProps<T> {
    */
   onStart?: EventProp<OnStart<T>>
   /**
-   * Called when all animations come to a stand-still.
-   */
-  onRest?: EventProp<OnRest<T>>
-  /**
    * Called when a spring has its value changed.
    */
   onChange?: EventProp<OnChange<T>>
+  onPause?: EventProp<OnPause<T>>
+  onResume?: EventProp<OnResume<T>>
+  /**
+   * Called when all animations come to a stand-still.
+   */
+  onRest?: EventProp<OnRest<T>>
 }
 
 /**
@@ -174,13 +178,6 @@ export interface ControllerProps<State extends Lookup = Lookup>
    */
   onRest?: OnRest<State> | { [P in keyof State]?: OnRest<State[P]> }
   /**
-   * Called after an animation is updated by new props.
-   * Useful for manipulation
-   *
-   * Also accepts an object for per-key events
-   */
-  onProps?: OnProps<State> | { [P in keyof State]?: OnProps<State[P]> }
-  /**
    * Called once per frame when animations are active
    *
    * Also accepts an object for per-key events
@@ -188,6 +185,15 @@ export interface ControllerProps<State extends Lookup = Lookup>
   onChange?:
     | ((values: State) => void)
     | { [P in keyof State]?: OnChange<State[P]> }
+  onPause?: EventProp<OnPause<State[keyof State]>>
+  onResume?: EventProp<OnResume<State[keyof State]>>
+  /**
+   * Called after an animation is updated by new props.
+   * Useful for manipulation
+   *
+   * Also accepts an object for per-key events
+   */
+  onProps?: OnProps<State> | { [P in keyof State]?: OnProps<State[P]> }
 }
 
 export type LoopProp<T extends object> = boolean | T | (() => boolean | T)
@@ -246,6 +252,9 @@ export interface AnimationProps<T = any> {
   default?: boolean | SpringDefaultProps
 }
 
+export interface SpringEventProps<T = any>
+  extends Pick<SpringDefaultProps<T>, keyof ReservedEventProps> {}
+
 /** Default props for a `SpringValue` object */
 export type SpringDefaultProps<T = any> = {
   [D in typeof DEFAULT_PROPS[number]]?: SpringProps<T>[D]
@@ -303,6 +312,8 @@ export interface ReservedEventProps {
   onProps?: any
   onStart?: any
   onChange?: any
+  onPause?: any
+  onResume?: any
   onRest?: any
 }
 

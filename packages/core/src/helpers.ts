@@ -108,6 +108,8 @@ export const DEFAULT_PROPS = [
   'onProps',
   'onStart',
   'onChange',
+  'onPause',
+  'onResume',
   'onRest',
 ] as const
 
@@ -128,6 +130,8 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   onProps: 1,
   onStart: 1,
   onChange: 1,
+  onPause: 1,
+  onResume: 1,
   onRest: 1,
 
   // Transition props

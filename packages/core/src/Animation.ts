@@ -1,7 +1,7 @@
 import { AnimatedValue } from 'animated'
 import { FluidValue } from 'shared'
 import { AnimationConfig } from './AnimationConfig'
-import { OnStart, OnChange } from './types'
+import { OnStart, OnChange, OnPause, OnResume } from './types'
 
 const emptyArray: readonly any[] = []
 
@@ -21,5 +21,7 @@ export class Animation<T = any> {
   immediate = false
   onStart?: OnStart<T>
   onChange?: OnChange<T>
+  onPause?: OnPause<T>
+  onResume?: OnResume<T>
   onRest: OnRest[] = []
 }

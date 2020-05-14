@@ -313,6 +313,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (!this.is(PAUSED)) {
       this._phase = PAUSED
       flushCalls(this._state.pauseQueue)
+      callProp(this.animation.onPause, this)
     }
   }
 
@@ -322,6 +323,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (this.is(PAUSED)) {
       this._start()
       flushCalls(this._state.resumeQueue)
+      callProp(this.animation.onResume, this)
     }
   }
 
@@ -762,8 +764,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
           : toArray(goal)
       }
 
-      anim.onStart = getEventProp('onStart')
-      anim.onChange = getEventProp('onChange')
+      // These event props are saved for later.
+      each(
+        ['onStart', 'onChange', 'onPause', 'onResume'] as const,
+        prop => (anim[prop] = getEventProp(prop) as any)
+      )
 
       // The "reset" prop tries to reuse the old "onRest" prop,
       // unless you defined a new "onRest" prop.

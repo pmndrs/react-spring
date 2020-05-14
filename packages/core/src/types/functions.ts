@@ -121,6 +121,9 @@ export type OnStart<T = unknown> = (spring: SpringValue<T>) => void
 /** Called when a `SpringValue` changes */
 export type OnChange<T = unknown> = (value: T, source: SpringValue<T>) => void
 
+export type OnPause<T = unknown> = OnStart<T>
+export type OnResume<T = unknown> = OnStart<T>
+
 /** Called once the animation comes to a halt */
 export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
 
