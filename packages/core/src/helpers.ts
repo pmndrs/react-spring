@@ -203,3 +203,18 @@ export function hasProps(props: object) {
   for (const _ in props) return true
   return false
 }
+
+export function overrideGet<T, P extends keyof T>(
+  target: T,
+  key: P,
+  get: () => T[P]
+) {
+  Object.defineProperty(target, key, { get, enumerable: true })
+}
+
+export function throwDisposed(cond?: boolean): any {
+  if (cond === false) return
+  throw Error(
+    'This object is disposed. Did you call its `dispose` method on accident?'
+  )
+}

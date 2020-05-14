@@ -11,7 +11,7 @@ import {
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
-import { getDefaultProp } from './helpers'
+import { getDefaultProp, overrideGet, throwDisposed } from './helpers'
 import { FrameValue } from './FrameValue'
 import {
   SpringPhase,
@@ -212,7 +212,7 @@ export class Controller<State extends Lookup = Lookup>
       this._phase = DISPOSED
       stopAsync(this._state)
       this.each(spring => spring.dispose())
-      this.springs = null as any
+      overrideGet(this, 'springs', throwDisposed)
     }
   }
 

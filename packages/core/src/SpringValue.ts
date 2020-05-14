@@ -35,6 +35,8 @@ import {
   mergeDefaultProps,
   getDefaultProps,
   getDefaultProp,
+  throwDisposed,
+  overrideGet,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
 import {
@@ -306,7 +308,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * This does nothing when not animating.
    */
   pause() {
-    checkDisposed(this, 'pause')
+    throwDisposed(this.is(DISPOSED))
     if (!this.is(PAUSED)) {
       this._phase = PAUSED
       flushCalls(this._state.pauseQueue)
@@ -315,7 +317,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Resume the animation if paused. */
   resume() {
-    checkDisposed(this, 'resume')
+    throwDisposed(this.is(DISPOSED))
     if (this.is(PAUSED)) {
       this._start()
       flushCalls(this._state.resumeQueue)
@@ -360,7 +362,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Push props into the pending queue. */
   update(props: SpringUpdate<T>) {
-    checkDisposed(this, 'update')
+    throwDisposed(this.is(DISPOSED))
     const queue = this.queue || (this.queue = [])
     queue.push(props)
     return this
@@ -379,8 +381,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   start(to: Animatable<T>, props?: SpringUpdate<T>): AsyncResult<T>
 
-  async start(to?: SpringUpdate<T> | Animatable<T>, arg2?: SpringUpdate<T>) {
-    checkDisposed(this, 'start')
+  start(to?: SpringUpdate<T> | Animatable<T>, arg2?: SpringUpdate<T>) {
+    throwDisposed(this.is(DISPOSED))
 
     let queue: SpringUpdate<T>[]
     if (!is.und(to)) {
@@ -390,8 +392,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
       this.queue = []
     }
 
-    const results = await Promise.all(queue.map(props => this._update(props)))
-    return getCombinedResult(this, results)
+    return Promise.all(queue.map(props => this._update(props))).then(results =>
+      getCombinedResult(this, results)
+    )
   }
 
   /**
@@ -426,6 +429,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
       this.stop()
       this._phase = DISPOSED
+      overrideGet(this, 'animation', throwDisposed)
     }
   }
 
@@ -943,14 +947,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
         each(onRestQueue, onRest => onRest(cancel))
       }
     }
-  }
-}
-
-function checkDisposed(spring: SpringValue, name: string) {
-  if (spring.is(DISPOSED)) {
-    throw Error(
-      `Cannot call "${name}" of disposed "${spring.constructor.name}" object`
-    )
   }
 }
 
