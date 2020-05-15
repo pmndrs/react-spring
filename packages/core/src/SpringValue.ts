@@ -756,11 +756,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
           : toArray(goal)
       }
 
-      // These event props are saved for later.
-      each(
-        ['onStart', 'onChange', 'onPause', 'onResume'] as const,
-        prop => (anim[prop] = getEventProp(prop) as any)
-      )
+      // These event props are stored for later in the animation.
+      // Only updates that start an animation can change these props.
+      if (started) {
+        each(
+          ['onStart', 'onChange', 'onPause', 'onResume'] as const,
+          prop => (anim[prop] = getEventProp(prop) as any)
+        )
+      }
 
       // The "reset" prop tries to reuse the old "onRest" prop,
       // unless you defined a new "onRest" prop.
