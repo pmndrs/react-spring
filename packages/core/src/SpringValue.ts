@@ -49,7 +49,6 @@ import {
 } from './SpringPhase'
 import {
   AnimationRange,
-  EventProp,
   OnRest,
   SpringDefaultProps,
   SpringUpdate,
