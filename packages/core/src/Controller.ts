@@ -129,7 +129,9 @@ export class Controller<State extends Lookup = Lookup>
 
   /** Push an update onto the queue of each value. */
   update(props: ControllerUpdate<State> | Falsy) {
-    if (props) this.queue.push(createUpdate(props))
+    if (props) {
+      this.queue.push(createUpdate(props))
+    }
     return this
   }
 
@@ -141,13 +143,17 @@ export class Controller<State extends Lookup = Lookup>
    * the queued animations added with the `update` method, which are left alone.
    */
   start(props?: OneOrMore<ControllerUpdate<State>> | null): AsyncResult<State> {
-    const queue = props ? toArray<any>(props).map(createUpdate) : this.queue
-    if (!props) {
+    let { queue } = this as any
+    if (props) {
+      queue = toArray<any>(props).map(createUpdate)
+    } else {
       this.queue = []
     }
+
     if (this._flush) {
       return this._flush(this, queue)
     }
+
     prepareKeys(this, queue)
     return flushUpdateQueue(this, queue)
   }
