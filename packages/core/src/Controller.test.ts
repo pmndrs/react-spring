@@ -75,7 +75,7 @@ describe('Controller', () => {
       ctrl.stop()
 
       expect(ctrl.idle).toBeTruthy()
-      expect((await promise).cancelled).toBeTruthy()
+      expect((await promise).finished).toBeFalsy()
     })
 
     it('respects the "pause" prop', async () => {

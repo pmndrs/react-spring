@@ -6,6 +6,7 @@ import {
   toArray,
   useForceUpdate,
   useOnce,
+  usePrev,
   each,
   OneOrMore,
   UnknownProps,
@@ -250,7 +251,8 @@ export function useTransition(
 
   // The prop overrides from an ancestor.
   const context = useSpringContext()
-  const hasContext = hasProps(context)
+  const prevContext = usePrev(context)
+  const hasContext = context !== prevContext && hasProps(context)
 
   // Merge the context into each transition.
   useLayoutEffect(() => {

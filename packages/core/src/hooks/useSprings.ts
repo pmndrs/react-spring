@@ -170,7 +170,8 @@ export function useSprings(
   const springs = ctrls.map((ctrl, i) => getSprings(ctrl, updates[i]))
 
   const context = useSpringContext()
-  const hasContext = hasProps(context)
+  const prevContext = usePrev(context)
+  const hasContext = context !== prevContext && hasProps(context)
 
   useLayoutEffect(() => {
     layoutId.current++
