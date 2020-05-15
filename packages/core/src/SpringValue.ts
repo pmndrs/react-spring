@@ -332,8 +332,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * All `onRest` callbacks are passed `{finished: true}`
    */
   finish(to?: T | FluidValue<T>) {
-    this.resume()
-    if (this.is(ACTIVE)) {
+    if (this.is(ACTIVE) || this.is(PAUSED)) {
       const anim = this.animation
 
       // Decay animations have an implicit goal.
@@ -927,8 +926,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * Always wrap `_stop` calls with `batchedUpdates`.
    */
   protected _stop(cancel?: boolean) {
-    this.resume()
-    if (this.is(ACTIVE)) {
+    if (this.is(ACTIVE) || this.is(PAUSED)) {
       this._phase = IDLE
 
       // Always let change observers know when a spring becomes idle.
