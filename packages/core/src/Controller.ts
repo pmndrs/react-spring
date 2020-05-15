@@ -362,9 +362,8 @@ export async function flushUpdate(
     })
   }
 
-  // When true, cancel the current `runAsync` call.
   const cancel =
-    !keys && (props.cancel === true || getDefaultProp(props, 'cancel') === true)
+    props.cancel === true || getDefaultProp(props, 'cancel') === true
 
   if (asyncTo || (cancel && state.asyncId)) {
     promises.push(
@@ -375,14 +374,13 @@ export async function flushUpdate(
           pause: noop,
           resume: noop,
           start(props, resolve) {
-            let result: AsyncResult | undefined
             if (cancel) {
               stopAsync(state, ctrl['_lastAsyncId'])
-            } else if (!props.cancel) {
+              resolve(getCancelledResult(ctrl))
+            } else {
               props.onRest = onRest as any
-              result = runAsync(asyncTo!, props, state, ctrl)
+              resolve(runAsync(asyncTo!, props, state, ctrl))
             }
-            resolve(result || getCancelledResult(ctrl))
           },
         },
       })
