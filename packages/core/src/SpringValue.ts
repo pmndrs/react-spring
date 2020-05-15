@@ -347,13 +347,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
       G.batchedUpdates(() => {
         // Ensure the "onStart" and "onRest" props are called.
-        if (!anim.changed) {
-          anim.changed = true
-          if (anim.onStart) {
-            anim.onStart(this)
-          }
-        }
-
+        this._onStart()
         // Exit the frameloop.
         this._stop()
       })
@@ -867,22 +861,24 @@ export class SpringValue<T = any> extends FrameValue<T> {
     return !isEqual(value, oldValue)
   }
 
+  protected _onStart() {
+    const anim = this.animation
+    if (!anim.changed) {
+      anim.changed = true
+      callProp(anim.onStart, this)
+    }
+  }
+
   protected _onChange(value: T, idle = false) {
     const anim = this.animation
 
     // The "onStart" prop is called on the first change after entering the
     // frameloop, but never for immediate animations.
-    if (!anim.changed && !idle) {
-      anim.changed = true
-      if (anim.onStart) {
-        anim.onStart(this)
-      }
+    if (!idle) {
+      this._onStart()
     }
 
-    if (anim.onChange) {
-      anim.onChange(value, this)
-    }
-
+    callProp(anim.onChange, value, this)
     super._onChange(value, idle)
   }
 
