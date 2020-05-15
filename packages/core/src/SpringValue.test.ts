@@ -59,6 +59,7 @@ describe('SpringValue', () => {
   })
 
   describeProps()
+  describeEvents()
   describeMethods()
   describeGlobals()
 
@@ -519,6 +520,177 @@ function describeDelayProp() {
       await advanceByTime(400)
       expect(anim.immediate).toBeFalsy()
       expect(anim.to).toBe(0)
+    })
+  })
+}
+
+function describeEvents() {
+  describe('the "onStart" event', () => {
+    it('is called on the first frame', async () => {
+      const onStart = jest.fn()
+      const spring = new SpringValue(0, { onStart })
+
+      spring.start(1)
+      expect(onStart).toBeCalledTimes(0)
+
+      mockRaf.step()
+      expect(onStart).toBeCalledTimes(1)
+
+      await advanceUntilIdle()
+      expect(onStart).toBeCalledTimes(1)
+    })
+    it('is called by the "finish" method', () => {
+      const onStart = jest.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onStart })
+      expect(onStart).toBeCalledTimes(0)
+
+      spring.finish()
+      expect(onStart).toBeCalledTimes(1)
+    })
+  })
+  describe('the "onChange" event', () => {
+    it('is called on every frame', async () => {
+      const onChange = jest.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onChange })
+
+      await advanceUntilIdle()
+      const frames = getFrames(spring)
+      expect(onChange).toBeCalledTimes(frames.length)
+    })
+    it('receives the "to" value on the last frame', async () => {
+      const onChange = jest.fn()
+      const spring = new SpringValue('blue', { onChange })
+
+      spring.start('red')
+      await advanceUntilIdle()
+
+      const [lastValue] = onChange.mock.calls.slice(-1)[0]
+      expect(lastValue).toBe('red')
+    })
+    it('is called by the "set" method', () => {
+      const onChange = jest.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onChange })
+
+      mockRaf.step()
+      expect(onChange).toBeCalledTimes(1)
+
+      // During an animation:
+      spring.set(1)
+      expect(onChange).toBeCalledTimes(2)
+      expect(spring.idle).toBeTruthy()
+
+      // While idle:
+      spring.set(0)
+      expect(onChange).toBeCalledTimes(3)
+    })
+  })
+  describe('the "onPause" event', () => {
+    it('is called by the "pause" method', () => {
+      const onPause = jest.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onPause })
+
+      mockRaf.step()
+      spring.pause()
+      spring.pause() // noop
+
+      expect(onPause).toBeCalledTimes(1)
+
+      spring.resume()
+      spring.pause()
+
+      expect(onPause).toBeCalledTimes(2)
+    })
+  })
+  describe('the "onResume" event', () => {
+    it('is called by the "resume" method', () => {
+      const onResume = jest.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onResume })
+
+      mockRaf.step()
+      spring.resume() // noop
+
+      expect(onResume).toBeCalledTimes(0)
+
+      spring.pause()
+      spring.resume()
+
+      expect(onResume).toBeCalledTimes(1)
+    })
+  })
+  describe('the "onRest" event', () => {
+    it('is called on the last frame', async () => {
+      const onRest = jest.fn()
+      // @ts-ignore
+      const spring = new SpringValue({
+        from: 0,
+        to: 1,
+        onRest,
+        config: {
+          // The animation is 3 frames long.
+          duration: 3 * frameLength,
+        },
+      })
+
+      mockRaf.step()
+      mockRaf.step()
+      expect(onRest).not.toBeCalled()
+
+      mockRaf.step()
+      expect(onRest).toBeCalledTimes(1)
+    })
+    it('is called by the "stop" method', () => {
+      const onRest = jest.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onRest })
+
+      mockRaf.step()
+      spring.stop()
+
+      expect(onRest).toBeCalledTimes(1)
+      expect(onRest.mock.calls[0][0]).toMatchObject({
+        value: spring.get(),
+        finished: false,
+      })
+    })
+    it('is called by the "finish" method', () => {
+      const onRest = jest.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onRest })
+
+      mockRaf.step()
+      spring.finish()
+
+      expect(onRest).toBeCalledTimes(1)
+      expect(onRest.mock.calls[0][0]).toMatchObject({
+        value: 1,
+        finished: true,
+      })
+    })
+    it('is called when the "cancel" prop is true', () => {
+      const onRest = jest.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onRest })
+
+      mockRaf.step()
+      spring.start({ cancel: true })
+
+      expect(onRest).toBeCalledTimes(1)
+      expect(onRest.mock.calls[0][0]).toMatchObject({
+        value: spring.get(),
+        cancelled: true,
+      })
+    })
+    it('is called after an async animation', async () => {
+      const onRest = jest.fn()
+      const spring = new SpringValue(0)
+
+      await spring.start({
+        to: () => {},
+        onRest,
+      })
+
+      expect(onRest).toBeCalledTimes(1)
+      expect(onRest.mock.calls[0][0]).toMatchObject({
+        value: spring.get(),
+        finished: true,
+      })
     })
   })
 }
