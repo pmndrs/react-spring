@@ -18,6 +18,44 @@ describe('SpringContext', () => {
     </SpringContext>
   ))
 
+  it('only merges when changed', () => {
+    const context: SpringContext = {}
+    const onProps = jest.fn()
+    const Test = () => {
+      useSpring({ onProps, x: 0 })
+      return null
+    }
+
+    const getRoot = () => (
+      <SpringContext {...context}>
+        <Test />
+      </SpringContext>
+    )
+
+    const expectUpdates = (updates: any[]) => {
+      onProps.mock.calls.forEach((args, i) => {
+        const update = updates[i]
+        if (update) {
+          expect(args[0]).toMatchObject(update)
+        } else {
+          // Unexpected update.
+          expect(args[0]).toBeUndefined()
+        }
+      })
+      onProps.mockClear()
+    }
+
+    const elem = render(getRoot())
+    expectUpdates([{ onProps, to: { x: 0 } }])
+
+    context.pause = true
+    elem.rerender(getRoot())
+    expectUpdates([{ default: context }, { onProps, to: { x: 0 } }])
+
+    elem.rerender(getRoot())
+    expectUpdates([{ onProps, to: { x: 0 } }])
+  })
+
   it('can cancel current animations', () => {
     update({})
     mockRaf.step()
