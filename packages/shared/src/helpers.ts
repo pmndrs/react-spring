@@ -64,9 +64,11 @@ export const each = <T extends object, This>(
   if (is.fun(obj.forEach)) {
     obj.forEach(cb, ctx)
   } else {
-    Object.keys(obj).forEach(key =>
-      cb.call(ctx!, (obj as any)[key], key as any)
-    )
+    const keys = Object.keys(obj)
+    for (let i = 0; i < keys.length; i++) {
+      const key: any = keys[i]
+      cb.call(ctx!, (obj as any)[key], key)
+    }
   }
 }
 
