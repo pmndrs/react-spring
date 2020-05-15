@@ -582,6 +582,10 @@ function describeEvents() {
       // While idle:
       spring.set(0)
       expect(onChange).toBeCalledTimes(3)
+
+      // No-op calls are ignored:
+      spring.set(0)
+      expect(onChange).toBeCalledTimes(3)
     })
   })
   describe('the "onPause" event', () => {
@@ -708,25 +712,6 @@ function describeMethods() {
       expect(await promise).toMatchObject({
         finished: false,
         value: 2,
-      })
-    })
-
-    describe('when a new value is passed', () => {
-      it('calls the "onChange" prop', () => {
-        const onChange = jest.fn()
-        const spring = new SpringValue(0, { onChange })
-        spring.set(1)
-        expect(onChange).toBeCalledWith(1, spring)
-      })
-      it.todo('wraps the "onChange" call with "batchedUpdates"')
-    })
-
-    describe('when the current value is passed', () => {
-      it('skips the "onChange" call', () => {
-        const onChange = jest.fn()
-        const spring = new SpringValue(0, { onChange })
-        spring.set(0)
-        expect(onChange).not.toBeCalled()
       })
     })
   })
