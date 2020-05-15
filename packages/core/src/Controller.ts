@@ -172,6 +172,7 @@ export class Controller<State extends Lookup = Lookup>
 
   /** Freeze the active animation in time */
   pause(keys?: OneOrMore<string>) {
+    throwDisposed(this.is(DISPOSED))
     if (is.und(keys)) {
       if (!this.is(PAUSED)) {
         this._phase = PAUSED
@@ -187,6 +188,7 @@ export class Controller<State extends Lookup = Lookup>
 
   /** Resume the animation if paused. */
   resume(keys?: OneOrMore<string>) {
+    throwDisposed(this.is(DISPOSED))
     if (is.und(keys)) {
       if (this.is(PAUSED)) {
         this._phase = this._active.size ? ACTIVE : IDLE
@@ -218,6 +220,7 @@ export class Controller<State extends Lookup = Lookup>
       this._phase = DISPOSED
       stopAsync(this._state)
       this.each(spring => spring.dispose())
+      overrideGet(this, 'queue', throwDisposed)
       overrideGet(this, 'springs', throwDisposed)
     }
   }
