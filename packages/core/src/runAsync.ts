@@ -74,23 +74,6 @@ export async function runAsync<T>(
       (resolve, reject) => ((preventBail = resolve), (bail = reject))
     )
 
-    // Stop animating when an error is caught.
-    const withBailHandler = <Args extends any[]>(
-      fn: (...args: Args) => AsyncResult<T>
-    ) => (...args: Args) => {
-      const onError = (err: any) => {
-        if (err instanceof BailSignal) {
-          bail(err) // Stop animating.
-        }
-        throw err
-      }
-      try {
-        return fn(...args).catch(onError)
-      } catch (err) {
-        onError(err)
-      }
-    }
-
     const bailIfEnded = (bailSignal: BailSignal<T>) => {
       const bailResult =
         // The `cancel` prop or `stop` method was used.
@@ -100,26 +83,32 @@ export async function runAsync<T>(
 
       if (bailResult) {
         bailSignal.result = bailResult
+
+        // Reject the `bailPromise` to ensure the `runAsync` promise
+        // is not relying on the caller to rethrow the error for us.
+        bail(bailSignal)
         throw bailSignal
       }
     }
 
-    // Note: This function cannot use the `async` keyword, because we want the
-    // `throw` statements to interrupt the caller.
-    const animate: any = withBailHandler((arg1: any, arg2?: any) => {
+    const animate: any = (arg1: any, arg2?: any) => {
+      // Create the bail signal outside the returned promise,
+      // so the generated stack trace is relevant.
       const bailSignal = new BailSignal()
-      bailIfEnded(bailSignal)
 
-      const props: any = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 }
-      props.parentId = callId
+      return (async () => {
+        bailIfEnded(bailSignal)
 
-      each(defaultProps, (value, key) => {
-        if (is.und(props[key])) {
-          props[key] = value as any
-        }
-      })
+        const props: any = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 }
+        props.parentId = callId
 
-      return target.start(props).then(async result => {
+        each(defaultProps, (value, key) => {
+          if (is.und(props[key])) {
+            props[key] = value as any
+          }
+        })
+
+        const result = await target.start(props)
         bailIfEnded(bailSignal)
 
         if (target.is(PAUSED)) {
@@ -129,8 +118,8 @@ export async function runAsync<T>(
         }
 
         return result
-      })
-    })
+      })()
+    }
 
     let result!: AnimationResult<T>
     try {
