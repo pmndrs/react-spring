@@ -22,9 +22,6 @@ export function Spring<State extends object>(
   props: { to: State } & Omit<SpringComponentProps<NoInfer<State>>, 'to'>
 ): JSX.Element | null
 
-/**
- * The `Spring` component passes `SpringValue` objects to your render prop.
- */
-export function Spring({ children, ...props }: any) {
+export function Spring({ children, ...props }: SpringComponentProps) {
   return children(useSpring(props))
 }
