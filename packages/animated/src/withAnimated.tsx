@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { forwardRef, useRef, Ref } from 'react'
+import { forwardRef, useRef, Ref, useCallback } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import { is, each, useForceUpdate, ElementType, FluidConfig } from 'shared'
 
@@ -8,14 +8,26 @@ import { HostConfig } from './createHost'
 
 export type AnimatableComponent = string | Exclude<ElementType, string>
 
-export const withAnimated = (Component: any, host: HostConfig) =>
-  forwardRef((rawProps: any, ref: Ref<any>) => {
+export const withAnimated = (Component: any, host: HostConfig) => {
+  const hasInstance: boolean =
+    // Function components must use "forwardRef" to avoid being
+    // re-rendered on every animation frame.
+    !is.fun(Component) ||
+    (Component.prototype && Component.prototype.isReactComponent)
+
+  return forwardRef((givenProps: any, givenRef: Ref<any>) => {
     const instanceRef = useRef<any>(null)
-    const hasInstance: boolean =
-      // Function components must use "forwardRef" to avoid being
-      // re-rendered on every animation frame.
-      !is.fun(Component) ||
-      (Component.prototype && Component.prototype.isReactComponent)
+
+    // The `hasInstance` value is constant, so we can safely avoid
+    // the `useCallback` invocation when `hasInstance` is false.
+    const ref =
+      hasInstance &&
+      useCallback(
+        (value: any) => {
+          instanceRef.current = updateRef(givenRef, value)
+        },
+        [givenRef]
+      )
 
     const forceUpdate = useForceUpdate()
     const props = new AnimatedProps(() => {
@@ -35,25 +47,17 @@ export const withAnimated = (Component: any, host: HostConfig) =>
     })
 
     const dependencies = new Set<FluidConfig>()
-    props.setValue(rawProps, { dependencies, host })
+    props.setValue(givenProps, { dependencies, host })
 
     useLayoutEffect(() => {
       each(dependencies, dep => dep.addChild(props))
       return () => each(dependencies, dep => dep.removeChild(props))
     })
 
-    return (
-      <Component
-        {...host.getComponentProps(props.getValue()!)}
-        ref={
-          hasInstance &&
-          ((value: any) => {
-            instanceRef.current = updateRef(ref, value)
-          })
-        }
-      />
-    )
+    const usedProps = host.getComponentProps(props.getValue()!)
+    return <Component {...usedProps} ref={ref} />
   })
+}
 
 function updateRef<T>(ref: Ref<T>, value: T) {
   if (ref) {
