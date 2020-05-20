@@ -957,10 +957,10 @@ function getNodeType(value: any): AnimatedType {
  * based on whether the current value equals the goal value that
  * was calculated at the time the "onRest" handler was set.
  */
-const checkFinishedOnRest = <T>(
+function checkFinishedOnRest<T>(
   onRest: OnRest<T> | undefined,
   spring: SpringValue<T>
-) => {
+) {
   const { to } = spring.animation
   return onRest
     ? (cancel?: boolean) => {
