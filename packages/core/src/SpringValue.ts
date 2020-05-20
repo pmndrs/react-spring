@@ -490,24 +490,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _updateNode(value: any): Animated | undefined {
     let node = getAnimated(this)
     if (!is.und(value)) {
-      const nodeType = this._getNodeType(value)
+      const nodeType = getNodeType(value)
       if (!node || node.constructor !== nodeType) {
         setAnimated(this, (node = nodeType.create(value)))
       }
     }
     return node
-  }
-
-  /** Return the `Animated` node constructor for a given value */
-  protected _getNodeType(value: T | FluidValue<T>): AnimatedType {
-    const parentNode = getAnimated(value)
-    return parentNode
-      ? (parentNode.constructor as any)
-      : is.arr(value)
-      ? AnimatedArray
-      : isAnimatedString(value)
-      ? AnimatedString
-      : AnimatedValue
   }
 
   /** Every update is processed by this method before merging. */
@@ -692,7 +680,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       if (immediate) {
         node = this._updateNode(goal)!
       } else {
-        const nodeType = this._getNodeType(to)
+        const nodeType = getNodeType(to)
         if (nodeType !== node.constructor) {
           throw Error(
             `Cannot animate between ${node.constructor.name} and ${nodeType.name}, as the "to" prop suggests`
@@ -950,6 +938,18 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
   }
+}
+
+/** Return the `Animated` node constructor for a given value */
+function getNodeType(value: any): AnimatedType {
+  const parentNode = getAnimated(value)
+  return parentNode
+    ? (parentNode.constructor as any)
+    : is.arr(value)
+    ? AnimatedArray
+    : isAnimatedString(value)
+    ? AnimatedString
+    : AnimatedValue
 }
 
 /**
