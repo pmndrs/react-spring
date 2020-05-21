@@ -13,14 +13,7 @@ import {
 import * as G from 'shared/globals'
 
 import { FrameValue, isFrameValue } from './FrameValue'
-import {
-  getAnimated,
-  setAnimated,
-  AnimatedValue,
-  AnimatedArray,
-  AnimatedType,
-  getPayload,
-} from 'animated'
+import { getAnimated, setAnimated, getAnimatedType, getPayload } from 'animated'
 
 /**
  * An `Interpolation` is a memoized value that's computed whenever one of its
@@ -49,7 +42,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
     this.calc = createInterpolator(...args)
 
     const value = this._get()
-    const nodeType: AnimatedType = is.arr(value) ? AnimatedArray : AnimatedValue
+    const nodeType = getAnimatedType(value)
 
     // Assume the computed value never changes type.
     setAnimated(this, nodeType.create(value))

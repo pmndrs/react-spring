@@ -12,14 +12,13 @@ import {
   flushCalls,
 } from 'shared'
 import {
-  AnimatedType,
   AnimatedValue,
   AnimatedString,
-  AnimatedArray,
   getPayload,
   getAnimated,
   setAnimated,
   Animated,
+  getAnimatedType,
 } from 'animated'
 import * as G from 'shared/globals'
 
@@ -490,7 +489,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _updateNode(value: any): Animated | undefined {
     let node = getAnimated(this)
     if (!is.und(value)) {
-      const nodeType = getNodeType(value)
+      const nodeType = getAnimatedType(value)
       if (!node || node.constructor !== nodeType) {
         setAnimated(this, (node = nodeType.create(value)))
       }
@@ -680,7 +679,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       if (immediate) {
         node = this._updateNode(goal)!
       } else {
-        const nodeType = getNodeType(to)
+        const nodeType = getAnimatedType(to)
         if (nodeType !== node.constructor) {
           throw Error(
             `Cannot animate between ${node.constructor.name} and ${nodeType.name}, as the "to" prop suggests`
@@ -938,18 +937,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
   }
-}
-
-/** Return the `Animated` node constructor for a given value */
-function getNodeType(value: any): AnimatedType {
-  const parentNode = getAnimated(value)
-  return parentNode
-    ? (parentNode.constructor as any)
-    : is.arr(value)
-    ? AnimatedArray
-    : isAnimatedString(value)
-    ? AnimatedString
-    : AnimatedValue
 }
 
 /**
