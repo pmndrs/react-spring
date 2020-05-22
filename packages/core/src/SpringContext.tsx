@@ -16,6 +16,8 @@ export interface SpringContext {
   immediate?: boolean
   /** Set the default `config` prop for future animations. */
   config?: SpringConfig
+  /** Debug all new and existing animations. */
+  debug?: boolean
 }
 
 const ctx = React.createContext<SpringContext>({})
@@ -33,6 +35,7 @@ export const SpringContext = ({
     props.cancel,
     props.immediate,
     props.config,
+    props.debug,
   ])
 
   const { Provider } = ctx
