@@ -61,15 +61,22 @@ import {
   getCancelledResult,
   getFinishedResult,
   getNoopResult,
+  AnimationResult,
 } from './AnimationResult'
 
 declare const console: any
+
+type SpringEvents<T> = {
+  type: 'idle'
+  result: AnimationResult<T>
+  parent: SpringValue<T>
+}
 
 /**
  * Only numbers, strings, and arrays of numbers/strings are supported.
  * Non-animatable strings are also supported.
  */
-export class SpringValue<T = any> extends FrameValue<T> {
+export class SpringValue<T = any> extends FrameValue<T, SpringEvents<T>> {
   /** The property name used when `to` or `from` is an object. Useful when debugging too. */
   key?: string
 
@@ -765,7 +772,17 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // "onRest" prop. Instead, the _default_ "onRest" prop is used
       // when the next animation has an undefined "onRest" prop.
       if (started) {
-        anim.onRest = [onRest, checkFinishedOnRest(resolve, this)]
+        anim.onRest = [
+          onRest,
+          checkFinishedOnRest(result => {
+            resolve(result)
+            this._emit({
+              type: 'idle',
+              result,
+              parent: this,
+            })
+          }, this),
+        ]
 
         // Flush the "onRest" queue for the previous animation.
         let onRestIndex = reset ? 0 : 1

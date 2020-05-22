@@ -1,4 +1,10 @@
-import { each, InterpolatorArgs, FluidValue, FluidObserver } from 'shared'
+import {
+  each,
+  InterpolatorArgs,
+  FluidValue,
+  FluidObserver,
+  FluidEvent,
+} from 'shared'
 import { getAnimated } from 'animated'
 import { deprecateInterpolate } from 'shared/deprecations'
 import * as G from 'shared/globals'
@@ -15,8 +21,8 @@ let nextId = 1
  *
  * Its underlying value can be accessed and even observed.
  */
-export abstract class FrameValue<T = any>
-  extends FluidValue<T, FrameValue.Event<T>>
+export abstract class FrameValue<T = any, U extends FluidEvent<T> = never>
+  extends FluidValue<T, U | FrameValue.Event<T>>
   implements FluidObserver<FrameValue.Event> {
   readonly id = nextId++
 
@@ -24,7 +30,9 @@ export abstract class FrameValue<T = any>
   abstract get idle(): boolean
 
   protected _priority = 0
-  protected _children = new Set<FrameValue.Observer<T>>()
+  protected _children = new Set<
+    FrameValue.Observer<T, U | FrameValue.Event<T>>
+  >()
 
   get priority() {
     return this._priority
@@ -141,7 +149,7 @@ export abstract class FrameValue<T = any>
     })
   }
 
-  protected _emit(event: FrameValue.Event) {
+  protected _emit(event: U | FrameValue.Event<T>) {
     // Clone "_children" so it can be safely mutated inside the loop.
     each(Array.from(this._children), child => {
       child.onParentChange(event)
@@ -182,5 +190,8 @@ export declare namespace FrameValue {
   )
 
   /** An object that handles `FrameValue` events */
-  export type Observer<T = any> = FluidObserver<Event<T>>
+  export type Observer<
+    T = any,
+    U extends FluidEvent<T> = never
+  > = FluidObserver<Event<T> | U>
 }
