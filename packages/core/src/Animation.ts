@@ -18,6 +18,7 @@ export class Animation<T = any> {
   to!: T | FluidValue<T>
   from!: T | FluidValue<T>
   config = new AnimationConfig()
+  debug = false
   immediate = false
   onStart?: OnStart<T>
   onChange?: OnChange<T>

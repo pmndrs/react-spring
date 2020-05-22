@@ -225,6 +225,10 @@ export interface AnimationProps<T = any> {
    */
   delay?: number | ((key: StringKeys<T>) => number)
   /**
+   * Tell the inspector to debug this animation.
+   */
+  debug?: boolean
+  /**
    * When true, props jump to their goal values instead of animating.
    */
   immediate?: MatchProp<StringKeys<T>>
@@ -282,6 +286,7 @@ export interface ReservedProps extends ReservedEventProps {
   to?: any
   ref?: any
   loop?: any
+  debug?: any
   pause?: any
   reset?: any
   cancel?: any

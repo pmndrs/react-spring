@@ -746,6 +746,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       // These event props are stored for later in the animation.
       // Only updates that start an animation can change these props.
       if (started) {
+        anim.debug = !!(is.und(props.debug) ? defaultProps.debug : props.debug)
         each(
           ['onStart', 'onChange', 'onPause', 'onResume'] as const,
           prop => (anim[prop] = getEventProp(prop) as any)
