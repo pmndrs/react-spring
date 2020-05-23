@@ -5,5 +5,6 @@
   "private": true,
   "scripts": {
     "build": "babel main.jsx --out-file _main.js"
-  }
+  },
+  "bic": false
 }
