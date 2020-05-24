@@ -132,24 +132,25 @@ export function normalizeColor(color: number | string) {
   return null
 }
 
-function hue2rgb(h: number, c: number, x: number) {
-  if (h < 60) return [c, x, 0]
-  if (h < 120) return [x, c, 0]
-  if (h < 180) return [0, c, x]
-  if (h < 240) return [0, x, c]
-  if (h < 300) return [x, 0, c]
-  return [c, 0, x]
+function hue2rgb(p: number, q: number, t: number) {
+  if (t < 0) t += 1
+  if (t > 1) t -= 1
+  if (t < 1 / 6) return p + (q - p) * 6 * t
+  if (t < 1 / 2) return q
+  if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+  return p
 }
 
 function hslToRgb(h: number, s: number, l: number) {
-  const C = (1 - Math.abs(2 * l - 1)) * s
-  const X = C * (1 - Math.abs(((h / 60) % 2) - 1))
-  const M = l - C / 2
-  const [R1, G1, B1] = hue2rgb(h, C, X)
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+  const p = 2 * l - q
+  const r = hue2rgb(p, q, h + 1 / 3)
+  const g = hue2rgb(p, q, h)
+  const b = hue2rgb(p, q, h - 1 / 3)
   return (
-    (Math.round((R1 + M) * 255) << 24) |
-    (Math.round((G1 + M) * 255) << 16) |
-    (Math.round((B1 + M) * 255) << 8)
+    (Math.round(r * 255) << 24) |
+    (Math.round(g * 255) << 16) |
+    (Math.round(b * 255) << 8)
   )
 }
 
