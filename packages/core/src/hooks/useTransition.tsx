@@ -78,12 +78,6 @@ export function useTransition(
   const items = toArray(data)
   const transitions: TransitionState[] = []
 
-  // Keys help with reusing transitions between renders.
-  // The `key` prop can be undefined (which means the items themselves are used
-  // as keys), or a function (which maps each item to its key), or an array of
-  // keys (which are assigned to each item by index).
-  const keys = getKeys(items, props)
-
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<TransitionState[] | null>(null)
   const prevTransitions = reset ? null : usedTransitions.current
@@ -101,6 +95,12 @@ export function useTransition(
       t.ctrl.stop(true)
     })
   )
+
+  // Keys help with reusing transitions between renders.
+  // The `key` prop can be undefined (which means the items themselves are used
+  // as keys), or a function (which maps each item to its key), or an array of
+  // keys (which are assigned to each item by index).
+  const keys = getKeys(items, props, prevTransitions)
 
   // Expired transitions that need clean up.
   const expired = (reset && usedTransitions.current) || []
@@ -321,9 +321,28 @@ export function useTransition(
   return ref ? [renderTransitions, ref] : renderTransitions
 }
 
+/** Local state for auto-generated item keys */
+let nextKey = 1
+
 function getKeys(
   items: readonly any[],
-  { key, keys = key }: { key?: ItemKeys; keys?: ItemKeys }
+  { key, keys = key }: { key?: ItemKeys; keys?: ItemKeys },
+  prevTransitions: TransitionState[] | null
 ): readonly any[] {
+  if (keys === null) {
+    const reused = new Set()
+    return items.map(item => {
+      const t =
+        prevTransitions &&
+        prevTransitions.find(
+          t => t.item === item && t.phase !== LEAVE && !reused.has(t)
+        )
+      if (t) {
+        reused.add(t)
+        return t.key
+      }
+      return nextKey++
+    })
+  }
   return is.und(keys) ? items : is.fun(keys) ? items.map(keys) : toArray(keys)
 }
