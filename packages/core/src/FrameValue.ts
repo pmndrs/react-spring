@@ -152,34 +152,37 @@ export abstract class FrameValue<T = any>
 export declare namespace FrameValue {
   /** A parent changed its value */
   interface ChangeEvent<T = any> {
+    parent: FrameValue<T>
     type: 'change'
     value: T
     idle: boolean
   }
 
   /** A parent changed its priority */
-  interface PriorityEvent {
+  interface PriorityEvent<T = any> {
+    parent: FrameValue<T>
     type: 'priority'
     priority: number
   }
 
   /** A parent reset the internal state of its current animation */
-  interface ResetEvent {
+  interface ResetEvent<T = any> {
+    parent: FrameValue<T>
     type: 'reset'
   }
 
   /** A parent entered the frameloop */
-  interface StartEvent {
+  interface StartEvent<T = any> {
+    parent: FrameValue<T>
     type: 'start'
   }
 
   /** Events sent to children of `FrameValue` objects */
-  export type Event<T = any> = { parent: FrameValue<T> } & (
+  export type Event<T = any> =
     | ChangeEvent<T>
-    | PriorityEvent
-    | ResetEvent
-    | StartEvent
-  )
+    | PriorityEvent<T>
+    | ResetEvent<T>
+    | StartEvent<T>
 
   /** An object that handles `FrameValue` events */
   export type Observer<T = any> = FluidObserver<Event<T>>
