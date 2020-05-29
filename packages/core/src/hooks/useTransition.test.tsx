@@ -93,6 +93,26 @@ describe('useTransition', () => {
       expect(onRest).toBeCalledTimes(1)
     })
   })
+
+  describe('when "leave" is a no-op update', () => {
+    it('still unmounts the transition', async () => {
+      const props = {
+        from: { t: 0 },
+        enter: { t: 1 },
+        leave: { t: 1 },
+      }
+
+      update(true, props)
+      expect(rendered).toEqual([true])
+      await advanceUntilIdle()
+
+      update(false, props)
+      expect(rendered).toEqual([true, false])
+
+      await advanceUntilIdle()
+      expect(rendered).toEqual([false])
+    })
+  })
 })
 
 function createUpdater(
