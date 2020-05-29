@@ -13,7 +13,7 @@ export let createStringInterpolator: (
   config: InterpolatorConfig<string>
 ) => (input: number) => string
 
-export let frameLoop = new FrameLoop()
+export let frameLoop: FrameLoop
 
 //
 // Optional

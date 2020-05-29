@@ -1,6 +1,11 @@
 import * as Globals from './globals'
 export { Globals }
 
+import { FrameLoop } from './FrameLoop'
+Globals.assign({
+  frameLoop: new FrameLoop(),
+})
+
 export * from './types'
 export * from './types.util'
 
