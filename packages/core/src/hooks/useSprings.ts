@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import {
   is,
@@ -92,7 +92,7 @@ export function useSprings(
   const forceUpdate = useForceUpdate()
 
   // State is updated on commit.
-  const [state] = useState(
+  const state = useMemo(
     (): State => ({
       ctrls: [],
       queue: [],
@@ -116,7 +116,8 @@ export function useSprings(
               forceUpdate()
             })
       },
-    })
+    }),
+    []
   )
 
   // The imperative API ref from the props of the first controller.
