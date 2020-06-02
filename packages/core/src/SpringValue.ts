@@ -526,6 +526,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // Ensure the initial value can be accessed by animated components.
     const range = this._prepareNode(props)
 
+    if (Object.isFrozen(this)) {
+      throw Error(
+        'Cannot animate a `SpringValue` object that is frozen. ' +
+          'Did you forget to pass your component to `animated(...)` before animating its props?'
+      )
+    }
+
     return scheduleProps<T>(++this._lastCallId, {
       key: this.key,
       props,
