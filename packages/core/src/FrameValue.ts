@@ -53,6 +53,10 @@ export abstract class FrameValue<T = any>
     return G.to(this, args) as Interpolation<T, Out>
   }
 
+  toJSON() {
+    return this.get()
+  }
+
   /** @internal */
   abstract advance(dt: number): void
 
