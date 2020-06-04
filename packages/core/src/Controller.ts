@@ -98,7 +98,7 @@ export class Controller<State extends Lookup = Lookup>
       this._flush = flush
     }
     if (props) {
-      this.start(props)
+      this.start({ default: true, ...props })
     }
   }
 
