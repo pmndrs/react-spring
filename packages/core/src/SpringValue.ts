@@ -37,6 +37,7 @@ import {
   throwDisposed,
   overrideGet,
   isFalsy,
+  isAsyncTo,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
 import {
@@ -460,7 +461,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     let { to, from } = props
 
     to = is.obj(to) ? to[key] : to
-    if (isFalsy(to) || is.fun(to) || is.arr(to)) {
+    if (isFalsy(to) || isAsyncTo(to)) {
       to = undefined
     }
 
@@ -646,7 +647,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     /** The "to" prop is async. */
-    const hasAsyncTo = is.arr(props.to) || is.fun(props.to)
+    const hasAsyncTo = isAsyncTo(props.to)
 
     const { config } = anim
     const { decay, velocity } = config
@@ -1003,7 +1004,7 @@ export function createLoopUpdate<T>(
       // For the "reverse" prop to loop as expected, the "to" prop
       // must be undefined. The "reverse" prop is ignored when the
       // "to" prop is an array or function.
-      to: !reverse || is.arr(to) || is.fun(to) ? to : undefined,
+      to: !reverse || isAsyncTo(to) ? to : undefined,
 
       // Avoid defining the "from" prop if a reset is unwanted.
       from: reset ? props.from : undefined,

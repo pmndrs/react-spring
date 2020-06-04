@@ -226,3 +226,7 @@ export function throwDisposed(cond?: boolean): any {
 export function isFalsy(value: any): value is Falsy {
   return value == null || value === false
 }
+
+export function isAsyncTo(to: any) {
+  return is.fun(to) || (is.arr(to) && is.obj(to[0]))
+}
