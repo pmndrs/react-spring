@@ -459,8 +459,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }) {
     const key = this.key || ''
 
-    to = !is.obj(to) || getFluidConfig(to) ? to : to[key]
-    from = !is.obj(from) || getFluidConfig(from) ? from : from[key]
+    to = is.obj(to) ? to[key] : is.fun(to) || is.arr(to) ? false : to
+    from = is.obj(from) ? from[key] : from
 
     // Create the range now to avoid "reverse" logic.
     const range = { to, from }
