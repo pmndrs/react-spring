@@ -222,3 +222,7 @@ export function throwDisposed(cond?: boolean): any {
     'This object is disposed. Did you call its `dispose` method on accident?'
   )
 }
+
+export function isFalsy(value: any): value is Falsy {
+  return value == null || value === false
+}

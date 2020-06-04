@@ -36,6 +36,7 @@ import {
   getDefaultProp,
   throwDisposed,
   overrideGet,
+  isFalsy,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
 import {
@@ -459,8 +460,15 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }) {
     const key = this.key || ''
 
-    to = is.obj(to) ? to[key] : is.fun(to) || is.arr(to) ? false : to
+    to = is.obj(to) ? to[key] : to
+    if (isFalsy(to) || is.fun(to) || is.arr(to)) {
+      to = undefined
+    }
+
     from = is.obj(from) ? from[key] : from
+    if (isFalsy(from)) {
+      from = undefined
+    }
 
     // Create the range now to avoid "reverse" logic.
     const range = { to, from }
@@ -1017,19 +1025,8 @@ export function createUpdate(props: any) {
   // Collect the keys affected by this update.
   const keys = new Set<string>()
 
-  if (from) {
-    findDefined(from, keys)
-  } else {
-    // Falsy values are deleted to avoid merging issues.
-    delete props.from
-  }
-
-  if (is.obj(to)) {
-    findDefined(to, keys)
-  } else if (!to) {
-    // Falsy values are deleted to avoid merging issues.
-    delete props.to
-  }
+  if (is.obj(to)) findDefined(to, keys)
+  if (is.obj(from)) findDefined(from, keys)
 
   // The "keys" prop helps in applying updates to affected keys only.
   props.keys = keys.size ? Array.from(keys) : null
