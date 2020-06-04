@@ -449,16 +449,15 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * This also ensures the initial value is available to animated components
    * during the render phase.
    */
-  protected _prepareNode({
-    to,
-    from,
-    reverse,
-  }: {
+  protected _prepareNode(props: {
     to?: any
     from?: any
     reverse?: boolean
+    default?: any
   }) {
     const key = this.key || ''
+
+    let { to, from } = props
 
     to = is.obj(to) ? to[key] : to
     if (isFalsy(to) || is.fun(to) || is.arr(to)) {
@@ -476,12 +475,20 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // Before ever animating, this method ensures an `Animated` node
     // exists and keeps its value in sync with the "from" prop.
     if (this.is(CREATED)) {
-      if (reverse) [to, from] = [from, to]
-      from = getFluidValue(from)
+      if (props.reverse) [to, from] = [from, to]
 
-      const node = this._updateNode(is.und(from) ? getFluidValue(to) : from)
-      if (node && !is.und(from)) {
-        node.setValue(from)
+      from = getFluidValue(from)
+      if (!is.und(from)) {
+        // Set the value in case the node was not replaced.
+        this._updateNode(from)!.setValue(from)
+      }
+      // If no "from" value exists in a declarative update, use its "to" value,
+      // but only if our `Animated` node is undefined.
+      else if (props.default && !getAnimated(this)) {
+        to = getFluidValue(to)
+        if (!is.und(to)) {
+          this._updateNode(to)
+        }
       }
     }
 
@@ -495,12 +502,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * The newest `Animated` node is returned.
    */
   protected _updateNode(value: any): Animated | undefined {
+    const nodeType = getAnimatedType(value)
     let node = getAnimated(this)
-    if (!is.und(value)) {
-      const nodeType = getAnimatedType(value)
-      if (!node || node.constructor !== nodeType) {
-        setAnimated(this, (node = nodeType.create(value)))
-      }
+    if (!node || node.constructor !== nodeType) {
+      setAnimated(this, (node = nodeType.create(value)))
     }
     return node
   }
