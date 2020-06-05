@@ -206,7 +206,7 @@ describe('Controller', () => {
       const ctrl = new Controller<{ x: number }>()
 
       const { springs } = ctrl
-      ctrl.start({
+      const promise = ctrl.start({
         to: async update => {
           // The spring does not exist yet!
           expect(springs.x).toBeUndefined()
@@ -227,7 +227,8 @@ describe('Controller', () => {
         },
       })
 
-      await advanceUntilIdle()
+      await Promise.all([advanceUntilIdle(), promise])
+      expect(ctrl.idle).toBeTruthy()
 
       // Since we call `update` twice, frames are generated!
       expect(getFrames(ctrl)).toMatchSnapshot()

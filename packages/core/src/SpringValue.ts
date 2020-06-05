@@ -483,9 +483,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
         // Set the value in case the node was not replaced.
         this._updateNode(from)!.setValue(from)
       }
-      // If no "from" value exists in a declarative update, use its "to" value,
-      // but only if our `Animated` node is undefined.
-      else if (props.default && !getAnimated(this)) {
+      // Use the "to" value if our node is undefined.
+      else if (!getAnimated(this)) {
         to = getFluidValue(to)
         if (!is.und(to)) {
           this._updateNode(to)
