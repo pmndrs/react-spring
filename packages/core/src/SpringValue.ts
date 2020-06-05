@@ -616,7 +616,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     let { to = prevTo, from = prevFrom } = range
 
     // Focus the "from" value if changing without a "to" value.
-    if (hasFromProp && !hasToProp) {
+    // For default updates, do this only if no "to" value exists.
+    if (hasFromProp && !hasToProp && (!props.default || is.und(to))) {
       to = from
     }
 
