@@ -45,8 +45,7 @@ describe('SpringValue', () => {
     expect(frames).toEqual(getFrames(spring2))
   })
 
-  // FIXME: This test fails.
-  xit('can animate an array of numbers', async () => {
+  it('can animate an array of numbers', async () => {
     const spring = new SpringValue()
     spring.start({
       to: [10, 20],
@@ -54,8 +53,7 @@ describe('SpringValue', () => {
       config: { duration: 10 * frameLength },
     })
     await advanceUntilIdle()
-    const frames = getFrames(spring)
-    expect(frames).not.toEqual([])
+    expect(getFrames(spring)).toMatchSnapshot()
   })
 
   describeProps()
