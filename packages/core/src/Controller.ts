@@ -228,6 +228,7 @@ export class Controller<State extends Lookup = Lookup>
 
   /** @internal Called at the end of every animation frame */
   protected _onFrame() {
+    if (this.is(DISPOSED)) return
     const { onStart, onChange, onRest } = this._events
 
     const isActive = this._active.size > 0
