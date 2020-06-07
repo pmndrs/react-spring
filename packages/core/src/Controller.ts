@@ -78,6 +78,7 @@ export class Controller<State extends Lookup = Lookup>
 
   /** State used by the `runAsync` function */
   protected _state: RunAsyncState<State> = {
+    timeouts: new Set(),
     pauseQueue: new Set(),
     resumeQueue: new Set(),
   }

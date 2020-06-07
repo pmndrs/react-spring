@@ -49,6 +49,7 @@ export function scheduleProps<T>(
 
     function onPause() {
       state.resumeQueue.add(onResume)
+      state.timeouts.delete(timeout)
       timeout.cancel()
       // Cache the remaining delay.
       delay = timeout.time - G.now()
@@ -56,8 +57,9 @@ export function scheduleProps<T>(
 
     function onResume() {
       if (delay > 0) {
-        state.pauseQueue.add(onPause)
         timeout = G.frameLoop.setTimeout(onStart, delay)
+        state.pauseQueue.add(onPause)
+        state.timeouts.add(timeout)
       } else {
         onStart()
       }
@@ -65,6 +67,7 @@ export function scheduleProps<T>(
 
     function onStart() {
       state.pauseQueue.delete(onPause)
+      state.timeouts.delete(timeout)
 
       // Maybe cancelled during its delay.
       if (callId <= (state.cancelId || 0)) {

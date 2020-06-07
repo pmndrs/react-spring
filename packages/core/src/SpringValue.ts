@@ -86,6 +86,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<T> = {
+    timeouts: new Set(),
     pauseQueue: new Set(),
     resumeQueue: new Set(),
   }

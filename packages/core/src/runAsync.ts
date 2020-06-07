@@ -1,4 +1,4 @@
-import { is, each, Falsy } from 'shared'
+import { is, each, Falsy, Timeout } from 'shared'
 import * as G from 'shared/globals'
 
 import { PAUSED } from './SpringPhase'
@@ -27,6 +27,7 @@ export interface RunAsyncProps<T = any> extends SpringProps<T> {
 }
 
 export interface RunAsyncState<T = any> {
+  timeouts: Set<Timeout>
   pauseQueue: Set<() => void>
   resumeQueue: Set<() => void>
   asyncId?: number
@@ -173,6 +174,7 @@ export async function runAsync<T>(
 
 /** Stop the current `runAsync` call with `finished: false` (or with `cancelled: true` when `cancelId` is defined) */
 export function stopAsync(state: RunAsyncState, cancelId?: number | Falsy) {
+  state.timeouts.forEach(t => t.cancel())
   state.asyncId = state.asyncTo = state.promise = undefined
   if (cancelId) state.cancelId = cancelId
 }
