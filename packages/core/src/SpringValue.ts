@@ -420,11 +420,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** Prevent future animations, and stop the current animation */
   dispose() {
     if (!this.is(DISPOSED)) {
-      if (this.animation) {
-        // Prevent "onRest" calls when disposed.
-        this.animation.onRest = []
-      }
-      this.stop()
+      stopAsync(this._state)
       this._phase = DISPOSED
       overrideGet(this, 'animation', throwDisposed)
     }
