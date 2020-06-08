@@ -61,7 +61,7 @@ export class FrameLoop {
   onWrite: (cb: FrameRequestCallback) => void
 
   // Exposed for testing.
-  protected _animations!: OpaqueAnimation[]
+  protected _idle!: boolean
   protected _dispose!: () => void
 
   constructor(raf = requestAnimationFrame) {
@@ -221,13 +221,15 @@ export class FrameLoop {
       typeof process !== 'undefined' &&
       process.env.NODE_ENV !== 'production'
     ) {
+      const isIdle = () =>
+        !startQueue.size && !animations.length && !timeoutQueue.length
       const dispose = () => {
         idle = true
         startQueue.clear()
         timeoutQueue.length = 0
       }
       Object.defineProperties(this, {
-        _animations: { get: () => animations },
+        _idle: { get: isIdle },
         _dispose: { get: () => dispose },
       })
     }
