@@ -397,4 +397,30 @@ describe('Controller', () => {
       })
     })
   })
+
+  describe('the "dispose" method', () => {
+    it('prevents any updates with pending delays', async () => {
+      const ctrl = new Controller<{ t: number }>({ t: 0 })
+      const { t } = ctrl.springs
+
+      ctrl.start({ t: 1, delay: 100 })
+      ctrl.dispose()
+
+      await advanceUntilIdle()
+      expect(ctrl['_state'].timeouts.size).toBe(0)
+      expect(t['_state'].timeouts.size).toBe(0)
+    })
+
+    it('stops the active runAsync call', async () => {
+      const ctrl = new Controller<{ t: number }>({ t: 0 })
+      ctrl.start({
+        to: async animate => {
+          await animate({ t: 1 })
+        },
+      })
+      ctrl.dispose()
+      await advanceUntilIdle()
+      expect(ctrl['_state'].asyncTo).toBeUndefined()
+    })
+  })
 })
