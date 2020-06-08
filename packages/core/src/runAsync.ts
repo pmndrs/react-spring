@@ -1,4 +1,4 @@
-import { is, each, Falsy, Timeout } from 'shared'
+import { is, each, Falsy, Timeout, flush } from 'shared'
 import * as G from 'shared/globals'
 
 import { PAUSED } from './SpringPhase'
@@ -174,7 +174,9 @@ export async function runAsync<T>(
 
 /** Stop the current `runAsync` call with `finished: false` (or with `cancelled: true` when `cancelId` is defined) */
 export function stopAsync(state: RunAsyncState, cancelId?: number | Falsy) {
-  state.timeouts.forEach(t => t.cancel())
+  flush(state.timeouts, t => t.cancel())
+  state.pauseQueue.clear()
+  state.resumeQueue.clear()
   state.asyncId = state.asyncTo = state.promise = undefined
   if (cancelId) state.cancelId = cancelId
 }
