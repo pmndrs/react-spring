@@ -137,6 +137,7 @@ const update = () => {
 }
 
 const start = (controller: Controller) => {
+  if (typeof window === 'undefined') return
   if (!controllers.has(controller)) controllers.add(controller)
   if (!active) {
     active = true
