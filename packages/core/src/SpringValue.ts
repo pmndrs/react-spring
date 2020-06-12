@@ -998,6 +998,9 @@ export function createLoopUpdate<T>(
       // Avoid updating default props when looping.
       default: false,
 
+      // Ensure `pause` is false, so the loop can continue.
+      pause: false,
+
       // For the "reverse" prop to loop as expected, the "to" prop
       // must be undefined. The "reverse" prop is ignored when the
       // "to" prop is an array or function.
