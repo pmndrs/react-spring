@@ -70,7 +70,7 @@ interface UpdateValuesFn<State extends Lookup = Lookup>
  * The `T` parameter must be a primitive type for a single animated value.
  */
 interface UpdateValueFn<T = any> extends AnyUpdateFn<T, SpringProps<T>> {
-  (props: { to?: GoalValue<T> | Falsy } & SpringProps<T>): AsyncResult<T>
+  (props: { to?: GoalValue<T> } & SpringProps<T>): AsyncResult<T>
 }
 
 /**

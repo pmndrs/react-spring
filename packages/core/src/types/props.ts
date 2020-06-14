@@ -58,7 +58,7 @@ export type SpringsUpdate<State extends Lookup = UnknownProps> =
  * or a primitive type for a single animated value.
  */
 export interface SpringProps<T = any> extends AnimationProps<T> {
-  from?: GoalValue<T> | Falsy
+  from?: GoalValue<T>
   // FIXME: Use "SpringUpdate<T>" once type recursion is good enough.
   loop?: LoopProp<SpringUpdate>
   /**
@@ -109,7 +109,7 @@ export type ToProps<T = any> =
  */
 export type GoalProp<T> = [T] extends [IsPlainObject<T>]
   ? GoalValues<T> | Falsy
-  : GoalValue<T> | Falsy
+  : GoalValue<T>
 
 /** A set of values for a `Controller` to animate from/to. */
 export type GoalValues<T extends Lookup> = FluidProps<Partial<T>>
@@ -120,7 +120,7 @@ export type GoalValues<T extends Lookup> = FluidProps<Partial<T>>
  * The `UnknownProps` type lets you pass in { a: 1 } if the `key`
  * property of `SpringValue` equals "a".
  */
-export type GoalValue<T> = T | FluidValue<T> | UnknownProps
+export type GoalValue<T> = T | FluidValue<T> | UnknownProps | null | undefined
 
 /**
  * Where `to` is inferred from non-reserved props
