@@ -112,7 +112,9 @@ export type GoalProp<T> = [T] extends [IsPlainObject<T>]
   : GoalValue<T>
 
 /** A set of values for a `Controller` to animate from/to. */
-export type GoalValues<T extends Lookup> = FluidProps<Partial<T>>
+export type GoalValues<T extends Lookup> = FluidProps<T> extends infer Props
+  ? { [P in keyof Props]?: Props[P] | null }
+  : never
 
 /**
  * A value that `SpringValue` objects can animate from/to.
@@ -128,9 +130,7 @@ export type GoalValue<T> = T | FluidValue<T> | UnknownProps | null | undefined
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type InlineToProps<T = any> = Remap<
-  FluidProps<Partial<T>> & { to?: undefined }
->
+export type InlineToProps<T = any> = Remap<GoalValues<T> & { to?: undefined }>
 
 /** A serial queue of spring updates. */
 export interface SpringChain<T = any>
