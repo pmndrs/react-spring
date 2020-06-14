@@ -287,7 +287,7 @@ export async function flushUpdate(
   props: ControllerQueue[number],
   isLoop?: boolean
 ): AsyncResult {
-  const { keys, to, loop, onRest } = props
+  const { keys, to, from, loop, onRest } = props
   const defaults = is.obj(props.default) && props.default
 
   // Looping must be handled in this function, or else the values
@@ -295,6 +295,10 @@ export async function flushUpdate(
   if (loop) {
     props.loop = false
   }
+
+  // Treat false like null, which gets ignored.
+  if (to === false) props.to = null
+  if (from === false) props.from = null
 
   const asyncTo = is.arr(to) || is.fun(to) ? to : undefined
   if (asyncTo) {

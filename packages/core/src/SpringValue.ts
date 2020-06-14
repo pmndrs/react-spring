@@ -36,7 +36,6 @@ import {
   getDefaultProp,
   throwDisposed,
   overrideGet,
-  isFalsy,
   isAsyncTo,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
@@ -458,12 +457,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
     let { to, from } = props
 
     to = is.obj(to) ? to[key] : to
-    if (isFalsy(to) || isAsyncTo(to)) {
+    if (to == null || isAsyncTo(to)) {
       to = undefined
     }
 
     from = is.obj(from) ? from[key] : from
-    if (isFalsy(from)) {
+    if (from == null) {
       from = undefined
     }
 
