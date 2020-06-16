@@ -34,19 +34,10 @@ import {
   mergeDefaultProps,
   getDefaultProps,
   getDefaultProp,
-  throwDisposed,
-  overrideGet,
   isAsyncTo,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
-import {
-  SpringPhase,
-  CREATED,
-  IDLE,
-  ACTIVE,
-  PAUSED,
-  DISPOSED,
-} from './SpringPhase'
+import { SpringPhase, CREATED, IDLE, ACTIVE, PAUSED } from './SpringPhase'
 import {
   AnimationRange,
   OnRest,
@@ -309,7 +300,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * This does nothing when not animating.
    */
   pause() {
-    throwDisposed(this.is(DISPOSED))
     if (!this.is(PAUSED)) {
       this._phase = PAUSED
       flushCalls(this._state.pauseQueue)
@@ -319,7 +309,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Resume the animation if paused. */
   resume() {
-    throwDisposed(this.is(DISPOSED))
     if (this.is(PAUSED)) {
       this._start()
       flushCalls(this._state.resumeQueue)
@@ -358,7 +347,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Push props into the pending queue. */
   update(props: SpringUpdate<T>) {
-    throwDisposed(this.is(DISPOSED))
     const queue = this.queue || (this.queue = [])
     queue.push(props)
     return this
@@ -378,8 +366,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
   start(to: Animatable<T>, props?: SpringUpdate<T>): AsyncResult<T>
 
   start(to?: SpringUpdate<T> | Animatable<T>, arg2?: SpringUpdate<T>) {
-    throwDisposed(this.is(DISPOSED))
-
     let queue: SpringUpdate<T>[]
     if (!is.und(to)) {
       queue = [is.obj(to) ? (to as any) : { ...arg2, to }]
@@ -399,30 +385,20 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * Pass `true` to call `onRest` with `cancelled: true`.
    */
   stop(cancel?: boolean) {
-    if (!this.is(DISPOSED)) {
-      stopAsync(this._state, cancel && this._lastCallId)
+    stopAsync(this._state, cancel && this._lastCallId)
 
-      // Ensure the `to` value equals the current value.
-      this._focus(this.get())
+    // Ensure the `to` value equals the current value.
+    this._focus(this.get())
 
-      // Exit the frameloop and notify `onRest` listeners.
-      G.batchedUpdates(() => this._stop(cancel))
-    }
+    // Exit the frameloop and notify `onRest` listeners.
+    G.batchedUpdates(() => this._stop(cancel))
+
     return this
   }
 
   /** Restart the animation. */
   reset() {
     this._update({ reset: true })
-  }
-
-  /** Prevent future animations, and stop the current animation */
-  dispose() {
-    if (!this.is(DISPOSED)) {
-      stopAsync(this._state)
-      this._phase = DISPOSED
-      overrideGet(this, 'animation', throwDisposed)
-    }
   }
 
   /** @internal */

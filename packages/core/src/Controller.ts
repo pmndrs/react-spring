@@ -11,16 +11,9 @@ import {
 import * as G from 'shared/globals'
 
 import { Lookup, Falsy } from './types/common'
-import { getDefaultProp, overrideGet, throwDisposed } from './helpers'
+import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
-import {
-  SpringPhase,
-  CREATED,
-  ACTIVE,
-  IDLE,
-  PAUSED,
-  DISPOSED,
-} from './SpringPhase'
+import { SpringPhase, CREATED, ACTIVE, IDLE, PAUSED } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import {
   getCancelledResult,
@@ -175,7 +168,6 @@ export class Controller<State extends Lookup = Lookup>
 
   /** Freeze the active animation in time */
   pause(keys?: OneOrMore<string>) {
-    throwDisposed(this.is(DISPOSED))
     if (is.und(keys)) {
       if (!this.is(PAUSED)) {
         this._phase = PAUSED
@@ -191,7 +183,6 @@ export class Controller<State extends Lookup = Lookup>
 
   /** Resume the animation if paused. */
   resume(keys?: OneOrMore<string>) {
-    throwDisposed(this.is(DISPOSED))
     if (is.und(keys)) {
       if (this.is(PAUSED)) {
         this._phase = this._active.size ? ACTIVE : IDLE
@@ -217,20 +208,8 @@ export class Controller<State extends Lookup = Lookup>
     each(this.springs, iterator as any)
   }
 
-  /** Destroy every spring in this controller */
-  dispose() {
-    if (!this.is(DISPOSED)) {
-      this._phase = DISPOSED
-      stopAsync(this._state)
-      this.each(spring => spring.dispose())
-      overrideGet(this, 'queue', throwDisposed)
-      overrideGet(this, 'springs', throwDisposed)
-    }
-  }
-
   /** @internal Called at the end of every animation frame */
   protected _onFrame() {
-    if (this.is(DISPOSED)) return
     const { onStart, onChange, onRest } = this._events
 
     const isActive = this._active.size > 0

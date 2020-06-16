@@ -96,9 +96,7 @@ export interface SpringProps<T = any> extends AnimationProps<T> {
  * or a primitive type for a single animated value.
  */
 export type ToProps<T = any> =
-  | { to?: GoalProp<T> }
-  | { to?: SpringToFn<T> | Falsy }
-  | { to?: SpringChain<T> | Falsy }
+  | { to?: GoalProp<T> | SpringToFn<T> | SpringChain<T> }
   | ([T] extends [IsPlainObject<T>] ? InlineToProps<T> : never)
 
 /**
@@ -326,7 +324,9 @@ export interface ReservedEventProps {
  */
 export type PickAnimated<Props extends object, Fwd = true> = unknown &
   ([Props] extends [Any]
-    ? any // Preserve "any" instead of resolving to "{}"
+    ? Lookup // Preserve "any" instead of resolving to "{}"
+    : [object] extends [Props]
+    ? Lookup
     : ObjectFromUnion<
         | FromValues<Props>
         | (TransitionKey & keyof Props extends never

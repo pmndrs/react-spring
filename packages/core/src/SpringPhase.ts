@@ -1,6 +1,5 @@
 // TODO: use "const enum" when Babel supports it
 export type SpringPhase =
-  | typeof DISPOSED
   | typeof CREATED
   | typeof IDLE
   | typeof PAUSED
@@ -17,6 +16,3 @@ export const ACTIVE = 'ACTIVE'
 
 /** The spring is frozen in time */
 export const PAUSED = 'PAUSED'
-
-/** The spring cannot be animated */
-export const DISPOSED = 'DISPOSED'

@@ -140,7 +140,7 @@ export type OnProps<T = unknown> = (
  * Called after any delay has finished.
  */
 export type OnDelayEnd<T = unknown> = (
-  props: RunAsyncProps<T>,
+  props: RunAsyncProps,
   spring: SpringValue<T>
 ) => void
 

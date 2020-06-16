@@ -128,7 +128,7 @@ export function useSprings(
 
   // Cache old controllers to dispose in the commit phase.
   const prevLength = usePrev(length) || 0
-  const disposed = ctrls.slice(length, prevLength)
+  const oldCtrls = ctrls.slice(length, prevLength)
 
   // Create new controllers when "length" increases, and destroy
   // the affected controllers when "length" decreases.
@@ -192,8 +192,8 @@ export function useSprings(
       each(queue, cb => cb())
     }
 
-    // Dispose unused controllers.
-    each(disposed, ctrl => ctrl.dispose())
+    // Cancel the animations of unused controllers.
+    each(oldCtrls, ctrl => ctrl.stop(true))
 
     // Update existing controllers.
     each(ctrls, (ctrl, i) => {
@@ -218,9 +218,9 @@ export function useSprings(
     })
   })
 
-  // Dispose all controllers on unmount.
+  // Cancel the animations of all controllers on unmount.
   useOnce(() => () => {
-    each(state.ctrls, ctrl => ctrl.dispose())
+    each(state.ctrls, ctrl => ctrl.stop(true))
   })
 
   // Return a deep copy of the `springs` array so the caller can

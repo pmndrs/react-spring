@@ -92,7 +92,7 @@ export function useTransition(
       if (t.expired) {
         clearTimeout(t.expirationId!)
       }
-      t.ctrl.dispose()
+      t.ctrl.stop(true)
     })
   )
 

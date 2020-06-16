@@ -208,14 +208,6 @@ export function hasProps(props: object) {
   return false
 }
 
-export function overrideGet<T, P extends keyof T>(
-  target: T,
-  key: P,
-  get: () => T[P]
-) {
-  Object.defineProperty(target, key, { get, enumerable: true })
-}
-
 export function throwDisposed(cond?: boolean): any {
   if (cond === false) return
   throw Error(

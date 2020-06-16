@@ -398,13 +398,13 @@ describe('Controller', () => {
     })
   })
 
-  describe('the "dispose" method', () => {
+  describe('the "stop" method', () => {
     it('prevents any updates with pending delays', async () => {
       const ctrl = new Controller<{ t: number }>({ t: 0 })
       const { t } = ctrl.springs
 
       ctrl.start({ t: 1, delay: 100 })
-      ctrl.dispose()
+      ctrl.stop()
 
       await advanceUntilIdle()
       expect(ctrl['_state'].timeouts.size).toBe(0)
@@ -418,7 +418,7 @@ describe('Controller', () => {
           await animate({ t: 1 })
         },
       })
-      ctrl.dispose()
+      ctrl.stop()
       await advanceUntilIdle()
       expect(ctrl['_state'].asyncTo).toBeUndefined()
     })
