@@ -160,13 +160,15 @@ export class Controller<State extends Lookup = Lookup>
   }
 
   /** Stop one animation, some animations, or all animations */
-  stop(keys?: OneOrMore<string>) {
-    if (is.und(keys)) {
-      stopAsync(this._state)
-      this.each(spring => spring.stop())
-    } else {
+  stop(cancel?: boolean): this
+  stop(keys?: OneOrMore<string>, cancel?: boolean): this
+  stop(arg?: boolean | OneOrMore<string>, cancel?: boolean) {
+    if (is.str(arg) || is.arr(arg)) {
       const springs = this.springs as Lookup<SpringValue>
-      each(toArray(keys), key => springs[key].stop())
+      each(toArray(arg), key => springs[key].stop(cancel))
+    } else {
+      stopAsync(this._state, arg && this._lastAsyncId)
+      this.each(spring => spring.stop(arg))
     }
     return this
   }
