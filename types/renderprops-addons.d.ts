@@ -1,4 +1,4 @@
-import { Ref, PureComponent } from 'react'
+import { Ref, PureComponent, CSSProperties } from 'react'
 import { SpringConfig } from './renderprops-universal'
 
 interface ParallaxProps {
