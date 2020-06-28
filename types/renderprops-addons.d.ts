@@ -23,6 +23,8 @@ interface ParallaxLayerProps {
   offset?: number
 
   speed?: number
+  
+  style?: CSSProperties
 }
 
 export class ParallaxLayer extends PureComponent<ParallaxLayerProps> {}
