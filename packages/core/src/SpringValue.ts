@@ -995,8 +995,7 @@ export function createLoopUpdate<T>(
 /**
  * Return a new object based on the given `props`.
  *
- * - All unreserved props are moved into the `to` prop object.
- * - The `to` and `from` props are deleted when falsy.
+ * - All non-reserved props are moved into the `to` prop object.
  * - The `keys` prop is set to an array of affected keys,
  *   or `null` if all keys are affected.
  */
