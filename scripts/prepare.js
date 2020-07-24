@@ -63,7 +63,7 @@ async function prepare() {
     const { postinstall } = pkg.scripts || {}
     deleteFields(pkg, ['private', 'scripts', 'devDependencies'])
     if (postinstall) setScript(pkg, 'postinstall', postinstall)
-    useDefaultFields(pkg, ['description', 'sideEffects'])
+    useDefaultFields(pkg, ['description'])
     useFields(pkg, [
       'license',
       'dependencies',

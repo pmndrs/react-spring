@@ -26,7 +26,6 @@
   "contributors": [
     "Alec Larson (https://github.com/aleclarson)"
   ],
-  "sideEffects": false,
   "workspaces": {
     "packages": [
       "packages/*",
