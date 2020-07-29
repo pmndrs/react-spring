@@ -44,7 +44,7 @@ export interface RunAsyncState<T = any> {
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export async function runAsync<T>(
+export function runAsync<T>(
   to: SpringChain<T> | SpringToFn<T>,
   props: RunAsyncProps<T>,
   state: RunAsyncState<T>,
