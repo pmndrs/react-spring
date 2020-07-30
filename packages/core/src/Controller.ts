@@ -69,6 +69,9 @@ export class Controller<State extends Lookup = Lookup>
   /** The values currently being animated */
   protected _active = new Set<FrameValue>()
 
+  /** Equals false when `onStart` listeners can be called */
+  protected _started = false
+
   /** State used by the `runAsync` function */
   protected _state: RunAsyncState<State> = {
     timeouts: new Set(),
@@ -184,11 +187,14 @@ export class Controller<State extends Lookup = Lookup>
   /** Resume the animation if paused. */
   resume(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
+      // The `idle` property treats paused springs as idle, so we need
+      // to resume every spring before updating our `_phase` with it.
+      this.each(spring => spring.resume())
+
       if (this.is(PAUSED)) {
-        this._phase = this._active.size ? ACTIVE : IDLE
+        this._phase = this.idle ? IDLE : ACTIVE
         flushCalls(this._state.resumeQueue)
       }
-      this.each(spring => spring.resume())
     } else {
       const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].resume())
@@ -213,8 +219,8 @@ export class Controller<State extends Lookup = Lookup>
     const { onStart, onChange, onRest } = this._events
 
     const isActive = this._active.size > 0
-    if (isActive && this._phase != ACTIVE) {
-      this._phase = ACTIVE
+    if (isActive && !this._started) {
+      this._started = true
       flushCalls(onStart, this)
     }
 
@@ -225,7 +231,10 @@ export class Controller<State extends Lookup = Lookup>
 
     // The "onRest" queue is only flushed when all springs are idle.
     if (!isActive) {
-      this._phase = IDLE
+      this._started = false
+      if (!this.is(PAUSED) && this.idle) {
+        this._phase = IDLE
+      }
       flush(onRest, ([onRest, result]) => {
         result.value = values
         onRest(result)
