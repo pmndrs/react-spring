@@ -418,6 +418,68 @@ describe('Controller', () => {
         expect(loop).toBeCalledTimes(0)
       })
     })
+
+    describe('when "finish" is called while paused', () => {
+      async function getPausedLoop() {
+        const ctrl = new Controller<{ t: number }>({
+          from: { t: 0 }, // FIXME: replace this line with `t: 0,` for a stack overflow
+          loop: {
+            async to(start) {
+              await start({
+                t: 1,
+                reset: true,
+              })
+            },
+          },
+        })
+
+        // Ensure `loop.to` has been called.
+        await flushMicroTasks()
+
+        // Apply the first frame.
+        mockRaf.step()
+
+        ctrl.pause()
+        return ctrl
+      }
+
+      it('finishes immediately', async () => {
+        const ctrl = await getPausedLoop()
+        const { t } = ctrl.springs
+
+        expect(t.get()).toBeLessThan(1)
+        t.finish()
+        expect(t.get()).toBe(1)
+      })
+
+      it('does not loop until resumed', async () => {
+        const ctrl = await getPausedLoop()
+        const { t } = ctrl.springs
+
+        t.finish()
+        expect(t.idle).toBeTruthy()
+        expect(t.get()).toBe(1)
+
+        // HACK: The internal promise is undefined once resolved.
+        const expectResolved = (isResolved: boolean) =>
+          !ctrl['_state'].promise == isResolved
+
+        // Resume the paused loop.
+        ctrl.resume()
+
+        // Its promise is not resolved yet..
+        expectResolved(false)
+        expect(t.idle).toBeTruthy()
+        expect(t.get()).toBe(1)
+
+        // ..but in the next microtask, it will be..
+        await flushMicroTasks()
+        expectResolved(true)
+        // ..which means the loop restarts!
+        expect(t.idle).toBeFalsy()
+        expect(t.get()).toBe(0)
+      })
+    })
   })
 
   describe('the "stop" method', () => {
