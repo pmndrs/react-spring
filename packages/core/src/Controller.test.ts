@@ -202,6 +202,28 @@ describe('Controller', () => {
       })
     })
 
+    describe('while paused', () => {
+      it('stays paused when its values are force-finished', () => {
+        const ctrl = new Controller<{ t: number }>({ t: 0 })
+        const { t } = ctrl.springs
+
+        const onRest = jest.fn()
+        ctrl.start({
+          to: next => next({ t: 1 }),
+          onRest,
+        })
+
+        mockRaf.step()
+        ctrl.pause()
+
+        t.finish()
+        mockRaf.step()
+
+        expect(ctrl['_phase']).toBe('PAUSED')
+        expect(onRest).not.toBeCalled()
+      })
+    })
+
     it('acts strangely without the "from" prop', async () => {
       const ctrl = new Controller<{ x: number }>()
 
