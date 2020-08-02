@@ -1,4 +1,4 @@
-import { each, Lookup, UnknownProps } from 'shared'
+import { each, Lookup, UnknownProps } from '@react-spring/shared'
 import { Controller } from './Controller'
 import { getProps } from './helpers'
 import {

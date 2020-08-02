@@ -10,7 +10,7 @@ import {
   isAnimatedString,
   Animatable,
   flushCalls,
-} from 'shared'
+} from '@react-spring/shared'
 import {
   AnimatedValue,
   AnimatedString,
@@ -19,8 +19,8 @@ import {
   setAnimated,
   Animated,
   getAnimatedType,
-} from 'animated'
-import * as G from 'shared/globals'
+} from '@react-spring/animated'
+import * as G from '@react-spring/shared/src/globals'
 
 import { Animation } from './Animation'
 import { mergeConfig } from './AnimationConfig'

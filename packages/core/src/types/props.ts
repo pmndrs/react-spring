@@ -11,7 +11,7 @@ import {
   OneOrMore,
   Remap,
   UnknownProps,
-} from 'shared'
+} from '@react-spring/shared'
 
 import { DEFAULT_PROPS } from '../helpers'
 import { Controller } from '../Controller'

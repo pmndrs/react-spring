@@ -1,4 +1,4 @@
-import { is, isAnimatedString } from 'shared'
+import { is, isAnimatedString } from '@react-spring/shared'
 import { AnimatedType } from './types'
 import { AnimatedArray } from './AnimatedArray'
 import { AnimatedString } from './AnimatedString'

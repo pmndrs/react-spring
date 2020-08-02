@@ -1,8 +1,8 @@
 import { StyleSheet } from 'react-native'
-import { createHost, AnimatedObject } from 'animated'
-import { createStringInterpolator } from 'shared/stringInterpolation'
-import { is, Globals } from 'shared'
-import colorNames from 'shared/colors'
+import { createHost, AnimatedObject } from '@react-spring/animated'
+import { createStringInterpolator } from '@react-spring/shared/src/stringInterpolation'
+import { is, Globals } from '@react-spring/shared'
+import colorNames from '@react-spring/shared/src/colors'
 import { primitives } from './primitives'
 import { WithAnimated } from './animated'
 import { AnimatedStyle } from './AnimatedStyle'
@@ -33,4 +33,4 @@ export const animated = host.animated as WithAnimated
 export { animated as a }
 
 export * from './animated'
-export * from 'core'
+export * from '@react-spring/core'

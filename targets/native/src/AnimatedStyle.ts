@@ -1,4 +1,4 @@
-import { AnimatedObject } from 'animated'
+import { AnimatedObject } from '@react-spring/animated'
 import { AnimatedTransform } from './AnimatedTransform'
 
 type Style = object & { transform?: any }

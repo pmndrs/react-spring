@@ -1,8 +1,8 @@
 import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { act } from '@testing-library/react'
-import { isEqual, is, FrameLoop } from 'shared'
-import colorNames from 'shared/colors'
+import { isEqual, is, FrameLoop } from '@react-spring/shared'
+import colorNames from '@react-spring/shared/src/colors'
 
 import { Globals, Controller, FrameValue } from '..'
 import { computeGoal } from '../src/helpers'

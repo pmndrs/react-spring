@@ -5,7 +5,7 @@ import {
   Merge,
   FluidValue,
   FluidProps,
-} from 'shared'
+} from '@react-spring/shared'
 import { Primitives } from './primitives'
 
 type AnimatedPrimitives = {

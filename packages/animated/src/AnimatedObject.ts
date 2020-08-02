@@ -1,4 +1,4 @@
-import { Lookup, each, getFluidConfig } from 'shared'
+import { Lookup, each, getFluidConfig } from '@react-spring/shared'
 import { Animated, isAnimated, getPayload } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
 import { TreeContext } from './context'

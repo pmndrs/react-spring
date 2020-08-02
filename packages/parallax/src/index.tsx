@@ -7,8 +7,8 @@ import {
   config as configs,
 } from '@react-spring/web'
 import { useMemoOne } from 'use-memo-one'
-import { frameLoop } from 'shared/globals'
-import { useOnce } from 'shared'
+import { frameLoop } from '@react-spring/shared/src/globals'
+import { useOnce } from '@react-spring/shared'
 
 const ParentContext = React.createContext<any>(null)
 

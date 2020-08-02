@@ -1,5 +1,5 @@
-import { each, getFluidValue } from 'shared'
-import { Animated, AnimatedValue, AnimatedObject } from 'animated'
+import { each, getFluidValue } from '@react-spring/shared'
+import { Animated, AnimatedValue, AnimatedObject } from '@react-spring/animated'
 
 type Transform = { [key: string]: string | number | Animated }
 

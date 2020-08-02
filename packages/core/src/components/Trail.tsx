@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { NoInfer, is, Falsy } from 'shared'
+import { NoInfer, is, Falsy } from '@react-spring/shared'
 
 import { Valid } from '../types/common'
 import { PickAnimated, SpringValues } from '../types'

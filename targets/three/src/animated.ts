@@ -4,7 +4,7 @@ import {
   ComponentPropsWithRef,
   ElementType,
   FluidValue,
-} from 'shared'
+} from '@react-spring/shared'
 import { Primitives } from './primitives'
 
 type AnimatedPrimitives = {

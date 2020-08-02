@@ -1,6 +1,6 @@
-import { createStringInterpolator } from 'shared/stringInterpolation'
+import { createStringInterpolator } from '@react-spring/shared/src/stringInterpolation'
 import { Interpolation } from './Interpolation'
-import { Globals } from 'shared'
+import { Globals } from '@react-spring/shared'
 
 // Sane defaults
 Globals.assign({

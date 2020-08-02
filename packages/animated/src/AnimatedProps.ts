@@ -1,5 +1,5 @@
-import { FluidObserver, FluidEvent } from 'shared'
-import * as G from 'shared/globals'
+import { FluidObserver, FluidEvent } from '@react-spring/shared'
+import * as G from '@react-spring/shared/src/globals'
 
 import { AnimatedObject } from './AnimatedObject'
 import { TreeContext } from './context'

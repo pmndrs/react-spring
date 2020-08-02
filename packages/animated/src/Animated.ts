@@ -1,4 +1,4 @@
-import { defineHidden } from 'shared'
+import { defineHidden } from '@react-spring/shared'
 import { AnimatedValue } from './AnimatedValue'
 
 const $node: any = Symbol.for('Animated:node')

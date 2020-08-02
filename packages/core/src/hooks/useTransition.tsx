@@ -10,7 +10,7 @@ import {
   each,
   OneOrMore,
   UnknownProps,
-} from 'shared'
+} from '@react-spring/shared'
 
 import {
   Change,

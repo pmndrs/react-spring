@@ -7,8 +7,8 @@ import {
   flushCalls,
   UnknownProps,
   noop,
-} from 'shared'
-import * as G from 'shared/globals'
+} from '@react-spring/shared'
+import * as G from '@react-spring/shared/src/globals'
 
 import { Lookup, Falsy } from './types/common'
 import { getDefaultProp } from './helpers'

@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react-layout-effect'
 import { useCallbackOne } from 'use-memo-one'
-import { is } from 'shared'
+import { is } from '@react-spring/shared'
 
 import { Valid } from '../types/common'
 import {

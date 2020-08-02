@@ -9,7 +9,7 @@ import {
   UnknownProps,
   useForceUpdate,
   Lookup,
-} from 'shared'
+} from '@react-spring/shared'
 
 import {
   ControllerFlushFn,

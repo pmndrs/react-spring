@@ -1,5 +1,5 @@
 import { assert, _, test, describe } from 'spec.ts';
-import { FluidValue } from 'shared';
+import { FluidValue } from '@react-spring/shared';
 import { CSSProperties } from 'react';
 
 import { AnimatedProps } from '../..';

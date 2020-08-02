@@ -1,4 +1,4 @@
-import { is, each, Lookup } from 'shared'
+import { is, each, Lookup } from '@react-spring/shared'
 import { AnimatableComponent, withAnimated } from './withAnimated'
 import { Animated } from './Animated'
 import { AnimatedObject } from './AnimatedObject'

@@ -1,4 +1,4 @@
-import { FluidValue } from 'shared'
+import { FluidValue } from '@react-spring/shared'
 import { HostConfig } from './createHost'
 
 export type TreeContext = {

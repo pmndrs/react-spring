@@ -1,4 +1,4 @@
-import { Lookup, FluidValue, Any } from 'shared'
+import { Lookup, FluidValue, Any } from '@react-spring/shared'
 import { AnimationConfig } from '../AnimationConfig'
 import { SpringValue } from '../SpringValue'
 

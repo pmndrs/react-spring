@@ -1,4 +1,4 @@
-import { is } from 'shared'
+import { is } from '@react-spring/shared'
 import { Animated, Payload } from './Animated'
 
 /** An animated number or a native attribute value */

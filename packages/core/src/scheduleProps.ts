@@ -2,7 +2,7 @@ import { matchProp, callProp } from './helpers'
 import { RunAsyncState, RunAsyncProps } from './runAsync'
 import { SpringProps, AnimationResolver } from './types'
 import { AsyncResult } from './AnimationResult'
-import { Timeout, Globals as G } from 'shared'
+import { Timeout, Globals as G } from '@react-spring/shared'
 
 interface ScheduledProps<T> {
   key?: string

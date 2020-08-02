@@ -9,10 +9,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "paths": {
-      "shared": ["./node_modules/shared/src"],
-      "shared/*": ["./node_modules/shared/src/*"]
-    },
     "preserveSymlinks": true,
     "sourceMap": true,
     "strict": true,

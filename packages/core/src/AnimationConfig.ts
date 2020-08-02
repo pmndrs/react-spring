@@ -1,4 +1,4 @@
-import { is } from 'shared'
+import { is } from '@react-spring/shared'
 import { config as configs } from './constants'
 
 const linear = (t: number) => t

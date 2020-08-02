@@ -4,7 +4,7 @@ import {
   ComponentPropsWithRef,
   ForwardRefExoticComponent,
 } from 'react'
-import { FluidValue } from 'shared'
+import { FluidValue } from '@react-spring/shared'
 import { primitives } from './primitives'
 
 type Primitives = typeof primitives[number]

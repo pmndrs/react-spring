@@ -1,5 +1,5 @@
-import { AnimatedValue } from 'animated'
-import { FluidValue } from 'shared'
+import { AnimatedValue } from '@react-spring/animated'
+import { FluidValue } from '@react-spring/shared'
 import { AnimationConfig } from './AnimationConfig'
 import { OnStart, OnChange, OnPause, OnResume } from './types'
 

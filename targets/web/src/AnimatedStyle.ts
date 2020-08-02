@@ -1,4 +1,4 @@
-import { AnimatedObject } from 'animated'
+import { AnimatedObject } from '@react-spring/animated'
 import {
   is,
   each,
@@ -10,7 +10,7 @@ import {
   FluidObserver,
   getFluidConfig,
   getFluidValue,
-} from 'shared'
+} from '@react-spring/shared'
 
 /** The transform-functions
  * (https://developer.mozilla.org/fr/docs/Web/CSS/transform-function)

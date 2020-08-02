@@ -10,8 +10,8 @@ import {
   FluidValue,
   Lookup,
   Falsy,
-} from 'shared'
-import * as G from 'shared/globals'
+} from '@react-spring/shared'
+import * as G from '@react-spring/shared/src/globals'
 import { ReservedProps, ForwardProps, InferTo } from './types'
 
 // @see https://github.com/alexreardon/use-memo-one/pull/10

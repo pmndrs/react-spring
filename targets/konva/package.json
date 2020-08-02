@@ -3,9 +3,9 @@
   "version": "9.0.0-rc.3",
   "main": "src/index.ts",
   "dependencies": {
-    "animated": "link:../../packages/animated",
-    "core": "link:../../packages/core",
-    "shared": "link:../../packages/shared"
+    "@react-spring/animated": "link:../../packages/animated",
+    "@react-spring/core": "link:../../packages/core",
+    "@react-spring/shared": "link:../../packages/shared"
   },
   "peerDependencies": {
     "konva": ">=2.6",

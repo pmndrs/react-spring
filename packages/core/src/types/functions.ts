@@ -1,4 +1,4 @@
-import { OneOrMore, Lookup, Falsy } from 'shared'
+import { OneOrMore, Lookup, Falsy } from '@react-spring/shared'
 
 import { Controller, ControllerQueue } from '../Controller'
 import { SpringValue } from '../SpringValue'

@@ -6,8 +6,8 @@ import {
   InterpolatorConfig,
   InterpolatorFn,
   FluidValue,
-} from 'shared'
-import { deprecateInterpolate } from 'shared/deprecations'
+} from '@react-spring/shared'
+import { deprecateInterpolate } from '@react-spring/shared/src/deprecations'
 import { Interpolation } from './Interpolation'
 
 /** Map the value of one or more dependencies */

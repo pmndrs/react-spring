@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react-layout-effect'
-import { each } from 'shared'
+import { each } from '@react-spring/shared'
 
 /** API
  *  useChain(references, timeSteps, timeFrame)

@@ -9,11 +9,16 @@ import {
   InterpolatorFn,
   OneOrMore,
   Arrify,
-} from 'shared'
-import * as G from 'shared/globals'
+} from '@react-spring/shared'
+import * as G from '@react-spring/shared/src/globals'
 
 import { FrameValue, isFrameValue } from './FrameValue'
-import { getAnimated, setAnimated, getAnimatedType, getPayload } from 'animated'
+import {
+  getAnimated,
+  setAnimated,
+  getAnimatedType,
+  getPayload,
+} from '@react-spring/animated'
 
 /**
  * An `Interpolation` is a memoized value that's computed whenever one of its

@@ -12,11 +12,11 @@ export { FrameValue } from './FrameValue'
 export { SpringHandle } from './SpringHandle'
 export { Interpolation } from './Interpolation'
 export { BailSignal } from './runAsync'
-export { FrameLoop, createInterpolator } from 'shared'
+export { FrameLoop, createInterpolator } from '@react-spring/shared'
 export { inferTo } from './helpers'
 
 export * from './types'
 export type { AnimationResult } from './AnimationResult'
 export type { UnknownProps } from './types/common'
 
-export * from 'shared/types'
+export * from '@react-spring/shared/src/types'

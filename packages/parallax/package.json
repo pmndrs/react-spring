@@ -4,7 +4,7 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@react-spring/web": "link:../../targets/web",
-    "shared": "link:../shared",
+    "@react-spring/shared": "link:../shared",
     "use-memo-one": "^1.1.0"
   },
   "peerDependencies": {

@@ -5,7 +5,7 @@ import {
   ElementType,
   ComponentPropsWithRef,
   FluidValue,
-} from 'shared'
+} from '@react-spring/shared'
 import { primitives } from './primitives'
 
 type Primitives = typeof primitives
