@@ -68,37 +68,16 @@ export interface AnimatedGlobals {
   willAdvance?: typeof willAdvance
 }
 
-export const assign = (globals: AnimatedGlobals): AnimatedGlobals =>
-  ({
-    to,
-    now,
-    frameLoop,
-    colorNames,
-    skipAnimation,
-    createStringInterpolator,
-    requestAnimationFrame,
-    batchedUpdates,
-    willAdvance,
-  } = Object.assign(
-    {
-      to,
-      now,
-      frameLoop,
-      colorNames,
-      skipAnimation,
-      createStringInterpolator,
-      requestAnimationFrame,
-      batchedUpdates,
-      willAdvance,
-    },
-    pluckDefined(globals)
-  ))
-
-// Ignore undefined values
-function pluckDefined(globals: any) {
-  const defined: any = {}
-  for (const key in globals) {
-    if (globals[key] !== undefined) defined[key] = globals[key]
-  }
-  return defined
+export const assign = (globals: AnimatedGlobals) => {
+  if (globals.to) to = globals.to
+  if (globals.now) now = globals.now
+  if (globals.frameLoop) frameLoop = globals.frameLoop
+  if (globals.colorNames !== undefined) colorNames = globals.colorNames
+  if (globals.skipAnimation != null) skipAnimation = globals.skipAnimation
+  if (globals.createStringInterpolator)
+    createStringInterpolator = globals.createStringInterpolator
+  if (globals.requestAnimationFrame)
+    requestAnimationFrame = globals.requestAnimationFrame
+  if (globals.batchedUpdates) batchedUpdates = globals.batchedUpdates
+  if (globals.willAdvance) willAdvance = globals.willAdvance
 }
