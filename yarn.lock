@@ -2093,48 +2093,66 @@
   dependencies:
     "@types/node" ">= 8"
 
+"@react-spring/animated@link:packages/animated":
+  version "9.0.0-rc.3"
+  dependencies:
+    "@react-spring/shared" "link:packages/shared"
+    react-layout-effect "^1.0.1"
+
 "@react-spring/core@link:packages/core":
   version "9.0.0-rc.3"
   dependencies:
-    animated "link:packages/animated"
+    "@react-spring/animated" "link:packages/animated"
+    "@react-spring/shared" "link:packages/shared"
     react-layout-effect "^1.0.1"
-    shared "link:packages/shared"
     use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
   version "9.0.0-rc.3"
   dependencies:
-    animated "link:packages/animated"
-    core "link:packages/core"
-    shared "link:packages/shared"
+    "@react-spring/animated" "link:packages/animated"
+    "@react-spring/core" "link:packages/core"
+    "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/native@link:targets/native":
   version "9.0.0-rc.3"
   dependencies:
-    animated "link:packages/animated"
-    core "link:packages/core"
-    shared "link:packages/shared"
+    "@react-spring/animated" "link:packages/animated"
+    "@react-spring/core" "link:packages/core"
+    "@react-spring/shared" "link:packages/shared"
+
+"@react-spring/shared@link:packages/shared":
+  version "9.0.0-rc.3"
+  dependencies:
+    "@react-spring/types" "link:packages/types"
+    fluids "^0.1.6"
+    tslib "^1.11.1"
 
 "@react-spring/three@link:targets/three":
   version "9.0.0-rc.3"
   dependencies:
-    animated "link:packages/animated"
-    core "link:packages/core"
-    shared "link:packages/shared"
+    "@react-spring/animated" "link:packages/animated"
+    "@react-spring/core" "link:packages/core"
+    "@react-spring/shared" "link:packages/shared"
+
+"@react-spring/types@link:packages/types":
+  version "9.0.0-rc.3"
+  dependencies:
+    "@alloc/types" "^1.2.1"
 
 "@react-spring/web@link:targets/web":
   version "9.0.0-rc.3"
   dependencies:
-    animated "link:packages/animated"
-    core "link:packages/core"
-    shared "link:packages/shared"
+    "@react-spring/animated" "link:packages/animated"
+    "@react-spring/core" "link:packages/core"
+    "@react-spring/shared" "link:packages/shared"
 
 "@react-spring/zdog@link:targets/zdog":
   version "9.0.0-rc.3"
   dependencies:
-    animated "link:packages/animated"
-    core "link:packages/core"
-    shared "link:packages/shared"
+    "@react-spring/animated" "link:packages/animated"
+    "@react-spring/core" "link:packages/core"
+    "@react-spring/shared" "link:packages/shared"
 
 "@rollup/plugin-commonjs@^11.1.0":
   version "11.1.0"
@@ -2481,10 +2499,6 @@ ajv@^6.5.5:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
-
-"animated@link:packages/animated":
-  version "0.0.0"
-  uid ""
 
 ansi-256-colors@^1.1.0:
   version "1.1.0"
@@ -3716,10 +3730,6 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
-
-"core@link:packages/core":
-  version "0.0.0"
-  uid ""
 
 cosmiconfig@^5.0.5, cosmiconfig@^5.0.7, cosmiconfig@^5.1.0:
   version "5.2.1"
@@ -9518,10 +9528,6 @@ setprototypeof@1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.1.1.tgz#7e95acb24aa92f5885e0abef5ba131330d4ae683"
   integrity sha512-JvdAWfbXeIGaZ9cILp38HntZSFSo3mWg6xGcJJsd+d4aRMOqauag1C63dJfDw7OaMYwEbHMOxEZ1lqVRYP2OAw==
-
-"shared@link:packages/shared":
-  version "0.0.0"
-  uid ""
 
 shebang-command@^1.2.0:
   version "1.2.0"
