@@ -1,4 +1,4 @@
-import { Lookup, Arrify, AnyFn } from './types.util'
+import { Lookup, Arrify, AnyFn } from '@react-spring/types'
 import * as G from './globals'
 
 export const noop = () => {}
@@ -14,7 +14,7 @@ type PlainObject<T> = Exclude<T & Lookup, Function | readonly any[]>
 
 export const is = {
   arr: Array.isArray as IsArray,
-  obj: <T extends any>(a: T): a is PlainObject<T> =>
+  obj: <T extends any>(a: T & any): a is PlainObject<T> =>
     !!a && a.constructor.name === 'Object',
   fun: (a: unknown): a is Function => typeof a === 'function',
   str: (a: unknown): a is string => typeof a === 'string',
@@ -37,9 +37,7 @@ export function isEqual(a: any, b: any) {
 // Not all strings can be animated (eg: {display: "none"})
 export const isAnimatedString = (value: unknown): value is string =>
   is.str(value) &&
-  (value[0] == '#' ||
-    /\d/.test(value) ||
-    !!(G.colorNames && G.colorNames[value]))
+  (value[0] == '#' || /\d/.test(value) || !!(G.colors && G.colors[value]))
 
 type Eachable<Value, Key> = {
   forEach: (cb: (value: Value, key: Key) => void, ctx?: any) => void

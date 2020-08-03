@@ -1,15 +1,18 @@
 import { StyleSheet } from 'react-native'
 import { createHost, AnimatedObject } from '@react-spring/animated'
-import { createStringInterpolator } from '@react-spring/shared/src/stringInterpolation'
-import { is, Globals } from '@react-spring/shared'
-import colorNames from '@react-spring/shared/src/colors'
+import {
+  is,
+  Globals,
+  createStringInterpolator,
+  colors,
+} from '@react-spring/shared'
 import { primitives } from './primitives'
 import { WithAnimated } from './animated'
 import { AnimatedStyle } from './AnimatedStyle'
 
 Globals.assign({
-  colorNames,
   createStringInterpolator,
+  colors,
 })
 
 const host = createHost(primitives, {

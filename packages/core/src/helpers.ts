@@ -5,13 +5,10 @@ import {
   toArray,
   getFluidConfig,
   isAnimatedString,
-  AnyFn,
-  OneOrMore,
   FluidValue,
-  Lookup,
-  Falsy,
+  Globals as G,
 } from '@react-spring/shared'
-import * as G from '@react-spring/shared/src/globals'
+import { AnyFn, OneOrMore, Lookup, Falsy } from '@react-spring/types'
 import { ReservedProps, ForwardProps, InferTo } from './types'
 
 // @see https://github.com/alexreardon/use-memo-one/pull/10

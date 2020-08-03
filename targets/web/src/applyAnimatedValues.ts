@@ -1,4 +1,5 @@
-import { Globals as G, Lookup } from '@react-spring/shared'
+import { Globals as G } from '@react-spring/shared'
+import { Lookup } from '@react-spring/types'
 
 const isCustomPropRE = /^--/
 

@@ -1,5 +1,5 @@
-import { is, each, Falsy, Timeout, flush } from '@react-spring/shared'
-import * as G from '@react-spring/shared/src/globals'
+import { is, each, Timeout, flush, Globals as G } from '@react-spring/shared'
+import { Falsy } from '@react-spring/types'
 
 import { PAUSED } from './SpringPhase'
 import { getDefaultProps } from './helpers'

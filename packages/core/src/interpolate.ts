@@ -1,3 +1,4 @@
+import { FluidValue, deprecateInterpolate } from '@react-spring/shared'
 import {
   Constrain,
   OneOrMore,
@@ -5,9 +6,7 @@ import {
   ExtrapolateType,
   InterpolatorConfig,
   InterpolatorFn,
-  FluidValue,
-} from '@react-spring/shared'
-import { deprecateInterpolate } from '@react-spring/shared/src/deprecations'
+} from '@react-spring/types'
 import { Interpolation } from './Interpolation'
 
 /** Map the value of one or more dependencies */

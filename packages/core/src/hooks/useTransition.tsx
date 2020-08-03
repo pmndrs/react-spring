@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useRef, useMemo, useImperativeHandle } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
+import { OneOrMore, UnknownProps } from '@react-spring/types'
 import {
   is,
   toArray,
@@ -8,8 +9,6 @@ import {
   useOnce,
   usePrev,
   each,
-  OneOrMore,
-  UnknownProps,
 } from '@react-spring/shared'
 
 import {

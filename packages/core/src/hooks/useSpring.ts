@@ -1,4 +1,5 @@
-import { is, RefProp, UnknownProps, Remap } from '@react-spring/shared'
+import { RefProp, UnknownProps, Remap } from '@react-spring/types'
+import { is } from '@react-spring/shared'
 
 import {
   ControllerUpdate,

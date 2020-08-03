@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import { useSpring } from './useSpring'
-import { is, Lookup, UnknownProps } from 'shared'
+import { is } from '@react-spring/shared'
+import { Lookup, UnknownProps } from '@react-spring/types'
 import { SpringStopFn, SpringStartFn } from '../types'
 import { SpringValue } from '../SpringValue'
+import { useSpring } from './useSpring'
 
 describe('useSpring', () => {
   let springs: Lookup<SpringValue>

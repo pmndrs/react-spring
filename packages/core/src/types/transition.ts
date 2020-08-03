@@ -10,7 +10,7 @@ import {
   Merge,
   Falsy,
   NoInfer,
-} from '@react-spring/shared'
+} from '@react-spring/types'
 
 import {
   AnimationProps,

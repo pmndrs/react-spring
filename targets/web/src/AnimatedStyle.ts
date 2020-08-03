@@ -1,10 +1,9 @@
 import { AnimatedObject } from '@react-spring/animated'
+import { Lookup, OneOrMore } from '@react-spring/types'
 import {
   is,
   each,
   toArray,
-  Lookup,
-  OneOrMore,
   FluidValue,
   FluidEvent,
   FluidObserver,

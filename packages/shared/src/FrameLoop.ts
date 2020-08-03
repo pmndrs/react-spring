@@ -1,4 +1,4 @@
-import { FrameRequestCallback } from './types'
+import { FrameRequestCallback, RequestFrameFn } from '@react-spring/types'
 import { flushCalls } from './helpers'
 import * as G from './globals'
 
@@ -10,8 +10,6 @@ declare const process:
 // The global `requestAnimationFrame` must be dereferenced to avoid "Illegal invocation" errors
 const requestAnimationFrame: RequestFrameFn = fn =>
   (void 0, G.requestAnimationFrame)(fn)
-
-export type RequestFrameFn = (cb: FrameRequestCallback) => number | void
 
 export interface OpaqueAnimation {
   idle: boolean

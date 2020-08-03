@@ -1,5 +1,7 @@
+export type ColorName = keyof typeof colors
+
 // http://www.w3.org/TR/css3-color/#svg-color
-const colors = {
+export const colors = {
   transparent: 0x00000000,
   aliceblue: 0xf0f8ffff,
   antiquewhite: 0xfaebd7ff,
@@ -151,7 +153,3 @@ const colors = {
   yellow: 0xffff00ff,
   yellowgreen: 0x9acd32ff,
 }
-
-export type ColorName = keyof typeof colors
-
-export default colors

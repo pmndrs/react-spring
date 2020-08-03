@@ -1,8 +1,7 @@
 import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { act } from '@testing-library/react'
-import { isEqual, is, FrameLoop } from '@react-spring/shared'
-import colorNames from '@react-spring/shared/src/colors'
+import { isEqual, is, FrameLoop, colors } from '@react-spring/shared'
 
 import { Globals, Controller, FrameValue } from '..'
 import { computeGoal } from '../src/helpers'
@@ -24,7 +23,7 @@ beforeEach(() => {
     now: mockRaf.now,
     requestAnimationFrame: mockRaf.raf,
     frameLoop: new FrameLoop(),
-    colorNames,
+    colors,
     // This lets our useTransition hook force its component
     // to update from within an "onRest" handler.
     batchedUpdates: act,

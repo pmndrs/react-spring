@@ -1,7 +1,9 @@
 import { FluidValue } from 'fluids'
-
-import { OneOrMore } from './types.util'
-import { InterpolatorConfig, InterpolatorArgs } from './types'
+import {
+  OneOrMore,
+  InterpolatorConfig,
+  InterpolatorArgs,
+} from '@react-spring/types'
 import { FrameLoop, OpaqueAnimation } from './FrameLoop'
 import { noop } from './helpers'
 
@@ -28,7 +30,7 @@ declare const performance: { now: () => number }
 
 export let now = () => performance.now()
 
-export let colorNames = null as { [key: string]: number } | null
+export let colors = null as { [key: string]: number } | null
 
 export let skipAnimation = false as boolean
 
@@ -55,7 +57,7 @@ export interface AnimatedGlobals {
   /** Provide a custom `FrameLoop` instance */
   frameLoop?: typeof frameLoop
   /** Provide custom color names for interpolation */
-  colorNames?: typeof colorNames
+  colors?: typeof colors
   /** Make all animations instant and skip the frameloop entirely */
   skipAnimation?: typeof skipAnimation
   /** Provide custom logic for string interpolation */
@@ -72,7 +74,7 @@ export const assign = (globals: AnimatedGlobals) => {
   if (globals.to) to = globals.to
   if (globals.now) now = globals.now
   if (globals.frameLoop) frameLoop = globals.frameLoop
-  if (globals.colorNames !== undefined) colorNames = globals.colorNames
+  if (globals.colors !== undefined) colors = globals.colors
   if (globals.skipAnimation != null) skipAnimation = globals.skipAnimation
   if (globals.createStringInterpolator)
     createStringInterpolator = globals.createStringInterpolator

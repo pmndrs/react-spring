@@ -1,5 +1,5 @@
 import { inferTo } from './helpers'
-import { ReservedProps } from './types/common'
+import { ReservedProps } from './types/props'
 
 describe('helpers', () => {
   it('interpolateTo', () => {

@@ -1,12 +1,12 @@
 import {
+  deprecateInterpolate,
   each,
-  InterpolatorArgs,
   FluidValue,
   FluidObserver,
+  Globals as G,
 } from '@react-spring/shared'
+import { InterpolatorArgs } from '@react-spring/types'
 import { getAnimated } from '@react-spring/animated'
-import { deprecateInterpolate } from '@react-spring/shared/src/deprecations'
-import * as G from '@react-spring/shared/src/globals'
 
 import { Interpolation } from './Interpolation'
 

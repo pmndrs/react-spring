@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { assert, test, _ } from 'spec.ts';
 import { SpringValues, SpringUpdateFn } from '@react-spring/core';
-import { Lookup } from '@react-spring/shared';
+import { Lookup } from '@react-spring/types';
 
 import { animated, useTransition } from '../..';
 

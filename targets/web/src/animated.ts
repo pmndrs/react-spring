@@ -1,11 +1,6 @@
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import {
-  ElementType,
-  ComponentPropsWithRef,
-  Merge,
-  FluidValue,
-  FluidProps,
-} from '@react-spring/shared'
+import { FluidValue, FluidProps } from '@react-spring/shared'
+import { ElementType, ComponentPropsWithRef, Merge } from '@react-spring/types'
 import { Primitives } from './primitives'
 
 type AnimatedPrimitives = {

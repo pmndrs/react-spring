@@ -1,0 +1,10 @@
+{
+  "name": "@react-spring/types",
+  "version": "9.0.0-rc.3",
+  "dependencies": {
+    "@alloc/types": "^1.2.1"
+  },
+  "devDependencies": {
+    "typescript": "3.8.3"
+  }
+}

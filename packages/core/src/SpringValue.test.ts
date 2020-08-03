@@ -1,7 +1,7 @@
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 import { flushMicroTasks } from 'flush-microtasks'
-import { Globals } from 'shared'
+import { Globals } from '@react-spring/shared'
 
 const frameLength = 1000 / 60
 

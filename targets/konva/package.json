@@ -5,7 +5,8 @@
   "dependencies": {
     "@react-spring/animated": "link:../../packages/animated",
     "@react-spring/core": "link:../../packages/core",
-    "@react-spring/shared": "link:../../packages/shared"
+    "@react-spring/shared": "link:../../packages/shared",
+    "@react-spring/types": "link:../../packages/types"
   },
   "peerDependencies": {
     "konva": ">=2.6",

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { RenderResult, render } from '@testing-library/react'
-import { useTransition } from './useTransition'
+import { toArray } from '@react-spring/shared'
 import { TransitionFn, UseTransitionProps } from '../types'
-import { toArray } from 'shared'
+import { useTransition } from './useTransition'
 
 describe('useTransition', () => {
   let transition: TransitionFn

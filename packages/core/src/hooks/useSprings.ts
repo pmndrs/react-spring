@@ -1,14 +1,12 @@
 import { useMemo, useRef } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
+import { RefProp, UnknownProps, Lookup } from '@react-spring/types'
 import {
   is,
   each,
   usePrev,
   useOnce,
-  RefProp,
-  UnknownProps,
   useForceUpdate,
-  Lookup,
 } from '@react-spring/shared'
 
 import {

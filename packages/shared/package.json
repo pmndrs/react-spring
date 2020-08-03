@@ -10,7 +10,7 @@
     "directory": "dist"
   },
   "dependencies": {
-    "@alloc/types": "^1.2.1",
+    "@react-spring/types": "link:../types",
     "fluids": "^0.1.6",
     "tslib": "^1.11.1"
   },

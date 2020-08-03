@@ -1,16 +1,18 @@
 import {
+  Arrify,
+  InterpolatorArgs,
+  InterpolatorFn,
+  OneOrMore,
+} from '@react-spring/types'
+import {
   is,
   each,
   isEqual,
   toArray,
   FluidValue,
   createInterpolator,
-  InterpolatorArgs,
-  InterpolatorFn,
-  OneOrMore,
-  Arrify,
+  Globals as G,
 } from '@react-spring/shared'
-import * as G from '@react-spring/shared/src/globals'
 
 import { FrameValue, isFrameValue } from './FrameValue'
 import {

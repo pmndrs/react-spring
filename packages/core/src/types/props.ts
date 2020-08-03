@@ -1,17 +1,16 @@
+import { FluidProps, FluidValue } from '@react-spring/shared'
 import {
   Any,
   Constrain,
   Lookup,
   Falsy,
-  FluidProps,
-  FluidValue,
   Merge,
   ObjectFromUnion,
   ObjectType,
   OneOrMore,
   Remap,
   UnknownProps,
-} from '@react-spring/shared'
+} from '@react-spring/types'
 
 import { DEFAULT_PROPS } from '../helpers'
 import { Controller } from '../Controller'

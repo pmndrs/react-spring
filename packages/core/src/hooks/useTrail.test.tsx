@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import { each, Lookup, is } from 'shared'
+import { is, each } from '@react-spring/shared'
+import { Lookup } from '@react-spring/types'
 import { SpringValue } from '../SpringValue'
 import { useTrail, UseTrailProps } from './useTrail'
 

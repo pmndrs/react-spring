@@ -1,5 +1,5 @@
+import { NoInfer, UnknownProps } from '@react-spring/types'
 import { useSpring, UseSpringProps } from '../hooks/useSpring'
-import { NoInfer, UnknownProps } from '../types/common'
 import { SpringValues, SpringToFn, SpringChain } from '../types'
 
 export type SpringComponentProps<

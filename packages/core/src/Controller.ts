@@ -1,16 +1,14 @@
+import { OneOrMore, UnknownProps, Lookup, Falsy } from '@react-spring/types'
 import {
   is,
   each,
   flush,
-  OneOrMore,
   toArray,
   flushCalls,
-  UnknownProps,
+  Globals as G,
   noop,
 } from '@react-spring/shared'
-import * as G from '@react-spring/shared/src/globals'
 
-import { Lookup, Falsy } from './types/common'
 import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringPhase, CREATED, ACTIVE, IDLE, PAUSED } from './SpringPhase'

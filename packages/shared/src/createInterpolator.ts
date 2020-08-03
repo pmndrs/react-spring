@@ -7,7 +7,7 @@ import {
   ExtrapolateType,
   InterpolatorConfig,
   InterpolatorFactory,
-} from './types'
+} from '@react-spring/types'
 
 export const createInterpolator: InterpolatorFactory = (
   range: readonly number[] | InterpolatorFn<any, any> | InterpolatorConfig<any>,

@@ -1,3 +1,4 @@
+import { Animatable } from '@react-spring/types'
 import {
   is,
   each,
@@ -8,8 +9,8 @@ import {
   getFluidConfig,
   getFluidValue,
   isAnimatedString,
-  Animatable,
   flushCalls,
+  Globals as G,
 } from '@react-spring/shared'
 import {
   AnimatedValue,
@@ -20,7 +21,6 @@ import {
   Animated,
   getAnimatedType,
 } from '@react-spring/animated'
-import * as G from '@react-spring/shared/src/globals'
 
 import { Animation } from './Animation'
 import { mergeConfig } from './AnimationConfig'

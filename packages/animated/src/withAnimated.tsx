@@ -1,13 +1,8 @@
 import * as React from 'react'
 import { forwardRef, useRef, Ref, useCallback } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
-import {
-  is,
-  each,
-  useForceUpdate,
-  ElementType,
-  FluidConfig,
-} from '@react-spring/shared'
+import { is, each, useForceUpdate, FluidConfig } from '@react-spring/shared'
+import { ElementType } from '@react-spring/types'
 
 import { AnimatedProps } from './AnimatedProps'
 import { HostConfig } from './createHost'

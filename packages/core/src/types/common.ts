@@ -1,6 +1,5 @@
-import { FluidValue, Remap, Any } from '@react-spring/shared'
-
-export * from '@react-spring/shared/src/types.util'
+import { Remap, Any } from '@react-spring/types'
+import { FluidValue } from '@react-spring/shared'
 
 /** Replace the type of each `T` property with `never` (unless compatible with `U`) */
 export type Valid<T, U> = NeverProps<T, InvalidKeys<T, U>>
