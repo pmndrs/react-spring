@@ -1,26 +1,16 @@
 # @react-spring/shared
 
-This package contains modules which are **not imported** by the main module.
+Various helpers used by `@react-spring/core` and/or the platform targets (eg: `@react-spring/web`).
 
-- `@react-spring/shared/src/colorMatchers`
-  Regular expressions for color strings
+### Notable exports:
 
-- `@react-spring/shared/src/colors`
-  The dictionary of named colors and their numeric values
+- The `Globals` object (updated with its `assign` method)
+- The `createStringInterpolator` function
+- The `createInterpolator` function
+- The `normalizeColor` function
+- The `FrameLoop` class
+- The `colors` object
+- The `colorToRgba` function
+- The [`fluids`] package
 
-- `@react-spring/shared/src/normalizeColor`
-  Converts named colors, hexadecimal colors, `rgba` strings, and `hsla` strings
-  into their numeric values
-
-- `@react-spring/shared/src/stringInterpolation`
-  Exports the `createStringInterpolator` function (with color support)
-
-## Main module
-
-Import `@react-spring/shared` to access these named imports:
-
-- `Globals` object (updated with its `assign` method)
-- `createInterpolator` function
-- `is` functions (for runtime type checks)
-- Utility hooks (like `useForceUpdate`)
-- Every type in `src/types`
+[`fluids`]: https://www.npmjs.com/package/fluids
