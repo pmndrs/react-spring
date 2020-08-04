@@ -4,7 +4,7 @@ import {
   InterpolatorConfig,
   InterpolatorArgs,
 } from '@react-spring/types'
-import { FrameLoop, OpaqueAnimation } from './FrameLoop'
+import type { FrameLoop, OpaqueAnimation } from './FrameLoop'
 import { noop } from './helpers'
 
 //
