@@ -25,7 +25,7 @@ import {
   flushUpdateQueue,
   setSprings,
 } from '../Controller'
-import { useMemo as useMemoOne, hasProps } from '../helpers'
+import { hasProps } from '../helpers'
 import { useSpringContext } from '../SpringContext'
 import { SpringHandle } from '../SpringHandle'
 
@@ -130,13 +130,13 @@ export function useSprings(
 
   // Create new controllers when "length" increases, and destroy
   // the affected controllers when "length" decreases.
-  useMemoOne(() => {
+  useMemo(() => {
     ctrls.length = length
     declareUpdates(prevLength, length)
   }, [length])
 
   // Update existing controllers when "deps" are changed.
-  useMemoOne(() => {
+  useMemo(() => {
     declareUpdates(0, Math.min(prevLength, length))
   }, deps)
 
