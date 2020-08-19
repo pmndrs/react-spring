@@ -271,7 +271,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     } else if (changed) {
       this._onChange(this.get())
     }
-    return idle
   }
 
   /** Check the current phase */
