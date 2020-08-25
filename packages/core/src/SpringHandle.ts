@@ -24,8 +24,8 @@ export interface SpringHandle<T extends Lookup = UnknownProps> {
   resume: SpringResumeFn<T>
 }
 
-/** Create an imperative API for manipulating an array of `Controller` objects. */
 export const SpringHandle = {
+  /** Create an imperative API for manipulating an array of `Controller` objects. */
   create: (getControllers: () => Controller[]): SpringHandle => ({
     get controllers() {
       return getControllers()
