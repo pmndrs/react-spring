@@ -74,7 +74,7 @@ type Merge<A, B> = { [K in keyof A]: K extends keyof B ? B[K] : A[K] } & B
 export type SetUpdateFn<DS extends object> = (ds: Partial<UseSpringProps<DS>>) => void
 export interface SetUpdateCallbackFn<DS extends object> {
   (ds: Partial<UseSpringProps<DS>>): void;
-  (i: number): Partial<UseSpringProps<DS>>;
+  (cb: (i: number) => Partial<UseSpringProps<DS>>): void;
 }
 
 // The hooks do emulate React's 'ref' by accepting { ref?: React.RefObject<Controller> } and
