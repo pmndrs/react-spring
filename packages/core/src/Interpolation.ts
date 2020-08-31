@@ -61,6 +61,8 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
     if (!isEqual(value, oldValue)) {
       getAnimated(this)!.setValue(value)
       this._onChange(value, this.idle)
+    } else if (checkIdle(this)) {
+      onIdle(this)
     }
   }
 
@@ -133,16 +135,9 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
         this.advance()
       }
       // Leave the frameloop when all parents are done animating.
-      else if (event.idle) {
-        this.idle = toArray(this.source).every(
-          (source: any) => source.idle !== false
-        )
-        if (this.idle) {
-          this.advance()
-          each(getPayload(this)!, node => {
-            node.done = true
-          })
-        }
+      else if (event.idle && checkIdle(this)) {
+        this.advance()
+        onIdle(this)
       }
     }
     // Ensure our priority is greater than all parents, which means
@@ -155,4 +150,21 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
     }
     super.onParentChange(event)
   }
+}
+
+// Set `idle` to true if all sources are idle. Return the idle status.
+function checkIdle(self: Interpolation) {
+  return toArray(self.source).every(isIdle) && (self.idle = true)
+}
+
+// Sources with undefined `idle` are considered "always idle".
+function isIdle(source: any) {
+  return source.idle !== false
+}
+
+function onIdle(self: Interpolation) {
+  self['_onChange'](self.get(), true)
+  each(getPayload(self)!, node => {
+    node.done = true
+  })
 }
