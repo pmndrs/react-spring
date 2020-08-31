@@ -28,15 +28,6 @@ export class AnimatedValue<T = any> extends Animated {
     return this._value
   }
 
-  /**
-   * Set the current value and optionally round it.
-   *
-   * The `step` argument does nothing whenever it equals `undefined` or `0`.
-   * It works with fractions and whole numbers. The best use case is (probably)
-   * rounding to the pixel grid with a step of:
-   *
-   *      1 / window.devicePixelRatio
-   */
   setValue(value: T, step?: number) {
     if (is.num(value)) {
       this.lastPosition = value
