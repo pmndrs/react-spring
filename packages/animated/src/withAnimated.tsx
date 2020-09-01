@@ -1,7 +1,14 @@
 import * as React from 'react'
 import { forwardRef, useRef, Ref, useCallback } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
-import { is, each, useForceUpdate, FluidConfig } from '@react-spring/shared'
+import {
+  is,
+  each,
+  useForceUpdate,
+  FluidConfig,
+  useOnce,
+  usePrev,
+} from '@react-spring/shared'
 import { ElementType } from '@react-spring/types'
 
 import { AnimatedProps } from './AnimatedProps'
@@ -50,9 +57,22 @@ export const withAnimated = (Component: any, host: HostConfig) => {
     const dependencies = new Set<FluidConfig>()
     props.setValue(givenProps, { dependencies, host })
 
+    const state = [props, dependencies] as const
+    const stateRef = useRef(state)
+    const prevState = usePrev(state)
+
     useLayoutEffect(() => {
+      stateRef.current = state
+      // Attach the new props to our latest dependencies.
       each(dependencies, dep => dep.addChild(props))
-      return () => each(dependencies, dep => dep.removeChild(props))
+      // Detach the old props from our previous dependencies.
+      if (prevState) each(prevState[1], dep => dep.removeChild(prevState[0]))
+    })
+
+    // Stop observing on unmount.
+    useOnce(() => () => {
+      const [props, dependencies] = stateRef.current
+      each(dependencies, dep => dep.removeChild(props))
     })
 
     const usedProps = host.getComponentProps(props.getValue()!)
