@@ -809,22 +809,33 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _focus(value: T | FluidValue<T>) {
     const anim = this.animation
     if (value !== anim.to) {
-      let config = getFluidConfig(anim.to)
-      if (config) {
-        config.removeChild(this)
+      if (this._children.size) {
+        this._detach()
       }
-
       anim.to = value
-
-      let priority = 0
-      if ((config = getFluidConfig(value))) {
-        config.addChild(this)
-        if (isFrameValue(value)) {
-          priority = (value.priority || 0) + 1
-        }
+      if (this._children.size) {
+        this._attach()
       }
-      this.priority = priority
     }
+  }
+
+  protected _attach() {
+    let priority = 0
+
+    const { to } = this.animation
+    const config = getFluidConfig(to)
+    if (config) {
+      config.addChild(this)
+      if (isFrameValue(to)) {
+        priority = to.priority + 1
+      }
+    }
+
+    this.priority = priority
+  }
+
+  protected _detach() {
+    getFluidConfig(this.animation.to)?.removeChild(this)
   }
 
   /** Set the current value and our `node` if necessary. The `_onChange` method is *not* called. */
