@@ -725,11 +725,16 @@ type OpaqueTarget = {
 
 function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
   describe('when our target is ' + name, () => {
-    let spring: SpringValue
     let target: OpaqueTarget
+    let spring: SpringValue
+    let observer: FrameValue.Observer & {
+      onParentChange: jest.MockedFunction<any>
+    }
     beforeEach(() => {
-      spring = new SpringValue(0)
       target = create(1)
+      spring = new SpringValue(0)
+      // The target is not attached until the spring is observed.
+      spring.addChild((observer = { onParentChange: jest.fn() }))
     })
 
     it('animates toward the current value', async () => {
@@ -843,6 +848,25 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
 
     describe('when animating an array', () => {
       it.todo('animates as expected')
+    })
+
+    // In the case of an Interpolation, staying attached will prevent
+    // garbage collection when an animation loop is active, which results
+    // in a memory leak since the Interpolation stays in the frameloop.
+    describe('when our last child is detached', () => {
+      it('detaches from the target', () => {
+        const children = target.node['_children']
+        spring.start({ to: target.node })
+
+        // Expect the target node to be attached.
+        expect(children.has(spring)).toBeTruthy()
+
+        // Remove the observer.
+        spring.removeChild(observer)
+
+        // Expect the target node to be detached.
+        expect(children.has(spring)).toBeFalsy()
+      })
     })
   })
 }
