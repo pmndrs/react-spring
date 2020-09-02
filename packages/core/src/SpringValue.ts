@@ -882,7 +882,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const anim = this.animation
 
     // Reset the state of each Animated node.
-    getAnimated(this)!.reset(anim.to)
+    getAnimated(this)!.reset(getFluidValue(anim.to))
 
     // Ensure the `onStart` prop will be called.
     if (!this.is(ACTIVE)) {
