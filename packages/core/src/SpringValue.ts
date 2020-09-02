@@ -135,8 +135,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
     anim.values.forEach((node, i) => {
       if (node.done) return
 
-      // The "anim.toValues" array must exist when no parent exists.
-      let to = payload ? payload[i].lastPosition : toValues![i]
+      const to =
+        // Animated strings always go from 0 to 1.
+        node.constructor == AnimatedString
+          ? 1
+          : payload
+          ? payload[i].lastPosition
+          : toValues![i]
 
       let finished = anim.immediate
       let position = to
