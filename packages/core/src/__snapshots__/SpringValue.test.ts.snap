@@ -75,6 +75,22 @@ Array [
 ]
 `;
 
+exports[`SpringValue can have an animated string as its target 1`] = `
+Array [
+  "rgba(255, 255, 0, 1)",
+  "rgba(255, 229, 0, 1)",
+  "rgba(255, 204, 0, 1)",
+  "rgba(255, 178, 0, 1)",
+  "rgba(255, 153, 0, 1)",
+  "rgba(255, 127, 0, 1)",
+  "rgba(255, 102, 0, 1)",
+  "rgba(255, 76, 0, 1)",
+  "rgba(255, 51, 0, 1)",
+  "rgba(255, 25, 0, 1)",
+  "red",
+]
+`;
+
 exports[`SpringValue the "loop" prop can be combined with the "reverse" prop 1`] = `
 Array [
   0.33334,
@@ -275,39 +291,5 @@ Array [
   0.029086205080955534,
   0.028040767912793738,
   0.022634843307857987,
-]
-`;
-
-exports[`SpringValue when our target is an Interpolation when animating a string animates as expected 1`] = `
-Array [
-  "rgba(255, 170, 0, 1)",
-  "rgba(255, 85, 0, 1)",
-  "red",
-  "rgba(255, 85, 0, 1)",
-  "rgba(255, 170, 0, 1)",
-  "yellow",
-  "rgba(255, 170, 0, 1)",
-  "rgba(255, 85, 0, 1)",
-  "red",
-  "rgba(255, 85, 0, 1)",
-  "rgba(255, 170, 0, 1)",
-  "yellow",
-]
-`;
-
-exports[`SpringValue when our target is another SpringValue when animating a string animates as expected 1`] = `
-Array [
-  "rgba(255, 170, 0, 1)",
-  "rgba(255, 85, 0, 1)",
-  "red",
-  "rgba(255, 85, 0, 1)",
-  "rgba(255, 170, 0, 1)",
-  "yellow",
-  "rgba(255, 170, 0, 1)",
-  "rgba(255, 85, 0, 1)",
-  "red",
-  "rgba(255, 85, 0, 1)",
-  "rgba(255, 170, 0, 1)",
-  "yellow",
 ]
 `;
