@@ -2,6 +2,7 @@ import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 import { flushMicroTasks } from 'flush-microtasks'
 import { Globals } from '@react-spring/shared'
+import { computeGoal } from './helpers'
 
 const frameLength = 1000 / 60
 
@@ -52,6 +53,23 @@ describe('SpringValue', () => {
       from: [0, 0],
       config: { duration: 10 * frameLength },
     })
+    await advanceUntilIdle()
+    expect(getFrames(spring)).toMatchSnapshot()
+  })
+
+  it('can have an animated string as its target', async () => {
+    const target = new SpringValue('yellow')
+    const spring = new SpringValue({
+      to: target,
+      config: { duration: 10 * frameLength },
+    })
+
+    // The target is not attached until the spring is observed.
+    spring.addChild({ onParentChange() {} })
+
+    mockRaf.step()
+    target.set('red')
+
     await advanceUntilIdle()
     expect(getFrames(spring)).toMatchSnapshot()
   })
