@@ -843,31 +843,6 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
       })
     })
 
-    // FIXME: These tests fail.
-    xdescribe('when animating a string', () => {
-      it('animates as expected', async () => {
-        const spring = new SpringValue('yellow')
-        spring.start('red', {
-          config: { duration: frameLength * 3 },
-        })
-
-        await advanceUntilIdle()
-        spring.start({
-          loop: true,
-          reverse: true,
-        })
-
-        await advanceUntilValue(spring, 'yellow')
-        await advanceUntilValue(spring, 'red')
-        await advanceUntilValue(spring, 'yellow')
-        expect(getFrames(spring)).toMatchSnapshot()
-      })
-    })
-
-    describe('when animating an array', () => {
-      it.todo('animates as expected')
-    })
-
     // In the case of an Interpolation, staying attached will prevent
     // garbage collection when an animation loop is active, which results
     // in a memory leak since the Interpolation stays in the frameloop.
