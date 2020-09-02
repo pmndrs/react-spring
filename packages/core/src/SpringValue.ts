@@ -409,11 +409,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
   onParentChange(event: FrameValue.Event) {
     super.onParentChange(event)
     if (event.type == 'change') {
-      if (!this.is(ACTIVE)) {
-        this._reset()
-        if (!this.is(PAUSED)) {
-          this._start()
-        }
+      this._reset()
+      if (!this.is(ACTIVE) && !this.is(PAUSED)) {
+        this._start()
       }
     } else if (event.type == 'priority') {
       this.priority = event.priority + 1
