@@ -6,7 +6,7 @@ type UseOnce = (effect: React.EffectCallback) => void
 export const useOnce: UseOnce = effect => useEffect(effect, [])
 
 /** Return a function that re-renders this component, if still mounted */
-export const useForceUpdate = () => {
+export function useForceUpdate() {
   const update = useState<any>(0)[1]
   const unmounted = useRef(false)
   useOnce(() => () => {
