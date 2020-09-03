@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
-import { RefProp, UnknownProps, Lookup } from '@react-spring/types'
+import { Lookup } from '@react-spring/types'
 import {
   is,
   each,
@@ -11,11 +11,9 @@ import {
 
 import {
   ControllerFlushFn,
-  PickAnimated,
-  SpringStartFn,
-  SpringStopFn,
-  SpringValues,
   ControllerUpdate,
+  PickAnimated,
+  SpringValues,
 } from '../types'
 import { UseSpringProps } from './useSpring'
 import { declareUpdate } from '../SpringValue'
@@ -25,13 +23,13 @@ import {
   flushUpdateQueue,
   setSprings,
 } from '../Controller'
-import { hasProps } from '../helpers'
+import { hasProps, detachRefs, replaceRef } from '../helpers'
 import { useSpringContext } from '../SpringContext'
-import { SpringHandle } from '../SpringHandle'
+import { SpringRef } from '../SpringRef'
 
 export type UseSpringsProps<State extends Lookup = Lookup> = unknown &
   ControllerUpdate<State> & {
-    ref?: RefProp<SpringHandle<State>>
+    ref?: SpringRef<State>
   }
 
 /**
@@ -45,7 +43,7 @@ export function useSprings<Props extends UseSpringProps>(
   props: (i: number, ctrl: Controller) => Props,
   deps?: readonly any[]
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State & object>[], SpringStartFn<State>, SpringStopFn<State>]
+  ? [SpringValues<State>[], SpringRef<State>]
   : never
 
 /**
@@ -64,7 +62,7 @@ export function useSprings<Props extends UseSpringsProps>(
   props: Props[] & UseSpringsProps<PickAnimated<Props>>[],
   deps: readonly any[] | undefined
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State & object>[], SpringStartFn<State>, SpringStopFn<State>]
+  ? [SpringValues<State>[], SpringRef<State>]
   : never
 
 /** @internal */
@@ -76,13 +74,19 @@ export function useSprings(
   const propsFn = is.fun(props) && props
   if (propsFn && !deps) deps = []
 
+  // Create a local ref if a props function or deps array is ever passed.
+  const ref = useMemo(
+    () => (propsFn || arguments.length == 3 ? new SpringRef() : void 0),
+    []
+  )
+
   interface State {
     // The controllers used for applying updates.
     ctrls: Controller[]
     // The queue of changes to make on commit.
     queue: Array<() => void>
     // The flush function used by controllers.
-    flush: ControllerFlushFn<UnknownProps>
+    flush: ControllerFlushFn
   }
 
   // Set to 0 to prevent sync flush.
@@ -118,9 +122,6 @@ export function useSprings(
     []
   )
 
-  // The imperative API ref from the props of the first controller.
-  const refProp = useRef<RefProp<SpringHandle>>()
-
   const ctrls = [...state.ctrls]
   const updates: any[] = []
 
@@ -145,23 +146,15 @@ export function useSprings(
     for (let i = startIndex; i < endIndex; i++) {
       const ctrl = ctrls[i] || (ctrls[i] = new Controller(null, state.flush))
 
-      let update: UseSpringProps<any> = propsFn
+      const update: UseSpringProps<any> = propsFn
         ? propsFn(i, ctrl)
         : (props as any)[i]
 
       if (update) {
-        update = updates[i] = declareUpdate(update)
-        if (i == 0) {
-          refProp.current = update.ref
-          update.ref = undefined
-        }
+        updates[i] = declareUpdate(update)
       }
     }
   }
-
-  const api = useMemo(() => {
-    return SpringHandle.create(() => state.ctrls)
-  }, [])
 
   // New springs are created during render so users can pass them to
   // their animated components, but new springs aren't cached until the
@@ -178,11 +171,6 @@ export function useSprings(
     // Replace the cached controllers.
     state.ctrls = ctrls
 
-    // Update the ref prop.
-    if (refProp.current) {
-      refProp.current.current = api
-    }
-
     // Flush the commit queue.
     const { queue } = state
     if (queue.length) {
@@ -190,13 +178,19 @@ export function useSprings(
       each(queue, cb => cb())
     }
 
-    // Cancel the animations of unused controllers.
-    each(oldCtrls, ctrl => ctrl.stop(true))
+    // Clean up any unused controllers.
+    each(oldCtrls, ctrl => {
+      detachRefs(ctrl, ref)
+      ctrl.stop(true)
+    })
 
     // Update existing controllers.
     each(ctrls, (ctrl, i) => {
       const values = springs[i]
       setSprings(ctrl, values)
+
+      // Attach the controller to the local ref.
+      ref?.current.add(ctrl)
 
       // Update the default props.
       if (hasContext) {
@@ -206,8 +200,12 @@ export function useSprings(
       // Apply updates created during render.
       const update = updates[i]
       if (update) {
-        // Start animating unless a ref exists.
-        if (refProp.current) {
+        // Update the injected ref if needed.
+        replaceRef(ctrl, update.ref)
+
+        // When an injected ref exists, the update is postponed
+        // until the ref has its `start` method called.
+        if (ctrl.ref) {
           ctrl.queue.push(update)
         } else {
           ctrl.start(update)
@@ -225,7 +223,5 @@ export function useSprings(
   // safely mutate it during render.
   const values = springs.map(x => ({ ...x }))
 
-  return propsFn || arguments.length == 3
-    ? [values, api.start, api.stop]
-    : values
+  return ref ? [values, ref] : values
 }

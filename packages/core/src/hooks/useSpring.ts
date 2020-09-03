@@ -1,15 +1,9 @@
-import { RefProp, UnknownProps, Remap } from '@react-spring/types'
+import { Remap } from '@react-spring/types'
 import { is } from '@react-spring/shared'
 
-import {
-  ControllerUpdate,
-  PickAnimated,
-  SpringStartFn,
-  SpringStopFn,
-  SpringValues,
-} from '../types'
+import { ControllerUpdate, PickAnimated, SpringValues } from '../types'
 import { Valid } from '../types/common'
-import { SpringHandle } from '../SpringHandle'
+import { SpringRef } from '../SpringRef'
 import { useSprings } from './useSprings'
 
 /**
@@ -24,7 +18,7 @@ export type UseSpringProps<Props extends object = any> = unknown &
          *
          * When defined, the render animation won't auto-start.
          */
-        ref?: RefProp<SpringHandle<State>>
+        ref?: SpringRef<State>
       }
     >
   : never
@@ -38,11 +32,9 @@ export function useSpring<Props extends object>(
     | Function
     | (() => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps),
   deps?: readonly any[] | undefined
-): [
-  SpringValues<PickAnimated<Props>>,
-  SpringStartFn<PickAnimated<Props>>,
-  SpringStopFn<UnknownProps>
-]
+): PickAnimated<Props> extends infer State
+  ? [SpringValues<State>, SpringRef<State>]
+  : never
 
 /**
  * Updated on every render, with state inferred from forward props.
@@ -57,21 +49,17 @@ export function useSpring<Props extends object>(
 export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps: readonly any[] | undefined
-): [
-  SpringValues<PickAnimated<Props>>,
-  SpringStartFn<PickAnimated<Props>>,
-  SpringStopFn<UnknownProps>
-]
+): PickAnimated<Props> extends infer State
+  ? [SpringValues<State>, SpringRef<State>]
+  : never
 
 /** @internal */
 export function useSpring(props: any, deps?: readonly any[]) {
   const isFn = is.fun(props)
-  const [[values], update, stop] = useSprings(
+  const [[values], ref] = useSprings(
     1,
     isFn ? props : [props],
     isFn ? deps || [] : deps
   )
-  return isFn || arguments.length == 2
-    ? ([values, update, stop] as const)
-    : values
+  return isFn || arguments.length == 2 ? [values, ref] : values
 }

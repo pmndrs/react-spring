@@ -22,6 +22,6 @@ export function Spring<State extends object>(
   props: { to: State } & Omit<SpringComponentProps<NoInfer<State>>, 'to'>
 ): JSX.Element | null
 
-export function Spring({ children, ...props }: SpringComponentProps) {
+export function Spring({ children, ...props }: any) {
   return children(useSpring(props))
 }

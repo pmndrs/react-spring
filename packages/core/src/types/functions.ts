@@ -1,12 +1,10 @@
-import { OneOrMore, Lookup, Falsy } from '@react-spring/types'
+import { Lookup, Falsy } from '@react-spring/types'
 
 import { Controller, ControllerQueue } from '../Controller'
 import { SpringValue } from '../SpringValue'
 import { RunAsyncProps } from '../runAsync'
-import { AsyncResult, AnimationResult } from '../AnimationResult'
 import {
   SpringTo,
-  SpringsUpdate,
   InlineToProps,
   SpringChain,
   SpringProps,
@@ -14,13 +12,15 @@ import {
   GoalValue,
   GoalValues,
 } from './props'
+import { AsyncResult, AnimationResult } from './objects'
 import { IsPlainObject } from './common'
+import { Readable, InferProps, InferState, InferTarget } from './internal'
 
 /** The flush function that handles `start` calls */
-export type ControllerFlushFn<State extends Lookup> = (
-  ctrl: Controller<State>,
-  queue: ControllerQueue<State>
-) => AsyncResult<State>
+export type ControllerFlushFn<T extends Controller<any> = Controller> = (
+  ctrl: T,
+  queue: ControllerQueue<InferState<T>>
+) => AsyncResult<T>
 
 /**
  * An async function that can update or stop the animations of a spring.
@@ -29,9 +29,12 @@ export type ControllerFlushFn<State extends Lookup> = (
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export interface SpringToFn<T = unknown> extends Function {
-  (update: SpringStartFn<T>, stop: SpringStopFn<T>): Promise<any> | void
+export interface SpringToFn<T = any> {
+  (start: StartFn<T>, stop: StopFn<T>): Promise<any> | void
 }
+
+type StartFn<T> = InferTarget<T> extends { start: infer T } ? T : never
+type StopFn<T> = InferTarget<T> extends { stop: infer T } ? T : never
 
 /**
  * Update the props of an animation.
@@ -43,10 +46,14 @@ export type SpringUpdateFn<T = any> = T extends IsPlainObject<T>
   ? UpdateValuesFn<T>
   : UpdateValueFn<T>
 
-interface AnyUpdateFn<T, Props extends object> {
-  (to: SpringTo<T>, props?: Props): AsyncResult<T>
+interface AnyUpdateFn<
+  T extends SpringValue | Controller<any>,
+  Props extends object = InferProps<T>,
+  State = InferState<T>
+> {
+  (to: SpringTo<State>, props?: Props): AsyncResult<T>
   (props: { to?: SpringToFn<T> | Falsy } & Props): AsyncResult<T>
-  (props: { to?: SpringChain<T> | Falsy } & Props): AsyncResult<T>
+  (props: { to?: SpringChain<State> | Falsy } & Props): AsyncResult<T>
 }
 
 /**
@@ -55,13 +62,13 @@ interface AnyUpdateFn<T, Props extends object> {
  * The `T` parameter must be a set of animated values (as an object type).
  */
 interface UpdateValuesFn<State extends Lookup = Lookup>
-  extends AnyUpdateFn<State, ControllerProps<State>> {
-  (props: InlineToProps<State> & ControllerProps<State>): AsyncResult<State>
+  extends AnyUpdateFn<Controller<State>> {
+  (props: InlineToProps<State> & ControllerProps<State>): AsyncResult<Controller<State>> // prettier-ignore
   (
     props: {
       to?: GoalValues<State> | Falsy
     } & ControllerProps<State>
-  ): AsyncResult<State>
+  ): AsyncResult<Controller<State>>
 }
 
 /**
@@ -69,48 +76,9 @@ interface UpdateValuesFn<State extends Lookup = Lookup>
  *
  * The `T` parameter must be a primitive type for a single animated value.
  */
-interface UpdateValueFn<T = any> extends AnyUpdateFn<T, SpringProps<T>> {
-  (props: { to?: GoalValue<T> } & SpringProps<T>): AsyncResult<T>
+interface UpdateValueFn<T = any> extends AnyUpdateFn<SpringValue<T>> {
+  (props: { to?: GoalValue<T> } & SpringProps<T>): AsyncResult<SpringValue<T>>
 }
-
-/**
- * Start the animation described by the `props` argument.
- *
- * If nothing is passed, flush the `update` queue.
- */
-export interface SpringStartFn<State = unknown> {
-  (props?: SpringsUpdate<State> | null): AsyncResult<State[]>
-}
-
-/**
- * Stop every animating `SpringValue` at its current value.
- *
- * Pass one or more keys to stop selectively.
- *
- * The `T` parameter can be a set of animated values (as an object type)
- * or a primitive type for a single animated value.
- */
-export type SpringStopFn<T = unknown> = T extends object
-  ? T extends ReadonlyArray<number | string>
-    ? (cancel?: boolean) => void
-    : (keys?: OneOrMore<string>) => void
-  : (cancel?: boolean) => void
-
-/**
- * Pause animating `SpringValue`.
- *
- * The `T` parameter can be a set of animated values (as an object type)
- * or a primitive type for a single animated value.
- */
-export type SpringPauseFn<T = unknown> = SpringStopFn<T>
-
-/**
- * Resume paused `SpringValue`.
- *
- * The `T` parameter can be a set of animated values (as an object type)
- * or a primitive type for a single animated value.
- */
-export type SpringResumeFn<T = unknown> = SpringStopFn<T>
 
 /**
  * Called before the first frame of every animation.
@@ -125,14 +93,16 @@ export type OnPause<T = unknown> = OnStart<T>
 export type OnResume<T = unknown> = OnStart<T>
 
 /** Called once the animation comes to a halt */
-export type OnRest<T = unknown> = (result: AnimationResult<T>) => void
+export type OnRest<T extends Readable = any> = (
+  result: AnimationResult<T>
+) => void
 
 /**
  * Called after an animation is updated by new props,
  * even if the animation remains idle.
  */
 export type OnProps<T = unknown> = (
-  props: Readonly<RunAsyncProps<T>>,
+  props: Readonly<RunAsyncProps<SpringValue<T>>>,
   spring: SpringValue<T>
 ) => void
 
@@ -140,10 +110,6 @@ export type OnProps<T = unknown> = (
  * Called after any delay has finished.
  */
 export type OnDelayEnd<T = unknown> = (
-  props: RunAsyncProps,
+  props: RunAsyncProps<SpringValue<T>>,
   spring: SpringValue<T>
-) => void
-
-export type AnimationResolver<T> = (
-  result: AnimationResult<T> | AsyncResult<T>
 ) => void

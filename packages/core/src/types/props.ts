@@ -14,6 +14,8 @@ import {
 
 import { DEFAULT_PROPS } from '../helpers'
 import { Controller } from '../Controller'
+import { SpringRef } from '../SpringRef'
+import { SpringValue } from '../SpringValue'
 import { SpringConfig } from './objects'
 import { StringKeys, RawValues, IsPlainObject } from './common'
 import { TransitionKey, TransitionValues } from './transition'
@@ -82,7 +84,7 @@ export interface SpringProps<T = any> extends AnimationProps<T> {
   /**
    * Called when all animations come to a stand-still.
    */
-  onRest?: EventProp<OnRest<T>>
+  onRest?: EventProp<OnRest<SpringValue<T>>>
 }
 
 /**
@@ -153,6 +155,7 @@ export type ControllerUpdate<State extends Lookup = Lookup> = unknown &
  */
 export interface ControllerProps<State extends Lookup = Lookup>
   extends AnimationProps<State> {
+  ref?: SpringRef<State>
   from?: GoalValues<State> | Falsy
   // FIXME: Use "ControllerUpdate<T>" once type recursion is good enough.
   loop?: LoopProp<ControllerUpdate>
@@ -173,7 +176,9 @@ export interface ControllerProps<State extends Lookup = Lookup>
    *
    * Also accepts an object for per-key events
    */
-  onRest?: OnRest<State> | { [P in keyof State]?: OnRest<State[P]> }
+  onRest?:
+    | OnRest<Controller<State>>
+    | { [P in keyof State]?: OnRest<SpringValue<State[P]>> }
   /**
    * Called once per frame when animations are active
    *

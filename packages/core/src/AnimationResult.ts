@@ -1,32 +1,9 @@
-import { SpringPhase } from './SpringPhase'
-import { SpringStopFn } from './types'
+import { AnimationResult } from './types'
+import { Readable } from './types/internal'
 
 /** @internal */
-export interface AnimationTarget<T> {
-  get(): T
-  is(phase: SpringPhase): boolean
-  start(props: any): AsyncResult<T>
-  stop: SpringStopFn<any>
-}
-
-/** The object given to the `onRest` prop and `start` promise. */
-export interface AnimationResult<T = any> {
-  value: T
-  target?: AnimationTarget<T>
-  /** When true, no animation ever started. */
-  noop?: boolean
-  /** When true, the animation was neither cancelled nor stopped prematurely. */
-  finished?: boolean
-  /** When true, the animation was cancelled before it could finish. */
-  cancelled?: boolean
-}
-
-/** The promised result of an animation. */
-export type AsyncResult<T = any> = Promise<AnimationResult<T>>
-
-/** @internal */
-export const getCombinedResult = <T>(
-  target: AnimationTarget<T>,
+export const getCombinedResult = <T extends Readable>(
+  target: T,
   results: AnimationResult<T>[]
 ): AnimationResult<T> =>
   results.length == 1
@@ -41,8 +18,8 @@ export const getCombinedResult = <T>(
       )
 
 /** No-op results are for updates that never start an animation. */
-export const getNoopResult = <T>(
-  target: AnimationTarget<T>,
+export const getNoopResult = <T extends Readable>(
+  target: T,
   value = target.get()
 ) => ({
   value,
@@ -51,8 +28,8 @@ export const getNoopResult = <T>(
   target,
 })
 
-export const getFinishedResult = <T>(
-  target: AnimationTarget<T>,
+export const getFinishedResult = <T extends Readable>(
+  target: T,
   finished: boolean,
   value = target.get()
 ) => ({
@@ -61,8 +38,8 @@ export const getFinishedResult = <T>(
   target,
 })
 
-export const getCancelledResult = <T>(
-  target: AnimationTarget<T>,
+export const getCancelledResult = <T extends Readable>(
+  target: T,
   value = target.get()
 ) => ({
   value,
