@@ -205,13 +205,6 @@ export function hasProps(props: object) {
   return false
 }
 
-export function throwDisposed(cond?: boolean): any {
-  if (cond === false) return
-  throw Error(
-    'This object is disposed. Did you call its `dispose` method on accident?'
-  )
-}
-
 export function isAsyncTo(to: any) {
   return is.fun(to) || (is.arr(to) && is.obj(to[0]))
 }
