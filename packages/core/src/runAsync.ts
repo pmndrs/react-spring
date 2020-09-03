@@ -3,21 +3,20 @@ import { Falsy } from '@react-spring/types'
 
 import { PAUSED } from './SpringPhase'
 import { getDefaultProps } from './helpers'
+import { AnimationTarget, InferState, InferProps } from './types/internal'
 import {
-  SpringChain,
-  SpringDefaultProps,
-  SpringProps,
-  SpringToFn,
-} from './types'
-import {
-  getCancelledResult,
-  getFinishedResult,
   AnimationResult,
   AsyncResult,
-  AnimationTarget,
-} from './AnimationResult'
+  SpringChain,
+  SpringDefaultProps,
+  SpringToFn,
+} from './types'
+import { getCancelledResult, getFinishedResult } from './AnimationResult'
 
-export interface RunAsyncProps<T = any> extends SpringProps<T> {
+type AsyncTo<T> = SpringChain<T> | SpringToFn<T>
+
+/** @internal */
+export type RunAsyncProps<T extends AnimationTarget = any> = InferProps<T> & {
   callId: number
   parentId?: number
   cancel: boolean
@@ -26,12 +25,13 @@ export interface RunAsyncProps<T = any> extends SpringProps<T> {
   to?: any
 }
 
-export interface RunAsyncState<T = any> {
+/** @internal */
+export interface RunAsyncState<T extends AnimationTarget = any> {
   timeouts: Set<Timeout>
   pauseQueue: Set<() => void>
   resumeQueue: Set<() => void>
   asyncId?: number
-  asyncTo?: SpringChain<T> | SpringToFn<T>
+  asyncTo?: AsyncTo<InferState<T>>
   promise?: AsyncResult<T>
   cancelId?: number
 }
@@ -44,11 +44,11 @@ export interface RunAsyncState<T = any> {
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export function runAsync<T>(
-  to: SpringChain<T> | SpringToFn<T>,
+export function runAsync<T extends AnimationTarget>(
+  to: AsyncTo<InferState<T>>,
   props: RunAsyncProps<T>,
   state: RunAsyncState<T>,
-  target: AnimationTarget<T>
+  target: T
 ): AsyncResult<T> {
   const { callId, parentId, onRest } = props
   const { asyncTo: prevTo, promise: prevPromise } = state
@@ -57,15 +57,14 @@ export function runAsync<T>(
     return prevPromise!
   }
 
-  return (state.promise = (async (): AsyncResult<T> => {
+  return (state.promise = (async () => {
     state.asyncId = callId
     state.asyncTo = to
 
     // The default props of any `animate` calls.
-    const defaultProps = getDefaultProps<SpringDefaultProps<T>>(props, [
-      // The `onRest` prop is only called when the `runAsync` promise is resolved.
-      'onRest',
-    ])
+    // The `onRest` prop is only called when the `runAsync` promise is resolved.
+    const defaultProps = getDefaultProps<P>(props, ['onRest'])
+    type P = SpringDefaultProps<InferState<T>>
 
     let preventBail!: () => void
     let bail: (error: any) => void
@@ -75,7 +74,7 @@ export function runAsync<T>(
       (resolve, reject) => ((preventBail = resolve), (bail = reject))
     )
 
-    const bailIfEnded = (bailSignal: BailSignal<T>) => {
+    const bailIfEnded = (bailSignal: BailSignal) => {
       const bailResult =
         // The `cancel` prop or `stop` method was used.
         (callId <= (state.cancelId || 0) && getCancelledResult(target)) ||
@@ -136,10 +135,8 @@ export function runAsync<T>(
       }
 
       // Async script
-      else if (is.fun(to)) {
-        animating = Promise.resolve(
-          to(animate, target.stop.bind(target) as any)
-        )
+      else {
+        animating = Promise.resolve(to(animate, target.stop.bind(target)))
       }
 
       await Promise.all([animating.then(preventBail), bailPromise])
@@ -182,8 +179,8 @@ export function stopAsync(state: RunAsyncState, cancelId?: number | Falsy) {
 }
 
 /** This error is thrown to signal an interrupted async animation. */
-export class BailSignal<T = any> extends Error {
-  result!: AnimationResult<T>
+export class BailSignal extends Error {
+  result!: AnimationResult
   constructor() {
     super(
       'An async animation has been interrupted. You see this error because you ' +

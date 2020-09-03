@@ -11,17 +11,15 @@ import {
 
 import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
+import { SpringRef } from './SpringRef'
 import { SpringPhase, CREATED, ACTIVE, IDLE, PAUSED } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
-import {
-  getCancelledResult,
-  getCombinedResult,
-  AnimationResult,
-  AsyncResult,
-} from './AnimationResult'
+import { getCancelledResult, getCombinedResult } from './AnimationResult'
 import { runAsync, RunAsyncState, stopAsync } from './runAsync'
 import { scheduleProps } from './scheduleProps'
 import {
+  AnimationResult,
+  AsyncResult,
   ControllerFlushFn,
   ControllerUpdate,
   OnRest,
@@ -52,8 +50,14 @@ export class Controller<State extends Lookup = Lookup>
   /** The queue of props passed to the `update` method. */
   queue: ControllerQueue<State> = []
 
+  /**
+   * The injected ref. When defined, render-based updates are pushed
+   * onto the `queue` instead of being auto-started.
+   */
+  ref?: SpringRef<State>
+
   /** Custom handler for flushing update queues */
-  protected _flush?: ControllerFlushFn<State>
+  protected _flush?: ControllerFlushFn<this>
 
   /** These props are used by all future spring values */
   protected _initialProps?: Lookup
@@ -71,7 +75,7 @@ export class Controller<State extends Lookup = Lookup>
   protected _started = false
 
   /** State used by the `runAsync` function */
-  protected _state: RunAsyncState<State> = {
+  protected _state: RunAsyncState<this> = {
     timeouts: new Set(),
     pauseQueue: new Set(),
     resumeQueue: new Set(),
@@ -86,7 +90,7 @@ export class Controller<State extends Lookup = Lookup>
 
   constructor(
     props?: ControllerUpdate<State> | null,
-    flush?: ControllerFlushFn<State>
+    flush?: ControllerFlushFn<any>
   ) {
     this._onFrame = this._onFrame.bind(this)
     if (flush) {
@@ -137,7 +141,7 @@ export class Controller<State extends Lookup = Lookup>
    * When you pass a queue (instead of nothing), that queue is used instead of
    * the queued animations added with the `update` method, which are left alone.
    */
-  start(props?: OneOrMore<ControllerUpdate<State>> | null): AsyncResult<State> {
+  start(props?: OneOrMore<ControllerUpdate<State>> | null): AsyncResult<this> {
     let { queue } = this as any
     if (props) {
       queue = toArray<any>(props).map(createUpdate)
@@ -153,16 +157,29 @@ export class Controller<State extends Lookup = Lookup>
     return flushUpdateQueue(this, queue)
   }
 
-  /** Stop one animation, some animations, or all animations */
-  stop(cancel?: boolean): this
-  stop(keys?: OneOrMore<string>, cancel?: boolean): this
-  stop(arg?: boolean | OneOrMore<string>, cancel?: boolean) {
-    if (is.str(arg) || is.arr(arg)) {
+  /** Stop all animations. */
+  stop(): this
+  /** Stop animations for the given keys. */
+  stop(keys: OneOrMore<string>): this
+  /** Cancel all animations. */
+  stop(cancel: boolean): this
+  /** Cancel animations for the given keys. */
+  stop(cancel: boolean, keys: OneOrMore<string>): this
+  /** Stop some or all animations. */
+  stop(keys?: OneOrMore<string>): this
+  /** Cancel some or all animations. */
+  stop(cancel: boolean, keys?: OneOrMore<string>): this
+  /** @internal */
+  stop(arg?: boolean | OneOrMore<string>, keys?: OneOrMore<string>) {
+    if (arg !== !!arg) {
+      keys = arg as OneOrMore<string>
+    }
+    if (keys) {
       const springs = this.springs as Lookup<SpringValue>
-      each(toArray(arg), key => springs[key].stop(cancel))
+      each(toArray(keys), key => springs[key].stop(!!arg))
     } else {
-      stopAsync(this._state, arg && this._lastAsyncId)
-      this.each(spring => spring.stop(arg))
+      stopAsync(this._state, this._lastAsyncId)
+      this.each(spring => spring.stop(!!arg))
     }
     return this
   }
@@ -315,6 +332,7 @@ export async function flushUpdate(
             } else {
               // The "value" is set before the "handler" is called.
               queue.set(handler, {
+                target: ctrl,
                 value: null,
                 finished,
                 cancelled,
@@ -342,7 +360,7 @@ export async function flushUpdate(
     }
   }
 
-  const promises = (keys || Object.keys(ctrl.springs)).map(key =>
+  const promises: AsyncResult[] = (keys || Object.keys(ctrl.springs)).map(key =>
     ctrl.springs[key]!.start(props as any)
   )
 

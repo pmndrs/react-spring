@@ -10,6 +10,8 @@ import {
 } from '@react-spring/shared'
 import { AnyFn, OneOrMore, Lookup, Falsy } from '@react-spring/types'
 import { ReservedProps, ForwardProps, InferTo } from './types'
+import type { Controller } from './Controller'
+import type { SpringRef } from './SpringRef'
 
 // @see https://github.com/alexreardon/use-memo-one/pull/10
 export const useMemo: typeof useMemoOne = (create, deps) =>
@@ -43,9 +45,13 @@ export const getProps = <T, Arg = never>(
   props: AnyProps<T, Arg> | null | undefined,
   i: number,
   arg: Arg
-) =>
+): T =>
   props &&
-  (is.fun(props) ? props(i, arg) : is.arr(props) ? props[i] : { ...props })
+  (is.fun(props)
+    ? (props as Function)(i, arg)
+    : is.arr(props)
+    ? props[i]
+    : { ...props })
 
 /** Returns `true` if the given prop is having its default value set. */
 export const hasDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
@@ -207,4 +213,19 @@ export function hasProps(props: object) {
 
 export function isAsyncTo(to: any) {
   return is.fun(to) || (is.arr(to) && is.obj(to[0]))
+}
+
+/** Detach `ctrl` from `ctrl.ref` and (optionally) the given `ref` */
+export function detachRefs(ctrl: Controller, ref?: SpringRef) {
+  ctrl.ref?.current.delete(ctrl)
+  ref?.current.delete(ctrl)
+}
+
+/** Replace `ctrl.ref` with the given `ref` (if defined) */
+export function replaceRef(ctrl: Controller, ref?: SpringRef) {
+  if (ref && ctrl.ref !== ref) {
+    ctrl.ref?.current.delete(ctrl)
+    ref.current.add(ctrl)
+    ctrl.ref = ref
+  }
 }

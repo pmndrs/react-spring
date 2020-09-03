@@ -1,12 +1,16 @@
-import { matchProp, callProp } from './helpers'
-import { RunAsyncState, RunAsyncProps } from './runAsync'
-import { SpringProps, AnimationResolver } from './types'
-import { AsyncResult } from './AnimationResult'
 import { Timeout, Globals as G } from '@react-spring/shared'
+import { matchProp, callProp } from './helpers'
+import { AsyncResult } from './types'
+import { RunAsyncState, RunAsyncProps } from './runAsync'
+import {
+  AnimationResolver,
+  AnimationTarget,
+  InferProps,
+} from './types/internal'
 
-interface ScheduledProps<T> {
+interface ScheduledProps<T extends AnimationTarget> {
   key?: string
-  props: Pick<SpringProps<T>, 'cancel' | 'pause' | 'delay'>
+  props: InferProps<T>
   state: RunAsyncState<T>
   actions: {
     pause: () => void
@@ -22,7 +26,7 @@ interface ScheduledProps<T> {
  * The `actions.start` function must handle the `cancel` prop itself,
  * but the `pause` prop is taken care of.
  */
-export function scheduleProps<T>(
+export function scheduleProps<T extends AnimationTarget>(
   callId: number,
   { key, props, state, actions }: ScheduledProps<T>
 ): AsyncResult<T> {

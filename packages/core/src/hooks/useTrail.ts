@@ -3,13 +3,9 @@ import { useCallbackOne } from 'use-memo-one'
 import { is } from '@react-spring/shared'
 
 import { Valid } from '../types/common'
-import {
-  PickAnimated,
-  SpringStartFn,
-  SpringStopFn,
-  SpringValues,
-} from '../types'
+import { PickAnimated, SpringValues } from '../types'
 import { UseSpringProps } from './useSpring'
+import { SpringRef } from '../SpringRef'
 import { Controller } from '../Controller'
 import { useSprings } from './useSprings'
 import { getProps } from '../helpers'
@@ -24,7 +20,7 @@ export function useTrail<Props extends object>(
   ) => UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps?: readonly any[]
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State & object>[], SpringStartFn<State>, SpringStopFn<State>]
+  ? [SpringValues<State>[], SpringRef<State>]
   : never
 
 export function useTrail<Props extends object>(
@@ -37,7 +33,7 @@ export function useTrail<Props extends object>(
   props: UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps: readonly any[]
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State & object>[], SpringStartFn<State>, SpringStopFn<State>]
+  ? [SpringValues<State>[], SpringRef<State>]
   : never
 
 export function useTrail(

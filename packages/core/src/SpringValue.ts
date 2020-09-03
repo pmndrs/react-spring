@@ -1,4 +1,3 @@
-import { Animatable } from '@react-spring/types'
 import {
   is,
   each,
@@ -38,17 +37,17 @@ import {
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
 import { SpringPhase, CREATED, IDLE, ACTIVE, PAUSED } from './SpringPhase'
-import {
-  AnimationRange,
-  OnRest,
-  SpringDefaultProps,
-  SpringUpdate,
-  VelocityProp,
-  AnimationResolver,
-  SpringEventProps,
-} from './types'
+import { AnimationRange, AnimationResolver, InferProps } from './types/internal'
 import {
   AsyncResult,
+  OnRest,
+  SpringDefaultProps,
+  SpringEventProps,
+  SpringUpdate,
+  VelocityProp,
+  SpringProps,
+} from './types'
+import {
   getCombinedResult,
   getCancelledResult,
   getFinishedResult,
@@ -75,7 +74,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _phase: SpringPhase = CREATED
 
   /** The state for `runAsync` calls */
-  protected _state: RunAsyncState<T> = {
+  protected _state: RunAsyncState<SpringValue<T>> = {
     timeouts: new Set(),
     pauseQueue: new Set(),
     resumeQueue: new Set(),
@@ -363,16 +362,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * When arguments are passed, a new animation is created, and the
    * queued animations are left alone.
    */
-  start(): AsyncResult<T>
+  start(): AsyncResult<this>
 
-  start(props: SpringUpdate<T>): AsyncResult<T>
+  start(props: SpringUpdate<T>): AsyncResult<this>
 
-  start(to: Animatable<T>, props?: SpringUpdate<T>): AsyncResult<T>
+  start(to: T, props?: SpringProps<T>): AsyncResult<this>
 
-  start(to?: SpringUpdate<T> | Animatable<T>, arg2?: SpringUpdate<T>) {
+  start(to?: T | SpringUpdate<T>, arg2?: SpringProps<T>) {
     let queue: SpringUpdate<T>[]
     if (!is.und(to)) {
-      queue = [is.obj(to) ? (to as any) : { ...arg2, to }]
+      queue = [is.obj(to) ? to : { ...arg2, to }]
     } else {
       queue = this.queue || []
       this.queue = []
@@ -486,9 +485,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Every update is processed by this method before merging. */
   protected _update(
-    { ...props }: SpringUpdate<T>,
+    { ...props }: InferProps<SpringValue<T>>,
     isLoop?: boolean
-  ): AsyncResult<T> {
+  ): AsyncResult<SpringValue<T>> {
     const defaultProps: any = this._defaultProps
 
     // Let the caller inspect every update.
@@ -520,7 +519,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       )
     }
 
-    return scheduleProps<T>(++this._lastCallId, {
+    return scheduleProps(++this._lastCallId, {
       key: this.key,
       props,
       state: this._state,
@@ -543,8 +542,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** Merge props into the current animation */
   protected _merge(
     range: AnimationRange<T>,
-    props: RunAsyncProps<T>,
-    resolve: AnimationResolver<T>
+    props: RunAsyncProps<SpringValue<T>>,
+    resolve: AnimationResolver<SpringValue<T>>
   ): void {
     // The "cancel" prop cancels all pending delays and it forces the
     // active animation to stop where it is.
@@ -950,9 +949,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
  * based on whether the current value equals the goal value that
  * was calculated at the time the "onRest" handler was set.
  */
-function checkFinishedOnRest<T>(
+function checkFinishedOnRest<T extends SpringValue>(
   onRest: OnRest<T> | undefined,
-  spring: SpringValue<T>
+  spring: T
 ) {
   const { to } = spring.animation
   return onRest
