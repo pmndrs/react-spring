@@ -24,9 +24,13 @@ export class SpringRef<State extends Lookup = Lookup> {
   start(props?: object | ControllerUpdateFn<State>) {
     const results: AsyncResult[] = []
     each(this.current, ctrl => {
-      const update = is.fun(props) ? props(ctrl) : props
-      if (update) {
-        results.push(ctrl.start(update))
+      if (is.und(props)) {
+        results.push(ctrl.start())
+      } else {
+        const update = is.fun(props) ? props(ctrl) : props
+        if (update) {
+          results.push(ctrl.start(update))
+        }
       }
     })
     return results
