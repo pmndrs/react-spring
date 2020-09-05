@@ -1,18 +1,39 @@
-// TODO: use "const enum" when Babel supports it
-export type SpringPhase =
-  | typeof CREATED
-  | typeof IDLE
-  | typeof PAUSED
-  | typeof ACTIVE
+/** The property symbol of the current animation phase. */
+export const $P = Symbol.for('SpringPhase')
 
-/** The spring has not animated yet */
-export const CREATED = 'CREATED'
+const HAS_ANIMATED = 1
+const IS_ANIMATING = 2
+const IS_PAUSED = 4
 
-/** The spring has animated before */
-export const IDLE = 'IDLE'
+/** Returns true if the `target` has ever animated. */
+export const hasAnimated = (target: any) => (target[$P] & HAS_ANIMATED) > 0
 
-/** The spring is animating */
-export const ACTIVE = 'ACTIVE'
+/** Returns true if the `target` is animating (even if paused). */
+export const isAnimating = (target: any) => (target[$P] & IS_ANIMATING) > 0
 
-/** The spring is frozen in time */
-export const PAUSED = 'PAUSED'
+/** Returns true if the `target` is paused (even if idle). */
+export const isPaused = (target: any) => (target[$P] & IS_PAUSED) > 0
+
+/** Set the active bit of the `target` phase. */
+export const setActiveBit = (target: any, active: boolean) =>
+  active
+    ? (target[$P] |= IS_ANIMATING | HAS_ANIMATED)
+    : (target[$P] &= ~IS_ANIMATING)
+
+export const setPausedBit = (target: any, paused: boolean) =>
+  paused ? (target[$P] |= IS_PAUSED) : (target[$P] &= ~IS_PAUSED)
+
+/** Define methods for inspecting the current animation phase. */
+export function defineSpringPhases(cls: { prototype: object }) {
+  const makeGetter = (get: (target: any) => any) => ({
+    get() {
+      return get(this)
+    },
+  })
+  Object.defineProperties(cls.prototype, {
+    [$P]: { value: 0, writable: true },
+    hasAnimated: makeGetter(hasAnimated),
+    isAnimating: makeGetter(isAnimating),
+    isPaused: makeGetter(isPaused),
+  })
+}

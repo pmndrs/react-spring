@@ -2,7 +2,6 @@ import type { Lookup } from '@react-spring/types'
 import type { FluidValue } from '@react-spring/shared'
 import type { Controller } from '../Controller'
 import type { SpringValue } from '../SpringValue'
-import type { SpringPhase } from '../SpringPhase'
 import type { AsyncResult, AnimationResult } from './objects'
 import type { ControllerUpdate, SpringUpdate } from './props'
 
@@ -34,7 +33,6 @@ export type InferTarget<T> = T extends object
 
 /** @internal */
 export interface AnimationTarget<T = any> extends Readable<T> {
-  is(phase: SpringPhase): boolean
   start(props: any): AsyncResult<this>
   stop: Function
 }

@@ -82,7 +82,6 @@ export abstract class FrameValue<T = any>
     if (this.idle) {
       // Start animating when a parent does.
       if (type == 'start') {
-        this._reset()
         this._start()
       }
     }
@@ -113,13 +112,7 @@ export abstract class FrameValue<T = any>
     })
   }
 
-  /**
-   * Start animating if possible.
-   *
-   * Note: Be sure to call `_reset` first, or the animation will break.
-   * This method would like to call `_reset` for you, but that would
-   * interfere with paused animations.
-   */
+  /** Start animating if possible. */
   protected _start() {
     this._emit({
       type: 'start',

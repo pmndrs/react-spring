@@ -12,7 +12,7 @@ import {
 import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringRef } from './SpringRef'
-import { SpringPhase, CREATED, ACTIVE, IDLE, PAUSED } from './SpringPhase'
+import { setPausedBit, isPaused } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import { getCancelledResult, getCombinedResult } from './AnimationResult'
 import { runAsync, RunAsyncState, stopAsync } from './runAsync'
@@ -62,9 +62,6 @@ export class Controller<State extends Lookup = Lookup>
   /** These props are used by all future spring values */
   protected _initialProps?: Lookup
 
-  /** The combined phase of our spring values */
-  protected _phase: SpringPhase = CREATED
-
   /** The counter for tracking `scheduleProps` calls */
   protected _lastAsyncId = 0
 
@@ -112,11 +109,6 @@ export class Controller<State extends Lookup = Lookup>
         spring => spring.idle
       )
     )
-  }
-
-  /** Check the current phase */
-  is(phase: SpringPhase) {
-    return this._phase == phase
   }
 
   /** Get the current values of our springs */
@@ -187,8 +179,8 @@ export class Controller<State extends Lookup = Lookup>
   /** Freeze the active animation in time */
   pause(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
-      if (!this.is(PAUSED)) {
-        this._phase = PAUSED
+      if (!isPaused(this)) {
+        setPausedBit(this, true)
         flushCalls(this._state.pauseQueue)
       }
       this.each(spring => spring.pause())
@@ -202,12 +194,9 @@ export class Controller<State extends Lookup = Lookup>
   /** Resume the animation if paused. */
   resume(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
-      // The `idle` property treats paused springs as idle, so we need
-      // to resume every spring before updating our `_phase` with it.
       this.each(spring => spring.resume())
-
-      if (this.is(PAUSED)) {
-        this._phase = this.idle ? IDLE : ACTIVE
+      if (isPaused(this)) {
+        setPausedBit(this, false)
         flushCalls(this._state.resumeQueue)
       }
     } else {
@@ -247,9 +236,6 @@ export class Controller<State extends Lookup = Lookup>
     // The "onRest" queue is only flushed when all springs are idle.
     if (!isActive) {
       this._started = false
-      if (!this.is(PAUSED) && this.idle) {
-        this._phase = IDLE
-      }
       flush(onRest, ([onRest, result]) => {
         result.value = values
         onRest(result)
@@ -368,7 +354,7 @@ export async function flushUpdate(
 
   // This must come *after* the update is sent to each spring, or else
   // their default `pause` prop wouldn't be updated in time.
-  if (ctrl.is(PAUSED)) {
+  if (isPaused(ctrl)) {
     await new Promise(resume => {
       state.resumeQueue.add(resume)
     })

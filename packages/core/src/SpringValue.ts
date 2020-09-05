@@ -36,7 +36,14 @@ import {
   isAsyncTo,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
-import { SpringPhase, CREATED, IDLE, ACTIVE, PAUSED } from './SpringPhase'
+import {
+  isAnimating,
+  isPaused,
+  setPausedBit,
+  hasAnimated,
+  setActiveBit,
+  defineSpringPhases,
+} from './SpringPhase'
 import { AnimationRange, AnimationResolver, InferProps } from './types/internal'
 import {
   AsyncResult,
@@ -70,9 +77,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** The queue of pending props */
   queue?: SpringUpdate<T>[]
 
-  /** The lifecycle phase of this spring */
-  protected _phase: SpringPhase = CREATED
-
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<SpringValue<T>> = {
     timeouts: new Set(),
@@ -100,8 +104,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
   }
 
+  /** Equals true when not advancing on each frame. */
   get idle() {
-    return !this.is(ACTIVE) && !this._state.asyncTo
+    return !(isAnimating(this) || this._state.asyncTo) || isPaused(this)
   }
 
   get goal() {
@@ -277,11 +282,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
   }
 
-  /** Check the current phase */
-  is(phase: SpringPhase) {
-    return this._phase == phase
-  }
-
   /** Set the current value, while stopping the current animation */
   set(value: T | FluidValue<T>) {
     G.batchedUpdates(() => {
@@ -289,7 +289,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       if (this._set(value)) {
         // Ensure change observers are notified. When active,
         // the "_stop" method handles this.
-        if (!this.is(ACTIVE)) {
+        if (!isAnimating(this)) {
           return this._onChange(this.get(), true)
         }
       }
@@ -303,8 +303,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * This does nothing when not animating.
    */
   pause() {
-    if (!this.is(PAUSED)) {
-      this._phase = PAUSED
+    if (!isPaused(this)) {
+      setPausedBit(this, true)
       flushCalls(this._state.pauseQueue)
       callProp(this.animation.onPause, this)
     }
@@ -312,8 +312,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Resume the animation if paused. */
   resume() {
-    if (this.is(PAUSED)) {
-      this._start()
+    if (isPaused(this)) {
+      setPausedBit(this, false)
+      if (isAnimating(this)) {
+        this._resume()
+      }
       flushCalls(this._state.resumeQueue)
       callProp(this.animation.onResume, this)
     }
@@ -325,7 +328,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * All `onRest` callbacks are passed `{finished: true}`
    */
   finish(to?: T | FluidValue<T>) {
-    if (this.is(ACTIVE) || this.is(PAUSED)) {
+    if (isAnimating(this)) {
       const anim = this.animation
 
       // Decay animations have an implicit goal.
@@ -408,10 +411,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   onParentChange(event: FrameValue.Event) {
     super.onParentChange(event)
     if (event.type == 'change') {
-      this._reset()
-      if (!this.is(ACTIVE) && !this.is(PAUSED)) {
-        this._start()
-      }
+      this._start()
     } else if (event.type == 'priority') {
       this.priority = event.priority + 1
     }
@@ -448,7 +448,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Before ever animating, this method ensures an `Animated` node
     // exists and keeps its value in sync with the "from" prop.
-    if (this.is(CREATED)) {
+    if (!hasAnimated(this)) {
       if (props.reverse) [to, from] = [from, to]
 
       from = getFluidValue(from)
@@ -693,7 +693,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     if (!started) {
       // When true, the current value has probably changed.
-      const hasValueChanged = reset || (this.is(CREATED) && hasFromChanged)
+      const hasValueChanged = reset || (!hasAnimated(this) && hasFromChanged)
 
       // When the "to" value or current value are changed,
       // start animating if not already finished.
@@ -712,7 +712,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     // When an active animation changes its goal to its current value:
-    if (finished && this.is(ACTIVE)) {
+    if (finished && isAnimating(this)) {
       // Avoid an abrupt stop unless the animation is being reset.
       if (anim.changed && !reset) {
         started = true
@@ -788,16 +788,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Start an animation
     else if (started) {
-      // Must be idle for "onStart" to be called again.
-      if (reset) this._phase = IDLE
-
-      this._reset()
+      if (reset) {
+        // Must be idle for "onStart" to be called again.
+        setActiveBit(this, false)
+      }
       this._start()
     }
 
     // Postpone promise resolution until the animation is finished,
     // so that no-op updates still resolve at the expected time.
-    else if (this.is(ACTIVE) && !hasToChanged) {
+    else if (isAnimating(this) && !hasToChanged) {
       anim.onRest.push(checkFinishedOnRest(resolve, this))
     }
 
@@ -884,7 +884,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     getAnimated(this)!.reset(getFluidValue(anim.to))
 
     // Ensure the `onStart` prop will be called.
-    if (!this.is(ACTIVE)) {
+    if (!isAnimating(this)) {
       anim.changed = false
     }
 
@@ -897,17 +897,22 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   protected _start() {
-    if (!this.is(ACTIVE)) {
-      this._phase = ACTIVE
-
-      super._start()
-
-      // The "skipAnimation" global avoids the frameloop.
-      if (G.skipAnimation) {
-        this.finish()
-      } else {
-        G.frameLoop.start(this)
+    this._reset()
+    if (!isAnimating(this)) {
+      setActiveBit(this, true)
+      if (!isPaused(this)) {
+        super._start()
+        this._resume()
       }
+    }
+  }
+
+  protected _resume() {
+    // The "skipAnimation" global avoids the frameloop.
+    if (G.skipAnimation) {
+      this.finish()
+    } else {
+      G.frameLoop.start(this)
     }
   }
 
@@ -917,8 +922,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * Always wrap `_stop` calls with `batchedUpdates`.
    */
   protected _stop(cancel?: boolean) {
-    if (this.is(ACTIVE) || this.is(PAUSED)) {
-      this._phase = IDLE
+    if (isAnimating(this)) {
+      setActiveBit(this, false)
 
       // Always let change observers know when a spring becomes idle.
       this._onChange(this.get(), true)
@@ -942,6 +947,24 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
   }
+}
+
+defineSpringPhases(SpringValue)
+
+export interface SpringValue {
+  /**
+   * When true, this value has been animated at least once.
+   */
+  readonly hasAnimated: boolean
+  /**
+   * When true, this value has an unfinished animation,
+   * which is either active or paused.
+   */
+  readonly isAnimating: boolean
+  /**
+   * When true, all current and future animations are paused.
+   */
+  readonly isPaused: boolean
 }
 
 /**
