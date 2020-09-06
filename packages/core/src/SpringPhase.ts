@@ -1,5 +1,5 @@
 /** The property symbol of the current animation phase. */
-export const $P = Symbol.for('SpringPhase')
+const $P = Symbol.for('SpringPhase')
 
 const HAS_ANIMATED = 1
 const IS_ANIMATING = 2
@@ -22,18 +22,3 @@ export const setActiveBit = (target: any, active: boolean) =>
 
 export const setPausedBit = (target: any, paused: boolean) =>
   paused ? (target[$P] |= IS_PAUSED) : (target[$P] &= ~IS_PAUSED)
-
-/** Define methods for inspecting the current animation phase. */
-export function defineSpringPhases(cls: { prototype: object }) {
-  const makeGetter = (get: (target: any) => any) => ({
-    get() {
-      return get(this)
-    },
-  })
-  Object.defineProperties(cls.prototype, {
-    [$P]: { value: 0, writable: true },
-    hasAnimated: makeGetter(hasAnimated),
-    isAnimating: makeGetter(isAnimating),
-    isPaused: makeGetter(isPaused),
-  })
-}

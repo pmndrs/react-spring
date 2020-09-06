@@ -42,7 +42,6 @@ import {
   setPausedBit,
   hasAnimated,
   setActiveBit,
-  defineSpringPhases,
 } from './SpringPhase'
 import { AnimationRange, AnimationResolver, InferProps } from './types/internal'
 import {
@@ -118,6 +117,28 @@ export class SpringValue<T = any> extends FrameValue<T> {
     return (node instanceof AnimatedValue
       ? node.lastVelocity || 0
       : node.getPayload().map(node => node.lastVelocity || 0)) as any
+  }
+
+  /**
+   * When true, this value has been animated at least once.
+   */
+  get hasAnimated() {
+    return hasAnimated(this)
+  }
+
+  /**
+   * When true, this value has an unfinished animation,
+   * which is either active or paused.
+   */
+  get isAnimating() {
+    return isAnimating(this)
+  }
+
+  /**
+   * When true, all current and future animations are paused.
+   */
+  get isPaused() {
+    return isPaused(this)
   }
 
   /** Advance the current animation by a number of milliseconds */
@@ -947,24 +968,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
   }
-}
-
-defineSpringPhases(SpringValue)
-
-export interface SpringValue {
-  /**
-   * When true, this value has been animated at least once.
-   */
-  readonly hasAnimated: boolean
-  /**
-   * When true, this value has an unfinished animation,
-   * which is either active or paused.
-   */
-  readonly isAnimating: boolean
-  /**
-   * When true, all current and future animations are paused.
-   */
-  readonly isPaused: boolean
 }
 
 /**
