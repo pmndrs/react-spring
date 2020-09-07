@@ -1,28 +1,24 @@
 import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { is } from '@react-spring/shared'
-import { Lookup, UnknownProps } from '@react-spring/types'
-import { SpringStopFn, SpringStartFn } from '../types'
+import { Lookup } from '@react-spring/types'
 import { SpringValue } from '../SpringValue'
+import { SpringRef } from '../SpringRef'
 import { useSpring } from './useSpring'
 
 describe('useSpring', () => {
   let springs: Lookup<SpringValue>
-  let animate: SpringStartFn<UnknownProps>
-  let stop: SpringStopFn<any>
+  let ref: SpringRef
 
   // Call the "useSpring" hook and update local variables.
   const update = createUpdater(({ args }) => {
     const result = useSpring(...args)
     if (is.fun(args[0]) || args.length == 2) {
       springs = result[0] as any
-      animate = result[1]
-      stop = result[2]
+      ref = result[1]
     } else {
       springs = result as any
-      animate = stop = () => {
-        throw Error('Function does not exist')
-      }
+      ref = undefined as any
     }
     return null
   })
@@ -35,9 +31,9 @@ describe('useSpring', () => {
       update({ x: 1 })
       expect(springs.x.goal).toBe(1)
     })
-    it('returns only the animated values', () => {
-      expect(() => animate({ x: 2 })).toThrowError()
-      expect(() => stop()).toThrowError()
+    it('does not return a ref', () => {
+      update({ x: 0 })
+      expect(ref).toBeUndefined()
     })
   })
 
@@ -52,16 +48,9 @@ describe('useSpring', () => {
       update({ x: 1 }, [2])
       expect(springs.x.goal).toBe(1)
     })
-    it('returns the "animate" and "stop" functions', () => {
-      update({ x: 0 }, [])
-      expect(springs.x.goal).toBe(0)
-
-      animate({ x: 1 })
-      expect(springs.x.goal).toBe(1)
-      expect(springs.x.idle).toBeFalsy()
-
-      stop()
-      expect(springs.x.idle).toBeTruthy()
+    it('returns a ref', () => {
+      update({ x: 0 }, [1])
+      expect(ref).toBeInstanceOf(SpringRef)
     })
   })
 
@@ -73,16 +62,9 @@ describe('useSpring', () => {
       update(() => ({ x: 1 }))
       expect(springs.x.goal).toBe(0)
     })
-    it('returns the "animate" and "stop" functions', () => {
+    it('returns a ref', () => {
       update(() => ({ x: 0 }))
-      expect(springs.x.goal).toBe(0)
-
-      animate({ x: 1 })
-      expect(springs.x.goal).toBe(1)
-      expect(springs.x.idle).toBeFalsy()
-
-      stop()
-      expect(springs.x.idle).toBeTruthy()
+      expect(ref).toBeInstanceOf(SpringRef)
     })
   })
 
@@ -97,16 +79,9 @@ describe('useSpring', () => {
       update(() => ({ x: 1 }), [2])
       expect(springs.x.goal).toBe(1)
     })
-    it('returns the "animate" and "stop" functions', () => {
-      update(() => ({ x: 0 }), [])
-      expect(springs.x.goal).toBe(0)
-
-      animate({ x: 1 })
-      expect(springs.x.goal).toBe(1)
-      expect(springs.x.idle).toBeFalsy()
-
-      stop()
-      expect(springs.x.idle).toBeTruthy()
+    it('returns a ref', () => {
+      update(() => ({ x: 0 }), [1])
+      expect(ref).toBeInstanceOf(SpringRef)
     })
   })
 })
