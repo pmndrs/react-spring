@@ -1,5 +1,5 @@
-import { Timeout, Globals as G } from '@react-spring/shared'
-import { matchProp, callProp } from './helpers'
+import { Timeout, Globals as G, is } from '@react-spring/shared'
+import { matchProp, callProp, getDefaultProp } from './helpers'
 import { AsyncResult } from './types'
 import { RunAsyncState, RunAsyncProps } from './runAsync'
 import {
@@ -8,9 +8,13 @@ import {
   InferProps,
 } from './types/internal'
 
+// The `scheduleProps` function only handles these defaults.
+type DefaultProps = { cancel?: boolean; pause?: boolean }
+
 interface ScheduledProps<T extends AnimationTarget> {
   key?: string
   props: InferProps<T>
+  defaultProps?: DefaultProps
   state: RunAsyncState<T>
   actions: {
     pause: () => void
@@ -28,20 +32,30 @@ interface ScheduledProps<T extends AnimationTarget> {
  */
 export function scheduleProps<T extends AnimationTarget>(
   callId: number,
-  { key, props, state, actions }: ScheduledProps<T>
+  { key, props, defaultProps, state, actions }: ScheduledProps<T>
 ): AsyncResult<T> {
   return new Promise((resolve, reject) => {
     let delay: number
     let timeout: Timeout
 
-    let pause = false
-    let cancel = matchProp(props.cancel, key)
+    let cancel = mergeDefaultProp(defaultProps, props, 'cancel')
+    cancel = matchProp(props.cancel ?? cancel, key)
 
     if (cancel) {
       onStart()
     } else {
+      // The `pause` prop updates the paused flag.
+      if (!is.und(props.pause)) {
+        state.paused = matchProp(props.pause, key)
+      }
+      // The default `pause` takes precedence when true,
+      // which allows `SpringContext` to work as expected.
+      let pause = mergeDefaultProp(defaultProps, props, 'pause')
+      if (pause !== true) {
+        pause = state.paused || matchProp(pause, key)
+      }
+
       delay = callProp(props.delay || 0, key)
-      pause = matchProp(props.pause, key)
       if (pause) {
         state.resumeQueue.add(onResume)
         actions.pause()
@@ -79,10 +93,25 @@ export function scheduleProps<T extends AnimationTarget>(
       }
 
       try {
-        actions.start({ ...props, callId, delay, cancel, pause }, resolve)
+        actions.start({ ...props, callId, cancel }, resolve)
       } catch (err) {
         reject(err)
       }
     }
   })
+}
+
+/** Update and return the default prop. */
+function mergeDefaultProp(
+  defaultProps: DefaultProps | undefined,
+  props: DefaultProps,
+  key: keyof DefaultProps
+) {
+  let value: any
+  return (
+    defaultProps &&
+    (is.und((value = getDefaultProp(props, key)))
+      ? defaultProps[key]
+      : (defaultProps[key] = value))
+  )
 }

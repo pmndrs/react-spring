@@ -1,6 +1,5 @@
 import { Controller } from './Controller'
 import { flushMicroTasks } from 'flush-microtasks'
-import { isPaused } from './SpringPhase'
 
 const frameLength = 1000 / 60
 
@@ -220,7 +219,7 @@ describe('Controller', () => {
         t.finish()
         mockRaf.step()
 
-        expect(isPaused(ctrl)).toBeTruthy()
+        expect(ctrl['_state'].paused).toBeTruthy()
         expect(onRest).not.toBeCalled()
       })
     })

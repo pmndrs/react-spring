@@ -87,12 +87,19 @@ export const mergeDefaultProps = (
   omitKeys?: readonly (string | Falsy)[]
 ) => getDefaultProps(props, omitKeys, defaults)
 
-/** These props can have default values */
+/**
+ * These props are implicitly used as defaults when defined in a
+ * declarative update (eg: render-based) or any update with `default: true`.
+ *
+ * Use `default: {}` or `default: false` to opt-out of these implicit defaults
+ * for any given update.
+ *
+ * Note: These are not the only props with default values. For example, the
+ * `pause`, `cancel`, and `immediate` props. But those must be updated with
+ * the object syntax (eg: `default: { immediate: true }`).
+ */
 export const DEFAULT_PROPS = [
-  'pause',
-  'cancel',
   'config',
-  'immediate',
   'onDelayEnd',
   'onProps',
   'onStart',

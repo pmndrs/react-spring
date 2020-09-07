@@ -1,7 +1,6 @@
 import { is, each, Timeout, flush, Globals as G } from '@react-spring/shared'
 import { Falsy } from '@react-spring/types'
 
-import { isPaused } from './SpringPhase'
 import { getDefaultProps } from './helpers'
 import { AnimationTarget, InferState, InferProps } from './types/internal'
 import {
@@ -20,16 +19,15 @@ export type RunAsyncProps<T extends AnimationTarget = any> = InferProps<T> & {
   callId: number
   parentId?: number
   cancel: boolean
-  pause: boolean
-  delay: number
   to?: any
 }
 
 /** @internal */
 export interface RunAsyncState<T extends AnimationTarget = any> {
-  timeouts: Set<Timeout>
+  paused: boolean
   pauseQueue: Set<() => void>
   resumeQueue: Set<() => void>
+  timeouts: Set<Timeout>
   asyncId?: number
   asyncTo?: AsyncTo<InferState<T>>
   promise?: AsyncResult<T>
@@ -111,7 +109,7 @@ export function runAsync<T extends AnimationTarget>(
         const result = await target.start(props)
         bailIfEnded(bailSignal)
 
-        if (isPaused(target)) {
+        if (state.paused) {
           await new Promise(resume => {
             state.resumeQueue.add(resume)
           })

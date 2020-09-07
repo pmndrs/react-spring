@@ -12,7 +12,6 @@ import {
 import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
 import { SpringRef } from './SpringRef'
-import { setPausedBit, isPaused } from './SpringPhase'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import { getCancelledResult, getCombinedResult } from './AnimationResult'
 import { runAsync, RunAsyncState, stopAsync } from './runAsync'
@@ -73,9 +72,10 @@ export class Controller<State extends Lookup = Lookup>
 
   /** State used by the `runAsync` function */
   protected _state: RunAsyncState<this> = {
-    timeouts: new Set(),
+    paused: false,
     pauseQueue: new Set(),
     resumeQueue: new Set(),
+    timeouts: new Set(),
   }
 
   /** The event queues that are flushed once per frame maximum */
@@ -179,11 +179,7 @@ export class Controller<State extends Lookup = Lookup>
   /** Freeze the active animation in time */
   pause(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
-      if (!isPaused(this)) {
-        setPausedBit(this, true)
-        flushCalls(this._state.pauseQueue)
-      }
-      this.each(spring => spring.pause())
+      this.start({ pause: true })
     } else {
       const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].pause())
@@ -194,11 +190,7 @@ export class Controller<State extends Lookup = Lookup>
   /** Resume the animation if paused. */
   resume(keys?: OneOrMore<string>) {
     if (is.und(keys)) {
-      this.each(spring => spring.resume())
-      if (isPaused(this)) {
-        setPausedBit(this, false)
-        flushCalls(this._state.resumeQueue)
-      }
+      this.start({ pause: false })
     } else {
       const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].resume())
@@ -334,31 +326,21 @@ export async function flushUpdate(
     })
   }
 
-  if (!keys) {
-    let paused = getDefaultProp(props, 'pause')
-    if (paused !== true && typeof props.pause == 'boolean') {
-      paused = props.pause
-    }
-    if (paused === true) {
-      ctrl.pause()
-    } else if (paused === false) {
-      ctrl.resume()
-    }
+  const state = ctrl['_state']
+
+  // Pause/resume the `asyncTo` when `props.pause` is true/false.
+  if (props.pause === !state.paused) {
+    state.paused = props.pause
+    flushCalls(props.pause ? state.pauseQueue : state.resumeQueue)
+  }
+  // When a controller is paused, its values are also paused.
+  else if (state.paused) {
+    props.pause = true
   }
 
   const promises: AsyncResult[] = (keys || Object.keys(ctrl.springs)).map(key =>
     ctrl.springs[key]!.start(props as any)
   )
-
-  const state = ctrl['_state']
-
-  // This must come *after* the update is sent to each spring, or else
-  // their default `pause` prop wouldn't be updated in time.
-  if (isPaused(ctrl)) {
-    await new Promise(resume => {
-      state.resumeQueue.add(resume)
-    })
-  }
 
   const cancel =
     props.cancel === true || getDefaultProp(props, 'cancel') === true
@@ -376,13 +358,23 @@ export async function flushUpdate(
               stopAsync(state, ctrl['_lastAsyncId'])
               resolve(getCancelledResult(ctrl))
             } else {
-              props.onRest = onRest as any
+              props.onRest = onRest
               resolve(runAsync(asyncTo!, props, state, ctrl))
             }
           },
         },
       })
     )
+  }
+
+  // Pause after updating each spring, so they can be resumed separately
+  // and so their default `pause` and `cancel` props are updated.
+  if (state.paused) {
+    // Ensure `this` must be resumed before the returned promise
+    // is resolved and before starting the next `loop` repetition.
+    await new Promise(resume => {
+      state.resumeQueue.add(resume)
+    })
   }
 
   const result = getCombinedResult<any>(ctrl, await Promise.all(promises))

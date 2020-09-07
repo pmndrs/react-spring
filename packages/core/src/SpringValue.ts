@@ -32,7 +32,6 @@ import {
   inferTo,
   mergeDefaultProps,
   getDefaultProps,
-  getDefaultProp,
   isAsyncTo,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
@@ -78,9 +77,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<SpringValue<T>> = {
-    timeouts: new Set(),
+    paused: false,
     pauseQueue: new Set(),
     resumeQueue: new Set(),
+    timeouts: new Set(),
   }
 
   /** Some props have customizable default values */
@@ -324,23 +324,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * This does nothing when not animating.
    */
   pause() {
-    if (!isPaused(this)) {
-      setPausedBit(this, true)
-      flushCalls(this._state.pauseQueue)
-      callProp(this.animation.onPause, this)
-    }
+    this._update({ pause: true })
   }
 
   /** Resume the animation if paused. */
   resume() {
-    if (isPaused(this)) {
-      setPausedBit(this, false)
-      if (isAnimating(this)) {
-        this._resume()
-      }
-      flushCalls(this._state.resumeQueue)
-      callProp(this.animation.onResume, this)
-    }
+    this._update({ pause: false })
   }
 
   /**
@@ -517,19 +506,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       onProps(props, this)
     }
 
-    // These props are coerced into booleans by the `scheduleProps` function,
-    // so they need their default values merged before then.
-    each(['cancel', 'pause'] as const, key => {
-      const value = getDefaultProp(props, key)
-      if (!is.und(value)) {
-        defaultProps[key] = value as any
-      }
-      // For these props, truthy default values are preferred.
-      if (defaultProps[key]) {
-        props[key] = defaultProps[key] as any
-      }
-    })
-
     // Ensure the initial value can be accessed by animated components.
     const range = this._prepareNode(props)
 
@@ -540,13 +516,30 @@ export class SpringValue<T = any> extends FrameValue<T> {
       )
     }
 
+    const state = this._state
     return scheduleProps(++this._lastCallId, {
       key: this.key,
       props,
-      state: this._state,
+      defaultProps,
+      state,
       actions: {
-        pause: this.pause.bind(this),
-        resume: this.resume.bind(this),
+        pause: () => {
+          if (!isPaused(this)) {
+            setPausedBit(this, true)
+            flushCalls(state.pauseQueue)
+            callProp(this.animation.onPause, this)
+          }
+        },
+        resume: () => {
+          if (isPaused(this)) {
+            setPausedBit(this, false)
+            if (isAnimating(this)) {
+              this._resume()
+            }
+            flushCalls(state.resumeQueue)
+            callProp(this.animation.onResume, this)
+          }
+        },
         start: this._merge.bind(this, range),
       },
     }).then(result => {
@@ -603,7 +596,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     if (props.default) {
-      mergeDefaultProps(defaultProps, props, ['pause', 'cancel'])
+      mergeDefaultProps(defaultProps, props)
     }
 
     const { to: prevTo, from: prevFrom } = anim
@@ -1058,10 +1051,7 @@ export function createUpdate(props: any) {
 export function declareUpdate(props: any) {
   const update = createUpdate(props)
   if (is.und(update.default)) {
-    update.default = getDefaultProps(update, [
-      // Avoid forcing `immediate: true` onto imperative updates.
-      update.immediate === true && 'immediate',
-    ])
+    update.default = getDefaultProps(update)
   }
   return update
 }
