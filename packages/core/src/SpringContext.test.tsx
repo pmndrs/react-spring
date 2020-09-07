@@ -56,22 +56,6 @@ describe('SpringContext', () => {
     expectUpdates([{ onProps, to: { x: 0 } }])
   })
 
-  it('can cancel current animations', () => {
-    update({})
-    mockRaf.step()
-    expect(t.idle).toBeFalsy()
-    update({ cancel: true })
-    expect(t.idle).toBeTruthy()
-  })
-  it('can cancel future animations', async () => {
-    update({ cancel: true })
-    expect(t.idle).toBeTruthy()
-    const { cancelled } = await t.start(100)
-    expect(cancelled).toBeTruthy()
-    expect(t.idle).toBeTruthy()
-    expect(t.goal).toBe(0)
-  })
-
   it('can pause current animations', () => {
     update({})
     mockRaf.step()
