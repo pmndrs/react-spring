@@ -205,10 +205,10 @@ export type VelocityProp<T = any> = T extends ReadonlyArray<number | string>
   : number
 
 /** For props that can be set on a per-key basis. */
-export type MatchProp<P extends string = string> =
+export type MatchProp<T> =
   | boolean
-  | OneOrMore<P>
-  | ((key: P) => boolean)
+  | OneOrMore<StringKeys<T>>
+  | ((key: StringKeys<T>) => boolean)
 
 /** Event props can be customized per-key. */
 export type EventProp<T> = T | Lookup<T | undefined>
@@ -229,21 +229,21 @@ export interface AnimationProps<T = any> {
   /**
    * When true, props jump to their goal values instead of animating.
    */
-  immediate?: MatchProp<StringKeys<T>>
+  immediate?: MatchProp<T>
   /**
    * Cancel all animations by using `true`, or some animations by using a key
    * or an array of keys.
    */
-  cancel?: MatchProp<StringKeys<T>>
+  cancel?: MatchProp<T>
   /**
    * Pause all animations by using `true`, or some animations by using a key
    * or an array of keys.
    */
-  pause?: MatchProp<StringKeys<T>>
+  pause?: MatchProp<T>
   /**
    * Start the next animations at their values in the `from` prop.
    */
-  reset?: MatchProp<StringKeys<T>>
+  reset?: MatchProp<T>
   /**
    * Swap the `to` and `from` props.
    */
