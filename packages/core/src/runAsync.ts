@@ -3,13 +3,7 @@ import { Falsy } from '@react-spring/types'
 
 import { getDefaultProps } from './helpers'
 import { AnimationTarget, InferState, InferProps } from './types/internal'
-import {
-  AnimationResult,
-  AsyncResult,
-  SpringChain,
-  SpringDefaultProps,
-  SpringToFn,
-} from './types'
+import { AnimationResult, AsyncResult, SpringChain, SpringToFn } from './types'
 import { getCancelledResult, getFinishedResult } from './AnimationResult'
 
 type AsyncTo<T> = SpringChain<T> | SpringToFn<T>
@@ -61,8 +55,7 @@ export function runAsync<T extends AnimationTarget>(
 
     // The default props of any `animate` calls.
     // The `onRest` prop is only called when the `runAsync` promise is resolved.
-    const defaultProps = getDefaultProps<P>(props, ['onRest'])
-    type P = SpringDefaultProps<InferState<T>>
+    const defaultProps = getDefaultProps<InferProps<T>>(props, ['onRest'])
 
     let preventBail!: () => void
     let bail: (error: any) => void
@@ -102,7 +95,7 @@ export function runAsync<T extends AnimationTarget>(
 
         each(defaultProps, (value, key) => {
           if (is.und(props[key])) {
-            props[key] = value as any
+            props[key] = value
           }
         })
 

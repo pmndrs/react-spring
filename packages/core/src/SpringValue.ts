@@ -42,12 +42,10 @@ import {
   hasAnimated,
   setActiveBit,
 } from './SpringPhase'
-import { AnimationRange, AnimationResolver, InferProps } from './types/internal'
+import { AnimationRange, AnimationResolver } from './types/internal'
 import {
   AsyncResult,
   OnRest,
-  SpringDefaultProps,
-  SpringEventProps,
   SpringUpdate,
   VelocityProp,
   SpringProps,
@@ -84,7 +82,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /** Some props have customizable default values */
-  protected _defaultProps = {} as SpringDefaultProps<T>
+  protected _defaultProps: SpringProps<T> = {}
 
   /** The counter for tracking `scheduleProps` calls */
   protected _lastCallId = 0
@@ -495,10 +493,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Every update is processed by this method before merging. */
   protected _update(
-    { ...props }: InferProps<SpringValue<T>>,
+    { ...props }: SpringProps<T>,
     isLoop?: boolean
   ): AsyncResult<SpringValue<T>> {
-    const defaultProps: any = this._defaultProps
+    const defaultProps = this._defaultProps
 
     // Let the caller inspect every update.
     const onProps = resolveEventProp(defaultProps, props, 'onProps', this.key)
@@ -586,7 +584,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     /** Get the function for a specific event prop */
-    const getEventProp = <K extends keyof SpringEventProps>(prop: K) =>
+    const getEventProp = <K extends keyof SpringProps>(prop: K) =>
       resolveEventProp(defaultProps, props, prop, key)
 
     // Call "onDelayEnd" before merging props, but after cancellation checks.
@@ -1062,12 +1060,12 @@ function findDefined(values: any, keys: Set<string>) {
 }
 
 /** Coerce an event prop into a function */
-function resolveEventProp<T extends SpringEventProps, P extends keyof T>(
-  defaultProps: T,
-  props: T,
+function resolveEventProp<T, P extends keyof SpringProps>(
+  defaultProps: SpringProps<T>,
+  props: SpringProps<T>,
   prop: P,
   key?: string
-): Extract<T[P], Function> {
+): Extract<SpringProps<T>[P], Function> {
   const value: any = !is.und(props[prop]) ? props[prop] : defaultProps[prop]
   return is.fun(value) ? value : key && value ? value[key] : undefined
 }

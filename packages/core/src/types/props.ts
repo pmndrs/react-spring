@@ -12,7 +12,6 @@ import {
   UnknownProps,
 } from '@react-spring/types'
 
-import { DEFAULT_PROPS } from '../helpers'
 import { Controller } from '../Controller'
 import { SpringRef } from '../SpringRef'
 import { SpringValue } from '../SpringValue'
@@ -251,15 +250,7 @@ export interface AnimationProps<T = any> {
   /**
    * Override the default props with this update.
    */
-  default?: boolean | SpringDefaultProps
-}
-
-export interface SpringEventProps<T = any>
-  extends Pick<SpringDefaultProps<T>, keyof ReservedEventProps> {}
-
-/** Default props for a `SpringValue` object */
-export type SpringDefaultProps<T = any> = {
-  [D in typeof DEFAULT_PROPS[number]]?: SpringProps<T>[D]
+  default?: boolean | SpringProps<T>
 }
 
 /** Default props for a `Controller` object */

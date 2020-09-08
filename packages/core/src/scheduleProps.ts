@@ -1,20 +1,21 @@
 import { Timeout, Globals as G, is } from '@react-spring/shared'
 import { matchProp, callProp, getDefaultProp } from './helpers'
-import { AsyncResult } from './types'
+import { AsyncResult, MatchProp } from './types'
 import { RunAsyncState, RunAsyncProps } from './runAsync'
 import {
   AnimationResolver,
   AnimationTarget,
   InferProps,
+  InferState,
 } from './types/internal'
 
 // The `scheduleProps` function only handles these defaults.
-type DefaultProps = { cancel?: boolean; pause?: boolean }
+type DefaultProps<T> = { cancel?: MatchProp<T>; pause?: MatchProp<T> }
 
 interface ScheduledProps<T extends AnimationTarget> {
   key?: string
   props: InferProps<T>
-  defaultProps?: DefaultProps
+  defaultProps?: DefaultProps<InferState<T>>
   state: RunAsyncState<T>
   actions: {
     pause: () => void
@@ -102,10 +103,10 @@ export function scheduleProps<T extends AnimationTarget>(
 }
 
 /** Update and return the default prop. */
-function mergeDefaultProp(
-  defaultProps: DefaultProps | undefined,
-  props: DefaultProps,
-  key: keyof DefaultProps
+function mergeDefaultProp<T>(
+  defaultProps: DefaultProps<T> | undefined,
+  props: DefaultProps<T>,
+  key: keyof DefaultProps<T>
 ) {
   let value: any
   return (

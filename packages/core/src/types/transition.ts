@@ -19,7 +19,6 @@ import {
   GoalProp,
   PickAnimated,
   SpringChain,
-  SpringDefaultProps,
 } from './props'
 import { SpringToFn } from './functions'
 import { SpringValues, SpringConfig, AnimationResult } from './objects'
@@ -100,12 +99,6 @@ export type TransitionComponentProps<
     items: OneOrMore<Item>
     children: TransitionRenderFn<NoInfer<Item>, PickAnimated<Props>>
   }
-
-/** Default props for a `useTransition` call */
-export type TransitionDefaultProps<Item = any> = Pick<
-  UseTransitionProps<Item>,
-  keyof SpringDefaultProps
->
 
 type Key = string | number
 

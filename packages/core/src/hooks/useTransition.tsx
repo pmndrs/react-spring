@@ -20,7 +20,6 @@ import {
   TransitionState,
   TransitionTo,
   UseTransitionProps,
-  TransitionDefaultProps,
 } from '../types'
 import { Valid } from '../types/common'
 import {
@@ -158,7 +157,7 @@ export function useTransition(
   const forceUpdate = useForceUpdate()
 
   // These props are inherited by every phase change.
-  const defaultProps = getDefaultProps<TransitionDefaultProps>(props)
+  const defaultProps = getDefaultProps<UseTransitionProps>(props)
 
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
