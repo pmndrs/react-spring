@@ -97,7 +97,7 @@ global.advanceUntil = async test => {
     }
 
     Globals.assign({
-      willAdvance: animations => animations.forEach(observe),
+      willAdvance: observe,
     })
 
     jest.advanceTimersByTime(1000 / 60)

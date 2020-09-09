@@ -43,7 +43,7 @@ export let requestAnimationFrame: (cb: (time: number) => void) => void =
 
 export let batchedUpdates = (callback: () => void) => callback()
 
-export let willAdvance: (animations: OpaqueAnimation[]) => void = noop
+export let willAdvance: (animation: OpaqueAnimation) => void = noop
 
 //
 // Configuration

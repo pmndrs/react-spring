@@ -170,7 +170,6 @@ export class FrameLoop {
 
         G.batchedUpdates(() => {
           if (currentFrame.length) {
-            G.willAdvance(currentFrame)
             const nextFrame = prevFrame
             for (let i = 0; i < currentFrame.length; i++) {
               const animation = currentFrame[i]
@@ -178,6 +177,7 @@ export class FrameLoop {
 
               // Animations may go idle before the next frame.
               if (!animation.idle) {
+                G.willAdvance(animation)
                 animation.advance(dt)
                 if (!animation.idle) {
                   nextFrame.push(animation)
