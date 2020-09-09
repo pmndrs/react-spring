@@ -801,6 +801,8 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
       it('starts animating', async () => {
         spring.start({ to: target.node })
         await advanceUntil(() => spring.idle)
+        // Clear the frame cache.
+        getFrames(spring)
 
         target.start(2)
         await advanceUntilIdle()
