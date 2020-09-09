@@ -17,7 +17,6 @@ import {
   getPayload,
   getAnimated,
   setAnimated,
-  Animated,
   getAnimatedType,
 } from '@react-spring/animated'
 
@@ -303,15 +302,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Set the current value, while stopping the current animation */
   set(value: T | FluidValue<T>) {
+    this._focus(value)
     G.batchedUpdates(() => {
-      this._focus(value)
-      if (this._set(value)) {
-        // Ensure change observers are notified. When active,
-        // the "_stop" method handles this.
-        if (!isAnimating(this)) {
-          return this._onChange(this.get(), true)
-        }
-      }
+      this._set(value)
       this._stop()
     })
     return this
@@ -330,28 +323,19 @@ export class SpringValue<T = any> extends FrameValue<T> {
     this._update({ pause: false })
   }
 
-  /**
-   * Skip to the end of the current animation.
-   *
-   * All `onRest` callbacks are passed `{finished: true}`
-   */
-  finish(to?: T | FluidValue<T>) {
+  /** Skip to the end of the current animation. */
+  finish() {
     if (isAnimating(this)) {
-      const anim = this.animation
-
-      // Decay animations have an implicit goal.
-      if (!anim.config.decay && is.und(to)) {
-        to = anim.to
-      }
-
-      // Set the value if we can.
-      if (!is.und(to)) {
-        this._set(to)
-      }
-
+      const { to, config } = this.animation
       G.batchedUpdates(() => {
         // Ensure the "onStart" and "onRest" props are called.
         this._onStart()
+
+        // Decay animations have an implicit goal.
+        if (!config.decay) {
+          this._set(to, true)
+        }
+
         // Exit the frameloop.
         this._stop()
       })
@@ -417,7 +401,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** @internal */
   onParentChange(event: FrameValue.Event) {
-    super.onParentChange(event)
     if (event.type == 'change') {
       this._start()
     } else if (event.type == 'priority') {
@@ -461,34 +444,15 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
       from = getFluidValue(from)
       if (!is.und(from)) {
-        // Set the value in case the node was not replaced.
-        this._updateNode(from)!.setValue(from)
+        this._set(from)
       }
       // Use the "to" value if our node is undefined.
       else if (!getAnimated(this)) {
-        to = getFluidValue(to)
-        if (!is.und(to)) {
-          this._updateNode(to)
-        }
+        this._set(to)
       }
     }
 
     return range
-  }
-
-  /**
-   * Create an `Animated` node if none exists or the given value has an
-   * incompatible type. Do nothing if `value` is undefined.
-   *
-   * The newest `Animated` node is returned.
-   */
-  protected _updateNode(value: any): Animated | undefined {
-    const nodeType = getAnimatedType(value)
-    let node = getAnimated(this)
-    if (!node || node.constructor !== nodeType) {
-      setAnimated(this, (node = nodeType.create(value)))
-    }
-    return node
   }
 
   /** Every update is processed by this method before merging. */
@@ -682,15 +646,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
         matchProp(defaultProps.immediate || props.immediate, key))
 
     if (hasToChanged) {
-      if (immediate) {
-        node = this._updateNode(goal)!
-      } else {
-        const nodeType = getAnimatedType(to)
-        if (nodeType !== node.constructor) {
+      const nodeType = getAnimatedType(to)
+      if (nodeType !== node.constructor) {
+        if (immediate) {
+          node = this._set(goal)!
+        } else
           throw Error(
             `Cannot animate between ${node.constructor.name} and ${nodeType.name}, as the "to" prop suggests`
           )
-        }
       }
     }
 
@@ -791,7 +754,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Update our node even if the animation is idle.
     if (reset) {
-      node.setValue(value)
+      this._set(value)
     }
 
     if (hasAsyncTo) {
@@ -852,20 +815,31 @@ export class SpringValue<T = any> extends FrameValue<T> {
     getFluidConfig(this.animation.to)?.removeChild(this)
   }
 
-  /** Set the current value and our `node` if necessary. The `_onChange` method is *not* called. */
-  protected _set(value: T | FluidValue<T>) {
-    const config = getFluidConfig(value)
-    if (config) {
-      value = config.get()
+  /**
+   * Update the current value from outside the frameloop,
+   * and return the `Animated` node.
+   */
+  protected _set(arg: T | FluidValue<T>, force?: boolean) {
+    const value = getFluidValue(arg) as T
+    if (!is.und(value)) {
+      const oldNode = getAnimated(this)
+      if (force || !oldNode || !isEqual(value, oldNode.getValue())) {
+        // Create a new node or update the existing node.
+        const nodeType = getAnimatedType(value)
+        if (!oldNode || oldNode.constructor != nodeType) {
+          setAnimated(this, nodeType.create(value))
+        } else {
+          oldNode.setValue(value)
+        }
+        // Never emit a "change" event for the initial value.
+        if (oldNode) {
+          G.batchedUpdates(() => {
+            this._onChange(value, true)
+          })
+        }
+      }
     }
-    const node = getAnimated(this)
-    const oldValue = node && node.getValue()
-    if (node) {
-      node.setValue(value)
-    } else {
-      this._updateNode(value)
-    }
-    return !isEqual(value, oldValue)
+    return getAnimated(this)
   }
 
   protected _onStart() {
@@ -889,31 +863,28 @@ export class SpringValue<T = any> extends FrameValue<T> {
     super._onChange(value, idle)
   }
 
-  protected _reset() {
+  // This method resets the animation state (even if already animating) to
+  // ensure the latest from/to range is used, and it also ensures this spring
+  // is added to the frameloop.
+  protected _start() {
     const anim = this.animation
 
     // Reset the state of each Animated node.
     getAnimated(this)!.reset(getFluidValue(anim.to))
-
-    // Ensure the `onStart` prop will be called.
-    if (!isAnimating(this)) {
-      anim.changed = false
-    }
 
     // Use the current values as the from values.
     if (!anim.immediate) {
       anim.fromValues = anim.values.map(node => node.lastPosition)
     }
 
-    super._reset()
-  }
-
-  protected _start() {
-    this._reset()
     if (!isAnimating(this)) {
       setActiveBit(this, true)
+
+      // Ensure the `onStart` prop will be called.
+      anim.changed = false
+
+      // Start animating if not paused.
       if (!isPaused(this)) {
-        super._start()
         this._resume()
       }
     }
@@ -937,12 +908,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (isAnimating(this)) {
       setActiveBit(this, false)
 
-      // Always let change observers know when a spring becomes idle.
-      this._onChange(this.get(), true)
-
       const anim = this.animation
       each(anim.values, node => {
         node.done = true
+      })
+
+      this._emit({
+        type: 'idle',
+        parent: this,
       })
 
       const onRestQueue = anim.onRest

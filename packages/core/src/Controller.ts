@@ -67,6 +67,9 @@ export class Controller<State extends Lookup = Lookup>
   /** The values currently being animated */
   protected _active = new Set<FrameValue>()
 
+  /** The values that changed recently */
+  protected _changed = new Set<FrameValue>()
+
   /** Equals false when `onStart` listeners can be called */
   protected _started = false
 
@@ -214,19 +217,22 @@ export class Controller<State extends Lookup = Lookup>
   protected _onFrame() {
     const { onStart, onChange, onRest } = this._events
 
-    const isActive = this._active.size > 0
-    if (isActive && !this._started) {
+    const active = this._active.size > 0
+    if (active && !this._started) {
       this._started = true
       flushCalls(onStart, this)
     }
 
-    const values =
-      onChange.size || (!isActive && onRest.size) ? this.get() : null
+    const idle = !active && this._started
+    const changed = this._changed.size > 0 && onChange.size
+    const values = changed || (idle && onRest.size) ? this.get() : null
 
-    flushCalls(onChange, values!)
+    if (changed) {
+      flushCalls(onChange, values!)
+    }
 
     // The "onRest" queue is only flushed when all springs are idle.
-    if (!isActive) {
+    if (idle) {
       this._started = false
       flush(onRest, ([onRest, result]) => {
         result.value = values
@@ -238,9 +244,16 @@ export class Controller<State extends Lookup = Lookup>
   /** @internal */
   onParentChange(event: FrameValue.Event) {
     if (event.type == 'change') {
-      this._active[event.idle ? 'delete' : 'add'](event.parent)
-      G.frameLoop.onFrame(this._onFrame)
+      this._changed.add(event.parent)
+      if (!event.idle) {
+        this._active.add(event.parent)
+      }
+    } else if (event.type == 'idle') {
+      this._active.delete(event.parent)
     }
+    // The `onFrame` handler runs when a parent is changed or idle.
+    else return
+    G.frameLoop.onFrame(this._onFrame)
   }
 }
 

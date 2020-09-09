@@ -63,9 +63,6 @@ export abstract class FrameValue<T = any>
   }
 
   /** @internal */
-  abstract advance(dt: number): void
-
-  /** @internal */
   addChild(child: FrameValue.Observer<T>): void {
     if (!this._children.size) this._attach()
     this._children.add(child)
@@ -78,47 +75,16 @@ export abstract class FrameValue<T = any>
   }
 
   /** @internal */
-  onParentChange({ type }: FrameValue.Event) {
-    if (this.idle) {
-      // Start animating when a parent does.
-      if (type == 'start') {
-        this._start()
-      }
-    }
-    // Reset our animation state when a parent does, but only when
-    // our animation is active.
-    else if (type == 'reset') {
-      this._reset()
-    }
-  }
+  abstract advance(dt: number): void
+
+  /** @internal */
+  abstract onParentChange(_event: FrameValue.Event): void
 
   /** Called when the first child is added. */
   protected _attach() {}
 
   /** Called when the last child is removed. */
   protected _detach() {}
-
-  /**
-   * Reset our animation state (eg: start values, velocity, etc)
-   * and tell our children to do the same.
-   *
-   * This is called when our goal value is changed during (or before)
-   * an animation.
-   */
-  protected _reset() {
-    this._emit({
-      type: 'reset',
-      parent: this,
-    })
-  }
-
-  /** Start animating if possible. */
-  protected _start() {
-    this._emit({
-      type: 'start',
-      parent: this,
-    })
-  }
 
   /** Tell our children about our new value */
   protected _onChange(value: T, idle = false) {
@@ -173,10 +139,10 @@ export declare namespace FrameValue {
     type: 'reset'
   }
 
-  /** A parent entered the frameloop */
-  interface StartEvent<T = any> {
+  /** A parent is done animating */
+  interface IdleEvent<T = any> {
     parent: FrameValue<T>
-    type: 'start'
+    type: 'idle'
   }
 
   /** Events sent to children of `FrameValue` objects */
@@ -184,7 +150,7 @@ export declare namespace FrameValue {
     | ChangeEvent<T>
     | PriorityEvent<T>
     | ResetEvent<T>
-    | StartEvent<T>
+    | IdleEvent<T>
 
   /** An object that handles `FrameValue` events */
   export type Observer<T = any> = FluidObserver<Event<T>>
