@@ -277,27 +277,24 @@ export function useTransition(
     () => {
       each(changes, ({ phase, springs, payload }, t) => {
         const { ctrl } = t
+        t.phase = phase
 
         // Attach the controller to our local ref.
         ref?.add(ctrl)
 
+        // Update the injected ref if needed.
+        replaceRef(ctrl, payload.ref)
+
         // Save any springs created this render.
         setSprings(ctrl, springs)
 
-        if (!context.cancel) {
-          t.phase = phase
-
-          // Merge the context into new items.
-          if (hasContext && phase == ENTER) {
-            ctrl.start({ default: context })
-          }
-
-          // Update the injected ref if needed.
-          replaceRef(ctrl, payload.ref)
-
-          // Postpone the update if an injected ref exists.
-          ctrl[ctrl.ref ? 'update' : 'start'](payload)
+        // Merge the context into new items.
+        if (hasContext && phase == ENTER) {
+          ctrl.start({ default: context })
         }
+
+        // Postpone the update if an injected ref exists.
+        ctrl[ctrl.ref ? 'update' : 'start'](payload)
       })
     },
     reset ? void 0 : deps
