@@ -102,7 +102,7 @@ export type OnRest<T extends Readable = any> = (
  * even if the animation remains idle.
  */
 export type OnProps<T = unknown> = (
-  props: Readonly<RunAsyncProps<SpringValue<T>>>,
+  props: Readonly<SpringProps<T>>,
   spring: SpringValue<T>
 ) => void
 
