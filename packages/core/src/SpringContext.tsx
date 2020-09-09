@@ -20,13 +20,10 @@ export const SpringContext = ({
   ...props
 }: PropsWithChildren<SpringContext>) => {
   const inherited = useContext(ctx)
+  const { pause = inherited.pause, immediate = inherited.immediate } = props
 
   // Memoize the context to avoid unwanted renders.
-  props = useMemo(() => ({ ...inherited, ...props }), [
-    inherited,
-    props.pause,
-    props.immediate,
-  ])
+  props = useMemo(() => ({ pause, immediate }), [pause, immediate])
 
   const { Provider } = ctx
   return <Provider value={props}>{children}</Provider>
