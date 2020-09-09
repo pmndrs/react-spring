@@ -69,8 +69,10 @@ export class FrameLoop {
     // The most recent framestamp
     let lastTime = 0
 
-    // The active animations for the current frame, sorted by lowest priority first
-    let animations: OpaqueAnimation[] = []
+    // The animations being updated in the current frame, sorted by lowest
+    // priority first. These two arrays are swapped at the end of each frame.
+    let currentFrame: OpaqueAnimation[] = []
+    let prevFrame: OpaqueAnimation[] = []
 
     // The priority of the currently advancing animation.
     // To protect against a race condition whenever a frame is being processed,
@@ -90,15 +92,16 @@ export class FrameLoop {
     const writeQueue = new Set<FrameRequestCallback>()
 
     // Add an animation to the frameloop
-    const start = (animation: OpaqueAnimation) => {
-      let index = animations.indexOf(animation)
-      if (index < 0) {
-        index = animations.findIndex(
-          other => other.priority > animation.priority
-        )
-        animations.splice(~index ? index : animations.length, 0, animation)
-      }
-    }
+    const start = (animation: OpaqueAnimation) =>
+      currentFrame.indexOf(animation) < 0 &&
+      currentFrame.splice(
+        findIndex(
+          currentFrame,
+          existing => existing.priority > animation.priority
+        ),
+        0,
+        animation
+      )
 
     const loop = () => {
       if (idle) return
@@ -166,20 +169,28 @@ export class FrameLoop {
         lastTime = time
 
         G.batchedUpdates(() => {
-          if (animations.length) {
-            G.willAdvance(animations)
-            animations = animations.filter(animation => {
+          if (currentFrame.length) {
+            G.willAdvance(currentFrame)
+            const nextFrame = prevFrame
+            for (let i = 0; i < currentFrame.length; i++) {
+              const animation = currentFrame[i]
               priority = animation.priority
 
               // Animations may go idle before the next frame.
               if (!animation.idle) {
                 animation.advance(dt)
+                if (!animation.idle) {
+                  nextFrame.push(animation)
+                }
               }
-
-              // Remove idle animations.
-              return !animation.idle
-            })
+            }
             priority = 0
+            // Reuse the `currentFrame` array to avoid garbage collection.
+            prevFrame = currentFrame
+            prevFrame.length = 0
+            // Set `currentFrame` for next frame, so the `start` function
+            // adds new animations to the proper array.
+            currentFrame = nextFrame
           }
 
           flushCalls(frameQueue, time)
@@ -220,12 +231,14 @@ export class FrameLoop {
       process.env.NODE_ENV !== 'production'
     ) {
       const isIdle = () =>
-        !startQueue.size && !animations.length && !timeoutQueue.length
+        !startQueue.size && !currentFrame.length && !timeoutQueue.length
+
       const dispose = () => {
         idle = true
         startQueue.clear()
         timeoutQueue.length = 0
       }
+
       Object.defineProperties(this, {
         _idle: { get: isIdle },
         _dispose: { get: () => dispose },
