@@ -380,6 +380,42 @@ function describeImmediateProp() {
       expect(spring.get()).toBe(value)
     })
   })
+
+  describe('when "immediate: true" is followed by "immediate: false" in same frame', () => {
+    it('applies the immediate goal synchronously', () => {
+      const spring = new SpringValue(0)
+
+      // The immediate update is applied in the next frame.
+      spring.start({ to: 1, immediate: true })
+      expect(spring.get()).toBe(0)
+
+      // But when an animated update is merged before the next frame,
+      // the immediate update is applied synchronously.
+      spring.start({ to: 2 })
+      expect(spring.get()).toBe(1)
+      expect(spring.animation).toMatchObject({
+        fromValues: [1],
+        toValues: [2],
+      })
+    })
+
+    it('does nothing if the 2nd update has "reset: true"', () => {
+      const spring = new SpringValue(0)
+
+      // The immediate update is applied in the next frame.
+      spring.start({ to: 1, immediate: true })
+      expect(spring.get()).toBe(0)
+
+      // But when an animated update is merged before the next frame,
+      // the immediate update is applied synchronously.
+      spring.start({ to: 2, reset: true })
+      expect(spring.get()).toBe(0)
+      expect(spring.animation).toMatchObject({
+        fromValues: [0],
+        toValues: [2],
+      })
+    })
+  })
 }
 
 function describeConfigProp() {

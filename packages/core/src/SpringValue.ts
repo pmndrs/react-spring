@@ -699,8 +699,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     if (!hasAsyncTo) {
-      anim.immediate = immediate
-
       // Make sure our "toValues" are updated even if our previous
       // "to" prop is a fluid value whose current value is also ours.
       if (started || getFluidConfig(prevTo)) {
@@ -710,6 +708,15 @@ export class SpringValue<T = any> extends FrameValue<T> {
           : goalType == AnimatedString
           ? [1]
           : toArray(goal)
+      }
+
+      if (anim.immediate != immediate) {
+        anim.immediate = immediate
+
+        // Ensure the immediate goal is used as from value.
+        if (!immediate && !reset) {
+          this._set(prevTo)
+        }
       }
 
       // These event props are stored for later in the animation.
