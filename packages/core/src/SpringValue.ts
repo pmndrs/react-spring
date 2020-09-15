@@ -32,6 +32,7 @@ import {
   mergeDefaultProps,
   getDefaultProps,
   isAsyncTo,
+  resolveProp,
 } from './helpers'
 import { FrameValue, isFrameValue } from './FrameValue'
 import {
@@ -1046,6 +1047,6 @@ function resolveEventProp<T, P extends keyof SpringProps>(
   prop: P,
   key?: string
 ): Extract<SpringProps<T>[P], Function> {
-  const value: any = !is.und(props[prop]) ? props[prop] : defaultProps[prop]
-  return is.fun(value) ? value : key && value ? value[key] : undefined
+  const value: any = resolveProp(props[prop], key)
+  return is.und(value) ? resolveProp(defaultProps[prop], key) : value
 }

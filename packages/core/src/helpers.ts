@@ -36,6 +36,11 @@ export const matchProp = (
     (is.fun(value) ? value(key) : toArray(value).includes(key))
   )
 
+export const resolveProp = <T>(
+  prop: T | Lookup<T> | undefined,
+  key: string | undefined
+) => (is.obj(prop) ? key && (prop as any)[key] : prop)
+
 export const concatFn = <T extends AnyFn>(first: T | undefined, last: T) =>
   first ? (...args: Parameters<T>) => (first(...args), last(...args)) : last
 
