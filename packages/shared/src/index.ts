@@ -8,5 +8,6 @@ export * from './hooks'
 export * from './helpers'
 export * from './FrameLoop'
 export * from './createInterpolator'
+export * from './isAnimatedString'
 
 export * from 'fluids'

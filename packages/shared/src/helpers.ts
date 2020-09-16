@@ -1,5 +1,4 @@
 import { Lookup, Arrify } from './types.util'
-import * as G from './globals'
 
 export const noop = () => {}
 
@@ -33,13 +32,6 @@ export function isEqual(a: any, b: any) {
   }
   return a === b
 }
-
-// Not all strings can be animated (eg: {display: "none"})
-export const isAnimatedString = (value: unknown): value is string =>
-  is.str(value) &&
-  (value[0] == '#' ||
-    /\d/.test(value) ||
-    !!(G.colorNames && G.colorNames[value]))
 
 type Eachable<Value, Key> = {
   forEach: (cb: (value: Value, key: Key) => void, ctx?: any) => void
