@@ -43,6 +43,7 @@ async function prepare() {
 
   // Package-specific fields to delete
   const deletions = {
+    [`${RS}/animated`]: ['keywords'],
     [`${RS}/shared`]: ['keywords'],
   }
 
