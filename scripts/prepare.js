@@ -50,14 +50,6 @@ async function prepare() {
   // Package-specific fields to override
   // const overrides = {}
 
-  // Entry module overrides
-  const entryOverrides = {
-    [`${RS}/shared`]: {
-      main: 'cjs/index.js',
-      module: 'esm/index.js',
-    },
-  }
-
   // The pipeline of changes
   const preparePackage = async pkg => {
     const { postinstall } = pkg.scripts || {}
@@ -110,8 +102,7 @@ async function prepare() {
 
   // Ensure "package.json" points to the correct modules.
   const setEntryModules = pkg => {
-    const overrides = entryOverrides[pkg.name] || {}
-    const main = overrides.main || pkg.main
+    const main = pkg.main
     if (!main) {
       throw Error('pkg.main must exist')
     }
@@ -119,16 +110,14 @@ async function prepare() {
     const srcDir = new RegExp(`^${SRC}/`)
     const tsxExt = /\.tsx?$/
 
-    pkg.main =
-      overrides.main || main.replace(srcDir, '').replace(tsxExt, '.cjs.js')
-    pkg.module =
-      overrides.module ||
-      (pkg.main.endsWith('.cjs.js') ? pkg.main.replace(/\.cjs\./, '.') : void 0)
+    pkg.main = main.replace(srcDir, '').replace(tsxExt, '.cjs.js')
+    pkg.module = pkg.main.endsWith('.cjs.js')
+      ? pkg.main.replace(/\.cjs\./, '.')
+      : void 0
     pkg.types =
-      overrides.types ||
-      (pkg.types || tsxExt.test(main)
+      pkg.types || tsxExt.test(main)
         ? (pkg.types || main.replace(tsxExt, '.d.ts')).replace(srcDir, '')
-        : void 0)
+        : void 0
 
     // Packages compatible with "react-native" provide an uncompiled main module.
     if (RN_PKG.test(pkg.name)) {

@@ -196,20 +196,15 @@ const rewritePaths = (opts = {}) => {
 
   return modulePath => {
     let depId = resolveLocal(modulePath)
-    if (!depId) return modulePath
-
-    // Some modules are built with "tsc" and thus have no ".cjs" variant
-    if (modulePath.startsWith('shared')) {
-      return depId
+    if (!depId) {
+      return modulePath
     }
-
     if (opts.cjs) {
       const name = packageNames.find(name => name === depId)
       if (name) {
         depId = path.join(name, packages[name].main)
       }
     }
-
     return depId
   }
 }
