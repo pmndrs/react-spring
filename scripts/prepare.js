@@ -18,7 +18,7 @@ const PJ = 'package.json'
 const RS = '@react-spring'
 
 // Packages compatible with react-native
-const RN_PKG = /\/(native|addons|core|animated)$/
+const RN_PKG = /\/(native|core|animated|shared)$/
 
 const lernaJson = fs.readJsonSync('lerna.json')
 
