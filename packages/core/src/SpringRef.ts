@@ -4,7 +4,7 @@ import { AsyncResult, ControllerUpdate } from './types'
 import { Controller } from './Controller'
 
 interface ControllerUpdateFn<State extends Lookup = Lookup> {
-  (ctrl: Controller<State>): ControllerUpdate<State> | Falsy
+  (ctrl: Controller<State>, i: number): ControllerUpdate<State> | Falsy
 }
 
 export class SpringRef<State extends Lookup = Lookup> {
@@ -23,16 +23,19 @@ export class SpringRef<State extends Lookup = Lookup> {
   /** @internal */
   start(props?: object | ControllerUpdateFn<State>) {
     const results: AsyncResult[] = []
+
+    let i = 0
     each(this.current, ctrl => {
       if (is.und(props)) {
         results.push(ctrl.start())
       } else {
-        const update = is.fun(props) ? props(ctrl) : props
+        const update = this._getProps(props, ctrl, i++)
         if (update) {
           results.push(ctrl.start(update))
         }
       }
     })
+
     return results
   }
 
@@ -44,10 +47,18 @@ export class SpringRef<State extends Lookup = Lookup> {
   update(props: ControllerUpdate<State> | ControllerUpdateFn<State>): this
   /** @internal */
   update(props: object | ControllerUpdateFn<State>) {
-    each(this.current, ctrl => {
-      ctrl.update(is.fun(props) ? props(ctrl) : props)
-    })
+    let i = 0
+    each(this.current, ctrl => ctrl.update(this._getProps(props, ctrl, i++)))
     return this
+  }
+
+  /** Overridden by `useTrail` to manipulate props */
+  protected _getProps(
+    arg: ControllerUpdate<State> | ControllerUpdateFn<State>,
+    ctrl: Controller<State>,
+    index: number
+  ): ControllerUpdate<State> | Falsy {
+    return is.fun(arg) ? arg(ctrl, index) : arg
   }
 }
 

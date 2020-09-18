@@ -1,6 +1,5 @@
 import { useLayoutEffect } from 'react-layout-effect'
-import { useCallbackOne } from 'use-memo-one'
-import { is } from '@react-spring/shared'
+import { each, is } from '@react-spring/shared'
 
 import { Valid } from '../types/common'
 import { PickAnimated, SpringValues } from '../types'
@@ -8,7 +7,6 @@ import { UseSpringProps } from './useSpring'
 import { SpringRef } from '../SpringRef'
 import { Controller } from '../Controller'
 import { useSprings } from './useSprings'
-import { getProps } from '../helpers'
 
 export type UseTrailProps<Props extends object = any> = UseSpringProps<Props>
 
@@ -44,37 +42,42 @@ export function useTrail(
   const propsFn = is.fun(propsArg) && propsArg
   if (propsFn && !deps) deps = []
 
-  const ctrls: Controller[] = []
+  // The trail is reversed when every render-based update is reversed.
+  let reverse = true
+
   const result = useSprings(
     length,
     (i, ctrl) => {
-      ctrls[i] = ctrl
-      return getProps(propsArg, i, ctrl) as any
+      const props = propsFn ? propsFn(i, ctrl) : propsArg
+      reverse = reverse && props.reverse
+      return props
     },
     // Ensure the props function is called when no deps exist.
     // This works around the 3 argument rule.
     deps || [{}]
   )
 
-  useLayoutEffect(() => {
-    const reverse = is.obj(propsArg) && propsArg.reverse
-    for (let i = 0; i < ctrls.length; i++) {
-      const parent = ctrls[i + (reverse ? 1 : -1)]
-      if (parent) ctrls[i].update({ to: parent.springs }).start()
-    }
-  }, deps)
+  const ref = result[1]
+  const ctrls = Array.from(ref.current)
+
+  useLayoutEffect(
+    () =>
+      each(ctrls, (ctrl, i) => {
+        const parent = ctrls[i + (reverse ? 1 : -1)]
+        if (parent) ctrl.start({ to: parent.springs })
+      }),
+    deps
+  )
 
   if (propsFn || arguments.length == 3) {
-    const update = result[1]
-    result[1] = useCallbackOne(propsArg => {
-      const reverse = is.obj(propsArg) && propsArg.reverse
-      return update((i, ctrl) => {
-        const props = getProps(propsArg, i, ctrl)!
-        const parent = ctrls[i + (reverse ? 1 : -1)]
+    ref['_getProps'] = (propsArg, ctrl, i) => {
+      const props = is.fun(propsArg) ? propsArg(ctrl, i) : propsArg
+      if (props) {
+        const parent = ctrls[i + (props.reverse ? 1 : -1)]
         if (parent) props.to = parent.springs
         return props
-      })
-    }, deps)
+      }
+    }
     return result
   }
   return result[0]
