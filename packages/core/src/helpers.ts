@@ -39,20 +39,6 @@ export const matchProp = (
 export const concatFn = <T extends AnyFn>(first: T | undefined, last: T) =>
   first ? (...args: Parameters<T>) => (first(...args), last(...args)) : last
 
-type AnyProps<T, Arg = never> = OneOrMore<T> | ((i: number, arg: Arg) => T)
-
-export const getProps = <T, Arg = never>(
-  props: AnyProps<T, Arg> | null | undefined,
-  i: number,
-  arg: Arg
-): T =>
-  props &&
-  (is.fun(props)
-    ? (props as Function)(i, arg)
-    : is.arr(props)
-    ? props[i]
-    : { ...props })
-
 /** Returns `true` if the given prop is having its default value set. */
 export const hasDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
   !is.und(getDefaultProp(props, key))
