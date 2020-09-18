@@ -48,7 +48,11 @@ async function prepare() {
   }
 
   // Package-specific fields to override
-  // const overrides = {}
+  const overrides = {
+    [`${RS}/web`]: {
+      jsdelivr: 'dist/index.umd.js',
+    },
+  }
 
   // The pipeline of changes
   const preparePackage = async pkg => {
@@ -72,7 +76,7 @@ async function prepare() {
     useOwnFiles(pkg, ['README.md', '@types'])
     useFiles(pkg, ['LICENSE', '.npmignore'])
     deleteFields(pkg, deletions[pkg.name])
-    // assignFields(pkg, overrides[pkg.name])
+    assignFields(pkg, overrides[pkg.name])
     savePackage(pkg)
   }
 
