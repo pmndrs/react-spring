@@ -198,8 +198,7 @@ async function prepare() {
           // Link "dist" packages together.
           const linkDir = join(pkg.dir, DIST, 'node_modules')
           const linkPath = join(linkDir, depId)
-          const depPath = join(dep.dir, DIST)
-          fs.removeSync(linkPath)
+          const depPath = join(dep.dir, dep.main ? DIST : '')
           fs.ensureSymlinkSync(depPath, linkPath)
         }
       }
