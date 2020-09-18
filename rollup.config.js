@@ -100,6 +100,7 @@ export const umdBundle = (name, config) => {
       format: 'umd',
       name,
       globals,
+      sourcemap: true,
     },
     external: Object.keys(globals),
     plugins: [
