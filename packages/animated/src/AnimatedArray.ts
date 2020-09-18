@@ -37,7 +37,10 @@ export class AnimatedArray<
   }
 
   /** Convert the `from` and `to` values to an array of `Animated` nodes */
-  protected _makeAnimated(from: T | null, to: T = from!) {
+  protected _makeAnimated(
+    from: T | null,
+    to: T = from!
+  ): AnimatedValue<Value>[] {
     return from
       ? from.map((from, i) =>
           (isAnimatedString(from) ? AnimatedString : AnimatedValue).create(

@@ -13,6 +13,7 @@ import {
   Globals as G,
 } from '@react-spring/shared'
 import {
+  Animated,
   AnimatedValue,
   AnimatedString,
   getPayload,
@@ -829,7 +830,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * Update the current value from outside the frameloop,
    * and return the `Animated` node.
    */
-  protected _set(arg: T | FluidValue<T>, force?: boolean) {
+  protected _set(
+    arg: T | FluidValue<T>,
+    force?: boolean
+  ): Animated | undefined {
     const value = getFluidValue(arg) as T
     if (!is.und(value)) {
       const oldNode = getAnimated(this)
