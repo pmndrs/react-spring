@@ -120,7 +120,7 @@ async function prepare() {
 
     // Packages compatible with "react-native" provide an uncompiled main module.
     if (RN_PKG.test(pkg.name)) {
-      pkg['react-native'] = main
+      pkg['react-native'] = { [pkg.module]: main }
     }
   }
 
