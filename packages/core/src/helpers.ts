@@ -1,8 +1,8 @@
 import { useMemoOne } from 'use-memo-one'
 import {
   is,
-  each,
   toArray,
+  eachProp,
   getFluidConfig,
   isAnimatedString,
   FluidValue,
@@ -114,7 +114,9 @@ export const DEFAULT_PROPS = [
   'onRest',
 ] as const
 
-const RESERVED_PROPS: Required<ReservedProps> = {
+const RESERVED_PROPS: {
+  [key: string]: 1 | undefined
+} = {
   config: 1,
   from: 1,
   to: 1,
@@ -163,7 +165,7 @@ function getForwardProps<Props extends ReservedProps>(
   const forward: any = {}
 
   let count = 0
-  each(props, (value, prop) => {
+  eachProp(props, (value, prop) => {
     if (!RESERVED_PROPS[prop]) {
       forward[prop] = value
       count++
@@ -183,7 +185,7 @@ export function inferTo<T extends object>(props: T): InferTo<T> {
   const to = getForwardProps(props)
   if (to) {
     const out: any = { to }
-    each(props, (val, key) => key in to || (out[key] = val))
+    eachProp(props, (val, key) => key in to || (out[key] = val))
     return out
   }
   return { ...props } as any

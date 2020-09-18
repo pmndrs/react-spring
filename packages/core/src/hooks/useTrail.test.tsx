@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import { is, each } from '@react-spring/shared'
+import { is } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
 import { SpringValue } from '../SpringValue'
 import { useTrail, UseTrailProps } from './useTrail'
@@ -53,16 +53,6 @@ describe('useTrail', () => {
       it.todo('has each spring follow the spring before it')
     })
   })
-
-  function mapSprings<T>(fn: (spring: SpringValue) => T) {
-    return springs.map(values => {
-      const result: any = {}
-      each(values, spring => {
-        result[spring.key!] = fn(spring)
-      })
-      return result
-    })
-  }
 })
 
 function createUpdater(

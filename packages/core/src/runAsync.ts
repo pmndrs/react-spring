@@ -1,4 +1,10 @@
-import { is, each, Timeout, flush, Globals as G } from '@react-spring/shared'
+import {
+  is,
+  flush,
+  eachProp,
+  Timeout,
+  Globals as G,
+} from '@react-spring/shared'
 import { Falsy } from '@react-spring/types'
 
 import { getDefaultProps } from './helpers'
@@ -93,7 +99,7 @@ export function runAsync<T extends AnimationTarget>(
         const props: any = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 }
         props.parentId = callId
 
-        each(defaultProps, (value, key) => {
+        eachProp(defaultProps, (value, key) => {
           if (is.und(props[key])) {
             props[key] = value
           }

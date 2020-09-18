@@ -4,6 +4,7 @@ import {
   is,
   each,
   toArray,
+  eachProp,
   FluidValue,
   FluidEvent,
   FluidObserver,
@@ -77,7 +78,7 @@ export class AnimatedStyle extends AnimatedObject {
     }
 
     // Pluck any other transform-related props
-    each(style, (value, key: any) => {
+    eachProp(style, (value, key) => {
       if (key === 'transform') {
         inputs.push([value || ''])
         transforms.push((transform: string) => [transform, transform === ''])

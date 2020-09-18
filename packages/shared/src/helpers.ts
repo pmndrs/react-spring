@@ -38,34 +38,29 @@ export const isAnimatedString = (value: unknown): value is string =>
   is.str(value) &&
   (value[0] == '#' || /\d/.test(value) || !!(G.colors && G.colors[value]))
 
-type Eachable<Value, Key> = {
-  forEach: (cb: (value: Value, key: Key) => void, ctx?: any) => void
+type EachFn<Value, Key, This> = (this: This, value: Value, key: Key) => void
+type Eachable<Value = any, Key = any, This = any> = {
+  forEach(cb: EachFn<Value, Key, This>, ctx?: This): void
 }
 
-type InferKey<T extends object> = T extends Eachable<any, infer Key>
-  ? Key
-  : Extract<keyof T, string>
+/** Minifiable `.forEach` call */
+export const each = <Value, Key, This>(
+  obj: Eachable<Value, Key, This>,
+  fn: EachFn<Value, Key, This>
+) => obj.forEach(fn)
 
-type InferValue<T extends object> = T extends
-  | Eachable<infer Value, any>
-  | { [key: string]: infer Value }
-  ? Value
-  : never
-
-/** An unsafe object/array/set iterator that allows for better minification */
-export const each = <T extends object, This>(
-  obj: T & { forEach?: Function },
-  cb: (this: This, value: InferValue<T>, key: InferKey<T>) => void,
+/** Iterate the properties of an object */
+export function eachProp<T extends object, This>(
+  obj: T,
+  fn: (
+    this: This,
+    value: T extends any[] ? T[number] : T[keyof T],
+    key: string
+  ) => void,
   ctx?: This
-) => {
-  if (is.fun(obj.forEach)) {
-    obj.forEach(cb, ctx)
-  } else {
-    const keys = Object.keys(obj)
-    for (let i = 0; i < keys.length; i++) {
-      const key: any = keys[i]
-      cb.call(ctx!, (obj as any)[key], key)
-    }
+) {
+  for (const key in obj) {
+    fn.call(ctx as any, obj[key] as any, key)
   }
 }
 

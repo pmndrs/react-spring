@@ -1,5 +1,5 @@
 import { Lookup } from '@react-spring/types'
-import { each, getFluidConfig } from '@react-spring/shared'
+import { each, eachProp, getFluidConfig } from '@react-spring/shared'
 import { Animated, isAnimated, getPayload } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
 import { TreeContext } from './context'
@@ -17,7 +17,7 @@ export class AnimatedObject extends Animated {
   getValue(animated?: boolean): Source {
     if (!this.source) return null
     const values: Lookup = {}
-    each(this.source, (source, key) => {
+    eachProp(this.source, (source, key) => {
       if (isAnimated(source)) {
         values[key] = source.getValue(animated)
       } else {
@@ -48,7 +48,7 @@ export class AnimatedObject extends Animated {
   protected _makePayload(source: Source) {
     if (source) {
       const payload = new Set<AnimatedValue>()
-      each(source, this._addToPayload, payload)
+      eachProp(source, this._addToPayload, payload)
       return Array.from(payload)
     }
   }

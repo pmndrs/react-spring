@@ -2,11 +2,12 @@ import { OneOrMore, UnknownProps, Lookup, Falsy } from '@react-spring/types'
 import {
   is,
   each,
+  noop,
   flush,
   toArray,
+  eachProp,
   flushCalls,
   Globals as G,
-  noop,
 } from '@react-spring/shared'
 
 import { getDefaultProp } from './helpers'
@@ -210,7 +211,7 @@ export class Controller<State extends Lookup = Lookup>
 
   /** Call a function once per spring value */
   each(iterator: (spring: SpringValue, key: string) => void) {
-    each(this.springs, iterator as any)
+    eachProp(this.springs, iterator as any)
   }
 
   /** @internal Called at the end of every animation frame */
@@ -439,7 +440,7 @@ export function setSprings(
   ctrl: Controller,
   springs: SpringValues<UnknownProps>
 ) {
-  each(springs, (spring, key) => {
+  eachProp(springs, (spring, key) => {
     if (!ctrl.springs[key]) {
       ctrl.springs[key] = spring
       spring.addChild(ctrl)

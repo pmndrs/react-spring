@@ -4,11 +4,12 @@ import {
   noop,
   isEqual,
   toArray,
-  FluidValue,
-  getFluidConfig,
-  getFluidValue,
-  isAnimatedString,
+  eachProp,
   flushCalls,
+  getFluidValue,
+  getFluidConfig,
+  isAnimatedString,
+  FluidValue,
   Globals as G,
 } from '@react-spring/shared'
 import {
@@ -19,6 +20,7 @@ import {
   setAnimated,
   getAnimatedType,
 } from '@react-spring/animated'
+import { Lookup } from '@react-spring/types'
 
 import { Animation } from './Animation'
 import { mergeConfig } from './AnimationConfig'
@@ -1036,8 +1038,8 @@ export function declareUpdate(props: any) {
 }
 
 /** Find keys with defined values */
-function findDefined(values: any, keys: Set<string>) {
-  each(values, (value, key) => value != null && keys.add(key as any))
+function findDefined(values: Lookup, keys: Set<string>) {
+  eachProp(values, (value, key) => value != null && keys.add(key as any))
 }
 
 /** Coerce an event prop into a function */

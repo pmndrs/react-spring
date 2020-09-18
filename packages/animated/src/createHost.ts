@@ -1,5 +1,5 @@
 import { Lookup } from '@react-spring/types'
-import { is, each } from '@react-spring/shared'
+import { is, eachProp } from '@react-spring/shared'
 import { AnimatableComponent, withAnimated } from './withAnimated'
 import { Animated } from './Animated'
 import { AnimatedObject } from './AnimatedObject'
@@ -51,8 +51,8 @@ export const createHost = (
     return Component
   }
 
-  each(components, (Component, key) => {
-    if (!is.str(key)) {
+  eachProp(components, (Component, key) => {
+    if (is.arr(components)) {
       key = getDisplayName(Component)!
     }
     animated[key] = animated(Component)
