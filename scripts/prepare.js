@@ -57,7 +57,6 @@ async function prepare() {
     useDefaultFields(pkg, ['description'])
     useFields(pkg, [
       'license',
-      'dependencies',
       'author',
       'maintainers',
       'repository',

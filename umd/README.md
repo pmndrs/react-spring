@@ -2,12 +2,8 @@ This directory is a testbed for the `.umd.js` bundle.
 
 ### Instructions
 
-- Install `@babel/cli` globally
+1. Run `yarn` in the root directory
 
-```
-npm i -g @babel/cli
-```
+2. Run `yarn build` in the `umd/` directory
 
-- Run `yarn build` in the `umd/` directory
-
-- Open `index.html`
+3. Open `index.html`

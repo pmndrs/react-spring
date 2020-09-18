@@ -4,7 +4,7 @@
   "description": "Example using .umd.js bundle",
   "private": true,
   "scripts": {
-    "build": "babel main.jsx --out-file _main.js"
+    "build": "../node_modules/.bin/esbuild --bundle main.jsx --outfile=_main.js"
   },
   "bic": false
 }
