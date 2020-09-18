@@ -31,7 +31,6 @@ const readPackages = rootJson =>
     const pkgDir = dirname(pkgJsonPath)
     const pkg = fs.readJsonSync(pkgJsonPath)
     Object.defineProperty(pkg, 'dir', { value: pkgDir })
-    fs.ensureDirSync(join(pkgDir, DIST))
     packages[pkg.name] = pkg
     return packages
   }, {})
@@ -269,10 +268,14 @@ async function prepare() {
   log('')
   await Promise.all(
     Object.keys(packages).map(name => {
+      if (name == `${RS}/types`) {
+        return // This package is published as-is.
+      }
       const pkg = packages[name]
       log(chalk.cyan(name))
       log('./' + pkg.dir)
       log('')
+      fs.ensureDirSync(join(pkg.dir, DIST))
       return preparePackage(pkg)
     })
   )
