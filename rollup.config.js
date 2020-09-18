@@ -53,8 +53,7 @@ export const bundle = config => {
   return [
     esmBundle(config),
     cjsBundle(config),
-    dtsBundle(config, 'es'),
-    dtsBundle(config, 'cjs'),
+    dtsBundle(config, 'es'), //
   ]
 }
 

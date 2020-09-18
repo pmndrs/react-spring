@@ -68,6 +68,7 @@ async function prepare() {
     setHomepage(pkg)
     setEntryModules(pkg)
     await rewriteLocalDeps(pkg)
+    linkCjsTypes(pkg)
     useOwnFiles(pkg, ['README.md', '@types'])
     useFiles(pkg, ['LICENSE', '.npmignore'])
     deleteFields(pkg, deletions[pkg.name])
@@ -204,6 +205,15 @@ async function prepare() {
       }
     }
   }
+
+  const linkCjsTypes = pkg =>
+    fs.readdirSync(join(pkg.dir, DIST)).forEach(name => {
+      if (name.endsWith('.d.ts') && !name.endsWith('.cjs.d.ts')) {
+        const dest = join(pkg.dir, DIST, name.replace(/\.d\.ts$/, '.cjs.d.ts'))
+        fs.removeSync(dest)
+        fs.ensureSymlinkSync(name, dest)
+      }
+    })
 
   // Copy files from the monorepo root.
   const useFiles = (pkg, files) =>
