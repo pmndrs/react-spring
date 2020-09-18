@@ -68,9 +68,9 @@ async function prepare() {
       'license',
       'dependencies',
       'author',
-      'contributors',
+      'maintainers',
+      'repository',
       'keywords',
-      'bugs',
     ])
     pkg.version = lernaJson.version
     pkg.publishConfig = rootJson.publishConfig

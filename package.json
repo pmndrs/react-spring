@@ -2,6 +2,8 @@
   "name": "@react-spring/lerna",
   "private": true,
   "description": "Cross-platform animation engine for React",
+  "repository": "pmndrs/react-spring",
+  "homepage": "https://github.com/pmndrs/react-spring#readme",
   "keywords": [
     "animated",
     "animation",
@@ -13,17 +15,9 @@
     "typescript",
     "velocity"
   ],
-  "homepage": "https://github.com/react-spring/react-spring#readme",
-  "bugs": {
-    "url": "https://github.com/react-spring/react-spring/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/react-spring/react-spring.git"
-  },
   "license": "MIT",
   "author": "Paul Henschel",
-  "contributors": [
+  "maintainers": [
     "Alec Larson (https://github.com/aleclarson)"
   ],
   "workspaces": {
