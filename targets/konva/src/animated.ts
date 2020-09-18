@@ -1,10 +1,10 @@
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
 import {
   AssignableKeys,
-  ElementType,
   ComponentPropsWithRef,
-  FluidValue,
-} from '@react-spring/shared'
+  ElementType,
+} from '@react-spring/types'
+import { FluidValue } from '@react-spring/shared'
 import { KonvaExports, Primitives } from './primitives'
 
 type AnimatedPrimitives = {

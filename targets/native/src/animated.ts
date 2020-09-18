@@ -2,10 +2,10 @@ import { ForwardRefExoticComponent } from 'react'
 import { ViewStyle, RecursiveArray } from 'react-native'
 import {
   AssignableKeys,
-  ElementType,
   ComponentPropsWithRef,
-  FluidValue,
-} from '@react-spring/shared'
+  ElementType,
+} from '@react-spring/types'
+import { FluidValue } from '@react-spring/shared'
 import { primitives } from './primitives'
 
 type Primitives = typeof primitives
