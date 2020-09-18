@@ -88,7 +88,7 @@ async function prepare() {
     if (pkg.name !== 'react-spring') {
       pkg.homepage = pkg.homepage.replace(
         '#readme',
-        `/tree/master/${pkg.dir}#readme`
+        `/tree/v9/${pkg.dir}#readme`
       )
     }
   }
