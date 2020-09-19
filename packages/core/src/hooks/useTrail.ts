@@ -58,22 +58,19 @@ export function useTrail(
   )
 
   const ref = result[1]
-  const ctrls = Array.from(ref.current)
 
-  useLayoutEffect(
-    () =>
-      each(ctrls, (ctrl, i) => {
-        const parent = ctrls[i + (reverse ? 1 : -1)]
-        if (parent) ctrl.start({ to: parent.springs })
-      }),
-    deps
-  )
+  useLayoutEffect(() => {
+    each(ref.current, (ctrl, i) => {
+      const parent = ref.current[i + (reverse ? 1 : -1)]
+      if (parent) ctrl.start({ to: parent.springs })
+    })
+  }, deps)
 
   if (propsFn || arguments.length == 3) {
     ref['_getProps'] = (propsArg, ctrl, i) => {
       const props = is.fun(propsArg) ? propsArg(ctrl, i) : propsArg
       if (props) {
-        const parent = ctrls[i + (props.reverse ? 1 : -1)]
+        const parent = ref.current[i + (props.reverse ? 1 : -1)]
         if (parent) props.to = parent.springs
         return props
       }

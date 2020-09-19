@@ -190,7 +190,7 @@ export function useSprings(
       setSprings(ctrl, values)
 
       // Attach the controller to the local ref.
-      ref?.current.add(ctrl)
+      ref?.add(ctrl)
 
       // Update the default props.
       if (hasContext) {

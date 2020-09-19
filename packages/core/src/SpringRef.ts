@@ -8,7 +8,7 @@ interface ControllerUpdateFn<State extends Lookup = Lookup> {
 }
 
 export class SpringRef<State extends Lookup = Lookup> {
-  readonly current = new Set<Controller<State>>()
+  readonly current: Controller<State>[] = []
 
   /** Start the queued animations of each controller. */
   start(): AsyncResult<Controller<State>>[]
@@ -24,12 +24,11 @@ export class SpringRef<State extends Lookup = Lookup> {
   start(props?: object | ControllerUpdateFn<State>) {
     const results: AsyncResult[] = []
 
-    let i = 0
-    each(this.current, ctrl => {
+    each(this.current, (ctrl, i) => {
       if (is.und(props)) {
         results.push(ctrl.start())
       } else {
-        const update = this._getProps(props, ctrl, i++)
+        const update = this._getProps(props, ctrl, i)
         if (update) {
           results.push(ctrl.start(update))
         }
@@ -47,9 +46,21 @@ export class SpringRef<State extends Lookup = Lookup> {
   update(props: ControllerUpdate<State> | ControllerUpdateFn<State>): this
   /** @internal */
   update(props: object | ControllerUpdateFn<State>) {
-    let i = 0
-    each(this.current, ctrl => ctrl.update(this._getProps(props, ctrl, i++)))
+    each(this.current, (ctrl, i) => ctrl.update(this._getProps(props, ctrl, i)))
     return this
+  }
+
+  /** Add a controller to this ref */
+  add(ctrl: Controller<State>) {
+    if (!this.current.includes(ctrl)) {
+      this.current.push(ctrl)
+    }
+  }
+
+  /** Remove a controller from this ref */
+  delete(ctrl: Controller<State>) {
+    const i = this.current.indexOf(ctrl)
+    if (~i) this.current.splice(i, 1)
   }
 
   /** Overridden by `useTrail` to manipulate props */
