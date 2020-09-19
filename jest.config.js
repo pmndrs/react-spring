@@ -1,7 +1,6 @@
 const fs = require('fs-extra')
 const path = require('path')
 const { recrawl } = require('recrawl-sync')
-const { pathsToModuleNameMapper } = require('ts-jest/utils')
 
 const testMatch = ['**/*.test.*']
 const ignoredPaths = ['.*', 'node_modules']
@@ -47,21 +46,14 @@ function createConfig(rootDir) {
     testPathIgnorePatterns: ['.+/(types|__snapshots__)/.+'],
     modulePathIgnorePatterns: ['dist'],
     moduleNameMapper: {
-      ...getModuleNameMapper(compilerOptions.paths),
       '^react$': '<rootDir>/../../node_modules/react',
+    },
+    transform: {
+      '^.+\\.tsx?$': 'esbuild-jest',
     },
     collectCoverageFrom: ['src/**/*'],
     coverageDirectory: './coverage',
     coverageReporters: ['json', 'html', 'text'],
     timers: 'fake',
   }
-}
-
-function getModuleNameMapper(paths) {
-  if (!paths) return
-  const map = pathsToModuleNameMapper(paths)
-  for (const key in map) {
-    map[key] = map[key].replace('./', '<rootDir>/')
-  }
-  return map
 }
