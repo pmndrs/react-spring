@@ -1,28 +1,24 @@
 import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import { is, each } from '@react-spring/shared'
+import { is, eachProp } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
-import { SpringStopFn, SpringStartFn } from '../types'
+import { SpringRef } from '../SpringRef'
 import { SpringValue } from '../SpringValue'
 import { useSprings } from './useSprings'
 
 describe('useSprings', () => {
   let springs: Lookup<SpringValue>[]
-  let animate: SpringStartFn<any>
-  let stop: SpringStopFn<any>
+  let ref: SpringRef
 
   // Call the "useSprings" hook and update local variables.
   const update = createUpdater(({ args }) => {
     const result = useSprings(...args)
     if (is.fun(args[1]) || args.length == 3) {
       springs = result[0] as any
-      animate = result[1]
-      stop = result[2]
+      ref = result[1]
     } else {
       springs = result as any
-      animate = stop = () => {
-        throw Error('Function does not exist')
-      }
+      ref = undefined as any
     }
     return null
   })
@@ -110,7 +106,7 @@ describe('useSprings', () => {
   function mapSprings<T>(fn: (spring: SpringValue) => T) {
     return springs.map(values => {
       const result: any = {}
-      each(values, spring => {
+      eachProp(values, spring => {
         result[spring.key!] = fn(spring)
       })
       return result
