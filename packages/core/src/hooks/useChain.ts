@@ -12,10 +12,8 @@ export function useChain(
     if (timeSteps) {
       let prevDelay = 0
       each(refs, (ref, i) => {
-        if (!ref.current) return
-
         const controllers = ref.current
-        if (controllers.size) {
+        if (controllers.length) {
           let delay = timeFrame * timeSteps[i]
 
           // Use the previous delay if none exists.
@@ -33,10 +31,10 @@ export function useChain(
     } else {
       let p: Promise<any> = Promise.resolve()
       each(refs, ref => {
-        const controllers = Array.from(ref.current)
+        const controllers = ref.current
         if (controllers.length) {
           // Take the queue of each controller
-          const updates = controllers.map(ctrl => {
+          const queues = controllers.map(ctrl => {
             const q = ctrl.queue
             ctrl.queue = []
             return q
@@ -44,7 +42,9 @@ export function useChain(
 
           // Apply the queue when the previous ref stops animating
           p = p.then(() => {
-            each(controllers, (ctrl, i) => ctrl.queue.push(...updates[i]))
+            each(controllers, (ctrl, i) =>
+              each(queues[i] || [], update => ctrl.queue.push(update))
+            )
             return ref.start()
           })
         }

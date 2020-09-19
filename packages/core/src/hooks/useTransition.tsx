@@ -280,7 +280,7 @@ export function useTransition(
         const { ctrl } = t
 
         // Attach the controller to our local ref.
-        ref?.current.add(ctrl)
+        ref?.add(ctrl)
 
         // Save any springs created this render.
         setSprings(ctrl, springs)
