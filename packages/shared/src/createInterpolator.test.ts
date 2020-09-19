@@ -1,11 +1,11 @@
 import { createInterpolator, Globals } from '.'
 import { createStringInterpolator } from './stringInterpolation'
-import colorNames from './colors'
+import { colors } from './colors'
 
 beforeAll(() => {
   Globals.assign({
-    colorNames,
     createStringInterpolator,
+    colors,
   })
 })
 
