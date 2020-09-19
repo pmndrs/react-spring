@@ -53,7 +53,7 @@
     "build-if-changed": "^1.5.0",
     "chalk": "^2.4.2",
     "enquirer": "^2.3.2",
-    "esbuild": "^0.7.1",
+    "esbuild": "^0.7.2",
     "esbuild-jest": "^0.2.2",
     "execa": "^2.0.4",
     "flush-microtasks": "^1.0.1",
