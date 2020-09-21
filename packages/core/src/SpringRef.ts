@@ -105,5 +105,6 @@ export interface SpringRef<State extends Lookup> {
 each(['stop', 'pause', 'resume'] as const, key => {
   SpringRef.prototype[key] = function (this: SpringRef) {
     each(this.current, ctrl => ctrl[key](...arguments))
+    return this
   } as any
 })
