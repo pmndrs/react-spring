@@ -2,6 +2,9 @@ import { CSSProperties, ForwardRefExoticComponent } from 'react'
 import { FluidValue, FluidProps } from '@react-spring/shared'
 import { ElementType, ComponentPropsWithRef, Merge } from '@react-spring/types'
 import { Primitives } from './primitives'
+import * as CSS from 'csstype'
+
+export type { CSS }
 
 type AnimatedPrimitives = {
   [Tag in Primitives]: AnimatedComponent<Tag>
