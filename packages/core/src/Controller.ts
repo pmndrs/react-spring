@@ -202,13 +202,6 @@ export class Controller<State extends Lookup = Lookup>
     return this
   }
 
-  /** Restart every animation. */
-  reset() {
-    this.each(spring => spring.reset())
-    // TODO: restart async "to" prop
-    return this
-  }
-
   /** Call a function once per spring value */
   each(iterator: (spring: SpringValue, key: string) => void) {
     eachProp(this.springs, iterator as any)
