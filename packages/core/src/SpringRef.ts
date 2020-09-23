@@ -10,6 +10,18 @@ interface ControllerUpdateFn<State extends Lookup = Lookup> {
 export class SpringRef<State extends Lookup = Lookup> {
   readonly current: Controller<State>[] = []
 
+  /** Update the state of each controller without animating. */
+  set(values: Partial<State>) {
+    each(this.current, ctrl => {
+      for (const key in values) {
+        const value = values[key]
+        if (!is.und(value)) {
+          ctrl.springs[key].set(value)
+        }
+      }
+    })
+  }
+
   /** Start the queued animations of each controller. */
   start(): AsyncResult<Controller<State>>[]
   /** Update every controller with the same props. */
