@@ -4,7 +4,7 @@ import { AsyncResult, ControllerUpdate } from './types'
 import { Controller } from './Controller'
 
 interface ControllerUpdateFn<State extends Lookup = Lookup> {
-  (ctrl: Controller<State>, i: number): ControllerUpdate<State> | Falsy
+  (i: number, ctrl: Controller<State>): ControllerUpdate<State> | Falsy
 }
 
 export class SpringRef<State extends Lookup = Lookup> {
@@ -81,7 +81,7 @@ export class SpringRef<State extends Lookup = Lookup> {
     ctrl: Controller<State>,
     index: number
   ): ControllerUpdate<State> | Falsy {
-    return is.fun(arg) ? arg(ctrl, index) : arg
+    return is.fun(arg) ? arg(index, ctrl) : arg
   }
 }
 
