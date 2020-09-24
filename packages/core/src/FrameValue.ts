@@ -133,12 +133,6 @@ export declare namespace FrameValue {
     priority: number
   }
 
-  /** A parent reset the internal state of its current animation */
-  interface ResetEvent<T = any> {
-    parent: FrameValue<T>
-    type: 'reset'
-  }
-
   /** A parent is done animating */
   interface IdleEvent<T = any> {
     parent: FrameValue<T>
@@ -146,11 +140,7 @@ export declare namespace FrameValue {
   }
 
   /** Events sent to children of `FrameValue` objects */
-  export type Event<T = any> =
-    | ChangeEvent<T>
-    | PriorityEvent<T>
-    | ResetEvent<T>
-    | IdleEvent<T>
+  export type Event<T = any> = ChangeEvent<T> | PriorityEvent<T> | IdleEvent<T>
 
   /** An object that handles `FrameValue` events */
   export type Observer<T = any> = FluidObserver<Event<T>>
