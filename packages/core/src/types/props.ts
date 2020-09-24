@@ -24,7 +24,6 @@ import {
   OnRest,
   OnStart,
   OnProps,
-  OnDelayEnd,
   OnPause,
   OnResume,
 } from './functions'
@@ -61,10 +60,6 @@ export interface SpringProps<T = any> extends AnimationProps<T> {
   from?: GoalValue<T>
   // FIXME: Use "SpringUpdate<T>" once type recursion is good enough.
   loop?: LoopProp<SpringUpdate>
-  /**
-   * Called after any delay has finished.
-   */
-  onDelayEnd?: EventProp<OnDelayEnd<T>>
   /**
    * Called after an animation is updated by new props,
    * even if the animation remains idle.
@@ -158,10 +153,6 @@ export interface ControllerProps<State extends Lookup = Lookup>
   from?: GoalValues<State> | Falsy
   // FIXME: Use "ControllerUpdate<T>" once type recursion is good enough.
   loop?: LoopProp<ControllerUpdate>
-  /**
-   * Called after any delay has finished.
-   */
-  onDelayEnd?: OnDelayEnd | { [P in keyof State]?: OnDelayEnd<State[P]> }
   /**
    * Called when the # of animating values exceeds 0
    *
@@ -301,7 +292,6 @@ export interface ReservedProps extends ReservedEventProps {
 }
 
 export interface ReservedEventProps {
-  onDelayEnd?: any
   onProps?: any
   onStart?: any
   onChange?: any

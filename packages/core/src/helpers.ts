@@ -105,7 +105,6 @@ export const mergeDefaultProps = (
  */
 export const DEFAULT_PROPS = [
   'config',
-  'onDelayEnd',
   'onProps',
   'onStart',
   'onChange',
@@ -129,7 +128,6 @@ const RESERVED_PROPS: {
   immediate: 1,
   default: 1,
   delay: 1,
-  onDelayEnd: 1,
   onProps: 1,
   onStart: 1,
   onChange: 1,

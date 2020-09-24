@@ -555,12 +555,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const getEventProp = <K extends keyof SpringProps>(prop: K) =>
       resolveEventProp(defaultProps, props, prop, key)
 
-    // Call "onDelayEnd" before merging props, but after cancellation checks.
-    const onDelayEnd = getEventProp('onDelayEnd')
-    if (onDelayEnd) {
-      onDelayEnd(props, this)
-    }
-
     if (props.default) {
       mergeDefaultProps(defaultProps, props)
     }

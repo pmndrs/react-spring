@@ -2,7 +2,6 @@ import { Lookup, Falsy } from '@react-spring/types'
 
 import { Controller, ControllerQueue } from '../Controller'
 import { SpringValue } from '../SpringValue'
-import { RunAsyncProps } from '../runAsync'
 import {
   SpringTo,
   InlineToProps,
@@ -103,13 +102,5 @@ export type OnRest<T extends Readable = any> = (
  */
 export type OnProps<T = unknown> = (
   props: Readonly<SpringProps<T>>,
-  spring: SpringValue<T>
-) => void
-
-/**
- * Called after any delay has finished.
- */
-export type OnDelayEnd<T = unknown> = (
-  props: RunAsyncProps<SpringValue<T>>,
   spring: SpringValue<T>
 ) => void
