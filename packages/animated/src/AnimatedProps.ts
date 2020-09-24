@@ -14,16 +14,17 @@ export class AnimatedProps extends AnimatedObject implements FluidObserver {
   }
 
   setValue(props: Props | null, context?: TreeContext) {
-    if (!props) return // The constructor passes null.
-    if (context) {
-      TreeContext.current = context
-      if (props.style) {
-        const { createAnimatedStyle } = context.host
-        props = { ...props, style: createAnimatedStyle(props.style) }
+    if (props) {
+      if (context) {
+        TreeContext.current = context
+        if (props.style) {
+          const { createAnimatedStyle } = context.host
+          props = { ...props, style: createAnimatedStyle(props.style) }
+        }
       }
+      super.setValue(props)
+      TreeContext.current = null
     }
-    super.setValue(props)
-    TreeContext.current = null
   }
 
   /** @internal */

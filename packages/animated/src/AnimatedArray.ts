@@ -1,4 +1,4 @@
-import { isAnimatedString, each } from '@react-spring/shared'
+import { isAnimatedString } from '@react-spring/shared'
 import { AnimatedObject } from './AnimatedObject'
 import { AnimatedString } from './AnimatedString'
 import { AnimatedValue } from './AnimatedValue'
@@ -28,12 +28,12 @@ export class AnimatedArray<
     const payload = this.getPayload()
     // Reuse the payload when lengths are equal.
     if (newValue && newValue.length == payload.length) {
-      each(payload, (node, i) => node.setValue(newValue[i]))
-    } else {
-      // Remake the payload when length changes.
-      this.source = this._makeAnimated(newValue)
-      this.payload = this._makePayload(this.source)
+      return payload.some((node, i) => node.setValue(newValue[i]))
     }
+    // Remake the payload when length changes.
+    this.source = this._makeAnimated(newValue)
+    this.payload = this._makePayload(this.source)
+    return true
   }
 
   /** Convert the `from` and `to` values to an array of `Animated` nodes */
