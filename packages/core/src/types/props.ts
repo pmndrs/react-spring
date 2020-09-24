@@ -244,12 +244,6 @@ export interface AnimationProps<T = any> {
   default?: boolean | SpringProps<T>
 }
 
-/** Default props for a `Controller` object */
-export type ControllerDefaultProps<State extends Lookup = Lookup> = Pick<
-  ControllerProps<State>,
-  'onStart' | 'onChange' | 'onRest'
->
-
 /**
  * Extract the custom props that are treated like `to` values
  */
