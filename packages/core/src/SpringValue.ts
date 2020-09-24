@@ -1,7 +1,6 @@
 import {
   is,
   each,
-  noop,
   isEqual,
   toArray,
   eachProp,
@@ -32,8 +31,8 @@ import {
   computeGoal,
   matchProp,
   inferTo,
-  mergeDefaultProps,
   getDefaultProps,
+  getDefaultProp,
   isAsyncTo,
   resolveProp,
 } from './helpers'
@@ -45,14 +44,13 @@ import {
   hasAnimated,
   setActiveBit,
 } from './SpringPhase'
-import { AnimationRange, AnimationResolver } from './types/internal'
 import {
-  AsyncResult,
-  OnRest,
-  SpringUpdate,
-  VelocityProp,
-  SpringProps,
-} from './types'
+  AnimationRange,
+  AnimationResolver,
+  EventKey,
+  PickEventFns,
+} from './types/internal'
+import { AsyncResult, SpringUpdate, VelocityProp, SpringProps } from './types'
 import {
   getCombinedResult,
   getCancelledResult,
@@ -61,6 +59,10 @@ import {
 } from './AnimationResult'
 
 declare const console: any
+
+interface DefaultSpringProps<T>
+  extends Pick<SpringProps<T>, 'pause' | 'cancel' | 'immediate' | 'config'>,
+    PickEventFns<SpringProps<T>> {}
 
 /**
  * Only numbers, strings, and arrays of numbers/strings are supported.
@@ -76,6 +78,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** The queue of pending props */
   queue?: SpringUpdate<T>[]
 
+  /** Some props have customizable default values */
+  defaultProps: DefaultSpringProps<T> = {}
+
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<SpringValue<T>> = {
     paused: false,
@@ -84,8 +89,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     timeouts: new Set(),
   }
 
-  /** Some props have customizable default values */
-  protected _defaultProps: SpringProps<T> = {}
+  /** The promise resolvers of pending `start` calls */
+  protected _pendingCalls = new Set<AnimationResolver<this>>()
 
   /** The counter for tracking `scheduleProps` calls */
   protected _lastCallId = 0
@@ -110,7 +115,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   get goal() {
-    return getFluidValue(this.animation.to)
+    return getFluidValue(this.animation.to) as T
   }
 
   get velocity(): VelocityProp<T> {
@@ -297,19 +302,27 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     })
 
+    const node = getAnimated(this)!
     if (idle) {
-      this.finish()
+      const value = getFluidValue(anim.to)
+      if (node.setValue(value) || changed) {
+        this._onChange(value)
+      }
+      this._stop()
     } else if (changed) {
-      this._onChange(this.get())
+      this._onChange(node.getValue())
     }
   }
 
   /** Set the current value, while stopping the current animation */
   set(value: T | FluidValue<T>) {
-    this._focus(value)
     G.batchedUpdates(() => {
-      this._set(value)
       this._stop()
+
+      // These override the current value and goal value that may have
+      // been updated by `onRest` handlers in the `_stop` call above.
+      this._focus(value)
+      this._set(value)
     })
     return this
   }
@@ -335,12 +348,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
         // Ensure the "onStart" and "onRest" props are called.
         this._onStart()
 
-        // Decay animations have an implicit goal.
+        // Jump to the goal value, except for decay animations
+        // which have an undefined goal value.
         if (!config.decay) {
-          this._set(to, true)
+          this._set(to, false)
         }
 
-        // Exit the frameloop.
         this._stop()
       })
     }
@@ -387,13 +400,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * Pass `true` to call `onRest` with `cancelled: true`.
    */
   stop(cancel?: boolean) {
-    stopAsync(this._state, cancel && this._lastCallId)
+    const { to } = this.animation
 
-    // Ensure the `to` value equals the current value.
+    // The current value becomes the goal value.
     this._focus(this.get())
 
-    // Exit the frameloop and notify `onRest` listeners.
-    G.batchedUpdates(() => this._stop(cancel))
+    stopAsync(this._state, cancel && this._lastCallId)
+    G.batchedUpdates(() => this._stop(to, cancel))
 
     return this
   }
@@ -464,13 +477,19 @@ export class SpringValue<T = any> extends FrameValue<T> {
     { ...props }: SpringProps<T>,
     isLoop?: boolean
   ): AsyncResult<SpringValue<T>> {
-    const defaultProps = this._defaultProps
+    const { key, defaultProps } = this
 
-    // Let the caller inspect every update.
-    const onProps = resolveEventProp(defaultProps, props, 'onProps', this.key)
-    if (onProps) {
-      onProps(props, this)
-    }
+    // Update the default props immediately.
+    if (props.default)
+      Object.assign(
+        defaultProps,
+        getDefaultProps(props, (value, prop) =>
+          /^on/.test(prop) ? resolveProp(value, key) : value
+        )
+      )
+
+    mergeActiveFn(this, props, 'onProps')
+    sendEvent(this, 'onProps', props, this)
 
     // Ensure the initial value can be accessed by animated components.
     const range = this._prepareNode(props)
@@ -484,7 +503,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     const state = this._state
     return scheduleProps(++this._lastCallId, {
-      key: this.key,
+      key,
       props,
       defaultProps,
       state,
@@ -493,7 +512,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
           if (!isPaused(this)) {
             setPausedBit(this, true)
             flushCalls(state.pauseQueue)
-            callProp(this.animation.onPause, this)
+            sendEvent(this, 'onPause', this)
           }
         },
         resume: () => {
@@ -503,7 +522,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
               this._resume()
             }
             flushCalls(state.resumeQueue)
-            callProp(this.animation.onResume, this)
+            sendEvent(this, 'onResume', this)
           }
         },
         start: this._merge.bind(this, range),
@@ -532,9 +551,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       return resolve(getCancelledResult(this))
     }
 
-    const { key, animation: anim } = this
-    const defaultProps = this._defaultProps
-
     /** The "to" prop is defined. */
     const hasToProp = !is.und(range.to)
 
@@ -551,14 +567,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
 
-    /** Get the function for a specific event prop */
-    const getEventProp = <K extends keyof SpringProps>(prop: K) =>
-      resolveEventProp(defaultProps, props, prop, key)
-
-    if (props.default) {
-      mergeDefaultProps(defaultProps, props)
-    }
-
+    const { key, defaultProps, animation: anim } = this
     const { to: prevTo, from: prevFrom } = anim
     let { to = prevTo, from = prevFrom } = range
 
@@ -684,15 +693,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
       }
     }
 
-    // When an active animation changes its goal to its current value:
+    // Was the goal value set to the current value while animating?
     if (finished && isAnimating(this)) {
-      // Avoid an abrupt stop unless the animation is being reset.
+      // If the first frame has passed, allow the animation to
+      // overshoot instead of stopping abruptly.
       if (anim.changed && !reset) {
         started = true
       }
       // Stop the animation before its first frame.
       else if (!started) {
-        this._stop()
+        this._stop(prevTo)
       }
     }
 
@@ -717,47 +727,39 @@ export class SpringValue<T = any> extends FrameValue<T> {
         }
       }
 
-      // These event props are stored for later in the animation.
-      // Only updates that start an animation can change these props.
       if (started) {
-        each(
-          ['onStart', 'onChange', 'onPause', 'onResume'] as const,
-          prop => (anim[prop] = getEventProp(prop) as any)
-        )
-      }
+        const { onRest } = anim
 
-      // The "reset" prop tries to reuse the old "onRest" prop,
-      // unless you defined a new "onRest" prop.
-      const onRestQueue = anim.onRest
-      const onRest =
-        reset && !props.onRest
-          ? onRestQueue[0] || noop
-          : checkFinishedOnRest(getEventProp('onRest'), this)
+        // Set the active handlers when an animation starts.
+        each(ACTIVE_EVENTS, type => mergeActiveFn(this, props, type))
 
-      // In most cases, the animation after this one won't reuse our
-      // "onRest" prop. Instead, the _default_ "onRest" prop is used
-      // when the next animation has an undefined "onRest" prop.
-      if (started) {
-        anim.onRest = [onRest, checkFinishedOnRest(resolve, this)]
+        const result = getFinishedResult(this, checkFinished(this, prevTo))
+        flushCalls(this._pendingCalls, result)
+        this._pendingCalls.add(resolve)
 
-        // Flush the "onRest" queue for the previous animation.
-        let onRestIndex = reset ? 0 : 1
-        if (onRestIndex < onRestQueue.length) {
+        if (anim.changed)
           G.batchedUpdates(() => {
-            for (; onRestIndex < onRestQueue.length; onRestIndex++) {
-              onRestQueue[onRestIndex]()
+            // Ensure `onStart` can be called after a reset.
+            anim.changed = !reset
+
+            // Call the active `onRest` handler from the interrupted animation.
+            onRest?.(result)
+
+            // Notify the default `onRest` of the reset, but wait for the
+            // first frame to pass before sending an `onStart` event.
+            if (reset) {
+              callProp(defaultProps.onRest, result)
+            }
+            // Call the active `onStart` handler here since the first frame
+            // has already passed, which means this is a goal update and not
+            // an entirely new animation.
+            else {
+              anim.onStart?.(this)
             }
           })
-        }
-      }
-      // The "onRest" prop is always first, and it can be updated even
-      // if a new animation is not started by this update.
-      else if (reset || props.onRest) {
-        anim.onRest[0] = onRest
       }
     }
 
-    // Update our node even if the animation is idle.
     if (reset) {
       this._set(value)
     }
@@ -768,17 +770,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Start an animation
     else if (started) {
-      if (reset) {
-        // Must be idle for "onStart" to be called again.
-        setActiveBit(this, false)
-      }
       this._start()
     }
 
     // Postpone promise resolution until the animation is finished,
     // so that no-op updates still resolve at the expected time.
     else if (isAnimating(this) && !hasToChanged) {
-      anim.onRest.push(checkFinishedOnRest(resolve, this))
+      this._pendingCalls.add(resolve)
     }
 
     // Resolve our promise immediately.
@@ -824,14 +822,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
    * Update the current value from outside the frameloop,
    * and return the `Animated` node.
    */
-  protected _set(
-    arg: T | FluidValue<T>,
-    force?: boolean
-  ): Animated | undefined {
-    const value = getFluidValue(arg) as T
+  protected _set(arg: T | FluidValue<T>, idle = true): Animated | undefined {
+    const value = getFluidValue(arg)
     if (!is.und(value)) {
       const oldNode = getAnimated(this)
-      if (force || !oldNode || !isEqual(value, oldNode.getValue())) {
+      if (!oldNode || !isEqual(value, oldNode.getValue())) {
         // Create a new node or update the existing node.
         const nodeType = getAnimatedType(value)
         if (!oldNode || oldNode.constructor != nodeType) {
@@ -842,7 +837,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         // Never emit a "change" event for the initial value.
         if (oldNode) {
           G.batchedUpdates(() => {
-            this._onChange(value, true)
+            this._onChange(value, idle)
           })
         }
       }
@@ -854,20 +849,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const anim = this.animation
     if (!anim.changed) {
       anim.changed = true
-      callProp(anim.onStart, this)
+      sendEvent(this, 'onStart', this)
     }
   }
 
-  protected _onChange(value: T, idle = false) {
-    const anim = this.animation
-
-    // The "onStart" prop is called on the first change after entering the
-    // frameloop, but never for immediate animations.
+  protected _onChange(value: T, idle?: boolean) {
     if (!idle) {
       this._onStart()
+      callProp(this.animation.onChange, value, this)
     }
-
-    callProp(anim.onChange, value, this)
+    callProp(this.defaultProps.onChange, value, this)
     super._onChange(value, idle)
   }
 
@@ -887,11 +878,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     if (!isAnimating(this)) {
       setActiveBit(this, true)
-
-      // Ensure the `onStart` prop will be called.
-      anim.changed = false
-
-      // Start animating if not paused.
       if (!isPaused(this)) {
         this._resume()
       }
@@ -912,7 +898,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
    *
    * Always wrap `_stop` calls with `batchedUpdates`.
    */
-  protected _stop(cancel?: boolean) {
+  protected _stop(goal?: any, cancel?: boolean) {
     if (isAnimating(this)) {
       setActiveBit(this, false)
 
@@ -921,49 +907,36 @@ export class SpringValue<T = any> extends FrameValue<T> {
         node.done = true
       })
 
+      // These active handlers must be reset to undefined or else
+      // they could be called while idle. But keep them defined
+      // when the goal value is dynamic.
+      if (anim.toValues) {
+        anim.onChange = anim.onPause = anim.onResume = undefined
+      }
+
       this._emit({
         type: 'idle',
         parent: this,
       })
 
-      const onRestQueue = anim.onRest
-      if (onRestQueue.length) {
-        // Preserve the "onRest" prop when the goal is dynamic.
-        anim.onRest = [anim.toValues ? noop : onRestQueue[0]]
+      const result = cancel
+        ? getCancelledResult(this)
+        : getFinishedResult(this, checkFinished(this, goal ?? anim.to))
 
-        // Never call the "onRest" prop for no-op animations.
-        if (!anim.changed) {
-          onRestQueue[0] = noop
-        }
-
-        each(onRestQueue, onRest => onRest(cancel))
+      flushCalls(this._pendingCalls, result)
+      if (anim.changed) {
+        anim.changed = false
+        sendEvent(this, 'onRest', result)
       }
     }
   }
 }
 
-/**
- * The "finished" value is determined by each "onRest" handler,
- * based on whether the current value equals the goal value that
- * was calculated at the time the "onRest" handler was set.
- */
-function checkFinishedOnRest<T extends SpringValue>(
-  onRest: OnRest<T> | undefined,
-  spring: T
-) {
-  const { to } = spring.animation
-  return onRest
-    ? (cancel?: boolean) => {
-        if (cancel) {
-          onRest(getCancelledResult(spring))
-        } else {
-          const goal = computeGoal(to)
-          const value = computeGoal(spring.get())
-          const finished = isEqual(value, goal)
-          onRest(getFinishedResult(spring, finished))
-        }
-      }
-    : noop
+/** Returns true when the current value and goal value are equal. */
+function checkFinished<T>(target: SpringValue<T>, to: T | FluidValue<T>) {
+  const goal = computeGoal(to)
+  const value = computeGoal(target.get())
+  return isEqual(value, goal)
 }
 
 export function createLoopUpdate<T>(
@@ -1040,13 +1013,36 @@ function findDefined(values: Lookup, keys: Set<string>) {
   eachProp(values, (value, key) => value != null && keys.add(key as any))
 }
 
-/** Coerce an event prop into a function */
-function resolveEventProp<T, P extends keyof SpringProps>(
-  defaultProps: SpringProps<T>,
+/** Event props with "active handler" support */
+const ACTIVE_EVENTS = [
+  'onStart',
+  'onRest',
+  'onChange',
+  'onPause',
+  'onResume',
+] as const
+
+function mergeActiveFn<T, P extends EventKey>(
+  target: SpringValue<T>,
   props: SpringProps<T>,
-  prop: P,
-  key?: string
-): Extract<SpringProps<T>[P], Function> {
-  const value: any = resolveProp(props[prop], key)
-  return is.und(value) ? resolveProp(defaultProps[prop], key) : value
+  type: P
+) {
+  target.animation[type] =
+    props[type] !== getDefaultProp(props, type)
+      ? resolveProp<any>(props[type], target.key)
+      : undefined
+}
+
+type EventArgs<T, P extends EventKey> = Parameters<
+  Extract<SpringProps<T>[P], Function>
+>
+
+/** Call the active handler first, then the default handler. */
+function sendEvent<T, P extends EventKey>(
+  target: SpringValue<T>,
+  type: P,
+  ...args: EventArgs<T, P>
+) {
+  target.animation[type]?.(...(args as [any, any]))
+  target.defaultProps[type]?.(...(args as [any, any]))
 }

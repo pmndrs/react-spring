@@ -1,12 +1,10 @@
 import { AnimatedValue } from '@react-spring/animated'
 import { FluidValue } from '@react-spring/shared'
 import { AnimationConfig } from './AnimationConfig'
-import { OnStart, OnChange, OnPause, OnResume } from './types'
+import { PickEventFns } from './types/internal'
+import { SpringProps } from './types'
 
 const emptyArray: readonly any[] = []
-
-/** @internal */
-type OnRest = (cancel?: boolean) => void
 
 /** An animation being executed by the frameloop */
 export class Animation<T = any> {
@@ -19,9 +17,6 @@ export class Animation<T = any> {
   from!: T | FluidValue<T>
   config = new AnimationConfig()
   immediate = false
-  onStart?: OnStart<T>
-  onChange?: OnChange<T>
-  onPause?: OnPause<T>
-  onResume?: OnResume<T>
-  onRest: OnRest[] = []
 }
+
+export interface Animation<T> extends PickEventFns<SpringProps<T>> {}

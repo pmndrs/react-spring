@@ -8,7 +8,7 @@ import {
   FluidValue,
   Globals as G,
 } from '@react-spring/shared'
-import { AnyFn, OneOrMore, Lookup, Falsy } from '@react-spring/types'
+import { AnyFn, OneOrMore, Lookup } from '@react-spring/types'
 import { ReservedProps, ForwardProps, InferTo } from './types'
 import type { Controller } from './Controller'
 import type { SpringRef } from './SpringRef'
@@ -59,6 +59,8 @@ export const getDefaultProp = <T extends Lookup, P extends keyof T>(
     ? props.default[key]
     : undefined
 
+const noopTransform = (value: any) => value
+
 /**
  * Extract the default props from an update.
  *
@@ -68,29 +70,22 @@ export const getDefaultProp = <T extends Lookup, P extends keyof T>(
  */
 export const getDefaultProps = <T extends Lookup>(
   props: Lookup,
-  omitKeys: readonly (string | Falsy)[] = [],
-  defaults: Lookup = {} as any
-) => {
+  transform: (value: any, key: string) => any = noopTransform
+): T => {
   let keys: readonly string[] = DEFAULT_PROPS
   if (props.default && props.default !== true) {
     props = props.default
     keys = Object.keys(props)
   }
+  const defaults: any = {}
   for (const key of keys) {
-    const value = props[key]
-    if (!is.und(value) && !omitKeys.includes(key)) {
+    const value = transform(props[key], key)
+    if (!is.und(value)) {
       defaults[key] = value
     }
   }
-  return defaults as T
+  return defaults
 }
-
-/** Merge the default props of an update into a props cache. */
-export const mergeDefaultProps = (
-  defaults: Lookup,
-  props: Lookup,
-  omitKeys?: readonly (string | Falsy)[]
-) => getDefaultProps(props, omitKeys, defaults)
 
 /**
  * These props are implicitly used as defaults when defined in a

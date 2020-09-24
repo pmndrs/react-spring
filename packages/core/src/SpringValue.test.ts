@@ -638,6 +638,26 @@ function describeEvents() {
       spring.set(0)
       expect(onChange).toBeCalledTimes(3)
     })
+    describe('when active handler', () => {
+      it('is never called by the "set" method', () => {
+        const spring = new SpringValue(0)
+
+        const onChange = jest.fn()
+        spring.start(1, { onChange })
+
+        // Before first frame
+        spring.set(2)
+        expect(onChange).not.toBeCalled()
+
+        spring.start(1, { onChange })
+        mockRaf.step()
+        onChange.mockReset()
+
+        // Before last frame
+        spring.set(0)
+        expect(onChange).not.toBeCalled()
+      })
+    })
   })
   describe('the "onPause" event', () => {
     it('is called by the "pause" method', () => {
@@ -757,12 +777,13 @@ function describeMethods() {
       const promise = spring.start(1)
 
       await advanceUntilValue(spring, 0.5)
+      const value = spring.get()
       spring.set(2)
 
       expect(spring.idle).toBeTruthy()
       expect(await promise).toMatchObject({
         finished: false,
-        value: 2,
+        value,
       })
     })
   })

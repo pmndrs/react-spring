@@ -3,7 +3,11 @@ import type { FluidValue } from '@react-spring/shared'
 import type { Controller } from '../Controller'
 import type { SpringValue } from '../SpringValue'
 import type { AsyncResult, AnimationResult } from './objects'
-import type { ControllerUpdate, SpringUpdate } from './props'
+import type {
+  ControllerUpdate,
+  ReservedEventProps,
+  SpringUpdate,
+} from './props'
 
 /** @internal */
 export interface Readable<T = any> {
@@ -47,3 +51,11 @@ export interface AnimationRange<T> {
 export type AnimationResolver<T extends Readable> = (
   result: AnimationResult<T> | AsyncResult<T>
 ) => void
+
+/** @internal */
+export type EventKey = keyof ReservedEventProps
+
+/** @internal */
+export type PickEventFns<T> = {
+  [P in Extract<keyof T, EventKey>]?: Extract<T[P], Function>
+}

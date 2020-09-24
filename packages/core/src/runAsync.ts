@@ -60,8 +60,10 @@ export function runAsync<T extends AnimationTarget>(
     state.asyncTo = to
 
     // The default props of any `animate` calls.
-    // The `onRest` prop is only called when the `runAsync` promise is resolved.
-    const defaultProps = getDefaultProps<InferProps<T>>(props, ['onRest'])
+    const defaultProps = getDefaultProps<InferProps<T>>(props, (value, key) =>
+      // The `onRest` prop is only called when the `runAsync` promise is resolved.
+      key === 'onRest' ? undefined : value
+    )
 
     let preventBail!: () => void
     let bail: (error: any) => void
