@@ -68,7 +68,7 @@ export function useTrail(
 
   if (propsFn || arguments.length == 3) {
     ref['_getProps'] = (propsArg, ctrl, i) => {
-      const props = is.fun(propsArg) ? propsArg(ctrl, i) : propsArg
+      const props = is.fun(propsArg) ? propsArg(i, ctrl) : propsArg
       if (props) {
         const parent = ref.current[i + (props.reverse ? 1 : -1)]
         if (parent) props.to = parent.springs
