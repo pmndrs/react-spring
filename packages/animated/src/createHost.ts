@@ -40,7 +40,9 @@ export const createHost = (
     const displayName = getDisplayName(Component) || 'Anonymous'
 
     if (is.str(Component)) {
-      Component = withAnimated(Component, hostConfig)
+      Component =
+        animated[Component] ||
+        (animated[Component] = withAnimated(Component, hostConfig))
     } else {
       Component =
         Component[cacheKey] ||
