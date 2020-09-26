@@ -6,9 +6,11 @@ import {
 } from '@react-spring/types'
 import {
   is,
+  raf,
   each,
   isEqual,
   toArray,
+  frameLoop,
   FluidValue,
   createInterpolator,
   Globals as G,
@@ -88,10 +90,10 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
       })
 
       if (G.skipAnimation) {
-        G.batchedUpdates(() => this.advance())
+        raf.batchedUpdates(() => this.advance())
         becomeIdle(this)
       } else {
-        G.frameLoop.start(this)
+        frameLoop.start(this)
       }
     }
   }

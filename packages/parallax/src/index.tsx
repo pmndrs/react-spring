@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useContext, useState, useRef, useEffect, CSSProperties } from 'react'
-import { useOnce, Globals as G } from '@react-spring/shared'
+import { useOnce, raf } from '@react-spring/shared'
 import {
   a,
   Controller,
@@ -222,7 +222,7 @@ export const Parallax = React.memo(
       if (!state.busy) {
         state.busy = true
         state.current = event.target[getScrollType(horizontal)]
-        G.frameLoop.onFrame(() => {
+        raf.onStart(() => {
           state.layers.forEach(layer =>
             layer.setPosition(state.space, state.current)
           )
@@ -237,7 +237,7 @@ export const Parallax = React.memo(
 
       const onResize = () => {
         const update = () => state.update()
-        G.frameLoop.onFrame(update)
+        raf.onFrame(update)
         setTimeout(update, 150) // Some browsers don't fire on maximize!
       }
 

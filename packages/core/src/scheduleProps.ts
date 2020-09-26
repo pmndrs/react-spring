@@ -1,4 +1,4 @@
-import { Timeout, Globals as G, is } from '@react-spring/shared'
+import { Timeout, Globals as G, is, raf } from '@react-spring/shared'
 import { matchProp, callProp, getDefaultProp } from './helpers'
 import { AsyncResult, MatchProp } from './types'
 import { RunAsyncState, RunAsyncProps } from './runAsync'
@@ -71,12 +71,12 @@ export function scheduleProps<T extends AnimationTarget>(
       state.timeouts.delete(timeout)
       timeout.cancel()
       // Cache the remaining delay.
-      delay = timeout.time - G.now()
+      delay = timeout.time - raf.now()
     }
 
     function onResume() {
       if (delay > 0) {
-        timeout = G.frameLoop.setTimeout(onStart, delay)
+        timeout = raf.setTimeout(onStart, delay)
         state.pauseQueue.add(onPause)
         state.timeouts.add(timeout)
       } else {

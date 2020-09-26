@@ -8,11 +8,3 @@ export type Animatable<T = any> = T extends number
     ? ReadonlyArray<number | string>
     : { [P in keyof T]: Animatable<T[P]> }
   : never
-
-export interface FrameRequestCallback {
-  (time?: number): void
-}
-
-export interface RequestFrameFn {
-  (cb: FrameRequestCallback): number | void
-}

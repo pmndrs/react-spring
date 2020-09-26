@@ -1,6 +1,7 @@
 import {
   deprecateInterpolate,
   each,
+  frameLoop,
   FluidValue,
   FluidObserver,
   Globals as G,
@@ -99,8 +100,7 @@ export abstract class FrameValue<T = any>
   /** Tell our children about our new priority */
   protected _onPriorityChange(priority: number) {
     if (!this.idle) {
-      // Make the frameloop aware of our new priority.
-      G.frameLoop.start(this)
+      frameLoop.sort(this)
     }
     this._emit({
       type: 'priority',

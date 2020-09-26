@@ -1,13 +1,13 @@
 import { OneOrMore, UnknownProps, Lookup, Falsy } from '@react-spring/types'
 import {
   is,
+  raf,
   each,
   noop,
   flush,
   toArray,
   eachProp,
   flushCalls,
-  Globals as G,
 } from '@react-spring/shared'
 
 import { getDefaultProp } from './helpers'
@@ -247,7 +247,7 @@ export class Controller<State extends Lookup = Lookup>
     }
     // The `onFrame` handler runs when a parent is changed or idle.
     else return
-    G.frameLoop.onFrame(this._onFrame)
+    raf.onFrame(this._onFrame)
   }
 }
 

@@ -1,9 +1,11 @@
 import {
   is,
+  raf,
   each,
   isEqual,
   toArray,
   eachProp,
+  frameLoop,
   flushCalls,
   getFluidValue,
   getFluidConfig,
@@ -316,7 +318,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Set the current value, while stopping the current animation */
   set(value: T | FluidValue<T>) {
-    G.batchedUpdates(() => {
+    raf.batchedUpdates(() => {
       this._stop()
 
       // These override the current value and goal value that may have
@@ -344,7 +346,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   finish() {
     if (isAnimating(this)) {
       const { to, config } = this.animation
-      G.batchedUpdates(() => {
+      raf.batchedUpdates(() => {
         // Ensure the "onStart" and "onRest" props are called.
         this._onStart()
 
@@ -406,7 +408,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     this._focus(this.get())
 
     stopAsync(this._state, cancel && this._lastCallId)
-    G.batchedUpdates(() => this._stop(to, cancel))
+    raf.batchedUpdates(() => this._stop(to, cancel))
 
     return this
   }
@@ -738,7 +740,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         this._pendingCalls.add(resolve)
 
         if (anim.changed)
-          G.batchedUpdates(() => {
+          raf.batchedUpdates(() => {
             // Ensure `onStart` can be called after a reset.
             anim.changed = !reset
 
@@ -836,7 +838,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         }
         // Never emit a "change" event for the initial value.
         if (oldNode) {
-          G.batchedUpdates(() => {
+          raf.batchedUpdates(() => {
             this._onChange(value, idle)
           })
         }
@@ -889,7 +891,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (G.skipAnimation) {
       this.finish()
     } else {
-      G.frameLoop.start(this)
+      frameLoop.start(this)
     }
   }
 

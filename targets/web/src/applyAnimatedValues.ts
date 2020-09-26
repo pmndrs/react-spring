@@ -1,4 +1,3 @@
-import { Globals as G } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
 
 const isCustomPropRE = /^--/
@@ -45,36 +44,34 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
         ))
   )
 
-  G.frameLoop.onWrite(() => {
-    if (children !== void 0) {
-      instance.textContent = children
-    }
+  if (children !== void 0) {
+    instance.textContent = children
+  }
 
-    // Apply CSS styles
-    for (let name in style) {
-      if (style.hasOwnProperty(name)) {
-        const value = dangerousStyleValue(name, style[name])
-        if (name === 'float') name = 'cssFloat'
-        else if (isCustomPropRE.test(name)) {
-          instance.style.setProperty(name, value)
-        } else {
-          instance.style[name] = value
-        }
+  // Apply CSS styles
+  for (let name in style) {
+    if (style.hasOwnProperty(name)) {
+      const value = dangerousStyleValue(name, style[name])
+      if (name === 'float') name = 'cssFloat'
+      else if (isCustomPropRE.test(name)) {
+        instance.style.setProperty(name, value)
+      } else {
+        instance.style[name] = value
       }
     }
+  }
 
-    // Apply DOM attributes
-    names.forEach((name, i) => {
-      instance.setAttribute(name, values[i])
-    })
-
-    if (scrollTop !== void 0) {
-      instance.scrollTop = scrollTop
-    }
-    if (scrollLeft !== void 0) {
-      instance.scrollLeft = scrollLeft
-    }
+  // Apply DOM attributes
+  names.forEach((name, i) => {
+    instance.setAttribute(name, values[i])
   })
+
+  if (scrollTop !== void 0) {
+    instance.scrollTop = scrollTop
+  }
+  if (scrollLeft !== void 0) {
+    instance.scrollLeft = scrollLeft
+  }
 }
 
 let isUnitlessNumber: { [key: string]: true } = {

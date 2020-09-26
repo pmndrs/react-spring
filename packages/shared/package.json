@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-spring/types": "link:../types",
-    "fluids": "^0.1.6"
+    "fluids": "^0.1.6",
+    "rafz": "^0.1.0"
   }
 }

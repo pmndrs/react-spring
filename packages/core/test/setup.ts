@@ -1,7 +1,7 @@
 import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { act } from '@testing-library/react'
-import { isEqual, is, FrameLoop, colors } from '@react-spring/shared'
+import { isEqual, is, colors, frameLoop, raf } from '@react-spring/shared'
 
 import { Globals, Controller, FrameValue } from '..'
 import { computeGoal } from '../src/helpers'
@@ -22,7 +22,6 @@ beforeEach(() => {
   Globals.assign({
     now: mockRaf.now,
     requestAnimationFrame: mockRaf.raf,
-    frameLoop: new FrameLoop(),
     colors,
     // This lets our useTransition hook force its component
     // to update from within an "onRest" handler.
@@ -32,7 +31,7 @@ beforeEach(() => {
 
 afterEach(() => {
   isRunning = false
-  Globals.frameLoop['_dispose']()
+  frameLoop.clear()
 })
 
 // This observes every SpringValue animation when "advanceUntil" is used.
@@ -129,9 +128,7 @@ global.advanceByTime = ms => {
 }
 
 global.advanceUntilIdle = () => {
-  return advanceUntil(() => {
-    return Globals.frameLoop['_idle']
-  })
+  return advanceUntil(() => frameLoop.idle && raf.idle())
 }
 
 // TODO: support "value" as an array or animatable string

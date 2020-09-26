@@ -1,10 +1,4 @@
-import {
-  is,
-  flush,
-  eachProp,
-  Timeout,
-  Globals as G,
-} from '@react-spring/shared'
+import { is, raf, flush, eachProp, Timeout } from '@react-spring/shared'
 import { Falsy } from '@react-spring/types'
 
 import { getDefaultProps } from './helpers'
@@ -159,7 +153,7 @@ export function runAsync<T extends AnimationTarget>(
     }
 
     if (is.fun(onRest)) {
-      G.batchedUpdates(() => {
+      raf.batchedUpdates(() => {
         onRest(result)
       })
     }
