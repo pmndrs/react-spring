@@ -2769,6 +2769,7 @@
   dependencies:
     "@react-spring/types" "link:packages/types"
     fluids "^0.1.6"
+    rafz "^0.1.0"
 
 "@react-spring/three@link:targets/three":
   version "9.0.0-rc.3"
@@ -9401,6 +9402,11 @@ quick-lru@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
+
+rafz@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/rafz/-/rafz-0.1.0.tgz#f56cfe000a62cc228705cdb1aa083fde1483c0ff"
+  integrity sha512-Ln10NrE2cO0bsK5Oz/CxWFKADJDZJJismBRd8bHNAtQO9mhlnlUWhRa1jZQPZVFxxZp5TxnpbgubFcgG8UkUSA==
 
 randomatic@^3.0.0:
   version "3.1.1"
