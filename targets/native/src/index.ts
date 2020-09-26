@@ -11,6 +11,7 @@ import { WithAnimated } from './animated'
 import { AnimatedStyle } from './AnimatedStyle'
 
 Globals.assign({
+  batchedUpdates: require('react-native').unstable_batchedUpdates,
   createStringInterpolator,
   colors,
 })
