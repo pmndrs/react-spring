@@ -39,9 +39,7 @@ export function scheduleProps<T extends AnimationTarget>(
     let delay: number
     let timeout: Timeout
 
-    let cancel = mergeDefaultProp(defaultProps, props, 'cancel')
-    cancel = matchProp(props.cancel ?? cancel, key)
-
+    let cancel = matchProp(props.cancel ?? defaultProps?.cancel, key)
     if (cancel) {
       onStart()
     } else {
@@ -51,7 +49,7 @@ export function scheduleProps<T extends AnimationTarget>(
       }
       // The default `pause` takes precedence when true,
       // which allows `SpringContext` to work as expected.
-      let pause = mergeDefaultProp(defaultProps, props, 'pause')
+      let pause = defaultProps?.pause
       if (pause !== true) {
         pause = state.paused || matchProp(pause, key)
       }
@@ -100,19 +98,4 @@ export function scheduleProps<T extends AnimationTarget>(
       }
     }
   })
-}
-
-/** Update and return the default prop. */
-function mergeDefaultProp<T>(
-  defaultProps: DefaultProps<T> | undefined,
-  props: DefaultProps<T>,
-  key: keyof DefaultProps<T>
-) {
-  let value: any
-  return (
-    defaultProps &&
-    (is.und((value = getDefaultProp(props, key)))
-      ? defaultProps[key]
-      : (defaultProps[key] = value))
-  )
 }
