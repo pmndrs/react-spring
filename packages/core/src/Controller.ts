@@ -122,6 +122,16 @@ export class Controller<State extends Lookup = Lookup>
     return values
   }
 
+  /** Set the current values without animating. */
+  set(values: Partial<State>) {
+    for (const key in values) {
+      const value = values[key]
+      if (!is.und(value)) {
+        this.springs[key].set(value)
+      }
+    }
+  }
+
   /** Push an update onto the queue of each value. */
   update(props: ControllerUpdate<State> | Falsy) {
     if (props) {

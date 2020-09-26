@@ -12,14 +12,7 @@ export class SpringRef<State extends Lookup = Lookup> {
 
   /** Update the state of each controller without animating. */
   set(values: Partial<State>) {
-    each(this.current, ctrl => {
-      for (const key in values) {
-        const value = values[key]
-        if (!is.und(value)) {
-          ctrl.springs[key].set(value)
-        }
-      }
-    })
+    each(this.current, ctrl => ctrl.set(values))
   }
 
   /** Start the queued animations of each controller. */
