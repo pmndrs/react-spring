@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useContext, useMemo, useRef } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import { Lookup } from '@react-spring/types'
 import {
@@ -24,7 +24,7 @@ import {
   setSprings,
 } from '../Controller'
 import { hasProps, detachRefs, replaceRef } from '../helpers'
-import { useSpringContext } from '../SpringContext'
+import { SpringContext } from '../SpringContext'
 import { SpringRef } from '../SpringRef'
 
 export type UseSpringsProps<State extends Lookup = Lookup> = unknown &
@@ -161,7 +161,7 @@ export function useSprings(
   // commit phase (see the `useLayoutEffect` callback below).
   const springs = ctrls.map((ctrl, i) => getSprings(ctrl, updates[i]))
 
-  const context = useSpringContext()
+  const context = useContext(SpringContext)
   const prevContext = usePrev(context)
   const hasContext = context !== prevContext && hasProps(context)
 

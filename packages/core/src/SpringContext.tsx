@@ -13,24 +13,24 @@ export interface SpringContext {
   immediate?: boolean
 }
 
-const ctx = React.createContext<SpringContext>({})
-
 export const SpringContext = ({
   children,
   ...props
 }: PropsWithChildren<SpringContext>) => {
-  const inherited = useContext(ctx)
+  const inherited = useContext(SpringContext)
   const { pause = inherited.pause, immediate = inherited.immediate } = props
 
   // Memoize the context to avoid unwanted renders.
   props = useMemo(() => ({ pause, immediate }), [pause, immediate])
 
-  const { Provider } = ctx
+  const { Provider } = SpringContext
   return <Provider value={props}>{children}</Provider>
 }
 
+// Ensure `useContext(SpringContext)` works
+const ctx = React.createContext<SpringContext>({})
+Object.assign(SpringContext, ctx)
+
+// See #988
 SpringContext.Provider = ctx.Provider
 SpringContext.Consumer = ctx.Consumer
-
-/** Get the current values of nearest `SpringContext` component. */
-export const useSpringContext = () => useContext(ctx)

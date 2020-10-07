@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useRef, useMemo } from 'react'
+import { useContext, useRef, useMemo } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import { OneOrMore, UnknownProps } from '@react-spring/types'
 import {
@@ -31,7 +31,7 @@ import {
   replaceRef,
 } from '../helpers'
 import { Controller, getSprings, setSprings } from '../Controller'
-import { useSpringContext } from '../SpringContext'
+import { SpringContext } from '../SpringContext'
 import { SpringRef } from '../SpringRef'
 import {
   ENTER,
@@ -261,7 +261,7 @@ export function useTransition(
   })
 
   // The prop overrides from an ancestor.
-  const context = useSpringContext()
+  const context = useContext(SpringContext)
   const prevContext = usePrev(context)
   const hasContext = context !== prevContext && hasProps(context)
 
