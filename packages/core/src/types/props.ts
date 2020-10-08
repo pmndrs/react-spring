@@ -292,6 +292,7 @@ export interface ReservedEventProps {
   onPause?: any
   onResume?: any
   onRest?: any
+  onDestroyed?: any
 }
 
 /**

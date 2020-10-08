@@ -66,7 +66,7 @@ export function useTransition(
   props: UseTransitionProps,
   deps?: any[]
 ): any {
-  const { reset, sort, trail = 0, expires = true } = props
+  const { reset, sort, trail = 0, expires = true, onDestroyed } = props
 
   // Return a `SpringRef` if a deps array was passed.
   const ref = useMemo(
@@ -104,7 +104,12 @@ export function useTransition(
 
   // Expired transitions that need clean up.
   const expired = (reset && usedTransitions.current) || []
-  useLayoutEffect(() => each(expired, ({ ctrl }) => detachRefs(ctrl, ref)))
+  useLayoutEffect(() =>
+    each(expired, ({ ctrl, item, key }) => {
+      detachRefs(ctrl, ref)
+      callProp(onDestroyed, item, key)
+    })
+  )
 
   // Map old indices to new indices.
   const reused: number[] = []

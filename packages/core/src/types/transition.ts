@@ -82,6 +82,10 @@ export type UseTransitionProps<Item = any> = Merge<
       transition: TransitionState
     ) => void
     /**
+     * Called after a transition item is unmounted.
+     */
+    onDestroyed?: (item: Item, key: Key) => void
+    /**
      * Used to access the imperative API.
      *
      * Animations never auto-start when `ref` is defined.

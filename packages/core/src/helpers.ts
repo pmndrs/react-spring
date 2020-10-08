@@ -140,6 +140,7 @@ const RESERVED_PROPS: {
   update: 1,
   leave: 1,
   children: 1,
+  onDestroyed: 1,
 
   // Internal props
   keys: 1,

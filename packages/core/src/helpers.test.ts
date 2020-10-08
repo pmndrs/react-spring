@@ -37,6 +37,7 @@ describe('helpers', () => {
       onStart: undefined,
       onChange: undefined,
       onRest: undefined,
+      onDestroyed: undefined,
     }
     expect(
       inferTo({
