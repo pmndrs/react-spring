@@ -17,20 +17,23 @@ export const SpringContext = ({
   children,
   ...props
 }: PropsWithChildren<SpringContext>) => {
-  const inherited = useContext(SpringContext)
+  const inherited = useContext(ctx)
   const { pause = inherited.pause, immediate = inherited.immediate } = props
 
   // Memoize the context to avoid unwanted renders.
   props = useMemo(() => ({ pause, immediate }), [pause, immediate])
 
-  const { Provider } = SpringContext
+  const { Provider } = ctx
   return <Provider value={props}>{children}</Provider>
 }
 
-// Ensure `useContext(SpringContext)` works
 const ctx = React.createContext<SpringContext>({})
-Object.assign(SpringContext, ctx)
 
 // See #988
 SpringContext.Provider = ctx.Provider
 SpringContext.Consumer = ctx.Consumer
+
+// Ensure `useContext(SpringContext)` works
+Object.defineProperty(SpringContext, '_currentValue', {
+  get: () => (ctx as any)._currentValue,
+})
