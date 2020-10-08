@@ -12,4 +12,4 @@ export * from './deprecations'
 export * from './helpers'
 
 export * from 'fluids'
-export { raf } from 'rafz'
+export { raf, Timeout } from 'rafz'

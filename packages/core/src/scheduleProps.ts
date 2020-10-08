@@ -1,5 +1,5 @@
-import { Timeout, Globals as G, is, raf } from '@react-spring/shared'
-import { matchProp, callProp, getDefaultProp } from './helpers'
+import { Timeout, is, raf } from '@react-spring/shared'
+import { matchProp, callProp } from './helpers'
 import { AsyncResult, MatchProp } from './types'
 import { RunAsyncState, RunAsyncProps } from './runAsync'
 import {
