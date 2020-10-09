@@ -30,13 +30,16 @@ export const SpringContext = ({
   return <Provider value={props}>{children}</Provider>
 }
 
-const ctx = React.createContext<SpringContext>({})
+const ctx = makeContext(SpringContext, {} as SpringContext)
 
-// See #988
+// Allow `useContext(SpringContext)` in TypeScript.
 SpringContext.Provider = ctx.Provider
 SpringContext.Consumer = ctx.Consumer
 
-// Ensure `useContext(SpringContext)` works
-Object.defineProperty(SpringContext, '_currentValue', {
-  get: () => (ctx as any)._currentValue,
-})
+/** Make the `target` compatible with `useContext` */
+function makeContext<T>(target: any, init: T): React.Context<T> {
+  Object.assign(target, React.createContext(init))
+  target.Provider._context = target
+  target.Consumer._context = target
+  return target
+}
