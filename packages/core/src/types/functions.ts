@@ -96,6 +96,10 @@ export type OnRest<T extends Readable = any> = (
   result: AnimationResult<T>
 ) => void
 
+export type OnResolve<T = unknown> = (
+  result: AnimationResult<Controller<T>>
+) => void
+
 /**
  * Called after an animation is updated by new props,
  * even if the animation remains idle.

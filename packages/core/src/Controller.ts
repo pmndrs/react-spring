@@ -287,7 +287,7 @@ export async function flushUpdate(
   props: ControllerQueue[number],
   isLoop?: boolean
 ): AsyncResult {
-  const { keys, to, from, loop, onRest } = props
+  const { keys, to, from, loop, onRest, onResolve } = props
   const defaults = is.obj(props.default) && props.default
 
   // Looping must be handled in this function, or else the values
@@ -401,6 +401,9 @@ export async function flushUpdate(
       prepareKeys(ctrl, [nextProps])
       return flushUpdate(ctrl, nextProps, true)
     }
+  }
+  if (onResolve) {
+    raf.batchedUpdates(() => onResolve(result))
   }
   return result
 }

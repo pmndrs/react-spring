@@ -26,6 +26,7 @@ import {
   OnProps,
   OnPause,
   OnResume,
+  OnResolve,
 } from './functions'
 
 /**
@@ -186,6 +187,10 @@ export interface ControllerProps<State extends Lookup = Lookup>
    * Also accepts an object for per-key events
    */
   onProps?: OnProps<State> | { [P in keyof State]?: OnProps<State[P]> }
+  /**
+   * Called when the promise for this update is resolved.
+   */
+  onResolve?: OnResolve<T>
 }
 
 export type LoopProp<T extends object> = boolean | T | (() => boolean | T)
@@ -292,6 +297,7 @@ export interface ReservedEventProps {
   onPause?: any
   onResume?: any
   onRest?: any
+  onResolve?: any
   onDestroyed?: any
 }
 

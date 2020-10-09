@@ -37,6 +37,7 @@ describe('helpers', () => {
       onStart: undefined,
       onChange: undefined,
       onRest: undefined,
+      onResolve: undefined,
       onDestroyed: undefined,
     }
     expect(

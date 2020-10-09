@@ -129,6 +129,7 @@ const RESERVED_PROPS: {
   onPause: 1,
   onResume: 1,
   onRest: 1,
+  onResolve: 1,
 
   // Transition props
   items: 1,
