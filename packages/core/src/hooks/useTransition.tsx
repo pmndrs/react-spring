@@ -220,15 +220,13 @@ export function useTransition(
       payload.from = callProp(from, t.item, i)
     }
 
-    const { onRest }: { onRest?: any } = payload
-    payload.onRest = result => {
+    const { onResolve } = payload
+    payload.onResolve = result => {
+      callProp(onResolve, result)
+
       const transitions = usedTransitions.current!
       const t = transitions.find(t => t.key === key)
       if (!t) return
-
-      if (is.fun(onRest)) {
-        onRest(result, t)
-      }
 
       // Reset the phase of a cancelled enter/leave transition, so it can
       // retry the animation on the next render.

@@ -77,10 +77,6 @@ export type UseTransitionProps<Item = any> = Merge<
     config?:
       | SpringConfig
       | ((item: Item, index: number) => AnimationProps['config'])
-    onRest?: (
-      result: AnimationResult<Controller>,
-      transition: TransitionState
-    ) => void
     /**
      * Called after a transition item is unmounted.
      */
