@@ -18,7 +18,10 @@ export const SpringContext = ({
   ...props
 }: PropsWithChildren<SpringContext>) => {
   const inherited = useContext(ctx)
-  const { pause = inherited.pause, immediate = inherited.immediate } = props
+
+  // Inherited values are dominant when truthy.
+  const pause = props.pause || inherited.pause,
+    immediate = props.immediate || inherited.immediate
 
   // Memoize the context to avoid unwanted renders.
   props = useMemo(() => ({ pause, immediate }), [pause, immediate])
