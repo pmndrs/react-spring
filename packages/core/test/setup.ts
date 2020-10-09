@@ -17,6 +17,7 @@ let frameCache: WeakMap<any, any[]>
 beforeEach(() => {
   isRunning = true
   frameCache = new WeakMap()
+  frameLoop.clear()
 
   global.mockRaf = createMockRaf()
   Globals.assign({
@@ -31,7 +32,6 @@ beforeEach(() => {
 
 afterEach(() => {
   isRunning = false
-  frameLoop.clear()
 })
 
 // This observes every SpringValue animation when "advanceUntil" is used.
