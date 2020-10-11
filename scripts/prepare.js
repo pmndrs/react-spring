@@ -125,7 +125,9 @@ async function prepare() {
 
     // Packages compatible with "react-native" provide an uncompiled main module.
     if (RN_PKG.test(pkg.name)) {
-      pkg['react-native'] = { [pkg.module]: main }
+      pkg['react-native'] = {
+        [pkg.module]: pkg.name.endsWith('native') ? 'src/native.ts' : main,
+      }
     }
   }
 
