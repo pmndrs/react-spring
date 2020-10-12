@@ -36,7 +36,7 @@ export function isEqual(a: any, b: any) {
 // Not all strings can be animated (eg: {display: "none"})
 export const isAnimatedString = (value: unknown): value is string =>
   is.str(value) &&
-  (value[0] == '#' || /\d/.test(value) || !!(G.colors && G.colors[value]))
+  (value[0] == '#' || /\d/.test(value) || value in (G.colors || {}))
 
 type EachFn<Value, Key, This> = (this: This, value: Value, key: Key) => void
 type Eachable<Value = any, Key = any, This = any> = {
