@@ -21,7 +21,7 @@ import {
   SpringChain,
 } from './props'
 import { SpringToFn } from './functions'
-import { SpringValues, SpringConfig, AnimationResult } from './objects'
+import { SpringValues, SpringConfig } from './objects'
 import { TransitionPhase } from '../TransitionPhase'
 import { Controller } from '../Controller'
 import { SpringRef } from '../SpringRef'
