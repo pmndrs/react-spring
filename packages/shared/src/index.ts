@@ -12,4 +12,5 @@ export * from './deprecations'
 export * from './helpers'
 
 export * from 'fluids'
-export { raf, Timeout } from 'rafz'
+export { raf } from 'rafz'
+export type { Timeout } from 'rafz'
