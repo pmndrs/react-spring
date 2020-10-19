@@ -330,8 +330,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /**
-   * Freeze the active animation in time.
-   * This does nothing when not animating.
+   * Freeze the active animation in time, as well as any updates merged
+   * before `resume` is called.
    */
   pause() {
     this._update({ pause: true })
