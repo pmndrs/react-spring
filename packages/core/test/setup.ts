@@ -1,7 +1,8 @@
 import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { act } from '@testing-library/react'
-import { isEqual, is, colors, frameLoop, raf } from '@react-spring/shared'
+import { isEqual, is, colors, frameLoop } from '@react-spring/shared'
+import { __raf as raf } from 'rafz'
 
 import { Globals, Controller, FrameValue } from '..'
 import { computeGoal } from '../src/helpers'
@@ -18,6 +19,7 @@ beforeEach(() => {
   isRunning = true
   frameCache = new WeakMap()
   frameLoop.clear()
+  raf.clear()
 
   global.mockRaf = createMockRaf()
   Globals.assign({
@@ -128,7 +130,7 @@ global.advanceByTime = ms => {
 }
 
 global.advanceUntilIdle = () => {
-  return advanceUntil(() => frameLoop.idle && raf.idle())
+  return advanceUntil(() => frameLoop.idle && raf.count == 0)
 }
 
 // TODO: support "value" as an array or animatable string
