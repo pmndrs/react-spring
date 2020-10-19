@@ -67,7 +67,6 @@ export const frameLoop = {
   clear() {
     currentFrame = []
     startQueue.clear()
-    raf.clear()
   },
 }
 
