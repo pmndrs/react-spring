@@ -3,9 +3,8 @@
   "version": "9.0.0-rc.3",
   "main": "src/index.tsx",
   "dependencies": {
-    "@react-spring/web": "link:../../targets/web",
     "@react-spring/shared": "link:../shared",
-    "use-memo-one": "^1.1.0"
+    "@react-spring/web": "link:../../targets/web"
   },
   "peerDependencies": {
     "react": ">=16.8"

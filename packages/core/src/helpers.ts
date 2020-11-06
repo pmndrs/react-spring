@@ -1,4 +1,3 @@
-import { useMemoOne } from 'use-memo-one'
 import {
   is,
   toArray,
@@ -12,10 +11,6 @@ import { AnyFn, OneOrMore, Lookup } from '@react-spring/types'
 import { ReservedProps, ForwardProps, InferTo } from './types'
 import type { Controller } from './Controller'
 import type { SpringRef } from './SpringRef'
-
-// @see https://github.com/alexreardon/use-memo-one/pull/10
-export const useMemo: typeof useMemoOne = (create, deps) =>
-  useMemoOne(create, deps || [{}])
 
 export function callProp<T>(
   value: T,

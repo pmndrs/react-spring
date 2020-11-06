@@ -10,8 +10,7 @@
     "@react-spring/animated": "link:../animated",
     "@react-spring/shared": "link:../shared",
     "@react-spring/types": "link:../types",
-    "react-layout-effect": "^1.0.1",
-    "use-memo-one": "^1.1.0"
+    "react-layout-effect": "^1.0.1"
   },
   "publishConfig": {
     "directory": "dist"
