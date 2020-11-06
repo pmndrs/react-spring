@@ -2283,7 +2283,6 @@
     "@react-spring/shared" "link:packages/shared"
     "@react-spring/types" "link:packages/types"
     react-layout-effect "^1.0.1"
-    use-memo-one "^1.1.0"
 
 "@react-spring/konva@link:targets/konva":
   version "9.0.0-rc.3"
@@ -10916,11 +10915,6 @@ urix@^0.1.0:
   version "0.1.0"
   resolved "https://registry.npmjs.org/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
   integrity sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
-
-use-memo-one@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/use-memo-one/-/use-memo-one-1.1.1.tgz#39e6f08fe27e422a7d7b234b5f9056af313bd22c"
-  integrity sha512-oFfsyun+bP7RX8X2AskHNTxu+R3QdE/RC5IefMbqptmACAA/gfol1KDD5KRzPsGMa62sWxGZw+Ui43u6x4ddoQ==
 
 use@^3.1.0:
   version "3.1.1"
