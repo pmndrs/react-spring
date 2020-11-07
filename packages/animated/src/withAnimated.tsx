@@ -4,14 +4,17 @@ import { useLayoutEffect } from 'react-layout-effect'
 import {
   is,
   each,
+  raf,
   useForceUpdate,
-  FluidConfig,
   useOnce,
-  usePrev,
+  FluidEvent,
+  FluidObserver,
+  FluidValue,
 } from '@react-spring/shared'
 import { ElementType } from '@react-spring/types'
 
-import { AnimatedProps } from './AnimatedProps'
+import { AnimatedObject } from './AnimatedObject'
+import { TreeContext } from './context'
 import { HostConfig } from './createHost'
 
 export type AnimatableComponent = string | Exclude<ElementType, string>
@@ -37,47 +40,80 @@ export const withAnimated = (Component: any, host: HostConfig) => {
         [givenRef]
       )
 
+    const [props, deps] = getAnimatedState(givenProps, host)
+
     const forceUpdate = useForceUpdate()
-    const props = new AnimatedProps(() => {
+    const observer = new PropsObserver(() => {
       const instance = instanceRef.current
       if (hasInstance && !instance) {
-        return // The wrapped component forgot to forward its ref.
+        // Either this component was unmounted before changes could be
+        // applied, or the wrapped component forgot to forward its ref.
+        return
       }
 
       const didUpdate = instance
-        ? host.applyAnimatedValues(instance, props.getValue(true)!)
+        ? host.applyAnimatedValues(instance, props.getValue(true))
         : false
 
       // Re-render the component when native updates fail.
       if (didUpdate === false) {
         forceUpdate()
       }
-    })
+    }, deps)
 
-    const dependencies = new Set<FluidConfig>()
-    props.setValue(givenProps, { dependencies, host })
-
-    const state = [props, dependencies] as const
-    const stateRef = useRef(state)
-    const prevState = usePrev(state)
-
+    const observerRef = useRef<PropsObserver>()
     useLayoutEffect(() => {
-      stateRef.current = state
-      // Attach the new props to our latest dependencies.
-      each(dependencies, dep => dep.addChild(props))
-      // Detach the old props from our previous dependencies.
-      if (prevState) each(prevState[1], dep => dep.removeChild(prevState[0]))
+      const lastObserver = observerRef.current
+      observerRef.current = observer
+
+      // Observe the latest dependencies.
+      each(deps, dep => dep.addChild(observer))
+
+      // Stop observing previous dependencies.
+      if (lastObserver) {
+        each(lastObserver.deps, dep => dep.removeChild(lastObserver))
+        raf.cancel(lastObserver.update)
+      }
     })
 
     // Stop observing on unmount.
     useOnce(() => () => {
-      const [props, dependencies] = stateRef.current
-      each(dependencies, dep => dep.removeChild(props))
+      const observer = observerRef.current!
+      each(observer.deps, dep => dep.removeChild(observer))
     })
 
-    const usedProps = host.getComponentProps(props.getValue()!)
+    const usedProps = host.getComponentProps(props.getValue())
     return <Component {...usedProps} ref={ref} />
   })
+}
+
+class PropsObserver implements FluidObserver {
+  constructor(readonly update: () => void, readonly deps: Set<FluidValue>) {}
+  onParentChange(event: FluidEvent) {
+    if (event.type == 'change') {
+      raf.write(this.update)
+    }
+  }
+}
+
+type AnimatedState = [props: AnimatedObject, dependencies: Set<FluidValue>]
+
+function getAnimatedState(props: any, host: HostConfig): AnimatedState {
+  const dependencies = new Set<FluidValue>()
+  TreeContext.dependencies = dependencies
+
+  // Search the style for dependencies.
+  if (props.style)
+    props = {
+      ...props,
+      style: host.createAnimatedStyle(props.style),
+    }
+
+  // Search the props for dependencies.
+  props = new AnimatedObject(props)
+
+  TreeContext.dependencies = null
+  return [props, dependencies]
 }
 
 function updateRef<T>(ref: Ref<T>, value: T) {

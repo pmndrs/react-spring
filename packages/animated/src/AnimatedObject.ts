@@ -52,8 +52,8 @@ export class AnimatedObject extends Animated {
   /** Add to a payload set. */
   protected _addToPayload(this: Set<AnimatedValue>, source: any) {
     const config = getFluidConfig(source)
-    if (config && TreeContext.current) {
-      TreeContext.current.dependencies.add(source)
+    if (config && TreeContext.dependencies) {
+      TreeContext.dependencies.add(source)
     }
     const payload = getPayload(source)
     if (payload) {
