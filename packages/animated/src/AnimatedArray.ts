@@ -11,43 +11,32 @@ export class AnimatedArray<
   T extends ReadonlyArray<Value> = Value[]
 > extends AnimatedObject {
   protected source!: Source
-  constructor(from: T, to?: T) {
-    super(null)
-    super.setValue(this._makeAnimated(from, to))
+  constructor(source: T) {
+    super(source)
   }
 
-  static create<T extends ReadonlyArray<Value>>(from: T, to?: T) {
-    return new AnimatedArray(from, to)
+  /** @internal */
+  static create<T extends ReadonlyArray<Value>>(source: T) {
+    return new AnimatedArray(source)
   }
 
   getValue(): T {
     return this.source.map(node => node.getValue()) as any
   }
 
-  setValue(newValue: T | null) {
+  setValue(source: T) {
     const payload = this.getPayload()
     // Reuse the payload when lengths are equal.
-    if (newValue && newValue.length == payload.length) {
-      return payload.some((node, i) => node.setValue(newValue[i]))
+    if (source.length == payload.length) {
+      return payload.some((node, i) => node.setValue(source[i]))
     }
     // Remake the payload when length changes.
-    this.source = this._makeAnimated(newValue)
-    this.payload = this._makePayload(this.source)
+    super.setValue(source.map(makeAnimated))
     return true
   }
+}
 
-  /** Convert the `from` and `to` values to an array of `Animated` nodes */
-  protected _makeAnimated(
-    from: T | null,
-    to: T = from!
-  ): AnimatedValue<Value>[] {
-    return from
-      ? from.map((from, i) =>
-          (isAnimatedString(from) ? AnimatedString : AnimatedValue).create(
-            from,
-            to[i]
-          )
-        )
-      : []
-  }
+function makeAnimated(value: any) {
+  const nodeType = isAnimatedString(value) ? AnimatedString : AnimatedValue
+  return nodeType.create(value)
 }

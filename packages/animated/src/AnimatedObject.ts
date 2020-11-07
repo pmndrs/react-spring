@@ -4,18 +4,14 @@ import { Animated, isAnimated, getPayload } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
 import { TreeContext } from './context'
 
-type Source = Lookup | null
-
 /** An object containing `Animated` nodes */
 export class AnimatedObject extends Animated {
-  protected source!: Source
-  constructor(source: Source = null) {
+  constructor(protected source: Lookup) {
     super()
     this.setValue(source)
   }
 
-  getValue(animated?: boolean): Source {
-    if (!this.source) return null
+  getValue(animated?: boolean) {
     const values: Lookup = {}
     eachProp(this.source, (source, key) => {
       if (isAnimated(source)) {
@@ -33,7 +29,7 @@ export class AnimatedObject extends Animated {
   }
 
   /** Replace the raw object data */
-  setValue(source: Source) {
+  setValue(source: Lookup) {
     this.source = source
     this.payload = this._makePayload(source)
   }
@@ -45,7 +41,7 @@ export class AnimatedObject extends Animated {
   }
 
   /** Create a payload set. */
-  protected _makePayload(source: Source) {
+  protected _makePayload(source: Lookup) {
     if (source) {
       const payload = new Set<AnimatedValue>()
       eachProp(source, this._addToPayload, payload)

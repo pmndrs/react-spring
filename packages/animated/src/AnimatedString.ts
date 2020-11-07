@@ -8,16 +8,16 @@ export class AnimatedString extends AnimatedValue<Value> {
   protected _string: string | null = null
   protected _toString: (input: number) => string
 
-  constructor(from: string, to: string) {
+  constructor(value: string) {
     super(0)
-    this._toString = createInterpolator({ output: [from, to] })
+    this._toString = createInterpolator({
+      output: [value, value],
+    })
   }
 
-  static create<T>(from: T, to: T | null = from): AnimatedValue<T> {
-    if (is.str(from) && is.str(to)) {
-      return new AnimatedString(from, to) as any
-    }
-    throw TypeError('Expected "from" and "to" to be strings')
+  /** @internal */
+  static create(value: string) {
+    return new AnimatedString(value)
   }
 
   getValue() {
