@@ -26,7 +26,10 @@ export class AnimatedString extends AnimatedValue<Value> {
   }
 
   setValue(value: Value) {
-    if (!is.num(value)) {
+    if (is.str(value)) {
+      if (value == this._string) {
+        return false
+      }
       this._string = value
       this._value = 1
     } else if (super.setValue(value)) {
