@@ -202,9 +202,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
         // Duration easing
         if (!is.und(config.duration)) {
-          let p = config.progress || 0
-          if (config.duration <= 0) p = 1
-          else p += (1 - p) * Math.min(1, elapsed / config.duration)
+          let p = 1
+          if (config.duration > 0) {
+            p = (config.progress || 0) + elapsed / config.duration
+            p = p > 1 ? 1 : p < 0 ? 0 : p
+          }
 
           position = from + config.easing(p) * (to - from)
           velocity = (position - node.lastPosition) / dt
