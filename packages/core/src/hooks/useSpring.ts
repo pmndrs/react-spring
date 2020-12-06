@@ -44,7 +44,7 @@ export function useSpring<Props extends object>(
 ): SpringValues<PickAnimated<Props>>
 
 /**
- * Updated only when `deps` change, with state inferred from forwad props.
+ * Updated only when `deps` change, with state inferred from forward props.
  */
 export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
