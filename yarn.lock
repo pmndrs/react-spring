@@ -2304,7 +2304,7 @@
   version "9.0.0-rc.3"
   dependencies:
     "@react-spring/types" "link:packages/types"
-    fluids "^0.1.6"
+    fluids "^0.2.0"
     rafz "^0.1.13"
 
 "@react-spring/three@link:targets/three":
@@ -4990,10 +4990,15 @@ findup-sync@^4.0.0:
     micromatch "^4.0.2"
     resolve-dir "^1.0.1"
 
-fluids@^0.1.6:
-  version "0.1.10"
-  resolved "https://registry.npmjs.org/fluids/-/fluids-0.1.10.tgz#0517e7a53dbce1db011dddec301b75178518ba0e"
-  integrity sha512-66FLmUJOrkvEHIsRVeM+88MG0bjd2TOBuR0BkM0hzyCb68W9drzqeX/AHDNp3ouZALQN7JvBvmKdVhHI+PZsdg==
+fluids@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/fluids/-/fluids-0.2.0.tgz#b3b5869c8b1ef4a18eeee1bf4344286b9dcc91df"
+  integrity sha512-Ben70C291Vcu4MomxULtm/9D6QUE22mpkeF/LuKYLACyhUcrHxCWyDpCZmEYecAXX4WgVaTFPq1MSPvao80Agw==
+
+fluids@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.npmjs.org/fluids/-/fluids-0.2.2.tgz#7e2daf4ba345d6601f922be14d7c89da05309d8a"
+  integrity sha512-vVrf225DaIUxtRgm1vGifGRaBqel2LA59ZvBsOaIZmNxGOBHXY0CGh03W07fLLvjwhwzaN2ABdt2x+nLOPwSBw==
 
 flush-microtasks@^1.0.1:
   version "1.0.1"

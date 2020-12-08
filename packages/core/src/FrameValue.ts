@@ -1,10 +1,9 @@
 import {
   deprecateInterpolate,
-  each,
   frameLoop,
   FluidValue,
-  FluidObserver,
   Globals as G,
+  callFluidObservers,
 } from '@react-spring/shared'
 import { InterpolatorArgs } from '@react-spring/types'
 import { getAnimated } from '@react-spring/animated'
@@ -21,16 +20,16 @@ let nextId = 1
  *
  * Its underlying value can be accessed and even observed.
  */
-export abstract class FrameValue<T = any>
-  extends FluidValue<T, FrameValue.Event<T>>
-  implements FluidObserver<FrameValue.Event> {
+export abstract class FrameValue<T = any> extends FluidValue<
+  T,
+  FrameValue.Event<T>
+> {
   readonly id = nextId++
 
   abstract key?: string
   abstract get idle(): boolean
 
   protected _priority = 0
-  protected _children = new Set<FrameValue.Observer<T>>()
 
   get priority() {
     return this._priority
@@ -63,23 +62,19 @@ export abstract class FrameValue<T = any>
     return this.get()
   }
 
-  /** @internal */
-  addChild(child: FrameValue.Observer<T>): void {
-    if (!this._children.size) this._attach()
-    this._children.add(child)
+  protected observerAdded(count: number) {
+    if (count == 1) this._attach()
   }
 
-  /** @internal */
-  removeChild(child: FrameValue.Observer<T>): void {
-    this._children.delete(child)
-    if (!this._children.size) this._detach()
+  protected observerRemoved(count: number) {
+    if (count == 0) this._detach()
   }
 
   /** @internal */
   abstract advance(dt: number): void
 
   /** @internal */
-  abstract onParentChange(_event: FrameValue.Event): void
+  abstract eventObserved(_event: FrameValue.Event): void
 
   /** Called when the first child is added. */
   protected _attach() {}
@@ -89,7 +84,7 @@ export abstract class FrameValue<T = any>
 
   /** Tell our children about our new value */
   protected _onChange(value: T, idle = false) {
-    this._emit({
+    callFluidObservers(this, {
       type: 'change',
       parent: this,
       value,
@@ -102,17 +97,10 @@ export abstract class FrameValue<T = any>
     if (!this.idle) {
       frameLoop.sort(this)
     }
-    this._emit({
+    callFluidObservers(this, {
       type: 'priority',
       parent: this,
       priority,
-    })
-  }
-
-  protected _emit(event: FrameValue.Event) {
-    // Clone "_children" so it can be safely mutated inside the loop.
-    each(Array.from(this._children), child => {
-      child.onParentChange(event)
     })
   }
 }
@@ -141,7 +129,4 @@ export declare namespace FrameValue {
 
   /** Events sent to children of `FrameValue` objects */
   export type Event<T = any> = ChangeEvent<T> | PriorityEvent<T> | IdleEvent<T>
-
-  /** An object that handles `FrameValue` events */
-  export type Observer<T = any> = FluidObserver<Event<T>>
 }

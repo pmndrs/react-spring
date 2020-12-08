@@ -12,8 +12,12 @@ import {
   toArray,
   frameLoop,
   FluidValue,
+  getFluidValue,
   createInterpolator,
   Globals as G,
+  callFluidObservers,
+  addFluidObserver,
+  removeFluidObserver,
 } from '@react-spring/shared'
 
 import { FrameValue, isFrameValue } from './FrameValue'
@@ -75,8 +79,8 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
 
   protected _get() {
     const inputs: Arrify<In> = is.arr(this.source)
-      ? this.source.map(node => node.get())
-      : (toArray(this.source.get()) as any)
+      ? this.source.map(getFluidValue)
+      : (toArray(getFluidValue(this.source)) as any)
 
     return this.calc(...inputs)
   }
@@ -102,7 +106,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   protected _attach() {
     let priority = 1
     each(toArray(this.source), source => {
-      source.addChild(this)
+      addFluidObserver(source, this)
       if (isFrameValue(source)) {
         if (!source.idle) {
           this._active.add(source)
@@ -117,14 +121,14 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   // Stop observing our sources once we have no observers.
   protected _detach() {
     each(toArray(this.source), source => {
-      source.removeChild(this)
+      removeFluidObserver(source, this)
     })
     this._active.clear()
     becomeIdle(this)
   }
 
   /** @internal */
-  onParentChange(event: FrameValue.Event) {
+  eventObserved(event: FrameValue.Event) {
     // Update our value when an idle parent is changed,
     // and enter the frameloop when a parent is resumed.
     if (event.type == 'change') {
@@ -172,7 +176,7 @@ function becomeIdle(self: Interpolation) {
       node.done = true
     })
 
-    self['_emit']({
+    callFluidObservers(self, {
       type: 'idle',
       parent: self,
     })

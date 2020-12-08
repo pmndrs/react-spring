@@ -2,7 +2,7 @@ import {
   is,
   toArray,
   eachProp,
-  getFluidConfig,
+  getFluidValue,
   isAnimatedString,
   FluidValue,
   Globals as G,
@@ -183,10 +183,8 @@ export function inferTo<T extends object>(props: T): InferTo<T> {
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
 export function computeGoal<T>(value: T | FluidValue<T>): T {
-  const config = getFluidConfig(value)
-  return config
-    ? computeGoal(config.get())
-    : is.arr(value)
+  value = getFluidValue(value)
+  return is.arr(value)
     ? value.map(computeGoal)
     : isAnimatedString(value)
     ? (G.createStringInterpolator({

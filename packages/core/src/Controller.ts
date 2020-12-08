@@ -8,6 +8,8 @@ import {
   toArray,
   eachProp,
   flushCalls,
+  addFluidObserver,
+  FluidObserver,
 } from '@react-spring/shared'
 
 import { getDefaultProp } from './helpers'
@@ -40,8 +42,7 @@ export interface ControllerQueue<State extends Lookup = Lookup>
     }
   > {}
 
-export class Controller<State extends Lookup = Lookup>
-  implements FrameValue.Observer {
+export class Controller<State extends Lookup = Lookup> {
   readonly id = nextId++
 
   /** The animated values */
@@ -246,7 +247,7 @@ export class Controller<State extends Lookup = Lookup>
   }
 
   /** @internal */
-  onParentChange(event: FrameValue.Event) {
+  eventObserved(event: FrameValue.Event) {
     if (event.type == 'change') {
       this._changed.add(event.parent)
       if (!event.idle) {
@@ -449,16 +450,16 @@ export function setSprings(
   eachProp(springs, (spring, key) => {
     if (!ctrl.springs[key]) {
       ctrl.springs[key] = spring
-      spring.addChild(ctrl)
+      addFluidObserver(spring, ctrl)
     }
   })
 }
 
-function createSpring(key: string, observer?: FrameValue.Observer) {
+function createSpring(key: string, observer?: FluidObserver<FrameValue.Event>) {
   const spring = new SpringValue()
   spring.key = key
   if (observer) {
-    spring.addChild(observer)
+    addFluidObserver(spring, observer)
   }
   return spring
 }

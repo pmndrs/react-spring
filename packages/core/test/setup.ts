@@ -1,7 +1,15 @@
 import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { act } from '@testing-library/react'
-import { isEqual, is, colors, frameLoop } from '@react-spring/shared'
+import {
+  isEqual,
+  is,
+  colors,
+  frameLoop,
+  addFluidObserver,
+  removeFluidObserver,
+  getFluidObservers,
+} from '@react-spring/shared'
 import { __raf as raf } from 'rafz'
 
 import { Globals, Controller, FrameValue } from '..'
@@ -38,15 +46,13 @@ afterEach(() => {
 
 // This observes every SpringValue animation when "advanceUntil" is used.
 // Any changes between frames are not recorded.
-const frameObserver = {
-  onParentChange(event: FrameValue.Event) {
-    const spring = event.parent
-    if (event.type == 'change') {
-      let frames = frameCache.get(spring)
-      if (!frames) frameCache.set(spring, (frames = []))
-      frames.push(event.value)
-    }
-  },
+const frameObserver = (event: FrameValue.Event) => {
+  const spring = event.parent
+  if (event.type == 'change') {
+    let frames = frameCache.get(spring)
+    if (!frames) frameCache.set(spring, (frames = []))
+    frames.push(event.value)
+  }
 }
 
 global.getFrames = (target, preserve) => {
@@ -91,8 +97,8 @@ global.advanceUntil = async test => {
     const values: FrameValue[] = []
     const observe = (value: unknown) => {
       if (value instanceof FrameValue && !value.idle) {
-        value['_children'].forEach(observe)
-        value.addChild(frameObserver)
+        getFluidObservers(value)?.forEach(observe)
+        addFluidObserver(value, frameObserver)
         values.push(value)
       }
     }
@@ -106,7 +112,7 @@ global.advanceUntil = async test => {
 
     // Stop observing after the frame is processed.
     for (const value of values) {
-      value.removeChild(frameObserver)
+      removeFluidObserver(value, frameObserver)
     }
 
     // Ensure pending effects are flushed.
