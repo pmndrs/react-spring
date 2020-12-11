@@ -2304,7 +2304,7 @@
   version "9.0.0-rc.3"
   dependencies:
     "@react-spring/types" "link:packages/types"
-    fluids "^0.2.0"
+    fluids "^0.2.2"
     rafz "^0.1.13"
 
 "@react-spring/three@link:targets/three":
@@ -4990,11 +4990,6 @@ findup-sync@^4.0.0:
     micromatch "^4.0.2"
     resolve-dir "^1.0.1"
 
-fluids@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/fluids/-/fluids-0.2.0.tgz#b3b5869c8b1ef4a18eeee1bf4344286b9dcc91df"
-  integrity sha512-Ben70C291Vcu4MomxULtm/9D6QUE22mpkeF/LuKYLACyhUcrHxCWyDpCZmEYecAXX4WgVaTFPq1MSPvao80Agw==
-
 fluids@^0.2.2:
   version "0.2.2"
   resolved "https://registry.npmjs.org/fluids/-/fluids-0.2.2.tgz#7e2daf4ba345d6601f922be14d7c89da05309d8a"
@@ -5757,9 +5752,9 @@ inherits@2, inherits@2.0.4, inherits@^2.0.1, inherits@^2.0.3, inherits@^2.0.4, i
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
 
 ini@^1.3.2, ini@^1.3.4:
-  version "1.3.5"
-  resolved "https://registry.npmjs.org/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
-  integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.7.tgz#a09363e1911972ea16d7a8851005d84cf09a9a84"
+  integrity sha512-iKpRpXP+CrP2jyrxvg1kMUpXDyRUFDWurxbnVT1vQPx+Wz9uCYsMIqYuSBLV+PAaZG/d7kRLKRFc9oDMsH+mFQ==
 
 init-package-json@^1.10.3:
   version "1.10.3"
