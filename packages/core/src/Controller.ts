@@ -390,7 +390,7 @@ export async function flushUpdate(
   if (state.paused) {
     // Ensure `this` must be resumed before the returned promise
     // is resolved and before starting the next `loop` repetition.
-    await new Promise(resume => {
+    await new Promise<void>(resume => {
       state.resumeQueue.add(resume)
     })
   }

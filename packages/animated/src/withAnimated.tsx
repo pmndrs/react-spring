@@ -8,7 +8,6 @@ import {
   useForceUpdate,
   useOnce,
   FluidEvent,
-  FluidObserver,
   FluidValue,
   addFluidObserver,
   removeFluidObserver,
