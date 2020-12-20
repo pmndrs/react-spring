@@ -927,14 +927,13 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
         spring.start({ to: target.node })
 
         // Expect the target node to be attached.
-        const children = getFluidObservers(target.node)!
-        expect(children.has(spring)).toBeTruthy()
+        expect(hasFluidObserver(target.node, spring)).toBeTruthy()
 
         // Remove the observer.
         removeFluidObserver(spring, observer)
 
         // Expect the target node to be detached.
-        expect(children.has(spring)).toBeFalsy()
+        expect(hasFluidObserver(target.node, spring)).toBeFalsy()
       })
     })
   })
@@ -960,4 +959,9 @@ function describeGlobals() {
       expect(onRest).toBeCalledTimes(1)
     })
   })
+}
+
+function hasFluidObserver(target: any, observer: FluidObserver) {
+  const observers = getFluidObservers(target)
+  return !!observers && observers.has(observer)
 }
