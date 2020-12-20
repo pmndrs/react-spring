@@ -610,6 +610,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const { config } = anim
     const { decay, velocity } = config
 
+    // Reset to default velocity when goal values are defined.
+    if (hasToProp || hasFromProp) {
+      config.velocity = 0
+    }
+
     // The "runAsync" function treats the "config" prop as a default,
     // so we must avoid merging it when the "to" prop is async.
     if (props.config && !hasAsyncTo) {

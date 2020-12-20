@@ -426,6 +426,20 @@ function describeImmediateProp() {
 
 function describeConfigProp() {
   describe('the "config" prop', () => {
+    it('resets the velocity when "to" changes', () => {
+      const spring = new SpringValue(0)
+      spring.start({ to: 100, config: { velocity: 10 } })
+
+      const { config } = spring.animation
+      expect(config.velocity).toBe(10)
+
+      // Preserve velocity if "to" did not change.
+      spring.start({ config: { tension: 200 } })
+      expect(config.velocity).toBe(10)
+
+      spring.start({ to: 200 })
+      expect(config.velocity).toBe(0)
+    })
     describe('when "damping" is 1.0', () => {
       it('should prevent bouncing', async () => {
         const spring = new SpringValue(0)
