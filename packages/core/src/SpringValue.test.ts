@@ -52,13 +52,19 @@ describe('SpringValue', () => {
   })
 
   it('can animate an array of numbers', async () => {
+    const onChange = jest.fn()
     const spring = new SpringValue()
     spring.start({
       to: [10, 20],
       from: [0, 0],
       config: { duration: 10 * frameLength },
+      onChange,
     })
     await advanceUntilIdle()
+    expect(onChange.mock.calls.slice(-1)[0]).toEqual([
+      spring.animation.to,
+      spring,
+    ])
     expect(getFrames(spring)).toMatchSnapshot()
   })
 
