@@ -1,9 +1,4 @@
-import {
-  Arrify,
-  InterpolatorArgs,
-  InterpolatorFn,
-  OneOrMore,
-} from '@react-spring/types'
+import { Arrify, InterpolatorArgs, InterpolatorFn } from '@react-spring/types'
 import {
   is,
   raf,
@@ -18,6 +13,7 @@ import {
   callFluidObservers,
   addFluidObserver,
   removeFluidObserver,
+  hasFluidValue,
 } from '@react-spring/shared'
 
 import { FrameValue, isFrameValue } from './FrameValue'
@@ -51,7 +47,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
 
   constructor(
     /** The source of input values */
-    readonly source: OneOrMore<FluidValue>,
+    readonly source: unknown,
     args: InterpolatorArgs<In, Out>
   ) {
     super()
@@ -106,7 +102,9 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   protected _attach() {
     let priority = 1
     each(toArray(this.source), source => {
-      addFluidObserver(source, this)
+      if (hasFluidValue(source)) {
+        addFluidObserver(source, this)
+      }
       if (isFrameValue(source)) {
         if (!source.idle) {
           this._active.add(source)
@@ -121,7 +119,9 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   // Stop observing our sources once we have no observers.
   protected _detach() {
     each(toArray(this.source), source => {
-      removeFluidObserver(source, this)
+      if (hasFluidValue(source)) {
+        removeFluidObserver(source, this)
+      }
     })
     this._active.clear()
     becomeIdle(this)
@@ -148,7 +148,8 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
     // our value won't be updated until our parents have updated.
     else if (event.type == 'priority') {
       this.priority = toArray(this.source).reduce(
-        (max, source: any) => Math.max(max, (source.priority || 0) + 1),
+        (highest: number, parent) =>
+          Math.max(highest, (isFrameValue(parent) ? parent.priority : 0) + 1),
         0
       )
     }
