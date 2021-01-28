@@ -5,6 +5,10 @@ import { now, requestFrame, manualFrameloop } from './Globals'
 let active = false
 const controllers = new Set()
 
+if (typeof window === 'undefined' || window === null) {
+  setInterval(controllers.clear.bind(controllers), 1000)
+}
+
 const update = () => {
   if (!active) return false
   let time = now()
