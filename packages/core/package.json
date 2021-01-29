@@ -12,6 +12,9 @@
     "@react-spring/types": "link:../types",
     "react-layout-effect": "^1.0.1"
   },
+  "peerDependencies": {
+    "react": ">=16.8"
+  },
   "publishConfig": {
     "directory": "dist"
   },
