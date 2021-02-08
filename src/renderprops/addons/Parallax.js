@@ -4,7 +4,7 @@ import { Controller, config, Globals, animated } from 'react-spring/renderprops'
 
 const El = Globals.defaultElement
 const AnimatedDiv = animated(El)
-const { Provider, Consumer } = React.createContext(null)
+export const { Provider, Consumer } = React.createContext(null)
 
 function getScrollType(horizontal) {
   return horizontal ? 'scrollLeft' : 'scrollTop'

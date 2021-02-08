@@ -1,0 +1,42 @@
+{
+  "name": "react-spring",
+  "version": "8.0.27",
+  "description": "A set of spring-physics based animation primitives",
+  "main": "web.cjs.js",
+  "module": "web.js",
+  "react-native": "native.js",
+  "private": false,
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drcmda/react-spring.git"
+  },
+  "keywords": [
+    "react",
+    "motion",
+    "animated",
+    "animation",
+    "spring"
+  ],
+  "author": "Paul Henschel",
+  "contributors": [
+    "Alec Larson (https://github.com/aleclarson)"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/drcmda/react-spring/issues"
+  },
+  "homepage": "https://github.com/drcmda/react-spring#readme",
+  "peerDependencies": {
+    "react": ">= 16.8.0",
+    "react-dom": ">= 16.8.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.3.1",
+    "prop-types": "^15.5.8"
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-spring"
+  }
+}
