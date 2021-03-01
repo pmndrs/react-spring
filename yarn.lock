@@ -2483,8 +2483,10 @@ ajv@^6.5.5:
     uri-js "^4.2.2"
 
 "animated@link:packages/animated":
-  version "0.0.0"
-  uid ""
+  version "9.0.0-rc.3"
+  dependencies:
+    react-layout-effect "^1.0.1"
+    shared "link:packages/shared"
 
 ansi-256-colors@^1.1.0:
   version "1.1.0"
@@ -3718,8 +3720,12 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
 "core@link:packages/core":
-  version "0.0.0"
-  uid ""
+  version "9.0.0-rc.3"
+  dependencies:
+    animated "link:packages/animated"
+    react-layout-effect "^1.0.1"
+    shared "link:packages/shared"
+    use-memo-one "^1.1.0"
 
 cosmiconfig@^5.0.5, cosmiconfig@^5.0.7, cosmiconfig@^5.1.0:
   version "5.2.1"
@@ -9520,8 +9526,11 @@ setprototypeof@1.1.1:
   integrity sha512-JvdAWfbXeIGaZ9cILp38HntZSFSo3mWg6xGcJJsd+d4aRMOqauag1C63dJfDw7OaMYwEbHMOxEZ1lqVRYP2OAw==
 
 "shared@link:packages/shared":
-  version "0.0.0"
-  uid ""
+  version "9.0.0-rc.3"
+  dependencies:
+    "@alloc/types" "^1.2.1"
+    fluids "^0.1.6"
+    tslib "^1.11.1"
 
 shebang-command@^1.2.0:
   version "1.2.0"
@@ -10194,10 +10203,10 @@ text-extensions@^1.0.0:
   resolved "https://registry.npmjs.org/text-extensions/-/text-extensions-1.9.0.tgz#1853e45fee39c945ce6f6c36b2d659b5aabc2a26"
   integrity sha512-wiBrwC1EhBelW12Zy26JeOUkQ5mRu+5o8rpsJk5+2t+Y5vE7e842qtZDQ2g1NpX/29HdyFeJ4nSIhI47ENSxlQ==
 
-three@^0.115.0:
-  version "0.115.0"
-  resolved "https://registry.npmjs.org/three/-/three-0.115.0.tgz#540d800c381b9da2334c024f0fbe4d23f84eb05e"
-  integrity sha512-mAV2Ky3RdcbdSbR9capI+tKLvRldWYxd4151PZTT/o7+U2jh9Is3a4KmnYwzyUAhB2ZA3pXSgCd2DOY4Tj5kow==
+three@^0.125.0:
+  version "0.125.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.125.0.tgz#19e922b9dc51ad0b706893aeee888de68e99850a"
+  integrity sha512-qL36qUGsPQ/Ofo/RZdXwHwM7A8wzUSAIyawtjIebJSPvounUQeneSqxI0aBY2iwKpseGy+RUtj3C5f/z4poyXw==
 
 throat@^4.1.0:
   version "4.1.0"
