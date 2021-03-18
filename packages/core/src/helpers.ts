@@ -1,22 +1,16 @@
-import { useMemoOne } from 'use-memo-one'
 import {
   is,
-  each,
   toArray,
-  getFluidConfig,
+  eachProp,
+  getFluidValue,
   isAnimatedString,
-  AnyFn,
-  OneOrMore,
   FluidValue,
-  Lookup,
-  Falsy,
-} from 'shared'
-import * as G from 'shared/globals'
+  Globals as G,
+} from '@react-spring/shared'
+import { AnyFn, OneOrMore, Lookup } from '@react-spring/types'
 import { ReservedProps, ForwardProps, InferTo } from './types'
-
-// @see https://github.com/alexreardon/use-memo-one/pull/10
-export const useMemo: typeof useMemoOne = (create, deps) =>
-  useMemoOne(create, deps || [{}])
+import type { Controller } from './Controller'
+import type { SpringRef } from './SpringRef'
 
 export function callProp<T>(
   value: T,
@@ -37,18 +31,13 @@ export const matchProp = (
     (is.fun(value) ? value(key) : toArray(value).includes(key))
   )
 
+export const resolveProp = <T>(
+  prop: T | Lookup<T> | undefined,
+  key: string | undefined
+) => (is.obj(prop) ? key && (prop as any)[key] : prop)
+
 export const concatFn = <T extends AnyFn>(first: T | undefined, last: T) =>
   first ? (...args: Parameters<T>) => (first(...args), last(...args)) : last
-
-type AnyProps<T, Arg = never> = OneOrMore<T> | ((i: number, arg: Arg) => T)
-
-export const getProps = <T, Arg = never>(
-  props: AnyProps<T, Arg> | null | undefined,
-  i: number,
-  arg: Arg
-) =>
-  props &&
-  (is.fun(props) ? props(i, arg) : is.arr(props) ? props[i] : { ...props })
 
 /** Returns `true` if the given prop is having its default value set. */
 export const hasDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
@@ -65,6 +54,8 @@ export const getDefaultProp = <T extends Lookup, P extends keyof T>(
     ? props.default[key]
     : undefined
 
+const noopTransform = (value: any) => value
+
 /**
  * Extract the default props from an update.
  *
@@ -74,37 +65,36 @@ export const getDefaultProp = <T extends Lookup, P extends keyof T>(
  */
 export const getDefaultProps = <T extends Lookup>(
   props: Lookup,
-  omitKeys: readonly (string | Falsy)[] = [],
-  defaults: Lookup = {} as any
-) => {
+  transform: (value: any, key: string) => any = noopTransform
+): T => {
   let keys: readonly string[] = DEFAULT_PROPS
   if (props.default && props.default !== true) {
     props = props.default
     keys = Object.keys(props)
   }
+  const defaults: any = {}
   for (const key of keys) {
-    const value = props[key]
-    if (!is.und(value) && !omitKeys.includes(key)) {
+    const value = transform(props[key], key)
+    if (!is.und(value)) {
       defaults[key] = value
     }
   }
-  return defaults as T
+  return defaults
 }
 
-/** Merge the default props of an update into a props cache. */
-export const mergeDefaultProps = (
-  defaults: Lookup,
-  props: Lookup,
-  omitKeys?: readonly (string | Falsy)[]
-) => getDefaultProps(props, omitKeys, defaults)
-
-/** These props can have default values */
+/**
+ * These props are implicitly used as defaults when defined in a
+ * declarative update (eg: render-based) or any update with `default: true`.
+ *
+ * Use `default: {}` or `default: false` to opt-out of these implicit defaults
+ * for any given update.
+ *
+ * Note: These are not the only props with default values. For example, the
+ * `pause`, `cancel`, and `immediate` props. But those must be updated with
+ * the object syntax (eg: `default: { immediate: true }`).
+ */
 export const DEFAULT_PROPS = [
-  'pause',
-  'cancel',
   'config',
-  'immediate',
-  'onDelayEnd',
   'onProps',
   'onStart',
   'onChange',
@@ -113,7 +103,9 @@ export const DEFAULT_PROPS = [
   'onRest',
 ] as const
 
-const RESERVED_PROPS: Required<ReservedProps> = {
+const RESERVED_PROPS: {
+  [key: string]: 1 | undefined
+} = {
   config: 1,
   from: 1,
   to: 1,
@@ -126,13 +118,13 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   immediate: 1,
   default: 1,
   delay: 1,
-  onDelayEnd: 1,
   onProps: 1,
   onStart: 1,
   onChange: 1,
   onPause: 1,
   onResume: 1,
   onRest: 1,
+  onResolve: 1,
 
   // Transition props
   items: 1,
@@ -144,6 +136,7 @@ const RESERVED_PROPS: Required<ReservedProps> = {
   update: 1,
   leave: 1,
   children: 1,
+  onDestroyed: 1,
 
   // Internal props
   keys: 1,
@@ -162,7 +155,7 @@ function getForwardProps<Props extends ReservedProps>(
   const forward: any = {}
 
   let count = 0
-  each(props, (value, prop) => {
+  eachProp(props, (value, prop) => {
     if (!RESERVED_PROPS[prop]) {
       forward[prop] = value
       count++
@@ -182,7 +175,7 @@ export function inferTo<T extends object>(props: T): InferTo<T> {
   const to = getForwardProps(props)
   if (to) {
     const out: any = { to }
-    each(props, (val, key) => key in to || (out[key] = val))
+    eachProp(props, (val, key) => key in to || (out[key] = val))
     return out
   }
   return { ...props } as any
@@ -190,10 +183,8 @@ export function inferTo<T extends object>(props: T): InferTo<T> {
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
 export function computeGoal<T>(value: T | FluidValue<T>): T {
-  const config = getFluidConfig(value)
-  return config
-    ? computeGoal(config.get())
-    : is.arr(value)
+  value = getFluidValue(value)
+  return is.arr(value)
     ? value.map(computeGoal)
     : isAnimatedString(value)
     ? (G.createStringInterpolator({
@@ -208,17 +199,21 @@ export function hasProps(props: object) {
   return false
 }
 
-export function overrideGet<T, P extends keyof T>(
-  target: T,
-  key: P,
-  get: () => T[P]
-) {
-  Object.defineProperty(target, key, { get, enumerable: true })
+export function isAsyncTo(to: any) {
+  return is.fun(to) || (is.arr(to) && is.obj(to[0]))
 }
 
-export function throwDisposed(cond?: boolean): any {
-  if (cond === false) return
-  throw Error(
-    'This object is disposed. Did you call its `dispose` method on accident?'
-  )
+/** Detach `ctrl` from `ctrl.ref` and (optionally) the given `ref` */
+export function detachRefs(ctrl: Controller, ref?: SpringRef) {
+  ctrl.ref?.delete(ctrl)
+  ref?.delete(ctrl)
+}
+
+/** Replace `ctrl.ref` with the given `ref` (if defined) */
+export function replaceRef(ctrl: Controller, ref?: SpringRef) {
+  if (ref && ctrl.ref !== ref) {
+    ctrl.ref?.delete(ctrl)
+    ref.add(ctrl)
+    ctrl.ref = ref
+  }
 }

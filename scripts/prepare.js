@@ -18,7 +18,7 @@ const PJ = 'package.json'
 const RS = '@react-spring'
 
 // Packages compatible with react-native
-const RN_PKG = /\/(native|addons|core|animated)$/
+const RN_PKG = /\/(native|core|animated|shared)$/
 
 const lernaJson = fs.readJsonSync('lerna.json')
 
@@ -31,7 +31,6 @@ const readPackages = rootJson =>
     const pkgDir = dirname(pkgJsonPath)
     const pkg = fs.readJsonSync(pkgJsonPath)
     Object.defineProperty(pkg, 'dir', { value: pkgDir })
-    fs.ensureDirSync(join(pkgDir, DIST))
     packages[pkg.name] = pkg
     return packages
   }, {})
@@ -44,17 +43,14 @@ async function prepare() {
 
   // Package-specific fields to delete
   const deletions = {
+    [`${RS}/animated`]: ['keywords'],
     [`${RS}/shared`]: ['keywords'],
   }
 
   // Package-specific fields to override
-  // const overrides = {}
-
-  // Entry module overrides
-  const entryOverrides = {
-    [`${RS}/shared`]: {
-      main: 'cjs/index.js',
-      module: 'esm/index.js',
+  const overrides = {
+    [`${RS}/web`]: {
+      jsdelivr: 'dist/index.umd.js',
     },
   }
 
@@ -63,24 +59,24 @@ async function prepare() {
     const { postinstall } = pkg.scripts || {}
     deleteFields(pkg, ['private', 'scripts', 'devDependencies'])
     if (postinstall) setScript(pkg, 'postinstall', postinstall)
-    useDefaultFields(pkg, ['description', 'sideEffects'])
+    useDefaultFields(pkg, ['description'])
     useFields(pkg, [
       'license',
-      'dependencies',
       'author',
-      'contributors',
+      'maintainers',
+      'repository',
       'keywords',
-      'bugs',
     ])
     pkg.version = lernaJson.version
     pkg.publishConfig = rootJson.publishConfig
     setHomepage(pkg)
     setEntryModules(pkg)
     await rewriteLocalDeps(pkg)
+    linkCjsTypes(pkg)
     useOwnFiles(pkg, ['README.md', '@types'])
     useFiles(pkg, ['LICENSE', '.npmignore'])
     deleteFields(pkg, deletions[pkg.name])
-    // assignFields(pkg, overrides[pkg.name])
+    assignFields(pkg, overrides[pkg.name])
     savePackage(pkg)
   }
 
@@ -97,7 +93,7 @@ async function prepare() {
     if (pkg.name !== 'react-spring') {
       pkg.homepage = pkg.homepage.replace(
         '#readme',
-        `/tree/master/${pkg.dir}#readme`
+        `/tree/v9/${pkg.dir}#readme`
       )
     }
   }
@@ -110,8 +106,7 @@ async function prepare() {
 
   // Ensure "package.json" points to the correct modules.
   const setEntryModules = pkg => {
-    const overrides = entryOverrides[pkg.name] || {}
-    const main = overrides.main || pkg.main
+    const main = pkg.main
     if (!main) {
       throw Error('pkg.main must exist')
     }
@@ -119,20 +114,20 @@ async function prepare() {
     const srcDir = new RegExp(`^${SRC}/`)
     const tsxExt = /\.tsx?$/
 
-    pkg.main =
-      overrides.main || main.replace(srcDir, '').replace(tsxExt, '.cjs.js')
-    pkg.module =
-      overrides.module ||
-      (pkg.main.endsWith('.cjs.js') ? pkg.main.replace(/\.cjs\./, '.') : void 0)
+    pkg.main = main.replace(srcDir, '').replace(tsxExt, '.cjs.js')
+    pkg.module = pkg.main.endsWith('.cjs.js')
+      ? pkg.main.replace(/\.cjs\./, '.')
+      : void 0
     pkg.types =
-      overrides.types ||
-      (pkg.types || tsxExt.test(main)
+      pkg.types || tsxExt.test(main)
         ? (pkg.types || main.replace(tsxExt, '.d.ts')).replace(srcDir, '')
-        : void 0)
+        : void 0
 
     // Packages compatible with "react-native" provide an uncompiled main module.
     if (RN_PKG.test(pkg.name)) {
-      pkg['react-native'] = main
+      pkg['react-native'] = {
+        [pkg.module]: pkg.name.endsWith('native') ? 'src/native.ts' : main,
+      }
     }
   }
 
@@ -210,13 +205,21 @@ async function prepare() {
           // Link "dist" packages together.
           const linkDir = join(pkg.dir, DIST, 'node_modules')
           const linkPath = join(linkDir, depId)
-          const depPath = join(dep.dir, DIST)
-          fs.removeSync(linkPath)
+          const depPath = join(dep.dir, dep.main ? DIST : '')
           fs.ensureSymlinkSync(depPath, linkPath)
         }
       }
     }
   }
+
+  const linkCjsTypes = pkg =>
+    fs.readdirSync(join(pkg.dir, DIST)).forEach(name => {
+      if (name.endsWith('.d.ts') && !name.endsWith('.cjs.d.ts')) {
+        const dest = join(pkg.dir, DIST, name.replace(/\.d\.ts$/, '.cjs.d.ts'))
+        fs.removeSync(dest)
+        fs.ensureSymlinkSync(name, dest)
+      }
+    })
 
   // Copy files from the monorepo root.
   const useFiles = (pkg, files) =>
@@ -280,10 +283,14 @@ async function prepare() {
   log('')
   await Promise.all(
     Object.keys(packages).map(name => {
+      if (name == `${RS}/types`) {
+        return // This package is published as-is.
+      }
       const pkg = packages[name]
       log(chalk.cyan(name))
       log('./' + pkg.dir)
       log('')
+      fs.ensureDirSync(join(pkg.dir, DIST))
       return preparePackage(pkg)
     })
   )

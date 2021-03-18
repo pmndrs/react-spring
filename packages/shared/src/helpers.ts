@@ -1,22 +1,21 @@
-import { Lookup, Arrify, AnyFn } from './types.util'
+import { Lookup, Arrify, AnyFn, Any } from '@react-spring/types'
 import * as G from './globals'
 
-export const noop = () => {}
+export function noop() {}
 
 export const defineHidden = (obj: any, key: any, value: any) =>
   Object.defineProperty(obj, key, { value, writable: true, configurable: true })
 
-interface IsArray {
-  <T>(a: T): a is T & readonly any[]
-}
+type IsType<U> = <T>(arg: T & any) => arg is Narrow<T, U>
+type Narrow<T, U> = [T] extends [Any] ? U : [T] extends [U] ? Extract<T, U> : U
 
 type PlainObject<T> = Exclude<T & Lookup, Function | readonly any[]>
 
 export const is = {
-  arr: Array.isArray as IsArray,
-  obj: <T extends any>(a: T): a is PlainObject<T> =>
+  arr: Array.isArray as IsType<readonly any[]>,
+  obj: <T extends any>(a: T & any): a is PlainObject<T> =>
     !!a && a.constructor.name === 'Object',
-  fun: (a: unknown): a is Function => typeof a === 'function',
+  fun: ((a: unknown) => typeof a === 'function') as IsType<Function>,
   str: (a: unknown): a is string => typeof a === 'string',
   num: (a: unknown): a is number => typeof a === 'number',
   und: (a: unknown): a is undefined => a === undefined,
@@ -37,38 +36,31 @@ export function isEqual(a: any, b: any) {
 // Not all strings can be animated (eg: {display: "none"})
 export const isAnimatedString = (value: unknown): value is string =>
   is.str(value) &&
-  (value[0] == '#' ||
-    /\d/.test(value) ||
-    !!(G.colorNames && G.colorNames[value]))
+  (value[0] == '#' || /\d/.test(value) || value in (G.colors || {}))
 
-type Eachable<Value, Key> = {
-  forEach: (cb: (value: Value, key: Key) => void, ctx?: any) => void
+type EachFn<Value, Key, This> = (this: This, value: Value, key: Key) => void
+type Eachable<Value = any, Key = any, This = any> = {
+  forEach(cb: EachFn<Value, Key, This>, ctx?: This): void
 }
 
-type InferKey<T extends object> = T extends Eachable<any, infer Key>
-  ? Key
-  : Extract<keyof T, string>
+/** Minifiable `.forEach` call */
+export const each = <Value, Key, This>(
+  obj: Eachable<Value, Key, This>,
+  fn: EachFn<Value, Key, This>
+) => obj.forEach(fn)
 
-type InferValue<T extends object> = T extends
-  | Eachable<infer Value, any>
-  | { [key: string]: infer Value }
-  ? Value
-  : never
-
-/** An unsafe object/array/set iterator that allows for better minification */
-export const each = <T extends object, This>(
-  obj: T & { forEach?: Function },
-  cb: (this: This, value: InferValue<T>, key: InferKey<T>) => void,
+/** Iterate the properties of an object */
+export function eachProp<T extends object, This>(
+  obj: T,
+  fn: (
+    this: This,
+    value: T extends any[] ? T[number] : T[keyof T],
+    key: string
+  ) => void,
   ctx?: This
-) => {
-  if (is.fun(obj.forEach)) {
-    obj.forEach(cb, ctx)
-  } else {
-    const keys = Object.keys(obj)
-    for (let i = 0; i < keys.length; i++) {
-      const key: any = keys[i]
-      cb.call(ctx!, (obj as any)[key], key)
-    }
+) {
+  for (const key in obj) {
+    fn.call(ctx as any, obj[key] as any, key)
   }
 }
 

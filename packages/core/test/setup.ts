@@ -1,8 +1,16 @@
 import createMockRaf from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { act } from '@testing-library/react'
-import { isEqual, is, FrameLoop } from 'shared'
-import colorNames from 'shared/colors'
+import {
+  isEqual,
+  is,
+  colors,
+  frameLoop,
+  addFluidObserver,
+  removeFluidObserver,
+  getFluidObservers,
+} from '@react-spring/shared'
+import { __raf as raf } from 'rafz'
 
 import { Globals, Controller, FrameValue } from '..'
 import { computeGoal } from '../src/helpers'
@@ -18,13 +26,14 @@ let frameCache: WeakMap<any, any[]>
 beforeEach(() => {
   isRunning = true
   frameCache = new WeakMap()
+  frameLoop.clear()
+  raf.clear()
 
   global.mockRaf = createMockRaf()
   Globals.assign({
     now: mockRaf.now,
     requestAnimationFrame: mockRaf.raf,
-    frameLoop: new FrameLoop(),
-    colorNames,
+    colors,
     // This lets our useTransition hook force its component
     // to update from within an "onRest" handler.
     batchedUpdates: act,
@@ -33,20 +42,17 @@ beforeEach(() => {
 
 afterEach(() => {
   isRunning = false
-  Globals.frameLoop['_dispose']()
 })
 
 // This observes every SpringValue animation when "advanceUntil" is used.
 // Any changes between frames are not recorded.
-const frameObserver = {
-  onParentChange(event: FrameValue.Event) {
-    const spring = event.parent
-    if (event.type == 'change') {
-      let frames = frameCache.get(spring)
-      if (!frames) frameCache.set(spring, (frames = []))
-      frames.push(event.value)
-    }
-  },
+const frameObserver = (event: FrameValue.Event) => {
+  const spring = event.parent
+  if (event.type == 'change') {
+    let frames = frameCache.get(spring)
+    if (!frames) frameCache.set(spring, (frames = []))
+    frames.push(event.value)
+  }
 }
 
 global.getFrames = (target, preserve) => {
@@ -91,14 +97,14 @@ global.advanceUntil = async test => {
     const values: FrameValue[] = []
     const observe = (value: unknown) => {
       if (value instanceof FrameValue && !value.idle) {
-        value['_children'].forEach(observe)
-        value.addChild(frameObserver)
+        getFluidObservers(value)?.forEach(observe)
+        addFluidObserver(value, frameObserver)
         values.push(value)
       }
     }
 
     Globals.assign({
-      willAdvance: animations => animations.forEach(observe),
+      willAdvance: observe,
     })
 
     jest.advanceTimersByTime(1000 / 60)
@@ -106,7 +112,7 @@ global.advanceUntil = async test => {
 
     // Stop observing after the frame is processed.
     for (const value of values) {
-      value.removeChild(frameObserver)
+      removeFluidObserver(value, frameObserver)
     }
 
     // Ensure pending effects are flushed.
@@ -130,7 +136,7 @@ global.advanceByTime = ms => {
 }
 
 global.advanceUntilIdle = () => {
-  return advanceUntil(() => Globals.frameLoop['_animations'].length == 0)
+  return advanceUntil(() => frameLoop.idle && raf.count == 0)
 }
 
 // TODO: support "value" as an array or animatable string

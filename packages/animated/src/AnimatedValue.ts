@@ -1,4 +1,4 @@
-import { is } from 'shared'
+import { is } from '@react-spring/shared'
 import { Animated, Payload } from './Animated'
 
 /** An animated number or a native attribute value */
@@ -16,8 +16,9 @@ export class AnimatedValue<T = any> extends Animated {
     }
   }
 
-  static create<T>(from: T, _to?: T | null) {
-    return new AnimatedValue(from)
+  /** @internal */
+  static create(value: any) {
+    return new AnimatedValue(value)
   }
 
   getPayload(): Payload {
@@ -28,15 +29,6 @@ export class AnimatedValue<T = any> extends Animated {
     return this._value
   }
 
-  /**
-   * Set the current value and optionally round it.
-   *
-   * The `step` argument does nothing whenever it equals `undefined` or `0`.
-   * It works with fractions and whole numbers. The best use case is (probably)
-   * rounding to the pixel grid with a step of:
-   *
-   *      1 / window.devicePixelRatio
-   */
   setValue(value: T, step?: number) {
     if (is.num(value)) {
       this.lastPosition = value

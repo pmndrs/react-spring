@@ -1,11 +1,8 @@
 {
   "include": ["src"],
-  "exclude": ["**/*.test.ts"],
   "compilerOptions": {
-    "importHelpers": true,
-    "declaration": true,
+    "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
-    "inlineSources": true,
     "jsx": "react",
     "lib": ["es2017"],
     "moduleResolution": "node",
@@ -16,11 +13,6 @@
     "preserveSymlinks": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es5",
-    "typeRoots": [
-      "../../node_modules/@types",
-      "./node_modules/@types",
-      "./@types"
-    ]
+    "target": "esnext"
   }
 }

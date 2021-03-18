@@ -10,10 +10,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "paths": {
-      "shared": ["../shared/src"],
-      "shared/*": ["../shared/src/*"]
-    },
     "preserveSymlinks": true,
     "skipLibCheck": true,
     "sourceMap": true,

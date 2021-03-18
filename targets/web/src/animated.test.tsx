@@ -4,8 +4,8 @@ import { render, cleanup } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import createMockRaf, { MockRaf } from 'mock-raf'
 import { SpringValue, Animatable } from 'react-spring'
+import { Globals } from '@react-spring/shared'
 import { a } from '.'
-import * as Globals from 'shared/globals'
 
 afterEach(cleanup)
 

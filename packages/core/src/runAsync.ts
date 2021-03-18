@@ -1,36 +1,29 @@
-import { is, each, Falsy } from 'shared'
-import * as G from 'shared/globals'
+import { is, raf, flush, eachProp, Timeout } from '@react-spring/shared'
+import { Falsy } from '@react-spring/types'
 
-import { PAUSED } from './SpringPhase'
 import { getDefaultProps } from './helpers'
-import {
-  SpringChain,
-  SpringDefaultProps,
-  SpringProps,
-  SpringToFn,
-} from './types'
-import {
-  getCancelledResult,
-  getFinishedResult,
-  AnimationResult,
-  AsyncResult,
-  AnimationTarget,
-} from './AnimationResult'
+import { AnimationTarget, InferState, InferProps } from './types/internal'
+import { AnimationResult, AsyncResult, SpringChain, SpringToFn } from './types'
+import { getCancelledResult, getFinishedResult } from './AnimationResult'
 
-export interface RunAsyncProps<T = any> extends SpringProps<T> {
+type AsyncTo<T> = SpringChain<T> | SpringToFn<T>
+
+/** @internal */
+export type RunAsyncProps<T extends AnimationTarget = any> = InferProps<T> & {
   callId: number
   parentId?: number
   cancel: boolean
-  pause: boolean
-  delay: number
   to?: any
 }
 
-export interface RunAsyncState<T = any> {
+/** @internal */
+export interface RunAsyncState<T extends AnimationTarget = any> {
+  paused: boolean
   pauseQueue: Set<() => void>
   resumeQueue: Set<() => void>
+  timeouts: Set<Timeout>
   asyncId?: number
-  asyncTo?: SpringChain<T> | SpringToFn<T>
+  asyncTo?: AsyncTo<InferState<T>>
   promise?: AsyncResult<T>
   cancelId?: number
 }
@@ -43,11 +36,11 @@ export interface RunAsyncState<T = any> {
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export async function runAsync<T>(
-  to: SpringChain<T> | SpringToFn<T>,
+export function runAsync<T extends AnimationTarget>(
+  to: AsyncTo<InferState<T>>,
   props: RunAsyncProps<T>,
   state: RunAsyncState<T>,
-  target: AnimationTarget<T>
+  target: T
 ): AsyncResult<T> {
   const { callId, parentId, onRest } = props
   const { asyncTo: prevTo, promise: prevPromise } = state
@@ -56,15 +49,15 @@ export async function runAsync<T>(
     return prevPromise!
   }
 
-  return (state.promise = (async (): AsyncResult<T> => {
+  return (state.promise = (async () => {
     state.asyncId = callId
     state.asyncTo = to
 
     // The default props of any `animate` calls.
-    const defaultProps = getDefaultProps<SpringDefaultProps<T>>(props, [
+    const defaultProps = getDefaultProps<InferProps<T>>(props, (value, key) =>
       // The `onRest` prop is only called when the `runAsync` promise is resolved.
-      'onRest',
-    ])
+      key === 'onRest' ? undefined : value
+    )
 
     let preventBail!: () => void
     let bail: (error: any) => void
@@ -74,7 +67,7 @@ export async function runAsync<T>(
       (resolve, reject) => ((preventBail = resolve), (bail = reject))
     )
 
-    const bailIfEnded = (bailSignal: BailSignal<T>) => {
+    const bailIfEnded = (bailSignal: BailSignal) => {
       const bailResult =
         // The `cancel` prop or `stop` method was used.
         (callId <= (state.cancelId || 0) && getCancelledResult(target)) ||
@@ -102,17 +95,17 @@ export async function runAsync<T>(
         const props: any = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 }
         props.parentId = callId
 
-        each(defaultProps, (value, key) => {
+        eachProp(defaultProps, (value, key) => {
           if (is.und(props[key])) {
-            props[key] = value as any
+            props[key] = value
           }
         })
 
         const result = await target.start(props)
         bailIfEnded(bailSignal)
 
-        if (target.is(PAUSED)) {
-          await new Promise(resume => {
+        if (state.paused) {
+          await new Promise<void>(resume => {
             state.resumeQueue.add(resume)
           })
         }
@@ -135,10 +128,8 @@ export async function runAsync<T>(
       }
 
       // Async script
-      else if (is.fun(to)) {
-        animating = Promise.resolve(
-          to(animate, target.stop.bind(target) as any)
-        )
+      else {
+        animating = Promise.resolve(to(animate, target.stop.bind(target)))
       }
 
       await Promise.all([animating.then(preventBail), bailPromise])
@@ -162,7 +153,7 @@ export async function runAsync<T>(
     }
 
     if (is.fun(onRest)) {
-      G.batchedUpdates(() => {
+      raf.batchedUpdates(() => {
         onRest(result)
       })
     }
@@ -173,13 +164,16 @@ export async function runAsync<T>(
 
 /** Stop the current `runAsync` call with `finished: false` (or with `cancelled: true` when `cancelId` is defined) */
 export function stopAsync(state: RunAsyncState, cancelId?: number | Falsy) {
+  flush(state.timeouts, t => t.cancel())
+  state.pauseQueue.clear()
+  state.resumeQueue.clear()
   state.asyncId = state.asyncTo = state.promise = undefined
   if (cancelId) state.cancelId = cancelId
 }
 
 /** This error is thrown to signal an interrupted async animation. */
-export class BailSignal<T = any> extends Error {
-  result!: AnimationResult<T>
+export class BailSignal extends Error {
+  result!: AnimationResult
   constructor() {
     super(
       'An async animation has been interrupted. You see this error because you ' +

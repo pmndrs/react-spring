@@ -1,38 +1,37 @@
-import { Lookup, each, getFluidConfig } from 'shared'
+import { Lookup } from '@react-spring/types'
+import {
+  each,
+  eachProp,
+  getFluidValue,
+  hasFluidValue,
+} from '@react-spring/shared'
 import { Animated, isAnimated, getPayload } from './Animated'
 import { AnimatedValue } from './AnimatedValue'
 import { TreeContext } from './context'
 
-type Source = Lookup | null
-
 /** An object containing `Animated` nodes */
 export class AnimatedObject extends Animated {
-  protected source!: Source
-  constructor(source: Source = null) {
+  constructor(protected source: Lookup) {
     super()
     this.setValue(source)
   }
 
-  getValue(animated?: boolean): Source {
-    if (!this.source) return null
+  getValue(animated?: boolean) {
     const values: Lookup = {}
-    each(this.source, (source, key) => {
+    eachProp(this.source, (source, key) => {
       if (isAnimated(source)) {
         values[key] = source.getValue(animated)
-      } else {
-        const config = getFluidConfig(source)
-        if (config) {
-          values[key] = config.get()
-        } else if (!animated) {
-          values[key] = source
-        }
+      } else if (hasFluidValue(source)) {
+        values[key] = getFluidValue(source)
+      } else if (!animated) {
+        values[key] = source
       }
     })
     return values
   }
 
   /** Replace the raw object data */
-  setValue(source: Source) {
+  setValue(source: Lookup) {
     this.source = source
     this.payload = this._makePayload(source)
   }
@@ -44,19 +43,18 @@ export class AnimatedObject extends Animated {
   }
 
   /** Create a payload set. */
-  protected _makePayload(source: Source) {
+  protected _makePayload(source: Lookup) {
     if (source) {
       const payload = new Set<AnimatedValue>()
-      each(source, this._addToPayload, payload)
+      eachProp(source, this._addToPayload, payload)
       return Array.from(payload)
     }
   }
 
   /** Add to a payload set. */
   protected _addToPayload(this: Set<AnimatedValue>, source: any) {
-    const config = getFluidConfig(source)
-    if (config && TreeContext.current) {
-      TreeContext.current.dependencies.add(source)
+    if (TreeContext.dependencies && hasFluidValue(source)) {
+      TreeContext.dependencies.add(source)
     }
     const payload = getPayload(source)
     if (payload) {

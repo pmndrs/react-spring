@@ -48,10 +48,23 @@ React 16.8+ has global state to support its "hooks" feature, so you need to ensu
 - **For `create-react-app` users:** Follow this guide: https://github.com/facebook/react/issues/13991#issuecomment-496383268
 
 - **For `webpack` users:** Add an alias to `webpack.config.js` like this:
+
   ```js
   alias: {
     react: path.resolve('node_modules/react'),
   }
+  ```
+
+- **For `gatsby` users:** Install `gatsby-plugin-alias-imports` and add this to your `gatsby-config.js` module:
+  ```js
+  {
+    resolve: `gatsby-plugin-alias-imports`,
+    options: {
+      alias: {
+        react: path.resolve('node_modules/react'),
+      },
+    },
+  },
   ```
 
 # Publishing

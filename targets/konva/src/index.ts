@@ -1,13 +1,11 @@
-import { Globals } from 'shared'
-import { createStringInterpolator } from 'shared/stringInterpolation'
-import colorNames from 'shared/colors'
-import { createHost } from 'animated'
+import { Globals, createStringInterpolator, colors } from '@react-spring/shared'
+import { createHost } from '@react-spring/animated'
 import { primitives } from './primitives'
 import { WithAnimated } from './animated'
 
 Globals.assign({
   createStringInterpolator,
-  colorNames,
+  colors,
 })
 
 const host = createHost(primitives, {
@@ -21,4 +19,4 @@ export const animated = host.animated as WithAnimated
 export { animated as a }
 
 export * from './animated'
-export * from 'core'
+export * from '@react-spring/core'

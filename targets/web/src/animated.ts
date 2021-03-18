@@ -1,12 +1,10 @@
 import { CSSProperties, ForwardRefExoticComponent } from 'react'
-import {
-  ElementType,
-  ComponentPropsWithRef,
-  Merge,
-  FluidValue,
-  FluidProps,
-} from 'shared'
+import { FluidValue, FluidProps } from '@react-spring/shared'
+import { ElementType, ComponentPropsWithRef, Merge } from '@react-spring/types'
 import { Primitives } from './primitives'
+
+import type * as CSS from 'csstype'
+export type { CSS }
 
 type AnimatedPrimitives = {
   [Tag in Primitives]: AnimatedComponent<Tag>
@@ -48,6 +46,8 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
     ? never
     : DT extends void
     ? undefined
+    : DT extends string | number
+    ? DT | AnimatedLeaf<T>
     : DT extends object
     ? [ValidStyleProps<DT>] extends [never]
       ? DT extends ReadonlyArray<any>
@@ -76,6 +76,8 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
     ? undefined
     : [DT] extends [never]
     ? never
+    : DT extends string | number
+    ? DT | AnimatedLeaf<T>
     : DT extends object
     ? AnimatedObject<DT>
     : DT | AnimatedLeaf<T>
@@ -86,13 +88,15 @@ type AnimatedObject<T extends object> =
   | (T extends ReadonlyArray<number | string> ? FluidValue<Readonly<T>> : never)
 
 // An animated primitive (or an array of them)
-type AnimatedLeaf<T> =
-  | Exclude<T, object | void>
-  | Extract<T, ReadonlyArray<number | string>> extends infer U
+type AnimatedLeaf<T> = NonObject<T> extends infer U
   ? [U] extends [never]
     ? never
-    : FluidValue<U | Exclude<T, object | void>>
+    : FluidValue<U>
   : never
+
+type NonObject<T> =
+  | Extract<T, string | number | ReadonlyArray<string | number>>
+  | Exclude<T, object | void>
 
 type Angle = number | string
 type Length = number | string

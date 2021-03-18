@@ -1,5 +1,6 @@
 import { Interpolation } from './Interpolation'
-import * as Globals from 'shared/globals'
+import { Globals } from '@react-spring/shared'
+
 Globals.assign({
   to: (...args) => new Interpolation(...args),
 })

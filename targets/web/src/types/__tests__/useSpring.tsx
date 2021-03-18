@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useRef } from 'react';
 import { assert, test, _ } from 'spec.ts';
 import { RunAsyncProps } from '@react-spring/core/src/runAsync';
 import {
@@ -7,10 +6,7 @@ import {
   useSpring,
   SpringValue,
   SpringValues,
-  SpringHandle,
-  SpringStartFn,
-  SpringStopFn,
-  SpringUpdateFn,
+  SpringRef,
   AnimationResult,
 } from '../..';
 
@@ -86,7 +82,7 @@ test('infer animated array', () => {
 });
 
 test('imperative mode (inferred)', () => {
-  const [props, update, stop] = useSpring(() => ({
+  const [props, ref] = useSpring(() => ({
     width: 0,
     onRest(event) {
       // FIXME: should include {foo: number}
@@ -95,12 +91,11 @@ test('imperative mode (inferred)', () => {
   }));
 
   assert(props, _ as SpringValues<State>);
-  assert(update, _ as SpringStartFn<State>);
-  assert(stop, _ as SpringStopFn<State>);
+  assert(ref, _ as SpringRef<State>);
 });
 
 test('imperative mode', () => {
-  const [props, update, stop] = useSpring<State>(() => ({
+  const [props, ref] = useSpring<State>(() => ({
     width: 0,
     onRest(event) {
       // FIXME: should include {foo: number}
@@ -109,23 +104,7 @@ test('imperative mode', () => {
   }));
 
   assert(props, _ as SpringValues<State>);
-  assert(update, _ as SpringStartFn<State>);
-  assert(stop, _ as SpringStopFn<State>);
-
-  test('update()', () => {
-    update({
-      width: 100,
-      onRest(result) {
-        assert(result, _ as AnimationResult<State>);
-      },
-    });
-  });
-
-  test('stop()', () => {
-    stop();
-    stop('foo');
-    stop(['foo', 'bar']);
-  });
+  assert(ref, _ as SpringRef<State>);
 
   test('with delay and reset', () => {
     const [props] = useSpring(() => ({
@@ -168,11 +147,11 @@ test('imperative mode', () => {
 });
 
 test('spring refs', () => {
-  const ref = useRef<SpringHandle>(null);
+  const ref = new SpringRef();
   useSpring({ foo: 1, ref });
-  ref.current!.start();
-  ref.current!.stop(['foo', 'bar']);
-  ref.current!.stop();
+  ref.start();
+  ref.stop(['foo', 'bar']);
+  ref.stop();
 });
 
 test('basic config', () => {

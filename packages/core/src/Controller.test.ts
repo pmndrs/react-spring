@@ -202,11 +202,33 @@ describe('Controller', () => {
       })
     })
 
+    describe('while paused', () => {
+      it('stays paused when its values are force-finished', () => {
+        const ctrl = new Controller<{ t: number }>({ t: 0 })
+        const { t } = ctrl.springs
+
+        const onRest = jest.fn()
+        ctrl.start({
+          to: next => next({ t: 1 }),
+          onRest,
+        })
+
+        mockRaf.step()
+        ctrl.pause()
+
+        t.finish()
+        mockRaf.step()
+
+        expect(ctrl['_state'].paused).toBeTruthy()
+        expect(onRest).not.toBeCalled()
+      })
+    })
+
     it('acts strangely without the "from" prop', async () => {
       const ctrl = new Controller<{ x: number }>()
 
       const { springs } = ctrl
-      ctrl.start({
+      const promise = ctrl.start({
         to: async update => {
           // The spring does not exist yet!
           expect(springs.x).toBeUndefined()
@@ -227,7 +249,8 @@ describe('Controller', () => {
         },
       })
 
-      await advanceUntilIdle()
+      await Promise.all([advanceUntilIdle(), promise])
+      expect(ctrl.idle).toBeTruthy()
 
       // Since we call `update` twice, frames are generated!
       expect(getFrames(ctrl)).toMatchSnapshot()
@@ -394,6 +417,94 @@ describe('Controller', () => {
         await advanceUntilIdle()
         expect(loop).toBeCalledTimes(0)
       })
+    })
+
+    describe('when "finish" is called while paused', () => {
+      async function getPausedLoop() {
+        const ctrl = new Controller<{ t: number }>({
+          from: { t: 0 }, // FIXME: replace this line with `t: 0,` for a stack overflow
+          loop: {
+            async to(start) {
+              await start({
+                t: 1,
+                reset: true,
+              })
+            },
+          },
+        })
+
+        // Ensure `loop.to` has been called.
+        await flushMicroTasks()
+
+        // Apply the first frame.
+        mockRaf.step()
+
+        ctrl.pause()
+        return ctrl
+      }
+
+      it('finishes immediately', async () => {
+        const ctrl = await getPausedLoop()
+        const { t } = ctrl.springs
+
+        expect(t.get()).toBeLessThan(1)
+        t.finish()
+        expect(t.get()).toBe(1)
+      })
+
+      it('does not loop until resumed', async () => {
+        const ctrl = await getPausedLoop()
+        const { t } = ctrl.springs
+
+        t.finish()
+        expect(t.idle).toBeTruthy()
+        expect(t.get()).toBe(1)
+
+        // HACK: The internal promise is undefined once resolved.
+        const expectResolved = (isResolved: boolean) =>
+          !ctrl['_state'].promise == isResolved
+
+        // Resume the paused loop.
+        ctrl.resume()
+
+        // Its promise is not resolved yet..
+        expectResolved(false)
+        expect(t.idle).toBeTruthy()
+        expect(t.get()).toBe(1)
+
+        // ..but in the next microtask, it will be..
+        await flushMicroTasks()
+        expectResolved(true)
+        // ..which means the loop restarts!
+        expect(t.idle).toBeFalsy()
+        expect(t.get()).toBe(0)
+      })
+    })
+  })
+
+  describe('the "stop" method', () => {
+    it('prevents any updates with pending delays', async () => {
+      const ctrl = new Controller<{ t: number }>({ t: 0 })
+      const { t } = ctrl.springs
+
+      ctrl.start({ t: 1, delay: 100 })
+      ctrl.stop()
+
+      await advanceUntilIdle()
+      expect(ctrl['_state'].timeouts.size).toBe(0)
+      expect(t['_state'].timeouts.size).toBe(0)
+    })
+
+    it('stops the active runAsync call', async () => {
+      const ctrl = new Controller<{ t: number }>({ t: 0 })
+      ctrl.start({
+        to: async animate => {
+          await animate({ t: 1 })
+        },
+      })
+      ctrl.stop()
+      await advanceUntilIdle()
+      expect(ctrl['_state'].asyncTo).toBeUndefined()
     })
   })
 })

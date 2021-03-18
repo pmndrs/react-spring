@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { RenderResult, render } from '@testing-library/react'
-import { useTransition } from './useTransition'
+import { toArray } from '@react-spring/shared'
 import { TransitionFn, UseTransitionProps } from '../types'
-import { toArray } from 'shared'
+import { useTransition } from './useTransition'
 
 describe('useTransition', () => {
   let transition: TransitionFn
@@ -91,6 +91,26 @@ describe('useTransition', () => {
 
       await advanceUntilIdle()
       expect(onRest).toBeCalledTimes(1)
+    })
+  })
+
+  describe('when "leave" is a no-op update', () => {
+    it('still unmounts the transition', async () => {
+      const props = {
+        from: { t: 0 },
+        enter: { t: 1 },
+        leave: { t: 1 },
+      }
+
+      update(true, props)
+      expect(rendered).toEqual([true])
+      await advanceUntilIdle()
+
+      update(false, props)
+      expect(rendered).toEqual([true, false])
+
+      await advanceUntilIdle()
+      expect(rendered).toEqual([false])
     })
   })
 })

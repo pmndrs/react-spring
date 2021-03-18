@@ -1,9 +1,9 @@
-import { each, getFluidValue } from 'shared'
-import { Animated, AnimatedValue, AnimatedObject } from 'animated'
+import { each, eachProp, getFluidValue } from '@react-spring/shared'
+import { Animated, AnimatedValue, AnimatedObject } from '@react-spring/animated'
 
 type Transform = { [key: string]: string | number | Animated }
 
-type Source = Transform[] | null
+type Source = Transform[]
 
 export class AnimatedTransform extends AnimatedObject {
   protected source!: Source
@@ -15,7 +15,7 @@ export class AnimatedTransform extends AnimatedObject {
     return this.source
       ? this.source.map(source => {
           const transform: any = {}
-          each(source, (source, key) => {
+          eachProp(source, (source, key) => {
             transform[key] = getFluidValue(source)
           })
           return transform
@@ -31,7 +31,7 @@ export class AnimatedTransform extends AnimatedObject {
   protected _makePayload(source: Source) {
     if (!source) return []
     const payload = new Set<AnimatedValue>()
-    each(source, transform => each(transform, this._addToPayload, payload))
+    each(source, transform => eachProp(transform, this._addToPayload, payload))
     return Array.from(payload)
   }
 }

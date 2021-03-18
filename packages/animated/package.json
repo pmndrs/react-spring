@@ -7,8 +7,9 @@
     "build": "rollup -c"
   },
   "dependencies": {
-    "react-layout-effect": "^1.0.1",
-    "shared": "link:../shared"
+    "@react-spring/shared": "link:../shared",
+    "@react-spring/types": "link:../types",
+    "react-layout-effect": "^1.0.1"
   },
   "publishConfig": {
     "directory": "dist"

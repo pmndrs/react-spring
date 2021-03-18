@@ -1,5 +1,5 @@
 import { assert, _, test } from 'spec.ts';
-import { Remap } from '../common';
+import { Remap } from '@react-spring/types';
 import { SpringUpdateFn } from '../functions';
 import { PickAnimated, ForwardProps, ReservedProps } from '../props';
 

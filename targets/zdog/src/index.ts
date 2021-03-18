@@ -1,14 +1,13 @@
 import { applyProps } from 'react-zdog'
-import { Globals } from 'core'
-import { createHost } from 'animated'
-import { createStringInterpolator } from 'shared/stringInterpolation'
-import colorNames from 'shared/colors'
+import { Globals } from '@react-spring/core'
+import { createStringInterpolator, colors } from '@react-spring/shared'
+import { createHost } from '@react-spring/animated'
 import { primitives } from './primitives'
 import { WithAnimated } from './animated'
 
 Globals.assign({
   createStringInterpolator,
-  colorNames,
+  colors,
 })
 
 const host = createHost(primitives, {
@@ -19,4 +18,4 @@ export const animated = host.animated as WithAnimated
 export { animated as a }
 
 export * from './animated'
-export * from 'core'
+export * from '@react-spring/core'

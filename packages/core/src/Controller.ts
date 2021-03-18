@@ -1,36 +1,27 @@
+import { OneOrMore, UnknownProps, Lookup, Falsy } from '@react-spring/types'
 import {
   is,
+  raf,
   each,
-  flush,
-  OneOrMore,
-  toArray,
-  flushCalls,
-  UnknownProps,
   noop,
-} from 'shared'
-import * as G from 'shared/globals'
+  flush,
+  toArray,
+  eachProp,
+  flushCalls,
+  addFluidObserver,
+  FluidObserver,
+} from '@react-spring/shared'
 
-import { Lookup, Falsy } from './types/common'
-import { getDefaultProp, overrideGet, throwDisposed } from './helpers'
+import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
-import {
-  SpringPhase,
-  CREATED,
-  ACTIVE,
-  IDLE,
-  PAUSED,
-  DISPOSED,
-} from './SpringPhase'
+import { SpringRef } from './SpringRef'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
-import {
-  getCancelledResult,
-  getCombinedResult,
-  AnimationResult,
-  AsyncResult,
-} from './AnimationResult'
+import { getCancelledResult, getCombinedResult } from './AnimationResult'
 import { runAsync, RunAsyncState, stopAsync } from './runAsync'
 import { scheduleProps } from './scheduleProps'
 import {
+  AnimationResult,
+  AsyncResult,
   ControllerFlushFn,
   ControllerUpdate,
   OnRest,
@@ -51,8 +42,7 @@ export interface ControllerQueue<State extends Lookup = Lookup>
     }
   > {}
 
-export class Controller<State extends Lookup = Lookup>
-  implements FrameValue.Observer {
+export class Controller<State extends Lookup = Lookup> {
   readonly id = nextId++
 
   /** The animated values */
@@ -61,14 +51,17 @@ export class Controller<State extends Lookup = Lookup>
   /** The queue of props passed to the `update` method. */
   queue: ControllerQueue<State> = []
 
+  /**
+   * The injected ref. When defined, render-based updates are pushed
+   * onto the `queue` instead of being auto-started.
+   */
+  ref?: SpringRef<State>
+
   /** Custom handler for flushing update queues */
-  protected _flush?: ControllerFlushFn<State>
+  protected _flush?: ControllerFlushFn<this>
 
   /** These props are used by all future spring values */
   protected _initialProps?: Lookup
-
-  /** The combined phase of our spring values */
-  protected _phase: SpringPhase = CREATED
 
   /** The counter for tracking `scheduleProps` calls */
   protected _lastAsyncId = 0
@@ -76,10 +69,18 @@ export class Controller<State extends Lookup = Lookup>
   /** The values currently being animated */
   protected _active = new Set<FrameValue>()
 
+  /** The values that changed recently */
+  protected _changed = new Set<FrameValue>()
+
+  /** Equals false when `onStart` listeners can be called */
+  protected _started = false
+
   /** State used by the `runAsync` function */
-  protected _state: RunAsyncState<State> = {
+  protected _state: RunAsyncState<this> = {
+    paused: false,
     pauseQueue: new Set(),
     resumeQueue: new Set(),
+    timeouts: new Set(),
   }
 
   /** The event queues that are flushed once per frame maximum */
@@ -91,14 +92,14 @@ export class Controller<State extends Lookup = Lookup>
 
   constructor(
     props?: ControllerUpdate<State> | null,
-    flush?: ControllerFlushFn<State>
+    flush?: ControllerFlushFn<any>
   ) {
     this._onFrame = this._onFrame.bind(this)
     if (flush) {
       this._flush = flush
     }
     if (props) {
-      this.start(props)
+      this.start({ default: true, ...props })
     }
   }
 
@@ -115,16 +116,21 @@ export class Controller<State extends Lookup = Lookup>
     )
   }
 
-  /** Check the current phase */
-  is(phase: SpringPhase) {
-    return this._phase == phase
-  }
-
   /** Get the current values of our springs */
   get(): State & UnknownProps {
     const values: any = {}
     this.each((spring, key) => (values[key] = spring.get()))
     return values
+  }
+
+  /** Set the current values without animating. */
+  set(values: Partial<State>) {
+    for (const key in values) {
+      const value = values[key]
+      if (!is.und(value)) {
+        this.springs[key].set(value)
+      }
+    }
   }
 
   /** Push an update onto the queue of each value. */
@@ -142,7 +148,7 @@ export class Controller<State extends Lookup = Lookup>
    * When you pass a queue (instead of nothing), that queue is used instead of
    * the queued animations added with the `update` method, which are left alone.
    */
-  start(props?: OneOrMore<ControllerUpdate<State>> | null): AsyncResult<State> {
+  start(props?: OneOrMore<ControllerUpdate<State>> | null): AsyncResult<this> {
     let { queue } = this as any
     if (props) {
       queue = toArray<any>(props).map(createUpdate)
@@ -158,27 +164,37 @@ export class Controller<State extends Lookup = Lookup>
     return flushUpdateQueue(this, queue)
   }
 
-  /** Stop one animation, some animations, or all animations */
-  stop(keys?: OneOrMore<string>) {
-    if (is.und(keys)) {
-      stopAsync(this._state)
-      this.each(spring => spring.stop())
-    } else {
+  /** Stop all animations. */
+  stop(): this
+  /** Stop animations for the given keys. */
+  stop(keys: OneOrMore<string>): this
+  /** Cancel all animations. */
+  stop(cancel: boolean): this
+  /** Cancel animations for the given keys. */
+  stop(cancel: boolean, keys: OneOrMore<string>): this
+  /** Stop some or all animations. */
+  stop(keys?: OneOrMore<string>): this
+  /** Cancel some or all animations. */
+  stop(cancel: boolean, keys?: OneOrMore<string>): this
+  /** @internal */
+  stop(arg?: boolean | OneOrMore<string>, keys?: OneOrMore<string>) {
+    if (arg !== !!arg) {
+      keys = arg as OneOrMore<string>
+    }
+    if (keys) {
       const springs = this.springs as Lookup<SpringValue>
-      each(toArray(keys), key => springs[key].stop())
+      each(toArray(keys), key => springs[key].stop(!!arg))
+    } else {
+      stopAsync(this._state, this._lastAsyncId)
+      this.each(spring => spring.stop(!!arg))
     }
     return this
   }
 
   /** Freeze the active animation in time */
   pause(keys?: OneOrMore<string>) {
-    throwDisposed(this.is(DISPOSED))
     if (is.und(keys)) {
-      if (!this.is(PAUSED)) {
-        this._phase = PAUSED
-        flushCalls(this._state.pauseQueue)
-      }
-      this.each(spring => spring.pause())
+      this.start({ pause: true })
     } else {
       const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].pause())
@@ -188,13 +204,8 @@ export class Controller<State extends Lookup = Lookup>
 
   /** Resume the animation if paused. */
   resume(keys?: OneOrMore<string>) {
-    throwDisposed(this.is(DISPOSED))
     if (is.und(keys)) {
-      if (this.is(PAUSED)) {
-        this._phase = this._active.size ? ACTIVE : IDLE
-        flushCalls(this._state.resumeQueue)
-      }
-      this.each(spring => spring.resume())
+      this.start({ pause: false })
     } else {
       const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys), key => springs[key].resume())
@@ -202,47 +213,32 @@ export class Controller<State extends Lookup = Lookup>
     return this
   }
 
-  /** Restart every animation. */
-  reset() {
-    this.each(spring => spring.reset())
-    // TODO: restart async "to" prop
-    return this
-  }
-
   /** Call a function once per spring value */
   each(iterator: (spring: SpringValue, key: string) => void) {
-    each(this.springs, iterator as any)
-  }
-
-  /** Destroy every spring in this controller */
-  dispose() {
-    if (!this.is(DISPOSED)) {
-      this._phase = DISPOSED
-      stopAsync(this._state)
-      this.each(spring => spring.dispose())
-      overrideGet(this, 'queue', throwDisposed)
-      overrideGet(this, 'springs', throwDisposed)
-    }
+    eachProp(this.springs, iterator as any)
   }
 
   /** @internal Called at the end of every animation frame */
   protected _onFrame() {
     const { onStart, onChange, onRest } = this._events
 
-    const isActive = this._active.size > 0
-    if (isActive && this._phase != ACTIVE) {
-      this._phase = ACTIVE
+    const active = this._active.size > 0
+    if (active && !this._started) {
+      this._started = true
       flushCalls(onStart, this)
     }
 
-    const values =
-      onChange.size || (!isActive && onRest.size) ? this.get() : null
+    const idle = !active && this._started
+    const changed = this._changed.size > 0 && onChange.size
+    const values = changed || (idle && onRest.size) ? this.get() : null
 
-    flushCalls(onChange, values!)
+    if (changed) {
+      flushCalls(onChange, values!)
+    }
 
     // The "onRest" queue is only flushed when all springs are idle.
-    if (!isActive) {
-      this._phase = IDLE
+    if (idle) {
+      this._started = false
       flush(onRest, ([onRest, result]) => {
         result.value = values
         onRest(result)
@@ -251,11 +247,18 @@ export class Controller<State extends Lookup = Lookup>
   }
 
   /** @internal */
-  onParentChange(event: FrameValue.Event) {
+  eventObserved(event: FrameValue.Event) {
     if (event.type == 'change') {
-      this._active[event.idle ? 'delete' : 'add'](event.parent)
-      G.frameLoop.onFrame(this._onFrame)
+      this._changed.add(event.parent)
+      if (!event.idle) {
+        this._active.add(event.parent)
+      }
+    } else if (event.type == 'idle') {
+      this._active.delete(event.parent)
     }
+    // The `onFrame` handler runs when a parent is changed or idle.
+    else return
+    raf.onFrame(this._onFrame)
   }
 }
 
@@ -285,7 +288,7 @@ export async function flushUpdate(
   props: ControllerQueue[number],
   isLoop?: boolean
 ): AsyncResult {
-  const { keys, to, loop, onRest } = props
+  const { keys, to, from, loop, onRest, onResolve } = props
   const defaults = is.obj(props.default) && props.default
 
   // Looping must be handled in this function, or else the values
@@ -293,6 +296,10 @@ export async function flushUpdate(
   if (loop) {
     props.loop = false
   }
+
+  // Treat false like null, which gets ignored.
+  if (to === false) props.to = null
+  if (from === false) props.from = null
 
   const asyncTo = is.arr(to) || is.fun(to) ? to : undefined
   if (asyncTo) {
@@ -321,6 +328,7 @@ export async function flushUpdate(
             } else {
               // The "value" is set before the "handler" is called.
               queue.set(handler, {
+                target: ctrl,
                 value: null,
                 finished,
                 cancelled,
@@ -336,31 +344,21 @@ export async function flushUpdate(
     })
   }
 
-  if (!keys) {
-    let paused = getDefaultProp(props, 'pause')
-    if (paused !== true && typeof props.pause == 'boolean') {
-      paused = props.pause
-    }
-    if (paused === true) {
-      ctrl.pause()
-    } else if (paused === false) {
-      ctrl.resume()
-    }
-  }
-
-  const promises = (keys || Object.keys(ctrl.springs)).map(key =>
-    ctrl.springs[key]!.start(props as any)
-  )
-
   const state = ctrl['_state']
 
-  // This must come *after* the update is sent to each spring, or else
-  // their default `pause` prop wouldn't be updated in time.
-  if (ctrl.is(PAUSED)) {
-    await new Promise(resume => {
-      state.resumeQueue.add(resume)
-    })
+  // Pause/resume the `asyncTo` when `props.pause` is true/false.
+  if (props.pause === !state.paused) {
+    state.paused = props.pause
+    flushCalls(props.pause ? state.pauseQueue : state.resumeQueue)
   }
+  // When a controller is paused, its values are also paused.
+  else if (state.paused) {
+    props.pause = true
+  }
+
+  const promises: AsyncResult[] = (keys || Object.keys(ctrl.springs)).map(key =>
+    ctrl.springs[key]!.start(props as any)
+  )
 
   const cancel =
     props.cancel === true || getDefaultProp(props, 'cancel') === true
@@ -378,13 +376,23 @@ export async function flushUpdate(
               stopAsync(state, ctrl['_lastAsyncId'])
               resolve(getCancelledResult(ctrl))
             } else {
-              props.onRest = onRest as any
+              props.onRest = onRest
               resolve(runAsync(asyncTo!, props, state, ctrl))
             }
           },
         },
       })
     )
+  }
+
+  // Pause after updating each spring, so they can be resumed separately
+  // and so their default `pause` and `cancel` props are updated.
+  if (state.paused) {
+    // Ensure `this` must be resumed before the returned promise
+    // is resolved and before starting the next `loop` repetition.
+    await new Promise<void>(resume => {
+      state.resumeQueue.add(resume)
+    })
   }
 
   const result = getCombinedResult<any>(ctrl, await Promise.all(promises))
@@ -394,6 +402,9 @@ export async function flushUpdate(
       prepareKeys(ctrl, [nextProps])
       return flushUpdate(ctrl, nextProps, true)
     }
+  }
+  if (onResolve) {
+    raf.batchedUpdates(() => onResolve(result))
   }
   return result
 }
@@ -436,19 +447,19 @@ export function setSprings(
   ctrl: Controller,
   springs: SpringValues<UnknownProps>
 ) {
-  each(springs, (spring, key) => {
+  eachProp(springs, (spring, key) => {
     if (!ctrl.springs[key]) {
       ctrl.springs[key] = spring
-      spring.addChild(ctrl)
+      addFluidObserver(spring, ctrl)
     }
   })
 }
 
-function createSpring(key: string, observer?: FrameValue.Observer) {
+function createSpring(key: string, observer?: FluidObserver<FrameValue.Event>) {
   const spring = new SpringValue()
   spring.key = key
   if (observer) {
-    spring.addChild(observer)
+    addFluidObserver(spring, observer)
   }
   return spring
 }

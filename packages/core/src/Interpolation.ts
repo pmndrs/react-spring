@@ -1,19 +1,28 @@
+import { Arrify, InterpolatorArgs, InterpolatorFn } from '@react-spring/types'
 import {
   is,
+  raf,
   each,
   isEqual,
   toArray,
+  frameLoop,
   FluidValue,
+  getFluidValue,
   createInterpolator,
-  InterpolatorArgs,
-  InterpolatorFn,
-  OneOrMore,
-  Arrify,
-} from 'shared'
-import * as G from 'shared/globals'
+  Globals as G,
+  callFluidObservers,
+  addFluidObserver,
+  removeFluidObserver,
+  hasFluidValue,
+} from '@react-spring/shared'
 
 import { FrameValue, isFrameValue } from './FrameValue'
-import { getAnimated, setAnimated, getAnimatedType, getPayload } from 'animated'
+import {
+  getAnimated,
+  setAnimated,
+  getAnimatedType,
+  getPayload,
+} from '@react-spring/animated'
 
 /**
  * An `Interpolation` is a memoized value that's computed whenever one of its
@@ -33,9 +42,12 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   /** The function that maps inputs values to output */
   readonly calc: InterpolatorFn<In, Out>
 
+  /** The inputs which are currently animating */
+  protected _active = new Set<FluidValue>()
+
   constructor(
     /** The source of input values */
-    readonly source: OneOrMore<FluidValue>,
+    readonly source: unknown,
     args: InterpolatorArgs<In, Out>
   ) {
     super()
@@ -55,97 +67,119 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
       getAnimated(this)!.setValue(value)
       this._onChange(value, this.idle)
     }
+    // Become idle when all parents are idle or paused.
+    if (!this.idle && checkIdle(this._active)) {
+      becomeIdle(this)
+    }
   }
 
   protected _get() {
     const inputs: Arrify<In> = is.arr(this.source)
-      ? this.source.map(node => node.get())
-      : (toArray(this.source.get()) as any)
+      ? this.source.map(getFluidValue)
+      : (toArray(getFluidValue(this.source)) as any)
 
     return this.calc(...inputs)
   }
 
-  protected _reset() {
-    each(getPayload(this)!, node => node.reset())
-    super._reset()
-  }
-
   protected _start() {
-    this.idle = false
+    if (this.idle && !checkIdle(this._active)) {
+      this.idle = false
 
-    super._start()
+      each(getPayload(this)!, node => {
+        node.done = false
+      })
 
-    if (G.skipAnimation) {
-      this.idle = true
-      this.advance()
-    } else {
-      G.frameLoop.start(this)
+      if (G.skipAnimation) {
+        raf.batchedUpdates(() => this.advance())
+        becomeIdle(this)
+      } else {
+        frameLoop.start(this)
+      }
     }
   }
 
+  // Observe our sources only when we're observed.
   protected _attach() {
-    // Start observing our "source" once we have an observer.
-    let idle = true
     let priority = 1
     each(toArray(this.source), source => {
+      if (hasFluidValue(source)) {
+        addFluidObserver(source, this)
+      }
       if (isFrameValue(source)) {
-        if (!source.idle) idle = false
+        if (!source.idle) {
+          this._active.add(source)
+        }
         priority = Math.max(priority, source.priority + 1)
       }
-      source.addChild(this)
     })
     this.priority = priority
-    if (!idle) {
-      this._reset()
-      this._start()
-    }
+    this._start()
   }
 
+  // Stop observing our sources once we have no observers.
   protected _detach() {
-    // Stop observing our "source" once we have no observers.
     each(toArray(this.source), source => {
-      source.removeChild(this)
+      if (hasFluidValue(source)) {
+        removeFluidObserver(source, this)
+      }
     })
-    // This removes us from the frameloop.
-    this.idle = true
+    this._active.clear()
+    becomeIdle(this)
   }
 
   /** @internal */
-  onParentChange(event: FrameValue.Event) {
-    // Ensure our start value respects our parent values, in case
-    // any of their animations were restarted with the "reset" prop.
-    if (event.type == 'start') {
-      this.advance()
-    }
-    // Change events are useful for (1) reacting to non-animated parents
-    // and (2) reacting to the last change in a parent animation.
-    else if (event.type == 'change') {
-      // If we're idle, we know for sure that this change is *not*
-      // caused by an animation.
-      if (this.idle) {
+  eventObserved(event: FrameValue.Event) {
+    // Update our value when an idle parent is changed,
+    // and enter the frameloop when a parent is resumed.
+    if (event.type == 'change') {
+      if (event.idle) {
         this.advance()
+      } else {
+        this._active.add(event.parent)
+        this._start()
       }
-      // Leave the frameloop when all parents are done animating.
-      else if (event.idle) {
-        this.idle = toArray(this.source).every(
-          (source: any) => source.idle !== false
-        )
-        if (this.idle) {
-          this.advance()
-          each(getPayload(this)!, node => {
-            node.done = true
-          })
-        }
-      }
+    }
+    // Once all parents are idle, the `advance` method runs one more time,
+    // so we should avoid updating the `idle` status here.
+    else if (event.type == 'idle') {
+      this._active.delete(event.parent)
     }
     // Ensure our priority is greater than all parents, which means
     // our value won't be updated until our parents have updated.
     else if (event.type == 'priority') {
       this.priority = toArray(this.source).reduce(
-        (max, source: any) => Math.max(max, (source.priority || 0) + 1),
+        (highest: number, parent) =>
+          Math.max(highest, (isFrameValue(parent) ? parent.priority : 0) + 1),
         0
       )
     }
-    super.onParentChange(event)
+  }
+}
+
+/** Returns true for an idle source. */
+function isIdle(source: any) {
+  return source.idle !== false
+}
+
+/** Return true if all values in the given set are idle or paused. */
+function checkIdle(active: Set<FluidValue>) {
+  // Parents can be active even when paused, so the `.every` check
+  // removes us from the frameloop if all active parents are paused.
+  return !active.size || Array.from(active).every(isIdle)
+}
+
+/** Become idle if not already idle. */
+function becomeIdle(self: Interpolation) {
+  if (!self.idle) {
+    self.idle = true
+
+    each(getPayload(self)!, node => {
+      node.done = true
+    })
+
+    callFluidObservers(self, {
+      type: 'idle',
+      parent: self,
+    })
   }
 }

@@ -1,20 +1,20 @@
+import { FluidProps, FluidValue } from '@react-spring/shared'
 import {
   Any,
   Constrain,
   Lookup,
   Falsy,
-  FluidProps,
-  FluidValue,
   Merge,
   ObjectFromUnion,
   ObjectType,
   OneOrMore,
   Remap,
   UnknownProps,
-} from 'shared'
+} from '@react-spring/types'
 
-import { DEFAULT_PROPS } from '../helpers'
 import { Controller } from '../Controller'
+import { SpringRef } from '../SpringRef'
+import { SpringValue } from '../SpringValue'
 import { SpringConfig } from './objects'
 import { StringKeys, RawValues, IsPlainObject } from './common'
 import { TransitionKey, TransitionValues } from './transition'
@@ -24,9 +24,9 @@ import {
   OnRest,
   OnStart,
   OnProps,
-  OnDelayEnd,
   OnPause,
   OnResume,
+  OnResolve,
 } from './functions'
 
 /**
@@ -58,13 +58,9 @@ export type SpringsUpdate<State extends Lookup = UnknownProps> =
  * or a primitive type for a single animated value.
  */
 export interface SpringProps<T = any> extends AnimationProps<T> {
-  from?: GoalValue<T> | Falsy
+  from?: GoalValue<T>
   // FIXME: Use "SpringUpdate<T>" once type recursion is good enough.
   loop?: LoopProp<SpringUpdate>
-  /**
-   * Called after any delay has finished.
-   */
-  onDelayEnd?: EventProp<OnDelayEnd<T>>
   /**
    * Called after an animation is updated by new props,
    * even if the animation remains idle.
@@ -83,7 +79,7 @@ export interface SpringProps<T = any> extends AnimationProps<T> {
   /**
    * Called when all animations come to a stand-still.
    */
-  onRest?: EventProp<OnRest<T>>
+  onRest?: EventProp<OnRest<SpringValue<T>>>
 }
 
 /**
@@ -96,9 +92,7 @@ export interface SpringProps<T = any> extends AnimationProps<T> {
  * or a primitive type for a single animated value.
  */
 export type ToProps<T = any> =
-  | { to?: GoalProp<T> }
-  | { to?: SpringToFn<T> | Falsy }
-  | { to?: SpringChain<T> | Falsy }
+  | { to?: GoalProp<T> | SpringToFn<T> | SpringChain<T> }
   | ([T] extends [IsPlainObject<T>] ? InlineToProps<T> : never)
 
 /**
@@ -109,10 +103,12 @@ export type ToProps<T = any> =
  */
 export type GoalProp<T> = [T] extends [IsPlainObject<T>]
   ? GoalValues<T> | Falsy
-  : GoalValue<T> | Falsy
+  : GoalValue<T>
 
 /** A set of values for a `Controller` to animate from/to. */
-export type GoalValues<T extends Lookup> = FluidProps<Partial<T>>
+export type GoalValues<T extends Lookup> = FluidProps<T> extends infer Props
+  ? { [P in keyof Props]?: Props[P] | null }
+  : never
 
 /**
  * A value that `SpringValue` objects can animate from/to.
@@ -120,7 +116,7 @@ export type GoalValues<T extends Lookup> = FluidProps<Partial<T>>
  * The `UnknownProps` type lets you pass in { a: 1 } if the `key`
  * property of `SpringValue` equals "a".
  */
-export type GoalValue<T> = T | FluidValue<T> | UnknownProps
+export type GoalValue<T> = T | FluidValue<T> | UnknownProps | null | undefined
 
 /**
  * Where `to` is inferred from non-reserved props
@@ -128,9 +124,7 @@ export type GoalValue<T> = T | FluidValue<T> | UnknownProps
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type InlineToProps<T = any> = Remap<
-  FluidProps<Partial<T>> & { to?: undefined }
->
+export type InlineToProps<T = any> = Remap<GoalValues<T> & { to?: undefined }>
 
 /** A serial queue of spring updates. */
 export interface SpringChain<T = any>
@@ -156,13 +150,10 @@ export type ControllerUpdate<State extends Lookup = Lookup> = unknown &
  */
 export interface ControllerProps<State extends Lookup = Lookup>
   extends AnimationProps<State> {
+  ref?: SpringRef<State>
   from?: GoalValues<State> | Falsy
   // FIXME: Use "ControllerUpdate<T>" once type recursion is good enough.
   loop?: LoopProp<ControllerUpdate>
-  /**
-   * Called after any delay has finished.
-   */
-  onDelayEnd?: OnDelayEnd | { [P in keyof State]?: OnDelayEnd<State[P]> }
   /**
    * Called when the # of animating values exceeds 0
    *
@@ -176,7 +167,9 @@ export interface ControllerProps<State extends Lookup = Lookup>
    *
    * Also accepts an object for per-key events
    */
-  onRest?: OnRest<State> | { [P in keyof State]?: OnRest<State[P]> }
+  onRest?:
+    | OnRest<Controller<State>>
+    | { [P in keyof State]?: OnRest<SpringValue<State[P]>> }
   /**
    * Called once per frame when animations are active
    *
@@ -194,6 +187,10 @@ export interface ControllerProps<State extends Lookup = Lookup>
    * Also accepts an object for per-key events
    */
   onProps?: OnProps<State> | { [P in keyof State]?: OnProps<State[P]> }
+  /**
+   * Called when the promise for this update is resolved.
+   */
+  onResolve?: OnResolve<State>
 }
 
 export type LoopProp<T extends object> = boolean | T | (() => boolean | T)
@@ -203,10 +200,10 @@ export type VelocityProp<T = any> = T extends ReadonlyArray<number | string>
   : number
 
 /** For props that can be set on a per-key basis. */
-export type MatchProp<P extends string = string> =
+export type MatchProp<T> =
   | boolean
-  | OneOrMore<P>
-  | ((key: P) => boolean)
+  | OneOrMore<StringKeys<T>>
+  | ((key: StringKeys<T>) => boolean)
 
 /** Event props can be customized per-key. */
 export type EventProp<T> = T | Lookup<T | undefined>
@@ -227,21 +224,21 @@ export interface AnimationProps<T = any> {
   /**
    * When true, props jump to their goal values instead of animating.
    */
-  immediate?: MatchProp<StringKeys<T>>
+  immediate?: MatchProp<T>
   /**
    * Cancel all animations by using `true`, or some animations by using a key
    * or an array of keys.
    */
-  cancel?: MatchProp<StringKeys<T>>
+  cancel?: MatchProp<T>
   /**
    * Pause all animations by using `true`, or some animations by using a key
    * or an array of keys.
    */
-  pause?: MatchProp<StringKeys<T>>
+  pause?: MatchProp<T>
   /**
    * Start the next animations at their values in the `from` prop.
    */
-  reset?: MatchProp<StringKeys<T>>
+  reset?: MatchProp<T>
   /**
    * Swap the `to` and `from` props.
    */
@@ -249,22 +246,8 @@ export interface AnimationProps<T = any> {
   /**
    * Override the default props with this update.
    */
-  default?: boolean | SpringDefaultProps
+  default?: boolean | SpringProps<T>
 }
-
-export interface SpringEventProps<T = any>
-  extends Pick<SpringDefaultProps<T>, keyof ReservedEventProps> {}
-
-/** Default props for a `SpringValue` object */
-export type SpringDefaultProps<T = any> = {
-  [D in typeof DEFAULT_PROPS[number]]?: SpringProps<T>[D]
-}
-
-/** Default props for a `Controller` object */
-export type ControllerDefaultProps<State extends Lookup = Lookup> = Pick<
-  ControllerProps<State>,
-  'onStart' | 'onChange' | 'onRest'
->
 
 /**
  * Extract the custom props that are treated like `to` values
@@ -308,13 +291,14 @@ export interface ReservedProps extends ReservedEventProps {
 }
 
 export interface ReservedEventProps {
-  onDelayEnd?: any
   onProps?: any
   onStart?: any
   onChange?: any
   onPause?: any
   onResume?: any
   onRest?: any
+  onResolve?: any
+  onDestroyed?: any
 }
 
 /**
@@ -326,7 +310,9 @@ export interface ReservedEventProps {
  */
 export type PickAnimated<Props extends object, Fwd = true> = unknown &
   ([Props] extends [Any]
-    ? any // Preserve "any" instead of resolving to "{}"
+    ? Lookup // Preserve "any" instead of resolving to "{}"
+    : [object] extends [Props]
+    ? Lookup
     : ObjectFromUnion<
         | FromValues<Props>
         | (TransitionKey & keyof Props extends never

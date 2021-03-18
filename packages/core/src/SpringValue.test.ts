@@ -1,7 +1,13 @@
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 import { flushMicroTasks } from 'flush-microtasks'
-import { Globals } from 'shared'
+import {
+  addFluidObserver,
+  FluidObserver,
+  getFluidObservers,
+  Globals,
+  removeFluidObserver,
+} from '@react-spring/shared'
 
 const frameLength = 1000 / 60
 
@@ -45,17 +51,38 @@ describe('SpringValue', () => {
     expect(frames).toEqual(getFrames(spring2))
   })
 
-  // FIXME: This test fails.
-  xit('can animate an array of numbers', async () => {
+  it('can animate an array of numbers', async () => {
+    const onChange = jest.fn()
     const spring = new SpringValue()
     spring.start({
       to: [10, 20],
       from: [0, 0],
       config: { duration: 10 * frameLength },
+      onChange,
     })
     await advanceUntilIdle()
-    const frames = getFrames(spring)
-    expect(frames).not.toEqual([])
+    expect(onChange.mock.calls.slice(-1)[0]).toEqual([
+      spring.animation.to,
+      spring,
+    ])
+    expect(getFrames(spring)).toMatchSnapshot()
+  })
+
+  it('can have an animated string as its target', async () => {
+    const target = new SpringValue('yellow')
+    const spring = new SpringValue({
+      to: target,
+      config: { duration: 10 * frameLength },
+    })
+
+    // The target is not attached until the spring is observed.
+    addFluidObserver(spring, () => {})
+
+    mockRaf.step()
+    target.set('red')
+
+    await advanceUntilIdle()
+    expect(getFrames(spring)).toMatchSnapshot()
   })
 
   describeProps()
@@ -365,10 +392,60 @@ function describeImmediateProp() {
       expect(spring.get()).toBe(value)
     })
   })
+
+  describe('when "immediate: true" is followed by "immediate: false" in same frame', () => {
+    it('applies the immediate goal synchronously', () => {
+      const spring = new SpringValue(0)
+
+      // The immediate update is applied in the next frame.
+      spring.start({ to: 1, immediate: true })
+      expect(spring.get()).toBe(0)
+
+      // But when an animated update is merged before the next frame,
+      // the immediate update is applied synchronously.
+      spring.start({ to: 2 })
+      expect(spring.get()).toBe(1)
+      expect(spring.animation).toMatchObject({
+        fromValues: [1],
+        toValues: [2],
+      })
+    })
+
+    it('does nothing if the 2nd update has "reset: true"', () => {
+      const spring = new SpringValue(0)
+
+      // The immediate update is applied in the next frame.
+      spring.start({ to: 1, immediate: true })
+      expect(spring.get()).toBe(0)
+
+      // But when an animated update is merged before the next frame,
+      // the immediate update is applied synchronously.
+      spring.start({ to: 2, reset: true })
+      expect(spring.get()).toBe(0)
+      expect(spring.animation).toMatchObject({
+        fromValues: [0],
+        toValues: [2],
+      })
+    })
+  })
 }
 
 function describeConfigProp() {
   describe('the "config" prop', () => {
+    it('resets the velocity when "to" changes', () => {
+      const spring = new SpringValue(0)
+      spring.start({ to: 100, config: { velocity: 10 } })
+
+      const { config } = spring.animation
+      expect(config.velocity).toBe(10)
+
+      // Preserve velocity if "to" did not change.
+      spring.start({ config: { tension: 200 } })
+      expect(config.velocity).toBe(10)
+
+      spring.start({ to: 200 })
+      expect(config.velocity).toBe(0)
+    })
     describe('when "damping" is 1.0', () => {
       it('should prevent bouncing', async () => {
         const spring = new SpringValue(0)
@@ -587,6 +664,26 @@ function describeEvents() {
       spring.set(0)
       expect(onChange).toBeCalledTimes(3)
     })
+    describe('when active handler', () => {
+      it('is never called by the "set" method', () => {
+        const spring = new SpringValue(0)
+
+        const onChange = jest.fn()
+        spring.start(1, { onChange })
+
+        // Before first frame
+        spring.set(2)
+        expect(onChange).not.toBeCalled()
+
+        spring.start(1, { onChange })
+        mockRaf.step()
+        onChange.mockReset()
+
+        // Before last frame
+        spring.set(0)
+        expect(onChange).not.toBeCalled()
+      })
+    })
   })
   describe('the "onPause" event', () => {
     it('is called by the "pause" method', () => {
@@ -706,12 +803,13 @@ function describeMethods() {
       const promise = spring.start(1)
 
       await advanceUntilValue(spring, 0.5)
+      const value = spring.get()
       spring.set(2)
 
       expect(spring.idle).toBeTruthy()
       expect(await promise).toMatchObject({
         finished: false,
-        value: 2,
+        value,
       })
     })
   })
@@ -727,11 +825,14 @@ type OpaqueTarget = {
 
 function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
   describe('when our target is ' + name, () => {
-    let spring: SpringValue
     let target: OpaqueTarget
+    let spring: SpringValue
+    let observer: FluidObserver
     beforeEach(() => {
-      spring = new SpringValue(0)
       target = create(1)
+      spring = new SpringValue(0)
+      // The target is not attached until the spring is observed.
+      addFluidObserver(spring, (observer = () => {}))
     })
 
     it('animates toward the current value', async () => {
@@ -781,6 +882,8 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
       it('starts animating', async () => {
         spring.start({ to: target.node })
         await advanceUntil(() => spring.idle)
+        // Clear the frame cache.
+        getFrames(spring)
 
         target.start(2)
         await advanceUntilIdle()
@@ -822,29 +925,22 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
       })
     })
 
-    // FIXME: These tests fail.
-    xdescribe('when animating a string', () => {
-      it('animates as expected', async () => {
-        const spring = new SpringValue('yellow')
-        spring.start('red', {
-          config: { duration: frameLength * 3 },
-        })
+    // In the case of an Interpolation, staying attached will prevent
+    // garbage collection when an animation loop is active, which results
+    // in a memory leak since the Interpolation stays in the frameloop.
+    describe('when our last child is detached', () => {
+      it('detaches from the target', () => {
+        spring.start({ to: target.node })
 
-        await advanceUntilIdle()
-        spring.start({
-          loop: true,
-          reverse: true,
-        })
+        // Expect the target node to be attached.
+        expect(hasFluidObserver(target.node, spring)).toBeTruthy()
 
-        await advanceUntilValue(spring, 'yellow')
-        await advanceUntilValue(spring, 'red')
-        await advanceUntilValue(spring, 'yellow')
-        expect(getFrames(spring)).toMatchSnapshot()
+        // Remove the observer.
+        removeFluidObserver(spring, observer)
+
+        // Expect the target node to be detached.
+        expect(hasFluidObserver(target.node, spring)).toBeFalsy()
       })
-    })
-
-    describe('when animating an array', () => {
-      it.todo('animates as expected')
     })
   })
 }
@@ -869,4 +965,9 @@ function describeGlobals() {
       expect(onRest).toBeCalledTimes(1)
     })
   })
+}
+
+function hasFluidObserver(target: any, observer: FluidObserver) {
+  const observers = getFluidObservers(target)
+  return !!observers && observers.has(observer)
 }

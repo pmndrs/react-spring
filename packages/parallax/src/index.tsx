@@ -1,14 +1,12 @@
 import * as React from 'react'
 import { useContext, useState, useRef, useEffect, CSSProperties } from 'react'
+import { useMemoOne, useOnce, raf } from '@react-spring/shared'
 import {
   a,
   Controller,
   SpringConfig,
   config as configs,
 } from '@react-spring/web'
-import { useMemoOne } from 'use-memo-one'
-import { frameLoop } from 'shared/globals'
-import { useOnce } from 'shared'
 
 const ParentContext = React.createContext<any>(null)
 
@@ -222,7 +220,7 @@ export const Parallax = React.memo(
       if (!state.busy) {
         state.busy = true
         state.current = event.target[getScrollType(horizontal)]
-        frameLoop.onFrame(() => {
+        raf.onStart(() => {
           state.layers.forEach(layer =>
             layer.setPosition(state.space, state.current)
           )
@@ -237,7 +235,7 @@ export const Parallax = React.memo(
 
       const onResize = () => {
         const update = () => state.update()
-        frameLoop.onFrame(update)
+        raf.onFrame(update)
         setTimeout(update, 150) // Some browsers don't fire on maximize!
       }
 

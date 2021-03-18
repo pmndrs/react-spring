@@ -1,6 +1,6 @@
 import { getFluidValue } from 'fluids'
 import { createInterpolator } from './createInterpolator'
-import { InterpolatorConfig } from './types'
+import { InterpolatorConfig } from '@react-spring/types'
 import { colorToRgba } from './colorToRgba'
 import * as G from './globals'
 
@@ -13,7 +13,7 @@ const numberRegex = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
 const colorRegex = /(#(?:[0-9a-f]{2}){2,4}|(#[0-9a-f]{3})|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi
 
 // Covers color names (transparent, blue, etc.)
-let colorNamesRegex: RegExp
+let namedColorRegex: RegExp
 
 // rgba requires that the r,g,b are integers.... so we want to round them,
 // but we *dont* want to round the opacity (4th column).
@@ -34,16 +34,16 @@ const rgbaRound = (_: any, p1: number, p2: number, p3: number, p4: number) =>
 export const createStringInterpolator = (
   config: InterpolatorConfig<string>
 ) => {
-  if (!colorNamesRegex)
-    colorNamesRegex = G.colorNames
-      ? new RegExp(`(${Object.keys(G.colorNames).join('|')})`, 'g')
+  if (!namedColorRegex)
+    namedColorRegex = G.colors
+      ? new RegExp(`(${Object.keys(G.colors).join('|')})`, 'g')
       : /^\b$/ // never match
 
   // Convert colors to rgba(...)
   const output = config.output.map(value =>
     getFluidValue(value)
       .replace(colorRegex, colorToRgba)
-      .replace(colorNamesRegex, colorToRgba)
+      .replace(namedColorRegex, colorToRgba)
   )
 
   // Convert ["1px 2px", "0px 0px"] into [[1, 2], [0, 0]]

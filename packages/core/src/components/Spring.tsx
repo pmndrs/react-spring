@@ -1,5 +1,5 @@
+import { NoInfer, UnknownProps } from '@react-spring/types'
 import { useSpring, UseSpringProps } from '../hooks/useSpring'
-import { NoInfer, UnknownProps } from '../types/common'
 import { SpringValues, SpringToFn, SpringChain } from '../types'
 
 export type SpringComponentProps<
@@ -22,6 +22,6 @@ export function Spring<State extends object>(
   props: { to: State } & Omit<SpringComponentProps<NoInfer<State>>, 'to'>
 ): JSX.Element | null
 
-export function Spring({ children, ...props }: SpringComponentProps) {
+export function Spring({ children, ...props }: any) {
   return children(useSpring(props))
 }

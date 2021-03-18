@@ -1,17 +1,16 @@
-import { Globals } from 'core'
+import { Globals } from '@react-spring/core'
 import { unstable_batchedUpdates } from 'react-dom'
-import { createStringInterpolator } from 'shared/stringInterpolation'
-import colorNames from 'shared/colors'
-import { createHost } from 'animated'
+import { createStringInterpolator, colors } from '@react-spring/shared'
+import { createHost } from '@react-spring/animated'
 import { applyAnimatedValues } from './applyAnimatedValues'
 import { AnimatedStyle } from './AnimatedStyle'
 import { WithAnimated } from './animated'
 import { primitives } from './primitives'
 
 Globals.assign({
-  colorNames,
-  createStringInterpolator,
   batchedUpdates: unstable_batchedUpdates,
+  createStringInterpolator,
+  colors,
 })
 
 const host = createHost(primitives, {
@@ -24,4 +23,4 @@ export const animated = host.animated as WithAnimated
 export { animated as a }
 
 export * from './animated'
-export * from 'core'
+export * from '@react-spring/core'

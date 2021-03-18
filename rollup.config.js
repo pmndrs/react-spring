@@ -3,10 +3,10 @@ import path from 'path'
 import { crawl } from 'recrawl-sync'
 
 import dts from 'rollup-plugin-dts'
-import babel from 'rollup-plugin-babel'
+import babel from '@rollup/plugin-babel'
+import esbuild from 'rollup-plugin-esbuild'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import { terser } from 'rollup-plugin-terser'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
 const external = id => !id.startsWith('.') && !id.startsWith(root)
@@ -35,14 +35,12 @@ export const multiBundle = ({
 const getBundleConfig = ({
   input = 'src/index.ts',
   output = 'dist/index.js',
-  minify = false,
   sourcemap = true,
   sourcemapExcludeSources = true,
   sourceRoot = path.dirname(input),
 } = {}) => ({
   input,
   output,
-  minify,
   sourcemap,
   sourcemapExcludeSources,
   sourceRoot,
@@ -53,8 +51,7 @@ export const bundle = config => {
   return [
     esmBundle(config),
     cjsBundle(config),
-    dtsBundle(config, 'es'),
-    dtsBundle(config, 'cjs'),
+    dtsBundle(config, 'es'), //
   ]
 }
 
@@ -69,16 +66,7 @@ export const esmBundle = config => ({
     sourcemapExcludeSources: config.sourcemapExcludeSources,
   },
   external,
-  plugins: [
-    resolve({ extensions }),
-    babel(
-      getBabelOptions(
-        { useESModules: true },
-        '>1%, not dead, not ie 11, not op_mini all'
-      )
-    ),
-    config.minify && terser(),
-  ],
+  plugins: [esbuild({ target: 'es2018' })],
 })
 
 export const cjsBundle = config => ({
@@ -92,11 +80,7 @@ export const cjsBundle = config => ({
     sourcemapExcludeSources: config.sourcemapExcludeSources,
   },
   external,
-  plugins: [
-    resolve({ extensions }),
-    babel(getBabelOptions({ useESModules: false })),
-    config.minify && terser(),
-  ],
+  plugins: [esbuild({ target: 'es2018' })],
 })
 
 // Used for the ".umd" bundle
@@ -116,13 +100,17 @@ export const umdBundle = (name, config) => {
       format: 'umd',
       name,
       globals,
+      sourcemap: true,
     },
     external: Object.keys(globals),
     plugins: [
-      resolve({ extensions }),
+      resolve({ extensions: ['.js', '.ts', '.tsx'] }),
       commonjs({ include: /node_modules/ }),
-      babel(getBabelOptions({ useESModules: false })),
-      config.minify && terser(),
+      esbuild({ target: 'es2018' }),
+      babel({
+        presets: [['@babel/env', { targets: 'defaults' }]],
+        babelHelpers: 'bundled',
+      }),
     ],
   }
 }
@@ -143,29 +131,6 @@ export const dtsBundle = (config, format) => ({
   ],
   plugins: [dts()],
   external,
-})
-
-const babelExtensions = [
-  ...require('@babel/core').DEFAULT_EXTENSIONS,
-  'ts',
-  'tsx',
-]
-
-export const getBabelOptions = ({ useESModules }, targets) => ({
-  babelrc: false,
-  exclude: '**/node_modules/**',
-  extensions: babelExtensions,
-  runtimeHelpers: true,
-  presets: [
-    ['@babel/preset-env', { loose: true, targets }],
-    '@babel/preset-typescript',
-    '@babel/preset-react',
-  ],
-  plugins: [
-    ['@babel/plugin-proposal-class-properties', { loose: true }],
-    ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
-    ['@babel/plugin-transform-runtime', { useESModules }],
-  ],
 })
 
 const pkgCache = Object.create(null)
@@ -196,20 +161,15 @@ const rewritePaths = (opts = {}) => {
 
   return modulePath => {
     let depId = resolveLocal(modulePath)
-    if (!depId) return modulePath
-
-    // Some modules are built with "tsc" and thus have no ".cjs" variant
-    if (modulePath.startsWith('shared')) {
-      return depId
+    if (!depId) {
+      return modulePath
     }
-
     if (opts.cjs) {
       const name = packageNames.find(name => name === depId)
       if (name) {
         depId = path.join(name, packages[name].main)
       }
     }
-
     return depId
   }
 }

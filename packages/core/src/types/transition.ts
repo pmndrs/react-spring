@@ -6,11 +6,10 @@ import {
   Constrain,
   OneOrMore,
   UnknownProps,
-  RefProp,
   Merge,
   Falsy,
   NoInfer,
-} from 'shared'
+} from '@react-spring/types'
 
 import {
   AnimationProps,
@@ -20,14 +19,12 @@ import {
   GoalProp,
   PickAnimated,
   SpringChain,
-  SpringDefaultProps,
 } from './props'
 import { SpringToFn } from './functions'
 import { SpringValues, SpringConfig } from './objects'
 import { TransitionPhase } from '../TransitionPhase'
-import { AnimationResult } from '../AnimationResult'
-import { SpringHandle } from '../SpringHandle'
 import { Controller } from '../Controller'
+import { SpringRef } from '../SpringRef'
 
 /** The phases of a `useTransition` item */
 export type TransitionKey = 'initial' | 'enter' | 'update' | 'leave'
@@ -80,16 +77,16 @@ export type UseTransitionProps<Item = any> = Merge<
     config?:
       | SpringConfig
       | ((item: Item, index: number) => AnimationProps['config'])
-    onRest?: (
-      result: AnimationResult<UnknownProps>,
-      transition: TransitionState
-    ) => void
+    /**
+     * Called after a transition item is unmounted.
+     */
+    onDestroyed?: (item: Item, key: Key) => void
     /**
      * Used to access the imperative API.
      *
      * Animations never auto-start when `ref` is defined.
      */
-    ref?: RefProp<SpringHandle>
+    ref?: SpringRef
   }
 >
 
@@ -103,22 +100,16 @@ export type TransitionComponentProps<
     children: TransitionRenderFn<NoInfer<Item>, PickAnimated<Props>>
   }
 
-/** Default props for a `useTransition` call */
-export type TransitionDefaultProps<Item = any> = Pick<
-  UseTransitionProps<Item>,
-  keyof SpringDefaultProps
->
-
 type Key = string | number
 
 export type ItemKeys<T = any> = OneOrMore<Key> | ((item: T) => Key) | null
 
 /** The function returned by `useTransition` */
-export interface TransitionFn<Item = any, State extends object = any> {
+export interface TransitionFn<Item = any, State extends Lookup = Lookup> {
   (render: TransitionRenderFn<Item, State>): JSX.Element
 }
 
-export interface TransitionRenderFn<Item = any, State extends object = any> {
+export interface TransitionRenderFn<Item = any, State extends Lookup = Lookup> {
   (
     values: SpringValues<State>,
     item: Item,
@@ -127,7 +118,7 @@ export interface TransitionRenderFn<Item = any, State extends object = any> {
   ): ReactNode
 }
 
-export interface TransitionState<Item = any, State extends object = any> {
+export interface TransitionState<Item = any, State extends Lookup = Lookup> {
   key: any
   item: Item
   ctrl: Controller<State>

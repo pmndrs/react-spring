@@ -19,6 +19,7 @@ const App = () => {
     },
     loop: {
       reverse: true,
+      delay: 300,
     },
   })
   return <a.div style={s} />

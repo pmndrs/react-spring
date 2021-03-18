@@ -1,6 +1,9 @@
-import { createStringInterpolator } from 'shared/stringInterpolation'
+import {
+  Globals,
+  frameLoop,
+  createStringInterpolator,
+} from '@react-spring/shared'
 import { Interpolation } from './Interpolation'
-import { Globals } from 'shared'
 
 // Sane defaults
 Globals.assign({
@@ -10,5 +13,5 @@ Globals.assign({
 
 export { Globals }
 
-/** Advance all animations forward one frame */
-export const update = () => Globals.frameLoop.advance()
+/** Advance all animations by the given time */
+export const update = frameLoop.advance

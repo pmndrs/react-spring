@@ -1,5 +1,5 @@
 import { inferTo } from './helpers'
-import { ReservedProps } from './types/common'
+import { ReservedProps } from './types/props'
 
 describe('helpers', () => {
   it('interpolateTo', () => {
@@ -37,6 +37,8 @@ describe('helpers', () => {
       onStart: undefined,
       onChange: undefined,
       onRest: undefined,
+      onResolve: undefined,
+      onDestroyed: undefined,
     }
     expect(
       inferTo({

@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { useRef, useMemo, useImperativeHandle } from 'react'
+import { useContext, useRef, useMemo } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
+import { OneOrMore, UnknownProps } from '@react-spring/types'
 import {
   is,
   toArray,
@@ -8,28 +9,30 @@ import {
   useOnce,
   usePrev,
   each,
-  OneOrMore,
-  UnknownProps,
-} from 'shared'
+} from '@react-spring/shared'
 
 import {
   Change,
   ControllerUpdate,
   ItemKeys,
   PickAnimated,
-  SpringStartFn,
-  SpringStopFn,
   TransitionFn,
   TransitionState,
   TransitionTo,
   UseTransitionProps,
-  TransitionDefaultProps,
 } from '../types'
 import { Valid } from '../types/common'
-import { callProp, inferTo, getDefaultProps, hasProps } from '../helpers'
+import {
+  callProp,
+  detachRefs,
+  getDefaultProps,
+  hasProps,
+  inferTo,
+  replaceRef,
+} from '../helpers'
 import { Controller, getSprings, setSprings } from '../Controller'
-import { useSpringContext } from '../SpringContext'
-import { SpringHandle } from '../SpringHandle'
+import { SpringContext } from '../SpringContext'
+import { SpringRef } from '../SpringRef'
 import {
   ENTER,
   MOUNT,
@@ -55,11 +58,7 @@ export function useTransition<Item, Props extends object>(
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps: any[] | undefined
 ): PickAnimated<Props> extends infer State
-  ? [
-      TransitionFn<Item, State & object>,
-      SpringStartFn<State>,
-      SpringStopFn<State>
-    ]
+  ? [TransitionFn<Item, State>, SpringRef<State>]
   : never
 
 export function useTransition(
@@ -67,17 +66,17 @@ export function useTransition(
   props: UseTransitionProps,
   deps?: any[]
 ): any {
-  const { ref, reset, sort, trail = 0, expires = true } = props
+  const { reset, sort, trail = 0, expires = true, onDestroyed } = props
+
+  // Return a `SpringRef` if a deps array was passed.
+  const ref = useMemo(
+    () => (arguments.length == 3 ? new SpringRef() : void 0),
+    []
+  )
 
   // Every item has its own transition.
   const items = toArray(data)
   const transitions: TransitionState[] = []
-
-  // Keys help with reusing transitions between renders.
-  // The `key` prop can be undefined (which means the items themselves are used
-  // as keys), or a function (which maps each item to its key), or an array of
-  // keys (which are assigned to each item by index).
-  const keys = getKeys(items, props)
 
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<TransitionState[] | null>(null)
@@ -92,7 +91,23 @@ export function useTransition(
       if (t.expired) {
         clearTimeout(t.expirationId!)
       }
-      t.ctrl.dispose()
+      detachRefs(t.ctrl, ref)
+      t.ctrl.stop(true)
+    })
+  )
+
+  // Keys help with reusing transitions between renders.
+  // The `key` prop can be undefined (which means the items themselves are used
+  // as keys), or a function (which maps each item to its key), or an array of
+  // keys (which are assigned to each item by index).
+  const keys = getKeys(items, props, prevTransitions)
+
+  // Expired transitions that need clean up.
+  const expired = (reset && usedTransitions.current) || []
+  useLayoutEffect(() =>
+    each(expired, ({ ctrl, item, key }) => {
+      detachRefs(ctrl, ref)
+      callProp(onDestroyed, item, key)
     })
   )
 
@@ -103,6 +118,7 @@ export function useTransition(
       // Expired transitions are not rendered.
       if (t.expired) {
         clearTimeout(t.expirationId!)
+        expired.push(t)
       } else {
         i = reused[i] = keys.indexOf(t.key)
         if (~i) transitions[i] = t
@@ -146,7 +162,7 @@ export function useTransition(
   const forceUpdate = useForceUpdate()
 
   // These props are inherited by every phase change.
-  const defaultProps = getDefaultProps<TransitionDefaultProps>(props)
+  const defaultProps = getDefaultProps<UseTransitionProps>(props)
 
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
@@ -204,15 +220,13 @@ export function useTransition(
       payload.from = callProp(from, t.item, i)
     }
 
-    const { onRest }: { onRest?: any } = payload
-    payload.onRest = result => {
+    const { onResolve } = payload
+    payload.onResolve = result => {
+      callProp(onResolve, result)
+
       const transitions = usedTransitions.current!
       const t = transitions.find(t => t.key === key)
       if (!t) return
-
-      if (is.fun(onRest)) {
-        onRest(result, t)
-      }
 
       // Reset the phase of a cancelled enter/leave transition, so it can
       // retry the animation on the next render.
@@ -250,7 +264,7 @@ export function useTransition(
   })
 
   // The prop overrides from an ancestor.
-  const context = useSpringContext()
+  const context = useContext(SpringContext)
   const prevContext = usePrev(context)
   const hasContext = context !== prevContext && hasProps(context)
 
@@ -262,25 +276,28 @@ export function useTransition(
       })
   }, [context])
 
-  const api = useMemo(() => {
-    return SpringHandle.create(() => {
-      return usedTransitions.current!.map(t => t.ctrl)
-    })
-  }, [])
-
-  useImperativeHandle(ref, () => api)
-
   useLayoutEffect(
     () => {
       each(changes, ({ phase, springs, payload }, t) => {
-        setSprings(t.ctrl, springs)
-        if (!context.cancel) {
-          t.phase = phase
-          if (hasContext && phase == ENTER) {
-            t.ctrl.start({ default: context })
-          }
-          t.ctrl[ref ? 'update' : 'start'](payload)
+        const { ctrl } = t
+        t.phase = phase
+
+        // Attach the controller to our local ref.
+        ref?.add(ctrl)
+
+        // Update the injected ref if needed.
+        replaceRef(ctrl, payload.ref)
+
+        // Save any springs created this render.
+        setSprings(ctrl, springs)
+
+        // Merge the context into new items.
+        if (hasContext && phase == ENTER) {
+          ctrl.start({ default: context })
         }
+
+        // Postpone the update if an injected ref exists.
+        ctrl[ctrl.ref ? 'update' : 'start'](payload)
       })
     },
     reset ? void 0 : deps
@@ -304,14 +321,31 @@ export function useTransition(
     </>
   )
 
-  return arguments.length == 3
-    ? [renderTransitions, api.start, api.stop]
-    : renderTransitions
+  return ref ? [renderTransitions, ref] : renderTransitions
 }
+
+/** Local state for auto-generated item keys */
+let nextKey = 1
 
 function getKeys(
   items: readonly any[],
-  { key, keys = key }: { key?: ItemKeys; keys?: ItemKeys }
+  { key, keys = key }: { key?: ItemKeys; keys?: ItemKeys },
+  prevTransitions: TransitionState[] | null
 ): readonly any[] {
+  if (keys === null) {
+    const reused = new Set()
+    return items.map(item => {
+      const t =
+        prevTransitions &&
+        prevTransitions.find(
+          t => t.item === item && t.phase !== LEAVE && !reused.has(t)
+        )
+      if (t) {
+        reused.add(t)
+        return t.key
+      }
+      return nextKey++
+    })
+  }
   return is.und(keys) ? items : is.fun(keys) ? items.map(keys) : toArray(keys)
 }
