@@ -9,6 +9,7 @@ export * from './createInterpolator'
 export * from './stringInterpolation'
 export * from './deprecations'
 export * from './helpers'
+export * from './isAnimatedString'
 
 export * from './hooks/useForceUpdate'
 export * from './hooks/useMemoOne'

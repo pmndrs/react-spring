@@ -1,5 +1,4 @@
 import { Lookup, Arrify, AnyFn, Any } from '@react-spring/types'
-import * as G from './globals'
 
 export function noop() {}
 
@@ -32,11 +31,6 @@ export function isEqual(a: any, b: any) {
   }
   return a === b
 }
-
-// Not all strings can be animated (eg: {display: "none"})
-export const isAnimatedString = (value: unknown): value is string =>
-  is.str(value) &&
-  (value[0] == '#' || /\d/.test(value) || value in (G.colors || {}))
 
 type EachFn<Value, Key, This> = (this: This, value: Value, key: Key) => void
 type Eachable<Value = any, Key = any, This = any> = {
