@@ -1,7 +1,8 @@
 import { applyProps, addEffect, invalidate } from 'react-three-fiber'
-import { Globals, FrameLoop } from '@react-spring/core'
+import { Globals } from '@react-spring/core'
 import { createStringInterpolator, colors } from '@react-spring/shared'
 import { createHost } from '@react-spring/animated'
+import { FrameLoop } from './FrameLoop'
 import { primitives } from './primitives'
 import { WithAnimated } from './animated'
 
@@ -15,6 +16,7 @@ addEffect(() => {
 Globals.assign({
   createStringInterpolator,
   colors,
+  //@ts-ignore
   frameLoop,
 })
 
