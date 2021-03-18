@@ -20,7 +20,11 @@ export const interpolate: Interpolator = (source: any, ...args: [any]) => (
 
 /** Extract the raw value types that are being interpolated */
 export type Interpolated<T extends ReadonlyArray<any>> = {
-  [P in keyof T]: T[P] extends { get(): infer U } ? U : never
+  [P in keyof T]: T[P] extends infer Element
+    ? Element extends FluidValue<infer U>
+      ? U
+      : Element
+    : never
 }
 
 /**
@@ -28,16 +32,16 @@ export type Interpolated<T extends ReadonlyArray<any>> = {
  * The exported `interpolate` function uses this type.
  */
 export interface Interpolator {
-  // Single parent
-  <In, Out>(
-    parent: FluidValue<In>,
-    interpolator: InterpolatorFn<In, Out>
-  ): Interpolation<Out>
-
-  // Tuple of parents
-  <In extends ReadonlyArray<FluidValue>, Out>(
+  // Tuple of parent values
+  <In extends ReadonlyArray<any>, Out>(
     parents: In,
     interpolator: (...args: Interpolated<In>) => Out
+  ): Interpolation<Out>
+
+  // Single parent value
+  <In, Out>(
+    parent: FluidValue<In> | In,
+    interpolator: InterpolatorFn<In, Out>
   ): Interpolation<Out>
 
   // Interpolation config

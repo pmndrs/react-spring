@@ -53,7 +53,10 @@ export type AnimationResolver<T extends Readable> = (
 ) => void
 
 /** @internal */
-export type EventKey = keyof ReservedEventProps
+export type EventKey = Exclude<
+  keyof ReservedEventProps,
+  'onResolve' | 'onDestroyed'
+>
 
 /** @internal */
 export type PickEventFns<T> = {

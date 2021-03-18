@@ -1,7 +1,13 @@
 import { SpringValue } from './SpringValue'
 import { FrameValue } from './FrameValue'
 import { flushMicroTasks } from 'flush-microtasks'
-import { Globals } from '@react-spring/shared'
+import {
+  addFluidObserver,
+  FluidObserver,
+  getFluidObservers,
+  Globals,
+  removeFluidObserver,
+} from '@react-spring/shared'
 
 const frameLength = 1000 / 60
 
@@ -46,13 +52,19 @@ describe('SpringValue', () => {
   })
 
   it('can animate an array of numbers', async () => {
+    const onChange = jest.fn()
     const spring = new SpringValue()
     spring.start({
       to: [10, 20],
       from: [0, 0],
       config: { duration: 10 * frameLength },
+      onChange,
     })
     await advanceUntilIdle()
+    expect(onChange.mock.calls.slice(-1)[0]).toEqual([
+      spring.animation.to,
+      spring,
+    ])
     expect(getFrames(spring)).toMatchSnapshot()
   })
 
@@ -64,7 +76,7 @@ describe('SpringValue', () => {
     })
 
     // The target is not attached until the spring is observed.
-    spring.addChild({ onParentChange() {} })
+    addFluidObserver(spring, () => {})
 
     mockRaf.step()
     target.set('red')
@@ -420,6 +432,20 @@ function describeImmediateProp() {
 
 function describeConfigProp() {
   describe('the "config" prop', () => {
+    it('resets the velocity when "to" changes', () => {
+      const spring = new SpringValue(0)
+      spring.start({ to: 100, config: { velocity: 10 } })
+
+      const { config } = spring.animation
+      expect(config.velocity).toBe(10)
+
+      // Preserve velocity if "to" did not change.
+      spring.start({ config: { tension: 200 } })
+      expect(config.velocity).toBe(10)
+
+      spring.start({ to: 200 })
+      expect(config.velocity).toBe(0)
+    })
     describe('when "damping" is 1.0', () => {
       it('should prevent bouncing', async () => {
         const spring = new SpringValue(0)
@@ -801,14 +827,12 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
   describe('when our target is ' + name, () => {
     let target: OpaqueTarget
     let spring: SpringValue
-    let observer: FrameValue.Observer & {
-      onParentChange: jest.MockedFunction<any>
-    }
+    let observer: FluidObserver
     beforeEach(() => {
       target = create(1)
       spring = new SpringValue(0)
       // The target is not attached until the spring is observed.
-      spring.addChild((observer = { onParentChange: jest.fn() }))
+      addFluidObserver(spring, (observer = () => {}))
     })
 
     it('animates toward the current value', async () => {
@@ -906,17 +930,16 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
     // in a memory leak since the Interpolation stays in the frameloop.
     describe('when our last child is detached', () => {
       it('detaches from the target', () => {
-        const children = target.node['_children']
         spring.start({ to: target.node })
 
         // Expect the target node to be attached.
-        expect(children.has(spring)).toBeTruthy()
+        expect(hasFluidObserver(target.node, spring)).toBeTruthy()
 
         // Remove the observer.
-        spring.removeChild(observer)
+        removeFluidObserver(spring, observer)
 
         // Expect the target node to be detached.
-        expect(children.has(spring)).toBeFalsy()
+        expect(hasFluidObserver(target.node, spring)).toBeFalsy()
       })
     })
   })
@@ -942,4 +965,9 @@ function describeGlobals() {
       expect(onRest).toBeCalledTimes(1)
     })
   })
+}
+
+function hasFluidObserver(target: any, observer: FluidObserver) {
+  const observers = getFluidObservers(target)
+  return !!observers && observers.has(observer)
 }

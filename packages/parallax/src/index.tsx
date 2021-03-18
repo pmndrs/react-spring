@@ -1,13 +1,12 @@
 import * as React from 'react'
 import { useContext, useState, useRef, useEffect, CSSProperties } from 'react'
-import { useOnce, raf } from '@react-spring/shared'
+import { useMemoOne, useOnce, raf } from '@react-spring/shared'
 import {
   a,
   Controller,
   SpringConfig,
   config as configs,
 } from '@react-spring/web'
-import { useMemoOne } from 'use-memo-one'
 
 const ParentContext = React.createContext<any>(null)
 

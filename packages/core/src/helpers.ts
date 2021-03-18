@@ -1,9 +1,8 @@
-import { useMemoOne } from 'use-memo-one'
 import {
   is,
   toArray,
   eachProp,
-  getFluidConfig,
+  getFluidValue,
   isAnimatedString,
   FluidValue,
   Globals as G,
@@ -12,10 +11,6 @@ import { AnyFn, OneOrMore, Lookup } from '@react-spring/types'
 import { ReservedProps, ForwardProps, InferTo } from './types'
 import type { Controller } from './Controller'
 import type { SpringRef } from './SpringRef'
-
-// @see https://github.com/alexreardon/use-memo-one/pull/10
-export const useMemo: typeof useMemoOne = (create, deps) =>
-  useMemoOne(create, deps || [{}])
 
 export function callProp<T>(
   value: T,
@@ -188,10 +183,8 @@ export function inferTo<T extends object>(props: T): InferTo<T> {
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
 export function computeGoal<T>(value: T | FluidValue<T>): T {
-  const config = getFluidConfig(value)
-  return config
-    ? computeGoal(config.get())
-    : is.arr(value)
+  value = getFluidValue(value)
+  return is.arr(value)
     ? value.map(computeGoal)
     : isAnimatedString(value)
     ? (G.createStringInterpolator({

@@ -190,7 +190,7 @@ export interface ControllerProps<State extends Lookup = Lookup>
   /**
    * Called when the promise for this update is resolved.
    */
-  onResolve?: OnResolve<T>
+  onResolve?: OnResolve<State>
 }
 
 export type LoopProp<T extends object> = boolean | T | (() => boolean | T)

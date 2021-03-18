@@ -8,10 +8,14 @@ import {
   frameLoop,
   flushCalls,
   getFluidValue,
-  getFluidConfig,
   isAnimatedString,
   FluidValue,
   Globals as G,
+  callFluidObservers,
+  hasFluidValue,
+  addFluidObserver,
+  removeFluidObserver,
+  getFluidObservers,
 } from '@react-spring/shared'
 import {
   Animated,
@@ -106,7 +110,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
     super()
     if (!is.und(arg1) || !is.und(arg2)) {
       const props = is.obj(arg1) ? { ...arg1 } : { ...arg2, from: arg1 }
-      props.default = true
+      if (is.und(props.default)) {
+        props.default = true
+      }
       this.start(props)
     }
   }
@@ -158,11 +164,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     let { config, toValues } = anim
 
     const payload = getPayload(anim.to)
-    if (!payload) {
-      const toConfig = getFluidConfig(anim.to)
-      if (toConfig) {
-        toValues = toArray(toConfig.get())
-      }
+    if (!payload && hasFluidValue(anim.to)) {
+      toValues = toArray(getFluidValue(anim.to)) as any
     }
 
     anim.values.forEach((node, i) => {
@@ -202,9 +205,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
         // Duration easing
         if (!is.und(config.duration)) {
-          let p = config.progress || 0
-          if (config.duration <= 0) p = 1
-          else p += (1 - p) * Math.min(1, elapsed / config.duration)
+          let p = 1
+          if (config.duration > 0) {
+            p = (config.progress || 0) + elapsed / config.duration
+            p = p > 1 ? 1 : p < 0 ? 0 : p
+          }
 
           position = from + config.easing(p) * (to - from)
           velocity = (position - node.lastPosition) / dt
@@ -330,8 +335,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /**
-   * Freeze the active animation in time.
-   * This does nothing when not animating.
+   * Freeze the active animation in time, as well as any updates merged
+   * before `resume` is called.
    */
   pause() {
     this._update({ pause: true })
@@ -419,7 +424,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /** @internal */
-  onParentChange(event: FrameValue.Event) {
+  eventObserved(event: FrameValue.Event) {
     if (event.type == 'change') {
       this._start()
     } else if (event.type == 'priority') {
@@ -589,6 +594,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
       anim.from = from
     }
 
+    // Coerce "from" into a static value.
+    from = getFluidValue(from)
+
     /** The "to" value is changing. */
     const hasToChanged = !isEqual(to, prevTo)
 
@@ -596,19 +604,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
       this._focus(to)
     }
 
-    // Both "from" and "to" can use a fluid config (thanks to http://npmjs.org/fluids).
-    const toConfig = getFluidConfig(to)
-    const fromConfig = getFluidConfig(from)
-
-    if (fromConfig) {
-      from = fromConfig.get()
-    }
-
     /** The "to" prop is async. */
     const hasAsyncTo = isAsyncTo(props.to)
 
     const { config } = anim
     const { decay, velocity } = config
+
+    // Reset to default velocity when goal values are defined.
+    if (hasToProp || hasFromProp) {
+      config.velocity = 0
+    }
 
     // The "runAsync" function treats the "config" prop as a default,
     // so we must avoid merging it when the "to" prop is async.
@@ -672,7 +677,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     // When the goal value is fluid, we don't know if its value
     // will change before the next animation frame, so it always
     // starts the animation to be safe.
-    let started = !!toConfig
+    let started = hasFluidValue(to)
     let finished = false
 
     if (!started) {
@@ -711,9 +716,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (!hasAsyncTo) {
       // Make sure our "toValues" are updated even if our previous
       // "to" prop is a fluid value whose current value is also ours.
-      if (started || getFluidConfig(prevTo)) {
+      if (started || hasFluidValue(prevTo)) {
         anim.values = node.getPayload()
-        anim.toValues = toConfig
+        anim.toValues = hasFluidValue(to)
           ? null
           : goalType == AnimatedString
           ? [1]
@@ -791,11 +796,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
   protected _focus(value: T | FluidValue<T>) {
     const anim = this.animation
     if (value !== anim.to) {
-      if (this._children.size) {
+      if (getFluidObservers(this)) {
         this._detach()
       }
       anim.to = value
-      if (this._children.size) {
+      if (getFluidObservers(this)) {
         this._attach()
       }
     }
@@ -805,9 +810,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     let priority = 0
 
     const { to } = this.animation
-    const config = getFluidConfig(to)
-    if (config) {
-      config.addChild(this)
+    if (hasFluidValue(to)) {
+      addFluidObserver(to, this)
       if (isFrameValue(to)) {
         priority = to.priority + 1
       }
@@ -817,7 +821,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   protected _detach() {
-    getFluidConfig(this.animation.to)?.removeChild(this)
+    const { to } = this.animation
+    if (hasFluidValue(to)) {
+      removeFluidObserver(to, this)
+    }
   }
 
   /**
@@ -916,7 +923,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         anim.onChange = anim.onPause = anim.onResume = undefined
       }
 
-      this._emit({
+      callFluidObservers(this, {
         type: 'idle',
         parent: this,
       })

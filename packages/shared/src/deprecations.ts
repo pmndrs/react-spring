@@ -8,7 +8,7 @@ export function deprecateInterpolate() {
     flagInterpolate = true
     console.warn(
       prefix +
-        'The "interpolate" function is deprecated in v10 (use "to" instead)'
+        'The "interpolate" function is deprecated in v9 (use "to" instead)'
     )
   }
 }

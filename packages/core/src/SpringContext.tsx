@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useContext, PropsWithChildren } from 'react'
-import { useMemo } from './helpers'
+import { useMemoOne } from '@react-spring/shared'
 
 /**
  * This context affects all new and existing `SpringValue` objects
@@ -24,7 +24,7 @@ export const SpringContext = ({
     immediate = props.immediate || !!inherited.immediate
 
   // Memoize the context to avoid unwanted renders.
-  props = useMemo(() => ({ pause, immediate }), [pause, immediate])
+  props = useMemoOne(() => ({ pause, immediate }), [pause, immediate])
 
   const { Provider } = ctx
   return <Provider value={props}>{children}</Provider>

@@ -7,9 +7,11 @@ import {
   eachProp,
   FluidValue,
   FluidEvent,
-  FluidObserver,
-  getFluidConfig,
   getFluidValue,
+  callFluidObservers,
+  hasFluidValue,
+  addFluidObserver,
+  removeFluidObserver,
 } from '@react-spring/shared'
 
 /** The transform-functions
@@ -116,9 +118,8 @@ export class AnimatedStyle extends AnimatedObject {
 }
 
 /** @internal */
-class FluidTransform extends FluidValue<string> implements FluidObserver {
+class FluidTransform extends FluidValue<string> {
   protected _value: string | null = null
-  protected _children = new Set<FluidObserver>()
 
   constructor(readonly inputs: Inputs, readonly transforms: Transforms) {
     super()
@@ -142,38 +143,32 @@ class FluidTransform extends FluidValue<string> implements FluidObserver {
     return identity ? 'none' : transform
   }
 
-  addChild(child: FluidObserver) {
-    if (!this._children.size) {
-      // Start observing our inputs once we have an observer.
+  // Start observing our inputs once we have an observer.
+  protected observerAdded(count: number) {
+    if (count == 1)
       each(this.inputs, input =>
-        each(input, value => {
-          const config = getFluidConfig(value)
-          if (config) config.addChild(this)
-        })
+        each(
+          input,
+          value => hasFluidValue(value) && addFluidObserver(value, this)
+        )
       )
-    }
-    this._children.add(child)
   }
 
-  removeChild(child: FluidObserver) {
-    this._children.delete(child)
-    if (!this._children.size) {
-      // Stop observing our inputs once we have no observers.
+  // Stop observing our inputs once we have no observers.
+  protected observerRemoved(count: number) {
+    if (count == 0)
       each(this.inputs, input =>
-        each(input, value => {
-          const config = getFluidConfig(value)
-          if (config) config.removeChild(this)
-        })
+        each(
+          input,
+          value => hasFluidValue(value) && removeFluidObserver(value, this)
+        )
       )
-    }
   }
 
-  onParentChange(event: FluidEvent) {
+  eventObserved(event: FluidEvent) {
     if (event.type == 'change') {
       this._value = null
     }
-    each(this._children, child => {
-      child.onParentChange(event)
-    })
+    callFluidObservers(this, event)
   }
 }

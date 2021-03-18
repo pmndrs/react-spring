@@ -3,7 +3,7 @@ import { Animated, AnimatedValue, AnimatedObject } from '@react-spring/animated'
 
 type Transform = { [key: string]: string | number | Animated }
 
-type Source = Transform[] | null
+type Source = Transform[]
 
 export class AnimatedTransform extends AnimatedObject {
   protected source!: Source

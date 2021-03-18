@@ -2,7 +2,6 @@ import * as Globals from './globals'
 export { Globals }
 
 export * from './FrameLoop'
-export * from './hooks'
 export * from './colors'
 export * from './colorToRgba'
 export * from './colorMatchers'
@@ -12,5 +11,11 @@ export * from './deprecations'
 export * from './helpers'
 export * from './isAnimatedString'
 
+export * from './hooks/useForceUpdate'
+export * from './hooks/useMemoOne'
+export * from './hooks/useOnce'
+export * from './hooks/usePrev'
+
 export * from 'fluids'
-export { raf, Timeout } from 'rafz'
+export { raf } from 'rafz'
+export type { Timeout } from 'rafz'

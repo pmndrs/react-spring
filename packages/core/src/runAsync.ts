@@ -105,7 +105,7 @@ export function runAsync<T extends AnimationTarget>(
         bailIfEnded(bailSignal)
 
         if (state.paused) {
-          await new Promise(resume => {
+          await new Promise<void>(resume => {
             state.resumeQueue.add(resume)
           })
         }

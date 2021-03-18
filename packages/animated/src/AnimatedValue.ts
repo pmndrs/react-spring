@@ -16,8 +16,9 @@ export class AnimatedValue<T = any> extends Animated {
     }
   }
 
-  static create<T>(from: T, _to?: T | null) {
-    return new AnimatedValue(from)
+  /** @internal */
+  static create(value: any) {
+    return new AnimatedValue(value)
   }
 
   getPayload(): Payload {
