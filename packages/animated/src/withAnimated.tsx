@@ -8,8 +8,9 @@ import {
   useForceUpdate,
   useOnce,
   FluidEvent,
-  FluidObserver,
   FluidValue,
+  addFluidObserver,
+  removeFluidObserver,
 } from '@react-spring/shared'
 import { ElementType } from '@react-spring/types'
 
@@ -67,11 +68,11 @@ export const withAnimated = (Component: any, host: HostConfig) => {
       observerRef.current = observer
 
       // Observe the latest dependencies.
-      each(deps, dep => dep.addChild(observer))
+      each(deps, dep => addFluidObserver(dep, observer))
 
       // Stop observing previous dependencies.
       if (lastObserver) {
-        each(lastObserver.deps, dep => dep.removeChild(lastObserver))
+        each(lastObserver.deps, dep => removeFluidObserver(dep, lastObserver))
         raf.cancel(lastObserver.update)
       }
     })
@@ -79,7 +80,7 @@ export const withAnimated = (Component: any, host: HostConfig) => {
     // Stop observing on unmount.
     useOnce(() => () => {
       const observer = observerRef.current!
-      each(observer.deps, dep => dep.removeChild(observer))
+      each(observer.deps, dep => removeFluidObserver(dep, observer))
     })
 
     const usedProps = host.getComponentProps(props.getValue())
@@ -87,9 +88,9 @@ export const withAnimated = (Component: any, host: HostConfig) => {
   })
 }
 
-class PropsObserver implements FluidObserver {
+class PropsObserver {
   constructor(readonly update: () => void, readonly deps: Set<FluidValue>) {}
-  onParentChange(event: FluidEvent) {
+  eventObserved(event: FluidEvent) {
     if (event.type == 'change') {
       raf.write(this.update)
     }

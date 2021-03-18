@@ -1,5 +1,6 @@
 import { SpringValue } from './SpringValue'
 import { to } from './interpolate'
+import { addFluidObserver } from '@react-spring/shared'
 
 describe('Interpolation', () => {
   it.todo('can use a SpringValue')
@@ -25,7 +26,7 @@ describe('Interpolation', () => {
 
       // For interpolation to be active, it must be observed.
       const observer = jest.fn()
-      c.addChild({ onParentChange: observer })
+      addFluidObserver(c, observer)
 
       // Pause the first input.
       a.pause()

@@ -1,9 +1,4 @@
-import {
-  Arrify,
-  InterpolatorArgs,
-  InterpolatorFn,
-  OneOrMore,
-} from '@react-spring/types'
+import { Arrify, InterpolatorArgs, InterpolatorFn } from '@react-spring/types'
 import {
   is,
   raf,
@@ -12,8 +7,13 @@ import {
   toArray,
   frameLoop,
   FluidValue,
+  getFluidValue,
   createInterpolator,
   Globals as G,
+  callFluidObservers,
+  addFluidObserver,
+  removeFluidObserver,
+  hasFluidValue,
 } from '@react-spring/shared'
 
 import { FrameValue, isFrameValue } from './FrameValue'
@@ -47,7 +47,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
 
   constructor(
     /** The source of input values */
-    readonly source: OneOrMore<FluidValue>,
+    readonly source: unknown,
     args: InterpolatorArgs<In, Out>
   ) {
     super()
@@ -75,8 +75,8 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
 
   protected _get() {
     const inputs: Arrify<In> = is.arr(this.source)
-      ? this.source.map(node => node.get())
-      : (toArray(this.source.get()) as any)
+      ? this.source.map(getFluidValue)
+      : (toArray(getFluidValue(this.source)) as any)
 
     return this.calc(...inputs)
   }
@@ -102,7 +102,9 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   protected _attach() {
     let priority = 1
     each(toArray(this.source), source => {
-      source.addChild(this)
+      if (hasFluidValue(source)) {
+        addFluidObserver(source, this)
+      }
       if (isFrameValue(source)) {
         if (!source.idle) {
           this._active.add(source)
@@ -117,14 +119,16 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   // Stop observing our sources once we have no observers.
   protected _detach() {
     each(toArray(this.source), source => {
-      source.removeChild(this)
+      if (hasFluidValue(source)) {
+        removeFluidObserver(source, this)
+      }
     })
     this._active.clear()
     becomeIdle(this)
   }
 
   /** @internal */
-  onParentChange(event: FrameValue.Event) {
+  eventObserved(event: FrameValue.Event) {
     // Update our value when an idle parent is changed,
     // and enter the frameloop when a parent is resumed.
     if (event.type == 'change') {
@@ -144,7 +148,8 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
     // our value won't be updated until our parents have updated.
     else if (event.type == 'priority') {
       this.priority = toArray(this.source).reduce(
-        (max, source: any) => Math.max(max, (source.priority || 0) + 1),
+        (highest: number, parent) =>
+          Math.max(highest, (isFrameValue(parent) ? parent.priority : 0) + 1),
         0
       )
     }
@@ -172,7 +177,7 @@ function becomeIdle(self: Interpolation) {
       node.done = true
     })
 
-    self['_emit']({
+    callFluidObservers(self, {
       type: 'idle',
       parent: self,
     })
