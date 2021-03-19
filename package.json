@@ -87,6 +87,7 @@
     "rollup-plugin-dts": "^1.4.11",
     "rollup-plugin-esbuild": "^2.5.0",
     "sade": "^1.6.1",
+    "shx": "^0.3.3",
     "sort-package-json": "1.22.1",
     "spec.ts": "1.1.3",
     "typescript": "^4.0.0",
