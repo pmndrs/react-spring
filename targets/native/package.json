@@ -3,7 +3,7 @@
   "version": "9.0.0-rc.4",
   "main": "src/index.ts",
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c && copyfiles package.json dist"
   },
   "dependencies": {
     "@react-spring/animated": "link:../../packages/animated",
