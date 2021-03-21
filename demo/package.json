@@ -8,7 +8,6 @@
   "private": false,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
     "serve": "vite preview"
   },
   "dependencies": {

@@ -2,6 +2,14 @@
   "name": "@react-spring/types",
   "version": "9.0.0-rc.3",
   "description": "Internal package with TypeScript stuff",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "directory": "dist"
+  },
+  "scripts": {
+    "build": "rimraf dist && yarn copy",
+    "copy": "copyfiles package.json *.js *.d.ts dist"
+  },
   "dependencies": {
     "@alloc/types": "^1.2.1"
   }
