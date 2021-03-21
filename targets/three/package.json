@@ -18,7 +18,7 @@
     "three": "^0.115.0"
   },
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c && copyfiles package.json dist"
   },
   "publishConfig": {
     "directory": "dist"

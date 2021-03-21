@@ -18,7 +18,7 @@
     "react-dom": "~16.9.0"
   },
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c && copyfiles package.json dist"
   },
   "publishConfig": {
     "directory": "dist"
