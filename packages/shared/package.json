@@ -4,7 +4,7 @@
   "description": "Globals and shared modules",
   "main": "src/index.ts",
   "scripts": {
-    "build": "rollup -c && copyfiles package.json dist"
+    "build": "rollup -c"
   },
   "publishConfig": {
     "directory": "dist"
