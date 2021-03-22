@@ -1,4 +1,4 @@
-import { applyProps, addEffect, invalidate } from '@react-three/fiber'
+import { applyProps, addEffect, invalidate } from 'react-three-fiber'
 import { Globals } from '@react-spring/core'
 import { createStringInterpolator, colors } from '@react-spring/shared'
 import { createHost } from '@react-spring/animated'
