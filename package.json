@@ -32,7 +32,7 @@
   "scripts": {
     "build": "bic",
     "clean": "lerna exec --parallel --no-bail -- rimraf node_modules dist .rpt2_cache .bic_cache",
-    "prepare": "cd ./demo && yarn && cd ../ && node ./scripts/prepare.js && bic && yarn test:ts",
+    "prepare": "cd ./demo && yarn && cd ../",
     "release": "node ./scripts/release.js",
     "test": "jest",
     "test:cov": "jest --coverage",
