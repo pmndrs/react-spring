@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { forwardRef, useRef, Ref, useCallback } from 'react'
+import { forwardRef, useRef, Ref, useCallback, useEffect } from 'react'
 import { useLayoutEffect } from 'react-layout-effect'
 import {
   is,
@@ -44,7 +44,8 @@ export const withAnimated = (Component: any, host: HostConfig) => {
     const [props, deps] = getAnimatedState(givenProps, host)
 
     const forceUpdate = useForceUpdate()
-    const observer = new PropsObserver(() => {
+
+    const callback = () => {
       const instance = instanceRef.current
       if (hasInstance && !instance) {
         // Either this component was unmounted before changes could be
@@ -60,7 +61,9 @@ export const withAnimated = (Component: any, host: HostConfig) => {
       if (didUpdate === false) {
         forceUpdate()
       }
-    }, deps)
+    }
+
+    const observer = new PropsObserver(callback, deps)
 
     const observerRef = useRef<PropsObserver>()
     useLayoutEffect(() => {
@@ -77,6 +80,7 @@ export const withAnimated = (Component: any, host: HostConfig) => {
       }
     })
 
+    useEffect(callback, [])
     // Stop observing on unmount.
     useOnce(() => () => {
       const observer = observerRef.current!
