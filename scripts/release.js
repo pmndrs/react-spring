@@ -126,6 +126,10 @@ function updateLockfile(opts = {}) {
   // Merge the "yarn.lock" changes into the version commit.
   exec(`git add yarn.lock`)
   exec(`git commit --amend --no-edit`)
+
+  exec(`yarn build`)
+
+  exec(`node ./scripts/prepare`)
 }
 
 function undoCommit(shouldUndo) {
