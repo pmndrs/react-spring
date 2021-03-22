@@ -17,9 +17,7 @@
   ],
   "license": "MIT",
   "author": "Paul Henschel",
-  "maintainers": [
-    "Alec Larson (https://github.com/aleclarson)"
-  ],
+  "maintainers": [],
   "workspaces": {
     "packages": [
       "packages/*",
