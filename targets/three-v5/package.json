@@ -1,5 +1,5 @@
 {
-  "name": "@react-spring/three",
+  "name": "@react-spring/three-v5",
   "version": "9.0.0-rc.4",
   "main": "src/index.ts",
   "dependencies": {
@@ -9,15 +9,13 @@
     "@react-spring/types": "link:../../packages/types"
   },
   "peerDependencies": {
-    "@react-three/fiber": ">=6.0",
     "react": ">=16.11",
-    "three": ">=0.126"
+    "react-three-fiber": ">=4.0",
+    "three": ">=0.115"
   },
   "devDependencies": {
-    "@react-three/fiber": "^5.3.15",
-    "@types/three": "^0.126.1",
     "react-three-fiber": "^4.0.0",
-    "three": "^0.126.1"
+    "three": "^0.115.0"
   },
   "scripts": {
     "build": "rollup -c"
