@@ -1,0 +1,5 @@
+{
+  "packages": ["packages/*", "targets/*"],
+  "sandboxes": ["/demo/src/sandboxes/card", "/demo/src/sandboxes/gooBlobs"],
+  "node": "14"
+}

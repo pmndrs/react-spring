@@ -540,3 +540,8 @@ vite@^2.1.2:
     rollup "^2.38.5"
   optionalDependencies:
     fsevents "~2.3.1"
+
+wouter@^2.7.4:
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/wouter/-/wouter-2.7.4.tgz#d528122cacf6e9805d7b953bbddfb90226850977"
+  integrity sha512-shJIsHR+gcn69L2zR+0eKquOvAcjfIEdhzf8iAP502DlrAwg5lO2Q90DqIvXryNz/mk1fe2crTB40ZHXjoF1Bg==
