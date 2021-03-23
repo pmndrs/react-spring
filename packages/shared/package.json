@@ -1,0 +1,20 @@
+{
+  "name": "@react-spring/shared",
+  "version": "9.0.0-rc.4",
+  "description": "Globals and shared modules",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  },
+  "dependencies": {
+    "@react-spring/types": "link:../types",
+    "fluids": "^0.2.2",
+    "rafz": "^0.1.13"
+  },
+  "peerDependencies": {
+    "react": ">=16.8"
+  }
+}

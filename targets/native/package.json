@@ -1,0 +1,26 @@
+{
+  "name": "@react-spring/native",
+  "version": "9.0.0-rc.4",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "dependencies": {
+    "@react-spring/animated": "link:../../packages/animated",
+    "@react-spring/core": "link:../../packages/core",
+    "@react-spring/shared": "link:../../packages/shared",
+    "@react-spring/types": "link:../../packages/types"
+  },
+  "peerDependencies": {
+    "react": ">=16.8",
+    "react-native": ">=0.58"
+  },
+  "devDependencies": {
+    "@types/react": "~16.9.0",
+    "@types/react-native": "~0.57.0",
+    "react-native": "~0.58.0"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  }
+}

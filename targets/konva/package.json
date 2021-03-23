@@ -1,0 +1,26 @@
+{
+  "name": "@react-spring/konva",
+  "version": "9.0.0-rc.4",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@react-spring/animated": "link:../../packages/animated",
+    "@react-spring/core": "link:../../packages/core",
+    "@react-spring/shared": "link:../../packages/shared",
+    "@react-spring/types": "link:../../packages/types"
+  },
+  "peerDependencies": {
+    "konva": ">=2.6",
+    "react": ">=16.8",
+    "react-konva": ">=16.8"
+  },
+  "devDependencies": {
+    "konva": "~2.6.0",
+    "react-konva": "~16.8.0"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  }
+}

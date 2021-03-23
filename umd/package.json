@@ -1,0 +1,10 @@
+{
+  "name": "umd",
+  "version": "0.0.0",
+  "description": "Example using .umd.js bundle",
+  "private": true,
+  "scripts": {
+    "build": "../node_modules/.bin/esbuild --bundle main.jsx --outfile=_main.js"
+  },
+  "bic": false
+}

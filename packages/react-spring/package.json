@@ -1,0 +1,19 @@
+{
+  "name": "react-spring",
+  "version": "9.0.0-rc.4",
+  "main": "src/web.ts",
+  "dependencies": {
+    "@react-spring/core": "link:../core",
+    "@react-spring/konva": "link:../../targets/konva",
+    "@react-spring/native": "link:../../targets/native",
+    "@react-spring/three": "link:../../targets/three",
+    "@react-spring/web": "link:../../targets/web",
+    "@react-spring/zdog": "link:../../targets/zdog"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  }
+}

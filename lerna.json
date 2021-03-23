@@ -1,0 +1,24 @@
+{
+  "version": "9.0.0-rc.4",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "registry": "https://registry.npmjs.org",
+  "ignoreChanges": [
+    "**/__tests__/**",
+    "**/__snapshots__/**",
+    "**/*.test.*",
+    "**/*.md"
+  ],
+  "command": {
+    "version": {
+      "changelog": false,
+      "conventionalCommits": true,
+      "message": "%v",
+      "push": false
+    },
+    "publish": {
+      "contents": "dist",
+      "ignoreScripts": true
+    }
+  }
+}

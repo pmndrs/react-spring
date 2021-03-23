@@ -1,0 +1,26 @@
+{
+  "name": "@react-spring/web",
+  "version": "9.0.0-rc.4",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@react-spring/animated": "link:../../packages/animated",
+    "@react-spring/core": "link:../../packages/core",
+    "@react-spring/shared": "link:../../packages/shared",
+    "@react-spring/types": "link:../../packages/types"
+  },
+  "peerDependencies": {
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.0.0",
+    "@testing-library/react": "^9.1.1",
+    "react-dom": "~16.9.0"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  }
+}

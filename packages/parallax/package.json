@@ -1,0 +1,18 @@
+{
+  "name": "@react-spring/parallax",
+  "version": "9.0.0-rc.4",
+  "main": "src/index.tsx",
+  "dependencies": {
+    "@react-spring/shared": "link:../shared",
+    "@react-spring/web": "link:../../targets/web"
+  },
+  "peerDependencies": {
+    "react": ">=16.8"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  }
+}

@@ -1,134 +1,98 @@
 {
-  "name": "react-spring",
-  "version": "8.0.27",
-  "description": "A set of spring-physics based animation primitives",
-  "main": "web.cjs.js",
-  "module": "web.js",
-  "react-native": "native.js",
+  "name": "@react-spring/lerna",
   "private": true,
-  "sideEffects": false,
+  "description": "Cross-platform animation engine for React",
+  "repository": "pmndrs/react-spring",
+  "homepage": "https://github.com/pmndrs/react-spring#readme",
+  "keywords": [
+    "animated",
+    "animation",
+    "hooks",
+    "motion",
+    "react",
+    "react-native",
+    "spring",
+    "typescript",
+    "velocity"
+  ],
+  "license": "MIT",
+  "author": "Paul Henschel",
+  "maintainers": [],
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "targets/*"
+    ],
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
-    "prebuild": "rimraf dist",
-    "docz": "docz dev",
-    "docz:build": "docz build && cp .docz/dist/index.html .docz/dist/200.html && cp examples/CNAME .docz/dist/CNAME",
-    "build": "npm-run-all --parallel copy rollup",
-    "copy": "copyfiles -f package.json readme.md LICENSE.md \"types/*\" dist && json -I -f dist/package.json -e \"this.private=false; this.devDependencies=undefined; this.optionalDependencies=undefined; this.scripts=undefined; this.husky=undefined; this.prettier=undefined; this.jest=undefined;\"",
-    "rollup": "rollup -c",
-    "prepare": "npm run build",
+    "build": "bic",
+    "clean": "lerna exec --parallel --no-bail -- rimraf node_modules dist .rpt2_cache .bic_cache",
+    "prepare": "yarn build && node ./scripts/prepare.js",
+    "release": "node ./scripts/release.js",
     "test": "jest",
-    "test:dev": "jest --watch --no-coverage",
-    "test:coverage:watch": "jest --watch",
-    "test:ts": "tsc --noEmit",
-    "postinstall": "node -e \"console.log('\\u001b[35m\\u001b[1mEnjoy react-spring? You can now donate to our open collective:\\u001b[22m\\u001b[39m\\n > \\u001b[34mhttps://opencollective.com/react-spring/donate\\u001b[0m')\""
+    "test:cov": "jest --coverage",
+    "test:ts": "cd packages/react-spring && tsc -p . --noEmit"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "body-max-line-length": [
+        0
+      ]
+    }
   },
   "husky": {
     "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "pretty-quick --staged"
     }
   },
-  "prettier": {
-    "semi": false,
-    "trailingComma": "es5",
-    "singleQuote": true,
-    "jsxBracketSameLine": true,
-    "tabWidth": 2,
-    "printWidth": 80
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/drcmda/react-spring.git"
-  },
-  "keywords": [
-    "react",
-    "motion",
-    "animated",
-    "animation",
-    "spring"
-  ],
-  "author": "Paul Henschel",
-  "contributors": [
-    "Alec Larson (https://github.com/aleclarson)"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/drcmda/react-spring/issues"
-  },
-  "homepage": "https://github.com/drcmda/react-spring#readme",
   "devDependencies": {
-    "@babel/core": "7.2.2",
-    "@babel/plugin-proposal-class-properties": "7.3.0",
-    "@babel/plugin-proposal-do-expressions": "7.2.0",
-    "@babel/plugin-proposal-object-rest-spread": "7.3.2",
-    "@babel/plugin-transform-modules-commonjs": "7.2.0",
-    "@babel/plugin-transform-parameters": "7.2.0",
-    "@babel/plugin-transform-runtime": "7.2.0",
-    "@babel/plugin-transform-template-literals": "7.2.0",
-    "@babel/preset-env": "7.3.1",
-    "@babel/preset-react": "7.0.0",
-    "@babel/preset-typescript": "^7.1.0",
-    "@types/jest": "^24.0.0",
-    "@types/mock-raf": "^1.0.2",
-    "@types/react": "16.8.2",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "24.1.0",
-    "babel-plugin-transform-react-remove-prop-types": "0.4.24",
-    "babel-polyfill": "6.26.0",
-    "copyfiles": "2.1.0",
-    "enzyme": "3.8.0",
-    "enzyme-adapter-react-16": "1.9.1",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@rollup/plugin-babel": "^5.2.1",
+    "@rollup/plugin-commonjs": "^11.1.0",
+    "@rollup/plugin-node-resolve": "^7.1.3",
+    "@types/jest": "^24.0.13",
+    "@types/react": "^16.8.19",
+    "build-if-changed": "^1.5.0",
+    "chalk": "^2.4.2",
+    "copyfiles": "^2.4.1",
+    "enquirer": "^2.3.2",
+    "esbuild": "^0.8.0",
+    "esbuild-jest": "^0.2.2",
+    "execa": "^2.0.4",
+    "flush-microtasks": "^1.0.1",
+    "fs-extra": "7.0.1",
     "husky": "1.3.1",
-    "jest": "24.1.0",
-    "json": "9.0.6",
-    "konva": "^2.6.0",
-    "mock-raf": "1.0.1",
-    "npm-run-all": "4.1.5",
-    "prettier": "1.16.4",
+    "jest": "^25.1.0",
+    "jest-watch-typeahead": "^0.3.1",
+    "lerna": "3.15.0",
+    "meta": "^1.2.19",
+    "mock-raf": "npm:@react-spring/mock-raf",
+    "prettier": "^2.0.5",
     "pretty-quick": "1.10.0",
-    "react": "16.8.1",
-    "react-dom": "16.8.1",
-    "react-konva": "^16.8.0",
-    "react-native": "^0.58.4",
-    "react-test-renderer": "16.8.1",
-    "react-testing-library": "5.6.1",
+    "react": "~16.9.0",
+    "recrawl-sync": "^1.2.2",
     "rimraf": "2.6.3",
-    "rollup": "1.1.2",
-    "rollup-plugin-babel": "4.3.2",
-    "rollup-plugin-commonjs": "9.2.0",
-    "rollup-plugin-node-resolve": "4.0.0",
-    "rollup-plugin-size-snapshot": "0.8.0",
-    "rollup-plugin-uglify": "6.0.2",
-    "typescript": "3.3.3"
+    "rollup": "^2.7.6",
+    "rollup-plugin-dts": "^1.4.11",
+    "rollup-plugin-esbuild": "^2.5.0",
+    "sade": "^1.6.1",
+    "sort-package-json": "1.22.1",
+    "spec.ts": "1.1.3",
+    "typescript": "^4.0.0",
+    "typescript-rewrite-paths": "^1.2.0"
   },
-  "peerDependencies": {
-    "react": ">= 16.8.0",
-    "react-dom": ">= 16.8.0"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.3.1",
-    "prop-types": "^15.5.8"
-  },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "jest",
-      "legacy"
-    ],
-    "testRegex": "test.(js|ts|tsx)$",
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true,
-    "coverageReporters": [
-      "json",
-      "html",
-      "text",
-      "text-summary"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!test/"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/setupTests.js"
-    ]
+  "publishConfig": {
+    "access": "public"
   },
   "collective": {
     "type": "opencollective",

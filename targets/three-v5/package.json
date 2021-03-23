@@ -1,0 +1,26 @@
+{
+  "name": "@react-spring/three-v5",
+  "version": "9.0.0-rc.4",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@react-spring/animated": "link:../../packages/animated",
+    "@react-spring/core": "link:../../packages/core",
+    "@react-spring/shared": "link:../../packages/shared",
+    "@react-spring/types": "link:../../packages/types"
+  },
+  "peerDependencies": {
+    "react": ">=16.11",
+    "react-three-fiber": ">=4.0",
+    "three": ">=0.115"
+  },
+  "devDependencies": {
+    "react-three-fiber": "^4.0.0",
+    "three": "^0.115.0"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  }
+}
