@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "lib": ["es2017"],
+    "lib": ["es2017", "DOM"],
     "moduleResolution": "node",
     "noErrorTruncation": true,
     "noEmitOnError": true,
@@ -15,6 +15,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
+    "module": "ESNext",
     "typeRoots": ["../../node_modules/@types", "../../@types"]
   }
 }
