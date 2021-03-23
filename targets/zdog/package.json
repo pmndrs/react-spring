@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/zdog",
-  "version": "9.0.0-rc.4",
+  "version": "9.0.0",
   "main": "src/index.ts",
   "dependencies": {
     "@react-spring/animated": "link:../../packages/animated",
