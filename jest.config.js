@@ -32,9 +32,6 @@ function getProjects() {
 }
 
 function createConfig(rootDir) {
-  const { compilerOptions } = fs.readJsonSync(
-    path.join(rootDir, 'tsconfig.json')
-  )
   return {
     rootDir,
     preset: 'ts-jest',
@@ -56,18 +53,3 @@ function createConfig(rootDir) {
     timers: 'fake',
   }
 }
-
-// module.exports = {
-//   preset: 'ts-jest',
-//   setupFilesAfterEnv:
-//     rootDir.indexOf('shared') < 0
-//       ? [path.join(__dirname, 'packages/core/test/setup.ts')]
-//       : [],
-//   testEnvironment: 'jsdom',
-//   testPathIgnorePatterns: ['/node_modules/'],
-//   modulePathIgnorePatterns: ['dist'],
-//   moduleFileExtensions: ['js', 'ts', 'tsx'],
-//   verbose: false,
-//   testTimeout: 30000,
-//   timers: 'fake',
-// }
