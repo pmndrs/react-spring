@@ -89,7 +89,7 @@
     "sort-package-json": "1.22.1",
     "spec.ts": "1.1.3",
     "ts-jest": "^26.5.4",
-    "typescript": "^4.0.0",
+    "typescript": "^4.2.3",
     "typescript-rewrite-paths": "^1.2.0"
   },
   "publishConfig": {
