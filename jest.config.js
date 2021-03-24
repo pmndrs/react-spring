@@ -37,6 +37,7 @@ function createConfig(rootDir) {
   )
   return {
     rootDir,
+    preset: 'ts-jest',
     setupFilesAfterEnv:
       rootDir.indexOf('shared') < 0
         ? [path.join(__dirname, 'packages/core/test/setup.ts')]
@@ -48,12 +49,25 @@ function createConfig(rootDir) {
     moduleNameMapper: {
       '^react$': '<rootDir>/../../node_modules/react',
     },
-    transform: {
-      '^.+\\.tsx?$': 'esbuild-jest',
-    },
     collectCoverageFrom: ['src/**/*'],
     coverageDirectory: './coverage',
+    moduleFileExtensions: ['js', 'ts', 'tsx'],
     coverageReporters: ['json', 'html', 'text'],
     timers: 'fake',
   }
 }
+
+// module.exports = {
+//   preset: 'ts-jest',
+//   setupFilesAfterEnv:
+//     rootDir.indexOf('shared') < 0
+//       ? [path.join(__dirname, 'packages/core/test/setup.ts')]
+//       : [],
+//   testEnvironment: 'jsdom',
+//   testPathIgnorePatterns: ['/node_modules/'],
+//   modulePathIgnorePatterns: ['dist'],
+//   moduleFileExtensions: ['js', 'ts', 'tsx'],
+//   verbose: false,
+//   testTimeout: 30000,
+//   timers: 'fake',
+// }

@@ -72,7 +72,7 @@ describe('AnimatedValue interpolation options', () => {
 
   it('accepts an AnimatedValueArray and an interpolation function', () => {
     const value = to(spring([1, 2, 3]), (r, g, b) => `rgb(${r}, ${g}, ${b})`)
-    expect(value.get()).toBe('rgb(1, 2, 3)')
+    expect(value.get()).toBe('rgba(1, 2, 3, 1)')
   })
 
   it('chains interpolations', () => {

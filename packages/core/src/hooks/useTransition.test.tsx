@@ -1,4 +1,5 @@
 import * as React from 'react'
+import '@testing-library/jest-dom'
 import { RenderResult, render } from '@testing-library/react'
 import { toArray } from '@react-spring/shared'
 import { TransitionFn, UseTransitionProps } from '../types'
@@ -25,12 +26,12 @@ describe('useTransition', () => {
     update(true, props)
     expect(rendered).toEqual([true])
 
-    mockRaf.step()
+    global.mockRaf.step()
 
     update(false, props)
     expect(rendered).toEqual([true, false])
 
-    await advanceUntilIdle()
+    await global.advanceUntilIdle()
     expect(rendered).toEqual([false])
   })
 
@@ -45,12 +46,12 @@ describe('useTransition', () => {
       update(true, props)
       expect(rendered).toEqual([true])
 
-      mockRaf.step()
+      global.mockRaf.step()
 
       update(false, props)
       expect(rendered).toEqual([true, false])
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(rendered).toEqual([false])
     })
   })
@@ -68,12 +69,12 @@ describe('useTransition', () => {
       update(true, props)
       expect(rendered).toEqual([true])
 
-      mockRaf.step()
+      global.mockRaf.step()
 
       update(false, props)
       expect(rendered).toEqual([true, false])
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(rendered).toEqual([false])
     })
   })
@@ -89,7 +90,7 @@ describe('useTransition', () => {
         }),
       })
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(onRest).toBeCalledTimes(1)
     })
   })
@@ -104,12 +105,12 @@ describe('useTransition', () => {
 
       update(true, props)
       expect(rendered).toEqual([true])
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
 
       update(false, props)
       expect(rendered).toEqual([true, false])
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(rendered).toEqual([false])
     })
   })

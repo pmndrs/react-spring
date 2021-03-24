@@ -15,6 +15,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
+    "esModuleInterop": true,
     "typeRoots": ["../../targets/zdog/@types", "../../targets/three/@types"]
   }
 }

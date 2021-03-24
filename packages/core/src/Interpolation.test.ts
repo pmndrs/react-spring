@@ -19,7 +19,7 @@ describe('Interpolation', () => {
     it('leaves the frameloop', () => {
       const a = new SpringValue({ from: 0, to: 1 })
       const b = new SpringValue({ from: 1, to: 0 })
-      mockRaf.step()
+      global.mockRaf.step()
 
       const calc = jest.fn((a: number, b: number) => Math.abs(a - b))
       const c = to([a, b], calc)
@@ -33,7 +33,7 @@ describe('Interpolation', () => {
 
       // Expect interpolation to continue.
       calc.mockClear()
-      mockRaf.step()
+      global.mockRaf.step()
       expect(calc).toBeCalled()
 
       // Pause the other input.
@@ -43,13 +43,13 @@ describe('Interpolation', () => {
       // When its value stays the same, it checks the idle status of each input,
       // which triggers an update to its own idle status.
       calc.mockClear()
-      mockRaf.step()
+      global.mockRaf.step()
       expect(calc).toBeCalled()
       expect(c.idle).toBeTruthy()
 
       // Expect interpolation to be paused.
       calc.mockClear()
-      mockRaf.step()
+      global.mockRaf.step()
       expect(calc).not.toBeCalled()
     })
   })
