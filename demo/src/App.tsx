@@ -14,7 +14,7 @@ const links: {
 const Example = ({ link }: { link: string }) => {
   const Component = links[link]
   return (
-    <div>
+    <div className="main">
       <Link href="/">
         <a>← Back</a>
       </Link>

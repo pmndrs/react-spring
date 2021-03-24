@@ -13,9 +13,8 @@ body {
 
 .main {
   position: relative;
-  width: 200px;
-  height: 50px;
-  background: #272727;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
   border-radius: 5px;
   border: 2px solid white;
