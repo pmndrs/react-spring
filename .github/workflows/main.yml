@@ -1,6 +1,8 @@
 name: release
 on:
-  push: {}
+  push:
+    branches:
+      - 'master'
   pull_request: {}
 jobs:
   main:
