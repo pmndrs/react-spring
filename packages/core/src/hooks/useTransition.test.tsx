@@ -3,7 +3,13 @@ import { RenderResult, render } from '@testing-library/react'
 import { toArray } from '@react-spring/shared'
 import { TransitionFn, UseTransitionProps } from '../types'
 import { useTransition } from './useTransition'
+import { MessageChannel as MessageChannelPolyfill } from 'worker_threads'
 
+beforeAll(() => {
+  if (!window.MessageChannel) {
+    window.MessageChannel = (MessageChannelPolyfill as unknown) as typeof window.MessageChannel
+  }
+})
 describe('useTransition', () => {
   let transition: TransitionFn
   let rendered: any[]
