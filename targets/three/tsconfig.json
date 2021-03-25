@@ -13,6 +13,7 @@
     "preserveSymlinks": true,
     "sourceMap": true,
     "strict": true,
+    "esModuleInterop": true,
     "target": "esnext"
   }
 }

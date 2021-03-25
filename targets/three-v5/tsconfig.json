@@ -12,6 +12,7 @@
     "noUnusedParameters": true,
     "preserveSymlinks": true,
     "sourceMap": true,
+    "esModuleInterop": true,
     "strict": true,
     "target": "esnext"
   }

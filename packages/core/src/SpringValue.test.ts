@@ -17,8 +17,8 @@ describe('SpringValue', () => {
     spring.start(1, {
       config: { duration: 10 * frameLength },
     })
-    await advanceUntilIdle()
-    const frames = getFrames(spring)
+    await global.advanceUntilIdle()
+    const frames = global.getFrames(spring)
     expect(frames).toMatchSnapshot()
   })
 
@@ -29,8 +29,8 @@ describe('SpringValue', () => {
       from: '0px 0px',
       config: { duration: 10 * frameLength },
     })
-    await advanceUntilIdle()
-    const frames = getFrames(spring)
+    await global.advanceUntilIdle()
+    const frames = global.getFrames(spring)
     expect(frames).toMatchSnapshot()
     const { finished } = await promise
     expect(finished).toBeTruthy()
@@ -41,14 +41,14 @@ describe('SpringValue', () => {
     const spring1 = new SpringValue(0)
     spring1.start(10)
 
-    await advanceUntilIdle()
-    const frames = getFrames(spring1).map(n => n + 'px')
+    await global.advanceUntilIdle()
+    const frames = global.getFrames(spring1).map(n => n + 'px')
 
     const spring2 = new SpringValue('0px')
     spring2.start('10px')
 
-    await advanceUntilIdle()
-    expect(frames).toEqual(getFrames(spring2))
+    await global.advanceUntilIdle()
+    expect(frames).toEqual(global.getFrames(spring2))
   })
 
   it('can animate an array of numbers', async () => {
@@ -60,12 +60,12 @@ describe('SpringValue', () => {
       config: { duration: 10 * frameLength },
       onChange,
     })
-    await advanceUntilIdle()
+    await global.advanceUntilIdle()
     expect(onChange.mock.calls.slice(-1)[0]).toEqual([
       spring.animation.to,
       spring,
     ])
-    expect(getFrames(spring)).toMatchSnapshot()
+    expect(global.getFrames(spring)).toMatchSnapshot()
   })
 
   it('can have an animated string as its target', async () => {
@@ -78,11 +78,11 @@ describe('SpringValue', () => {
     // The target is not attached until the spring is observed.
     addFluidObserver(spring, () => {})
 
-    mockRaf.step()
+    global.mockRaf.step()
     target.set('red')
 
-    await advanceUntilIdle()
-    expect(getFrames(spring)).toMatchSnapshot()
+    await global.advanceUntilIdle()
+    expect(global.getFrames(spring)).toMatchSnapshot()
   })
 
   describeProps()
@@ -124,7 +124,7 @@ describe('SpringValue', () => {
       await flushMicroTasks()
       expect(resolve).not.toBeCalled()
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(resolve).toBeCalled()
     })
   })
@@ -157,22 +157,22 @@ function describeToProp() {
       // Prevent the animation to 1 (which hasn't started yet)
       spring.start(0)
 
-      await advanceUntilIdle()
-      expect(getFrames(spring)).toEqual([])
+      await global.advanceUntilIdle()
+      expect(global.getFrames(spring)).toEqual([])
     })
 
     it('avoids interrupting an active animation', async () => {
       const spring = new SpringValue(0)
       spring.start(1)
-      await advance()
+      await global.advance()
 
       const goal = spring.get()
       spring.start(goal)
       expect(spring.idle).toBeFalsy()
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(spring.get()).toBe(goal)
-      expect(getFrames(spring)).toMatchSnapshot()
+      expect(global.getFrames(spring)).toMatchSnapshot()
     })
   })
 
@@ -180,7 +180,7 @@ function describeToProp() {
     describe('and "from" prop is defined', () => {
       it('stops the active animation before "to" is called', () => {
         const spring = new SpringValue({ from: 0, to: 1 })
-        mockRaf.step()
+        global.mockRaf.step()
 
         expect.assertions(1)
         spring.start({
@@ -208,7 +208,7 @@ function describeResetProp() {
       })
 
       const spring = new SpringValue({ from: 0, to: 1, onRest })
-      mockRaf.step()
+      global.mockRaf.step()
 
       spring.start({ reset: true })
 
@@ -247,7 +247,7 @@ function describeDefaultProp() {
         it('does not start animating', async () => {
           const props = { default: true, from: 0, to: 2 }
           const spring = new SpringValue(props)
-          await advanceUntilIdle()
+          await global.advanceUntilIdle()
 
           props.from = 1
           spring.start(props)
@@ -261,7 +261,7 @@ function describeDefaultProp() {
           it('starts at the "from" prop', async () => {
             const props: any = { default: true, from: 0, to: 2 }
             const spring = new SpringValue(props)
-            await advanceUntilIdle()
+            await global.advanceUntilIdle()
 
             props.from = 1
             props.reset = true
@@ -300,7 +300,7 @@ function describeDefaultProp() {
           // This animation will be stopped.
           const promise = spring.start({ from: 0, to: 1 })
 
-          mockRaf.step()
+          global.mockRaf.step()
           const value = spring.get()
 
           spring.start({ from: 0 })
@@ -323,14 +323,14 @@ function describeReverseProp() {
       const spring = new SpringValue<number>()
       spring.start({ from: 0, to: 1, reverse: true })
 
-      await advanceUntilIdle()
-      expect(getFrames(spring)).toMatchSnapshot()
+      await global.advanceUntilIdle()
+      expect(global.getFrames(spring)).toMatchSnapshot()
     })
 
     it('works when "to" and "from" were set by an earlier update', async () => {
       // TODO: remove the need for "<number>"
       const spring = new SpringValue<number>({ from: 0, to: 1 })
-      await advanceUntilValue(spring, 0.5)
+      await global.advanceUntilValue(spring, 0.5)
 
       spring.start({ reverse: true })
       expect(spring.animation).toMatchObject({
@@ -338,8 +338,8 @@ function describeReverseProp() {
         to: 0,
       })
 
-      await advanceUntilIdle()
-      expect(getFrames(spring)).toMatchSnapshot()
+      await global.advanceUntilIdle()
+      expect(global.getFrames(spring)).toMatchSnapshot()
     })
 
     it('works when "from" was set by an earlier update', async () => {
@@ -347,8 +347,8 @@ function describeReverseProp() {
       expect(spring.animation.from).toBe(0)
       spring.start({ to: 1, reverse: true })
 
-      await advanceUntilIdle()
-      expect(getFrames(spring)).toMatchSnapshot()
+      await global.advanceUntilIdle()
+      expect(global.getFrames(spring)).toMatchSnapshot()
     })
 
     it('preserves the reversal for future updates', async () => {
@@ -359,7 +359,7 @@ function describeReverseProp() {
         from: 1,
       })
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
 
       spring.start({ to: 2 })
       expect(spring.animation).toMatchObject({
@@ -379,14 +379,14 @@ function describeImmediateProp() {
     it('stops animating', async () => {
       const spring = new SpringValue(0)
       spring.start(2)
-      await advanceUntilValue(spring, 1)
+      await global.advanceUntilValue(spring, 1)
 
       // Use "immediate" to emulate the "stop" method. (see #884)
       const value = spring.get()
       spring.start(value, { immediate: true })
 
       // The "immediate" prop waits until the next frame before going idle.
-      mockRaf.step()
+      global.mockRaf.step()
 
       expect(spring.idle).toBeTruthy()
       expect(spring.get()).toBe(value)
@@ -452,8 +452,8 @@ function describeConfigProp() {
         spring.start(1, {
           config: { frequency: 1.5, damping: 1 },
         })
-        await advanceUntilIdle()
-        expect(countBounces(spring)).toBe(0)
+        await global.advanceUntilIdle()
+        expect(global.countBounces(spring)).toBe(0)
       })
     })
     describe('when "damping" is less than 1.0', () => {
@@ -463,8 +463,8 @@ function describeConfigProp() {
         spring.start(1, {
           config: { frequency: 1.5, damping: 1 },
         })
-        await advanceUntilIdle()
-        expect(countBounces(spring)).toBeGreaterThan(0)
+        await global.advanceUntilIdle()
+        expect(global.countBounces(spring)).toBeGreaterThan(0)
       })
     })
   })
@@ -479,16 +479,16 @@ function describeLoopProp() {
         config: { duration: frameLength * 3 },
       })
 
-      await advanceUntilValue(spring, 1)
-      const firstRun = getFrames(spring)
+      await global.advanceUntilValue(spring, 1)
+      const firstRun = global.getFrames(spring)
       expect(firstRun).toMatchSnapshot()
 
       // The loop resets the value before the next frame.
       // FIXME: Reset on next frame instead?
       expect(spring.get()).toBe(0)
 
-      await advanceUntilValue(spring, 1)
-      expect(getFrames(spring)).toEqual(firstRun)
+      await global.advanceUntilValue(spring, 1)
+      expect(global.getFrames(spring)).toEqual(firstRun)
     })
 
     it('can pass a custom delay', async () => {
@@ -497,13 +497,13 @@ function describeLoopProp() {
         loop: { reset: true, delay: 1000 },
       })
 
-      await advanceUntilValue(spring, 1)
+      await global.advanceUntilValue(spring, 1)
       expect(spring.get()).toBe(1)
 
-      mockRaf.step({ time: 1000 })
+      global.mockRaf.step({ time: 1000 })
       expect(spring.get()).toBeLessThan(1)
 
-      await advanceUntilValue(spring, 1)
+      await global.advanceUntilValue(spring, 1)
       expect(spring.get()).toBe(1)
     })
 
@@ -513,21 +513,21 @@ function describeLoopProp() {
       let loop: any = true
       spring.start(1, { loop: () => loop })
 
-      await advanceUntilValue(spring, 1)
+      await global.advanceUntilValue(spring, 1)
       expect(spring.idle).toBeFalsy()
       expect(spring.get()).toBeLessThan(1)
 
       loop = { reset: true, delay: 1000 }
-      await advanceUntilValue(spring, 1)
+      await global.advanceUntilValue(spring, 1)
       expect(spring.idle).toBeTruthy()
       expect(spring.get()).toBe(1)
 
-      mockRaf.step({ time: 1000 })
+      global.mockRaf.step({ time: 1000 })
       expect(spring.idle).toBeFalsy()
       expect(spring.get()).toBeLessThan(1)
 
       loop = false
-      await advanceUntilValue(spring, 1)
+      await global.advanceUntilValue(spring, 1)
       expect(spring.idle).toBeTruthy()
       expect(spring.get()).toBe(1)
     })
@@ -536,10 +536,10 @@ function describeLoopProp() {
       const spring = new SpringValue(0)
       spring.start(1, { loop: true })
 
-      await advanceUntilValue(spring, 0.5)
+      await global.advanceUntilValue(spring, 0.5)
       spring.start(2)
 
-      await advanceUntilValue(spring, 2)
+      await global.advanceUntilValue(spring, 2)
       expect(spring.idle).toBeTruthy()
     })
 
@@ -547,11 +547,11 @@ function describeLoopProp() {
       const spring = new SpringValue(0)
       spring.start(1)
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       spring.start({ reset: true, loop: true })
       expect(spring.get()).toBe(0)
 
-      await advanceUntilValue(spring, 1)
+      await global.advanceUntilValue(spring, 1)
       expect(spring.get()).toBe(0)
       expect(spring.idle).toBeFalsy()
     })
@@ -560,14 +560,14 @@ function describeLoopProp() {
       const spring = new SpringValue(0)
       spring.start(1, { config: { duration: frameLength * 3 } })
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       spring.start({
         loop: { reverse: true },
       })
 
-      await advanceUntilValue(spring, 0)
-      await advanceUntilValue(spring, 1)
-      expect(getFrames(spring)).toMatchSnapshot()
+      await global.advanceUntilValue(spring, 0)
+      await global.advanceUntilValue(spring, 1)
+      expect(global.getFrames(spring)).toMatchSnapshot()
     })
   })
 }
@@ -591,10 +591,10 @@ function describeDelayProp() {
       spring.start(0, { delay: 100, config: { duration: 1000 } })
 
       expect(anim.to).toBe(1)
-      await advanceByTime(100)
+      await global.advanceByTime(100)
       expect(anim.to).toBe(0)
 
-      await advanceByTime(400)
+      await global.advanceByTime(400)
       expect(anim.immediate).toBeFalsy()
       expect(anim.to).toBe(0)
     })
@@ -610,10 +610,10 @@ function describeEvents() {
       spring.start(1)
       expect(onStart).toBeCalledTimes(0)
 
-      mockRaf.step()
+      global.mockRaf.step()
       expect(onStart).toBeCalledTimes(1)
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(onStart).toBeCalledTimes(1)
     })
     it('is called by the "finish" method', () => {
@@ -630,8 +630,8 @@ function describeEvents() {
       const onChange = jest.fn()
       const spring = new SpringValue({ from: 0, to: 1, onChange })
 
-      await advanceUntilIdle()
-      const frames = getFrames(spring)
+      await global.advanceUntilIdle()
+      const frames = global.getFrames(spring)
       expect(onChange).toBeCalledTimes(frames.length)
     })
     it('receives the "to" value on the last frame', async () => {
@@ -639,7 +639,7 @@ function describeEvents() {
       const spring = new SpringValue('blue', { onChange })
 
       spring.start('red')
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
 
       const [lastValue] = onChange.mock.calls.slice(-1)[0]
       expect(lastValue).toBe('red')
@@ -648,7 +648,7 @@ function describeEvents() {
       const onChange = jest.fn()
       const spring = new SpringValue({ from: 0, to: 1, onChange })
 
-      mockRaf.step()
+      global.mockRaf.step()
       expect(onChange).toBeCalledTimes(1)
 
       // During an animation:
@@ -676,7 +676,7 @@ function describeEvents() {
         expect(onChange).not.toBeCalled()
 
         spring.start(1, { onChange })
-        mockRaf.step()
+        global.mockRaf.step()
         onChange.mockReset()
 
         // Before last frame
@@ -690,7 +690,7 @@ function describeEvents() {
       const onPause = jest.fn()
       const spring = new SpringValue({ from: 0, to: 1, onPause })
 
-      mockRaf.step()
+      global.mockRaf.step()
       spring.pause()
       spring.pause() // noop
 
@@ -707,7 +707,7 @@ function describeEvents() {
       const onResume = jest.fn()
       const spring = new SpringValue({ from: 0, to: 1, onResume })
 
-      mockRaf.step()
+      global.mockRaf.step()
       spring.resume() // noop
 
       expect(onResume).toBeCalledTimes(0)
@@ -732,18 +732,18 @@ function describeEvents() {
         },
       })
 
-      mockRaf.step()
-      mockRaf.step()
+      global.mockRaf.step()
+      global.mockRaf.step()
       expect(onRest).not.toBeCalled()
 
-      mockRaf.step()
+      global.mockRaf.step()
       expect(onRest).toBeCalledTimes(1)
     })
     it('is called by the "stop" method', () => {
       const onRest = jest.fn()
       const spring = new SpringValue({ from: 0, to: 1, onRest })
 
-      mockRaf.step()
+      global.mockRaf.step()
       spring.stop()
 
       expect(onRest).toBeCalledTimes(1)
@@ -756,7 +756,7 @@ function describeEvents() {
       const onRest = jest.fn()
       const spring = new SpringValue({ from: 0, to: 1, onRest })
 
-      mockRaf.step()
+      global.mockRaf.step()
       spring.finish()
 
       expect(onRest).toBeCalledTimes(1)
@@ -769,7 +769,7 @@ function describeEvents() {
       const onRest = jest.fn()
       const spring = new SpringValue({ from: 0, to: 1, onRest })
 
-      mockRaf.step()
+      global.mockRaf.step()
       spring.start({ cancel: true })
 
       expect(onRest).toBeCalledTimes(1)
@@ -802,7 +802,7 @@ function describeMethods() {
       const spring = new SpringValue(0)
       const promise = spring.start(1)
 
-      await advanceUntilValue(spring, 0.5)
+      await global.advanceUntilValue(spring, 0.5)
       const value = spring.get()
       spring.set(2)
 
@@ -843,7 +843,7 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
         toValues: null,
       })
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(spring.get()).toBe(target.node.get())
     })
 
@@ -851,7 +851,7 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
 
     it('can change its target while animating', async () => {
       spring.start({ to: target.node })
-      await advanceUntilValue(spring, target.node.get() / 2)
+      await global.advanceUntilValue(spring, target.node.get() / 2)
 
       spring.start(0)
       expect(spring.priority).toBe(0)
@@ -860,7 +860,7 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
         toValues: [0],
       })
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(spring.get()).toBe(0)
     })
 
@@ -869,10 +869,10 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
         spring.start({ to: target.node })
         target.start(1.1)
 
-        await advanceUntil(() => target.node.idle)
+        await global.advanceUntil(() => target.node.idle)
         expect(spring.idle).toBeFalsy()
 
-        await advanceUntilIdle()
+        await global.advanceUntilIdle()
         expect(spring.idle).toBeTruthy()
         expect(spring.get()).toBe(target.node.get())
       })
@@ -881,14 +881,14 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
     describe('when target animates after we go idle', () => {
       it('starts animating', async () => {
         spring.start({ to: target.node })
-        await advanceUntil(() => spring.idle)
+        await global.advanceUntil(() => spring.idle)
         // Clear the frame cache.
-        getFrames(spring)
+        global.getFrames(spring)
 
         target.start(2)
-        await advanceUntilIdle()
+        await global.advanceUntilIdle()
 
-        expect(getFrames(spring).length).toBeGreaterThan(1)
+        expect(global.getFrames(spring).length).toBeGreaterThan(1)
         expect(spring.get()).toBe(target.node.get())
       })
     })
@@ -896,12 +896,12 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
     describe('when target has its value set (not animated)', () => {
       it('animates toward the new value', async () => {
         spring.start({ to: target.node })
-        await advanceUntilIdle()
+        await global.advanceUntilIdle()
 
         target.set(2)
-        await advanceUntilIdle()
+        await global.advanceUntilIdle()
 
-        expect(getFrames(spring).length).toBeGreaterThan(1)
+        expect(global.getFrames(spring).length).toBeGreaterThan(1)
         expect(spring.get()).toBe(target.node.get())
       })
     })
@@ -911,14 +911,14 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
         spring.start({ to: target.node })
         target.start(2)
 
-        await advanceUntilValue(target.node, 1.5)
+        await global.advanceUntilValue(target.node, 1.5)
         expect(target.node.idle).toBeFalsy()
 
         target.reset()
         expect(target.node.get()).toBe(1)
 
-        await advanceUntilIdle()
-        const frames = getFrames(spring)
+        await global.advanceUntilIdle()
+        const frames = global.getFrames(spring)
 
         expect(frames.length).toBeGreaterThan(1)
         expect(spring.get()).toBe(target.node.get())

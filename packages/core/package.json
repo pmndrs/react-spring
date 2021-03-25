@@ -19,7 +19,8 @@
     "directory": "dist"
   },
   "devDependencies": {
-    "@testing-library/react": "^9.4.0",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
     "rafz": "link:../shared/node_modules/rafz",
     "react-dom": "^16.12.0"
   }

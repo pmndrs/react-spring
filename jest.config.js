@@ -35,25 +35,32 @@ function createConfig(rootDir) {
   const { compilerOptions } = fs.readJsonSync(
     path.join(rootDir, 'tsconfig.json')
   )
+
   return {
     rootDir,
-    setupFilesAfterEnv:
-      rootDir.indexOf('shared') < 0
-        ? [path.join(__dirname, 'packages/core/test/setup.ts')]
-        : [],
+    preset: 'ts-jest',
+    setupFilesAfterEnv: [path.join(__dirname, 'packages/core/test/setup.ts')],
     testMatch,
     testEnvironment: 'jsdom',
-    testPathIgnorePatterns: ['.+/(types|__snapshots__)/.+'],
+    testPathIgnorePatterns: [
+      '.+/(types|__snapshots__)/.+',
+      '<rootDir>/node_modules/',
+    ],
     modulePathIgnorePatterns: ['dist'],
     moduleNameMapper: {
       '^react$': '<rootDir>/../../node_modules/react',
     },
-    transform: {
-      '^.+\\.tsx?$': 'esbuild-jest',
-    },
     collectCoverageFrom: ['src/**/*'],
     coverageDirectory: './coverage',
+    moduleFileExtensions: ['js', 'ts', 'tsx'],
     coverageReporters: ['json', 'html', 'text'],
     timers: 'fake',
+    globals: {
+      'ts-jest': {
+        tsconfig: {
+          ...compilerOptions,
+        },
+      },
+    },
   }
 }

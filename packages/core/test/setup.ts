@@ -1,4 +1,4 @@
-import createMockRaf from 'mock-raf'
+import createMockRaf, { MockRaf } from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { act } from '@testing-library/react'
 import {
@@ -12,8 +12,34 @@ import {
 } from '@react-spring/shared'
 import { __raf as raf } from 'rafz'
 
-import { Globals, Controller, FrameValue } from '..'
+import { Globals, Controller, FrameValue, SpringValue } from '../src/index'
 import { computeGoal } from '../src/helpers'
+
+declare global {
+  namespace NodeJS {
+    interface Global {
+      mockRaf: MockRaf
+
+      advance: (n?: number) => Promise<void>
+      advanceByTime: (ms: number) => Promise<void>
+      advanceUntil: (test: () => boolean) => Promise<void>
+      advanceUntilIdle: () => Promise<void>
+      advanceUntilValue: <T>(spring: FrameValue<T>, value: T) => Promise<void>
+
+      /** Take an array of values (one per animation frame) from internal test storage  */
+      getFrames: <T>(
+        target: FrameValue<T> | Controller<Extract<T, object>>,
+        preserve?: boolean
+      ) => T[]
+
+      /** Count the number of bounces in a spring animation */
+      countBounces: (spring: SpringValue<number>) => number
+
+      // @ts-ignore
+      setTimeout: (handler: Function, ms: number) => number
+    }
+  }
+}
 
 // Allow indefinite tests, since we limit the number of animation frames
 // per "advanceUntil" call to 1000. This keeps the "isRunning" variable
@@ -31,8 +57,8 @@ beforeEach(() => {
 
   global.mockRaf = createMockRaf()
   Globals.assign({
-    now: mockRaf.now,
-    requestAnimationFrame: mockRaf.raf,
+    now: global.mockRaf.now,
+    requestAnimationFrame: global.mockRaf.raf,
     colors,
     // This lets our useTransition hook force its component
     // to update from within an "onRest" handler.
@@ -64,7 +90,7 @@ global.getFrames = (target, preserve) => {
     frames = []
     if (target instanceof Controller) {
       target.each(spring => {
-        getFrames(spring, preserve).forEach((value, i) => {
+        global.getFrames(spring, preserve).forEach((value, i) => {
           const frame = frames[i] || (frames[i] = {})
           frame[spring.key!] = value
         })
@@ -81,7 +107,7 @@ global.countBounces = spring => {
   const { to, from } = spring.animation
   let prev = from
   let count = 0
-  getFrames(spring, true).forEach(value => {
+  global.getFrames(spring, true).forEach(value => {
     if (value !== to && value > to !== prev > to) {
       count += 1
     }
@@ -108,7 +134,7 @@ global.advanceUntil = async test => {
     })
 
     jest.advanceTimersByTime(1000 / 60)
-    mockRaf.step()
+    global.mockRaf.step()
 
     // Stop observing after the frame is processed.
     for (const value of values) {
@@ -126,17 +152,17 @@ global.advanceUntil = async test => {
 }
 
 global.advance = (n = 1) => {
-  return advanceUntil(() => --n < 0)
+  return global.advanceUntil(() => --n < 0)
 }
 
 global.advanceByTime = ms => {
   let fired = false
   setTimeout(() => (fired = true), ms)
-  return advanceUntil(() => fired)
+  return global.advanceUntil(() => fired)
 }
 
 global.advanceUntilIdle = () => {
-  return advanceUntil(() => frameLoop.idle && raf.count == 0)
+  return global.advanceUntil(() => frameLoop.idle && raf.count == 0)
 }
 
 // TODO: support "value" as an array or animatable string
@@ -144,9 +170,9 @@ global.advanceUntilValue = (spring, value) => {
   const from = computeGoal(spring.get())
   const goal = computeGoal(value)
 
-  const offset = getFrames(spring, true).length
-  return advanceUntil(() => {
-    const frames = getFrames(spring, true)
+  const offset = global.getFrames(spring, true).length
+  return global.advanceUntil(() => {
+    const frames = global.getFrames(spring, true)
     const value = frames.length - offset > 0 ? frames[frames.length - 1] : from
 
     const stop = is.num(goal)

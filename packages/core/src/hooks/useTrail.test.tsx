@@ -20,7 +20,7 @@ describe('useTrail', () => {
     expect(springs.length).toBe(2)
     expect(springs[1].x.animation.to).toBe(springs[0].x)
 
-    mockRaf.step()
+    global.mockRaf.step()
     expect(springs[0].x.get()).not.toBe(springs[1].x.get())
   })
 

@@ -2,23 +2,23 @@ import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { is, eachProp } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
-import { SpringRef } from '../SpringRef'
+// import { SpringRef } from '../SpringRef'
 import { SpringValue } from '../SpringValue'
 import { useSprings } from './useSprings'
 
 describe('useSprings', () => {
   let springs: Lookup<SpringValue>[]
-  let ref: SpringRef
+  // let ref: SpringRef
 
   // Call the "useSprings" hook and update local variables.
   const update = createUpdater(({ args }) => {
     const result = useSprings(...args)
     if (is.fun(args[1]) || args.length == 3) {
       springs = result[0] as any
-      ref = result[1]
+      // ref = result[1]
     } else {
       springs = result as any
-      ref = undefined as any
+      // ref = undefined as any
     }
     return null
   })
