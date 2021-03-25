@@ -36,9 +36,14 @@ describe('helpers', () => {
       onProps: undefined,
       onStart: undefined,
       onChange: undefined,
+      onPause: undefined,
+      onResume: undefined,
       onRest: undefined,
       onResolve: undefined,
       onDestroyed: undefined,
+      keys: undefined,
+      callId: undefined,
+      parentId: undefined,
     }
     expect(
       inferTo({
@@ -47,7 +52,6 @@ describe('helpers', () => {
         ...excludeProps,
       })
     ).toMatchObject({
-      to: forwardProps,
       ...restProps,
       ...excludeProps,
     })

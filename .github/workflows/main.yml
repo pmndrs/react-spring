@@ -1,6 +1,8 @@
 name: release
 on:
-  push: {}
+  push:
+    branches:
+      - 'master'
   pull_request: {}
 jobs:
   main:
@@ -15,9 +17,11 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: '15.11.0'
       - name: Install deps
         # this runs a build script so there is no dedicated build
-        run: yarn install
+        run: |
+          npm i -g yarn 
+          yarn install
       - name: Run tests
         run: yarn test:ts && yarn test:cov

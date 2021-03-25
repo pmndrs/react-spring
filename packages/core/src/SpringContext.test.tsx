@@ -58,7 +58,7 @@ describe('SpringContext', () => {
 
   it('can pause current animations', () => {
     update({})
-    mockRaf.step()
+    global.mockRaf.step()
     expect(t.idle).toBeFalsy()
 
     update({ pause: true })
@@ -90,24 +90,24 @@ describe('SpringContext', () => {
 
   it('can make current animations immediate', () => {
     update({})
-    mockRaf.step()
+    global.mockRaf.step()
     expect(t.idle).toBeFalsy()
 
     update({ immediate: true })
-    mockRaf.step()
+    global.mockRaf.step()
 
     expect(t.idle).toBeTruthy()
     expect(t.get()).toBe(1)
   })
   it('can make future animations immediate', () => {
     update({ immediate: true })
-    mockRaf.step()
+    global.mockRaf.step()
 
     expect(t.idle).toBeTruthy()
     expect(t.get()).toBe(1)
 
     t.start(2)
-    mockRaf.step()
+    global.mockRaf.step()
 
     expect(t.idle).toBeTruthy()
     expect(t.get()).toBe(2)

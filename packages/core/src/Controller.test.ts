@@ -8,8 +8,8 @@ describe('Controller', () => {
     const ctrl = new Controller({ x: 0 })
     ctrl.start({ x: 100 })
 
-    await advanceUntilIdle()
-    const frames = getFrames(ctrl)
+    await global.advanceUntilIdle()
+    const frames = global.getFrames(ctrl)
     expect(frames).toMatchSnapshot()
 
     // The first frame should *not* be the from value.
@@ -24,8 +24,8 @@ describe('Controller', () => {
     const ctrl = new Controller<{ x: [number, number] }>({ x: [1, 2], config })
     ctrl.start({ x: [5, 10] })
 
-    await advanceUntilIdle()
-    const frames = getFrames(ctrl)
+    await global.advanceUntilIdle()
+    const frames = global.getFrames(ctrl)
     expect(frames).toMatchSnapshot()
 
     // The last frame should be the goal value.
@@ -50,7 +50,7 @@ describe('Controller', () => {
       })
 
       const { x } = ctrl.springs
-      await advanceUntilValue(x, 0.5)
+      await global.advanceUntilValue(x, 0.5)
 
       ctrl.start({ cancel: true })
       await flushMicroTasks()
@@ -70,7 +70,7 @@ describe('Controller', () => {
       })
 
       const { x } = ctrl.springs
-      await advanceUntilValue(x, 0.5)
+      await global.advanceUntilValue(x, 0.5)
 
       ctrl.stop()
 
@@ -114,14 +114,14 @@ describe('Controller', () => {
           },
         })
 
-        await advance()
+        await global.advance()
         expect(n).toBe(1)
 
         ctrl.start({
           to: () => {},
         })
 
-        await advanceUntilIdle()
+        await global.advanceUntilIdle()
         expect(n).toBe(1)
 
         expect(await promise).toMatchObject({
@@ -144,7 +144,7 @@ describe('Controller', () => {
             await animate({ x: 0 })
           },
         })
-        await advanceUntilIdle()
+        await global.advanceUntilIdle()
         expect(onStart).toBeCalledTimes(2)
       })
 
@@ -168,7 +168,7 @@ describe('Controller', () => {
           },
         })
 
-        await advanceUntilIdle()
+        await global.advanceUntilIdle()
         await flushMicroTasks()
 
         expect(nestedFn).toBeCalledTimes(1)
@@ -193,7 +193,7 @@ describe('Controller', () => {
           },
         })
 
-        await advanceUntilValue(x, 0.5)
+        await global.advanceUntilValue(x, 0.5)
         ctrl.start({ cancel: true })
         await flushMicroTasks()
 
@@ -213,11 +213,11 @@ describe('Controller', () => {
           onRest,
         })
 
-        mockRaf.step()
+        global.mockRaf.step()
         ctrl.pause()
 
         t.finish()
-        mockRaf.step()
+        global.mockRaf.step()
 
         expect(ctrl['_state'].paused).toBeTruthy()
         expect(onRest).not.toBeCalled()
@@ -249,11 +249,11 @@ describe('Controller', () => {
         },
       })
 
-      await Promise.all([advanceUntilIdle(), promise])
+      await Promise.all([global.advanceUntilIdle(), promise])
       expect(ctrl.idle).toBeTruthy()
 
       // Since we call `update` twice, frames are generated!
-      expect(getFrames(ctrl)).toMatchSnapshot()
+      expect(global.getFrames(ctrl)).toMatchSnapshot()
     })
   })
 
@@ -268,7 +268,7 @@ describe('Controller', () => {
         onStart,
       })
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(onStart).toBeCalledTimes(1)
     })
 
@@ -281,7 +281,7 @@ describe('Controller', () => {
       const onStart2 = jest.fn()
       ctrl.start({ y: 1, onStart: onStart2 })
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(onStart1).toBeCalledTimes(1)
       expect(onStart2).toBeCalledTimes(1)
     })
@@ -298,16 +298,16 @@ describe('Controller', () => {
       const { t } = ctrl.springs
       expect(t.get()).toBe(0)
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(t.get()).toBe(1)
 
       ctrl.start({
         loop: { reverse: true },
       })
 
-      await advanceUntilValue(t, 0)
-      await advanceUntilValue(t, 1)
-      expect(getFrames(t)).toMatchSnapshot()
+      await global.advanceUntilValue(t, 0)
+      await global.advanceUntilValue(t, 1)
+      expect(global.getFrames(t)).toMatchSnapshot()
     })
 
     describe('used with multiple values', () => {
@@ -323,7 +323,7 @@ describe('Controller', () => {
 
         const { x, y } = ctrl.springs
         for (let i = 0; i < 2; i++) {
-          await advanceUntilValue(y, 1)
+          await global.advanceUntilValue(y, 1)
 
           // Both values should equal their "from" value at the same time.
           expect(x.get()).toBe(x.animation.from)
@@ -355,18 +355,18 @@ describe('Controller', () => {
             },
           })
 
-          await advanceUntilValue(t, 1)
+          await global.advanceUntilValue(t, 1)
           expect(t.idle).toBeFalsy()
 
           for (let i = 0; i < 2; i++) {
-            await advanceUntilValue(t, 0)
+            await global.advanceUntilValue(t, 0)
             expect(t.idle).toBeFalsy()
 
-            await advanceUntilValue(t, 1)
+            await global.advanceUntilValue(t, 1)
             expect(t.idle).toBeFalsy()
           }
 
-          await advanceUntilValue(t, 0)
+          await global.advanceUntilValue(t, 0)
           expect(t.idle).toBeTruthy()
         })
       })
@@ -387,16 +387,16 @@ describe('Controller', () => {
           })
 
           for (let i = 0; i < 3; i++) {
-            await advanceUntilValue(t, 2)
+            await global.advanceUntilValue(t, 2)
             expect(t.idle).toBeFalsy()
 
             // Run the first frame of the next loop.
-            mockRaf.step()
+            global.mockRaf.step()
           }
 
           loop = false
 
-          await advanceUntilValue(t, 2)
+          await global.advanceUntilValue(t, 2)
           expect(t.idle).toBeTruthy()
 
           expect(await promise).toMatchObject({
@@ -414,7 +414,7 @@ describe('Controller', () => {
         const loop = jest.fn(() => true)
         ctrl.start({ t: 0, loop })
 
-        await advanceUntilIdle()
+        await global.advanceUntilIdle()
         expect(loop).toBeCalledTimes(0)
       })
     })
@@ -437,7 +437,7 @@ describe('Controller', () => {
         await flushMicroTasks()
 
         // Apply the first frame.
-        mockRaf.step()
+        global.mockRaf.step()
 
         ctrl.pause()
         return ctrl
@@ -490,7 +490,7 @@ describe('Controller', () => {
       ctrl.start({ t: 1, delay: 100 })
       ctrl.stop()
 
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(ctrl['_state'].timeouts.size).toBe(0)
       expect(t['_state'].timeouts.size).toBe(0)
     })
@@ -503,7 +503,7 @@ describe('Controller', () => {
         },
       })
       ctrl.stop()
-      await advanceUntilIdle()
+      await global.advanceUntilIdle()
       expect(ctrl['_state'].asyncTo).toBeUndefined()
     })
   })
