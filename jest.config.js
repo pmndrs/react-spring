@@ -52,6 +52,14 @@ function createConfig(rootDir) {
     },
     collectCoverageFrom: ['src/**/*'],
     coverageDirectory: './coverage',
+    coverageThreshold: {
+      global: {
+        statements: 80,
+        branches: 74,
+        functions: 71,
+        lines: 82,
+      },
+    },
     moduleFileExtensions: ['js', 'ts', 'tsx'],
     coverageReporters: ['json', 'html', 'text'],
     timers: 'fake',
