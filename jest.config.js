@@ -41,7 +41,10 @@ function createConfig(rootDir) {
         : [],
     testMatch,
     testEnvironment: 'jsdom',
-    testPathIgnorePatterns: ['.+/(types|__snapshots__)/.+'],
+    testPathIgnorePatterns: [
+      '.+/(types|__snapshots__)/.+',
+      '<rootDir>/node_modules/',
+    ],
     modulePathIgnorePatterns: ['dist'],
     moduleNameMapper: {
       '^react$': '<rootDir>/../../node_modules/react',
