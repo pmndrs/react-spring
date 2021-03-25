@@ -32,6 +32,10 @@ function getProjects() {
 }
 
 function createConfig(rootDir) {
+  const { compilerOptions } = fs.readJsonSync(
+    path.join(rootDir, 'tsconfig.json')
+  )
+
   return {
     rootDir,
     preset: 'ts-jest',
@@ -54,5 +58,12 @@ function createConfig(rootDir) {
     moduleFileExtensions: ['js', 'ts', 'tsx'],
     coverageReporters: ['json', 'html', 'text'],
     timers: 'fake',
+    globals: {
+      'ts-jest': {
+        tsconfig: {
+          ...compilerOptions,
+        },
+      },
+    },
   }
 }
