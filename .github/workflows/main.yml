@@ -20,4 +20,4 @@ jobs:
         # this runs a build script so there is no dedicated build
         run: yarn install
       - name: Run tests
-        run: yarn test:ts && yarn test
+        run: yarn test:ts && yarn test:cov
