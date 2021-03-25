@@ -39,10 +39,7 @@ function createConfig(rootDir) {
   return {
     rootDir,
     preset: 'ts-jest',
-    setupFilesAfterEnv:
-      rootDir.indexOf('shared') < 0
-        ? [path.join(__dirname, 'packages/core/test/setup.ts')]
-        : [],
+    setupFilesAfterEnv: [path.join(__dirname, 'packages/core/test/setup.ts')],
     testMatch,
     testEnvironment: 'jsdom',
     testPathIgnorePatterns: [

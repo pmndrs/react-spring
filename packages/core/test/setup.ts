@@ -12,7 +12,7 @@ import {
 } from '@react-spring/shared'
 import { __raf as raf } from 'rafz'
 
-import { Globals, Controller, FrameValue, SpringValue } from '..'
+import { Globals, Controller, FrameValue, SpringValue } from '../src/index'
 import { computeGoal } from '../src/helpers'
 
 declare global {
