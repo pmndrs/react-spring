@@ -3,6 +3,8 @@
   "version": "9.0.0",
   "description": "Internal package with TypeScript stuff",
   "main": "src/index.ts",
+  "repository": "pmndrs/react-spring",
+  "license": "MIT",
   "publishConfig": {
     "directory": "dist"
   },
