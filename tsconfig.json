@@ -1,5 +1,5 @@
 {
-  "include": ["packages/*/src/**/*"],
+  "include": ["packages/*/src/**/*", "packages/types/*", "targets/*/src/**/*"],
   "exclude": ["**/*.test.ts"],
   "compilerOptions": {
     "target": "ESNext",
