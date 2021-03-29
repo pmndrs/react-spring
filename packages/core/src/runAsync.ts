@@ -1,4 +1,11 @@
-import { is, raf, flush, eachProp, Timeout } from '@react-spring/shared'
+import {
+  is,
+  raf,
+  flush,
+  eachProp,
+  Timeout,
+  Globals as G,
+} from '@react-spring/shared'
 import { Falsy } from '@react-spring/types'
 
 import { getDefaultProps } from './helpers'
@@ -90,6 +97,15 @@ export function runAsync<T extends AnimationTarget>(
       const bailSignal = new BailSignal()
 
       return (async () => {
+        if (G.skipAnimation) {
+          /**
+           * We need to stop animations if `skipAnimation`
+           * is set in the Globals
+           *
+           */
+          stopAsync(state)
+        }
+
         bailIfEnded(bailSignal)
 
         const props: any = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 }
