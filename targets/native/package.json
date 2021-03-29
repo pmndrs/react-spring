@@ -1,26 +1,20 @@
 {
   "name": "@react-spring/native",
   "version": "9.0.0",
-  "main": "src/index.ts",
-  "scripts": {
-    "build": "rollup -c"
-  },
+  "main": "dist/react-spring-native.cjs.js",
+  "module": "dist/react-spring-native.esm.js",
   "dependencies": {
-    "@react-spring/animated": "link:../../packages/animated",
-    "@react-spring/core": "link:../../packages/core",
-    "@react-spring/shared": "link:../../packages/shared",
-    "@react-spring/types": "link:../../packages/types"
+    "@react-spring/animated": "*",
+    "@react-spring/core": "*",
+    "@react-spring/shared": "*",
+    "@react-spring/types": "*"
   },
   "peerDependencies": {
     "react": ">=16.8",
     "react-native": ">=0.58"
   },
   "devDependencies": {
-    "@types/react": "~16.9.0",
     "@types/react-native": "~0.57.0",
     "react-native": "~0.58.0"
-  },
-  "publishConfig": {
-    "directory": "dist"
   }
 }

@@ -33,7 +33,7 @@ function getProjects() {
 
 function createConfig(rootDir) {
   const { compilerOptions } = fs.readJsonSync(
-    path.join(rootDir, 'tsconfig.json')
+    path.join(__dirname, 'tsconfig.json')
   )
 
   return {

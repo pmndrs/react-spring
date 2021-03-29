@@ -1,12 +1,14 @@
 {
   "name": "@react-spring/zdog",
   "version": "9.0.0",
-  "main": "src/index.ts",
+  "main": "dist/react-spring-zdog.cjs.js",
+  "module": "dist/react-spring-zdog.esm.js",
+  "types": "./src/types/react-zdog.d.ts",
   "dependencies": {
-    "@react-spring/animated": "link:../../packages/animated",
-    "@react-spring/core": "link:../../packages/core",
-    "@react-spring/shared": "link:../../packages/shared",
-    "@react-spring/types": "link:../../packages/types"
+    "@react-spring/animated": "*",
+    "@react-spring/core": "*",
+    "@react-spring/shared": "*",
+    "@react-spring/types": "*"
   },
   "peerDependencies": {
     "react": ">=16.8",
@@ -15,14 +17,7 @@
     "zdog": ">=1.0"
   },
   "devDependencies": {
-    "react-dom": "~16.8.0",
     "react-zdog": "~1.0.0",
     "zdog": "~1.0.0"
-  },
-  "scripts": {
-    "build": "rollup -c"
-  },
-  "publishConfig": {
-    "directory": "dist"
   }
 }

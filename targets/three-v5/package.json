@@ -1,12 +1,13 @@
 {
   "name": "@react-spring/three-v5",
   "version": "9.0.0",
-  "main": "src/index.ts",
+  "main": "dist/react-spring-three-v5.cjs.js",
+  "module": "dist/react-spring-three-v5.esm.js",
   "dependencies": {
-    "@react-spring/animated": "link:../../packages/animated",
-    "@react-spring/core": "link:../../packages/core",
-    "@react-spring/shared": "link:../../packages/shared",
-    "@react-spring/types": "link:../../packages/types"
+    "@react-spring/animated": "*",
+    "@react-spring/core": "*",
+    "@react-spring/shared": "*",
+    "@react-spring/types": "*"
   },
   "peerDependencies": {
     "react": ">=16.11",
@@ -16,11 +17,5 @@
   "devDependencies": {
     "react-three-fiber": "^4.0.0",
     "three": "^0.115.0"
-  },
-  "scripts": {
-    "build": "rollup -c"
-  },
-  "publishConfig": {
-    "directory": "dist"
   }
 }

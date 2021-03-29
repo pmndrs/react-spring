@@ -2,17 +2,11 @@
   "name": "@react-spring/types",
   "version": "9.0.0",
   "description": "Internal package with TypeScript stuff",
-  "main": "src/index.ts",
-  "repository": "pmndrs/react-spring",
-  "license": "MIT",
-  "publishConfig": {
-    "directory": "dist"
-  },
-  "scripts": {
-    "build": "rimraf dist && yarn copy",
-    "copy": "copyfiles package.json *.js *.d.ts dist"
-  },
-  "dependencies": {
-    "@alloc/types": "^1.2.1"
+  "main": "index.d.ts",
+  "exports": {
+    ".": "./index.d.ts",
+    "./animated": "./animated.d.ts",
+    "./interpolation": "./interpolation.d.ts",
+    "./util": "./util.d.ts"
   }
 }

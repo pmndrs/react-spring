@@ -1,19 +1,14 @@
 {
   "name": "react-spring",
   "version": "9.0.0",
-  "main": "src/web.ts",
+  "main": "dist/react-spring.cjs.js",
+  "module": "dist/react-spring.esm.js",
   "dependencies": {
-    "@react-spring/core": "link:../core",
-    "@react-spring/konva": "link:../../targets/konva",
-    "@react-spring/native": "link:../../targets/native",
-    "@react-spring/three": "link:../../targets/three",
-    "@react-spring/web": "link:../../targets/web",
-    "@react-spring/zdog": "link:../../targets/zdog"
-  },
-  "scripts": {
-    "build": "rollup -c"
-  },
-  "publishConfig": {
-    "directory": "dist"
+    "@react-spring/core": "*",
+    "@react-spring/konva": "*",
+    "@react-spring/native": "*",
+    "@react-spring/three": "*",
+    "@react-spring/web": "*",
+    "@react-spring/zdog": "*"
   }
 }

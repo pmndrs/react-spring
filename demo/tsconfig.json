@@ -14,10 +14,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
-    "paths": {
-      "@react-spring/web": ["../targets/web/src/index.ts"]
-    }
+    "jsx": "react"
   },
   "include": ["./src"]
 }

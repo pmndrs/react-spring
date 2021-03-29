@@ -1,18 +1,13 @@
 {
   "name": "@react-spring/parallax",
   "version": "9.0.0",
-  "main": "src/index.tsx",
+  "main": "dist/react-spring-parallax.cjs.js",
+  "module": "dist/react-spring-parallax.esm.js",
   "dependencies": {
-    "@react-spring/shared": "link:../shared",
-    "@react-spring/web": "link:../../targets/web"
+    "@react-spring/shared": "*",
+    "@react-spring/web": "*"
   },
   "peerDependencies": {
     "react": ">=16.8"
-  },
-  "scripts": {
-    "build": "rollup -c"
-  },
-  "publishConfig": {
-    "directory": "dist"
   }
 }
