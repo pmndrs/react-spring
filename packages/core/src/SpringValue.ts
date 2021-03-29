@@ -207,8 +207,34 @@ export class SpringValue<T = any> extends FrameValue<T> {
         if (!is.und(config.duration)) {
           let p = 1
           if (config.duration > 0) {
-            p = (config.progress || 0) + elapsed / config.duration
+            // calculate the new progress
+            const newP = (config.progress || 0) + elapsed / config.duration
+
+            /**
+             * check the new progress is larger than
+             * the previous progress, it will be in
+             * most cases but if you change the duration
+             * mid animation, we should handle that differently
+             * https://github.com/pmndrs/react-spring/issues/1163
+             */
+            if (newP > node.durationProgress) {
+              p = newP
+            } else if (newP < node.durationProgress) {
+              /**
+               * this is where the duration time has increased:
+               * change the elapsed time to reflect the progress
+               * percentage that has already passsed and apply
+               * as normal so there's no jank or moving backwards.
+               */
+              node.elapsedTime = config.duration * node.durationProgress
+              p = (config.progress || 0) + node.elapsedTime / config.duration
+            }
+
+            // p is clamped between 0-1
             p = p > 1 ? 1 : p < 0 ? 0 : p
+
+            // store our new progress
+            node.durationProgress = p
           }
 
           position = from + config.easing(p) * (to - from)
