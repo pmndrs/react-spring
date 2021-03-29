@@ -8,5 +8,8 @@
     "./animated": "./animated.d.ts",
     "./interpolation": "./interpolation.d.ts",
     "./util": "./util.d.ts"
+  },
+  "dependencies": {
+    "@alloc/types": "^1.2.1"
   }
 }
