@@ -33,13 +33,7 @@ import {
 import { Controller, getSprings, setSprings } from '../Controller'
 import { SpringContext } from '../SpringContext'
 import { SpringRef } from '../SpringRef'
-import {
-  ENTER,
-  MOUNT,
-  LEAVE,
-  UPDATE,
-  TransitionPhase,
-} from '../TransitionPhase'
+import { TransitionPhase } from '../TransitionPhase'
 
 declare function setTimeout(handler: Function, timeout?: number): number
 declare function clearTimeout(timeoutId: number): void
@@ -131,7 +125,7 @@ export function useTransition(
       (transitions[i] = {
         key: keys[i],
         item,
-        phase: MOUNT,
+        phase: TransitionPhase.MOUNT,
         ctrl: new Controller(),
       })
   })
@@ -172,21 +166,21 @@ export function useTransition(
 
     let to: TransitionTo<any>
     let phase: TransitionPhase
-    if (prevPhase == MOUNT) {
+    if (prevPhase == TransitionPhase.MOUNT) {
       to = props.enter
-      phase = ENTER
+      phase = TransitionPhase.ENTER
     } else {
       const isLeave = keys.indexOf(key) < 0
-      if (prevPhase != LEAVE) {
+      if (prevPhase != TransitionPhase.LEAVE) {
         if (isLeave) {
           to = props.leave
-          phase = LEAVE
+          phase = TransitionPhase.LEAVE
         } else if ((to = props.update)) {
-          phase = UPDATE
+          phase = TransitionPhase.UPDATE
         } else return
       } else if (!isLeave) {
         to = props.enter
-        phase = ENTER
+        phase = TransitionPhase.ENTER
       } else return
     }
 
@@ -203,14 +197,14 @@ export function useTransition(
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
-      delay: delay += trail,
+      delay: (delay += trail),
       // This prevents implied resets.
       reset: false,
       // Merge any phase-specific props.
       ...(to as any),
     }
 
-    if (phase == ENTER && is.und(payload.from)) {
+    if (phase == TransitionPhase.ENTER && is.und(payload.from)) {
       // The `initial` prop is used on the first render of our parent component,
       // as well as when `reset: true` is passed. It overrides the `from` prop
       // when defined, and it makes `enter` instant when null.
@@ -230,14 +224,14 @@ export function useTransition(
 
       // Reset the phase of a cancelled enter/leave transition, so it can
       // retry the animation on the next render.
-      if (result.cancelled && t.phase != UPDATE) {
+      if (result.cancelled && t.phase != TransitionPhase.UPDATE) {
         t.phase = prevPhase
         return
       }
 
       if (t.ctrl.idle) {
         const idle = transitions.every(t => t.ctrl.idle)
-        if (t.phase == LEAVE) {
+        if (t.phase == TransitionPhase.LEAVE) {
           const expiry = callProp(expires, t.item)
           if (expiry !== false) {
             const expiryMs = expiry === true ? 0 : expiry
@@ -292,7 +286,7 @@ export function useTransition(
         setSprings(ctrl, springs)
 
         // Merge the context into new items.
-        if (hasContext && phase == ENTER) {
+        if (hasContext && phase == TransitionPhase.ENTER) {
           ctrl.start({ default: context })
         }
 
@@ -338,7 +332,10 @@ function getKeys(
       const t =
         prevTransitions &&
         prevTransitions.find(
-          t => t.item === item && t.phase !== LEAVE && !reused.has(t)
+          t =>
+            t.item === item &&
+            t.phase !== TransitionPhase.LEAVE &&
+            !reused.has(t)
         )
       if (t) {
         reused.add(t)
