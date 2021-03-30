@@ -97,15 +97,6 @@ export function runAsync<T extends AnimationTarget>(
       const bailSignal = new BailSignal()
 
       return (async () => {
-        if (G.skipAnimation) {
-          /**
-           * We need to stop animations if `skipAnimation`
-           * is set in the Globals
-           *
-           */
-          stopAsync(state)
-        }
-
         bailIfEnded(bailSignal)
 
         const props: any = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 }
@@ -131,6 +122,17 @@ export function runAsync<T extends AnimationTarget>(
     }
 
     let result!: AnimationResult<T>
+
+    if (G.skipAnimation) {
+      /**
+       * We need to stop animations if `skipAnimation`
+       * is set in the Globals
+       *
+       */
+      stopAsync(state)
+      return getFinishedResult(target, false)
+    }
+
     try {
       let animating!: Promise<void>
 
