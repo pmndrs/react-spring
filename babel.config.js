@@ -7,6 +7,7 @@ module.exports = {
       {
         bugfixes: true,
         targets: {
+          // check this later
           esmodules: true,
         },
       },
