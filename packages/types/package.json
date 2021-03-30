@@ -2,13 +2,7 @@
   "name": "@react-spring/types",
   "version": "9.0.0",
   "description": "Internal package with TypeScript stuff",
-  "main": "index.d.ts",
-  "exports": {
-    ".": "./index.d.ts",
-    "./animated": "./animated.d.ts",
-    "./interpolation": "./interpolation.d.ts",
-    "./util": "./util.d.ts"
-  },
+  "main": "index.js",
   "dependencies": {
     "@alloc/types": "^1.2.1"
   }
