@@ -12,9 +12,5 @@
   "peerDependencies": {
     "react": ">=16.8",
     "react-native": ">=0.58"
-  },
-  "devDependencies": {
-    "@types/react-native": "~0.57.0",
-    "react-native": "~0.58.0"
   }
 }

@@ -13,9 +13,5 @@
     "react": ">=16.11",
     "react-three-fiber": ">=4.0",
     "three": ">=0.115"
-  },
-  "devDependencies": {
-    "react-three-fiber": "^4.0.0",
-    "three": "^0.115.0"
   }
 }

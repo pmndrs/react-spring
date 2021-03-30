@@ -13,10 +13,5 @@
     "@react-three/fiber": ">=6.0",
     "react": ">=16.11",
     "three": ">=0.126"
-  },
-  "devDependencies": {
-    "@react-three/fiber": "6.0.0-alpha.15",
-    "@types/three": "^0.126.1",
-    "three": "^0.126.1"
   }
 }

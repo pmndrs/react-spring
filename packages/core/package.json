@@ -15,8 +15,5 @@
   },
   "peerDependencies": {
     "react": ">=16.8"
-  },
-  "devDependencies": {
-    "rafz": "^0.1.13"
   }
 }
