@@ -10,7 +10,8 @@
     "@react-spring/animated": "link:../animated",
     "@react-spring/shared": "link:../shared",
     "@react-spring/types": "link:../types",
-    "react-layout-effect": "^1.0.1"
+    "react-layout-effect": "^1.0.1",
+    "react-spring": "0.0.0-deprecated"
   },
   "peerDependencies": {
     "react": ">=16.8"
