@@ -1,11 +1,12 @@
 module.exports = {
   comments: false,
-  plugins: [['@babel/plugin-proposal-class-properties', { loose: true }]],
   presets: [
     [
       '@babel/preset-env',
       {
         bugfixes: true,
+        loose: true,
+        shippedProposals: true,
         targets: {
           // check this later
           esmodules: true,

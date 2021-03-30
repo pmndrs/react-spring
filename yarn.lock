@@ -7340,11 +7340,6 @@ react-refresh@^0.9.0:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.9.0.tgz#71863337adc3e5c2f8a6bfddd12ae3bfe32aafbf"
   integrity sha512-Gvzk7OZpiqKSkxsQvO/mbTN1poglhmAV7gR/DdIrRrSMXraRQQlfikRJOr3Nb9GTMPC5kof948Zy6jJZIFtDvQ==
 
-react-spring@0.0.0-deprecated:
-  version "0.0.0-deprecated"
-  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-0.0.0-deprecated.tgz#3b3b85930917071b6b9633cde0b05369d8cc28d2"
-  integrity sha512-Wbl/maBq4Ni6zMxvBP0IxWYthIqlMTdKlc9xHbD81GAyR89MpYUdwE5/FeAIRco0r2oL/4nLFWRI73M86t1CFg==
-
 react-three-fiber@0.0.0-deprecated:
   version "0.0.0-deprecated"
   resolved "https://registry.yarnpkg.com/react-three-fiber/-/react-three-fiber-0.0.0-deprecated.tgz#c737242487d824cf9520307308b7e4c4071a278f"
