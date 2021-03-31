@@ -16,6 +16,6 @@ export * from './hooks/useMemoOne'
 export * from './hooks/useOnce'
 export * from './hooks/usePrev'
 
-export * from 'fluids'
+export * from './fluids'
 export { raf } from 'rafz'
 export type { Timeout } from 'rafz'

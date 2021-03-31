@@ -2315,8 +2315,7 @@
   version "9.0.0"
   dependencies:
     "@react-spring/types" "link:packages/types"
-    fluids "^0.2.2"
-    rafz "^0.1.13"
+    rafz "^0.1.14"
 
 "@react-spring/three@link:targets/three":
   version "9.0.0"
@@ -5152,11 +5151,6 @@ findup-sync@^4.0.0:
     is-glob "^4.0.0"
     micromatch "^4.0.2"
     resolve-dir "^1.0.1"
-
-fluids@^0.2.2:
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/fluids/-/fluids-0.2.4.tgz#5efcece750a682244c2d4952d81611815d6b43ca"
-  integrity sha512-+smvcInZ+1jy1/PbXSxZitDOS903/sAtyEqsQhrTSIDPm9unNz0FM6B5YmeR+IXXRFNgbKpHznuQaqiVt1y0ZA==
 
 flush-microtasks@^1.0.1:
   version "1.0.1"
@@ -9187,9 +9181,9 @@ quick-lru@^4.0.1:
   resolved "https://registry.npmjs.org/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
 
-rafz@^0.1.13:
+rafz@^0.1.14:
   version "0.1.14"
-  resolved "https://registry.npmjs.org/rafz/-/rafz-0.1.14.tgz#164f01cf7cc6094e08467247ef351ef5c8d278fe"
+  resolved "https://registry.yarnpkg.com/rafz/-/rafz-0.1.14.tgz#164f01cf7cc6094e08467247ef351ef5c8d278fe"
   integrity sha512-YiQkedSt1urYtYbvHhTQR3l67M8SZbUvga5eJFM/v4vx/GmDdtXlE2hjJIyRjhhO/PjcdGC+CXCYOUA4onit8w==
 
 "rafz@link:packages/shared/node_modules/rafz":
