@@ -17,6 +17,7 @@ interface ControllerUpdateFn<State extends Lookup = Lookup> {
  * animate({}) // this also works
  * ```
  */
+
 export class SpringRef<State extends Lookup = Lookup> extends Function {
   readonly current: Controller<State>[] = []
 
@@ -24,8 +25,8 @@ export class SpringRef<State extends Lookup = Lookup> extends Function {
     super('return arguments.callee._call.apply(arguments.callee, arguments)')
   }
 
-  _call(values: Partial<State>) {
-    this.set(values)
+  _call(props?: ControllerUpdate<State> | ControllerUpdateFn<State>) {
+    this.start(props)
   }
 
   /** Update the state of each controller without animating. */
@@ -97,6 +98,9 @@ export class SpringRef<State extends Lookup = Lookup> extends Function {
 }
 
 export interface SpringRef<State extends Lookup> {
+  (props?: ControllerUpdate<State> | ControllerUpdateFn<State>): AsyncResult<
+    Controller<State>
+  >[]
   /** Stop all animations. */
   stop(): this
   /** Stop animations for the given keys. */

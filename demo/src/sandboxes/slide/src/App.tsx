@@ -4,18 +4,17 @@ import { useDrag } from 'react-use-gesture'
 
 import styles from './styles.module.css'
 
-const left = { bg: `linear-gradient(120deg, #f093fb 0%, #f5576c 100%)`, justifySelf: 'end' }
-
-const right = { bg: `linear-gradient(120deg, #96fbc4 0%, #f9f586 100%)`, justifySelf: 'start' }
+const bg1 = 'linear-gradient(120deg, #96fbc4 0%, #f9f586 100%)'
+const bg2 = 'linear-gradient(120deg, #f093fb 0%, #f5576c 100%)'
 
 const Slider: React.FC = ({ children }) => {
-  const [{ x, bg, scale, justifySelf }, ref] = useSpring(() => ({ x: 0, scale: 1, ...left }))
+  const [{ x, bg, size }, set] = useSpring(() => ({ x: 0, bg: bg1, size: 1 }))
   const bind = useDrag(({ active, movement: [x] }) =>
-    ref.set({
+    set({
       x: active ? x : 0,
-      scale: active ? 1.1 : 1,
-      ...(x < 0 ? left : right),
-      // immediate: name => active && name === 'x', // TODO this triggers an error atm
+      bg: x < 0 ? bg2 : bg1,
+      size: active ? 1.1 : 1,
+      immediate: name => active && name === 'x',
     })
   )
 
@@ -23,8 +22,11 @@ const Slider: React.FC = ({ children }) => {
 
   return (
     <animated.div {...bind()} className={styles.item} style={{ background: bg }}>
-      <animated.div className={styles.av} style={{ scale: avSize, justifySelf }} />
-      <animated.div className={styles.fg} style={{ x, scale }}>
+      <animated.div
+        className={styles.av}
+        style={{ scale: avSize, justifySelf: x.to(x => (x < 0 ? 'end' : 'start')) }}
+      />
+      <animated.div className={styles.fg} style={{ x, scale: size }}>
         {children}
       </animated.div>
     </animated.div>
