@@ -25,6 +25,7 @@ export class SpringRef<State extends Lookup = Lookup> extends Function {
   }
 
   _call(props?: ControllerUpdate<State> | ControllerUpdateFn<State>) {
+    // TODO maybe we should deprecate calling the ref directly.
     this.start(props)
   }
 
