@@ -2280,7 +2280,6 @@
   dependencies:
     "@react-spring/shared" "link:packages/shared"
     "@react-spring/types" "link:packages/types"
-    react-layout-effect "^1.0.1"
 
 "@react-spring/core@link:packages/core":
   version "9.0.0"
@@ -2288,7 +2287,6 @@
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
     "@react-spring/types" "link:packages/types"
-    react-layout-effect "^1.0.1"
 
 "@react-spring/konva@link:targets/konva":
   version "9.0.0"
@@ -9262,11 +9260,6 @@ react-konva@~16.8.0:
   dependencies:
     react-reconciler "^0.20.4"
     scheduler "^0.13.6"
-
-react-layout-effect@^1.0.1:
-  version "1.0.5"
-  resolved "https://registry.npmjs.org/react-layout-effect/-/react-layout-effect-1.0.5.tgz#0dc4e24452aee5de66c93c166f0ec512dfb1be80"
-  integrity sha512-zdRXHuch+OBHU6bvjTelOGUCM+UDr/iCY+c0wXLEAc+G4/FlcJruD/hUOzlKH5XgO90Y/BUJPNhI/g9kl+VAsA==
 
 react-merge-refs@^1.0.0, react-merge-refs@^1.1.0:
   version "1.1.0"

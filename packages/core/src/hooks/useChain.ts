@@ -1,5 +1,4 @@
-import { useLayoutEffect } from 'react-layout-effect'
-import { each } from '@react-spring/shared'
+import { each, useLayoutEffect } from '@react-spring/shared'
 import { SpringRef } from '../SpringRef'
 import { callProp } from '../helpers'
 
