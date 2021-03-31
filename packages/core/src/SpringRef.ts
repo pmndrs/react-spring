@@ -12,9 +12,9 @@ interface ControllerUpdateFn<State extends Lookup = Lookup> {
  * https://hackernoon.com/creating-callable-objects-in-javascript-d21l3te1
  *
  * ```js
- * const [springs, animate] = useSpring(() => ({}))
- * animate.set({}) // this works
- * animate({}) // this also works
+ * const [springs, api] = useSpring(() => ({x: 0}))
+ * api.start({x: 3}) // this works
+ * api({x: 3}) // this also works (non breaking from 9rc3)
  * ```
  */
 export class SpringRef<State extends Lookup = Lookup> extends Function {
