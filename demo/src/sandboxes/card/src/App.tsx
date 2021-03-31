@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSpring, animated } from '@react-spring/web'
 
-import './index.css'
+import styles from './styles.module.css'
 
 const calc = (x: number, y: number) => [
   -(y - window.innerHeight / 2) / 20,
@@ -17,15 +17,17 @@ export default function App() {
     config: { mass: 5, tension: 350, friction: 40 },
   }))
   return (
-    <animated.div
-      className="card"
-      onMouseMove={({ clientX: x, clientY: y }) => {
-        ref.current[0].set({ xys: calc(x, y) })
-      }}
-      onMouseLeave={() => {
-        ref.current[0].set({ xys: [0, 0, 1] })
-      }}
-      style={{ transform: props.xys.to(trans) }}
-    />
+    <div className="flex fill center">
+      <animated.div
+        className={styles.card}
+        onMouseMove={({ clientX: x, clientY: y }) => {
+          ref.current[0].set({ xys: calc(x, y) })
+        }}
+        onMouseLeave={() => {
+          ref.current[0].set({ xys: [0, 0, 1] })
+        }}
+        style={{ transform: props.xys.to(trans) }}
+      />
+    </div>
   )
 }

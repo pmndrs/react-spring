@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTrail, animated } from '@react-spring/web'
 
-import './index.css'
+import styles from './styles.module.css'
 
 const fast = { tension: 1200, friction: 40 }
 const slow = { mass: 10, tension: 200, friction: 50 }
@@ -25,7 +25,7 @@ export default function App() {
         </filter>
       </svg>
       <div
-        className="hooks-main"
+        className={styles.hooksMain}
         onMouseMove={e => ref.current[0].set({ xy: [e.clientX, e.clientY] })}>
         {trail.map((props, index) => (
           <animated.div key={index} style={{ transform: props.xy.to(trans) }} />
