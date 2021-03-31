@@ -11,7 +11,7 @@ const trans = (x: number, y: number) =>
 export default function App() {
   const [trail, ref] = useTrail(3, () => ({
     xy: [0, 0],
-    config: i => (i === 0 ? fast : slow),
+    config: i => (i === 0 ? fast : slow), // TODO fix lint error
   }))
   return (
     <>
