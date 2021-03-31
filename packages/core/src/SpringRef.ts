@@ -17,7 +17,6 @@ interface ControllerUpdateFn<State extends Lookup = Lookup> {
  * animate({}) // this also works
  * ```
  */
-
 export class SpringRef<State extends Lookup = Lookup> extends Function {
   readonly current: Controller<State>[] = []
 
