@@ -18,7 +18,7 @@ document.addEventListener('gesturechange', e => e.preventDefault())
 
 export default function App() {
   const domTarget = useRef(null)
-  const [{ x, y, rotateX, rotateY, rotateZ, zoom, scale }, ref] = useSpring(
+  const [{ x, y, rotateX, rotateY, rotateZ, zoom, scale }, api] = useSpring(
     () => ({
       rotateX: 0,
       rotateY: 0,
@@ -31,25 +31,25 @@ export default function App() {
     })
   )
 
-  const [{ wheelY }, refWheel] = useSpring(() => ({ wheelY: 0 }))
+  const [{ wheelY }, wheelApi] = useSpring(() => ({ wheelY: 0 }))
 
   useGesture(
     {
-      onDrag: ({ offset: [x, y] }) =>
-        ref.set({ x, y, rotateX: 0, rotateY: 0, scale: 1 }),
-      onPinch: ({ offset: [d, a] }) => ref.set({ zoom: d / 200, rotateZ: a }),
+      onDrag: ({ active, offset: [x, y] }) =>
+        api.start({ x, y, rotateX: 0, rotateY: 0, scale: active ? 1 : 1.1 }),
+      onPinch: ({ offset: [d, a] }) => api.start({ zoom: d / 200, rotateZ: a }),
       onMove: ({ xy: [px, py], dragging }) =>
         !dragging &&
-        ref.set({
+        api.start({
           rotateX: calcX(py, y.get()),
           rotateY: calcY(px, x.get()),
           scale: 1.1,
         }),
       onHover: ({ hovering }) =>
-        !hovering && ref.set({ rotateX: 0, rotateY: 0, scale: 1 }),
+        !hovering && api.start({ rotateX: 0, rotateY: 0, scale: 1 }),
       onWheel: ({ event, offset: [, y] }) => {
         event.preventDefault()
-        refWheel.set({ wheelY: y })
+        wheelApi.set({ wheelY: y })
       },
     },
     { domTarget, eventOptions: { passive: false } }

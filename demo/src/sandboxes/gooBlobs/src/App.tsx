@@ -9,7 +9,7 @@ const trans = (x: number, y: number) =>
   `translate3d(${x}px,${y}px,0) translate3d(-50%,-50%,0)`
 
 export default function App() {
-  const [trail, ref] = useTrail(3, () => ({
+  const [trail, api] = useTrail(3, () => ({
     xy: [0, 0],
     config: i => (i === 0 ? fast : slow), // TODO fix lint error
   }))
@@ -26,7 +26,7 @@ export default function App() {
       </svg>
       <div
         className={styles.hooksMain}
-        onMouseMove={e => ref.current[0].set({ xy: [e.clientX, e.clientY] })}>
+        onMouseMove={e => api.start({ xy: [e.clientX, e.clientY] })}>
         {trail.map((props, index) => (
           <animated.div key={index} style={{ transform: props.xy.to(trans) }} />
         ))}
