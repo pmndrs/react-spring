@@ -14,7 +14,7 @@ const Slider: React.FC = ({ children }) => {
       x: active ? x : 0,
       scale: active ? 1.1 : 1,
       ...(x < 0 ? left : right),
-      immediate: name => active && name === 'x', // TODO this triggers an error atm
+      immediate: name => active && name === 'x',
     })
   )
 
