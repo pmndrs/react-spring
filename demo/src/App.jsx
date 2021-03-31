@@ -5,11 +5,13 @@ import styles from './styles.module.css'
 import GooBlobs from './sandboxes/gooBlobs/src/App'
 import Card from './sandboxes/card/src/App'
 import FlipCard from './sandboxes/flipCard/src/App'
+import Slide from './sandboxes/slide/src/App'
 
 const links = {
   card: Card,
   'flip-card': FlipCard,
   'goo-blobs': GooBlobs,
+  slide: Slide,
 }
 
 const Example = ({ link }) => {
