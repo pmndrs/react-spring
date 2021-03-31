@@ -12,6 +12,7 @@
   text-align: center;
   border-radius: 5px;
   box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.2);
+  -webkit-user-select: none;
   user-select: none;
 }
 
