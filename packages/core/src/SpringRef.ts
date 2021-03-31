@@ -7,8 +7,26 @@ interface ControllerUpdateFn<State extends Lookup = Lookup> {
   (i: number, ctrl: Controller<State>): ControllerUpdate<State> | Falsy
 }
 
-export class SpringRef<State extends Lookup = Lookup> {
+/**
+ * Extending from function allows SpringRef instances to be callable.
+ * https://hackernoon.com/creating-callable-objects-in-javascript-d21l3te1
+ *
+ * ```js
+ * const [springs, animate] = useSpring(() => ({}))
+ * animate.set({}) // this works
+ * animate({}) // this also works
+ * ```
+ */
+export class SpringRef<State extends Lookup = Lookup> extends Function {
   readonly current: Controller<State>[] = []
+
+  constructor() {
+    super('return arguments.callee._call.apply(arguments.callee, arguments)')
+  }
+
+  _call(values: Partial<State>) {
+    this.set(values)
+  }
 
   /** Update the state of each controller without animating. */
   set(values: Partial<State>) {
