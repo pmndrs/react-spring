@@ -11,6 +11,7 @@ import CardsStack from './sandboxes/cards-stack/src/App'
 import Viewpager from './sandboxes/viewpager/src/App'
 import SimpleTransition from './sandboxes/simple-transition/src/App'
 import ImageFade from './sandboxes/image-fade/src/App'
+import ListReordering from './sandboxes/list-reordering/src/App'
 
 const links = {
   card: Card,
@@ -22,6 +23,7 @@ const links = {
   viewpager: Viewpager,
   'simple-transition': SimpleTransition,
   'image-fade': ImageFade,
+  'list-reordering': ListReordering,
 }
 
 const Example = ({ link }) => {
