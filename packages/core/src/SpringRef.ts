@@ -1,4 +1,4 @@
-import { each, is } from '@react-spring/shared'
+import { each, is, deprecateDirectCall } from '@react-spring/shared'
 import { Lookup, Falsy, OneOrMore } from '@react-spring/types'
 import { AsyncResult, ControllerUpdate } from './types'
 import { Controller } from './Controller'
@@ -24,8 +24,9 @@ export class SpringRef<State extends Lookup = Lookup> extends Function {
     super('return arguments.callee._call.apply(arguments.callee, arguments)')
   }
 
+  /** @deprecated use the property 'start' instead */
   _call(props?: ControllerUpdate<State> | ControllerUpdateFn<State>) {
-    // TODO maybe we should deprecate calling the ref directly.
+    deprecateDirectCall()
     this.start(props)
   }
 
