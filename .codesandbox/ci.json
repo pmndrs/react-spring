@@ -6,7 +6,8 @@
     "/demo/src/sandboxes/flipCard",
     "/demo/src/sandboxes/slide",
     "/demo/src/sandboxes/draggableList",
-    "/demo/src/sandboxes/cardsStack"
+    "/demo/src/sandboxes/cardsStack",
+    "/demo/src/sandboxes/viewpager"
   ],
   "node": "14"
 }

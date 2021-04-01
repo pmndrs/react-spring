@@ -8,6 +8,7 @@ import FlipCard from './sandboxes/flipCard/src/App'
 import Slide from './sandboxes/slide/src/App'
 import DraggableList from './sandboxes/draggableList/src/App'
 import CardsStack from './sandboxes/cardsStack/src/App'
+import Viewpager from './sandboxes/viewpager/src/App'
 
 const links = {
   card: Card,
@@ -16,6 +17,7 @@ const links = {
   slide: Slide,
   'draggable-list': DraggableList,
   'cards-stack': CardsStack,
+  viewpager: Viewpager,
 }
 
 const Example = ({ link }) => {
