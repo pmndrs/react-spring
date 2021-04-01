@@ -6,7 +6,7 @@ import createMockRaf, { MockRaf } from 'mock-raf'
 import { SpringValue, Animatable } from 'react-spring'
 import { Globals } from '@react-spring/shared'
 
-import { a } from './index'
+import { a } from '.'
 
 let mockRaf: MockRaf
 beforeEach(() => {
