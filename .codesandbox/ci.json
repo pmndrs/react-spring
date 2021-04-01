@@ -8,7 +8,8 @@
     "/demo/src/sandboxes/draggable-list",
     "/demo/src/sandboxes/cards-stack",
     "/demo/src/sandboxes/viewpager",
-    "/demo/src/sandboxes/simple-transition"
+    "/demo/src/sandboxes/simple-transition",
+    "/demo/src/sandboxes/image-fade"
   ],
   "node": "14"
 }
