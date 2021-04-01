@@ -45,6 +45,7 @@ function DraggableList({ items }: { items: string[] }) {
     </div>
   )
 }
+
 export default function App() {
   return (
     <div className={`flex fill center ${styles.container}`}>

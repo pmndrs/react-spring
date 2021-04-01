@@ -5,7 +5,8 @@
     "/demo/src/sandboxes/gooBlobs",
     "/demo/src/sandboxes/flipCard",
     "/demo/src/sandboxes/slide",
-    "/demo/src/sandboxes/chain-animation"
+    "/demo/src/sandboxes/draggableList",
+    "/demo/src/sandboxes/cardsStack"
   ],
   "node": "14"
 }

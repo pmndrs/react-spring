@@ -7,6 +7,7 @@ import Card from './sandboxes/card/src/App'
 import FlipCard from './sandboxes/flipCard/src/App'
 import Slide from './sandboxes/slide/src/App'
 import DraggableList from './sandboxes/draggableList/src/App'
+import CardsStack from './sandboxes/cardsStack/src/App'
 
 const links = {
   card: Card,
@@ -14,6 +15,7 @@ const links = {
   'goo-blobs': GooBlobs,
   slide: Slide,
   'draggable-list': DraggableList,
+  'cards-stack': CardsStack,
 }
 
 const Example = ({ link }) => {
