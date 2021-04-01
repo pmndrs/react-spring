@@ -8,10 +8,10 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      # - name: Cancel Previous Runs
-      #   uses: styfle/cancel-workflow-action@0.6.0
-      #   with:
-      #     access_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Setup node
