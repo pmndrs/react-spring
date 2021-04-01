@@ -2,13 +2,14 @@ import React from 'react'
 import { Link, Route } from 'wouter'
 import styles from './styles.module.css'
 
-import GooBlobs from './sandboxes/gooBlobs/src/App'
+import GooBlobs from './sandboxes/goo-blobs/src/App'
 import Card from './sandboxes/card/src/App'
-import FlipCard from './sandboxes/flipCard/src/App'
+import FlipCard from './sandboxes/flip-card/src/App'
 import Slide from './sandboxes/slide/src/App'
-import DraggableList from './sandboxes/draggableList/src/App'
-import CardsStack from './sandboxes/cardsStack/src/App'
+import DraggableList from './sandboxes/draggable-list/src/App'
+import CardsStack from './sandboxes/cards-stack/src/App'
 import Viewpager from './sandboxes/viewpager/src/App'
+import SimpleTransition from './sandboxes/simple-transition/src/App'
 
 const links = {
   card: Card,
@@ -18,6 +19,7 @@ const links = {
   'draggable-list': DraggableList,
   'cards-stack': CardsStack,
   viewpager: Viewpager,
+  'simple-transition': SimpleTransition,
 }
 
 const Example = ({ link }) => {
