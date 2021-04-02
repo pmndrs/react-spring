@@ -12,7 +12,9 @@
     "/demo/src/sandboxes/image-fade",
     "/demo/src/sandboxes/list-reordering",
     "/demo/src/sandboxes/masonry",
-    "/demo/src/sandboxes/animating-auto"
+    "/demo/src/sandboxes/animating-auto",
+    "/demo/src/sandboxes/multistage-transition",
+    "/demo/src/sandboxes/chain"
   ],
   "node": "14"
 }

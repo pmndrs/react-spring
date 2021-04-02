@@ -15,6 +15,7 @@ import ListReordering from './sandboxes/list-reordering/src/App'
 import Chain from './sandboxes/chain/src/App'
 import Masonry from './sandboxes/masonry/src/App'
 import AnimatingAuto from './sandboxes/animating-auto/src/App'
+import MultiStageTransition from './sandboxes/multistage-transition/src/App'
 
 const links = {
   card: Card,
@@ -30,6 +31,7 @@ const links = {
   'list-reordering': ListReordering,
   masonry: Masonry,
   'animating-auto': AnimatingAuto,
+  'multistage-transition': MultiStageTransition,
 }
 
 const Example = ({ link }) => {
