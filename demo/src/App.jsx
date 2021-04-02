@@ -12,9 +12,11 @@ import Viewpager from './sandboxes/viewpager/src/App'
 import SimpleTransition from './sandboxes/simple-transition/src/App'
 import ImageFade from './sandboxes/image-fade/src/App'
 import ListReordering from './sandboxes/list-reordering/src/App'
+import Chain from './sandboxes/chain/src/App'
 
 const links = {
   card: Card,
+  chain: Chain,
   'flip-card': FlipCard,
   'goo-blobs': GooBlobs,
   slide: Slide,
