@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import {
   useTransition,
   useSpring,
@@ -29,9 +29,9 @@ export default function App() {
   const transition = useTransition(open ? data : [], {
     ref: transApi,
     trail: 400 / data.length,
-    from: { opacity: 0, transform: 'scale(0)' },
-    enter: { opacity: 1, transform: 'scale(1)' },
-    leave: { opacity: 0, transform: 'scale(0)' },
+    from: { opacity: 0, scale: 0 },
+    enter: { opacity: 1, scale: 1 },
+    leave: { opacity: 0, scale: 0 },
   })
 
   // This will orchestrate the two animations above, comment the last arg and it creates a sequence
