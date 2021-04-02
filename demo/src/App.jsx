@@ -12,6 +12,7 @@ import Viewpager from './sandboxes/viewpager/src/App'
 import SimpleTransition from './sandboxes/simple-transition/src/App'
 import ImageFade from './sandboxes/image-fade/src/App'
 import ListReordering from './sandboxes/list-reordering/src/App'
+import Masonry from './sandboxes/masonry/src/App'
 
 const links = {
   card: Card,
@@ -24,6 +25,7 @@ const links = {
   'simple-transition': SimpleTransition,
   'image-fade': ImageFade,
   'list-reordering': ListReordering,
+  masonry: Masonry,
 }
 
 const Example = ({ link }) => {
