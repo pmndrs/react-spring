@@ -10,7 +10,9 @@
     "/demo/src/sandboxes/viewpager",
     "/demo/src/sandboxes/simple-transition",
     "/demo/src/sandboxes/image-fade",
-    "/demo/src/sandboxes/list-reordering"
+    "/demo/src/sandboxes/list-reordering",
+    "/demo/src/sandboxes/masonry",
+    "/demo/src/sandboxes/animating-auto"
   ],
   "node": "14"
 }

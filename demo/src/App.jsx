@@ -13,6 +13,7 @@ import SimpleTransition from './sandboxes/simple-transition/src/App'
 import ImageFade from './sandboxes/image-fade/src/App'
 import ListReordering from './sandboxes/list-reordering/src/App'
 import Masonry from './sandboxes/masonry/src/App'
+import AnimatingAuto from './sandboxes/animating-auto/src/App'
 
 const links = {
   card: Card,
@@ -26,6 +27,7 @@ const links = {
   'image-fade': ImageFade,
   'list-reordering': ListReordering,
   masonry: Masonry,
+  'animating-auto': AnimatingAuto,
 }
 
 const Example = ({ link }) => {
