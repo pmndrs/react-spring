@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useTrail, a } from 'react-spring'
+import { useTrail, a } from '@react-spring/web'
 
 import styles from './styles.module.css'
 

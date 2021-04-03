@@ -1,11 +1,3 @@
-html,
-body,
-#root {
-  padding: 0;
-  overflow: hidden;
-  user-select: none;
-}
-
 .wrapper {
   width: 100%;
   height: 100%;

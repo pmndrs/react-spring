@@ -18,7 +18,7 @@
     "/demo/src/sandboxes/train",
     "/demo/src/sandboxes/svg-filter",
     "/demo/src/sandboxes/css-keyframes",
-    "/demo/src/sandboxes/notification-hub"
+    "/demo/src/sandboxes/tree"
   ],
   "node": "14"
 }
