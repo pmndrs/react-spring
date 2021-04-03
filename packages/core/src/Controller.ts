@@ -25,6 +25,8 @@ import {
   ControllerFlushFn,
   ControllerUpdate,
   OnRest,
+  OnStart,
+  OnChange,
   SpringValues,
 } from './types'
 
@@ -57,6 +59,13 @@ export class Controller<State extends Lookup = Lookup> {
    */
   ref?: SpringRef<State>
 
+  /**
+   * the item the controller is associated too,
+   * if applicable. This is commonly used with
+   * the useTransition hook.
+   */
+  protected _item?: unknown
+
   /** Custom handler for flushing update queues */
   protected _flush?: ControllerFlushFn<this>
 
@@ -85,9 +94,9 @@ export class Controller<State extends Lookup = Lookup> {
 
   /** The event queues that are flushed once per frame maximum */
   protected _events = {
-    onStart: new Set<(ctrl: Controller<State>) => void>(),
-    onChange: new Set<(values: object) => void>(),
-    onRest: new Map<OnRest, AnimationResult>(),
+    onStart: new Set<OnStart<Controller<State>>>(),
+    onChange: new Set<OnChange<Controller<State>>>(),
+    onRest: new Map<OnRest<Controller<State>>, AnimationResult>(),
   }
 
   constructor(
@@ -101,6 +110,10 @@ export class Controller<State extends Lookup = Lookup> {
     if (props) {
       this.start({ default: true, ...props })
     }
+  }
+
+  set item(item: unknown) {
+    this._item = item
   }
 
   /**
@@ -225,7 +238,7 @@ export class Controller<State extends Lookup = Lookup> {
     const active = this._active.size > 0
     if (active && !this._started) {
       this._started = true
-      flushCalls(onStart, this)
+      flushCalls(onStart, this, this._item)
     }
 
     const idle = !active && this._started
@@ -233,7 +246,7 @@ export class Controller<State extends Lookup = Lookup> {
     const values = changed || (idle && onRest.size) ? this.get() : null
 
     if (changed) {
-      flushCalls(onChange, values!)
+      flushCalls(onChange, this, this._item)
     }
 
     // The "onRest" queue is only flushed when all springs are idle.
@@ -241,7 +254,7 @@ export class Controller<State extends Lookup = Lookup> {
       this._started = false
       flush(onRest, ([onRest, result]) => {
         result.value = values
-        onRest(result)
+        onRest(this, this._item)
       })
     }
   }
@@ -457,6 +470,7 @@ export function setSprings(
 
 function createSpring(key: string, observer?: FluidObserver<FrameValue.Event>) {
   const spring = new SpringValue()
+  // spring.ctrl = observer as Controller<any>
   spring.key = key
   if (observer) {
     addFluidObserver(spring, observer)

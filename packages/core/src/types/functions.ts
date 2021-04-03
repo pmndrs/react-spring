@@ -83,18 +83,22 @@ interface UpdateValueFn<T = any> extends AnyUpdateFn<SpringValue<T>> {
  * Called before the first frame of every animation.
  * From inside the `requestAnimationFrame` callback.
  */
-export type OnStart<T = unknown> = (spring: SpringValue<T>) => void
+export type OnStart<T = unknown, Item = unknown> = (
+  ctrl: T,
+  item?: Item
+) => void
 
 /** Called when a `SpringValue` changes */
-export type OnChange<T = unknown> = (value: T, source: SpringValue<T>) => void
+export type OnChange<T = unknown, Item = unknown> = (
+  ctrl: T,
+  item?: Item
+) => void
 
-export type OnPause<T = unknown> = OnStart<T>
-export type OnResume<T = unknown> = OnStart<T>
+export type OnPause<T = unknown, Item = unknown> = OnStart<T, Item>
+export type OnResume<T = unknown, Item = unknown> = OnStart<T, Item>
 
 /** Called once the animation comes to a halt */
-export type OnRest<T extends Readable = any> = (
-  result: AnimationResult<T>
-) => void
+export type OnRest<T = unknown, Item = unknown> = (ctrl: T, item?: Item) => void
 
 export type OnResolve<T = unknown> = (
   result: AnimationResult<Controller<T>>
