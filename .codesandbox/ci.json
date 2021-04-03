@@ -17,7 +17,8 @@
     "/demo/src/sandboxes/chain",
     "/demo/src/sandboxes/train",
     "/demo/src/sandboxes/svg-filter",
-    "/demo/src/sandboxes/css-keyframes"
+    "/demo/src/sandboxes/css-keyframes",
+    "/demo/src/sandboxes/notification-hub"
   ],
   "node": "14"
 }
