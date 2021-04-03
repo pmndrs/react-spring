@@ -19,6 +19,7 @@ import MultiStageTransition from './sandboxes/multistage-transition/src/App'
 import Trail from './sandboxes/trail/src/App'
 import SvgFilter from './sandboxes/svg-filter/src/App'
 import CssKeyframes from './sandboxes/css-keyframes/src/App'
+import Tree from './sandboxes/tree/src/App'
 
 const links = {
   card: Card,
@@ -38,6 +39,7 @@ const links = {
   trail: Trail,
   'svg-filter': SvgFilter,
   'css-keyframes': CssKeyframes,
+  tree: Tree,
 }
 
 const Example = ({ link }) => {
