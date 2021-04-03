@@ -15,7 +15,8 @@
     "/demo/src/sandboxes/animating-auto",
     "/demo/src/sandboxes/multistage-transition",
     "/demo/src/sandboxes/chain",
-    "/demo/src/sandboxes/train"
+    "/demo/src/sandboxes/train",
+    "/demo/src/sandboxes/svg-filter"
   ],
   "node": "14"
 }

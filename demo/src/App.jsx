@@ -17,6 +17,7 @@ import Masonry from './sandboxes/masonry/src/App'
 import AnimatingAuto from './sandboxes/animating-auto/src/App'
 import MultiStageTransition from './sandboxes/multistage-transition/src/App'
 import Trail from './sandboxes/trail/src/App'
+import SvgFilter from './sandboxes/svg-filter/src/App'
 
 const links = {
   card: Card,
@@ -34,6 +35,7 @@ const links = {
   'animating-auto': AnimatingAuto,
   'multistage-transition': MultiStageTransition,
   trail: Trail,
+  'svg-filter': SvgFilter,
 }
 
 const Example = ({ link }) => {
