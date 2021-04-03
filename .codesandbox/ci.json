@@ -16,7 +16,8 @@
     "/demo/src/sandboxes/multistage-transition",
     "/demo/src/sandboxes/chain",
     "/demo/src/sandboxes/train",
-    "/demo/src/sandboxes/svg-filter"
+    "/demo/src/sandboxes/svg-filter",
+    "/demo/src/sandboxes/css-keyframes"
   ],
   "node": "14"
 }
