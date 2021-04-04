@@ -163,7 +163,6 @@ export function useTransition(
 
   // These props are inherited by every phase change.
   const defaultProps = getDefaultProps<UseTransitionProps>(props)
-
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
   each(transitions, (t, i) => {
@@ -209,6 +208,13 @@ export function useTransition(
       // Merge any phase-specific props.
       ...(to as any),
     }
+
+    // binding t.item to onStart, onChange, onRest, onXXXX functions
+    Object.entries(defaultProps).forEach(([key, value]) => {
+      if (key.indexOf('on') === 0 && typeof value === 'function')
+        // @ts-expect-error since payload spreads defaultProps, key can index payload
+        payload[key] = value.bind(null, t.item)
+    })
 
     if (phase == ENTER && is.und(payload.from)) {
       // The `initial` prop is used on the first render of our parent component,

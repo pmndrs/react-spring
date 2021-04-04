@@ -233,7 +233,7 @@ export class Controller<State extends Lookup = Lookup> {
     const values = changed || (idle && onRest.size) ? this.get() : null
 
     if (changed) {
-      flushCalls(onChange, values!)
+      flushCalls(onChange, values!, this)
     }
 
     // The "onRest" queue is only flushed when all springs are idle.
@@ -241,7 +241,7 @@ export class Controller<State extends Lookup = Lookup> {
       this._started = false
       flush(onRest, ([onRest, result]) => {
         result.value = values
-        onRest(result)
+        onRest(result, this)
       })
     }
   }

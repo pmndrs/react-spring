@@ -154,7 +154,7 @@ export function runAsync<T extends AnimationTarget>(
 
     if (is.fun(onRest)) {
       raf.batchedUpdates(() => {
-        onRest(result)
+        onRest(result.value, target)
       })
     }
 

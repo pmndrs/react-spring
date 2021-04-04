@@ -42,15 +42,17 @@ function MessageHub({
       await next({ opacity: 0 })
       await next({ height: 0 })
     },
-    onRest: (_, item) => {
+    // onStart: (...args) => console.log('onStart', ...args),
+    // onChange: (...args) => console.log('onChange', ...args),
+    // onRest: (...args) => console.log('onRest', ...args),
+    onRest: (item, ctrl) => {
       setItems(state =>
         state.filter(i => {
           /**
            * It would be good to not have to Typecast this,
            * it should be able to infer this from the .item in controller
            */
-          return i.key !== (_.target._item as Item).key
-          // return i.key !== (item as Item).key
+          return i.key !== item.key
         })
       )
     },
@@ -73,9 +75,7 @@ function MessageHub({
             <Button
               onClick={e => {
                 e.stopPropagation()
-                if (cancelMap.has(item)) {
-                  cancelMap.get(item)()
-                }
+                if (cancelMap.has(item)) cancelMap.get(item)()
               }}>
               <X size={18} />
             </Button>
