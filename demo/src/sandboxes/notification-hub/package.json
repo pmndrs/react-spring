@@ -8,7 +8,8 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-feather": "1.1.4",
-    "react-scripts": "4.0.3"
+    "react-scripts": "4.0.3",
+    "styled-components": "^5.2.3"
   },
   "scripts": {
     "start": "react-scripts start",

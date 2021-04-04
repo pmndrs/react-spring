@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useMemo, useEffect } from 'react'
 import { loremIpsum } from 'lorem-ipsum'
 import { X } from 'react-feather'
-import { animated, useTransition } from 'react-spring'
-import styles from './styles.module.css'
+import { useTransition } from '@react-spring/web'
+import { Main, Container, Message, Button, Content, Life } from './styles'
 
 let id = 0
 
@@ -28,8 +28,8 @@ function MessageHub({
   timeout = 3000,
   children,
 }: MessageHubProps) {
-  const [refMap] = useState(() => new WeakMap())
-  const [cancelMap] = useState(() => new WeakMap())
+  const refMap = useMemo(() => new WeakMap(), [])
+  const cancelMap = useMemo(() => new WeakMap(), [])
   const [items, setItems] = useState<Item[]>([])
 
   const transitions = useTransition(items, {
@@ -49,7 +49,8 @@ function MessageHub({
            * It would be good to not have to Typecast this,
            * it should be able to infer this from the .item in controller
            */
-          return i.key !== (item as Item).key
+          return i.key !== (_.target._item as Item).key
+          // return i.key !== (item as Item).key
         })
       )
     },
@@ -63,14 +64,13 @@ function MessageHub({
   }, [])
 
   return (
-    <div className={styles.container}>
+    <Container>
       {transitions(({ life, ...style }, item) => (
-        <animated.div className={styles.message} style={style}>
-          <div className={styles.content} ref={ref => ref && refMap.set(item, ref)}>
-            <animated.div className={styles.life} style={{ right: life }} />
+        <Message style={style}>
+          <Content ref={ref => ref && refMap.set(item, ref)}>
+            <Life style={{ right: life }} />
             <p>{item.msg}</p>
-            <div
-              className={styles.button}
+            <Button
               onClick={e => {
                 e.stopPropagation()
                 if (cancelMap.has(item)) {
@@ -78,11 +78,11 @@ function MessageHub({
                 }
               }}>
               <X size={18} />
-            </div>
-          </div>
-        </animated.div>
+            </Button>
+          </Content>
+        </Message>
       ))}
-    </div>
+    </Container>
   )
 }
 
@@ -90,19 +90,17 @@ export default function App() {
   const ref = useRef<null | AddFunction>(null)
 
   const handleClick = () => {
-    if (ref.current) {
-      ref.current(loremIpsum())
-    }
+    ref.current?.(loremIpsum())
   }
 
   return (
-    <div className={styles.main} onClick={handleClick}>
+    <Main className="flex fill center" onClick={handleClick}>
       Click here to create notifications
       <MessageHub
         children={(add: AddFunction) => {
           ref.current = add
         }}
       />
-    </div>
+    </Main>
   )
 }
