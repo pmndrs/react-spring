@@ -197,7 +197,7 @@ export function useTransition(
 
     if (!to.config) {
       const config = props.config || defaultProps.config
-      to.config = callProp(config, t.item, i)
+      to.config = callProp(config, t.item, i, phase)
     }
 
     // The payload is used to update the spring props once the current render is committed.

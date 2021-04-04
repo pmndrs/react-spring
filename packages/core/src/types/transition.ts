@@ -76,7 +76,11 @@ export type UseTransitionProps<Item = any> = Merge<
     expires?: boolean | number | ((item: Item) => boolean | number)
     config?:
       | SpringConfig
-      | ((item: Item, index: number) => AnimationProps['config'])
+      | ((
+          item: Item,
+          index: number,
+          state: TransitionPhase
+        ) => AnimationProps['config'])
     /**
      * Called after a transition item is unmounted.
      */

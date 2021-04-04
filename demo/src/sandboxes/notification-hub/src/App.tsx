@@ -54,7 +54,7 @@ function MessageHub({
         })
       )
     },
-    // config: (item, state) => (state === 'leave' ? [{ duration: timeout }, config, config] : config),
+    config: (item, index, phase) => key => (phase === 'leave' && key === 'life' ? { duration: timeout } : config),
   })
 
   useEffect(() => {
