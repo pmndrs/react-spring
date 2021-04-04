@@ -105,9 +105,9 @@ export function useTransition(
   // Expired transitions that need clean up.
   const expired = (reset && usedTransitions.current) || []
   useLayoutEffect(() =>
-    each(expired, ({ ctrl, item, key }) => {
+    each(expired, ({ ctrl, item }) => {
       detachRefs(ctrl, ref)
-      callProp(onDestroyed, item, key)
+      callProp(onDestroyed, item, ctrl.get(), ctrl)
     })
   )
 
