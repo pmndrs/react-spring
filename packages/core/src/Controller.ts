@@ -241,7 +241,7 @@ export class Controller<State extends Lookup = Lookup> {
       this._started = false
       flush(onRest, ([onRest, result]) => {
         result.value = values
-        onRest(result, this)
+        onRest(result.value, this)
       })
     }
   }
