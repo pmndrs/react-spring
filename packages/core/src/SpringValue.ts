@@ -750,7 +750,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
             anim.changed = !reset
 
             // Call the active `onRest` handler from the interrupted animation.
-            onRest?.(this)
+            onRest?.(result)
 
             // Notify the default `onRest` of the reset, but wait for the
             // first frame to pass before sending an `onStart` event.
@@ -935,7 +935,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       flushCalls(this._pendingCalls, result)
       if (anim.changed) {
         anim.changed = false
-        sendEvent(this, 'onRest', this)
+        sendEvent(this, 'onRest', result)
       }
     }
   }

@@ -61,8 +61,8 @@ export function useTransition<Item, Props extends object>(
   ? [TransitionFn<Item, State>, SpringRef<State>]
   : never
 
-export function useTransition<Item>(
-  data: OneOrMore<Item>,
+export function useTransition(
+  data: unknown,
   props: UseTransitionProps,
   deps?: any[]
 ): any {
@@ -127,16 +127,13 @@ export function useTransition<Item>(
 
   // Mount new items with fresh transitions.
   each(items, (item, i) => {
-    if (!transitions[i]) {
-      transitions[i] = {
+    transitions[i] ||
+      (transitions[i] = {
         key: keys[i],
         item,
         phase: MOUNT,
         ctrl: new Controller(),
-      }
-      // here we prepend the item to the controller so the controller can access it
-      transitions[i].ctrl.item = item as Item
-    }
+      })
   })
 
   // Update the item of any transition whose key still exists,
