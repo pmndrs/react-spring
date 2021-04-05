@@ -24,7 +24,6 @@ import {
 import { Valid } from '../types/common'
 import {
   callProp,
-  DEFAULT_PROPS,
   detachRefs,
   getDefaultProps,
   hasProps,
@@ -44,8 +43,6 @@ import {
 
 declare function setTimeout(handler: Function, timeout?: number): number
 declare function clearTimeout(timeoutId: number): void
-
-const CALLBACK_PROPS = DEFAULT_PROPS.filter(el => el !== 'config')
 
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
@@ -213,16 +210,10 @@ export function useTransition(
     }
 
     // binding t.item to onStart, onChange, onRest, onXXXX functions
-    CALLBACK_PROPS.forEach(cbKey => {
-      if (cbKey in payload) {
-        const cb = payload[cbKey]
-        // @ts-ignore
-        if (typeof cb === 'function') payload[cbKey] = cb.bind(null, t.item)
-        else if (typeof cb === 'object') {
-          // @ts-ignore
-          for (let propKey in cb) cb[propKey] = cb[propKey].bind(null, t.item)
-        }
-      }
+    Object.entries(defaultProps).forEach(([key, value]) => {
+      if (key.indexOf('on') === 0 && typeof value === 'function')
+        // @ts-expect-error since payload spreads defaultProps, key can index payload
+        payload[key] = value.bind(null, t.item)
     })
 
     if (phase == ENTER && is.und(payload.from)) {
