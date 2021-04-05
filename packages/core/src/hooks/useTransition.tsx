@@ -243,10 +243,14 @@ export function useTransition(
       const t = transitions.find(t => t.key === key)
       if (!t) return
 
-      // Reset the phase of a cancelled enter/leave transition, so it can
-      // retry the animation on the next render.
       if (result.cancelled && t.phase != UPDATE) {
-        t.phase = prevPhase
+        /**
+         * @legacy Reset the phase of a cancelled enter/leave transition, so it can
+         * retry the animation on the next render.
+         *
+         * Note: leaving this here made the transitioned item respawn.
+         */
+        // t.phase = prevPhase
         return
       }
 

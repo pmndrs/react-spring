@@ -35,10 +35,14 @@ function MessageHub({
   const transitions = useTransition(items, {
     from: { opacity: 0, height: 0, life: '100%' },
     keys: (item: Item) => item.key,
-    enter: item => async next => await next({ opacity: 1, height: refMap.get(item).offsetHeight }),
-    leave: item => async (next, cancel) => {
+    enter: item => async (next, cancel) => {
+      console.log('entering')
       cancelMap.set(item, cancel)
+      await next({ opacity: 1, height: refMap.get(item).offsetHeight })
       await next({ life: '0%' })
+    },
+    leave: _item => async next => {
+      console.log('leaving')
       await next({ opacity: 0 })
       await next({ height: 0 })
     },
@@ -56,7 +60,7 @@ function MessageHub({
         })
       )
     },
-    config: (item, index, phase) => key => (phase === 'leave' && key === 'life' ? { duration: timeout } : config),
+    config: (item, index, phase) => key => (phase === 'enter' && key === 'life' ? { duration: timeout } : config),
   })
 
   useEffect(() => {
