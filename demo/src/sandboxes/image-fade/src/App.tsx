@@ -12,13 +12,14 @@ const slides = [
 export default function App() {
   const [index, set] = useState(0)
   const transitions = useTransition(index, {
+    key: index,
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
-    config: config.molasses,
+    config: { duration: 3000 },
   })
   useEffect(() => {
-    const t = setInterval(() => set(state => (state + 1) % 4), 2000)
+    const t = setInterval(() => set(state => (state + 1) % slides.length), 4000)
     return () => clearTimeout(t)
   }, [])
   return (
