@@ -133,7 +133,7 @@ export function runAsync<T extends AnimationTarget>(
       }
 
       await Promise.all([animating.then(preventBail), bailPromise])
-      result = getFinishedResult(target.get(), false)
+      result = getFinishedResult(target.get(), true, false)
 
       // Bail handling
     } catch (err) {

@@ -9,11 +9,11 @@ export const getCombinedResult = <T extends Readable>(
   results.length == 1
     ? results[0]
     : results.some(result => result.cancelled)
-    ? getCancelledResult(target)
+    ? getCancelledResult(target.get())
     : results.every(result => result.noop)
-    ? getNoopResult(target)
+    ? getNoopResult(target.get())
     : getFinishedResult(
-        target,
+        target.get(),
         results.every(result => result.finished)
       )
 
@@ -38,5 +38,5 @@ export const getFinishedResult = (
 export const getCancelledResult = (value: any) => ({
   value,
   cancelled: true,
-  finished: true,
+  finished: false,
 })
