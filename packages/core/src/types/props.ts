@@ -161,7 +161,7 @@ export interface ControllerProps<State extends Lookup = Lookup>
    */
   onStart?:
     | OnStart<SpringValue<State>, Controller<State>>
-    | { [P in keyof State]?: OnStart<State[P]> }
+    | { [P in keyof State]?: OnStart<SpringValue<State[P]>, Controller<State>> }
   /**
    * Called when the # of animating values hits 0
    *

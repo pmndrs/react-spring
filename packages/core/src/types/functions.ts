@@ -90,40 +90,40 @@ type EventHandler<
  * From inside the `requestAnimationFrame` callback.
  */
 export type OnStart<
-  TResult extends Readable = any,
-  TSource = Controller,
+  TResult extends Readable,
+  TSource,
   Item = unknown
 > = EventHandler<TResult, TSource, Item>
 
 /** Called when a `SpringValue` changes */
 export type OnChange<
-  TResult extends Readable = any,
-  TSource = Controller,
+  TResult extends Readable,
+  TSource,
   Item = unknown
 > = EventHandler<TResult, TSource, Item>
 
 export type OnPause<
-  TResult extends Readable = any,
-  TSource = Controller,
+  TResult extends Readable,
+  TSource,
   Item = unknown
 > = EventHandler<TResult, TSource, Item>
 
 export type OnResume<
-  TResult extends Readable = any,
-  TSource = Controller,
+  TResult extends Readable,
+  TSource,
   Item = unknown
 > = EventHandler<TResult, TSource, Item>
 
 /** Called once the animation comes to a halt */
 export type OnRest<
-  TResult extends Readable = any,
-  TSource = Controller,
+  TResult extends Readable,
+  TSource,
   Item = unknown
 > = EventHandler<TResult, TSource, Item>
 
 export type OnResolve<
-  TResult extends Readable = any,
-  TSource = Controller,
+  TResult extends Readable,
+  TSource,
   Item = unknown
 > = EventHandler<TResult, TSource, Item>
 
