@@ -69,17 +69,17 @@ export interface SpringProps<T = any> extends AnimationProps<T> {
   /**
    * Called when an animation moves for the first time.
    */
-  onStart?: EventProp<OnStart<SpringValue<T>, Controller<T>>>
+  onStart?: EventProp<OnStart<SpringValue<T>, SpringValue<T>>>
   /**
    * Called when a spring has its value changed.
    */
-  onChange?: EventProp<OnChange<SpringValue<T>, Controller<T>>>
-  onPause?: EventProp<OnPause<SpringValue<T>, Controller<T>>>
-  onResume?: EventProp<OnResume<SpringValue<T>, Controller<T>>>
+  onChange?: EventProp<OnChange<SpringValue<T>, SpringValue<T>>>
+  onPause?: EventProp<OnPause<SpringValue<T>, SpringValue<T>>>
+  onResume?: EventProp<OnResume<SpringValue<T>, SpringValue<T>>>
   /**
    * Called when all animations come to a stand-still.
    */
-  onRest?: EventProp<OnRest<SpringValue<T>, Controller<T>>>
+  onRest?: EventProp<OnRest<SpringValue<T>, SpringValue<T>>>
 }
 
 /**
