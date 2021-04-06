@@ -18,31 +18,25 @@ export const getCombinedResult = <T extends Readable>(
       )
 
 /** No-op results are for updates that never start an animation. */
-export const getNoopResult = <T extends Readable>(
-  target: T,
-  value = target.get()
-) => ({
+export const getNoopResult = (value: any) => ({
   value,
   noop: true,
   finished: true,
-  target,
+  cancelled: false,
 })
 
-export const getFinishedResult = <T extends Readable>(
-  target: T,
+export const getFinishedResult = (
+  value: any,
   finished: boolean,
-  value = target.get()
+  cancelled: boolean = false
 ) => ({
   value,
   finished,
-  target,
+  cancelled,
 })
 
-export const getCancelledResult = <T extends Readable>(
-  target: T,
-  value = target.get()
-) => ({
+export const getCancelledResult = (value: any) => ({
   value,
   cancelled: true,
-  target,
+  finished: true,
 })

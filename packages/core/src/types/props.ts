@@ -69,17 +69,17 @@ export interface SpringProps<T = any> extends AnimationProps<T> {
   /**
    * Called when an animation moves for the first time.
    */
-  onStart?: EventProp<OnStart<T>>
+  onStart?: EventProp<OnStart<SpringValue<T>, Controller<T>>>
   /**
    * Called when a spring has its value changed.
    */
-  onChange?: EventProp<OnChange<T>>
-  onPause?: EventProp<OnPause<T>>
-  onResume?: EventProp<OnResume<T>>
+  onChange?: EventProp<OnChange<SpringValue<T>, Controller<T>>>
+  onPause?: EventProp<OnPause<SpringValue<T>, Controller<T>>>
+  onResume?: EventProp<OnResume<SpringValue<T>, Controller<T>>>
   /**
    * Called when all animations come to a stand-still.
    */
-  onRest?: EventProp<OnRest<SpringValue<T>>>
+  onRest?: EventProp<OnRest<SpringValue<T>, Controller<T>>>
 }
 
 /**
@@ -160,7 +160,7 @@ export interface ControllerProps<State extends Lookup = Lookup>
    * Also accepts an object for per-key events
    */
   onStart?:
-    | ((ctrl: Controller) => void)
+    | OnStart<SpringValue<State>, Controller<State>>
     | { [P in keyof State]?: OnStart<State[P]> }
   /**
    * Called when the # of animating values hits 0
@@ -168,18 +168,27 @@ export interface ControllerProps<State extends Lookup = Lookup>
    * Also accepts an object for per-key events
    */
   onRest?:
-    | OnRest<Controller<State>>
-    | { [P in keyof State]?: OnRest<SpringValue<State[P]>> }
+    | OnRest<SpringValue<State>, Controller<State>>
+    | { [P in keyof State]?: OnRest<SpringValue<State[P]>, Controller<State>> }
   /**
    * Called once per frame when animations are active
    *
    * Also accepts an object for per-key events
    */
   onChange?:
-    | ((values: State) => void)
-    | { [P in keyof State]?: OnChange<State[P]> }
-  onPause?: OnPause | { [P in keyof State]?: OnPause<State[P]> }
-  onResume?: OnResume | { [P in keyof State]?: OnResume<State[P]> }
+    | OnChange<SpringValue<State>, Controller<State>>
+    | {
+        [P in keyof State]?: OnChange<SpringValue<State[P]>, Controller<State>>
+      }
+
+  onPause?:
+    | OnPause<SpringValue<State>, Controller<State>>
+    | { [P in keyof State]?: OnPause<SpringValue<State[P]>, Controller<State>> }
+  onResume?:
+    | OnResume<SpringValue<State>, Controller<State>>
+    | {
+        [P in keyof State]?: OnResume<SpringValue<State[P]>, Controller<State>>
+      }
   /**
    * Called after an animation is updated by new props.
    * Useful for manipulation
@@ -190,7 +199,7 @@ export interface ControllerProps<State extends Lookup = Lookup>
   /**
    * Called when the promise for this update is resolved.
    */
-  onResolve?: OnResolve<State>
+  onResolve?: OnResolve<SpringValue<State>, Controller<State>>
 }
 
 export type LoopProp<T extends object> = boolean | T | (() => boolean | T)
