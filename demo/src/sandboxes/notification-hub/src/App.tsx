@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useEffect } from 'react'
+import React, { useRef, useState, useMemo, useEffect, MouseEvent } from 'react'
 import { loremIpsum } from 'lorem-ipsum'
 import { X } from 'react-feather'
 import { useTransition } from '@react-spring/web'
@@ -36,20 +36,15 @@ function MessageHub({
     from: { opacity: 0, height: 0, life: '100%' },
     keys: (item: Item) => item.key,
     enter: item => async (next, cancel) => {
-      console.log('entering')
       cancelMap.set(item, cancel)
       await next({ opacity: 1, height: refMap.get(item).offsetHeight })
       await next({ life: '0%' })
     },
     leave: _item => async next => {
-      console.log('leaving')
       await next({ opacity: 0 })
       await next({ height: 0 })
     },
-    // onStart: (...args) => console.log('onStart', ...args),
-    // onChange: (...args) => console.log('onChange', ...args),
-    // onRest: (...args) => console.log('onRest', ...args),
-    onRest: (item, ctrl) => {
+    onRest: (result, ctrl, item: Item) => {
       setItems(state =>
         state.filter(i => {
           /**
@@ -73,11 +68,11 @@ function MessageHub({
     <Container>
       {transitions(({ life, ...style }, item) => (
         <Message style={style}>
-          <Content ref={ref => ref && refMap.set(item, ref)}>
+          <Content ref={(ref: HTMLDivElement) => ref && refMap.set(item, ref)}>
             <Life style={{ right: life }} />
             <p>{item.msg}</p>
             <Button
-              onClick={e => {
+              onClick={(e: MouseEvent) => {
                 e.stopPropagation()
                 if (cancelMap.has(item)) cancelMap.get(item)()
               }}>
