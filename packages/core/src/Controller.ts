@@ -89,9 +89,18 @@ export class Controller<State extends Lookup = Lookup> {
 
   /** The event queues that are flushed once per frame maximum */
   protected _events = {
-    onStart: new Map<OnStart<SpringValue<State>, this>, AnimationResult>(),
-    onChange: new Map<OnChange<SpringValue<State>, this>, AnimationResult>(),
-    onRest: new Map<OnRest<SpringValue<State>, this>, AnimationResult>(),
+    onStart: new Map<
+      OnStart<SpringValue<State>, Controller<State>>,
+      AnimationResult
+    >(),
+    onChange: new Map<
+      OnChange<SpringValue<State>, Controller<State>>,
+      AnimationResult
+    >(),
+    onRest: new Map<
+      OnRest<SpringValue<State>, Controller<State>>,
+      AnimationResult
+    >(),
   }
 
   constructor(
