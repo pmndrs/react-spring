@@ -141,9 +141,10 @@ export type SpringTo<T = any> =
   | SpringToFn<T>
   | Falsy
 
-export type ControllerUpdate<State extends Lookup = Lookup> = unknown &
-  ToProps<State> &
-  ControllerProps<State>
+export type ControllerUpdate<
+  State extends Lookup = Lookup,
+  Item = undefined
+> = unknown & ToProps<State> & ControllerProps<State, Item>
 
 /**
  * Props for `Controller` methods and constructor.

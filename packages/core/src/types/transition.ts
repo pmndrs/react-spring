@@ -138,13 +138,13 @@ export type TransitionFrom<Item> =
 
 export type TransitionTo<Item, State extends Lookup = Lookup> =
   | Falsy
-  | OneOrMore<ControllerUpdate<State>>
+  | OneOrMore<ControllerUpdate<State, Item>>
   | Function // HACK: Fix inference of untyped inline functions.
   | ((
       item: Item,
       index: number
     ) =>
-      | ControllerUpdate<State>
+      | ControllerUpdate<State, Item>
       | SpringChain<State>
       | SpringToFn<State>
       | Falsy)

@@ -48,7 +48,7 @@ function MessageHub({
       },
       { height: 0 },
     ],
-    // onStart: (result, ctrl, item) => console.log(result, ctrl, item),
+    onStart: (result, ctrl, item) => console.log(result, ctrl, item),
     // onChange: {
     //   opacity: (result, ctrl, item) => console.log(result, ctrl, item),
     // },

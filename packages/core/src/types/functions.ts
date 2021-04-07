@@ -83,7 +83,9 @@ type EventHandler<
   TResult extends Readable = any,
   TSource = unknown,
   Item = undefined
-> = (result: AnimationResult<TResult>, ctrl: TSource, item: Item) => void
+> = Item extends undefined
+  ? (result: AnimationResult<TResult>, ctrl: TSource, item?: Item) => void
+  : (result: AnimationResult<TResult>, ctrl: TSource, item: Item) => void
 
 /**
  * Called before the first frame of every animation.
