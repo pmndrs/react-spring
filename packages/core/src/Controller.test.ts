@@ -527,7 +527,7 @@ describe('Controller', () => {
       global.mockRaf.step()
 
       expect(onStart).toBeCalledWith(
-        getFinishedResult(null, false),
+        getFinishedResult({ t: 0.022634843307857987 }, false),
         ctrl,
         undefined
       )
@@ -566,7 +566,11 @@ describe('Controller', () => {
 
       global.mockRaf.step()
 
-      expect(onStart).toBeCalledWith(getFinishedResult(null, false), ctrl, item)
+      expect(onStart).toBeCalledWith(
+        getFinishedResult({ t: 0.022634843307857987 }, false),
+        ctrl,
+        item
+      )
 
       expect(onChange).toBeCalledWith(
         getFinishedResult(ctrl.get(), false),

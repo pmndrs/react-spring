@@ -247,6 +247,7 @@ export class Controller<State extends Lookup = Lookup> {
     if (active && !this._started) {
       this._started = true
       flush(onStart, ([onStart, result]) => {
+        result.value = this.get()
         onStart(result, this, this._item)
       })
     }
