@@ -77,7 +77,7 @@ export class Controller<State extends Lookup = Lookup> {
   /** Equals false when `onStart` listeners can be called */
   protected _started = false
 
-  private _item?: unknown
+  private _item?: any
 
   /** State used by the `runAsync` function */
   protected _state: RunAsyncState<this> = {
@@ -133,7 +133,7 @@ export class Controller<State extends Lookup = Lookup> {
     return this._item
   }
 
-  set item(item: unknown) {
+  set item(item) {
     this._item = item
   }
 
@@ -426,7 +426,7 @@ export async function flushUpdate(
     }
   }
   if (onResolve) {
-    raf.batchedUpdates(() => onResolve(result, ctrl))
+    raf.batchedUpdates(() => onResolve(result, ctrl, ctrl.item))
   }
   return result
 }
