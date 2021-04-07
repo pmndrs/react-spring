@@ -40,11 +40,18 @@ function MessageHub({
       await next({ opacity: 1, height: refMap.get(item).offsetHeight })
       await next({ life: '0%' })
     },
-    leave: [{ opacity: 0 }, { height: 0 }],
-    onStart: (result, ctrl, item) => console.log(result, ctrl, item),
-    onChange: {
-      opacity: (result, ctrl, item) => console.log(result, ctrl, item),
-    },
+    leave: [
+      {
+        opacity: 0,
+        onResolve: (v, c, i) => console.log('onResolve', v, c, i),
+        onRest: (v, c, i) => console.log('onRest', v, c, i),
+      },
+      { height: 0 },
+    ],
+    // onStart: (result, ctrl, item) => console.log(result, ctrl, item),
+    // onChange: {
+    //   opacity: (result, ctrl, item) => console.log(result, ctrl, item),
+    // },
     onRest: (result, ctrl, item) => {
       setItems(state =>
         state.filter(i => {
@@ -52,6 +59,7 @@ function MessageHub({
         })
       )
     },
+    // onResolve: (result, ctrl, item) => console.log('resolve', result, ctrl, item),
     config: (item, index, phase) => key => (phase === 'enter' && key === 'life' ? { duration: timeout } : config),
   })
 
