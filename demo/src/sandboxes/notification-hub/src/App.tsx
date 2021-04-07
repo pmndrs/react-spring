@@ -34,20 +34,20 @@ function MessageHub({
 
   const transitions = useTransition(items, {
     from: { opacity: 0, height: 0, life: '100%' },
-    keys: (item: Item) => item.key,
+    keys: item => item.key,
     enter: item => async (next, cancel) => {
       cancelMap.set(item, cancel)
       await next({ opacity: 1, height: refMap.get(item).offsetHeight })
       await next({ life: '0%' })
     },
     leave: [{ opacity: 0 }, { height: 0 }],
-    onRest: (result, ctrl, item: Item) => {
+    onStart: (result, ctrl, item) => console.log(result, ctrl, item),
+    onChange: {
+      opacity: (result, ctrl, item) => console.log(result, ctrl, item),
+    },
+    onRest: (result, ctrl, item) => {
       setItems(state =>
         state.filter(i => {
-          /**
-           * It would be good to not have to Typecast this,
-           * it should be able to infer this from the .item in controller
-           */
           return i.key !== item.key
         })
       )

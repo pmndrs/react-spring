@@ -82,8 +82,8 @@ interface UpdateValueFn<T = any> extends AnyUpdateFn<SpringValue<T>> {
 type EventHandler<
   TResult extends Readable = any,
   TSource = unknown,
-  Item = any
-> = (result: AnimationResult<TResult>, ctrl?: TSource, item?: Item) => void
+  Item = undefined
+> = (result: AnimationResult<TResult>, ctrl: TSource, item: Item) => void
 
 /**
  * Called before the first frame of every animation.
@@ -92,39 +92,39 @@ type EventHandler<
 export type OnStart<
   TResult extends Readable,
   TSource,
-  Item = any
+  Item = undefined
 > = EventHandler<TResult, TSource, Item>
 
 /** Called when a `SpringValue` changes */
 export type OnChange<
   TResult extends Readable,
   TSource,
-  Item = any
+  Item = undefined
 > = EventHandler<TResult, TSource, Item>
 
 export type OnPause<
   TResult extends Readable,
   TSource,
-  Item = any
+  Item = undefined
 > = EventHandler<TResult, TSource, Item>
 
 export type OnResume<
   TResult extends Readable,
   TSource,
-  Item = any
+  Item = undefined
 > = EventHandler<TResult, TSource, Item>
 
 /** Called once the animation comes to a halt */
 export type OnRest<
   TResult extends Readable,
   TSource,
-  Item = any
+  Item = undefined
 > = EventHandler<TResult, TSource, Item>
 
 export type OnResolve<
   TResult extends Readable,
   TSource,
-  Item = any
+  Item = undefined
 > = EventHandler<TResult, TSource, Item>
 
 /**

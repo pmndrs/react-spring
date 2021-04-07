@@ -53,14 +53,14 @@ export type TransitionValues<Props extends object> = unknown &
   >
 
 export type UseTransitionProps<Item = any> = Merge<
-  ControllerProps<UnknownProps>,
+  ControllerProps<UnknownProps, Item>,
   {
     from?: TransitionFrom<Item>
     initial?: TransitionFrom<Item>
     enter?: TransitionTo<Item>
     update?: TransitionTo<Item>
     leave?: TransitionTo<Item>
-    key?: ItemKeys<Item>
+    keys?: ItemKeys<Item>
     sort?: (a: Item, b: Item) => number
     trail?: number
     /**
