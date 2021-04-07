@@ -40,10 +40,7 @@ function MessageHub({
       await next({ opacity: 1, height: refMap.get(item).offsetHeight })
       await next({ life: '0%' })
     },
-    leave: _item => async next => {
-      await next({ opacity: 0 })
-      await next({ height: 0 })
-    },
+    leave: [{ opacity: 0 }, { height: 0 }],
     onRest: (result, ctrl, item: Item) => {
       setItems(state =>
         state.filter(i => {
