@@ -53,7 +53,7 @@ export type TransitionValues<Props extends object> = unknown &
   >
 
 export type UseTransitionProps<Item = any> = Merge<
-  ControllerProps<UnknownProps, Item>,
+  Omit<ControllerProps<UnknownProps, Item>, 'onResolve'>,
   {
     from?: TransitionFrom<Item>
     initial?: TransitionFrom<Item>
