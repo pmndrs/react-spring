@@ -2276,20 +2276,20 @@
     "@types/node" ">= 8"
 
 "@react-spring/animated@link:packages/animated":
-  version "9.0.0"
+  version "9.1.0"
   dependencies:
     "@react-spring/shared" "link:packages/shared"
     "@react-spring/types" "link:packages/types"
 
 "@react-spring/core@link:packages/core":
-  version "9.0.0"
+  version "9.1.0"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
     "@react-spring/types" "link:packages/types"
 
 "@react-spring/konva@link:targets/konva":
-  version "9.0.0"
+  version "9.1.0"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -2297,7 +2297,7 @@
     "@react-spring/types" "link:packages/types"
 
 "@react-spring/native@link:targets/native":
-  version "9.0.0"
+  version "9.1.0"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -2305,13 +2305,13 @@
     "@react-spring/types" "link:packages/types"
 
 "@react-spring/shared@link:packages/shared":
-  version "9.0.0"
+  version "9.1.0"
   dependencies:
     "@react-spring/types" "link:packages/types"
     rafz "^0.1.14"
 
 "@react-spring/three@link:targets/three":
-  version "9.0.0"
+  version "9.1.0"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -2319,10 +2319,10 @@
     "@react-spring/types" "link:packages/types"
 
 "@react-spring/types@link:packages/types":
-  version "9.0.0"
+  version "9.1.0"
 
 "@react-spring/web@link:targets/web":
-  version "9.0.0"
+  version "9.1.0"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
@@ -2330,7 +2330,7 @@
     "@react-spring/types" "link:packages/types"
 
 "@react-spring/zdog@link:targets/zdog":
-  version "9.0.0"
+  version "9.1.0"
   dependencies:
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/core" "link:packages/core"
