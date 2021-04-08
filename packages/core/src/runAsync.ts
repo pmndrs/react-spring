@@ -133,7 +133,7 @@ export function runAsync<T extends AnimationTarget>(
       }
 
       await Promise.all([animating.then(preventBail), bailPromise])
-      result = getFinishedResult(target, true)
+      result = getFinishedResult(target.get(), true, false)
 
       // Bail handling
     } catch (err) {
@@ -154,7 +154,7 @@ export function runAsync<T extends AnimationTarget>(
 
     if (is.fun(onRest)) {
       raf.batchedUpdates(() => {
-        onRest(result)
+        onRest(result, target, target.item)
       })
     }
 

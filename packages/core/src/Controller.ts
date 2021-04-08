@@ -24,7 +24,9 @@ import {
   AsyncResult,
   ControllerFlushFn,
   ControllerUpdate,
+  OnChange,
   OnRest,
+  OnStart,
   SpringValues,
 } from './types'
 
@@ -36,7 +38,7 @@ let nextId = 1
 /** Queue of pending updates for a `Controller` instance. */
 export interface ControllerQueue<State extends Lookup = Lookup>
   extends Array<
-    ControllerUpdate<State> & {
+    ControllerUpdate<State, any> & {
       /** The keys affected by this update. When null, all keys are affected. */
       keys: string[] | null
     }
@@ -75,6 +77,8 @@ export class Controller<State extends Lookup = Lookup> {
   /** Equals false when `onStart` listeners can be called */
   protected _started = false
 
+  private _item?: any
+
   /** State used by the `runAsync` function */
   protected _state: RunAsyncState<this> = {
     paused: false,
@@ -85,9 +89,18 @@ export class Controller<State extends Lookup = Lookup> {
 
   /** The event queues that are flushed once per frame maximum */
   protected _events = {
-    onStart: new Set<(ctrl: Controller<State>) => void>(),
-    onChange: new Set<(values: object) => void>(),
-    onRest: new Map<OnRest, AnimationResult>(),
+    onStart: new Map<
+      OnStart<SpringValue<State>, Controller<State>, any>,
+      AnimationResult
+    >(),
+    onChange: new Map<
+      OnChange<SpringValue<State>, Controller<State>, any>,
+      AnimationResult
+    >(),
+    onRest: new Map<
+      OnRest<SpringValue<State>, Controller<State>, any>,
+      AnimationResult
+    >(),
   }
 
   constructor(
@@ -114,6 +127,14 @@ export class Controller<State extends Lookup = Lookup> {
         spring => spring.idle
       )
     )
+  }
+
+  get item() {
+    return this._item
+  }
+
+  set item(item) {
+    this._item = item
   }
 
   /** Get the current values of our springs */
@@ -225,7 +246,10 @@ export class Controller<State extends Lookup = Lookup> {
     const active = this._active.size > 0
     if (active && !this._started) {
       this._started = true
-      flushCalls(onStart, this)
+      flush(onStart, ([onStart, result]) => {
+        result.value = this.get()
+        onStart(result, this, this._item)
+      })
     }
 
     const idle = !active && this._started
@@ -233,7 +257,10 @@ export class Controller<State extends Lookup = Lookup> {
     const values = changed || (idle && onRest.size) ? this.get() : null
 
     if (changed) {
-      flushCalls(onChange, values!)
+      flush(onChange, ([onChange, result]) => {
+        result.value = values
+        onChange(result, this, this._item)
+      })
     }
 
     // The "onRest" queue is only flushed when all springs are idle.
@@ -241,7 +268,7 @@ export class Controller<State extends Lookup = Lookup> {
       this._started = false
       flush(onRest, ([onRest, result]) => {
         result.value = values
-        onRest(result)
+        onRest(result, this, this._item)
       })
     }
   }
@@ -317,25 +344,21 @@ export async function flushUpdate(
       const handler: any = props[key]
       if (is.fun(handler)) {
         const queue = ctrl['_events'][key]
-        if (queue instanceof Set) {
-          props[key] = () => queue.add(handler)
-        } else {
-          props[key] = (({ finished, cancelled }: AnimationResult) => {
-            const result = queue.get(handler)
-            if (result) {
-              if (!finished) result.finished = false
-              if (cancelled) result.cancelled = true
-            } else {
-              // The "value" is set before the "handler" is called.
-              queue.set(handler, {
-                target: ctrl,
-                value: null,
-                finished,
-                cancelled,
-              })
-            }
-          }) as any
-        }
+        props[key] = (({ finished, cancelled }: AnimationResult) => {
+          const result = queue.get(handler)
+          if (result) {
+            if (!finished) result.finished = false
+            if (cancelled) result.cancelled = true
+          } else {
+            // The "value" is set before the "handler" is called.
+            queue.set(handler, {
+              value: null,
+              finished: finished || false,
+              cancelled: cancelled || false,
+            })
+          }
+        }) as any
+
         // Avoid using a batched `handler` as a default prop.
         if (defaults) {
           defaults[key] = props[key] as any
@@ -404,7 +427,7 @@ export async function flushUpdate(
     }
   }
   if (onResolve) {
-    raf.batchedUpdates(() => onResolve(result))
+    raf.batchedUpdates(() => onResolve(result, ctrl, ctrl.item))
   }
   return result
 }

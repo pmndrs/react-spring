@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useMemo, useEffect, MouseEvent } from 'react'
 import { loremIpsum } from 'lorem-ipsum'
 import { X } from 'react-feather'
-import { animated, useTransition } from 'react-spring'
-import styles from './styles.module.css'
+import { useTransition } from '@react-spring/web'
+import { Main, Container, Message, Button, Content, Life } from './styles'
 
 let id = 0
 
@@ -28,32 +28,39 @@ function MessageHub({
   timeout = 3000,
   children,
 }: MessageHubProps) {
-  const [refMap] = useState(() => new WeakMap())
-  const [cancelMap] = useState(() => new WeakMap())
+  const refMap = useMemo(() => new WeakMap(), [])
+  const cancelMap = useMemo(() => new WeakMap(), [])
   const [items, setItems] = useState<Item[]>([])
 
   const transitions = useTransition(items, {
     from: { opacity: 0, height: 0, life: '100%' },
-    keys: (item: Item) => item.key,
-    enter: item => async next => await next({ opacity: 1, height: refMap.get(item).offsetHeight }),
-    leave: item => async (next, cancel) => {
+    keys: item => item.key,
+    enter: item => async (next, cancel) => {
       cancelMap.set(item, cancel)
+      await next({ opacity: 1, height: refMap.get(item).offsetHeight })
       await next({ life: '0%' })
-      await next({ opacity: 0 })
-      await next({ height: 0 })
     },
-    onRest: (_, item) => {
+    leave: [
+      {
+        opacity: 0,
+        onResolve: (v, c, i) => console.log('onResolve', v, c, i),
+        onRest: (v, c, i) => console.log('onRest', v, c, i),
+      },
+      { height: 0 },
+    ],
+    onStart: (result, ctrl, item) => console.log(result, ctrl, item),
+    // onChange: {
+    //   opacity: (result, ctrl, item) => console.log(result, ctrl, item),
+    // },
+    onRest: (result, ctrl, item) => {
       setItems(state =>
         state.filter(i => {
-          /**
-           * It would be good to not have to Typecast this,
-           * it should be able to infer this from the .item in controller
-           */
-          return i.key !== (item as Item).key
+          return i.key !== item.key
         })
       )
     },
-    // config: (item, state) => (state === 'leave' ? [{ duration: timeout }, config, config] : config),
+    // onResolve: (result, ctrl, item) => console.log('resolve', result, ctrl, item),
+    config: (item, index, phase) => key => (phase === 'enter' && key === 'life' ? { duration: timeout } : config),
   })
 
   useEffect(() => {
@@ -63,26 +70,23 @@ function MessageHub({
   }, [])
 
   return (
-    <div className={styles.container}>
+    <Container>
       {transitions(({ life, ...style }, item) => (
-        <animated.div className={styles.message} style={style}>
-          <div className={styles.content} ref={ref => ref && refMap.set(item, ref)}>
-            <animated.div className={styles.life} style={{ right: life }} />
+        <Message style={style}>
+          <Content ref={(ref: HTMLDivElement) => ref && refMap.set(item, ref)}>
+            <Life style={{ right: life }} />
             <p>{item.msg}</p>
-            <div
-              className={styles.button}
-              onClick={e => {
+            <Button
+              onClick={(e: MouseEvent) => {
                 e.stopPropagation()
-                if (cancelMap.has(item)) {
-                  cancelMap.get(item)()
-                }
+                if (cancelMap.has(item)) cancelMap.get(item)()
               }}>
               <X size={18} />
-            </div>
-          </div>
-        </animated.div>
+            </Button>
+          </Content>
+        </Message>
       ))}
-    </div>
+    </Container>
   )
 }
 
@@ -90,19 +94,17 @@ export default function App() {
   const ref = useRef<null | AddFunction>(null)
 
   const handleClick = () => {
-    if (ref.current) {
-      ref.current(loremIpsum())
-    }
+    ref.current?.(loremIpsum())
   }
 
   return (
-    <div className={styles.main} onClick={handleClick}>
+    <Main className="flex fill center" onClick={handleClick}>
       Click here to create notifications
       <MessageHub
         children={(add: AddFunction) => {
           ref.current = add
         }}
       />
-    </div>
+    </Main>
   )
 }

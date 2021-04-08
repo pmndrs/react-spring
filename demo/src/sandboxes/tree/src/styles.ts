@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { animated } from '@react-spring/web'
 
-export const Container = styled.div`
+export const Container = styled('div')`
   width: 100%;
   height: 100%;
   margin: 0;
@@ -11,11 +11,11 @@ export const Container = styled.div`
   font-family: ui-monospace, monospace;
   font-size: 14px;
   line-height: 21px;
-  -webkit-user-select: none;
+  --webkit-user-select: none;
   user-select: none;
 `
 
-export const Frame = styled.div`
+export const Frame = styled('div')`
   position: relative;
   padding: 4px 0px 0px 0px;
   text-overflow: ellipsis;

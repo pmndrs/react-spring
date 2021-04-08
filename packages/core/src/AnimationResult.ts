@@ -9,40 +9,34 @@ export const getCombinedResult = <T extends Readable>(
   results.length == 1
     ? results[0]
     : results.some(result => result.cancelled)
-    ? getCancelledResult(target)
+    ? getCancelledResult(target.get())
     : results.every(result => result.noop)
-    ? getNoopResult(target)
+    ? getNoopResult(target.get())
     : getFinishedResult(
-        target,
+        target.get(),
         results.every(result => result.finished)
       )
 
 /** No-op results are for updates that never start an animation. */
-export const getNoopResult = <T extends Readable>(
-  target: T,
-  value = target.get()
-) => ({
+export const getNoopResult = (value: any) => ({
   value,
   noop: true,
   finished: true,
-  target,
+  cancelled: false,
 })
 
-export const getFinishedResult = <T extends Readable>(
-  target: T,
+export const getFinishedResult = (
+  value: any,
   finished: boolean,
-  value = target.get()
+  cancelled: boolean = false
 ) => ({
   value,
   finished,
-  target,
+  cancelled,
 })
 
-export const getCancelledResult = <T extends Readable>(
-  target: T,
-  value = target.get()
-) => ({
+export const getCancelledResult = (value: any) => ({
   value,
   cancelled: true,
-  target,
+  finished: false,
 })
