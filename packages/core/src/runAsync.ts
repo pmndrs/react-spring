@@ -1,4 +1,11 @@
-import { is, raf, flush, eachProp, Timeout } from '@react-spring/shared'
+import {
+  is,
+  raf,
+  flush,
+  eachProp,
+  Timeout,
+  Globals as G,
+} from '@react-spring/shared'
 import { Falsy } from '@react-spring/types'
 
 import { getDefaultProps } from './helpers'
@@ -88,8 +95,23 @@ export function runAsync<T extends AnimationTarget>(
       // Create the bail signal outside the returned promise,
       // so the generated stack trace is relevant.
       const bailSignal = new BailSignal()
+      const skipAnimationSignal = new SkipAniamtionSignal()
 
       return (async () => {
+        if (G.skipAnimation) {
+          /**
+           * We need to stop animations if `skipAnimation`
+           * is set in the Globals
+           *
+           */
+          stopAsync(state)
+
+          // create the rejection error that's handled gracefully
+          skipAnimationSignal.result = getFinishedResult(target, false)
+          bail(skipAnimationSignal)
+          throw skipAnimationSignal
+        }
+
         bailIfEnded(bailSignal)
 
         const props: any = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 }
@@ -115,6 +137,16 @@ export function runAsync<T extends AnimationTarget>(
     }
 
     let result!: AnimationResult<T>
+
+    if (G.skipAnimation) {
+      /**
+       * We need to stop animations if `skipAnimation`
+       * is set in the Globals
+       */
+      stopAsync(state)
+      return getFinishedResult(target, false)
+    }
+
     try {
       let animating!: Promise<void>
 
@@ -138,6 +170,8 @@ export function runAsync<T extends AnimationTarget>(
       // Bail handling
     } catch (err) {
       if (err instanceof BailSignal) {
+        result = err.result
+      } else if (err instanceof SkipAniamtionSignal) {
         result = err.result
       } else {
         throw err
@@ -179,5 +213,13 @@ export class BailSignal extends Error {
       'An async animation has been interrupted. You see this error because you ' +
         'forgot to use `await` or `.catch(...)` on its returned promise.'
     )
+  }
+}
+
+export class SkipAniamtionSignal extends Error {
+  result!: AnimationResult
+
+  constructor() {
+    super('SkipAnimationSignal')
   }
 }

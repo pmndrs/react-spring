@@ -37,6 +37,8 @@ declare global {
 
       // @ts-ignore
       setTimeout: (handler: Function, ms: number) => number
+
+      setSkipAnimation: (skip: boolean) => void
     }
   }
 }
@@ -60,6 +62,7 @@ beforeEach(() => {
     now: global.mockRaf.now,
     requestAnimationFrame: global.mockRaf.raf,
     colors,
+    skipAnimation: false,
     // This lets our useTransition hook force its component
     // to update from within an "onRest" handler.
     batchedUpdates: act,
@@ -182,5 +185,11 @@ global.advanceUntilValue = (spring, value) => {
       : isEqual(value, goal)
 
     return stop
+  })
+}
+
+global.setSkipAnimation = skip => {
+  Globals.assign({
+    skipAnimation: skip,
   })
 }

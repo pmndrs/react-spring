@@ -256,6 +256,52 @@ describe('Controller', () => {
       // Since we call `update` twice, frames are generated!
       expect(global.getFrames(ctrl)).toMatchSnapshot()
     })
+
+    describe('when skipAnimations is true', () => {
+      it('should not run at all', async () => {
+        const ctrl = new Controller({ from: { x: 0 } })
+        let n = 0
+
+        global.setSkipAnimation(true)
+
+        ctrl.start({
+          to: async next => {
+            while (true) {
+              n += 1
+              await next({ x: 1, reset: true })
+            }
+          },
+        })
+
+        await flushMicroTasks()
+        expect(n).toBe(0)
+      })
+
+      it('should stop running and push the animation to the finished state when called mid animation', async () => {
+        const ctrl = new Controller({ from: { x: 0 } })
+        let n = 0
+
+        ctrl.start({
+          to: async next => {
+            while (n < 5) {
+              n++
+              await next({ x: 10, reset: true })
+            }
+          },
+        })
+
+        await global.advance()
+        expect(n).toBe(1)
+
+        global.setSkipAnimation(true)
+
+        await global.advanceUntilIdle()
+
+        const { x } = ctrl.springs
+        expect(n).toBe(2)
+        expect(x.get()).toEqual(10)
+      })
+    })
   })
 
   describe('when the "onStart" prop is defined', () => {
