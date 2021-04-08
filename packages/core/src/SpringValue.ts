@@ -104,6 +104,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** The last `scheduleProps` call that changed the `to` prop */
   protected _lastToId = 0
 
+  protected _memoizedDuration = 0
+
   constructor(from: Exclude<T, object>, props?: SpringUpdate<T>)
   constructor(props?: SpringUpdate<T>)
   constructor(arg1?: any, arg2?: any) {
@@ -191,7 +193,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
           return
         }
 
-        const elapsed = (node.elapsedTime += dt)
+        let elapsed = (node.elapsedTime += dt)
         const from = anim.fromValues[i]
 
         const v0 =
@@ -207,8 +209,31 @@ export class SpringValue<T = any> extends FrameValue<T> {
         if (!is.und(config.duration)) {
           let p = 1
           if (config.duration > 0) {
-            p = (config.progress || 0) + elapsed / config.duration
+            /**
+             * Here we check if the duration has changed in the config
+             * and if so update the elapsed time to the percentage
+             * of completition so there is no jank in the animation
+             * https://github.com/pmndrs/react-spring/issues/1163
+             */
+            if (this._memoizedDuration !== config.duration) {
+              // update the memoized version to the new duration
+              this._memoizedDuration = config.duration
+
+              // if the value has started animating we need to update it
+              if (node.durationProgress > 0) {
+                // set elapsed time to be the same percentage of progress as the previous duration
+                node.elapsedTime = config.duration * node.durationProgress
+                // add the delta so the below updates work as expected
+                elapsed = node.elapsedTime += dt
+              }
+            }
+
+            // calculate the new progress
+            p = (config.progress || 0) + elapsed / this._memoizedDuration
+            // p is clamped between 0-1
             p = p > 1 ? 1 : p < 0 ? 0 : p
+            // store our new progress
+            node.durationProgress = p
           }
 
           position = from + config.easing(p) * (to - from)
