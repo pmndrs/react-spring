@@ -1,34 +1,3 @@
-<<<<<<<< HEAD:demo/src/sandboxes/gooBlobs/src/index.css
-html,
-body,
-#root {
-  height: 100%;
-  width: 100%;
-}
-
-body {
-  font-family: system-ui;
-  margin: 0;
-}
-
-*,
-*:after,
-*:before {
-  box-sizing: border-box;
-}
-
-.flex {
-  display: flex;
-  align-items: center;
-}
-
-.flex.fill {
-  height: 100%;
-}
-
-.flex.center {
-  justify-content: center;
-========
 .hooksMain > div {
   position: absolute;
   will-change: transform;
@@ -92,5 +61,4 @@ body {
   -ms-user-select: none;
   user-select: none;
   cursor: default;
->>>>>>>> master:demo/src/sandboxes/goo-blobs/src/styles.module.css
 }
