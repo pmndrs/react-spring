@@ -21,7 +21,9 @@ export function useChain(
 
           each(controllers, ctrl => {
             each(ctrl.queue, props => {
-              props.delay = key => delay + callProp(props.delay || 0, key)
+              // memoizing stops recursion #1367
+              const memoizedDelayProp = props.delay
+              props.delay = key => delay + callProp(memoizedDelayProp || 0, key)
             })
             ctrl.start()
           })

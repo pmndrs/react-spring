@@ -14,7 +14,7 @@ const Slider: React.FC = ({ children }) => {
       x: active ? x : 0,
       scale: active ? 1.1 : 1,
       ...(x < 0 ? left : right),
-      immediate: name => active && name === 'x', // TODO this triggers an error atm
+      immediate: name => active && name === 'x',
     })
   )
 
@@ -22,10 +22,7 @@ const Slider: React.FC = ({ children }) => {
 
   return (
     <animated.div {...bind()} className={styles.item} style={{ background: bg }}>
-      <animated.div
-        className={styles.av}
-        style={{ scale: avSize, justifySelf: x.to(x => (x < 0 ? 'end' : 'start')) }}
-      />
+      <animated.div className={styles.av} style={{ scale: avSize, justifySelf }} />
       <animated.div className={styles.fg} style={{ x, scale }}>
         {children}
       </animated.div>

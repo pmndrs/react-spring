@@ -1,5 +1,6 @@
 import { Controller } from './Controller'
 import { flushMicroTasks } from 'flush-microtasks'
+import { getFinishedResult } from './AnimationResult'
 
 const frameLength = 1000 / 60
 
@@ -505,6 +506,85 @@ describe('Controller', () => {
       ctrl.stop()
       await global.advanceUntilIdle()
       expect(ctrl['_state'].asyncTo).toBeUndefined()
+    })
+  })
+
+  describe('events', () => {
+    test('events recieve an AnimationResult and the Controller as the first two args', async () => {
+      const ctrl = new Controller<{ t: number }>({ t: 0 })
+
+      const onRest = jest.fn()
+      const onStart = jest.fn()
+      const onChange = jest.fn()
+
+      ctrl.start({
+        to: next => next({ t: 1 }),
+        onRest,
+        onStart,
+        onChange,
+      })
+
+      global.mockRaf.step()
+
+      expect(onStart).toBeCalledWith(
+        getFinishedResult({ t: 0.022634843307857987 }, false),
+        ctrl,
+        undefined
+      )
+
+      expect(onChange).toBeCalledWith(
+        getFinishedResult(ctrl.get(), false),
+        ctrl,
+        undefined
+      )
+
+      await global.advanceUntilIdle()
+
+      expect(onRest).toBeCalledWith(
+        getFinishedResult(ctrl.get(), true),
+        ctrl,
+        undefined
+      )
+    })
+
+    test('events recieve also recieve the item if set as the third', async () => {
+      const ctrl = new Controller<{ t: number }>({ t: 0 })
+
+      const item = { msg: 'hello world', key: 1 }
+      ctrl.item = item
+
+      const onRest = jest.fn()
+      const onStart = jest.fn()
+      const onChange = jest.fn()
+
+      ctrl.start({
+        to: next => next({ t: 1 }),
+        onRest,
+        onStart,
+        onChange,
+      })
+
+      global.mockRaf.step()
+
+      expect(onStart).toBeCalledWith(
+        getFinishedResult({ t: 0.022634843307857987 }, false),
+        ctrl,
+        item
+      )
+
+      expect(onChange).toBeCalledWith(
+        getFinishedResult(ctrl.get(), false),
+        ctrl,
+        item
+      )
+
+      await global.advanceUntilIdle()
+
+      expect(onRest).toBeCalledWith(
+        getFinishedResult(ctrl.get(), true),
+        ctrl,
+        item
+      )
     })
   })
 })
