@@ -10,7 +10,6 @@ export type SpringConfig = Partial<AnimationConfig>
 /** The object given to the `onRest` prop and `start` promise. */
 export interface AnimationResult<T extends Readable = any> {
   value: T extends Readable<infer U> ? U : never
-  target: T
   /** When true, no animation ever started. */
   noop?: boolean
   /** When true, the animation was neither cancelled nor stopped prematurely. */

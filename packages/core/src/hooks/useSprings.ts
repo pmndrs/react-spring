@@ -1,5 +1,4 @@
 import { useContext, useMemo, useRef } from 'react'
-import { useLayoutEffect } from 'react-layout-effect'
 import { Lookup } from '@react-spring/types'
 import {
   is,
@@ -7,6 +6,7 @@ import {
   usePrev,
   useOnce,
   useForceUpdate,
+  useLayoutEffect,
 } from '@react-spring/shared'
 
 import {
