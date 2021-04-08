@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "@react-spring/types": "link:../types",
-    "fluids": "^0.2.2",
-    "rafz": "^0.1.13"
+    "rafz": "^0.1.14"
   },
   "peerDependencies": {
     "react": ">=16.8"

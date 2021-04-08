@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useContext, useRef, useMemo } from 'react'
-import { useLayoutEffect } from 'react-layout-effect'
 import { OneOrMore, UnknownProps } from '@react-spring/types'
 import {
   is,
@@ -9,6 +8,7 @@ import {
   useOnce,
   usePrev,
   each,
+  useLayoutEffect,
 } from '@react-spring/shared'
 
 import {
@@ -127,13 +127,16 @@ export function useTransition(
 
   // Mount new items with fresh transitions.
   each(items, (item, i) => {
-    transitions[i] ||
-      (transitions[i] = {
+    if (!transitions[i]) {
+      transitions[i] = {
         key: keys[i],
         item,
         phase: MOUNT,
         ctrl: new Controller(),
-      })
+      }
+
+      transitions[i].ctrl.item = item
+    }
   })
 
   // Update the item of any transition whose key still exists,
@@ -163,7 +166,6 @@ export function useTransition(
 
   // These props are inherited by every phase change.
   const defaultProps = getDefaultProps<UseTransitionProps>(props)
-
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
   each(transitions, (t, i) => {
@@ -197,13 +199,13 @@ export function useTransition(
 
     if (!to.config) {
       const config = props.config || defaultProps.config
-      to.config = callProp(config, t.item, i)
+      to.config = callProp(config, t.item, i, phase)
     }
 
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
-      delay: delay += trail,
+      delay: (delay += trail),
       // This prevents implied resets.
       reset: false,
       // Merge any phase-specific props.
@@ -228,10 +230,14 @@ export function useTransition(
       const t = transitions.find(t => t.key === key)
       if (!t) return
 
-      // Reset the phase of a cancelled enter/leave transition, so it can
-      // retry the animation on the next render.
       if (result.cancelled && t.phase != UPDATE) {
-        t.phase = prevPhase
+        /**
+         * @legacy Reset the phase of a cancelled enter/leave transition, so it can
+         * retry the animation on the next render.
+         *
+         * Note: leaving this here made the transitioned item respawn.
+         */
+        // t.phase = prevPhase
         return
       }
 

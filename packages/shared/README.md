@@ -11,6 +11,4 @@ Various helpers used by `@react-spring/core` and/or the platform targets (eg: `@
 - The `FrameLoop` class
 - The `colors` object
 - The `colorToRgba` function
-- The [`fluids`] package
-
-[`fluids`]: https://www.npmjs.com/package/fluids
+- The `FluidValue` class and related functions

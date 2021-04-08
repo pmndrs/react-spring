@@ -519,7 +519,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
           if (!isPaused(this)) {
             setPausedBit(this, true)
             flushCalls(state.pauseQueue)
-            sendEvent(this, 'onPause', this)
+            sendEvent(
+              this,
+              'onPause',
+              getFinishedResult(this, checkFinished(this, this.animation.to)),
+              this
+            )
           }
         },
         resume: () => {
@@ -529,7 +534,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
               this._resume()
             }
             flushCalls(state.resumeQueue)
-            sendEvent(this, 'onResume', this)
+            sendEvent(
+              this,
+              'onResume',
+              getFinishedResult(this, checkFinished(this, this.animation.to)),
+              this
+            )
           }
         },
         start: this._merge.bind(this, range),
@@ -750,7 +760,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
             anim.changed = !reset
 
             // Call the active `onRest` handler from the interrupted animation.
-            onRest?.(result)
+            onRest?.(result, this)
 
             // Notify the default `onRest` of the reset, but wait for the
             // first frame to pass before sending an `onStart` event.
@@ -761,7 +771,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
             // has already passed, which means this is a goal update and not
             // an entirely new animation.
             else {
-              anim.onStart?.(this)
+              anim.onStart?.(result, this)
             }
           })
       }
@@ -788,7 +798,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Resolve our promise immediately.
     else {
-      resolve(getNoopResult(this, value))
+      resolve(getNoopResult(value))
     }
   }
 
@@ -858,7 +868,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const anim = this.animation
     if (!anim.changed) {
       anim.changed = true
-      sendEvent(this, 'onStart', this)
+      sendEvent(
+        this,
+        'onStart',
+        getFinishedResult(this, checkFinished(this, anim.to)),
+        this
+      )
     }
   }
 
@@ -929,13 +944,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
       })
 
       const result = cancel
-        ? getCancelledResult(this)
-        : getFinishedResult(this, checkFinished(this, goal ?? anim.to))
+        ? getCancelledResult(this.get())
+        : getFinishedResult(this.get(), checkFinished(this, goal ?? anim.to))
 
       flushCalls(this._pendingCalls, result)
       if (anim.changed) {
         anim.changed = false
-        sendEvent(this, 'onRest', result)
+        sendEvent(this, 'onRest', result, this)
       }
     }
   }
