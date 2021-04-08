@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useContext, useRef, useMemo } from 'react'
-import { useLayoutEffect } from 'react-layout-effect'
 import { OneOrMore, UnknownProps } from '@react-spring/types'
 import {
   is,
@@ -9,6 +8,7 @@ import {
   useOnce,
   usePrev,
   each,
+  useLayoutEffect,
 } from '@react-spring/shared'
 
 import {
@@ -203,7 +203,7 @@ export function useTransition(
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
-      delay: delay += trail,
+      delay: (delay += trail),
       // This prevents implied resets.
       reset: false,
       // Merge any phase-specific props.

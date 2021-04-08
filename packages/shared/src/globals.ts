@@ -1,5 +1,5 @@
 import { raf } from 'rafz'
-import { FluidValue } from 'fluids'
+import { FluidValue } from './fluids'
 import {
   OneOrMore,
   InterpolatorConfig,

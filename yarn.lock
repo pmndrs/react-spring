@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@alloc/types@^1.2.1":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@alloc/types/-/types-1.3.0.tgz#904245b8d3260a4b7d8a801c12501968f64fac08"
-  integrity sha512-mH7LiFiq9g6rX2tvt1LtwsclfG5hnsmtIfkZiauAGrm1AwXhoRS0sF2WrN9JGN7eV5vFXqNaB0eXZ3IvMsVi9g==
-
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":
   version "7.12.11"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -2285,7 +2280,6 @@
   dependencies:
     "@react-spring/shared" "link:packages/shared"
     "@react-spring/types" "link:packages/types"
-    react-layout-effect "^1.0.1"
 
 "@react-spring/core@link:packages/core":
   version "9.0.0"
@@ -2293,7 +2287,6 @@
     "@react-spring/animated" "link:packages/animated"
     "@react-spring/shared" "link:packages/shared"
     "@react-spring/types" "link:packages/types"
-    react-layout-effect "^1.0.1"
 
 "@react-spring/konva@link:targets/konva":
   version "9.0.0"
@@ -2315,8 +2308,7 @@
   version "9.0.0"
   dependencies:
     "@react-spring/types" "link:packages/types"
-    fluids "^0.2.2"
-    rafz "^0.1.13"
+    rafz "^0.1.14"
 
 "@react-spring/three@link:targets/three":
   version "9.0.0"
@@ -2328,8 +2320,6 @@
 
 "@react-spring/types@link:packages/types":
   version "9.0.0"
-  dependencies:
-    "@alloc/types" "^1.2.1"
 
 "@react-spring/web@link:targets/web":
   version "9.0.0"
@@ -5152,11 +5142,6 @@ findup-sync@^4.0.0:
     is-glob "^4.0.0"
     micromatch "^4.0.2"
     resolve-dir "^1.0.1"
-
-fluids@^0.2.2:
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/fluids/-/fluids-0.2.4.tgz#5efcece750a682244c2d4952d81611815d6b43ca"
-  integrity sha512-+smvcInZ+1jy1/PbXSxZitDOS903/sAtyEqsQhrTSIDPm9unNz0FM6B5YmeR+IXXRFNgbKpHznuQaqiVt1y0ZA==
 
 flush-microtasks@^1.0.1:
   version "1.0.1"
@@ -9187,9 +9172,9 @@ quick-lru@^4.0.1:
   resolved "https://registry.npmjs.org/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
 
-rafz@^0.1.13:
+rafz@^0.1.14:
   version "0.1.14"
-  resolved "https://registry.npmjs.org/rafz/-/rafz-0.1.14.tgz#164f01cf7cc6094e08467247ef351ef5c8d278fe"
+  resolved "https://registry.yarnpkg.com/rafz/-/rafz-0.1.14.tgz#164f01cf7cc6094e08467247ef351ef5c8d278fe"
   integrity sha512-YiQkedSt1urYtYbvHhTQR3l67M8SZbUvga5eJFM/v4vx/GmDdtXlE2hjJIyRjhhO/PjcdGC+CXCYOUA4onit8w==
 
 "rafz@link:packages/shared/node_modules/rafz":
@@ -9275,11 +9260,6 @@ react-konva@~16.8.0:
   dependencies:
     react-reconciler "^0.20.4"
     scheduler "^0.13.6"
-
-react-layout-effect@^1.0.1:
-  version "1.0.5"
-  resolved "https://registry.npmjs.org/react-layout-effect/-/react-layout-effect-1.0.5.tgz#0dc4e24452aee5de66c93c166f0ec512dfb1be80"
-  integrity sha512-zdRXHuch+OBHU6bvjTelOGUCM+UDr/iCY+c0wXLEAc+G4/FlcJruD/hUOzlKH5XgO90Y/BUJPNhI/g9kl+VAsA==
 
 react-merge-refs@^1.0.0, react-merge-refs@^1.1.0:
   version "1.1.0"

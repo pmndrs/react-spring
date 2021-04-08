@@ -1,4 +1,4 @@
-import { getFluidValue } from 'fluids'
+import { getFluidValue } from './fluids'
 import { createInterpolator } from './createInterpolator'
 import { InterpolatorConfig } from '@react-spring/types'
 import { colorToRgba } from './colorToRgba'

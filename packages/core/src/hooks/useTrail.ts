@@ -1,5 +1,4 @@
-import { useLayoutEffect } from 'react-layout-effect'
-import { each, is } from '@react-spring/shared'
+import { each, is, useLayoutEffect } from '@react-spring/shared'
 
 import { Valid } from '../types/common'
 import { PickAnimated, SpringValues } from '../types'

@@ -11,8 +11,5 @@
   "scripts": {
     "build": "rimraf dist && yarn copy",
     "copy": "copyfiles package.json *.js *.d.ts dist"
-  },
-  "dependencies": {
-    "@alloc/types": "^1.2.1"
   }
 }
