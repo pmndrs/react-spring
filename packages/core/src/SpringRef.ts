@@ -1,4 +1,4 @@
-import { each, is } from '@react-spring/shared'
+import { each, is, deprecateDirectCall } from '@react-spring/shared'
 import { Lookup, Falsy, OneOrMore } from '@react-spring/types'
 import { AsyncResult, ControllerUpdate } from './types'
 import { Controller } from './Controller'
@@ -7,8 +7,28 @@ interface ControllerUpdateFn<State extends Lookup = Lookup> {
   (i: number, ctrl: Controller<State>): ControllerUpdate<State> | Falsy
 }
 
-export class SpringRef<State extends Lookup = Lookup> {
+/**
+ * Extending from function allows SpringRef instances to be callable.
+ * https://hackernoon.com/creating-callable-objects-in-javascript-d21l3te1
+ *
+ * ```js
+ * const [springs, api] = useSpring(() => ({x: 0}))
+ * api.start({x: 3}) // this works
+ * api({x: 3}) // this also works (non breaking from 9rc3)
+ * ```
+ */
+export class SpringRef<State extends Lookup = Lookup> extends Function {
   readonly current: Controller<State>[] = []
+
+  constructor() {
+    super('return arguments.callee._call.apply(arguments.callee, arguments)')
+  }
+
+  /** @deprecated use the property 'start' instead */
+  _call(props?: ControllerUpdate<State> | ControllerUpdateFn<State>) {
+    deprecateDirectCall()
+    this.start(props)
+  }
 
   /** Update the state of each controller without animating. */
   set(values: Partial<State>) {
@@ -79,6 +99,9 @@ export class SpringRef<State extends Lookup = Lookup> {
 }
 
 export interface SpringRef<State extends Lookup> {
+  (props?: ControllerUpdate<State> | ControllerUpdateFn<State>): AsyncResult<
+    Controller<State>
+  >[]
   /** Stop all animations. */
   stop(): this
   /** Stop animations for the given keys. */
