@@ -185,7 +185,7 @@ async function prepare() {
     })
 
     // Replace "link:" versions with (A) exact versions for canary and beta releases,
-    // or with (B) caret ranges for actual releases.
+    // or with (B) tilde ranges for actual releases (allow to get patches automatically).
     const exactRE = /-(rc|canary|beta)\./
     const deps = pkg.dependencies
     if (deps) {
@@ -197,7 +197,7 @@ async function prepare() {
         const dep = packages[depId]
         if (dep) {
           const { version } = packages[depId]
-          deps[depId] = (exactRE.test(version) ? '' : '^') + version
+          deps[depId] = (exactRE.test(version) ? '' : '~') + version
           if (localId !== depId) {
             delete deps[localId]
           }
