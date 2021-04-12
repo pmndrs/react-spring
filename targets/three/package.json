@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/three",
-  "version": "9.1.0",
+  "version": "9.1.1",
   "main": "src/index.ts",
   "dependencies": {
     "@react-spring/animated": "link:../../packages/animated",
