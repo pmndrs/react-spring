@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "9.0.0",
+  "version": "9.0.1",
   "main": "src/web.ts",
   "dependencies": {
     "@react-spring/core": "link:../core",
