@@ -8,18 +8,18 @@
 }
 
 .hooksMain > div:nth-child(1) {
-  width: 120px;
-  height: 120px;
+  width: 60px;
+  height: 60px;
 }
 
 .hooksMain > div:nth-child(2) {
-  width: 250px;
-  height: 250px;
+  width: 125px;
+  height: 125px;
 }
 
 .hooksMain > div:nth-child(3) {
-  width: 150px;
-  height: 150px;
+  width: 75px;
+  height: 75px;
 }
 
 .hooksMain > div::after {
@@ -27,24 +27,24 @@
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 40px;
-  height: 40px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.8);
 }
 
 .hooksMain > div:nth-child(2)::after {
-  top: 70px;
-  left: 70px;
-  width: 70px;
-  height: 70px;
+  top: 35px;
+  left: 35px;
+  width: 35px;
+  height: 35px;
 }
 
 .hooksMain > div:nth-child(3)::after {
-  top: 50px;
-  left: 50px;
-  width: 50px;
-  height: 50px;
+  top: 25px;
+  left: 25px;
+  width: 25px;
+  height: 25px;
 }
 
 .hooksMain {

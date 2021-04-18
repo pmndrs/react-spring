@@ -1,4 +1,5 @@
 import React from 'react'
+import useMeasure from 'react-use-measure'
 import { useTrail, animated } from '@react-spring/web'
 
 import styles from './styles.module.css'
@@ -13,8 +14,14 @@ export default function App() {
     xy: [0, 0],
     config: i === 0 ? fast : slow,
   }))
+  const [ref, { left, top }] = useMeasure()
+
+  const handleMouseMove = e => {
+    api.start({ xy: [e.clientX - left, e.clientY - top] })
+  }
+
   return (
-    <>
+    <div className={styles.container}>
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>
         <filter id="goo">
           <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="30" />
@@ -24,13 +31,11 @@ export default function App() {
           />
         </filter>
       </svg>
-      <div
-        className={styles.hooksMain}
-        onMouseMove={e => api.start({ xy: [e.clientX, e.clientY] })}>
+      <div ref={ref} className={styles.hooksMain} onMouseMove={handleMouseMove}>
         {trail.map((props, index) => (
           <animated.div key={index} style={{ transform: props.xy.to(trans) }} />
         ))}
       </div>
-    </>
+    </div>
   )
 }
