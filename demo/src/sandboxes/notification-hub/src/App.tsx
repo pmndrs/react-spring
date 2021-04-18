@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useEffect, MouseEvent } from 'react'
 import { loremIpsum } from 'lorem-ipsum'
 import { X } from 'react-feather'
 import { useTransition } from '@react-spring/web'
-import { Main, Container, Message, Button, Content, Life, Wrapper } from './styles'
+import { Main, Container, Message, Button, Content, Life } from './styles'
 
 let id = 0
 
