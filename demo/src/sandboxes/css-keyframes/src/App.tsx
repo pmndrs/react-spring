@@ -15,9 +15,13 @@ import styles from './styles.module.css'
 
 export default function App() {
   const [state, toggle] = useState(true)
-  const { x } = useSpring({ from: { x: 0 }, x: state ? 1 : 0, config: { duration: 1000 } })
+  const { x } = useSpring({
+    from: { x: 0 },
+    x: state ? 1 : 0,
+    config: { duration: 1000 },
+  })
   return (
-    <div className="flex fill center" onClick={() => toggle(!state)}>
+    <div className={styles.container} onClick={() => toggle(!state)}>
       <animated.div
         className={styles.text}
         style={{
