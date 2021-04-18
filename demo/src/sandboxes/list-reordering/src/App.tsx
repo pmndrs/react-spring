@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useTransition, animated } from '@react-spring/web'
-import shuffle from 'lodash-es/shuffle'
+import shuffle from 'lodash.shuffle'
 import data from './data'
 
 import styles from './styles.module.css'

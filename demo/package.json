@@ -13,6 +13,7 @@
   "dependencies": {
     "lodash-move": "1.1.1",
     "lodash.clamp": "^4.0.3",
+    "lodash.shuffle": "^4.2.0",
     "lorem-ipsum": "^2.0.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -23,8 +24,8 @@
     "wouter": "^2.7.4"
   },
   "devDependencies": {
-    "@types/lodash-es": "^4.17.4",
     "@types/lodash.clamp": "^4.0.6",
+    "@types/lodash.shuffle": "^4.2.6",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.2",
     "@types/styled-components": "^5.1.9",
