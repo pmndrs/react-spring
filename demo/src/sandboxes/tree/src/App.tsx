@@ -20,7 +20,7 @@ const Tree = React.memo<
   const previous = usePrevious(isOpen)
   const [ref, { height: viewHeight }] = useMeasure()
   const { height, opacity, y } = useSpring({
-    from: { height: 0, opacity: 0, transform: 'translate3d(20px,0,0)' },
+    from: { height: 0, opacity: 0, y: 0 },
     to: {
       height: isOpen ? viewHeight : 0,
       opacity: isOpen ? 1 : 0,
@@ -46,7 +46,7 @@ const Tree = React.memo<
 
 export default function App() {
   return (
-    <Container>
+    <Container className="flex fill center">
       <Tree name="main" defaultOpen>
         <Tree name="hello" />
         <Tree name="subtree with children">

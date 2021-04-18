@@ -4,10 +4,16 @@ import { useTransition, animated } from '@react-spring/web'
 import styles from './styles.module.css'
 
 export default function App() {
-  const ref = useRef<number[]>([])
+  const ref = useRef<ReturnType<typeof setTimeout>[]>([])
   const [items, set] = useState<string[]>([])
   const transitions = useTransition(items, {
-    from: { opacity: 0, height: 0, innerHeight: 0, transform: 'perspective(600px) rotateX(0deg)', color: '#8fa5b6' },
+    from: {
+      opacity: 0,
+      height: 0,
+      innerHeight: 0,
+      transform: 'perspective(600px) rotateX(0deg)',
+      color: '#8fa5b6',
+    },
     enter: [
       { opacity: 1, height: 80, innerHeight: 80 },
       { transform: 'perspective(600px) rotateX(180deg)', color: '#28d79f' },
