@@ -46,7 +46,7 @@ const Tree = React.memo<
 
 export default function App() {
   return (
-    <Container className="flex fill center">
+    <Container>
       <Tree name="main" defaultOpen>
         <Tree name="hello" />
         <Tree name="subtree with children">
