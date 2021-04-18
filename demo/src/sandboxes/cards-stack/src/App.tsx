@@ -60,7 +60,7 @@ function Deck() {
 
 export default function App() {
   return (
-    <div className={`flex fill center ${styles.container}`}>
+    <div className={styles.container}>
       <Deck />
     </div>
   )

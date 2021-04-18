@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { useSprings, animated } from '@react-spring/web'
 import { useDrag } from 'react-use-gesture'
-import clamp from 'lodash-es/clamp'
+import clamp from 'lodash.clamp'
 
 import styles from './styles.module.css'
 
@@ -45,7 +45,7 @@ function Viewpager() {
 
 export default function App() {
   return (
-    <div className="flex fill center">
+    <div className={styles.container}>
       <Viewpager />
     </div>
   )

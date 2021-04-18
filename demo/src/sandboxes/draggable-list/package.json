@@ -4,7 +4,7 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@react-spring/web": "*",
-    "lodash-es": "4.17.15",
+    "lodash.clamp": "4.0.3",
     "lodash-move": "1.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
