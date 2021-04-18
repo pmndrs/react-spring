@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useSpring, animated, to } from '@react-spring/web'
 import { useGesture } from 'react-use-gesture'
 import imgs from './data'
@@ -13,10 +13,18 @@ const wheel = (y: number) => {
   return `translateY(${-imgHeight * (y < 0 ? 6 : 1) - (y % (imgHeight * 5))}px`
 }
 
-document.addEventListener('gesturestart', e => e.preventDefault())
-document.addEventListener('gesturechange', e => e.preventDefault())
-
 export default function App() {
+  useEffect(() => {
+    const preventDefault = (e: Event) => e.preventDefault()
+    document.addEventListener('gesturestart', preventDefault)
+    document.addEventListener('gesturechange', preventDefault)
+
+    return () => {
+      document.removeEventListener('gesturestart', preventDefault)
+      document.removeEventListener('gesturechange', preventDefault)
+    }
+  }, [])
+
   const domTarget = useRef(null)
   const [{ x, y, rotateX, rotateY, rotateZ, zoom, scale }, api] = useSpring(
     () => ({
