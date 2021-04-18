@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useEffect, MouseEvent } from 'react'
 import { loremIpsum } from 'lorem-ipsum'
 import { X } from 'react-feather'
 import { useTransition } from '@react-spring/web'
-import { Main, Container, Message, Button, Content, Life } from './styles'
+import { Main, Container, Message, Button, Content, Life, Wrapper } from './styles'
 
 let id = 0
 
@@ -86,7 +86,7 @@ export default function App() {
   }
 
   return (
-    <Main className="flex fill center" onClick={handleClick}>
+    <Main onClick={handleClick}>
       Click here to create notifications
       <MessageHub
         children={(add: AddFunction) => {

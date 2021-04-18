@@ -38,7 +38,7 @@ export default function App() {
   }, [])
 
   return (
-    <div className="flex fill">
+    <div className={styles.container}>
       <div className={styles.main}>
         {transitions(({ innerHeight, ...rest }, item) => (
           <animated.div className={styles.transitionsItem} style={rest} onClick={reset}>

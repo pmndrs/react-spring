@@ -6,6 +6,10 @@ export const Main = styled.div`
   color: #676767;
   -webkit-user-select: none;
   user-select: none;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
 `
 
 export const Container = styled.div`
