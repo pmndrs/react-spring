@@ -63,7 +63,7 @@ export default function App() {
     { domTarget, eventOptions: { passive: false } }
   )
   return (
-    <div className="flex fill center">
+    <div className={styles.container}>
       <animated.div
         ref={domTarget}
         className={styles.card}
