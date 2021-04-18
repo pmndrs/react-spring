@@ -1,6 +1,5 @@
 {
   "projects": {
     "docs": "https://github.com/react-spring/react-spring.io.git",
-    "examples": "https://github.com/react-spring/react-spring-examples.git"
   }
 }

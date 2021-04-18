@@ -3,7 +3,7 @@
 1. Clone this repository:
 
 ```sh
-git clone https://github.com/react-spring/react-spring -b v9
+git clone https://github.com/pmndrs/react-spring
 cd react-spring
 ```
 
@@ -14,7 +14,7 @@ cd react-spring
 ```sh
 yarn
 
-# Clone the docs and examples (optional)
+# Clone the docs (optional)
 yarn meta git update
 ```
 
@@ -72,11 +72,5 @@ React 16.8+ has global state to support its "hooks" feature, so you need to ensu
 To publish a new version:
 
 ```
-yarn release
-```
-
-To publish a **canary** version:
-
-```
-yarn release --canary
+yarn release major | minor | patch  --tag
 ```
