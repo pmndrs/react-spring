@@ -9,13 +9,19 @@ import styles from './styles.module.css'
 const fn = (order: number[], active = false, originalIndex = 0, curIndex = 0, y = 0) => (index: number) =>
   active && index === originalIndex
     ? {
-        y: curIndex * 100 + y,
+        y: curIndex * 50 + y,
         scale: 1.1,
         zIndex: 1,
         shadow: 15,
         immediate: (key: string) => key === 'y' || key === 'zIndex',
       }
-    : { y: order.indexOf(index) * 100, scale: 1, zIndex: 0, shadow: 1, immediate: false }
+    : {
+        y: order.indexOf(index) * 50,
+        scale: 1,
+        zIndex: 0,
+        shadow: 1,
+        immediate: false,
+      }
 
 function DraggableList({ items }: { items: string[] }) {
   const order = useRef(items.map((_, index) => index)) // Store indicies as a local ref, this represents the item order
@@ -28,7 +34,7 @@ function DraggableList({ items }: { items: string[] }) {
     if (!active) order.current = newOrder
   })
   return (
-    <div className={styles.content} style={{ height: items.length * 100 }}>
+    <div className={styles.content} style={{ height: items.length * 50 }}>
       {springs.map(({ zIndex, shadow, y, scale }, i) => (
         <animated.div
           {...bind(i)}

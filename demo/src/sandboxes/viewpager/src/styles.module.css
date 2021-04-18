@@ -1,7 +1,7 @@
 .page {
   position: absolute;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   will-change: transform;
 }
 
@@ -21,4 +21,9 @@
   align-items: center;
   height: 100%;
   justify-content: center;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
 }

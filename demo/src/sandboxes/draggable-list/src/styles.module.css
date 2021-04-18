@@ -10,18 +10,18 @@
 
 .content {
   position: relative;
-  width: 320px;
-  height: 240px;
+  width: 200px;
+  height: 100px;
 }
 
 .content > div {
   position: absolute;
-  width: 320px;
-  height: 90px;
+  width: 200px;
+  height: 40px;
   transform-origin: 50% 50% 0px;
   border-radius: 5px;
   color: white;
-  line-height: 90px;
+  line-height: 40px;
   padding-left: 32px;
   font-size: 14.5px;
   background: lightblue;
