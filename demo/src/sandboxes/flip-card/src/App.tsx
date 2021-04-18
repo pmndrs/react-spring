@@ -11,7 +11,7 @@ export default function App() {
     config: { mass: 5, tension: 500, friction: 80 },
   })
   return (
-    <div className="flex fill center" onClick={() => set(state => !state)}>
+    <div className={styles.container} onClick={() => set(state => !state)}>
       <a.div
         className={`${styles.c} ${styles.back}`}
         style={{ opacity: opacity.to(o => 1 - o), transform }}

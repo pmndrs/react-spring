@@ -16,7 +16,7 @@ export default function App() {
   })
 
   return (
-    <div className="flex fill center" onClick={() => toggle(!open)}>
+    <div className={styles.container} onClick={() => toggle(!open)}>
       <animated.svg className={styles.svg} style={{ scale, opacity }} viewBox="0 0 1278 446">
         <defs>
           <filter id="water">

@@ -4,11 +4,21 @@ import { useDrag } from 'react-use-gesture'
 
 import styles from './styles.module.css'
 
-const left = { bg: `linear-gradient(120deg, #f093fb 0%, #f5576c 100%)`, justifySelf: 'end' }
-const right = { bg: `linear-gradient(120deg, #96fbc4 0%, #f9f586 100%)`, justifySelf: 'start' }
+const left = {
+  bg: `linear-gradient(120deg, #f093fb 0%, #f5576c 100%)`,
+  justifySelf: 'end',
+}
+const right = {
+  bg: `linear-gradient(120deg, #96fbc4 0%, #f9f586 100%)`,
+  justifySelf: 'start',
+}
 
 const Slider: React.FC = ({ children }) => {
-  const [{ x, bg, scale, justifySelf }, api] = useSpring(() => ({ x: 0, scale: 1, ...left }))
+  const [{ x, bg, scale, justifySelf }, api] = useSpring(() => ({
+    x: 0,
+    scale: 1,
+    ...left,
+  }))
   const bind = useDrag(({ active, movement: [x] }) =>
     api.start({
       x: active ? x : 0,
@@ -18,7 +28,12 @@ const Slider: React.FC = ({ children }) => {
     })
   )
 
-  const avSize = x.to({ map: Math.abs, range: [50, 300], output: [0.5, 1], extrapolate: 'clamp' })
+  const avSize = x.to({
+    map: Math.abs,
+    range: [50, 300],
+    output: [0.5, 1],
+    extrapolate: 'clamp',
+  })
 
   return (
     <animated.div {...bind()} className={styles.item} style={{ background: bg }}>
@@ -32,7 +47,7 @@ const Slider: React.FC = ({ children }) => {
 
 export default function App() {
   return (
-    <div className="flex fill center">
+    <div className={styles.container}>
       <Slider>Slide.</Slider>
     </div>
   )

@@ -2,8 +2,8 @@
   position: absolute;
   max-width: 500px;
   max-height: 500px;
-  width: 80vw;
-  height: 30vw;
+  width: 350px;
+  height: 200px;
   cursor: pointer;
   will-change: transform, opacity;
 }
@@ -19,4 +19,11 @@
 
 .front {
   background-image: url(https://images.unsplash.com/photo-1540206395-68808572332f?ixlib=rb-1.2.1&w=1181&q=80&auto=format&fit=crop);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
 }
