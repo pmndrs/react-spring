@@ -244,7 +244,9 @@ export class Controller<State extends Lookup = Lookup> {
     const { onStart, onChange, onRest } = this._events
 
     const active = this._active.size > 0
-    if (active && !this._started) {
+    const changed = this._changed.size > 0
+
+    if ((active && !this._started) || (changed && !this._started)) {
       this._started = true
       flush(onStart, ([onStart, result]) => {
         result.value = this.get()
@@ -253,10 +255,9 @@ export class Controller<State extends Lookup = Lookup> {
     }
 
     const idle = !active && this._started
-    const changed = this._changed.size > 0 && onChange.size
     const values = changed || (idle && onRest.size) ? this.get() : null
 
-    if (changed) {
+    if (changed && onChange.size) {
       flush(onChange, ([onChange, result]) => {
         result.value = values
         onChange(result, this, this._item)
