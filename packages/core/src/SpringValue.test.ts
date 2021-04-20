@@ -624,6 +624,18 @@ function describeEvents() {
       spring.finish()
       expect(onStart).toBeCalledTimes(1)
     })
+    it('is called when immediate is set to true', async () => {
+      const onStart = jest.fn()
+      new SpringValue({
+        from: 0,
+        to: 1,
+        onStart,
+        immediate: true,
+      })
+
+      global.mockRaf.step()
+      expect(onStart).toBeCalledTimes(1)
+    })
   })
   describe('the "onChange" event', () => {
     it('is called on every frame', async () => {
@@ -792,6 +804,18 @@ function describeEvents() {
         value: spring.get(),
         finished: true,
       })
+    })
+    it('is called when immediate is set to true', async () => {
+      const onRest = jest.fn()
+      new SpringValue({
+        from: 0,
+        to: 1,
+        onRest,
+        immediate: true,
+      })
+
+      global.mockRaf.step()
+      expect(onRest).toBeCalledTimes(1)
     })
   })
 }

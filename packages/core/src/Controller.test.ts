@@ -632,5 +632,27 @@ describe('Controller', () => {
         item
       )
     })
+
+    test('onStart & onRest are flushed even if the `immediate` prop is true', async () => {
+      const onRest = jest.fn()
+      const onStart = jest.fn()
+
+      const ctrl = new Controller<{ t: number }>({
+        t: 0,
+        onStart,
+        onRest,
+      })
+
+      ctrl.start({
+        t: 1,
+        immediate: true,
+      })
+
+      await global.advanceUntilIdle()
+
+      expect(ctrl.get().t).toBe(1)
+      expect(onStart).toHaveBeenCalled()
+      expect(onRest).toHaveBeenCalled()
+    })
   })
 })
