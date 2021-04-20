@@ -4,10 +4,10 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@react-spring/web": "*",
-    "lorem-ipsum": "1.0.6",
+    "lorem-ipsum": "2.0.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-feather": "1.1.4",
+    "react-feather": "2.0.9",
     "react-scripts": "4.0.3",
     "styled-components": "^5.2.3"
   },
