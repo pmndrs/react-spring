@@ -19,5 +19,5 @@
       "@react-spring/web": ["../targets/web/src/index.ts"]
     }
   },
-  "include": ["./src"]
+  "include": ["./src", "custom.d.ts"]
 }

@@ -19,7 +19,8 @@
     "/demo/src/sandboxes/svg-filter",
     "/demo/src/sandboxes/css-keyframes",
     "/demo/src/sandboxes/tree",
-    "/demo/src/sandboxes/notification-hub"
+    "/demo/src/sandboxes/notification-hub",
+    "/demo/src/sandboxes/rocket-decay"
   ],
   "node": "14"
 }

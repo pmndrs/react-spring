@@ -21,6 +21,7 @@ import SvgFilter from './sandboxes/svg-filter/src/App'
 import CssKeyframes from './sandboxes/css-keyframes/src/App'
 import NotificationHub from './sandboxes/notification-hub/src/App'
 import Tree from './sandboxes/tree/src/App'
+import DecayRocket from './sandboxes/rocket-decay/src/App'
 
 const links = {
   card: Card,
@@ -42,6 +43,7 @@ const links = {
   'css-keyframes': CssKeyframes,
   'notification-hub': NotificationHub,
   tree: Tree,
+  'decay-rocket': DecayRocket,
 }
 
 const Example = ({ link }) => {
