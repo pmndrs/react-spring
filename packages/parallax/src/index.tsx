@@ -68,7 +68,8 @@ export const ParallaxLayer = React.memo(
       const layer = useMemoOne<IParallaxLayer>(
         () => ({
           setPosition(height, scrollTop, immediate = false) {
-            const distance = height * offset
+            const targetScroll = Math.floor(offset) * height
+            const distance = height * offset + targetScroll * speed
             ctrl.start({
               translate: -(scrollTop * speed) + distance,
               config: parent.config,
