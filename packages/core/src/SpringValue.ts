@@ -169,9 +169,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (!payload && hasFluidValue(anim.to)) {
       toValues = toArray(getFluidValue(anim.to)) as any
     }
+    console.log(toValues)
 
     anim.values.forEach((node, i) => {
       if (node.done) return
+
+      console.log(node)
 
       const to =
         // Animated strings always go from 0 to 1.
@@ -533,6 +536,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
       )
     }
 
+    console.log('PROPS', props, defaultProps)
+
     const state = this._state
     return scheduleProps(++this._lastCallId, {
       key,
@@ -570,6 +575,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         start: this._merge.bind(this, range),
       },
     }).then(result => {
+      console.log(result)
       if (props.loop && result.finished && !(isLoop && result.noop)) {
         const nextProps = createLoopUpdate(props)
         if (nextProps) {
@@ -728,6 +734,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
       // Changing "decay" or "velocity" starts the animation.
       if (
+        (!isEqual(anim.immediate, immediate) && !immediate) ||
         !isEqual(config.decay, decay) ||
         !isEqual(config.velocity, velocity)
       ) {
@@ -776,6 +783,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         each(ACTIVE_EVENTS, type => mergeActiveFn(this, props, type))
 
         const result = getFinishedResult(this, checkFinished(this, prevTo))
+        console.log('RESULT', result)
         flushCalls(this._pendingCalls, result)
         this._pendingCalls.add(resolve)
 
