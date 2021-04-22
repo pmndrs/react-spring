@@ -19,7 +19,9 @@
     "/demo/src/sandboxes/svg-filter",
     "/demo/src/sandboxes/css-keyframes",
     "/demo/src/sandboxes/tree",
-    "/demo/src/sandboxes/notification-hub"
+    "/demo/src/sandboxes/notification-hub",
+    "/demo/src/sandboxes/parallax",
+    "/demo/src/sandboxes/parallax-vert"
   ],
   "node": "14"
 }
