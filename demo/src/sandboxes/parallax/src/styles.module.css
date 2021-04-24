@@ -20,7 +20,6 @@
 .number span {
   display: inline-block;
   position: relative;
-  transform: translate3d(-35%, 0, 0);
 }
 
 .slopeBegin {
