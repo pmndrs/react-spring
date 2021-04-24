@@ -24,6 +24,7 @@ export interface IParallaxLayer {
 
 export interface IParallax {
   config: ConfigProp
+  horizontal: boolean
   busy: boolean
   space: number
   offset: number
@@ -52,6 +53,9 @@ export const ParallaxLayer = React.memo(
     ({ horizontal, factor = 1, offset = 0, speed = 0, ...rest }, ref) => {
       // Our parent controls our height and position.
       const parent = useContext<IParallax>(ParentContext)
+
+      // Layer's horizontal defaults to parent's horizontal if not set.
+      if (horizontal === undefined) horizontal = parent.horizontal
 
       // This is how we animate.
       const ctrl = useMemoOne(() => {
@@ -155,6 +159,7 @@ export const Parallax = React.memo(
     const state: IParallax = useMemoOne(
       () => ({
         config,
+        horizontal,
         busy: false,
         space: 0,
         current: 0,
