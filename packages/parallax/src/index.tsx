@@ -208,10 +208,12 @@ export const Parallax = React.memo(
       const scrollType = getScrollType(horizontal)
 
       state.offset = offset
+
+      state.controller.set({ scroll: state.current })
       state.controller.stop().start({
         scroll: offset * state.space,
         config,
-        onChange({ scroll }: any) {
+        onChange({ value: { scroll } }: any) {
           container[scrollType] = scroll
         },
       })
