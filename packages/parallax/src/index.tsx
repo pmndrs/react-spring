@@ -54,9 +54,6 @@ export const ParallaxLayer = React.memo(
       // Our parent controls our height and position.
       const parent = useContext<IParallax>(ParentContext)
 
-      // Layer's horizontal defaults to parent's horizontal if not set.
-      if (horizontal === undefined) horizontal = parent.horizontal
-
       // This is how we animate.
       const ctrl = useMemoOne(() => {
         const targetScroll = Math.floor(offset) * parent.space
@@ -105,8 +102,12 @@ export const ParallaxLayer = React.memo(
         }
       })
 
+      // Layer's horizontal defaults to parent's horizontal if not set.
+      const scrollHorizontal =
+        horizontal === undefined ? parent.horizontal : horizontal
+
       const translate3d = ctrl.springs.translate.to(
-        horizontal
+        scrollHorizontal
           ? x => `translate3d(${x}px,0,0)`
           : y => `translate3d(0,${y}px,0)`
       )
@@ -119,8 +120,8 @@ export const ParallaxLayer = React.memo(
             backgroundSize: 'auto',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
-            [horizontal ? 'height' : 'width']: '100%',
-            [horizontal ? 'width' : 'height']: ctrl.springs.space,
+            [scrollHorizontal ? 'height' : 'width']: '100%',
+            [scrollHorizontal ? 'width' : 'height']: ctrl.springs.space,
             WebkitTransform: translate3d,
             msTransform: translate3d,
             transform: translate3d,
