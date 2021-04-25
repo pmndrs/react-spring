@@ -37,7 +37,7 @@ export const createStringInterpolator = (
   if (!namedColorRegex)
     namedColorRegex = G.colors
       ? // match color names, ignore partial matches
-        new RegExp(`(?<!\\w)(${Object.keys(G.colors).join('|')})(?!\\w)`, 'g')
+        new RegExp(`(${Object.keys(G.colors).join('|')})(?!\\w)`, 'g')
       : // never match
         /^\b$/
 
