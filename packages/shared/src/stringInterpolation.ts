@@ -36,8 +36,10 @@ export const createStringInterpolator = (
 ) => {
   if (!namedColorRegex)
     namedColorRegex = G.colors
-      ? new RegExp(`(${Object.keys(G.colors).join('|')})`, 'g')
-      : /^\b$/ // never match
+      ? // match color names, ignore partial matches
+        new RegExp(`(${Object.keys(G.colors).join('|')})(?!\\w)`, 'g')
+      : // never match
+        /^\b$/
 
   // Convert colors to rgba(...)
   const output = config.output.map(value =>
