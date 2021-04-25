@@ -149,4 +149,13 @@ describe('Interpolation', () => {
 
     expect(interpolation(0.5)).toBe('rgba(2, 2, 2, 0.5)')
   })
+
+  it('should not match partial color names', () => {
+    const interpolation = createInterpolator({
+      range: [0, 1],
+      output: ['grayscale(0%)', 'grayscale(100%)'],
+    })
+
+    expect(interpolation(0.5)).toBe('grayscale(50%)')
+  })
 })
