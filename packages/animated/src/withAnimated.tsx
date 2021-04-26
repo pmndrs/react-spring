@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { forwardRef, useRef, Ref, useCallback, useEffect } from 'react'
-import { useLayoutEffect } from 'react-layout-effect'
 import {
   is,
   each,
@@ -11,6 +10,7 @@ import {
   FluidValue,
   addFluidObserver,
   removeFluidObserver,
+  useLayoutEffect,
 } from '@react-spring/shared'
 import { ElementType } from '@react-spring/types'
 

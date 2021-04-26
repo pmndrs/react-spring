@@ -104,6 +104,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** The last `scheduleProps` call that changed the `to` prop */
   protected _lastToId = 0
 
+  protected _memoizedDuration = 0
+
   constructor(from: Exclude<T, object>, props?: SpringUpdate<T>)
   constructor(props?: SpringUpdate<T>)
   constructor(arg1?: any, arg2?: any) {
@@ -191,7 +193,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
           return
         }
 
-        const elapsed = (node.elapsedTime += dt)
+        let elapsed = (node.elapsedTime += dt)
         const from = anim.fromValues[i]
 
         const v0 =
@@ -207,8 +209,31 @@ export class SpringValue<T = any> extends FrameValue<T> {
         if (!is.und(config.duration)) {
           let p = 1
           if (config.duration > 0) {
-            p = (config.progress || 0) + elapsed / config.duration
+            /**
+             * Here we check if the duration has changed in the config
+             * and if so update the elapsed time to the percentage
+             * of completition so there is no jank in the animation
+             * https://github.com/pmndrs/react-spring/issues/1163
+             */
+            if (this._memoizedDuration !== config.duration) {
+              // update the memoized version to the new duration
+              this._memoizedDuration = config.duration
+
+              // if the value has started animating we need to update it
+              if (node.durationProgress > 0) {
+                // set elapsed time to be the same percentage of progress as the previous duration
+                node.elapsedTime = config.duration * node.durationProgress
+                // add the delta so the below updates work as expected
+                elapsed = node.elapsedTime += dt
+              }
+            }
+
+            // calculate the new progress
+            p = (config.progress || 0) + elapsed / this._memoizedDuration
+            // p is clamped between 0-1
             p = p > 1 ? 1 : p < 0 ? 0 : p
+            // store our new progress
+            node.durationProgress = p
           }
 
           position = from + config.easing(p) * (to - from)
@@ -519,7 +544,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
           if (!isPaused(this)) {
             setPausedBit(this, true)
             flushCalls(state.pauseQueue)
-            sendEvent(this, 'onPause', this)
+            sendEvent(
+              this,
+              'onPause',
+              getFinishedResult(this, checkFinished(this, this.animation.to)),
+              this
+            )
           }
         },
         resume: () => {
@@ -529,7 +559,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
               this._resume()
             }
             flushCalls(state.resumeQueue)
-            sendEvent(this, 'onResume', this)
+            sendEvent(
+              this,
+              'onResume',
+              getFinishedResult(this, checkFinished(this, this.animation.to)),
+              this
+            )
           }
         },
         start: this._merge.bind(this, range),
@@ -750,7 +785,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
             anim.changed = !reset
 
             // Call the active `onRest` handler from the interrupted animation.
-            onRest?.(result)
+            onRest?.(result, this)
 
             // Notify the default `onRest` of the reset, but wait for the
             // first frame to pass before sending an `onStart` event.
@@ -761,7 +796,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
             // has already passed, which means this is a goal update and not
             // an entirely new animation.
             else {
-              anim.onStart?.(this)
+              anim.onStart?.(result, this)
             }
           })
       }
@@ -788,7 +823,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     // Resolve our promise immediately.
     else {
-      resolve(getNoopResult(this, value))
+      resolve(getNoopResult(value))
     }
   }
 
@@ -858,7 +893,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const anim = this.animation
     if (!anim.changed) {
       anim.changed = true
-      sendEvent(this, 'onStart', this)
+      sendEvent(
+        this,
+        'onStart',
+        getFinishedResult(this, checkFinished(this, anim.to)),
+        this
+      )
     }
   }
 
@@ -929,13 +969,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
       })
 
       const result = cancel
-        ? getCancelledResult(this)
-        : getFinishedResult(this, checkFinished(this, goal ?? anim.to))
+        ? getCancelledResult(this.get())
+        : getFinishedResult(this.get(), checkFinished(this, goal ?? anim.to))
 
       flushCalls(this._pendingCalls, result)
       if (anim.changed) {
         anim.changed = false
-        sendEvent(this, 'onRest', result)
+        sendEvent(this, 'onRest', result, this)
       }
     }
   }

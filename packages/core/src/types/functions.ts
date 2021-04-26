@@ -79,26 +79,55 @@ interface UpdateValueFn<T = any> extends AnyUpdateFn<SpringValue<T>> {
   (props: { to?: GoalValue<T> } & SpringProps<T>): AsyncResult<SpringValue<T>>
 }
 
+type EventHandler<
+  TResult extends Readable = any,
+  TSource = unknown,
+  Item = undefined
+> = Item extends undefined
+  ? (result: AnimationResult<TResult>, ctrl: TSource, item?: Item) => void
+  : (result: AnimationResult<TResult>, ctrl: TSource, item: Item) => void
+
 /**
  * Called before the first frame of every animation.
  * From inside the `requestAnimationFrame` callback.
  */
-export type OnStart<T = unknown> = (spring: SpringValue<T>) => void
+export type OnStart<
+  TResult extends Readable,
+  TSource,
+  Item = undefined
+> = EventHandler<TResult, TSource, Item>
 
 /** Called when a `SpringValue` changes */
-export type OnChange<T = unknown> = (value: T, source: SpringValue<T>) => void
+export type OnChange<
+  TResult extends Readable,
+  TSource,
+  Item = undefined
+> = EventHandler<TResult, TSource, Item>
 
-export type OnPause<T = unknown> = OnStart<T>
-export type OnResume<T = unknown> = OnStart<T>
+export type OnPause<
+  TResult extends Readable,
+  TSource,
+  Item = undefined
+> = EventHandler<TResult, TSource, Item>
+
+export type OnResume<
+  TResult extends Readable,
+  TSource,
+  Item = undefined
+> = EventHandler<TResult, TSource, Item>
 
 /** Called once the animation comes to a halt */
-export type OnRest<T extends Readable = any> = (
-  result: AnimationResult<T>
-) => void
+export type OnRest<
+  TResult extends Readable,
+  TSource,
+  Item = undefined
+> = EventHandler<TResult, TSource, Item>
 
-export type OnResolve<T = unknown> = (
-  result: AnimationResult<Controller<T>>
-) => void
+export type OnResolve<
+  TResult extends Readable,
+  TSource,
+  Item = undefined
+> = EventHandler<TResult, TSource, Item>
 
 /**
  * Called after an animation is updated by new props,

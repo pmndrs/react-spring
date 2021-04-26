@@ -20,9 +20,7 @@ This library represents a modern approach to animation. It is very much inspired
 
 More info about the project can be found [here](https://www.react-spring.io).
 
-For info specific to v9 can be found [here](https://aleclarson.github.io/react-spring/v9/).
-
-Examples and tutorials can be found [here](https://www.react-spring.io/docs/hooks/basics).
+Examples and tutorials can be found [here](https://react-spring.io/basics).
 
 ---
 

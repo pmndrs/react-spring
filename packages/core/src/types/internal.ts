@@ -39,6 +39,7 @@ export type InferTarget<T> = T extends object
 export interface AnimationTarget<T = any> extends Readable<T> {
   start(props: any): AsyncResult<this>
   stop: Function
+  item?: unknown
 }
 
 /** @internal */

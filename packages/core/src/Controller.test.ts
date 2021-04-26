@@ -1,5 +1,6 @@
 import { Controller } from './Controller'
 import { flushMicroTasks } from 'flush-microtasks'
+import { getFinishedResult } from './AnimationResult'
 
 const frameLength = 1000 / 60
 
@@ -255,6 +256,52 @@ describe('Controller', () => {
       // Since we call `update` twice, frames are generated!
       expect(global.getFrames(ctrl)).toMatchSnapshot()
     })
+
+    describe('when skipAnimations is true', () => {
+      it('should not run at all', async () => {
+        const ctrl = new Controller({ from: { x: 0 } })
+        let n = 0
+
+        global.setSkipAnimation(true)
+
+        ctrl.start({
+          to: async next => {
+            while (true) {
+              n += 1
+              await next({ x: 1, reset: true })
+            }
+          },
+        })
+
+        await flushMicroTasks()
+        expect(n).toBe(0)
+      })
+
+      it('should stop running and push the animation to the finished state when called mid animation', async () => {
+        const ctrl = new Controller({ from: { x: 0 } })
+        let n = 0
+
+        ctrl.start({
+          to: async next => {
+            while (n < 5) {
+              n++
+              await next({ x: 10, reset: true })
+            }
+          },
+        })
+
+        await global.advance()
+        expect(n).toBe(1)
+
+        global.setSkipAnimation(true)
+
+        await global.advanceUntilIdle()
+
+        const { x } = ctrl.springs
+        expect(n).toBe(2)
+        expect(x.get()).toEqual(10)
+      })
+    })
   })
 
   describe('when the "onStart" prop is defined', () => {
@@ -505,6 +552,107 @@ describe('Controller', () => {
       ctrl.stop()
       await global.advanceUntilIdle()
       expect(ctrl['_state'].asyncTo).toBeUndefined()
+    })
+  })
+
+  describe('events', () => {
+    test('events recieve an AnimationResult and the Controller as the first two args', async () => {
+      const ctrl = new Controller<{ t: number }>({ t: 0 })
+
+      const onRest = jest.fn()
+      const onStart = jest.fn()
+      const onChange = jest.fn()
+
+      ctrl.start({
+        to: next => next({ t: 1 }),
+        onRest,
+        onStart,
+        onChange,
+      })
+
+      global.mockRaf.step()
+
+      expect(onStart).toBeCalledWith(
+        getFinishedResult({ t: 0.022634843307857987 }, false),
+        ctrl,
+        undefined
+      )
+
+      expect(onChange).toBeCalledWith(
+        getFinishedResult(ctrl.get(), false),
+        ctrl,
+        undefined
+      )
+
+      await global.advanceUntilIdle()
+
+      expect(onRest).toBeCalledWith(
+        getFinishedResult(ctrl.get(), true),
+        ctrl,
+        undefined
+      )
+    })
+
+    test('events recieve also recieve the item if set as the third', async () => {
+      const ctrl = new Controller<{ t: number }>({ t: 0 })
+
+      const item = { msg: 'hello world', key: 1 }
+      ctrl.item = item
+
+      const onRest = jest.fn()
+      const onStart = jest.fn()
+      const onChange = jest.fn()
+
+      ctrl.start({
+        to: next => next({ t: 1 }),
+        onRest,
+        onStart,
+        onChange,
+      })
+
+      global.mockRaf.step()
+
+      expect(onStart).toBeCalledWith(
+        getFinishedResult({ t: 0.022634843307857987 }, false),
+        ctrl,
+        item
+      )
+
+      expect(onChange).toBeCalledWith(
+        getFinishedResult(ctrl.get(), false),
+        ctrl,
+        item
+      )
+
+      await global.advanceUntilIdle()
+
+      expect(onRest).toBeCalledWith(
+        getFinishedResult(ctrl.get(), true),
+        ctrl,
+        item
+      )
+    })
+
+    test('onStart & onRest are flushed even if the `immediate` prop is true', async () => {
+      const onRest = jest.fn()
+      const onStart = jest.fn()
+
+      const ctrl = new Controller<{ t: number }>({
+        t: 0,
+        onStart,
+        onRest,
+      })
+
+      ctrl.start({
+        t: 1,
+        immediate: true,
+      })
+
+      await global.advanceUntilIdle()
+
+      expect(ctrl.get().t).toBe(1)
+      expect(onStart).toHaveBeenCalled()
+      expect(onRest).toHaveBeenCalled()
     })
   })
 })

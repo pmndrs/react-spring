@@ -1,4 +1,4 @@
-import { getFluidValue } from 'fluids'
+import { getFluidValue } from './fluids'
 import { createInterpolator } from './createInterpolator'
 import { InterpolatorConfig } from '@react-spring/types'
 import { colorToRgba } from './colorToRgba'
@@ -36,8 +36,10 @@ export const createStringInterpolator = (
 ) => {
   if (!namedColorRegex)
     namedColorRegex = G.colors
-      ? new RegExp(`(${Object.keys(G.colors).join('|')})`, 'g')
-      : /^\b$/ // never match
+      ? // match color names, ignore partial matches
+        new RegExp(`(${Object.keys(G.colors).join('|')})(?!\\w)`, 'g')
+      : // never match
+        /^\b$/
 
   // Convert colors to rgba(...)
   const output = config.output.map(value =>

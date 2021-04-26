@@ -53,14 +53,14 @@ export type TransitionValues<Props extends object> = unknown &
   >
 
 export type UseTransitionProps<Item = any> = Merge<
-  ControllerProps<UnknownProps>,
+  Omit<ControllerProps<UnknownProps, Item>, 'onResolve'>,
   {
     from?: TransitionFrom<Item>
     initial?: TransitionFrom<Item>
     enter?: TransitionTo<Item>
     update?: TransitionTo<Item>
     leave?: TransitionTo<Item>
-    key?: ItemKeys<Item>
+    keys?: ItemKeys<Item>
     sort?: (a: Item, b: Item) => number
     trail?: number
     /**
@@ -76,7 +76,11 @@ export type UseTransitionProps<Item = any> = Merge<
     expires?: boolean | number | ((item: Item) => boolean | number)
     config?:
       | SpringConfig
-      | ((item: Item, index: number) => AnimationProps['config'])
+      | ((
+          item: Item,
+          index: number,
+          state: TransitionPhase
+        ) => AnimationProps['config'])
     /**
      * Called after a transition item is unmounted.
      */
@@ -134,13 +138,13 @@ export type TransitionFrom<Item> =
 
 export type TransitionTo<Item, State extends Lookup = Lookup> =
   | Falsy
-  | OneOrMore<ControllerUpdate<State>>
+  | OneOrMore<ControllerUpdate<State, Item>>
   | Function // HACK: Fix inference of untyped inline functions.
   | ((
       item: Item,
       index: number
     ) =>
-      | ControllerUpdate<State>
+      | ControllerUpdate<State, Item>
       | SpringChain<State>
       | SpringToFn<State>
       | Falsy)

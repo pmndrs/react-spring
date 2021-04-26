@@ -24,6 +24,7 @@ export interface IParallaxLayer {
 
 export interface IParallax {
   config: ConfigProp
+  horizontal: boolean
   busy: boolean
   space: number
   offset: number
@@ -68,7 +69,8 @@ export const ParallaxLayer = React.memo(
       const layer = useMemoOne<IParallaxLayer>(
         () => ({
           setPosition(height, scrollTop, immediate = false) {
-            const distance = height * offset
+            const targetScroll = Math.floor(offset) * height
+            const distance = height * offset + targetScroll * speed
             ctrl.start({
               translate: -(scrollTop * speed) + distance,
               config: parent.config,
@@ -100,8 +102,12 @@ export const ParallaxLayer = React.memo(
         }
       })
 
+      // Layer's horizontal defaults to parent's horizontal if not set.
+      const scrollHorizontal =
+        horizontal === undefined ? parent.horizontal : horizontal
+
       const translate3d = ctrl.springs.translate.to(
-        horizontal
+        scrollHorizontal
           ? x => `translate3d(${x}px,0,0)`
           : y => `translate3d(0,${y}px,0)`
       )
@@ -114,8 +120,8 @@ export const ParallaxLayer = React.memo(
             backgroundSize: 'auto',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
-            [horizontal ? 'height' : 'width']: '100%',
-            [horizontal ? 'width' : 'height']: ctrl.springs.space,
+            [scrollHorizontal ? 'height' : 'width']: '100%',
+            [scrollHorizontal ? 'width' : 'height']: ctrl.springs.space,
             WebkitTransform: translate3d,
             msTransform: translate3d,
             transform: translate3d,
@@ -154,6 +160,7 @@ export const Parallax = React.memo(
     const state: IParallax = useMemoOne(
       () => ({
         config,
+        horizontal,
         busy: false,
         space: 0,
         current: 0,
@@ -207,10 +214,12 @@ export const Parallax = React.memo(
       const scrollType = getScrollType(horizontal)
 
       state.offset = offset
+
+      state.controller.set({ scroll: state.current })
       state.controller.stop().start({
         scroll: offset * state.space,
         config,
-        onChange({ scroll }: any) {
+        onChange({ value: { scroll } }: any) {
           container[scrollType] = scroll
         },
       })
