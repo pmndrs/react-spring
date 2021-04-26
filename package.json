@@ -42,7 +42,9 @@
     "demo:dev": "yarn workspace demo dev",
     "test": "jest",
     "test:cov": "jest --coverage",
-    "test:ts": "tsc --noEmit"
+    "test:ts": "tsc --noEmit",
+    "release": "yarn build && yarn changeset publish && git push --follow-tags",
+    "version": "yarn changeset version"
   },
   "commitlint": {
     "extends": [
