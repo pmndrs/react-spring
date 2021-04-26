@@ -2,11 +2,12 @@
   "include": [
     "packages/core/test/setup.ts",
     "packages/*/src/**/*",
-    "packages/types/*",
     "targets/*/src/**/*",
-    "**/*.test.ts"
+    "packages/types/*",
+    "**/*.test.ts",
+    "targets/zdog/@types/**/*"
   ],
-  "exclude": [],
+  "exclude": ["packages/*/src/types/**/*", "targets/*/src/types/**/*"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",

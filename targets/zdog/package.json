@@ -3,7 +3,6 @@
   "version": "9.1.2",
   "main": "dist/react-spring-zdog.cjs.js",
   "module": "dist/react-spring-zdog.esm.js",
-  "types": "./src/types/react-zdog.d.ts",
   "dependencies": {
     "@react-spring/animated": "*",
     "@react-spring/core": "*",
