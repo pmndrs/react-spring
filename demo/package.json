@@ -5,7 +5,7 @@
   "main": "null",
   "author": "Josh Ellis",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "scripts": {
     "dev": "vite",
     "serve": "vite preview"
