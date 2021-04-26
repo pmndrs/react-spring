@@ -64,6 +64,8 @@
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
+    "@changesets/changelog-git": "^0.1.7",
+    "@changesets/cli": "^2.16.0",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@preconstruct/cli": "^2.0.6",
