@@ -17,7 +17,9 @@
   ],
   "license": "MIT",
   "author": "Paul Henschel",
-  "maintainers": [],
+  "maintainers": [
+    "Josh Ellis (https://github.com/joshuaellis)"
+  ],
   "workspaces": {
     "packages": [
       "packages/*",
@@ -38,7 +40,6 @@
     "watch": "preconstruct watch",
     "dev": "preconstruct dev",
     "demo:dev": "yarn workspace demo dev",
-    "release": "node ./scripts/release.js",
     "test": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit"

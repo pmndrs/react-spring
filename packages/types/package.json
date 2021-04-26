@@ -4,5 +4,21 @@
   "description": "Internal package with TypeScript stuff",
   "main": "index.js",
   "repository": "pmndrs/react-spring",
-  "license": "MIT"
+  "homepage": "https://github.com/pmndrs/react-spring#readme",
+  "keywords": [
+    "animated",
+    "animation",
+    "hooks",
+    "motion",
+    "react",
+    "react-native",
+    "spring",
+    "typescript",
+    "velocity"
+  ],
+  "license": "MIT",
+  "author": "Paul Henschel",
+  "maintainers": [
+    "Josh Ellis (https://github.com/joshuaellis)"
+  ]
 }
