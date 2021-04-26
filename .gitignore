@@ -25,3 +25,5 @@ yarn-error.log*
 Desktop.ini
 report.*.json
 .idea
+
+**/CHANGELOG.md
