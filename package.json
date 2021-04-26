@@ -35,6 +35,7 @@
     ]
   },
   "scripts": {
+    "changeset:add": "changeset add",
     "postinstall": "patch-package && preconstruct dev",
     "build": "preconstruct build",
     "watch": "preconstruct watch",
