@@ -1,6 +1,12 @@
 {
-  "include": ["packages/*/src/**/*", "packages/types/*", "targets/*/src/**/*"],
-  "exclude": ["**/*.test.ts"],
+  "include": [
+    "packages/core/test/setup.ts",
+    "packages/*/src/**/*",
+    "packages/types/*",
+    "targets/*/src/**/*",
+    "**/*.test.ts"
+  ],
+  "exclude": [],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
