@@ -42,8 +42,11 @@ export class SpringRef<State extends Lookup = Lookup> extends Function {
   /** Update controllers based on their state. */
   start(props: ControllerUpdateFn<State>): AsyncResult<Controller<State>>[]
   /** Start animating each controller. */
+  start(
+    props?: ControllerUpdate<State> | ControllerUpdateFn<State>
+  ): AsyncResult<Controller<State>>[]
   /** @internal */
-  start(props?: object) {
+  start(props?: object | ControllerUpdateFn<State>) {
     const results: AsyncResult[] = []
 
     each(this.current, (ctrl, i) => {
@@ -64,8 +67,10 @@ export class SpringRef<State extends Lookup = Lookup> extends Function {
   update(props: ControllerUpdate<State>): this
   /** Generate separate props for each controller's update queue. */
   update(props: ControllerUpdateFn<State>): this
+  /** Add props to each controller's update queue. */
+  update(props: ControllerUpdate<State> | ControllerUpdateFn<State>): this
   /** @internal */
-  update(props: object) {
+  update(props: object | ControllerUpdateFn<State>) {
     each(this.current, (ctrl, i) => ctrl.update(this._getProps(props, ctrl, i)))
     return this
   }
