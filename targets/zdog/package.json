@@ -4,10 +4,10 @@
   "main": "dist/react-spring-zdog.cjs.js",
   "module": "dist/react-spring-zdog.esm.js",
   "dependencies": {
-    "@react-spring/animated": "*",
-    "@react-spring/core": "*",
-    "@react-spring/shared": "*",
-    "@react-spring/types": "*"
+    "@react-spring/animated": "~9.1.2",
+    "@react-spring/core": "~9.1.2",
+    "@react-spring/shared": "~9.1.2",
+    "@react-spring/types": "~9.1.2"
   },
   "peerDependencies": {
     "react": ">=16.8",

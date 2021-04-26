@@ -4,10 +4,10 @@
   "main": "dist/react-spring-three.cjs.js",
   "module": "dist/react-spring-three.esm.js",
   "dependencies": {
-    "@react-spring/animated": "*",
-    "@react-spring/core": "*",
-    "@react-spring/shared": "*",
-    "@react-spring/types": "*"
+    "@react-spring/animated": "~9.1.2",
+    "@react-spring/core": "~9.1.2",
+    "@react-spring/shared": "~9.1.2",
+    "@react-spring/types": "~9.1.2"
   },
   "peerDependencies": {
     "@react-three/fiber": ">=6.0",

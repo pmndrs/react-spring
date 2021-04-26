@@ -4,11 +4,11 @@
   "main": "dist/react-spring.cjs.js",
   "module": "dist/react-spring.esm.js",
   "dependencies": {
-    "@react-spring/core": "*",
-    "@react-spring/konva": "*",
-    "@react-spring/native": "*",
-    "@react-spring/three": "*",
-    "@react-spring/web": "*",
-    "@react-spring/zdog": "*"
+    "@react-spring/core": "~9.1.2",
+    "@react-spring/konva": "~9.1.2",
+    "@react-spring/native": "~9.1.2",
+    "@react-spring/three": "~9.1.2",
+    "@react-spring/web": "~9.1.2",
+    "@react-spring/zdog": "~9.1.2"
   }
 }

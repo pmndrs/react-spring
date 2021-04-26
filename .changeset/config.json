@@ -5,6 +5,6 @@
   "linked": [],
   "access": "restricted",
   "baseBranch": "master",
-  "updateInternalDependencies": "patch",
+  "updateInternalDependencies": "minor",
   "ignore": []
 }

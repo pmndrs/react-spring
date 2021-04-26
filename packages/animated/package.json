@@ -5,8 +5,8 @@
   "main": "dist/react-spring-animated.cjs.js",
   "module": "dist/react-spring-animated.esm.js",
   "dependencies": {
-    "@react-spring/shared": "*",
-    "@react-spring/types": "*",
+    "@react-spring/shared": "~9.1.2",
+    "@react-spring/types": "~9.1.2",
     "react-layout-effect": "^1.0.1"
   },
   "peerDependencies": {

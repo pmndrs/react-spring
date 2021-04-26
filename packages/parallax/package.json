@@ -4,8 +4,8 @@
   "main": "dist/react-spring-parallax.cjs.js",
   "module": "dist/react-spring-parallax.esm.js",
   "dependencies": {
-    "@react-spring/shared": "*",
-    "@react-spring/web": "*"
+    "@react-spring/shared": "~9.1.2",
+    "@react-spring/web": "~9.1.2"
   },
   "peerDependencies": {
     "react": ">=16.8"

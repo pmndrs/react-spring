@@ -5,7 +5,7 @@
   "main": "dist/react-spring-shared.cjs.js",
   "module": "dist/react-spring-shared.esm.js",
   "dependencies": {
-    "@react-spring/types": "*",
+    "@react-spring/types": "~9.1.2",
     "fluids": "^0.2.2",
     "rafz": "^0.1.13"
   },
