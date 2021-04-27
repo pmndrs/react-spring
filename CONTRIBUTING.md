@@ -17,6 +17,10 @@ cd react-spring
 
 Be sure your commit messages follow this specification: https://www.conventionalcommits.org/en/v1.0.0-beta.4/
 
+### Windows permission errors
+
+Some Windows users may need to [enable developer mode](https://howtogeek.com/292914/what-is-developer-mode-in-windows-10) if experiencing `EPERM: operation not permitted, symlink` with Preconstruct. If this persists, you might be running on an unsupported drive/format. In which case, consider using [Docker](https://docs.docker.com/docker-for-windows).
+
 ### Duplicate `react` errors
 
 React 16.8+ has global state to support its "hooks" feature, so you need to ensure only one copy of `react` exists in your program. Otherwise, you'll most likely see [this error](https://reactjs.org/warnings/invalid-hook-call-warning.html). Please try the following solutions, and let us know if it still doesn't work for you.
