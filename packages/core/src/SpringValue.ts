@@ -169,12 +169,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (!payload && hasFluidValue(anim.to)) {
       toValues = toArray(getFluidValue(anim.to)) as any
     }
-    console.log(toValues)
 
     anim.values.forEach((node, i) => {
       if (node.done) return
-
-      console.log(node)
 
       const to =
         // Animated strings always go from 0 to 1.
@@ -338,14 +335,37 @@ export class SpringValue<T = any> extends FrameValue<T> {
     })
 
     const node = getAnimated(this)!
+    /**
+     * Get the node's current value, this will be different
+     * to anim.to when config.decay is true
+     */
+    const currVal = node.getValue()
     if (idle) {
-      const value = getFluidValue(anim.to)
-      if (node.setValue(value) || changed) {
-        this._onChange(value)
+      // get our final fluid val from the anim.to
+      const finalVal = getFluidValue(anim.to)
+      /**
+       * check if they're not equal, or if they're
+       * change and if there's no config.decay set
+       */
+      if ((currVal !== finalVal || changed) && !config.decay) {
+        // set the value to anim.to
+        node.setValue(finalVal)
+        this._onChange(finalVal)
+      } else if (changed && config.decay) {
+        /**
+         * if it's changed but there is a config.decay,
+         * just call _onChange with currrent value
+         */
+        this._onChange(currVal)
       }
+      // call stop because the spring has stopped.
       this._stop()
     } else if (changed) {
-      this._onChange(node.getValue())
+      /**
+       * if the spring has changed, but is not idle,
+       * just call the _onChange handler
+       */
+      this._onChange(currVal)
     }
   }
 
@@ -536,8 +556,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
       )
     }
 
-    console.log('PROPS', props, defaultProps)
-
     const state = this._state
     return scheduleProps(++this._lastCallId, {
       key,
@@ -575,7 +593,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
         start: this._merge.bind(this, range),
       },
     }).then(result => {
-      console.log(result)
       if (props.loop && result.finished && !(isLoop && result.noop)) {
         const nextProps = createLoopUpdate(props)
         if (nextProps) {
@@ -783,7 +800,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
         each(ACTIVE_EVENTS, type => mergeActiveFn(this, props, type))
 
         const result = getFinishedResult(this, checkFinished(this, prevTo))
-        console.log('RESULT', result)
         flushCalls(this._pendingCalls, result)
         this._pendingCalls.add(resolve)
 
