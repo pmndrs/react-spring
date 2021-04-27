@@ -9,33 +9,9 @@ cd react-spring
 
 2. Install `yarn` (https://yarnpkg.com/en/docs/install)
 
-3. Bootstrap the packages:
+3. Preconstuct will link the packages up in a postinstall funciton
 
-```sh
-yarn
-
-# Clone the docs (optional)
-yarn meta git update
-```
-
-4. Link the packages:
-
-```sh
-# Use the .js bundles
-yarn lerna exec 'cd dist && yarn link || exit 0'
-
-# Or use the uncompiled .ts packages
-yarn lerna exec 'yarn link'
-```
-
-5. Link `react-spring` to your project:
-
-```sh
-cd ~/my-project
-yarn link react-spring
-```
-
-6. Let's get cooking! 👨🏻‍🍳🥓
+4. Let's get cooking! 👨🏻‍🍳🥓
 
 ## Guidelines
 
@@ -69,8 +45,45 @@ React 16.8+ has global state to support its "hooks" feature, so you need to ensu
 
 # Publishing
 
-To publish a new version:
+We use [`changesets`](https://github.com/atlassian/changesets) to publish our package now.
+All our dependencies are fixed using ~ after [1414](https://github.com/pmndrs/react-spring/issues/1414) but luckily changesets will bump them for every minor version we release.
 
+## Simple release
+
+You want to release some new features that haven't been released yet:
+
+```shell
+yarn changeset:add
 ```
-yarn release major | minor | patch  --tag
+
+Follow the prompt to flag which packages need to update although with `react-spring` we keep all our packages at the same version.
+
+Then you'll run:
+
+```shell
+yarn vers
+```
+
+This will update all the packages correctly according to what version you just set with the `add` script & possibly update the deps within those packages.
+
+Finally:
+
+```shell
+yarn release
+```
+
+This will build the packages, publish them & push the tags to github to signify a new release. Please then update the `releases` on github & the changelog on `react-spring.io`
+
+## Prerelease
+
+Everything above applies but you must first run:
+
+```shell
+yarn changeset pre enter beta | alpha | next
+```
+
+If you find you're stuck in a prerelease and trying to do a Simple Release, try running:
+
+```shell
+yarn changeset pre exit
 ```

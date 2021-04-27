@@ -1,26 +1,39 @@
 {
   "name": "@react-spring/web",
   "version": "9.1.2",
-  "main": "src/index.ts",
+  "main": "dist/react-spring-web.cjs.js",
+  "module": "dist/react-spring-web.esm.js",
+  "files": [
+    "dist/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": "pmndrs/react-spring",
+  "homepage": "https://github.com/pmndrs/react-spring#readme",
+  "keywords": [
+    "animated",
+    "animation",
+    "hooks",
+    "motion",
+    "react",
+    "react-native",
+    "spring",
+    "typescript",
+    "velocity"
+  ],
+  "license": "MIT",
+  "author": "Paul Henschel",
+  "maintainers": [
+    "Josh Ellis (https://github.com/joshuaellis)"
+  ],
   "dependencies": {
-    "@react-spring/animated": "link:../../packages/animated",
-    "@react-spring/core": "link:../../packages/core",
-    "@react-spring/shared": "link:../../packages/shared",
-    "@react-spring/types": "link:../../packages/types"
+    "@react-spring/animated": "~9.1.2",
+    "@react-spring/core": "~9.1.2",
+    "@react-spring/shared": "~9.1.2",
+    "@react-spring/types": "~9.1.2"
   },
   "peerDependencies": {
     "react": ">=16.8",
     "react-dom": ">=16.8"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^4.0.0",
-    "@testing-library/react": "^9.1.1",
-    "react-dom": "~16.9.0"
-  },
-  "scripts": {
-    "build": "rollup -c"
-  },
-  "publishConfig": {
-    "directory": "dist"
   }
 }

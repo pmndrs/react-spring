@@ -2,18 +2,37 @@
   "name": "@react-spring/animated",
   "version": "9.1.2",
   "description": "Animated component props for React",
-  "main": "src/index.ts",
-  "scripts": {
-    "build": "rollup -c"
-  },
+  "main": "dist/react-spring-animated.cjs.js",
+  "module": "dist/react-spring-animated.esm.js",
+  "files": [
+    "dist/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": "pmndrs/react-spring",
+  "homepage": "https://github.com/pmndrs/react-spring#readme",
+  "keywords": [
+    "animated",
+    "animation",
+    "hooks",
+    "motion",
+    "react",
+    "react-native",
+    "spring",
+    "typescript",
+    "velocity"
+  ],
+  "license": "MIT",
+  "author": "Paul Henschel",
+  "maintainers": [
+    "Josh Ellis (https://github.com/joshuaellis)"
+  ],
   "dependencies": {
-    "@react-spring/shared": "link:../shared",
-    "@react-spring/types": "link:../types"
+    "@react-spring/shared": "~9.1.2",
+    "@react-spring/types": "~9.1.2",
+    "react-layout-effect": "^1.0.1"
   },
   "peerDependencies": {
     "react": ">=16.8"
-  },
-  "publishConfig": {
-    "directory": "dist"
   }
 }
