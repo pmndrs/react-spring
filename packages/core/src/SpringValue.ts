@@ -335,14 +335,37 @@ export class SpringValue<T = any> extends FrameValue<T> {
     })
 
     const node = getAnimated(this)!
+    /**
+     * Get the node's current value, this will be different
+     * to anim.to when config.decay is true
+     */
+    const currVal = node.getValue()
     if (idle) {
-      const value = getFluidValue(anim.to)
-      if (node.setValue(value) || changed) {
-        this._onChange(value)
+      // get our final fluid val from the anim.to
+      const finalVal = getFluidValue(anim.to)
+      /**
+       * check if they're not equal, or if they're
+       * change and if there's no config.decay set
+       */
+      if ((currVal !== finalVal || changed) && !config.decay) {
+        // set the value to anim.to
+        node.setValue(finalVal)
+        this._onChange(finalVal)
+      } else if (changed && config.decay) {
+        /**
+         * if it's changed but there is a config.decay,
+         * just call _onChange with currrent value
+         */
+        this._onChange(currVal)
       }
+      // call stop because the spring has stopped.
       this._stop()
     } else if (changed) {
-      this._onChange(node.getValue())
+      /**
+       * if the spring has changed, but is not idle,
+       * just call the _onChange handler
+       */
+      this._onChange(currVal)
     }
   }
 
@@ -728,6 +751,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
       // Changing "decay" or "velocity" starts the animation.
       if (
+        (!isEqual(anim.immediate, immediate) && !immediate) ||
         !isEqual(config.decay, decay) ||
         !isEqual(config.velocity, velocity)
       ) {
