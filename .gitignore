@@ -1,16 +1,29 @@
-dist/
-.bic_cache
-.rpt2_cache/
 node_modules/
-coverage/
+# production
+build/
+dist/
+.cache/
+.parcel-cache/
+
+# testing
+/coverage
+
+# misc
+.DS_Store
 Thumbs.db
 ehthumbs.db
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
 Desktop.ini
-$RECYCLE.BIN/
-.DS_Store
-package-lock.json
 report.*.json
 .idea
-*.log
-/docs/
-/examples/
+
+**/CHANGELOG.md
