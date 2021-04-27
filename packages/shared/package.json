@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/shared",
-  "version": "9.1.2",
+  "version": "9.2.0-beta.0",
   "description": "Globals and shared modules",
   "main": "dist/react-spring-shared.cjs.js",
   "module": "dist/react-spring-shared.esm.js",
@@ -28,7 +28,7 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/types": "~9.1.2",
+    "@react-spring/types": "~9.2.0-beta.0",
     "fluids": "^0.2.2",
     "rafz": "^0.1.13"
   },
