@@ -8869,6 +8869,11 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
+vec-la@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/vec-la/-/vec-la-1.5.0.tgz#cfedcac1028dad156c373dbb87e114b072d05cd8"
+  integrity sha512-XKjE9qYtOgpAS1xRMTqeII7oFdolanVqrzl2KngiH8xiExCdWDLOYDwSLKHkmXadbU+JSP9Poy0v+xmYlkxUAg==
+
 verror@1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/verror/-/verror-1.10.0.tgz#3a105ca17053af55d6e270c1f8288682e18da400"
