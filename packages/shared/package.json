@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/shared",
-  "version": "9.1.1",
+  "version": "9.1.2",
   "description": "Globals and shared modules",
   "main": "src/index.ts",
   "scripts": {

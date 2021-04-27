@@ -17,11 +17,15 @@ const pages = [
 function Viewpager() {
   const index = useRef(0)
   const [ref, { width }] = useMeasure()
-  const [props, api] = useSprings(pages.length, i => ({
-    x: i * width,
-    scale: 1,
-    display: 'block',
-  }))
+  const [props, api] = useSprings(
+    pages.length,
+    i => ({
+      x: i * width,
+      scale: width === 0 ? 0 : 1,
+      display: 'block',
+    }),
+    [width]
+  )
   const bind = useDrag(({ active, movement: [mx], direction: [xDir], distance, cancel }) => {
     if (active && distance > width / 2) {
       index.current = clamp(index.current + (xDir > 0 ? -1 : 1), 0, pages.length - 1)
