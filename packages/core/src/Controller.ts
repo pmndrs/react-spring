@@ -204,7 +204,7 @@ export class Controller<State extends Lookup = Lookup> {
     }
     if (keys) {
       const springs = this.springs as Lookup<SpringValue>
-      each(toArray(keys), key => springs[key].stop(!!arg))
+      each(toArray(keys) as string[], key => springs[key].stop(!!arg))
     } else {
       stopAsync(this._state, this._lastAsyncId)
       this.each(spring => spring.stop(!!arg))
@@ -218,7 +218,7 @@ export class Controller<State extends Lookup = Lookup> {
       this.start({ pause: true })
     } else {
       const springs = this.springs as Lookup<SpringValue>
-      each(toArray(keys), key => springs[key].pause())
+      each(toArray(keys) as string[], key => springs[key].pause())
     }
     return this
   }
@@ -229,7 +229,7 @@ export class Controller<State extends Lookup = Lookup> {
       this.start({ pause: false })
     } else {
       const springs = this.springs as Lookup<SpringValue>
-      each(toArray(keys), key => springs[key].resume())
+      each(toArray(keys) as string[], key => springs[key].resume())
     }
     return this
   }
