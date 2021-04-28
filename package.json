@@ -44,7 +44,7 @@
     "test": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
-    "release": "yarn build && yarn changeset publish && git push --follow-tags",
+    "release": "yarn build && yarn changeset publish",
     "vers": "yarn changeset version"
   },
   "commitlint": {
