@@ -41,10 +41,11 @@ describe('useTransition', () => {
     const props = {
       ref,
     }
+    const children = [<div />, <div />, <div />]
 
-    update(true, props)
+    update(children, props)
 
-    expect(ref.current).toHaveLength(1)
+    expect(ref.current).toHaveLength(3)
   })
 
   describe('when "leave" is an array', () => {
