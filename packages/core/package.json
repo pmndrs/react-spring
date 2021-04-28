@@ -32,8 +32,7 @@
   "dependencies": {
     "@react-spring/animated": "~9.2.0-beta.0",
     "@react-spring/shared": "~9.2.0-beta.0",
-    "@react-spring/types": "~9.2.0-beta.0",
-    "react-layout-effect": "^1.0.1"
+    "@react-spring/types": "~9.2.0-beta.0"
   },
   "peerDependencies": {
     "react": ">=16.8"
