@@ -36,7 +36,7 @@ describe('useTransition', () => {
     expect(rendered).toEqual([false])
   })
 
-  it('assign controller to provided "ref"', async () => {
+  it('assign controllers to provided "ref"', async () => {
     const ref = new SpringRef()
     const props = {
       ref,
