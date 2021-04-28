@@ -129,6 +129,15 @@ describe('Interpolation', () => {
     expect(interpolation(1)).toBe('100deg')
   })
 
+  it('should interpolate between number and unit', () => {
+    const interpolation = createInterpolator({
+      range: [0, 1],
+      output: ['0', '100%'],
+    })
+
+    expect(interpolation(0.5)).toBe('50%')
+  })
+
   it('should support a mix of color patterns', () => {
     const interpolation = createInterpolator({
       range: [0, 1, 2],
