@@ -4,6 +4,7 @@ import { RenderResult, render } from '@testing-library/react'
 import { toArray } from '@react-spring/shared'
 import { TransitionFn, UseTransitionProps } from '../types'
 import { useTransition } from './useTransition'
+import { SpringRef } from '../SpringRef'
 
 describe('useTransition', () => {
   let transition: TransitionFn
@@ -33,6 +34,17 @@ describe('useTransition', () => {
 
     await global.advanceUntilIdle()
     expect(rendered).toEqual([false])
+  })
+
+  it('assign controller to provided "ref"', async () => {
+    const ref = new SpringRef()
+    const props = {
+      ref,
+    }
+
+    update(true, props)
+
+    expect(ref.current).toHaveLength(1)
   })
 
   describe('when "leave" is an array', () => {
