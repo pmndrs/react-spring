@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/shared",
-  "version": "9.2.0-beta.0",
+  "version": "9.2.0-beta.1",
   "description": "Globals and shared modules",
   "main": "dist/react-spring-shared.cjs.js",
   "module": "dist/react-spring-shared.esm.js",
