@@ -199,7 +199,6 @@ export function useTransition(
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
-      ref: props.ref,
       delay: (delay += trail),
       // This prevents implied resets.
       reset: false,
