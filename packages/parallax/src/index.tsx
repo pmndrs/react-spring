@@ -46,13 +46,26 @@ export interface ParallaxLayerProps extends ViewProps {
   offset?: number
   /** Shifts the layer in accordance to its offset, values can be positive or negative */
   speed?: number
+  /** Layer will be "sticky" until sticky offset is reached */
+  sticky?: number
 }
 
 export const ParallaxLayer = React.memo(
   React.forwardRef<IParallaxLayer, ParallaxLayerProps>(
-    ({ horizontal, factor = 1, offset = 0, speed = 0, ...rest }, ref) => {
+    (
+      { horizontal, factor = 1, offset = 0, speed = 0, sticky, ...rest },
+      ref
+    ) => {
       // Our parent controls our height and position.
       const parent = useContext<IParallax>(ParentContext)
+
+      const state = useMemoOne(
+        () => ({
+          horizontal: horizontal ?? parent.horizontal,
+          translate: 0,
+        }),
+        []
+      )
 
       // This is how we animate.
       const ctrl = useMemoOne(() => {
@@ -69,12 +82,26 @@ export const ParallaxLayer = React.memo(
       const layer = useMemoOne<IParallaxLayer>(
         () => ({
           setPosition(height, scrollTop, immediate = false) {
-            const targetScroll = Math.floor(offset) * height
-            const distance = height * offset + targetScroll * speed
+            if (sticky === undefined) {
+              const targetScroll = Math.floor(offset) * height
+              const distance = height * offset + targetScroll * speed
+              state.translate = -(scrollTop * speed) + distance
+            } else {
+              if (
+                parent.current > offset * height &&
+                parent.current < sticky * height
+              ) {
+                state.translate = parent.current
+              } else {
+                const stickyOffset =
+                  parent.current < offset * height ? offset : sticky
+                state.translate = stickyOffset * height
+              }
+            }
             ctrl.start({
-              translate: -(scrollTop * speed) + distance,
+              translate: state.translate,
               config: parent.config,
-              immediate,
+              immediate: sticky === undefined ? immediate : true,
             })
           },
           setHeight(height, immediate = false) {
@@ -102,12 +129,8 @@ export const ParallaxLayer = React.memo(
         }
       })
 
-      // Layer's horizontal defaults to parent's horizontal if not set.
-      const scrollHorizontal =
-        horizontal === undefined ? parent.horizontal : horizontal
-
       const translate3d = ctrl.springs.translate.to(
-        scrollHorizontal
+        state.horizontal
           ? x => `translate3d(${x}px,0,0)`
           : y => `translate3d(0,${y}px,0)`
       )
@@ -120,8 +143,8 @@ export const ParallaxLayer = React.memo(
             backgroundSize: 'auto',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
-            [scrollHorizontal ? 'height' : 'width']: '100%',
-            [scrollHorizontal ? 'width' : 'height']: ctrl.springs.space,
+            [state.horizontal ? 'height' : 'width']: '100%',
+            [state.horizontal ? 'width' : 'height']: ctrl.springs.space,
             WebkitTransform: translate3d,
             msTransform: translate3d,
             transform: translate3d,
