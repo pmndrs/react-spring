@@ -87,14 +87,11 @@ export const ParallaxLayer = React.memo(
               const distance = height * offset + targetScroll * speed
               state.translate = -(scrollTop * speed) + distance
             } else {
-              if (
-                parent.current > offset * height &&
-                parent.current < sticky * height
-              ) {
-                state.translate = parent.current
+              if (scrollTop > offset * height && scrollTop < sticky * height) {
+                state.translate = scrollTop
               } else {
                 const stickyOffset =
-                  parent.current < offset * height ? offset : sticky
+                  scrollTop < offset * height ? offset : sticky
                 state.translate = stickyOffset * height
               }
             }
