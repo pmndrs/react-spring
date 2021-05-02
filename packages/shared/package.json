@@ -33,6 +33,6 @@
     "rafz": "^0.1.13"
   },
   "peerDependencies": {
-    "react": ">=16.8"
+    "react": "^16.8.0  || ^17.0.0"
   }
 }

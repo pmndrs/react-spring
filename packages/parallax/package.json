@@ -31,6 +31,6 @@
     "@react-spring/web": "~9.2.0-beta.0"
   },
   "peerDependencies": {
-    "react": ">=16.8"
+    "react": "^16.8.0  || ^17.0.0"
   }
 }
