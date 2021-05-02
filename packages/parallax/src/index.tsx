@@ -46,8 +46,8 @@ export interface ParallaxLayerProps extends ViewProps {
   offset?: number
   /** Shifts the layer in accordance to its offset, values can be positive or negative */
   speed?: number
-  /** Layer will be "sticky" until sticky offset is reached */
-  sticky?: number
+  /** Layer will be "sticky" between these two offsets, all other props are ignored */
+  sticky?: { from: number; to: number }
 }
 
 export const ParallaxLayer = React.memo(
@@ -87,18 +87,18 @@ export const ParallaxLayer = React.memo(
               const distance = height * offset + targetScroll * speed
               state.translate = -(scrollTop * speed) + distance
             } else {
-              if (scrollTop > offset * height && scrollTop < sticky * height) {
+              const { from, to } = sticky
+              if (scrollTop > from * height && scrollTop < to * height) {
                 state.translate = scrollTop
               } else {
-                const stickyOffset =
-                  scrollTop < offset * height ? offset : sticky
+                const stickyOffset = scrollTop < from * height ? from : to
                 state.translate = stickyOffset * height
               }
             }
             ctrl.start({
               translate: state.translate,
-              config: parent.config,
-              immediate: sticky === undefined ? immediate : true,
+              config: sticky === undefined ? parent.config : { tension: 0 },
+              immediate: immediate,
             })
           },
           setHeight(height, immediate = false) {

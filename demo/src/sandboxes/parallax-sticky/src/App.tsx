@@ -28,7 +28,7 @@ export default function App() {
           <p>Scroll down</p>
         </ParallaxLayer>
 
-        <ParallaxLayer offset={1} sticky={3} speed={0} style={{ ...flexCenter }}>
+        <ParallaxLayer sticky={{ from: 1, to: 3 }} style={{ ...flexCenter }}>
           <div style={{ ...flexCenter, height: '10rem', width: '50%', backgroundColor: '#ff6d6d' }}>
             <p>Should be sticky</p>
           </div>
