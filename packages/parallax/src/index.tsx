@@ -19,7 +19,6 @@ const START_TRANSLATE = 'translate(0px,0px)'
 
 export interface IParallaxLayer {
   horizontal: boolean
-  translate: number
   setHeight(height: number, immediate?: boolean): void
   setPosition(height: number, scrollTop: number, immediate?: boolean): void
 }
@@ -63,12 +62,18 @@ export const ParallaxLayer = React.memo(
 
       // This is how we animate.
       const ctrl = useMemoOne(() => {
-        const targetScroll = Math.floor(offset) * parent.space
-        const distance = parent.space * offset + targetScroll * speed
+        let translate
+        if (sticky) {
+          translate = sticky.from * parent.space
+        } else {
+          const targetScroll = Math.floor(offset) * parent.space
+          const distance = parent.space * offset + targetScroll * speed
+          translate = -(parent.current * speed) + distance
+        }
         type Animated = { space: number; translate: number }
         return new Controller<Animated>({
           space: parent.space * factor,
-          translate: -(parent.current * speed) + distance,
+          translate,
         })
       }, [])
 
@@ -76,26 +81,24 @@ export const ParallaxLayer = React.memo(
       const layer = useMemoOne<IParallaxLayer>(
         () => ({
           horizontal: horizontal ?? parent.horizontal,
-          translate: 0,
           setPosition(height, scrollTop, immediate = false) {
-            if (!sticky) {
+            if (sticky) {
+              const { from, to } = sticky
+              if (scrollTop >= from * height && scrollTop <= to * height) {
+                ctrl.start({
+                  translate: scrollTop,
+                  config: { duration: 0 },
+                })
+              }
+            } else {
               const targetScroll = Math.floor(offset) * height
               const distance = height * offset + targetScroll * speed
-              layer.translate = -(scrollTop * speed) + distance
-            } else {
-              const { from, to } = sticky
-              if (scrollTop > from * height && scrollTop < to * height) {
-                layer.translate = scrollTop
-              } else {
-                const stickyOffset = scrollTop < from * height ? from : to
-                layer.translate = stickyOffset * height
-              }
+              ctrl.start({
+                translate: -(scrollTop * speed) + distance,
+                config: parent.config,
+                immediate: immediate,
+              })
             }
-            ctrl.start({
-              translate: layer.translate,
-              config: !sticky ? parent.config : { tension: 0 },
-              immediate: immediate,
-            })
           },
           setHeight(height, immediate = false) {
             ctrl.start({
