@@ -18,6 +18,8 @@ const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
 const START_TRANSLATE = 'translate(0px,0px)'
 
 export interface IParallaxLayer {
+  horizontal: boolean
+  translate: number
   setHeight(height: number, immediate?: boolean): void
   setPosition(height: number, scrollTop: number, immediate?: boolean): void
 }
@@ -59,14 +61,6 @@ export const ParallaxLayer = React.memo(
       // Our parent controls our height and position.
       const parent = useContext<IParallax>(ParentContext)
 
-      const state = useMemoOne(
-        () => ({
-          horizontal: horizontal ?? parent.horizontal,
-          translate: 0,
-        }),
-        []
-      )
-
       // This is how we animate.
       const ctrl = useMemoOne(() => {
         const targetScroll = Math.floor(offset) * parent.space
@@ -81,23 +75,25 @@ export const ParallaxLayer = React.memo(
       // Create the layer.
       const layer = useMemoOne<IParallaxLayer>(
         () => ({
+          horizontal: horizontal ?? parent.horizontal,
+          translate: 0,
           setPosition(height, scrollTop, immediate = false) {
-            if (sticky === undefined) {
+            if (!sticky) {
               const targetScroll = Math.floor(offset) * height
               const distance = height * offset + targetScroll * speed
-              state.translate = -(scrollTop * speed) + distance
+              layer.translate = -(scrollTop * speed) + distance
             } else {
               const { from, to } = sticky
               if (scrollTop > from * height && scrollTop < to * height) {
-                state.translate = scrollTop
+                layer.translate = scrollTop
               } else {
                 const stickyOffset = scrollTop < from * height ? from : to
-                state.translate = stickyOffset * height
+                layer.translate = stickyOffset * height
               }
             }
             ctrl.start({
-              translate: state.translate,
-              config: sticky === undefined ? parent.config : { tension: 0 },
+              translate: layer.translate,
+              config: !sticky ? parent.config : { tension: 0 },
               immediate: immediate,
             })
           },
@@ -127,7 +123,7 @@ export const ParallaxLayer = React.memo(
       })
 
       const translate3d = ctrl.springs.translate.to(
-        state.horizontal
+        layer.horizontal
           ? x => `translate3d(${x}px,0,0)`
           : y => `translate3d(0,${y}px,0)`
       )
@@ -140,8 +136,8 @@ export const ParallaxLayer = React.memo(
             backgroundSize: 'auto',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
-            [state.horizontal ? 'height' : 'width']: '100%',
-            [state.horizontal ? 'width' : 'height']: ctrl.springs.space,
+            [layer.horizontal ? 'height' : 'width']: '100%',
+            [layer.horizontal ? 'width' : 'height']: ctrl.springs.space,
             WebkitTransform: translate3d,
             msTransform: translate3d,
             transform: translate3d,
