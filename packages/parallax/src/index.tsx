@@ -19,6 +19,7 @@ const START_TRANSLATE = 'translate(0px,0px)'
 
 export interface IParallaxLayer {
   horizontal: boolean
+  isSticky: boolean
   setHeight(height: number, immediate?: boolean): void
   setPosition(height: number, scrollTop: number, immediate?: boolean): void
 }
@@ -81,15 +82,10 @@ export const ParallaxLayer = React.memo(
       const layer = useMemoOne<IParallaxLayer>(
         () => ({
           horizontal: horizontal ?? parent.horizontal,
+          isSticky: false,
           setPosition(height, scrollTop, immediate = false) {
             if (sticky) {
-              const { from, to } = sticky
-              if (scrollTop >= from * height && scrollTop <= to * height) {
-                ctrl.start({
-                  translate: scrollTop,
-                  config: { duration: 0 },
-                })
-              }
+              setSticky(height, scrollTop)
             } else {
               const targetScroll = Math.floor(offset) * height
               const distance = height * offset + targetScroll * speed
@@ -113,6 +109,29 @@ export const ParallaxLayer = React.memo(
 
       React.useImperativeHandle(ref, () => layer)
 
+      const layerRef = useRef<any>()
+
+      const setSticky = (height: number, scrollTop: number) => {
+        const ref = layerRef.current
+        if (!sticky || !ref) return
+
+        const { from, to } = sticky
+        const isSticky = scrollTop >= from * height && scrollTop <= to * height
+
+        if (isSticky === layer.isSticky) return
+        layer.isSticky = isSticky
+
+        ref.style.position = isSticky ? 'sticky' : 'absolute'
+        if (isSticky) {
+          ctrl.set({ translate: 0 })
+        } else {
+          const above = scrollTop < from * height
+          ctrl.set({
+            translate: above ? from * height : to * height,
+          })
+        }
+      }
+
       // Register the layer with our parent.
       useOnce(() => {
         if (parent) {
@@ -134,8 +153,10 @@ export const ParallaxLayer = React.memo(
       return (
         <a.div
           {...rest}
+          ref={layerRef}
           style={{
             position: 'absolute',
+            [layer.horizontal ? 'left' : 'top']: 0,
             backgroundSize: 'auto',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
@@ -296,7 +317,7 @@ export const Parallax = React.memo(
           <a.div
             ref={contentRef}
             style={{
-              overflow: 'hidden',
+              overflow: 'clip',
               position: 'absolute',
               [horizontal ? 'height' : 'width']: '100%',
               [horizontal ? 'width' : 'height']: state.space * pages,
