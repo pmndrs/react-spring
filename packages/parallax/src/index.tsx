@@ -311,7 +311,7 @@ export const Parallax = React.memo(
           <a.div
             ref={contentRef}
             style={{
-              overflow: 'clip',
+              overflow: 'hidden',
               position: 'absolute',
               [horizontal ? 'height' : 'width']: '100%',
               [horizontal ? 'width' : 'height']: state.space * pages,
@@ -321,9 +321,20 @@ export const Parallax = React.memo(
               ...props.innerStyle,
             }}>
             <ParentContext.Provider value={state}>
-              {rest.children}
+              {React.Children.map(
+                rest.children,
+                child => !(child as React.ReactElement).props.sticky && child
+              )}
             </ParentContext.Provider>
           </a.div>
+        )}
+        {ready && (
+          <ParentContext.Provider value={state}>
+            {React.Children.map(
+              rest.children,
+              child => (child as React.ReactElement).props.sticky && child
+            )}
+          </ParentContext.Provider>
         )}
       </a.div>
     )
