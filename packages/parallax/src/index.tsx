@@ -308,33 +308,33 @@ export const Parallax = React.memo(
           ...rest.style,
         }}>
         {ready && (
-          <a.div
-            ref={contentRef}
-            style={{
-              overflow: 'hidden',
-              position: 'absolute',
-              [horizontal ? 'height' : 'width']: '100%',
-              [horizontal ? 'width' : 'height']: state.space * pages,
-              WebkitTransform: START_TRANSLATE,
-              msTransform: START_TRANSLATE,
-              transform: START_TRANSLATE_3D,
-              ...props.innerStyle,
-            }}>
+          <>
+            <a.div
+              ref={contentRef}
+              style={{
+                overflow: 'hidden',
+                position: 'absolute',
+                [horizontal ? 'height' : 'width']: '100%',
+                [horizontal ? 'width' : 'height']: state.space * pages,
+                WebkitTransform: START_TRANSLATE,
+                msTransform: START_TRANSLATE,
+                transform: START_TRANSLATE_3D,
+                ...props.innerStyle,
+              }}>
+              <ParentContext.Provider value={state}>
+                {React.Children.map(
+                  rest.children,
+                  child => !(child as React.ReactElement).props.sticky && child
+                )}
+              </ParentContext.Provider>
+            </a.div>
             <ParentContext.Provider value={state}>
               {React.Children.map(
                 rest.children,
-                child => !(child as React.ReactElement).props.sticky && child
+                child => (child as React.ReactElement).props.sticky && child
               )}
             </ParentContext.Provider>
-          </a.div>
-        )}
-        {ready && (
-          <ParentContext.Provider value={state}>
-            {React.Children.map(
-              rest.children,
-              child => (child as React.ReactElement).props.sticky && child
-            )}
-          </ParentContext.Provider>
+          </>
         )}
       </a.div>
     )
