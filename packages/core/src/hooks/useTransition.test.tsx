@@ -128,6 +128,25 @@ describe('useTransition', () => {
     expect(ref.current).toHaveLength(3)
   })
 
+  it('returns a ref if the props argument is a function', () => {
+    let transRef: SpringRef | null = null
+    const update = createUpdater(({ args }) => {
+      const [transition, ref] = useTransition(...args)
+      rendered = transition((_, item) => item).props.children
+      transRef = ref
+      return null
+    })
+
+    update(true, () => ({
+      from: { n: 0 },
+      enter: { n: 1 },
+      leave: { n: 0 },
+    }))
+
+    expect(rendered).toEqual([true])
+
+    expect(transRef).toBeInstanceOf(SpringRef)
+  })
 })
 
 function createUpdater(
@@ -138,7 +157,7 @@ function createUpdater(
     result = undefined
   })
 
-  type Args = [any, UseTransitionProps, any[]?]
+  type Args = [any, UseTransitionProps | (() => UseTransitionProps), any[]?]
   return (...args: Args) => {
     const elem = <Component args={args} />
     if (result) result.rerender(elem)
