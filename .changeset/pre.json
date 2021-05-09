@@ -16,5 +16,10 @@
     "@react-spring/web": "9.1.2",
     "@react-spring/zdog": "9.1.2"
   },
-  "changesets": ["brave-oranges-develop"]
+  "changesets": [
+    "brave-oranges-develop",
+    "popular-brooms-wash",
+    "tidy-goats-itch",
+    "tricky-olives-chew"
+  ]
 }

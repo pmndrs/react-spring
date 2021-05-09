@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/konva",
-  "version": "9.2.0-beta.0",
+  "version": "9.2.0-beta.3",
   "main": "dist/react-spring-konva.cjs.js",
   "module": "dist/react-spring-konva.esm.js",
   "files": [
@@ -34,8 +34,8 @@
   },
   "peerDependencies": {
     "konva": ">=2.6",
-    "react": ">=16.8",
-    "react-konva": ">=16.8"
+    "react": "^16.8.0  || ^17.0.0",
+    "react-konva": "^16.8.0  || ^17.0.0"
   },
   "devDependencies": {
     "konva": "~2.6.0",

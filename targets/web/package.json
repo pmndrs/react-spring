@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/web",
-  "version": "9.2.0-beta.0",
+  "version": "9.2.0-beta.3",
   "main": "dist/react-spring-web.cjs.js",
   "module": "dist/react-spring-web.esm.js",
   "files": [
@@ -33,7 +33,7 @@
     "@react-spring/types": "~9.2.0-beta.0"
   },
   "peerDependencies": {
-    "react": ">=16.8",
-    "react-dom": ">=16.8"
+    "react": "^16.8.0  || ^17.0.0",
+    "react-dom": "^16.8.0  || ^17.0.0"
   }
 }

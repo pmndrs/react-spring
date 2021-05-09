@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/animated",
-  "version": "9.2.0-beta.0",
+  "version": "9.2.0-beta.3",
   "description": "Animated component props for React",
   "main": "dist/react-spring-animated.cjs.js",
   "module": "dist/react-spring-animated.esm.js",
@@ -32,6 +32,6 @@
     "@react-spring/types": "~9.2.0-beta.0"
   },
   "peerDependencies": {
-    "react": ">=16.8"
+    "react": "^16.8.0  || ^17.0.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/native",
-  "version": "9.2.0-beta.0",
+  "version": "9.2.0-beta.3",
   "main": "dist/react-spring-native.cjs.js",
   "module": "dist/react-spring-native.esm.js",
   "files": [
@@ -33,7 +33,7 @@
     "@react-spring/types": "~9.2.0-beta.0"
   },
   "peerDependencies": {
-    "react": ">=16.8",
+    "react": "^16.8.0  || ^17.0.0",
     "react-native": ">=0.58"
   },
   "devDependencies": {
