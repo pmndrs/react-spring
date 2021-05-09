@@ -29,7 +29,6 @@
   ],
   "dependencies": {
     "@react-spring/types": "~9.2.0-beta.0",
-    "fluids": "^0.2.2",
     "rafz": "^0.1.13"
   },
   "peerDependencies": {

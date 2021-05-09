@@ -4082,11 +4082,6 @@ find-yarn-workspace-root@^2.0.0:
   dependencies:
     micromatch "^4.0.2"
 
-fluids@^0.2.2:
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/fluids/-/fluids-0.2.8.tgz#96a0afe6f6db23a301e2022b0ec5e967be264ba6"
-  integrity sha512-60W1IZZaIm7OeNKhlyxNgCqEt0t89ds+RODxiWy6BVgaolK1eXFCamIEmxdAx8o83XtuH1haIl5QkOX2nff9wA==
-
 flush-microtasks@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/flush-microtasks/-/flush-microtasks-1.0.1.tgz#ed3cf034c71dc222c6a9054af650e2b5e9ba1c94"
@@ -7237,11 +7232,6 @@ react-konva@~16.8.0:
   dependencies:
     react-reconciler "^0.20.4"
     scheduler "^0.13.6"
-
-react-layout-effect@^1.0.1:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/react-layout-effect/-/react-layout-effect-1.0.5.tgz#0dc4e24452aee5de66c93c166f0ec512dfb1be80"
-  integrity sha512-zdRXHuch+OBHU6bvjTelOGUCM+UDr/iCY+c0wXLEAc+G4/FlcJruD/hUOzlKH5XgO90Y/BUJPNhI/g9kl+VAsA==
 
 react-merge-refs@^1.0.0, react-merge-refs@^1.1.0:
   version "1.1.0"
