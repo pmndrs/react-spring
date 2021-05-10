@@ -191,6 +191,9 @@ export function useTransition(
 
     let to: TransitionTo<any>
     let phase: TransitionPhase
+
+    let propsDelay = callProp(p.delay || 0, key)
+
     if (prevPhase == TransitionPhase.MOUNT) {
       to = p.enter
       phase = TransitionPhase.ENTER
@@ -214,16 +217,30 @@ export function useTransition(
     to = callProp(to, t.item, i)
     to = is.obj(to) ? inferTo(to) : { to }
 
+    /**
+     * This would allow us to give different delays for phases.
+     * If we were to do this, we'd have to suffle the prop
+     * spreading below to set delay last.
+     * But if we were going to do that, we should consider letting
+     * the prop trail also be part of a phase.
+     */
+    // if (to.delay) {
+    //   phaseDelay = callProp(to.delay, key)
+    // }
+
     if (!to.config) {
       const config = propsConfig || defaultProps.config
       to.config = callProp(config, t.item, i, phase)
     }
 
+    delay += trail
+
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
+      // we need to add our props.delay value you here.
+      delay: propsDelay + delay,
       ref: propsRef,
-      delay: (delay += trail),
       // This prevents implied resets.
       reset: false,
       // Merge any phase-specific props.
