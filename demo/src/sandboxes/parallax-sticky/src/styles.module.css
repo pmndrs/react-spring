@@ -1,0 +1,54 @@
+.background {
+  background: linear-gradient(#e66465, #9198e5);
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.scrollText {
+  font-size: 1.5rem;
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.25rem;
+  height: 10rem;
+  width: 25%;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.parallax {
+  margin-right: 15%;
+}
+
+.sticky {
+  margin-left: 15%;
+  background-color: #ff6d6d;
+}
+
+.blue {
+  background-color: #5b65ad;
+  color: white;
+}
+
+.purple {
+  background-color: #9d65d0;
+}
+
+@media (max-width: 750px) {
+  .card {
+    width: 40%;
+  }
+
+  .parallax {
+    margin-right: 1.5rem;
+  }
+
+  .sticky {
+    margin-left: 1.5rem;
+  }
+}
