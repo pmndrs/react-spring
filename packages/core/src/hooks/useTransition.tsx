@@ -40,6 +40,16 @@ declare function clearTimeout(timeoutId: number): void
 
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
+  props: () =>
+    | UseTransitionProps<Item>
+    | (Props & Valid<Props, UseTransitionProps<Item>>),
+  deps?: any[]
+): PickAnimated<Props> extends infer State
+  ? [TransitionFn<Item, PickAnimated<Props>>, SpringRef<State>]
+  : never
+
+export function useTransition<Item, Props extends object>(
+  data: OneOrMore<Item>,
   props:
     | UseTransitionProps<Item>
     | (Props & Valid<Props, UseTransitionProps<Item>>)
@@ -57,14 +67,24 @@ export function useTransition<Item, Props extends object>(
 
 export function useTransition(
   data: unknown,
-  props: UseTransitionProps,
+  props: UseTransitionProps | (() => any),
   deps?: any[]
 ): any {
-  const { reset, sort, trail = 0, expires = true, onDestroyed } = props
+  const propsFn = is.fun(props) && props
+
+  const {
+    reset,
+    sort,
+    trail = 0,
+    expires = true,
+    onDestroyed,
+    ref: propsRef,
+    config: propsConfig,
+  }: UseTransitionProps<any> = propsFn ? propsFn() : props
 
   // Return a `SpringRef` if a deps array was passed.
   const ref = useMemo(
-    () => (arguments.length == 3 ? new SpringRef() : void 0),
+    () => (propsFn || arguments.length == 3 ? new SpringRef() : void 0),
     []
   )
 
@@ -94,7 +114,7 @@ export function useTransition(
   // The `key` prop can be undefined (which means the items themselves are used
   // as keys), or a function (which maps each item to its key), or an array of
   // keys (which are assigned to each item by index).
-  const keys = getKeys(items, props, prevTransitions)
+  const keys = getKeys(items, propsFn ? propsFn() : props, prevTransitions)
 
   // Expired transitions that need clean up.
   const expired = (reset && usedTransitions.current) || []
@@ -137,12 +157,13 @@ export function useTransition(
   // and ensure leaving transitions are rendered until they finish.
   if (reused.length) {
     let i = -1
+    const { leave }: UseTransitionProps<any> = propsFn ? propsFn() : props
     each(reused, (keyIndex, prevIndex) => {
       const t = prevTransitions![prevIndex]
       if (~keyIndex) {
         i = transitions.indexOf(t)
         transitions[i] = { ...t, item: items[keyIndex] }
-      } else if (props.leave) {
+      } else if (leave) {
         transitions.splice(++i, 0, t)
       }
     })
@@ -166,22 +187,24 @@ export function useTransition(
     const key = t.key
     const prevPhase = t.phase
 
+    const p: UseTransitionProps<any> = propsFn ? propsFn() : props
+
     let to: TransitionTo<any>
     let phase: TransitionPhase
     if (prevPhase == TransitionPhase.MOUNT) {
-      to = props.enter
+      to = p.enter
       phase = TransitionPhase.ENTER
     } else {
       const isLeave = keys.indexOf(key) < 0
       if (prevPhase != TransitionPhase.LEAVE) {
         if (isLeave) {
-          to = props.leave
+          to = p.leave
           phase = TransitionPhase.LEAVE
-        } else if ((to = props.update)) {
+        } else if ((to = p.update)) {
           phase = TransitionPhase.UPDATE
         } else return
       } else if (!isLeave) {
-        to = props.enter
+        to = p.enter
         phase = TransitionPhase.ENTER
       } else return
     }
@@ -192,13 +215,14 @@ export function useTransition(
     to = is.obj(to) ? inferTo(to) : { to }
 
     if (!to.config) {
-      const config = props.config || defaultProps.config
+      const config = propsConfig || defaultProps.config
       to.config = callProp(config, t.item, i, phase)
     }
 
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
+      ref: propsRef,
       delay: (delay += trail),
       // This prevents implied resets.
       reset: false,
@@ -207,11 +231,11 @@ export function useTransition(
     }
 
     if (phase == TransitionPhase.ENTER && is.und(payload.from)) {
+      const p = propsFn ? propsFn() : props
       // The `initial` prop is used on the first render of our parent component,
       // as well as when `reset: true` is passed. It overrides the `from` prop
       // when defined, and it makes `enter` instant when null.
-      const from =
-        is.und(props.initial) || prevTransitions ? props.from : props.initial
+      const from = is.und(p.initial) || prevTransitions ? p.from : p.initial
 
       payload.from = callProp(from, t.item, i)
     }
@@ -284,22 +308,29 @@ export function useTransition(
         const { ctrl } = t
         t.phase = phase
 
-        // Attach the controller to our local ref.
-        ref?.add(ctrl)
-
-        // Update the injected ref if needed.
-        replaceRef(ctrl, payload.ref)
-
         // Save any springs created this render.
         setSprings(ctrl, springs)
+
+        // Attach the controller to our local ref.
+        ref?.add(ctrl)
 
         // Merge the context into new items.
         if (hasContext && phase == TransitionPhase.ENTER) {
           ctrl.start({ default: context })
         }
 
-        // Postpone the update if an injected ref exists.
-        ctrl[ctrl.ref ? 'update' : 'start'](payload)
+        if (payload) {
+          // Update the injected ref if needed.
+          replaceRef(ctrl, payload.ref)
+
+          // When an injected ref exists, the update is postponed
+          // until the ref has its `start` method called.
+          if (ctrl.ref) {
+            ctrl.update(payload)
+          } else {
+            ctrl.start(payload)
+          }
+        }
       })
     },
     reset ? void 0 : deps
