@@ -21,7 +21,10 @@ export class SpringRef<State extends Lookup = Lookup> extends Function {
   readonly current: Controller<State>[] = []
 
   constructor() {
-    super('return arguments.callee._call.apply(arguments.callee, arguments)')
+    super()
+    return new Proxy(this, {
+      apply: (target, thisArg, args) => target._call(...args),
+    })
   }
 
   /** @deprecated use the property 'start' instead */
