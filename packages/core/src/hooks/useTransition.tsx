@@ -191,7 +191,9 @@ export function useTransition(
 
     let to: TransitionTo<any>
     let phase: TransitionPhase
-    let propsDelay = callProp(props.delay || 0, key)
+
+    let propsDelay = callProp(p.delay || 0, key)
+
     if (prevPhase == TransitionPhase.MOUNT) {
       to = p.enter
       phase = TransitionPhase.ENTER
