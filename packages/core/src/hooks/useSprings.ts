@@ -25,7 +25,7 @@ import {
 } from '../Controller'
 import { hasProps, detachRefs, replaceRef } from '../helpers'
 import { SpringContext } from '../SpringContext'
-import { SpringRef } from '../SpringRef'
+import { SpringRef, CallableSpringRef } from '../SpringRef'
 
 export type UseSpringsProps<State extends Lookup = Lookup> = unknown &
   ControllerUpdate<State> & {
@@ -76,7 +76,7 @@ export function useSprings(
 
   // Create a local ref if a props function or deps array is ever passed.
   const ref = useMemo(
-    () => (propsFn || arguments.length == 3 ? new SpringRef() : void 0),
+    () => (propsFn || arguments.length == 3 ? CallableSpringRef() : void 0),
     []
   )
 

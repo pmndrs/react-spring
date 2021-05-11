@@ -32,7 +32,7 @@ import {
 } from '../helpers'
 import { Controller, getSprings, setSprings } from '../Controller'
 import { SpringContext } from '../SpringContext'
-import { SpringRef } from '../SpringRef'
+import { SpringRef, CallableSpringRef } from '../SpringRef'
 import { TransitionPhase } from '../TransitionPhase'
 
 declare function setTimeout(handler: Function, timeout?: number): number
@@ -84,7 +84,7 @@ export function useTransition(
 
   // Return a `SpringRef` if a deps array was passed.
   const ref = useMemo(
-    () => (propsFn || arguments.length == 3 ? new SpringRef() : void 0),
+    () => (propsFn || arguments.length == 3 ? CallableSpringRef() : void 0),
     []
   )
 

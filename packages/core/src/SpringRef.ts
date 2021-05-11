@@ -7,31 +7,8 @@ interface ControllerUpdateFn<State extends Lookup = Lookup> {
   (i: number, ctrl: Controller<State>): ControllerUpdate<State> | Falsy
 }
 
-/**
- * Extending from function allows SpringRef instances to be callable.
- * https://hackernoon.com/creating-callable-objects-in-javascript-d21l3te1
- *
- * ```js
- * const [springs, api] = useSpring(() => ({x: 0}))
- * api.start({x: 3}) // this works
- * api({x: 3}) // this also works (non breaking from 9rc3)
- * ```
- */
-export class SpringRef<State extends Lookup = Lookup> extends Function {
+export class SpringRef<State extends Lookup = Lookup> {
   readonly current: Controller<State>[] = []
-
-  constructor() {
-    super()
-    return new Proxy(this, {
-      apply: (target, thisArg, args) => target._call(...args),
-    })
-  }
-
-  /** @deprecated use the property 'start' instead */
-  _call(props?: ControllerUpdate<State> | ControllerUpdateFn<State>) {
-    deprecateDirectCall()
-    this.start(props)
-  }
 
   /** Update the state of each controller without animating. */
   set(values: Partial<State>) {
@@ -133,9 +110,32 @@ export interface SpringRef<State extends Lookup> {
   resume(keys?: OneOrMore<string>): this
 }
 
+/**
+ * TODO(tree-shaking): this is probably a cause for concern
+ * It could just be written in.
+ */
 each(['stop', 'pause', 'resume'] as const, key => {
   SpringRef.prototype[key] = function (this: SpringRef) {
     each(this.current, ctrl => ctrl[key](...arguments))
     return this
   } as any
 })
+
+export function CallableSpringRef() {
+  const ref = new SpringRef()
+
+  // @ts-ignore
+  const call: SpringRef = (...args) => {
+    deprecateDirectCall()
+    ref.start(...args)
+  }
+
+  Object.getOwnPropertyNames(Object.getPrototypeOf(ref)).forEach(key => {
+    // @ts-expect-error
+    call.current = ref.current
+    // @ts-expect-error
+    call[key] = ref[key]
+  })
+
+  return call
+}
