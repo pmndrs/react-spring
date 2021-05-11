@@ -74,7 +74,11 @@ describe('useSpring', () => {
     })
     it('returns a ref', () => {
       update({ x: 0 }, [1])
-      expect(ref).toBeInstanceOf(SpringRef)
+      /**
+       * this should be reinstanted once we have removed CallableSpringRef
+       */
+      // expect(ref).toBeInstanceOf(SpringRef)
+      expect(ref).toHaveProperty('start')
     })
   })
 
@@ -88,7 +92,11 @@ describe('useSpring', () => {
     })
     it('returns a ref', () => {
       update(() => ({ x: 0 }))
-      expect(ref).toBeInstanceOf(SpringRef)
+      /**
+       * this should be reinstanted once we have removed CallableSpringRef
+       */
+      // expect(ref).toBeInstanceOf(SpringRef)
+      expect(ref).toHaveProperty('start')
     })
   })
 
@@ -105,7 +113,11 @@ describe('useSpring', () => {
     })
     it('returns a ref', () => {
       update(() => ({ x: 0 }), [1])
-      expect(ref).toBeInstanceOf(SpringRef)
+      /**
+       * this should be reinstanted once we have removed CallableSpringRef
+       */
+      // expect(ref).toBeInstanceOf(SpringRef)
+      expect(ref).toHaveProperty('start')
     })
   })
 })

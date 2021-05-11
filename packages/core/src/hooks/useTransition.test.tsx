@@ -145,7 +145,11 @@ describe('useTransition', () => {
 
     expect(rendered).toEqual([true])
 
-    expect(transRef).toBeInstanceOf(SpringRef)
+    /**
+     * this should be reinstanted once we have removed CallableSpringRef
+     */
+    // expect(transRef).toHaveProperty(SpringRef)
+    expect(transRef).toHaveProperty('start')
   })
 })
 
