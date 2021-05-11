@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/animated",
-  "version": "9.2.0-beta.4",
+  "version": "9.2.0-beta.5",
   "description": "Animated component props for React",
   "main": "dist/react-spring-animated.cjs.js",
   "module": "dist/react-spring-animated.esm.js",
