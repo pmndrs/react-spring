@@ -73,7 +73,7 @@ export const ParallaxLayer = React.memo(
         }
         type Animated = { space: number; translate: number }
         return new Controller<Animated>({
-          space: parent.space * factor,
+          space: sticky ? parent.space : parent.space * factor,
           translate,
         })
       }, [])
@@ -81,7 +81,8 @@ export const ParallaxLayer = React.memo(
       // Create the layer.
       const layer = useMemoOne<IParallaxLayer>(
         () => ({
-          horizontal: horizontal ?? parent.horizontal,
+          horizontal:
+            horizontal === undefined || sticky ? parent.horizontal : horizontal,
           isSticky: false,
           setPosition(height, scrollTop, immediate = false) {
             if (sticky) {
@@ -92,13 +93,13 @@ export const ParallaxLayer = React.memo(
               ctrl.start({
                 translate: -(scrollTop * speed) + distance,
                 config: parent.config,
-                immediate: immediate,
+                immediate,
               })
             }
           },
           setHeight(height, immediate = false) {
             ctrl.start({
-              space: height * factor,
+              space: sticky ? height : height * factor,
               config: parent.config,
               immediate,
             })
