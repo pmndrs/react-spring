@@ -187,10 +187,6 @@ export function useSprings(
     })
 
     // Update existing controllers.
-    each(ctrls, (ctrl, i) => {
-      const values = springs[i]
-      setSprings(ctrl, values)
-
     each(ctrls.current, (ctrl, i) => {
       // Attach the controller to the local ref.
       ref?.add(ctrl)

@@ -30,7 +30,7 @@ import {
   inferTo,
   replaceRef,
 } from '../helpers'
-import { Controller, getSprings, setSprings } from '../Controller'
+import { Controller, getSprings } from '../Controller'
 import { SpringContext } from '../SpringContext'
 import { SpringRef } from '../SpringRef'
 import { TransitionPhase } from '../TransitionPhase'
@@ -321,12 +321,9 @@ export function useTransition(
 
   useLayoutEffect(
     () => {
-      each(changes, ({ phase, springs, payload }, t) => {
+      each(changes, ({ phase, payload }, t) => {
         const { ctrl } = t
         t.phase = phase
-
-        // Save any springs created this render.
-        setSprings(ctrl, springs)
 
         // Attach the controller to our local ref.
         ref?.add(ctrl)
