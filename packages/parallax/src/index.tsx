@@ -189,6 +189,7 @@ export const Parallax = React.memo(
       config = configs.slow,
       enabled = true,
       horizontal = false,
+      children,
       ...rest
     } = props
 
@@ -324,15 +325,15 @@ export const Parallax = React.memo(
               }}>
               <ParentContext.Provider value={state}>
                 {React.Children.map(
-                  rest.children,
-                  child => !(child as React.ReactElement).props.sticky && child
+                  children,
+                  (child: any) => !child.props.sticky && child
                 )}
               </ParentContext.Provider>
             </a.div>
             <ParentContext.Provider value={state}>
               {React.Children.map(
-                rest.children,
-                child => (child as React.ReactElement).props.sticky && child
+                children,
+                (child: any) => child.props.sticky && child
               )}
             </ParentContext.Provider>
           </>
