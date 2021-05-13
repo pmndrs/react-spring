@@ -13,7 +13,7 @@ export default function App() {
           <p className={styles.scrollText}>Scroll down</p>
         </ParallaxLayer>
 
-        <ParallaxLayer sticky={{ from: 1, to: 3 }} style={{ ...alignCenter, justifyContent: 'flex-start' }}>
+        <ParallaxLayer sticky={{ start: 1, end: 3 }} style={{ ...alignCenter, justifyContent: 'flex-start' }}>
           <div className={`${styles.card} ${styles.sticky}`}>
             <p>I'm a sticky layer</p>
           </div>

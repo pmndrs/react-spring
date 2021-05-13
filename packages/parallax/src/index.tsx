@@ -19,6 +19,7 @@ const START_TRANSLATE = 'translate(0px,0px)'
 
 export interface IParallaxLayer {
   horizontal: boolean
+  sticky: StickyConfig
   isSticky: boolean
   setHeight(height: number, immediate?: boolean): void
   setPosition(height: number, scrollTop: number, immediate?: boolean): void
@@ -40,6 +41,8 @@ export interface IParallax {
 
 type ViewProps = React.ComponentPropsWithoutRef<'div'>
 
+type StickyConfig = { start?: number; end?: number } | undefined
+
 export interface ParallaxLayerProps extends ViewProps {
   horizontal?: boolean
   /** Size of a page, (1=100%, 1.5=1 and 1/2, ...) */
@@ -49,7 +52,7 @@ export interface ParallaxLayerProps extends ViewProps {
   /** Shifts the layer in accordance to its offset, values can be positive or negative */
   speed?: number
   /** Layer will be sticky between these two offsets, all other props are ignored */
-  sticky?: { from: number; to: number }
+  sticky?: StickyConfig
 }
 
 export const ParallaxLayer = React.memo(
@@ -65,7 +68,8 @@ export const ParallaxLayer = React.memo(
       const ctrl = useMemoOne(() => {
         let translate
         if (sticky) {
-          translate = sticky.from * parent.space
+          const start = sticky.start || 0
+          translate = start * parent.space
         } else {
           const targetScroll = Math.floor(offset) * parent.space
           const distance = parent.space * offset + targetScroll * speed
@@ -83,6 +87,7 @@ export const ParallaxLayer = React.memo(
         () => ({
           horizontal:
             horizontal === undefined || sticky ? parent.horizontal : horizontal,
+          sticky: undefined,
           isSticky: false,
           setPosition(height, scrollTop, immediate = false) {
             if (sticky) {
@@ -108,14 +113,22 @@ export const ParallaxLayer = React.memo(
         []
       )
 
+      useOnce(() => {
+        if (sticky) {
+          const start = sticky.start || 0
+          const end = sticky.end || start + 1
+          layer.sticky = { start, end }
+        }
+      })
+
       React.useImperativeHandle(ref, () => layer)
 
       const layerRef = useRef<any>()
 
       const setSticky = (height: number, scrollTop: number) => {
-        const from = sticky!.from * height
-        const to = sticky!.to * height
-        const isSticky = scrollTop >= from && scrollTop <= to
+        const start = layer.sticky!.start! * height
+        const end = layer.sticky!.end! * height
+        const isSticky = scrollTop >= start && scrollTop <= end
 
         if (isSticky === layer.isSticky) return
         layer.isSticky = isSticky
@@ -123,7 +136,7 @@ export const ParallaxLayer = React.memo(
         const ref = layerRef.current
         ref.style.position = isSticky ? 'sticky' : 'absolute'
         ctrl.set({
-          translate: isSticky ? 0 : scrollTop < from ? from : to,
+          translate: isSticky ? 0 : scrollTop < start ? start : end,
         })
       }
 
