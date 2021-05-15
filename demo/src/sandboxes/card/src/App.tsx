@@ -44,17 +44,17 @@ export default function App() {
   useGesture(
     {
       onDrag: ({ active, offset: [x, y] }) =>
-        api.start({ x, y, rotateX: 0, rotateY: 0, scale: active ? 1 : 1.1 }),
-      onPinch: ({ offset: [d, a] }) => api.start({ zoom: d / 200, rotateZ: a }),
+        api({ x, y, rotateX: 0, rotateY: 0, scale: active ? 1 : 1.1 }),
+      onPinch: ({ offset: [d, a] }) => api({ zoom: d / 200, rotateZ: a }),
       onMove: ({ xy: [px, py], dragging }) =>
         !dragging &&
-        api.start({
+        api({
           rotateX: calcX(py, y.get()),
           rotateY: calcY(px, x.get()),
           scale: 1.1,
         }),
       onHover: ({ hovering }) =>
-        !hovering && api.start({ rotateX: 0, rotateY: 0, scale: 1 }),
+        !hovering && api({ rotateX: 0, rotateY: 0, scale: 1 }),
       onWheel: ({ event, offset: [, y] }) => {
         event.preventDefault()
         wheelApi.set({ wheelY: y })
