@@ -126,6 +126,8 @@ describe('useTransition', () => {
     update(children, props)
 
     expect(ref.current).toHaveLength(3)
+
+    testIsRef(ref)
   })
 
   it('returns a ref if the props argument is a function', () => {
@@ -145,11 +147,7 @@ describe('useTransition', () => {
 
     expect(rendered).toEqual([true])
 
-    /**
-     * this should be reinstanted once we have removed CallableSpringRef
-     */
-    // expect(transRef).toHaveProperty(SpringRef)
-    expect(transRef).toHaveProperty('start')
+    testIsRef(transRef)
   })
 })
 
@@ -168,4 +166,19 @@ function createUpdater(
     else result = render(elem)
     return result
   }
+}
+
+function testIsRef(ref: SpringRef | null) {
+  const props = [
+    'add',
+    'delete',
+    'pause',
+    'resume',
+    'set',
+    'start',
+    'stop',
+    'update',
+    '_getProps',
+  ]
+  props.forEach(prop => expect(ref).toHaveProperty(prop))
 }
