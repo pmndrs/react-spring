@@ -117,7 +117,7 @@ describe('useTransition', () => {
   })
 
   it('assign controllers to provided "ref"', async () => {
-    const ref = new SpringRef()
+    const ref = SpringRef()
     const props = {
       ref,
     }

@@ -147,7 +147,7 @@ test('imperative mode', () => {
 });
 
 test('spring refs', () => {
-  const ref = new SpringRef();
+  const ref = SpringRef();
   useSpring({ foo: 1, ref });
   ref.start();
   ref.stop(['foo', 'bar']);
