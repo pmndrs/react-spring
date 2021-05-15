@@ -74,11 +74,7 @@ describe('useSpring', () => {
     })
     it('returns a ref', () => {
       update({ x: 0 }, [1])
-      /**
-       * this should be reinstanted once we have removed CallableSpringRef
-       */
-      // expect(ref).toBeInstanceOf(SpringRef)
-      expect(ref).toHaveProperty('start')
+      testIsRef(ref)
     })
   })
 
@@ -92,11 +88,7 @@ describe('useSpring', () => {
     })
     it('returns a ref', () => {
       update(() => ({ x: 0 }))
-      /**
-       * this should be reinstanted once we have removed CallableSpringRef
-       */
-      // expect(ref).toBeInstanceOf(SpringRef)
-      expect(ref).toHaveProperty('start')
+      testIsRef(ref)
     })
   })
 
@@ -113,11 +105,7 @@ describe('useSpring', () => {
     })
     it('returns a ref', () => {
       update(() => ({ x: 0 }), [1])
-      /**
-       * this should be reinstanted once we have removed CallableSpringRef
-       */
-      // expect(ref).toBeInstanceOf(SpringRef)
-      expect(ref).toHaveProperty('start')
+      testIsRef(ref)
     })
   })
 })
@@ -163,4 +151,19 @@ function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {
     renderWithContext((prevElem = <Component args={args} />))
 
   return [update, context] as const
+}
+
+function testIsRef(ref: SpringRef | null) {
+  const props = [
+    'add',
+    'delete',
+    'pause',
+    'resume',
+    'set',
+    'start',
+    'stop',
+    'update',
+    '_getProps',
+  ]
+  props.forEach(prop => expect(ref).toHaveProperty(prop))
 }
