@@ -18,6 +18,9 @@ const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
 const START_TRANSLATE = 'translate(0px,0px)'
 
 export interface IParallaxLayer {
+  horizontal: boolean
+  sticky: StickyConfig
+  isSticky: boolean
   setHeight(height: number, immediate?: boolean): void
   setPosition(height: number, scrollTop: number, immediate?: boolean): void
 }
@@ -38,6 +41,8 @@ export interface IParallax {
 
 type ViewProps = React.ComponentPropsWithoutRef<'div'>
 
+type StickyConfig = { start?: number; end?: number } | undefined
+
 export interface ParallaxLayerProps extends ViewProps {
   horizontal?: boolean
   /** Size of a page, (1=100%, 1.5=1 and 1/2, ...) */
@@ -46,40 +51,60 @@ export interface ParallaxLayerProps extends ViewProps {
   offset?: number
   /** Shifts the layer in accordance to its offset, values can be positive or negative */
   speed?: number
+  /** Layer will be sticky between these two offsets, all other props are ignored */
+  sticky?: StickyConfig
 }
 
 export const ParallaxLayer = React.memo(
   React.forwardRef<IParallaxLayer, ParallaxLayerProps>(
-    ({ horizontal, factor = 1, offset = 0, speed = 0, ...rest }, ref) => {
+    (
+      { horizontal, factor = 1, offset = 0, speed = 0, sticky, ...rest },
+      ref
+    ) => {
       // Our parent controls our height and position.
       const parent = useContext<IParallax>(ParentContext)
 
       // This is how we animate.
       const ctrl = useMemoOne(() => {
-        const targetScroll = Math.floor(offset) * parent.space
-        const distance = parent.space * offset + targetScroll * speed
+        let translate
+        if (sticky) {
+          const start = sticky.start || 0
+          translate = start * parent.space
+        } else {
+          const targetScroll = Math.floor(offset) * parent.space
+          const distance = parent.space * offset + targetScroll * speed
+          translate = -(parent.current * speed) + distance
+        }
         type Animated = { space: number; translate: number }
         return new Controller<Animated>({
-          space: parent.space * factor,
-          translate: -(parent.current * speed) + distance,
+          space: sticky ? parent.space : parent.space * factor,
+          translate,
         })
       }, [])
 
       // Create the layer.
       const layer = useMemoOne<IParallaxLayer>(
         () => ({
+          horizontal:
+            horizontal === undefined || sticky ? parent.horizontal : horizontal,
+          sticky: undefined,
+          isSticky: false,
           setPosition(height, scrollTop, immediate = false) {
-            const targetScroll = Math.floor(offset) * height
-            const distance = height * offset + targetScroll * speed
-            ctrl.start({
-              translate: -(scrollTop * speed) + distance,
-              config: parent.config,
-              immediate,
-            })
+            if (sticky) {
+              setSticky(height, scrollTop)
+            } else {
+              const targetScroll = Math.floor(offset) * height
+              const distance = height * offset + targetScroll * speed
+              ctrl.start({
+                translate: -(scrollTop * speed) + distance,
+                config: parent.config,
+                immediate,
+              })
+            }
           },
           setHeight(height, immediate = false) {
             ctrl.start({
-              space: height * factor,
+              space: sticky ? height : height * factor,
               config: parent.config,
               immediate,
             })
@@ -88,7 +113,32 @@ export const ParallaxLayer = React.memo(
         []
       )
 
+      useOnce(() => {
+        if (sticky) {
+          const start = sticky.start || 0
+          const end = sticky.end || start + 1
+          layer.sticky = { start, end }
+        }
+      })
+
       React.useImperativeHandle(ref, () => layer)
+
+      const layerRef = useRef<any>()
+
+      const setSticky = (height: number, scrollTop: number) => {
+        const start = layer.sticky!.start! * height
+        const end = layer.sticky!.end! * height
+        const isSticky = scrollTop >= start && scrollTop <= end
+
+        if (isSticky === layer.isSticky) return
+        layer.isSticky = isSticky
+
+        const ref = layerRef.current
+        ref.style.position = isSticky ? 'sticky' : 'absolute'
+        ctrl.set({
+          translate: isSticky ? 0 : scrollTop < start ? start : end,
+        })
+      }
 
       // Register the layer with our parent.
       useOnce(() => {
@@ -102,12 +152,8 @@ export const ParallaxLayer = React.memo(
         }
       })
 
-      // Layer's horizontal defaults to parent's horizontal if not set.
-      const scrollHorizontal =
-        horizontal === undefined ? parent.horizontal : horizontal
-
       const translate3d = ctrl.springs.translate.to(
-        scrollHorizontal
+        layer.horizontal
           ? x => `translate3d(${x}px,0,0)`
           : y => `translate3d(0,${y}px,0)`
       )
@@ -115,13 +161,15 @@ export const ParallaxLayer = React.memo(
       return (
         <a.div
           {...rest}
+          ref={layerRef}
           style={{
             position: 'absolute',
+            [layer.horizontal ? 'left' : 'top']: 0,
             backgroundSize: 'auto',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
-            [scrollHorizontal ? 'height' : 'width']: '100%',
-            [scrollHorizontal ? 'width' : 'height']: ctrl.springs.space,
+            [layer.horizontal ? 'height' : 'width']: '100%',
+            [layer.horizontal ? 'width' : 'height']: ctrl.springs.space,
             WebkitTransform: translate3d,
             msTransform: translate3d,
             transform: translate3d,
@@ -154,6 +202,7 @@ export const Parallax = React.memo(
       config = configs.slow,
       enabled = true,
       horizontal = false,
+      children,
       ...rest
     } = props
 
@@ -274,22 +323,33 @@ export const Parallax = React.memo(
           ...rest.style,
         }}>
         {ready && (
-          <a.div
-            ref={contentRef}
-            style={{
-              overflow: 'hidden',
-              position: 'absolute',
-              [horizontal ? 'height' : 'width']: '100%',
-              [horizontal ? 'width' : 'height']: state.space * pages,
-              WebkitTransform: START_TRANSLATE,
-              msTransform: START_TRANSLATE,
-              transform: START_TRANSLATE_3D,
-              ...props.innerStyle,
-            }}>
+          <>
+            <a.div
+              ref={contentRef}
+              style={{
+                overflow: 'hidden',
+                position: 'absolute',
+                [horizontal ? 'height' : 'width']: '100%',
+                [horizontal ? 'width' : 'height']: state.space * pages,
+                WebkitTransform: START_TRANSLATE,
+                msTransform: START_TRANSLATE,
+                transform: START_TRANSLATE_3D,
+                ...props.innerStyle,
+              }}>
+              <ParentContext.Provider value={state}>
+                {React.Children.map(
+                  children,
+                  (child: any) => !child.props.sticky && child
+                )}
+              </ParentContext.Provider>
+            </a.div>
             <ParentContext.Provider value={state}>
-              {rest.children}
+              {React.Children.map(
+                children,
+                (child: any) => child.props.sticky && child
+              )}
             </ParentContext.Provider>
-          </a.div>
+          </>
         )}
       </a.div>
     )
