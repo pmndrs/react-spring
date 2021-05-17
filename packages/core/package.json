@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/core",
-  "version": "9.2.0-beta.5",
+  "version": "9.2.0-beta.6",
   "main": "dist/react-spring-core.cjs.js",
   "module": "dist/react-spring-core.esm.js",
   "files": [
@@ -30,9 +30,9 @@
     "postinstall": "node -e \"console.log('\\u001b[35m\\u001b[1mEnjoy react-spring? You can now donate to our open collective:\\u001b[22m\\u001b[39m\\n > \\u001b[34mhttps://opencollective.com/react-spring/donate\\u001b[0m')\""
   },
   "dependencies": {
-    "@react-spring/animated": "~9.2.0-beta.0",
-    "@react-spring/shared": "~9.2.0-beta.0",
-    "@react-spring/types": "~9.2.0-beta.0"
+    "@react-spring/animated": "~9.2.0-beta.6",
+    "@react-spring/shared": "~9.2.0-beta.6",
+    "@react-spring/types": "~9.2.0-beta.6"
   },
   "peerDependencies": {
     "react": "^16.8.0  || ^17.0.0"
