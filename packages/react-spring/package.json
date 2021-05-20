@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "9.2.0-beta.5",
+  "version": "9.2.0-beta.6",
   "main": "dist/react-spring.cjs.js",
   "module": "dist/react-spring.esm.js",
   "files": [
@@ -27,11 +27,11 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/core": "~9.2.0-beta.0",
-    "@react-spring/konva": "~9.2.0-beta.0",
-    "@react-spring/native": "~9.2.0-beta.0",
-    "@react-spring/three": "~9.2.0-beta.0",
-    "@react-spring/web": "~9.2.0-beta.0",
-    "@react-spring/zdog": "~9.2.0-beta.0"
+    "@react-spring/core": "~9.2.0-beta.6",
+    "@react-spring/konva": "~9.2.0-beta.6",
+    "@react-spring/native": "~9.2.0-beta.6",
+    "@react-spring/three": "~9.2.0-beta.6",
+    "@react-spring/web": "~9.2.0-beta.6",
+    "@react-spring/zdog": "~9.2.0-beta.6"
   }
 }

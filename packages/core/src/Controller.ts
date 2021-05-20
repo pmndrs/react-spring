@@ -442,7 +442,7 @@ export async function flushUpdate(
  * until they're given to `setSprings`.
  */
 export function getSprings<State extends Lookup>(
-  ctrl: Controller<State>,
+  ctrl: Controller<Lookup<any>>,
   props?: OneOrMore<ControllerUpdate<State>>
 ) {
   const springs = { ...ctrl.springs }
@@ -460,6 +460,7 @@ export function getSprings<State extends Lookup>(
       })
     })
   }
+  setSprings(ctrl, springs)
   return springs
 }
 
@@ -468,7 +469,7 @@ export function getSprings<State extends Lookup>(
  * whose key is not already in use.
  */
 export function setSprings(
-  ctrl: Controller,
+  ctrl: Controller<Lookup<any>>,
   springs: SpringValues<UnknownProps>
 ) {
   eachProp(springs, (spring, key) => {
