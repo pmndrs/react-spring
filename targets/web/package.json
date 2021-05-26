@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/web",
-  "version": "9.2.0-beta.6",
+  "version": "9.2.0-beta.7",
   "main": "dist/react-spring-web.cjs.js",
   "module": "dist/react-spring-web.esm.js",
   "files": [
