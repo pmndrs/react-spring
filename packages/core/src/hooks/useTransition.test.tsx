@@ -117,7 +117,7 @@ describe('useTransition', () => {
   })
 
   it('assign controllers to provided "ref"', async () => {
-    const ref = new SpringRef()
+    const ref = SpringRef()
     const props = {
       ref,
     }
@@ -126,6 +126,8 @@ describe('useTransition', () => {
     update(children, props)
 
     expect(ref.current).toHaveLength(3)
+
+    testIsRef(ref)
   })
 
   it('returns a ref if the props argument is a function', () => {
@@ -145,7 +147,7 @@ describe('useTransition', () => {
 
     expect(rendered).toEqual([true])
 
-    expect(transRef).toBeInstanceOf(SpringRef)
+    testIsRef(transRef)
   })
 })
 
@@ -164,4 +166,19 @@ function createUpdater(
     else result = render(elem)
     return result
   }
+}
+
+function testIsRef(ref: SpringRef | null) {
+  const props = [
+    'add',
+    'delete',
+    'pause',
+    'resume',
+    'set',
+    'start',
+    'stop',
+    'update',
+    '_getProps',
+  ]
+  props.forEach(prop => expect(ref).toHaveProperty(prop))
 }

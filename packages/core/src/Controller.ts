@@ -14,7 +14,7 @@ import {
 
 import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
-import { SpringRef } from './SpringRef'
+import type { SpringRef } from './SpringRef'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import { getCancelledResult, getCombinedResult } from './AnimationResult'
 import { runAsync, RunAsyncState, stopAsync } from './runAsync'

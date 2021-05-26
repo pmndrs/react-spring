@@ -26,10 +26,11 @@ import {
 import { hasProps, detachRefs, replaceRef } from '../helpers'
 import { SpringContext } from '../SpringContext'
 import { SpringRef } from '../SpringRef'
+import type { SpringRef as SpringRefType } from '../SpringRef'
 
 export type UseSpringsProps<State extends Lookup = Lookup> = unknown &
   ControllerUpdate<State> & {
-    ref?: SpringRef<State>
+    ref?: SpringRefType<State>
   }
 
 /**
@@ -43,7 +44,7 @@ export function useSprings<Props extends UseSpringProps>(
   props: (i: number, ctrl: Controller) => Props,
   deps?: readonly any[]
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State>[], SpringRef<State>]
+  ? [SpringValues<State>[], SpringRefType<State>]
   : never
 
 /**
@@ -62,7 +63,7 @@ export function useSprings<Props extends UseSpringsProps>(
   props: Props[] & UseSpringsProps<PickAnimated<Props>>[],
   deps: readonly any[] | undefined
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State>[], SpringRef<State>]
+  ? [SpringValues<State>[], SpringRefType<State>]
   : never
 
 /** @internal */
@@ -76,7 +77,7 @@ export function useSprings(
 
   // Create a local ref if a props function or deps array is ever passed.
   const ref = useMemo(
-    () => (propsFn || arguments.length == 3 ? new SpringRef() : void 0),
+    () => (propsFn || arguments.length == 3 ? SpringRef() : void 0),
     []
   )
 

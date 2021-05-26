@@ -33,6 +33,7 @@ import {
 import { Controller, getSprings } from '../Controller'
 import { SpringContext } from '../SpringContext'
 import { SpringRef } from '../SpringRef'
+import type { SpringRef as SpringRefType } from '../SpringRef'
 import { TransitionPhase } from '../TransitionPhase'
 
 declare function setTimeout(handler: Function, timeout?: number): number
@@ -45,7 +46,7 @@ export function useTransition<Item, Props extends object>(
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps?: any[]
 ): PickAnimated<Props> extends infer State
-  ? [TransitionFn<Item, PickAnimated<Props>>, SpringRef<State>]
+  ? [TransitionFn<Item, PickAnimated<Props>>, SpringRefType<State>]
   : never
 
 export function useTransition<Item, Props extends object>(
@@ -62,7 +63,7 @@ export function useTransition<Item, Props extends object>(
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps: any[] | undefined
 ): PickAnimated<Props> extends infer State
-  ? [TransitionFn<Item, State>, SpringRef<State>]
+  ? [TransitionFn<Item, State>, SpringRefType<State>]
   : never
 
 export function useTransition(
@@ -84,7 +85,7 @@ export function useTransition(
 
   // Return a `SpringRef` if a deps array was passed.
   const ref = useMemo(
-    () => (propsFn || arguments.length == 3 ? new SpringRef() : void 0),
+    () => (propsFn || arguments.length == 3 ? SpringRef() : void 0),
     []
   )
 
