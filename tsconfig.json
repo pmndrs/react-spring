@@ -1,0 +1,27 @@
+{
+  "include": [
+    "packages/core/test/setup.ts",
+    "packages/*/src/**/*",
+    "targets/*/src/**/*",
+    "packages/types/*",
+    "**/*.test.ts",
+    "targets/zdog/@types/**/*"
+  ],
+  "exclude": ["packages/*/src/types/**/*", "targets/*/src/types/**/*"],
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "jsx": "react",
+    "noEmit": true,
+    "downlevelIteration": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

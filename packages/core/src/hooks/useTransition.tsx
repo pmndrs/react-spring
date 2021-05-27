@@ -30,19 +30,24 @@ import {
   inferTo,
   replaceRef,
 } from '../helpers'
-import { Controller, getSprings, setSprings } from '../Controller'
+import { Controller, getSprings } from '../Controller'
 import { SpringContext } from '../SpringContext'
 import { SpringRef } from '../SpringRef'
-import {
-  ENTER,
-  MOUNT,
-  LEAVE,
-  UPDATE,
-  TransitionPhase,
-} from '../TransitionPhase'
+import type { SpringRef as SpringRefType } from '../SpringRef'
+import { TransitionPhase } from '../TransitionPhase'
 
 declare function setTimeout(handler: Function, timeout?: number): number
 declare function clearTimeout(timeoutId: number): void
+
+export function useTransition<Item, Props extends object>(
+  data: OneOrMore<Item>,
+  props: () =>
+    | UseTransitionProps<Item>
+    | (Props & Valid<Props, UseTransitionProps<Item>>),
+  deps?: any[]
+): PickAnimated<Props> extends infer State
+  ? [TransitionFn<Item, PickAnimated<Props>>, SpringRefType<State>]
+  : never
 
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
@@ -58,19 +63,29 @@ export function useTransition<Item, Props extends object>(
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps: any[] | undefined
 ): PickAnimated<Props> extends infer State
-  ? [TransitionFn<Item, State>, SpringRef<State>]
+  ? [TransitionFn<Item, State>, SpringRefType<State>]
   : never
 
 export function useTransition(
   data: unknown,
-  props: UseTransitionProps,
+  props: UseTransitionProps | (() => any),
   deps?: any[]
 ): any {
-  const { reset, sort, trail = 0, expires = true, onDestroyed } = props
+  const propsFn = is.fun(props) && props
+
+  const {
+    reset,
+    sort,
+    trail = 0,
+    expires = true,
+    onDestroyed,
+    ref: propsRef,
+    config: propsConfig,
+  }: UseTransitionProps<any> = propsFn ? propsFn() : props
 
   // Return a `SpringRef` if a deps array was passed.
   const ref = useMemo(
-    () => (arguments.length == 3 ? new SpringRef() : void 0),
+    () => (propsFn || arguments.length == 3 ? SpringRef() : void 0),
     []
   )
 
@@ -100,7 +115,7 @@ export function useTransition(
   // The `key` prop can be undefined (which means the items themselves are used
   // as keys), or a function (which maps each item to its key), or an array of
   // keys (which are assigned to each item by index).
-  const keys = getKeys(items, props, prevTransitions)
+  const keys = getKeys(items, propsFn ? propsFn() : props, prevTransitions)
 
   // Expired transitions that need clean up.
   const expired = (reset && usedTransitions.current) || []
@@ -131,7 +146,7 @@ export function useTransition(
       transitions[i] = {
         key: keys[i],
         item,
-        phase: MOUNT,
+        phase: TransitionPhase.MOUNT,
         ctrl: new Controller(),
       }
 
@@ -143,12 +158,13 @@ export function useTransition(
   // and ensure leaving transitions are rendered until they finish.
   if (reused.length) {
     let i = -1
+    const { leave }: UseTransitionProps<any> = propsFn ? propsFn() : props
     each(reused, (keyIndex, prevIndex) => {
       const t = prevTransitions![prevIndex]
       if (~keyIndex) {
         i = transitions.indexOf(t)
         transitions[i] = { ...t, item: items[keyIndex] }
-      } else if (props.leave) {
+      } else if (leave) {
         transitions.splice(++i, 0, t)
       }
     })
@@ -172,23 +188,28 @@ export function useTransition(
     const key = t.key
     const prevPhase = t.phase
 
+    const p: UseTransitionProps<any> = propsFn ? propsFn() : props
+
     let to: TransitionTo<any>
     let phase: TransitionPhase
-    if (prevPhase == MOUNT) {
-      to = props.enter
-      phase = ENTER
+
+    let propsDelay = callProp(p.delay || 0, key)
+
+    if (prevPhase == TransitionPhase.MOUNT) {
+      to = p.enter
+      phase = TransitionPhase.ENTER
     } else {
       const isLeave = keys.indexOf(key) < 0
-      if (prevPhase != LEAVE) {
+      if (prevPhase != TransitionPhase.LEAVE) {
         if (isLeave) {
-          to = props.leave
-          phase = LEAVE
-        } else if ((to = props.update)) {
-          phase = UPDATE
+          to = p.leave
+          phase = TransitionPhase.LEAVE
+        } else if ((to = p.update)) {
+          phase = TransitionPhase.UPDATE
         } else return
       } else if (!isLeave) {
-        to = props.enter
-        phase = ENTER
+        to = p.enter
+        phase = TransitionPhase.ENTER
       } else return
     }
 
@@ -197,27 +218,42 @@ export function useTransition(
     to = callProp(to, t.item, i)
     to = is.obj(to) ? inferTo(to) : { to }
 
+    /**
+     * This would allow us to give different delays for phases.
+     * If we were to do this, we'd have to suffle the prop
+     * spreading below to set delay last.
+     * But if we were going to do that, we should consider letting
+     * the prop trail also be part of a phase.
+     */
+    // if (to.delay) {
+    //   phaseDelay = callProp(to.delay, key)
+    // }
+
     if (!to.config) {
-      const config = props.config || defaultProps.config
+      const config = propsConfig || defaultProps.config
       to.config = callProp(config, t.item, i, phase)
     }
+
+    delay += trail
 
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
-      delay: (delay += trail),
+      // we need to add our props.delay value you here.
+      delay: propsDelay + delay,
+      ref: propsRef,
       // This prevents implied resets.
       reset: false,
       // Merge any phase-specific props.
       ...(to as any),
     }
 
-    if (phase == ENTER && is.und(payload.from)) {
+    if (phase == TransitionPhase.ENTER && is.und(payload.from)) {
+      const p = propsFn ? propsFn() : props
       // The `initial` prop is used on the first render of our parent component,
       // as well as when `reset: true` is passed. It overrides the `from` prop
       // when defined, and it makes `enter` instant when null.
-      const from =
-        is.und(props.initial) || prevTransitions ? props.from : props.initial
+      const from = is.und(p.initial) || prevTransitions ? p.from : p.initial
 
       payload.from = callProp(from, t.item, i)
     }
@@ -230,7 +266,9 @@ export function useTransition(
       const t = transitions.find(t => t.key === key)
       if (!t) return
 
-      if (result.cancelled && t.phase != UPDATE) {
+      // Reset the phase of a cancelled enter/leave transition, so it can
+      // retry the animation on the next render.
+      if (result.cancelled && t.phase != TransitionPhase.UPDATE) {
         /**
          * @legacy Reset the phase of a cancelled enter/leave transition, so it can
          * retry the animation on the next render.
@@ -243,7 +281,7 @@ export function useTransition(
 
       if (t.ctrl.idle) {
         const idle = transitions.every(t => t.ctrl.idle)
-        if (t.phase == LEAVE) {
+        if (t.phase == TransitionPhase.LEAVE) {
           const expiry = callProp(expires, t.item)
           if (expiry !== false) {
             const expiryMs = expiry === true ? 0 : expiry
@@ -284,26 +322,30 @@ export function useTransition(
 
   useLayoutEffect(
     () => {
-      each(changes, ({ phase, springs, payload }, t) => {
+      each(changes, ({ phase, payload }, t) => {
         const { ctrl } = t
         t.phase = phase
 
         // Attach the controller to our local ref.
         ref?.add(ctrl)
 
-        // Update the injected ref if needed.
-        replaceRef(ctrl, payload.ref)
-
-        // Save any springs created this render.
-        setSprings(ctrl, springs)
-
         // Merge the context into new items.
-        if (hasContext && phase == ENTER) {
+        if (hasContext && phase == TransitionPhase.ENTER) {
           ctrl.start({ default: context })
         }
 
-        // Postpone the update if an injected ref exists.
-        ctrl[ctrl.ref ? 'update' : 'start'](payload)
+        if (payload) {
+          // Update the injected ref if needed.
+          replaceRef(ctrl, payload.ref)
+
+          // When an injected ref exists, the update is postponed
+          // until the ref has its `start` method called.
+          if (ctrl.ref) {
+            ctrl.update(payload)
+          } else {
+            ctrl.start(payload)
+          }
+        }
       })
     },
     reset ? void 0 : deps
@@ -344,7 +386,10 @@ function getKeys(
       const t =
         prevTransitions &&
         prevTransitions.find(
-          t => t.item === item && t.phase !== LEAVE && !reused.has(t)
+          t =>
+            t.item === item &&
+            t.phase !== TransitionPhase.LEAVE &&
+            !reused.has(t)
         )
       if (t) {
         reused.add(t)

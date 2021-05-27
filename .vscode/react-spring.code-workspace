@@ -9,8 +9,8 @@
       "path": "../packages"
     },
     {
-      "name": "examples",
-      "path": "../examples"
+      "name": "demo",
+      "path": "../demo"
     },
     {
       "name": "docs",
@@ -18,10 +18,6 @@
     }
   ],
   "settings": {
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "files.exclude": {
-      "**/.bic_cache": true,
-      "**/.rpt2_cache": true
-    }
+    "typescript.tsdk": "node_modules/typescript/lib"
   }
 }

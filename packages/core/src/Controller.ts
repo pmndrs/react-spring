@@ -14,7 +14,7 @@ import {
 
 import { getDefaultProp } from './helpers'
 import { FrameValue } from './FrameValue'
-import { SpringRef } from './SpringRef'
+import type { SpringRef } from './SpringRef'
 import { SpringValue, createLoopUpdate, createUpdate } from './SpringValue'
 import { getCancelledResult, getCombinedResult } from './AnimationResult'
 import { runAsync, RunAsyncState, stopAsync } from './runAsync'
@@ -204,7 +204,7 @@ export class Controller<State extends Lookup = Lookup> {
     }
     if (keys) {
       const springs = this.springs as Lookup<SpringValue>
-      each(toArray(keys), key => springs[key].stop(!!arg))
+      each(toArray(keys) as string[], key => springs[key].stop(!!arg))
     } else {
       stopAsync(this._state, this._lastAsyncId)
       this.each(spring => spring.stop(!!arg))
@@ -218,7 +218,7 @@ export class Controller<State extends Lookup = Lookup> {
       this.start({ pause: true })
     } else {
       const springs = this.springs as Lookup<SpringValue>
-      each(toArray(keys), key => springs[key].pause())
+      each(toArray(keys) as string[], key => springs[key].pause())
     }
     return this
   }
@@ -229,7 +229,7 @@ export class Controller<State extends Lookup = Lookup> {
       this.start({ pause: false })
     } else {
       const springs = this.springs as Lookup<SpringValue>
-      each(toArray(keys), key => springs[key].resume())
+      each(toArray(keys) as string[], key => springs[key].resume())
     }
     return this
   }
@@ -442,7 +442,7 @@ export async function flushUpdate(
  * until they're given to `setSprings`.
  */
 export function getSprings<State extends Lookup>(
-  ctrl: Controller<State>,
+  ctrl: Controller<Lookup<any>>,
   props?: OneOrMore<ControllerUpdate<State>>
 ) {
   const springs = { ...ctrl.springs }
@@ -460,6 +460,7 @@ export function getSprings<State extends Lookup>(
       })
     })
   }
+  setSprings(ctrl, springs)
   return springs
 }
 
@@ -468,7 +469,7 @@ export function getSprings<State extends Lookup>(
  * whose key is not already in use.
  */
 export function setSprings(
-  ctrl: Controller,
+  ctrl: Controller<Lookup<any>>,
   springs: SpringValues<UnknownProps>
 ) {
   eachProp(springs, (spring, key) => {

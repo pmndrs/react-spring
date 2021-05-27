@@ -4,6 +4,7 @@ import { RenderResult, render } from '@testing-library/react'
 import { toArray } from '@react-spring/shared'
 import { TransitionFn, UseTransitionProps } from '../types'
 import { useTransition } from './useTransition'
+import { SpringRef } from '../SpringRef'
 
 describe('useTransition', () => {
   let transition: TransitionFn
@@ -114,6 +115,40 @@ describe('useTransition', () => {
       expect(rendered).toEqual([false])
     })
   })
+
+  it('assign controllers to provided "ref"', async () => {
+    const ref = SpringRef()
+    const props = {
+      ref,
+    }
+    const children = [<div />, <div />, <div />]
+
+    update(children, props)
+
+    expect(ref.current).toHaveLength(3)
+
+    testIsRef(ref)
+  })
+
+  it('returns a ref if the props argument is a function', () => {
+    let transRef: SpringRef | null = null
+    const update = createUpdater(({ args }) => {
+      const [transition, ref] = useTransition(...args)
+      rendered = transition((_, item) => item).props.children
+      transRef = ref
+      return null
+    })
+
+    update(true, () => ({
+      from: { n: 0 },
+      enter: { n: 1 },
+      leave: { n: 0 },
+    }))
+
+    expect(rendered).toEqual([true])
+
+    testIsRef(transRef)
+  })
 })
 
 function createUpdater(
@@ -124,11 +159,26 @@ function createUpdater(
     result = undefined
   })
 
-  type Args = [any, UseTransitionProps, any[]?]
+  type Args = [any, UseTransitionProps | (() => UseTransitionProps), any[]?]
   return (...args: Args) => {
     const elem = <Component args={args} />
     if (result) result.rerender(elem)
     else result = render(elem)
     return result
   }
+}
+
+function testIsRef(ref: SpringRef | null) {
+  const props = [
+    'add',
+    'delete',
+    'pause',
+    'resume',
+    'set',
+    'start',
+    'stop',
+    'update',
+    '_getProps',
+  ]
+  props.forEach(prop => expect(ref).toHaveProperty(prop))
 }

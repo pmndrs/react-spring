@@ -1,15 +1,24 @@
 {
   "name": "@react-spring/types",
-  "version": "9.1.2",
+  "version": "9.2.0-beta.7",
   "description": "Internal package with TypeScript stuff",
-  "main": "src/index.ts",
+  "main": "index.js",
   "repository": "pmndrs/react-spring",
+  "homepage": "https://github.com/pmndrs/react-spring#readme",
+  "keywords": [
+    "animated",
+    "animation",
+    "hooks",
+    "motion",
+    "react",
+    "react-native",
+    "spring",
+    "typescript",
+    "velocity"
+  ],
   "license": "MIT",
-  "publishConfig": {
-    "directory": "dist"
-  },
-  "scripts": {
-    "build": "rimraf dist && yarn copy",
-    "copy": "copyfiles package.json *.js *.d.ts dist"
-  }
+  "author": "Paul Henschel",
+  "maintainers": [
+    "Josh Ellis (https://github.com/joshuaellis)"
+  ]
 }

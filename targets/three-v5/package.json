@@ -1,12 +1,36 @@
 {
   "name": "@react-spring/three-v5",
-  "version": "9.1.2",
-  "main": "src/index.ts",
+  "version": "9.2.0-beta.7",
+  "main": "dist/react-spring-three-v5.cjs.js",
+  "module": "dist/react-spring-three-v5.esm.js",
+  "files": [
+    "dist/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": "pmndrs/react-spring",
+  "homepage": "https://github.com/pmndrs/react-spring#readme",
+  "keywords": [
+    "animated",
+    "animation",
+    "hooks",
+    "motion",
+    "react",
+    "react-native",
+    "spring",
+    "typescript",
+    "velocity"
+  ],
+  "license": "MIT",
+  "author": "Paul Henschel",
+  "maintainers": [
+    "Josh Ellis (https://github.com/joshuaellis)"
+  ],
   "dependencies": {
-    "@react-spring/animated": "link:../../packages/animated",
-    "@react-spring/core": "link:../../packages/core",
-    "@react-spring/shared": "link:../../packages/shared",
-    "@react-spring/types": "link:../../packages/types"
+    "@react-spring/animated": "~9.2.0-beta.6",
+    "@react-spring/core": "~9.2.0-beta.6",
+    "@react-spring/shared": "~9.2.0-beta.6",
+    "@react-spring/types": "~9.2.0-beta.6"
   },
   "peerDependencies": {
     "react": ">=16.11",
@@ -16,11 +40,5 @@
   "devDependencies": {
     "react-three-fiber": "^4.0.0",
     "three": "^0.115.0"
-  },
-  "scripts": {
-    "build": "rollup -c"
-  },
-  "publishConfig": {
-    "directory": "dist"
   }
 }
