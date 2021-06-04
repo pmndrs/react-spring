@@ -36,6 +36,7 @@ export default function App() {
       style={{
         transform: to(
           [pos, angle],
+          // @ts-ignore
           ([x, y], a) => `translate3d(${x}px,${y}px,0) rotate(${a}rad)`
         ),
       }}
