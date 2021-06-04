@@ -21,24 +21,32 @@ const BaseDemo = ({ horizontal = false }: BaseDemoProps) => {
       ref={parallax}
       pages={3}
       horizontal={horizontal}
+      data-testid="container"
       className="container">
       <ParallaxLayer
         horizontal={!horizontal}
-        offset={1.5}
-        speed={1.5}
-        className="opposite-horizontal"
+        offset={1}
+        speed={1}
+        data-testid="opposite-layer"
+        className="opposite"
       />
 
-      <ParallaxLayer offset={1} speed={1} className="parent-horizontal" />
+      <ParallaxLayer
+        offset={1}
+        speed={1}
+        data-testid="default-layer"
+        className="default"
+      />
 
-      <ParallaxLayer sticky={{ start: 1, end: 2 }} className="sticky">
+      <ParallaxLayer
+        sticky={{ start: 1, end: 2 }}
+        data-testid="sticky-layer"
+        className="sticky">
         <div className="sticky-content flex-center">Sticky</div>
       </ParallaxLayer>
 
       <ParallaxLayer className="flex-center">
-        <button onClick={() => scroll(1)} data-test="scroll-button">
-          Scroll
-        </button>
+        <button onClick={() => scroll(1)}>Scroll</button>
       </ParallaxLayer>
     </Parallax>
   )

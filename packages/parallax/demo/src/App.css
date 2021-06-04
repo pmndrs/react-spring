@@ -5,11 +5,11 @@
   right: 0;
 }
 
-.parent-horizontal {
+.default {
   background-color: rebeccapurple;
 }
 
-.opposite-horizontal {
+.opposite {
   background-color: lightgreen;
 }
 

@@ -26,11 +26,20 @@
   "maintainers": [
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
+  "scripts": {
+    "dev": "cd ./demo && yarn dev",
+    "cypress": "cypress open",
+    "test": "cypress run"
+  },
   "dependencies": {
     "@react-spring/shared": "~9.2.0",
     "@react-spring/web": "~9.2.0"
   },
   "peerDependencies": {
     "react": "^16.8.0  || ^17.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/cypress": "^7.0.6",
+    "cypress": "^7.4.0"
   }
 }
