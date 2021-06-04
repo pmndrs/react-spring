@@ -8,7 +8,7 @@ module.exports = {
     '.+/(types|__snapshots__)/.+',
     '<rootDir>/node_modules/',
   ],
-  modulePathIgnorePatterns: ['dist'],
+  modulePathIgnorePatterns: ['dist', 'cypress'],
   moduleNameMapper: {
     '^react$': '<rootDir>/node_modules/react',
   },
