@@ -139,6 +139,17 @@ describe('animated component', () => {
       'scale(2) translate(10px,20px) translate3d(30px,40px,50px)'
     )
   })
+  it('updates all values of Animated arrays', () => {
+    const translate3d = spring([10, 20, 30] as const)
+    const { queryByTestId } = render(
+      <a.div style={{ translate3d }} data-testid="wrapper" />
+    )
+    const wrapper: any = queryByTestId('wrapper')!
+    expect(wrapper.style.transform).toBe('translate3d(10px,20px,30px)')
+    translate3d.set([11, 21, 31] as const)
+    mockRaf.step()
+    expect(wrapper.style.transform).toBe('translate3d(11px,21px,31px)')
+  })
   it('sets default units to unit-less values passed as transform functions', () => {
     const { queryByTestId } = render(
       <a.div
