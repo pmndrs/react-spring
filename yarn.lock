@@ -1737,22 +1737,6 @@
     pirates "^4.0.1"
     source-map-support "^0.5.16"
 
-"@react-three/fiber@6.0.0-alpha.15":
-  version "6.0.0-alpha.15"
-  resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-6.0.0-alpha.15.tgz#a8b70606147afe54d201c55be27fe8357d6e141b"
-  integrity sha512-PUmpOTQBf+wbaTw5gfiJ6foy80z2mc2ZJVLY1GjDImJRuv9IGiPO7P0QEN/UH/ZFjmr/bdqXVFIU29zF4uI2zw==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    react-merge-refs "^1.1.0"
-    react-reconciler "^0.26.2"
-    react-three-fiber "0.0.0-deprecated"
-    react-use-measure "^2.0.4"
-    resize-observer-polyfill "^1.5.1"
-    scheduler "^0.20.2"
-    use-asset "^1.0.4"
-    utility-types "^3.10.0"
-    zustand "^3.3.3"
-
 "@react-three/fiber@^6.2.2":
   version "6.2.2"
   resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-6.2.2.tgz#bced876201cb136e91d5b0891f31e5c740e1537c"
@@ -8997,7 +8981,7 @@ zdog@~1.0.0:
   resolved "https://registry.yarnpkg.com/zdog/-/zdog-1.0.2.tgz#f2a64a727ff0c3d1a067083124e652abcb392a15"
   integrity sha512-QjLJ5G5H9X4wowICh8Gx7EC4D738qtspaEr6JnUwXcbZ5bDwgHWG/Q3099Lj91mrFODKL3V/ob8VWZUdXr1YoA==
 
-zustand@^3.3.3, zustand@^3.5.1:
+zustand@^3.5.1:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.2.tgz#cf162a8bd1d86475bf308bc856c4d02ff13fd53c"
   integrity sha512-HUCQI9O77/D/zvoWPNv4dwLriiiY2xtEqnQ0TVY8uaPjmOHls04Okd0w3sWUE9Ex2LaYlSk11DbPPIOZ6shEWg==
