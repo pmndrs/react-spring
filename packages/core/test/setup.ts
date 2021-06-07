@@ -10,7 +10,7 @@ import {
   removeFluidObserver,
   getFluidObservers,
 } from '@react-spring/shared'
-import { __raf as raf } from 'rafz'
+import { __raf as raf } from '@react-spring/rafz'
 
 import { Globals, Controller, FrameValue, SpringValue } from '../src/index'
 import { computeGoal } from '../src/helpers'

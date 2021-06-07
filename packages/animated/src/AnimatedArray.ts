@@ -10,7 +10,7 @@ type Source = AnimatedValue<Value>[]
 export class AnimatedArray<
   T extends ReadonlyArray<Value> = Value[]
 > extends AnimatedObject {
-  protected source!: Source
+  protected declare source: Source
   constructor(source: T) {
     super(source)
   }
@@ -28,7 +28,7 @@ export class AnimatedArray<
     const payload = this.getPayload()
     // Reuse the payload when lengths are equal.
     if (source.length == payload.length) {
-      return payload.some((node, i) => node.setValue(source[i]))
+      return payload.map((node, i) => node.setValue(source[i])).some(Boolean)
     }
     // Remake the payload when length changes.
     super.setValue(source.map(makeAnimated))

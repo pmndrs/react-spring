@@ -26,10 +26,11 @@ import {
 import { hasProps, detachRefs, replaceRef } from '../helpers'
 import { SpringContext } from '../SpringContext'
 import { SpringRef } from '../SpringRef'
+import type { SpringRef as SpringRefType } from '../SpringRef'
 
 export type UseSpringsProps<State extends Lookup = Lookup> = unknown &
   ControllerUpdate<State> & {
-    ref?: SpringRef<State>
+    ref?: SpringRefType<State>
   }
 
 /**
@@ -43,7 +44,7 @@ export function useSprings<Props extends UseSpringProps>(
   props: (i: number, ctrl: Controller) => Props,
   deps?: readonly any[]
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State>[], SpringRef<State>]
+  ? [SpringValues<State>[], SpringRefType<State>]
   : never
 
 /**
@@ -62,7 +63,7 @@ export function useSprings<Props extends UseSpringsProps>(
   props: Props[] & UseSpringsProps<PickAnimated<Props>>[],
   deps: readonly any[] | undefined
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State>[], SpringRef<State>]
+  ? [SpringValues<State>[], SpringRefType<State>]
   : never
 
 /** @internal */
@@ -76,7 +77,7 @@ export function useSprings(
 
   // Create a local ref if a props function or deps array is ever passed.
   const ref = useMemo(
-    () => (propsFn || arguments.length == 3 ? new SpringRef() : void 0),
+    () => (propsFn || arguments.length == 3 ? SpringRef() : void 0),
     []
   )
 
@@ -122,17 +123,17 @@ export function useSprings(
     []
   )
 
-  const ctrls = [...state.ctrls]
+  const ctrls = useRef([...state.ctrls])
   const updates: any[] = []
 
   // Cache old controllers to dispose in the commit phase.
   const prevLength = usePrev(length) || 0
-  const oldCtrls = ctrls.slice(length, prevLength)
+  const oldCtrls = ctrls.current.slice(length, prevLength)
 
   // Create new controllers when "length" increases, and destroy
   // the affected controllers when "length" decreases.
   useMemo(() => {
-    ctrls.length = length
+    ctrls.current.length = length
     declareUpdates(prevLength, length)
   }, [length])
 
@@ -144,7 +145,9 @@ export function useSprings(
   /** Fill the `updates` array with declarative updates for the given index range. */
   function declareUpdates(startIndex: number, endIndex: number) {
     for (let i = startIndex; i < endIndex; i++) {
-      const ctrl = ctrls[i] || (ctrls[i] = new Controller(null, state.flush))
+      const ctrl =
+        ctrls.current[i] ||
+        (ctrls.current[i] = new Controller(null, state.flush))
 
       const update: UseSpringProps<any> = propsFn
         ? propsFn(i, ctrl)
@@ -159,7 +162,7 @@ export function useSprings(
   // New springs are created during render so users can pass them to
   // their animated components, but new springs aren't cached until the
   // commit phase (see the `useLayoutEffect` callback below).
-  const springs = ctrls.map((ctrl, i) => getSprings(ctrl, updates[i]))
+  const springs = ctrls.current.map((ctrl, i) => getSprings(ctrl, updates[i]))
 
   const context = useContext(SpringContext)
   const prevContext = usePrev(context)
@@ -169,7 +172,7 @@ export function useSprings(
     layoutId.current++
 
     // Replace the cached controllers.
-    state.ctrls = ctrls
+    state.ctrls = ctrls.current
 
     // Flush the commit queue.
     const { queue } = state
@@ -185,10 +188,7 @@ export function useSprings(
     })
 
     // Update existing controllers.
-    each(ctrls, (ctrl, i) => {
-      const values = springs[i]
-      setSprings(ctrl, values)
-
+    each(ctrls.current, (ctrl, i) => {
       // Attach the controller to the local ref.
       ref?.add(ctrl)
 

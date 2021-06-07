@@ -28,6 +28,6 @@ export function deprecateInterpolate() {
 const warnDirectCall = once(console.warn)
 export function deprecateDirectCall() {
   warnDirectCall(
-    `${prefix}Directly calling start instead of using the api object is deprecated in v9 (use ".start" instead)`
+    `${prefix}Directly calling start instead of using the api object is deprecated in v9 (use ".start" instead), this will be removed in later 0.X.0 versions`
   )
 }

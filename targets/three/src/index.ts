@@ -1,23 +1,22 @@
-import { applyProps, addEffect, invalidate } from '@react-three/fiber'
+import { applyProps, addEffect } from '@react-three/fiber'
+
 import { Globals } from '@react-spring/core'
-import { createStringInterpolator, colors } from '@react-spring/shared'
+import { createStringInterpolator, colors, raf } from '@react-spring/shared'
 import { createHost } from '@react-spring/animated'
-import { FrameLoop } from './FrameLoop'
+
 import { primitives } from './primitives'
 import { WithAnimated } from './animated'
-
-// Let r3f drive the frameloop.
-const frameLoop = new FrameLoop(() => invalidate())
-addEffect(() => {
-  frameLoop.advance()
-  return true // Never stop.
-})
 
 Globals.assign({
   createStringInterpolator,
   colors,
-  //@ts-ignore
-  frameLoop,
+  frameLoop: 'demand',
+})
+
+// Let r3f drive the frameloop.
+// @ts-expect-error r3f expects boolean returned, boolean does nothing.
+addEffect(() => {
+  raf.advance()
 })
 
 const host = createHost(primitives, {

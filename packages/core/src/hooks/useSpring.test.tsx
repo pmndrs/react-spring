@@ -74,7 +74,7 @@ describe('useSpring', () => {
     })
     it('returns a ref', () => {
       update({ x: 0 }, [1])
-      expect(ref).toBeInstanceOf(SpringRef)
+      testIsRef(ref)
     })
   })
 
@@ -88,7 +88,7 @@ describe('useSpring', () => {
     })
     it('returns a ref', () => {
       update(() => ({ x: 0 }))
-      expect(ref).toBeInstanceOf(SpringRef)
+      testIsRef(ref)
     })
   })
 
@@ -105,7 +105,7 @@ describe('useSpring', () => {
     })
     it('returns a ref', () => {
       update(() => ({ x: 0 }), [1])
-      expect(ref).toBeInstanceOf(SpringRef)
+      testIsRef(ref)
     })
   })
 })
@@ -151,4 +151,19 @@ function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {
     renderWithContext((prevElem = <Component args={args} />))
 
   return [update, context] as const
+}
+
+function testIsRef(ref: SpringRef | null) {
+  const props = [
+    'add',
+    'delete',
+    'pause',
+    'resume',
+    'set',
+    'start',
+    'stop',
+    'update',
+    '_getProps',
+  ]
+  props.forEach(prop => expect(ref).toHaveProperty(prop))
 }

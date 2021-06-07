@@ -18,27 +18,14 @@ export default function App() {
 
   const bind = useDrag(
     ({ xy, previous, down, movement: pos, velocity, direction }) => {
-      //   console.log('DOWN', down)
-      //   if (!down) {
-      //     api.start({
-      //       pos,
-      //       config: { velocity: scale(direction, velocity), decay: true },
-      //     })
-      //   } else {
-      //     api.start({
-      //       pos,
-      //       immediate: true,
-      //     })
-      //   }
-      //   console.log('POS', pos)
       api.start({
         pos,
         immediate: down,
         config: { velocity: scale(direction, velocity), decay: true },
       })
 
-      //   if (dist(xy, previous) > 10 || !down)
-      //     angleApi.start({ angle: Math.atan2(direction[0], -direction[1]) })
+      if (dist(xy, previous) > 10 || !down)
+        angleApi.start({ angle: Math.atan2(direction[0], -direction[1]) })
     },
     { initial: () => pos.get() }
   )
@@ -49,6 +36,7 @@ export default function App() {
       style={{
         transform: to(
           [pos, angle],
+          // @ts-ignore
           ([x, y], a) => `translate3d(${x}px,${y}px,0) rotate(${a}rad)`
         ),
       }}
