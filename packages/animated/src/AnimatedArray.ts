@@ -28,7 +28,7 @@ export class AnimatedArray<
     const payload = this.getPayload()
     // Reuse the payload when lengths are equal.
     if (source.length == payload.length) {
-      return payload.some((node, i) => node.setValue(source[i]))
+      return payload.map((node, i) => node.setValue(source[i])).some(Boolean)
     }
     // Remake the payload when length changes.
     super.setValue(source.map(makeAnimated))
