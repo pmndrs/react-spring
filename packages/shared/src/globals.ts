@@ -1,10 +1,12 @@
-import { raf } from 'rafz'
-import { FluidValue } from './fluids'
+import { raf } from '@react-spring/rafz'
 import {
   OneOrMore,
   InterpolatorConfig,
   InterpolatorArgs,
 } from '@react-spring/types'
+import { Rafz } from 'packages/rafz'
+
+import { FluidValue } from './fluids'
 import type { OpaqueAnimation } from './FrameLoop'
 import { noop } from './helpers'
 
@@ -52,6 +54,8 @@ export interface AnimatedGlobals {
   batchedUpdates?: typeof raf.batchedUpdates
   /** @internal Exposed for testing purposes */
   willAdvance?: typeof willAdvance
+  /** sets the global frameLoop setting for the global raf instance */
+  frameLoop?: Rafz['frameLoop']
 }
 
 export const assign = (globals: AnimatedGlobals) => {
@@ -64,4 +68,5 @@ export const assign = (globals: AnimatedGlobals) => {
   if (globals.requestAnimationFrame) raf.use(globals.requestAnimationFrame)
   if (globals.batchedUpdates) raf.batchedUpdates = globals.batchedUpdates
   if (globals.willAdvance) willAdvance = globals.willAdvance
+  if (globals.frameLoop) raf.frameLoop = globals.frameLoop
 }

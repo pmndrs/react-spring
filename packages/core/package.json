@@ -38,6 +38,6 @@
     "react": "^16.8.0  || ^17.0.0"
   },
   "devDependencies": {
-    "rafz": "^0.1.13"
+    "@react-spring/rafz": "~9.2.0"
   }
 }
