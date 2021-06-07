@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/zdog",
-  "version": "9.2.1",
+  "version": "9.2.2",
   "main": "dist/react-spring-zdog.cjs.js",
   "module": "dist/react-spring-zdog.esm.js",
   "files": [
