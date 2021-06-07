@@ -1,6 +1,0 @@
-language: node_js
-node_js:
-  - stable
-script:
-  - yarn test:ts
-  - yarn test

@@ -18,5 +18,6 @@ export * from './hooks/usePrev'
 export * from './hooks/useLayoutEffect'
 
 export * from './fluids'
-export { raf } from 'rafz'
-export type { Timeout } from 'rafz'
+
+export { raf } from '@react-spring/rafz'
+export type { Timeout } from '@react-spring/rafz'
