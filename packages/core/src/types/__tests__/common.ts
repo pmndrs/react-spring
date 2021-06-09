@@ -54,7 +54,7 @@ test('PickAnimated', () => {
   }>;
   assert(_ as A5, _ as Remap<UserProps & { width: 1 | 2 }>);
 
-  // "useTransition" props
+  // "useTransitions" props
   type A6 = PickAnimated<{
     from: { a: 1 };
     initial: { b: 1 };

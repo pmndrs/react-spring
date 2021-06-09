@@ -39,7 +39,7 @@ import { TransitionPhase } from '../TransitionPhase'
 declare function setTimeout(handler: Function, timeout?: number): number
 declare function clearTimeout(timeoutId: number): void
 
-export function useTransition<Item, Props extends object>(
+export function useTransitions<Item, Props extends object>(
   data: OneOrMore<Item>,
   props: () =>
     | UseTransitionProps<Item>
@@ -49,14 +49,14 @@ export function useTransition<Item, Props extends object>(
   ? [TransitionFn<Item, PickAnimated<Props>>, SpringRefType<State>]
   : never
 
-export function useTransition<Item, Props extends object>(
+export function useTransitions<Item, Props extends object>(
   data: OneOrMore<Item>,
   props:
     | UseTransitionProps<Item>
     | (Props & Valid<Props, UseTransitionProps<Item>>)
 ): TransitionFn<Item, PickAnimated<Props>>
 
-export function useTransition<Item, Props extends object>(
+export function useTransitions<Item, Props extends object>(
   data: OneOrMore<Item>,
   props:
     | UseTransitionProps<Item>
@@ -66,7 +66,7 @@ export function useTransition<Item, Props extends object>(
   ? [TransitionFn<Item, State>, SpringRefType<State>]
   : never
 
-export function useTransition(
+export function useTransitions(
   data: unknown,
   props: UseTransitionProps | (() => any),
   deps?: any[]
@@ -101,14 +101,15 @@ export function useTransition(
   })
 
   // Destroy all transitions on dismount.
-  useOnce(() => () =>
-    each(usedTransitions.current!, t => {
-      if (t.expired) {
-        clearTimeout(t.expirationId!)
-      }
-      detachRefs(t.ctrl, ref)
-      t.ctrl.stop(true)
-    })
+  useOnce(
+    () => () =>
+      each(usedTransitions.current!, t => {
+        if (t.expired) {
+          clearTimeout(t.expirationId!)
+        }
+        detachRefs(t.ctrl, ref)
+        t.ctrl.stop(true)
+      })
   )
 
   // Keys help with reusing transitions between renders.

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useTransition, animated } from '@react-spring/web'
+import { useTransitions, animated } from '@react-spring/web'
 import shuffle from 'lodash.shuffle'
 import data from './data'
 
@@ -13,7 +13,7 @@ function List() {
   }, [])
 
   let height = 0
-  const transitions = useTransition(
+  const transitions = useTransitions(
     rows.map(data => ({ ...data, y: (height += data.height) - data.height })),
     {
       key: (item: any) => item.name,

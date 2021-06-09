@@ -3,16 +3,16 @@ import '@testing-library/jest-dom'
 import { RenderResult, render } from '@testing-library/react'
 import { toArray } from '@react-spring/shared'
 import { TransitionFn, UseTransitionProps } from '../types'
-import { useTransition } from './useTransition'
+import { useTransitions } from './useTransitions'
 import { SpringRef } from '../SpringRef'
 
-describe('useTransition', () => {
+describe('useTransitions', () => {
   let transition: TransitionFn
   let rendered: any[]
 
-  // Call the "useTransition" hook and update local variables.
+  // Call the "useTransitions" hook and update local variables.
   const update = createUpdater(({ args }) => {
-    transition = toArray(useTransition(...args))[0]
+    transition = toArray(useTransitions(...args))[0]
     rendered = transition((_, item) => item).props.children
     return null
   })
@@ -133,7 +133,7 @@ describe('useTransition', () => {
   it('returns a ref if the props argument is a function', () => {
     let transRef: SpringRef | null = null
     const update = createUpdater(({ args }) => {
-      const [transition, ref] = useTransition(...args)
+      const [transition, ref] = useTransitions(...args)
       rendered = transition((_, item) => item).props.children
       transRef = ref
       return null

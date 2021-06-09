@@ -63,7 +63,7 @@ beforeEach(() => {
     requestAnimationFrame: global.mockRaf.raf,
     colors,
     skipAnimation: false,
-    // This lets our useTransition hook force its component
+    // This lets our useTransitions hook force its component
     // to update from within an "onRest" handler.
     batchedUpdates: act,
   })

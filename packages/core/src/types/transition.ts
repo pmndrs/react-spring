@@ -26,11 +26,11 @@ import { TransitionPhase } from '../TransitionPhase'
 import { Controller } from '../Controller'
 import { SpringRef } from '../SpringRef'
 
-/** The phases of a `useTransition` item */
+/** The phases of a `useTransitions` item */
 export type TransitionKey = 'initial' | 'enter' | 'update' | 'leave'
 
 /**
- * Extract a union of animated values from a set of `useTransition` props.
+ * Extract a union of animated values from a set of `useTransitions` props.
  */
 export type TransitionValues<Props extends object> = unknown &
   ForwardProps<
@@ -70,7 +70,7 @@ export type UseTransitionProps<Item = any> = Merge<
      * When `false`, items are never unmounted.
      *
      * When `> 0`, this prop is used in a `setTimeout` call that forces a
-     * rerender if the component that called `useTransition` doesn't rerender
+     * rerender if the component that called `useTransitions` doesn't rerender
      * on its own after an item's `leave` animation is finished.
      */
     expires?: boolean | number | ((item: Item) => boolean | number)
@@ -108,7 +108,7 @@ type Key = string | number
 
 export type ItemKeys<T = any> = OneOrMore<Key> | ((item: T) => Key) | null
 
-/** The function returned by `useTransition` */
+/** The function returned by `useTransitions` */
 export interface TransitionFn<Item = any, State extends Lookup = Lookup> {
   (render: TransitionRenderFn<Item, State>): JSX.Element
 }

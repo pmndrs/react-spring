@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react'
-import { useTransition, animated } from '@react-spring/web'
+import { useTransitions, animated } from '@react-spring/web'
 
 import styles from './styles.module.css'
 
 export default function App() {
   const ref = useRef<ReturnType<typeof setTimeout>[]>([])
   const [items, set] = useState<string[]>([])
-  const transitions = useTransition(items, {
+  const transitions = useTransitions(items, {
     from: {
       opacity: 0,
       height: 0,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  useTransition,
+  useTransitions,
   useSpring,
   useChain,
   config,
@@ -26,7 +26,7 @@ export default function App() {
   })
 
   const transApi = useSpringRef()
-  const transition = useTransition(open ? data : [], {
+  const transition = useTransitions(open ? data : [], {
     ref: transApi,
     trail: 400 / data.length,
     from: { opacity: 0, scale: 0 },

@@ -1,6 +1,6 @@
 import { Valid } from '../types/common'
 import { TransitionComponentProps } from '../types'
-import { useTransition } from '../hooks'
+import { useTransitions } from '../hooks'
 
 export function Transition<
   Item extends any,
@@ -16,5 +16,5 @@ export function Transition({
   children,
   ...props
 }: TransitionComponentProps<any>) {
-  return useTransition(items, props)(children)
+  return useTransitions(items, props)(children)
 }

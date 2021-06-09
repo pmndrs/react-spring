@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import useMeasure from 'react-use-measure'
-import { useTransition, a } from '@react-spring/web'
+import { useTransitions, a } from '@react-spring/web'
 import shuffle from 'lodash.shuffle'
 
 import useMedia from './useMedia'
@@ -32,7 +32,7 @@ function Masonry() {
     return [heights, gridItems]
   }, [columns, items, width])
   // Hook6: Turn the static grid values into animated transitions, any addition, removal or change will be animated
-  const transitions = useTransition(gridItems, {
+  const transitions = useTransitions(gridItems, {
     key: (item: { css: string; height: number }) => item.css,
     from: ({ x, y, width, height }) => ({ x, y, width, height, opacity: 0 }),
     enter: ({ x, y, width, height }) => ({ x, y, width, height, opacity: 1 }),

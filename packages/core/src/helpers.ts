@@ -146,7 +146,7 @@ const RESERVED_PROPS: {
 
 /**
  * Extract any properties whose keys are *not* reserved for customizing your
- * animations. All hooks use this function, which means `useTransition` props
+ * animations. All hooks use this function, which means `useTransitions` props
  * are reserved for `useSpring` calls, etc.
  */
 function getForwardProps<Props extends ReservedProps>(

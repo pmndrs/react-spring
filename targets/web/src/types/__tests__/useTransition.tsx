@@ -3,14 +3,14 @@ import { assert, test, _ } from 'spec.ts';
 import { SpringValues, SpringUpdateFn } from '@react-spring/core';
 import { Lookup } from '@react-spring/types';
 
-import { animated, useTransition } from '../..';
+import { animated, useTransitions } from '../..';
 
 const View = animated('div');
 
 const items = [1, 2] as [1, 2];
 
 test('infer animated from these props', () => {
-  const transition = useTransition(items, {
+  const transition = useTransitions(items, {
     from: { a: 1 },
     enter: { b: 1 },
     leave: { c: 1 },
@@ -34,7 +34,7 @@ test('infer animated from these props', () => {
 });
 
 test('basic usage', () => {
-  const transition = useTransition(items, {
+  const transition = useTransitions(items, {
     from: { opacity: 0 },
     enter: [{ opacity: 1 }, { color: 'red' }],
     leave: { opacity: 0 },
@@ -55,7 +55,7 @@ test('basic usage', () => {
 });
 
 test('with function props', () => {
-  const transition = useTransition(items, {
+  const transition = useTransitions(items, {
     from: (item) => {
       assert(item, _ as 1 | 2);
       return { width: 0, height: 0 };
@@ -80,7 +80,7 @@ test('with function props', () => {
   });
 
   test('return an async function', () => {
-    useTransition(items, {
+    useTransitions(items, {
       update: (item) => async (next) => {
         assert(item, _ as 1 | 2);
         assert(next, _ as SpringUpdateFn<Lookup>);

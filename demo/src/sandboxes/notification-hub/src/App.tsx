@@ -1,7 +1,7 @@
 import React, { useRef, useState, useMemo, useEffect, MouseEvent } from 'react'
 import { loremIpsum } from 'lorem-ipsum'
 import { X } from 'react-feather'
-import { useTransition } from '@react-spring/web'
+import { useTransitions } from '@react-spring/web'
 import { Main, Container, Message, Button, Content, Life } from './styles'
 
 let id = 0
@@ -32,7 +32,7 @@ function MessageHub({
   const cancelMap = useMemo(() => new WeakMap(), [])
   const [items, setItems] = useState<Item[]>([])
 
-  const transitions = useTransition(items, {
+  const transitions = useTransitions(items, {
     from: { opacity: 0, height: 0, life: '100%' },
     keys: item => item.key,
     enter: item => async (next, cancel) => {
@@ -48,7 +48,7 @@ function MessageHub({
         })
       )
     },
-    config: (item, index, phase) => key => (phase === 'enter' && key === 'life' ? { duration: timeout } : config),
+    config: (item, index, phase) => key => phase === 'enter' && key === 'life' ? { duration: timeout } : config,
   })
 
   useEffect(() => {

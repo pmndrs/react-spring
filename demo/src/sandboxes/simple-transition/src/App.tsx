@@ -1,5 +1,5 @@
 import React, { useState, useCallback, CSSProperties, useEffect } from 'react'
-import { useTransition, animated, AnimatedProps, useSpringRef } from '@react-spring/web'
+import { useTransitions, animated, AnimatedProps, useSpringRef } from '@react-spring/web'
 
 import styles from './styles.module.css'
 
@@ -13,7 +13,7 @@ export default function App() {
   const [index, set] = useState(0)
   const onClick = useCallback(() => set(state => (state + 1) % 3), [])
   const transRef = useSpringRef()
-  const transitions = useTransition(index, {
+  const transitions = useTransitions(index, {
     ref: transRef,
     keys: null,
     from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
