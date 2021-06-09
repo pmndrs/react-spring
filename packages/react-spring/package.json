@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "9.2.2",
+  "version": "9.2.3",
   "main": "dist/react-spring.cjs.js",
   "module": "dist/react-spring.esm.js",
   "files": [
