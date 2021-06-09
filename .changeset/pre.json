@@ -1,0 +1,20 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "demo": "1.0.0",
+    "@react-spring/animated": "9.2.3",
+    "@react-spring/core": "9.2.3",
+    "@react-spring/parallax": "9.2.3",
+    "@react-spring/rafz": "9.2.3",
+    "react-spring": "9.2.3",
+    "@react-spring/shared": "9.2.3",
+    "@react-spring/types": "9.2.3",
+    "@react-spring/konva": "9.2.3",
+    "@react-spring/native": "9.2.3",
+    "@react-spring/three": "9.2.3",
+    "@react-spring/web": "9.2.3",
+    "@react-spring/zdog": "9.2.3"
+  },
+  "changesets": ["friendly-deers-mate"]
+}
