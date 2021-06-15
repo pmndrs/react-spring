@@ -28,8 +28,9 @@
   ],
   "scripts": {
     "dev": "cd ./demo && yarn dev",
-    "cypress": "cypress open",
-    "test": "cypress run"
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test": "start-server-and-test 'yarn dev' http-get://localhost:3000 'yarn cy:run'"
   },
   "dependencies": {
     "@react-spring/shared": "~9.2.0",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@testing-library/cypress": "^7.0.6",
-    "cypress": "^7.4.0"
+    "cypress": "^7.4.0",
+    "start-server-and-test": "^1.12.5"
   }
 }
