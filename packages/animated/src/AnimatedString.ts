@@ -4,7 +4,7 @@ import { is, createInterpolator } from '@react-spring/shared'
 type Value = string | number
 
 export class AnimatedString extends AnimatedValue<Value> {
-  protected _value!: number
+  protected declare _value: number
   protected _string: string | null = null
   protected _toString: (input: number) => string
 

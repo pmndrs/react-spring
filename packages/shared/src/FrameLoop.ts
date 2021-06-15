@@ -1,4 +1,4 @@
-import { raf } from 'rafz'
+import { raf } from '@react-spring/rafz'
 import * as G from './globals'
 
 export interface OpaqueAnimation {

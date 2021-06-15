@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/three",
-  "version": "9.2.1",
+  "version": "9.2.3",
   "main": "dist/react-spring-three.cjs.js",
   "module": "dist/react-spring-three.esm.js",
   "files": [
@@ -38,7 +38,7 @@
     "three": ">=0.126"
   },
   "devDependencies": {
-    "@react-three/fiber": "6.0.0-alpha.15",
+    "@react-three/fiber": "^6.2.2",
     "@types/three": "^0.126.1",
     "three": "^0.126.1"
   }
