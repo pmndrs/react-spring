@@ -52,8 +52,7 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
   for (let name in style) {
     if (style.hasOwnProperty(name)) {
       const value = dangerousStyleValue(name, style[name])
-      if (name === 'float') name = 'cssFloat'
-      else if (isCustomPropRE.test(name)) {
+      if (isCustomPropRE.test(name)) {
         instance.style.setProperty(name, value)
       } else {
         instance.style[name] = value
