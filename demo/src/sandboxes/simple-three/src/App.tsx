@@ -2,7 +2,7 @@ import React from 'react'
 import './styles.css'
 
 import { Canvas } from '@react-three/fiber'
-import { useSpring, animated, Globals } from '@react-spring/three'
+import { useSpring, animated } from '@react-spring/three'
 
 export default function Thing() {
   const { position } = useSpring({
