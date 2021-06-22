@@ -41,9 +41,10 @@
     "watch": "preconstruct watch",
     "dev": "preconstruct dev",
     "demo:dev": "yarn workspace demo dev",
-    "test": "jest",
+    "test:unit": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
+    "test": "yarn test:unit && cd ./packages/parallax && yarn test",
     "release": "yarn test:ts && yarn test:cov && yarn build && yarn changeset publish",
     "vers": "yarn changeset version"
   },
