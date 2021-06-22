@@ -6,6 +6,9 @@ describe('Parallax - vertical', () => {
   })
 
   it('should translate layers as expected', () => {
+    // intial snapshot
+    cy.findByTestId('container').toMatchSnapshot()
+
     // initial layer positions
     cy.findByTestId('default-layer')
       .then(layer => layer[0].style.transform)
@@ -26,11 +29,15 @@ describe('Parallax - vertical', () => {
         expect(transform).to.equal(`translate3d(0px, ${HEIGHT}px, 0px)`)
       )
 
-    // scroll to first next page
+    // scroll to next page
     cy.findByTestId('container').scrollTo(0, HEIGHT)
     // wait for animation to finish
     cy.wait(2000)
 
+    // halfway snapshot
+    cy.findByTestId('container').toMatchSnapshot()
+
+    // halfway layer positions
     cy.findByTestId('default-layer')
       .then(layer => layer[0].style.transform)
       .then(transform =>
@@ -55,6 +62,10 @@ describe('Parallax - vertical', () => {
     // wait for animation again
     cy.wait(2000)
 
+    // final snapshot
+    cy.findByTestId('container').toMatchSnapshot()
+
+    // final layer positions
     cy.findAllByTestId(/-layer/).each(layer =>
       expect(layer[0].style.transform).to.equal('translate3d(0px, 0px, 0px)')
     )
@@ -77,6 +88,9 @@ describe('Parallax - horizontal', () => {
   })
 
   it('should translate layers as expected', () => {
+    // intial snapshot
+    cy.findByTestId('container').toMatchSnapshot()
+
     // initial layer positions
     cy.findByTestId('default-layer')
       .then(layer => layer[0].style.transform)
@@ -102,6 +116,10 @@ describe('Parallax - horizontal', () => {
     // wait for animation to finish
     cy.wait(2000)
 
+    // halfway snapshot
+    cy.findByTestId('container').toMatchSnapshot()
+
+    // halfway layer positions
     cy.findByTestId('default-layer')
       .then(layer => layer[0].style.transform)
       .then(transform =>
@@ -127,6 +145,10 @@ describe('Parallax - horizontal', () => {
     // wait for animation again
     cy.wait(2000)
 
+    // final snapshot
+    cy.findByTestId('container').toMatchSnapshot()
+
+    // final layer positions
     cy.findAllByTestId(/-layer/).each(layer =>
       expect(layer[0].style.transform).to.equal('translate3d(0px, 0px, 0px)')
     )
