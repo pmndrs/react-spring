@@ -25,6 +25,8 @@ import DecayRocket from './sandboxes/rocket-decay/src/App'
 import Parallax from './sandboxes/parallax/src/App'
 import ParallaxVert from './sandboxes/parallax-vert/src/App'
 import ParallaxSticky from './sandboxes/parallax-sticky/src/App'
+import SimpleThree from './sandboxes/simple-three/src/App'
+import Test from './sandboxes/test/src/App'
 
 const links = {
   card: Card,
@@ -50,6 +52,8 @@ const links = {
   parallax: Parallax,
   'parallax-vert': ParallaxVert,
   'parallax-sticky': ParallaxSticky,
+  three: SimpleThree,
+  test: Test,
 }
 
 const Example = ({ link }) => {
