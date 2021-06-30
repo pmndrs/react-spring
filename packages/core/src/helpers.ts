@@ -95,7 +95,6 @@ export const getDefaultProps = <T extends Lookup>(
  */
 export const DEFAULT_PROPS = [
   'config',
-  'immediate',
   'onProps',
   'onStart',
   'onChange',

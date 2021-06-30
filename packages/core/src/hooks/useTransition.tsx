@@ -101,14 +101,15 @@ export function useTransition(
   })
 
   // Destroy all transitions on dismount.
-  useOnce(() => () =>
-    each(usedTransitions.current!, t => {
-      if (t.expired) {
-        clearTimeout(t.expirationId!)
-      }
-      detachRefs(t.ctrl, ref)
-      t.ctrl.stop(true)
-    })
+  useOnce(
+    () => () =>
+      each(usedTransitions.current!, t => {
+        if (t.expired) {
+          clearTimeout(t.expirationId!)
+        }
+        detachRefs(t.ctrl, ref)
+        t.ctrl.stop(true)
+      })
   )
 
   // Keys help with reusing transitions between renders.
@@ -242,6 +243,7 @@ export function useTransition(
       // we need to add our props.delay value you here.
       delay: propsDelay + delay,
       ref: propsRef,
+      immediate: p.immediate,
       // This prevents implied resets.
       reset: false,
       // Merge any phase-specific props.
