@@ -5,7 +5,7 @@ import styles from './styles.module.css'
 export default function App() {
   const alignCenter = { display: 'flex', alignItems: 'center' }
   return (
-    <>
+    <div>
       <div className={styles.background} />
 
       <Parallax pages={5}>
@@ -31,6 +31,6 @@ export default function App() {
           </div>
         </ParallaxLayer>
       </Parallax>
-    </>
+    </div>
   )
 }
