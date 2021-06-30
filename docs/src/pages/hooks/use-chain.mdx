@@ -1,0 +1,49 @@
+import { DemoGrid } from 'components/Demo/DemoGrid'
+import { Demo } from 'components/Demo/Demo'
+
+import ChainDemo from 'demos/chain/src/App'
+
+# useChain
+
+## Overview
+
+```js
+import { useChain, animated } from 'react-spring'
+```
+
+Set the execution order of previously defined animation-hooks, where one animation starts after the other in sequence. You need to collect refs off the animations you want to chain, which blocks the animation from starting on its own. The order can be changed in subsequent render passes.
+
+```jsx
+// Build a spring and catch its ref
+const springRef = useSpringRef()
+const props = useSpring({ ...values, ref: springRef })
+// Build a transition and catch its ref
+const transitionRef = useSpringRef()
+const transitions = useTransition({ ...values, ref: transitionRef })
+// First run the spring, when it concludes run the transition
+useChain([springRef, transitionRef])
+// Use the animated props like always
+return (
+  <animated.div style={props}>
+    {transitions(styles => (
+      <animated.div style={styles} />
+    ))}
+  </animated.div>
+)
+```
+
+You can optionally define timeSteps and a timeFrame (which defaults to a second). timeSteps is just an array with offsets between 0-1 that correspend to beginning and the end of the timeFrame.
+
+```jsx
+// The spring will start right away: 0.0 * 1000ms = 0ms
+// The transition will start after: 0.5 * 1000ms (the timeFrame default) = 500ms
+useChain([springRef, transitionRef], [0, 0.5] /*1000*/)
+```
+
+## Demos
+
+<DemoGrid>
+  <Demo title="Chain">
+    <ChainDemo />
+  </Demo>
+</DemoGrid>

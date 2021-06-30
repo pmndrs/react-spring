@@ -1,0 +1,12 @@
+.text {
+  font-weight: 600;
+  font-size: 8em;
+  will-change: opacity;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
+}

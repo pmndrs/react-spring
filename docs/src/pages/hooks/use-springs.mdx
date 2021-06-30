@@ -1,0 +1,66 @@
+import { DemoGrid } from 'components/Demo/DemoGrid'
+import { Demo } from 'components/Demo/Demo'
+
+import CardStackDemo from 'demos/cards-stack/src/App'
+import DraggableListDemo from 'demos/draggable-list/src/App'
+import ViewpagerDemo from 'demos/viewpager/src/App'
+
+# useSprings
+
+## Overview
+
+```js
+import { useSprings, animated } from 'react-spring'
+```
+
+Creates multiple springs, each with its own config. Use it for static lists, etc.
+
+### Either: overwrite values to change the animation
+
+If you re-render the component with changed props, the animation will update.
+
+```jsx
+const springs = useSprings(
+  number,
+  items.map(item => ({ opacity: item.opacity }))
+)
+```
+
+### Or: pass a function that returns values, and update using the API
+
+You will get an updater function back. It will not cause the component to render like an overwrite would (still the animation executes of course). Handling updates like this is useful for fast-occurring updates, but you should generally prefer it. Optionally there's also a stop function as a third argument.
+
+```jsx
+const [springs, api] = useSprings(number, index => ({ opacity: 1 }))
+
+// Update springs with new props
+api.start(index => ({ opacity: 0 }))
+// Stop all springs
+api.stop()
+```
+
+### Finally: distribute animated props among the view
+
+The return value is an array containing animated props.
+
+```jsx
+return springs.map(styles => <animated.div style={styles} />)
+```
+
+## Properties
+
+All properties documented in the [common props](/common/props) apply.
+
+## Demos
+
+<DemoGrid>
+  <Demo title="Card Stack">
+    <CardStackDemo />
+  </Demo>
+  <Demo title="Draggable List">
+    <DraggableListDemo />
+  </Demo>
+  <Demo title="Viewpager">
+    <ViewpagerDemo />
+  </Demo>
+</DemoGrid>

@@ -24,7 +24,8 @@
     "packages": [
       "packages/*",
       "targets/*",
-      "demo"
+      "demo",
+      "docs"
     ]
   },
   "preconstruct": {
@@ -40,6 +41,8 @@
     "build": "preconstruct build",
     "watch": "preconstruct watch",
     "dev": "preconstruct dev",
+    "docs:dev": "yarn workspace docs dev",
+    "docs:build": "yarn workspace docs build",
     "demo:dev": "yarn workspace demo dev",
     "test": "jest",
     "test:cov": "jest --coverage",
