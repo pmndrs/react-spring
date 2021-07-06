@@ -149,6 +149,23 @@ describe('useTransition', () => {
 
     testIsRef(transRef)
   })
+
+  it('passes immediate through to payload', async () => {
+    const props = {
+      from: { n: 0 },
+      enter: { n: 1 },
+      leave: { n: 0 },
+      immediate: true,
+    }
+
+    update(true, props)
+
+    transition(style => {
+      expect(style.n.animation.immediate).toEqual(true)
+
+      return null
+    })
+  })
 })
 
 function createUpdater(
