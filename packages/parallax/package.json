@@ -38,11 +38,5 @@
   },
   "peerDependencies": {
     "react": "^16.8.0  || ^17.0.0"
-  },
-  "devDependencies": {
-    "@testing-library/cypress": "^7.0.6",
-    "cypress": "^7.4.0",
-    "cypress-plugin-snapshots": "^1.4.4",
-    "start-server-and-test": "^1.12.5"
   }
 }
