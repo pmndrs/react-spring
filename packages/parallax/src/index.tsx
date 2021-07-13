@@ -180,7 +180,6 @@ export const ParallaxLayer = React.memo(
           }}
         />
       )
-      return null
     }
   )
 )

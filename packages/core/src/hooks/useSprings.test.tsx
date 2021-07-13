@@ -2,26 +2,28 @@ import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { is, eachProp } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
-// import { SpringRef } from '../SpringRef'
+import { SpringRef } from '../SpringRef'
 import { SpringValue } from '../SpringValue'
 import { useSprings } from './useSprings'
 
 describe('useSprings', () => {
+  const isStrictMode = true
+  const strictModeFunctionCallMultiplier = isStrictMode ? 2 : 1
   let springs: Lookup<SpringValue>[]
-  // let ref: SpringRef
+  let ref: SpringRef
 
   // Call the "useSprings" hook and update local variables.
   const update = createUpdater(({ args }) => {
     const result = useSprings(...args)
     if (is.fun(args[1]) || args.length == 3) {
       springs = result[0] as any
-      // ref = result[1]
+      ref = result[1]
     } else {
       springs = result as any
-      // ref = undefined as any
+      ref = undefined as any
     }
     return null
-  })
+  }, isStrictMode)
 
   describe('when only a props function is passed', () => {
     it('calls the props function once per new spring', () => {
@@ -29,28 +31,43 @@ describe('useSprings', () => {
 
       // Create two springs.
       update(2, getProps)
-      expect(getProps).toHaveBeenCalledTimes(2)
+      expect(getProps).toHaveBeenCalledTimes(
+        2 * strictModeFunctionCallMultiplier
+      )
       expect(springs.length).toBe(2)
+      expect(ref.current.length).toBe(2)
 
       // Do nothing.
       update(2, getProps)
-      expect(getProps).toHaveBeenCalledTimes(2)
+      expect(getProps).toHaveBeenCalledTimes(
+        2 * strictModeFunctionCallMultiplier
+      )
       expect(springs.length).toBe(2)
+      expect(ref.current.length).toBe(2)
 
       // Create a spring.
       update(3, getProps)
-      expect(getProps).toHaveBeenCalledTimes(3)
+      expect(getProps).toHaveBeenCalledTimes(
+        3 * strictModeFunctionCallMultiplier
+      )
       expect(springs.length).toBe(3)
+      expect(ref.current.length).toBe(3)
 
       // Remove a spring.
       update(2, getProps)
-      expect(getProps).toHaveBeenCalledTimes(3)
+      expect(getProps).toHaveBeenCalledTimes(
+        3 * strictModeFunctionCallMultiplier
+      )
       expect(springs.length).toBe(2)
+      expect(ref.current.length).toBe(2)
 
       // Create two springs.
       update(4, getProps)
-      expect(getProps).toHaveBeenCalledTimes(5)
+      expect(getProps).toHaveBeenCalledTimes(
+        5 * strictModeFunctionCallMultiplier
+      )
       expect(springs.length).toBe(4)
+      expect(ref.current.length).toBe(4)
     })
   })
 
@@ -59,13 +76,19 @@ describe('useSprings', () => {
       const getProps = jest.fn((i: number) => ({ x: i * 100 }))
 
       update(2, getProps, [1])
-      expect(getProps).toHaveBeenCalledTimes(2)
+      expect(getProps).toHaveBeenCalledTimes(
+        2 * strictModeFunctionCallMultiplier
+      )
 
       update(2, getProps, [1])
-      expect(getProps).toHaveBeenCalledTimes(2)
+      expect(getProps).toHaveBeenCalledTimes(
+        2 * strictModeFunctionCallMultiplier
+      )
 
       update(2, getProps, [2])
-      expect(getProps).toHaveBeenCalledTimes(4)
+      expect(getProps).toHaveBeenCalledTimes(
+        4 * strictModeFunctionCallMultiplier
+      )
     })
   })
 
@@ -83,11 +106,29 @@ describe('useSprings', () => {
     it('creates new springs', () => {
       const getProps = (i: number) => ({ x: i * 100 })
 
-      update(0, getProps)
+      update(0, getProps, [[]])
       expect(springs.length).toBe(0)
+      expect(ref.current.length).toBe(0)
 
-      update(2, getProps)
+      update(2, getProps, [[1, 2]])
       expect(springs.length).toBe(2)
+      expect(ref.current.length).toBe(2)
+
+      update(0, getProps, [[]])
+      expect(springs.length).toBe(0)
+      expect(ref.current.length).toBe(0)
+
+      update(2, getProps, [[1, 2]])
+      expect(springs.length).toBe(2)
+      expect(ref.current.length).toBe(2)
+
+      update(1, getProps, [[1]])
+      expect(springs.length).toBe(1)
+      expect(ref.current.length).toBe(1)
+
+      update(2, getProps, [[1, 2]])
+      expect(springs.length).toBe(2)
+      expect(ref.current.length).toBe(2)
     })
   })
 
@@ -97,9 +138,19 @@ describe('useSprings', () => {
 
       update(3, getProps)
       expect(springs.length).toBe(3)
+      expect(ref.current.length).toBe(3)
 
       update(1, getProps)
       expect(springs.length).toBe(1)
+      expect(ref.current.length).toBe(1)
+
+      update(3, getProps)
+      expect(springs.length).toBe(3)
+      expect(ref.current.length).toBe(3)
+
+      update(1, getProps)
+      expect(springs.length).toBe(1)
+      expect(ref.current.length).toBe(1)
     })
   })
 
@@ -115,7 +166,8 @@ describe('useSprings', () => {
 })
 
 function createUpdater(
-  Component: React.ComponentType<{ args: [any, any, any?] }>
+  Component: React.ComponentType<{ args: [any, any, any?] }>,
+  isStrictMode: boolean
 ) {
   let result: RenderResult | undefined
   afterEach(() => {
@@ -124,7 +176,12 @@ function createUpdater(
 
   type Args = [number, any[] | ((i: number) => any), any[]?]
   return (...args: Args) => {
-    const elem = <Component args={args} />
+    const component = <Component args={args} />
+    const elem = isStrictMode ? (
+      <React.StrictMode>{component}</React.StrictMode>
+    ) : (
+      component
+    )
     if (result) result.rerender(elem)
     else result = render(elem)
     return result

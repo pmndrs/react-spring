@@ -128,12 +128,17 @@ export function useSprings(
 
   // Cache old controllers to dispose in the commit phase.
   const prevLength = usePrev(length) || 0
-  const oldCtrls = ctrls.current.slice(length, prevLength)
 
   // Create new controllers when "length" increases, and destroy
   // the affected controllers when "length" decreases.
   useMemo(() => {
+    // Clean up any unused controllers
+    each(ctrls.current.slice(length, prevLength), ctrl => {
+      detachRefs(ctrl, ref)
+      ctrl.stop(true)
+    })
     ctrls.current.length = length
+
     declareUpdates(prevLength, length)
   }, [length])
 
@@ -180,12 +185,6 @@ export function useSprings(
       state.queue = []
       each(queue, cb => cb())
     }
-
-    // Clean up any unused controllers.
-    each(oldCtrls, ctrl => {
-      detachRefs(ctrl, ref)
-      ctrl.stop(true)
-    })
 
     // Update existing controllers.
     each(ctrls.current, (ctrl, i) => {
