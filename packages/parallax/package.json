@@ -27,7 +27,7 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "scripts": {
-    "dev": "cd ./demo && yarn dev"
+    "dev": "cd ./test && yarn dev"
   },
   "dependencies": {
     "@react-spring/shared": "~9.2.0",
