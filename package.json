@@ -44,7 +44,8 @@
     "test:unit": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
-    "test": "yarn test:unit && cd ./packages/parallax && yarn test",
+    "test:e2e": "start-server-and-test 'yarn workspace @react-spring/parallax dev' http-get://localhost:3000 'yarn cypress run'",
+    "test": "yarn test:unit && yarn test:e2e",
     "release": "yarn test:ts && yarn test:cov && yarn build && yarn changeset publish",
     "vers": "yarn changeset version"
   },

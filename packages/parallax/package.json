@@ -27,10 +27,7 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "scripts": {
-    "dev": "cd ./demo && yarn dev",
-    "cy:open": "cypress open",
-    "cy:run": "cypress run",
-    "test": "start-server-and-test 'yarn dev' http-get://localhost:3000 'yarn cy:run'"
+    "dev": "cd ./demo && yarn dev"
   },
   "dependencies": {
     "@react-spring/shared": "~9.2.0",
