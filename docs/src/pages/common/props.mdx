@@ -18,7 +18,7 @@ All primitives inherit the following properties (though some of them may bring t
 | [config](configs) | obj/fn            | Spring config (contains mass, tension, friction, etc). Also valid as a function for individual keys: key => config                                                       |
 | reset             | bool              | The spring starts to animate from scratch (from -> to) if set true                                                                                                       |
 | reverse           | bool              | "from" and "to" are switched if set true, this will only make sense in combination with the "reset" flag                                                                 |
-| cancel            | bool/string/fn    | When `true`, the `cancel` prop stops the animation of every animated value owned by the `Controller` that receives it. See [cancel prop](/#cancel-prop) for more details |
+| cancel            | bool/string/fn    | When `true`, the `cancel` prop stops the animation of every animated value owned by the `Controller` that receives it. See [cancel prop](#cancel-prop) for more details |
 | pause             | bool              | The `pause` prop literally freezes animations in time.                                                                                                                   |
 | `events`          | fn                | A variety of event callbacks (see [events](#events) for more information)                                                                                                |
 
