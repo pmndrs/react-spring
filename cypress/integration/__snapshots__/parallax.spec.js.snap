@@ -1,0 +1,159 @@
+exports[`Parallax - vertical > should translate layers as expected #0`] = `
+<div
+  data-testid="container"
+  class="container"
+  style="position: absolute; width: 100%; height: 100%; overflow: hidden scroll; transform: translate3d(0px, 0px, 0px);"
+></div>
+`;
+
+exports[`Parallax - vertical > should translate layers as expected #1`] = `
+<div
+  data-testid="container"
+  class="container"
+  style="position: absolute; width: 100%; height: 100%; overflow: hidden scroll; transform: translate3d(0px, 0px, 0px);"
+>
+  <div
+    style="overflow: hidden; position: absolute; width: 100%; height: 1980px; transform: translate3d(0px, 0px, 0px);"
+  >
+    <div
+      data-testid="opposite-layer"
+      class="opposite"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; height: 100%; width: 660px; transform: translate3d(660px, 0px, 0px);"
+    ></div>
+    <div
+      data-testid="default-layer"
+      class="default"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; width: 100%; height: 660px; transform: translate3d(0px, 660px, 0px);"
+    ></div>
+    <div
+      class="flex-center"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; width: 100%; height: 660px; transform: translate3d(0px, 0px, 0px);"
+    >
+      <button>Scroll</button>
+    </div>
+  </div>
+  <div
+    data-testid="sticky-layer"
+    class="sticky"
+    style="position: sticky; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; width: 100%; height: 660px; transform: translate3d(0px, 0px, 0px);"
+  >
+    <div class="sticky-content flex-center">Sticky</div>
+  </div>
+</div>
+`;
+
+exports[`Parallax - vertical > should translate layers as expected #2`] = `
+<div
+  data-testid="container"
+  class="container"
+  style="position: absolute; width: 100%; height: 100%; overflow: hidden scroll; transform: translate3d(0px, 0px, 0px);"
+>
+  <div
+    style="overflow: hidden; position: absolute; width: 100%; height: 1980px; transform: translate3d(0px, 0px, 0px);"
+  >
+    <div
+      data-testid="opposite-layer"
+      class="opposite"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; height: 100%; width: 660px; transform: translate3d(0px, 0px, 0px);"
+    ></div>
+    <div
+      data-testid="default-layer"
+      class="default"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; width: 100%; height: 660px; transform: translate3d(0px, 0px, 0px);"
+    ></div>
+    <div
+      class="flex-center"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; width: 100%; height: 660px; transform: translate3d(0px, 0px, 0px);"
+    >
+      <button>Scroll</button>
+    </div>
+  </div>
+  <div
+    data-testid="sticky-layer"
+    class="sticky"
+    style="position: sticky; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; width: 100%; height: 660px; transform: translate3d(0px, 0px, 0px);"
+  >
+    <div class="sticky-content flex-center">Sticky</div>
+  </div>
+</div>
+`;
+
+exports[`Parallax - horizontal > should translate layers as expected #0`] = `
+<div
+  data-testid="container"
+  class="container"
+  style="position: absolute; width: 100%; height: 100%; overflow: scroll hidden; transform: translate3d(0px, 0px, 0px);"
+></div>
+`;
+
+exports[`Parallax - horizontal > should translate layers as expected #1`] = `
+<div
+  data-testid="container"
+  class="container"
+  style="position: absolute; width: 100%; height: 100%; overflow: scroll hidden; transform: translate3d(0px, 0px, 0px);"
+>
+  <div
+    style="overflow: hidden; position: absolute; height: 100%; width: 3000px; transform: translate3d(0px, 0px, 0px);"
+  >
+    <div
+      data-testid="opposite-layer"
+      class="opposite"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; width: 100%; height: 1000px; transform: translate3d(0px, 1000px, 0px);"
+    ></div>
+    <div
+      data-testid="default-layer"
+      class="default"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; height: 100%; width: 1000px; transform: translate3d(1000px, 0px, 0px);"
+    ></div>
+    <div
+      class="flex-center"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; height: 100%; width: 1000px; transform: translate3d(0px, 0px, 0px);"
+    >
+      <button>Scroll</button>
+    </div>
+  </div>
+  <div
+    data-testid="sticky-layer"
+    class="sticky"
+    style="position: sticky; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; height: 100%; width: 1000px; transform: translate3d(0px, 0px, 0px);"
+  >
+    <div class="sticky-content flex-center">Sticky</div>
+  </div>
+</div>
+`;
+
+exports[`Parallax - horizontal > should translate layers as expected #2`] = `
+<div
+  data-testid="container"
+  class="container"
+  style="position: absolute; width: 100%; height: 100%; overflow: scroll hidden; transform: translate3d(0px, 0px, 0px);"
+>
+  <div
+    style="overflow: hidden; position: absolute; height: 100%; width: 3000px; transform: translate3d(0px, 0px, 0px);"
+  >
+    <div
+      data-testid="opposite-layer"
+      class="opposite"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; width: 100%; height: 1000px; transform: translate3d(0px, 0px, 0px);"
+    ></div>
+    <div
+      data-testid="default-layer"
+      class="default"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; height: 100%; width: 1000px; transform: translate3d(0px, 0px, 0px);"
+    ></div>
+    <div
+      class="flex-center"
+      style="position: absolute; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; height: 100%; width: 1000px; transform: translate3d(0px, 0px, 0px);"
+    >
+      <button>Scroll</button>
+    </div>
+  </div>
+  <div
+    data-testid="sticky-layer"
+    class="sticky"
+    style="position: sticky; inset: 0px; background-size: auto; background-repeat: no-repeat; will-change: transform; height: 100%; width: 1000px; transform: translate3d(0px, 0px, 0px);"
+  >
+    <div class="sticky-content flex-center">Sticky</div>
+  </div>
+</div>
+`;

@@ -24,4 +24,6 @@ jobs:
           npm i -g yarn 
           yarn install
       - name: Run tests
-        run: yarn test:ts && yarn test:cov
+        run: yarn test
+      - name: Trial Build
+        run: yarn build

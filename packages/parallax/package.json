@@ -26,6 +26,9 @@
   "maintainers": [
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
+  "scripts": {
+    "dev": "cd ./test && yarn dev"
+  },
   "dependencies": {
     "@react-spring/shared": "~9.2.0",
     "@react-spring/web": "~9.2.0"
