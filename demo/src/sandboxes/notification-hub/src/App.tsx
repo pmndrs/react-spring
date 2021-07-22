@@ -48,7 +48,7 @@ function MessageHub({
         })
       )
     },
-    config: (item, index, phase) => key => (phase === 'enter' && key === 'life' ? { duration: timeout } : config),
+    config: (item, index, phase) => key => phase === 'enter' && key === 'life' ? { duration: timeout } : config,
   })
 
   useEffect(() => {
@@ -67,7 +67,7 @@ function MessageHub({
             <Button
               onClick={(e: MouseEvent) => {
                 e.stopPropagation()
-                if (cancelMap.has(item)) cancelMap.get(item)()
+                if (cancelMap.has(item) && life.get() !== '0%') cancelMap.get(item)()
               }}>
               <X size={18} />
             </Button>
