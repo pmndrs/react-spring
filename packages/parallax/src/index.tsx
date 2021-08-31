@@ -14,6 +14,13 @@ function getScrollType(horizontal: boolean) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
 }
 
+function isReactFragment(node: any) {
+  if (node.type) {
+    return node.type === React.Fragment
+  }
+  return node === React.Fragment
+}
+
 const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
 const START_TRANSLATE = 'translate(0px,0px)'
 
@@ -339,17 +346,27 @@ export const Parallax = React.memo(
                 ...props.innerStyle,
               }}>
               <ParentContext.Provider value={state}>
-                {React.Children.map(
-                  children,
-                  (child: any) => !child.props.sticky && child
-                )}
+                {React.Children.map(children, (child: any) => {
+                  if (isReactFragment(child)) {
+                    return React.Children.map(
+                      child.props.children,
+                      child => !child.props.sticky && child
+                    )
+                  }
+                  return !child.props.sticky && child
+                })}
               </ParentContext.Provider>
             </a.div>
             <ParentContext.Provider value={state}>
-              {React.Children.map(
-                children,
-                (child: any) => child.props.sticky && child
-              )}
+              {React.Children.map(children, (child: any) => {
+                if (isReactFragment(child)) {
+                  return React.Children.map(
+                    child.props.children,
+                    child => child.props.sticky && child
+                  )
+                }
+                return child.props.sticky && child
+              })}
             </ParentContext.Provider>
           </>
         )}
