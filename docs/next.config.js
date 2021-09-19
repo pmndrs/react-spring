@@ -1,3 +1,4 @@
+const withTM = require('next-transpile-modules')(['@react-spring/demo'])
 const slugs = require('remark-slug')
 const autoLinkHeadings = require('remark-autolink-headings')
 
@@ -17,7 +18,11 @@ const withMDX = require('@next/mdx')({
   },
 })
 
-module.exports = withMDX({
-  pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
-  future: { webpack5: true },
-})
+module.exports = withTM(
+  withMDX({
+    pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
+    experimental: {
+      externalDir: true,
+    },
+  })
+)
