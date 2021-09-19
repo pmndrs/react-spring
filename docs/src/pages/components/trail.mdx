@@ -1,0 +1,48 @@
+# Trail
+
+## Overview
+
+```js
+import { Trail, animated } from 'react-spring'
+```
+
+Creates multiple springs with a single config, each spring will follow the previous one. Use it for staggered animations.
+
+### Either: overwrite values to change the animation
+
+If you re-render the component with changed props, the animation will update.
+
+```jsx
+<Trail items={items} opacity={1}>
+    {...}
+</Trail>
+```
+
+### Or: pass a function that returns values, and update using "set"
+
+You will get an API object back. It will not cause the component to render like an overwrite would (the animation still executes of course). Handling updates like this is useful for fast-occurring updates, and you should generally prefer it as it's more powerful. Further documentation can be found in [Imperatives & Refs](/common/imperatives-and-refs#api-methods)
+
+```jsx
+const springRef = new SpringRef()
+
+<Trail ref={springRef} items={items} opacity={1}>
+    {...}
+</Trail>
+
+// Update trail
+springRef.start({ opacity: 0 })
+// Stop trail
+springRef.stop()
+```
+
+### Finally: distribute animated props among the view
+
+The return value is an array containing animated props.
+
+```jsx
+item => styles => <animated.div style={styles}>{item.text}</animated.div>
+```
+
+## Properties
+
+All properties of the [shared-api](/docs/hooks/api) apply.

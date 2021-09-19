@@ -1,0 +1,302 @@
+# Transition
+
+## Overview
+
+```js
+import { Transition, animated } from 'react-spring'
+```
+
+An animated TransitionGroup. Feed it your items and lifecycles. Whenever items are added or removed, it will animate these changes.
+
+### You can transition arrays
+
+```jsx render=true edit=true
+class TransitionArray extends PureComponent {
+  constructor() {
+    super()
+
+    this.state = {
+      items: NUM_TRANS,
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    const { items: currItems } = this.state
+    const { items: prevItems } = prevState
+
+    if (currItems.length === 0 && prevItems.length !== currItems.length) {
+      setTimeout(() => {
+        this.setState({
+          items: NUM_TRANS,
+        })
+      }, 2000)
+    }
+  }
+
+  render() {
+    return (
+      <div style={{ display: 'flex' }}>
+        <Transition
+          items={this.state.items}
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}
+          delay={200}
+          config={config.molasses}
+          onRest={() => this.setState({ items: [] })}>
+          {({ opacity }, item) => (
+            <animated.div
+              style={{
+                opacity: opacity.to(item.op),
+                transform: opacity
+                  .to(item.trans)
+                  .to(y => `translate3d(0,${y}px,0)`),
+              }}>
+              {item.fig}
+            </animated.div>
+          )}
+        </Transition>
+      </div>
+    )
+  }
+}
+```
+
+### Toggle between components
+
+```jsx render=true edit=true
+class Toggle extends PureComponent {
+  constructor() {
+    super()
+
+    this.state = {
+      toggle: false,
+    }
+  }
+
+  render() {
+    const { toggle } = this.state
+    return (
+      <Transition
+        items={toggle}
+        from={{ opacity: 0 }}
+        enter={{ opacity: 1 }}
+        leave={{ opacity: 0 }}
+        reverse={toggle}
+        delay={200}
+        config={config.molasses}
+        onRest={() =>
+          this.setState({
+            toggle: !toggle,
+          })
+        }>
+        {({ opacity }, item) =>
+          item ? (
+            <animated.div
+              style={{
+                position: 'absolute',
+                opacity: opacity.to({ range: [0.0, 1.0], output: [0, 1] }),
+              }}>
+              😄
+            </animated.div>
+          ) : (
+            <animated.div
+              style={{
+                position: 'absolute',
+                opacity: opacity.to({ range: [1.0, 0.0], output: [0, 1] }),
+              }}>
+              🤪
+            </animated.div>
+          )
+        }
+      </Transition>
+    )
+  }
+}
+```
+
+### Mount/Unmount single-component reveals
+
+```jsx render=true edit=true
+class Mount extends PureComponent {
+  constructor() {
+    super()
+
+    this.state = {
+      show: false,
+    }
+  }
+
+  render() {
+    const { show } = this.state
+
+    return (
+      <Transition
+        items={show}
+        from={{ opacity: 0 }}
+        enter={{ opacity: 1 }}
+        leave={{ opacity: 0 }}
+        reverse={show}
+        delay={200}
+        config={config.molasses}
+        onRest={() =>
+          this.setState({
+            show: !show,
+          })
+        }>
+        {(styles, item) =>
+          item && <animated.div style={styles}>✌️</animated.div>
+        }
+      </Transition>
+    )
+  }
+}
+```
+
+The `transition` function accepts a callback that receives four arguments: the animated values,
+the item, the `Transition` object, and the sibling position.
+
+It returns a React fragment containing every element returned by your
+callback. As you might assume, elements in the middle of their `leave`
+animation need to remain mounted.
+
+All elements in the fragment are guaranteed to have a `key` prop, whether or
+not you define one explicitly. Unkeyed elements will use the `ctrl.id` from
+their `Transition` object.
+
+For every unique item key, there exists a `Transition` object. The only time
+you have access to a `Transition` object is when it's passed as the 3rd argument
+of your transition callback.
+
+```js
+// The `t` argument is a Transition object.
+// The `i` argument is the sibling position.
+const elems = transition((style, item, t, i) => (
+  <a.div style={style}>{t.phase}</a.div>
+))
+```
+
+## Properties
+
+All properties of the [shared-api](/common/props) apply.
+
+| Property | Type              | Description                                                                                                                                                      |
+| -------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| initial  | obj/fn            | Initial (first time) base values, optional (can be null)                                                                                                         |
+| from     | obj/fn            | Base values, optional                                                                                                                                            |
+| enter    | obj/fn/array(obj) | Styles apply for entering elements                                                                                                                               |
+| update   | obj/fn/array(obj) | Styles apply for updating elements (you can update the hook itself with new values)                                                                              |
+| leave    | obj/fn/array(obj) | Styles apply for leaving elements                                                                                                                                |
+| trail    | number            | Delay in ms before the animation starts, adds up for each enter/update and leave                                                                                 |
+| reset    | bool/fn           | Prefers the `initial` prop over the `from` prop.                                                                                                                 |
+| keys     | array/function    | see [keys](/hooks/use-transition#keys) for more information                                                                                                      |
+| key      | single item       | only use if you're passing a single item to `useTransition` see [keys](/hooks/use-transition#keys) for more information                                          |
+| expires  | bool/number       | lets you control when removed items are unmounted (after their `leave` animation has finished) see [expires](/hooks/use-transition#expires) for more information |
+| sort     | fn                | useful shortcut for slicing and sorting your items array before passing it to the `useTransition` hook                                                           |
+
+### Keys
+
+Every `Transition` object has a unique key that identifies it. You have the
+option of defining explicit keys or letting the "item" (the value represented
+by the `Transition` object) be its own key.
+
+To define explicit keys, you must define the `keys` prop in your `useTransition`
+props. For example, when using an items array, the new `keys` prop can be:
+
+- an array of keys
+- or a mapping function that returns a key for any item given to it.
+
+```js
+useTransition(items, {
+  // Using a function
+  keys: item => item.key,
+  // Using an array created by lodash.map
+  keys: _.map(items, 'key'),
+})
+```
+
+⚠️ You **must** use explicit keys for any item that is an immutable object.
+
+Using explicit keys for mutable objects is unnecessary. 🥳
+
+If you're passing a single item to `useTransition`, you have the option of
+passing a single key as the `key` prop.
+
+```js
+useTransition(item, {
+  key: item.key,
+})
+```
+
+### Expires
+
+The `expires` prop lets you control when removed items are unmounted (after
+their `leave` animation has finished). By default, unmounting is postponed
+until the next render or until all transitions are resting.
+
+When `true` or `<= 0`, the default behavior is used.
+
+When `false`, items are never unmounted.
+
+When `> 0`, this prop is used in a `setTimeout` call that forces a
+rerender if the component that called `useTransition` doesn't rerender
+on its own after an item's `leave` animation is finished.
+
+Finally, the `expires` prop can be a function that receives an item and returns any of
+the values mentioned above.
+
+### Sort
+
+The `sort` prop is a function that takes two items, returns `-1` when
+the 1st item should appear first, and returns `1` when the 2nd item should.
+
+It's a useful shortcut for slicing and sorting your items array before passing
+it to the `useTransition` hook.
+
+```js
+// v8
+useTransition(items.slice().sort(props.sort), null, props)
+
+// v9
+useTransition(items, {
+  sort: (a, b) => { ... },
+  ...props
+})
+```
+
+## Additional notes
+
+### Multi-stage transitions
+
+The initial/from/enter/update/leave lifecycles can be objects, arrays or functions. When you provide a function you have access to individual items. The function is allowed to return plain objects, or either an array or a function for multi-stage transitions. When you provide a plain array you also can form a basic multi-stage transition (without access to the item).
+
+```jsx
+useTransition(items, {
+  enter: item => [
+    { opacity: item.opacity, height: item.height },
+    { life: '100%' },
+  ],
+  leave: item => async (next, cancel) => {
+    await next({ life: '0%' })
+    await next({ opacity: 0 })
+    await next({ height: 0 })
+  },
+  from: { life: '0%', opacity: 0, height: 0 },
+})
+```
+
+### Transitioning between routes
+
+```jsx
+const location = useLocation()
+const transitions = useTransition(location, { ... })
+return transitions((props, item) => (
+  <animated.div style={props}>
+    <Switch location={item}>
+      <Route path="/a" component={A} />
+      <Route path="/b" component={B} />
+      <Route path="/c" component={C} />
+    </Switch>
+  </animated.div>
+))
+```

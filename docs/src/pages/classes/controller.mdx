@@ -1,0 +1,171 @@
+# Controller
+
+## Overview
+
+The `Controller` is react-spring's heart. All primitives use it internally (including hooks). If you dislike render-props, and maybe hooks are too radical for you, then perhaps this is what you are looking for as it gives you full manual control without having to worry about loose-end animation handles. The api is very similar to the `useSpring` hook.
+
+```jsx
+import { Controller, animated } from 'react-spring'
+
+class Test extends React.Component {
+  state = { show: true }
+  animations = new Controller({ opacity: 0 })
+
+  toggle = () => this.setState(state => ({ show: !state.show }))
+
+  render() {
+    const props = this.animations.update({ opacity: this.state.show ? 1 : 0 })
+    return (
+      <>
+        <button onClick={this.toggle}>click</button>
+        <animated.div style={props}>I will fade</animated.div>
+      </>
+    )
+  }
+}
+```
+
+## Methods
+
+### `each((spring, key) => void): void`
+
+Call a function once per spring value.
+
+```js
+controller.each((spring, key) =>
+  key === 'opacity' ? spring.set(1) : spring.set(0)
+)
+```
+
+### `get(): T`
+
+Get the current values of our springs.
+
+```js
+const springValues = controller.get()
+```
+
+### `pause(): this`
+
+Freeze the active animation in time.
+
+```js
+contoller.pause()
+```
+
+### `pause(keys): this`
+
+Freezes some of the spring animations in time.
+
+```js
+contoller.pause(['opacity', 'color'])
+```
+
+### `resume(): this`
+
+Resumes the active animation.
+
+```js
+contoller.resume()
+```
+
+### `resume(keys): this`
+
+Resumes some of the paused spring animations.
+
+```js
+contoller.resume(['opacity', 'color'])
+```
+
+### `set(values): void`
+
+Set the current values without animating.
+
+```js
+contoller.set({ opacity: 1, color: 0x0000ff })
+```
+
+### `start(): Promise<AnimationResult>`
+
+Start the queued animations for every spring, and resolve the returned promise once all queued animations have finished or been cancelled.
+
+```js
+controller.start()
+```
+
+### `start(props): Promise<AnimationResult>`
+
+When you pass a queue (instead of nothing), that queue is used instead of the queued animations added with the `update` method, which are left alone.
+
+```js
+controller.start({ opacity: 1, color: 0x0000ff })
+```
+
+### `stop(): this`
+
+Stop all animations.
+
+```js
+contoller.stop()
+```
+
+### `stop(keys): this`
+
+Stop animations for the given keys.
+
+```js
+contoller.stop(['opacity', 'color'])
+```
+
+### `stop(cancel, keys): this`
+
+Cancel animations for the given keys.
+
+```js
+contoller.stop(true, ['opacity', 'color'])
+```
+
+### `update(props): this`
+
+Push an update onto the queue of each value.
+
+```js
+contoller.update({ opacity: 1, color: 0x0000ff })
+```
+
+## Properties
+
+### `get idle(): boolean`
+
+Returns `true` when both:
+
+- the current phase is _anything but_ `ACTIVE`
+- no async `to` prop is active
+
+Put simply, it's `true` when not animating.
+
+### `get item(): any`
+
+Returns the item the `Controller` is associated with. You probably don't need to use this much.
+
+This is used only in the [`useTransition`](/hooks/use-transition) hook & [`Transition`](/components/transition) render-props component.
+
+### `set item(item): void`
+
+Sets the item the `Controller` is associated with. You probably don't need to use this much.
+
+This is used only in the [`useTransition`](/hooks/use-transition) hook & [`Transition`](/components/transition) render-props component.
+
+### `queue: SpringUpdate<T>[]`
+
+The queue of pending updates.
+
+Call `.start()` to flush the queue.
+
+### `ref?: SpringRef<T>`
+
+The injected ref. When defined, render-based updates are pushed onto the `queue` instead of being auto-started.
+
+### `springs: SpringValues<T>`
+
+The animated values
