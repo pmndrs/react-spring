@@ -57,7 +57,7 @@ export function eachProp<T extends object, This>(
     for (let i = 0; i < obj.length; i++) {
       fn.call(ctx as any, obj[i] as any, `${i}`)
     }
-    return;
+    return
   }
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {

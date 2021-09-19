@@ -24,7 +24,8 @@
     "packages": [
       "packages/*",
       "targets/*",
-      "demo"
+      "demo",
+      "docs"
     ]
   },
   "preconstruct": {
@@ -40,7 +41,9 @@
     "build": "preconstruct build",
     "watch": "preconstruct watch",
     "dev": "preconstruct dev",
-    "demo:dev": "yarn workspace demo dev",
+    "docs:dev": "yarn workspace @react-spring/docs dev",
+    "docs:build": "yarn workspace @react-spring/docs build",
+    "demo:dev": "yarn workspace @react-spring/demo dev",
     "test:unit": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
@@ -78,9 +81,14 @@
     "@testing-library/cypress": "^7.0.6",
     "@testing-library/jest-dom": "^4.0.0",
     "@testing-library/react": "^11.2.5",
+    "@types/lodash.shuffle": "^4.2.6",
+    "@types/mdx-js__react": "^1.5.3",
     "@types/jest": "^26.0.23",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
+    "@types/react-lazyload": "^3.1.0",
+    "@types/styled-components": "^5.1.9",
+    "babel-plugin-styled-components": "^1.12.0",
     "cypress": "^7.7.0",
     "cypress-plugin-snapshots": "^1.4.4",
     "flush-microtasks": "^1.0.1",

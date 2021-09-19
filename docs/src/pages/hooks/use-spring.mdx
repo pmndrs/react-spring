@@ -1,0 +1,148 @@
+import { DemoGrid } from 'components/Demo/DemoGrid'
+import { Demo } from 'components/Demo/Demo'
+
+import AnimatedAutoDemo from '@react-spring/demo/src/sandboxes/animating-auto/src/App'
+import CardDemo from '@react-spring/demo/src/sandboxes/card/src/App'
+import CSSDemo from '@react-spring/demo/src/sandboxes/css-keyframes/src/App'
+import FlipCardDemo from '@react-spring/demo/src/sandboxes/flip-card/src/App'
+import SlideDemo from '@react-spring/demo/src/sandboxes/slide/src/App'
+import SVGFilterDemo from '@react-spring/demo/src/sandboxes/svg-filter/src/App'
+import TreeDemo from '@react-spring/demo/src/sandboxes/tree/src/App'
+
+# useSpring
+
+## Overview
+
+```js
+import { useSpring, animated } from 'react-spring'
+```
+
+Turns values into animated-values.
+
+### Either: overwrite values to change the animation
+
+If you re-render the component with changed props, the animation will update.
+
+```jsx
+const styles = useSpring({ opacity: toggle ? 1 : 0 })
+```
+
+### Or: pass a function that returns values, and update using the api
+
+You will get an API object back. It will not cause the component to render like an overwrite would (the animation still executes of course). Handling updates like this is useful for fast-occurring updates, and you should generally prefer it as it's more powerful. Further documentation can be found in [Imperatives & Refs](/common/imperatives-and-refs#api-methods)
+
+```jsx
+const [styles, api] = useSpring(() => ({ opacity: 1 }))
+
+// Update spring with new props
+api.start({ opacity: toggle ? 1 : 0 })
+// Stop animation
+api.stop()
+```
+
+### Finally: distribute animated props among the view
+
+The return value is an object containing animated props.
+
+```jsx
+return <animated.div style={styles}>i will fade</animated.div>
+```
+
+## Properties
+
+All properties documented in the [common props](/common/props) apply.
+
+## Additional notes
+
+### To-prop shortcut
+
+Any property that useSpring does not recognize will be combined into "to", for instance `opacity: 1` will become `to: { opacity: 1 }`.
+
+```jsx
+// This ...
+const props = useSpring({ opacity: 1, color: 'red' })
+// is a shortcut for this ...
+const props = useSpring({ to: { opacity: 1, color: 'red' } })
+```
+
+### Async chains/scripts
+
+The `to` prop also allows you to 1. script your animation, or 2. chain multiple animations together. Since these animations will execute asynchronously, make sure to provide a `from` property for base values (otherwise, props will be empty).
+
+#### This is how you create a script
+
+```jsx
+function AsyncExample() {
+  const styles = useSpring({
+    to: async (next, cancel) => {
+      await next({ opacity: 1, color: '#ffaaee' })
+      await next({ opacity: 0, color: 'rgb(14,26,19)' })
+    },
+    from: { opacity: 0, color: 'red' },
+  })
+  // ...
+  return <animated.div style={styles}>I will fade in and out</animated.div>
+}
+```
+
+#### And this is how you create a chain
+
+```jsx render=true edit=true
+function ChainExample() {
+  const styles = useSpring({
+    loop: true,
+    to: [
+      { opacity: 1, color: '#ffaaee' },
+      { opacity: 0, color: 'rgb(14,26,19)' },
+    ],
+    from: { opacity: 0, color: 'red' },
+  })
+  // ...
+  return <animated.div style={styles}>I will fade in and out</animated.div>
+}
+```
+
+When using an async `to` function inside a component that renders frequently,
+you'll need to memoize your `to` function to prevent an unintended restart.
+
+One solution is to use the `useCallback` hook.
+
+```jsx
+useSpring({
+  to: useCallback(async next => { ... }, []),
+})
+```
+
+Another solution is to pass a props function.
+
+```jsx
+useSpring(() => ({
+  to: async next => { ... },
+}))
+```
+
+## Demos
+
+<DemoGrid>
+  <Demo title="Animating Auto">
+    <AnimatedAutoDemo />
+  </Demo>
+  <Demo title="Card">
+    <CardDemo />
+  </Demo>
+  <Demo title="CSS Keyframes">
+    <CSSDemo />
+  </Demo>
+  <Demo title="Flip Card">
+    <FlipCardDemo />
+  </Demo>
+  <Demo title="Slide">
+    <SlideDemo />
+  </Demo>
+  <Demo title="SVG Filter">
+    <SVGFilterDemo />
+  </Demo>
+  <Demo title="Tree">
+    <TreeDemo />
+  </Demo>
+</DemoGrid>

@@ -1,0 +1,364 @@
+# Props
+
+## Overview
+
+```jsx
+useSpring({ from: { ... }, to: { ... }, delay: 100, onRest: () => ... })
+```
+
+All primitives inherit the following properties (though some of them may bring their own additionally):
+
+| Property          | Type              | Description                                                                                                                                                             |
+| ----------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| from              | obj               | Base values, optional                                                                                                                                                   |
+| to                | obj/fn/array(obj) | Animates to ...                                                                                                                                                         |
+| loop              | obj/fn/bool       | Looping settings, see [loop prop](#loop-prop) for more details                                                                                                          |
+| delay             | number/fn         | Delay in ms before the animation starts. Also valid as a function for individual keys: key => delay                                                                     |
+| immediate         | bool/fn           | Prevents animation if true. Also valid as a function for individual keys: key => immediate                                                                              |
+| [config](configs) | obj/fn            | Spring config (contains mass, tension, friction, etc). Also valid as a function for individual keys: key => config                                                      |
+| reset             | bool              | The spring starts to animate from scratch (from -> to) if set true                                                                                                      |
+| reverse           | bool              | "from" and "to" are switched if set true, this will only make sense in combination with the "reset" flag                                                                |
+| cancel            | bool/string/fn    | When `true`, the `cancel` prop stops the animation of every animated value owned by the `Controller` that receives it. See [cancel prop](#cancel-prop) for more details |
+| pause             | bool              | The `pause` prop literally freezes animations in time.                                                                                                                  |
+| `events`          | fn                | A variety of event callbacks (see [events](#events) for more information)                                                                                               |
+
+## Advanced Props
+
+### Loop Prop
+
+Use `loop: true` to repeat an animation.
+
+```js render=true edit=true
+function LoopTrue() {
+  const styles = useSpring({
+    loop: true,
+    from: { rotateZ: 0 },
+    to: { rotateZ: 180 },
+  })
+
+  return (
+    <animated.div
+      style={{
+        width: 80,
+        height: 80,
+        backgroundColor: '#46e891',
+        borderRadius: 16,
+        ...styles,
+      }}
+    />
+  )
+}
+```
+
+### The `loop` function
+
+Pass a function to be called after each loop. Return `true` to continue
+looping, or `false` to stop.
+
+```js render=true edit=true
+function LoopFunction() {
+  const n = useRef(0)
+  const styles = useSpring({
+    loop: () => 3 > n.current++,
+    from: { x: 0 },
+    to: { x: 100 },
+  })
+
+  return (
+    <animated.div
+      style={{
+        width: 80,
+        height: 80,
+        backgroundColor: '#46e891',
+        borderRadius: 16,
+        ...styles,
+      }}
+    />
+  )
+}
+```
+
+The `loop` function can also return a `loop` object, which is described in the
+next section. This is useful when you want to decide the next loop animation
+right after the previous loop is finished.
+
+### The `loop` object
+
+Define a `loop` object to customize the loop animation separately from the
+initial animation. It may contain any of the `useSpring` props. For example,
+if `reverse: true` is used, the loop animation will reverse on each loop.
+
+```js render=true edit=true
+function LoopObject() {
+  const styles = useSpring({
+    loop: { reverse: true },
+    from: { x: 0 },
+    to: { x: 100 },
+  })
+
+  return (
+    <animated.div
+      style={{
+        width: 80,
+        height: 80,
+        backgroundColor: '#46e891',
+        borderRadius: 16,
+        ...styles,
+      }}
+    />
+  )
+}
+```
+
+#### Inherited props
+
+The `loop` object is always merged into a copy of the props object it was
+defined in. The following example shows a loop animation that inherits its
+`config` prop.
+
+```js render=true edit=true
+function InheritedProps() {
+  const n = useRef(0)
+  const styles = useSpring({
+    from: { x: 0 },
+    config: { duration: 1000 },
+    loop: {
+      x: 100,
+    },
+  })
+
+  return (
+    <animated.div
+      style={{
+        width: 80,
+        height: 80,
+        backgroundColor: '#46e891',
+        borderRadius: 16,
+        ...styles,
+      }}
+    />
+  )
+}
+```
+
+⚠️ Notice how the loop doesn't run more than once. That's because some props
+are **never** inherited. These props include `default`, `reset`, and `reverse`.
+
+**To loop the animation,** try adding `reset: true` to the `loop` prop in the above
+example. Alternatively, you could add `from: { x: 0 }` to get the same effect.
+
+Lastly, try adding `config: { friction: 5 }` to the `loop` object. This overrides
+the inherited `config.duration` with a springy animation.
+
+### Cancel Prop
+
+When `true`, the `cancel` prop stops the animation of every animated value
+owned by the `Controller` that receives it.
+
+The following example never animates, because `cancel` is always true.
+
+```js
+useSpring({
+  cancel: true,
+  from: { x: 0 },
+  to: { x: 100 },
+})
+```
+
+Once the `cancel` prop turns from `true` to `false`, the declared animation
+will resume or reset, depending on the given props.
+
+#### Delayed updates
+
+The `cancel` prop even prevents delayed updates. 😎
+
+```jsx
+const [style, animate] = useSpring(() => ({ x: 0 }))
+
+// Pass this to an element.
+const onClick = () => {
+  animate({ x: 100, delay: 500 })
+
+  // Prevent the previous update. 🤣
+  animate({ cancel: true })
+}
+```
+
+#### Specific keys
+
+To cancel the animation of specific keys, you can pass a single key, an array of
+keys, or a `(key: string) => boolean` function.
+
+```js
+// Using a single key
+cancel: 'x',
+
+// Using an array of keys
+cancel: ['x', 'y'],
+
+// Using a function
+cancel: key => key !== 'x',
+```
+
+The `reset` and `immediate` props support these same types.
+
+### Events
+
+| Event name | Description                                              |
+| ---------- | -------------------------------------------------------- |
+| onStart    | Callback when a spring or key is about to be animated    |
+| onChange   | Frame by frame callback                                  |
+| onRest     | Callback when a spring or key comes to a stand-still     |
+| onPause    | Callback when a spring or key is paused                  |
+| onResume   | Callback when a spring or key is resumed                 |
+| onDelayEnd | Callback when a spring or key has finished being delayed |
+| onProps    | Callback when a spring or key's props have been updated  |
+
+#### Events as functions
+
+Events excluding `onDelayEnd` and `onProps` all have the same arguments passed to them:
+
+```jsx
+(result: AnimationResult, spring: Controller | SpringValue, item?: Item) => void
+```
+
+So lets break this down:
+
+- `result` (1st arg) – is an [Animation Result](#animation-results), this is an object containing the values of your spring at time of calling.
+- `spring` (2nd arg) – is either the `Controller` or `SpringValue` of the Animation Result, this called the event
+- `item` (3rd arg) – this is only available when using the [useTransition](/hooks/use-transition) hook or [Transition](/render-props/transition) component.
+
+> ⚠️ **warning** ⚠️ – Currently `onStart` is called after the first animation tick, this value is considered _dirty_
+
+`onDelayEnd` & `onProps` have the following arguments passed:
+
+```jsx
+(props: SpringProps, spring: SpringValue) => void
+```
+
+- `props` (1st arg) – the props object of the spring (all merged from the new values just passed).
+- `spring` (2nd arg) – the affected `SpringValue` object
+
+#### Events as objects
+
+Events like can also be defined on a per-key basis.
+
+```jsx
+useSpring({
+  from: { x: 0, y: 0 },
+  onRest: {
+    x: () => console.log('x.onRest'),
+    y: () => console.log('y.onRest'),
+  },
+})
+```
+
+#### Animation result
+
+Some events receive an `AnimationResult` object as their first argument when called. It contains the following properties:
+
+- `value: any` The current value when the animation ended.
+- `finished?: boolean` Equals true when the animation finished before being stopped or cancelled.
+- `cancelled?: boolean` Equals true when the animation was cancelled.
+
+The promise returned by the ref API's `start` method is resolved with an `AnimationResult` object, as well as the `start` method of the `SpringValue`
+and `Controller` classes.
+
+## Default props
+
+The `default` prop lets you set the default value of certain props defined in
+the same update.
+
+### Declarative updates
+
+For the declarative API, this prop is `true` by default. In the following
+example, the `onRest` handler is inherited by every update passed to `animate`,
+except when a call has its own `onRest` prop defined.
+
+```jsx
+useSpring({
+  to: async animate => { ... },
+  onRest: () => { ... }
+})
+```
+
+### Imperative updates
+
+Imperative updates can use `default: true` to set default props. When an
+async `to` prop is defined by an imperative update, it will inherit props from
+the imperative update like this:
+
+```jsx
+useSpring({
+  from: { x: 0 },
+  to: async animate => {
+    // The `config` prop below is inherited by
+    // both objects in the `to` array.
+    await animate({
+      to: [{ x: 100 }, { x: 0 }],
+      config: { tension: 100 },
+    })
+  },
+})
+```
+
+Default props are inherited while an update is being processed by the internal
+diffing algorithm within the `SpringValue#_merge` [method][merge1].
+
+[merge1]: https://github.com/react-spring/react-spring/blob/09f9a8aa34e73321d701c815b643576affd82a1c/packages/core/src/SpringValue.ts#L562-L824
+
+For example, both the `ref` prop and the `animate` function will inherit
+the default props defined below (in the `useSpring` props function).
+
+```jsx
+const ref = useSpringRef()
+const [{ x }, api] = useSpring(() => ({
+  x: 0,
+  onRest: () => { ... },
+  ref,
+}))
+
+useEffect(async () => {
+  // Animate to 100 with the ref API.
+  await ref.current.start({ x: 100 })
+  // Animate to 0 with the returned API.
+  await api.start({ x: 0 })
+}, [])
+```
+
+### Compatible props
+
+In the last example, only the `onRest` prop is inherited, because only some
+props can have a default value.
+
+The following props can have default values:
+
+- `cancel`
+- `config`
+- `immediate`
+- `onChange`
+- `onDelayEnd`
+- `onProps`
+- `onRest`
+- `onStart`
+- `pause`
+
+### The `default` object
+
+In addition to passing `default: true`, you can also pass an object instead.
+Only the props defined in your `default` object will be saved for future updates.
+
+In this example, we are setting `true` as the default value of `immediate`. This
+affects all future animations owned by the `useSpring` call, whether or not they
+are declarative or imperative.
+
+```js
+const { x } = useSpring({
+  x: 0,
+  default: { immediate: true },
+})
+useEffect(() => {
+  // This will be immediate.
+  x.start(100)
+})
+```
