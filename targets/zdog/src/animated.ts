@@ -1,4 +1,3 @@
-import * as Zdog from 'react-zdog'
 import {
   ElementType,
   ComponentPropsWithRef,
@@ -7,9 +6,9 @@ import {
 import { FluidValue } from '@react-spring/shared'
 import { primitives } from './primitives'
 
-type Primitives = typeof primitives[number]
+type Primitives = typeof primitives
 type AnimatedPrimitives = {
-  [P in Primitives]: AnimatedComponent<typeof Zdog[P]>
+  [P in keyof Primitives]: AnimatedComponent<Primitives[P]>
 }
 
 /** The type of the `animated()` function */
@@ -18,9 +17,8 @@ export type WithAnimated = {
 } & AnimatedPrimitives
 
 /** The type of an `animated()` component */
-export type AnimatedComponent<
-  T extends ElementType
-> = ForwardRefExoticComponent<AnimatedProps<ComponentPropsWithRef<T>>>
+export type AnimatedComponent<T extends ElementType> =
+  ForwardRefExoticComponent<AnimatedProps<ComponentPropsWithRef<T>>>
 
 /** The props of an `animated()` component */
 export type AnimatedProps<Props extends object> = {
