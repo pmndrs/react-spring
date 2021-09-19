@@ -1,6 +1,8 @@
 # Testing
 
-If you want to see a setup guide and example with the testing framwork you use that isn't documented here, why not consider submitting a [PR](https://www.github.com/react-spring.io)?
+If you want to see a setup guide and example with the testing framwork you use that isn't documented here, why not consider submitting a [PR](https://github.com/pmndrs/react-spring.io)?
+
+You may also want to join the discussion on [Testing recommendations](https://github.com/pmndrs/react-spring/discussions/1326).
 
 ## Setup with Jest
 
@@ -76,3 +78,31 @@ describe('react-spring component test', () => {
 And Hooray!
 
 ![nh](https://user-images.githubusercontent.com/43169879/53028522-f005e880-345e-11e9-9b91-c9d6610c146e.png)
+
+### Skipping animations
+
+Now let's say that you wanted to check that the value of the opacity is set to 1 in the previous example. You might write something like this
+(notice we use Jest and the [DOM testing library](https://github.com/testing-library/jest-dom) here):
+
+```js
+import { render } from 'react-testing-library'
+import '@testing-library/jest-dom'
+
+describe('react-spring component test', () => {
+  it('sets opacity to 1', () => {
+    const { container } = render(<Thing />)
+    expect(container).toHaveStyle({ opacity: 1 })
+  })
+})
+```
+
+This will fail because the animation won't run in the test environment. To skip animations and jump straight
+to the `to` value, enable `skipAnimation` before the tests run:
+
+```js
+import { Globals } from 'react-spring'
+
+Globals.assign({
+  skipAnimation: true,
+})
+```
