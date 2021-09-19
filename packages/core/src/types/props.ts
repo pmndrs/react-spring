@@ -352,7 +352,7 @@ export type PickAnimated<Props extends object, Fwd = true> = unknown &
     : [object] extends [Props]
     ? Lookup
     : ObjectFromUnion<
-        Props extends { from: infer From } // extract prop from the `from` prop if it exists
+        Props extends { from: infer From extends object ? object : () => any } // extract prop from the `from` prop if it exists
           ? ObjectType<From>
           : TransitionKey & keyof Props extends never
           ? ToValues<Props, Fwd>
