@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/parallax",
-  "version": "9.2.3",
+  "version": "9.2.4",
   "main": "dist/react-spring-parallax.cjs.js",
   "module": "dist/react-spring-parallax.esm.js",
   "files": [
@@ -26,6 +26,9 @@
   "maintainers": [
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
+  "scripts": {
+    "dev": "cd ./test && yarn dev"
+  },
   "dependencies": {
     "@react-spring/shared": "~9.2.0",
     "@react-spring/web": "~9.2.0"

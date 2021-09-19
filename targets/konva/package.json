@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/konva",
-  "version": "9.2.3",
+  "version": "9.2.4",
   "main": "dist/react-spring-konva.cjs.js",
   "module": "dist/react-spring-konva.esm.js",
   "files": [
