@@ -16,6 +16,9 @@ const withMDX = require('@next/mdx')({
     ],
     rehypePlugins: [],
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 })
 
 module.exports = withTM(
