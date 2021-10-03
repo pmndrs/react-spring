@@ -4,6 +4,7 @@ build/
 dist/
 .cache/
 .parcel-cache/
+.next
 
 # testing
 /coverage

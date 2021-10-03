@@ -1,0 +1,110 @@
+# Spring
+
+## Overview
+
+```js
+import { Spring, animated } from 'react-spring'
+```
+
+Turns values into animated-values.
+
+### Either: overwrite values to change the animation
+
+If you re-render the component with changed props, the animation will update.
+
+```jsx
+<Spring opacity={toggle ? 1 : 0}>
+  {styles => ...}
+</Spring>
+```
+
+### Or: pass a SpringRef and update using the api
+
+It will not cause the component to render like an overwrite would (the animation still executes of course). Handling updates like this is useful for fast-occurring updates, and you should generally prefer it as it's more powerful. Further documentation can be found in [Imperatives & Refs](/common/imperatives-and-refs#api-methods)
+
+```jsx
+const springRef = new SpringRef()
+
+springRef.start({
+  to: {
+    opacity: 1
+  }
+})
+
+<Spring ref={springRef} from={{ opacity: 0 }}>
+  {styles => ...}
+</Spring>
+```
+
+### Finally: distribute animated props among the view
+
+The child of `Spring` is a render prop function.
+
+```jsx
+styles => <animated.div style={styles}>i will fade</animated.div>
+```
+
+## Properties
+
+All properties documented in the [common props](/common/props) apply.
+
+## Additional notes
+
+### To-prop shortcut
+
+Any property that Spring does not recognize will be combined into "to", for instance `opacity: 1` will become `to: { opacity: 1 }`.
+
+```jsx
+// This ...
+<Spring opacity={1} color={'red'} />
+// is a shortcut for this ...
+<Spring to={{ opacity: 1, color: 'red' }} />
+```
+
+### Async chains/scripts
+
+The `to` prop also allows you to 1. script your animation, or 2. chain multiple animations together. Since these animations will execute asynchronously, make sure to provide a `from` property for base values (otherwise, props will be empty).
+
+#### This is how you create a script
+
+```jsx
+class AsyncExample extends PureComponent {
+  handleAsyncTo = async (next, cancel) => {
+    await next({ opacity: 1, color: '#ffaaee' })
+    await next({ opacity: 0, color: 'rgb(14,26,19)' })
+  }
+
+  render() {
+    // ...
+    return (
+      <Spring to={handleAsyncTo} from={{ opacity: 0, color: 'red' }}>
+        {styles => (
+          <animated.div style={styles}>I will fade in and out</animated.div>
+        )}
+      </Spring>
+    )
+  }
+}
+```
+
+#### And this is how you create a chain
+
+```jsx render=true edit=true
+class ChainExample extends PureComponent {
+  render() {
+    return (
+      <Spring
+        loop
+        from={{ opacity: 0, color: 'red' }}
+        to={[
+          { opacity: 1, color: '#ffaaee' },
+          { opacity: 0, color: 'rgb(14,26,19)' },
+        ]}>
+        {styles => (
+          <animated.div style={styles}>I will fade in and out</animated.div>
+        )}
+      </Spring>
+    )
+  }
+}
+```
