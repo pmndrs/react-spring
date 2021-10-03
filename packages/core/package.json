@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/core",
-  "version": "9.2.5-beta.0",
+  "version": "9.2.5",
   "main": "dist/react-spring-core.cjs.js",
   "module": "dist/react-spring-core.esm.js",
   "files": [

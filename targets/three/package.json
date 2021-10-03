@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/three",
-  "version": "9.2.5-beta.0",
+  "version": "9.2.5",
   "main": "dist/react-spring-three.cjs.js",
   "module": "dist/react-spring-three.esm.js",
   "files": [
