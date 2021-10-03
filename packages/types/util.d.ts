@@ -146,11 +146,10 @@ type LeafFunctionComponent<P> = {
   displayName?: string
 }
 
-export type ComponentPropsWithRef<
-  T extends ElementType
-> = T extends React.ComponentClass<infer P>
-  ? React.PropsWithoutRef<P> & React.RefAttributes<InstanceType<T>>
-  : React.PropsWithRef<React.ComponentProps<T>>
+export type ComponentPropsWithRef<T extends ElementType> =
+  T extends React.ComponentClass<infer P>
+    ? React.PropsWithoutRef<P> & React.RefAttributes<InstanceType<T>>
+    : React.PropsWithRef<React.ComponentProps<T>>
 
 // In @types/react, a "children" prop is required by the "FunctionComponent" type.
 export type ComponentType<P = {}> =
