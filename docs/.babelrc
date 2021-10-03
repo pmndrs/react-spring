@@ -1,5 +1,13 @@
 {
-  "presets": ["next/babel"],
+  "presets": [
+    "next/babel",
+    [
+      "@babel/preset-typescript",
+      {
+        "allowDeclareFields": true
+      }
+    ]
+  ],
   "plugins": [
     [
       "babel-plugin-styled-components",
