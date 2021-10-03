@@ -16,9 +16,6 @@ const withMDX = require('@next/mdx')({
     ],
     rehypePlugins: [],
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
 })
 
 module.exports = withTM(
@@ -26,6 +23,9 @@ module.exports = withTM(
     pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
     experimental: {
       externalDir: true,
+    },
+    typescript: {
+      ignoreBuildErrors: true,
     },
   })
 )
