@@ -24,5 +24,8 @@ module.exports = withTM(
     experimental: {
       externalDir: true,
     },
+    typescript: {
+      ignoreBuildErrors: true,
+    },
   })
 )
