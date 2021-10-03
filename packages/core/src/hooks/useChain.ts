@@ -46,7 +46,7 @@ export function useChain(
             each(controllers, (ctrl, i) =>
               each(queues[i] || [], update => ctrl.queue.push(update))
             )
-            return ref.start()
+            return Promise.all(ref.start())
           })
         }
       })
