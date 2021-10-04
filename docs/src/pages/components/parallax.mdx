@@ -59,6 +59,7 @@ import { Parallax, ParallaxLayer } from '@react-spring/parallax'
 
 ### Usage Notes
 
+- All direct `children` of `Parallax` must be `ParallaxLayer`s (or `fragment`s whose only direct `children` are `ParallaxLayer`s).
 - `Parallax` is a scrollable container so all scroll events are fired from the container itself -- listening for scroll on `window` won't work.
 - `scrollTo` is a method on `Parallax` -- you access it with a `ref` and then `ref.current.scrollTo(pageNumber)`.
 
