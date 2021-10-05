@@ -10,16 +10,16 @@ type ZdogElements = {
     : never
 }[keyof ZdogExports]
 
-export const primitives: ZdogElements[] = [
-  'Anchor',
-  'Shape',
-  'Group',
-  'Rect',
-  'RoundedRect',
-  'Ellipse',
-  'Polygon',
-  'Hemisphere',
-  'Cylinder',
-  'Cone',
-  'Box',
-]
+export const primitives: { [key in ZdogElements]: ElementType } = {
+  Anchor: Zdog.Anchor,
+  Shape: Zdog.Shape,
+  Group: Zdog.Group,
+  Rect: Zdog.Rect,
+  RoundedRect: Zdog.RoundedRect,
+  Ellipse: Zdog.Ellipse,
+  Polygon: Zdog.Polygon,
+  Hemisphere: Zdog.Hemisphere,
+  Cylinder: Zdog.Cylinder,
+  Cone: Zdog.Cone,
+  Box: Zdog.Box,
+}
