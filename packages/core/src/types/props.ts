@@ -361,12 +361,6 @@ export type PickAnimated<Props extends object, Fwd = true> = unknown &
           : TransitionValues<Props>
       >)
 
-export type NonUndefined<A> = A extends undefined ? never : A
-
-export type FunctionKeys<T extends object> = {
-  [K in keyof T]-?: NonUndefined<T[K]> extends Function ? K : never
-}[keyof T]
-
 /**
  * Pick the values of the `to` prop. Forward props are *not* included.
  */
