@@ -12,6 +12,9 @@ const numberRegex = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g
 // Taken from https://gist.github.com/olmokramer/82ccce673f86db7cda5e
 const colorRegex = /(#(?:[0-9a-f]{2}){2,4}|(#[0-9a-f]{3})|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi
 
+// Gets numbers with units when specified
+const unitRegex = new RegExp(`(${numberRegex.source})(%|[a-z]+)`, 'i')
+
 // Covers color names (transparent, blue, etc.)
 let namedColorRegex: RegExp
 
@@ -68,9 +71,17 @@ export const createStringInterpolator = (
 
   // Use the first `output` as a template for each call
   return (input: number) => {
+    // Convert numbers to units if available (allows for ["0", "100%"])
+    const missingUnit =
+      !unitRegex.test(output[0]) &&
+      output.find(value => unitRegex.test(value))?.replace(numberRegex, '')
+
     let i = 0
     return output[0]
-      .replace(numberRegex, () => String(interpolators[i++](input)))
+      .replace(
+        numberRegex,
+        () => `${interpolators[i++](input)}${missingUnit || ''}`
+      )
       .replace(rgbaRegex, rgbaRound)
   }
 }
