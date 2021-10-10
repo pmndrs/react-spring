@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/parallax",
-  "version": "9.2.6",
+  "version": "9.3.0",
   "main": "dist/react-spring-parallax.cjs.js",
   "module": "dist/react-spring-parallax.esm.js",
   "files": [
@@ -30,8 +30,8 @@
     "dev": "cd ./test && yarn dev"
   },
   "dependencies": {
-    "@react-spring/shared": "~9.2.6-beta.0",
-    "@react-spring/web": "~9.2.6-beta.0"
+    "@react-spring/shared": "~9.3.0",
+    "@react-spring/web": "~9.3.0"
   },
   "peerDependencies": {
     "react": "^16.8.0  || ^17.0.0"
