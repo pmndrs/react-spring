@@ -14,6 +14,24 @@ function getScrollType(horizontal: boolean) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
 }
 
+function mapChildrenRecursive(
+  children: React.ReactNode,
+  callback: Function
+): React.ReactNode {
+  const isReactFragment = (node: any) => {
+    if (node.type) {
+      return node.type === React.Fragment
+    }
+    return node === React.Fragment
+  }
+
+  return React.Children.map(children, (child: any) =>
+    isReactFragment(child)
+      ? mapChildrenRecursive(child.props.children, callback)
+      : callback(child)
+  )
+}
+
 const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
 const START_TRANSLATE = 'translate(0px,0px)'
 
@@ -339,14 +357,14 @@ export const Parallax = React.memo(
                 ...props.innerStyle,
               }}>
               <ParentContext.Provider value={state}>
-                {React.Children.map(
+                {mapChildrenRecursive(
                   children,
                   (child: any) => !child.props.sticky && child
                 )}
               </ParentContext.Provider>
             </a.div>
             <ParentContext.Provider value={state}>
-              {React.Children.map(
+              {mapChildrenRecursive(
                 children,
                 (child: any) => child.props.sticky && child
               )}
