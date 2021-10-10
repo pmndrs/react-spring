@@ -1,10 +1,9 @@
-import { raf } from '@react-spring/rafz'
+import { raf, Rafz } from '@react-spring/rafz'
 import {
   OneOrMore,
   InterpolatorConfig,
   InterpolatorArgs,
 } from '@react-spring/types'
-import { Rafz } from 'packages/rafz'
 
 import { FluidValue } from './fluids'
 import type { OpaqueAnimation } from './FrameLoop'

@@ -1,4 +1,4 @@
-import { ForwardRefExoticComponent } from 'react'
+import { ForwardRefExoticComponent, ReactNode } from 'react'
 import { ViewStyle, RecursiveArray } from 'react-native'
 import {
   AssignableKeys,
@@ -19,9 +19,10 @@ export type WithAnimated = {
 } & AnimatedPrimitives
 
 /** The type of an `animated()` component */
-export type AnimatedComponent<
-  T extends ElementType
-> = ForwardRefExoticComponent<AnimatedProps<ComponentPropsWithRef<T>>>
+export type AnimatedComponent<T extends ElementType> =
+  ForwardRefExoticComponent<
+    AnimatedProps<ComponentPropsWithRef<T>> & { children: ReactNode }
+  >
 
 /** The props of an `animated()` component */
 export type AnimatedProps<Props extends object> = {

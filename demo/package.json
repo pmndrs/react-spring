@@ -1,5 +1,5 @@
 {
-  "name": "demo",
+  "name": "@react-spring/demo",
   "version": "1.0.0",
   "description": "a sandbox for react-spring (probably will be replaced with something in the future)",
   "main": "null",

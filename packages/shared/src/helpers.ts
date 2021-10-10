@@ -53,8 +53,16 @@ export function eachProp<T extends object, This>(
   ) => void,
   ctx?: This
 ) {
+  if (is.arr(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      fn.call(ctx as any, obj[i] as any, `${i}`)
+    }
+    return
+  }
   for (const key in obj) {
-    fn.call(ctx as any, obj[key] as any, key)
+    if (obj.hasOwnProperty(key)) {
+      fn.call(ctx as any, obj[key] as any, key)
+    }
   }
 }
 
