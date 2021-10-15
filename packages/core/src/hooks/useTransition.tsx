@@ -332,7 +332,7 @@ export function useTransition(
 
   useLayoutEffect(
     () => {
-      const startChanges = async () => {
+      const startSyncChanges = async () => {
         for await (const [t, { phase, payload }] of changes) {
           if (phase == TransitionPhase.ENTER) {
             changesHasLeave.current = true
@@ -347,11 +347,7 @@ export function useTransition(
 
           // Merge the context into new items.
           if (hasContext && phase == TransitionPhase.ENTER) {
-            if (exitBeforeEnter) {
-              await ctrl.start({ default: context })
-            } else {
-              ctrl.start({ default: context })
-            }
+            await ctrl.start({ default: context })
           }
 
           if (payload) {
@@ -363,17 +359,43 @@ export function useTransition(
             if (ctrl.ref) {
               ctrl.update(payload)
             } else {
-              if (exitBeforeEnter) {
-                await ctrl.start(payload)
-              } else {
-                ctrl.start(payload)
-              }
+              await ctrl.start(payload)
             }
           }
         }
       }
 
-      startChanges()
+      startSyncChanges()
+
+      if (exitBeforeEnter) {
+        startSyncChanges()
+      } else {
+        each(changes, ({ phase, payload }, t) => {
+          const { ctrl } = t
+          t.phase = phase
+
+          // Attach the controller to our local ref.
+          ref?.add(ctrl)
+
+          // Merge the context into new items.
+          if (hasContext && phase == TransitionPhase.ENTER) {
+            ctrl.start({ default: context })
+          }
+
+          if (payload) {
+            // Update the injected ref if needed.
+            replaceRef(ctrl, payload.ref)
+
+            // When an injected ref exists, the update is postponed
+            // until the ref has its `start` method called.
+            if (ctrl.ref) {
+              ctrl.update(payload)
+            } else {
+              ctrl.start(payload)
+            }
+          }
+        })
+      }
     },
     reset ? void 0 : deps
   )
@@ -384,8 +406,10 @@ export function useTransition(
         const { springs } = changes.get(t) || t.ctrl
         const elem: any =
           !exitBeforeEnter ||
-          changesHasLeave.current === false ||
-          (changesHasLeave.current === true && t.phase != TransitionPhase.MOUNT)
+          (exitBeforeEnter &&
+            (changesHasLeave.current === false ||
+              (changesHasLeave.current === true &&
+                t.phase != TransitionPhase.MOUNT)))
             ? render({ ...springs }, t.item, t, i)
             : null
         return elem && elem.type ? (
