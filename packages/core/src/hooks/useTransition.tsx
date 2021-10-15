@@ -78,6 +78,7 @@ export function useTransition(
     sort,
     trail = 0,
     expires = true,
+    exitBeforeEnter = false,
     onDestroyed,
     ref: propsRef,
     config: propsConfig,
@@ -316,39 +317,63 @@ export function useTransition(
 
   // Merge the context into each transition.
   useLayoutEffect(() => {
-    if (hasContext)
-      each(transitions, t => {
-        t.ctrl.start({ default: context })
-      })
+    if (hasContext) {
+      Promise.all(
+        transitions.map(async t =>
+          exitBeforeEnter
+            ? await t.ctrl.start({ default: context })
+            : t.ctrl.start({ default: context })
+        )
+      )
+    }
   }, [context])
+
+  const changesHasLeave = useRef(false)
 
   useLayoutEffect(
     () => {
-      each(changes, ({ phase, payload }, t) => {
-        const { ctrl } = t
-        t.phase = phase
-
-        // Attach the controller to our local ref.
-        ref?.add(ctrl)
-
-        // Merge the context into new items.
-        if (hasContext && phase == TransitionPhase.ENTER) {
-          ctrl.start({ default: context })
-        }
-
-        if (payload) {
-          // Update the injected ref if needed.
-          replaceRef(ctrl, payload.ref)
-
-          // When an injected ref exists, the update is postponed
-          // until the ref has its `start` method called.
-          if (ctrl.ref) {
-            ctrl.update(payload)
+      const startChanges = async () => {
+        for await (const [t, { phase, payload }] of changes) {
+          if (phase == TransitionPhase.ENTER) {
+            changesHasLeave.current = true
           } else {
-            ctrl.start(payload)
+            changesHasLeave.current = false
+          }
+          const { ctrl } = t
+          t.phase = phase
+
+          // Attach the controller to our local ref.
+          ref?.add(ctrl)
+
+          // Merge the context into new items.
+          if (hasContext && phase == TransitionPhase.ENTER) {
+            if (exitBeforeEnter) {
+              await ctrl.start({ default: context })
+            } else {
+              ctrl.start({ default: context })
+            }
+          }
+
+          if (payload) {
+            // Update the injected ref if needed.
+            replaceRef(ctrl, payload.ref)
+
+            // When an injected ref exists, the update is postponed
+            // until the ref has its `start` method called.
+            if (ctrl.ref) {
+              ctrl.update(payload)
+            } else {
+              if (exitBeforeEnter) {
+                await ctrl.start(payload)
+              } else {
+                ctrl.start(payload)
+              }
+            }
           }
         }
-      })
+      }
+
+      startChanges()
     },
     reset ? void 0 : deps
   )
@@ -357,7 +382,12 @@ export function useTransition(
     <>
       {transitions.map((t, i) => {
         const { springs } = changes.get(t) || t.ctrl
-        const elem: any = render({ ...springs }, t.item, t, i)
+        const elem: any =
+          !exitBeforeEnter ||
+          changesHasLeave.current === false ||
+          (changesHasLeave.current === true && t.phase != TransitionPhase.MOUNT)
+            ? render({ ...springs }, t.item, t, i)
+            : null
         return elem && elem.type ? (
           <elem.type
             {...elem.props}
