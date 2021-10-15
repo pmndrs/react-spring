@@ -1,0 +1,21 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@react-spring/demo": "1.0.0",
+    "@react-spring/docs": "1.0.3",
+    "@react-spring/animated": "9.3.0",
+    "@react-spring/core": "9.3.0",
+    "@react-spring/parallax": "9.3.0",
+    "@react-spring/rafz": "9.3.0",
+    "react-spring": "9.3.0",
+    "@react-spring/shared": "9.3.0",
+    "@react-spring/types": "9.3.0",
+    "@react-spring/konva": "9.3.0",
+    "@react-spring/native": "9.3.0",
+    "@react-spring/three": "9.3.0",
+    "@react-spring/web": "9.3.0",
+    "@react-spring/zdog": "9.3.0"
+  },
+  "changesets": ["cool-avocados-eat"]
+}
