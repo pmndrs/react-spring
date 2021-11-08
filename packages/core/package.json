@@ -12,7 +12,7 @@
   "homepage": "https://github.com/pmndrs/react-spring#readme",
   "funding": {
     "type": "opencollective",
-    "https://opencollective.com/react-spring/donate"
+    "url": "https://opencollective.com/react-spring/donate"
   },
   "keywords": [
     "animated",
