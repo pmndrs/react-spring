@@ -1,12 +1,12 @@
 import { is } from '@react-spring/shared'
-import { config as configs } from './constants'
+import { EasingFunction } from '@react-spring/types'
+import { config as configs, easings } from './constants'
 
-const linear = (t: number) => t
 const defaults: any = {
   ...configs.default,
   mass: 1,
   damping: 1,
-  easing: linear,
+  easing: easings.linear,
   clamp: false,
 }
 
@@ -100,7 +100,7 @@ export class AnimationConfig {
    *
    * Defaults to quadratic ease-in-out.
    */
-  easing!: (t: number) => number
+  easing!: EasingFunction
 
   /**
    * Avoid overshooting by ending abruptly at the goal value.
