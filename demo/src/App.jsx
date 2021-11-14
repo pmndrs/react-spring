@@ -19,6 +19,7 @@ import MultiStageTransition from './sandboxes/multistage-transition/src/App'
 import Trail from './sandboxes/trail/src/App'
 import SvgFilter from './sandboxes/svg-filter/src/App'
 import CssKeyframes from './sandboxes/css-keyframes/src/App'
+import CssVariables from './sandboxes/css-variables/src/App'
 import NotificationHub from './sandboxes/notification-hub/src/App'
 import Tree from './sandboxes/tree/src/App'
 import DecayRocket from './sandboxes/rocket-decay/src/App'
@@ -27,29 +28,30 @@ import ParallaxVert from './sandboxes/parallax-vert/src/App'
 import ParallaxSticky from './sandboxes/parallax-sticky/src/App'
 
 const links = {
+  'animating-auto': AnimatingAuto,
   card: Card,
+  'cards-stack': CardsStack,
   chain: Chain,
+  'css-keyframes': CssKeyframes,
+  'css-variables': CssVariables,
+  'decay-rocket': DecayRocket,
+  'draggable-list': DraggableList,
   'flip-card': FlipCard,
   'goo-blobs': GooBlobs,
-  slide: Slide,
-  'draggable-list': DraggableList,
-  'cards-stack': CardsStack,
-  viewpager: Viewpager,
-  'simple-transition': SimpleTransition,
   'image-fade': ImageFade,
   'list-reordering': ListReordering,
   masonry: Masonry,
-  'animating-auto': AnimatingAuto,
   'multistage-transition': MultiStageTransition,
-  trail: Trail,
-  'svg-filter': SvgFilter,
-  'css-keyframes': CssKeyframes,
   'notification-hub': NotificationHub,
-  tree: Tree,
-  'decay-rocket': DecayRocket,
   parallax: Parallax,
   'parallax-vert': ParallaxVert,
   'parallax-sticky': ParallaxSticky,
+  'simple-transition': SimpleTransition,
+  slide: Slide,
+  'svg-filter': SvgFilter,
+  trail: Trail,
+  viewpager: Viewpager,
+  tree: Tree,
 }
 
 const Example = ({ link }) => {
