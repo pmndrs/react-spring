@@ -380,3 +380,48 @@ useEffect(() => {
   api.start({ x: 100, y: 100 })
 }, [])
 ```
+
+### Forwarding refs and the `animated` HoC
+
+For performance reasons, the attributes of animated DOM elements are updated directly by `animated` using a ref to the DOM node, rather than via React updates. Internally, `animated` figures out the difference between DOM elements and regular components by checking the type of the component using a `ref`. This means that if you use `forwardRef` on a component wrapped with `animated` and then pass that ref onto a DOM node, `animated` will treat that component as though it were a DOM node itself, and will stop triggering React updates to interpolate when the animated props change.
+
+For example:
+
+```jsx
+const MyAnimatedComponent = animated(({ value }) => (
+  <div>{value}</div>
+))
+
+const MyAnimatedComponentWithRefForwarding = animated(forwardRef(({ value }, ref) => (
+  <div ref={ref}>{value}</div>
+)))
+
+const MyComponentWithSpring = () => {
+  const { value } = useSpring({
+    from: { value: 0 },
+    to: { value: 1 },
+  });
+  
+  return (
+    <>
+      /* This component will automatically update as "value" changes */
+      <MyAnimatedComponent value={value} />
+      
+      /* This component will not automatically update as "value" changes */
+      <MyAnimatedComponentWithRefForwarding value={value} />
+    </>
+  );
+}
+```
+
+You can work around this problem by forwarding refs as regular props:
+
+```jsx
+const AnimatedComponent = animated(({ value, forwardedRef }) => (
+  <div ref={forwardedRef}>{value}</div>
+))
+
+const AnimatedComponentWithRefForwarding = useRef((props, ref) => (
+  <AnimatedComponent {...props} forwardedRef={ref} />
+))
+```
