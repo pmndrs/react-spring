@@ -1,5 +1,60 @@
 # Changelog
 
+## v9.3.0
+
+### Features
+
+- feat: interpolate bare numbers with units by @CodyJasonBennett in https://github.com/pmndrs/react-spring/pull/1473
+
+### Fixes
+
+- fix: handle ParallaxLayers inside fragments (#1667) by @kindoflew in https://github.com/pmndrs/react-spring/pull/1671
+- fix(native): add children prop by @CodyJasonBennett in https://github.com/pmndrs/react-spring/pull/1705
+
+## v9.2.6
+
+### Fixes
+
+- useChain does not run hooks in sequence when duration is specified #1492
+- useSpring does not orchestrate animations if one is using config w/o duration, when others do #1584
+- Type inference failed with functions passed to useSpring etc.
+
+## v9.2.5
+
+### Fixes
+
+- zDog types (#1665)
+- Type inference fails when function is used with enter in useTransition (#1483)
+
+## v9.2.4
+
+### Fixes
+
+- Animated should not try to access Array.prototype (#1585)
+- Add `immediate` to payload in useTransition hook (#1600)
+- useSprings controller clear refs properly when length changes in React.StrictMode (#1597)
+
+## v9.2.3
+
+### Fixes
+
+- incorrect type imports for rafz (#1560)
+
+## v9.2.2
+
+### Features
+
+- NEW package @react-spring/rafz (a fork of the pmndrs library rafz) – did not constitute minor bump.
+
+### Fixes
+
+- Three – Array props were not been updated correctly, big thanks @midanosi! (#1430)
+- Three – XR session was breaking Springs, big thanks @ffdead (#1518)
+
+### Chores
+
+- update the yarn.lock with updated packages
+
 ## v9.2.1
 
 ### Fixes
