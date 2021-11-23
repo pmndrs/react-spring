@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/types",
-  "version": "9.3.0",
+  "version": "9.3.1",
   "description": "Internal package with TypeScript stuff",
   "main": "index.js",
   "repository": "pmndrs/react-spring",
