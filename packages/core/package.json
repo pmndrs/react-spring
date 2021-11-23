@@ -10,6 +10,10 @@
   ],
   "repository": "pmndrs/react-spring",
   "homepage": "https://github.com/pmndrs/react-spring#readme",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/react-spring/donate"
+  },
   "keywords": [
     "animated",
     "animation",
@@ -26,9 +30,6 @@
   "maintainers": [
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
-  "scripts": {
-    "postinstall": "node -e \"console.log('\\u001b[35m\\u001b[1mEnjoy react-spring? You can now donate to our open collective:\\u001b[22m\\u001b[39m\\n > \\u001b[34mhttps://opencollective.com/react-spring/donate\\u001b[0m')\""
-  },
   "dependencies": {
     "@react-spring/animated": "~9.3.0",
     "@react-spring/shared": "~9.3.0",
