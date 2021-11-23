@@ -321,7 +321,16 @@ export const Parallax = React.memo(
       return () => window.removeEventListener('resize', onResize, false)
     })
 
-    const overflow = enabled ? 'scroll' : 'hidden'
+    const overflow: React.CSSProperties = enabled
+      ? {
+          overflowY: horizontal ? 'hidden' : 'scroll',
+          overflowX: horizontal ? 'scroll' : 'hidden',
+        }
+      : {
+          overflowY: 'hidden',
+          overflowX: 'hidden',
+        }
+
     return (
       <a.div
         {...rest}
@@ -333,9 +342,7 @@ export const Parallax = React.memo(
           position: 'absolute',
           width: '100%',
           height: '100%',
-          overflow,
-          overflowY: horizontal ? 'hidden' : overflow,
-          overflowX: horizontal ? overflow : 'hidden',
+          ...overflow,
           WebkitOverflowScrolling: 'touch',
           WebkitTransform: START_TRANSLATE,
           msTransform: START_TRANSLATE,
