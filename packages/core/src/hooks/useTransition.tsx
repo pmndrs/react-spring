@@ -186,11 +186,13 @@ export function useTransition(
   const defaultProps = getDefaultProps<UseTransitionProps>(props)
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
-  const exitingTransitions = new Map<TransitionState, Change>()
+  const exitingTransitions = useRef(new Map<TransitionState, Change>())
+
+  const forceChange = useRef(false)
   each(transitions, (t, i) => {
     const key = t.key
     const prevPhase = t.phase
-    console.log('prevPhase', prevPhase)
+    // console.log('prevPhase', prevPhase)
 
     const p: UseTransitionProps<any> = propsFn ? propsFn() : props
 
@@ -269,7 +271,7 @@ export function useTransition(
 
       const transitions = usedTransitions.current!
       const t = transitions.find(t => t.key === key)
-      console.log('onResolve', t)
+      // console.log('onResolve', t)
       if (!t) return
 
       // Reset the phase of a cancelled enter/leave transition, so it can
@@ -304,6 +306,19 @@ export function useTransition(
         }
         // Force update once idle and expired items exist.
         if (idle && transitions.some(t => t.expired)) {
+          /**
+           * Remove the exited transition from the list
+           */
+          exitingTransitions.current.delete(t)
+
+          if (exitBeforeEnter) {
+            /**
+             * If we have exitBeforeEnter == true
+             * we need to force the animation to start
+             */
+            forceChange.current = true
+          }
+
           forceUpdate()
         }
       }
@@ -315,9 +330,9 @@ export function useTransition(
      * Make a separate map for the exiting changes and "regular" changes
      */
     if (phase === TransitionPhase.LEAVE && exitBeforeEnter) {
-      exitingTransitions.set(t, { phase, springs, payload })
+      exitingTransitions.current.set(t, { phase, springs, payload })
     } else {
-      console.log('setting normal changes')
+      // console.log('setting normal changes')
       changes.set(t, { phase, springs, payload })
     }
   })
@@ -342,26 +357,23 @@ export function useTransition(
      * set to true, we remove the transitions so they go to back
      * to their initial state.
      */
-    if (exitingTransitions.size) {
+    if (exitingTransitions.current.size) {
       const ind = transitions.findIndex(state => state.key === t.key)
       transitions.splice(ind, 1)
     }
   })
 
-  console.log('prevTransitions', prevTransitions)
-
   useLayoutEffect(
     () => {
-      console.log('exitingTransitions.size', exitingTransitions.size)
       /*
-       * if exitingTransitions has a size it means we're exiting before enter
+       * if exitingTransitions.current has a size it means we're exiting before enter
        * so we want to map through those and fire those first.
        */
       each(
-        exitingTransitions.size ? exitingTransitions : changes,
+        exitingTransitions.current.size ? exitingTransitions.current : changes,
         ({ phase, payload }, t) => {
           const { ctrl } = t
-          console.log('updating transition with phase', phase)
+
           t.phase = phase
 
           // Attach the controller to our local ref.
@@ -372,20 +384,24 @@ export function useTransition(
             ctrl.start({ default: context })
           }
 
-          console.log('do we have a payload', Boolean(payload))
-
           if (payload) {
             // Update the injected ref if needed.
             replaceRef(ctrl, payload.ref)
 
-            // When an injected ref exists, the update is postponed
-            // until the ref has its `start` method called.
-            if (ctrl.ref) {
-              console.log('updating ref')
+            /**
+             * When an injected ref exists, the update is postponed
+             * until the ref has its `start` method called.
+             * Unless we have exitBeforeEnter in which case will skip
+             * to enter the new animation straight away as if they "overlapped"
+             */
+            if (ctrl.ref && !forceChange.current) {
               ctrl.update(payload)
             } else {
-              console.log('starting controller', ctrl.id)
               ctrl.start(payload)
+
+              if (forceChange.current) {
+                forceChange.current = false
+              }
             }
           }
         }
@@ -398,7 +414,6 @@ export function useTransition(
     <>
       {transitions.map((t, i) => {
         const { springs } = changes.get(t) || t.ctrl
-        console.log('rendering controller', t.ctrl.id)
         const elem: any = render({ ...springs }, t.item, t, i)
         return elem && elem.type ? (
           <elem.type
