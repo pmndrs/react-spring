@@ -2,54 +2,69 @@ import React from 'react'
 import { Link, Route } from 'wouter'
 import styles from './styles.module.css'
 
-import GooBlobs from './sandboxes/goo-blobs/src/App'
-import Card from './sandboxes/card/src/App'
-import FlipCard from './sandboxes/flip-card/src/App'
-import Slide from './sandboxes/slide/src/App'
-import DraggableList from './sandboxes/draggable-list/src/App'
-import CardsStack from './sandboxes/cards-stack/src/App'
-import Viewpager from './sandboxes/viewpager/src/App'
-import SimpleTransition from './sandboxes/simple-transition/src/App'
-import ImageFade from './sandboxes/image-fade/src/App'
-import ListReordering from './sandboxes/list-reordering/src/App'
-import Chain from './sandboxes/chain/src/App'
-import Masonry from './sandboxes/masonry/src/App'
 import AnimatingAuto from './sandboxes/animating-auto/src/App'
-import MultiStageTransition from './sandboxes/multistage-transition/src/App'
-import Trail from './sandboxes/trail/src/App'
-import SvgFilter from './sandboxes/svg-filter/src/App'
+
+import Card from './sandboxes/card/src/App'
+import CardsStack from './sandboxes/cards-stack/src/App'
+import Chain from './sandboxes/chain/src/App'
 import CssKeyframes from './sandboxes/css-keyframes/src/App'
-import NotificationHub from './sandboxes/notification-hub/src/App'
-import Tree from './sandboxes/tree/src/App'
+
 import DecayRocket from './sandboxes/rocket-decay/src/App'
+import DraggableList from './sandboxes/draggable-list/src/App'
+
+import ExitBeforeEnter from './sandboxes/exit-before-enter/src/App'
+
+import FlipCard from './sandboxes/flip-card/src/App'
+
+import GooBlobs from './sandboxes/goo-blobs/src/App'
+
+import ImageFade from './sandboxes/image-fade/src/App'
+
+import ListReordering from './sandboxes/list-reordering/src/App'
+
+import Masonry from './sandboxes/masonry/src/App'
+import MultiStageTransition from './sandboxes/multistage-transition/src/App'
+
+import NotificationHub from './sandboxes/notification-hub/src/App'
+
 import Parallax from './sandboxes/parallax/src/App'
 import ParallaxVert from './sandboxes/parallax-vert/src/App'
 import ParallaxSticky from './sandboxes/parallax-sticky/src/App'
 
+import SimpleTransition from './sandboxes/simple-transition/src/App'
+import Slide from './sandboxes/slide/src/App'
+import SvgFilter from './sandboxes/svg-filter/src/App'
+
+import Trail from './sandboxes/trail/src/App'
+import Tree from './sandboxes/tree/src/App'
+
+import Viewpager from './sandboxes/viewpager/src/App'
+
 const links = {
+  'animating-auto': AnimatingAuto,
   card: Card,
+  'cards-stack': CardsStack,
   chain: Chain,
+  'css-keyframes': CssKeyframes,
+  'decay-rocket': DecayRocket,
+  'draggable-list': DraggableList,
+  'exit-before-enter': ExitBeforeEnter,
   'flip-card': FlipCard,
   'goo-blobs': GooBlobs,
-  slide: Slide,
-  'draggable-list': DraggableList,
-  'cards-stack': CardsStack,
-  viewpager: Viewpager,
-  'simple-transition': SimpleTransition,
   'image-fade': ImageFade,
   'list-reordering': ListReordering,
   masonry: Masonry,
-  'animating-auto': AnimatingAuto,
   'multistage-transition': MultiStageTransition,
-  trail: Trail,
-  'svg-filter': SvgFilter,
-  'css-keyframes': CssKeyframes,
   'notification-hub': NotificationHub,
-  tree: Tree,
-  'decay-rocket': DecayRocket,
   parallax: Parallax,
   'parallax-vert': ParallaxVert,
   'parallax-sticky': ParallaxSticky,
+  'simple-transition': SimpleTransition,
+  slide: Slide,
+  'svg-filter': SvgFilter,
+  trail: Trail,
+  tree: Tree,
+  viewpager: Viewpager,
 }
 
 const Example = ({ link }) => {

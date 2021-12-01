@@ -1,8 +1,12 @@
 .page {
   margin: 0 auto;
   max-width: 720px;
-  padding: 20vh 16px 0;
+  padding: 40px 16px 0;
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
 }
 
 .back {
@@ -21,10 +25,13 @@
 }
 
 .link {
+  display: inline-block;
   color: inherit;
 }
 
 .linkList {
   display: grid;
+  justify-content: flex-start;
   gap: 10px;
+  margin-bottom: 80px;
 }

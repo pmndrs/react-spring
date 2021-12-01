@@ -1,0 +1,59 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.img__container {
+  overflow: hidden;
+  position: relative;
+  width: 80vw;
+}
+
+.img__container::before {
+  display: block;
+  content: '';
+  width: 100%;
+  padding-top: 56.25%;
+}
+
+.img__container > img {
+  position: absolute;
+  min-width: 100%;
+  max-width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ticker {
+  position: absolute;
+  height: 4rem;
+  width: 4rem;
+  bottom: 2rem;
+  right: 2rem;
+}
+
+.ticker > * {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ticker > div {
+  opacity: 0.2;
+  border: solid 3px black;
+}
+
+.ticker > svg {
+  fill: none;
+  stroke: black;
+  stroke-width: 3;
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+}
