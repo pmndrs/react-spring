@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/konva",
-  "version": "9.3.1",
+  "version": "9.4.0-beta.0",
   "main": "dist/react-spring-konva.cjs.js",
   "module": "dist/react-spring-konva.esm.js",
   "files": [
@@ -27,10 +27,10 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/animated": "~9.3.0",
-    "@react-spring/core": "~9.3.0",
-    "@react-spring/shared": "~9.3.0",
-    "@react-spring/types": "~9.3.0"
+    "@react-spring/animated": "~9.4.0-beta.0",
+    "@react-spring/core": "~9.4.0-beta.0",
+    "@react-spring/shared": "~9.4.0-beta.0",
+    "@react-spring/types": "~9.4.0-beta.0"
   },
   "peerDependencies": {
     "konva": ">=2.6",
