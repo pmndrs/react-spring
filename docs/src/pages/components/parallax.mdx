@@ -52,16 +52,34 @@ import { Parallax, ParallaxLayer } from '@react-spring/parallax'
 | horizontal? | boolean       | Whether or not the container scrolls horizontally. Defaults to `false`.          |
 | innerStyle? | CSSProperties | CSS object to style the inner `Parallax` wrapper (not the scrollable container)  |
 
-### `scrollTo`
+### `ref` Properties
 
-`Parallax` also has a `scrollTo` function for click-to-scroll. It takes one paramater: the number of the page to scroll to
-(Pages are zero-indexed so `scrollTo(0)` will scroll to the first page, etc).
+`Parallax` also has a few useful properties that you can access using a `ref`:
+
+```jsx
+const ref = useRef()
+...
+<Parallax ref={ref}>
+```
+
+#### `ref.current.scrollTo`
+
+A function for click-to-scroll. It takes one paramater: the number of the page to scroll to. Pages are zero-indexed, so `scrollTo(0)` will scroll to the first page, `scrollTo(1)` to the second, etc.
+
+#### `ref.current.container`
+
+The `ref` for the outer container `div` of `Parallax`, for when you need access to the actual DOM Element.
+
+**NOTE**: since it is also a `ref`, it must be accessed with `ref.current.container.current`.
+
+#### `ref.current.content`
+
+The `ref` for the inner container `div` of `Parallax`.
 
 ### Usage Notes
 
 - All direct `children` of `Parallax` must be `ParallaxLayer`s (or `fragment`s whose only direct `children` are `ParallaxLayer`s).
-- `Parallax` is a scrollable container so all scroll events are fired from the container itself -- listening for scroll on `window` won't work.
-- `scrollTo` is a method on `Parallax` -- you access it with a `ref` and then `ref.current.scrollTo(pageNumber)`.
+- `Parallax` is a scrollable container so all scroll events are fired from the container itself -- listening for scroll on `window` won't work (but you _can_ use `ref.current.container`).
 
 ## ParallaxLayer
 
