@@ -12,7 +12,10 @@ module.exports = {
   moduleNameMapper: {
     '^react$': '<rootDir>/node_modules/react',
   },
-  collectCoverageFrom: ['src/**/*'],
+  collectCoverageFrom: [
+    '<rootDir>/packages/{animated,core,rafz,shared}/src/*.{ts,tsx}',
+    '<rootDir>/targets/{web}/src/*.{ts,tsx}',
+  ],
   coverageDirectory: './coverage',
   coverageThreshold: {
     global: {
