@@ -388,29 +388,26 @@ For performance reasons, the attributes of animated DOM elements are updated dir
 For example:
 
 ```jsx
-const MyAnimatedComponent = animated(({ value }) => (
-  <div>{value}</div>
-))
+const MyAnimatedComponent = animated(({ value }) => <div>{value}</div>)
 
-const MyAnimatedComponentWithRefForwarding = animated(forwardRef(({ value }, ref) => (
-  <div ref={ref}>{value}</div>
-)))
+const MyAnimatedComponentWithRefForwarding = animated(
+  forwardRef(({ value }, ref) => <div ref={ref}>{value}</div>)
+)
 
 const MyComponentWithSpring = () => {
   const { value } = useSpring({
     from: { value: 0 },
     to: { value: 1 },
-  });
-  
+  })
+
   return (
     <>
       /* This component will automatically update as "value" changes */
       <MyAnimatedComponent value={value} />
-      
       /* This component will not automatically update as "value" changes */
       <MyAnimatedComponentWithRefForwarding value={value} />
     </>
-  );
+  )
 }
 ```
 
