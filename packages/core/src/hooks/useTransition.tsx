@@ -192,7 +192,6 @@ export function useTransition(
   each(transitions, (t, i) => {
     const key = t.key
     const prevPhase = t.phase
-    // console.log('prevPhase', prevPhase)
 
     const p: UseTransitionProps<any> = propsFn ? propsFn() : props
 
@@ -271,7 +270,6 @@ export function useTransition(
 
       const transitions = usedTransitions.current!
       const t = transitions.find(t => t.key === key)
-      // console.log('onResolve', t)
       if (!t) return
 
       // Reset the phase of a cancelled enter/leave transition, so it can
@@ -308,6 +306,7 @@ export function useTransition(
         if (idle && transitions.some(t => t.expired)) {
           /**
            * Remove the exited transition from the list
+           * this may not exist but we'll try anyway.
            */
           exitingTransitions.current.delete(t)
 
@@ -332,7 +331,6 @@ export function useTransition(
     if (phase === TransitionPhase.LEAVE && exitBeforeEnter) {
       exitingTransitions.current.set(t, { phase, springs, payload })
     } else {
-      // console.log('setting normal changes')
       changes.set(t, { phase, springs, payload })
     }
   })
