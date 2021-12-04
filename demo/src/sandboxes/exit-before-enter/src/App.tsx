@@ -8,7 +8,11 @@ import {
 
 import styles from './styles.module.css'
 
-const IMAGES = ['/img_01.jpg', '/img_02.png', '/img_03.jpeg']
+const IMAGES = [
+  'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/154443660/original/734570cec0de955789ff0acd80caad3d582b85e0/create-a-generative-art-piece-for-you.png',
+  'https://images.squarespace-cdn.com/content/v1/5c77350965a707ed1710a1bc/1592330659753-70M66LGEPXFTQ8S716MX/Generative+Art+by+Mark+Stock+-+Gyre+35700.jpg',
+  'https://cdn.pixabay.com/photo/2018/09/04/09/12/generative-art-3653275_1280.jpg',
+]
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0)
