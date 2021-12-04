@@ -17,5 +17,5 @@
     "@react-spring/web": "9.3.1",
     "@react-spring/zdog": "9.3.1"
   },
-  "changesets": ["famous-roses-peel"]
+  "changesets": ["calm-pumpkins-nail", "cool-avocados-eat", "famous-roses-peel"]
 }
