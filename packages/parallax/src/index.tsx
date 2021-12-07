@@ -52,6 +52,8 @@ export interface IParallax {
   current: number
   controller: Controller<{ scroll: number }>
   layers: Set<IParallaxLayer>
+  container: React.MutableRefObject<any>
+  content: React.MutableRefObject<any>
   scrollTo(offset: number): void
   update(): void
   stop(): void
@@ -226,6 +228,9 @@ export const Parallax = React.memo(
       ...rest
     } = props
 
+    const containerRef = useRef<any>()
+    const contentRef = useRef<any>()
+
     const state: IParallax = useMemoOne(
       () => ({
         config,
@@ -236,6 +241,8 @@ export const Parallax = React.memo(
         offset: 0,
         controller: new Controller({ scroll: 0 }),
         layers: new Set<IParallaxLayer>(),
+        container: containerRef,
+        content: contentRef,
         update: () => update(),
         scrollTo: offset => scrollTo(offset),
         stop: () => state.controller.stop(),
@@ -248,9 +255,6 @@ export const Parallax = React.memo(
     }, [config])
 
     React.useImperativeHandle(ref, () => state)
-
-    const containerRef = useRef<any>()
-    const contentRef = useRef<any>()
 
     const update = () => {
       const container = containerRef.current
@@ -321,7 +325,16 @@ export const Parallax = React.memo(
       return () => window.removeEventListener('resize', onResize, false)
     })
 
-    const overflow = enabled ? 'scroll' : 'hidden'
+    const overflow: React.CSSProperties = enabled
+      ? {
+          overflowY: horizontal ? 'hidden' : 'scroll',
+          overflowX: horizontal ? 'scroll' : 'hidden',
+        }
+      : {
+          overflowY: 'hidden',
+          overflowX: 'hidden',
+        }
+
     return (
       <a.div
         {...rest}
@@ -333,9 +346,7 @@ export const Parallax = React.memo(
           position: 'absolute',
           width: '100%',
           height: '100%',
-          overflow,
-          overflowY: horizontal ? 'hidden' : overflow,
-          overflowX: horizontal ? overflow : 'hidden',
+          ...overflow,
           WebkitOverflowScrolling: 'touch',
           WebkitTransform: START_TRANSLATE,
           msTransform: START_TRANSLATE,

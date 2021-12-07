@@ -78,6 +78,7 @@ export function useTransition(
     sort,
     trail = 0,
     expires = true,
+    exitBeforeEnter = false,
     onDestroyed,
     ref: propsRef,
     config: propsConfig,
@@ -96,21 +97,21 @@ export function useTransition(
   // The "onRest" callbacks need a ref to the latest transitions.
   const usedTransitions = useRef<TransitionState[] | null>(null)
   const prevTransitions = reset ? null : usedTransitions.current
+
   useLayoutEffect(() => {
     usedTransitions.current = transitions
   })
 
   // Destroy all transitions on dismount.
-  useOnce(
-    () => () =>
-      each(usedTransitions.current!, t => {
-        if (t.expired) {
-          clearTimeout(t.expirationId!)
-        }
-        detachRefs(t.ctrl, ref)
-        t.ctrl.stop(true)
-      })
-  )
+  useOnce(() => () => {
+    each(usedTransitions.current!, t => {
+      if (t.expired) {
+        clearTimeout(t.expirationId!)
+      }
+      detachRefs(t.ctrl, ref)
+      t.ctrl.stop(true)
+    })
+  })
 
   // Keys help with reusing transitions between renders.
   // The `key` prop can be undefined (which means the items themselves are used
@@ -185,6 +186,9 @@ export function useTransition(
   const defaultProps = getDefaultProps<UseTransitionProps>(props)
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
+  const exitingTransitions = useRef(new Map<TransitionState, Change>())
+
+  const forceChange = useRef(false)
   each(transitions, (t, i) => {
     const key = t.key
     const prevPhase = t.phase
@@ -300,13 +304,35 @@ export function useTransition(
         }
         // Force update once idle and expired items exist.
         if (idle && transitions.some(t => t.expired)) {
+          /**
+           * Remove the exited transition from the list
+           * this may not exist but we'll try anyway.
+           */
+          exitingTransitions.current.delete(t)
+
+          if (exitBeforeEnter) {
+            /**
+             * If we have exitBeforeEnter == true
+             * we need to force the animation to start
+             */
+            forceChange.current = true
+          }
+
           forceUpdate()
         }
       }
     }
 
     const springs = getSprings(t.ctrl, payload)
-    changes.set(t, { phase, springs, payload })
+
+    /**
+     * Make a separate map for the exiting changes and "regular" changes
+     */
+    if (phase === TransitionPhase.LEAVE && exitBeforeEnter) {
+      exitingTransitions.current.set(t, { phase, springs, payload })
+    } else {
+      changes.set(t, { phase, springs, payload })
+    }
   })
 
   // The prop overrides from an ancestor.
@@ -316,39 +342,68 @@ export function useTransition(
 
   // Merge the context into each transition.
   useLayoutEffect(() => {
-    if (hasContext)
+    if (hasContext) {
       each(transitions, t => {
         t.ctrl.start({ default: context })
       })
+    }
   }, [context])
+
+  each(changes, (_, t) => {
+    /**
+     * If we have children to exit because exitBeforeEnter is
+     * set to true, we remove the transitions so they go to back
+     * to their initial state.
+     */
+    if (exitingTransitions.current.size) {
+      const ind = transitions.findIndex(state => state.key === t.key)
+      transitions.splice(ind, 1)
+    }
+  })
 
   useLayoutEffect(
     () => {
-      each(changes, ({ phase, payload }, t) => {
-        const { ctrl } = t
-        t.phase = phase
+      /*
+       * if exitingTransitions.current has a size it means we're exiting before enter
+       * so we want to map through those and fire those first.
+       */
+      each(
+        exitingTransitions.current.size ? exitingTransitions.current : changes,
+        ({ phase, payload }, t) => {
+          const { ctrl } = t
 
-        // Attach the controller to our local ref.
-        ref?.add(ctrl)
+          t.phase = phase
 
-        // Merge the context into new items.
-        if (hasContext && phase == TransitionPhase.ENTER) {
-          ctrl.start({ default: context })
-        }
+          // Attach the controller to our local ref.
+          ref?.add(ctrl)
 
-        if (payload) {
-          // Update the injected ref if needed.
-          replaceRef(ctrl, payload.ref)
+          // Merge the context into new items.
+          if (hasContext && phase == TransitionPhase.ENTER) {
+            ctrl.start({ default: context })
+          }
 
-          // When an injected ref exists, the update is postponed
-          // until the ref has its `start` method called.
-          if (ctrl.ref) {
-            ctrl.update(payload)
-          } else {
-            ctrl.start(payload)
+          if (payload) {
+            // Update the injected ref if needed.
+            replaceRef(ctrl, payload.ref)
+
+            /**
+             * When an injected ref exists, the update is postponed
+             * until the ref has its `start` method called.
+             * Unless we have exitBeforeEnter in which case will skip
+             * to enter the new animation straight away as if they "overlapped"
+             */
+            if (ctrl.ref && !forceChange.current) {
+              ctrl.update(payload)
+            } else {
+              ctrl.start(payload)
+
+              if (forceChange.current) {
+                forceChange.current = false
+              }
+            }
           }
         }
-      })
+      )
     },
     reset ? void 0 : deps
   )
