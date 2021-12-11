@@ -5,7 +5,6 @@
   "keywords": [],
   "homepage": "https://codesandbox.io/s/new",
   "main": "src/index.js",
-  "bic": false,
   "dependencies": {
     "@react-spring/web": "*",
     "react": "^17.0.1",

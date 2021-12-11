@@ -37,9 +37,5 @@
     "react-dom": "^16.8.0  || ^17.0.0",
     "react-zdog": ">=1.0",
     "zdog": ">=1.0"
-  },
-  "devDependencies": {
-    "react-zdog": "~1.0.0",
-    "zdog": "~1.0.0"
   }
 }

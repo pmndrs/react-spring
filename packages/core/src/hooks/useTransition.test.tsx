@@ -10,6 +10,10 @@ describe('useTransition', () => {
   let transition: TransitionFn
   let rendered: any[]
 
+  afterEach(() => {
+    result = undefined
+  })
+
   // Call the "useTransition" hook and update local variables.
   const update = createUpdater(({ args }) => {
     transition = toArray(useTransition(...args))[0]
@@ -193,14 +197,10 @@ describe('useTransition', () => {
   })
 })
 
+let result: RenderResult | undefined
 function createUpdater(
   Component: React.ComponentType<{ args: [any, any, any?] }>
 ) {
-  let result: RenderResult | undefined
-  afterEach(() => {
-    result = undefined
-  })
-
   type Args = [any, UseTransitionProps | (() => UseTransitionProps), any[]?]
   return (...args: Args) => {
     const elem = <Component args={args} />

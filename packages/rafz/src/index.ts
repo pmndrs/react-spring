@@ -193,7 +193,7 @@ function eachSafely<T>(values: Eachable<T>, each: (value: T) => void) {
     try {
       each(value)
     } catch (e) {
-      raf.catch(e)
+      raf.catch(e as Error)
     }
   })
 }

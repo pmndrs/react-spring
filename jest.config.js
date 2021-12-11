@@ -28,8 +28,4 @@ module.exports = {
   moduleFileExtensions: ['js', 'ts', 'tsx'],
   coverageReporters: ['json', 'html', 'text'],
   timers: 'fake',
-  watchPlugins: [
-    'jest-watch-typeahead/filename',
-    'jest-watch-typeahead/testname',
-  ],
 }
