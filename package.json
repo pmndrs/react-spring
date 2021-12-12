@@ -24,6 +24,7 @@
     "packages": [
       "packages/*",
       "targets/*",
+      "packages/parallax/@react-spring/parallax-demo",
       "demo",
       "docs"
     ]
@@ -48,7 +49,7 @@
     "test:unit": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
-    "test:e2e": "start-server-and-test 'yarn workspace @react-spring/parallax dev' http-get://localhost:3000 'yarn cypress run'",
+    "test:e2e": "start-server-and-test 'yarn vite serve packages/parallax/test' http-get://localhost:3000 'yarn cypress run'",
     "test": "yarn test:ts && yarn test:unit && yarn test:e2e",
     "release": "yarn test:ts && yarn test:cov && yarn build && yarn changeset publish",
     "vers": "yarn changeset version"
@@ -93,7 +94,7 @@
     "husky": "^7.0.4",
     "jest": "^27.4.4",
     "konva": "^8.3.1",
-    "mock-raf": "npm:@react-spring/mock-raf",
+    "mock-raf": "npm:@react-spring/mock-raf@1.1.1",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.5.1",
@@ -118,7 +119,5 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-spring"
   },
-  "dependencies": {
-    "remove": "^0.1.5"
-  }
+  "packageManager": "yarn@3.1.1"
 }

@@ -27,7 +27,7 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "scripts": {
-    "dev": "cd ./test && yarn dev"
+    "test": "vite serve ./test"
   },
   "dependencies": {
     "@react-spring/shared": "~9.4.0-beta.1",
