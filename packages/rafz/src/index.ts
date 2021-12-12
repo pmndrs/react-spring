@@ -51,8 +51,11 @@ let findTimeout = (time: number) =>
   ~(~timeouts.findIndex(t => t.time > time) || ~timeouts.length)
 
 raf.cancel = fn => {
+  onStartQueue.delete(fn)
+  onFrameQueue.delete(fn)
   updateQueue.delete(fn)
   writeQueue.delete(fn)
+  onFinishQueue.delete(fn)
 }
 
 raf.sync = fn => {
