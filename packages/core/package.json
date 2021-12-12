@@ -32,8 +32,8 @@
   ],
   "dependencies": {
     "@react-spring/animated": "~9.4.0-beta.1",
-    "@react-spring/shared": "~9.4.0-beta.1",
     "@react-spring/rafz": "~9.4.0-beta.1",
+    "@react-spring/shared": "~9.4.0-beta.1",
     "@react-spring/types": "~9.4.0-beta.1"
   },
   "peerDependencies": {
