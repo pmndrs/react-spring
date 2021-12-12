@@ -1,3 +1,5 @@
+const ANIMATION_WAIT = 4000
+
 describe('Parallax - vertical', () => {
   const HEIGHT = Cypress.config('viewportHeight')
 
@@ -32,7 +34,7 @@ describe('Parallax - vertical', () => {
     // scroll to next page
     cy.findByTestId('container').scrollTo(0, HEIGHT)
     // wait for animation to finish
-    cy.wait(2000)
+    cy.wait(ANIMATION_WAIT)
 
     // halfway snapshot
     cy.findByTestId('container').toMatchSnapshot()
@@ -60,7 +62,7 @@ describe('Parallax - vertical', () => {
     // scroll to last page
     cy.findByTestId('container').scrollTo('bottom')
     // wait for animation again
-    cy.wait(2000)
+    cy.wait(ANIMATION_WAIT)
 
     // final snapshot
     cy.findByTestId('container').toMatchSnapshot()
@@ -114,7 +116,7 @@ describe('Parallax - horizontal', () => {
     // scroll to next page
     cy.findByTestId('container').scrollTo(WIDTH, 0)
     // wait for animation to finish
-    cy.wait(2000)
+    cy.wait(ANIMATION_WAIT)
 
     // halfway snapshot
     cy.findByTestId('container').toMatchSnapshot()
@@ -143,7 +145,7 @@ describe('Parallax - horizontal', () => {
     // but will pass with `yarn test` (`cypress run`)
     cy.findByTestId('container').scrollTo('right')
     // wait for animation again
-    cy.wait(2000)
+    cy.wait(ANIMATION_WAIT)
 
     // final snapshot
     cy.findByTestId('container').toMatchSnapshot()
