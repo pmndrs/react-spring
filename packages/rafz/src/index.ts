@@ -35,12 +35,12 @@ raf.setTimeout = (handler, ms) => {
   let cancel = () => {
     let i = timeouts.findIndex(t => t.cancel == cancel)
     if (~i) timeouts.splice(i, 1)
-    __raf.count -= ~i ? 1 : 0
+    pendingCount -= ~i ? 1 : 0
   }
 
   let timeout: Timeout = { time, handler, cancel }
   timeouts.splice(findTimeout(time), 0, timeout)
-  __raf.count += 1
+  pendingCount += 1
 
   start()
   return timeout
@@ -107,6 +107,9 @@ raf.advance = () => {
 /** The most recent timestamp. */
 let ts = -1
 
+/** The number of pending tasks  */
+let pendingCount = 0
+
 /** When true, scheduling is disabled. */
 let sync = false
 
@@ -148,7 +151,7 @@ function update() {
   let count = findTimeout(ts)
   if (count) {
     eachSafely(timeouts.splice(0, count), t => t.handler())
-    __raf.count -= count
+    pendingCount -= count
   }
 
   onStartQueue.flush()
@@ -157,7 +160,7 @@ function update() {
   writeQueue.flush()
   onFinishQueue.flush()
 
-  if (!__raf.count) {
+  if (!pendingCount) {
     stop()
   }
 }
@@ -173,19 +176,19 @@ function makeQueue<T extends Function>(): Queue<T> {
   let current = next
   return {
     add(fn) {
-      __raf.count += current == next && !next.has(fn) ? 1 : 0
+      pendingCount += current == next && !next.has(fn) ? 1 : 0
       next.add(fn)
     },
     delete(fn) {
-      __raf.count -= current == next && next.has(fn) ? 1 : 0
+      pendingCount -= current == next && next.has(fn) ? 1 : 0
       return next.delete(fn)
     },
     flush(arg) {
       if (current.size) {
         next = new Set()
-        __raf.count -= current.size
+        pendingCount -= current.size
         eachSafely(current, fn => fn(arg) && next.add(fn))
-        __raf.count += next.size
+        pendingCount += next.size
         current = next
       }
     },
@@ -209,9 +212,11 @@ function eachSafely<T>(values: Eachable<T>, each: (value: T) => void) {
 /** Tree-shakable state for testing purposes */
 export const __raf = {
   /** The number of pending tasks */
-  count: 0,
+  count(): number {
+    return pendingCount
+  },
   /** Whether there's a raf update loop running */
-  isStarted() {
+  isStarted(): boolean {
     return ts >= 0
   },
   /** Clear internal state. Never call from update loop! */
@@ -223,6 +228,6 @@ export const __raf = {
     onFrameQueue = makeQueue()
     writeQueue = makeQueue()
     onFinishQueue = makeQueue()
-    __raf.count = 0
+    pendingCount = 0
   },
 }
