@@ -129,6 +129,10 @@ function start() {
   }
 }
 
+function stop() {
+  ts = -1
+}
+
 function loop() {
   if (~ts) {
     nativeRaf(loop)
@@ -152,6 +156,10 @@ function update() {
   onFrameQueue.flush()
   writeQueue.flush()
   onFinishQueue.flush()
+
+  if (!__raf.count) {
+    stop()
+  }
 }
 
 interface Queue<T extends Function = any> {
@@ -202,6 +210,10 @@ function eachSafely<T>(values: Eachable<T>, each: (value: T) => void) {
 export const __raf = {
   /** The number of pending tasks */
   count: 0,
+  /** Whether there's a raf update loop running */
+  isStarted() {
+    return ts >= 0
+  },
   /** Clear internal state. Never call from update loop! */
   clear() {
     ts = -1
