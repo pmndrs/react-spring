@@ -256,11 +256,11 @@ const location = useLocation()
 const transitions = useTransition(location, { ... })
 return transitions((props, item) => (
   <animated.div style={props}>
-    <Switch location={item}>
-      <Route path="/a" component={A} />
-      <Route path="/b" component={B} />
-      <Route path="/c" component={C} />
-    </Switch>
+    <Routes location={item}>
+      <Route path="/a" element={<A />} />
+      <Route path="/b" element={<B />} />
+      <Route path="/c" element={<C />} />
+    </Routes>
   </animated.div>
 ))
 ```
