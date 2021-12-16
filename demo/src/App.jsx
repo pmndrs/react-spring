@@ -14,6 +14,7 @@ import DraggableList from './sandboxes/draggable-list/src/App'
 
 import ExitBeforeEnter from './sandboxes/exit-before-enter/src/App'
 
+import Fiber from './sandboxes/fiber/src/App'
 import FlipCard from './sandboxes/flip-card/src/App'
 
 import GooBlobs from './sandboxes/goo-blobs/src/App'
@@ -49,6 +50,7 @@ const links = {
   'decay-rocket': DecayRocket,
   'draggable-list': DraggableList,
   'exit-before-enter': ExitBeforeEnter,
+  fiber: Fiber,
   'flip-card': FlipCard,
   'goo-blobs': GooBlobs,
   'image-fade': ImageFade,

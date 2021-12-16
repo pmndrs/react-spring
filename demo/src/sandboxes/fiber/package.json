@@ -1,0 +1,39 @@
+{
+  "name": "react-spring-animations",
+  "version": "1.0.0",
+  "description": "This is react-spring animating both the dom as well as the canvas with a single spring.",
+  "keywords": [
+    "react-spring",
+    "gltf",
+    "physics",
+    "spring",
+    "animation"
+  ],
+  "main": "src/index.js",
+  "dependencies": {
+    "@react-spring/three": "9.2.2",
+    "@react-spring/web": "9.2.2",
+    "@react-three/drei": "7.7.0",
+    "@react-three/fiber": "7.0.24",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-scripts": "4.0.3",
+    "three": "0.132.2",
+    "three-stdlib": "2.4.0"
+  },
+  "devDependencies": {
+    "typescript": "3.3.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

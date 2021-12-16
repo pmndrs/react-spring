@@ -1,4 +1,4 @@
-import { applyProps, addEffect } from '@react-three/fiber'
+import { applyProps, addEffect, invalidate } from '@react-three/fiber'
 
 import { Globals } from '@react-spring/core'
 import { createStringInterpolator, colors, raf } from '@react-spring/shared'
@@ -11,6 +11,10 @@ Globals.assign({
   createStringInterpolator,
   colors,
   frameLoop: 'demand',
+})
+
+raf.onFrame(() => {
+  invalidate()
 })
 
 // Let r3f drive the frameloop.
