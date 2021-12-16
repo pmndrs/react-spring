@@ -216,7 +216,7 @@ export const __raf = {
     return pendingCount
   },
   /** Whether there's a raf update loop running */
-  isStarted(): boolean {
+  isRunning(): boolean {
     return ts >= 0
   },
   /** Clear internal state. Never call from update loop! */
