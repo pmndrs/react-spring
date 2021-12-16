@@ -130,9 +130,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   get velocity(): VelocityProp<T> {
     const node = getAnimated(this)!
-    return (node instanceof AnimatedValue
-      ? node.lastVelocity || 0
-      : node.getPayload().map(node => node.lastVelocity || 0)) as any
+    return (
+      node instanceof AnimatedValue
+        ? node.lastVelocity || 0
+        : node.getPayload().map(node => node.lastVelocity || 0)
+    ) as any
   }
 
   /**
@@ -444,9 +446,13 @@ export class SpringValue<T = any> extends FrameValue<T> {
       this.queue = []
     }
 
-    return Promise.all(queue.map(props => this._update(props))).then(results =>
-      getCombinedResult(this, results)
-    )
+    return Promise.all(
+      queue.map(props => {
+        const up = this._update(props)
+        console.log('_state', JSON.stringify(this._state.pauseQueue.size))
+        return up
+      })
+    ).then(results => getCombinedResult(this, results))
   }
 
   /**
@@ -557,6 +563,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     const state = this._state
+
     return scheduleProps(++this._lastCallId, {
       key,
       props,
