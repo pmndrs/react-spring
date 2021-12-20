@@ -74,7 +74,7 @@ export function scheduleProps<T extends AnimationTarget>(
 
     function onResume() {
       if (delay > 0) {
-        console.log('delayed')
+        state.delayed = true
         timeout = raf.setTimeout(onStart, delay)
         state.pauseQueue.add(onPause)
         state.timeouts.add(timeout)
@@ -84,6 +84,10 @@ export function scheduleProps<T extends AnimationTarget>(
     }
 
     function onStart() {
+      if (state.delayed) {
+        state.delayed = false
+      }
+
       state.pauseQueue.delete(onPause)
       state.timeouts.delete(timeout)
 

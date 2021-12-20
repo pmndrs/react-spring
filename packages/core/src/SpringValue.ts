@@ -90,6 +90,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<SpringValue<T>> = {
     paused: false,
+    delayed: false,
     pauseQueue: new Set(),
     resumeQueue: new Set(),
     timeouts: new Set(),
@@ -157,6 +158,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
    */
   get isPaused() {
     return isPaused(this)
+  }
+
+  /**
+   *
+   *
+   */
+  get isDelayed() {
+    return this._state.delayed
   }
 
   /** Advance the current animation by a number of milliseconds */
@@ -449,7 +458,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
     return Promise.all(
       queue.map(props => {
         const up = this._update(props)
-        console.log('_state', JSON.stringify(this._state.pauseQueue.size))
         return up
       })
     ).then(results => getCombinedResult(this, results))

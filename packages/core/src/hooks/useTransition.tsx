@@ -241,8 +241,6 @@ export function useTransition(
 
     delay += trail
 
-    console.log('DELAY', propsDelay + delay)
-
     // The payload is used to update the spring props once the current render is committed.
     const payload: ControllerUpdate<UnknownProps> = {
       ...defaultProps,
@@ -286,8 +284,6 @@ export function useTransition(
         // t.phase = prevPhase
         return
       }
-
-      console.log('resolved', JSON.stringify(t.ctrl._state.pauseQueue.size))
 
       if (t.ctrl.idle) {
         const idle = transitions.every(t => t.ctrl.idle)
