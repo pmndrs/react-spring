@@ -1,17 +1,39 @@
 import { cssVariableRegex } from './regexs'
 
-export const variableToRgba = (input: string) => {
-  console.log('input', input)
+export const variableToRgba = (input: string): string => {
   const [token, fallback] = parseCSSVariable(input)
 
-  console.log('token', token, 'fallback', fallback)
-  console.log(
-    'var',
-    window.getComputedStyle(document.documentElement).getPropertyValue(token)
-  )
-  return window
+  if (!token) {
+    return input
+  }
+
+  const value = window
     .getComputedStyle(document.documentElement)
     .getPropertyValue(token)
+
+  if (value) {
+    /**
+     * We have a valid variable returned
+     * trim and return
+     */
+    return value.trim()
+  } else if (fallback && cssVariableRegex.test(fallback)) {
+    /**
+     * We have a fallback and it's another CSS variable
+     */
+    return variableToRgba(fallback)
+  } else if (fallback) {
+    /**
+     * We have a fallback and it's not a CSS variable
+     */
+    return fallback
+  }
+
+  /**
+   * Nothing worked so just return the input
+   * like our other FluidValue replace functions do
+   */
+  return input
 }
 
 const parseCSSVariable = (current: string) => {

@@ -41,22 +41,13 @@ export const createStringInterpolator = (
       : // never match
         /^\b$/
 
-  console.log('config.output', config.output)
-
   // Convert colors to rgba(...)
   const output = config.output.map(value => {
-    console.log(
-      'fluid value',
-      getFluidValue(value),
-      cssVariableRegex.test(getFluidValue(value))
-    )
     return getFluidValue(value)
       .replace(cssVariableRegex, variableToRgba)
       .replace(colorRegex, colorToRgba)
       .replace(namedColorRegex, colorToRgba)
   })
-
-  console.log(output)
 
   // Convert ["1px 2px", "0px 0px"] into [[1, 2], [0, 0]]
   const keyframes = output.map(value => value.match(numberRegex)!.map(Number))
@@ -70,8 +61,6 @@ export const createStringInterpolator = (
       return values[i]
     })
   )
-
-  console.log(outputRanges)
 
   // Create an interpolator for each animated number
   const interpolators = outputRanges.map(output =>

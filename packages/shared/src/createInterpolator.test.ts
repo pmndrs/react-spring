@@ -167,4 +167,53 @@ describe('Interpolation', () => {
 
     expect(interpolation(0.5)).toBe('grayscale(50%)')
   })
+
+  describe('CSS Variables', () => {
+    const originalGetComputedStyle = window.getComputedStyle
+
+    const getComputedStyleMock = () => ({
+      getPropertyValue: (variableName: '--from' | '--to' | '--no') => {
+        switch (variableName) {
+          case '--from':
+            return '#3cffd0'
+          case '--to':
+            return '#277ef4'
+          case '--no':
+            return undefined
+          default:
+            throw Error('Should never happen')
+        }
+      },
+    })
+
+    beforeAll(() => {
+      // @ts-expect-error for testing purposes only.
+      window.getComputedStyle = getComputedStyleMock
+    })
+    afterAll(() => {
+      window.getComputedStyle = originalGetComputedStyle
+    })
+
+    it('should correctly parse variables', () => {
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['var(--to)', 'var(--from)'],
+      })
+
+      expect(interpolation(0.0)).toBe('rgba(39, 126, 244, 1)')
+      expect(interpolation(0.5)).toBe('rgba(50, 191, 226, 1)')
+      expect(interpolation(1.0)).toBe('rgba(60, 255, 208, 1)')
+    })
+
+    it('should return the fallbacks if the variable cannot be found', () => {
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['var(--no, pink)', 'var(--no, purple)'],
+      })
+
+      expect(interpolation(0.0)).toBe('rgba(255, 192, 203, 1)')
+      expect(interpolation(0.5)).toBe('rgba(192, 96, 166, 1)')
+      expect(interpolation(1.0)).toBe('rgba(128, 0, 128, 1)')
+    })
+  })
 })
