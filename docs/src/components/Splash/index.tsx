@@ -157,9 +157,4 @@ const Tagline = styled.p`
   color: ${props => props.theme.colors.white};
   font-size: ${props => props.theme.fontSizes.S};
   line-height: ${props => props.theme.lineHeights.S};
-
-  ${MEDIA_QUERIES.tabletUp} {
-    font-size: ${props => props.theme.fontSizes.M};
-    line-height: ${props => props.theme.lineHeights.M};
-  }
 `
