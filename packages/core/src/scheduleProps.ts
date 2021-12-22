@@ -1,4 +1,4 @@
-import { Timeout, is, raf } from '@react-spring/shared'
+import { Timeout, is, raf, Globals as G } from '@react-spring/shared'
 import { matchProp, callProp } from './helpers'
 import { AsyncResult, MatchProp } from './types'
 import { RunAsyncState, RunAsyncProps } from './runAsync'
@@ -73,7 +73,7 @@ export function scheduleProps<T extends AnimationTarget>(
     }
 
     function onResume() {
-      if (delay > 0) {
+      if (delay > 0 && !G.skipAnimation) {
         state.delayed = true
         timeout = raf.setTimeout(onStart, delay)
         state.pauseQueue.add(onPause)

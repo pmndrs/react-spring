@@ -270,6 +270,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
           velocity = node.lastVelocity == null ? v0 : node.lastVelocity
 
           /** The smallest distance from a value before being treated like said value. */
+          /**
+           * TODO: make this value ~0.0001 by default in next breaking change
+           * for more info see – https://github.com/pmndrs/react-spring/issues/1389
+           */
           const precision =
             config.precision ||
             (from == to ? 0.005 : Math.min(1, Math.abs(to - from) * 0.001))

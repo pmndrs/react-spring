@@ -974,6 +974,53 @@ function describeGlobals() {
   const resetGlobals = () => Globals.assign(defaults)
   describe('"skipAnimation" global', () => {
     afterEach(resetGlobals)
+
+    it('should skip animations', async () => {
+      const spring = new SpringValue(0)
+
+      global.mockRaf.step()
+
+      spring.start(1)
+
+      expect(spring.get()).toEqual(0)
+
+      await global.advanceUntilIdle()
+
+      expect(spring.get()).toEqual(1)
+
+      Globals.assign({
+        skipAnimation: true,
+      })
+
+      spring.start(0)
+
+      expect(spring.get()).toEqual(0)
+    })
+
+    it('should skip to end even if delay is present', async () => {
+      const spring = new SpringValue(0)
+
+      global.mockRaf.step()
+
+      spring.start(1, { delay: 400 })
+
+      expect(spring.get()).toEqual(0)
+
+      await global.advanceUntilIdle()
+
+      expect(spring.get()).toEqual(1)
+
+      Globals.assign({
+        skipAnimation: true,
+      })
+
+      spring.start(0, {
+        delay: 400,
+      })
+
+      expect(spring.get()).toEqual(0)
+    })
+
     it('still calls "onStart", "onChange", and "onRest" props', async () => {
       const spring = new SpringValue(0)
 
