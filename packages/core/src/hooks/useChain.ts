@@ -25,8 +25,9 @@ export function useChain(
               const memoizedDelayProp = props.delay
               props.delay = key => delay + callProp(memoizedDelayProp || 0, key)
             })
-            ctrl.start()
           })
+
+          ref.start()
         }
       })
     } else {

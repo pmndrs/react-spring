@@ -14,12 +14,12 @@ Globals.assign({
 })
 
 // Let r3f drive the frameloop.
-// @ts-expect-error r3f expects boolean returned, boolean does nothing.
 addEffect(() => {
   raf.advance()
 })
 
 const host = createHost(primitives, {
+  // @ts-expect-error r3f related
   applyAnimatedValues: applyProps,
 })
 

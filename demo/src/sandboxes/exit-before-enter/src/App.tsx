@@ -2,8 +2,8 @@ import React, { useLayoutEffect, useState } from 'react'
 import {
   useSpringRef,
   animated,
-  useSpring,
   useTransition,
+  useSpring,
 } from '@react-spring/web'
 
 import styles from './styles.module.css'
@@ -37,6 +37,7 @@ export default function App() {
     config: {
       duration: 4000,
     },
+    delay: 1000,
     ref: springApi,
   })
 
@@ -48,7 +49,7 @@ export default function App() {
       strokeDashoffset: 0,
     },
     config: {
-      duration: 8000,
+      duration: 11000,
     },
     loop: true,
     ref: springApi,

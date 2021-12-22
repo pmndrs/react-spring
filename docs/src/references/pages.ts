@@ -104,6 +104,10 @@ export const PAGES: Page[] = [
         url: '/guides/accessibility',
       },
       {
+        title: 'React Three Fiber',
+        url: '/guides/r3f',
+      },
+      {
         title: 'Testing',
         url: '/guides/testing',
       },

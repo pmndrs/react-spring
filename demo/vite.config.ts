@@ -12,5 +12,8 @@ export default defineConfig({
       '@react-spring/three': path.resolve('../targets/three/src/index.ts'),
     },
   },
+  server: {
+    port: 4000,
+  },
   plugins: [reactRefresh()],
 })

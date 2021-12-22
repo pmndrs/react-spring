@@ -1,8 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, EffectCallback } from 'react'
 
-// Explicit type annotation fixes TS2742 error.
-type UseOnce = (effect: React.EffectCallback) => void
-
-export const useOnce: UseOnce = effect => useEffect(effect, emptyDeps)
+export const useOnce = (effect: EffectCallback) => useEffect(effect, emptyDeps)
 
 const emptyDeps: any[] = []
