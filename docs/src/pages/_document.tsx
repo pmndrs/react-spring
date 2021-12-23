@@ -55,6 +55,13 @@ export default class Doc extends Document {
           />
           <link rel="manifest" href={'/manifest.json'} />
           <link rel="shortcut icon" href={'/favicon.ico'} />
+          <script
+            data-host="https://microanalytics.io"
+            data-dnt="false"
+            src="https://microanalytics.io/js/script.js"
+            id="ZwSg9rf6GA"
+            async
+            defer></script>
         </Head>
         <body>
           <Main />
