@@ -40,9 +40,13 @@ const styles = useSpring({
 <animated.div style={styles} />
 ```
 
+Just a small bit about us:
+
 * **Cross-Platform**: We support `react-dom`, `react-native`, `react-three-fiber`, `react-konva` & `react-zdog`.
 * **Versatile**: Be declarative with your animations or if you prefer, imperative.
 * **Spring-Physics First**: By default animation use springs for fluid interactivity, but we support durations with easings as well.
+
+There's a lot more to be had! Give it a try and find out.
 
 ## Getting Started
 
