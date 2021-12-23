@@ -10,6 +10,14 @@ interface DemoProps {
   description?: string
 }
 
+declare global {
+  interface Window {
+    pa?: {
+      track: (args: { name: string; value?: string; unit?: string }) => void
+    }
+  }
+}
+
 export const Demo: FC<DemoProps> = ({ children, title, description }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [inViewport, setInViewport] = useState(false)
@@ -17,6 +25,12 @@ export const Demo: FC<DemoProps> = ({ children, title, description }) => {
   useObserver(containerRef, entry => {
     setInViewport(entry.isIntersecting)
   })
+
+  const handleClick = () => {
+    if (window.pa) {
+      window.pa.track({ name: 'Opened demo in codesandbox', value: title })
+    }
+  }
 
   return (
     <DemoContainer ref={containerRef}>
@@ -29,7 +43,8 @@ export const Demo: FC<DemoProps> = ({ children, title, description }) => {
           href={`https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/${title
             .split(' ')
             .join('-')
-            .toLowerCase()}`}>
+            .toLowerCase()}`}
+          onClick={handleClick}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
