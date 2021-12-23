@@ -13,7 +13,7 @@ interface DemoProps {
 declare global {
   interface Window {
     pa?: {
-      track: (args: { name: string; value?: string; unit?: string }) => void
+      track: (args: { name: string; value?: number; unit?: string }) => void
     }
   }
 }
@@ -28,7 +28,7 @@ export const Demo: FC<DemoProps> = ({ children, title, description }) => {
 
   const handleClick = () => {
     if (window.pa) {
-      window.pa.track({ name: 'Opened demo in codesandbox', value: title })
+      window.pa.track({ name: `Viewed ${title} in codesandbox` })
     }
   }
 
