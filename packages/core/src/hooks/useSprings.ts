@@ -76,6 +76,7 @@ export function useSprings(
   if (propsFn && !deps) deps = []
 
   // Create a local ref if a props function or deps array is ever passed.
+  // 如果传递的props是一个函数或者参数长度为3则创建一个本地的ref(Controller)引用
   const ref = useMemo(
     () => (propsFn || arguments.length == 3 ? SpringRef() : void 0),
     []
