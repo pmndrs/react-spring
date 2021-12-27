@@ -7,6 +7,20 @@ import Document, {
 } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
+declare global {
+  interface Window {
+    plausible: {
+      (
+        eventName: string,
+        props?: {
+          props: Record<string, string>
+        }
+      ): void
+      q?: IArguments[]
+    }
+  }
+}
+
 export default class Doc extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet()
@@ -56,12 +70,9 @@ export default class Doc extends Document {
           <link rel="manifest" href={'/manifest.json'} />
           <link rel="shortcut icon" href={'/favicon.ico'} />
           <script
-            data-host="https://microanalytics.io"
-            data-dnt="false"
-            src="https://microanalytics.io/js/script.js"
-            id="ZwSg9rf6GA"
-            async
-            defer></script>
+            defer
+            data-domain="react-spring.io"
+            src="https://plausible.io/js/plausible.js"></script>
         </Head>
         <body>
           <Main />

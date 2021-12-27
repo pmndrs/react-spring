@@ -10,14 +10,6 @@ interface DemoProps {
   description?: string
 }
 
-declare global {
-  interface Window {
-    pa?: {
-      track: (args: { name: string; value?: number; unit?: string }) => void
-    }
-  }
-}
-
 export const Demo: FC<DemoProps> = ({ children, title, description }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [inViewport, setInViewport] = useState(false)
@@ -27,8 +19,13 @@ export const Demo: FC<DemoProps> = ({ children, title, description }) => {
   })
 
   const handleClick = () => {
-    if (window.pa) {
-      window.pa.track({ name: `Viewed ${title} in codesandbox` })
+    if (window.plausible) {
+      window.plausible('Viewed Demo', {
+        props: {
+          name: title,
+          location: document.location.pathname,
+        },
+      })
     }
   }
 

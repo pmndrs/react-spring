@@ -2,6 +2,7 @@ import { AppProps } from 'next/app'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { DefaultSeo } from 'next-seo'
 import { MDXProvider } from '@mdx-js/react'
+import { useEffect } from 'react'
 
 import { GLOBAL } from 'styles/global'
 import { RESET } from 'styles/reset'
@@ -28,6 +29,17 @@ const components = {
 }
 
 function App({ Component, pageProps }: MyAppProps) {
+  useEffect(() => {
+    /**
+     * Attach plausible on mount
+     */
+    window.plausible =
+      window.plausible ||
+      function () {
+        void (window.plausible.q = window.plausible.q || []).push(arguments)
+      }
+  }, [])
+
   return (
     <ThemeProvider theme={SpringTheme}>
       <MDXProvider components={components}>
