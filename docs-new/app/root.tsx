@@ -20,7 +20,6 @@ export const meta: MetaFunction = () => {
 }
 
 function Document({ children }: { children: React.ReactNode }) {
-  console.log('getCssText', getCssText, getCssText())
   return (
     <html lang="en">
       <head>

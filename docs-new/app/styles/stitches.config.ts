@@ -1,6 +1,6 @@
 import { createStitches } from '@stitches/react'
 
-const { styled, globalCss, getCssText } = createStitches({
+const stitches = createStitches({
   theme: {
     colors: {
       red: '#ff6d6d',
@@ -16,5 +16,7 @@ const { styled, globalCss, getCssText } = createStitches({
     largeDesktopUp: '(min-width: 1680px)',
   },
 })
+
+const { styled, globalCss, getCssText } = stitches
 
 export { styled, getCssText, globalCss }
