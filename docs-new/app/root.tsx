@@ -19,16 +19,12 @@ export const meta: MetaFunction = () => {
   }
 }
 
-export default function App() {
-  // globalStyles()
-
-  console.log('styles', getCssText())
-
+function Document({ children }: { children: React.ReactNode }) {
+  console.log('getCssText', getCssText, getCssText())
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
         <style
@@ -38,11 +34,19 @@ export default function App() {
         />
       </head>
       <body>
-        <Outlet />
-        <ScrollRestoration />
+        {children}
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
+  )
+}
+
+export default function App() {
+  return (
+    <Document>
+      <Outlet />
+      <ScrollRestoration />
+    </Document>
   )
 }

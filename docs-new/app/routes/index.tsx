@@ -27,10 +27,11 @@ export default function Index() {
           </a>
         </li>
       </ul>
+      <Title>Hello World</Title>
     </div>
   )
 }
 
-// const Title = styled('div', {
-//   color: 'red',
-// })
+const Title = styled('div', {
+  color: 'red',
+})
