@@ -7,6 +7,9 @@ import {
   ScrollRestoration,
 } from 'remix'
 import type { MetaFunction } from 'remix'
+import { useEffect } from 'react'
+
+import { useForceUpdate } from './hooks/useForceUpdate'
 
 import { getCssText } from './styles/stitches.config'
 import { globalStyles } from './styles/global'
@@ -20,6 +23,14 @@ export const meta: MetaFunction = () => {
 }
 
 function Document({ children }: { children: React.ReactNode }) {
+  globalStyles()
+
+  const forceUpdate = useForceUpdate()
+
+  useEffect(() => {
+    forceUpdate()
+  }, [])
+
   return (
     <html lang="en">
       <head>
