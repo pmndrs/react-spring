@@ -14,5 +14,13 @@ export const unitRegex = new RegExp(`(${numberRegex.source})(%|[a-z]+)`, 'i')
 export const rgbaRegex =
   /rgba\(([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+)\)/gi
 
+/**
+ * Parse special CSS variable format into a CSS token and a fallback.
+ *
+ * ```
+ * `var(--foo, #fff)` => [`--foo`, '#fff']
+ * ```
+ *
+ */
 export const cssVariableRegex =
   /var\((--[a-zA-Z0-9-_]+),? ?([a-zA-Z0-9 ()%#.,-]+)?\)/

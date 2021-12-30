@@ -1,5 +1,16 @@
 import { cssVariableRegex } from './regexs'
 
+/**
+ * takes a CSS variable and attempts
+ * to turn it into a RGBA value
+ *
+ * ```
+ * 'var(--white)' => 'rgba(255,255,255,1)'
+ * ```
+ *
+ * @param input string
+ * @returns string
+ */
 export const variableToRgba = (input: string): string => {
   const [token, fallback] = parseCSSVariable(input)
 
@@ -17,6 +28,23 @@ export const variableToRgba = (input: string): string => {
      * trim and return
      */
     return value.trim()
+  } else if (fallback && fallback.startsWith('--')) {
+    /**
+     * fallback is something like --my-variable
+     * so we try get property value
+     */
+    const value = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue(fallback)
+
+    /**
+     * if it exists, return else nothing was found so just return the input
+     */
+    if (value) {
+      return value
+    } else {
+      return input
+    }
   } else if (fallback && cssVariableRegex.test(fallback)) {
     /**
      * We have a fallback and it's another CSS variable
