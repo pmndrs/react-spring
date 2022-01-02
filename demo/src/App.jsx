@@ -8,6 +8,7 @@ import Card from './sandboxes/card/src/App'
 import CardsStack from './sandboxes/cards-stack/src/App'
 import Chain from './sandboxes/chain/src/App'
 import CssKeyframes from './sandboxes/css-keyframes/src/App'
+import CssVariables from './sandboxes/css-variables/src/App'
 
 import DecayRocket from './sandboxes/rocket-decay/src/App'
 import DraggableList from './sandboxes/draggable-list/src/App'
@@ -46,6 +47,7 @@ const links = {
   'cards-stack': CardsStack,
   chain: Chain,
   'css-keyframes': CssKeyframes,
+  'css-variables': CssVariables,
   'decay-rocket': DecayRocket,
   'draggable-list': DraggableList,
   'exit-before-enter': ExitBeforeEnter,
@@ -63,8 +65,8 @@ const links = {
   slide: Slide,
   'svg-filter': SvgFilter,
   trail: Trail,
-  tree: Tree,
   viewpager: Viewpager,
+  tree: Tree,
 }
 
 const Example = ({ link }) => {
