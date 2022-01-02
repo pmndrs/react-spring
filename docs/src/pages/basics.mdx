@@ -173,6 +173,7 @@ function Scrolling() {
 Springs take pretty much everything, they don't just handle numbers.
 
 - Colors (names, rgb, rgba, hsl, hsla, gradients)
+- CSS Variables (declared on :root) and their fallbacks
 - Absolute lengths (cm, mm, in, px, pt, pc)
 - Relative lengths (em, ex, ch, rem, vw, vh, vmin, vmax, %)
 - Angles (deg, rad, grad, turn)
@@ -195,6 +196,7 @@ const props = useSpring({
   borderBottom: '10px solid #2D3747',
   shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
   textShadow: '0px 5px 15px rgba(255,255,255,0.5)',
+  color: 'var(--darkModeColor)',
 })
 ```
 

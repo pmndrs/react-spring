@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/core",
-  "version": "9.4.0-beta.5",
+  "version": "9.4.0-beta.6",
   "main": "dist/react-spring-core.cjs.js",
   "module": "dist/react-spring-core.esm.js",
   "files": [
@@ -31,10 +31,10 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/animated": "~9.4.0-beta.2",
-    "@react-spring/rafz": "~9.4.0-beta.2",
-    "@react-spring/shared": "~9.4.0-beta.2",
-    "@react-spring/types": "~9.4.0-beta.2"
+    "@react-spring/animated": "~9.4.0-beta.6",
+    "@react-spring/rafz": "~9.4.0-beta.6",
+    "@react-spring/shared": "~9.4.0-beta.6",
+    "@react-spring/types": "~9.4.0-beta.6"
   },
   "peerDependencies": {
     "react": "^16.8.0  || ^17.0.0"

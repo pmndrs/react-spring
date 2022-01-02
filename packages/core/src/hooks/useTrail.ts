@@ -38,7 +38,7 @@ export function useTrail<Props extends object>(
 export function useTrail(
   length: number,
   propsArg: unknown,
-  deps: readonly any[] = []
+  deps?: readonly any[]
 ) {
   const propsFn = is.fun(propsArg) && propsArg
   if (propsFn && !deps) deps = []
