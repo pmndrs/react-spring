@@ -28,6 +28,16 @@ export const FeedbackPopover = () => {
       },
     })
 
+  const handleAnchorClick = () => {
+    if (window.plausible) {
+      window.plausible('Clicked through to feedback', {
+        props: {
+          location: document.location.pathname,
+        },
+      })
+    }
+  }
+
   return (
     <Popover style={styles}>
       <PopoverContent>
@@ -48,7 +58,11 @@ export const FeedbackPopover = () => {
         <PopoverTitle>Struggling to find what you want?</PopoverTitle>
         <PopoverCopy>
           {`We're interested in hearing your feedback for our documentation! Have your voice heard by commenting in this `}
-          <a href="https://github.com/pmndrs/react-spring/issues/1799">issue</a>
+          <a
+            onClick={handleAnchorClick}
+            href="https://github.com/pmndrs/react-spring/issues/1799">
+            issue
+          </a>
         </PopoverCopy>
       </PopoverContent>
     </Popover>
