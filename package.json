@@ -24,6 +24,7 @@
     "packages": [
       "packages/*",
       "targets/*",
+      "packages/parallax/@react-spring/parallax-demo",
       "demo",
       "docs"
     ]
@@ -37,17 +38,18 @@
   },
   "scripts": {
     "changeset:add": "changeset add",
-    "postinstall": "patch-package && preconstruct dev",
     "build": "preconstruct build",
     "watch": "preconstruct watch",
     "dev": "preconstruct dev",
     "docs:dev": "yarn workspace @react-spring/docs dev",
     "docs:build": "yarn workspace @react-spring/docs build",
     "demo:dev": "yarn workspace @react-spring/demo dev",
+    "postinstall": "patch-package && preconstruct dev",
+    "prepare": "husky install",
     "test:unit": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
-    "test:e2e": "start-server-and-test 'yarn workspace @react-spring/parallax dev' http-get://localhost:3000 'yarn cypress run'",
+    "test:e2e": "start-server-and-test 'yarn vite serve packages/parallax/test' http-get://localhost:3000 'yarn cypress run'",
     "test": "yarn test:ts && yarn test:unit && yarn test:e2e",
     "release": "yarn test:ts && yarn test:cov && yarn build && yarn changeset publish",
     "vers": "yarn changeset version"
@@ -62,50 +64,53 @@
       ]
     }
   },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "pretty-quick --staged"
-    }
-  },
   "devDependencies": {
     "@babel/core": "^7.13.10",
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
-    "@changesets/changelog-git": "^0.1.7",
-    "@changesets/cli": "^2.16.0",
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "@preconstruct/cli": "^2.0.6",
-    "@testing-library/cypress": "^7.0.6",
-    "@testing-library/jest-dom": "^4.0.0",
-    "@testing-library/react": "^11.2.5",
+    "@changesets/cli": "^2.18.1",
+    "@commitlint/cli": "^15.0.0",
+    "@commitlint/config-conventional": "^15.0.0",
+    "@preconstruct/cli": "^2.1.5",
+    "@react-three/fiber": "^7.0.23",
+    "@testing-library/cypress": "^8.0.2",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@types/jest": "^27.0.3",
+    "@types/lodash.clamp": "^4.0.6",
     "@types/lodash.shuffle": "^4.2.6",
-    "@types/mdx-js__react": "^1.5.3",
-    "@types/jest": "^26.0.23",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
+    "@types/mdx-js__react": "^1.5.5",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
     "@types/react-lazyload": "^3.1.0",
-    "@types/styled-components": "^5.1.9",
-    "babel-plugin-styled-components": "^1.12.0",
-    "cypress": "^7.7.0",
+    "@types/react-native": "^0.66.8",
+    "@types/styled-components": "^5.1.17",
+    "@types/three": "^0.135.0",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
+    "cypress": "^9.1.1",
     "cypress-plugin-snapshots": "^1.4.4",
     "flush-microtasks": "^1.0.1",
-    "husky": "1.3.1",
-    "jest": "^26.6.3",
-    "jest-watch-typeahead": "^0.3.1",
-    "mock-raf": "npm:@react-spring/mock-raf",
+    "husky": "^7.0.4",
+    "jest": "^27.4.4",
+    "konva": "^8.3.1",
+    "mock-raf": "npm:@react-spring/mock-raf@1.1.1",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0",
-    "prettier": "^2.2.1",
-    "pretty-quick": "1.10.0",
+    "prettier": "^2.5.1",
+    "pretty-quick": "^3.1.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-konva": "^17.0.2-5",
+    "react-native": "^0.66.4",
+    "react-zdog": "^1.0.11",
     "spec.ts": "^1.1.3",
-    "start-server-and-test": "^1.12.6",
-    "ts-jest": "^26.5.4",
-    "typescript": "^4.2.3"
+    "start-server-and-test": "^1.14.0",
+    "three": "^0.135.0",
+    "ts-jest": "^27.1.1",
+    "typescript": "^4.5.3",
+    "vite": "^2.7.1",
+    "zdog": "^1.1.2"
   },
   "publishConfig": {
     "access": "public"
@@ -113,5 +118,6 @@
   "collective": {
     "type": "opencollective",
     "url": "https://opencollective.com/react-spring"
-  }
+  },
+  "packageManager": "yarn@3.1.1"
 }

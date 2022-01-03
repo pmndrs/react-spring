@@ -3,7 +3,7 @@ import { Lookup, Falsy, OneOrMore } from '@react-spring/types'
 import { AsyncResult, ControllerUpdate } from './types'
 import { Controller } from './Controller'
 
-interface ControllerUpdateFn<State extends Lookup = Lookup> {
+export interface ControllerUpdateFn<State extends Lookup = Lookup> {
   (i: number, ctrl: Controller<State>): ControllerUpdate<State> | Falsy
 }
 
@@ -130,7 +130,6 @@ export const SpringRef = <
     each(current, ctrl => ctrl.set(values))
   }
 
-  /** @internal */
   SpringRef.start = function (props?: object | ControllerUpdateFn<State>) {
     const results: AsyncResult[] = []
 
@@ -154,7 +153,6 @@ export const SpringRef = <
     return this
   }
 
-  /** @internal */
   SpringRef.update = function (props: object | ControllerUpdateFn<State>) {
     each(current, (ctrl, i) => ctrl.update(this._getProps(props, ctrl, i)))
     return this

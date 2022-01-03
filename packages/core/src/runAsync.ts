@@ -29,6 +29,7 @@ export interface RunAsyncState<T extends AnimationTarget = any> {
   pauseQueue: Set<() => void>
   resumeQueue: Set<() => void>
   timeouts: Set<Timeout>
+  delayed?: boolean
   asyncId?: number
   asyncTo?: AsyncTo<InferState<T>>
   promise?: AsyncResult<T>

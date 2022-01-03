@@ -17,11 +17,13 @@ export default function App() {
     enter: { opacity: 1 },
     leave: { opacity: 0 },
     config: { duration: 3000 },
+    onRest: (_a, _b, item) => {
+      if (index === item) {
+        set(state => (state + 1) % slides.length)
+      }
+    },
+    exitBeforeEnter: true,
   })
-  useEffect(() => {
-    const t = setInterval(() => set(state => (state + 1) % slides.length), 4000)
-    return () => clearTimeout(t)
-  }, [])
   return (
     <div className="flex fill center">
       {transitions((style, i) => (

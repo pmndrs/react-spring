@@ -1,0 +1,30 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@react-spring/demo": "1.0.0",
+    "@react-spring/docs": "1.0.3",
+    "@react-spring/animated": "9.3.1",
+    "@react-spring/core": "9.3.1",
+    "@react-spring/parallax": "9.3.1",
+    "@react-spring/rafz": "9.3.1",
+    "react-spring": "9.3.2",
+    "@react-spring/shared": "9.3.1",
+    "@react-spring/types": "9.3.1",
+    "@react-spring/konva": "9.3.1",
+    "@react-spring/native": "9.3.1",
+    "@react-spring/three": "9.3.1",
+    "@react-spring/web": "9.3.1",
+    "@react-spring/zdog": "9.3.1"
+  },
+  "changesets": [
+    "calm-pumpkins-nail",
+    "cool-avocados-eat",
+    "famous-roses-peel",
+    "kind-moons-hide",
+    "rude-planes-tease",
+    "silver-mayflies-own",
+    "spicy-rings-tickle",
+    "yellow-pugs-arrive"
+  ]
+}

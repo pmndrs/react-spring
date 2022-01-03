@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/three",
-  "version": "9.3.2",
+  "version": "9.4.0-beta.6",
   "main": "dist/react-spring-three.cjs.js",
   "module": "dist/react-spring-three.esm.js",
   "files": [
@@ -27,19 +27,14 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/animated": "~9.3.0",
-    "@react-spring/core": "~9.3.0",
-    "@react-spring/shared": "~9.3.0",
-    "@react-spring/types": "~9.3.0"
+    "@react-spring/animated": "~9.4.0-beta.6",
+    "@react-spring/core": "~9.4.0-beta.6",
+    "@react-spring/shared": "~9.4.0-beta.6",
+    "@react-spring/types": "~9.4.0-beta.6"
   },
   "peerDependencies": {
     "@react-three/fiber": ">=6.0",
     "react": ">=16.11",
     "three": ">=0.126"
-  },
-  "devDependencies": {
-    "@react-three/fiber": "^6.2.2",
-    "@types/three": "^0.126.1",
-    "three": "^0.126.1"
   }
 }

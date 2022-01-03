@@ -28,3 +28,8 @@ body {
 .flex.center {
   justify-content: center;
 }
+
+:root {
+  --from: #3cffd0;
+  --to: #277ef4;
+}

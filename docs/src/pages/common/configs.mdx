@@ -31,7 +31,7 @@ And we've added the following properties `frequency`, `damping`, `round`, `bounc
 | clamp        | false     | when true, stops the spring once it overshoots its boundaries                                                                                                                                                     |
 | precision    | 0.01      | how close to the end result the animated value gets before we consider it to be "there", this is important with spring animations                                                                                 |
 | velocity     | 0         | initial velocity (see [v9 changelog](/changelog#changes-in-configvelocity) for a breaking change).                                                                                                                |
-| easing       | t => t    | linear by default, you can use any easing you want, for instance d3-ease                                                                                                                                          |
+| easing       | t => t    | linear by default, you can use any easing you want, for instance d3-ease, we have included a variety of easings see [here](#easings)                                                                              |
 | damping      | 1         | The damping ratio, which dictates how the spring slows down. Only works when `frequency` is defined. Defaults to `1`.                                                                                             |
 | progress     | 0         | When used with `duration`, it decides how far into the easing function to start from. The duration itself is unaffected.                                                                                          |
 | duration     | undefined | if > than 0 will switch to a duration-based animation instead of spring physics, value should be indicated in milliseconds (e.g. `duration: 250` for a duration of 250ms)                                         |
@@ -69,3 +69,50 @@ useSpring({ ..., config: config.default })
   live
   url="https://codesandbox.io/embed/react-spring-preset-configs-kdv7r?fontsize=14&hidenavigation=1&theme=dark&view=preview&hidedevtools=1&hidenavigation=1"
 />
+
+## Easings
+
+Whilst react-spring is supposed to be a spring based animation library, it's evolved over time with the ambition of an all-in-one animation library.
+
+With this in mind, we now support a multitude of easing functions to be used with the configuration when `duration` is set.
+
+| In            | Out            | In Out           |
+| ------------- | -------------- | ---------------- |
+| easeInBack    | easeOutBack    | easeInOutBack    |
+| easeInBounce  | easeOutBounce  | easeInOutBounce  |
+| easeInCirc    | easeOutCirc    | easeInOutCirc    |
+| easeInCubic   | easeOutCubic   | easeInOutCubic   |
+| easeInElastic | easeOutElastic | easeInOutElastic |
+| easeInExpo    | easeOutExpo    | easeInOutExpo    |
+| easeInQuad    | easeOutQuad    | easeInOutQuad    |
+| easeInQuart   | easeOutQuart   | easeInOutQuart   |
+| easeInQuint   | easeOutQuint   | easeInOutQuint   |
+| easeInSine    | easeOutSine    | easeInOutSine    |
+
+These are used like so:
+
+```js render=true edit=true
+function EasingComponent() {
+  const { background, rotateZ } = useSpring({
+    from: {
+      background: '#46e891',
+      rotateZ: 0,
+    },
+    to: {
+      background: '#277ef4',
+      rotateZ: 225,
+    },
+    config: {
+      duration: 2000,
+      easing: easings.easeInOutQuart,
+    },
+    loop: { reverse: true },
+  })
+
+  return (
+    <animated.div
+      style={{ background, width: 120, height: 120, borderRadius: 16, rotateZ }}
+    />
+  )
+}
+```

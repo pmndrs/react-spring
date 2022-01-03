@@ -22,7 +22,6 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "bic": false,
   "devDependencies": {
     "@types/lodash.shuffle": "4.2.6",
     "@types/react": "^17.0.2",
