@@ -65,9 +65,11 @@ html {
   max-width: 50%;
   overflow:scroll;
 }
+
 .code-table > div:last-of-type {
   flex: 1;
 }
+
 .code-table > div:last-child {
   position: relative;
   display: flex;

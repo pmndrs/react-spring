@@ -115,6 +115,6 @@ export const PAGES: Page[] = [
   },
   {
     title: 'Changelog',
-    url: '/changelog',
+    url: 'https://github.com/pmndrs/react-spring/releases',
   },
 ]
