@@ -6,10 +6,10 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'remix'
-import type { MetaFunction } from 'remix'
-import { useEffect } from 'react'
+import type { MetaFunction, LinksFunction } from 'remix'
 
 import { useForceUpdate } from './hooks/useForceUpdate'
+import { useIsomorphicLayoutEffect } from './hooks/useIsomorphicEffect'
 
 import { getCssText } from './styles/stitches.config'
 import { globalStyles } from './styles/global'
@@ -22,12 +22,22 @@ export const meta: MetaFunction = () => {
   }
 }
 
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
+]
+
 function Document({ children }: { children: React.ReactNode }) {
   globalStyles()
 
   const forceUpdate = useForceUpdate()
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
+    /**
+     * Force update on useLayoutEffect
+     * So that the tree has rendered and
+     * getCssText from stitches will have
+     * all the styled components
+     */
     forceUpdate()
   }, [])
 
@@ -35,11 +45,11 @@ function Document({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
         <style
           id="stitches"
-          suppressHydrationWarning
           dangerouslySetInnerHTML={{ __html: getCssText() }}
         />
       </head>

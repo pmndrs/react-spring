@@ -7,10 +7,15 @@
     "dev": "remix dev"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^0.1.5",
+    "@radix-ui/react-icons": "^1.0.3",
+    "@radix-ui/react-toolbar": "^0.1.4",
+    "@react-spring/web": "*",
     "@remix-run/react": "^1.1.1",
     "@remix-run/serve": "^1.1.1",
     "@remix-run/vercel": "^1.1.1",
-    "@stitches/react": "^1.2.6",
+    "@stitches/react": "patch:@stitches/react@1.2.6#../patches/@stitches_react.patch",
+    "@use-gesture/react": "^10.2.4",
     "front-matter": "^4.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

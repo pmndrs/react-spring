@@ -1,123 +1,132 @@
-// import { styled } from '@stitches/react';
+import { styled } from '../styles/stitches.config'
 
-// import { Logo } from './Logo'
+import { Logo } from './Logo'
 
-// export const Splash = () => {
-//   return (
-//     <Container>
-//       <Column>
-//         <TitleContainer>
-//           <Title>react-spring</Title>
-//           <Tagline>
-//             bring your components to life with simple spring animation
-//             primitives
-//           </Tagline>
-//           <QuickNav>
-//             <a
-//               target="_blank"
-//               rel="nofollow noopener noreferrer"
-//               href="https://github.com/pmndrs/react-spring/discussions">
-//               community
-//             </a>
-//             <a
-//               target="_blank"
-//               rel="nofollow noopener noreferrer"
-//               href="https://github.com/pmndrs/react-spring">
-//               source
-//             </a>
-//             <a
-//               target="_blank"
-//               rel="nofollow noopener noreferrer"
-//               href="https://twitter.com/pmndrs">
-//               twitter
-//             </a>
-//           </QuickNav>
-//         </TitleContainer>
-//       </Column>
-//       <Column>
-//         <LogoContainer>
-//           <Logo width="100%" />
-//         </LogoContainer>
-//       </Column>
-//     </Container>
-//   )
-// }
+export const Splash = () => {
+  return (
+    <Container>
+      <Column>
+        <TitleContainer>
+          <Title>react-spring</Title>
+          <Tagline>
+            bring your components to life with simple spring animation
+            primitives
+          </Tagline>
+          <QuickNav>
+            <QuickNavAnchor
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+              href="https://github.com/pmndrs/react-spring/discussions">
+              <span>community</span>
+            </QuickNavAnchor>
+            <QuickNavAnchor
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+              href="https://github.com/pmndrs/react-spring">
+              <span>source</span>
+            </QuickNavAnchor>
+            <QuickNavAnchor
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+              href="https://twitter.com/pmndrs">
+              <span>twitter</span>
+            </QuickNavAnchor>
+          </QuickNav>
+        </TitleContainer>
+      </Column>
+      <Column>
+        <LogoContainer>
+          <Logo width="100%" />
+        </LogoContainer>
+      </Column>
+    </Container>
+  )
+}
 
-// const Container = styled('header', {
-//     position: relative;
-//     background: #363645;
-//     color: white;
-//     width: 100%;
-//     height: calc(100vh - 100px);
-//     display: flex;
-//     flex-flow: row nowrap;
-//     align-items: space-around;
-//     justify-content: center;
-//     border-radius: 0 0 20px 20px;
-//     overflow: hidden;
-//     padding: 20px;
+const Container = styled('header', {
+  position: 'relative',
+  width: '100%',
+  height: '80vh',
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column-reverse',
+  alignItems: 'space-around',
+  justifyContent: 'center',
+  backgroundColor: '$steel',
+  color: '$white',
+  borderRadius: '0 0 $r20 $r20',
+  padding: '$25',
+  backgroundSize: '40px 40px',
+  backgroundImage: `linear-gradient(to right,rgba(0, 0, 0, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px)`,
 
-//     background-size: 40px 40px;
-//     background-image: linear-gradient(
-//         to right,
-//         rgba(0, 0, 0, 0.1) 1px,
-//         transparent 1px
-//       ),
-//       linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-// })
+  '@tabletUp': {
+    flexDirection: 'row',
+    padding: '$50',
+  },
+})
 
-// const Column = styled.div`
-//   height: 100%;
-//   width: 400px;
+const Column = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   @media (min-width: 900px) {
-//     &:first-child {
-//       margin-right: 120px;
-//     }
-//   }
-// `
+  '@tabletUp': {
+    flex: 1,
+    maxWidth: '$splash',
 
-// const QuickNav = styled.div`
-//   margin-top: 18px;
-//   & a {
-//     display: inline-block;
-//     background: #ff6d6d;
-//     color: white;
-//     text-decoration: none;
-//     font-weight: 18px;
-//     line-height: 20px;
-//     padding: 10px 15px;
-//     border-radius: 18px;
-//     margin-top: 8px;
-//     margin-left: 12px;
-//     &:first-child {
-//       margin-left: 0;
-//     }
-//   }
-// `
+    '&:first-child': {
+      marginRight: '12rem',
+    },
+  },
+})
 
-// const LogoContainer = styled.div`
-//   width: 100%;
-//   user-select: none;
-// `
+const LogoContainer = styled('div', {
+  width: '50%',
+  userSelect: 'none',
+  marginBottom: '$25',
 
-// const TitleContainer = styled.div`
-//   text-align: right;
-// `
+  '@tabletUp': {
+    width: '100%',
+    margin: 0,
+  },
+})
 
-// const Title = styled.h1`
-//   font-size: 65px;
-//   font-weight: 600;
-//   line-height: 65px;
-//   color: white;
-// `
+const QuickNav = styled('ul', {
+  marginTop: '$25',
+})
 
-// const Tagline = styled.p`
-//   font-size: 20px;
-//   line-height: 26px;
-//   font-weight: 400;
-//   margin-top: 16px;
-// `
+const QuickNavAnchor = styled('a', {
+  display: 'inline-block',
+  background: '$red',
+  color: '$white',
+  borderRadius: '$r20',
+})
+
+const TitleContainer = styled('div', {
+  textAlign: 'center',
+  marginBottom: '$25',
+
+  '@tabletUp': {
+    margin: 0,
+    textAlign: 'right',
+  },
+})
+
+const Title = styled('h1', {
+  fontWeight: '$bold',
+  color: '$white',
+  fontSize: '$XL',
+  lineHeight: '$XL',
+
+  '@tabletUp': {
+    fontSize: '$XXL',
+    lineHeight: '$XXL',
+  },
+})
+
+const Tagline = styled('p', {
+  color: '$white',
+  fontSize: '$S',
+  lineHeight: '$S',
+  marginTop: '$20',
+})

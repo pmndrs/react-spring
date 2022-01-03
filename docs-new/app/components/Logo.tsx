@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useSpring, animated } from 'react-spring'
-import { useDrag } from 'react-use-gesture'
+import { useDrag } from '@use-gesture/react'
 
 interface LogoProps {
   width: string
@@ -49,7 +49,10 @@ export const Logo = ({ width }: LogoProps) => {
       viewBox="0 0 139 139"
       width={width}
       {...bind()}
-      style={{ cursor: cursor }}>
+      style={{
+        cursor: cursor,
+        touchAction: 'none',
+      }}>
       <radialGradient
         id="a"
         cx="33.434395%"
