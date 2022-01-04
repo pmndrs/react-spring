@@ -127,7 +127,7 @@ const MobileMenuOverlay = styled(animated.div, {
   height: '100vh',
   zIndex: 0,
   backgroundColor: 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(10px)',
+  backdropFilter: 'blur(5px)',
 
   '@supports not (backdrop-filter: blur(10px))': {
     backgroundColor: 'rgba(0,0,0,0.1)',
