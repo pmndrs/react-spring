@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
-import { animated, useSpring } from '@react-spring/web'
+import { animated, useSpring, useTransition } from '@react-spring/web'
 
 import { styled } from '~/styles/stitches.config'
 
@@ -13,54 +13,55 @@ import { useWindowSize } from '~/hooks/useWindowSize'
 
 export const Header = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [mountElements, setMountElements] = useState(false)
   const { width } = useWindowSize()
 
   const handleDialogChange = (isOpen: boolean) => setDialogOpen(isOpen)
 
-  const [{ x, opacity }, api] = useSpring(() => ({
-    x: '-100%',
-    opacity: 0,
+  const transitions = useTransition(dialogOpen, {
+    from: {
+      x: '-100%',
+      opacity: 0,
+    },
+    enter: {
+      x: '0',
+      opacity: 1,
+    },
+    leave: {
+      x: '-100%',
+      opacity: 0,
+    },
     config: {
       tension: 210,
       friction: 25,
       mass: 1,
     },
-  }))
-
-  useIsomorphicLayoutEffect(() => {
-    if (dialogOpen) {
-      api.start({
-        x: '0',
-        opacity: 1,
-        onStart: () => setMountElements(true),
-      })
-    } else {
-      api.start({
-        x: '-100%',
-        opacity: 0,
-        onRest: () => setMountElements(false),
-      })
-    }
-  }, [dialogOpen])
+  })
 
   return (
     <Head>
       <MaxWidth>
         <DesktopNavigation />
-        <Dialog.Root onOpenChange={handleDialogChange}>
+        <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>
           <MobileMenuButton>
             <HamburgerMenu height={20} width={20} />
           </MobileMenuButton>
           <Dialog.Portal forceMount>
-            {/* @ts-expect-error this issue has been raised https://github.com/radix-ui/primitives/pull/1060 */}
-            <MobileMenuOverlay forceMount={mountElements} style={{ opacity }} />
-            {/* @ts-expect-error this issue has been raised https://github.com/radix-ui/primitives/pull/1060 */}
-            <MobileMenu forceMount={mountElements} style={{ x }}>
-              <HiddenTitle>Main Menu</HiddenTitle>
-              <a href="https://www.google.com">link to google</a>
-              <Dialog.Close />
-            </MobileMenu>
+            {transitions(({ opacity, x }, item) =>
+              item ? (
+                <>
+                  <Dialog.Overlay forceMount asChild>
+                    <MobileMenuOverlay style={{ opacity }} />
+                  </Dialog.Overlay>
+                  <Dialog.Content forceMount asChild>
+                    <MobileMenu style={{ x }}>
+                      <HiddenTitle>Main Menu</HiddenTitle>
+                      <a href="https://www.google.com">link to google</a>
+                      <Dialog.Close />
+                    </MobileMenu>
+                  </Dialog.Content>
+                </>
+              ) : null
+            )}
           </Dialog.Portal>
         </Dialog.Root>
         <Logo width={width < 768 ? '48px' : '64px'} />
@@ -116,7 +117,7 @@ const HamburgerMenu = styled(HamburgerMenuIcon, {
   color: '$black',
 })
 
-const MobileMenuOverlay = styled(animated(Dialog.Overlay), {
+const MobileMenuOverlay = styled(animated.div, {
   position: 'absolute',
   left: 0,
   right: 0,
@@ -133,7 +134,7 @@ const MobileMenuOverlay = styled(animated(Dialog.Overlay), {
   },
 })
 
-const MobileMenu = styled(animated(Dialog.Content), {
+const MobileMenu = styled(animated.div, {
   position: 'absolute',
   left: 0,
   right: 0,

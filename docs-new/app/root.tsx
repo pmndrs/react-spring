@@ -29,18 +29,6 @@ export const links: LinksFunction = () => [
 function Document({ children }: { children: React.ReactNode }) {
   globalStyles()
 
-  const forceUpdate = useForceUpdate()
-
-  useIsomorphicLayoutEffect(() => {
-    /**
-     * Force update on useLayoutEffect
-     * So that the tree has rendered and
-     * getCssText from stitches will have
-     * all the styled components
-     */
-    forceUpdate()
-  }, [])
-
   return (
     <html lang="en">
       <head>
@@ -48,10 +36,6 @@ function Document({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
-        <style
-          id="stitches"
-          dangerouslySetInnerHTML={{ __html: getCssText() }}
-        />
       </head>
       <body>
         {children}
