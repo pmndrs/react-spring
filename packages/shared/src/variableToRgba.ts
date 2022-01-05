@@ -1,3 +1,4 @@
+import { isSSR } from './helpers'
 import { cssVariableRegex } from './regexs'
 
 /**
@@ -14,7 +15,7 @@ import { cssVariableRegex } from './regexs'
 export const variableToRgba = (input: string): string => {
   const [token, fallback] = parseCSSVariable(input)
 
-  if (!token) {
+  if (!token || isSSR()) {
     return input
   }
 
