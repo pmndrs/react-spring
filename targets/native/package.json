@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/native",
-  "version": "9.4.0",
+  "version": "9.4.1",
   "main": "dist/react-spring-native.cjs.js",
   "module": "dist/react-spring-native.esm.js",
   "files": [
