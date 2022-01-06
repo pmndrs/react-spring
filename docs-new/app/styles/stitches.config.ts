@@ -1,11 +1,11 @@
-import { createStitches, PropertyValue } from '@stitches/react'
+import * as Stitches from '@stitches/react'
 
 interface GradientBorderParams {
   width?: number
   gradient?: string
 }
 
-const stitches = createStitches({
+const stitches = Stitches.createStitches({
   theme: {
     colors: {
       red: '#ff6d6d',
@@ -20,10 +20,12 @@ const stitches = createStitches({
       '15': '1.5rem',
       '20': '2rem',
       '25': '2.5rem',
+      '30': '3rem',
       '50': '5rem',
     },
     sizes: {
       splash: '40rem',
+      type: '80rem',
       document: '120rem',
     },
     radii: {
@@ -50,20 +52,22 @@ const stitches = createStitches({
       bold: '600',
     },
     fontSizes: {
-      XXL: '6.4rem',
-      XL: '5.2rem',
-      L: '4rem',
-      M: '3.2rem',
+      XXL: '4.8rem',
+      XL: '4rem',
+      L: '3.2rem',
+      M: '2.6rem',
       S: '2rem',
-      XS: '1.4rem',
+      XS: '1.6rem',
+      XXS: '1.2rem',
     },
     lineHeights: {
-      XXL: '6.4rem',
-      XL: '5.2rem',
-      L: '4.8rem',
-      M: '4rem',
-      S: '2.8rem',
-      XS: '2rem',
+      XXL: '5.8rem',
+      XL: '5rem',
+      L: '4.2rem',
+      M: '3.6rem',
+      S: '3rem',
+      XS: '2.6rem',
+      XXS: '2.2rem',
     },
   },
   media: {
@@ -75,54 +79,55 @@ const stitches = createStitches({
     motion: '(prefers-reduced-motion)',
   },
   utils: {
-    p: (value: PropertyValue<'padding'>) => ({
+    p: (value: Stitches.PropertyValue<'padding'>) => ({
       padding: value,
     }),
-    pt: (value: PropertyValue<'paddingTop'>) => ({
+    pt: (value: Stitches.PropertyValue<'paddingTop'>) => ({
       paddingTop: value,
     }),
-    pr: (value: PropertyValue<'paddingRight'>) => ({
+    pr: (value: Stitches.PropertyValue<'paddingRight'>) => ({
       paddingRight: value,
     }),
-    pb: (value: PropertyValue<'paddingBottom'>) => ({
+    pb: (value: Stitches.PropertyValue<'paddingBottom'>) => ({
       paddingBottom: value,
     }),
-    pl: (value: PropertyValue<'paddingLeft'>) => ({
+    pl: (value: Stitches.PropertyValue<'paddingLeft'>) => ({
       paddingLeft: value,
     }),
-    px: (value: PropertyValue<'paddingLeft'>) => ({
+    px: (value: Stitches.PropertyValue<'paddingLeft'>) => ({
       paddingLeft: value,
       paddingRight: value,
     }),
-    py: (value: PropertyValue<'paddingTop'>) => ({
+    py: (value: Stitches.PropertyValue<'paddingTop'>) => ({
       paddingTop: value,
       paddingBottom: value,
     }),
 
-    m: (value: PropertyValue<'margin'>) => ({
+    m: (value: Stitches.PropertyValue<'margin'>) => ({
       margin: value,
     }),
-    mt: (value: PropertyValue<'marginTop'>) => ({
+    mt: (value: Stitches.PropertyValue<'marginTop'>) => ({
       marginTop: value,
     }),
-    mr: (value: PropertyValue<'marginRight'>) => ({
+    mr: (value: Stitches.PropertyValue<'marginRight'>) => ({
       marginRight: value,
     }),
-    mb: (value: PropertyValue<'marginBottom'>) => ({
+    mb: (value: Stitches.PropertyValue<'marginBottom'>) => ({
       marginBottom: value,
     }),
-    ml: (value: PropertyValue<'marginLeft'>) => ({
+    ml: (value: Stitches.PropertyValue<'marginLeft'>) => ({
       marginLeft: value,
     }),
-    mx: (value: PropertyValue<'marginLeft'>) => ({
+    mx: (value: Stitches.PropertyValue<'marginLeft'>) => ({
       marginLeft: value,
       marginRight: value,
     }),
-    my: (value: PropertyValue<'marginTop'>) => ({
+    my: (value: Stitches.PropertyValue<'marginTop'>) => ({
       marginTop: value,
       marginBottom: value,
     }),
-    visuallyHidden: () => ({
+    // require unused variable to allow custom CSS type to be used
+    visuallyHidden: (_val: string) => ({
       position: 'absolute',
       border: 0,
       width: 1,
@@ -153,6 +158,12 @@ const stitches = createStitches({
   },
 })
 
-const { styled, globalCss, getCssText } = stitches
+const { styled, globalCss, getCssText, config } = stitches
+
+type StitchesConfig = typeof config
+type CSS = Stitches.CSS<StitchesConfig>
+type ScaleValue<TValue> = Stitches.ScaleValue<TValue, StitchesConfig>
+
+export type { StitchesConfig, CSS, ScaleValue }
 
 export { styled, getCssText, globalCss }

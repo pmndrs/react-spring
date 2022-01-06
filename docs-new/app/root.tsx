@@ -8,10 +8,6 @@ import {
 } from 'remix'
 import type { MetaFunction, LinksFunction } from 'remix'
 
-import { useForceUpdate } from './hooks/useForceUpdate'
-import { useIsomorphicLayoutEffect } from './hooks/useIsomorphicEffect'
-
-import { getCssText } from './styles/stitches.config'
 import { globalStyles } from './styles/global'
 
 export const meta: MetaFunction = () => {
