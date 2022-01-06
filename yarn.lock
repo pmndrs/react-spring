@@ -4164,6 +4164,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-spring/docs@workspace:docs-new"
   dependencies:
+    "@mdx-js/react": ^1.6.22
     "@radix-ui/react-dialog": ^0.1.5
     "@radix-ui/react-icons": ^1.0.3
     "@radix-ui/react-toolbar": ^0.1.4
@@ -4171,7 +4172,7 @@ __metadata:
     "@remix-run/react": ^1.1.1
     "@remix-run/serve": ^1.1.1
     "@remix-run/vercel": ^1.1.1
-    "@stitches/react": "patch:@stitches/react@1.2.6#../patches/@stitches_react.patch"
+    "@stitches/react": ^1.2.6
     "@use-gesture/react": ^10.2.4
     front-matter: ^4.0.2
     react: ^17.0.2
@@ -4335,6 +4336,30 @@ __metadata:
   bin:
     remix: cli.js
   checksum: e407ad166011e95b1080e231ac4fdac9722c6ffe27246f0de77bca3f9756a9e74bd4beb57929730688c8957603db78e440e1fbcda6541cec7b4969009458b484
+  languageName: node
+  linkType: hard
+
+"@remix-run/dev@patch:@remix-run/dev@^1.1.1#patches/remix-run_dev.patch::locator=react-spring--root%40workspace%3A.":
+  version: 1.1.1
+  resolution: "@remix-run/dev@patch:@remix-run/dev@npm%3A1.1.1#patches/remix-run_dev.patch::version=1.1.1&hash=4f3e2b&locator=react-spring--root%40workspace%3A."
+  dependencies:
+    cacache: ^15.0.5
+    chokidar: ^3.5.1
+    esbuild: 0.13.14
+    exit-hook: 2.2.1
+    fs-extra: ^10.0.0
+    lodash.debounce: ^4.0.8
+    meow: ^7.1.1
+    minimatch: ^3.0.4
+    pretty-ms: ^7.0.1
+    read-package-json-fast: ^2.0.2
+    remark-frontmatter: ^4.0.0
+    remark-mdx-frontmatter: ^1.0.1
+    ws: ^7.4.5
+    xdm: ^2.0.0
+  bin:
+    remix: cli.js
+  checksum: 54e0c6537a7e0b1e3562ab9bbb71eab64a6d1e62a10fd59b398db235ee9229ca293fa6e38fb6ff86d8adf3e44091a6fe75449ad47262df2d278241b26ad97186
   languageName: node
   linkType: hard
 
@@ -4572,21 +4597,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stitches/react@npm:1.2.6":
+"@stitches/react@npm:^1.2.6":
   version: 1.2.6
   resolution: "@stitches/react@npm:1.2.6"
   peerDependencies:
     react: ">= 16.3.0"
   checksum: 416088cdde17a22d6cdb04cf1cf756c6e5fc291dd7e41f82ce422bb95432ad32b6d990e7264d996d367c40bbc674d61be087e4e1f7b23eea7f81ef6266373a9c
-  languageName: node
-  linkType: hard
-
-"@stitches/react@patch:@stitches/react@1.2.6#../patches/@stitches_react.patch::locator=%40react-spring%2Fdocs%40workspace%3Adocs-new":
-  version: 1.2.6
-  resolution: "@stitches/react@patch:@stitches/react@npm%3A1.2.6#../patches/@stitches_react.patch::version=1.2.6&hash=dd3e93&locator=%40react-spring%2Fdocs%40workspace%3Adocs-new"
-  peerDependencies:
-    react: ">= 16.3.0"
-  checksum: 144219fe97b5f34d2b4a2b309b6f9fbfd1f90fa6496255653a1615d68700086b1736d544256187312fa4bd282a1a8b8481ab3ec5d3c21c2950caac6c0162945a
   languageName: node
   linkType: hard
 
@@ -16204,7 +16220,7 @@ __metadata:
     "@commitlint/config-conventional": ^15.0.0
     "@preconstruct/cli": ^2.1.5
     "@react-three/fiber": ^7.0.23
-    "@remix-run/dev": ^1.1.1
+    "@remix-run/dev": "patch:@remix-run/dev@^1.1.1#patches/remix-run_dev.patch"
     "@testing-library/cypress": ^8.0.2
     "@testing-library/jest-dom": ^5.16.1
     "@testing-library/react": ^12.1.2

@@ -1,0 +1,14 @@
+diff --git a/compiler/plugins/mdx.js b/compiler/plugins/mdx.js
+index b52c7fdd807104259eb739d93b8ec2a49bed8f2d..803b9cf155f4cb4a4a0d1497cf12c51bacca8708 100644
+--- a/compiler/plugins/mdx.js
++++ b/compiler/plugins/mdx.js
+@@ -88,7 +88,8 @@ export const links = undefined;
+             pragma: "React.createElement",
+             pragmaFrag: "React.Fragment",
+             rehypePlugins,
+-            remarkPlugins
++            remarkPlugins,
++            providerImportSource: "@mdx-js/react",
+           });
+           contents = `
+ ${compiled.value}

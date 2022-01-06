@@ -75,7 +75,7 @@
     "@commitlint/config-conventional": "^15.0.0",
     "@preconstruct/cli": "^2.1.5",
     "@react-three/fiber": "^7.0.23",
-    "@remix-run/dev": "^1.1.1",
+    "@remix-run/dev": "patch:@remix-run/dev@^1.1.1#patches/remix-run_dev.patch",
     "@testing-library/cypress": "^8.0.2",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
