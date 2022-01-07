@@ -36,3 +36,13 @@ report.*.json
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+node_modules
+
+.cache
+.vercel
+.output
+
+docs-new/public/build
+docs-new/api/_build
+docs-new/api/index.js

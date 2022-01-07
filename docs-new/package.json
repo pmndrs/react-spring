@@ -3,7 +3,7 @@
   "description": "",
   "license": "",
   "scripts": {
-    "build": "remix build",
+    "build": "remix build && rollup -c",
     "dev": "remix dev"
   },
   "dependencies": {

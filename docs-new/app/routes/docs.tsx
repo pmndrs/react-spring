@@ -128,8 +128,3 @@ const Main = styled('main', {
     padding: '0 $15',
   },
 })
-
-const MyHiddenThing = styled('h1', {
-  color: 'pink',
-  fontSize: '$XL',
-})
