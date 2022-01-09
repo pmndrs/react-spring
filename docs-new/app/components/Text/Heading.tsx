@@ -1,7 +1,7 @@
 import { CSSProperties, forwardRef, ReactNode } from 'react'
 import { getFontStyles } from '~/styles/fontStyles'
 
-import { styled, ScaleValue, CSS } from '~/styles/stitches.config'
+import { styled, ScaleValue, CSS, dark } from '~/styles/stitches.config'
 
 export interface HeadingProps {
   tag?: keyof Pick<

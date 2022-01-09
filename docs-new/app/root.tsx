@@ -1,14 +1,21 @@
 import {
+  HeadersFunction,
   Links,
   LiveReload,
+  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from 'remix'
 import type { MetaFunction, LinksFunction } from 'remix'
 
+import { getColorScheme } from './cookies'
+
 import { globalStyles } from './styles/global'
+import { useIsomorphicLayoutEffect } from './hooks/useIsomorphicEffect'
+import { useState } from 'react'
 
 export const meta: MetaFunction = () => {
   return {
@@ -22,8 +29,29 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
 ]
 
+export const headers: HeadersFunction = () => ({
+  'Accept-CH': 'Sec-CH-Prefers-Color-Scheme, Sec-CH-Prefers-Reduced-Motion',
+})
+
+export const loader: LoaderFunction = async ({ request }) => ({
+  colorScheme: await getColorScheme(request),
+})
+
 function Document({ children }: { children: React.ReactNode }) {
+  const { colorScheme } = useLoaderData<{ colorScheme: string }>()
+  const [theme, setTheme] = useState(colorScheme)
+
   globalStyles()
+
+  useIsomorphicLayoutEffect(() => {
+    if (!theme) {
+      setTheme(
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+      )
+    }
+  }, [])
 
   return (
     <html lang="en">
@@ -33,9 +61,9 @@ function Document({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className={theme}>
         {children}
-        <Scripts />
+        {/* <Scripts /> */}
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>

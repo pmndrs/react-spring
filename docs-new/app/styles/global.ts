@@ -1,4 +1,4 @@
-import { globalCss } from './stitches.config'
+import { dark, globalCss } from './stitches.config'
 
 export const globalStyles = globalCss({
   '*, *:before, *:after': {
@@ -36,4 +36,6 @@ export const globalStyles = globalCss({
     outline: '3px auto $red-outline',
     ['-webkit-tap-highlight-color']: '3px auto $red-outline',
   },
+
+  [`${dark}`]: {},
 })

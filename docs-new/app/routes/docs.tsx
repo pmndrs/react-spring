@@ -39,7 +39,20 @@ const comps = {
     />
   ),
   h3: (props: HeadingProps) => (
-    <Heading tag="h3" fontStyle="$M" css={{ mt: 40, mb: 20 }} {...props} />
+    <Heading
+      tag="h3"
+      fontStyle="$M"
+      css={{
+        mt: 30,
+        mb: 15,
+
+        '@tabletUp': {
+          mt: 40,
+          mb: 20,
+        },
+      }}
+      {...props}
+    />
   ),
   h4: (props: HeadingProps) => (
     <Heading
