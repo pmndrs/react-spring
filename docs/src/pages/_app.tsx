@@ -15,6 +15,7 @@ import { Footer } from 'components/Footer'
 import { CodeBlock } from 'components/CodeBlock'
 
 import { DEFAULT_SEO } from 'references/defaultSeo'
+import { FeedbackPopover } from 'components/FeedbackPopover'
 
 const GlobalStyle = createGlobalStyle`
   ${RESET}
@@ -33,11 +34,13 @@ function App({ Component, pageProps }: MyAppProps) {
     /**
      * Attach plausible on mount
      */
-    window.plausible =
-      window.plausible ||
-      function () {
-        void (window.plausible.q = window.plausible.q || []).push(arguments)
-      }
+    if (process.env.NEXT_PUBLIC_PLAUSIBLE) {
+      window.plausible =
+        window.plausible ||
+        function () {
+          void (window.plausible.q = window.plausible.q || []).push(arguments)
+        }
+    }
   }, [])
 
   return (
@@ -49,6 +52,7 @@ function App({ Component, pageProps }: MyAppProps) {
           <Component {...pageProps} />
         </PageContainer>
         <Footer />
+        <FeedbackPopover />
         <GlobalStyle />
       </MDXProvider>
     </ThemeProvider>

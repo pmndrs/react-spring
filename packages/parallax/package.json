@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/parallax",
-  "version": "9.4.0",
+  "version": "9.4.1",
   "main": "dist/react-spring-parallax.cjs.js",
   "module": "dist/react-spring-parallax.esm.js",
   "files": [
