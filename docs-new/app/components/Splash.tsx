@@ -36,7 +36,7 @@ export const Splash = () => {
       </Column>
       <Column>
         <LogoContainer>
-          <Logo width="100%" />
+          <Logo large />
         </LogoContainer>
       </Column>
     </Container>

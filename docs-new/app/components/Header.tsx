@@ -1,19 +1,15 @@
 import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
-import { animated, useSpring, useTransition } from '@react-spring/web'
+import { animated, useTransition } from '@react-spring/web'
 
 import { styled } from '~/styles/stitches.config'
 
-import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
-
 import { Logo } from './Logo'
 import { Navigation } from './Navigation'
-import { useWindowSize } from '~/hooks/useWindowSize'
 
 export const Header = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
-  const { width } = useWindowSize()
 
   const handleDialogChange = (isOpen: boolean) => setDialogOpen(isOpen)
 
@@ -64,7 +60,7 @@ export const Header = () => {
             )}
           </Dialog.Portal>
         </Dialog.Root>
-        <Logo width={width < 768 ? '48px' : '64px'} />
+        <Logo />
       </MaxWidth>
     </Head>
   )

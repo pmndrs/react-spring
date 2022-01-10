@@ -12,8 +12,9 @@ const { styled, globalCss, getCssText, config, createTheme } =
         red: '#ff6d6d',
         steel: '#363645',
         black: '#1B1A22',
-        white: '#fff',
+        white: '#ebebeb',
         grey: '#ccc',
+        green: '#1dc08f',
         'red-outline': 'rgba(255, 109, 109, 0.5)',
       },
       space: {
@@ -49,6 +50,7 @@ const { styled, globalCss, getCssText, config, createTheme } =
         serif: '',
       },
       fontWeights: {
+        light: '200',
         default: '400',
         bold: '600',
       },
@@ -163,9 +165,10 @@ const dark = createTheme('dark', {
   colors: {
     red: '#ff6d6d',
     steel: '#363645',
-    black: '#ffffff',
-    white: '#fff',
+    black: '#ebebeb',
+    white: '#1B1A22',
     grey: '#ccc',
+    green: '#1dc08f',
     'red-outline': 'rgba(255, 109, 109, 0.5)',
   },
 })

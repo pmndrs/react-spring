@@ -1,21 +1,17 @@
 import {
-  HeadersFunction,
   Links,
   LiveReload,
-  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
+  MetaFunction,
+  LinksFunction,
 } from 'remix'
-import type { MetaFunction, LinksFunction } from 'remix'
-
-import { getColorScheme } from './cookies'
 
 import { globalStyles } from './styles/global'
-import { useIsomorphicLayoutEffect } from './hooks/useIsomorphicEffect'
-import { useState } from 'react'
+
+// import { SiteThemePicker } from './components/Site/SiteThemePicker'
 
 export const meta: MetaFunction = () => {
   return {
@@ -29,29 +25,8 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
 ]
 
-export const headers: HeadersFunction = () => ({
-  'Accept-CH': 'Sec-CH-Prefers-Color-Scheme, Sec-CH-Prefers-Reduced-Motion',
-})
-
-export const loader: LoaderFunction = async ({ request }) => ({
-  colorScheme: await getColorScheme(request),
-})
-
 function Document({ children }: { children: React.ReactNode }) {
-  const { colorScheme } = useLoaderData<{ colorScheme: string }>()
-  const [theme, setTheme] = useState(colorScheme)
-
   globalStyles()
-
-  useIsomorphicLayoutEffect(() => {
-    if (!theme) {
-      setTheme(
-        window.matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'light'
-      )
-    }
-  }, [])
 
   return (
     <html lang="en">
@@ -60,10 +35,11 @@ function Document({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+        {/* <SiteThemePicker /> */}
       </head>
-      <body className={theme}>
+      <body>
         {children}
-        {/* <Scripts /> */}
+        <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>

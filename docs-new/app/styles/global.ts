@@ -7,6 +7,7 @@ export const globalStyles = globalCss({
 
   'html, body': {
     color: '$black',
+    backgroundColor: '$white',
 
     '-webkit-font-smoothing': 'antialiased',
     '-moz-osx-font-smoothing': 'grayscale',
@@ -33,8 +34,10 @@ export const globalStyles = globalCss({
   },
 
   '*:focus': {
-    outline: '3px auto $red-outline',
-    ['-webkit-tap-highlight-color']: '3px auto $red-outline',
+    outline: '3px solid $red-outline',
+    outlineOffset: '2px',
+    borderRadius: '$r4',
+    ['-webkit-tap-highlight-color']: '3px solid $red-outline',
   },
 
   [`${dark}`]: {},
