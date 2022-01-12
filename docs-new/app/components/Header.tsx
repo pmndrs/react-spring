@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { HamburgerMenuIcon } from '@radix-ui/react-icons'
+import { X, List } from 'phosphor-react'
 import { animated, useTransition } from '@react-spring/web'
 
 import { styled } from '~/styles/stitches.config'
@@ -39,7 +39,7 @@ export const Header = () => {
         <DesktopNavigation />
         <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>
           <MobileMenuButton>
-            <HamburgerMenu height={20} width={20} />
+            <HamburgerMenu size={20} />
           </MobileMenuButton>
           <Dialog.Portal forceMount>
             {transitions(({ opacity, x }, item) =>
@@ -50,9 +50,11 @@ export const Header = () => {
                   </Dialog.Overlay>
                   <Dialog.Content forceMount asChild>
                     <MobileMenu style={{ x }}>
+                      <MobileMenuClose>
+                        <X />
+                      </MobileMenuClose>
                       <HiddenTitle>Main Menu</HiddenTitle>
-                      <a href="https://www.google.com">link to google</a>
-                      <Dialog.Close />
+                      <Navigation showSubNav={false} />
                     </MobileMenu>
                   </Dialog.Content>
                 </>
@@ -109,7 +111,7 @@ const MobileMenuButton = styled(Dialog.Trigger, {
   },
 })
 
-const HamburgerMenu = styled(HamburgerMenuIcon, {
+const HamburgerMenu = styled(List, {
   color: '$black',
 })
 
@@ -137,10 +139,19 @@ const MobileMenu = styled(animated.div, {
   top: 0,
   bottom: 0,
   height: '100vh',
-  width: '20rem',
+  width: '30rem',
   background: '$white',
   zIndex: 1,
   boxShadow: '3px 0 12px -10px rgba(0,0,0,0.5)',
+  padding: '$25 $20',
+})
+
+const MobileMenuClose = styled(Dialog.Close, {
+  border: 'none',
+  color: '$steel',
+  background: 'transparent',
+  mb: '$20',
+  p: '1.1rem 1.2rem',
 })
 
 const HiddenTitle = styled(Dialog.Title, {

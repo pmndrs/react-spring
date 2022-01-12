@@ -17,7 +17,15 @@ export interface HeadingProps {
 
 export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
   (
-    { tag = 'h1', fontStyle = '$S', weight = 400, className, children, css },
+    {
+      tag = 'h1',
+      fontStyle = '$S',
+      weight = 400,
+      className,
+      children,
+      css,
+      ...restProps
+    },
     ref
   ) => {
     return (
@@ -29,7 +37,8 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
           fontWeight: weight,
           ...getFontStyles(fontStyle),
           ...css,
-        }}>
+        }}
+        {...restProps}>
         {children}
       </HeadingElement>
     )

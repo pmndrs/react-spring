@@ -12,10 +12,12 @@ const { styled, globalCss, getCssText, config, createTheme } =
         red: '#ff6d6d',
         steel: '#363645',
         black: '#1B1A22',
-        white: '#ebebeb',
+        white: '#fafafa',
         grey: '#ccc',
         green: '#1dc08f',
         'red-outline': 'rgba(255, 109, 109, 0.5)',
+        buttonGradient:
+          'linear-gradient(326deg, rgb(135 255 208) 0%, rgb(255 247 157) 5%, rgba(255,119,119,1) 100%)',
       },
       space: {
         '10': '1rem',
@@ -23,6 +25,9 @@ const { styled, globalCss, getCssText, config, createTheme } =
         '20': '2rem',
         '25': '2.5rem',
         '30': '3rem',
+        '35': '3.5rem',
+        '40': '4rem',
+        '45': '4.5rem',
         '50': '5rem',
       },
       sizes: {
@@ -164,12 +169,14 @@ const { styled, globalCss, getCssText, config, createTheme } =
 const dark = createTheme('dark', {
   colors: {
     red: '#ff6d6d',
-    steel: '#363645',
+    steel: '#ccc',
     black: '#ebebeb',
     white: '#1B1A22',
-    grey: '#ccc',
+    grey: '#363645',
     green: '#1dc08f',
-    'red-outline': 'rgba(255, 109, 109, 0.5)',
+    'red-outline': 'rgb(29, 192, 143, 0.5)',
+    buttonGradient:
+      'linear-gradient(326deg, rgba(255,119,119,1) 0%, rgb(255 247 157) 5%, rgb(135 255 208) 100%)',
   },
 })
 

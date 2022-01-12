@@ -35,7 +35,7 @@ export const globalStyles = globalCss({
 
   '*:focus': {
     outline: '3px solid $red-outline',
-    outlineOffset: '2px',
+    // outlineOffset: '2px',
     borderRadius: '$r4',
     ['-webkit-tap-highlight-color']: '3px solid $red-outline',
   },

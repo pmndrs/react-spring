@@ -1,3 +1,6 @@
+const rehypeAutolinkHeadings = require('rehype-autolink-headings')
+const rehypeSlug = require('rehype-slug')
+
 /**
  * @type {import('@remix-run/dev/config').AppConfig}
  */
@@ -7,4 +10,12 @@ module.exports = {
   publicPath: '/build/',
   serverBuildDirectory: 'api/_build',
   ignoredRouteFiles: ['.*'],
+  mdx: () => {
+    return {
+      rehypePlugins: [
+        rehypeSlug,
+        [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+      ],
+    }
+  },
 }

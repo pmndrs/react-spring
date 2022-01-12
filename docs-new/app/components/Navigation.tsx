@@ -1,34 +1,30 @@
-import {
-  ChatBubbleIcon,
-  CodeIcon,
-  FileTextIcon,
-  GitHubLogoIcon,
-  HomeIcon,
-} from '@radix-ui/react-icons'
+import { DiscordLogo, House, GithubLogo, Code, Files } from 'phosphor-react'
 import * as Toolbar from '@radix-ui/react-toolbar'
-import { ExoticComponent, ReactNode } from 'react'
+import * as Tooltip from '@radix-ui/react-tooltip'
 
-import { styled } from '~/styles/stitches.config'
+import { dark, styled } from '~/styles/stitches.config'
+import { NavigationButton, NavigationButtonProps } from './Buttons/NavButton'
 
 interface NavigationProps {
   className?: string
+  showSubNav?: boolean
 }
 
 const MAIN_NAV: NavigationButtonProps[] = [
   {
     title: 'Home',
     href: '/',
-    Icon: HomeIcon,
+    Icon: House,
   },
   {
     title: 'Docs',
     href: '/docs',
-    Icon: FileTextIcon,
+    Icon: Files,
   },
   {
     title: 'Examples',
     href: '/examples',
-    Icon: CodeIcon,
+    Icon: Code,
   },
 ]
 
@@ -37,54 +33,33 @@ const SUB_NAV: NavigationButtonProps[] = [
     title: 'Source',
     href: 'https://github.com/pmndrs/react-spring',
     isExternal: true,
-    Icon: GitHubLogoIcon,
+    Icon: GithubLogo,
   },
   {
     title: 'Discord',
-    href: '',
+    href: 'https://discord.com/invite/poimandres',
     isExternal: true,
-    Icon: ChatBubbleIcon,
+    Icon: DiscordLogo,
   },
 ]
 
-interface NavigationButtonProps {
-  title: string
-  href: string
-  Icon: ExoticComponent
-  isExternal?: boolean
-}
-
-const NavigationButton = ({
-  Icon,
-  title,
-  href,
-  isExternal,
-}: NavigationButtonProps) => {
-  const externalLinkProps = isExternal
-    ? {
-        rel: 'noopener noreferrer',
-        target: '_blank',
-      }
-    : {}
-
+export const Navigation = ({
+  className,
+  showSubNav = true,
+}: NavigationProps) => {
   return (
-    <NavAnchor href={href} {...externalLinkProps}>
-      <Icon />
-    </NavAnchor>
-  )
-}
-
-export const Navigation = ({ className }: NavigationProps) => {
-  return (
-    <NavList className={className}>
-      {MAIN_NAV.map(props => (
-        <NavigationButton key={props.title} {...props} />
-      ))}
-      <NavSeperator />
-      {SUB_NAV.map(props => (
-        <NavigationButton key={props.title} {...props} />
-      ))}
-    </NavList>
+    <Tooltip.TooltipProvider>
+      <NavList className={className}>
+        {MAIN_NAV.map(props => (
+          <NavigationButton key={props.title} {...props} />
+        ))}
+        {showSubNav && <NavSeperator />}
+        {showSubNav &&
+          SUB_NAV.map(props => (
+            <NavigationButton key={props.title} {...props} />
+          ))}
+      </NavList>
+    </Tooltip.TooltipProvider>
   )
 }
 
@@ -97,18 +72,13 @@ const NavList = styled(Toolbar.Root, {
   gap: '$10',
 })
 
-const NavAnchor = styled(Toolbar.Link, {
-  padding: '$15',
-  borderRadius: '$r8',
-  color: '$steel',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-})
-
 const NavSeperator = styled(Toolbar.Separator, {
   width: '0.1rem',
-  background: '#ddd',
+  background: '$grey',
   margin: '0 $15',
   height: '2rem',
+
+  [`.${dark} &`]: {
+    background: '$steel',
+  },
 })

@@ -1,4 +1,4 @@
-import { Outlet } from 'remix'
+import { LoaderFunction, Outlet } from 'remix'
 import { MDXProvider } from '@mdx-js/react'
 
 import { styled } from '~/styles/stitches.config'

@@ -11,7 +11,7 @@ import {
 
 import { globalStyles } from './styles/global'
 
-// import { SiteThemePicker } from './components/Site/SiteThemePicker'
+import { SiteThemePicker } from './components/Site/SiteThemePicker'
 
 export const meta: MetaFunction = () => {
   return {
