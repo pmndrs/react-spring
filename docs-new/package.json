@@ -4,7 +4,9 @@
   "license": "",
   "scripts": {
     "build": "remix build && rollup -c",
-    "dev": "remix dev"
+    "dev": "concurrently \"yarn dev:remix\" \"yarn dev:scripts\"",
+    "dev:remix": "remix dev",
+    "dev:scripts": "ts-node ./scripts/index.ts"
   },
   "dependencies": {
     "@mdx-js/react": "^1.6.22",
@@ -24,7 +26,8 @@
     "rehype-autolink-headings": "5.1.0",
     "rehype-slug": "4.0.1",
     "remix": "^1.1.1",
-    "tiny-invariant": "^1.2.0"
+    "tiny-invariant": "^1.2.0",
+    "zod": "^3.11.6"
   },
   "engines": {
     "node": ">=14"

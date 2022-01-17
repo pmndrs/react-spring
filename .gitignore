@@ -57,3 +57,8 @@ report.*.json
 docs-new/public/build
 docs-new/api/_build
 docs-new/api/index.js
+
+#
+# Doc scripts
+#
+*.generated.*
