@@ -3,7 +3,7 @@ import * as Toolbar from '@radix-ui/react-toolbar'
 import * as Tooltip from '@radix-ui/react-tooltip'
 
 import { dark, styled } from '~/styles/stitches.config'
-import { NavigationButton, NavigationButtonProps } from './Buttons/NavButton'
+import { NavigationButton, NavigationButtonProps } from '../Buttons/NavButton'
 
 interface NavigationProps {
   className?: string
@@ -43,7 +43,7 @@ const SUB_NAV: NavigationButtonProps[] = [
   },
 ]
 
-export const Navigation = ({
+export const HeaderNavigation = ({
   className,
   showSubNav = true,
 }: NavigationProps) => {

@@ -1,6 +1,6 @@
 import { styled } from '~/styles/stitches.config'
 
-import { Header } from '../components/Header'
+import { Header } from '../components/Header/Header'
 
 export default function DocsLayout() {
   return (

@@ -100,7 +100,6 @@
     "cypress": "^9.1.1",
     "cypress-plugin-snapshots": "^1.4.4",
     "flush-microtasks": "^1.0.1",
-    "fs-extra": "^10.0.0",
     "gray-matter": "^4.0.3",
     "husky": "^7.0.4",
     "jest": "^27.4.4",

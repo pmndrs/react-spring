@@ -5,10 +5,24 @@ import { animated, useTransition } from '@react-spring/web'
 
 import { styled } from '~/styles/stitches.config'
 
-import { Logo } from './Logo'
-import { Navigation } from './Navigation'
+import { Logo } from '../Logo'
+import { HeaderNavigation } from './HeaderNavigation'
 
-export const Header = () => {
+import type {
+  NavigationSchemaItem,
+  SubtitleSchemaItem,
+} from '../../../scripts/docs/navigation'
+import { HeaderSubnav } from './HeaderSubnav'
+
+interface HeaderProps {
+  data?: {
+    sidebar: NavigationSchemaItem
+    subnav: SubtitleSchemaItem
+  }
+}
+
+export const Header = ({ data }: HeaderProps) => {
+  const { sidebar, subnav } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleDialogChange = (isOpen: boolean) => setDialogOpen(isOpen)
@@ -54,7 +68,7 @@ export const Header = () => {
                         <X />
                       </MobileMenuClose>
                       <HiddenTitle>Main Menu</HiddenTitle>
-                      <Navigation showSubNav={false} />
+                      <HeaderNavigation showSubNav={false} />
                     </MobileMenu>
                   </Dialog.Content>
                 </>
@@ -64,6 +78,7 @@ export const Header = () => {
         </Dialog.Root>
         <Logo />
       </MaxWidth>
+      <MaxWidth>{subnav ? <HeaderSubnav subnav={subnav} /> : null}</MaxWidth>
     </Head>
   )
 }
@@ -87,7 +102,7 @@ const MaxWidth = styled('div', {
   margin: '0 auto',
 })
 
-const DesktopNavigation = styled(Navigation, {
+const DesktopNavigation = styled(HeaderNavigation, {
   display: 'none',
 
   '@tabletUp': {

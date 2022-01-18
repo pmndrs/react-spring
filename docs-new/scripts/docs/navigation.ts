@@ -1,13 +1,19 @@
 import type { ProcessedDoc } from './docs'
 
-export type SubtitleSchema = Record<
-  string,
-  { href: string; label: string; id: string }[]
->
+export type SubtitleSchemaItem = Array<{
+  href: string
+  label: string
+  id: string
+}>
+
+export type SubtitleSchema = Record<string, SubtitleSchemaItem>
 
 export const makeSubnavigation = (docs: ProcessedDoc[]): SubtitleSchema =>
   docs.reduce((acc, curr) => {
-    acc[curr.id] = curr.subtitles.map(({ id, title }) => ({
+    const id = `${curr.docPath === '/' ? curr.docPath : `${curr.docPath}/`}${
+      curr.baseID
+    }`
+    acc[id] = curr.subtitles.map(({ id, title }) => ({
       href: `#${id}`,
       label: title,
       id,
@@ -16,7 +22,7 @@ export const makeSubnavigation = (docs: ProcessedDoc[]): SubtitleSchema =>
     return acc
   }, {} as SubtitleSchema)
 
-interface NavigationSchemaItem {
+export interface NavigationSchemaItem {
   sidebarPosition?: number
   title: string
   children: NavigationSchemaItem[]

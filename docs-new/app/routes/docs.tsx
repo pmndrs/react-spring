@@ -1,13 +1,20 @@
-import { LoaderFunction, Outlet } from 'remix'
+import { LoaderFunction, Outlet, useLoaderData } from 'remix'
 import { MDXProvider } from '@mdx-js/react'
 
 import { styled } from '~/styles/stitches.config'
 
-import { Header } from '../components/Header'
+import { Header } from '../components/Header/Header'
 import { Heading, HeadingProps } from '~/components/Text/Heading'
 import { Copy, CopyProps } from '~/components/Text/Copy'
 import { List, ListProps } from '~/components/Text/List'
 import { Anchor, AnchorProps } from '~/components/Text/Anchor'
+
+import { getNavigations } from '~/helpers/navigation'
+
+import type {
+  SubtitleSchemaItem,
+  NavigationSchemaItem,
+} from '../../scripts/docs/navigation'
 
 const comps = {
   h1: (props: HeadingProps) => (
@@ -31,7 +38,7 @@ const comps = {
         mb: 15,
 
         '@tabletUp': {
-          mt: 40,
+          mt: 400,
           mb: 20,
         },
       }}
@@ -118,10 +125,20 @@ const comps = {
   a: (props: AnchorProps) => <Anchor {...props} />,
 }
 
+export const loader: LoaderFunction = ({ request }) => {
+  const navigations = getNavigations(request.url)
+
+  return navigations
+}
+
 export default function DocsLayout() {
+  const navigation = useLoaderData<{
+    subnav: SubtitleSchemaItem
+    sidebar: NavigationSchemaItem
+  }>()
   return (
     <>
-      <Header />
+      <Header data={navigation} />
       <Main>
         <MDXProvider components={comps}>
           <Outlet />

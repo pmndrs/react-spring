@@ -4339,6 +4339,7 @@ __metadata:
     "@stitches/react": ^1.2.6
     "@use-gesture/react": ^10.2.4
     front-matter: ^4.0.2
+    fs-extra: ^10.0.0
     phosphor-react: ^1.4.0
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -17213,7 +17214,6 @@ __metadata:
     cypress: ^9.1.1
     cypress-plugin-snapshots: ^1.4.4
     flush-microtasks: ^1.0.1
-    fs-extra: ^10.0.0
     gray-matter: ^4.0.3
     husky: ^7.0.4
     jest: ^27.4.4
