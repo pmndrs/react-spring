@@ -3,10 +3,11 @@
   "description": "",
   "license": "",
   "scripts": {
-    "build": "ts-node ./scripts/index.ts && remix build && rollup -c",
-    "dev": "concurrently \"yarn dev:remix\" \"yarn dev:scripts\"",
+    "build": "yarn scripts:build && remix build && rollup -c",
+    "dev": "concurrently \"yarn dev:remix\" \"yarn scripts:watch\"",
     "dev:remix": "remix dev",
-    "dev:scripts": "ts-node ./scripts/index.ts"
+    "scripts:build": "ts-node ./scripts/build.ts",
+    "scripts:watch": "ts-node ./scripts/watch.ts"
   },
   "dependencies": {
     "@mdx-js/react": "^1.6.22",

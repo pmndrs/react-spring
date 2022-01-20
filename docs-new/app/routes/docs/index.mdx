@@ -46,6 +46,44 @@ But then sometimes I might be a [link](https://google.com) to somewhere else
 
 Smart extraordinary cosy Ettinger bespoke, exclusive Asia-Pacific craftsmanship Baggu alluring soft power K-pop vibrant boulevard. Espresso discerning artisanal business class, lovely Tsutaya classic liveable Lufthansa Ginza destination Toto Nordic. Washlet Asia-Pacific Sunspel boutique Airbus A380, eclectic classic handsome tote bag. Signature Ginza Melbourne sleepy emerging.
 
+```jsx
+function Scrolling() {
+  const [flip, set] = useState(false)
+
+  const words = ['We', 'came.', 'We', 'saw.', 'We', 'kicked', 'its', 'ass.']
+
+  const { scroll } = useSpring({
+    scroll: (words.length - 1) * 50,
+    from: { scroll: 0 },
+    reset: true,
+    reverse: flip,
+    delay: 200,
+    config: config.molasses,
+    onRest: () => set(!flip),
+  })
+
+  return (
+    <animated.div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: 60,
+        overflow: 'auto',
+        fontSize: '0.5em',
+      }}
+      scrollTop={scroll}>
+      {words.map((word, i) => (
+        <div
+          key={`${word}_${i}`}
+          style={{ width: '100%', height: 50, textAlign: 'center' }}>
+          {word}
+        </div>
+      ))}
+    </animated.div>
+  )
+}
+```
+
 <br />
 <br />
 <br />

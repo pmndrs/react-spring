@@ -156,12 +156,17 @@ const writeData = async (data: GeneratedDataFromDocs) => {
   }
 }
 
-export const watchDocs = () => {
-  const DOCS_DIR = path.resolve(
-    __dirname,
-    '../../app/routes/docs/**/*.{mdx,json}'
-  )
+/**
+ * TODO: this will watch the docs
+ * but it wont build and drop the
+ * whole thing...
+ */
+const DOCS_DIR = path.resolve(
+  __dirname,
+  '../../app/routes/docs/**/*.{mdx,json}'
+)
 
+export const watchDocs = () => {
   const watcher = chokidar.watch(DOCS_DIR, {
     persistent: true,
     ignoreInitial: true,
@@ -211,4 +216,20 @@ export const watchDocs = () => {
       // eslint-disable-next-line no-console
       console.log(`✍🏼 Removed ${path} from the schemas`)
     })
+}
+
+export const buildDocs = () => {
+  const watcher = chokidar.watch(DOCS_DIR, {
+    persistent: false,
+  })
+
+  watcher.on('ready', async () => {
+    // eslint-disable-next-line no-console
+    console.log('📄 Building docs!')
+    const data = await generateData(watcher.getWatched())
+    await writeData(data)
+    // eslint-disable-next-line no-console
+    console.log('✍🏼 Written the schemas')
+    await watcher.close()
+  })
 }
