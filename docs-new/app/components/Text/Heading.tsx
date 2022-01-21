@@ -45,4 +45,8 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
   }
 )
 
-const HeadingElement = styled('h1', {})
+const HeadingElement = styled('h1', {
+  '& > a': {
+    textDecoration: 'none',
+  },
+})

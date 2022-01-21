@@ -156,11 +156,6 @@ const writeData = async (data: GeneratedDataFromDocs) => {
   }
 }
 
-/**
- * TODO: this will watch the docs
- * but it wont build and drop the
- * whole thing...
- */
 const DOCS_DIR = path.resolve(
   __dirname,
   '../../app/routes/docs/**/*.{mdx,json}'

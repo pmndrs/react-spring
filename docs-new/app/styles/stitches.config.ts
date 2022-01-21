@@ -16,6 +16,8 @@ const { styled, globalCss, getCssText, config, createTheme } =
         grey: '#ccc',
         green: '#1dc08f',
         'red-outline': 'rgba(255, 109, 109, 0.5)',
+        'green-outline': 'rgba(29, 192, 143, 0.5)',
+        'steel-outline': 'rgba(54, 54, 69, 0.2)',
         buttonGradient:
           'linear-gradient(326deg, rgb(135 255 208) 0%, rgb(255 247 157) 5%, rgba(255,119,119,1) 100%)',
       },
@@ -29,6 +31,7 @@ const { styled, globalCss, getCssText, config, createTheme } =
         '40': '4rem',
         '45': '4.5rem',
         '50': '5rem',
+        '80': '8rem',
       },
       sizes: {
         splash: '40rem',
@@ -51,7 +54,7 @@ const { styled, globalCss, getCssText, config, createTheme } =
       fonts: {
         sans: 'Inter, -apple-system, system-ui, sans-serif',
         'sans-var': '"Inter var", -apple-system, system-ui, sans-serif',
-        mono: '',
+        mono: '"Space Mono", monospace',
         serif: '',
       },
       fontWeights: {
@@ -67,6 +70,7 @@ const { styled, globalCss, getCssText, config, createTheme } =
         S: '2rem',
         XS: '1.6rem',
         XXS: '1.2rem',
+        code: '1.4rem',
       },
       lineHeights: {
         XXL: '5.8rem',
@@ -76,6 +80,7 @@ const { styled, globalCss, getCssText, config, createTheme } =
         S: '3rem',
         XS: '2.6rem',
         XXS: '2.2rem',
+        code: '1.8rem',
       },
     },
     media: {

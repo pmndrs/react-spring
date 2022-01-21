@@ -15,6 +15,8 @@ import type {
   SubtitleSchemaItem,
   NavigationSchemaItem,
 } from '../../scripts/docs/navigation'
+import { Pre } from '~/components/Code/Pre'
+import { H } from '~/components/Code/H'
 
 const comps = {
   h1: (props: HeadingProps) => (
@@ -101,6 +103,12 @@ const comps = {
         '& + &': {
           mt: 15,
         },
+        '& > code': {
+          backgroundColor: '$steel-outline',
+          borderRadius: '$r4',
+          py: 2,
+          px: 5,
+        },
       }}
       {...props}
     />
@@ -123,6 +131,27 @@ const comps = {
     />
   ),
   a: (props: AnchorProps) => <Anchor {...props} />,
+  pre: ({
+    children,
+    showLineNumbers,
+    id,
+    line,
+  }: {
+    children: string
+    showLineNumbers?: string
+    id?: string
+    line?: string
+  }) => {
+    return (
+      <Pre
+        id={id}
+        showLineNumbers={showLineNumbers === ''}
+        data-showing-lines={Boolean(line)}>
+        {children}
+      </Pre>
+    )
+  },
+  H,
 }
 
 export const loader: LoaderFunction = ({ request }) => {
@@ -151,10 +180,12 @@ export default function DocsLayout() {
 const Main = styled('main', {
   padding: '0 $25',
   width: '100%',
-  maxWidth: '$document',
+  maxWidth: 'calc($document + 100px)',
   margin: '0 auto',
+  pt: '176px',
 
   '@tabletUp': {
-    padding: '0 $15',
+    padding: '0 $80',
+    pt: '176px',
   },
 })

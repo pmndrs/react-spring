@@ -1,31 +1,21 @@
-import fs from 'fs-extra'
-import path from 'path'
+import navigationSchema from '../data/navigationSchema.generated.json'
+import subnavSchema from '../data/subnavSchema.generated.json'
 
-export const getNavigations = async (dir: string) => {
-  const dataPath = path.resolve(__dirname, '../../app/data')
-
-  const sidebar = await fs.readJSON(
-    path.join(dataPath, 'navigationSchema.generated.json')
-  )
-
-  const allSubnavs = await fs.readJSON(
-    path.join(dataPath, 'subnavSchema.generated.json')
-  )
-
+export const getNavigations = (dir: string) => {
   const url = new URL(dir)
 
   const dirWithoutDocs = `/${url.pathname.split('/').slice(2).join('/')}`
 
-  let subnav = allSubnavs[dirWithoutDocs]
+  let subnav = subnavSchema[dirWithoutDocs as keyof typeof subnavSchema]
 
   if (!subnav) {
     const dirWithIndex =
       dirWithoutDocs === '/' ? '/index' : `${dirWithoutDocs}/index`
-    subnav = allSubnavs[dirWithIndex]
+    subnav = subnavSchema[dirWithIndex as keyof typeof subnavSchema]
   }
 
   return {
-    sidebar,
+    navigationSchema,
     subnav,
   }
 }

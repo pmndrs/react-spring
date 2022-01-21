@@ -1,6 +1,10 @@
 const rehypeAutolinkHeadings = require('rehype-autolink-headings')
 const rehypeSlug = require('rehype-slug')
 
+const rehypeHighlightCode = require('./scripts/mdx/rehype-highlight-code')
+
+const rehypeMetaAttribute = require('./scripts/mdx/rehype-meta-attribute')
+
 /**
  * @type {import('@remix-run/dev/config').AppConfig}
  */
@@ -15,6 +19,8 @@ module.exports = {
       rehypePlugins: [
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+        rehypeHighlightCode,
+        rehypeMetaAttribute,
       ],
     }
   },
