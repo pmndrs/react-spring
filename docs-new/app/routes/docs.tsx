@@ -180,12 +180,12 @@ export default function DocsLayout() {
 const Main = styled('main', {
   padding: '0 $25',
   width: '100%',
-  maxWidth: 'calc($document + 100px)',
+  maxWidth: 'calc($document + 120px)',
   margin: '0 auto',
-  pt: '176px',
+  pt: '140px',
 
   '@tabletUp': {
     padding: '0 $80',
-    pt: '176px',
+    pt: '166px',
   },
 })
