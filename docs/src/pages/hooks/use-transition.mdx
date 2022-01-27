@@ -51,6 +51,7 @@ function TransitionArray() {
             transform: opacity
               .to(item.trans)
               .to(y => `translate3d(0,${y}px,0)`),
+            display: opacity.to(o => (o < 0.1 ? 'none' : 'block')),
           }}>
           {item.fig}
         </animated.div>
