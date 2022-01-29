@@ -24,12 +24,21 @@ export const HeaderSubnav = ({ className, subnav }: HeaderSubnavProps) => {
 const SubNavContainer = styled('nav', {
   width: '100%',
   display: 'flex',
-  justifyContent: 'center',
-  //   border: 'solid 1px $grey',
-  //   borderLeft: 'none',
-  //   borderRight: 'none',
+  justifyContent: 'flex-start',
   mt: '$15',
-  py: '$10',
+  mb: '$25',
+  px: '$25',
+  overflow: '-moz-scrollbars-none',
+  overflowX: 'auto',
+
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+
+  '@tabletUp': {
+    justifyContent: 'center',
+    px: '$50',
+  },
 })
 
 const SubNavList = styled('ul', {
@@ -41,8 +50,21 @@ const SubNavList = styled('ul', {
 
 const SubNavListItem = styled('li', {
   mx: '$15',
+
+  '&:first-child': {
+    ml: 0,
+  },
+
+  '&:last-child': {
+    mr: 0,
+  },
+
+  '@tabletUp': {
+    mx: '$15',
+  },
 })
 
 const SubNavAnchor = styled('a', {
   ...getFontStyles('$XXS'),
+  whiteSpace: 'nowrap',
 })

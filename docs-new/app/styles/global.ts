@@ -24,6 +24,10 @@ export const globalStyles = globalCss({
     },
 
     scrollBehavior: 'smooth',
+
+    '@motion': {
+      scrollBehavior: 'initial',
+    },
   },
 
   'h1, h2, h3, h4, h5, h6, p': {
@@ -36,9 +40,10 @@ export const globalStyles = globalCss({
   },
 
   '*:focus': {
-    outline: '3px solid $red-outline',
-    // outlineOffset: '2px',
+    boxShadow: '0 0 0 3px $red-outline',
+    outline: 'none',
     borderRadius: '$r4',
+
     ['-webkit-tap-highlight-color']: '3px solid $red-outline',
   },
 

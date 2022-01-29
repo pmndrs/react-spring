@@ -52,7 +52,7 @@ const Container = styled('header', {
   flexDirection: 'column-reverse',
   alignItems: 'space-around',
   justifyContent: 'center',
-  backgroundColor: '$steel',
+  backgroundColor: '$steel100',
   color: '$white',
   borderRadius: '0 0 $r20 $r20',
   padding: '$25',
@@ -97,7 +97,7 @@ const QuickNav = styled('ul', {
 
 const QuickNavAnchor = styled('a', {
   display: 'inline-block',
-  background: '$red',
+  background: '$red100',
   color: '$white',
   borderRadius: '$r20',
 })

@@ -69,6 +69,11 @@ export const getFontStyles = (DeskStyle: DesktopFontSizeTokens): CSS => {
         fontSize: DeskStyle,
         lineHeight: DeskStyle,
       }
+    case '$code':
+      return {
+        fontSize: DeskStyle,
+        lineHeight: DeskStyle,
+      }
     default:
       return {}
   }

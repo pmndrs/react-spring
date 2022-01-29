@@ -1,4 +1,4 @@
-import { LoaderFunction, Outlet, useLoaderData } from 'remix'
+import { Outlet, useLocation } from 'remix'
 import { MDXProvider } from '@mdx-js/react'
 
 import { styled } from '~/styles/stitches.config'
@@ -11,10 +11,6 @@ import { Anchor, AnchorProps } from '~/components/Text/Anchor'
 
 import { getNavigations } from '~/helpers/navigation'
 
-import type {
-  SubtitleSchemaItem,
-  NavigationSchemaItem,
-} from '../../scripts/docs/navigation'
 import { Pre } from '~/components/Code/Pre'
 import { H } from '~/components/Code/H'
 
@@ -104,7 +100,7 @@ const comps = {
           mt: 15,
         },
         '& > code': {
-          backgroundColor: '$steel-outline',
+          backgroundColor: '$steel20',
           borderRadius: '$r4',
           py: 2,
           px: 5,
@@ -154,17 +150,10 @@ const comps = {
   H,
 }
 
-export const loader: LoaderFunction = ({ request }) => {
-  const navigations = getNavigations(request.url)
-
-  return navigations
-}
-
 export default function DocsLayout() {
-  const navigation = useLoaderData<{
-    subnav: SubtitleSchemaItem
-    sidebar: NavigationSchemaItem
-  }>()
+  const location = useLocation()
+  const navigation = getNavigations(location.pathname)
+
   return (
     <>
       <Header data={navigation} />
@@ -185,7 +174,7 @@ const Main = styled('main', {
   pt: '140px',
 
   '@tabletUp': {
-    padding: '0 $80',
+    padding: '0 6.2rem',
     pt: '166px',
   },
 })

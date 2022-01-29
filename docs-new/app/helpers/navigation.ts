@@ -2,9 +2,7 @@ import navigationSchema from '../data/navigationSchema.generated.json'
 import subnavSchema from '../data/subnavSchema.generated.json'
 
 export const getNavigations = (dir: string) => {
-  const url = new URL(dir)
-
-  const dirWithoutDocs = `/${url.pathname.split('/').slice(2).join('/')}`
+  const dirWithoutDocs = `/${dir.split('/').slice(2).join('/')}`
 
   let subnav = subnavSchema[dirWithoutDocs as keyof typeof subnavSchema]
 
@@ -15,7 +13,7 @@ export const getNavigations = (dir: string) => {
   }
 
   return {
-    navigationSchema,
+    sidebar: navigationSchema,
     subnav,
   }
 }

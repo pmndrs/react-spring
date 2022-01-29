@@ -9,18 +9,39 @@ const { styled, globalCss, getCssText, config, createTheme } =
   Stitches.createStitches({
     theme: {
       colors: {
-        red: '#ff6d6d',
-        steel: '#363645',
-        black: '#1B1A22',
+        red130: '#b34c4c',
+        red120: '#cc5757',
+        red110: '#e66262',
+        red100: '#ff6d6d',
+        red90: '#ff7c7c',
+        red80: '#ff8a8a',
+        red70: '#ff9999',
+        red60: '#ffa7a7',
+        red50: '#ffb6b6',
+        red40: '#ffc5c5',
+        red30: '#ffd3d3',
+        red20: '#ffe2e2',
+        steel120: '#2b2b37',
+        steel110: '#31313e',
+        steel100: '#363645',
+        steel90: '#4a4a58',
+        steel80: '#5e5e6a',
+        steel70: '#72727d',
+        steel60: '#86868f',
+        steel50: '#9b9ba2',
+        steel40: '#afafb5',
+        steel30: '#c3c3c7',
+        steel20: '#d7d7da',
         white: 'rgba(250,250,250,1)',
         white0: 'rgba(250,250,250,0)',
-        grey: '#ccc',
+        black: '#1B1A22',
         green: '#1dc08f',
-        'red-outline': 'rgba(250, 179, 179, 1)',
-        'green-outline': 'rgba(138, 220, 196, 1)',
-        'steel-outline': 'rgba(211, 211, 215, 1)',
-        buttonGradient:
-          'linear-gradient(326deg, rgb(135 255 208) 0%, rgb(255 247 157) 5%, rgba(255,119,119,1) 100%)',
+        grey: '$steel20',
+        'red-outline': '$red40',
+        buttonGradient: 'linear-gradient(330deg, #fff59a 20%, #ff6d6d 100%)',
+      },
+      shadows: {
+        'red-outline': 'var(--colors-red-outline)',
       },
       space: {
         '10': '1rem',
@@ -139,6 +160,9 @@ const { styled, globalCss, getCssText, config, createTheme } =
       my: (value: Stitches.PropertyValue<'marginTop'>) => ({
         marginTop: value,
         marginBottom: value,
+      }),
+      debug: (value: Stitches.PropertyValue<'color'>) => ({
+        border: `solid 1px ${value}`,
       }),
       // require unused variable to allow custom CSS type to be used
       visuallyHidden: (_val: string) => ({

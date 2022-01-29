@@ -42,9 +42,11 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
 
       const isIndexRoute = level === routes.length - 1 && doc.baseID === 'index'
 
+      // console.log()
+
       if (route === '') {
         schemas.push({
-          href: '/docs',
+          href: `/docs${isIndexRoute ? '' : `/${doc.baseID}`}`,
           id: doc.baseID,
           title: doc.title,
           sidebarPosition: doc.sidebarPosition,
@@ -73,7 +75,14 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
        * append it the current list of schemas
        */
       if (!doesSchemaAtRouteExist || isIndexRoute) {
-        schemas.push(schemaAtRoute)
+        const index = schemas.findIndex(
+          schema => schema.id === schemaAtRoute.id
+        )
+        if (index < 0) {
+          schemas.push(schemaAtRoute)
+        } else {
+          schemas[index] = schemaAtRoute
+        }
       }
 
       /**

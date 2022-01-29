@@ -16,12 +16,14 @@ import * as Tooltip from '@radix-ui/react-tooltip'
 import { IconProps } from 'phosphor-react'
 
 import { dark, styled } from '~/styles/stitches.config'
+import { getFontStyles } from '~/styles/fontStyles'
 
 export interface NavigationButtonProps {
   title: string
   href: string
   Icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
   isExternal?: boolean
+  showLabel?: boolean
 }
 
 export const NavigationButton = ({
@@ -29,11 +31,12 @@ export const NavigationButton = ({
   title,
   href,
   isExternal,
+  showLabel = false,
 }: NavigationButtonProps) => {
   const [tooltipOpen, setTooltipOpen] = useState(false)
   const { pathname } = useLocation()
 
-  const isRoute = pathname === href
+  const isRoute = (href !== '/' && pathname.includes(href)) || pathname === href
 
   const [{ scale }, api] = useSpring(
     () => ({
@@ -61,7 +64,7 @@ export const NavigationButton = ({
 
   const handleMouseEnter = () => {
     api.start({
-      scale: isRoute ? 0 : 1,
+      scale: isRoute || window.innerWidth < 768 ? 0 : 1,
     })
   }
 
@@ -95,6 +98,7 @@ export const NavigationButton = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           href={href}
+          variant={showLabel ? 'withLabel' : undefined}
           {...externalLinkProps}>
           <NavAnchorPlainBackground
             style={{
@@ -111,18 +115,14 @@ export const NavigationButton = ({
               },
             }}>
             <Icon size={20} />
+            {showLabel ? <span>{title}</span> : null}
           </NavIconWrapper>
         </NavAnchor>
       </Tooltip.Trigger>
       {transitions(
         (styles, item) =>
           item && (
-            <ToolTip
-              portalled={false}
-              forceMount
-              //   align="start"
-              sideOffset={5}
-              style={styles}>
+            <ToolTip portalled={false} forceMount sideOffset={5} style={styles}>
               {title}
             </ToolTip>
           )
@@ -135,13 +135,22 @@ const NavAnchor = styled(Toolbar.Link, {
   padding: '$15',
   height: '4.6rem',
   width: '4.6rem',
-  color: '$steel',
+  color: '$steel100',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative',
   backgroundImage: '$buttonGradient',
   borderRadius: '$r8',
+
+  variants: {
+    variant: {
+      withLabel: {
+        width: '100%',
+        justifyContent: 'flex-start',
+      },
+    },
+  },
 })
 
 const NavAnchorPlainBackground = styled(animated.span, {
@@ -159,13 +168,25 @@ const NavAnchorPlainBackground = styled(animated.span, {
 const NavIconWrapper = styled('span', {
   position: 'relative',
   zIndex: '$2',
+  display: 'flex',
+
+  '& > span': {
+    ...getFontStyles('$code'),
+    fontWeight: '$bold',
+    ml: '$15',
+  },
 })
 
 const ToolTip = styled(animated(Tooltip.Content), {
+  display: 'none',
   backgroundColor: '$red-outline',
   padding: '$10 $15',
   fontSize: '$XXS',
   fontWeight: '$bold',
   borderRadius: '$r8',
   color: '$black',
+
+  '@tabletUp': {
+    display: 'block',
+  },
 })
