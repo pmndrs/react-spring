@@ -76,5 +76,33 @@ export function useTrail(
     }
     return result
   }
+
+  /**
+   * Overwrite the start function so it runs our
+   * specific trail-making way
+   * WARNING: we don't want to replace the `start` function
+   * if the props are fn, it will cause an error.
+   * See: https://github.com/pmndrs/react-spring/issues/1810
+   * But we need this to be done for:
+   * https://github.com/pmndrs/react-spring/issues/1512
+   */
+  ref['start'] = (propsArg?: object | ControllerUpdateFn) => {
+    const results: AsyncResult[] = []
+
+    each(ref.current, (ctrl, i) => {
+      const props = is.fun(propsArg) ? propsArg(i, ctrl) : propsArg
+
+      const parent = ref.current[i + (reverse ? 1 : -1)]
+
+      if (parent) {
+        results.push(ctrl.start({ ...props, to: parent.springs }))
+      } else {
+        results.push(ctrl.start({ ...props }))
+      }
+    })
+
+    return results
+  }
+
   return result[0]
 }
