@@ -104,6 +104,10 @@ export const PAGES: Page[] = [
         url: '/guides/accessibility',
       },
       {
+        title: 'React Three Fiber',
+        url: '/guides/r3f',
+      },
+      {
         title: 'Testing',
         url: '/guides/testing',
       },
@@ -111,6 +115,6 @@ export const PAGES: Page[] = [
   },
   {
     title: 'Changelog',
-    url: '/changelog',
+    url: 'https://github.com/pmndrs/react-spring/releases',
   },
 ]

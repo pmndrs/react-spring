@@ -3,8 +3,8 @@ import { forwardRef } from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import createMockRaf, { MockRaf } from 'mock-raf'
-import { SpringValue, Animatable } from 'react-spring'
 import { Globals } from '@react-spring/shared'
+import { SpringValue, Animatable } from '@react-spring/core'
 
 import { a } from './index'
 

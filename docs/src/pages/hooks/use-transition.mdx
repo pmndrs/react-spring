@@ -7,6 +7,7 @@ import MasonryDemo from '@react-spring/demo/src/sandboxes/masonry/src/App'
 import MultistageTransitionDemo from '@react-spring/demo/src/sandboxes/multistage-transition/src/App'
 import NotificationHubDemo from '@react-spring/demo/src/sandboxes/notification-hub/src/App'
 import SimpleTransitionDemo from '@react-spring/demo/src/sandboxes/simple-transition/src/App'
+import ExitBeforeEnterDemo from '@react-spring/demo/src/sandboxes/exit-before-enter/src/App'
 
 # useTransition
 
@@ -142,19 +143,20 @@ const elems = transition((style, item, t, i) => (
 
 All properties of the [shared-api](/common/props) apply.
 
-| Property | Type              | Description                                                                                                                                                      |
-| -------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| initial  | obj/fn            | Initial (first time) base values, optional (can be null)                                                                                                         |
-| from     | obj/fn            | Base values, optional                                                                                                                                            |
-| enter    | obj/fn/array(obj) | Styles apply for entering elements                                                                                                                               |
-| update   | obj/fn/array(obj) | Styles apply for updating elements (you can update the hook itself with new values)                                                                              |
-| leave    | obj/fn/array(obj) | Styles apply for leaving elements                                                                                                                                |
-| trail    | number            | Delay in ms before the animation starts, adds up for each enter/update and leave                                                                                 |
-| reset    | bool/fn           | Prefers the `initial` prop over the `from` prop.                                                                                                                 |
-| keys     | array/function    | see [keys](/hooks/use-transition#keys) for more information                                                                                                      |
-| key      | single item       | only use if you're passing a single item to `useTransition` see [keys](/hooks/use-transition#keys) for more information                                          |
-| expires  | bool/number       | lets you control when removed items are unmounted (after their `leave` animation has finished) see [expires](/hooks/use-transition#expires) for more information |
-| sort     | fn                | useful shortcut for slicing and sorting your items array before passing it to the `useTransition` hook                                                           |
+| Property        | Type              | Description                                                                                                                                                      |
+| --------------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| initial         | obj/fn            | Initial (first time) base values, optional (can be null)                                                                                                         |
+| from            | obj/fn            | Base values, optional                                                                                                                                            |
+| enter           | obj/fn/array(obj) | Styles apply for entering elements                                                                                                                               |
+| update          | obj/fn/array(obj) | Styles apply for updating elements (you can update the hook itself with new values)                                                                              |
+| leave           | obj/fn/array(obj) | Styles apply for leaving elements                                                                                                                                |
+| trail           | number            | Delay in ms before the animation starts, adds up for each enter/update and leave                                                                                 |
+| reset           | bool/fn           | Prefers the `initial` prop over the `from` prop.                                                                                                                 |
+| keys            | array/function    | See [keys](/hooks/use-transition#keys) for more information                                                                                                      |
+| key             | single item       | Only use if you're passing a single item to `useTransition` see [keys](/hooks/use-transition#keys) for more information                                          |
+| expires         | bool/number       | Lets you control when removed items are unmounted (after their `leave` animation has finished) see [expires](/hooks/use-transition#expires) for more information |
+| sort            | fn                | Useful shortcut for slicing and sorting your items array before passing it to the `useTransition` hook                                                           |
+| exitBeforeEnter | bool              | Ensures any items leaving animate out before the new items animate in                                                                                            |
 
 ### Keys
 
@@ -254,11 +256,11 @@ const location = useLocation()
 const transitions = useTransition(location, { ... })
 return transitions((props, item) => (
   <animated.div style={props}>
-    <Switch location={item}>
-      <Route path="/a" component={A} />
-      <Route path="/b" component={B} />
-      <Route path="/c" component={C} />
-    </Switch>
+    <Routes location={item}>
+      <Route path="/a" element={<A />} />
+      <Route path="/b" element={<B />} />
+      <Route path="/c" element={<C />} />
+    </Routes>
   </animated.div>
 ))
 ```
@@ -283,5 +285,8 @@ return transitions((props, item) => (
   </Demo>
   <Demo title="Simple Transition">
     <SimpleTransitionDemo />
+  </Demo>
+  <Demo title="Exit Before Enter">
+    <ExitBeforeEnterDemo />
   </Demo>
 </DemoGrid>

@@ -12,7 +12,10 @@ module.exports = {
   moduleNameMapper: {
     '^react$': '<rootDir>/node_modules/react',
   },
-  collectCoverageFrom: ['src/**/*'],
+  collectCoverageFrom: [
+    '<rootDir>/packages/{animated,core,rafz,shared}/src/*.{ts,tsx}',
+    '<rootDir>/targets/{web}/src/*.{ts,tsx}',
+  ],
   coverageDirectory: './coverage',
   coverageThreshold: {
     global: {
@@ -25,8 +28,4 @@ module.exports = {
   moduleFileExtensions: ['js', 'ts', 'tsx'],
   coverageReporters: ['json', 'html', 'text'],
   timers: 'fake',
-  watchPlugins: [
-    'jest-watch-typeahead/filename',
-    'jest-watch-typeahead/testname',
-  ],
 }

@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
+import { MEDIA_QUERIES } from 'styles/mediaQueries'
 import { Logo } from '../Logo'
 
-export const Splash = () => {
+export const Header = () => {
   return (
     <Container>
       <Column>
@@ -13,24 +14,24 @@ export const Splash = () => {
             primitives
           </Tagline>
           <QuickNav>
-            <a
+            <QuickNavAnchor
               target="_blank"
               rel="nofollow noopener noreferrer"
               href="https://github.com/pmndrs/react-spring/discussions">
-              community
-            </a>
-            <a
+              <span>community</span>
+            </QuickNavAnchor>
+            <QuickNavAnchor
               target="_blank"
               rel="nofollow noopener noreferrer"
               href="https://github.com/pmndrs/react-spring">
-              source
-            </a>
-            <a
+              <span>source</span>
+            </QuickNavAnchor>
+            <QuickNavAnchor
               target="_blank"
               rel="nofollow noopener noreferrer"
               href="https://twitter.com/pmndrs">
-              twitter
-            </a>
+              <span>twitter</span>
+            </QuickNavAnchor>
           </QuickNav>
         </TitleContainer>
       </Column>
@@ -43,19 +44,20 @@ export const Splash = () => {
   )
 }
 
-const Container = styled.div`
+const Container = styled.header`
   position: relative;
-  background: #363645;
-  color: white;
+  background: ${props => props.theme.colors.steel};
+  color: ${props => props.theme.colors.white};
+  border-radius: 0 0 20px 20px;
+
   width: 100%;
   height: calc(100vh - 100px);
+
   display: flex;
-  flex-flow: row nowrap;
+  flex-direction: column-reverse;
   align-items: space-around;
   justify-content: center;
-  border-radius: 0 0 20px 20px;
-  overflow: hidden;
-  padding: 20px;
+  padding: ${props => props.theme.padding['25']};
 
   background-size: 40px 40px;
   background-image: linear-gradient(
@@ -64,60 +66,95 @@ const Container = styled.div`
       transparent 1px
     ),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+
+  ${MEDIA_QUERIES.tabletUp} {
+    flex-direction: row;
+    padding: ${props => props.theme.padding['50']};
+  }
 `
 
 const Column = styled.div`
-  height: 100%;
-  width: 400px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-  @media (min-width: 900px) {
+
+  ${MEDIA_QUERIES.tabletUp} {
+    flex: 1;
+    max-width: ${props => props.theme.wrappers.splash};
+
     &:first-child {
       margin-right: 120px;
     }
   }
 `
 
-const QuickNav = styled.div`
-  margin-top: 18px;
-  & a {
-    display: inline-block;
-    background: #ff6d6d;
-    color: white;
-    text-decoration: none;
-    font-weight: 18px;
-    line-height: 20px;
-    padding: 10px 15px;
-    border-radius: 18px;
-    margin-top: 8px;
-    margin-left: 12px;
-    &:first-child {
-      margin-left: 0;
-    }
+const LogoContainer = styled.div`
+  margin: 0 0 24px 0;
+  width: 50%;
+  user-select: none;
+
+  ${MEDIA_QUERIES.tabletUp} {
+    width: 100%;
+    margin: 0;
   }
 `
 
-const LogoContainer = styled.div`
-  width: 100%;
-  user-select: none;
+const QuickNav = styled.div`
+  margin-top: 24px;
+`
+
+const QuickNavAnchor = styled.a`
+  display: inline-block;
+  background: ${props => props.theme.colors.red};
+  color: ${props => props.theme.colors.white};
+  font-size: ${props => props.theme.fontSizes.XS};
+  line-height: ${props => props.theme.lineHeights.XS};
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 18px;
+  margin-left: 16px;
+  transition: background 400ms ease-out;
+
+  &:hover {
+    background: ${props => props.theme.colors.redHover};
+  }
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  & span {
+    position: relative;
+    bottom: 1px;
+  }
 `
 
 const TitleContainer = styled.div`
-  text-align: right;
+  text-align: center;
+  margin-bottom: 24px;
+
+  ${MEDIA_QUERIES.tabletUp} {
+    margin: 0;
+    text-align: right;
+  }
 `
 
 const Title = styled.h1`
-  font-size: 65px;
   font-weight: 600;
-  line-height: 65px;
-  color: white;
+  color: ${props => props.theme.colors.white};
+  font-size: ${props => props.theme.fontSizes.XL};
+  line-height: ${props => props.theme.lineHeights.XL};
+
+  ${MEDIA_QUERIES.tabletUp} {
+    font-size: ${props => props.theme.fontSizes.XXL};
+    line-height: ${props => props.theme.lineHeights.XXL};
+  }
 `
 
 const Tagline = styled.p`
-  font-size: 20px;
-  line-height: 26px;
-  font-weight: 400;
   margin-top: 16px;
+
+  color: ${props => props.theme.colors.white};
+  font-size: ${props => props.theme.fontSizes.S};
+  line-height: ${props => props.theme.lineHeights.S};
 `

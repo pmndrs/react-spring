@@ -16,6 +16,7 @@ import {
   Spring,
   SpringRef,
   Transition,
+  easings,
 } from '@react-spring/web'
 import { Parallax, ParallaxLayer } from '@react-spring/parallax'
 import { mdx } from '@mdx-js/react'
@@ -80,6 +81,7 @@ const springScope = {
   Transition,
   Parallax,
   ParallaxLayer,
+  easings,
 }
 
 const reactScope = {

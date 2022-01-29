@@ -3,46 +3,92 @@
 </p>
 
 <br />
-<br />
-<br />
 
-**react-spring** is a spring-physics based animation library that should cover most of your UI related animation needs. It gives you tools flexible enough to confidently cast your ideas into moving interfaces.
+<h1 align="center">react-spring</h1>
+<h3 align="center">A spring-physics first animation library <br>giving you flexible tools to confidently cast your ideas</h3>
 
-This library represents a modern approach to animation. It is very much inspired by Christopher Chedeau's [animated](https://github.com/animatedjs/animated) and Cheng Lou's [react-motion](https://github.com/chenglou/react-motion). It inherits animated's powerful interpolations and performance, as well as react-motion's ease of use. But while animated is mostly imperative and react-motion mostly declarative, react-spring bridges both. You will be surprised how easy static data is cast into motion with small, explicit utility functions that don't necessarily affect how you form your views.
+<br>
 
-[![Build](https://github.com/pmndrs/react-spring/actions/workflows/main.yml/badge.svg?style=flat&colorA=000000&colorB=000000)](https://github.com/pmndrs/react-spring/actions/workflows/main.yml) [![npm version](https://badge.fury.io/js/react-spring.svg)](https://badge.fury.io/js/react-spring) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ) [![Backers on Open Collective](https://opencollective.com/react-spring/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/react-spring/sponsors/badge.svg)](#sponsors)
+<p align="center">
+  <a href="https://www.npmjs.com/package/react-spring" target="_blank">
+    <img src="https://img.shields.io/npm/v/react-spring.svg?style=flat&colorA=000000&colorB=000000" />
+  </a>
+  <a href="https://www.npmjs.com/package/react-spring" target="_blank">
+    <img src="https://img.shields.io/npm/dm/react-spring.svg?style=flat&colorA=000000&colorB=000000" />
+  </a>
+  <a href="https://discord.gg/ZZjjNvJ" target="_blank">
+    <img src="https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff" alt="Chat on Discord">
+  </a>
+</p>
 
-### Installation
+<br>
 
-    npm install react-spring
+`react-spring` is a cross-platform spring-physics first animation library.
 
-### Documentation and Examples
+It's as simple as:
 
-More info about the project can be found [here](https://www.react-spring.io).
+```jsx
+const styles = useSpring({
+  from: {
+    opacity: 0
+  },
+  to: {
+    opacity: 1
+  }
+})
 
-Examples and tutorials can be found [here](https://react-spring.io/basics).
+<animated.div style={styles} />
+```
+
+Just a small bit about us:
+
+* **Cross-Platform**: We support `react-dom`, `react-native`, `react-three-fiber`, `react-konva` & `react-zdog`.
+* **Versatile**: Be declarative with your animations or if you prefer, imperative.
+* **Spring-Physics First**: By default animation use springs for fluid interactivity, but we support durations with easings as well.
+
+There's a lot more to be had! Give it a try and find out.
+
+## Getting Started
+
+### ⚡️ Jump Start 
+
+```shell
+# Install the entire library
+npm install react-spring
+# or just install your specific target (recommended)
+npm install @react-spring/web
+```
+
+```jsx
+import { animated, useSpring } from '@react-spring/web'
+
+const FadeIn = ({ isVisible, children }) => {
+  const styles = useSpring({
+    opacity: isVisible ? 1 : 0,
+    y: isVisible ? 0 : 24
+  })
+
+  return <animated.div>{children}</animated.div>
+}
+```
+
+It's as simple as that to create scroll-in animations.
+
+### 📖  Documentation and Examples
+
+More documentation on the project can be found [here](https://www.react-spring.io).
+
+Pages contain their own [examples](https://react-spring.io/hooks/use-spring#demos) which you can check out there, or [open in codesandbox](https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/card) for a more in-depth view!
 
 ---
 
-## Why springs and not durations
-
-The principle you will be working with is called a `spring`, it _does not have a defined curve or a set duration_. In that it differs greatly from the animation you are probably used to. We think of animation in terms of time and curves, but that in itself causes most of the struggle we face when trying to make elements on the screen move naturally, because nothing in the real world moves like that.
-
-<p align="middle">
-  <img height="250" src="https://i.imgur.com/7CCH51r.gif" />
-</p>
-
-We are so used to time-based animation that we believe that struggle is normal, dealing with arbitrary curves, easings, time waterfalls, not to mention getting this all in sync. As Andy Matuschak (ex Apple UI-Kit developer) [expressed it once](https://twitter.com/andy_matuschak/status/566736015188963328): _Animation APIs parameterized by duration and curve are fundamentally opposed to continuous, fluid interactivity_.
-
-Springs change that, animation becomes easy and approachable, everything you do looks and feels natural by default. For a detailed explanation watch [this video](https://www.youtube.com/embed/1tavDv5hXpo?controls=1&start=370).
-
-### What others say
+## 📣  What others say
 
 <p align="middle">
   <img src="assets/testimonies.jpg" />
 </p>
 
-### Used by
+##  Used by
 
 <p align="middle">
   <a href="https://nextjs.org/"><img width="285" src="assets/projects/next.png"></a>
@@ -50,42 +96,17 @@ Springs change that, animation becomes easy and approachable, everything you do 
   <a href="https://aragon.org/"><img width="285" src="assets/projects/aragon.png"></a>
 </p>
 
-And [many others](https://github.com/react-spring/react-spring/network/dependents) ...
-
-## Funding
-
-If you like this project, please consider helping out. All contributions are welcome as well as donations to [Opencollective](https://opencollective.com/react-spring), or in crypto:
-
-BTC: 36fuguTPxGCNnYZSRdgdh6Ea94brCAjMbH
-
-ETH: 0x6E3f79Ea1d0dcedeb33D3fC6c34d2B1f156F2682
-
-You can also support this project by becoming a sponsor. Your logo will show up here with a link to your website.
-
-## Gold sponsors
-
-<a href="https://aragon.org/">
-  <img width="300" src="https://wiki.aragon.org/design/logo/svg/imagetype.svg"/>
-</a>
-
-## Other Sponsors
-
-<a href="https://opencollective.com/react-spring/sponsor/0/website" target="_blank">
-  <img src="https://opencollective.com/react-spring/sponsor/0/avatar.svg"/>
-</a>
-<a href="https://opencollective.com/react-spring/sponsor/1/website" target="_blank">
-  <img src="https://opencollective.com/react-spring/sponsor/1/avatar.svg"/>
-</a>
+And [many others](https://github.com/react-spring/react-spring/network/dependents)...
 
 ## Backers
 
-Thank you to all our backers! 🙏
+Thank you to all our backers! 🙏 If you want to join them here, then consider contributing to our [Opencollective](https://opencollective.com/react-spring).
 
 <a href="https://opencollective.com/react-spring#backers" target="_blank">
   <img src="https://opencollective.com/react-spring/backers.svg?width=890"/>
 </a>
 
-### Contributors
+## Contributors
 
 This project exists thanks to all the people who contribute.
 

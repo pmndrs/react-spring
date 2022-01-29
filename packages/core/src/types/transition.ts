@@ -63,6 +63,7 @@ export type UseTransitionProps<Item = any> = Merge<
     keys?: ItemKeys<Item>
     sort?: (a: Item, b: Item) => number
     trail?: number
+    exitBeforeEnter?: boolean
     /**
      * When `true` or `<= 0`, each item is unmounted immediately after its
      * `leave` animation is finished.

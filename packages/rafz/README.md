@@ -13,7 +13,7 @@ Coordinate `requestAnimationFrame` calls across your app and/or libraries.
 ## API
 
 ```ts
-import { raf } from 'rafz'
+import { raf } from '@react-spring/rafz'
 
 // Schedule an update
 raf(dt => {})
