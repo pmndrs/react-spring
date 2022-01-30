@@ -171,10 +171,8 @@ const Main = styled('main', {
   width: '100%',
   maxWidth: 'calc($document + 120px)',
   margin: '0 auto',
-  pt: '140px',
 
   '@tabletUp': {
     padding: '0 6.2rem',
-    pt: '166px',
   },
 })

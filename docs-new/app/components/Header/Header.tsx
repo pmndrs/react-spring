@@ -13,6 +13,8 @@ import type {
 } from '../../../scripts/docs/navigation'
 import { HeaderSubnav } from './HeaderSubnav'
 import { HeaderSidePanel } from './HeaderSidePanel'
+import { useWindowScrolling } from '~/hooks/useWindowScrolling'
+import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
 
 interface HeaderProps {
   data?: {
@@ -24,13 +26,32 @@ interface HeaderProps {
 export const Header = ({ data }: HeaderProps) => {
   const { sidebar, subnav } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [stickyHeader, setStickyHeader] = useState(false)
+
+  const scrollState = useWindowScrolling({
+    active: true,
+    threshold: 0,
+  })
 
   const handleDialogChange = (isOpen: boolean) => setDialogOpen(isOpen)
 
   const handleNavigationClick = () => setDialogOpen(false)
 
+  useIsomorphicLayoutEffect(() => {
+    const { innerWidth } = window
+    const { direction, scrollTop } = scrollState
+
+    const limit = innerWidth < 768 ? 15 + 48 : 64 + 25
+
+    if (scrollTop >= limit) {
+      setStickyHeader(true)
+    } else {
+      setStickyHeader(false)
+    }
+  }, [scrollState])
+
   return (
-    <Head hasSubNav={Boolean(subnav)}>
+    <Head isStuck={stickyHeader} hasSubNav={Boolean(subnav)}>
       <MaxWidth withPadding>
         <DesktopNavigation />
         <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>
@@ -56,16 +77,60 @@ export const Header = ({ data }: HeaderProps) => {
 const Head = styled('header', {
   width: '100%',
   py: '$15',
-  position: 'fixed',
-  background: '$white',
+  backgroundColor: 'rgba(250, 250, 250, 0.80)',
+  backdropFilter: 'blur(5px)',
   zIndex: '$1',
-  // debug: 'purple',
+
+  '@supports not (backdrop-filter: blur(10px))': {
+    backgroundColor: '$white',
+  },
+
+  '& + main': {
+    pt: '$10',
+  },
 
   '@tabletUp': {
     py: '$25',
+
+    '& + main': {
+      pt: '0',
+    },
+  },
+
+  // Give a good offset for the jump links
+  '& + main h2::before': {
+    display: 'block',
+    content: ' ',
+    marginTop: '-48px',
+    height: '48px',
+    visibility: 'hidden',
+    pointerEvents: 'none',
+
+    '@tabletUp': {
+      marginTop: '-64px',
+      height: '64px',
+    },
   },
 
   variants: {
+    isStuck: {
+      true: {
+        position: 'fixed',
+        top: `calc((var(--space-15) + 48px) * -1)`,
+
+        '& + main': {
+          pt: `12.5rem`,
+        },
+
+        '@tabletUp': {
+          top: `calc((var(--space-25) + 64px) * -1)`,
+
+          '& + main': {
+            pt: `14.1rem`,
+          },
+        },
+      },
+    },
     hasSubNav: {
       true: {
         pb: '0',
