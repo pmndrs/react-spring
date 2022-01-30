@@ -97,7 +97,6 @@ export const Header = ({ data }: HeaderProps) => {
         <Logo />
       </MaxWidth>
       <MaxWidth>{subnav ? <HeaderSubnav subnav={subnav} /> : null}</MaxWidth>
-      {/* {subnav ? <Divider /> : null} */}
     </Head>
   )
 }
@@ -151,7 +150,7 @@ const Head = styled(animated.header, {
 
         '@tabletUp': {
           '& + main': {
-            pt: `14.1rem`,
+            pt: `17.1rem`,
           },
         },
       },
@@ -215,8 +214,3 @@ const MobileMenuButton = styled(Dialog.Trigger, {
 const HamburgerMenu = styled(List, {
   color: '$black',
 })
-
-// const Divider = styled('div', {
-//   mx: '$25',
-//   borderTop: 'solid 1px $steel40',
-// })

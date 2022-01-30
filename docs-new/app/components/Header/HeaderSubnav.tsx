@@ -25,7 +25,7 @@ const SubNavContainer = styled('nav', {
   width: '100%',
   display: 'flex',
   justifyContent: 'flex-start',
-  my: '$15',
+  my: '$30',
   px: '$25',
   overflow: '-moz-scrollbars-none',
   overflowX: 'auto',
