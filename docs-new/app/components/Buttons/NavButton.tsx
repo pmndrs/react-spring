@@ -32,7 +32,6 @@ export const NavigationButton = ({
   href,
   isExternal,
   showLabel = false,
-  onClick,
 }: NavigationButtonProps) => {
   const [tooltipOpen, setTooltipOpen] = useState(false)
   const { pathname } = useLocation()

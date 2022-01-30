@@ -12,7 +12,7 @@ type ScrollState = {
 }
 
 type UseWindowScrolling = (args: {
-  threshold?: number
+  threshold?: number | [down: number, up: number]
   active?: boolean
   yOffset?: number
   onScroll?: (e: Event) => void
@@ -35,6 +35,11 @@ export const useWindowScrolling: UseWindowScrolling = ({
 
     const updateScrollDir = () => {
       const scrollY = window.pageYOffset
+      const direction = scrollY > lastScrollY ? 'down' : 'up'
+
+      const thresholdValue = Array.isArray(threshold)
+        ? threshold[direction === 'down' ? 0 : 1]
+        : threshold
 
       if (!active) {
         setScrollState(s => ({
@@ -49,20 +54,20 @@ export const useWindowScrolling: UseWindowScrolling = ({
         return
       }
 
-      if (Math.abs(scrollY - lastScrollY) < threshold) {
+      if (Math.abs(scrollY - lastScrollY) < thresholdValue) {
         ticking = false
         return
       }
 
       setScrollState({
-        direction: scrollY > lastScrollY ? 'down' : 'up',
+        direction,
         scrollTop: scrollY,
       })
       lastScrollY = scrollY > 0 ? scrollY : 0
       ticking = false
     }
 
-    const onScroll = (e: Event) => {
+    const handleScroll = (e: Event) => {
       if (!ticking) {
         raf(updateScrollDir)
         ticking = true
@@ -71,9 +76,9 @@ export const useWindowScrolling: UseWindowScrolling = ({
       }
     }
 
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', handleScroll)
 
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [active, threshold])
 
   return scrollState

@@ -169,7 +169,7 @@ export default function DocsLayout() {
 const Main = styled('main', {
   padding: '0 $25',
   width: '100%',
-  maxWidth: 'calc($document + 120px)',
+  maxWidth: '$document',
   margin: '0 auto',
 
   '@tabletUp': {

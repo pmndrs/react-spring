@@ -1,20 +1,23 @@
 import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { List } from 'phosphor-react'
+import { animated, useSpring } from '@react-spring/web'
 
 import { styled } from '~/styles/stitches.config'
 
+import { useWindowScrolling } from '~/hooks/useWindowScrolling'
+import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
+
 import { Logo } from '../Logo'
-import { HeaderNavigation } from './HeaderNavigation'
 
 import type {
   NavigationSchema,
   SubtitleSchemaItem,
 } from '../../../scripts/docs/navigation'
+
+import { HeaderNavigation } from './HeaderNavigation'
 import { HeaderSubnav } from './HeaderSubnav'
 import { HeaderSidePanel } from './HeaderSidePanel'
-import { useWindowScrolling } from '~/hooks/useWindowScrolling'
-import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
 
 interface HeaderProps {
   data?: {
@@ -23,35 +26,60 @@ interface HeaderProps {
   }
 }
 
+const HEADER_HEIGHT: [desktop: number, mobile: number] = [64 + 25, 48 + 15]
+
 export const Header = ({ data }: HeaderProps) => {
   const { sidebar, subnav } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
   const [stickyHeader, setStickyHeader] = useState(false)
 
+  const [styles, api] = useSpring(() => ({
+    top: 0,
+  }))
+
   const scrollState = useWindowScrolling({
     active: true,
-    threshold: 0,
+    threshold: [0, 40],
   })
 
   const handleDialogChange = (isOpen: boolean) => setDialogOpen(isOpen)
 
   const handleNavigationClick = () => setDialogOpen(false)
 
+  /**
+   * Handles making the subnav sticky.
+   * Handles forcing the main nav to
+   * drop back down when scrolling up.
+   * Handles _not_ showing the main nav
+   * if a subnav link is clicked to scroll
+   * back up.
+   */
   useIsomorphicLayoutEffect(() => {
     const { innerWidth } = window
     const { direction, scrollTop } = scrollState
 
-    const limit = innerWidth < 768 ? 15 + 48 : 64 + 25
+    const limit = innerWidth < 768 ? HEADER_HEIGHT[1] : HEADER_HEIGHT[0]
 
     if (scrollTop >= limit) {
       setStickyHeader(true)
-    } else {
+    } else if (scrollTop === 0) {
       setStickyHeader(false)
     }
-  }, [scrollState])
+
+    if (direction === 'down') {
+      api.start({
+        top: limit * -1,
+        immediate: !stickyHeader,
+      })
+    } else if (direction === 'up') {
+      api.start({
+        top: 0,
+      })
+    }
+  }, [scrollState, stickyHeader])
 
   return (
-    <Head isStuck={stickyHeader} hasSubNav={Boolean(subnav)}>
+    <Head isStuck={stickyHeader} hasSubNav={Boolean(subnav)} style={styles}>
       <MaxWidth withPadding>
         <DesktopNavigation />
         <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>
@@ -74,7 +102,7 @@ export const Header = ({ data }: HeaderProps) => {
   )
 }
 
-const Head = styled('header', {
+const Head = styled(animated.header, {
   width: '100%',
   py: '$15',
   backgroundColor: 'rgba(250, 250, 250, 0.80)',
@@ -116,15 +144,12 @@ const Head = styled('header', {
     isStuck: {
       true: {
         position: 'fixed',
-        top: `calc((var(--space-15) + 48px) * -1)`,
 
         '& + main': {
           pt: `12.5rem`,
         },
 
         '@tabletUp': {
-          top: `calc((var(--space-25) + 64px) * -1)`,
-
           '& + main': {
             pt: `14.1rem`,
           },
