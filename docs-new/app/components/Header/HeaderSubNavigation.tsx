@@ -19,12 +19,10 @@ const SUB_NAV: NavigationButtonProps[] = [
 
 export interface HeaderSubNavigationProps {
   showLabels?: boolean
-  onClick?: () => void
 }
 
 export const HeaderSubNavigation = ({
   showLabels = false,
-  onClick,
 }: HeaderSubNavigationProps) => {
   return (
     <>

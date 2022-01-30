@@ -79,13 +79,15 @@ export const HeaderSidePanel = ({
             <MobileSubMenu>
               {isDocs &&
                 Array.isArray(submenu) &&
-                submenu.map(item => renderSubMenu({ ...item, location }, 0))}
+                submenu.map(item =>
+                  renderSubMenu(
+                    { ...item, location, onClick: handleNavClick },
+                    0
+                  )
+                )}
             </MobileSubMenu>
             <SubNavContainer isDocsSection={isDocs}>
-              <HeaderSubNavigation
-                onClick={handleNavClick}
-                showLabels={!isDocs}
-              />
+              <HeaderSubNavigation showLabels={!isDocs} />
             </SubNavContainer>
           </MobileMenu>
         </Dialog.Content>
@@ -96,25 +98,35 @@ export const HeaderSidePanel = ({
 
 interface SubMenuSchema extends NavigationSchemaItem {
   location: Location
+  onClick?: () => void
 }
 
 const renderSubMenu = (
-  { children, id, title, href, location }: SubMenuSchema,
+  { children, id, title, href, location, onClick }: SubMenuSchema,
   level: number
 ) => {
+  const handleClick = () => {
+    if (onClick) {
+      onClick()
+    }
+  }
   const hasRenderableChildren = children.length > 0
   return (
     <li key={id}>
       <Anchor
         to={!hasRenderableChildren ? href : ''}
         title={level === 0}
-        active={location.pathname === href}>
+        active={location.pathname === href}
+        onClick={handleClick}>
         {title}
       </Anchor>
       {hasRenderableChildren ? (
         <ul>
           {children.map(item =>
-            renderSubMenu({ ...item, location }, level + 1)
+            renderSubMenu(
+              { ...item, location, onClick: handleClick },
+              level + 1
+            )
           )}
         </ul>
       ) : null}
