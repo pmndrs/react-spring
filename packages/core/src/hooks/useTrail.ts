@@ -73,27 +73,6 @@ export function useTrail(
     })
   }, deps)
 
-  /**
-   * Overwrite the start function so it runs our
-   * specific trail-making way
-   */
-  ref['start'] = (propsArg?: object | ControllerUpdateFn) => {
-    const results: AsyncResult[] = []
-
-    each(ref.current, (ctrl, i) => {
-      const props = is.fun(propsArg) ? propsArg(i, ctrl) : propsArg
-
-      const parent = ref.current[i + (reverse ? 1 : -1)]
-      if (parent) {
-        results.push(ctrl.start({ ...props, to: parent.springs }))
-      } else {
-        results.push(ctrl.start({ ...props }))
-      }
-    })
-
-    return results
-  }
-
   if (propsFn || arguments.length == 3) {
     ref['_getProps'] = (propsArg, ctrl, i) => {
       const props = is.fun(propsArg) ? propsArg(i, ctrl) : propsArg
