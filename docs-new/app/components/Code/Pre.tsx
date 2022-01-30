@@ -1,19 +1,36 @@
-import { styled } from '~/styles/stitches.config'
+import { dark, styled } from '~/styles/stitches.config'
 
 /**
  * Credit to https://ped.ro/writing/code-blocks-but-better
  */
 export const Pre = styled('pre', {
-  $$comment: '#a6accd',
-  $$punctuation: '#e4f0fb',
-  $$property: '#e4f0fb',
-  $$boolean: '#f087bd',
-  $$string: '#5de4c7',
-  $$operator: '#add7ff',
-  $$function: '#5de4c7',
-  $$keyword: '#add7ff',
+  $$comment: 'var(--colors-steel60)',
+  $$punctuation: 'var(--colors-steel80)',
+  $$property: 'var(--colors-steel100)',
+  $$boolean: '#e52e8d',
+  $$string: '#189076',
+  $$operator: '#0074e0',
+  $$function: '#189076',
+  $$keyword: '#0074e0',
   $$literal: '#fffac2',
-  $$falsy: '#f087bd',
+  $$falsy: '#e52e8d',
+  backgroundColor: '#f0f2f4',
+  color: '#161616',
+
+  [`.${dark} &`]: {
+    $$comment: '#a6accd',
+    $$punctuation: '#e4f0fb',
+    $$property: '#e4f0fb',
+    $$boolean: '#f087bd',
+    $$string: '#5de4c7',
+    $$operator: '#add7ff',
+    $$function: '#5de4c7',
+    $$keyword: '#add7ff',
+    $$literal: '#fffac2',
+    $$falsy: '#f087bd',
+    backgroundColor: '#161616',
+    color: '#fafafa',
+  },
 
   boxSizing: 'border-box',
   padding: '$30',
@@ -23,8 +40,6 @@ export const Pre = styled('pre', {
   fontSize: '$code',
   lineHeight: '$code',
   whiteSpace: 'pre',
-  backgroundColor: '#161616',
-  color: '#fafafa',
 
   '& > code': { display: 'block', fontFamily: 'inherit' },
 
@@ -95,18 +110,28 @@ export const Pre = styled('pre', {
 
   '.highlight-word': {
     display: 'inline-block',
-    color: 'rgba(29, 192, 143, 0.9)',
-    backgroundColor: 'rgba(29, 192, 143, 0.25)',
+    color: '$red100',
+    backgroundColor: '$red20',
     borderRadius: '$r4',
     py: 2,
     px: 5,
     transition: 'color 400ms, background-color 400ms, transform 400ms',
+
+    [`.${dark} &`]: {
+      color: '$green100',
+      backgroundColor: '$green20',
+    },
   },
 
   '.highlight-word.on': {
-    color: 'rgba(29, 192, 143, 1)',
-    backgroundColor: 'rgba(29, 192, 143, 0.4)',
+    color: '$red120',
+    backgroundColor: '$red40',
     transform: 'scale(1.1)',
+
+    [`.${dark} &`]: {
+      color: '$green120',
+      backgroundColor: '$green40',
+    },
   },
 
   variants: {
