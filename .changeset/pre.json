@@ -17,5 +17,5 @@
     "@react-spring/web": "9.4.2",
     "@react-spring/zdog": "9.4.2"
   },
-  "changesets": ["violet-cycles-love"]
+  "changesets": ["metal-schools-sleep", "violet-cycles-love"]
 }
