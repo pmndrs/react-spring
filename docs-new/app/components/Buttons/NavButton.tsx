@@ -122,7 +122,7 @@ export const NavigationButton = ({
       {transitions(
         (styles, item) =>
           item && (
-            <ToolTip portalled={false} forceMount sideOffset={5} style={styles}>
+            <ToolTip forceMount sideOffset={5} style={styles}>
               {title}
             </ToolTip>
           )

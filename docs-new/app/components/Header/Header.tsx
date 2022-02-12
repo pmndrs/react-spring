@@ -9,6 +9,7 @@ import { useWindowScrolling } from '~/hooks/useWindowScrolling'
 import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
 
 import { Logo } from '../Logo'
+import { MenuSticky } from '../Menu/MenuSticky'
 
 import type {
   NavigationSchema,
@@ -16,7 +17,6 @@ import type {
 } from '../../../scripts/docs/navigation'
 
 import { HeaderNavigation } from './HeaderNavigation'
-import { HeaderSubnav } from './HeaderSubnav'
 import { HeaderSidePanel } from './HeaderSidePanel'
 
 interface HeaderProps {
@@ -24,11 +24,15 @@ interface HeaderProps {
     sidebar: NavigationSchema
     subnav: SubtitleSchemaItem
   }
+  className?: string
 }
 
-const HEADER_HEIGHT: [desktop: number, mobile: number] = [64 + 25, 48 + 15]
+export const HEADER_HEIGHT: [desktop: number, mobile: number] = [
+  64 + 25,
+  48 + 15,
+]
 
-export const Header = ({ data }: HeaderProps) => {
+export const Header = ({ data, className }: HeaderProps) => {
   const { sidebar, subnav } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
   const [stickyHeader, setStickyHeader] = useState(false)
@@ -47,40 +51,43 @@ export const Header = ({ data }: HeaderProps) => {
   const handleNavigationClick = () => setDialogOpen(false)
 
   /**
-   * Handles making the subnav sticky.
    * Handles forcing the main nav to
    * drop back down when scrolling up.
    * Handles _not_ showing the main nav
    * if a subnav link is clicked to scroll
    * back up.
    */
-  useIsomorphicLayoutEffect(() => {
-    const { innerWidth } = window
-    const { direction, scrollTop } = scrollState
+  // useIsomorphicLayoutEffect(() => {
+  //   const { innerWidth } = window
+  //   const { direction, scrollTop } = scrollState
 
-    const limit = innerWidth < 768 ? HEADER_HEIGHT[1] : HEADER_HEIGHT[0]
+  //   const limit = innerWidth < 768 ? HEADER_HEIGHT[1] : HEADER_HEIGHT[0]
 
-    if (scrollTop >= limit) {
-      setStickyHeader(true)
-    } else if (scrollTop === 0) {
-      setStickyHeader(false)
-    }
+  //   if (scrollTop >= limit) {
+  //     setStickyHeader(true)
+  //   } else if (scrollTop === 0) {
+  //     setStickyHeader(false)
+  //   }
 
-    if (direction === 'down') {
-      api.start({
-        top: limit * -1,
-        immediate: !stickyHeader,
-      })
-    } else if (direction === 'up') {
-      api.start({
-        top: 0,
-      })
-    }
-  }, [scrollState, stickyHeader])
+  //   if (direction === 'down') {
+  //     api.start({
+  //       top: limit * -1,
+  //       immediate: !(scrollTop >= limit),
+  //     })
+  //   } else if (direction === 'up') {
+  //     api.start({
+  //       top: 0,
+  //     })
+  //   }
+  // }, [scrollState])
 
   return (
-    <Head isStuck={stickyHeader} hasSubNav={Boolean(subnav)} style={styles}>
-      <MaxWidth withPadding>
+    <Head
+      className={className}
+      hasSubNav={Boolean(subnav)}
+      isStuck={stickyHeader}
+      style={styles}>
+      <FlexContainer>
         <DesktopNavigation />
         <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>
           <MobileMenuButton>
@@ -95,8 +102,8 @@ export const Header = ({ data }: HeaderProps) => {
           </Dialog.Portal>
         </Dialog.Root>
         <Logo />
-      </MaxWidth>
-      <MaxWidth>{subnav ? <HeaderSubnav subnav={subnav} /> : null}</MaxWidth>
+      </FlexContainer>
+      {subnav ? <HeaderSticky tag="div" subnav={subnav} /> : null}
     </Head>
   )
 }
@@ -109,7 +116,7 @@ const Head = styled(animated.header, {
   zIndex: '$1',
 
   '@supports not (backdrop-filter: blur(10px))': {
-    backgroundColor: '$white',
+    backgroundColor: 'rgba(250, 250, 250, 0.95)',
   },
 
   '& + main': {
@@ -120,7 +127,7 @@ const Head = styled(animated.header, {
     py: '$25',
 
     '& + main': {
-      pt: '0',
+      pt: '$20',
     },
   },
 
@@ -143,11 +150,9 @@ const Head = styled(animated.header, {
     isStuck: {
       true: {
         position: 'fixed',
-
         '& + main': {
           pt: `12.5rem`,
         },
-
         '@tabletUp': {
           '& + main': {
             pt: `17.1rem`,
@@ -166,24 +171,15 @@ const Head = styled(animated.header, {
   },
 })
 
-const MaxWidth = styled('div', {
+const FlexContainer = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   width: '100%',
-  maxWidth: '$document',
-  margin: '0 auto',
+  px: '$25',
 
-  variants: {
-    withPadding: {
-      true: {
-        px: '$25',
-
-        '@tabletUp': {
-          px: '$50',
-        },
-      },
-    },
+  '@tabletUp': {
+    px: '$50',
   },
 })
 
@@ -213,4 +209,10 @@ const MobileMenuButton = styled(Dialog.Trigger, {
 
 const HamburgerMenu = styled(List, {
   color: '$black',
+})
+
+const HeaderSticky = styled(MenuSticky, {
+  '@tabletUp': {
+    display: 'none',
+  },
 })

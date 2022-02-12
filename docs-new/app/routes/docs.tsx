@@ -13,6 +13,8 @@ import { getNavigations } from '~/helpers/navigation'
 
 import { Pre } from '~/components/Code/Pre'
 import { H } from '~/components/Code/H'
+import { MenuDocs } from '~/components/Menu/MenuDocs'
+import { MenuSticky } from '~/components/Menu/MenuSticky'
 
 const comps = {
   h1: (props: HeadingProps) => (
@@ -156,17 +158,56 @@ export default function DocsLayout() {
 
   return (
     <>
-      <Header data={navigation} />
-      <Main>
-        <MDXProvider components={comps}>
-          <Outlet />
-        </MDXProvider>
-      </Main>
+      <Grid>
+        <Header data={navigation} />
+        <Aside>
+          <MenuDocs submenu={navigation.sidebar} />
+        </Aside>
+        <Main>
+          <MainStickyMenu subnav={navigation.subnav} />
+          <Article>
+            <MDXProvider components={comps}>
+              <Outlet />
+            </MDXProvider>
+          </Article>
+        </Main>
+      </Grid>
     </>
   )
 }
 
+const Grid = styled('div', {
+  '@tabletUp': {
+    display: 'grid',
+    maxHeight: '100%',
+    overflow: 'hidden',
+    gridTemplateColumns: '30rem 1fr 1fr',
+    gridTemplateAreas: `
+      "header header header"
+      "aside main main"
+    `,
+  },
+
+  '& > header': {
+    gridArea: 'header',
+  },
+})
+
 const Main = styled('main', {
+  position: 'relative',
+  flex: '1',
+  gridArea: 'main',
+})
+
+const MainStickyMenu = styled(MenuSticky, {
+  display: 'none',
+
+  '@tabletUp': {
+    display: 'flex',
+  },
+})
+
+const Article = styled('article', {
   padding: '0 $25',
   width: '100%',
   maxWidth: '$document',
@@ -174,5 +215,17 @@ const Main = styled('main', {
 
   '@tabletUp': {
     padding: '0 6.2rem',
+  },
+})
+
+const Aside = styled('aside', {
+  display: 'none',
+  flexShrink: 1,
+  width: '30rem',
+  gridArea: 'aside',
+
+  '@tabletUp': {
+    display: 'block',
+    pt: '$25',
   },
 })

@@ -1,20 +1,16 @@
-import { Link, useLocation } from 'remix'
-import { Location } from 'react-router'
+import { useLocation } from 'remix'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'phosphor-react'
 import { animated, useTransition } from '@react-spring/web'
 import * as Toolbar from '@radix-ui/react-toolbar'
 
 import { styled } from '~/styles/stitches.config'
-import { getFontStyles } from '~/styles/fontStyles'
 
 import { HeaderNavigation } from './HeaderNavigation'
 import { HeaderSubNavigation } from './HeaderSubNavigation'
+import { MenuDocs } from '../Menu/MenuDocs'
 
-import {
-  NavigationSchema,
-  NavigationSchemaItem,
-} from '../../../scripts/docs/navigation'
+import { NavigationSchema } from '../../../scripts/docs/navigation'
 
 interface HeaderSidePanelProps {
   isOpen: boolean
@@ -76,16 +72,7 @@ export const HeaderSidePanel = ({
                 showLabels={!isDocs}
               />
             </div>
-            <MobileSubMenu>
-              {isDocs &&
-                Array.isArray(submenu) &&
-                submenu.map(item =>
-                  renderSubMenu(
-                    { ...item, location, onClick: handleNavClick },
-                    0
-                  )
-                )}
-            </MobileSubMenu>
+            <MenuDocs submenu={submenu} onNavClick={handleNavClick} />
             <SubNavContainer isDocsSection={isDocs}>
               <HeaderSubNavigation showLabels={!isDocs} />
             </SubNavContainer>
@@ -93,44 +80,6 @@ export const HeaderSidePanel = ({
         </Dialog.Content>
       </>
     ) : null
-  )
-}
-
-interface SubMenuSchema extends NavigationSchemaItem {
-  location: Location
-  onClick?: () => void
-}
-
-const renderSubMenu = (
-  { children, id, title, href, location, onClick }: SubMenuSchema,
-  level: number
-) => {
-  const handleClick = () => {
-    if (onClick) {
-      onClick()
-    }
-  }
-  const hasRenderableChildren = children.length > 0
-  return (
-    <li key={id}>
-      <Anchor
-        to={!hasRenderableChildren ? href : ''}
-        title={level === 0}
-        active={location.pathname === href}
-        onClick={handleClick}>
-        {title}
-      </Anchor>
-      {hasRenderableChildren ? (
-        <ul>
-          {children.map(item =>
-            renderSubMenu(
-              { ...item, location, onClick: handleClick },
-              level + 1
-            )
-          )}
-        </ul>
-      ) : null}
-    </li>
   )
 }
 
@@ -179,48 +128,6 @@ const MobileMenuClose = styled(Dialog.Close, {
 
 const HiddenTitle = styled(Dialog.Title, {
   visuallyHidden: '',
-})
-
-const MobileSubMenu = styled('ul', {
-  m: 0,
-  p: '$15 $10',
-  listStyle: 'none',
-  ...getFontStyles('$XS'),
-  overflowY: 'auto',
-  flexShrink: 1,
-  flexGrow: 1,
-
-  '& ul': {
-    m: 0,
-    p: 0,
-    listStyle: 'none',
-  },
-})
-
-const Anchor = styled(Link, {
-  '@media (hover: hover)': {
-    '&:hover': {
-      backgroundColor: '$red20',
-    },
-  },
-
-  display: 'block',
-  position: 'relative',
-  p: '0.5rem 1.2rem',
-  borderRadius: '$r8',
-
-  variants: {
-    title: {
-      true: {
-        fontWeight: '$bold',
-      },
-    },
-    active: {
-      true: {
-        backgroundColor: '$red60',
-      },
-    },
-  },
 })
 
 const MainNavigation = styled(HeaderNavigation, {

@@ -22,11 +22,7 @@ export const HeaderSubnav = ({ className, subnav }: HeaderSubnavProps) => {
 }
 
 const SubNavContainer = styled('nav', {
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'flex-start',
-  my: '$30',
-  px: '$25',
+  m: '$30 $25',
   overflow: '-moz-scrollbars-none',
   overflowX: 'auto',
 
@@ -36,7 +32,7 @@ const SubNavContainer = styled('nav', {
 
   '@tabletUp': {
     justifyContent: 'center',
-    px: '$50',
+    mx: '$50',
   },
 })
 
