@@ -15,7 +15,7 @@
     "lodash.clamp": "^4.0.3",
     "lodash.shuffle": "^4.2.0",
     "lorem-ipsum": "^2.0.4",
-    "next": "^12.0.7",
+    "next": "^12.0.9",
     "next-seo": "^4.28.1",
     "next-transpile-modules": "^9.0.0",
     "prism-react-renderer": "^1.2.0",
