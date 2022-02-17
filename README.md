@@ -68,7 +68,7 @@ const FadeIn = ({ isVisible, children }) => {
     y: isVisible ? 0 : 24
   })
 
-  return <animated.div>{children}</animated.div>
+  return <animated.div style={styles}>{children}</animated.div>
 }
 ```
 
