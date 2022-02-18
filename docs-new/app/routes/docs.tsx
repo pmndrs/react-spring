@@ -198,10 +198,22 @@ const Main = styled('main', {
   position: 'relative',
   flex: '1',
   gridArea: 'main',
+  width: '100%',
+  margin: '0 auto',
+
+  '@tabletUp': {
+    maxWidth: 'calc(100vw - 30rem)',
+  },
+
+  '@documentUp': {
+    maxWidth: '$document',
+  },
 })
 
 const MainStickyMenu = styled(MenuSticky, {
   display: 'none',
+  width: 'inherit',
+  maxWidth: 'inherit',
 
   '@tabletUp': {
     display: 'flex',
@@ -211,8 +223,6 @@ const MainStickyMenu = styled(MenuSticky, {
 const Article = styled('article', {
   padding: '0 $25',
   width: '100%',
-  maxWidth: '$document',
-  margin: '0 auto',
 
   '@tabletUp': {
     padding: '0 6.2rem',

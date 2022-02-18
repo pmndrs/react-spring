@@ -112,6 +112,7 @@ const { styled, globalCss, getCssText, config, createTheme } =
       dark: '(prefers-color-scheme: dark)',
       light: '(prefers-color-scheme: light)',
       motion: '(prefers-reduced-motion)',
+      documentUp: '(min-width: 1200px)',
     },
     utils: {
       p: (value: Stitches.PropertyValue<'padding'>) => ({

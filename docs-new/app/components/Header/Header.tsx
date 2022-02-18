@@ -63,7 +63,7 @@ export const Header = ({ data, className }: HeaderProps) => {
         </Dialog.Root>
         <Logo />
       </FlexContainer>
-      {subnav ? <HeaderSticky tag="div" subnav={subnav} /> : null}
+      {subnav ? <MenuSticky tag="div" subnav={subnav} /> : null}
     </Head>
   )
 }
@@ -115,7 +115,7 @@ const Head = styled(animated.header, {
         },
         '@tabletUp': {
           '& + aside + main': {
-            pt: `8.9rem`,
+            pt: 0,
           },
         },
       },
@@ -140,6 +140,15 @@ const FlexContainer = styled('div', {
 
   '@tabletUp': {
     px: '$50',
+
+    /**
+     * For some reason when I try to just use
+     * another `styled` component, it completely breaks...
+     * probably should report that...
+     */
+    '& + header': {
+      display: 'none',
+    },
   },
 })
 
@@ -169,10 +178,4 @@ const MobileMenuButton = styled(Dialog.Trigger, {
 
 const HamburgerMenu = styled(List, {
   color: '$black',
-})
-
-const HeaderSticky = styled(MenuSticky, {
-  '@tabletUp': {
-    display: 'none',
-  },
 })

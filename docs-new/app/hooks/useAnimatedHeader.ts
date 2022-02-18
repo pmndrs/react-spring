@@ -9,7 +9,7 @@ export const useAnimatedHeader = (
 ): [styles: { top: SpringValue<number> }, isStuck: boolean] => {
   const scrollState = useWindowScrolling({
     active: true,
-    threshold: [0, 40],
+    threshold: [0, 20],
   })
 
   const isStuck = useStickyHeader()

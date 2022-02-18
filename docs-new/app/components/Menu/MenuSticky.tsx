@@ -14,7 +14,11 @@ interface MenuStickyProps {
   subnav: SubtitleSchemaItem
 }
 
-export const MenuSticky = ({ className, subnav }: MenuStickyProps) => {
+export const MenuSticky = ({
+  className,
+  tag = 'header',
+  subnav,
+}: MenuStickyProps) => {
   const [styles, isStuck] = useAnimatedHeader(false)
 
   return (
@@ -29,6 +33,7 @@ const StickyMenu = styled(animated.header, {
   alignItems: 'center',
   justifyContent: 'space-between',
   width: '100%',
+  maxWidth: 'inherit',
   backgroundColor: 'rgba(250, 250, 250, 0.80)',
   backdropFilter: 'blur(5px)',
   zIndex: '$1',
@@ -45,7 +50,7 @@ const StickyMenu = styled(animated.header, {
         position: 'fixed',
 
         '& + article': {
-          paddingTop: 82,
+          paddingTop: 171,
         },
       },
     },
