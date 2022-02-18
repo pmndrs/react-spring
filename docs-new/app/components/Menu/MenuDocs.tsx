@@ -50,13 +50,17 @@ const renderSubMenu = (
   const hasRenderableChildren = children.length > 0
   return (
     <li key={id}>
-      <Anchor
-        to={!hasRenderableChildren ? href : ''}
-        title={level === 0}
-        active={location.pathname === href}
-        onClick={handleClick}>
-        {title}
-      </Anchor>
+      {!hasRenderableChildren ? (
+        <Anchor
+          to={href}
+          title={level === 0}
+          active={location.pathname === href}
+          onClick={handleClick}>
+          {title}
+        </Anchor>
+      ) : (
+        <AnchorLike title={level === 0}>{title}</AnchorLike>
+      )}
       {hasRenderableChildren ? (
         <ul>
           {children.map(item =>
@@ -88,11 +92,12 @@ const DocsList = styled('ul', {
   '@tabletUp': {
     pl: '$50',
     pr: '$25',
-    py: 0,
+    py: 4,
+    mt: -4,
   },
 })
 
-const Anchor = styled(Link, {
+const SharedAnchorStyles = {
   ...getFontStyles('$XS'),
 
   '@media (hover: hover)': {
@@ -116,6 +121,19 @@ const Anchor = styled(Link, {
       true: {
         backgroundColor: '$red60',
       },
+    },
+  },
+}
+
+const Anchor = styled(Link, {
+  ...SharedAnchorStyles,
+})
+
+const AnchorLike = styled('span', {
+  ...SharedAnchorStyles,
+  '@media (hover: hover)': {
+    '&:hover': {
+      backgroundColor: 'transparent',
     },
   },
 })

@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { List } from 'phosphor-react'
-import { animated, useSpring } from '@react-spring/web'
+import { animated } from '@react-spring/web'
 
 import { styled } from '~/styles/stitches.config'
 
-import { useWindowScrolling } from '~/hooks/useWindowScrolling'
-import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
+import { useAnimatedHeader } from '~/hooks/useAnimatedHeader'
 
 import { Logo } from '../Logo'
 import { MenuSticky } from '../Menu/MenuSticky'
@@ -35,57 +34,18 @@ export const HEADER_HEIGHT: [desktop: number, mobile: number] = [
 export const Header = ({ data, className }: HeaderProps) => {
   const { sidebar, subnav } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [stickyHeader, setStickyHeader] = useState(false)
 
-  const [styles, api] = useSpring(() => ({
-    top: 0,
-  }))
-
-  const scrollState = useWindowScrolling({
-    active: true,
-    threshold: [0, 40],
-  })
+  const [styles, isStuck] = useAnimatedHeader()
 
   const handleDialogChange = (isOpen: boolean) => setDialogOpen(isOpen)
 
   const handleNavigationClick = () => setDialogOpen(false)
 
-  /**
-   * Handles forcing the main nav to
-   * drop back down when scrolling up.
-   * Handles _not_ showing the main nav
-   * if a subnav link is clicked to scroll
-   * back up.
-   */
-  // useIsomorphicLayoutEffect(() => {
-  //   const { innerWidth } = window
-  //   const { direction, scrollTop } = scrollState
-
-  //   const limit = innerWidth < 768 ? HEADER_HEIGHT[1] : HEADER_HEIGHT[0]
-
-  //   if (scrollTop >= limit) {
-  //     setStickyHeader(true)
-  //   } else if (scrollTop === 0) {
-  //     setStickyHeader(false)
-  //   }
-
-  //   if (direction === 'down') {
-  //     api.start({
-  //       top: limit * -1,
-  //       immediate: !(scrollTop >= limit),
-  //     })
-  //   } else if (direction === 'up') {
-  //     api.start({
-  //       top: 0,
-  //     })
-  //   }
-  // }, [scrollState])
-
   return (
     <Head
       className={className}
       hasSubNav={Boolean(subnav)}
-      isStuck={stickyHeader}
+      isStuck={isStuck}
       style={styles}>
       <FlexContainer>
         <DesktopNavigation />
@@ -150,12 +110,12 @@ const Head = styled(animated.header, {
     isStuck: {
       true: {
         position: 'fixed',
-        '& + main': {
-          pt: `12.5rem`,
+        '& + aside + main': {
+          pt: `6.3rem`,
         },
         '@tabletUp': {
-          '& + main': {
-            pt: `17.1rem`,
+          '& + aside + main': {
+            pt: `8.9rem`,
           },
         },
       },

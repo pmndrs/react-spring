@@ -3,7 +3,7 @@ import { MDXProvider } from '@mdx-js/react'
 
 import { styled } from '~/styles/stitches.config'
 
-import { Header } from '../components/Header/Header'
+import { Header, HEADER_HEIGHT } from '../components/Header/Header'
 import { Heading, HeadingProps } from '~/components/Text/Heading'
 import { Copy, CopyProps } from '~/components/Text/Copy'
 import { List, ListProps } from '~/components/Text/List'
@@ -15,6 +15,7 @@ import { Pre } from '~/components/Code/Pre'
 import { H } from '~/components/Code/H'
 import { MenuDocs } from '~/components/Menu/MenuDocs'
 import { MenuSticky } from '~/components/Menu/MenuSticky'
+import { StickyAside } from '~/components/Asides/StickyAside'
 
 const comps = {
   h1: (props: HeadingProps) => (
@@ -160,9 +161,9 @@ export default function DocsLayout() {
     <>
       <Grid>
         <Header data={navigation} />
-        <Aside>
+        <StickyAside>
           <MenuDocs submenu={navigation.sidebar} />
-        </Aside>
+        </StickyAside>
         <Main>
           <MainStickyMenu subnav={navigation.subnav} />
           <Article>
@@ -215,17 +216,5 @@ const Article = styled('article', {
 
   '@tabletUp': {
     padding: '0 6.2rem',
-  },
-})
-
-const Aside = styled('aside', {
-  display: 'none',
-  flexShrink: 1,
-  width: '30rem',
-  gridArea: 'aside',
-
-  '@tabletUp': {
-    display: 'block',
-    pt: '$25',
   },
 })

@@ -1,14 +1,12 @@
-import { useState } from 'react'
+import { animated } from '@react-spring/web'
 
 import { styled } from '~/styles/stitches.config'
 
-import { useWindowScrolling } from '~/hooks/useWindowScrolling'
+import { useAnimatedHeader } from '~/hooks/useAnimatedHeader'
 
 import { HeaderSubnav } from '../Header/HeaderSubnav'
-import { HEADER_HEIGHT } from '../Header/Header'
 
 import { SubtitleSchemaItem } from '../../../scripts/docs/navigation'
-import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
 
 interface MenuStickyProps {
   tag?: keyof JSX.IntrinsicElements
@@ -16,40 +14,17 @@ interface MenuStickyProps {
   subnav: SubtitleSchemaItem
 }
 
-export const MenuSticky = ({
-  className,
-  tag = 'header',
-  subnav,
-}: MenuStickyProps) => {
-  const [stickyHeader, setStickyHeader] = useState(false)
-
-  const scrollState = useWindowScrolling({
-    active: true,
-  })
-
-  useIsomorphicLayoutEffect(() => {
-    const { innerWidth } = window
-    const { scrollTop } = scrollState
-
-    const limit = innerWidth < 768 ? HEADER_HEIGHT[1] : HEADER_HEIGHT[0]
-
-    if (scrollTop >= limit) {
-      setStickyHeader(true)
-    } else if (scrollTop === 0) {
-      setStickyHeader(false)
-    }
-  }, [scrollState])
-
-  console.log(scrollState.scrollTop)
+export const MenuSticky = ({ className, subnav }: MenuStickyProps) => {
+  const [styles, isStuck] = useAnimatedHeader(false)
 
   return (
-    <StickyMenu className={className} as={tag} isStuck={stickyHeader}>
+    <StickyMenu className={className} isStuck={isStuck} style={styles}>
       <HeaderSubnav subnav={subnav} />
     </StickyMenu>
   )
 }
 
-const StickyMenu = styled('header', {
+const StickyMenu = styled(animated.header, {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -57,17 +32,21 @@ const StickyMenu = styled('header', {
   backgroundColor: 'rgba(250, 250, 250, 0.80)',
   backdropFilter: 'blur(5px)',
   zIndex: '$1',
-  px: 0,
+  px: 28,
   top: 0,
 
   '@tabletUp': {
-    px: 0,
+    px: 62,
   },
 
   variants: {
     isStuck: {
       true: {
         position: 'fixed',
+
+        '& + article': {
+          paddingTop: 82,
+        },
       },
     },
   },
