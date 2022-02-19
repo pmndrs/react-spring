@@ -75,19 +75,27 @@ const GradientRight = styled(animated.div, {
   ...GradientShared,
   right: 28,
   backgroundImage: 'linear-gradient(90deg, $white0 0%, $white 100%)',
+
+  '@tabletUp': {
+    right: 62,
+  },
 })
 
 const GradientLeft = styled(animated.div, {
   ...GradientShared,
   left: 28,
   backgroundImage: 'linear-gradient(90deg, $white 0%, $white0 100%)',
+
+  '@tabletUp': {
+    left: 62,
+  },
 })
 
 const SubNavList = styled('ul', {
   listStyle: 'none',
   display: 'flex',
   margin: 0,
-  padding: 0,
+  padding: '0 0.4rem',
   gap: '$20',
 
   '@tabletUp': {
