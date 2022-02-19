@@ -204,14 +204,9 @@ const Main = styled('main', {
   '@tabletUp': {
     maxWidth: 'calc(100vw - 30rem)',
   },
-
-  '@documentUp': {
-    maxWidth: '$document',
-  },
 })
 
 const MainStickyMenu = styled(MenuSticky, {
-  display: 'none',
   width: 'inherit',
   maxWidth: 'inherit',
 
@@ -226,5 +221,7 @@ const Article = styled('article', {
 
   '@tabletUp': {
     padding: '0 6.2rem',
+    maxWidth: '$document',
+    margin: '0 auto',
   },
 })

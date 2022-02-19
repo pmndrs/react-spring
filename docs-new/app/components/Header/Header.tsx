@@ -63,7 +63,6 @@ export const Header = ({ data, className }: HeaderProps) => {
         </Dialog.Root>
         <Logo />
       </FlexContainer>
-      {subnav ? <MenuSticky tag="div" subnav={subnav} /> : null}
     </Head>
   )
 }
@@ -92,7 +91,7 @@ const Head = styled(animated.header, {
   },
 
   // Give a good offset for the jump links
-  '& + main h2::before': {
+  '& + aside + main h2::before': {
     display: 'block',
     content: ' ',
     marginTop: '-48px',
@@ -101,8 +100,8 @@ const Head = styled(animated.header, {
     pointerEvents: 'none',
 
     '@tabletUp': {
-      marginTop: '-64px',
-      height: '64px',
+      marginTop: '-82px',
+      height: '82px',
     },
   },
 
