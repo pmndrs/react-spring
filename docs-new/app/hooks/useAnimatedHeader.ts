@@ -7,7 +7,7 @@ import { useWindowScrolling } from './useWindowScrolling'
 export const useAnimatedHeader = (
   isHeader = true
 ): [styles: { top: SpringValue<number> }, isStuck: boolean] => {
-  const scrollState = useWindowScrolling({
+  const [direction] = useWindowScrolling({
     active: true,
     threshold: [0, 20],
   })
@@ -27,7 +27,6 @@ export const useAnimatedHeader = (
    */
   useIsomorphicLayoutEffect(() => {
     const { innerWidth } = window
-    const { direction } = scrollState
 
     const limit = innerWidth < 768 ? HEADER_HEIGHT[1] : HEADER_HEIGHT[0]
 
@@ -41,7 +40,7 @@ export const useAnimatedHeader = (
         top: isHeader ? 0 : limit,
       })
     }
-  }, [scrollState, isStuck])
+  }, [direction, isStuck])
 
   return [styles, isStuck]
 }

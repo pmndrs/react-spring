@@ -8,13 +8,12 @@ import { useWindowScrolling } from './useWindowScrolling'
 export const useStickyHeader = () => {
   const [stickyHeader, setStickyHeader] = useState(false)
 
-  const scrollState = useWindowScrolling({
+  const [_, scrollTop] = useWindowScrolling({
     active: true,
   })
 
   useIsomorphicLayoutEffect(() => {
     const { innerWidth } = window
-    const { scrollTop } = scrollState
 
     const limit = innerWidth < 768 ? HEADER_HEIGHT[1] : HEADER_HEIGHT[0]
 
@@ -23,7 +22,7 @@ export const useStickyHeader = () => {
     } else {
       setStickyHeader(false)
     }
-  }, [scrollState])
+  }, [scrollTop])
 
   return stickyHeader
 }

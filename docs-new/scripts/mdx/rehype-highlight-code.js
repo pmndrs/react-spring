@@ -20,7 +20,8 @@ module.exports = () => {
       const lang = node.properties.className
         ? node.properties.className[0].split('-')[1]
         : 'md'
-      let result = refractor.highlight(nodeToString(node), lang)
+      const data = nodeToString(node)
+      let result = refractor.highlight(data, lang)
 
       const linesToHighlight = [0]
 
@@ -30,6 +31,9 @@ module.exports = () => {
           if (bit.includes('line')) {
             const [_, lineRange] = bit.split('=')
             linesToHighlight.push(...rangeParser(lineRange || '0'))
+          }
+          if (bit.includes('live')) {
+            parentNode.properties.code = data
           }
         })
       }

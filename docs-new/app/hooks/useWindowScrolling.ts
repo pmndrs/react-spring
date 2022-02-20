@@ -6,17 +6,12 @@ type SCROLL_UP = 'up'
 type SCROLL_DOWN = 'down'
 type SCROLL_DIR = SCROLL_DOWN | SCROLL_UP
 
-type ScrollState = {
-  scrollTop: number
-  direction: SCROLL_DIR | undefined
-}
-
 type UseWindowScrolling = (args: {
   threshold?: number | [down: number, up: number]
   active?: boolean
   yOffset?: number
   onScroll?: (e: Event) => void
-}) => ScrollState
+}) => [direction: SCROLL_DIR | undefined, scrollTop: number]
 
 export const useWindowScrolling: UseWindowScrolling = ({
   active = true,
@@ -24,13 +19,11 @@ export const useWindowScrolling: UseWindowScrolling = ({
   yOffset = 0,
   onScroll,
 }) => {
-  const [scrollState, setScrollState] = useState<ScrollState>({
-    direction: undefined,
-    scrollTop: 0,
-  })
+  const [direction, setDirection] = useState<SCROLL_DIR | undefined>(undefined)
+  const [scrollTop, setScrollTop] = useState(0)
 
   useIsomorphicLayoutEffect(() => {
-    let lastScrollY = window.pageYOffset
+    let lastScrollY = 0
     let ticking = false
 
     const updateScrollDir = () => {
@@ -42,10 +35,7 @@ export const useWindowScrolling: UseWindowScrolling = ({
         : threshold
 
       if (!active) {
-        setScrollState(s => ({
-          ...s,
-          direction: undefined,
-        }))
+        setDirection(undefined)
         return
       }
 
@@ -59,27 +49,28 @@ export const useWindowScrolling: UseWindowScrolling = ({
         return
       }
 
-      setScrollState({
-        direction,
-        scrollTop: scrollY,
-      })
+      setDirection(direction)
+      setScrollTop(scrollY)
+
       lastScrollY = scrollY > 0 ? scrollY : 0
       ticking = false
     }
 
-    const handleScroll = (e: Event) => {
+    const handleScroll = (e?: Event) => {
       if (!ticking) {
         raf(updateScrollDir)
         ticking = true
-      } else if (onScroll) {
+      } else if (onScroll && e) {
         onScroll(e)
       }
     }
+
+    updateScrollDir()
 
     window.addEventListener('scroll', handleScroll)
 
     return () => window.removeEventListener('scroll', handleScroll)
   }, [active, threshold])
 
-  return scrollState
+  return [direction, scrollTop]
 }

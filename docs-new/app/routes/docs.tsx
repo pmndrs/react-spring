@@ -3,7 +3,7 @@ import { MDXProvider } from '@mdx-js/react'
 
 import { styled } from '~/styles/stitches.config'
 
-import { Header, HEADER_HEIGHT } from '../components/Header/Header'
+import { Header } from '../components/Header/Header'
 import { Heading, HeadingProps } from '~/components/Text/Heading'
 import { Copy, CopyProps } from '~/components/Text/Copy'
 import { List, ListProps } from '~/components/Text/List'
@@ -11,11 +11,11 @@ import { Anchor, AnchorProps } from '~/components/Text/Anchor'
 
 import { getNavigations } from '~/helpers/navigation'
 
-import { Pre } from '~/components/Code/Pre'
 import { H } from '~/components/Code/H'
 import { MenuDocs } from '~/components/Menu/MenuDocs'
 import { MenuSticky } from '~/components/Menu/MenuSticky'
 import { StickyAside } from '~/components/Asides/StickyAside'
+import { Code } from '~/components/Code/Code'
 
 const comps = {
   h1: (props: HeadingProps) => (
@@ -130,24 +130,24 @@ const comps = {
     />
   ),
   a: (props: AnchorProps) => <Anchor {...props} />,
-  pre: ({
-    children,
-    showLineNumbers,
-    id,
-    line,
-  }: {
+  pre: (props: {
     children: string
     showLineNumbers?: string
     id?: string
     line?: string
+    live?: string
+    code: string
   }) => {
+    const { children, code, showLineNumbers, id, line, live } = props
     return (
-      <Pre
+      <Code
         id={id}
         showLineNumbers={showLineNumbers === ''}
-        data-showing-lines={Boolean(line)}>
+        data-showing-lines={Boolean(line)}
+        isLive={Boolean(live)}
+        code={code}>
         {children}
-      </Pre>
+      </Code>
     )
   },
   H,
@@ -216,11 +216,11 @@ const MainStickyMenu = styled(MenuSticky, {
 })
 
 const Article = styled('article', {
-  padding: '0 $25',
+  padding: '0 $25 $50 $25',
   width: '100%',
 
   '@tabletUp': {
-    padding: '0 6.2rem',
+    padding: '0 6.2rem 10rem 6.2rem',
     maxWidth: '$document',
     margin: '0 auto',
   },

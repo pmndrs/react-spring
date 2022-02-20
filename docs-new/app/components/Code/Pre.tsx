@@ -16,6 +16,7 @@ export const Pre = styled('pre', {
   $$falsy: '#e52e8d',
   backgroundColor: '#f0f2f4',
   color: '#161616',
+  m: 0,
 
   [`.${dark} &`]: {
     $$comment: '#a6accd',
