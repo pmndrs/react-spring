@@ -72,7 +72,7 @@ const FadeIn = ({ isVisible, children }) => {
 }
 ```
 
-It's as simple as that to create scroll-in animations when `isVisible` is toggled.
+It's as simple as that to create scroll-in animations when value of `isVisible` is toggled.
 
 ### 📖  Documentation and Examples
 
