@@ -60,15 +60,33 @@ npm install @react-spring/web
 ```
 
 ```jsx
+import { useRef } from 'react'
+import { useOnScreen } from './hooks/use-on-screen'
 import { animated, useSpring } from '@react-spring/web'
 
 const FadeIn = ({ isVisible, children }) => {
   const styles = useSpring({
     opacity: isVisible ? 1 : 0,
-    y: isVisible ? 0 : 24
+    y: isVisible ? 0 : 24,
   })
 
-  return <animated.div>{children}</animated.div>
+  return <animated.div style={styles}>{children}</animated.div>
+}
+
+function App() {
+  const panelRef = useRef();
+  const isVisible = useOnScreen(panelRef);
+
+  return (
+    <div className="App">
+      <div ref={panelRef}>
+        <h1>Scroll down to the next section</h1>
+        <FadeIn isVisible={isVisible}>
+          You must unlearn what you have learned.
+        </FadeIn>
+      </div>
+    </div>
+  )
 }
 ```
 
