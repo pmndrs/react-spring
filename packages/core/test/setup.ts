@@ -16,31 +16,27 @@ import { Globals, Controller, FrameValue, SpringValue } from '../src/index'
 import { computeGoal } from '../src/helpers'
 
 declare global {
-  namespace NodeJS {
-    interface Global {
-      mockRaf: MockRaf
+  var mockRaf: MockRaf
 
-      advance: (n?: number) => Promise<void>
-      advanceByTime: (ms: number) => Promise<void>
-      advanceUntil: (test: () => boolean) => Promise<void>
-      advanceUntilIdle: () => Promise<void>
-      advanceUntilValue: <T>(spring: FrameValue<T>, value: T) => Promise<void>
+  var advance: (n?: number) => Promise<void>
+  var advanceByTime: (ms: number) => Promise<void>
+  var advanceUntil: (test: () => boolean) => Promise<void>
+  var advanceUntilIdle: () => Promise<void>
+  var advanceUntilValue: <T>(spring: FrameValue<T>, value: T) => Promise<void>
 
-      /** Take an array of values (one per animation frame) from internal test storage  */
-      getFrames: <T>(
-        target: FrameValue<T> | Controller<Extract<T, object>>,
-        preserve?: boolean
-      ) => T[]
+  /** Take an array of values (one per animation frame) from internal test storage  */
+  var getFrames: <T>(
+    target: FrameValue<T> | Controller<Extract<T, object>>,
+    preserve?: boolean
+  ) => T[]
 
-      /** Count the number of bounces in a spring animation */
-      countBounces: (spring: SpringValue<number>) => number
+  /** Count the number of bounces in a spring animation */
+  var countBounces: (spring: SpringValue<number>) => number
 
-      // @ts-ignore
-      setTimeout: (handler: Function, ms: number) => number
+  // @ts-ignore
+  var setTimeout: (handler: Function, ms: number) => number
 
-      setSkipAnimation: (skip: boolean) => void
-    }
-  }
+  var setSkipAnimation: (skip: boolean) => void
 }
 
 // Allow indefinite tests, since we limit the number of animation frames
