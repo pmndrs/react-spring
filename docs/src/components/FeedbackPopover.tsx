@@ -102,9 +102,6 @@ const PopoverCopy = styled.p`
   & > a {
     font-weight: 500;
     text-decoration: ${props => `underline ${props.theme.colors.red}`};
-  }
-
-  & > a:visited {
     color: inherit;
   }
 `
