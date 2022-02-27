@@ -27,4 +27,32 @@ Desktop.ini
 report.*.json
 .idea
 
+#
+# Changesets
+#
 **/CHANGELOG.md
+
+#
+# Yarn
+#
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+#
+# dot files
+#
+.cache
+.vercel
+.output
+
+#
+# Remix 
+#
+docs-new/public/build
+docs-new/api/_build
+docs-new/api/index.js

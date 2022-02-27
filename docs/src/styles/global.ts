@@ -65,9 +65,11 @@ html {
   max-width: 50%;
   overflow:scroll;
 }
+
 .code-table > div:last-of-type {
   flex: 1;
 }
+
 .code-table > div:last-child {
   position: relative;
   display: flex;
@@ -109,5 +111,10 @@ html {
 
 #intro-demos .demo-cell img.phone {
   max-width: 90px;
+}
+
+:root {
+  --from: #3cffd0;
+  --to: #277ef4;
 }
 `

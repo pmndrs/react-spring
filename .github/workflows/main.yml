@@ -12,18 +12,26 @@ jobs:
         uses: styfle/cancel-workflow-action@0.6.0
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Checkout repo
         uses: actions/checkout@v2
+
       - name: Setup node
         uses: actions/setup-node@v2
         with:
           node-version: '15.11.0'
-      - name: Install deps
-        # this runs a build script so there is no dedicated build
-        run: |
-          npm i -g yarn 
-          yarn install
-      - name: Run tests
-        run: yarn test
-      - name: Trial Build
+
+      - name: Install
+        run: yarn install
+
+      - name: Typecheck
+        run: yarn test:ts
+
+      - name: Tests (Jest)
+        run: yarn test:unit
+
+      - name: Test (Cypress)
+        run: yarn test:e2e
+
+      - name: Build
         run: yarn build

@@ -1,13 +1,5 @@
 # Basics
 
-<!-- There are 5 hooks in react-spring currently:
-
-- `useSpring` a single spring, moves data from a -> b
-- `useSprings` multiple springs, for lists, where each spring moves data from a -> b
-- `useTrail` multiple springs with a single dataset, one spring follows or trails behind the other
-- `useTransition` for mount/unmount transitions (lists where items are added/removed/updated)
-- `useChain` to queue or chain multiple animations together -->
-
 The basic spring is [useSpring](/hooks/use-spring), but the same concept applies to all animation primitives. Let's have a look...
 
 ```jsx
@@ -173,6 +165,7 @@ function Scrolling() {
 Springs take pretty much everything, they don't just handle numbers.
 
 - Colors (names, rgb, rgba, hsl, hsla, gradients)
+- CSS Variables (declared on :root) and their fallbacks
 - Absolute lengths (cm, mm, in, px, pt, pc)
 - Relative lengths (em, ex, ch, rem, vw, vh, vmin, vmax, %)
 - Angles (deg, rad, grad, turn)
@@ -195,6 +188,7 @@ const props = useSpring({
   borderBottom: '10px solid #2D3747',
   shape: 'M20,20 L20,380 L380,380 L380,20 L20,20 Z',
   textShadow: '0px 5px 15px rgba(255,255,255,0.5)',
+  color: 'var(--darkModeColor)',
 })
 ```
 
@@ -388,29 +382,26 @@ For performance reasons, the attributes of animated DOM elements are updated dir
 For example:
 
 ```jsx
-const MyAnimatedComponent = animated(({ value }) => (
-  <div>{value}</div>
-))
+const MyAnimatedComponent = animated(({ value }) => <div>{value}</div>)
 
-const MyAnimatedComponentWithRefForwarding = animated(forwardRef(({ value }, ref) => (
-  <div ref={ref}>{value}</div>
-)))
+const MyAnimatedComponentWithRefForwarding = animated(
+  forwardRef(({ value }, ref) => <div ref={ref}>{value}</div>)
+)
 
 const MyComponentWithSpring = () => {
   const { value } = useSpring({
     from: { value: 0 },
     to: { value: 1 },
-  });
-  
+  })
+
   return (
     <>
       /* This component will automatically update as "value" changes */
       <MyAnimatedComponent value={value} />
-      
       /* This component will not automatically update as "value" changes */
       <MyAnimatedComponentWithRefForwarding value={value} />
     </>
-  );
+  )
 }
 ```
 

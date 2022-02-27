@@ -10,6 +10,10 @@ describe('useTransition', () => {
   let transition: TransitionFn
   let rendered: any[]
 
+  afterEach(() => {
+    result = undefined
+  })
+
   // Call the "useTransition" hook and update local variables.
   const update = createUpdater(({ args }) => {
     transition = toArray(useTransition(...args))[0]
@@ -166,16 +170,37 @@ describe('useTransition', () => {
       return null
     })
   })
+
+  it('should allow items to leave before entering new items when exitBeforeEnter is true', async () => {
+    const props = {
+      from: { t: 0 },
+      enter: { t: 1 },
+      leave: { t: 1 },
+      exitBeforeEnter: true,
+    }
+
+    update(0, props)
+
+    expect(rendered).toEqual([0])
+
+    global.mockRaf.step()
+
+    update(1, props)
+
+    global.mockRaf.step()
+
+    expect(rendered).toEqual([0])
+
+    await global.advanceUntilIdle()
+
+    expect(rendered).toEqual([1])
+  })
 })
 
+let result: RenderResult | undefined
 function createUpdater(
   Component: React.ComponentType<{ args: [any, any, any?] }>
 ) {
-  let result: RenderResult | undefined
-  afterEach(() => {
-    result = undefined
-  })
-
   type Args = [any, UseTransitionProps | (() => UseTransitionProps), any[]?]
   return (...args: Args) => {
     const elem = <Component args={args} />

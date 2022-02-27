@@ -18,6 +18,17 @@ export const Demo: FC<DemoProps> = ({ children, title, description }) => {
     setInViewport(entry.isIntersecting)
   })
 
+  const handleClick = () => {
+    if (window.plausible) {
+      window.plausible('Viewed Demo', {
+        props: {
+          name: title,
+          location: document.location.pathname,
+        },
+      })
+    }
+  }
+
   return (
     <DemoContainer ref={containerRef}>
       <DemoHeader>
@@ -29,7 +40,8 @@ export const Demo: FC<DemoProps> = ({ children, title, description }) => {
           href={`https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/${title
             .split(' ')
             .join('-')
-            .toLowerCase()}`}>
+            .toLowerCase()}`}
+          onClick={handleClick}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"

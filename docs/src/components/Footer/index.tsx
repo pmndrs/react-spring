@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export default function Footer() {
+export const Footer = () => {
   return (
     <Container>
       <Cap />
@@ -49,19 +49,22 @@ const Cap = styled.div`
 `
 const Container = styled.div`
   position: relative;
-  width: 100%;
-  min-height: 300px;
-  background: #202020;
-  margin-top: 40px;
-  padding-top: 30px;
-  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  min-height: 300px;
+  text-align: center;
+
+  background: ${props => props.theme.colors.grey};
+  margin-top: ${props => props.theme.margin['40']};
+  padding-top: ${props => props.theme.padding['25']};
 
   a {
-    color: #ccc;
+    color: ${props => props.theme.colors.offWhite};
+
     text-decoration: none;
+
     &:hover {
       text-decoration: underline;
     }
@@ -69,10 +72,11 @@ const Container = styled.div`
 
   ul {
     list-style: none;
-    margin-top: 26px;
+    margin-top: ${props => props.theme.margin['20']};
+
     li {
       display: inline;
-      margin: 0 5px;
+      margin: ${props => `0 ${props.theme.margin['5']}`};
     }
   }
 `
