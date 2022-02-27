@@ -68,11 +68,11 @@ const FadeIn = ({ isVisible, children }) => {
     y: isVisible ? 0 : 24
   })
 
-  return <animated.div>{children}</animated.div>
+  return <animated.div style={styles}>{children}</animated.div>
 }
 ```
 
-It's as simple as that to create scroll-in animations.
+It's as simple as that to create scroll-in animations when value of `isVisible` is toggled.
 
 ### 📖  Documentation and Examples
 
