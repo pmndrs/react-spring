@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/web",
-  "version": "9.4.3",
+  "version": "9.4.4",
   "main": "dist/react-spring-web.cjs.js",
   "module": "dist/react-spring-web.esm.js",
   "files": [
@@ -27,10 +27,10 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/animated": "~9.4.3-beta.0",
-    "@react-spring/core": "~9.4.3-beta.0",
-    "@react-spring/shared": "~9.4.3-beta.0",
-    "@react-spring/types": "~9.4.3-beta.0"
+    "@react-spring/animated": "~9.4.4",
+    "@react-spring/core": "~9.4.4",
+    "@react-spring/shared": "~9.4.4",
+    "@react-spring/types": "~9.4.4"
   },
   "peerDependencies": {
     "react": "^16.8.0  || ^17.0.0",
