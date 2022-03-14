@@ -5,7 +5,7 @@ import resolve from '@rollup/plugin-node-resolve'
 export default {
   input: 'api/api.js',
   output: {
-    file: 'api/index.js',
+    dir: 'api/index.js',
     format: 'cjs',
   },
   plugins: [
