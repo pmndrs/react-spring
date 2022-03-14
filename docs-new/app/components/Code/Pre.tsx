@@ -14,8 +14,8 @@ export const Pre = styled('pre', {
   $$keyword: '#0074e0',
   $$literal: '#fffac2',
   $$falsy: '#e52e8d',
-  backgroundColor: '#f0f2f4',
-  color: '#161616',
+  backgroundColor: '$codeBackground',
+  color: '$codeText',
   m: 0,
 
   [`.${dark} &`]: {
@@ -29,7 +29,7 @@ export const Pre = styled('pre', {
     $$keyword: '#add7ff',
     $$literal: '#fffac2',
     $$falsy: '#f087bd',
-    backgroundColor: '#161616',
+    backgroundColor: '$codeText',
     color: '#fafafa',
   },
 

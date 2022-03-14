@@ -12,6 +12,7 @@
   "dependencies": {
     "@codesandbox/sandpack-react": "^0.14.0",
     "@mdx-js/react": "^1.6.22",
+    "@radix-ui/react-accordion": "^0.1.6",
     "@radix-ui/react-dialog": "^0.1.5",
     "@radix-ui/react-toolbar": "^0.1.4",
     "@radix-ui/react-tooltip": "^0.1.6",

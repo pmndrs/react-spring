@@ -5,7 +5,7 @@ interface GradientBorderParams {
   gradient?: string
 }
 
-const { styled, globalCss, getCssText, config, createTheme } =
+const { styled, globalCss, getCssText, config, createTheme, keyframes } =
   Stitches.createStitches({
     theme: {
       colors: {
@@ -37,6 +37,8 @@ const { styled, globalCss, getCssText, config, createTheme } =
         black: '#1B1A22',
         green: '#1dc08f',
         grey: '$steel20',
+        codeBackground: '#f0f2f4',
+        codeText: '#161616',
         'red-outline': '$red40',
         buttonGradient: 'linear-gradient(330deg, #fff59a 20%, #ff6d6d 100%)',
       },
@@ -219,4 +221,4 @@ type ScaleValue<TValue> = Stitches.ScaleValue<TValue, StitchesConfig>
 
 export type { StitchesConfig, CSS, ScaleValue }
 
-export { styled, getCssText, globalCss, dark }
+export { styled, getCssText, globalCss, dark, keyframes }

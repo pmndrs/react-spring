@@ -1,5 +1,10 @@
+import { useRef, useState } from 'react'
 import { SandpackRunner } from '@codesandbox/sandpack-react'
+import * as Accordion from '@radix-ui/react-accordion'
+import { animated, useSpring } from '@react-spring/web'
+
 import { styled } from '~/styles/stitches.config'
+
 import { Pre } from './Pre'
 
 interface LivePreviewProps {
@@ -12,6 +17,9 @@ interface LivePreviewProps {
 }
 
 export const LivePreview = ({ code, preProps }: LivePreviewProps) => {
+  const [value, setValue] = useState('')
+  const preRef = useRef<HTMLPreElement>(null!)
+
   const template = `
     import { useSpring, animated } from '@react-spring/web'
     import '/index.css'
@@ -20,6 +28,15 @@ export const LivePreview = ({ code, preProps }: LivePreviewProps) => {
       ${code}
     }
   `
+
+  const handleValueChange = (value: string) => setValue(value)
+
+  const [styles] = useSpring(
+    () => ({
+      height: value === '' ? 0 : preRef.current.getBoundingClientRect().height,
+    }),
+    [value]
+  )
 
   return (
     <PreviewContainer>
@@ -59,7 +76,22 @@ export const LivePreview = ({ code, preProps }: LivePreviewProps) => {
           },
         }}
       />
-      <Pre {...preProps} />
+      <Accordion.Root
+        type="single"
+        collapsible
+        value={value}
+        onValueChange={handleValueChange}>
+        <Accordion.Item value="code">
+          <AccordionHeader>
+            <AccordionTrigger>
+              {value === '' ? 'Show Code' : 'Hide Code'}
+            </AccordionTrigger>
+          </AccordionHeader>
+          <AccordionContent style={styles} forceMount>
+            <Pre ref={preRef} {...preProps} />
+          </AccordionContent>
+        </Accordion.Item>
+      </Accordion.Root>
     </PreviewContainer>
   )
 }
@@ -94,7 +126,7 @@ const PreviewContainer = styled('div', {
 
   '& .preview__button': {
     border: 'none',
-    backgroundColor: '#f0f2f4',
+    backgroundColor: '$codeBackground',
     cursor: 'pointer',
     margin: 0,
     padding: '0.5rem',
@@ -118,5 +150,30 @@ const PreviewContainer = styled('div', {
     border: 'solid 1px $grey',
     borderRadius: '$r8',
     height: 'inherit !important',
+  },
+})
+
+const AccordionHeader = styled(Accordion.Header, {
+  backgroundColor: '$codeBackground',
+  padding: '$15 $30',
+  display: 'flex',
+  justifyContent: 'flex-end',
+})
+
+const AccordionTrigger = styled(Accordion.Trigger, {
+  border: 'solid 1px $codeText',
+  backgroundColor: 'transparent',
+  borderRadius: '$r4',
+  fontFamily: '$mono',
+  fontSize: '$XXS',
+  lineHeight: '$code',
+  padding: '5px $10',
+})
+
+const AccordionContent = styled(animated(Accordion.Content), {
+  overflow: 'hidden',
+
+  [`${Pre}`]: {
+    pt: '0',
   },
 })
