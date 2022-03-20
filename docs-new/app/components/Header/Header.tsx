@@ -2,13 +2,13 @@ import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { List } from 'phosphor-react'
 import { animated } from '@react-spring/web'
+import { Property } from '@stitches/react/types/css'
 
 import { styled } from '~/styles/stitches.config'
 
 import { useAnimatedHeader } from '~/hooks/useAnimatedHeader'
 
 import { Logo } from '../Logo'
-import { MenuSticky } from '../Menu/MenuSticky'
 
 import type {
   NavigationSchema,
@@ -24,6 +24,10 @@ interface HeaderProps {
     subnav: SubtitleSchemaItem
   }
   className?: string
+  transparentBackground?: boolean
+  addMarginToMain?: boolean
+  alwaysAnimateHeader?: boolean
+  position?: Property.Position
 }
 
 export const HEADER_HEIGHT: [desktop: number, mobile: number] = [
@@ -31,11 +35,18 @@ export const HEADER_HEIGHT: [desktop: number, mobile: number] = [
   48 + 15,
 ]
 
-export const Header = ({ data, className }: HeaderProps) => {
+export const Header = ({
+  data,
+  className,
+  transparentBackground = false,
+  addMarginToMain = true,
+  position,
+  alwaysAnimateHeader,
+}: HeaderProps) => {
   const { sidebar, subnav } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const [styles, isStuck] = useAnimatedHeader()
+  const [styles, isStuck] = useAnimatedHeader(true, alwaysAnimateHeader)
 
   const handleDialogChange = (isOpen: boolean) => setDialogOpen(isOpen)
 
@@ -46,7 +57,9 @@ export const Header = ({ data, className }: HeaderProps) => {
       className={className}
       hasSubNav={Boolean(subnav)}
       isStuck={isStuck}
-      style={styles}>
+      style={{ ...styles, position: position }}
+      transparentBackground={transparentBackground}
+      addMarginToMain={addMarginToMain}>
       <FlexContainer>
         <DesktopNavigation />
         <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>
@@ -78,16 +91,8 @@ const Head = styled(animated.header, {
     backgroundColor: 'rgba(250, 250, 250, 0.95)',
   },
 
-  '& + main': {
-    pt: '$10',
-  },
-
   '@tabletUp': {
     py: '$25',
-
-    '& + main': {
-      pt: '$20',
-    },
   },
 
   // Give a good offset for the jump links
@@ -106,6 +111,25 @@ const Head = styled(animated.header, {
   },
 
   variants: {
+    transparentBackground: {
+      true: {
+        backgroundColor: 'transparent',
+        backdropFilter: 'unset',
+      },
+    },
+    addMarginToMain: {
+      true: {
+        '& + main': {
+          pt: '$10',
+        },
+
+        '@tabletUp': {
+          '& + main': {
+            pt: '$20',
+          },
+        },
+      },
+    },
     isStuck: {
       true: {
         position: 'fixed',

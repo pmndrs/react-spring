@@ -5,7 +5,8 @@ import { useStickyHeader } from './useStickyHeader'
 import { useWindowScrolling } from './useWindowScrolling'
 
 export const useAnimatedHeader = (
-  isHeader = true
+  isHeader = true,
+  alwaysAnimate = false
 ): [styles: { top: SpringValue<number> }, isStuck: boolean] => {
   const [direction] = useWindowScrolling({
     active: true,
@@ -33,7 +34,7 @@ export const useAnimatedHeader = (
     if (direction === 'down') {
       api.start({
         top: isHeader ? limit * -1 : 0,
-        immediate: !isStuck,
+        immediate: alwaysAnimate ? false : !isStuck,
       })
     } else if (direction === 'up') {
       api.start({
