@@ -3980,25 +3980,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/animated@workspace:packages/animated, @react-spring/animated@~9.4.3-beta.0":
+"@react-spring/animated@workspace:packages/animated, @react-spring/animated@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/animated@workspace:packages/animated"
   dependencies:
-    "@react-spring/shared": ~9.4.3-beta.0
-    "@react-spring/types": ~9.4.3-beta.0
+    "@react-spring/shared": ~9.4.4
+    "@react-spring/types": ~9.4.4
   peerDependencies:
     react: ^16.8.0  || ^17.0.0
   languageName: unknown
   linkType: soft
 
-"@react-spring/core@workspace:packages/core, @react-spring/core@~9.4.3-beta.0":
+"@react-spring/core@workspace:packages/core, @react-spring/core@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/core@workspace:packages/core"
   dependencies:
-    "@react-spring/animated": ~9.4.3-beta.0
-    "@react-spring/rafz": ~9.4.3-beta.0
-    "@react-spring/shared": ~9.4.3-beta.0
-    "@react-spring/types": ~9.4.3-beta.0
+    "@react-spring/animated": ~9.4.4
+    "@react-spring/rafz": ~9.4.4
+    "@react-spring/shared": ~9.4.4
+    "@react-spring/types": ~9.4.4
   peerDependencies:
     react: ^16.8.0  || ^17.0.0
   languageName: unknown
@@ -4062,14 +4062,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-spring/konva@workspace:targets/konva, @react-spring/konva@~9.4.3-beta.0":
+"@react-spring/konva@workspace:targets/konva, @react-spring/konva@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/konva@workspace:targets/konva"
   dependencies:
-    "@react-spring/animated": ~9.4.3-beta.0
-    "@react-spring/core": ~9.4.3-beta.0
-    "@react-spring/shared": ~9.4.3-beta.0
-    "@react-spring/types": ~9.4.3-beta.0
+    "@react-spring/animated": ~9.4.4
+    "@react-spring/core": ~9.4.4
+    "@react-spring/shared": ~9.4.4
+    "@react-spring/types": ~9.4.4
   peerDependencies:
     konva: ">=2.6"
     react: ^16.8.0  || ^17.0.0
@@ -4077,14 +4077,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-spring/native@workspace:targets/native, @react-spring/native@~9.4.3-beta.0":
+"@react-spring/native@workspace:targets/native, @react-spring/native@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/native@workspace:targets/native"
   dependencies:
-    "@react-spring/animated": ~9.4.3-beta.0
-    "@react-spring/core": ~9.4.3-beta.0
-    "@react-spring/shared": ~9.4.3-beta.0
-    "@react-spring/types": ~9.4.3-beta.0
+    "@react-spring/animated": ~9.4.4
+    "@react-spring/core": ~9.4.4
+    "@react-spring/shared": ~9.4.4
+    "@react-spring/types": ~9.4.4
   peerDependencies:
     react: ^16.8.0  || ^17.0.0
     react-native: ">=0.58"
@@ -4095,38 +4095,38 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-spring/parallax@workspace:packages/parallax"
   dependencies:
-    "@react-spring/shared": ~9.4.3-beta.0
-    "@react-spring/web": ~9.4.3-beta.0
+    "@react-spring/shared": ~9.4.4
+    "@react-spring/web": ~9.4.4
   peerDependencies:
     react: ^16.8.0  || ^17.0.0
   languageName: unknown
   linkType: soft
 
-"@react-spring/rafz@workspace:packages/rafz, @react-spring/rafz@~9.4.3-beta.0":
+"@react-spring/rafz@workspace:packages/rafz, @react-spring/rafz@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/rafz@workspace:packages/rafz"
   languageName: unknown
   linkType: soft
 
-"@react-spring/shared@workspace:packages/shared, @react-spring/shared@~9.4.3-beta.0":
+"@react-spring/shared@workspace:packages/shared, @react-spring/shared@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/shared@workspace:packages/shared"
   dependencies:
-    "@react-spring/rafz": ~9.4.3-beta.0
-    "@react-spring/types": ~9.4.3-beta.0
+    "@react-spring/rafz": ~9.4.4
+    "@react-spring/types": ~9.4.4
   peerDependencies:
     react: ^16.8.0  || ^17.0.0
   languageName: unknown
   linkType: soft
 
-"@react-spring/three@workspace:targets/three, @react-spring/three@~9.4.3-beta.0":
+"@react-spring/three@workspace:targets/three, @react-spring/three@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/three@workspace:targets/three"
   dependencies:
-    "@react-spring/animated": ~9.4.3-beta.0
-    "@react-spring/core": ~9.4.3-beta.0
-    "@react-spring/shared": ~9.4.3-beta.0
-    "@react-spring/types": ~9.4.3-beta.0
+    "@react-spring/animated": ~9.4.4
+    "@react-spring/core": ~9.4.4
+    "@react-spring/shared": ~9.4.4
+    "@react-spring/types": ~9.4.4
   peerDependencies:
     "@react-three/fiber": ">=6.0"
     react: ">=16.11"
@@ -4134,34 +4134,34 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-spring/types@workspace:packages/types, @react-spring/types@~9.4.3-beta.0":
+"@react-spring/types@workspace:packages/types, @react-spring/types@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/types@workspace:packages/types"
   languageName: unknown
   linkType: soft
 
-"@react-spring/web@workspace:targets/web, @react-spring/web@~9.4.3-beta.0":
+"@react-spring/web@workspace:targets/web, @react-spring/web@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/web@workspace:targets/web"
   dependencies:
-    "@react-spring/animated": ~9.4.3-beta.0
-    "@react-spring/core": ~9.4.3-beta.0
-    "@react-spring/shared": ~9.4.3-beta.0
-    "@react-spring/types": ~9.4.3-beta.0
+    "@react-spring/animated": ~9.4.4
+    "@react-spring/core": ~9.4.4
+    "@react-spring/shared": ~9.4.4
+    "@react-spring/types": ~9.4.4
   peerDependencies:
     react: ^16.8.0  || ^17.0.0
     react-dom: ^16.8.0  || ^17.0.0
   languageName: unknown
   linkType: soft
 
-"@react-spring/zdog@workspace:targets/zdog, @react-spring/zdog@~9.4.3-beta.0":
+"@react-spring/zdog@workspace:targets/zdog, @react-spring/zdog@~9.4.4":
   version: 0.0.0-use.local
   resolution: "@react-spring/zdog@workspace:targets/zdog"
   dependencies:
-    "@react-spring/animated": ~9.4.3-beta.0
-    "@react-spring/core": ~9.4.3-beta.0
-    "@react-spring/shared": ~9.4.3-beta.0
-    "@react-spring/types": ~9.4.3-beta.0
+    "@react-spring/animated": ~9.4.4
+    "@react-spring/core": ~9.4.4
+    "@react-spring/shared": ~9.4.4
+    "@react-spring/types": ~9.4.4
   peerDependencies:
     react: ^16.8.0  || ^17.0.0
     react-dom: ^16.8.0  || ^17.0.0
@@ -13438,12 +13438,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "react-spring@workspace:packages/react-spring"
   dependencies:
-    "@react-spring/core": ~9.4.3-beta.0
-    "@react-spring/konva": ~9.4.3-beta.0
-    "@react-spring/native": ~9.4.3-beta.0
-    "@react-spring/three": ~9.4.3-beta.0
-    "@react-spring/web": ~9.4.3-beta.0
-    "@react-spring/zdog": ~9.4.3-beta.0
+    "@react-spring/core": ~9.4.4
+    "@react-spring/konva": ~9.4.4
+    "@react-spring/native": ~9.4.4
+    "@react-spring/three": ~9.4.4
+    "@react-spring/web": ~9.4.4
+    "@react-spring/zdog": ~9.4.4
   languageName: unknown
   linkType: soft
 
