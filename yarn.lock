@@ -3600,10 +3600,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/env@npm:12.0.10"
-  checksum: 22e9200919a58eeb9ab03e18504ef689120075cb0301189b1f76d96d98cb73de448a54f96d2b388b1f3b6c08bf55021144f0c2bffd0b69720d6b23e1fd2cf27a
+"@next/env@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/env@npm:12.1.0"
+  checksum: 31037e019846a2c3eeb106d64d54084e0b86d1b9b92fdb7332eeb39d94cb4a8e11ddab1a088088f7aea7b60a4cb57781815539676fddedf4305f19f8c8bf5b7f
   languageName: node
   linkType: hard
 
@@ -3617,79 +3617,79 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-android-arm64@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-android-arm64@npm:12.0.10"
+"@next/swc-android-arm64@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-android-arm64@npm:12.1.0"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-darwin-arm64@npm:12.0.10"
+"@next/swc-darwin-arm64@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-darwin-arm64@npm:12.1.0"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-darwin-x64@npm:12.0.10"
+"@next/swc-darwin-x64@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-darwin-x64@npm:12.1.0"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm-gnueabihf@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-linux-arm-gnueabihf@npm:12.0.10"
+"@next/swc-linux-arm-gnueabihf@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-linux-arm-gnueabihf@npm:12.1.0"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-linux-arm64-gnu@npm:12.0.10"
+"@next/swc-linux-arm64-gnu@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-linux-arm64-gnu@npm:12.1.0"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-linux-arm64-musl@npm:12.0.10"
+"@next/swc-linux-arm64-musl@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-linux-arm64-musl@npm:12.1.0"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-linux-x64-gnu@npm:12.0.10"
+"@next/swc-linux-x64-gnu@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-linux-x64-gnu@npm:12.1.0"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-linux-x64-musl@npm:12.0.10"
+"@next/swc-linux-x64-musl@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-linux-x64-musl@npm:12.1.0"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-win32-arm64-msvc@npm:12.0.10"
+"@next/swc-win32-arm64-msvc@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-win32-arm64-msvc@npm:12.1.0"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-ia32-msvc@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-win32-ia32-msvc@npm:12.0.10"
+"@next/swc-win32-ia32-msvc@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-win32-ia32-msvc@npm:12.1.0"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:12.0.10":
-  version: 12.0.10
-  resolution: "@next/swc-win32-x64-msvc@npm:12.0.10"
+"@next/swc-win32-x64-msvc@npm:12.1.0":
+  version: 12.1.0
+  resolution: "@next/swc-win32-x64-msvc@npm:12.1.0"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -4039,7 +4039,7 @@ __metadata:
     lodash.clamp: ^4.0.3
     lodash.shuffle: ^4.2.0
     lorem-ipsum: ^2.0.4
-    next: ^12.0.10
+    next: ^12.1.0
     next-seo: ^5.1.0
     next-transpile-modules: ^9.0.0
     prism-react-renderer: ^1.3.1
@@ -11932,29 +11932,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^12.0.10":
-  version: 12.0.10
-  resolution: "next@npm:12.0.10"
+"next@npm:^12.1.0":
+  version: 12.1.0
+  resolution: "next@npm:12.1.0"
   dependencies:
-    "@next/env": 12.0.10
-    "@next/swc-android-arm64": 12.0.10
-    "@next/swc-darwin-arm64": 12.0.10
-    "@next/swc-darwin-x64": 12.0.10
-    "@next/swc-linux-arm-gnueabihf": 12.0.10
-    "@next/swc-linux-arm64-gnu": 12.0.10
-    "@next/swc-linux-arm64-musl": 12.0.10
-    "@next/swc-linux-x64-gnu": 12.0.10
-    "@next/swc-linux-x64-musl": 12.0.10
-    "@next/swc-win32-arm64-msvc": 12.0.10
-    "@next/swc-win32-ia32-msvc": 12.0.10
-    "@next/swc-win32-x64-msvc": 12.0.10
+    "@next/env": 12.1.0
+    "@next/swc-android-arm64": 12.1.0
+    "@next/swc-darwin-arm64": 12.1.0
+    "@next/swc-darwin-x64": 12.1.0
+    "@next/swc-linux-arm-gnueabihf": 12.1.0
+    "@next/swc-linux-arm64-gnu": 12.1.0
+    "@next/swc-linux-arm64-musl": 12.1.0
+    "@next/swc-linux-x64-gnu": 12.1.0
+    "@next/swc-linux-x64-musl": 12.1.0
+    "@next/swc-win32-arm64-msvc": 12.1.0
+    "@next/swc-win32-ia32-msvc": 12.1.0
+    "@next/swc-win32-x64-msvc": 12.1.0
     caniuse-lite: ^1.0.30001283
     postcss: 8.4.5
     styled-jsx: 5.0.0
     use-subscription: 1.5.1
   peerDependencies:
     fibers: ">= 3.1.0"
-    node-sass: ^4.0.0 || ^5.0.0 || ^6.0.0
+    node-sass: ^6.0.0 || ^7.0.0
     react: ^17.0.2 || ^18.0.0-0
     react-dom: ^17.0.2 || ^18.0.0-0
     sass: ^1.3.0
@@ -11990,7 +11990,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: e92ff09c1f831a5131c4ca6bd5b917bf2ed0ba6c176fe10109096bbd35b5a72e6d8015aa6dc95d635175b4f3d58b1130471c2797088292dec58b10eb38d66662
+  checksum: 36dbafd5e640c420446dc05077f858ae4a8aaf5f91feb3c6c16c1b3f50b9fb63f743ef282a3bf0c68645442bef8aee643492f6dc62388a17f87064cde064d181
   languageName: node
   linkType: hard
 
