@@ -96,7 +96,7 @@ Pages contain their own [examples](https://react-spring.io/hooks/use-spring#demo
   <a href="https://aragon.org/"><img width="285" src="assets/projects/aragon.png"></a>
 </p>
 
-And [many others](https://github.com/react-spring/react-spring/network/dependents)...
+And [many others...](https://github.com/pmndrs/react-spring/network/dependents)
 
 ## Backers
 
