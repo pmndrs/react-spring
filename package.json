@@ -51,7 +51,7 @@
     "test:ts": "tsc --noEmit",
     "test:e2e": "start-server-and-test 'yarn vite serve packages/parallax/test' http-get://localhost:3000 'yarn cypress run'",
     "test": "yarn test:ts && yarn test:unit && yarn test:e2e",
-    "release": "yarn test:ts && yarn test:unit && yarn build && yarn changeset publish",
+    "release": "yarn test:ts && yarn test:unit && yarn build && yarn changeset publish && yarn",
     "vers": "yarn changeset version"
   },
   "commitlint": {
