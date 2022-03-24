@@ -9,7 +9,7 @@ cd react-spring
 
 2. Install `yarn` (https://yarnpkg.com/en/docs/install)
 
-3. Preconstuct will link the packages up in a postinstall funciton
+3. Preconstuct will link the packages up in a postinstall function
 
 4. Let's get cooking! 👨🏻‍🍳🥓
 
