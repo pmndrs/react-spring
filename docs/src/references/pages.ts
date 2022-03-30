@@ -1,3 +1,5 @@
+
+
 export type Page = {
   title: string
   url?: string
@@ -29,7 +31,7 @@ export const PAGES: Page[] = [
           },
           {
             title: 'Imperatives & Refs',
-            url: '/common/imperatives-and-refs#imperatives-and-refs',
+            url: '/common/imperatives-and-refs#imperatives--refs',
           },
           {
             title: 'Interpolations',
@@ -42,23 +44,23 @@ export const PAGES: Page[] = [
         routes: [
           {
             title: 'useChain',
-            url: '/hooks/use-chain#use-chain',
+            url: '/hooks/use-chain#usechain',
           },
           {
             title: 'useSpring',
-            url: '/hooks/use-spring#use-spring',
+            url: '/hooks/use-spring#usespring',
           },
           {
             title: 'useSprings',
-            url: '/hooks/use-springs#use-springs',
+            url: '/hooks/use-springs#usesprings',
           },
           {
             title: 'useTrail',
-            url: '/hooks/use-trail#use-trail',
+            url: '/hooks/use-trail#usetrail',
           },
           {
             title: 'useTransition',
-            url: '/hooks/use-transition#use-transition',
+            url: '/hooks/use-transition#usetransition',
           },
         ],
       },
@@ -75,7 +77,7 @@ export const PAGES: Page[] = [
           },
           {
             title: 'Spring Context',
-            url: '/components/spring-context#spring-context',
+            url: '/components/spring-context#springcontext',
           },
           {
             title: 'Trail',
@@ -91,7 +93,7 @@ export const PAGES: Page[] = [
         title: 'Additional Classes',
         routes: [
           { title: 'Controller', url: '/classes/controller#controller' },
-          { title: 'Spring Value', url: '/classes/spring-value#spring-value' },
+          { title: 'Spring Value', url: '/classes/spring-value#springvalue' },
         ],
       },
     ],
