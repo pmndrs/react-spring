@@ -35,7 +35,7 @@ export const PAGES: Page[] = [
           },
           {
             title: 'Interpolations',
-            url: '/common/interpolation#interpolation',
+            url: '/common/interpolation#interpolations',
           },
         ],
       },
