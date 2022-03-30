@@ -68,11 +68,11 @@ const FadeIn = ({ isVisible, children }) => {
     y: isVisible ? 0 : 24
   })
 
-  return <animated.div>{children}</animated.div>
+  return <animated.div style={styles}>{children}</animated.div>
 }
 ```
 
-It's as simple as that to create scroll-in animations.
+It's as simple as that to create scroll-in animations when value of `isVisible` is toggled.
 
 ### 📖  Documentation and Examples
 
@@ -96,7 +96,7 @@ Pages contain their own [examples](https://react-spring.io/hooks/use-spring#demo
   <a href="https://aragon.org/"><img width="285" src="assets/projects/aragon.png"></a>
 </p>
 
-And [many others](https://github.com/react-spring/react-spring/network/dependents)...
+And [many others...](https://github.com/pmndrs/react-spring/network/dependents)
 
 ## Backers
 

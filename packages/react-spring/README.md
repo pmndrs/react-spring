@@ -50,7 +50,7 @@ Springs change that, animation becomes easy and approachable, everything you do 
   <a href="https://aragon.org/"><img width="285" src="assets/projects/aragon.png"></a>
 </p>
 
-And [many others](https://github.com/react-spring/react-spring/network/dependents) ...
+And [many others...](https://github.com/pmndrs/react-spring/network/dependents)
 
 ## Funding
 
