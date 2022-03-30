@@ -1,3 +1,5 @@
+
+
 export type Page = {
   title: string
   url?: string
@@ -7,11 +9,11 @@ export type Page = {
 export const PAGES: Page[] = [
   {
     title: 'Introduction',
-    url: '/',
+    url: '/#introduction',
   },
   {
     title: 'Basics',
-    url: '/basics',
+    url: '/basics#basics',
   },
   {
     title: 'API',
@@ -21,19 +23,19 @@ export const PAGES: Page[] = [
         routes: [
           {
             title: 'Props',
-            url: '/common/props',
+            url: '/common/props#props',
           },
           {
             title: 'Configs',
-            url: '/common/configs',
+            url: '/common/configs#configs',
           },
           {
             title: 'Imperatives & Refs',
-            url: '/common/imperatives-and-refs',
+            url: '/common/imperatives-and-refs#imperatives--refs',
           },
           {
             title: 'Interpolations',
-            url: '/common/interpolation',
+            url: '/common/interpolation#interpolations',
           },
         ],
       },
@@ -42,23 +44,23 @@ export const PAGES: Page[] = [
         routes: [
           {
             title: 'useChain',
-            url: '/hooks/use-chain',
+            url: '/hooks/use-chain#usechain',
           },
           {
             title: 'useSpring',
-            url: '/hooks/use-spring',
+            url: '/hooks/use-spring#usespring',
           },
           {
             title: 'useSprings',
-            url: '/hooks/use-springs',
+            url: '/hooks/use-springs#usesprings',
           },
           {
             title: 'useTrail',
-            url: '/hooks/use-trail',
+            url: '/hooks/use-trail#usetrail',
           },
           {
             title: 'useTransition',
-            url: '/hooks/use-transition',
+            url: '/hooks/use-transition#usetransition',
           },
         ],
       },
@@ -67,31 +69,31 @@ export const PAGES: Page[] = [
         routes: [
           {
             title: 'Parallax',
-            url: '/components/parallax',
+            url: '/components/parallax#parallax',
           },
           {
             title: 'Spring',
-            url: '/components/spring',
+            url: '/components/spring#spring',
           },
           {
             title: 'Spring Context',
-            url: '/components/spring-context',
+            url: '/components/spring-context#springcontext',
           },
           {
             title: 'Trail',
-            url: '/components/trail',
+            url: '/components/trail#trail',
           },
           {
             title: 'Transition',
-            url: '/components/transition',
+            url: '/components/transition#transition',
           },
         ],
       },
       {
         title: 'Additional Classes',
         routes: [
-          { title: 'Controller', url: '/classes/controller' },
-          { title: 'Spring Value', url: '/classes/spring-value' },
+          { title: 'Controller', url: '/classes/controller#controller' },
+          { title: 'Spring Value', url: '/classes/spring-value#springvalue' },
         ],
       },
     ],
@@ -101,15 +103,15 @@ export const PAGES: Page[] = [
     routes: [
       {
         title: 'Accessibility',
-        url: '/guides/accessibility',
+        url: '/guides/accessibility#accessibility',
       },
       {
         title: 'React Three Fiber',
-        url: '/guides/r3f',
+        url: '/guides/r3f#react-three-fiber',
       },
       {
         title: 'Testing',
-        url: '/guides/testing',
+        url: '/guides/testing#testing',
       },
     ],
   },
