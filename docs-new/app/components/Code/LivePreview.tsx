@@ -168,6 +168,7 @@ const AccordionTrigger = styled(Accordion.Trigger, {
   fontSize: '$XXS',
   lineHeight: '$code',
   padding: '5px $10',
+  cursor: 'pointer',
 })
 
 const AccordionContent = styled(animated(Accordion.Content), {

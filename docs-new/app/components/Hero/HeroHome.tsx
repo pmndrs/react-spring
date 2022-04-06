@@ -3,7 +3,7 @@ import { useSprings, animated, useSpring } from '@react-spring/web'
 import { styled } from '~/styles/stitches.config'
 
 const COLORS = [
-  { start: '#52DEE5', end: '#52DEE500' },
+  { start: '#52DEE580', end: '#52DEE500' },
   { start: 'var(--colors-red80)', end: '#ffb6b600' },
   { start: '#fff59a', end: '#fff59a00' },
 ]
@@ -232,16 +232,16 @@ const TitleAnimatedSpan = styled(animated.span, {
   variants: {
     color: {
       Make: {
-        backgroundColor: '#52DEE580',
-        filter: 'saturate(1.1)',
+        backgroundColor: '#0069ff',
+        filter: 'saturate(1)',
       },
       Better: {
         backgroundColor: '$red80',
-        filter: 'saturate(1.1)',
+        filter: 'saturate(1.4)',
       },
       Experiences: {
         backgroundColor: '#ffb457',
-        filter: 'saturate(0.8)',
+        filter: 'saturate(1)',
       },
     },
   },
