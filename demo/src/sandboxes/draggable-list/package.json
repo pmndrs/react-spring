@@ -6,8 +6,8 @@
     "@react-spring/web": "*",
     "lodash.clamp": "4.0.3",
     "lodash-move": "1.1.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-scripts": "4.0.3",
     "react-use-gesture": "^9.1.3"
   },

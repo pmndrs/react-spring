@@ -4,8 +4,8 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@react-spring/web": "*",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-scripts": "4.0.3"
   },
   "scripts": {

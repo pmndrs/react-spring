@@ -141,7 +141,6 @@ export function useTransition(
         if (~i) transitions[i] = t
       }
     })
-
   // Mount new items with fresh transitions.
   each(items, (item, i) => {
     if (!transitions[i]) {
