@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/parallax",
-  "version": "9.4.5-beta.0",
+  "version": "9.4.5-beta.1",
   "main": "dist/react-spring-parallax.cjs.js",
   "module": "dist/react-spring-parallax.esm.js",
   "files": [
@@ -30,8 +30,8 @@
     "test": "vite serve ./test"
   },
   "dependencies": {
-    "@react-spring/shared": "~9.4.5-beta.0",
-    "@react-spring/web": "~9.4.5-beta.0"
+    "@react-spring/shared": "~9.4.5-beta.1",
+    "@react-spring/web": "~9.4.5-beta.1"
   },
   "peerDependencies": {
     "react": "^16.8.0  || >=17.0.0 || >=18.0.0",

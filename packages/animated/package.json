@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/animated",
-  "version": "9.4.5-beta.0",
+  "version": "9.4.5-beta.1",
   "description": "Animated component props for React",
   "main": "dist/react-spring-animated.cjs.js",
   "module": "dist/react-spring-animated.esm.js",
@@ -28,8 +28,8 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/shared": "~9.4.5-beta.0",
-    "@react-spring/types": "~9.4.5-beta.0"
+    "@react-spring/shared": "~9.4.5-beta.1",
+    "@react-spring/types": "~9.4.5-beta.1"
   },
   "peerDependencies": {
     "react": "^16.8.0  || >=17.0.0 || >=18.0.0"

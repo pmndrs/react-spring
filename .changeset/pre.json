@@ -17,5 +17,5 @@
     "@react-spring/web": "9.4.4",
     "@react-spring/zdog": "9.4.4"
   },
-  "changesets": ["orange-rivers-applaud"]
+  "changesets": ["dirty-lizards-eat", "orange-rivers-applaud"]
 }
