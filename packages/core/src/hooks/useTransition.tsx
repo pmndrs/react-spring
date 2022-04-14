@@ -103,14 +103,24 @@ export function useTransition(
   })
 
   // Destroy all transitions on dismount.
-  useOnce(() => () => {
+  useOnce(() => {
     each(usedTransitions.current!, t => {
-      if (t.expired) {
-        clearTimeout(t.expirationId!)
+      t.ctrl.ref?.add(t.ctrl)
+      const change = changes.get(t)
+      if (change) {
+        t.ctrl.start(change.payload)
       }
-      detachRefs(t.ctrl, ref)
-      t.ctrl.stop(true)
     })
+
+    return () => {
+      each(usedTransitions.current!, t => {
+        if (t.expired) {
+          clearTimeout(t.expirationId!)
+        }
+        detachRefs(t.ctrl, ref)
+        t.ctrl.stop(true)
+      })
+    }
   })
 
   // Keys help with reusing transitions between renders.

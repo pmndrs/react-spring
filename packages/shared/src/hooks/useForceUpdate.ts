@@ -1,24 +1,13 @@
 import { useState } from 'react'
-import { useOnce } from './useOnce'
+import { useIsMounted } from './useIsMounted'
 
 /** Return a function that re-renders this component, if still mounted */
 export function useForceUpdate() {
   const update = useState<any>()[1]
-  const mounted = useState(makeMountedRef)[0]
-  useOnce(mounted.unmount)
+  const isMounted = useIsMounted()
   return () => {
-    if (mounted.current) {
-      update({})
+    if (isMounted.current) {
+      update(Math.random())
     }
   }
-}
-
-function makeMountedRef() {
-  const mounted = {
-    current: true,
-    unmount: () => () => {
-      mounted.current = false
-    },
-  }
-  return mounted
 }
