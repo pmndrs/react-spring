@@ -6,7 +6,7 @@ export type EasingFunction = (t: number) => number
 export type ExtrapolateType = 'identity' | 'clamp' | 'extend'
 
 export interface InterpolatorFactory {
-  <In, Out>(interpolator: InterpolatorFn<In, Out>): typeof interpolator
+  <In, Out>(interpolator: InterpolatorFn<In, Out>): typeof interpolator;
 
   <Out>(config: InterpolatorConfig<Out>): (input: number) => Animatable<Out>
 
