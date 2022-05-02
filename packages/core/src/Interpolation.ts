@@ -32,7 +32,10 @@ import {
  * `Interpolation` as the `to` prop of a `useSpring` call will trigger an
  * animation toward the memoized value.
  */
-export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
+export class Interpolation<
+  Input = any,
+  Output = any
+> extends FrameValue<Output> {
   /** Useful for debugging. */
   key?: string
 
@@ -40,7 +43,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   idle = true
 
   /** The function that maps inputs values to output */
-  readonly calc: InterpolatorFn<In, Out>
+  readonly calc: InterpolatorFn<Input, Output>
 
   /** The inputs which are currently animating */
   protected _active = new Set<FluidValue>()
@@ -48,7 +51,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   constructor(
     /** The source of input values */
     readonly source: unknown,
-    args: InterpolatorArgs<In, Out>
+    args: InterpolatorArgs<Input, Output>
   ) {
     super()
     this.calc = createInterpolator(...args)
@@ -74,7 +77,7 @@ export class Interpolation<In = any, Out = any> extends FrameValue<Out> {
   }
 
   protected _get() {
-    const inputs: Arrify<In> = is.arr(this.source)
+    const inputs: Arrify<Input> = is.arr(this.source)
       ? this.source.map(getFluidValue)
       : (toArray(getFluidValue(this.source)) as any)
 

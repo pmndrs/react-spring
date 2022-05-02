@@ -14,8 +14,8 @@
     "vec-la": "1.5.0"
   },
   "devDependencies": {
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
+    "@types/react": "^18.0.8",
+    "@types/react-dom": "^18.0.3",
     "typescript": "^4.2.3"
   },
   "scripts": {
