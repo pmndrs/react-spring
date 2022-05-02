@@ -33,16 +33,16 @@ export type Interpolated<T extends ReadonlyArray<any>> = {
  */
 export interface Interpolator {
   // Tuple of parent values
-  <In extends ReadonlyArray<any>, Out>(
-    parents: In,
-    interpolator: (...args: Interpolated<In>) => Out
-  ): Interpolation<Out>
+  <Input extends ReadonlyArray<any>, Output>(
+    parents: Input,
+    interpolator: (...args: Interpolated<Input>) => Output
+  ): Interpolation<Output>
 
   // Single parent value
-  <In, Out>(
-    parent: FluidValue<In> | In,
-    interpolator: InterpolatorFn<In, Out>
-  ): Interpolation<Out>
+  <Input, Output>(
+    parent: FluidValue<Input> | Input,
+    interpolator: InterpolatorFn<Input, Output>
+  ): Interpolation<Output>
 
   // Interpolation config
   <Out>(
