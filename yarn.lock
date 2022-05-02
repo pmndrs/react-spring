@@ -4144,24 +4144,50 @@ __metadata:
   linkType: hard
 
 "@react-spring/animated@npm:~9.4.4":
-  version: 9.4.4
+  version: 0.0.0-use.local
   resolution: "@react-spring/animated@npm:9.4.4"
   dependencies:
     "@react-spring/shared": ~9.4.4
     "@react-spring/types": ~9.4.4
   peerDependencies:
     react: ^16.8.0  || >=17.0.0 || >=18.0.0
+  checksum: 9f353dcece9239a3c93df06cd33587ddc397eb99d4c8fc4bbf704543b312fed99e3c11ae03f47c778c430645e6a1ff3a97e8b3d6031f602c1a40d8be93858431
+  languageName: unknown
+  linkType: soft
+
+"@react-spring/animated@workspace:packages/animated, @react-spring/animated@~9.4.5-beta.1":
+  version: 0.0.0-use.local
+  resolution: "@react-spring/animated@workspace:packages/animated"
+  dependencies:
+    "@react-spring/shared": ~9.4.5-beta.1
+    "@react-spring/types": ~9.4.5-beta.1
+  peerDependencies:
+    react: ^16.8.0  || >=17.0.0 || >=18.0.0
   languageName: unknown
   linkType: soft
 
 "@react-spring/core@npm:~9.4.4":
-  version: 9.4.4
+  version: 0.0.0-use.local
   resolution: "@react-spring/core@npm:9.4.4"
   dependencies:
     "@react-spring/animated": ~9.4.4
     "@react-spring/rafz": ~9.4.4
     "@react-spring/shared": ~9.4.4
     "@react-spring/types": ~9.4.4
+  peerDependencies:
+    react: ^16.8.0  || >=17.0.0 || >=18.0.0
+  checksum: d73d774d61b6e2b0e540bcddec05d38ca9d1f434b138a84a98e9c8069522ed5da033931d43c5781c4b2073de5a4f5b9267f4d93c6930d8ac45c3f4d85db0751f
+  languageName: unknown
+  linkType: soft
+
+"@react-spring/core@workspace:packages/core, @react-spring/core@~9.4.5-beta.1":
+  version: 0.0.0-use.local
+  resolution: "@react-spring/core@workspace:packages/core"
+  dependencies:
+    "@react-spring/animated": ~9.4.5-beta.1
+    "@react-spring/rafz": ~9.4.5-beta.1
+    "@react-spring/shared": ~9.4.5-beta.1
+    "@react-spring/types": ~9.4.5-beta.1
   peerDependencies:
     react: ^16.8.0  || >=17.0.0 || >=18.0.0
   languageName: unknown
@@ -4286,11 +4312,24 @@ __metadata:
   linkType: soft
 
 "@react-spring/parallax@npm:*":
-  version: 9.4.4
+  version: 0.0.0-use.local
   resolution: "@react-spring/parallax@npm:9.4.4"
   dependencies:
     "@react-spring/shared": ~9.4.4
     "@react-spring/web": ~9.4.4
+  peerDependencies:
+    react: ^16.8.0  || >=17.0.0 || >=18.0.0
+    react-dom: ^16.8.0  || >=17.0.0 || >=18.0.0
+  checksum: 006c1982b251c7514277a62022ad180c7efb5bb75636fa5bb9c00bf78ffb2644d881efdd7fb74130e95feb0fd4845efc625f3b66f2cfbead094926ff630d1b47
+  languageName: unknown
+  linkType: soft
+
+"@react-spring/parallax@workspace:packages/parallax":
+  version: 0.0.0-use.local
+  resolution: "@react-spring/parallax@workspace:packages/parallax"
+  dependencies:
+    "@react-spring/shared": ~9.4.5-beta.1
+    "@react-spring/web": ~9.4.5-beta.1
   peerDependencies:
     react: ^16.8.0  || >=17.0.0 || >=18.0.0
     react-dom: ^16.8.0  || >=17.0.0 || >=18.0.0
@@ -4311,11 +4350,23 @@ __metadata:
   linkType: soft
 
 "@react-spring/shared@npm:~9.4.4":
-  version: 9.4.4
+  version: 0.0.0-use.local
   resolution: "@react-spring/shared@npm:9.4.4"
   dependencies:
     "@react-spring/rafz": ~9.4.4
     "@react-spring/types": ~9.4.4
+  peerDependencies:
+    react: ^16.8.0  || >=17.0.0 || >=18.0.0
+  checksum: a15e51410b114b0e9c95e636aa07b8c2b415d1247e27e2e0d417e429b239e1c39fad1cb71e1015c8ffbc31fee76080abafc231c3c2ea5dc10961f27757abbd0d
+  languageName: unknown
+  linkType: soft
+
+"@react-spring/shared@workspace:packages/shared, @react-spring/shared@~9.4.5-beta.1":
+  version: 0.0.0-use.local
+  resolution: "@react-spring/shared@workspace:packages/shared"
+  dependencies:
+    "@react-spring/rafz": ~9.4.5-beta.1
+    "@react-spring/types": ~9.4.5-beta.1
   peerDependencies:
     react: ^16.8.0  || >=17.0.0 || >=18.0.0
   languageName: unknown
