@@ -1,7 +1,7 @@
 name: 🐞 Bug Report 🐛
 description: File a bug report
 title: '[bug]: '
-labels: ['potential bug']
+labels: ['template: bug']
 body:
   - type: markdown
     attributes:
