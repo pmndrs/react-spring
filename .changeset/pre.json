@@ -1,0 +1,21 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@react-spring/demo": "1.0.0",
+    "@react-spring/docs": "1.0.6",
+    "@react-spring/animated": "9.4.4",
+    "@react-spring/core": "9.4.4",
+    "@react-spring/parallax": "9.4.4",
+    "@react-spring/rafz": "9.4.4",
+    "react-spring": "9.4.4",
+    "@react-spring/shared": "9.4.4",
+    "@react-spring/types": "9.4.4",
+    "@react-spring/konva": "9.4.4",
+    "@react-spring/native": "9.4.4",
+    "@react-spring/three": "9.4.4",
+    "@react-spring/web": "9.4.4",
+    "@react-spring/zdog": "9.4.4"
+  },
+  "changesets": []
+}

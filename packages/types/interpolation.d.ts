@@ -6,31 +6,38 @@ export type EasingFunction = (t: number) => number
 export type ExtrapolateType = 'identity' | 'clamp' | 'extend'
 
 export interface InterpolatorFactory {
-  <In, Out>(interpolator: InterpolatorFn<In, Out>): typeof interpolator
+  <Input, Output>(
+    interpolator: InterpolatorFn<Input, Output>
+  ): typeof interpolator
 
-  <Out>(config: InterpolatorConfig<Out>): (input: number) => Animatable<Out>
+  <Output>(config: InterpolatorConfig<Output>): (
+    input: number
+  ) => Animatable<Output>
 
-  <Out>(
+  <Output>(
     range: readonly number[],
-    output: readonly Constrain<Out, Animatable>[],
+    output: readonly Constrain<Output, Animatable>[],
     extrapolate?: ExtrapolateType
-  ): (input: number) => Animatable<Out>
+  ): (input: number) => Animatable<Output>
 
-  <In, Out>(...args: InterpolatorArgs<In, Out>): InterpolatorFn<In, Out>
+  <Input, Output>(...args: InterpolatorArgs<Input, Output>): InterpolatorFn<
+    Input,
+    Output
+  >
 }
 
-export type InterpolatorArgs<In = any, Out = any> =
-  | [InterpolatorFn<Arrify<In>, Out>]
-  | [InterpolatorConfig<Out>]
+export type InterpolatorArgs<Input = any, Output = any> =
+  | [InterpolatorFn<Arrify<Input>, Output>]
+  | [InterpolatorConfig<Output>]
   | [
       readonly number[],
-      readonly Constrain<Out, Animatable>[],
+      readonly Constrain<Output, Animatable>[],
       (ExtrapolateType | undefined)?
     ]
 
-export type InterpolatorFn<In, Out> = (...inputs: Arrify<In>) => Out
+export type InterpolatorFn<Input, Output> = (...inputs: Arrify<Input>) => Output
 
-export type InterpolatorConfig<Out = Animatable> = {
+export type InterpolatorConfig<Output = Animatable> = {
   /**
    * What happens when the spring goes below its target value.
    *
@@ -79,7 +86,7 @@ export type InterpolatorConfig<Out = Animatable> = {
   /**
    * Output values from the interpolation function. Should match the length of the `range` array.
    */
-  output: readonly Constrain<Out, Animatable>[]
+  output: readonly Constrain<Output, Animatable>[]
 
   /**
    * Transformation to apply to the value before interpolation.

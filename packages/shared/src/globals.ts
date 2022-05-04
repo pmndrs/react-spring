@@ -21,10 +21,10 @@ export let createStringInterpolator: (
 // Optional
 //
 
-export let to: <In, Out>(
+export let to: <Input, Output>(
   source: OneOrMore<FluidValue>,
-  args: InterpolatorArgs<In, Out>
-) => FluidValue<Out>
+  args: InterpolatorArgs<Input, Output>
+) => FluidValue<Output>
 
 export let colors = null as { [key: string]: number } | null
 
