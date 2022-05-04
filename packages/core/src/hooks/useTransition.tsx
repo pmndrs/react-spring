@@ -102,8 +102,15 @@ export function useTransition(
     usedTransitions.current = transitions
   })
 
-  // Destroy all transitions on dismount.
   useOnce(() => {
+    /**
+     * This _should_ only run in `StrictMode` where everything
+     * is destroyed and remounted, because the enter animation
+     * was most likely cancelled we run it again on initial mount.
+     *
+     * This does nothing when `StrictMode` isn't enabled,
+     * because usedTransitions on mount is typically null.
+     */
     each(usedTransitions.current!, t => {
       t.ctrl.ref?.add(t.ctrl)
       const change = changes.get(t)
@@ -112,6 +119,7 @@ export function useTransition(
       }
     })
 
+    // Destroy all transitions on dismount.
     return () => {
       each(usedTransitions.current!, t => {
         if (t.expired) {
