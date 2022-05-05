@@ -15,6 +15,7 @@ export { BailSignal } from './runAsync'
 export {
   createInterpolator,
   useIsomorphicLayoutEffect,
+  useReducedMotion,
 } from '@react-spring/shared'
 export { inferTo } from './helpers'
 

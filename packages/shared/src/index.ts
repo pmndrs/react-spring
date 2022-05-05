@@ -16,6 +16,7 @@ export * from './hooks/useMemoOne'
 export * from './hooks/useOnce'
 export * from './hooks/usePrev'
 export * from './hooks/useIsomorphicLayoutEffect'
+export * from './hooks/useReducedMotion'
 
 export * from './fluids'
 
