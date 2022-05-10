@@ -76,7 +76,7 @@
     "@react-three/fiber": "^7.0.26",
     "@testing-library/cypress": "^8.0.2",
     "@testing-library/jest-dom": "^5.16.3",
-    "@testing-library/react": "^13.0.0",
+    "@testing-library/react": "^13.2.0",
     "@types/jest": "^27.4.0",
     "@types/lodash.clamp": "^4.0.6",
     "@types/lodash.shuffle": "^4.2.6",
