@@ -112,11 +112,15 @@ export function useTransition(
      * because usedTransitions on mount is typically null.
      */
     each(usedTransitions.current!, t => {
-      t.ctrl.ref?.add(t.ctrl)
-      const change = changes.get(t)
-      if (change) {
-        t.ctrl.start(change.payload)
-      }
+      // The above comment claims that this code will not execute outside
+      // of StrictMode. If that were true, throwing here wouldn't break any
+      // of the useTransition tests, since StrictMode is not enabled in tests.
+      throw new Error('Unexpected invocation.')
+      // t.ctrl.ref?.add(t.ctrl)
+      // const change = changes.get(t)
+      // if (change) {
+      //   t.ctrl.start(change.payload)
+      // }
     })
 
     // Destroy all transitions on dismount.
