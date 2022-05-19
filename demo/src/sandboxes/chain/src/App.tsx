@@ -32,7 +32,7 @@ export default function App() {
     from: { opacity: 0, scale: 0 },
     enter: { opacity: 1, scale: 1 },
     leave: { opacity: 0, scale: 0 },
-    toggleReverse: true
+    toggleReverse: !open
   })
 
   // This will orchestrate the two animations above, comment the last arg and it creates a sequence
@@ -52,7 +52,7 @@ export default function App() {
             className={styles.item}
             style={{ ...style, background: item.css }}
           />
-        ), !open)}
+        ))}
       </animated.div>
     </div>
   )

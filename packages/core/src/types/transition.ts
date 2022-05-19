@@ -112,7 +112,7 @@ export type ItemKeys<T = any> = OneOrMore<Key> | ((item: T) => Key) | null
 
 /** The function returned by `useTransition` */
 export interface TransitionFn<Item = any, State extends Lookup = Lookup> {
-  (render: TransitionRenderFn<Item, State>, reverse?: boolean): JSX.Element
+  (render: TransitionRenderFn<Item, State>): JSX.Element
 }
 
 export interface TransitionRenderFn<Item = any, State extends Lookup = Lookup> {

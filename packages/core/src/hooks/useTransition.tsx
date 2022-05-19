@@ -431,9 +431,9 @@ export function useTransition(
     reset ? void 0 : deps
   )
 
-  const renderTransitions: TransitionFn = (render, reverse = false) => (
+  const renderTransitions: TransitionFn = (render) => (
     <>
-      {(reverse ? transitions.reverse() : transitions).map((t, i) => {
+      {(toggleReverse ? transitions.reverse() : transitions).map((t, i) => {
         const { springs } = changes.get(t) || t.ctrl
         const elem: any = render({ ...springs }, t.item, t, i)
         return elem && elem.type ? (
