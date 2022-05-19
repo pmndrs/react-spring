@@ -38,14 +38,14 @@ export type TransitionValues<Props extends object> = unknown &
       Constrain<
         ObjectType<
           Props[TransitionKey & keyof Props] extends infer T
-          ? T extends ReadonlyArray<infer Element>
-          ? Element
-          : T extends (...args: any[]) => infer Return
-          ? Return extends ReadonlyArray<infer ReturnElement>
-          ? ReturnElement
-          : Return
-          : T
-          : never
+            ? T extends ReadonlyArray<infer Element>
+              ? Element
+              : T extends (...args: any[]) => infer Return
+              ? Return extends ReadonlyArray<infer ReturnElement>
+                ? ReturnElement
+                : Return
+              : T
+            : never
         >,
         {}
       >
@@ -77,12 +77,12 @@ export type UseTransitionProps<Item = any> = Merge<
      */
     expires?: boolean | number | ((item: Item) => boolean | number)
     config?:
-    | SpringConfig
-    | ((
-      item: Item,
-      index: number,
-      state: TransitionPhase
-    ) => AnimationProps['config'])
+      | SpringConfig
+      | ((
+          item: Item,
+          index: number,
+          state: TransitionPhase
+        ) => AnimationProps['config'])
     /**
      * Called after a transition item is unmounted.
      */
@@ -99,7 +99,7 @@ export type UseTransitionProps<Item = any> = Merge<
 export type TransitionComponentProps<
   Item,
   Props extends object = any
-  > = unknown &
+> = unknown &
   UseTransitionProps<Item> & {
     keys?: ItemKeys<NoInfer<Item>>
     items: OneOrMore<Item>
@@ -143,13 +143,13 @@ export type TransitionTo<Item, State extends Lookup = Lookup> =
   | OneOrMore<ControllerUpdate<State, Item>>
   | Function // HACK: Fix inference of untyped inline functions.
   | ((
-    item: Item,
-    index: number
-  ) =>
-    | ControllerUpdate<State, Item>
-    | SpringChain<State>
-    | SpringToFn<State>
-    | Falsy)
+      item: Item,
+      index: number
+    ) =>
+      | ControllerUpdate<State, Item>
+      | SpringChain<State>
+      | SpringToFn<State>
+      | Falsy)
 
 export interface Change {
   phase: TransitionPhase
