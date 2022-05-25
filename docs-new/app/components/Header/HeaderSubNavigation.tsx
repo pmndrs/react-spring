@@ -1,4 +1,4 @@
-import { DiscordLogo, GithubLogo } from 'phosphor-react'
+import { DiscordLogo, GithubLogo, Lifebuoy } from 'phosphor-react'
 
 import { NavigationButton, NavigationButtonProps } from '../Buttons/NavButton'
 
@@ -14,6 +14,12 @@ const SUB_NAV: NavigationButtonProps[] = [
     href: 'https://discord.com/invite/poimandres',
     isExternal: true,
     Icon: DiscordLogo,
+  },
+  {
+    title: 'Support',
+    href: 'https://opencollective.com/react-spring',
+    isExternal: true,
+    Icon: Lifebuoy,
   },
 ]
 
