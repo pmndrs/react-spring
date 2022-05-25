@@ -8,13 +8,15 @@ export interface CopyProps {
   className?: string
   children?: ReactNode
   css?: CSS
+  tag?: keyof Pick<JSX.IntrinsicElements, 'p' | 'blockquote'>
 }
 
 export const Copy = forwardRef<HTMLHeadingElement, CopyProps>(
-  ({ fontStyle = '$XS', className, children, css }, ref) => {
+  ({ fontStyle = '$XS', className, children, css, tag = 'p' }, ref) => {
     return (
       <Text
         className={className}
+        as={tag}
         ref={ref}
         css={{
           ...getFontStyles(fontStyle),
@@ -26,4 +28,6 @@ export const Copy = forwardRef<HTMLHeadingElement, CopyProps>(
   }
 )
 
-const Text = styled('p', {})
+const Text = styled('p', {
+  margin: 0,
+})

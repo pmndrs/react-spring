@@ -6,13 +6,13 @@ import { styled, ScaleValue, CSS, dark } from '~/styles/stitches.config'
 export interface HeadingProps {
   tag?: keyof Pick<
     JSX.IntrinsicElements,
-    'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+    'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'figcaption'
   >
   fontStyle?: ScaleValue<'fontSizes'>
   className?: string
   children?: ReactNode
   css?: CSS
-  weight?: CSSProperties['fontWeight']
+  weight?: ScaleValue<'fontWeights'> | CSSProperties['fontWeight']
 }
 
 export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
@@ -45,8 +45,4 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
   }
 )
 
-const HeadingElement = styled('h1', {
-  '& > a': {
-    textDecoration: 'none',
-  },
-})
+const HeadingElement = styled('h1')

@@ -94,7 +94,7 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes } =
         M: '2.6rem',
         S: '2rem',
         XS: '1.6rem',
-        XXS: '1.2rem',
+        XXS: '1.4rem',
         code: '1.4rem',
       },
       lineHeights: {
@@ -104,7 +104,7 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes } =
         M: '3.6rem',
         S: '3rem',
         XS: '2.6rem',
-        XXS: '2.2rem',
+        XXS: '180%',
         code: '1.8rem',
       },
     },
@@ -195,6 +195,14 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes } =
           height: `calc(100% + ${width * 2}px)`,
           borderRadius: 'inherit',
           zIndex: -1,
+        },
+      }),
+
+      hover: (val: object) => ({
+        '@media (hover:hover)': {
+          '&:hover': {
+            ...val,
+          },
         },
       }),
     },

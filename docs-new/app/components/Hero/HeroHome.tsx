@@ -8,7 +8,7 @@ const COLORS = [
   { start: '#fff59a', end: '#fff59a00' },
 ]
 
-const TAGLINE = ['Make', 'Better', 'Experiences'] as const
+const TAGLINE = ['Make', 'Memorable', 'Experiences'] as const
 
 const PATTERN_VALUE = 16
 
@@ -231,15 +231,15 @@ const TitleAnimatedSpan = styled(animated.span, {
 
   variants: {
     color: {
-      Make: {
+      [TAGLINE[0]]: {
         backgroundColor: '#0069ff',
         filter: 'saturate(1)',
       },
-      Better: {
+      [TAGLINE[1]]: {
         backgroundColor: '$red80',
         filter: 'saturate(1.4)',
       },
-      Experiences: {
+      [TAGLINE[2]]: {
         backgroundColor: '#ffb457',
         filter: 'saturate(1)',
       },
