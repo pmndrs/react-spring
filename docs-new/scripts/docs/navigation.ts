@@ -42,8 +42,6 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
 
       const isIndexRoute = level === routes.length - 1 && doc.baseID === 'index'
 
-      // console.log()
-
       if (route === '') {
         schemas.push({
           href: `/docs${isIndexRoute ? '' : `/${doc.baseID}`}`,

@@ -34,7 +34,6 @@ export default function Index() {
               interactions. Bringing your apps to life has never been simpler.
             </StraplineCopy>
           </Strapline>
-          <NavigationGrid cols={2} tiles={NAV_TILES} />
           <section>
             <h2>Why springs and not durations</h2>
             <p>

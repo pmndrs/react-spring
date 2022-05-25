@@ -48,19 +48,22 @@ const renderSubMenu = (
     }
   }
   const hasRenderableChildren = children.length > 0
+
+  const isTitle = level === 0
+
   return (
-    <li key={id}>
-      {!hasRenderableChildren ? (
-        <Anchor
-          to={href}
-          title={level === 0}
-          active={location.pathname === href}
-          onClick={handleClick}>
-          {title}
-        </Anchor>
+    <ListItem isTitle={isTitle} key={id}>
+      <Anchor
+        to={href}
+        title={isTitle}
+        active={location.pathname === href}
+        onClick={handleClick}>
+        {title}
+      </Anchor>
+      {/* {!hasRenderableChildren ? (
       ) : (
         <AnchorLike title={level === 0}>{title}</AnchorLike>
-      )}
+      )} */}
       {hasRenderableChildren ? (
         <ul>
           {children.map(item =>
@@ -71,7 +74,7 @@ const renderSubMenu = (
           )}
         </ul>
       ) : null}
-    </li>
+    </ListItem>
   )
 }
 
@@ -97,7 +100,19 @@ const DocsList = styled('ul', {
   },
 })
 
-const SharedAnchorStyles = {
+const ListItem = styled('li', {
+  variants: {
+    isTitle: {
+      true: {
+        '& + &': {
+          mt: '$15',
+        },
+      },
+    },
+  },
+})
+
+const Anchor = styled(Link, {
   ...getFontStyles('$XS'),
 
   '@media (hover: hover)': {
@@ -116,24 +131,14 @@ const SharedAnchorStyles = {
       true: {
         fontWeight: '$bold',
       },
+      false: {
+        pl: '$20',
+      },
     },
     active: {
       true: {
         backgroundColor: '$red60',
       },
-    },
-  },
-}
-
-const Anchor = styled(Link, {
-  ...SharedAnchorStyles,
-})
-
-const AnchorLike = styled('span', {
-  ...SharedAnchorStyles,
-  '@media (hover: hover)': {
-    '&:hover': {
-      backgroundColor: 'transparent',
     },
   },
 })
