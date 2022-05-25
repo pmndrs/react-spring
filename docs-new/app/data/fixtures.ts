@@ -1,4 +1,5 @@
 import type { Quote } from '~/components/Carousels/CarouselQuotes'
+import { Tile } from '~/components/Grids/NavigationGrid'
 
 export const QUOTES: Quote[] = [
   {
@@ -80,5 +81,82 @@ export const QUOTES: Quote[] = [
     handle: '@bobylito',
     tweetUrl: 'https://twitter.com/bobylito/status/1337144280171819018',
     job: 'Software Engineer',
+  },
+]
+
+export const NAV_TILES: Tile[] = [
+  {
+    href: '/docs/getting-started',
+    label: 'Getting Started',
+    description:
+      'Learn about how use react-spring with step by step explanations',
+  },
+  {
+    href: '/docs/api',
+    label: 'API Reference',
+    description:
+      'Explore the APIs of our hooks, components & classes to bring your app to life',
+  },
+  {
+    href: '/docs/guides',
+    label: 'Guides & Tutorials',
+    description: 'Read our further in-depth guides and tutorials',
+    comingSoon: true,
+  },
+  {
+    href: '/examples',
+    label: 'Examples',
+    description:
+      'Be inspired by exploring all our examples, why not contribute your own?',
+    comingSoon: true,
+  },
+]
+
+export const COMMUNITY_TILES: Tile[] = [
+  {
+    label: 'Discord',
+    description: 'Ask questions, share tips & tricks',
+    href: 'https://discord.gg/AXfNsGx64f',
+    isExternal: true,
+  },
+  {
+    label: 'Github',
+    description: 'Report issues, submit ideas and contribute',
+    isExternal: true,
+    href: 'https://www.github.com/pmndrs/react-spring',
+  },
+  {
+    label: 'Twitter',
+    description: 'Keep up to date with all things Poimandres',
+    isExternal: true,
+    href: 'https://www.twitter.com/pmndrs',
+  },
+]
+
+export const TOOL_TILES = [
+  {
+    label: 'react-three-fiber',
+    description: 'A React renderer for Three.js',
+    href: 'https://www.github.com/pmndrs/react-three-fiber',
+    isExternal: true,
+  },
+  {
+    label: '@use-gesture',
+    description:
+      'Bread n butter utility for component-tied mouse/touch gestures in React and Vanilla Javascript.',
+    href: 'https://github.com/pmndrs/use-gesture',
+    isExternal: true,
+  },
+  {
+    label: 'leva',
+    description: 'React-first components GUI',
+    href: 'https://www.github.com/pmndrs/leva',
+    isExternal: true,
+  },
+  {
+    label: 'zustand',
+    description: 'Bear necessities for state management in React',
+    href: 'https://www.github.com/pmndrs/zustand',
+    isExternal: true,
   },
 ]

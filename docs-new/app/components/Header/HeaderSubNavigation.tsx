@@ -4,7 +4,7 @@ import { NavigationButton, NavigationButtonProps } from '../Buttons/NavButton'
 
 const SUB_NAV: NavigationButtonProps[] = [
   {
-    title: 'Source',
+    title: 'Github',
     href: 'https://github.com/pmndrs/react-spring',
     isExternal: true,
     Icon: GithubLogo,
