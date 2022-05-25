@@ -7,11 +7,15 @@ import {
   ScrollRestoration,
   MetaFunction,
   LinksFunction,
+  LoaderFunction,
+  json,
+  useLoaderData,
 } from 'remix'
 
 import { globalStyles } from './styles/global'
 
 import { SiteThemePicker } from './components/Site/SiteThemePicker'
+import { WidgetPlausible } from './components/Widgets/WidgetPlausible'
 
 export const meta: MetaFunction = () => {
   return {
@@ -31,8 +35,18 @@ export const links: LinksFunction = () => [
   },
 ]
 
+export const loader: LoaderFunction = () => {
+  return json({
+    ENV: {
+      ENABLE_PLAUSIBLE: process.env.ENABLE_PLAUSIBLE,
+    },
+  })
+}
+
 function Document({ children }: { children: React.ReactNode }) {
   globalStyles()
+
+  const data = useLoaderData()
 
   return (
     <html lang="en">
@@ -41,10 +55,16 @@ function Document({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+        <WidgetPlausible />
         {/* <SiteThemePicker /> */}
       </head>
       <body>
         {children}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.env = ${JSON.stringify(data.ENV)}`,
+          }}
+        />
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>

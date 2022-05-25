@@ -1,5 +1,6 @@
 import {
   ForwardRefExoticComponent,
+  MouseEventHandler,
   RefAttributes,
   useRef,
   useState,
@@ -24,6 +25,7 @@ export interface NavigationButtonProps {
   Icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
   isExternal?: boolean
   showLabel?: boolean
+  onClick?: MouseEventHandler<HTMLAnchorElement>
 }
 
 export const NavigationButton = ({
@@ -32,6 +34,7 @@ export const NavigationButton = ({
   href,
   isExternal,
   showLabel = false,
+  onClick,
 }: NavigationButtonProps) => {
   const [tooltipOpen, setTooltipOpen] = useState(false)
   const { pathname } = useLocation()
@@ -78,6 +81,12 @@ export const NavigationButton = ({
     setTooltipOpen(isOpen)
   }
 
+  const handleClick: MouseEventHandler<HTMLAnchorElement> = e => {
+    if (onClick) {
+      onClick(e)
+    }
+  }
+
   const externalLinkProps = isExternal
     ? {
         rel: 'noopener noreferrer',
@@ -97,6 +106,7 @@ export const NavigationButton = ({
         <NavAnchor
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+          onClick={handleClick}
           href={href}
           variant={showLabel ? 'withLabel' : undefined}
           {...externalLinkProps}>

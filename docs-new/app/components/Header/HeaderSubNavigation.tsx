@@ -1,4 +1,5 @@
 import { DiscordLogo, GithubLogo, Lifebuoy } from 'phosphor-react'
+import { EventNames, firePlausibleEvent } from '~/helpers/analytics'
 
 import { NavigationButton, NavigationButtonProps } from '../Buttons/NavButton'
 
@@ -30,10 +31,24 @@ export interface HeaderSubNavigationProps {
 export const HeaderSubNavigation = ({
   showLabels = false,
 }: HeaderSubNavigationProps) => {
+  const handleClick = (label: string) => () => {
+    firePlausibleEvent({
+      name: EventNames.OutboundLink,
+      additionalProps: {
+        linkTitle: label,
+      },
+    })
+  }
+
   return (
     <>
       {SUB_NAV.map(props => (
-        <NavigationButton key={props.title} showLabel={showLabels} {...props} />
+        <NavigationButton
+          key={props.title}
+          showLabel={showLabels}
+          onClick={handleClick(props.title)}
+          {...props}
+        />
       ))}
     </>
   )
