@@ -59,11 +59,7 @@ const NavigationItem = ({
     <Tile>
       <h2>{label}</h2>
       <p>{description}</p>
-      {comingSoon ? (
-        <span>Coming soon!</span>
-      ) : (
-        <Link to={href}>Read more</Link>
-      )}
+      {comingSoon ? <span>Coming soon!</span> : <span>Read more</span>}
     </Tile>
   )
 
