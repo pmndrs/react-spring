@@ -2,7 +2,6 @@ import { MetaFunction } from 'remix'
 import { CarouselQuotes } from '~/components/Carousels/CarouselQuotes'
 import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 import { Header } from '~/components/Header/Header'
-import { HeroHome } from '~/components/Hero/HeroHome'
 import { Copy } from '~/components/Text/Copy'
 import { Heading } from '~/components/Text/Heading'
 
@@ -19,15 +18,9 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <>
-      <Header
-        transparentBackground
-        addMarginToMain={false}
-        position="fixed"
-        alwaysAnimateHeader
-      />
+      <Header addMarginToMain={false} position="fixed" alwaysAnimateHeader />
       <main>
         <article>
-          <HeroHome />
           <Strapline>
             <StraplineCopy fontStyle="$M">
               With naturally fluid animations you will elevate your UI &

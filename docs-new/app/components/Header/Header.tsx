@@ -30,9 +30,11 @@ interface HeaderProps {
   position?: Property.Position
 }
 
-export const HEADER_HEIGHT: [desktop: number, mobile: number] = [
-  64 + 25,
-  48 + 15,
+export const getHeaderHeights = (
+  hasSubNav = false
+): [desktop: number, mobile: number] => [
+  64 + (hasSubNav ? 25 : 50),
+  48 + (hasSubNav ? 15 : 30),
 ]
 
 export const Header = ({
@@ -46,7 +48,11 @@ export const Header = ({
   const { sidebar, subnav } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const [styles, isStuck] = useAnimatedHeader(true, alwaysAnimateHeader)
+  const [styles, isStuck] = useAnimatedHeader({
+    isHeader: true,
+    alwaysAnimate: alwaysAnimateHeader,
+    heights: getHeaderHeights(Boolean(subnav)),
+  })
 
   const handleDialogChange = (isOpen: boolean) => setDialogOpen(isOpen)
 

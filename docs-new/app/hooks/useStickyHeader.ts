@@ -1,11 +1,9 @@
 import { useState } from 'react'
 
-import { HEADER_HEIGHT } from '~/components/Header/Header'
-
 import { useIsomorphicLayoutEffect } from './useIsomorphicEffect'
 import { useWindowScrolling } from './useWindowScrolling'
 
-export const useStickyHeader = () => {
+export const useStickyHeader = (heights: [desktop: number, mobile: number]) => {
   const [stickyHeader, setStickyHeader] = useState(false)
 
   const [_, scrollTop] = useWindowScrolling({
@@ -15,7 +13,7 @@ export const useStickyHeader = () => {
   useIsomorphicLayoutEffect(() => {
     const { innerWidth } = window
 
-    const limit = innerWidth < 768 ? HEADER_HEIGHT[1] : HEADER_HEIGHT[0]
+    const limit = innerWidth < 768 ? heights[1] : heights[0]
 
     if (scrollTop >= limit) {
       setStickyHeader(true)

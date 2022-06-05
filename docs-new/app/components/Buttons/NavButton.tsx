@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useLocation } from 'remix'
+import { Link, useLocation } from 'remix'
 import {
   animated,
   SpringValue,
@@ -36,7 +36,6 @@ export const NavigationButton = ({
   showLabel = false,
   onClick,
 }: NavigationButtonProps) => {
-  const [tooltipOpen, setTooltipOpen] = useState(false)
   const { pathname } = useLocation()
 
   const isRoute = (href !== '/' && pathname.includes(href)) || pathname === href
@@ -48,23 +47,6 @@ export const NavigationButton = ({
     []
   )
 
-  const transitions = useTransition(tooltipOpen, {
-    from: {
-      scale: 0,
-    },
-    enter: {
-      scale: 1,
-    },
-    leave: {
-      scale: 0,
-    },
-    config: {
-      mass: 2,
-      tension: 250,
-      friction: 30,
-    },
-  })
-
   const handleMouseEnter = () => {
     api.start({
       scale: isRoute || window.innerWidth < 768 ? 0 : 1,
@@ -75,10 +57,6 @@ export const NavigationButton = ({
     api.start({
       scale: 0,
     })
-  }
-
-  const handleToolTipChange = (isOpen: boolean) => {
-    setTooltipOpen(isOpen)
   }
 
   const handleClick: MouseEventHandler<HTMLAnchorElement> = e => {
@@ -97,54 +75,39 @@ export const NavigationButton = ({
   const animateInterpolation = (val: SpringValue<number>) =>
     val.to({ range: [0, 1], output: [1.05, 0.8] })
 
+  /**
+   * TODO: refactor to use `Link` component
+   */
   return (
-    <Tooltip.Root
-      open={tooltipOpen}
-      delayDuration={0}
-      onOpenChange={handleToolTipChange}>
-      <Tooltip.Trigger asChild>
-        {/**
-         * TODO: refactor to use `Link` component
-         */}
-        <NavAnchor
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onClick={handleClick}
-          href={href}
-          variant={showLabel ? 'withLabel' : undefined}
-          {...externalLinkProps}>
-          <NavAnchorPlainBackground
-            style={{
-              scale: isRoute ? scale : animateInterpolation(scale),
-              x: '-50%',
-              y: '-50%',
-            }}
-          />
-          <NavIconWrapper
-            css={{
-              color: isRoute ? 'var(--colors-steel100)' : 'unset',
-              [`.${dark} &`]: {
-                color: isRoute ? '#363645' : 'unset',
-              },
-            }}>
-            <Icon size={20} weight="light" />
-            {showLabel ? <span>{title}</span> : null}
-          </NavIconWrapper>
-        </NavAnchor>
-      </Tooltip.Trigger>
-      {transitions(
-        (styles, item) =>
-          item && (
-            <ToolTip forceMount sideOffset={5} style={styles}>
-              {title}
-            </ToolTip>
-          )
-      )}
-    </Tooltip.Root>
+    <NavAnchor
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
+      href={href}
+      variant={showLabel ? 'withLabel' : undefined}
+      {...externalLinkProps}>
+      <NavAnchorPlainBackground
+        style={{
+          scale: isRoute ? scale : animateInterpolation(scale),
+          x: '-50%',
+          y: '-50%',
+        }}
+      />
+      <NavIconWrapper
+        css={{
+          color: isRoute ? 'var(--colors-steel100)' : 'unset',
+          [`.${dark} &`]: {
+            color: isRoute ? '#363645' : 'unset',
+          },
+        }}>
+        <Icon size={20} weight="light" />
+        {showLabel ? <span>{title}</span> : null}
+      </NavIconWrapper>
+    </NavAnchor>
   )
 }
 
-const NavAnchor = styled(Toolbar.Link, {
+const NavAnchor = styled('a', {
   padding: '$15',
   height: '4.6rem',
   width: '4.6rem',
@@ -187,19 +150,5 @@ const NavIconWrapper = styled('span', {
     ...getFontStyles('$XXS'),
     fontWeight: '$bold',
     ml: '$15',
-  },
-})
-
-const ToolTip = styled(animated(Tooltip.Content), {
-  display: 'none',
-  backgroundColor: '$red-outline',
-  padding: '$10 $15',
-  fontSize: '$XXS',
-  fontWeight: '$bold',
-  borderRadius: '$r8',
-  color: '$black',
-
-  '@tabletUp': {
-    display: 'block',
   },
 })

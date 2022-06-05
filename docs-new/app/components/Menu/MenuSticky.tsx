@@ -7,6 +7,7 @@ import { useAnimatedHeader } from '~/hooks/useAnimatedHeader'
 import { HeaderSubnav } from '../Header/HeaderSubnav'
 
 import { SubtitleSchemaItem } from '../../../scripts/docs/navigation'
+import { getHeaderHeights } from '../Header/Header'
 
 interface MenuStickyProps {
   tag?: keyof JSX.IntrinsicElements
@@ -15,7 +16,10 @@ interface MenuStickyProps {
 }
 
 export const MenuSticky = ({ className, subnav }: MenuStickyProps) => {
-  const [styles, isStuck] = useAnimatedHeader(false)
+  const [styles, isStuck] = useAnimatedHeader({
+    isHeader: false,
+    heights: getHeaderHeights(true),
+  })
 
   return (
     <StickyMenu className={className} isStuck={isStuck} style={styles}>

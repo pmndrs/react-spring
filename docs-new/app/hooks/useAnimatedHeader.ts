@@ -1,19 +1,28 @@
 import { SpringValue, useSpring } from '@react-spring/web'
-import { HEADER_HEIGHT } from '~/components/Header/Header'
 import { useIsomorphicLayoutEffect } from './useIsomorphicEffect'
 import { useStickyHeader } from './useStickyHeader'
 import { useWindowScrolling } from './useWindowScrolling'
 
-export const useAnimatedHeader = (
+interface UseAnimatedHeaderProps {
+  isHeader?: boolean
+  alwaysAnimate?: boolean
+  heights: [desktop: number, mobile: number]
+}
+
+export const useAnimatedHeader = ({
   isHeader = true,
-  alwaysAnimate = false
-): [styles: { top: SpringValue<number> }, isStuck: boolean] => {
+  alwaysAnimate = false,
+  heights,
+}: UseAnimatedHeaderProps): [
+  styles: { top: SpringValue<number> },
+  isStuck: boolean
+] => {
   const [direction] = useWindowScrolling({
     active: true,
     threshold: [0, 20],
   })
 
-  const isStuck = useStickyHeader()
+  const isStuck = useStickyHeader(heights)
 
   const [styles, api] = useSpring(() => ({
     top: 0,
@@ -29,7 +38,7 @@ export const useAnimatedHeader = (
   useIsomorphicLayoutEffect(() => {
     const { innerWidth } = window
 
-    const limit = innerWidth < 768 ? HEADER_HEIGHT[1] : HEADER_HEIGHT[0]
+    const limit = innerWidth < 768 ? heights[1] : heights[0]
 
     if (direction === 'down') {
       api.start({

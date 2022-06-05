@@ -1,12 +1,25 @@
-import { FC } from 'react'
+import { ReactNode } from 'react'
 import { animated } from '@react-spring/web'
 
 import { useAnimatedHeader } from '~/hooks/useAnimatedHeader'
 
 import { styled } from '~/styles/stitches.config'
 
-export const StickyAside: FC = ({ children }) => {
-  const [styles, isStuck] = useAnimatedHeader(false)
+import { getHeaderHeights } from '../Header/Header'
+
+interface StickyAsideProps {
+  children?: ReactNode
+  hasSubNav?: boolean
+}
+
+export const StickyAside = ({
+  children,
+  hasSubNav = false,
+}: StickyAsideProps) => {
+  const [styles, isStuck] = useAnimatedHeader({
+    isHeader: false,
+    heights: getHeaderHeights(hasSubNav),
+  })
 
   return (
     <Aside style={styles} isStuck={isStuck}>

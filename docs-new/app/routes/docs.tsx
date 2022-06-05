@@ -164,7 +164,7 @@ export default function DocsLayout() {
     <>
       <Grid>
         <Header data={navigation} />
-        <StickyAside>
+        <StickyAside hasSubNav={hasStickySubnav}>
           <MenuDocs submenu={navigation.sidebar} />
         </StickyAside>
         <Main>
