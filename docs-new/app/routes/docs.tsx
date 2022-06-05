@@ -108,6 +108,7 @@ const comps = {
           py: 2,
           px: 5,
         },
+        maxWidth: 680,
       }}
       {...props}
     />
@@ -157,6 +158,8 @@ export default function DocsLayout() {
   const location = useLocation()
   const navigation = getNavigations(location.pathname)
 
+  const hasStickySubnav = navigation.subnav.length > 0
+
   return (
     <>
       <Grid>
@@ -165,8 +168,10 @@ export default function DocsLayout() {
           <MenuDocs submenu={navigation.sidebar} />
         </StickyAside>
         <Main>
-          <MainStickyMenu subnav={navigation.subnav} />
-          <Article>
+          {hasStickySubnav ? (
+            <MainStickyMenu subnav={navigation.subnav} />
+          ) : null}
+          <Article hasStickySubnav={hasStickySubnav}>
             <MDXProvider components={comps}>
               <Outlet />
             </MDXProvider>
@@ -223,5 +228,13 @@ const Article = styled('article', {
     padding: '0 6.2rem 10rem 6.2rem',
     maxWidth: '$document',
     margin: '0 auto',
+  },
+
+  variants: {
+    hasStickySubnav: {
+      false: {
+        paddingTop: 27,
+      },
+    },
   },
 })
