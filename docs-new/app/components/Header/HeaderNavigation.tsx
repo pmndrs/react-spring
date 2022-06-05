@@ -1,4 +1,4 @@
-import { House, Files /*Code,  Books*/ } from 'phosphor-react'
+import { House, Files, Code, Books } from 'phosphor-react'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import * as Tooltip from '@radix-ui/react-tooltip'
 
@@ -23,16 +23,16 @@ const MAIN_NAV: NavigationButtonProps[] = [
     href: '/docs',
     Icon: Files,
   },
-  // {
-  //   title: 'Tutorials',
-  //   href: '/tutorials',
-  //   Icon: Books,
-  // },
-  // {
-  //   title: 'Examples',
-  //   href: '/examples',
-  //   Icon: Code,
-  // },
+  {
+    title: 'Tutorials',
+    href: '/tutorials',
+    Icon: Books,
+  },
+  {
+    title: 'Examples',
+    href: '/examples',
+    Icon: Code,
+  },
 ]
 
 export const HeaderNavigation = ({

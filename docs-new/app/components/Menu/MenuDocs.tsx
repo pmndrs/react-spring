@@ -52,7 +52,7 @@ const renderSubMenu = (
   const isTitle = level === 0
 
   return (
-    <ListItem isTitle={isTitle} key={id}>
+    <ListItem key={id}>
       <Anchor
         to={href}
         title={isTitle}
@@ -100,25 +100,13 @@ const DocsList = styled('ul', {
   },
 })
 
-const ListItem = styled('li', {
-  variants: {
-    isTitle: {
-      true: {
-        '& + &': {
-          mt: '$15',
-        },
-      },
-    },
-  },
-})
+const ListItem = styled('li')
 
 const Anchor = styled(Link, {
   ...getFontStyles('$XS'),
 
-  '@media (hover: hover)': {
-    '&:hover': {
-      backgroundColor: '$red20',
-    },
+  hover: {
+    backgroundColor: '#ff6d6d33',
   },
 
   display: 'block',
@@ -137,7 +125,11 @@ const Anchor = styled(Link, {
     },
     active: {
       true: {
-        backgroundColor: '$red60',
+        backgroundColor: '#ff6d6d99',
+
+        hover: {
+          backgroundColor: '#ff6d6d99',
+        },
       },
     },
   },
