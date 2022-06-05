@@ -100,7 +100,8 @@ export const NAV_TILES: Tile[] = [
   {
     href: '/docs/guides',
     label: 'Guides & Tutorials',
-    description: 'Read our further in-depth guides and tutorials',
+    description:
+      'Read up on step-by-step tutorials for common use cases exploring our different hooks',
     comingSoon: true,
   },
   {

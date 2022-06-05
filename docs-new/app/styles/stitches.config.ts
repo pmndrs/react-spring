@@ -28,7 +28,10 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes } =
         green: '#88DFAB',
         codeBackground: '#f0f2f4',
         'red-outline': '$red40',
-        buttonGradient: 'linear-gradient(330deg, #fff59a 20%, #ff6d6d 100%)',
+        redYellowGradient100:
+          'linear-gradient(330deg, #fff59a 20%, #ff6d6d 100%)',
+        redYellowGradient40:
+          'linear-gradient(330deg, #fff59a66 20%, #ff6d6d66 100%)',
       },
       shadows: {
         'red-outline': 'var(--colors-red-outline)',

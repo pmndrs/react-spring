@@ -153,7 +153,7 @@ const NavAnchor = styled(Toolbar.Link, {
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative',
-  backgroundImage: '$buttonGradient',
+  backgroundImage: '$redYellowGradient100',
   borderRadius: '$r8',
 
   variants: {

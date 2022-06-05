@@ -104,7 +104,7 @@ const Head = styled(animated.header, {
   },
 
   // Give a good offset for the jump links
-  '& + aside + main h2::before': {
+  '& + aside + main > article > h2::before': {
     display: 'block',
     content: ' ',
     marginTop: '-48px',
