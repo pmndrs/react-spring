@@ -16,6 +16,7 @@ import { globalStyles } from './styles/global'
 
 import { SiteThemePicker } from './components/Site/SiteThemePicker'
 import { WidgetPlausible } from './components/Widgets/WidgetPlausible'
+import { SiteFooter } from './components/Site/SiteFooter'
 
 export const meta: MetaFunction = () => {
   return {
@@ -60,6 +61,7 @@ function Document({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <SiteFooter />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.env = ${JSON.stringify(data.ENV)}`,
