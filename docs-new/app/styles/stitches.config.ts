@@ -71,9 +71,9 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes } =
         serif: '',
       },
       fontWeights: {
-        light: '200',
-        default: '400',
-        bold: '600',
+        default: 400,
+        bold: 600,
+        semiblack: 700,
       },
       fontSizes: {
         XXL: '4.8rem',
@@ -204,6 +204,11 @@ const dark = createTheme('dark', {
     steel20: '#2b2b37',
     steel100: '#f0f2f4',
     'red-outline': '$red120',
+  },
+  fontWeights: {
+    default: 300,
+    bold: 500,
+    semiblack: 600,
   },
 })
 

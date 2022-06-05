@@ -39,7 +39,7 @@ const comps = {
         mb: 15,
 
         '@tabletUp': {
-          mt: 400,
+          mt: 40,
           mb: 20,
         },
       }}

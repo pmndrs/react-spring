@@ -120,6 +120,7 @@ const Anchor = styled(Link, {
         fontWeight: '$bold',
       },
       false: {
+        fontWeight: '$default',
         pl: '$20',
       },
     },

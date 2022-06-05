@@ -36,6 +36,6 @@ export const Anchor = ({ href, children, className }: AnchorProps) => {
 const AnchorElement = styled(Link, {
   fontSize: 'inherit',
   lineHeight: 'inherit',
-  fontWeight: 600,
+  fontWeight: '$bold',
   textDecoration: 'underline',
 })

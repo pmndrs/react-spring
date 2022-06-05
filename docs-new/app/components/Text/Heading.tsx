@@ -20,7 +20,7 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
     {
       tag = 'h1',
       fontStyle = '$S',
-      weight = 400,
+      weight = '$default',
       className,
       children,
       css,
@@ -45,4 +45,9 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
   }
 )
 
-const HeadingElement = styled('h1')
+const HeadingElement = styled('h1', {
+  a: {
+    textDecoration: 'none',
+    fontWeight: 'inherit',
+  },
+})

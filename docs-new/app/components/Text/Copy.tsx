@@ -30,4 +30,5 @@ export const Copy = forwardRef<HTMLHeadingElement, CopyProps>(
 
 const Text = styled('p', {
   margin: 0,
+  fontWeight: '$default',
 })
