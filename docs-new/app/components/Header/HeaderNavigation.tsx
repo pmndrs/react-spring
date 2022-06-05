@@ -71,8 +71,4 @@ const NavSeperator = styled(Toolbar.Separator, {
   background: '$steel40',
   margin: '0 $15',
   height: '2rem',
-
-  [`.${dark} &`]: {
-    background: '$steel100',
-  },
 })

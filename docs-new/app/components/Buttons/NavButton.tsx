@@ -103,6 +103,9 @@ export const NavigationButton = ({
       delayDuration={0}
       onOpenChange={handleToolTipChange}>
       <Tooltip.Trigger asChild>
+        {/**
+         * TODO: refactor to use `Link` component
+         */}
         <NavAnchor
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -119,12 +122,12 @@ export const NavigationButton = ({
           />
           <NavIconWrapper
             css={{
-              color: isRoute ? 'var(--colors-steel)' : 'unset',
+              color: isRoute ? 'var(--colors-steel100)' : 'unset',
               [`.${dark} &`]: {
-                color: isRoute ? 'var(--colors-grey)' : 'unset',
+                color: isRoute ? '#363645' : 'unset',
               },
             }}>
-            <Icon size={20} />
+            <Icon size={20} weight="light" />
             {showLabel ? <span>{title}</span> : null}
           </NavIconWrapper>
         </NavAnchor>

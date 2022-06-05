@@ -4,7 +4,7 @@ import { List } from 'phosphor-react'
 import { animated } from '@react-spring/web'
 import { Property } from '@stitches/react/types/css'
 
-import { styled } from '~/styles/stitches.config'
+import { dark, styled } from '~/styles/stitches.config'
 
 import { useAnimatedHeader } from '~/hooks/useAnimatedHeader'
 
@@ -89,6 +89,14 @@ const Head = styled(animated.header, {
 
   '@supports not (backdrop-filter: blur(10px))': {
     backgroundColor: 'rgba(250, 250, 250, 0.95)',
+  },
+
+  [`.${dark} &`]: {
+    backgroundColor: 'rgba(27, 26, 34, 0.8)',
+
+    '@supports not (backdrop-filter: blur(10px))': {
+      backgroundColor: 'rgba(27, 26, 34, 0.95)',
+    },
   },
 
   '@tabletUp': {

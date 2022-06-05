@@ -1,6 +1,6 @@
 import { animated } from '@react-spring/web'
 
-import { styled } from '~/styles/stitches.config'
+import { dark, styled } from '~/styles/stitches.config'
 
 import { useAnimatedHeader } from '~/hooks/useAnimatedHeader'
 
@@ -38,6 +38,10 @@ const StickyMenu = styled(animated.header, {
 
   '@tabletUp': {
     px: 62,
+  },
+
+  [`.${dark} &`]: {
+    backgroundColor: 'rgba(27, 26, 34, 0.8)',
   },
 
   variants: {

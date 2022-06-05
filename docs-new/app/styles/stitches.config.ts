@@ -202,6 +202,8 @@ const dark = createTheme('dark', {
     white: '#1B1A22',
     codeBackground: '#2b2b37',
     steel20: '#2b2b37',
+    steel100: '#f0f2f4',
+    'red-outline': '$red120',
   },
 })
 
