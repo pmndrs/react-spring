@@ -2,6 +2,7 @@ import { MetaFunction } from 'remix'
 import { CarouselQuotes } from '~/components/Carousels/CarouselQuotes'
 import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 import { Header } from '~/components/Header/Header'
+import { HeroHome } from '~/components/Heros/HeroHome'
 import { Copy } from '~/components/Text/Copy'
 import { Heading } from '~/components/Text/Heading'
 
@@ -19,8 +20,9 @@ export default function Index() {
   return (
     <>
       <Header addMarginToMain={false} position="fixed" alwaysAnimateHeader />
-      <main>
-        <article style={{ marginTop: '120px' }}>
+      <Main>
+        <article>
+          <HeroHome />
           <CarouselQuotes quotes={QUOTES} />
           <ExternalLinkGrid
             cols={3}
@@ -37,7 +39,7 @@ export default function Index() {
             smallTiles
           />
         </article>
-      </main>
+      </Main>
     </>
   )
 }
@@ -47,4 +49,9 @@ const ExternalLinkGrid = styled(NavigationGrid, {
   '@tabletUp': {
     mx: '$50',
   },
+})
+
+const Main = styled('main', {
+  width: '100%',
+  overflowX: 'hidden',
 })

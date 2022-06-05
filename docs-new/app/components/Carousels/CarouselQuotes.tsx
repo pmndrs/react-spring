@@ -32,7 +32,7 @@ export const CarouselQuotes = ({ quotes }: CarouselQuotesProps) => {
       </QuoteHeading>
       <QuotesContainer>
         {quotes.map(quote => (
-          <CarouselQuoteCard {...quote} />
+          <CarouselQuoteCard key={quote.handle} {...quote} />
         ))}
       </QuotesContainer>
     </QuotesSection>
@@ -103,13 +103,16 @@ const ExternalLinkIcon = styled('div', {
   position: 'absolute',
   top: 16,
   right: 20,
-  opacity: 0,
   height: 24,
   width: 24,
   background: 'url(/images/icons/ArrowSquareOutBlue.png)',
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
+
+  '@media (hover:hover)': {
+    opacity: 0,
+  },
 
   [`.${dark} &`]: {
     background: 'url(/images/icons/ArrowSquareOutRed.png)',
@@ -124,7 +127,7 @@ const ExternalLinkIcon = styled('div', {
 })
 
 const QuoteAnchor = styled(Anchor, {
-  width: '80vw',
+  flex: '1 0 80vw',
   textDecoration: 'none',
 
   '@tabletUp': {

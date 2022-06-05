@@ -3,8 +3,8 @@ import { useState, useRef, useCallback } from 'react'
 import { useIsomorphicLayoutEffect } from './useIsomorphicEffect'
 
 export interface DimesionsReadOnly {
-  readonly width: number
-  readonly height: number
+  readonly width?: number
+  readonly height?: number
 }
 
 /**
@@ -17,8 +17,8 @@ const useWindowSize = (
   cb?: (bounds: DimesionsReadOnly) => void
 ): DimesionsReadOnly => {
   const [bounds, setBounds] = useState<DimesionsReadOnly>({
-    width: 0,
-    height: 0,
+    width: undefined,
+    height: undefined,
   })
 
   // hold old dimensions in ref to avoid having to remake the callback below

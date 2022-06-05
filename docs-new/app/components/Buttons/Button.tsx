@@ -1,4 +1,6 @@
+import { css } from '@stitches/react'
 import { MouseEventHandler, ReactNode } from 'react'
+import { Link } from 'remix'
 import { styled } from '~/styles/stitches.config'
 
 interface ButtonProps {
@@ -7,6 +9,8 @@ interface ButtonProps {
   type?: 'button' | 'submit'
   onClick?: MouseEventHandler<HTMLButtonElement>
   disabled?: boolean
+  href?: string
+  variant?: 'regular' | 'large'
 }
 
 export const Button = ({
@@ -15,6 +19,8 @@ export const Button = ({
   type = 'button',
   onClick,
   disabled = false,
+  href,
+  variant = 'regular',
 }: ButtonProps) => {
   const handleClick: MouseEventHandler<HTMLButtonElement> = e => {
     if (onClick) {
@@ -22,18 +28,27 @@ export const Button = ({
     }
   }
 
+  if (href) {
+    return (
+      <StyledLink className={className} to={href} variant={variant}>
+        {children}
+      </StyledLink>
+    )
+  }
+
   return (
     <StyledButton
       className={className}
       type={type}
       onClick={handleClick}
-      disabled={disabled}>
+      disabled={disabled}
+      variant={variant}>
       {children}
     </StyledButton>
   )
 }
 
-const StyledButton = styled('button', {
+const sharedStyles = css({
   border: 'solid 1px $black',
   backgroundColor: 'transparent',
   borderRadius: '$r4',
@@ -42,6 +57,8 @@ const StyledButton = styled('button', {
   lineHeight: '$code',
   padding: '5px $10',
   cursor: 'pointer',
+  display: 'inline-flex',
+  alignItems: 'center',
 
   '@motion': {
     transition: 'border-color 200ms ease-out',
@@ -55,4 +72,18 @@ const StyledButton = styled('button', {
     pointerEvents: 'none',
     opacity: 0.5,
   },
+
+  variants: {
+    variant: {
+      regular: {},
+      large: {
+        p: '8px 9px 8px 12px',
+        borderRadius: '$r8',
+      },
+    },
+  },
 })
+
+const StyledLink = styled(Link, { ...sharedStyles })
+
+const StyledButton = styled('button', { ...sharedStyles })
