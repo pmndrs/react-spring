@@ -61,7 +61,7 @@ export const Logo = ({ large = false }: LogoProps) => {
         gradientTransform="matrix(.57850251 .81411613 -.8156806 .57739294 .405118 -.135316)"
         r="64.015025%">
         <stop offset="0" stopColor="#fff" stopOpacity=".904382" />
-        <stop offset="1" stopColor="var(--colors-red100)" />
+        <stop offset="1" stopColor="#ff6d6d" />
       </radialGradient>
 
       <g fill="none" fillRule="evenodd">
@@ -69,7 +69,7 @@ export const Logo = ({ large = false }: LogoProps) => {
           <circle
             cx="69.375"
             cy="69.375"
-            fill="var(--colors-white)"
+            fill="rgba(250,250,250,1)"
             r="69.375"
           />
           <path
