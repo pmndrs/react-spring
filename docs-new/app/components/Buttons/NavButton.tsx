@@ -85,14 +85,15 @@ export const NavigationButton = ({
       onClick={handleClick}
       href={href}
       variant={showLabel ? 'withLabel' : undefined}
+      active={isRoute}
       {...externalLinkProps}>
-      <NavAnchorPlainBackground
+      {/* <NavAnchorPlainBackground
         style={{
           scale: isRoute ? scale : animateInterpolation(scale),
           x: '-50%',
           y: '-50%',
         }}
-      />
+      /> */}
       <NavIconWrapper
         css={{
           color: isRoute ? 'var(--colors-steel100)' : 'unset',
@@ -108,7 +109,6 @@ export const NavigationButton = ({
 }
 
 const NavAnchor = styled('a', {
-  padding: '$15',
   height: '4.6rem',
   width: '4.6rem',
   color: '$steel100',
@@ -116,10 +116,40 @@ const NavAnchor = styled('a', {
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative',
-  backgroundImage: '$redYellowGradient100',
   borderRadius: '$r8',
+  p: 2,
+  backgroundClip: 'content-box',
+
+  '&:before': {
+    content: '',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: -1,
+    borderRadius: 'inherit',
+    opacity: 0,
+    background: '$redYellowGradient100',
+    transition: 'opacity 250ms ease-out',
+  },
 
   variants: {
+    active: {
+      true: {
+        background: '$redYellowGradient100',
+        backgroundClip: 'content-box',
+      },
+      false: {
+        backgroundColor: '$white',
+
+        hover: {
+          '&::before': {
+            opacity: 1,
+          },
+        },
+      },
+    },
     variant: {
       withLabel: {
         width: '100%',
@@ -129,22 +159,11 @@ const NavAnchor = styled('a', {
   },
 })
 
-const NavAnchorPlainBackground = styled(animated.span, {
-  display: 'block',
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  background: '$white',
-  zIndex: '$1',
-  borderRadius: '$r8',
-  width: '100%',
-  height: '100%',
-})
-
 const NavIconWrapper = styled('span', {
   position: 'relative',
   zIndex: '$2',
   display: 'flex',
+  m: '$15',
 
   '& > span': {
     ...getFontStyles('$XXS'),
