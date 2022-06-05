@@ -140,12 +140,13 @@ const PreviewContainer = styled('div', {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '$r8',
-    transition: 'background-color 400ms',
 
-    '@media (hover: hover)': {
-      '&:hover': {
-        backgroundColor: '$steel20',
-      },
+    '@motion': {
+      transition: 'background-color 400ms',
+    },
+
+    hover: {
+      backgroundColor: '$steel20',
     },
   },
 

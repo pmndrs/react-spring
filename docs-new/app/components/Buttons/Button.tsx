@@ -42,7 +42,10 @@ const StyledButton = styled('button', {
   lineHeight: '$code',
   padding: '5px $10',
   cursor: 'pointer',
-  transition: 'border-color 200ms ease-out',
+
+  '@motion': {
+    transition: 'border-color 200ms ease-out',
+  },
 
   hover: {
     borderColor: '$red100',

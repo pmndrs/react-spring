@@ -1,5 +1,4 @@
 import { styled } from '~/styles/stitches.config'
-import { Copy } from '../Text/Copy'
 
 export const SiteFooter = () => {
   return (

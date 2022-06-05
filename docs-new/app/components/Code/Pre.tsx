@@ -115,7 +115,9 @@ export const Pre = styled('pre', {
     borderRadius: '$r4',
     py: 2,
     px: 5,
-    transition: 'color 400ms, background-color 400ms, transform 400ms',
+    '@motion': {
+      transition: 'color 400ms, background-color 400ms, transform 400ms',
+    },
   },
 
   /**

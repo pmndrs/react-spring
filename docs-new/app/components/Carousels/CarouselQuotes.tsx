@@ -1,4 +1,6 @@
-import { styled } from '~/styles/stitches.config'
+import { ArrowSquareOut } from 'phosphor-react'
+import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
+import { dark, styled } from '~/styles/stitches.config'
 import { AspectRatio } from '../AspectRatio'
 import { Anchor } from '../Text/Anchor'
 
@@ -28,43 +30,42 @@ export const CarouselQuotes = ({ quotes }: CarouselQuotesProps) => {
       <QuoteHeading fontStyle="$M" tag="h2">
         Hear what our fans say
       </QuoteHeading>
-      <QuotesScrollContainer>
-        <QuotesContainer>
-          {quotes.map(quote => (
-            <CarouselQuoteCard {...quote} />
-          ))}
-        </QuotesContainer>
-      </QuotesScrollContainer>
+      <QuotesContainer>
+        {quotes.map(quote => (
+          <CarouselQuoteCard {...quote} />
+        ))}
+      </QuotesContainer>
     </QuotesSection>
   )
 }
 
-const QuotesSection = styled('section', {})
+const QuotesSection = styled('section', {
+  mb: '$10',
+
+  '@tabletUp': {
+    mb: '$30',
+  },
+})
 
 const QuoteHeading = styled(Heading, {
   mx: '$25',
-  mb: '$20',
 
   '@tabletUp': {
     mx: '$50',
   },
 })
 
-const QuotesScrollContainer = styled('div', {
-  width: '100%',
-  overflow: 'auto',
-})
-
 const QuotesContainer = styled('div', {
   display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'stretch',
-  gap: '4rem',
-  p: 2,
+  gap: '$20',
+  alignItems: 'flex-start',
+  overflow: 'auto',
+  pt: '$20',
+  pb: '$10',
+  px: '$25',
 
   '@tabletUp': {
-    my: '$20',
-    mx: '$50',
+    px: '$50',
   },
 })
 
@@ -77,85 +78,81 @@ const CarouselQuoteCard = ({
   job,
 }: Quote) => {
   return (
-    <QuoteCard>
-      <QuoteCardInner>
-        <Copy tag="blockquote" fontStyle="$XS">
-          {text}
-        </Copy>
-        <QuoteeHandle href={tweetUrl}>
+    <QuoteAnchor href={tweetUrl}>
+      <QuoteCard>
+        <ExternalLinkIcon />
+        <QuoteeHandle>
           <QuoteImage width={1} height={1}>
             <img src={`/images/quotee/${img}`} alt={name} />
           </QuoteImage>
-          <QuoteeName tag="figcaption" fontStyle="$code" weight={600}>
+          <QuoteeName tag="figcaption" fontStyle="$code" weight={'$default'}>
             {handle}
             <br />
             <span>{job}</span>
           </QuoteeName>
         </QuoteeHandle>
-      </QuoteCardInner>
-    </QuoteCard>
+        <Copy tag="blockquote" fontStyle="$XS">
+          {text}
+        </Copy>
+      </QuoteCard>
+    </QuoteAnchor>
   )
 }
 
-const QuoteCard = styled('figure', {
-  position: 'relative',
-  width: '80vw',
-  margin: 0,
-  borderRadius: '$r8',
+const ExternalLinkIcon = styled('div', {
+  position: 'absolute',
+  top: 16,
+  right: 20,
+  opacity: 0,
+  height: 24,
+  width: 24,
+  background: 'url(/images/icons/ArrowSquareOutBlue.png)',
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
 
-  flex: '1 0 80vw',
-  zIndex: 0,
-
-  boxShadow: '0px 3px 8px 2px rgba(0, 0, 0, 10%)',
-
-  '&:before': {
-    content: '',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    zIndex: -1,
-    m: -2,
-    borderRadius: 'inherit',
-    background: 'linear-gradient(330deg, #fff59a 20%, #ff6d6d 100%)',
+  [`.${dark} &`]: {
+    background: 'url(/images/icons/ArrowSquareOutRed.png)',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
   },
 
-  '@tabletUp': {
-    width: '42rem',
-    flex: '1 0 42rem',
+  '@motion': {
+    transition: 'opacity 250ms ease-out',
   },
 })
 
-const QuoteCardInner = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  padding: '$30',
+const QuoteAnchor = styled(Anchor, {
+  width: '80vw',
+  textDecoration: 'none',
 
-  background: '$white',
-  backgroundClip: 'padding-box',
+  '@tabletUp': {
+    flex: '1 0 388px',
+  },
 
-  border: 'solid 5px transparent',
-  borderRadius: 'inherit',
+  hover: {
+    [`& ${ExternalLinkIcon}`]: {
+      opacity: 1,
+    },
+  },
+})
 
-  width: '100%',
-  height: '100%',
+const QuoteCard = styled('figure', {
+  backgroundColor: '$codeBackground',
+  m: 0,
+  p: '$20',
+  borderRadius: '$r8',
+  position: 'relative',
 })
 
 const QuoteImage = styled(AspectRatio, {
   borderRadius: '50%',
-  width: '5rem',
+  width: '4.8rem',
   mr: '$10',
-
-  '@tabletUp': {
-    width: '6rem',
-    mr: '$20',
-  },
 })
 
-const QuoteeHandle = styled(Anchor, {
-  mt: '$20',
+const QuoteeHandle = styled('div', {
   mb: '$10',
   display: 'flex',
   alignItems: 'center',
@@ -164,6 +161,6 @@ const QuoteeHandle = styled(Anchor, {
 
 const QuoteeName = styled(Heading, {
   '& > span': {
-    fontWeight: '$default',
+    color: '$steel60',
   },
 })

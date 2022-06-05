@@ -103,7 +103,10 @@ const NavAnchor = styled('a', {
     borderRadius: 'inherit',
     opacity: 0,
     background: '$redYellowGradient100',
-    transition: 'opacity 250ms ease-out',
+
+    '@motion': {
+      transition: 'opacity 250ms ease-out',
+    },
   },
 
   variants: {

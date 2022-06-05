@@ -154,9 +154,12 @@ const BackgroundTile = styled('span', {
   position: 'absolute',
   inset: 0,
   opacity: 0,
-  transition: 'opacity 250ms ease-out',
   zIndex: '-1',
   background: '$redYellowGradient40',
+
+  '@motion': {
+    transition: 'opacity 250ms ease-out',
+  },
 })
 
 const Tile = styled('span', {
@@ -168,7 +171,10 @@ const Tile = styled('span', {
   backgroundColor: '$codeBackground',
   p: '$15 $20',
   overflow: 'hidden',
-  transition: 'background-color 250ms ease-out',
+
+  '@motion': {
+    transition: 'background-color 250ms ease-out',
+  },
 
   variants: {
     variant: {

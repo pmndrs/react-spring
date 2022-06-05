@@ -111,7 +111,7 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes } =
       largeDesktopUp: '(min-width: 1680px)',
       dark: '(prefers-color-scheme: dark)',
       light: '(prefers-color-scheme: light)',
-      motion: '(prefers-reduced-motion)',
+      motion: '(prefers-reduced-motion: no-preference)',
       documentUp: '(min-width: 1200px)',
     },
     utils: {
