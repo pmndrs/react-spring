@@ -4,7 +4,7 @@ import { useIsomorphicLayoutEffect } from './useIsomorphicEffect'
 
 type SCROLL_UP = 'up'
 type SCROLL_DOWN = 'down'
-type SCROLL_DIR = SCROLL_DOWN | SCROLL_UP
+export type SCROLL_DIR = SCROLL_DOWN | SCROLL_UP
 
 type UseWindowScrolling = (args: {
   threshold?: number | [down: number, up: number]

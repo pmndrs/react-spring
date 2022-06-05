@@ -77,7 +77,7 @@ const sharedStyles = css({
     variant: {
       regular: {},
       large: {
-        p: '8px 9px 8px 12px',
+        p: '11px 9px 11px 12px',
         borderRadius: '$r8',
       },
     },

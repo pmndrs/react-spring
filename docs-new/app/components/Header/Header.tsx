@@ -48,7 +48,7 @@ export const Header = ({
   const { sidebar, subnav } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const [styles, isStuck] = useAnimatedHeader({
+  const [styles, isStuck, scrollTop, direction] = useAnimatedHeader({
     isHeader: true,
     alwaysAnimate: alwaysAnimateHeader,
     heights: getHeaderHeights(Boolean(subnav)),
@@ -64,6 +64,7 @@ export const Header = ({
       hasSubNav={Boolean(subnav)}
       isStuck={isStuck}
       style={{ ...styles, position: position }}
+      hasScrolledDown={scrollTop > 20 && direction === 'up'}
       transparentBackground={transparentBackground}
       addMarginToMain={addMarginToMain}>
       <FlexContainer>
@@ -89,20 +90,10 @@ export const Header = ({
 const Head = styled(animated.header, {
   width: '100%',
   py: '$15',
-  backgroundColor: 'rgba(250, 250, 250, 0.80)',
-  backdropFilter: 'blur(5px)',
   zIndex: '$1',
 
-  '@supports not (backdrop-filter: blur(10px))': {
-    backgroundColor: 'rgba(250, 250, 250, 0.95)',
-  },
-
-  [`.${dark} &`]: {
-    backgroundColor: 'rgba(27, 26, 34, 0.8)',
-
-    '@supports not (backdrop-filter: blur(10px))': {
-      backgroundColor: 'rgba(27, 26, 34, 0.95)',
-    },
+  '@motion': {
+    transition: 'background-color 400ms ease-out',
   },
 
   '@tabletUp': {
@@ -125,6 +116,25 @@ const Head = styled(animated.header, {
   },
 
   variants: {
+    hasScrolledDown: {
+      true: {
+        backgroundColor: 'rgba(250, 250, 250, 0.80)',
+        backdropFilter: 'blur(5px)',
+
+        '@supports not (backdrop-filter: blur(10px))': {
+          backgroundColor: 'rgba(250, 250, 250, 0.95)',
+        },
+
+        [`.${dark} &`]: {
+          backgroundColor: 'rgba(27, 26, 34, 0.8)',
+
+          '@supports not (backdrop-filter: blur(10px))': {
+            backgroundColor: 'rgba(27, 26, 34, 0.95)',
+          },
+        },
+      },
+      false: {},
+    },
     transparentBackground: {
       true: {
         backgroundColor: 'transparent',
