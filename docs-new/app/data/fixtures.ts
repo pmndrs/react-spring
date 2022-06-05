@@ -1,3 +1,4 @@
+import { DiscordLogo, GithubLogo, TwitterLogo } from 'phosphor-react'
 import type { Quote } from '~/components/Carousels/CarouselQuotes'
 import { Tile } from '~/components/Grids/NavigationGrid'
 
@@ -119,18 +120,21 @@ export const COMMUNITY_TILES: Tile[] = [
     description: 'Ask questions, share tips & tricks',
     href: 'https://discord.gg/AXfNsGx64f',
     isExternal: true,
+    Icon: DiscordLogo,
   },
   {
     label: 'Github',
     description: 'Report issues, submit ideas and contribute',
     isExternal: true,
     href: 'https://www.github.com/pmndrs/react-spring',
+    Icon: GithubLogo,
   },
   {
     label: 'Twitter',
     description: 'Keep up to date with all things Poimandres',
     isExternal: true,
     href: 'https://www.twitter.com/pmndrs',
+    Icon: TwitterLogo,
   },
 ]
 
@@ -140,6 +144,7 @@ export const TOOL_TILES = [
     description: 'A React renderer for Three.js',
     href: 'https://www.github.com/pmndrs/react-three-fiber',
     isExternal: true,
+    Icon: '⚡️',
   },
   {
     label: '@use-gesture',
@@ -147,17 +152,20 @@ export const TOOL_TILES = [
       'Bread n butter utility for component-tied mouse/touch gestures in React and Vanilla Javascript.',
     href: 'https://github.com/pmndrs/use-gesture',
     isExternal: true,
+    Icon: '🤙',
   },
   {
     label: 'leva',
     description: 'React-first components GUI',
     href: 'https://www.github.com/pmndrs/leva',
     isExternal: true,
+    Icon: '🌋',
   },
   {
     label: 'zustand',
     description: 'Bear necessities for state management in React',
     href: 'https://www.github.com/pmndrs/zustand',
     isExternal: true,
+    Icon: '🐻',
   },
 ]

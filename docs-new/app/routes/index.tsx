@@ -57,12 +57,14 @@ export default function Index() {
             tiles={COMMUNITY_TILES}
             subheading={'Join our community'}
             heading={'Share thoughts and join in with active discussions'}
+            smallTiles
           />
           <NavigationGrid
-            cols={3}
+            cols={4}
             tiles={TOOL_TILES}
             subheading={'Check out the ecosystem'}
             heading={'See more fantastic tools from Poimandres'}
+            smallTiles
           />
         </article>
       </main>

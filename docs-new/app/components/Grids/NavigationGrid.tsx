@@ -1,7 +1,12 @@
+import { IconProps } from 'phosphor-react'
+import { ForwardRefExoticComponent, RefAttributes } from 'react'
 import { Link } from 'remix'
-import { styled } from '~/styles/stitches.config'
+import { isStringGuard } from '~/helpers/guards'
+import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
+import { dark, styled } from '~/styles/stitches.config'
 import { Button } from '../Buttons/Button'
 import { Copy } from '../Text/Copy'
+import { GradiantHeader } from '../Text/GradientHeader'
 import { Heading } from '../Text/Heading'
 
 export interface Tile {
@@ -10,6 +15,9 @@ export interface Tile {
   description: string
   comingSoon?: boolean
   isExternal?: boolean
+  Icon?:
+    | ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+    | string
 }
 
 interface NavigationGridProps {
@@ -17,6 +25,7 @@ interface NavigationGridProps {
   cols?: number
   subheading?: string
   heading?: string
+  smallTiles?: boolean
 }
 
 export const NavigationGrid = ({
@@ -24,19 +33,36 @@ export const NavigationGrid = ({
   cols = 2,
   subheading,
   heading,
+  smallTiles = false,
 }: NavigationGridProps) => {
   return (
     <NavSection>
-      {subheading ? <Heading>{subheading}</Heading> : null}
-      {heading ? <Heading>{heading}</Heading> : null}
+      {subheading ? (
+        <GradiantHeader fontStyle="$XXS" tag="h2" weight="$semiblack">
+          {subheading}
+        </GradiantHeader>
+      ) : null}
+      {heading ? (
+        <Heading fontStyle="$M" tag="h3">
+          {heading}
+        </Heading>
+      ) : null}
       <Grid
         css={{
-          '@desktopUp': {
-            gridTemplateColumns: `repeat(${cols}, 1fr)`,
+          [smallTiles ? '@tabletUp' : '@desktopUp']: {
+            gridTemplateColumns: `repeat(${cols}, ${
+              smallTiles ? 'minmax(100px, 238px)' : '1fr'
+            })`,
+            gridColumnGap: '$40',
+            gridRowGap: '$40',
           },
         }}>
         {tiles.map(tile => (
-          <NavigationItem key={tile.label} {...tile} />
+          <NavigationItem
+            key={tile.label}
+            variant={smallTiles ? 'small' : 'large'}
+            {...tile}
+          />
         ))}
       </Grid>
     </NavSection>
@@ -45,22 +71,31 @@ export const NavigationGrid = ({
 
 const NavSection = styled('section', {
   my: '$20',
+  mx: '$25',
+
+  '& + &': {
+    mt: '$40',
+  },
 
   '@desktopUp': {
     my: '$40',
+    mx: '$50',
+
+    '& + &': {
+      mt: '$80',
+    },
   },
 })
 
 const Grid = styled('div', {
   display: 'grid',
   gridRowGap: '$20',
-
-  '@desktopUp': {
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gridColumnGap: '$40',
-    gridRowGap: '$40',
-  },
+  mt: '$20',
 })
+
+interface NavigationItemProps extends Tile {
+  variant: 'small' | 'large'
+}
 
 const NavigationItem = ({
   label,
@@ -68,19 +103,32 @@ const NavigationItem = ({
   description,
   comingSoon = false,
   isExternal = false,
-}: Tile) => {
+  variant = 'large',
+  Icon,
+}: NavigationItemProps) => {
   const canHover = Boolean(!comingSoon)
 
+  const isDarkMode = useIsDarkTheme()
+
   const renderTile = () => (
-    <Tile canHover={canHover}>
+    <Tile variant={variant} canHover={canHover}>
       <BackgroundTile />
+      {Icon && isStringGuard(Icon) ? (
+        <IconWrapper isString>{Icon}</IconWrapper>
+      ) : Icon && !isStringGuard(Icon) ? (
+        <IconWrapper>
+          <Icon size={32} weight={isDarkMode ? 'light' : 'regular'} />
+        </IconWrapper>
+      ) : null}
       <Heading tag="h2" fontStyle="$S" weight="$semiblack">
         {label}
       </Heading>
       <TileCopy>{description}</TileCopy>
-      <TileButton disabled={comingSoon}>
-        {comingSoon ? <span>Coming soon!</span> : <span>Read more</span>}
-      </TileButton>
+      {variant === 'large' ? (
+        <TileButton disabled={comingSoon}>
+          {comingSoon ? <span>Coming soon!</span> : <span>Read more</span>}
+        </TileButton>
+      ) : null}
     </Tile>
   )
 
@@ -105,10 +153,10 @@ const BackgroundTile = styled('span', {
   display: 'block',
   position: 'absolute',
   inset: 0,
-  background: '$redYellowGradient40',
   opacity: 0,
   transition: 'opacity 250ms ease-out',
   zIndex: '-1',
+  background: '$redYellowGradient40',
 })
 
 const Tile = styled('span', {
@@ -123,6 +171,12 @@ const Tile = styled('span', {
   transition: 'background-color 250ms ease-out',
 
   variants: {
+    variant: {
+      small: {
+        maxWidth: 238,
+      },
+      large: {},
+    },
     canHover: {
       true: {
         hover: {
@@ -136,6 +190,19 @@ const Tile = styled('span', {
             borderColor: '$red100',
           },
         },
+      },
+    },
+  },
+})
+
+const IconWrapper = styled('span', {
+  display: 'block',
+  mb: '$10',
+
+  variants: {
+    isString: {
+      true: {
+        fontSize: '$S',
       },
     },
   },

@@ -32,6 +32,10 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes } =
           'linear-gradient(330deg, #fff59a 20%, #ff6d6d 100%)',
         redYellowGradient40:
           'linear-gradient(330deg, #fff59a66 20%, #ff6d6d66 100%)',
+        blueGreenGradient100:
+          'linear-gradient(150deg, #569AFF 10.21%, #88DFAB 84.57%)',
+        blueGreenGradient40:
+          'linear-gradient(150deg, #569AFF66 10.21%, #88DFAB66 84.57%)',
       },
       shadows: {
         'red-outline': 'var(--colors-red-outline)',

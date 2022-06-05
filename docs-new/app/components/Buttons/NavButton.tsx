@@ -18,6 +18,7 @@ import { IconProps } from 'phosphor-react'
 
 import { dark, styled } from '~/styles/stitches.config'
 import { getFontStyles } from '~/styles/fontStyles'
+import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
 
 export interface NavigationButtonProps {
   title: string
@@ -40,25 +41,6 @@ export const NavigationButton = ({
 
   const isRoute = (href !== '/' && pathname.includes(href)) || pathname === href
 
-  const [{ scale }, api] = useSpring(
-    () => ({
-      scale: 0,
-    }),
-    []
-  )
-
-  const handleMouseEnter = () => {
-    api.start({
-      scale: isRoute || window.innerWidth < 768 ? 0 : 1,
-    })
-  }
-
-  const handleMouseLeave = () => {
-    api.start({
-      scale: 0,
-    })
-  }
-
   const handleClick: MouseEventHandler<HTMLAnchorElement> = e => {
     if (onClick) {
       onClick(e)
@@ -72,28 +54,18 @@ export const NavigationButton = ({
       }
     : {}
 
-  const animateInterpolation = (val: SpringValue<number>) =>
-    val.to({ range: [0, 1], output: [1.05, 0.8] })
+  const isDarkMode = useIsDarkTheme()
 
   /**
    * TODO: refactor to use `Link` component
    */
   return (
     <NavAnchor
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       href={href}
       variant={showLabel ? 'withLabel' : undefined}
       active={isRoute}
       {...externalLinkProps}>
-      {/* <NavAnchorPlainBackground
-        style={{
-          scale: isRoute ? scale : animateInterpolation(scale),
-          x: '-50%',
-          y: '-50%',
-        }}
-      /> */}
       <NavIconWrapper
         css={{
           color: isRoute ? 'var(--colors-steel100)' : 'unset',
@@ -101,7 +73,7 @@ export const NavigationButton = ({
             color: isRoute ? '#363645' : 'unset',
           },
         }}>
-        <Icon size={20} weight="light" />
+        <Icon size={20} weight={isDarkMode ? 'light' : 'regular'} />
         {showLabel ? <span>{title}</span> : null}
       </NavIconWrapper>
     </NavAnchor>
