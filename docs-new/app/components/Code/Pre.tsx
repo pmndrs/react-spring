@@ -15,7 +15,7 @@ export const Pre = styled('pre', {
   $$literal: '#fffac2',
   $$falsy: '#e52e8d',
   backgroundColor: '$codeBackground',
-  color: '$codeText',
+  color: '$black',
   m: 0,
 
   [`.${dark} &`]: {
@@ -29,8 +29,6 @@ export const Pre = styled('pre', {
     $$keyword: '#add7ff',
     $$literal: '#fffac2',
     $$falsy: '#f087bd',
-    backgroundColor: '$codeText',
-    color: '#fafafa',
   },
 
   boxSizing: 'border-box',
@@ -109,30 +107,22 @@ export const Pre = styled('pre', {
       opacity: 0.8,
     },
 
+  /**
+   * TODO: add color changes
+   */
   '.highlight-word': {
     display: 'inline-block',
-    color: '$red100',
-    backgroundColor: '$red20',
     borderRadius: '$r4',
     py: 2,
     px: 5,
     transition: 'color 400ms, background-color 400ms, transform 400ms',
-
-    [`.${dark} &`]: {
-      color: '$green100',
-      backgroundColor: '$green20',
-    },
   },
 
+  /**
+   * TODO: add color changes
+   */
   '.highlight-word.on': {
-    color: '$red120',
-    backgroundColor: '$red40',
     transform: 'scale(1.1)',
-
-    [`.${dark} &`]: {
-      color: '$green120',
-      backgroundColor: '$green40',
-    },
   },
 
   variants: {

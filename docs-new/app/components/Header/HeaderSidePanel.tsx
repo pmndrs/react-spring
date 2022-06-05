@@ -137,7 +137,7 @@ const MainNavigation = styled(HeaderNavigation, {
   variants: {
     isDocsSection: {
       true: {
-        borderBottom: 'solid 1px $grey',
+        borderBottom: 'solid 1px $steel20',
       },
       false: {
         flexDirection: 'column',
@@ -159,7 +159,7 @@ const SubNavContainer = styled(Toolbar.Root, {
     isDocsSection: {
       true: {
         alignItems: 'center',
-        borderTop: 'solid 1px $grey',
+        borderTop: 'solid 1px $steel20',
       },
       false: {
         alignItems: 'flex-start',

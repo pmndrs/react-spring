@@ -3,9 +3,10 @@ import { SandpackRunner } from '@codesandbox/sandpack-react'
 import * as Accordion from '@radix-ui/react-accordion'
 import { animated, useSpring } from '@react-spring/web'
 
-import { styled } from '~/styles/stitches.config'
+import { dark, styled } from '~/styles/stitches.config'
 
 import { Pre } from './Pre'
+import { Button } from '../Buttons/Button'
 
 interface LivePreviewProps {
   code: string
@@ -83,9 +84,11 @@ export const LivePreview = ({ code, preProps }: LivePreviewProps) => {
         onValueChange={handleValueChange}>
         <Accordion.Item value="code">
           <AccordionHeader>
-            <AccordionTrigger>
-              {value === '' ? 'Show Code' : 'Hide Code'}
-            </AccordionTrigger>
+            <Accordion.Trigger asChild>
+              <AccordionTrigger>
+                {value === '' ? 'Show Code' : 'Hide Code'}
+              </AccordionTrigger>
+            </Accordion.Trigger>
           </AccordionHeader>
           <AccordionContent style={styles} forceMount>
             <Pre ref={preRef} {...preProps} />
@@ -126,6 +129,7 @@ const PreviewContainer = styled('div', {
 
   '& .preview__button': {
     border: 'none',
+    color: '$black',
     backgroundColor: '$codeBackground',
     cursor: 'pointer',
     margin: 0,
@@ -145,9 +149,15 @@ const PreviewContainer = styled('div', {
     },
   },
 
+  [`.${dark} &`]: {
+    '.preview__button.sp-csb-icon-light': {
+      color: '$white',
+    },
+  },
+
   '& .preview__iframe': {
     width: '100%',
-    border: 'solid 1px $grey',
+    border: 'solid 1px $steel20',
     borderRadius: '$r8',
     height: 'inherit !important',
   },
@@ -160,15 +170,8 @@ const AccordionHeader = styled(Accordion.Header, {
   justifyContent: 'flex-end',
 })
 
-const AccordionTrigger = styled(Accordion.Trigger, {
-  border: 'solid 1px $codeText',
-  backgroundColor: 'transparent',
-  borderRadius: '$r4',
+const AccordionTrigger = styled(Button, {
   fontFamily: '$mono',
-  fontSize: '$XXS',
-  lineHeight: '$code',
-  padding: '5px $10',
-  cursor: 'pointer',
 })
 
 const AccordionContent = styled(animated(Accordion.Content), {
