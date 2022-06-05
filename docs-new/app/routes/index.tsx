@@ -52,14 +52,14 @@ export default function Index() {
             </p>
           </section>
           <CarouselQuotes quotes={QUOTES} />
-          <NavigationGrid
+          <ExternalLinkGrid
             cols={3}
             tiles={COMMUNITY_TILES}
             subheading={'Join our community'}
             heading={'Share thoughts and join in with active discussions'}
             smallTiles
           />
-          <NavigationGrid
+          <ExternalLinkGrid
             cols={4}
             tiles={TOOL_TILES}
             subheading={'Check out the ecosystem'}
@@ -84,4 +84,11 @@ const StraplineHeading = styled(Heading, {
 
 const StraplineCopy = styled(Copy, {
   fontWeight: '400',
+})
+
+const ExternalLinkGrid = styled(NavigationGrid, {
+  mx: '$25',
+  '@tabletUp': {
+    mx: '$50',
+  },
 })

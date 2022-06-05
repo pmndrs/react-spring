@@ -26,6 +26,7 @@ interface NavigationGridProps {
   subheading?: string
   heading?: string
   smallTiles?: boolean
+  className?: string
 }
 
 export const NavigationGrid = ({
@@ -34,9 +35,10 @@ export const NavigationGrid = ({
   subheading,
   heading,
   smallTiles = false,
+  className,
 }: NavigationGridProps) => {
   return (
-    <NavSection>
+    <NavSection className={className}>
       {subheading ? (
         <GradiantHeader fontStyle="$XXS" tag="h2" weight="$semiblack">
           {subheading}
@@ -71,7 +73,6 @@ export const NavigationGrid = ({
 
 const NavSection = styled('section', {
   my: '$20',
-  mx: '$25',
 
   '& + &': {
     mt: '$40',
@@ -79,7 +80,6 @@ const NavSection = styled('section', {
 
   '@desktopUp': {
     my: '$40',
-    mx: '$50',
 
     '& + &': {
       mt: '$80',
