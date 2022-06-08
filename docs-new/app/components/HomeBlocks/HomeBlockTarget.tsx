@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { animated, useTransition } from '@react-spring/web'
+import { animated, config, useTransition } from '@react-spring/web'
 
 import { styled } from '~/styles/stitches.config'
 
@@ -7,6 +7,7 @@ import { Pre } from '../Code/Pre'
 
 import { HomeBlockCopy } from './HomeBlockCopy'
 import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
+import { Section } from './HomeBlockSection'
 
 const webHtml = /* html */ `<div data-line="1" class="highlight-line" data-highlighted="true"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/web'</span>
 </div><div data-line="2" class="highlight-line" data-highlighted="false">
@@ -91,7 +92,7 @@ const zdogHtml = /* html */ `<div data-line="1" class="highlight-line" data-high
 const dataFixtures = [webHtml, nativeHtml, threeHtml, konvaHtml, zdogHtml]
 
 export const HomeBlockTarget = () => {
-  const [index, setIndex] = useState(4)
+  const [index, setIndex] = useState(0)
 
   const transition = useTransition(index, {
     from: {
@@ -102,6 +103,10 @@ export const HomeBlockTarget = () => {
     },
     leave: {
       opacity: 0,
+    },
+    config: {
+      duration: 800,
+      precision: 0.0001,
     },
     exitBeforeEnter: true,
   })
@@ -114,7 +119,7 @@ export const HomeBlockTarget = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [index])
 
   return (
     <Section>
@@ -150,20 +155,6 @@ export const HomeBlockTarget = () => {
     </Section>
   )
 }
-
-const Section = styled('section', {
-  px: '$25',
-
-  '@tabletUp': {
-    px: '$50',
-    display: 'flex',
-    gap: '$110',
-
-    '& > *': {
-      flex: '1 0 calc(50% - 5.5rem)',
-    },
-  },
-})
 
 const List = styled('ul', {
   my: 8,

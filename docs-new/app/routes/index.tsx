@@ -3,6 +3,8 @@ import { CarouselQuotes } from '~/components/Carousels/CarouselQuotes'
 import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 import { Header } from '~/components/Header/Header'
 import { HeroHome } from '~/components/Heros/HeroHome'
+import { HomeBlockImperative } from '~/components/HomeBlocks/HomeBlockImperative'
+import { HomeBlockSSR } from '~/components/HomeBlocks/HomeBlockSSR'
 import { HomeBlockTarget } from '~/components/HomeBlocks/HomeBlockTarget'
 
 import { COMMUNITY_TILES, NAV_TILES, QUOTES, TOOL_TILES } from '~/data/fixtures'
@@ -26,7 +28,11 @@ export default function Index() {
           </MaxWrapper>
           <CarouselQuotes quotes={QUOTES} />
           <MaxWrapper>
-            <HomeBlockTarget />
+            <HomeBlocks>
+              <HomeBlockTarget />
+              <HomeBlockImperative />
+              <HomeBlockSSR />
+            </HomeBlocks>
             <ExternalLinkGrid
               cols={3}
               tiles={COMMUNITY_TILES}
@@ -63,4 +69,13 @@ const Main = styled('main', {
 const MaxWrapper = styled('div', {
   maxWidth: '$largeDoc',
   mx: 'auto',
+})
+
+const HomeBlocks = styled('div', {
+  my: '$40',
+
+  '@tabletUp': {
+    mt: '$100',
+    mb: '$80',
+  },
 })

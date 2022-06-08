@@ -4,15 +4,22 @@ import { Pre } from './Pre'
 interface CodeProps {
   id?: string
   code?: string
-  isLive: boolean
-  showLineNumbers: boolean
-  ['data-showing-lines']: boolean
-  children: any
+  isLive?: boolean
+  showLineNumbers?: boolean
+  ['data-showing-lines']?: boolean
+  showCode?: boolean
+  children?: any
 }
 
-export const Code = ({ isLive, code, ...restProps }: CodeProps) => {
+export const Code = ({ isLive, code, showCode, ...restProps }: CodeProps) => {
   if (isLive) {
-    return <LivePreview code={code ?? ''} preProps={{ ...restProps }} />
+    return (
+      <LivePreview
+        code={code ?? ''}
+        showCode={showCode}
+        preProps={{ ...restProps }}
+      />
+    )
   } else {
     return <Pre {...restProps} />
   }

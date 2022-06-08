@@ -12,22 +12,23 @@ interface LivePreviewProps {
   code: string
   preProps: {
     id?: string
-    showLineNumbers: boolean
-    ['data-showing-lines']: boolean
+    showLineNumbers?: boolean
+    ['data-showing-lines']?: boolean
   }
+  showCode?: boolean
 }
 
-export const LivePreview = ({ code, preProps }: LivePreviewProps) => {
+export const LivePreview = ({
+  code,
+  showCode = true,
+  preProps,
+}: LivePreviewProps) => {
   const [value, setValue] = useState('')
   const preRef = useRef<HTMLPreElement>(null!)
 
   const template = `
-    import { useSpring, animated } from '@react-spring/web'
     import '/index.css'
-
-    export default function(){
-      ${code}
-    }
+    ${code}
   `
 
   const handleValueChange = (value: string) => setValue(value)
@@ -57,6 +58,19 @@ export const LivePreview = ({ code, preProps }: LivePreviewProps) => {
                             align-items: center;
                             margin: 0 25px;
                         }
+
+                        .spring-box {
+                          width: 80px;
+                          height: 80px;
+                          background-color: #ff6d6d;
+                          border-radius: 16px;
+                          font-family: Helvetica;
+                          font-size: 14px;
+                          display: flex;
+                          justify-content: center;
+                          align-items: center;
+                          color: #1B1A22;
+                        }
                     `,
             },
           },
@@ -77,24 +91,26 @@ export const LivePreview = ({ code, preProps }: LivePreviewProps) => {
           },
         }}
       />
-      <Accordion.Root
-        type="single"
-        collapsible
-        value={value}
-        onValueChange={handleValueChange}>
-        <Accordion.Item value="code">
-          <AccordionHeader>
-            <Accordion.Trigger asChild>
-              <AccordionTrigger>
-                {value === '' ? 'Show Code' : 'Hide Code'}
-              </AccordionTrigger>
-            </Accordion.Trigger>
-          </AccordionHeader>
-          <AccordionContent style={styles} forceMount>
-            <Pre ref={preRef} {...preProps} />
-          </AccordionContent>
-        </Accordion.Item>
-      </Accordion.Root>
+      {showCode ? (
+        <Accordion.Root
+          type="single"
+          collapsible
+          value={value}
+          onValueChange={handleValueChange}>
+          <Accordion.Item value="code">
+            <AccordionHeader>
+              <Accordion.Trigger asChild>
+                <AccordionTrigger>
+                  {value === '' ? 'Show Code' : 'Hide Code'}
+                </AccordionTrigger>
+              </Accordion.Trigger>
+            </AccordionHeader>
+            <AccordionContent style={styles} forceMount>
+              <Pre ref={preRef} {...preProps} />
+            </AccordionContent>
+          </Accordion.Item>
+        </Accordion.Root>
+      ) : null}
     </PreviewContainer>
   )
 }

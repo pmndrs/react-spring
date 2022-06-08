@@ -216,21 +216,25 @@ function Scrolling() {
 ## Live Preview
 
 ```jsx live=true
-const styles = useSpring({
-  loop: { reverse: true },
-  from: { x: 0 },
-  to: { x: 100 },
-})
+import { useSpring, animated } from '@react-spring/web'
 
-return (
-  <animated.div
-    style={{
-      width: 80,
-      height: 80,
-      backgroundColor: '#ff6d6d',
-      borderRadius: 16,
-      ...styles,
-    }}
-  />
-)
+export default function () {
+  const styles = useSpring({
+    loop: { reverse: true },
+    from: { x: 0 },
+    to: { x: 100 },
+  })
+
+  return (
+    <animated.div
+      style={{
+        width: 80,
+        height: 80,
+        backgroundColor: '#ff6d6d',
+        borderRadius: 16,
+        ...styles,
+      }}
+    />
+  )
+}
 ```
