@@ -1,4 +1,7 @@
+import { styled } from '~/styles/stitches.config'
+
 import { Code } from '../Code/Code'
+
 import { HomeBlockCopy } from './HomeBlockCopy'
 import { Section } from './HomeBlockSection'
 
@@ -52,6 +55,10 @@ export const HomeBlockImperative = () => (
         smooth, fluid animation.
       </p>
     </HomeBlockCopy>
-    <Code isLive code={example} showCode={false} />
+    <ImperativeCode isLive code={example} showCode={false} />
   </Section>
 )
+
+const ImperativeCode = styled(Code, {
+  mt: '$40',
+})

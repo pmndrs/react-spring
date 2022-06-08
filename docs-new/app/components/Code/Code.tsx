@@ -9,18 +9,26 @@ interface CodeProps {
   ['data-showing-lines']?: boolean
   showCode?: boolean
   children?: any
+  className?: string
 }
 
-export const Code = ({ isLive, code, showCode, ...restProps }: CodeProps) => {
+export const Code = ({
+  isLive,
+  code,
+  showCode,
+  className,
+  ...restProps
+}: CodeProps) => {
   if (isLive) {
     return (
       <LivePreview
         code={code ?? ''}
         showCode={showCode}
+        className={className}
         preProps={{ ...restProps }}
       />
     )
   } else {
-    return <Pre {...restProps} />
+    return <Pre className={className} {...restProps} />
   }
 }

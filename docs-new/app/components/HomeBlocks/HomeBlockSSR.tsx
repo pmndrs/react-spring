@@ -28,15 +28,18 @@ export const HomeBlockSSR = () => {
     []
   )
 
+  const animationHasRun = useRef(false)
+
   useIsomorphicLayoutEffect(() => {
     if (typeof IntersectionObserver === 'function') {
       const handler = (entries: IntersectionObserverEntry[]) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !animationHasRun.current) {
           const heights = [
             maxBarHeight,
             maxBarHeight * (90 / 259),
             maxBarHeight * (71 / 259),
           ]
+          animationHasRun.current = true
           api.start(i => ({
             height: heights[i],
             delay: 250,
@@ -104,6 +107,7 @@ const SizeGraph = styled('div', {
   alignItems: 'flex-end',
   gap: '$40',
   aspectRatio: 570 / 380,
+  mt: '$20',
 })
 
 const GraphBar = styled('div', {

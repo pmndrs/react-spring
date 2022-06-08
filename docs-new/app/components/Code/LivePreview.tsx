@@ -16,12 +16,14 @@ interface LivePreviewProps {
     ['data-showing-lines']?: boolean
   }
   showCode?: boolean
+  className?: string
 }
 
 export const LivePreview = ({
   code,
   showCode = true,
   preProps,
+  className,
 }: LivePreviewProps) => {
   const [value, setValue] = useState('')
   const preRef = useRef<HTMLPreElement>(null!)
@@ -41,7 +43,7 @@ export const LivePreview = ({
   )
 
   return (
-    <PreviewContainer>
+    <PreviewContainer className={className}>
       <SandpackRunner
         code={template}
         template="react"
