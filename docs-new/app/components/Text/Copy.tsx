@@ -8,7 +8,7 @@ export interface CopyProps {
   className?: string
   children?: ReactNode
   css?: CSS
-  tag?: keyof Pick<JSX.IntrinsicElements, 'p' | 'blockquote'>
+  tag?: keyof Pick<JSX.IntrinsicElements, 'p' | 'blockquote' | 'div'>
 }
 
 export const Copy = forwardRef<HTMLHeadingElement, CopyProps>(

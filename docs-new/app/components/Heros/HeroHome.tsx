@@ -1,6 +1,6 @@
 import { ArrowCircleRight } from 'phosphor-react'
 
-import { dark, styled, css } from '~/styles/stitches.config'
+import { dark, styled } from '~/styles/stitches.config'
 
 import { Button } from '../Buttons/Button'
 import { Heading } from '../Text/Heading'

@@ -17,6 +17,7 @@ export const Pre = styled('pre', {
   backgroundColor: '$codeBackground',
   color: '$black',
   m: 0,
+  overflow: 'hidden',
 
   [`.${dark} &`]: {
     $$comment: '#a6accd',
@@ -32,15 +33,29 @@ export const Pre = styled('pre', {
   },
 
   boxSizing: 'border-box',
-  padding: '$30',
   borderRadius: '$r8',
-  overflow: 'auto',
   fontFamily: '$mono',
   fontSize: '$code',
   lineHeight: '$code',
   whiteSpace: 'pre',
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  p: '$30',
 
-  '& > code': { display: 'block', fontFamily: 'inherit' },
+  '& > code': {
+    fontFamily: 'inherit',
+    display: 'inline-block',
+    position: 'relative',
+  },
+
+  '& > code::before': {
+    content: '',
+    display: 'block',
+    position: 'absolute',
+    right: -30,
+    width: 30,
+    height: 1,
+  },
 
   '.token.namespace': {
     opacity: 0.7,

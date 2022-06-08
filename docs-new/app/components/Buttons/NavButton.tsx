@@ -113,7 +113,6 @@ const NavAnchor = styled('a', {
     active: {
       true: {
         background: '$redYellowGradient100',
-        backgroundClip: 'content-box',
       },
       false: {
         backgroundColor: '$white',

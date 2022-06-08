@@ -54,11 +54,13 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes, css } =
         '60': '6rem',
         '80': '8rem',
         '100': '10rem',
+        '110': '11rem',
       },
       sizes: {
         splash: '40rem',
         type: '80rem',
         document: '120rem',
+        largeDoc: '1600px',
       },
       radii: {
         r4: '0.4rem',

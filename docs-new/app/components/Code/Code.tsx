@@ -3,7 +3,7 @@ import { Pre } from './Pre'
 
 interface CodeProps {
   id?: string
-  code: string
+  code?: string
   isLive: boolean
   showLineNumbers: boolean
   ['data-showing-lines']: boolean
@@ -12,7 +12,7 @@ interface CodeProps {
 
 export const Code = ({ isLive, code, ...restProps }: CodeProps) => {
   if (isLive) {
-    return <LivePreview code={code} preProps={{ ...restProps }} />
+    return <LivePreview code={code ?? ''} preProps={{ ...restProps }} />
   } else {
     return <Pre {...restProps} />
   }

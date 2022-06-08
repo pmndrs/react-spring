@@ -3,8 +3,7 @@ import { CarouselQuotes } from '~/components/Carousels/CarouselQuotes'
 import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 import { Header } from '~/components/Header/Header'
 import { HeroHome } from '~/components/Heros/HeroHome'
-import { Copy } from '~/components/Text/Copy'
-import { Heading } from '~/components/Text/Heading'
+import { HomeBlockTarget } from '~/components/HomeBlocks/HomeBlockTarget'
 
 import { COMMUNITY_TILES, NAV_TILES, QUOTES, TOOL_TILES } from '~/data/fixtures'
 import { styled } from '~/styles/stitches.config'
@@ -22,22 +21,27 @@ export default function Index() {
       <Header addMarginToMain={false} position="fixed" alwaysAnimateHeader />
       <Main>
         <article>
-          <HeroHome />
+          <MaxWrapper>
+            <HeroHome />
+          </MaxWrapper>
           <CarouselQuotes quotes={QUOTES} />
-          <ExternalLinkGrid
-            cols={3}
-            tiles={COMMUNITY_TILES}
-            subheading={'Join our community'}
-            heading={'Share thoughts and join in with active discussions'}
-            smallTiles
-          />
-          <ExternalLinkGrid
-            cols={4}
-            tiles={TOOL_TILES}
-            subheading={'Check out the ecosystem'}
-            heading={'See more fantastic tools from Poimandres'}
-            smallTiles
-          />
+          <MaxWrapper>
+            <HomeBlockTarget />
+            <ExternalLinkGrid
+              cols={3}
+              tiles={COMMUNITY_TILES}
+              subheading={'Join our community'}
+              heading={'Share thoughts and join in with active discussions'}
+              smallTiles
+            />
+            <ExternalLinkGrid
+              cols={4}
+              tiles={TOOL_TILES}
+              subheading={'Check out the ecosystem'}
+              heading={'See more fantastic tools from Poimandres'}
+              smallTiles
+            />
+          </MaxWrapper>
         </article>
       </Main>
     </>
@@ -54,4 +58,9 @@ const ExternalLinkGrid = styled(NavigationGrid, {
 const Main = styled('main', {
   width: '100%',
   overflowX: 'hidden',
+})
+
+const MaxWrapper = styled('div', {
+  maxWidth: '$largeDoc',
+  mx: 'auto',
 })

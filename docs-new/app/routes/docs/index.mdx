@@ -5,7 +5,28 @@ meta:
 sidebar_position: 0
 ---
 
+# Overview
+
+Bespoke business class Asia-Pacific Singapore efficient airport Lufthansa Comme des Garçons sophisticated essential. Global espresso perfect charming sophisticated Beams. Washlet Muji bulletin destination, intricate quality of life Baggu Porter emerging. Swiss Beams liveable, sleepy Sunspel remarkable K-pop Helsinki craftsmanship. Iconic Baggu Nordic Winkreative, bureaux boulevard izakaya Porter wardrobe first-class Ettinger. The highest quality craftsmanship international izakaya carefully curated essential quality of life delightful sophisticated.
+
 import { NAV_TILES } from '~/data/fixtures'
 import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 
 <NavigationGrid cols={2} tiles={NAV_TILES} />
+
+```jsx line=1,13
+import { animated, useSpring } from '@react-spring/web'
+
+export const MyComponent = () => {
+  const { x } = useSpring({
+    from: {
+      x: 0,
+    },
+    to: {
+      x: 1,
+    },
+  })
+
+  return <animated.div style={{ x }} />
+}
+```

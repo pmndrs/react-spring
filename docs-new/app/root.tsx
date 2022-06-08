@@ -57,7 +57,7 @@ function Document({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
         <WidgetPlausible />
-        {/* <SiteThemePicker /> */}
+        <SiteThemePicker />
       </head>
       <body>
         {children}
