@@ -108,7 +108,6 @@ export const HomeBlockTarget = () => {
       duration: 800,
       precision: 0.0001,
     },
-    exitBeforeEnter: true,
   })
 
   useIsomorphicLayoutEffect(() => {
@@ -144,11 +143,18 @@ export const HomeBlockTarget = () => {
         </p>
       </HomeBlockCopy>
       <HomeBlockCode>
+        <code
+          className="language-jsx"
+          dangerouslySetInnerHTML={{ __html: dataFixtures[0] }}
+          style={{
+            visibility: 'hidden',
+          }}
+        />
         {transition((style, i) => (
           <animated.code
             className="language-jsx"
             dangerouslySetInnerHTML={{ __html: dataFixtures[i] }}
-            style={style}
+            style={{ ...style, position: 'absolute', top: 30, left: 30 }}
           />
         ))}
       </HomeBlockCode>
@@ -158,8 +164,10 @@ export const HomeBlockTarget = () => {
 
 const List = styled('ul', {
   my: 8,
+  pl: 26,
 })
 
 const HomeBlockCode = styled(Pre, {
   mt: '$40',
+  position: 'relative',
 })

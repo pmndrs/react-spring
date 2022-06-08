@@ -16,6 +16,12 @@ export const HomeBlockSSR = () => {
 
   const maxBarHeight = width * ASPECT
 
+  const heights = [
+    maxBarHeight,
+    maxBarHeight * (90 / 259),
+    maxBarHeight * (71 / 259),
+  ]
+
   const [springs, api] = useSprings(
     3,
     () => ({
@@ -34,11 +40,6 @@ export const HomeBlockSSR = () => {
     if (typeof IntersectionObserver === 'function') {
       const handler = (entries: IntersectionObserverEntry[]) => {
         if (entries[0].isIntersecting && !animationHasRun.current) {
-          const heights = [
-            maxBarHeight,
-            maxBarHeight * (90 / 259),
-            maxBarHeight * (71 / 259),
-          ]
           animationHasRun.current = true
           api.start(i => ({
             height: heights[i],
@@ -53,6 +54,15 @@ export const HomeBlockSSR = () => {
       return () => {
         observer.disconnect()
       }
+    }
+  }, [maxBarHeight])
+
+  useIsomorphicLayoutEffect(() => {
+    if (animationHasRun.current) {
+      api.start(i => ({
+        height: heights[i],
+        delay: 250,
+      }))
     }
   }, [maxBarHeight])
 
@@ -99,7 +109,7 @@ export const HomeBlockSSR = () => {
 
 const SizeGraph = styled('div', {
   position: 'relative',
-  border: '1px solid $steel120',
+  border: '1px solid $steel20',
   borderRadius: '$r8',
   p: '$30 $40 $40',
   display: 'flex',

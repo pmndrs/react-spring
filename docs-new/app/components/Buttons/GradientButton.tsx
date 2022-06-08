@@ -37,6 +37,7 @@ const Button = styled('a', {
     zIndex: -1,
     borderRadius: 'inherit',
     background: '$redYellowGradient100',
+    transition: 'filter 250ms ease-out',
   },
 
   [`.${dark} &:before`]: {
@@ -48,5 +49,13 @@ const Button = styled('a', {
     display: 'block',
     backgroundColor: '$white',
     borderRadius: 'inherit',
+  },
+
+  '&:hover:before': {
+    filter: 'brightness(120%)',
+  },
+
+  [`.${dark} &:hover:before`]: {
+    filter: 'brightness(140%)',
   },
 })
