@@ -97,6 +97,7 @@ export const NAV_TILES: Tile[] = [
     label: 'API Reference',
     description:
       'Explore the APIs of our hooks, components & classes to bring your app to life',
+    comingSoon: true,
   },
   {
     href: '/docs/guides',

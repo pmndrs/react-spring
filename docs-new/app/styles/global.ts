@@ -30,6 +30,17 @@ export const globalStyles = globalCss({
     },
   },
 
+  html: {
+    display: 'flex',
+  },
+
+  body: {
+    flex: '1 0 100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+
   'h1, h2, h3, h4, h5, h6, p': {
     margin: 0,
   },
