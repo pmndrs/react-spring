@@ -13,36 +13,3 @@ import { NAV_TILES } from '~/data/fixtures'
 import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 
 <NavigationGrid cols={2} tiles={NAV_TILES} />
-
-```jsx lines=1-2,20-23
-import * as Dialog from '@radix-ui/react-dialog'
-import { styled } from '@stitches/react'
-import { animated, useSpring } from '@react-spring/web'
-
-export const AnimatedDialog = ({ isOpen, onOpenCallback }) => {
-  const { x, backgroundColor, o } = useSpring({
-    x: isOpen ? '0%' : '-100%',
-    backgroundColor: isOpen
-      ? 'var(--color-whiteblur)'
-      : 'var(--colors-white00)',
-    o: isOpen ? 1 : 0,
-    onRest: () => {
-      if (isOpen && onOpenCallback) {
-        onOpenCallback()
-      }
-    },
-  })
-
-  return (
-    <Dialog.Root>
-      <Overlay style={{ backgroundColor }} />
-      <Modal
-        style={{
-          x,
-          backgroundColor: o.to(o => 'rgba(255,255,255,' + o + ')'),
-        }}
-      />
-    </Dialog.Root>
-  )
-}
-```

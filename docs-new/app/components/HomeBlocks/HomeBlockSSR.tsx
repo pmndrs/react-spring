@@ -67,7 +67,7 @@ export const HomeBlockSSR = () => {
   }, [maxBarHeight])
 
   return (
-    <Section ref={sectionRef}>
+    <SSRSection ref={sectionRef}>
       <HomeBlockCopy
         subtitle="Designed with you in mind"
         title={`Production ready with SSR support`}>
@@ -103,9 +103,17 @@ export const HomeBlockSSR = () => {
           <h5>{`@react-spring/core`}</h5>
         </GraphBar>
       </SizeGraph>
-    </Section>
+    </SSRSection>
   )
 }
+
+const SSRSection = styled(Section, {
+  '@tabletUp': {
+    '& > *': {
+      flex: '1 1',
+    },
+  },
+})
 
 const SizeGraph = styled('div', {
   position: 'relative',
@@ -115,7 +123,7 @@ const SizeGraph = styled('div', {
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'flex-end',
-  gap: '$40',
+  gap: 'clamp($10, 10%, $40)',
   aspectRatio: 570 / 380,
   mt: '$20',
 })
@@ -125,7 +133,7 @@ const GraphBar = styled('div', {
   flexDirection: 'column',
   justifyContent: 'flex-end',
   width: 'calc((100% - 80rem) / 3)',
-  flex: '1 0 calc((100% - 80rem) / 3)',
+  flex: '1 1 calc((100% - 80rem) / 3)',
 
   '& > h4': {
     fontSize: '1.2rem',
