@@ -4,6 +4,14 @@ export const SiteFooter = () => {
   return (
     <Footer>
       <FooterCopy>
+        Designed & built by{' '}
+        <a
+          href="https://twitter.com/_josh_ellis_"
+          rel="noopener noreferrer"
+          target="_blank">
+          Josh
+        </a>
+        {'. '}
         Powered by –{' '}
         <a href="https://vercel.com/" rel="noopener noreferrer" target="_blank">
           Vercel

@@ -14,37 +14,35 @@ import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 
 <NavigationGrid cols={2} tiles={NAV_TILES} />
 
-```jsx line=4-10,13-18
+```jsx lines=1-2,20-23
+import * as Dialog from '@radix-ui/react-dialog'
+import { styled } from '@stitches/react'
 import { animated, useSpring } from '@react-spring/web'
 
-export default function () {
-  const [styles, api] = useSpring(
-    () => ({
-      x: 0,
-      rotateZ: 0,
-    }),
-    []
-  )
-
-  const handleClick = () => {
-    api.start({
-      to: [
-        { x: 200, rotateZ: 360 },
-        { x: 0, rotateZ: 0 },
-      ],
-    })
-  }
+export const AnimatedDialog = ({ isOpen, onOpenCallback }) => {
+  const { x, backgroundColor, o } = useSpring({
+    x: isOpen ? '0%' : '-100%',
+    backgroundColor: isOpen
+      ? 'var(--color-whiteblur)'
+      : 'var(--colors-white00)',
+    o: isOpen ? 1 : 0,
+    onRest: () => {
+      if (isOpen && onOpenCallback) {
+        onOpenCallback()
+      }
+    },
+  })
 
   return (
-    <animated.div
-      className="spring-box"
-      onClick={handleClick}
-      style={{
-        ...styles,
-        cursor: 'pointer',
-      }}>
-      Click Me!
-    </animated.div>
+    <Dialog.Root>
+      <Overlay style={{ backgroundColor }} />
+      <Modal
+        style={{
+          x,
+          backgroundColor: o.to(o => 'rgba(255,255,255,' + o + ')'),
+        }}
+      />
+    </Dialog.Root>
   )
 }
 ```

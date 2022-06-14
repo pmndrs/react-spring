@@ -4,6 +4,7 @@ import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 import { Header } from '~/components/Header/Header'
 import { HeroHome } from '~/components/Heros/HeroHome'
 import { HomeBlockImperative } from '~/components/HomeBlocks/HomeBlockImperative'
+import { HomeBlockMore } from '~/components/HomeBlocks/HomeBlockMore'
 import { HomeBlockSSR } from '~/components/HomeBlocks/HomeBlockSSR'
 import { HomeBlockTarget } from '~/components/HomeBlocks/HomeBlockTarget'
 
@@ -32,6 +33,7 @@ export default function Index() {
               <HomeBlockTarget />
               <HomeBlockImperative />
               <HomeBlockSSR />
+              <HomeBlockMore />
             </HomeBlocks>
             <ExternalLinkGrid
               cols={3}
