@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Outlet, useLocation } from 'remix'
 import { MDXProvider } from '@mdx-js/react'
 import { PencilSimple } from 'phosphor-react'
@@ -20,9 +21,9 @@ import {
   flattenNavigationWithChildren,
   getNavigations,
 } from '~/helpers/navigation'
-import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
 import { getDocFilePathToGithub } from '~/helpers/links'
-import { useMemo } from 'react'
+
+import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
 
 const comps = {
   h1: (props: HeadingProps) => (
