@@ -1,3 +1,4 @@
+import { NavigationSchema } from '../../scripts/docs/navigation'
 import navigationSchema from '../data/navigationSchema.generated.json'
 import subnavSchema from '../data/subnavSchema.generated.json'
 
@@ -17,3 +18,19 @@ export const getNavigations = (dir: string) => {
     subnav,
   }
 }
+
+export interface FlattenedNavigation {
+  href: string
+  hasChildren: boolean
+}
+
+export const flattenNavigationWithChildren = (
+  array: NavigationSchema
+): FlattenedNavigation[] =>
+  array.reduce(
+    (flattened, { children, href }) =>
+      flattened
+        .concat([{ href, hasChildren: children.length > 0 }])
+        .concat(children ? flattenNavigationWithChildren(children) : []),
+    [] as FlattenedNavigation[]
+  )

@@ -1,21 +1,28 @@
 import { Outlet, useLocation } from 'remix'
 import { MDXProvider } from '@mdx-js/react'
+import { PencilSimple } from 'phosphor-react'
 
 import { styled } from '~/styles/stitches.config'
+import { getFontStyles } from '~/styles/fontStyles'
 
 import { Header } from '../components/Header/Header'
 import { Heading, HeadingProps } from '~/components/Text/Heading'
 import { Copy, CopyProps } from '~/components/Text/Copy'
 import { List, ListProps } from '~/components/Text/List'
 import { Anchor, AnchorProps } from '~/components/Text/Anchor'
-
-import { getNavigations } from '~/helpers/navigation'
-
 import { H } from '~/components/Code/H'
 import { MenuDocs } from '~/components/Menu/MenuDocs'
 import { MenuSticky } from '~/components/Menu/MenuSticky'
 import { StickyAside } from '~/components/Asides/StickyAside'
 import { Code } from '~/components/Code/Code'
+
+import {
+  flattenNavigationWithChildren,
+  getNavigations,
+} from '~/helpers/navigation'
+import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
+import { getDocFilePathToGithub } from '~/helpers/links'
+import { useMemo } from 'react'
 
 const comps = {
   h1: (props: HeadingProps) => (
@@ -181,7 +188,16 @@ export default function DocsLayout() {
   const location = useLocation()
   const navigation = getNavigations(location.pathname)
 
+  const isDarkMode = useIsDarkTheme()
+
   const hasStickySubnav = navigation.subnav && navigation.subnav.length > 0
+
+  const flatRoutes = useMemo(
+    () => flattenNavigationWithChildren(navigation.sidebar),
+    [navigation.sidebar]
+  )
+
+  const activeRoute = flatRoutes.find(item => item.href === location.pathname)
 
   return (
     <>
@@ -198,6 +214,15 @@ export default function DocsLayout() {
             <MDXProvider components={comps}>
               <Outlet />
             </MDXProvider>
+            <Footer>
+              <EditAnchor href={getDocFilePathToGithub(activeRoute)}>
+                <PencilSimple
+                  size={20}
+                  weight={isDarkMode ? 'light' : 'regular'}
+                />
+                <span>Edit this page</span>
+              </EditAnchor>
+            </Footer>
           </Article>
         </Main>
       </Grid>
@@ -258,6 +283,29 @@ const Article = styled('article', {
       false: {
         paddingTop: 27,
       },
+    },
+  },
+})
+
+const Footer = styled('footer', {
+  mt: '$40',
+})
+
+const EditAnchor = styled(Anchor, {
+  ...getFontStyles('$XXS'),
+  textDecoration: 'none',
+  fontWeight: '$default',
+  color: '$steel40',
+  display: 'inline-flex',
+  alignItems: 'center',
+
+  '& > span': {
+    ml: '$5',
+  },
+
+  '&:hover': {
+    '& > span': {
+      textDecoration: 'underline',
     },
   },
 })
