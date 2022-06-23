@@ -56,12 +56,6 @@ const StickyMenu = styled(animated.header, {
         '& + article': {
           paddingTop: 82,
         },
-
-        '@tabletUp': {
-          '& + article': {
-            paddingTop: 171,
-          },
-        },
       },
     },
   },
