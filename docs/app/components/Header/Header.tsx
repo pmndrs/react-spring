@@ -48,7 +48,9 @@ export const Header = ({
   const { sidebar, subnav = [] } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const headerHeights = getHeaderHeights(Boolean(subnav))
+  const hasSubNav = Boolean(subnav.length > 0)
+
+  const headerHeights = getHeaderHeights(hasSubNav)
 
   const [styles, isStuck, scrollTop, direction] = useAnimatedHeader({
     isHeader: true,
@@ -65,7 +67,7 @@ export const Header = ({
   return (
     <Head
       className={className}
-      hasSubNav={Boolean(subnav.length > 0)}
+      hasSubNav={hasSubNav}
       isStuck={isStuck}
       style={{ ...styles, position: position }}
       hasScrolledDown={scrollTop > 20 && direction === 'up'}

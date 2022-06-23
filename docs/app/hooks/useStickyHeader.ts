@@ -20,7 +20,7 @@ export const useStickyHeader = (heights: [desktop: number, mobile: number]) => {
     } else if (direction === 'up' && scrollTop === 0) {
       setStickyHeader(false)
     }
-  }, [scrollTop])
+  }, [scrollTop, direction])
 
   return stickyHeader
 }
