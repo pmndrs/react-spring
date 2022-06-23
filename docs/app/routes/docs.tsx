@@ -110,6 +110,9 @@ const comps = {
         '& + &': {
           mt: 15,
         },
+        '& + pre': {
+          my: 40,
+        },
         '& > code': {
           backgroundColor: '$steel20',
           borderRadius: '$r4',
@@ -118,6 +121,7 @@ const comps = {
         },
         '& > a': {
           position: 'relative',
+          textDecoration: 'none',
 
           '&:after': {
             position: 'absolute',
@@ -169,15 +173,17 @@ const comps = {
     line?: string
     live?: string
     code: string
+    copy?: string
   }) => {
-    const { children, code, showLineNumbers, id, line, live } = props
+    const { children, code, showLineNumbers, id, line, live, copy } = props
     return (
       <Code
         id={id}
         showLineNumbers={showLineNumbers === ''}
         data-showing-lines={Boolean(line)}
         isLive={Boolean(live)}
-        code={code}>
+        code={code}
+        copy={copy}>
         {children}
       </Code>
     )

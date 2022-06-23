@@ -14,6 +14,8 @@ export const Pre = styled('pre', {
   $$keyword: '#0074e0',
   $$literal: '#fffac2',
   $$falsy: '#e52e8d',
+
+  position: 'relative',
   backgroundColor: '$codeBackground',
   color: '$black',
   m: 0,

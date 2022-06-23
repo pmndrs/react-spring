@@ -1,4 +1,8 @@
+import { styled } from '~/styles/stitches.config'
+
+import { ButtonCopy } from '../Buttons/ButtonCopy'
 import { LivePreview } from './LivePreview'
+
 import { Pre } from './Pre'
 
 interface CodeProps {
@@ -10,6 +14,7 @@ interface CodeProps {
   showCode?: boolean
   children?: any
   className?: string
+  copy?: string
 }
 
 export const Code = ({
@@ -17,6 +22,7 @@ export const Code = ({
   code,
   showCode,
   className,
+  copy,
   ...restProps
 }: CodeProps) => {
   if (isLive) {
@@ -29,6 +35,17 @@ export const Code = ({
       />
     )
   } else {
-    return <Pre className={className} {...restProps} />
+    return (
+      <Pre className={className} {...restProps}>
+        {copy ? <PreCopy>{copy}</PreCopy> : null}
+        {restProps.children}
+      </Pre>
+    )
   }
 }
+
+const PreCopy = styled(ButtonCopy, {
+  position: 'absolute',
+  top: 24,
+  right: 24,
+})
