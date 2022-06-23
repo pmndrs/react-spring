@@ -6,7 +6,7 @@ import { useWindowScrolling } from './useWindowScrolling'
 export const useStickyHeader = (heights: [desktop: number, mobile: number]) => {
   const [stickyHeader, setStickyHeader] = useState(false)
 
-  const [_, scrollTop] = useWindowScrolling({
+  const [direction, scrollTop] = useWindowScrolling({
     active: true,
   })
 
@@ -15,9 +15,9 @@ export const useStickyHeader = (heights: [desktop: number, mobile: number]) => {
 
     const limit = innerWidth < 768 ? heights[1] : heights[0]
 
-    if (scrollTop >= limit) {
+    if (scrollTop >= limit && direction === 'down') {
       setStickyHeader(true)
-    } else {
+    } else if (direction === 'up' && scrollTop === 0) {
       setStickyHeader(false)
     }
   }, [scrollTop])

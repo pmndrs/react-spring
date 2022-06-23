@@ -45,28 +45,46 @@ export const Header = ({
   position,
   alwaysAnimateHeader,
 }: HeaderProps) => {
-  const { sidebar, subnav } = data ?? {}
+  const { sidebar, subnav = [] } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  const headerHeights = getHeaderHeights(Boolean(subnav))
 
   const [styles, isStuck, scrollTop, direction] = useAnimatedHeader({
     isHeader: true,
     alwaysAnimate: alwaysAnimateHeader,
-    heights: getHeaderHeights(Boolean(subnav)),
+    heights: headerHeights,
   })
 
   const handleDialogChange = (isOpen: boolean) => setDialogOpen(isOpen)
 
   const handleNavigationClick = () => setDialogOpen(false)
 
+  const [desktopHeight, mobileHeight] = headerHeights
+
   return (
     <Head
       className={className}
-      hasSubNav={Boolean(subnav)}
+      hasSubNav={Boolean(subnav.length > 0)}
       isStuck={isStuck}
       style={{ ...styles, position: position }}
       hasScrolledDown={scrollTop > 20 && direction === 'up'}
       transparentBackground={transparentBackground}
-      addMarginToMain={addMarginToMain}>
+      addMarginToMain={addMarginToMain}
+      css={
+        isStuck
+          ? {
+              '& + aside + main': {
+                pt: mobileHeight,
+              },
+              '@tabletUp': {
+                '& + aside + main': {
+                  pt: desktopHeight,
+                },
+              },
+            }
+          : {}
+      }>
       <FlexContainer>
         <DesktopNavigation />
         <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>
@@ -157,14 +175,6 @@ const Head = styled(animated.header, {
     isStuck: {
       true: {
         position: 'fixed',
-        '& + aside + main': {
-          pt: `6.3rem`,
-        },
-        '@tabletUp': {
-          '& + aside + main': {
-            pt: 0,
-          },
-        },
       },
     },
     hasSubNav: {

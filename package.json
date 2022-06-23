@@ -26,8 +26,7 @@
       "targets/*",
       "packages/parallax/@react-spring/parallax-demo",
       "demo",
-      "docs",
-      "docs-new"
+      "docs"
     ]
   },
   "preconstruct": {

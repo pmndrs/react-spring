@@ -54,9 +54,9 @@ report.*.json
 #
 # Remix 
 #
-docs-new/public/build
-docs-new/api/_build
-docs-new/api/index.js
+docs/public/build
+docs/api/_build
+docs/api/index.js
 
 #
 # Doc scripts
