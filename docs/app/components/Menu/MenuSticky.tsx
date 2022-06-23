@@ -18,7 +18,7 @@ interface MenuStickyProps {
 export const MenuSticky = ({ className, subnav }: MenuStickyProps) => {
   const [styles, isStuck] = useAnimatedHeader({
     isHeader: false,
-    heights: getHeaderHeights(true),
+    heights: getHeaderHeights(),
   })
 
   return (

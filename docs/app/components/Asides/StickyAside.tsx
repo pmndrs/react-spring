@@ -12,13 +12,10 @@ interface StickyAsideProps {
   hasSubNav?: boolean
 }
 
-export const StickyAside = ({
-  children,
-  hasSubNav = false,
-}: StickyAsideProps) => {
+export const StickyAside = ({ children }: StickyAsideProps) => {
   const [styles, isStuck] = useAnimatedHeader({
     isHeader: false,
-    heights: getHeaderHeights(hasSubNav),
+    heights: getHeaderHeights(),
   })
 
   return (

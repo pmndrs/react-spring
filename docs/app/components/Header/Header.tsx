@@ -30,11 +30,8 @@ interface HeaderProps {
   position?: Property.Position
 }
 
-export const getHeaderHeights = (
-  hasSubNav = false
-): [desktop: number, mobile: number] => [
-  64 + (hasSubNav ? 25 : 50),
-  48 + (hasSubNav ? 15 : 30),
+export const getHeaderHeights = (): [desktop: number, mobile: number] => [
+  89, 63,
 ]
 
 export const Header = ({
@@ -45,12 +42,10 @@ export const Header = ({
   position,
   alwaysAnimateHeader,
 }: HeaderProps) => {
-  const { sidebar, subnav = [] } = data ?? {}
+  const { sidebar } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const hasSubNav = Boolean(subnav.length > 0)
-
-  const headerHeights = getHeaderHeights(hasSubNav)
+  const headerHeights = getHeaderHeights()
 
   const [styles, isStuck, scrollTop, direction] = useAnimatedHeader({
     isHeader: true,
@@ -64,10 +59,11 @@ export const Header = ({
 
   const [desktopHeight, mobileHeight] = headerHeights
 
+  // console.log(desktopHeight)
+
   return (
     <Head
       className={className}
-      hasSubNav={hasSubNav}
       isStuck={isStuck}
       style={{ ...styles, position: position }}
       hasScrolledDown={scrollTop > 20 && direction === 'up'}
@@ -109,7 +105,7 @@ export const Header = ({
 
 const Head = styled(animated.header, {
   width: '100%',
-  py: '$15',
+  pt: '$15',
   zIndex: '$1',
 
   '@motion': {
@@ -117,7 +113,7 @@ const Head = styled(animated.header, {
   },
 
   '@tabletUp': {
-    py: '$25',
+    pt: '$25',
   },
 
   // Give a good offset for the jump links
@@ -177,14 +173,6 @@ const Head = styled(animated.header, {
     isStuck: {
       true: {
         position: 'fixed',
-      },
-    },
-    hasSubNav: {
-      true: {
-        pb: '0',
-        '@tabletUp': {
-          pb: '0',
-        },
       },
     },
   },

@@ -278,11 +278,13 @@ const MainStickyMenu = styled(MenuSticky, {
 const Article = styled('article', {
   padding: '0 $25 $50 $25',
   width: '100%',
+  mt: '$15',
 
   '@tabletUp': {
     padding: '0 6.2rem 10rem 6.2rem',
     maxWidth: '$document',
     margin: '0 auto',
+    mt: '$25',
   },
 
   variants: {
