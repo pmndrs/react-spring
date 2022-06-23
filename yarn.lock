@@ -2591,19 +2591,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspotcode/source-map-consumer@npm:0.8.0":
-  version: 0.8.0
-  resolution: "@cspotcode/source-map-consumer@npm:0.8.0"
-  checksum: c0c16ca3d2f58898f1bd74c4f41a189dbcc202e642e60e489cbcc2e52419c4e89bdead02c886a12fb13ea37798ede9e562b2321df997ebc210ae9bd881561b4e
-  languageName: node
-  linkType: hard
-
-"@cspotcode/source-map-support@npm:0.7.0":
-  version: 0.7.0
-  resolution: "@cspotcode/source-map-support@npm:0.7.0"
+"@cspotcode/source-map-support@npm:^0.8.0":
+  version: 0.8.1
+  resolution: "@cspotcode/source-map-support@npm:0.8.1"
   dependencies:
-    "@cspotcode/source-map-consumer": 0.8.0
-  checksum: 9faddda7757cd778b5fd6812137b2cc265810043680d6399acc20441668fafcdc874053be9dccd0d9110087287bfad27eb3bf342f72bceca9aa9059f5d0c4be8
+    "@jridgewell/trace-mapping": 0.3.9
+  checksum: 5718f267085ed8edb3e7ef210137241775e607ee18b77d95aa5bd7514f47f5019aa2d82d96b3bf342ef7aa890a346fa1044532ff7cc3009e7d24fce3ce6200fa
   languageName: node
   linkType: hard
 
@@ -3439,6 +3432,30 @@ __metadata:
     core-js: ^3.4.1
     regenerator-runtime: ^0.13.3
   checksum: bd36b8bbaaf878190afe357f1bcebed9215dae503f06603039e6a106045588003b845150cb5a5ba6dd4d973e7e7b95779158ae921011fb6bd79083c8cb177804
+  languageName: node
+  linkType: hard
+
+"@jridgewell/resolve-uri@npm:^3.0.3":
+  version: 3.0.7
+  resolution: "@jridgewell/resolve-uri@npm:3.0.7"
+  checksum: 94f454f4cef8f0acaad85745fd3ca6cd0d62ef731cf9f952ecb89b8b2ce5e20998cd52be31311cedc5fa5b28b1708a15f3ad9df0fe1447ee4f42959b036c4b5b
+  languageName: node
+  linkType: hard
+
+"@jridgewell/sourcemap-codec@npm:^1.4.10":
+  version: 1.4.13
+  resolution: "@jridgewell/sourcemap-codec@npm:1.4.13"
+  checksum: f14449096f60a5f921262322fef65ce0bbbfb778080b3b20212080bcefdeba621c43a58c27065bd536ecb4cc767b18eb9c45f15b6b98a4970139572b60603a1c
+  languageName: node
+  linkType: hard
+
+"@jridgewell/trace-mapping@npm:0.3.9":
+  version: 0.3.9
+  resolution: "@jridgewell/trace-mapping@npm:0.3.9"
+  dependencies:
+    "@jridgewell/resolve-uri": ^3.0.3
+    "@jridgewell/sourcemap-codec": ^1.4.10
+  checksum: d89597752fd88d3f3480845691a05a44bd21faac18e2185b6f436c3b0fd0c5a859fbbd9aaa92050c4052caf325ad3e10e2e1d1b64327517471b7d51babc0ddef
   languageName: node
   linkType: hard
 
@@ -16435,7 +16452,7 @@ __metadata:
     start-server-and-test: ^1.14.0
     three: ^0.135.0
     ts-jest: ^27.1.1
-    ts-node: ^10.4.0
+    ts-node: ^10.8.1
     typescript: ^4.7.4
     vite: ^2.7.1
     zdog: ^1.1.2
@@ -18787,11 +18804,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.4.0":
-  version: 10.4.0
-  resolution: "ts-node@npm:10.4.0"
+"ts-node@npm:^10.8.1":
+  version: 10.8.1
+  resolution: "ts-node@npm:10.8.1"
   dependencies:
-    "@cspotcode/source-map-support": 0.7.0
+    "@cspotcode/source-map-support": ^0.8.0
     "@tsconfig/node10": ^1.0.7
     "@tsconfig/node12": ^1.0.7
     "@tsconfig/node14": ^1.0.0
@@ -18802,6 +18819,7 @@ __metadata:
     create-require: ^1.1.0
     diff: ^4.0.1
     make-error: ^1.1.1
+    v8-compile-cache-lib: ^3.0.1
     yn: 3.1.1
   peerDependencies:
     "@swc/core": ">=1.2.50"
@@ -18816,10 +18834,11 @@ __metadata:
   bin:
     ts-node: dist/bin.js
     ts-node-cwd: dist/bin-cwd.js
+    ts-node-esm: dist/bin-esm.js
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: 3933ac0a937d33c45e04a6750fcdd3e765eb2897d1da1307cd97ac52af093bcfb632ec0453a75000a65c8b5b7bdb32b1077050a186dcc556e62657cb592e6d49
+  checksum: 7d1aa7aa3ae1c0459c4922ed0dbfbade442cfe0c25aebaf620cdf1774f112c8d7a9b14934cb6719274917f35b2c503ba87bcaf5e16a0d39ba0f68ce3e7728363
   languageName: node
   linkType: hard
 
@@ -19528,6 +19547,13 @@ __metadata:
   bin:
     uvu: bin.js
   checksum: 369135a16dc454121681a83fbfe0a5d7733d3758403e921f4911eab8355235a1a5aeb59046f842046fbd4695d5267c463ca2b0ceb6787d6772d67e2f377bcf1f
+  languageName: node
+  linkType: hard
+
+"v8-compile-cache-lib@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "v8-compile-cache-lib@npm:3.0.1"
+  checksum: 78089ad549e21bcdbfca10c08850022b22024cdcc2da9b168bcf5a73a6ed7bf01a9cebb9eac28e03cd23a684d81e0502797e88f3ccd27a32aeab1cfc44c39da0
   languageName: node
   linkType: hard
 

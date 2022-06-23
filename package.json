@@ -117,7 +117,7 @@
     "start-server-and-test": "^1.14.0",
     "three": "^0.135.0",
     "ts-jest": "^27.1.1",
-    "ts-node": "^10.4.0",
+    "ts-node": "^10.8.1",
     "typescript": "^4.7.4",
     "vite": "^2.7.1",
     "zdog": "^1.1.2"
