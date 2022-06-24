@@ -38,7 +38,11 @@ const parseMarkdownForSubheadings = (
 
     return {
       title,
-      id: title.split(' ').join('-').toLowerCase(),
+      id: title
+        .replace(/[^a-zA-Z0-9 ]/g, '')
+        .split(' ')
+        .join('-')
+        .toLowerCase(),
     }
   })
 
