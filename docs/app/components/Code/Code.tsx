@@ -15,6 +15,7 @@ interface CodeProps {
   children?: any
   className?: string
   copy?: string
+  defaultOpen: boolean
 }
 
 export const Code = ({
@@ -23,6 +24,7 @@ export const Code = ({
   showCode,
   className,
   copy,
+  defaultOpen,
   ...restProps
 }: CodeProps) => {
   if (isLive) {
@@ -31,6 +33,7 @@ export const Code = ({
         code={code ?? ''}
         showCode={showCode}
         className={className}
+        defaultOpen={defaultOpen}
         preProps={{ ...restProps }}
       />
     )

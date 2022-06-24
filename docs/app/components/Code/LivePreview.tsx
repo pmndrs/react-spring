@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { SandpackRunner } from '@codesandbox/sandpack-react'
 import * as Accordion from '@radix-ui/react-accordion'
 import { animated, useSpring } from '@react-spring/web'
@@ -16,6 +16,7 @@ interface LivePreviewProps {
     ['data-showing-lines']?: boolean
   }
   showCode?: boolean
+  defaultOpen?: boolean
   className?: string
 }
 
@@ -24,8 +25,9 @@ export const LivePreview = ({
   showCode = true,
   preProps,
   className,
+  defaultOpen = false,
 }: LivePreviewProps) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(defaultOpen ? 'code' : '')
   const preRef = useRef<HTMLPreElement>(null!)
 
   const template = `
@@ -35,12 +37,18 @@ export const LivePreview = ({
 
   const handleValueChange = (value: string) => setValue(value)
 
-  const [styles] = useSpring(
+  const [styles, api] = useSpring(
     () => ({
-      height: value === '' ? 0 : preRef.current.getBoundingClientRect().height,
+      height: 0,
     }),
-    [value]
+    []
   )
+
+  useEffect(() => {
+    api.start({
+      height: value === '' ? 0 : preRef.current.getBoundingClientRect().height,
+    })
+  }, [value])
 
   return (
     <PreviewContainer className={className}>
@@ -119,6 +127,7 @@ export const LivePreview = ({
 
 const PreviewContainer = styled('div', {
   width: '100%',
+  my: '$40',
 
   '& .preview__wrapper': {
     mb: '$5',

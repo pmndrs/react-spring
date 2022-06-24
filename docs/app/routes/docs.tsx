@@ -175,8 +175,21 @@ const comps = {
     live?: string
     code: string
     copy?: string
+    defaultOpen?: string
+    showCode?: string
   }) => {
-    const { children, code, showLineNumbers, id, line, live, copy } = props
+    const {
+      defaultOpen,
+      children,
+      code,
+      showLineNumbers,
+      id,
+      line,
+      live,
+      copy,
+      showCode,
+    } = props
+
     return (
       <Code
         id={id}
@@ -184,7 +197,9 @@ const comps = {
         data-showing-lines={Boolean(line)}
         isLive={Boolean(live)}
         code={code}
-        copy={copy}>
+        copy={copy}
+        defaultOpen={defaultOpen === 'true'}
+        showCode={showCode !== 'false'}>
         {children}
       </Code>
     )
@@ -321,15 +336,15 @@ const EditAnchor = styled(Anchor, {
 })
 
 const BlockQuote = styled('blockquote', {
-  my: '$25',
+  my: '$30',
   position: 'relative',
   ml: '$20',
-  opacity: 0.6,
+  opacity: 0.7,
 
   '&:before': {
     content: '""',
     height: '100%',
-    width: 2,
+    width: 1,
     backgroundColor: '$black',
     position: 'absolute',
     top: 0,
