@@ -65,7 +65,7 @@ export const LivePreview = ({
                           width: 80px;
                           height: 80px;
                           background-color: #ff6d6d;
-                          border-radius: 16px;
+                          border-radius: 8px;
                           font-family: Helvetica;
                           font-size: 14px;
                           display: flex;
@@ -187,6 +187,11 @@ const AccordionHeader = styled(Accordion.Header, {
   padding: '$15 $30',
   display: 'flex',
   justifyContent: 'flex-end',
+  borderRadius: '$r8',
+
+  ['&[data-state=open]']: {
+    borderRadius: '$r8 $r8 0 0',
+  },
 })
 
 const AccordionTrigger = styled(Button, {
@@ -198,5 +203,9 @@ const AccordionContent = styled(animated(Accordion.Content), {
 
   [`${Pre}`]: {
     pt: '0',
+  },
+
+  [`&[data-state=open] ${Pre}`]: {
+    borderRadius: '0 0 $r8 $r8',
   },
 })
