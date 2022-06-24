@@ -166,6 +166,7 @@ const comps = {
     />
   ),
   a: (props: AnchorProps) => <Anchor {...props} />,
+  blockquote: (props: any) => <BlockQuote as="blockquote" {...props} />,
   pre: (props: {
     children: string
     showLineNumbers?: string
@@ -316,5 +317,22 @@ const EditAnchor = styled(Anchor, {
     '& > span': {
       textDecoration: 'underline',
     },
+  },
+})
+
+const BlockQuote = styled('blockquote', {
+  my: '$25',
+  position: 'relative',
+  ml: '$20',
+  opacity: 0.6,
+
+  '&:before': {
+    content: '""',
+    height: '100%',
+    width: 2,
+    backgroundColor: '$black',
+    position: 'absolute',
+    top: 0,
+    left: -20,
   },
 })
