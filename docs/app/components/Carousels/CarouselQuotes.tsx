@@ -48,10 +48,12 @@ const QuotesSection = styled('section', {
 })
 
 const QuoteHeading = styled(Heading, {
-  mx: '$25',
+  px: '$25',
 
   '@tabletUp': {
-    mx: '$50',
+    px: '$50',
+    margin: '0 auto',
+    maxWidth: '$largeDoc',
   },
 })
 

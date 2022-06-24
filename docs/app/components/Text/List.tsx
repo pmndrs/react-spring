@@ -30,4 +30,12 @@ export const List = forwardRef<HTMLUListElement, ListProps>(
 
 const ListElement = styled('ul', {
   pl: '$20',
+  fontWeight: '$default',
+
+  '& code': {
+    backgroundColor: '$steel20',
+    borderRadius: '$r4',
+    py: 2,
+    px: 5,
+  },
 })

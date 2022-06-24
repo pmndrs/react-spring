@@ -51,4 +51,9 @@ const PreCopy = styled(ButtonCopy, {
   position: 'absolute',
   top: 24,
   right: 24,
+  display: 'none',
+
+  '@tabletUp': {
+    display: 'block',
+  },
 })

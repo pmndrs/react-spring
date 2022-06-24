@@ -8,7 +8,7 @@ import { HomeBlockMore } from '~/components/HomeBlocks/HomeBlockMore'
 import { HomeBlockSSR } from '~/components/HomeBlocks/HomeBlockSSR'
 import { HomeBlockTarget } from '~/components/HomeBlocks/HomeBlockTarget'
 
-import { COMMUNITY_TILES, NAV_TILES, QUOTES, TOOL_TILES } from '~/data/fixtures'
+import { COMMUNITY_TILES, QUOTES, TOOL_TILES } from '~/data/fixtures'
 import { styled } from '~/styles/stitches.config'
 
 export const meta: MetaFunction = () => {
