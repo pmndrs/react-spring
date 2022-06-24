@@ -23,10 +23,8 @@ export const globalStyles = globalCss({
       fontFamily: '$sans-var',
     },
 
-    scrollBehavior: 'smooth',
-
     '@motion': {
-      scrollBehavior: 'initial',
+      scrollBehavior: 'smooth',
     },
   },
 

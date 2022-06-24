@@ -21,7 +21,11 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <>
-      <Header addMarginToMain={false} position="fixed" alwaysAnimateHeader />
+      <MainHeader
+        addMarginToMain={false}
+        position="fixed"
+        alwaysAnimateHeader
+      />
       <Main>
         <article>
           <MaxWrapper>
@@ -55,6 +59,14 @@ export default function Index() {
     </>
   )
 }
+
+const MainHeader = styled(Header, {
+  pb: '$15',
+
+  '@tabletUp': {
+    pb: '$25',
+  },
+})
 
 const ExternalLinkGrid = styled(NavigationGrid, {
   mx: '$25',

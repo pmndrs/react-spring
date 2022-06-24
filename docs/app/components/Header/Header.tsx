@@ -42,7 +42,7 @@ export const Header = ({
   position,
   alwaysAnimateHeader,
 }: HeaderProps) => {
-  const { sidebar } = data ?? {}
+  const { sidebar, subnav = [] } = data ?? {}
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const headerHeights = getHeaderHeights()
@@ -59,14 +59,14 @@ export const Header = ({
 
   const [desktopHeight, mobileHeight] = headerHeights
 
-  // console.log(desktopHeight)
-
   return (
     <Head
       className={className}
       isStuck={isStuck}
       style={{ ...styles, position: position }}
-      hasScrolledDown={scrollTop > 20 && direction === 'up'}
+      hasScrolledDown={
+        subnav.length > 0 || (scrollTop > 20 && direction === 'up')
+      }
       transparentBackground={transparentBackground}
       addMarginToMain={addMarginToMain}
       css={
