@@ -22,6 +22,7 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes, css } =
         steel40: '#afafb5',
         steel20: '#d7d7da',
         white: 'rgba(250,250,250,1)',
+        white80: 'rgba(250,250,250,0.8)',
         white0: 'rgba(250,250,250,0)',
         black: '#1B1A22',
         blue: '#569AFF',
@@ -211,6 +212,7 @@ const dark = createTheme('dark', {
   colors: {
     black: 'rgba(250,250,250,1)',
     white: '#1B1A22',
+    white80: '#1B1A22CC',
     codeBackground: '#2b2b37',
     steel20: '#2b2b37',
     steel100: '#f0f2f4',

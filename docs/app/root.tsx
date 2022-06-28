@@ -12,6 +12,8 @@ import {
   useLoaderData,
 } from 'remix'
 
+import docusearch from '@docsearch/css/dist/style.css'
+
 import { globalStyles } from './styles/global'
 
 import { SiteThemePicker } from './components/Site/SiteThemePicker'
@@ -27,6 +29,7 @@ export const meta: MetaFunction = () => {
 }
 
 export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: docusearch },
   { rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
@@ -40,6 +43,8 @@ export const loader: LoaderFunction = () => {
   return json({
     ENV: {
       ENABLE_PLAUSIBLE: process.env.ENABLE_PLAUSIBLE,
+      ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
+      ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
     },
   })
 }

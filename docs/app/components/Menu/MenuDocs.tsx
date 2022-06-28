@@ -8,6 +8,7 @@ import {
   NavigationSchema,
   NavigationSchemaItem,
 } from '../../../scripts/docs/navigation'
+import { WidgetSearch } from '../Widgets/WidgetSearch'
 
 interface MenuDocsProps {
   submenu?: NavigationSchema
@@ -25,6 +26,9 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
 
   return (
     <DocsList>
+      <WidgetContainer>
+        <WidgetSearch />
+      </WidgetContainer>
       {Array.isArray(submenu) &&
         submenu.map(item =>
           renderSubMenu({ ...item, location, onClick: handleNavClick }, 0)
@@ -133,5 +137,54 @@ const Anchor = styled(Link, {
         },
       },
     },
+  },
+})
+
+const WidgetContainer = styled('li', {
+  '.DocSearch': {
+    fontSize: '$XS',
+    color: '$steel40',
+  },
+
+  '.DocSearch-Button': {
+    borderRadius: '$r8',
+    margin: 0,
+    padding: '$5 11px',
+    width: '100%',
+    marginBottom: '$10',
+    backgroundColor: 'transparent',
+    border: '1px solid $steel40',
+    alignItems: 'center',
+
+    hover: {
+      background: 'transparent',
+      boxShadow: 'unset',
+      borderColor: '$red100',
+    },
+  },
+
+  '.DocSearch-Button-Placeholder': {
+    fontSize: '$XS',
+    padding: 0,
+  },
+
+  '.DocSearch-Search-Icon': {
+    display: 'none',
+  },
+
+  '.DocSearch-Button-Keys': {
+    justifyContent: 'flex-end',
+  },
+
+  '.DocSearch-Button-Key': {
+    border: 'none',
+    background: 'transparent',
+    boxShadow: 'unset',
+    width: 'unset',
+    height: 'unset',
+    padding: 0,
+    margin: 0,
+    color: '$steel60',
+    fontFamily: '$sans-var',
   },
 })
