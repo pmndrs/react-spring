@@ -16,7 +16,7 @@
   <a href="https://www.npmjs.com/package/react-spring" target="_blank">
     <img src="https://img.shields.io/npm/dm/react-spring.svg?style=flat&colorA=000000&colorB=000000" />
   </a>
-  <a href="https://discord.gg/ZZjjNvJ" target="_blank">
+  <a href="https://discord.gg/AXfNsGx64f" target="_blank">
     <img src="https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff" alt="Chat on Discord">
   </a>
 </p>
@@ -42,15 +42,15 @@ const styles = useSpring({
 
 Just a small bit about us:
 
-* **Cross-Platform**: We support `react-dom`, `react-native`, `react-three-fiber`, `react-konva` & `react-zdog`.
-* **Versatile**: Be declarative with your animations or if you prefer, imperative.
-* **Spring-Physics First**: By default animation use springs for fluid interactivity, but we support durations with easings as well.
+- **Cross-Platform**: We support `react-dom`, `react-native`, `react-three-fiber`, `react-konva` & `react-zdog`.
+- **Versatile**: Be declarative with your animations or if you prefer, imperative.
+- **Spring-Physics First**: By default animation use springs for fluid interactivity, but we support durations with easings as well.
 
 There's a lot more to be had! Give it a try and find out.
 
 ## Getting Started
 
-### ⚡️ Jump Start 
+### ⚡️ Jump Start
 
 ```shell
 # Install the entire library
@@ -65,7 +65,7 @@ import { animated, useSpring } from '@react-spring/web'
 const FadeIn = ({ isVisible, children }) => {
   const styles = useSpring({
     opacity: isVisible ? 1 : 0,
-    y: isVisible ? 0 : 24
+    y: isVisible ? 0 : 24,
   })
 
   return <animated.div style={styles}>{children}</animated.div>
@@ -74,7 +74,7 @@ const FadeIn = ({ isVisible, children }) => {
 
 It's as simple as that to create scroll-in animations when value of `isVisible` is toggled.
 
-### 📖  Documentation and Examples
+### 📖 Documentation and Examples
 
 More documentation on the project can be found [here](https://www.react-spring.io).
 
@@ -82,13 +82,13 @@ Pages contain their own [examples](https://react-spring.io/hooks/use-spring#demo
 
 ---
 
-## 📣  What others say
+## 📣 What others say
 
 <p align="middle">
   <img src="assets/testimonies.jpg" />
 </p>
 
-##  Used by
+## Used by
 
 <p align="middle">
   <a href="https://nextjs.org/"><img width="285" src="assets/projects/next.png"></a>

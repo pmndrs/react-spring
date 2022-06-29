@@ -13,6 +13,7 @@ dist/
 .DS_Store
 Thumbs.db
 ehthumbs.db
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -53,6 +54,11 @@ report.*.json
 #
 # Remix 
 #
-docs-new/public/build
-docs-new/api/_build
-docs-new/api/index.js
+docs/public/build
+docs/api/_build
+docs/api/index.js
+
+#
+# Doc scripts
+#
+*.generated.*

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, Route } from 'wouter'
 import styles from './styles.module.css'
 
@@ -103,3 +103,50 @@ export default function App() {
     </>
   )
 }
+
+import * as Dialog from '@radix-ui/react-dialog'
+import { styled } from '@stitches/react'
+import { animated, useSpring } from '@react-spring/web'
+
+export const AnimatedDialog = ({ isOpen, onOpenCallback }) => {
+  const { x, backgroundColor, opacity } = useSpring({
+    x: isOpen ? '0%' : '-100%',
+    backgroundColor: isOpen
+      ? 'var(--color-whiteblur)'
+      : 'var(--colors-white00)',
+    opacity: isOpen ? 1 : 0,
+    onRest: () => {
+      if (isOpen && onOpenCallback) {
+        onOpenCallback()
+      }
+    },
+  })
+
+  return (
+    <Dialog.Root>
+      <Overlay style={{ backgroundColor }} />
+      <Modal
+        style={{
+          x,
+          backgroundColor: opacity.to(o => `rgba(255,255,255, ${o})`),
+        }}
+      />
+    </Dialog.Root>
+  )
+}
+
+const Modal = styled(animated(Dialog.Content), {
+  position: 'fixed',
+  inset: 0,
+  height: '100vh',
+  width: '30rem',
+  zIndex: '$3',
+})
+
+const Overlay = styled(animated(Dialog.Overlay), {
+  position: 'fixed',
+  inset: 0,
+  width: '100vw',
+  height: '100vh',
+  zIndex: '$2',
+})

@@ -1,30 +1,20 @@
 {
+  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "*.d.ts"],
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "isolatedModules": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "baseUrl": ".",
+    "target": "ES2019",
+    "strict": true,
     "paths": {
-      "components/*": ["src/components/*"],
-      "demos/*": ["src/demos/*"],
-      "helpers/*": ["src/helpers/*"],
-      "hooks/*": ["src/hooks/*"],
-      "references/*": ["src/references/*"],
-      "styles/*": ["src/styles/*"],
-      "react-spring": ["node_modules/react-spring"]
+      "~/*": ["./app/*"]
     },
-    "incremental": true
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+    "noEmit": true,
+    "baseUrl": ".",
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true
+  }
 }

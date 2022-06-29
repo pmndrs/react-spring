@@ -1,33 +1,34 @@
-<p align="center">
-  <img src="https://i.imgur.com/QZownhg.png" width="240" />
-</p>
+# Welcome to Remix!
 
-<br />
-<br />
-<br />
+- [Remix Docs](https://remix.run/docs)
 
-# react-spring.io
+## Deployment
 
-This is the documentation repo!
-<br>
-It's a simple nextjs with `mdx` we have lots of exciting code samples built here in the code but if you do use a codesandbox iFrame, please try to put what page the sandbox is on and the original sandbox so we can clone and edit if needs be!
+After having run the `create-remix` command and selected "Vercel" as a deployment target, you only need to [import your Git repository](https://vercel.com/new) into Vercel, and it will be deployed.
 
-## Get Started
+If you'd like to avoid using a Git repository, you can also deploy the directory by running [Vercel CLI](https://vercel.com/cli):
 
-### Dependencies
+```sh
+npm i -g vercel
+vercel
+```
 
-- [Yarn](https://yarnpkg.com/) @ `>=1.22.5`
-- [Node](https://nodejs.org/en/) @ `>=15.11.0`
+It is generally recommended to use a Git repository, because future commits will then automatically be deployed by Vercel, through its [Git Integration](https://vercel.com/docs/concepts/git).
 
-### Commands
+## Development
 
-- `yarn install`
-- `yarn dev`
-- Check [localhost:3000](http://localhost:3000)
+To run your Remix app locally, make sure your project's local dependencies are installed:
 
-## Sandboxes
+```sh
+npm install
+```
 
-| Page           | Shows                 | Link                                                       |
-| -------------- | --------------------- | ---------------------------------------------------------- |
-| common-api.mdx | Configuration options | https://codesandbox.io/s/flamboyant-agnesi-x1vjb           |
-| common-api.mdx | Preset configs        | https://codesandbox.io/s/react-spring-preset-configs-kdv7r |
+Afterwards, start the Remix development server like so:
+
+```sh
+npm run dev
+```
+
+Open up [http://localhost:3000](http://localhost:3000) and you should be ready to go!
+
+If you're used to using the `vercel dev` command provided by [Vercel CLI](https://vercel.com/cli) instead, you can also use that, but it's not needed.
