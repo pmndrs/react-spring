@@ -1,0 +1,16 @@
+[
+  {
+    "href": "/docs",
+    "id": "index",
+    "title": "Overview ",
+    "sidebarPosition": 1,
+    "children": []
+  },
+  {
+    "href": "/docs/getting-started",
+    "id": "getting-started",
+    "title": "Getting started ",
+    "sidebarPosition": 2,
+    "children": []
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "/getting-started": [
+    { "href": "#install", "label": "Install", "id": "install" },
+    {
+      "href": "#the-animated-element",
+      "label": "The Animated Element",
+      "id": "the-animated-element"
+    },
+    { "href": "#the-hook", "label": "The Hook", "id": "the-hook" },
+    {
+      "href": "#your-first-animation",
+      "label": "Your First Animation",
+      "id": "your-first-animation"
+    },
+    {
+      "href": "#reacting-to-events",
+      "label": "Reacting to events",
+      "id": "reacting-to-events"
+    },
+    { "href": "#next-steps", "label": "Next Steps", "id": "next-steps" }
+  ]
+}
