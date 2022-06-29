@@ -213,6 +213,7 @@ export interface ParallaxProps extends ViewProps {
   enabled?: boolean
   horizontal?: boolean
   innerStyle?: CSSProperties
+  children: React.ReactNode
 }
 
 export const Parallax = React.memo(

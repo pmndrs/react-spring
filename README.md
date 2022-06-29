@@ -5,7 +5,7 @@
 <br />
 
 <h1 align="center">react-spring</h1>
-<h3 align="center">A spring-physics first animation library <br>giving you flexible tools to confidenty cast your ideas</h3>
+<h3 align="center">A spring-physics first animation library <br>giving you flexible tools to confidently cast your ideas</h3>
 
 <br>
 
@@ -68,17 +68,17 @@ const FadeIn = ({ isVisible, children }) => {
     y: isVisible ? 0 : 24,
   })
 
-  return <animated.div>{children}</animated.div>
+  return <animated.div style={styles}>{children}</animated.div>
 }
 ```
 
-It's as simple as that to create scroll-in animations.
+It's as simple as that to create scroll-in animations when value of `isVisible` is toggled.
 
 ### 📖 Documentation and Examples
 
 More documentation on the project can be found [here](https://www.react-spring.io).
 
-Pages contain their own [examples](https://react-spring.io/hooks/use-spring#demos) which you can check out there, or [open in codesandbox](https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/card) for a more indepth view!
+Pages contain their own [examples](https://react-spring.io/hooks/use-spring#demos) which you can check out there, or [open in codesandbox](https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/card) for a more in-depth view!
 
 ---
 
@@ -96,7 +96,7 @@ Pages contain their own [examples](https://react-spring.io/hooks/use-spring#demo
   <a href="https://aragon.org/"><img width="285" src="assets/projects/aragon.png"></a>
 </p>
 
-And [many others](https://github.com/react-spring/react-spring/network/dependents)...
+And [many others...](https://github.com/pmndrs/react-spring/network/dependents)
 
 ## Backers
 
