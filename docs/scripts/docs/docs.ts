@@ -95,6 +95,7 @@ export interface ProcessedDoc {
   sourceDirName: string
   docPath: string
   noSubnav: boolean
+  noPage: boolean
 }
 
 const processDoc = ({ content, source, docPath }: DocFile): ProcessedDoc => {
@@ -127,6 +128,8 @@ const processDoc = ({ content, source, docPath }: DocFile): ProcessedDoc => {
 
   const noSubnav: boolean = frontMatter.noSubnav ?? false
 
+  const noPage: boolean = frontMatter.noPage ?? false
+
   return {
     docPath,
     frontMatter,
@@ -138,6 +141,7 @@ const processDoc = ({ content, source, docPath }: DocFile): ProcessedDoc => {
     baseID,
     sourceDirName,
     noSubnav,
+    noPage,
   }
 }
 

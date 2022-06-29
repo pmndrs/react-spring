@@ -47,7 +47,9 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
 
       if (route === '') {
         schemas.push({
-          href: `/docs${isIndexRoute ? '' : `/${doc.baseID}`}`,
+          href: doc.noPage
+            ? ''
+            : `/docs${isIndexRoute ? '' : `/${doc.baseID}`}`,
           id: doc.baseID,
           title: doc.title,
           sidebarPosition: doc.sidebarPosition,
@@ -60,7 +62,9 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
         doesSchemaAtRouteExist && !isIndexRoute
           ? doesSchemaAtRouteExist
           : {
-              href: prevSchema
+              href: doc.noPage
+                ? ''
+                : prevSchema
                 ? `${prevSchema.href}/${route}`
                 : `/docs/${route}`,
               id: route,
@@ -110,7 +114,7 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
           title: doc.title,
           sidebarPosition: doc.sidebarPosition,
           children: [],
-          href: `${schemaAtRoute.href}/${doc.baseID}`,
+          href: doc.noPage ? '' : `${schemaAtRoute.href}/${doc.baseID}`,
         })
 
         return schemas

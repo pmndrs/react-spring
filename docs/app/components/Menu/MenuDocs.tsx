@@ -55,19 +55,23 @@ const renderSubMenu = (
 
   const isTitle = level === 0
 
+  const hasLink = Boolean(href)
+
   return (
     <ListItem key={id}>
-      <Anchor
-        to={href}
-        title={isTitle}
-        active={location.pathname === href}
-        onClick={handleClick}>
-        {title}
-      </Anchor>
-      {/* {!hasRenderableChildren ? (
+      {hasLink ? (
+        <Anchor
+          to={href}
+          title={isTitle}
+          active={location.pathname === href}
+          onClick={handleClick}>
+          {title}
+        </Anchor>
       ) : (
-        <AnchorLike title={level === 0}>{title}</AnchorLike>
-      )} */}
+        <Anchor title={isTitle} as="span" hasNoLink>
+          {title}
+        </Anchor>
+      )}
       {hasRenderableChildren ? (
         <ul>
           {children.map(item =>
@@ -126,6 +130,13 @@ const Anchor = styled(Link, {
       false: {
         fontWeight: '$default',
         pl: '$20',
+      },
+    },
+    hasNoLink: {
+      true: {
+        hover: {
+          background: 'transparent',
+        },
       },
     },
     active: {
