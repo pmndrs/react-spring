@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { SandpackRunner } from '@codesandbox/sandpack-react'
+import { SandpackPreview, SandpackProvider } from '@codesandbox/sandpack-react'
 import * as Accordion from '@radix-ui/react-accordion'
 import { animated, useSpring } from '@react-spring/web'
 
@@ -44,6 +44,9 @@ export const LivePreview = ({
     []
   )
 
+  /**
+   * TODO: make this instant on initial mount
+   */
   useEffect(() => {
     api.start({
       height: value === '' ? 0 : preRef.current.getBoundingClientRect().height,
@@ -52,40 +55,42 @@ export const LivePreview = ({
 
   return (
     <PreviewContainer className={className}>
-      <SandpackRunner
-        code={template}
+      <SandpackProvider
         template="react"
-        customSetup={{
-          files: {
-            '/index.css': {
-              code: /* css */ `
-                        html, body {
-                            height: 100%;
-                        }
-
-                        body {
-                            display:flex;
-                            align-items: center;
-                            margin: 0 25px;
-                        }
-
-                        .spring-box {
-                          width: 80px;
-                          height: 80px;
-                          background-color: #ff6d6d;
-                          border-radius: 8px;
-                          font-family: Helvetica;
-                          font-size: 14px;
-                          display: flex;
-                          justify-content: center;
-                          align-items: center;
-                          color: #1B1A22;
-                        }
-                    `,
-            },
+        files={{
+          '/App.js': {
+            code: template,
           },
+          '/index.css': {
+            code: /* css */ `
+                    html, body {
+                        height: 100%;
+                    }
+
+                    body {
+                        display:flex;
+                        align-items: center;
+                        margin: 0 25px;
+                    }
+
+                    .spring-box {
+                      width: 80px;
+                      height: 80px;
+                      background-color: #ff6d6d;
+                      border-radius: 8px;
+                      font-family: Helvetica;
+                      font-size: 14px;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      color: #1B1A22;
+                    }
+                `,
+          },
+        }}
+        customSetup={{
           dependencies: {
-            '@react-spring/web': '9.4.0-beta.1',
+            '@react-spring/web': '*',
           },
         }}
         options={{
@@ -99,8 +104,9 @@ export const LivePreview = ({
             'sp-overlay': 'preview__overlay',
             'sp-button': 'preview__button',
           },
-        }}
-      />
+        }}>
+        <SandpackPreview />
+      </SandpackProvider>
       {showCode ? (
         <Accordion.Root
           type="single"
@@ -144,6 +150,7 @@ const PreviewContainer = styled('div', {
 
   '& .preview__container': {
     position: 'relative',
+    backgroundColor: 'transparent',
   },
 
   '& .preview__actions': {
@@ -174,6 +181,7 @@ const PreviewContainer = styled('div', {
 
     hover: {
       backgroundColor: '$steel20',
+      color: '$black !important',
     },
   },
 

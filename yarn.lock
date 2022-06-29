@@ -3617,19 +3617,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codesandbox/sandpack-client@npm:^0.14.8":
-  version: 0.14.8
-  resolution: "@codesandbox/sandpack-client@npm:0.14.8"
+"@codesandbox/sandpack-client@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@codesandbox/sandpack-client@npm:1.2.2"
   dependencies:
     codesandbox-import-utils: ^1.2.3
     lodash.isequal: ^4.5.0
-  checksum: 9c97615018ce25d93891b1a0458cfef99808725827ccabb09f86d2267b9c73c1b77c5deb26c589128669520dc213eae8f77720c5e758e4cb22dc5a230a606c78
+  checksum: c43d3829007c82984d3a404e4f507f682edf6d54817a3e488dec9d2c93e740f1fbf9b3ae2785004049cf4fd88e773398f7ad16015ce48c69368f244195f4721a
   languageName: node
   linkType: hard
 
-"@codesandbox/sandpack-react@npm:^0.14.9":
-  version: 0.14.9
-  resolution: "@codesandbox/sandpack-react@npm:0.14.9"
+"@codesandbox/sandpack-react@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@codesandbox/sandpack-react@npm:1.2.2"
   dependencies:
     "@code-hike/classer": ^0.0.0-aa6efee
     "@codemirror/closebrackets": ^0.19.0
@@ -3645,17 +3645,18 @@ __metadata:
     "@codemirror/matchbrackets": ^0.19.3
     "@codemirror/state": ^0.19.6
     "@codemirror/view": ^0.19.32
-    "@codesandbox/sandpack-client": ^0.14.8
+    "@codesandbox/sandpack-client": ^1.2.2
     "@react-hook/intersection-observer": ^3.1.1
+    "@stitches/core": ^1.2.6
     codesandbox-import-util-types: ^2.2.3
-    codesandbox-import-utils: ^2.2.3
     lodash.isequal: ^4.5.0
+    lz-string: ^1.4.4
     react-devtools-inline: 4.4.0
     react-is: ^17.0.2
   peerDependencies:
     react: ^16.8.0 || ^17
     react-dom: ^16.8.0 || ^17
-  checksum: 18153026275f484d01981a41ab4411a06c6fc1ede30d2ce8af5b4d700fa1306e5195b3258a74315b581a2dc32fe1ec11a9bb76252915f3f55996f046085570e5
+  checksum: a5ea5dcff18659be4459ad74b4d219ae329af702a5af545f6d7d668dd2960245c5f914b53023e79d9494151f19a4b44787d298f1171822972f09f0c6a5ea74e6
   languageName: node
   linkType: hard
 
@@ -5295,7 +5296,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-spring/docs@workspace:docs"
   dependencies:
-    "@codesandbox/sandpack-react": ^0.14.9
+    "@codesandbox/sandpack-react": ^1.2.2
     "@docsearch/react": ^3.1.0
     "@mdx-js/react": ^1.6.22
     "@radix-ui/react-accordion": ^0.1.6
@@ -5893,6 +5894,13 @@ __metadata:
   dependencies:
     "@sinonjs/commons": ^1.7.0
   checksum: 09b5a158ce013a6c37613258bad79ca4efeb99b1f59c41c73cca36cac00b258aefcf46eeea970fccf06b989414d86fe9f54c1102272c0c3bdd51a313cea80949
+  languageName: node
+  linkType: hard
+
+"@stitches/core@npm:^1.2.6":
+  version: 1.2.8
+  resolution: "@stitches/core@npm:1.2.8"
+  checksum: 3a76a697b1d71ffb212e8b166f923c8f66ef99de93689dd417571f90fbba5692abb9a92220acd102baf5298896f0fdfeaa721da2d61adee1247531a26f67a15f
   languageName: node
   linkType: hard
 
@@ -7748,7 +7756,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"binaryextensions@npm:2, binaryextensions@npm:^2.1.2":
+"binaryextensions@npm:2":
   version: 2.3.0
   resolution: "binaryextensions@npm:2.3.0"
   checksum: e64e4658a611a753e0320b047a0045a063c6f2dd92d7a7fc06c25f7e72fb3700dabcf328e319c79f1038e6d0ea46edb0644686603d5f36bff3350d0e7eb198a9
@@ -8528,7 +8536,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"codesandbox-import-util-types@npm:^2.2.3, codesandbox-import-util-types@npm:^2.3.0":
+"codesandbox-import-util-types@npm:^2.2.3":
   version: 2.3.0
   resolution: "codesandbox-import-util-types@npm:2.3.0"
   checksum: e527fe1a0bc2de5a0a9842a70d42ad4c6de56a99a4a9e1427a81f4006ab91d85ff098e2e919cccbcd8703f9b3216b9c1f4ce5a40261051d8d1511287fbbf7d77
@@ -8543,17 +8551,6 @@ __metadata:
     istextorbinary: 2.2.1
     lz-string: ^1.4.4
   checksum: 8b760b8270c202a93e555f1ca516e6af3c2e898be6162da316470740a45b43fa933697519377955a90b598eb9963eb5e5ee59b43bec8ef4d0733f1ee9558137c
-  languageName: node
-  linkType: hard
-
-"codesandbox-import-utils@npm:^2.2.3":
-  version: 2.3.0
-  resolution: "codesandbox-import-utils@npm:2.3.0"
-  dependencies:
-    codesandbox-import-util-types: ^2.3.0
-    istextorbinary: ^2.2.1
-    lz-string: ^1.4.4
-  checksum: 977edf0d95706bf02e0b850679efb84ab04fa2d92d05faf183626fa996e2ff0c9f1350d69b0a8cf11c519f3edf15266f1109402810d0e6219b08a0b0589b072d
   languageName: node
   linkType: hard
 
@@ -9676,16 +9673,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"editions@npm:^2.2.0":
-  version: 2.3.1
-  resolution: "editions@npm:2.3.1"
-  dependencies:
-    errlop: ^2.0.0
-    semver: ^6.3.0
-  checksum: 0b08a2b50c30e7b046a3096ee66ea326158a147daac5f8c134b4bdfe4d2fe02f9916c8b92d8e86887f2379c3528df2150cc9eb3d5bc25c442b4b380d6d7a754e
-  languageName: node
-  linkType: hard
-
 "ee-first@npm:1.1.1":
   version: 1.1.1
   resolution: "ee-first@npm:1.1.1"
@@ -9789,13 +9776,6 @@ __metadata:
   version: 2.0.3
   resolution: "err-code@npm:2.0.3"
   checksum: 8b7b1be20d2de12d2255c0bc2ca638b7af5171142693299416e6a9339bd7d88fc8d7707d913d78e0993176005405a236b066b45666b27b797252c771156ace54
-  languageName: node
-  linkType: hard
-
-"errlop@npm:^2.0.0":
-  version: 2.2.0
-  resolution: "errlop@npm:2.2.0"
-  checksum: 9bce5eba67866b168cfbc98de46df4d7ad7a8e75fb12a40ade886d801dbe4c9d5d640a0bb6a41552a47aeda00c26db97182732213d7d523439e10dc6a853bd7d
   languageName: node
   linkType: hard
 
@@ -13303,17 +13283,6 @@ __metadata:
     editions: ^1.3.3
     textextensions: 2
   checksum: 2fff548636a7837679aebfe3846a39a6e39683f345f38f1f222414108b58e3782211bb650dee1c9d31957fa94b3522d5bd9aba862442d52c6e3d059a8983d33f
-  languageName: node
-  linkType: hard
-
-"istextorbinary@npm:^2.2.1":
-  version: 2.6.0
-  resolution: "istextorbinary@npm:2.6.0"
-  dependencies:
-    binaryextensions: ^2.1.2
-    editions: ^2.2.0
-    textextensions: ^2.5.0
-  checksum: 964915aa9533df46a7142d36263e9e1a0940d63b58e2ee1ca1ecc9088239a2499b8153d9746225cfe71b9a7a0ab40565bf23c0a8cfed3a4bce7465303b9fb237
   languageName: node
   linkType: hard
 
@@ -19736,7 +19705,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"textextensions@npm:2, textextensions@npm:^2.5.0":
+"textextensions@npm:2":
   version: 2.6.0
   resolution: "textextensions@npm:2.6.0"
   checksum: e28781f092d0172b78974fd22d5c007cc43ac50be666b36bbf10125d961775faf309a70b51697a2debc074c8f23cc923f1386b1e4661e11b128cee292060034c

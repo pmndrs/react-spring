@@ -11,7 +11,6 @@ import {
   json,
   useLoaderData,
 } from 'remix'
-
 import docusearch from '@docsearch/css/dist/style.css'
 
 import { globalStyles } from './styles/global'
