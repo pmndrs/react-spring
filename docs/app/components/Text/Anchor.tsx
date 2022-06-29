@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Link } from 'remix'
+import { Link } from '@remix-run/react'
 
 import { isValidHttpUrl } from '~/helpers/strings'
 import { styled } from '~/styles/stitches.config'

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Outlet, useLocation } from 'remix'
+import { Outlet, useLocation } from '@remix-run/react'
 import { MDXProvider } from '@mdx-js/react'
 import { PencilSimple } from 'phosphor-react'
 

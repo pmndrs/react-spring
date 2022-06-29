@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'remix'
+import { Link, useLocation } from '@remix-run/react'
 import { Location } from 'react-router'
 
 import { getFontStyles } from '~/styles/fontStyles'

@@ -1,4 +1,4 @@
-import { MetaFunction } from 'remix'
+import { MetaFunction } from '@remix-run/node'
 import { GradientButton } from '~/components/Buttons/GradientButton'
 
 import { Header } from '~/components/Header/Header'

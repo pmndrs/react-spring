@@ -1,4 +1,4 @@
-import { MetaFunction } from 'remix'
+import { MetaFunction } from '@remix-run/node'
 import { CarouselQuotes } from '~/components/Carousels/CarouselQuotes'
 import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 import { Header } from '~/components/Header/Header'

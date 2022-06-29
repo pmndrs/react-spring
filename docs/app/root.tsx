@@ -1,16 +1,18 @@
 import {
+  MetaFunction,
+  LinksFunction,
+  LoaderFunction,
+  json,
+} from '@remix-run/node'
+import {
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  MetaFunction,
-  LinksFunction,
-  LoaderFunction,
-  json,
   useLoaderData,
-} from 'remix'
+} from '@remix-run/react'
 import docusearch from '@docsearch/css/dist/style.css'
 
 import { globalStyles } from './styles/global'

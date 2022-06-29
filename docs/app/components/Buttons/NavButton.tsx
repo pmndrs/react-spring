@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Link, useLocation } from 'remix'
+import { Link, useLocation } from '@remix-run/react'
 import {
   animated,
   SpringValue,

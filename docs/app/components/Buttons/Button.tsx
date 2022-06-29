@@ -1,6 +1,6 @@
 import { css } from '@stitches/react'
 import { MouseEventHandler, ReactNode } from 'react'
-import { Link } from 'remix'
+import { Link } from '@remix-run/react'
 import { styled } from '~/styles/stitches.config'
 
 interface ButtonProps {

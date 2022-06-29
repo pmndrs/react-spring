@@ -1,6 +1,6 @@
 import { IconProps } from 'phosphor-react'
 import { ForwardRefExoticComponent, RefAttributes } from 'react'
-import { Link } from 'remix'
+import { Link } from '@remix-run/react'
 import { isStringGuard } from '~/helpers/guards'
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
 import { dark, styled } from '~/styles/stitches.config'

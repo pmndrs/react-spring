@@ -1,4 +1,4 @@
-import { useLocation } from 'remix'
+import { useLocation } from '@remix-run/react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'phosphor-react'
 import { animated, useTransition } from '@react-spring/web'
