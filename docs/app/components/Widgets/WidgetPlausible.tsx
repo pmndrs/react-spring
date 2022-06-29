@@ -6,7 +6,7 @@ export const WidgetPlausible = () => {
   return (
     <script
       defer
-      data-domain="react-spring.io"
+      data-domain="beta.react-spring.dev"
       src="https://plausible.io/js/plausible.js"
     />
   )
