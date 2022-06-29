@@ -3,7 +3,7 @@
   "description": "",
   "license": "",
   "scripts": {
-    "build": "remix build && rollup -c",
+    "build": "remix build",
     "dev": "concurrently \"yarn dev:remix\" \"yarn scripts:watch\"",
     "dev:remix": "remix dev",
     "scripts:build": "ts-node ./scripts/build.ts",
