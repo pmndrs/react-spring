@@ -6,7 +6,7 @@
     "build": "remix build",
     "deploy": "fly deploy --remote-only",
     "dev": "concurrently \"yarn dev:remix\" \"yarn scripts:watch\"",
-    "dev:remix": "remix dev",
+    "dev:remix": "cross-env NODE_ENV=development netlify dev",
     "scripts:build": "ts-node ./scripts/build.ts",
     "scripts:watch": "ts-node ./scripts/watch.ts"
   },
@@ -26,6 +26,7 @@
     "@remix-run/react": "^1.6.3",
     "@stitches/react": "^1.2.8",
     "@use-gesture/react": "^10.2.16",
+    "cross-env": "^7.0.3",
     "front-matter": "^4.0.2",
     "fs-extra": "^10.1.0",
     "hast-util-to-html": "7.1.3",
