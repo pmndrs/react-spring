@@ -7,8 +7,9 @@ import { dark, styled } from '~/styles/stitches.config'
 
 import { Pre } from './Pre'
 import { Button } from '../Buttons/Button'
+import { LIVE_PREVIEW_STYLES, LivePreviewStyles } from './LivePreviewStyles'
 
-interface LivePreviewProps {
+export interface LivePreviewProps {
   code: string
   preProps: {
     id?: string
@@ -18,6 +19,7 @@ interface LivePreviewProps {
   showCode?: boolean
   defaultOpen?: boolean
   className?: string
+  template?: keyof LivePreviewStyles
 }
 
 export const LivePreview = ({
@@ -26,11 +28,12 @@ export const LivePreview = ({
   preProps,
   className,
   defaultOpen = false,
+  template = 'spring',
 }: LivePreviewProps) => {
   const [value, setValue] = useState(defaultOpen ? 'code' : '')
   const preRef = useRef<HTMLPreElement>(null!)
 
-  const template = `
+  const codeTemplate = `
     import '/index.css'
     ${code}
   `
@@ -54,43 +57,22 @@ export const LivePreview = ({
   }, [value])
 
   return (
-    <PreviewContainer className={className}>
+    <PreviewContainer className={className} isDemo={template !== 'spring'}>
       <SandpackProvider
         template="react"
         files={{
           '/App.js': {
-            code: template,
+            code: codeTemplate,
           },
           '/index.css': {
-            code: /* css */ `
-                    html, body {
-                        height: 100%;
-                    }
-
-                    body {
-                        display:flex;
-                        align-items: center;
-                        margin: 0 25px;
-                    }
-
-                    .spring-box {
-                      width: 80px;
-                      height: 80px;
-                      background-color: #ff6d6d;
-                      border-radius: 8px;
-                      font-family: Helvetica;
-                      font-size: 14px;
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      color: #1B1A22;
-                    }
-                `,
+            code: LIVE_PREVIEW_STYLES[template],
           },
         }}
         customSetup={{
           dependencies: {
             '@react-spring/web': '*',
+            '@stitches/react': '*',
+            '@radix-ui/react-dialog': '*',
           },
         }}
         options={{
@@ -196,6 +178,16 @@ const PreviewContainer = styled('div', {
     border: 'solid 1px $steel20',
     borderRadius: '$r8',
     height: 'inherit !important',
+  },
+
+  variants: {
+    isDemo: {
+      true: {
+        '& .preview__iframe': {
+          background: '$blueGreenGradient100',
+        },
+      },
+    },
   },
 })
 

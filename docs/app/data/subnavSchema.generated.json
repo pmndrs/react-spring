@@ -18,5 +18,29 @@
       "id": "reacting-to-events"
     },
     { "href": "#next-steps", "label": "Next Steps", "id": "next-steps" }
-  ]
+  ],
+  "/concepts/animated-elements": [
+    {
+      "href": "#what-are-they",
+      "label": "What are they?",
+      "id": "what-are-they"
+    },
+    {
+      "href": "#animating-elements",
+      "label": "Animating elements",
+      "id": "animating-elements"
+    },
+    {
+      "href": "#animating-components",
+      "label": "Animating components",
+      "id": "animating-components"
+    },
+    {
+      "href": "#example-using-stitches--radixui",
+      "label": "Example: using stitches & radix-ui",
+      "id": "example-using-stitches--radixui"
+    },
+    { "href": "#deep-dive", "label": "Deep dive", "id": "deep-dive" }
+  ],
+  "/concepts/index": []
 }

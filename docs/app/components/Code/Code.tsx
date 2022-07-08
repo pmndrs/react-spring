@@ -1,21 +1,22 @@
 import { styled } from '~/styles/stitches.config'
 
 import { ButtonCopy } from '../Buttons/ButtonCopy'
-import { LivePreview } from './LivePreview'
+import { LivePreview, LivePreviewProps } from './LivePreview'
 
 import { Pre } from './Pre'
 
-interface CodeProps {
+interface CodeProps
+  extends Pick<
+    LivePreviewProps,
+    'code' | 'defaultOpen' | 'showCode' | 'template'
+  > {
   id?: string
-  code?: string
   isLive?: boolean
   showLineNumbers?: boolean
   ['data-showing-lines']?: boolean
-  showCode?: boolean
   children?: any
   className?: string
   copy?: string
-  defaultOpen: boolean
 }
 
 export const Code = ({
@@ -25,16 +26,18 @@ export const Code = ({
   className,
   copy,
   defaultOpen,
+  template,
   ...restProps
 }: CodeProps) => {
   if (isLive) {
     return (
       <LivePreview
-        code={code ?? ''}
+        code={code}
         showCode={showCode}
         className={className}
         defaultOpen={defaultOpen}
         preProps={{ ...restProps }}
+        template={template}
       />
     )
   } else {

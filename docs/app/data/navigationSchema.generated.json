@@ -12,5 +12,20 @@
     "title": "Getting started ",
     "sidebarPosition": 2,
     "children": []
+  },
+  {
+    "href": "",
+    "id": "concepts",
+    "children": [
+      {
+        "id": "animated-elements",
+        "title": "Animated Elements ",
+        "sidebarPosition": 1,
+        "children": [],
+        "href": "/docs/concepts/animated-elements"
+      }
+    ],
+    "sidebarPosition": 2,
+    "title": "Concepts "
   }
 ]

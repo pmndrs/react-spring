@@ -1,0 +1,314 @@
+---
+meta:
+  title: Animated Elements | React Spring
+sidebar_position: 1
+---
+
+# Animated Elements
+
+## What are they?
+
+The basis of `react-spring` depends on two things, `SpringValues` & `animated` components. Lets explore the latter.
+An `animated` component recieves `SpringValues` through the `style` prop and updates the element without causing a
+react render. It works because it is a [Higher-Order compoonent](https://reactjs.org/docs/higher-order-components.html) (HOC)
+assigned to a dictionary of elements depending on the target you've selected thus being able to pass the props you
+desire for your application but also containing the logic to interpolate the `SpringValues` from the hook you've used.
+
+## Animating elements
+
+The `animated` component can be imported from any of our targets. However, an `animated` component is specific to the target
+because they use the native elements of said target. These native elements are elements that are understood by the `react-reconciler`
+of choice e.g. [`@react-three/fiber`](https://github.com/pmndrs/react-three-fiber) is a reconciler for [`three.js`](https://threejs.org/)
+elements. So therefore any element that is understood by the reconciler can be animated.
+
+```jsx
+import { animated } from '@react-spring/web'
+
+// ✅ This will work because `div` is a web element
+<animated.div />
+
+// ❌ This will not work because `mesh` is not a web element.
+<animated.mesh />
+```
+
+If you've used `framer-motion` before, will most like be familar with the dot notation of accessing a dictionary of components.
+
+So while being able to use `animated.element` is useful, most cases you'll want to style said element. `react-spring` has no preference on styling techniques,
+common techniques like `css modules` or [`tailwind`](https://tailwindcss.com/) can work because every animated element can accept the properties of the native element, e.g. `className`.
+
+If you're using a css-in-js library to style your components then typically you'll have access to a `styled` function. Just like composing components you can compose
+your animated element with the `styled` function:
+
+```jsx
+import { styled } from '@stitches/react'
+
+const MyModal = styled(animated.div, {
+  width: '40vw',
+  height: '20vh',
+  borderRadius: '8px',
+  backgroundColor: '$white80',
+})
+```
+
+## Animating components
+
+Sometimes it's not possible to animate an element directly e.g. because it comes from another library, for example [`radix-ui`](https://www.radix-ui.com/).
+Because `animated` is a HOC we can simply wrap our components with it and assuming the component you're wrapping passes to the `style` prop to the native element.
+
+```jsx
+// This comes from another library e.g. radix-ui
+const ExternalComponent = props => {
+  return <div {...props} />
+}
+
+// MyApp.js
+import { ExternalComponent } from 'external-library'
+import { aniamted, useSpring } from '@react-spring/web'
+
+const AnimatedDialog = animated(ExternalComponent)
+
+const App = () => {
+  const styles = useSpring({
+    from: {
+      opacity: 0,
+      y: '6%',
+    },
+    to: {
+      opacity: 1,
+      y: 0,
+    },
+  })
+
+  return <AnimatedDialog style={styles} />
+}
+```
+
+If the component you are wrapping does not pass this element then <strong>nothing will animate</strong>.
+
+## Example: using stitches & radix-ui
+
+```jsx live=true template=dialog
+import { useState } from 'react'
+import { useTransition, animated } from '@react-spring/web'
+import { styled } from '@stitches/react'
+import * as Dialog from '@radix-ui/react-dialog'
+
+export default function () {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleDialogChange = (isOpen: boolean) => setIsOpen(isOpen)
+
+  const transition = useTransition(isOpen, {
+    from: {
+      scale: 0,
+      opacity: 0,
+    },
+    enter: {
+      scale: 1,
+      opacity: 1,
+    },
+    leave: {
+      scale: 0,
+      opacity: 0,
+    },
+  })
+
+  return (
+    <Dialog.Root open={isOpen} onOpenChange={handleDialogChange}>
+      <Trigger>
+        <TriggerShadow />
+        <TriggerEdge />
+        <TriggerLabel>Open Modal</TriggerLabel>
+      </Trigger>
+      <Dialog.Portal forceMount>
+        {transition((style, isOpen) => (
+          <>
+            <OverlayBackground style={{ opacity: style.opacity }} />
+            {isOpen ? (
+              <Content forceMount style={style}>
+                <DialogHeader>
+                  <CloseButton>
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M15.9574 14.1689L8.59651 6.75098L6.73232 8.59598L14.1313 16.071L6.71338 23.4129L8.5964 25.2769L15.9574 17.8779L23.3943 25.2769L25.2392 23.4129L17.8213 16.071L25.2202 8.59598L23.3752 6.75098L15.9574 14.1689Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </CloseButton>
+                </DialogHeader>
+                <Title>Aha you found me!</Title>
+              </Content>
+            ) : null}
+          </>
+        ))}
+      </Dialog.Portal>
+    </Dialog.Root>
+  )
+}
+
+const TriggerPart = styled('span', {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  borderRadius: 8,
+})
+
+const TriggerShadow = styled(TriggerPart, {
+  background: 'hsl(0deg 0% 0% / 0.1)',
+  transform: 'translateY(2px)',
+  transition: 'transform 250ms ease-out',
+})
+
+const TriggerEdge = styled(TriggerPart, {
+  background: `linear-gradient(
+      to left,
+      hsl(0deg 0% 69%) 0%,
+      hsl(0deg 0% 85%) 8%,
+      hsl(0deg 0% 85%) 92%,
+      hsl(0deg 0% 69%) 100%
+    )`,
+})
+
+const TriggerLabel = styled('span', {
+  display: 'block',
+  position: 'relative',
+  borderRadius: 8,
+  color: '#569AFF',
+  fontSize: '14px',
+  padding: '16px 24px',
+  background: '#fafafa',
+  transform: 'translateY(-4px)',
+  width: '100%',
+  userSelect: 'none',
+  transition: 'transform 250ms ease-out',
+})
+
+const Trigger = styled(Dialog.Trigger, {
+  border: 'none',
+  fontWeight: 600,
+  cursor: 'pointer',
+  background: 'transparent',
+  position: 'relative',
+  padding: 0,
+  cursor: 'pointer',
+  transition: 'filter 250ms ease-out',
+
+  '&:hover': {
+    filter: 'brightness(110%)',
+
+    [`& ${TriggerLabel}`]: {
+      transform: 'translateY(-6px)',
+    },
+
+    [`& ${TriggerShadow}`]: {
+      transform: 'translateY(4px)',
+    },
+  },
+
+  '&:active': {
+    [`& ${TriggerLabel}`]: {
+      transform: 'translateY(-2px)',
+      transition: 'transform 34ms',
+    },
+
+    [`& ${TriggerShadow}`]: {
+      transform: 'translateY(1px)',
+      transition: 'transform 34ms',
+    },
+  },
+})
+
+const OverlayBackground = styled(animated(Dialog.Overlay), {
+  width: '100vw',
+  height: '100vh',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  pointerEvents: 'all',
+  position: 'fixed',
+  inset: 0,
+})
+
+const Content = styled(animated(Dialog.Content), {
+  position: 'absolute',
+  width: '50vw',
+  height: '60vh',
+  backgroundColor: '#fafafa',
+  borderRadius: 8,
+  padding: '24px 24px 32px',
+})
+
+const DialogHeader = styled('header', {
+  display: 'flex',
+  justifyContent: 'flex-end',
+  marginBottom: 16,
+})
+
+const CloseButton = styled(Dialog.Close, {
+  backgroundColor: 'transparent',
+  border: 'none',
+  position: 'absolute',
+  top: 16,
+  right: 16,
+  cursor: 'pointer',
+  color: '#1B1A22',
+})
+
+const Title = styled(Dialog.Title, {
+  fontSize: 20,
+})
+```
+
+## Deep dive
+
+### How does it work?
+
+Higher-order components have access to the props you're passing to the child. Therefore,
+the `animated` component is able to scan through the passed `style` prop and handle said values.
+How the component handles the style prop is dependant of the target you're using. For the
+purpose of explanation, we'll focus on the `web` target.
+
+We start by extracting the whole `style` prop and wrapping it in an `AnimatedStyle` class, this
+class is unique to the `web` target and handles the shorthands for transformations and in theory
+could handle a multitude of interpolations if we were to add them. Once we've performed the specific
+target alterations to the style prop we call the `super` of it's class `AnimatedObject` which then runs
+through the object making the values "animated".
+
+### How does it update the native element without causing a react render?
+
+Similar to how the `style` prop is handled with regards to it being specific to the target, how we apply
+the animated values to the native element is also specific to the target. In the instance of the `web` target,
+we in the process of wrapping the element in the `animated` HOC attach a ref to the elment.
+
+We are then able to directly change the DOM node imperatively. For further reading, check out [`Controller`](/concepts/controller).
+
+### How can I make my own animated components?
+
+Because animated components belong to the target, to create your own registry of animated components
+e.g. for a [D3](https://d3js.org/) react renderer, you would need to use the `createHost` function
+exported from the `@react-spring/animated` package. The signature for which looks like:
+
+```ts
+interface HostConfig {
+  /** Provide custom logic for native updates */
+  applyAnimatedValues: (node: any, props: Lookup) => boolean | void
+  /** Wrap the `style` prop with an animated node */
+  createAnimatedStyle: (style: Lookup) => Animated
+  /** Intercept props before they're passed to an animated component */
+  getComponentProps: (props: Lookup) => typeof props
+}
+
+type AnimatableComponent = string | Exclude<React.ElementType<any>, string>
+
+type CreateHost = (
+  components: AnimatableComponent[] | { [key: string]: AnimatableComponent },
+  config: Partial<HostConfig>
+) => {
+  animated: WithAnimated
+}
+```

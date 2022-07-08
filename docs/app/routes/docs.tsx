@@ -24,6 +24,7 @@ import {
 import { getDocFilePathToGithub } from '~/helpers/links'
 
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
+import { LivePreviewStyles } from '~/components/Code/LivePreviewStyles'
 
 const comps = {
   h1: (props: HeadingProps) => (
@@ -177,6 +178,7 @@ const comps = {
     copy?: string
     defaultOpen?: string
     showCode?: string
+    template?: keyof LivePreviewStyles
   }) => {
     const {
       defaultOpen,
@@ -188,6 +190,7 @@ const comps = {
       live,
       copy,
       showCode,
+      template,
     } = props
 
     return (
@@ -199,7 +202,8 @@ const comps = {
         code={code}
         copy={copy}
         defaultOpen={defaultOpen === 'true'}
-        showCode={showCode !== 'false'}>
+        showCode={showCode !== 'false'}
+        template={template}>
         {children}
       </Code>
     )

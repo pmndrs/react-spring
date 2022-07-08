@@ -128,7 +128,7 @@ we normally want animations to occur on a user interaction. Whether that's
 this very common use-case?
 
 `useSpring` can take two types of first argument, a `config` object and a `function`.
-We're going to explore the latter, we'll start by changing the notation of our hook:
+We're going to explore the latter in more detail, we'll start by changing the notation of our hook.
 
 ```jsx line=4-6
 import { useSpring, animated } from '@react-spring/web'
@@ -153,8 +153,9 @@ export default function MyComponent() {
 ```
 
 When we provide a function to `useSpring` we get an array returned, with the first
-argument as our `springs` which we're already used to and the second argument is the
-`api` that controls these springs.
+argument as our `springs` which we're already used to (as this is returned when you
+provide only a config object) and the second argument is the `api` that controls
+these springs.
 
 We'll start with a very basic user interaction, the `onClick` event by creating a
 handler and in that handler we'll use the `api.start` method. The `start` method starts
