@@ -4729,6 +4729,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-popover@npm:^0.1.6":
+  version: 0.1.6
+  resolution: "@radix-ui/react-popover@npm:0.1.6"
+  dependencies:
+    "@babel/runtime": ^7.13.10
+    "@radix-ui/primitive": 0.1.0
+    "@radix-ui/react-compose-refs": 0.1.0
+    "@radix-ui/react-context": 0.1.1
+    "@radix-ui/react-dismissable-layer": 0.1.5
+    "@radix-ui/react-focus-guards": 0.1.0
+    "@radix-ui/react-focus-scope": 0.1.4
+    "@radix-ui/react-id": 0.1.5
+    "@radix-ui/react-popper": 0.1.4
+    "@radix-ui/react-portal": 0.1.4
+    "@radix-ui/react-presence": 0.1.2
+    "@radix-ui/react-primitive": 0.1.4
+    "@radix-ui/react-use-controllable-state": 0.1.0
+    aria-hidden: ^1.1.1
+    react-remove-scroll: ^2.4.0
+  peerDependencies:
+    react: ^16.8 || ^17.0
+    react-dom: ^16.8 || ^17.0
+  checksum: 21e0dfd97876a5b92ffe70a231fb7195f41dd2c2555a268b59e1f7b113f080e69462c8bd6189cd9e657fbeef25129d7f58a96c7906a0add3c087f7dc716f4043
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-popper@npm:0.1.4":
   version: 0.1.4
   resolution: "@radix-ui/react-popper@npm:0.1.4"
@@ -5311,6 +5337,7 @@ __metadata:
     "@netlify/functions": ^1.0.0
     "@radix-ui/react-accordion": ^0.1.6
     "@radix-ui/react-dialog": ^0.1.7
+    "@radix-ui/react-popover": ^0.1.6
     "@radix-ui/react-toolbar": ^0.1.5
     "@radix-ui/react-tooltip": ^0.1.7
     "@react-spring/rafz": "workspace:^"

@@ -89,7 +89,7 @@ const CopyButton = styled('button', {
 
   [`.${dark} &`]: {
     hover: {
-      backgroundColor: '$red120',
+      backgroundColor: '#ff6d6d66',
     },
   },
 

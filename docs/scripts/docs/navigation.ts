@@ -31,6 +31,7 @@ export interface NavigationSchemaItem {
   children: NavigationSchemaItem[]
   id: string
   href: string
+  noPage?: boolean
 }
 
 export type NavigationSchema = Array<NavigationSchemaItem>
@@ -38,6 +39,7 @@ export type NavigationSchema = Array<NavigationSchemaItem>
 export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
   const unorderedDocs = docs.reduce((acc, doc) => {
     const routes = doc.docPath.split('/').slice(1)
+    // console.log('---------', routes[0], '/', doc.baseID, '---------')
 
     let prevSchema: NavigationSchemaItem | null = null
     routes.reduce((schemas, route, level) => {
@@ -62,12 +64,11 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
         doesSchemaAtRouteExist && !isIndexRoute
           ? doesSchemaAtRouteExist
           : {
-              href: doc.noPage
-                ? ''
-                : prevSchema
+              href: prevSchema
                 ? `${prevSchema.href}/${route}`
                 : `/docs/${route}`,
               id: route,
+              noPage: doc.noPage,
               children: doesSchemaAtRouteExist
                 ? doesSchemaAtRouteExist.children
                 : [],
@@ -114,7 +115,8 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
           title: doc.title,
           sidebarPosition: doc.sidebarPosition,
           children: [],
-          href: doc.noPage ? '' : `${schemaAtRoute.href}/${doc.baseID}`,
+          href: `${schemaAtRoute.href}/${doc.baseID}`,
+          noPage: doc.noPage,
         })
 
         return schemas

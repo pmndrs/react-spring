@@ -1,6 +1,7 @@
 import { DocSearch } from '@docsearch/react'
+import { memo } from 'react'
 
-export const WidgetSearch = () => {
+export const WidgetSearch = memo(() => {
   return (
     <DocSearch
       appId={typeof window === 'undefined' ? '' : window.env.ALGOLIA_APP_ID}
@@ -8,4 +9,4 @@ export const WidgetSearch = () => {
       apiKey={typeof window === 'undefined' ? '' : window.env.ALGOLIA_API_KEY}
     />
   )
-}
+})

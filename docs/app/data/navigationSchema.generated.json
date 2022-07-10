@@ -2,30 +2,80 @@
   {
     "href": "/docs",
     "id": "index",
-    "title": "Overview ",
+    "title": "Overview",
     "sidebarPosition": 1,
     "children": []
   },
   {
     "href": "/docs/getting-started",
     "id": "getting-started",
-    "title": "Getting started ",
+    "title": "Getting started",
     "sidebarPosition": 2,
     "children": []
   },
   {
-    "href": "",
+    "href": "/docs/concepts",
     "id": "concepts",
+    "noPage": true,
     "children": [
       {
         "id": "animated-elements",
-        "title": "Animated Elements ",
+        "title": "Animated Elements",
         "sidebarPosition": 1,
         "children": [],
-        "href": "/docs/concepts/animated-elements"
+        "href": "/docs/concepts/animated-elements",
+        "noPage": false
       }
     ],
-    "sidebarPosition": 2,
-    "title": "Concepts "
+    "sidebarPosition": 3,
+    "title": "Concepts"
+  },
+  {
+    "href": "/docs/components",
+    "id": "components",
+    "noPage": true,
+    "children": [
+      {
+        "id": "use-spring",
+        "title": "useSpring",
+        "sidebarPosition": 1,
+        "children": [],
+        "href": "/docs/components/use-spring",
+        "noPage": false
+      }
+    ],
+    "sidebarPosition": 4,
+    "title": "Components"
+  },
+  {
+    "href": "/docs/advanced",
+    "id": "advanced",
+    "noPage": true,
+    "children": [],
+    "sidebarPosition": 5,
+    "title": "Advanced API"
+  },
+  {
+    "href": "/docs/utilities",
+    "id": "utilities",
+    "noPage": true,
+    "children": [],
+    "sidebarPosition": 6,
+    "title": "Utilities"
+  },
+  {
+    "href": "/docs/guides",
+    "id": "guides",
+    "noPage": true,
+    "children": [],
+    "sidebarPosition": 7,
+    "title": "Guides"
+  },
+  {
+    "href": "/docs/typescript",
+    "id": "typescript",
+    "title": "Typescript",
+    "sidebarPosition": 8,
+    "children": []
   }
 ]

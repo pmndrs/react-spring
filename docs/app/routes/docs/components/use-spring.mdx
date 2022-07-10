@@ -1,0 +1,73 @@
+---
+meta:
+  title: useSpring | React Spring
+sidebar_position: 1
+---
+
+# useSpring
+
+As with all our APIs we have a component and hook version. We personally
+recommend using the hook version as it is more inline with react's vision
+of the future of react. However, we understand there are codebases out there
+that still use class components and we want to support those too.
+
+## Usage
+
+Whether you're using a function or not, it's all about passing a config object to the hook.
+
+### With a function & deps
+
+```jsx lines=1,4-7,9
+import { useSpring, animated } from '@react-spring/web'
+
+function MyComponent() {
+  const [props, api] = useSpring(() => ({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  }))
+
+  return <animated.div style={props}>Hello World</animated.div>
+}
+```
+
+### With a config object
+
+```jsx lines=1,4-7,9
+import { useSpring, animated } from '@react-spring/web'
+
+function MyComponent() {
+  const props = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  })
+
+  return <animated.div style={props}>Hello World</animated.div>
+}
+```
+
+## Reference
+
+import { TablesConfiguration } from '~/components/Tables/TablesConfig'
+
+<TablesConfiguration />
+
+## Typescript
+
+```tsx
+function useSpring(configuration: ConfigObject): SpringValues
+
+function useSpring(
+  configurationFn: () => ConfigObject,
+  deps?: any[]
+): SpringValues
+```
+
+Where `ConfigObject` is described [above](#reference)
+
+### TS Glossary
+
+- [`SpringValues`](/docs/typescript#springvalues)
+
+## Examples
+
+Coming soon.

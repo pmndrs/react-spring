@@ -133,8 +133,8 @@ const processDoc = ({ content, source, docPath }: DocFile): ProcessedDoc => {
   return {
     docPath,
     frontMatter,
-    title,
-    description,
+    title: title.trim(),
+    description: description.trim(),
     subtitles,
     sidebarPosition,
     id,

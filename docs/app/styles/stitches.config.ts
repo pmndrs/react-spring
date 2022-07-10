@@ -71,6 +71,7 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes, css } =
       },
       zIndices: {
         1: '100',
+        ['1.5']: '150',
         2: '200',
         3: '300',
         4: '400',

@@ -19,6 +19,11 @@
     },
     { "href": "#next-steps", "label": "Next Steps", "id": "next-steps" }
   ],
+  "/typescript": [
+    { "href": "#springvalues", "label": "SpringValues", "id": "springvalues" }
+  ],
+  "/utilities/index": [],
+  "/guides/index": [],
   "/concepts/animated-elements": [
     {
       "href": "#what-are-they",
@@ -42,5 +47,13 @@
     },
     { "href": "#deep-dive", "label": "Deep dive", "id": "deep-dive" }
   ],
-  "/concepts/index": []
+  "/concepts/index": [],
+  "/components/index": [],
+  "/components/use-spring": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    { "href": "#reference", "label": "Reference", "id": "reference" },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" },
+    { "href": "#examples", "label": "Examples", "id": "examples" }
+  ],
+  "/advanced/index": []
 }

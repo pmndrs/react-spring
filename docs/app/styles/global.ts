@@ -60,6 +60,10 @@ export const globalStyles = globalCss({
   '.DocSearch': {
     fontSize: '$XS',
 
+    '&.DocSearch-Container, &.DocSearch-Container *': {
+      pointerEvents: 'auto',
+    },
+
     '&.DocSearch-Container': {
       backgroundColor: '$white80',
       borderRadius: '$r8',

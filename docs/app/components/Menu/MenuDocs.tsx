@@ -43,7 +43,7 @@ interface SubMenuSchema extends NavigationSchemaItem {
 }
 
 const renderSubMenu = (
-  { children, id, title, href, location, onClick }: SubMenuSchema,
+  { children, id, title, href, location, onClick, noPage }: SubMenuSchema,
   level: number
 ) => {
   const handleClick = () => {
@@ -55,11 +55,11 @@ const renderSubMenu = (
 
   const isTitle = level === 0
 
-  const hasLink = Boolean(href)
+  const doesNotWantPage = Boolean(noPage)
 
   return (
     <ListItem key={id}>
-      {hasLink ? (
+      {!doesNotWantPage ? (
         <Anchor
           to={href}
           title={isTitle}
@@ -157,6 +157,10 @@ const WidgetContainer = styled('li', {
     color: '$steel40',
   },
 
+  '.DocSearch-Container, .DocSearch-Container *': {
+    pointerEvents: 'auto',
+  },
+
   '.DocSearch-Button': {
     borderRadius: '$r8',
     margin: 0,
@@ -177,6 +181,7 @@ const WidgetContainer = styled('li', {
   '.DocSearch-Button-Placeholder': {
     fontSize: '$XS',
     padding: 0,
+    display: 'unset',
   },
 
   '.DocSearch-Search-Icon': {

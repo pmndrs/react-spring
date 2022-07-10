@@ -13,8 +13,11 @@ export const SiteFooter = () => {
         </a>
         {'. '}
         Powered by –{' '}
-        <a href="https://vercel.com/" rel="noopener noreferrer" target="_blank">
-          Vercel
+        <a
+          href="https://www.netlify.com/"
+          rel="noopener noreferrer"
+          target="_blank">
+          Netlify
         </a>
         ,{' '}
         <a href="https://remix.run/" rel="noopener noreferrer" target="_blank">

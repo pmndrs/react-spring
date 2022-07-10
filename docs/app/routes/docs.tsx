@@ -16,6 +16,8 @@ import { MenuDocs } from '~/components/Menu/MenuDocs'
 import { MenuSticky } from '~/components/Menu/MenuSticky'
 import { StickyAside } from '~/components/Asides/StickyAside'
 import { Code } from '~/components/Code/Code'
+import { LivePreviewStyles } from '~/components/Code/LivePreviewStyles'
+import { InlineLinkStyles } from '../components/InlineLink'
 
 import {
   flattenNavigationWithChildren,
@@ -24,7 +26,6 @@ import {
 import { getDocFilePathToGithub } from '~/helpers/links'
 
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
-import { LivePreviewStyles } from '~/components/Code/LivePreviewStyles'
 
 const comps = {
   h1: (props: HeadingProps) => (
@@ -114,35 +115,17 @@ const comps = {
         '& + pre': {
           my: 40,
         },
-        '& > code': {
+        'pre + &': {
+          mt: 30,
+        },
+        '& code': {
           backgroundColor: '$steel20',
           borderRadius: '$r4',
           py: 2,
           px: 5,
         },
         '& > a': {
-          position: 'relative',
-          textDecoration: 'none',
-
-          '&:after': {
-            position: 'absolute',
-            bottom: -1,
-            left: 0,
-            content: '',
-            width: '100%',
-            height: 2,
-            backgroundColor: '$red100',
-
-            '@motion': {
-              transition: 'width 200ms ease-out',
-            },
-          },
-
-          '&:hover:after': {
-            width: 0,
-            left: 'unset',
-            right: 0,
-          },
+          ...InlineLinkStyles,
         },
         maxWidth: 680,
       }}

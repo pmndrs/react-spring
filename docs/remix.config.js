@@ -11,7 +11,7 @@ const rehypeMetaAttribute = require('./scripts/mdx/rehype-meta-attribute')
 module.exports = {
   serverBuildTarget: 'netlify',
   server: './server.js',
-  ignoredRouteFiles: ['**/.*', '**/concepts/index.mdx'],
+  ignoredRouteFiles: ['**/.*', '**/concepts/index.mdx', '**/api/index.mdx'],
   mdx: () => {
     return {
       rehypePlugins: [
