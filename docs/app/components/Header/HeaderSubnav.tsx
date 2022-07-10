@@ -35,15 +35,17 @@ export const HeaderSubnav = ({ className, subnav }: HeaderSubnavProps) => {
   }
 
   return (
-    <SubNavContainer className={className} onScroll={handleScroll}>
+    <SubNavContainer className={className}>
       <GradientLeft style={{ ...springs[0] }} />
-      <SubNavList>
-        {subnav.map(({ href, label, id }) => (
-          <SubNavListItem key={id}>
-            <SubNavAnchor href={href}>{label}</SubNavAnchor>
-          </SubNavListItem>
-        ))}
-      </SubNavList>
+      <SubNavScroller onScroll={handleScroll}>
+        <SubNavList>
+          {subnav.map(({ href, label, id }) => (
+            <SubNavListItem key={id}>
+              <SubNavAnchor href={href}>{label}</SubNavAnchor>
+            </SubNavListItem>
+          ))}
+        </SubNavList>
+      </SubNavScroller>
       <GradientRight style={{ ...springs[1] }} />
     </SubNavContainer>
   )
@@ -51,21 +53,32 @@ export const HeaderSubnav = ({ className, subnav }: HeaderSubnavProps) => {
 
 const SubNavContainer = styled('nav', {
   m: '$30 0',
-  overflow: '-moz-scrollbars-none',
-  overflowX: 'auto',
   position: 'relative',
-
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
+  width: '100%',
 
   '@tabletUp': {
     justifyContent: 'center',
   },
 })
 
+const SubNavScroller = styled('div', {
+  overflow: '-moz-scrollbars-none',
+  overflowX: 'auto',
+  mx: -28,
+  px: 28,
+
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+
+  '@tabletUp': {
+    mx: 0,
+    px: 0,
+  },
+})
+
 const GradientShared = {
-  position: 'fixed',
+  position: 'absolute',
   top: 0,
   height: '100%',
   width: '2rem',
@@ -73,21 +86,21 @@ const GradientShared = {
 
 const GradientRight = styled(animated.div, {
   ...GradientShared,
-  right: 28,
+  right: -28,
   backgroundImage: 'linear-gradient(90deg, $white0 0%, $white 100%)',
 
   '@tabletUp': {
-    right: 62,
+    right: 0,
   },
 })
 
 const GradientLeft = styled(animated.div, {
   ...GradientShared,
-  left: 28,
+  left: -28,
   backgroundImage: 'linear-gradient(90deg, $white 0%, $white0 100%)',
 
   '@tabletUp': {
-    left: 62,
+    left: 0,
   },
 })
 
@@ -103,7 +116,17 @@ const SubNavList = styled('ul', {
   },
 })
 
-const SubNavListItem = styled('li')
+const SubNavListItem = styled('li', {
+  '&:last-child': {
+    pr: 28,
+  },
+
+  '@tabletUp': {
+    '&:last-child': {
+      pr: 0,
+    },
+  },
+})
 
 const SubNavAnchor = styled('a', {
   ...getFontStyles('$XXS'),
