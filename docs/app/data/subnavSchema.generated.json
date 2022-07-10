@@ -22,8 +22,6 @@
   "/typescript": [
     { "href": "#springvalues", "label": "SpringValues", "id": "springvalues" }
   ],
-  "/utilities/index": [],
-  "/guides/index": [],
   "/concepts/animated-elements": [
     {
       "href": "#what-are-they",
@@ -54,6 +52,5 @@
     { "href": "#reference", "label": "Reference", "id": "reference" },
     { "href": "#typescript", "label": "Typescript", "id": "typescript" },
     { "href": "#examples", "label": "Examples", "id": "examples" }
-  ],
-  "/advanced/index": []
+  ]
 }

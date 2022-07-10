@@ -48,30 +48,6 @@
     "title": "Components"
   },
   {
-    "href": "/docs/advanced",
-    "id": "advanced",
-    "noPage": true,
-    "children": [],
-    "sidebarPosition": 5,
-    "title": "Advanced API"
-  },
-  {
-    "href": "/docs/utilities",
-    "id": "utilities",
-    "noPage": true,
-    "children": [],
-    "sidebarPosition": 6,
-    "title": "Utilities"
-  },
-  {
-    "href": "/docs/guides",
-    "id": "guides",
-    "noPage": true,
-    "children": [],
-    "sidebarPosition": 7,
-    "title": "Guides"
-  },
-  {
     "href": "/docs/typescript",
     "id": "typescript",
     "title": "Typescript",
