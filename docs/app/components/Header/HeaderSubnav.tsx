@@ -55,10 +55,8 @@ const SubNavContainer = styled('nav', {
   m: '$30 0',
   position: 'relative',
   width: '100%',
-
-  '@tabletUp': {
-    justifyContent: 'center',
-  },
+  display: 'flex',
+  justifyContent: 'center',
 })
 
 const SubNavScroller = styled('div', {
