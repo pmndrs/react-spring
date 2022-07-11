@@ -26,6 +26,12 @@ export const meta: MetaFunction = () => {
     title: 'react-spring',
     description:
       'Bring your components to life with simple spring animation primitives for React',
+    'og:site_name': 'React Spring',
+    'og:title': 'React Spring',
+    'og:image': 'https://beta.react-spring.dev/share.jpg',
+    'og:image:width': '1200',
+    'og:image:height': '630',
+    'og:url': 'https://beta.react-spring.dev',
   }
 }
 
