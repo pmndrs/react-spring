@@ -137,6 +137,7 @@ const NavIconWrapper = styled('span', {
   position: 'relative',
   zIndex: '$2',
   display: 'flex',
+  alignItems: 'center',
   m: '$15',
 
   '& > span': {

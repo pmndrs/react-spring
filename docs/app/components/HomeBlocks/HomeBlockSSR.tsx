@@ -1,7 +1,9 @@
 import { useRef } from 'react'
-import { animated, config, useSprings } from '@react-spring/web'
+import { animated, useSprings } from '@react-spring/web'
 import useMeasure from 'react-use-measure'
+
 import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
+import { useWindowSize } from '~/hooks/useWindowSize'
 
 import { styled } from '~/styles/stitches.config'
 
@@ -13,6 +15,7 @@ const ASPECT = 259 / 140
 export const HomeBlockSSR = () => {
   const [measureRef, { width }] = useMeasure()
   const sectionRef = useRef(null!)
+  const { width: windowWidth } = useWindowSize()
 
   const maxBarHeight = width * ASPECT
 
@@ -66,6 +69,8 @@ export const HomeBlockSSR = () => {
     }
   }, [maxBarHeight])
 
+  const isTablet = (windowWidth ?? 0) > 768
+
   return (
     <SSRSection ref={sectionRef}>
       <HomeBlockCopy
@@ -95,12 +100,12 @@ export const HomeBlockSSR = () => {
         <GraphBar>
           <h4>{`19.2kb`}</h4>
           <Bar style={springs[1]} />
-          <h5>{`@react-spring/web`}</h5>
+          <h5>{isTablet ? `@react-spring/web` : 'web'}</h5>
         </GraphBar>
         <GraphBar>
           <h4>{`15.2kb`}</h4>
           <Bar style={springs[2]} />
-          <h5>{`@react-spring/core`}</h5>
+          <h5>{isTablet ? `@react-spring/core` : 'core'}</h5>
         </GraphBar>
       </SizeGraph>
     </SSRSection>

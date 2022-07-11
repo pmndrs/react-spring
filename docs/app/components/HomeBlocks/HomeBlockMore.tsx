@@ -16,7 +16,7 @@ const listItems = [
 ]
 
 const dataFixtures = [
-  `<code class="language-jsx" lines="7-11"><div data-line="1" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token operator">*</span> <span class="token keyword module">as</span> <span class="token maybe-class-name">Dialog</span></span> <span class="token keyword module">from</span> <span class="token string">'@radix-ui/react-dialog'</span>
+  `<div data-line="1" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token operator">*</span> <span class="token keyword module">as</span> <span class="token maybe-class-name">Dialog</span></span> <span class="token keyword module">from</span> <span class="token string">'@radix-ui/react-dialog'</span>
 </div><div data-line="2" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> styled <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@stitches/react'</span>
 </div><div data-line="3" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/web'</span>
 </div><div data-line="4" class="highlight-line" data-highlighted="false">
@@ -77,8 +77,8 @@ const dataFixtures = [
 </div><div data-line="23" class="highlight-line" data-highlighted="false"><span class="token plain-text">    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">Dialog.Root</span></span><span class="token punctuation">&gt;</span></span>
 </div><div data-line="24" class="highlight-line" data-highlighted="false">  <span class="token punctuation">)</span>
 </div><div data-line="25" class="highlight-line" data-highlighted="false"><span class="token punctuation">}</span>
-</div></code>`,
-  `<code class="language-jsx" lines="22"><div data-line="1" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token operator">*</span> <span class="token keyword module">as</span> <span class="token maybe-class-name">Dialog</span></span> <span class="token keyword module">from</span> <span class="token string">'@radix-ui/react-dialog'</span>
+</div>`,
+  `<div data-line="1" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token operator">*</span> <span class="token keyword module">as</span> <span class="token maybe-class-name">Dialog</span></span> <span class="token keyword module">from</span> <span class="token string">'@radix-ui/react-dialog'</span>
 </div><div data-line="2" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> styled <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@stitches/react'</span>
 </div><div data-line="3" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/web'</span>
 </div><div data-line="4" class="highlight-line" data-highlighted="false">
@@ -108,8 +108,8 @@ const dataFixtures = [
 </div><div data-line="23" class="highlight-line" data-highlighted="false"><span class="token plain-text">    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">Dialog.Root</span></span><span class="token punctuation">&gt;</span></span>
 </div><div data-line="24" class="highlight-line" data-highlighted="false">  <span class="token punctuation">)</span>
 </div><div data-line="25" class="highlight-line" data-highlighted="false"><span class="token punctuation">}</span>
-</div></code>`,
-  `<code class="language-jsx" lines="12-16"><div data-line="1" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token operator">*</span> <span class="token keyword module">as</span> <span class="token maybe-class-name">Dialog</span></span> <span class="token keyword module">from</span> <span class="token string">'@radix-ui/react-dialog'</span>
+</div>`,
+  `<div data-line="1" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token operator">*</span> <span class="token keyword module">as</span> <span class="token maybe-class-name">Dialog</span></span> <span class="token keyword module">from</span> <span class="token string">'@radix-ui/react-dialog'</span>
 </div><div data-line="2" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> styled <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@stitches/react'</span>
 </div><div data-line="3" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/web'</span>
 </div><div data-line="4" class="highlight-line" data-highlighted="false">
@@ -139,8 +139,8 @@ const dataFixtures = [
 </div><div data-line="23" class="highlight-line" data-highlighted="false"><span class="token plain-text">    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">Dialog.Root</span></span><span class="token punctuation">&gt;</span></span>
 </div><div data-line="24" class="highlight-line" data-highlighted="false">  <span class="token punctuation">)</span>
 </div><div data-line="25" class="highlight-line" data-highlighted="false"><span class="token punctuation">}</span>
-</div></code>`,
-  `<code class="language-jsx" lines="1-2,20-23"><div data-line="1" class="highlight-line" data-highlighted="true"><span class="token keyword module">import</span> <span class="token imports"><span class="token operator">*</span> <span class="token keyword module">as</span> <span class="token maybe-class-name">Dialog</span></span> <span class="token keyword module">from</span> <span class="token string">'@radix-ui/react-dialog'</span>
+</div>`,
+  `<div data-line="1" class="highlight-line" data-highlighted="true"><span class="token keyword module">import</span> <span class="token imports"><span class="token operator">*</span> <span class="token keyword module">as</span> <span class="token maybe-class-name">Dialog</span></span> <span class="token keyword module">from</span> <span class="token string">'@radix-ui/react-dialog'</span>
 </div><div data-line="2" class="highlight-line" data-highlighted="true"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> styled <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@stitches/react'</span>
 </div><div data-line="3" class="highlight-line" data-highlighted="false"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/web'</span>
 </div><div data-line="4" class="highlight-line" data-highlighted="false">
@@ -170,7 +170,7 @@ const dataFixtures = [
 </div><div data-line="23" class="highlight-line" data-highlighted="true"><span class="token plain-text">    </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">Dialog.Root</span></span><span class="token punctuation">&gt;</span></span>
 </div><div data-line="24" class="highlight-line" data-highlighted="false">  <span class="token punctuation">)</span>
 </div><div data-line="25" class="highlight-line" data-highlighted="false"><span class="token punctuation">}</span>
-</div></code>`,
+</div>`,
 ]
 
 export const HomeBlockMore = () => {

@@ -14,9 +14,15 @@ export const TablesConfiguration = () => (
   <Table>
     <thead>
       <tr>
-        <TableHeadCell style={{ width: '30%' }}>Prop</TableHeadCell>
-        <TableHeadCell style={{ width: '50%' }}>Type</TableHeadCell>
-        <TableHeadCell style={{ width: '20%' }}>Default</TableHeadCell>
+        <TableHeadCell css={{ width: '40%', '@tabletUp': { width: '30%' } }}>
+          Prop
+        </TableHeadCell>
+        <TableHeadCell css={{ width: '60%', '@tabletUp': { width: '50%' } }}>
+          Type
+        </TableHeadCell>
+        <TableHeadCell css={{ '@tabletUp': { width: '20%' } }} isThirdItem>
+          Default
+        </TableHeadCell>
       </tr>
     </thead>
     <tbody>
@@ -31,13 +37,17 @@ const renderCell = (datum: CellData, index: number) => {
   const isDarkMode = useIsDarkTheme()
 
   if (datum === null) {
-    return <TableCell key={`${datum}_${index}`}>{'–'}</TableCell>
+    return (
+      <TableCell key={`${datum}_${index}`} isThirdItem={index === 2}>
+        {'–'}
+      </TableCell>
+    )
   }
 
   if (typeof datum === 'object') {
     return (
       <Popover.Root>
-        <TableCell isPropName={index === 0}>
+        <TableCell isPropName={index === 0} isThirdItem={index === 2}>
           <code>{datum.label}</code>
           <PopoverTrigger>
             <Info size={16} weight={isDarkMode ? 'light' : 'regular'} />
@@ -56,7 +66,7 @@ const renderCell = (datum: CellData, index: number) => {
   }
 
   return (
-    <TableCell key={datum} isPropName={index === 0}>
+    <TableCell key={datum} isPropName={index === 0} isThirdItem={index === 2}>
       <code>{datum}</code>
     </TableCell>
   )
@@ -77,6 +87,18 @@ const TableHeadCell = styled('th', {
   fontSize: '$XXS',
   lineHeight: '$XXS',
   py: '$15',
+
+  variants: {
+    isThirdItem: {
+      true: {
+        display: 'none',
+
+        '@tabletUp': {
+          display: 'table-cell',
+        },
+      },
+    },
+  },
 })
 
 const TableCell = styled('td', {
@@ -84,6 +106,7 @@ const TableCell = styled('td', {
   fontSize: '$XS',
   lineHeight: '$XS',
   py: '$15',
+  pr: '$10',
 
   '& > code': {
     borderRadius: '$r4',
@@ -103,6 +126,15 @@ const TableCell = styled('td', {
         '& > code': {
           backgroundColor: '$steel20',
           color: '$steel40',
+        },
+      },
+    },
+    isThirdItem: {
+      true: {
+        display: 'none',
+
+        '@tabletUp': {
+          display: 'table-cell',
         },
       },
     },

@@ -26,7 +26,7 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
 
   return (
     <DocsList>
-      <WidgetContainer>
+      <WidgetContainer shouldBeHidden={location.pathname === '/'}>
         <WidgetSearch />
       </WidgetContainer>
       {Array.isArray(submenu) &&
@@ -152,6 +152,14 @@ const Anchor = styled(Link, {
 })
 
 const WidgetContainer = styled('li', {
+  variants: {
+    shouldBeHidden: {
+      true: {
+        display: 'none',
+      },
+    },
+  },
+
   '.DocSearch': {
     fontSize: '$XS',
     color: '$steel40',
