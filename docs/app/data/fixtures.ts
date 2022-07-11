@@ -93,12 +93,6 @@ export const NAV_TILES: Tile[] = [
       'Learn about how use react-spring with step by step explanations',
   },
   {
-    href: '/docs/api',
-    label: 'API Reference',
-    description:
-      'Explore the APIs of our hooks, components & classes to bring your app to life',
-  },
-  {
     href: '/docs/guides',
     label: 'Guides & Tutorials',
     description:
