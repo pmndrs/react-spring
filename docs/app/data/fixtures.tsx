@@ -1,6 +1,7 @@
 import { DiscordLogo, GithubLogo, TwitterLogo } from 'phosphor-react'
 import type { Quote } from '~/components/Carousels/CarouselQuotes'
 import { Tile } from '~/components/Grids/NavigationGrid'
+import { CellData } from '~/components/Tables/TablesConfig'
 
 export const QUOTES: Quote[] = [
   {
@@ -162,4 +163,162 @@ export const TOOL_TILES = [
     isExternal: true,
     Icon: '🐻',
   },
+]
+
+export const configData: CellData[][] = [
+  ['mass', 'number', '1'],
+  ['tension', 'number', '170'],
+  ['friction', 'number', '26'],
+  [
+    {
+      label: 'bounce',
+      content: (
+        <p>
+          When above zero, the spring will bounce instead of overshooting when
+          exceeding its goal value.
+        </p>
+      ),
+    },
+    'number',
+    null,
+  ],
+  [
+    {
+      label: 'clamp',
+      content: (
+        <p>When true, stops the spring once it overshoots its boundaries.</p>
+      ),
+    },
+    'boolean',
+    'false',
+  ],
+  [
+    {
+      label: 'precision',
+      content: (
+        <p>
+          How close to the goal the animated value gets before we consider it to
+          be "done", see <a href="#precision">precision</a> pifalls for more
+          information.
+        </p>
+      ),
+    },
+    'number',
+    '0.01',
+  ],
+  [
+    {
+      label: 'round',
+      content: (
+        <p>
+          While animating, round to the nearest multiple of this number. The
+          from and to values are never rounded, as well as any value passed to
+          the set method of an animated value.
+        </p>
+      ),
+    },
+    'boolean',
+    null,
+  ],
+  [
+    {
+      label: 'frequency',
+      content: (
+        <p>
+          The natural frequency (in seconds), which dictates the number of
+          bounces per second when no <code>damping</code> exists. When defined,
+          <code>tension</code> is derived from this, and <code>friction</code>{' '}
+          is derived from <code>tension</code> and <code>damping</code>.
+        </p>
+      ),
+    },
+    'number',
+    null,
+  ],
+  [
+    {
+      label: 'damping',
+      content: (
+        <p>
+          The damping ratio, which dictates how the spring slows down. Only
+          works when frequency is defined.
+        </p>
+      ),
+    },
+    'number',
+    '1',
+  ],
+  ['velocity', 'number', '0'],
+  [
+    {
+      label: 'restVelocity',
+      content: (
+        <p>
+          The smallest velocity before the animation is considered to be "not
+          moving". When undefined, precision is used instead.
+        </p>
+      ),
+    },
+    'number',
+    null,
+  ],
+  [
+    'decay',
+    {
+      label: 'number | boolean',
+      content: (
+        <p>
+          If <code>true</code>, default value is <code>0.998</code>.
+        </p>
+      ),
+    },
+    'false',
+  ],
+  [
+    {
+      label: 'duration',
+      content: (
+        <p>
+          Switches to duration based animation. Value should be indicated in
+          milliseconds.
+        </p>
+      ),
+    },
+    'number',
+    null,
+  ],
+  [
+    'easing',
+    {
+      label: 'function',
+      content: <code>{`(t: number) => number`}</code>,
+    },
+    't => t',
+  ],
+  [
+    {
+      label: 'progress',
+      content: (
+        <p>
+          Decides how far into the easing function to start from. The duration
+          itself is unaffected.
+        </p>
+      ),
+    },
+    'number',
+    '0',
+  ],
+]
+
+export const easingData: CellData[][] = [
+  ['easeInBack', 'easeOutBack', 'easeInOutBack'],
+  ['easeInBounce', 'easeOutBounce', 'easeOutBounce'],
+  ['easeInCirc', 'easeOutCirc', 'easeOutCirc'],
+  ['easeInCubic', 'easeOutCubic', 'easeOutCubic'],
+  ['easeInElastic', 'easeOutElastic', 'easeOutElastic'],
+  ['easeInExpo', 'easeOutExpo', 'easeOutExpo'],
+  ['easeInQuad', 'easeOutQuad', 'easeOutQuad'],
+  ['easeInQuart', 'easeOutQuart', 'easeOutQuart'],
+  ['easeInQuint', 'easeOutQuint', 'easeOutQuint'],
+  ['easeInSine', 'easeOutSine', 'easeOutSine'],
 ]

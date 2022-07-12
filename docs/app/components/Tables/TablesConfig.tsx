@@ -1,16 +1,18 @@
 import { ReactNode } from 'react'
-import * as Popover from '@radix-ui/react-popover'
-import { Info } from 'phosphor-react'
 
 import { styled } from '~/styles/stitches.config'
 
-import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
+import { renderCell } from './TableCell'
 
-import { InlineLinkStyles } from '~/components/InlineLink'
+export type CellData = string | null | { label: string; content: ReactNode }
 
-type CellData = string | null | { label: string; content: ReactNode }
+interface TablesConfigurationProps {
+  data?: CellData[][]
+}
 
-export const TablesConfiguration = () => (
+export const TablesConfiguration = ({
+  data = DEFAULT_CONFIG_DATA,
+}: TablesConfigurationProps) => (
   <Table>
     <thead>
       <tr>
@@ -26,51 +28,41 @@ export const TablesConfiguration = () => (
       </tr>
     </thead>
     <tbody>
-      {DEFAULT_CONFIG_DATA.map((row, index) => (
-        <tr key={index}>{row.map(renderCell)}</tr>
+      {data.map((row, index) => (
+        <tr key={index}>{row.map(renderCell())}</tr>
       ))}
     </tbody>
   </Table>
 )
 
-const renderCell = (datum: CellData, index: number) => {
-  const isDarkMode = useIsDarkTheme()
-
-  if (datum === null) {
-    return (
-      <TableCell key={`${datum}_${index}`} isThirdItem={index === 2}>
-        {'–'}
-      </TableCell>
-    )
-  }
-
-  if (typeof datum === 'object') {
-    return (
-      <Popover.Root>
-        <TableCell isPropName={index === 0} isThirdItem={index === 2}>
-          <code>{datum.label}</code>
-          <PopoverTrigger>
-            <Info size={16} weight={isDarkMode ? 'light' : 'regular'} />
-          </PopoverTrigger>
-          <PopoverContent
-            onOpenAutoFocus={e => e.preventDefault()}
-            side="top"
-            sideOffset={10}
-            isProp={index === 0}>
-            {datum.content}
-            <PopoverArrow />
-          </PopoverContent>
-        </TableCell>
-      </Popover.Root>
-    )
-  }
-
-  return (
-    <TableCell key={datum} isPropName={index === 0} isThirdItem={index === 2}>
-      <code>{datum}</code>
-    </TableCell>
-  )
+interface TableGenericProps extends TablesConfigurationProps {
+  headData: string[]
 }
+
+export const TableGeneric = ({
+  data = [],
+  headData = [],
+}: TableGenericProps) => (
+  <Table>
+    <thead>
+      <tr>
+        {headData.map(head =>
+          head ? <TableHeadCell key={head}>{head}</TableHeadCell> : null
+        )}
+      </tr>
+    </thead>
+    <tbody>
+      {data.map((row, index) => (
+        <tr key={index}>{row.map(renderCell('generic'))}</tr>
+      ))}
+    </tbody>
+  </Table>
+)
+
+export const TableScrollWrapper = styled('div', {
+  width: '100%',
+  overflow: 'scroll',
+})
 
 const Table = styled('table', {
   width: '100%',
@@ -101,107 +93,7 @@ const TableHeadCell = styled('th', {
   },
 })
 
-const TableCell = styled('td', {
-  fontFamily: '$mono',
-  fontSize: '$XS',
-  lineHeight: '$XS',
-  py: '$15',
-  pr: '$10',
-
-  '& > code': {
-    borderRadius: '$r4',
-    py: 2,
-    px: 5,
-  },
-
-  variants: {
-    isPropName: {
-      true: {
-        '& > code': {
-          backgroundColor: '#ff6d6d33',
-          color: '$red100',
-        },
-      },
-      false: {
-        '& > code': {
-          backgroundColor: '$steel20',
-          color: '$steel40',
-        },
-      },
-    },
-    isThirdItem: {
-      true: {
-        display: 'none',
-
-        '@tabletUp': {
-          display: 'table-cell',
-        },
-      },
-    },
-  },
-})
-
-const PopoverTrigger = styled(Popover.Trigger, {
-  background: 'transparent',
-  border: 'none',
-  p: 0,
-  m: 0,
-  ml: '$5',
-  cursor: 'pointer',
-  width: 24,
-  height: 24,
-  borderRadius: '$r4',
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  position: 'relative',
-  top: 3,
-
-  hover: {
-    background: '#ff6d6d66',
-  },
-})
-
-const PopoverArrow = styled(Popover.Arrow, {
-  fill: '$codeBackground',
-})
-
-const PopoverContent = styled(Popover.Content, {
-  fontFamily: '$sans-var',
-  fontSize: '$XXS',
-  lineHeight: '$XXS',
-  p: '$10 $15',
-  background: '$codeBackground',
-  borderRadius: '$r8',
-
-  '& > code': {
-    borderRadius: '$r4',
-    py: 2,
-    px: 5,
-    whiteSpace: 'nowrap',
-  },
-
-  '& a': { ...InlineLinkStyles },
-
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
-  scrollbarWidth: 'none',
-
-  variants: {
-    isProp: {
-      true: {
-        maxWidth: 265,
-      },
-      false: {
-        maxWidth: 400,
-        overflow: 'scroll',
-      },
-    },
-  },
-})
-
-const DEFAULT_CONFIG_DATA: CellData[][] = [
+export const DEFAULT_CONFIG_DATA: CellData[][] = [
   ['from', 'object', null],
   [
     'to',
@@ -258,8 +150,8 @@ const DEFAULT_CONFIG_DATA: CellData[][] = [
       label: 'reverse',
       content: (
         <p>
-          Reverse the `to` and `from` prop so that `to` is the initial starting
-          state.
+          Reverse the <code>to</code> and <code>from</code> prop so that{' '}
+          <code>to</code> is the initial starting state.
         </p>
       ),
     },

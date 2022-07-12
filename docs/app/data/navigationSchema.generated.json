@@ -48,6 +48,23 @@
     "title": "Components"
   },
   {
+    "href": "/docs/advanced",
+    "id": "advanced",
+    "noPage": true,
+    "children": [
+      {
+        "id": "config",
+        "title": "Spring Configs",
+        "sidebarPosition": 1,
+        "children": [],
+        "href": "/docs/advanced/config",
+        "noPage": false
+      }
+    ],
+    "sidebarPosition": 5,
+    "title": "Advanced API"
+  },
+  {
     "href": "/docs/typescript",
     "id": "typescript",
     "title": "Typescript",

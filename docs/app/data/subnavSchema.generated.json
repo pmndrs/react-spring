@@ -52,5 +52,17 @@
     { "href": "#reference", "label": "Reference", "id": "reference" },
     { "href": "#typescript", "label": "Typescript", "id": "typescript" },
     { "href": "#examples", "label": "Examples", "id": "examples" }
-  ]
+  ],
+  "/advanced/config": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    {
+      "href": "#config-visualizer",
+      "label": "Config Visualizer",
+      "id": "config-visualizer"
+    },
+    { "href": "#easings", "label": "Easings", "id": "easings" },
+    { "href": "#reference", "label": "Reference", "id": "reference" },
+    { "href": "#pitfalls", "label": "Pitfalls", "id": "pitfalls" }
+  ],
+  "/advanced/index": []
 }

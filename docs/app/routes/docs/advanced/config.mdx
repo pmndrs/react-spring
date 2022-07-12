@@ -1,0 +1,229 @@
+---
+meta:
+  title: Spring Configs | React Spring
+sidebar_position: 1
+---
+
+# Spring Configs
+
+Part of a component's `configuration` argument, the `config` prop is an object
+with many properties that can be used to customize & fine tune your animations.
+It directly controls how your springs behave and can customized on a spring by
+spring basis (e.g. `opacity` and `scale` could be different for one `useSpring` hook).
+
+## Usage
+
+### Basic Usage
+
+Your most typical usage of the `config` prop is to edit the mass, friction and tension properties.
+
+```jsx lines=7-11
+import { useSpring, animated } from '@react-spring/web'
+
+const MyComponent = () => {
+  const [springs, api] = useSpring(
+    () => ({
+      y: 0,
+      config: {
+        mass: 5,
+        friction: 120,
+        tension: 120,
+      },
+    }),
+    []
+  )
+
+  return <animated.div style={springs} />
+}
+```
+
+### Config per SpringValue
+
+The `config` prop can also be a function where the argument is the key of the
+spring value, this is great if you want one spring to control many elements or
+have properties behave in different ways like a smooth opacity change but a
+bouncy scale.
+
+```jsx lines=8-18
+import { useSpring, animated } from '@react-spring/web'
+
+const MyComponent = () => {
+  const [springs, api] = useSpring(
+    () => ({
+      backgroundColor: '#00ff00',
+      y: 0,
+      config: key => {
+        if (key === 'y') {
+          return {
+            mass: 5,
+            friction: 120,
+            tension: 120,
+          }
+        }
+
+        return {}
+      },
+    }),
+    []
+  )
+
+  return <animated.div style={springs} />
+}
+```
+
+Returning an empty object will enforce the default config options:
+`{ mass: 1, tension: 170, friction: 26 }`.
+
+### Partial Updates
+
+When using the spring `api` you can partially update your configs.
+These partial configs are merged with the original config for each
+call of the api.
+
+```jsx lines=17-22
+import { useSpring, animated } from '@react-spring/web'
+
+const MyComponent = () => {
+  const [springs, api] = useSpring(
+    () => ({
+      y: 0,
+      config: {
+        mass: 5,
+        friction: 120,
+        tension: 120,
+      },
+    }),
+    []
+  )
+
+  const handleClick = () => {
+    api.start({
+      y: 20,
+      config: {
+        friction: 10,
+      },
+    })
+  }
+
+  return <animated.div onClick={handleClick} style={springs} />
+}
+```
+
+### Presets
+
+Additionally to being able to configure your own spring, we export a
+small selection of presets enclosed in the `config` named export.
+
+```jsx
+import { config } from '@react-spring/web'
+```
+
+The presets are:
+
+import { DescriptiveList } from '~/components/Text/List'
+
+<DescriptiveList
+  data={[
+    ['default', <code>{`{ tension: 170, friction: 26 }`}</code>],
+    ['gentle', <code>{`{ tension: 120, friction: 14 }`}</code>],
+    ['wobbly', <code>{`{ tension: 180, friction: 12 }`}</code>],
+    ['stiff', <code>{`{ tension: 210, friction: 20 }`}</code>],
+    ['slow', <code>{`{ tension: 280, friction: 60 }`}</code>],
+    ['molasses', <code>{`{ tension: 280, friction: 120 }`}</code>],
+  ]}
+/>
+
+## Config Visualizer
+
+```jsx live=true template=configPlayground showCode=false
+import { useRef, useState } from 'react'
+import { useSpring, animated } from '@react-spring/web'
+import { useControls } from 'leva'
+
+export default function Card() {
+  const cardRef = useRef(null)
+  const config = useControls({
+    mass: 1,
+    tension: 170,
+    friction: 26,
+    clamp: false,
+    precision: 0.01,
+    velocity: 0,
+  })
+
+  const [{ xys }, api] = useSpring(() => ({ xys: [0, 0, 1], config }), [config])
+
+  const handleMouseLeave = () =>
+    api.start({
+      xys: [0, 0, 1],
+    })
+
+  const handleMouseMove = e => {
+    const rect = cardRef.current.getBoundingClientRect()
+    api.start({
+      xys: calc(e.clientX, e.clientY, rect),
+    })
+  }
+
+  return (
+    <div className="card-main" ref={cardRef}>
+      <animated.div
+        className="card"
+        style={{ transform: xys.to(trans) }}
+        onMouseLeave={handleMouseLeave}
+        onMouseMove={handleMouseMove}
+      />
+    </div>
+  )
+}
+
+const calc = (x, y, rect) => [
+  -(y - rect.top - rect.height / 2) / 5,
+  (x - rect.left - rect.width / 2) / 5,
+  1.4,
+]
+
+const trans = (x, y, s) =>
+  `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`
+```
+
+## Easings
+
+Easings can **only** be used in conjunction with the `duration` property.
+
+### Why Springs?
+
+We think of animation in terms of time and curves, but that causes most of the struggle we face
+when trying to make elements on the screen move naturally, because nothing in the real world
+moves like that. Springs don’t have a defined curve or a set duration.
+
+As Andy Matuschak (ex Apple UI-Kit developer) expressed – “Animation APIs parameterized by duration
+and curve are fundamentally opposed to continuous, fluid interactivity.”
+
+### Available Easings
+
+import { TableGeneric } from '~/components/Tables/TablesConfig'
+import { easingData } from '~/data/fixtures'
+
+<TableGeneric data={easingData} headData={[null, null, null]} />
+
+## Reference
+
+import { TablesConfiguration } from '~/components/Tables/TablesConfig'
+import { configData } from '~/data/fixtures'
+
+<TablesConfiguration data={configData} />
+
+## Pitfalls
+
+### My animation jumps at the end.
+
+In some instances such as animating `threejs` the items can feel as if they skip the
+last couple of frames. This is because the precision prop has a default value of `0.01`.
+Try editing this value to be `0.0001` to resolve this.
+
+### My animation is bouncing and I just want it to stop.
+
+Sometimes you want a snapping feel so you create a sharp spring. When you animate the spring
+the animation bounces around, this is because of the physics. An easy solution to this is to
+set `clamp` to true. Your spring will stop animating at the point it hit's it's goal value.

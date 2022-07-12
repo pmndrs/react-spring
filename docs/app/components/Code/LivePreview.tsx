@@ -8,6 +8,7 @@ import { dark, styled } from '~/styles/stitches.config'
 import { Pre } from './Pre'
 import { Button } from '../Buttons/Button'
 import { LIVE_PREVIEW_STYLES, LivePreviewStyles } from './LivePreviewStyles'
+import { LIVE_PREVIEW_DEPS } from './LivePreviewDeps'
 
 export interface LivePreviewProps {
   code: string
@@ -57,7 +58,10 @@ export const LivePreview = ({
   }, [value])
 
   return (
-    <PreviewContainer className={className} isDemo={template !== 'spring'}>
+    <PreviewContainer
+      className={className}
+      isDemo={template !== 'spring'}
+      largeSize={template === 'configPlayground'}>
       <SandpackProvider
         template="react"
         files={{
@@ -71,8 +75,7 @@ export const LivePreview = ({
         customSetup={{
           dependencies: {
             '@react-spring/web': '*',
-            '@stitches/react': '*',
-            '@radix-ui/react-dialog': '*',
+            ...LIVE_PREVIEW_DEPS[template],
           },
         }}
         options={{
@@ -181,6 +184,13 @@ const PreviewContainer = styled('div', {
   },
 
   variants: {
+    largeSize: {
+      true: {
+        '& .preview__iframe': {
+          minHeight: 400,
+        },
+      },
+    },
     isDemo: {
       true: {
         '& .preview__iframe': {
