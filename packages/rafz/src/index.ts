@@ -53,9 +53,9 @@ let findTimeout = (time: number) =>
 raf.cancel = fn => {
   onStartQueue.delete(fn)
   onFrameQueue.delete(fn)
+  onFinishQueue.delete(fn)
   updateQueue.delete(fn)
   writeQueue.delete(fn)
-  onFinishQueue.delete(fn)
 }
 
 raf.sync = fn => {
@@ -157,15 +157,17 @@ function update() {
     pendingCount -= count
   }
 
+  if (!pendingCount) {
+    stop()
+
+    return
+  }
+
   onStartQueue.flush()
   updateQueue.flush(prevTs ? Math.min(64, ts - prevTs) : 16.667)
   onFrameQueue.flush()
   writeQueue.flush()
   onFinishQueue.flush()
-
-  if (!pendingCount) {
-    stop()
-  }
 }
 
 interface Queue<T extends Function = any> {

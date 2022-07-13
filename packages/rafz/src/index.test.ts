@@ -25,6 +25,7 @@ describe('raf looping', () => {
   })
   it('stops looping after single job', () => {
     raf(() => {})
+    mockRaf.step()
     expect(__raf.isRunning()).toBe(true)
     mockRaf.step()
     expect(__raf.isRunning()).toBe(false)
@@ -35,6 +36,7 @@ describe('raf looping', () => {
     mockRaf.step()
     expect(fn).toHaveBeenCalledTimes(1)
     raf(fn)
+    mockRaf.step()
     expect(__raf.isRunning()).toBe(true)
     mockRaf.step()
     expect(__raf.isRunning()).toBe(false)
