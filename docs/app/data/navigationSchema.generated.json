@@ -59,6 +59,14 @@
         "children": [],
         "href": "/docs/advanced/config",
         "noPage": false
+      },
+      {
+        "id": "events",
+        "title": "Events",
+        "sidebarPosition": 2,
+        "children": [],
+        "href": "/docs/advanced/events",
+        "noPage": false
       }
     ],
     "sidebarPosition": 5,

@@ -1,0 +1,156 @@
+---
+meta:
+  title: Events | React Spring
+sidebar_position: 2
+---
+
+# Events
+
+There are a handful of events you can use to react to the state of animation at certain points in time.
+
+## Keys vs Springs
+
+Every event function can either be a function on it's own or be an object to which it's keys correlate
+to the keys of the spring:
+
+```jsx line=5-6,15-19
+useSpring(
+  () => ({
+    x: 0,
+    y: 0,
+    // onStart is called when the animation of the spring starts
+    onStart: () => console.log('the spring has started'),
+  }),
+  []
+)
+
+useSpring(
+  () => ({
+    x: 0,
+    y: 0,
+    onStart: {
+      // onStart is called for each key when the animation starts
+      x: () => console.log('x key has started'),
+      y: () => console.log('y key has started'),
+    },
+  }),
+  []
+)
+```
+
+The latter form can be useful if for example you have different configs for different keys.
+Or you want to do different events based on different keys, e.g. you want to imperatively
+update an objects rotation based on the x key.
+
+## onStart
+
+Called when the animation begins.
+
+:::warning
+`onStart` is called after the first animation tick, this value is therefore considered dirty
+:::
+
+```ts
+type OnStart = (
+  result: AnimationResult,
+  spring: Controller | SpringValue,
+  item?: Item
+) => void
+```
+
+## onChange
+
+Called on every frame.
+
+```ts
+type OnChange = (
+  result: AnimationResult,
+  spring: Controller | SpringValue,
+  item?: Item
+) => void
+```
+
+## onRest
+
+Called when the animation comes to a stand-still.
+
+```ts
+type OnRest = (
+  result: AnimationResult,
+  spring: Controller | SpringValue,
+  item?: Item
+) => void
+```
+
+## onPause
+
+Called when the animation is paused.
+
+```ts
+type OnPause = (
+  result: AnimationResult,
+  spring: Controller | SpringValue,
+  item?: Item
+) => void
+```
+
+## onResume
+
+Called when the animation is resumed.
+
+```ts
+type OnResume = (
+  result: AnimationResult,
+  spring: Controller | SpringValue,
+  item?: Item
+) => void
+```
+
+## onResolve
+
+Called when the promise for the update is resolved.
+
+```ts
+type OnResolve = (
+  result: AnimationResult,
+  spring: Controller | SpringValue,
+  item?: Item
+) => void
+```
+
+## onProps
+
+Called after an animation is updated by new props, even if the animation remains idle.
+
+```ts
+type OnProps = (
+  props: {[key: string]: any}
+  spring: SpringValue,
+) => void
+```
+
+## onDestroyed
+
+Called after a transition item is unmounted.
+
+```ts
+type OnDestroyed = (
+  item: Item
+  key: string | number
+) => void
+```
+
+## Typescript
+
+```ts
+interface AnimationResult {
+    // Type inference will solve this for you.
+    value: SpringValue | { [keyof SpringValues]: number} | number
+    finished: boolean
+    cancelled: boolean
+}
+```
+
+### A note on `Item`
+
+The `Item` argument is only present when using the relevant events within the [`useTransition`](/components/use-transition) hook.

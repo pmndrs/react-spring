@@ -64,5 +64,21 @@
     { "href": "#reference", "label": "Reference", "id": "reference" },
     { "href": "#pitfalls", "label": "Pitfalls", "id": "pitfalls" }
   ],
+  "/advanced/events": [
+    {
+      "href": "#keys-vs-springs",
+      "label": "Keys vs Springs",
+      "id": "keys-vs-springs"
+    },
+    { "href": "#onstart", "label": "onStart", "id": "onstart" },
+    { "href": "#onchange", "label": "onChange", "id": "onchange" },
+    { "href": "#onrest", "label": "onRest", "id": "onrest" },
+    { "href": "#onpause", "label": "onPause", "id": "onpause" },
+    { "href": "#onresume", "label": "onResume", "id": "onresume" },
+    { "href": "#onresolve", "label": "onResolve", "id": "onresolve" },
+    { "href": "#onprops", "label": "onProps", "id": "onprops" },
+    { "href": "#ondestroyed", "label": "onDestroyed", "id": "ondestroyed" },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" }
+  ],
   "/advanced/index": []
 }
