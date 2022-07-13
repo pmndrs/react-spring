@@ -1,4 +1,4 @@
-import { each, useLayoutEffect } from '@react-spring/shared'
+import { each, useIsomorphicLayoutEffect } from '@react-spring/shared'
 import { SpringRef } from '../SpringRef'
 import { callProp } from '../helpers'
 
@@ -7,7 +7,7 @@ export function useChain(
   timeSteps?: number[],
   timeFrame = 1000
 ) {
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (timeSteps) {
       let prevDelay = 0
       each(refs, (ref, i) => {

@@ -1,4 +1,4 @@
-import { each, is, useLayoutEffect } from '@react-spring/shared'
+import { each, is, useIsomorphicLayoutEffect } from '@react-spring/shared'
 
 import { Valid } from '../types/common'
 import { PickAnimated, SpringValues, AsyncResult } from '../types'
@@ -62,7 +62,7 @@ export function useTrail(
 
   const ref = passedRef ?? result[1]
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     each(ref.current, (ctrl, i) => {
       const parent = ref.current[i + (reverse ? 1 : -1)]
       if (parent) {

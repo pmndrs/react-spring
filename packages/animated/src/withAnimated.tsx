@@ -10,7 +10,7 @@ import {
   FluidValue,
   addFluidObserver,
   removeFluidObserver,
-  useLayoutEffect,
+  useIsomorphicLayoutEffect,
 } from '@react-spring/shared'
 import { ElementType } from '@react-spring/types'
 
@@ -66,7 +66,7 @@ export const withAnimated = (Component: any, host: HostConfig) => {
     const observer = new PropsObserver(callback, deps)
 
     const observerRef = useRef<PropsObserver>()
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       observerRef.current = observer
 
       // Observe the latest dependencies.

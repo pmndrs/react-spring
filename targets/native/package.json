@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/native",
-  "version": "9.4.5",
+  "version": "9.5.0",
   "main": "dist/react-spring-native.cjs.js",
   "module": "dist/react-spring-native.esm.js",
   "files": [
@@ -27,10 +27,10 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/animated": "~9.4.5",
-    "@react-spring/core": "~9.4.5",
-    "@react-spring/shared": "~9.4.5",
-    "@react-spring/types": "~9.4.5"
+    "@react-spring/animated": "~9.5.0",
+    "@react-spring/core": "~9.5.0",
+    "@react-spring/shared": "~9.5.0",
+    "@react-spring/types": "~9.5.0"
   },
   "peerDependencies": {
     "react": "^16.8.0  || >=17.0.0 || >=18.0.0",

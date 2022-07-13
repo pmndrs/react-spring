@@ -21,7 +21,7 @@ export type WithAnimated = {
 /** The type of an `animated()` component */
 export type AnimatedComponent<T extends ElementType> =
   ForwardRefExoticComponent<
-    AnimatedProps<ComponentPropsWithRef<T>> & { children: ReactNode }
+    AnimatedProps<ComponentPropsWithRef<T>> & { children?: ReactNode }
   >
 
 /** The props of an `animated()` component */
