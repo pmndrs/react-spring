@@ -42,10 +42,10 @@ export const Code = ({
     )
   } else {
     return (
-      <Pre className={className} {...restProps}>
+      <CodePre className={className} {...restProps}>
         {copy ? <PreCopy>{copy}</PreCopy> : null}
         {restProps.children}
-      </Pre>
+      </CodePre>
     )
   }
 }
@@ -58,5 +58,21 @@ const PreCopy = styled(ButtonCopy, {
 
   '@tabletUp': {
     display: 'block',
+  },
+})
+
+const CodePre = styled(Pre, {
+  [`${PreCopy}`]: {
+    opacity: 0,
+
+    '@motion': {
+      transition: 'opacity 200ms ease-out',
+    },
+  },
+
+  hover: {
+    [`${PreCopy}`]: {
+      opacity: 1,
+    },
   },
 })
