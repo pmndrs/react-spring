@@ -66,12 +66,10 @@ const HeadingElement = styled('h1', {
   whiteSpace: 'pre-line',
   position: 'relative',
 
-  a: {
+  '& > a': {
+    pointerEvents: 'auto',
     textDecoration: 'none',
     fontWeight: 'inherit',
-  },
-
-  '& > a': {
     hover: {
       [`& + ${LinkIcon}`]: {
         opacity: 1,

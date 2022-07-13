@@ -117,17 +117,21 @@ const Head = styled(animated.header, {
   },
 
   // Give a good offset for the jump links
-  '& + aside + main > article > h2::before': {
-    display: 'block',
-    content: ' ',
-    marginTop: '-48px',
-    height: '48px',
-    visibility: 'hidden',
+  '& + aside + main > article > h2': {
     pointerEvents: 'none',
 
-    '@tabletUp': {
-      marginTop: '-82px',
-      height: '82px',
+    '&::before': {
+      display: 'block',
+      content: ' ',
+      marginTop: '-48px',
+      height: '48px',
+      visibility: 'hidden',
+      pointerEvents: 'none',
+
+      '@tabletUp': {
+        marginTop: '-82px',
+        height: '82px',
+      },
     },
   },
 
