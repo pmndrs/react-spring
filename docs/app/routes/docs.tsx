@@ -37,25 +37,30 @@ const comps = {
           mb: 30,
         },
       }}
+      isLink
       {...props}
     />
   ),
-  h2: (props: HeadingProps) => (
-    <Heading
-      tag="h2"
-      fontStyle="$L"
-      css={{
-        mt: 30,
-        mb: 15,
+  h2: (props: HeadingProps) => {
+    console.log(props)
+    return (
+      <Heading
+        tag="h2"
+        fontStyle="$L"
+        css={{
+          mt: 30,
+          mb: 15,
 
-        '@tabletUp': {
-          mt: 40,
-          mb: 20,
-        },
-      }}
-      {...props}
-    />
-  ),
+          '@tabletUp': {
+            mt: 40,
+            mb: 20,
+          },
+        }}
+        isLink
+        {...props}
+      />
+    )
+  },
   h3: (props: HeadingProps) => (
     <Heading
       tag="h3"
@@ -69,6 +74,7 @@ const comps = {
           mb: 20,
         },
       }}
+      isLink
       {...props}
     />
   ),
