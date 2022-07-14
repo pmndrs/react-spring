@@ -16,7 +16,7 @@
     "@mdx-js/react": "^1.6.22",
     "@netlify/functions": "^1.0.0",
     "@radix-ui/react-accordion": "^0.1.6",
-    "@radix-ui/react-dialog": "^0.1.7",
+    "@radix-ui/react-dialog": "patch:@radix-ui/react-dialog@npm:0.1.7#../.yarn/patches/@radix-ui-react-dialog-npm-0.1.7-61b8140da9.patch",
     "@radix-ui/react-popover": "^0.1.6",
     "@radix-ui/react-toolbar": "^0.1.5",
     "@radix-ui/react-tooltip": "^0.1.7",

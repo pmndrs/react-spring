@@ -4649,7 +4649,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-dialog@npm:^0.1.7":
+"@radix-ui/react-dialog@npm:0.1.7":
   version: 0.1.7
   resolution: "@radix-ui/react-dialog@npm:0.1.7"
   dependencies:
@@ -4672,6 +4672,32 @@ __metadata:
     react: ^16.8 || ^17.0
     react-dom: ^16.8 || ^17.0
   checksum: 19f131abf91ad93717149ad126444a8a273fd77ce74477e35bdb9e5cbc81cd166ba15812a4973d8882c48b03c2b5fdcd554b8dea0675430481abf7829ed8941d
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-dialog@patch:@radix-ui/react-dialog@npm:0.1.7#../.yarn/patches/@radix-ui-react-dialog-npm-0.1.7-61b8140da9.patch::locator=%40react-spring%2Fdocs%40workspace%3Adocs":
+  version: 0.1.7
+  resolution: "@radix-ui/react-dialog@patch:@radix-ui/react-dialog@npm%3A0.1.7#../.yarn/patches/@radix-ui-react-dialog-npm-0.1.7-61b8140da9.patch::version=0.1.7&hash=73d4f6&locator=%40react-spring%2Fdocs%40workspace%3Adocs"
+  dependencies:
+    "@babel/runtime": ^7.13.10
+    "@radix-ui/primitive": 0.1.0
+    "@radix-ui/react-compose-refs": 0.1.0
+    "@radix-ui/react-context": 0.1.1
+    "@radix-ui/react-dismissable-layer": 0.1.5
+    "@radix-ui/react-focus-guards": 0.1.0
+    "@radix-ui/react-focus-scope": 0.1.4
+    "@radix-ui/react-id": 0.1.5
+    "@radix-ui/react-portal": 0.1.4
+    "@radix-ui/react-presence": 0.1.2
+    "@radix-ui/react-primitive": 0.1.4
+    "@radix-ui/react-slot": 0.1.2
+    "@radix-ui/react-use-controllable-state": 0.1.0
+    aria-hidden: ^1.1.1
+    react-remove-scroll: ^2.4.0
+  peerDependencies:
+    react: ^16.8 || ^17.0
+    react-dom: ^16.8 || ^17.0
+  checksum: ee8c51161eb74b676b01bfe2983d7b927f66f54046a9164b086f1aeef20a73c857a630e09d2ec2bce9b481381be2157507320d47eb40cf6778a6209e0afa0ac1
   languageName: node
   linkType: hard
 
@@ -5336,7 +5362,7 @@ __metadata:
     "@mdx-js/react": ^1.6.22
     "@netlify/functions": ^1.0.0
     "@radix-ui/react-accordion": ^0.1.6
-    "@radix-ui/react-dialog": ^0.1.7
+    "@radix-ui/react-dialog": "patch:@radix-ui/react-dialog@npm:0.1.7#../.yarn/patches/@radix-ui-react-dialog-npm-0.1.7-61b8140da9.patch"
     "@radix-ui/react-popover": ^0.1.6
     "@radix-ui/react-toolbar": ^0.1.5
     "@radix-ui/react-tooltip": ^0.1.7

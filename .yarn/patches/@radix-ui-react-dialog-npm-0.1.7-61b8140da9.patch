@@ -1,0 +1,287 @@
+diff --git a/dist/index.module.js b/dist/index.module.js
+index 8195b87caaaf4dce9694171556953fc35545139b..664c9198f2146cdd40ce478519a8906991796fc9 100644
+--- a/dist/index.module.js
++++ b/dist/index.module.js
+@@ -1,2 +1,281 @@
+-import{Slot as e}from"@radix-ui/react-slot";import{hideOthers as o}from"aria-hidden";import{RemoveScroll as t}from"react-remove-scroll";import{useFocusGuards as r}from"@radix-ui/react-focus-guards";import{Primitive as n}from"@radix-ui/react-primitive";import{Presence as a}from"@radix-ui/react-presence";import{UnstablePortal as i}from"@radix-ui/react-portal";import{FocusScope as l}from"@radix-ui/react-focus-scope";import{DismissableLayer as c}from"@radix-ui/react-dismissable-layer";import{useControllableState as s}from"@radix-ui/react-use-controllable-state";import{useId as u}from"@radix-ui/react-id";import{createContext as p,createContextScope as d}from"@radix-ui/react-context";import{useComposedRefs as f}from"@radix-ui/react-compose-refs";import{composeEventHandlers as g}from"@radix-ui/primitive";import*as m from"react";import D from"@babel/runtime/helpers/esm/extends";const[x,C]=d("Dialog");export{C as createDialogScope};const[v,E]=x("Dialog");export const Dialog=e=>{const{__scopeDialog:o,children:t,open:r,defaultOpen:n,onOpenChange:a,modal:i=!0,allowPinchZoom:l}=e,c=m.useRef(null),p=m.useRef(null),[d=!1,f]=s({prop:r,defaultProp:n,onChange:a});/*#__PURE__*/return m.createElement(v,{scope:o,triggerRef:c,contentRef:p,contentId:u(),titleId:u(),descriptionId:u(),open:d,onOpenChange:f,onOpenToggle:m.useCallback((()=>f((e=>!e))),[f]),modal:i,allowPinchZoom:l},t)};/*#__PURE__*/export const DialogTrigger=/*#__PURE__*/m.forwardRef(((e,o)=>{const{__scopeDialog:t,...r}=e,a=E("DialogTrigger",t),i=f(o,a.triggerRef);/*#__PURE__*/return m.createElement(n.button,D({type:"button","aria-haspopup":"dialog","aria-expanded":a.open,"aria-controls":a.contentId,"data-state":b(a.open)},r,{ref:i,onClick:g(e.onClick,a.onOpenToggle)}))}));/*#__PURE__*/export const DialogPortal=e=>{const{__scopeDialog:o,forceMount:t,children:r,container:n}=e,l=E("DialogPortal",o);/*#__PURE__*/return m.createElement(m.Fragment,null,m.Children.map(r,(e=>/*#__PURE__*/m.createElement(a,{present:t||l.open},/*#__PURE__*/m.createElement(i,{asChild:!0,container:n},e)))))};/*#__PURE__*/export const DialogOverlay=/*#__PURE__*/m.forwardRef(((e,o)=>{const{forceMount:t,...r}=e,n=E("DialogOverlay",e.__scopeDialog);return n.modal?/*#__PURE__*/m.createElement(a,{present:t||n.open},/*#__PURE__*/m.createElement(R,D({},r,{ref:o}))):null}));/*#__PURE__*/const R=/*#__PURE__*/m.forwardRef(((o,r)=>{const{__scopeDialog:a,...i}=o,l=E("DialogOverlay",a);/*#__PURE__*/return m.createElement(t,{as:e,allowPinchZoom:l.allowPinchZoom,shards:[l.contentRef]},/*#__PURE__*/m.createElement(n.div,D({"data-state":b(l.open)},i,{ref:r,style:{pointerEvents:"auto",...i.style}})))}));export const DialogContent=/*#__PURE__*/m.forwardRef(((e,o)=>{const{forceMount:t,...r}=e,n=E("DialogContent",e.__scopeDialog);/*#__PURE__*/return m.createElement(a,{present:t||n.open},n.modal?/*#__PURE__*/m.createElement(_,D({},r,{ref:o})):/*#__PURE__*/m.createElement(O,D({},r,{ref:o})))}));/*#__PURE__*/const _=/*#__PURE__*/m.forwardRef(((e,t)=>{const r=E("DialogContent",e.__scopeDialog),n=m.useRef(null),a=f(t,r.contentRef,n);return m.useEffect((()=>{const e=n.current;if(e)return o(e)}),[]),/*#__PURE__*/m.createElement(h,D({},e,{ref:a,trapFocus:r.open,disableOutsidePointerEvents:!0,onCloseAutoFocus:g(e.onCloseAutoFocus,(e=>{var o;e.preventDefault(),null===(o=r.triggerRef.current)||void 0===o||o.focus()})),onPointerDownOutside:g(e.onPointerDownOutside,(e=>{const o=e.detail.originalEvent,t=0===o.button&&!0===o.ctrlKey;(2===o.button||t)&&e.preventDefault()})),onFocusOutside:g(e.onFocusOutside,(e=>e.preventDefault()))}))})),O=/*#__PURE__*/m.forwardRef(((e,o)=>{const t=E("DialogContent",e.__scopeDialog),r=m.useRef(!1);/*#__PURE__*/return m.createElement(h,D({},e,{ref:o,trapFocus:!1,disableOutsidePointerEvents:!1,onCloseAutoFocus:o=>{var n,a;(null===(n=e.onCloseAutoFocus)||void 0===n||n.call(e,o),o.defaultPrevented)||(r.current||null===(a=t.triggerRef.current)||void 0===a||a.focus(),o.preventDefault());r.current=!1},onInteractOutside:o=>{var n,a;null===(n=e.onInteractOutside)||void 0===n||n.call(e,o),o.defaultPrevented||(r.current=!0);const i=o.target;(null===(a=t.triggerRef.current)||void 0===a?void 0:a.contains(i))&&o.preventDefault()}}))})),h=/*#__PURE__*/m.forwardRef(((e,o)=>{const{__scopeDialog:t,trapFocus:n,onOpenAutoFocus:a,onCloseAutoFocus:i,...s}=e,u=E("DialogContent",t),p=m.useRef(null),d=f(o,p);return r(),/*#__PURE__*/m.createElement(m.Fragment,null,/*#__PURE__*/m.createElement(l,{asChild:!0,loop:!0,trapped:n,onMountAutoFocus:a,onUnmountAutoFocus:i},/*#__PURE__*/m.createElement(c,D({role:"dialog",id:u.contentId,"aria-describedby":u.descriptionId,"aria-labelledby":u.titleId,"data-state":b(u.open)},s,{ref:d,onDismiss:()=>u.onOpenChange(!1)}))),!1)}));export const DialogTitle=/*#__PURE__*/m.forwardRef(((e,o)=>{const{__scopeDialog:t,...r}=e,a=E("DialogTitle",t);/*#__PURE__*/return m.createElement(n.h2,D({id:a.titleId},r,{ref:o}))}));/*#__PURE__*/export const DialogDescription=/*#__PURE__*/m.forwardRef(((e,o)=>{const{__scopeDialog:t,...r}=e,a=E("DialogDescription",t);/*#__PURE__*/return m.createElement(n.p,D({id:a.descriptionId},r,{ref:o}))}));/*#__PURE__*/export const DialogClose=/*#__PURE__*/m.forwardRef(((e,o)=>{const{__scopeDialog:t,...r}=e,a=E("DialogClose",t);/*#__PURE__*/return m.createElement(n.button,D({type:"button"},r,{ref:o,onClick:g(e.onClick,(()=>a.onOpenChange(!1)))}))}));/*#__PURE__*/function b(e){return e?"open":"closed"}const[w,F]=p("DialogTitleWarning",{contentName:"DialogContent",titleName:"DialogTitle",docsSlug:"dialog"});export{w as WarningProvider};export const Root=Dialog;export const Trigger=DialogTrigger;export const Portal=DialogPortal;export const Overlay=DialogOverlay;export const Content=DialogContent;export const Title=DialogTitle;export const Description=DialogDescription;export const Close=DialogClose;
++import { Slot as e } from "@radix-ui/react-slot";
++import { hideOthers as o } from "aria-hidden";
++import { RemoveScroll as t } from "react-remove-scroll";
++import { useFocusGuards as r } from "@radix-ui/react-focus-guards";
++import { Primitive as n } from "@radix-ui/react-primitive";
++import { Presence as a } from "@radix-ui/react-presence";
++import { UnstablePortal as i } from "@radix-ui/react-portal";
++import { FocusScope as l } from "@radix-ui/react-focus-scope";
++import { DismissableLayer as c } from "@radix-ui/react-dismissable-layer";
++import { useControllableState as s } from "@radix-ui/react-use-controllable-state";
++import { useId as u } from "@radix-ui/react-id";
++import {
++  createContext as p,
++  createContextScope as d,
++} from "@radix-ui/react-context";
++import { useComposedRefs as f } from "@radix-ui/react-compose-refs";
++import { composeEventHandlers as g } from "@radix-ui/primitive";
++import * as m from "react";
++import D from "@babel/runtime/helpers/esm/extends";
++const [x, C] = d("Dialog");
++export { C as createDialogScope };
++const [v, E] = x("Dialog");
++export const Dialog = (e) => {
++  const {
++      __scopeDialog: o,
++      children: t,
++      open: r,
++      defaultOpen: n,
++      onOpenChange: a,
++      modal: i = !0,
++      allowPinchZoom: l,
++    } = e,
++    c = m.useRef(null),
++    p = m.useRef(null),
++    [d = !1, f] = s({ prop: r, defaultProp: n, onChange: a });
++  /*#__PURE__*/ return m.createElement(
++    v,
++    {
++      scope: o,
++      triggerRef: c,
++      contentRef: p,
++      contentId: u(),
++      titleId: u(),
++      descriptionId: u(),
++      open: d,
++      onOpenChange: f,
++      onOpenToggle: m.useCallback(() => f((e) => !e), [f]),
++      modal: i,
++      allowPinchZoom: l,
++    },
++    t
++  );
++};
++/*#__PURE__*/ export const DialogTrigger = /*#__PURE__*/ m.forwardRef(
++  (e, o) => {
++    const { __scopeDialog: t, ...r } = e,
++      a = E("DialogTrigger", t),
++      i = f(o, a.triggerRef);
++    /*#__PURE__*/ return m.createElement(
++      n.button,
++      D(
++        {
++          type: "button",
++          "aria-haspopup": "dialog",
++          "aria-expanded": a.open,
++          "aria-controls": a.contentId,
++          "data-state": b(a.open),
++        },
++        r,
++        { ref: i, onClick: g(e.onClick, a.onOpenToggle) }
++      )
++    );
++  }
++);
++/*#__PURE__*/ export const DialogPortal = (e) => {
++  const { __scopeDialog: o, forceMount: t, children: r, container: n } = e,
++    l = E("DialogPortal", o);
++  /*#__PURE__*/ return m.createElement(
++    m.Fragment,
++    null,
++    m.Children.map(r, (e) =>
++      /*#__PURE__*/ m.createElement(
++        a,
++        { present: t || l.open },
++        /*#__PURE__*/ m.createElement(i, { asChild: !0, container: n }, e)
++      )
++    )
++  );
++};
++/*#__PURE__*/ export const DialogOverlay = /*#__PURE__*/ m.forwardRef(
++  (e, o) => {
++    const { forceMount: t, ...r } = e,
++      n = E("DialogOverlay", e.__scopeDialog);
++    return n.modal
++      ? /*#__PURE__*/ m.createElement(
++          a,
++          { present: t || n.open },
++          /*#__PURE__*/ m.createElement(R, D({}, r, { ref: o }))
++        )
++      : null;
++  }
++);
++/*#__PURE__*/ const R = /*#__PURE__*/ m.forwardRef((o, r) => {
++  const { __scopeDialog: a, ...i } = o,
++    l = E("DialogOverlay", a);
++  /*#__PURE__*/ return m.createElement(
++    t,
++    { as: e, allowPinchZoom: l.allowPinchZoom, shards: [l.contentRef] },
++    /*#__PURE__*/ m.createElement(
++      n.div,
++      D({ "data-state": b(l.open) }, i, {
++        ref: r,
++        style: { pointerEvents: "auto", ...i.style },
++      })
++    )
++  );
++});
++export const DialogContent = /*#__PURE__*/ m.forwardRef((e, o) => {
++  const { forceMount: t, ...r } = e,
++    n = E("DialogContent", e.__scopeDialog);
++  /*#__PURE__*/ return m.createElement(
++    a,
++    { present: t || n.open },
++    n.modal
++      ? /*#__PURE__*/ m.createElement(_, D({}, r, { ref: o }))
++      : /*#__PURE__*/ m.createElement(O, D({}, r, { ref: o }))
++  );
++});
++/*#__PURE__*/ const _ = /*#__PURE__*/ m.forwardRef((e, t) => {
++    const r = E("DialogContent", e.__scopeDialog),
++      n = m.useRef(null),
++      a = f(t, r.contentRef, n);
++    return (
++      m.useEffect(() => {
++        const e = n.current;
++        if (e) return o(e);
++      }, []),
++      /*#__PURE__*/ m.createElement(
++        h,
++        D({}, e, {
++          ref: a,
++          trapFocus: e.trapFocus ?? r.open,
++          disableOutsidePointerEvents: !0,
++          onCloseAutoFocus: g(e.onCloseAutoFocus, (e) => {
++            var o;
++            e.preventDefault(),
++              null === (o = r.triggerRef.current) || void 0 === o || o.focus();
++          }),
++          onPointerDownOutside: g(e.onPointerDownOutside, (e) => {
++            const o = e.detail.originalEvent,
++              t = 0 === o.button && !0 === o.ctrlKey;
++            (2 === o.button || t) && e.preventDefault();
++          }),
++          onFocusOutside: g(e.onFocusOutside, (e) => e.preventDefault()),
++        })
++      )
++    );
++  }),
++  O = /*#__PURE__*/ m.forwardRef((e, o) => {
++    const t = E("DialogContent", e.__scopeDialog),
++      r = m.useRef(!1);
++    /*#__PURE__*/ return m.createElement(
++      h,
++      D({}, e, {
++        ref: o,
++        trapFocus: !1,
++        disableOutsidePointerEvents: !1,
++        onCloseAutoFocus: (o) => {
++          var n, a;
++          (null === (n = e.onCloseAutoFocus) || void 0 === n || n.call(e, o),
++          o.defaultPrevented) ||
++            (r.current ||
++              null === (a = t.triggerRef.current) ||
++              void 0 === a ||
++              a.focus(),
++            o.preventDefault());
++          r.current = !1;
++        },
++        onInteractOutside: (o) => {
++          var n, a;
++          null === (n = e.onInteractOutside) || void 0 === n || n.call(e, o),
++            o.defaultPrevented || (r.current = !0);
++          const i = o.target;
++          (null === (a = t.triggerRef.current) || void 0 === a
++            ? void 0
++            : a.contains(i)) && o.preventDefault();
++        },
++      })
++    );
++  }),
++  h = /*#__PURE__*/ m.forwardRef((e, o) => {
++    const {
++        __scopeDialog: t,
++        trapFocus: n,
++        onOpenAutoFocus: a,
++        onCloseAutoFocus: i,
++        ...s
++      } = e,
++      u = E("DialogContent", t),
++      p = m.useRef(null),
++      d = f(o, p);
++    return (
++      r(),
++      /*#__PURE__*/ m.createElement(
++        m.Fragment,
++        null,
++        /*#__PURE__*/ m.createElement(
++          l,
++          {
++            asChild: !0,
++            loop: !0,
++            trapped: n,
++            onMountAutoFocus: a,
++            onUnmountAutoFocus: i,
++          },
++          /*#__PURE__*/ m.createElement(
++            c,
++            D(
++              {
++                role: "dialog",
++                id: u.contentId,
++                "aria-describedby": u.descriptionId,
++                "aria-labelledby": u.titleId,
++                "data-state": b(u.open),
++              },
++              s,
++              { ref: d, onDismiss: () => u.onOpenChange(!1) }
++            )
++          )
++        ),
++        !1
++      )
++    );
++  });
++export const DialogTitle = /*#__PURE__*/ m.forwardRef((e, o) => {
++  const { __scopeDialog: t, ...r } = e,
++    a = E("DialogTitle", t);
++  /*#__PURE__*/ return m.createElement(
++    n.h2,
++    D({ id: a.titleId }, r, { ref: o })
++  );
++});
++/*#__PURE__*/ export const DialogDescription = /*#__PURE__*/ m.forwardRef(
++  (e, o) => {
++    const { __scopeDialog: t, ...r } = e,
++      a = E("DialogDescription", t);
++    /*#__PURE__*/ return m.createElement(
++      n.p,
++      D({ id: a.descriptionId }, r, { ref: o })
++    );
++  }
++);
++/*#__PURE__*/ export const DialogClose = /*#__PURE__*/ m.forwardRef((e, o) => {
++  const { __scopeDialog: t, ...r } = e,
++    a = E("DialogClose", t);
++  /*#__PURE__*/ return m.createElement(
++    n.button,
++    D({ type: "button" }, r, {
++      ref: o,
++      onClick: g(e.onClick, () => a.onOpenChange(!1)),
++    })
++  );
++});
++/*#__PURE__*/ function b(e) {
++  return e ? "open" : "closed";
++}
++const [w, F] = p("DialogTitleWarning", {
++  contentName: "DialogContent",
++  titleName: "DialogTitle",
++  docsSlug: "dialog",
++});
++export { w as WarningProvider };
++export const Root = Dialog;
++export const Trigger = DialogTrigger;
++export const Portal = DialogPortal;
++export const Overlay = DialogOverlay;
++export const Content = DialogContent;
++export const Title = DialogTitle;
++export const Description = DialogDescription;
++export const Close = DialogClose;
+ //# sourceMappingURL=index.module.js.map

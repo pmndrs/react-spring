@@ -59,7 +59,8 @@ export const HeaderSidePanel = ({
         <Dialog.Overlay forceMount asChild>
           <MobileMenuOverlay style={{ opacity }} />
         </Dialog.Overlay>
-        <Dialog.Content forceMount asChild>
+        {/* @ts-ignore */}
+        <Dialog.Content trapFocus={false} forceMount asChild>
           <MobileMenu style={{ x }}>
             <div>
               <MobileMenuClose>
