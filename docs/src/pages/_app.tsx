@@ -3,6 +3,7 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { DefaultSeo } from 'next-seo'
 import { MDXProvider } from '@mdx-js/react'
 import { useEffect } from 'react'
+import styled from 'styled-components'
 
 import { GLOBAL } from 'styles/global'
 import { RESET } from 'styles/reset'
@@ -27,7 +28,19 @@ interface MyAppProps extends AppProps {}
 
 const components = {
   code: CodeBlock,
+  h1: props => <H1 {...props} />,
 }
+
+const H1 = styled.h1`
+  &::before {
+    display: block;
+    content: ' ';
+    margin-top: -140px;
+    height: 140px;
+    visibility: hidden;
+    pointer-events: none;
+  }
+`
 
 function App({ Component, pageProps }: MyAppProps) {
   useEffect(() => {
@@ -49,6 +62,12 @@ function App({ Component, pageProps }: MyAppProps) {
         <DefaultSeo {...DEFAULT_SEO} />
         <Header />
         <PageContainer>
+          <script
+            async
+            type="text/javascript"
+            src="//cdn.carbonads.com/carbon.js?serve=CEAIPK7I&placement=react-springdev"
+            id="_carbonads_js"
+          />
           <Component {...pageProps} />
         </PageContainer>
         <Footer />
