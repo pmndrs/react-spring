@@ -130,10 +130,14 @@ html {
 #carbonads {
   display: flex;
   max-width: 100%;
-  margin: 20px 0;
+  margin: 20px 0 0 0;
   background-color: hsl(0, 0%, 98%);
   box-shadow: 0 1px 4px 1px hsla(0, 0%, 0%, 0.1);
   z-index: 100;
+
+  @media (min-width: 768px){
+    margin: 0 0 20px 0;
+  }
 }
 #carbonads a {
   color: inherit;

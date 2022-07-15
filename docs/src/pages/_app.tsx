@@ -40,6 +40,13 @@ const H1 = styled.h1`
     visibility: hidden;
     pointer-events: none;
   }
+
+  @media (min-width: 768px) {
+    &::before {
+      height: unset;
+      margin-top: unset;
+    }
+  }
 `
 
 function App({ Component, pageProps }: MyAppProps) {
@@ -62,12 +69,6 @@ function App({ Component, pageProps }: MyAppProps) {
         <DefaultSeo {...DEFAULT_SEO} />
         <Header />
         <PageContainer>
-          <script
-            async
-            type="text/javascript"
-            src="//cdn.carbonads.com/carbon.js?serve=CEAIPK7I&placement=react-springdev"
-            id="_carbonads_js"
-          />
           <Component {...pageProps} />
         </PageContainer>
         <Footer />
