@@ -16,7 +16,7 @@ import { Footer } from 'components/Footer'
 import { CodeBlock } from 'components/CodeBlock'
 
 import { DEFAULT_SEO } from 'references/defaultSeo'
-import { FeedbackPopover } from 'components/FeedbackPopover'
+// import { FeedbackPopover } from 'components/FeedbackPopover'
 
 const GlobalStyle = createGlobalStyle`
   ${RESET}
@@ -71,7 +71,7 @@ function App({ Component, pageProps }: MyAppProps) {
           <Component {...pageProps} />
         </PageContainer>
         <Footer />
-        <FeedbackPopover />
+        {/* <FeedbackPopover /> */}
         <GlobalStyle />
       </MDXProvider>
     </ThemeProvider>
