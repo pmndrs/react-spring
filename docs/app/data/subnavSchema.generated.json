@@ -53,6 +53,12 @@
     { "href": "#typescript", "label": "Typescript", "id": "typescript" },
     { "href": "#examples", "label": "Examples", "id": "examples" }
   ],
+  "/components/use-springs": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    { "href": "#reference", "label": "Reference", "id": "reference" },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" },
+    { "href": "#examples", "label": "Examples", "id": "examples" }
+  ],
   "/advanced/config": [
     { "href": "#usage", "label": "Usage", "id": "usage" },
     {

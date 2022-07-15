@@ -42,6 +42,14 @@
         "children": [],
         "href": "/docs/components/use-spring",
         "noPage": false
+      },
+      {
+        "id": "use-springs",
+        "title": "useSprings",
+        "sidebarPosition": 2,
+        "children": [],
+        "href": "/docs/components/use-springs",
+        "noPage": false
       }
     ],
     "sidebarPosition": 4,

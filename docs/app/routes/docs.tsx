@@ -42,7 +42,6 @@ const comps = {
     />
   ),
   h2: (props: HeadingProps) => {
-    console.log(props)
     return (
       <Heading
         tag="h2"

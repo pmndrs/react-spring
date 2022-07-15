@@ -1,10 +1,10 @@
 ---
 meta:
-  title: useSpring | React Spring
-sidebar_position: 1
+  title: useSprings | React Spring
+sidebar_position: 2
 ---
 
-# useSpring
+# useSprings
 
 As with all our APIs we have a component and hook version. We personally
 recommend using the hook version as it is more inline with react's vision
@@ -17,31 +17,43 @@ Whether you're using a function or not, it's all about passing a config object t
 
 ### With a function & deps
 
-```jsx lines=1,4-7,9
-import { useSpring, animated } from '@react-spring/web'
+```jsx lines=1,4-7,11-13
+import { useSprings, animated } from '@react-spring/web'
 
 function MyComponent() {
-  const [props, api] = useSpring(() => ({
+  const [springs, api] = useSprings(2, () => ({
     from: { opacity: 0 },
     to: { opacity: 1 },
   }))
 
-  return <animated.div style={props}>Hello World</animated.div>
+  return (
+    <div>
+      {springs.map(props => (
+        <animated.div style={props}>Hello World</animated.div>
+      ))}
+    </div>
+  )
 }
 ```
 
 ### With a config object
 
-```jsx lines=1,4-7,9
-import { useSpring, animated } from '@react-spring/web'
+```jsx lines=1,4-7,11-13
+import { useSprings, animated } from '@react-spring/web'
 
 function MyComponent() {
-  const props = useSpring({
+  const springs = useSpring(2, {
     from: { opacity: 0 },
     to: { opacity: 1 },
   })
 
-  return <animated.div style={props}>Hello World</animated.div>
+  return (
+    <div>
+      {springs.map(props => (
+        <animated.div style={props}>Hello World</animated.div>
+      ))}
+    </div>
+  )
 }
 ```
 
@@ -54,12 +66,13 @@ import { TablesConfiguration } from '~/components/Tables/TablesConfig'
 ## Typescript
 
 ```tsx
-function useSpring(configuration: ConfigObject): SpringValues
+function useSprings(count: number, configuration: ConfigObject): SpringValues[]
 
-function useSpring(
-  configurationFn: () => ConfigObject,
+function useSprings(
+  count: number,
+  configurationFn: (springIndex: number) => ConfigObject,
   deps?: any[]
-): [springs: SpringValues, api: SpringRef]
+): [springs: SpringValues[], api: SpringRef]
 ```
 
 Where `ConfigObject` is described [above](#reference)
