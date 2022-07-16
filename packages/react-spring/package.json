@@ -33,5 +33,9 @@
     "@react-spring/three": "~9.5.0",
     "@react-spring/web": "~9.5.0",
     "@react-spring/zdog": "~9.5.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
   }
 }
