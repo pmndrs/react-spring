@@ -18,7 +18,7 @@ export const SiteThemePicker = () => {
 
   const [styles, api] = useSpring(
     () => ({
-      width: 42,
+      width: 0,
       left: theme === 'light' ? '2px' : 'unset',
       right: theme === 'light' ? 'unset' : '2px',
       config: {
@@ -33,6 +33,7 @@ export const SiteThemePicker = () => {
     const isDefaultDark = document.documentElement.classList.contains('dark')
 
     api.start({
+      width: 42,
       left: !isDefaultDark ? '2px' : 'unset',
       right: !isDefaultDark ? 'unset' : '2px',
       immediate: true,
@@ -47,6 +48,8 @@ export const SiteThemePicker = () => {
     dClass.remove('dark', 'light')
 
     dClass.add(theme)
+
+    window.localStorage.setItem('theme', theme)
   }, [theme])
 
   const isDarkMode = theme === ThemeValue.Dark
