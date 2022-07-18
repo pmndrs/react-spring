@@ -5,11 +5,13 @@ import * as Tooltip from '@radix-ui/react-tooltip'
 import { dark, styled } from '~/styles/stitches.config'
 import { NavigationButton, NavigationButtonProps } from '../Buttons/NavButton'
 import { HeaderSubNavigation } from './HeaderSubNavigation'
+import { SiteThemePicker } from '../Site/SiteThemePicker'
 
 interface NavigationProps {
   className?: string
   showSubNav?: boolean
   showLabels?: boolean
+  showThemePicker?: boolean
 }
 
 const MAIN_NAV: NavigationButtonProps[] = [
@@ -39,6 +41,7 @@ export const HeaderNavigation = ({
   className,
   showSubNav = true,
   showLabels = false,
+  showThemePicker = true,
 }: NavigationProps) => {
   return (
     <Tooltip.TooltipProvider>
@@ -50,8 +53,18 @@ export const HeaderNavigation = ({
             {...props}
           />
         ))}
-        {showSubNav && <NavSeperator />}
-        {showSubNav && <HeaderSubNavigation showLabels={showLabels} />}
+        {showSubNav && (
+          <>
+            <NavSeperator />
+            <HeaderSubNavigation showLabels={showLabels} />
+          </>
+        )}
+        {showThemePicker && (
+          <>
+            <NavSeperator />
+            <SiteThemePicker />
+          </>
+        )}
       </NavList>
     </Tooltip.TooltipProvider>
   )

@@ -17,7 +17,7 @@ import docusearch from '@docsearch/css/dist/style.css'
 
 import { globalStyles } from './styles/global'
 
-import { SiteThemePicker } from './components/Site/SiteThemePicker'
+import { WidgetTheme } from './components/Widgets/WidgetTheme'
 import { WidgetPlausible } from './components/Widgets/WidgetPlausible'
 import { SiteFooter } from './components/Site/SiteFooter'
 
@@ -69,7 +69,7 @@ function Document({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
         <WidgetPlausible />
-        <SiteThemePicker />
+        <WidgetTheme />
       </head>
       <body>
         {children}

@@ -11,6 +11,7 @@ import { HeaderSubNavigation } from './HeaderSubNavigation'
 import { MenuDocs } from '../Menu/MenuDocs'
 
 import { NavigationSchema } from '../../../scripts/docs/navigation'
+import { SiteThemePicker } from '../Site/SiteThemePicker'
 
 interface HeaderSidePanelProps {
   isOpen: boolean
@@ -63,13 +64,19 @@ export const HeaderSidePanel = ({
         <Dialog.Content trapFocus={false} forceMount asChild>
           <MobileMenu style={{ x }}>
             <div>
-              <MobileMenuClose>
-                <X />
-              </MobileMenuClose>
+              <MobileDialogHeader>
+                <MobileMenuClose>
+                  <X />
+                </MobileMenuClose>
+                <MobileThemePicker>
+                  <SiteThemePicker />
+                </MobileThemePicker>
+              </MobileDialogHeader>
               <HiddenTitle>Main Menu</HiddenTitle>
               <MainNavigation
                 isDocsSection={isDocs}
                 showSubNav={false}
+                showThemePicker={false}
                 showLabels={!isDocs}
               />
             </div>
@@ -117,6 +124,11 @@ const MobileMenu = styled(animated.div, {
   flexDirection: 'column',
 })
 
+const MobileDialogHeader = styled('header', {
+  display: 'flex',
+  justifyContent: 'space-between',
+})
+
 const MobileMenuClose = styled(Dialog.Close, {
   border: 'none',
   color: '$steel100',
@@ -125,6 +137,10 @@ const MobileMenuClose = styled(Dialog.Close, {
   ml: '$15',
   p: '1.1rem 1.2rem',
   cursor: 'pointer',
+})
+
+const MobileThemePicker = styled(Toolbar.Root, {
+  mr: '$15',
 })
 
 const HiddenTitle = styled(Dialog.Title, {

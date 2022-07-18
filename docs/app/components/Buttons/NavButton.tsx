@@ -80,7 +80,7 @@ export const NavigationButton = ({
   )
 }
 
-const NavAnchor = styled('a', {
+const NavAnchor = styled(Toolbar.Link, {
   height: '4.6rem',
   width: '4.6rem',
   color: '$steel100',
