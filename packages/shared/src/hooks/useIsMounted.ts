@@ -1,9 +1,9 @@
 import { useRef } from 'react'
-import { useLayoutEffect } from './useLayoutEffect'
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect'
 
 export const useIsMounted = () => {
   const isMounted = useRef(false)
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     isMounted.current = true
 
     return () => {

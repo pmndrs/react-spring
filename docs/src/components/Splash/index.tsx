@@ -51,7 +51,7 @@ const Container = styled.header`
   border-radius: 0 0 20px 20px;
 
   width: 100%;
-  height: calc(100vh - 100px);
+  height: calc(60vh);
 
   display: flex;
   flex-direction: column-reverse;

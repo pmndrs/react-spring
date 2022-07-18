@@ -30,7 +30,7 @@ export const FeedbackPopover = () => {
 
   const handleAnchorClick = () => {
     if (window.plausible) {
-      window.plausible('Clicked through to feedback', {
+      window.plausible('Clicked through to beta', {
         props: {
           location: document.location.pathname,
         },
@@ -55,13 +55,14 @@ export const FeedbackPopover = () => {
               clip-rule="evenodd"></path>
           </svg>
         </PopoverCloseButton>
-        <PopoverTitle>Struggling to find what you want?</PopoverTitle>
+        <PopoverTitle>Have you seen our beta?</PopoverTitle>
         <PopoverCopy>
-          {`We're interested in hearing your feedback for our documentation! Have your voice heard by commenting in this `}
+          {`We've been hard at work creating a better docs experience, check out the beta `}
           <a
             onClick={handleAnchorClick}
-            href="https://github.com/pmndrs/react-spring/issues/1799">
-            issue
+            href="https://beta.react-spring.dev"
+            target="_blank">
+            here
           </a>
         </PopoverCopy>
       </PopoverContent>

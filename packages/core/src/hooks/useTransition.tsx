@@ -8,7 +8,7 @@ import {
   useOnce,
   usePrev,
   each,
-  useLayoutEffect,
+  useIsomorphicLayoutEffect,
 } from '@react-spring/shared'
 
 import {
@@ -99,7 +99,7 @@ export function useTransition(
   const usedTransitions = useRef<TransitionState[] | null>(null)
   const prevTransitions = reset ? null : usedTransitions.current
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     usedTransitions.current = transitions
   })
 
@@ -140,7 +140,7 @@ export function useTransition(
 
   // Expired transitions that need clean up.
   const expired = (reset && usedTransitions.current) || []
-  useLayoutEffect(() =>
+  useIsomorphicLayoutEffect(() =>
     each(expired, ({ ctrl, item, key }) => {
       detachRefs(ctrl, ref)
       callProp(onDestroyed, item, key)
@@ -364,7 +364,7 @@ export function useTransition(
   const hasContext = context !== prevContext && hasProps(context)
 
   // Merge the context into each transition.
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (hasContext) {
       each(transitions, t => {
         t.ctrl.start({ default: context })
@@ -384,7 +384,7 @@ export function useTransition(
     }
   })
 
-  useLayoutEffect(
+  useIsomorphicLayoutEffect(
     () => {
       /*
        * if exitingTransitions.current has a size it means we're exiting before enter

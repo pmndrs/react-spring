@@ -6,7 +6,7 @@ import {
   usePrev,
   useOnce,
   useForceUpdate,
-  useLayoutEffect,
+  useIsomorphicLayoutEffect,
 } from '@react-spring/shared'
 
 import {
@@ -166,14 +166,14 @@ export function useSprings(
 
   // New springs are created during render so users can pass them to
   // their animated components, but new springs aren't cached until the
-  // commit phase (see the `useLayoutEffect` callback below).
+  // commit phase (see the `useIsomorphicLayoutEffect` callback below).
   const springs = ctrls.current.map((ctrl, i) => getSprings(ctrl, updates[i]))
 
   const context = useContext(SpringContext)
   const prevContext = usePrev(context)
   const hasContext = context !== prevContext && hasProps(context)
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     layoutId.current++
 
     // Replace the cached controllers.
