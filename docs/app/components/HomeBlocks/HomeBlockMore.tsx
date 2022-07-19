@@ -198,7 +198,7 @@ export const HomeBlockMore = () => {
         title={`And there's even more`}
         cta={{
           label: 'Get started now',
-          href: '/docs/get-started',
+          href: '/docs/getting-started',
         }}>
         <List>
           {listItems.map((str, i) => (
