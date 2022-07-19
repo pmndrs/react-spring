@@ -1,7 +1,7 @@
 import * as Popover from '@radix-ui/react-popover'
 import { Info } from 'phosphor-react'
 
-import { styled } from '~/styles/stitches.config'
+import { dark, styled } from '~/styles/stitches.config'
 
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
 
@@ -81,7 +81,11 @@ const TableCell = styled('td', {
       false: {
         '& > code': {
           backgroundColor: '$steel20',
-          color: '$steel40',
+          color: '$steel80',
+
+          [`.${dark} &`]: {
+            color: '$steel40',
+          },
         },
       },
     },
