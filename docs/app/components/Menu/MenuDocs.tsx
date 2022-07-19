@@ -2,7 +2,7 @@ import { Link, useLocation } from '@remix-run/react'
 import { Location } from 'react-router'
 
 import { getFontStyles } from '~/styles/fontStyles'
-import { styled } from '~/styles/stitches.config'
+import { css, styled } from '~/styles/stitches.config'
 
 import {
   NavigationSchema,
@@ -33,6 +33,15 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
         submenu.map(item =>
           renderSubMenu({ ...item, location, onClick: handleNavClick }, 0)
         )}
+      <ExternalAnchor
+        href="https://github.com/pmndrs/react-spring/releases"
+        rel="noopener noreferrer"
+        target="_blank"
+        title={true}
+        active={false}
+        onClick={handleNavClick}>
+        {`Changelog`}
+      </ExternalAnchor>
     </DocsList>
   )
 }
@@ -110,7 +119,7 @@ const DocsList = styled('ul', {
 
 const ListItem = styled('li')
 
-const Anchor = styled(Link, {
+const AnchorStyles = css({
   ...getFontStyles('$XS'),
 
   hover: {
@@ -212,3 +221,7 @@ const WidgetContainer = styled('li', {
     fontFamily: '$sans-var',
   },
 })
+
+const ExternalAnchor = styled('a', AnchorStyles)
+
+const Anchor = styled(Link, AnchorStyles)
