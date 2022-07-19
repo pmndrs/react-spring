@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Outlet, useLocation } from '@remix-run/react'
 import { MDXProvider } from '@mdx-js/react'
 import { PencilSimple } from 'phosphor-react'
@@ -18,6 +18,7 @@ import { StickyAside } from '~/components/Asides/StickyAside'
 import { Code } from '~/components/Code/Code'
 import { LivePreviewStyles } from '~/components/Code/LivePreviewStyles'
 import { InlineLinkStyles } from '../components/InlineLink'
+import { Callout } from '~/components/Callout'
 
 import {
   flattenNavigationWithChildren,
@@ -197,6 +198,9 @@ const comps = {
     )
   },
   H,
+  warning: (props: { children?: ReactNode }) => (
+    <Callout variant="warning" {...props} />
+  ),
 }
 
 export default function DocsLayout() {

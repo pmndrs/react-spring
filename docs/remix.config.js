@@ -1,9 +1,10 @@
 const rehypeAutolinkHeadings = require('rehype-autolink-headings')
 const rehypeSlug = require('rehype-slug')
+const remarkDirective = require('remark-directive')
 
 const rehypeHighlightCode = require('./scripts/mdx/rehype-highlight-code')
-
 const rehypeMetaAttribute = require('./scripts/mdx/rehype-meta-attribute')
+const parseCallouts = require('./scripts/mdx/remark-plugin-parser')
 
 /**
  * @type {import('@remix-run/dev/config').AppConfig}
@@ -20,6 +21,7 @@ module.exports = {
         rehypeHighlightCode,
         rehypeMetaAttribute,
       ],
+      remarkPlugins: [remarkDirective, parseCallouts],
     }
   },
 }

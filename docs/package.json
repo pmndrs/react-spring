@@ -40,6 +40,7 @@
     "rehype-autolink-headings": "5.1.0",
     "rehype-parse": "7.0.1",
     "rehype-slug": "4.0.1",
+    "remark-directive": "1.0.1",
     "remix": "^1.6.3",
     "tiny-invariant": "^1.2.0",
     "unified": "9.2.2",

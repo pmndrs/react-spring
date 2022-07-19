@@ -5386,6 +5386,7 @@ __metadata:
     rehype-autolink-headings: 5.1.0
     rehype-parse: 7.0.1
     rehype-slug: 4.0.1
+    remark-directive: 1.0.1
     remix: ^1.6.3
     tiny-invariant: ^1.2.0
     unified: 9.2.2
@@ -14494,6 +14495,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"longest-streak@npm:^2.0.0":
+  version: 2.0.4
+  resolution: "longest-streak@npm:2.0.4"
+  checksum: 28b8234a14963002c5c71035dee13a0a11e9e9d18ffa320fdc8796ed7437399204495702ed69cd2a7087b0af041a2a8b562829b7c1e2042e73a3374d1ecf6580
+  languageName: node
+  linkType: hard
+
 "longest-streak@npm:^3.0.0":
   version: 3.0.1
   resolution: "longest-streak@npm:3.0.1"
@@ -14690,6 +14698,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mdast-util-directive@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "mdast-util-directive@npm:1.0.1"
+  dependencies:
+    mdast-util-to-markdown: ^0.6.0
+    parse-entities: ^2.0.0
+    repeat-string: ^1.0.0
+    stringify-entities: ^3.1.0
+    unist-util-visit-parents: ^3.0.0
+  checksum: 04f3cb23f85b3e9be41ba18965a3375a016d8acf4e1819af5149e5a9cb07e3c87fe93b9a10ba5129b955ffabfb8ede78bb634946b5a0401fd63cd3f05e978665
+  languageName: node
+  linkType: hard
+
 "mdast-util-from-markdown@npm:^1.0.0":
   version: 1.2.0
   resolution: "mdast-util-from-markdown@npm:1.2.0"
@@ -14784,6 +14805,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mdast-util-to-markdown@npm:^0.6.0":
+  version: 0.6.5
+  resolution: "mdast-util-to-markdown@npm:0.6.5"
+  dependencies:
+    "@types/unist": ^2.0.0
+    longest-streak: ^2.0.0
+    mdast-util-to-string: ^2.0.0
+    parse-entities: ^2.0.0
+    repeat-string: ^1.0.0
+    zwitch: ^1.0.0
+  checksum: 7ebc47533bff6e8669f85ae124dc521ea570e9df41c0d9e4f0f43c19ef4a8c9928d741f3e4afa62fcca1927479b714582ff5fd684ef240d84ee5b75ab9d863cf
+  languageName: node
+  linkType: hard
+
 "mdast-util-to-markdown@npm:^1.0.0":
   version: 1.2.6
   resolution: "mdast-util-to-markdown@npm:1.2.6"
@@ -14796,6 +14831,13 @@ __metadata:
     unist-util-visit: ^4.0.0
     zwitch: ^2.0.0
   checksum: f15a24caffbd951c8ff6b599cfd67cef102f520bd17be07c31950b60fc1341d3fd8f915b19dfcd69bf6565fad2baedb4a888bc3f34bcd0699425e33cf77ec581
+  languageName: node
+  linkType: hard
+
+"mdast-util-to-string@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "mdast-util-to-string@npm:2.0.0"
+  checksum: 0b2113ada10e002fbccb014170506dabe2f2ddacaacbe4bc1045c33f986652c5a162732a2c057c5335cdb58419e2ad23e368e5be226855d4d4e280b81c4e9ec2
   languageName: node
   linkType: hard
 
@@ -15230,6 +15272,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"micromark-extension-directive@npm:^1.0.0":
+  version: 1.4.0
+  resolution: "micromark-extension-directive@npm:1.4.0"
+  dependencies:
+    micromark: ~2.11.0
+    parse-entities: ^2.0.0
+  checksum: 9a6d16cf36c7f8b5ac1254faf04e8954e1643bc9c9b72466c0d371beff288be1663a784aafdd03b996a71624d53765668771770172a1b1f0de24b155b1e7f507
+  languageName: node
+  linkType: hard
+
 "micromark-extension-frontmatter@npm:^1.0.0":
   version: 1.0.0
   resolution: "micromark-extension-frontmatter@npm:1.0.0"
@@ -15554,6 +15606,16 @@ __metadata:
     micromark-util-types: ^1.0.1
     uvu: ^0.5.0
   checksum: 04663fe0308cccfbf338111b41d3d82d6445d1d2b834c9fc1880e1ea3874c4a3b81adfafe62b0bc7708ba0a86889885ea31b4dbb39f1f72190c3aab46b743bb1
+  languageName: node
+  linkType: hard
+
+"micromark@npm:~2.11.0":
+  version: 2.11.4
+  resolution: "micromark@npm:2.11.4"
+  dependencies:
+    debug: ^4.0.0
+    parse-entities: ^2.0.0
+  checksum: f8a5477d394908a5d770227aea71657a76423d420227c67ea0699e659a5f62eb39d504c1f7d69ec525a6af5aaeb6a7bffcdba95614968c03d41d3851edecb0d6
   languageName: node
   linkType: hard
 
@@ -17966,6 +18028,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"remark-directive@npm:1.0.1":
+  version: 1.0.1
+  resolution: "remark-directive@npm:1.0.1"
+  dependencies:
+    mdast-util-directive: ^1.0.0
+    micromark-extension-directive: ^1.0.0
+  checksum: 3fb035da6141304c0c27b73ce6528d521c8d8f39e9e195a43ea2892a1298c092f58305f21007ec4f1f7ef6c6096d69351b108f5c0d04b5d2a7a7ffe64478b9ac
+  languageName: node
+  linkType: hard
+
 "remark-frontmatter@npm:^4.0.0":
   version: 4.0.1
   resolution: "remark-frontmatter@npm:4.0.1"
@@ -18027,7 +18099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"repeat-string@npm:^1.6.1":
+"repeat-string@npm:^1.0.0, repeat-string@npm:^1.6.1":
   version: 1.6.1
   resolution: "repeat-string@npm:1.6.1"
   checksum: 1b809fc6db97decdc68f5b12c4d1a671c8e3f65ec4a40c238bc5200e44e85bcc52a54f78268ab9c29fcf5fe4f1343e805420056d1f30fa9a9ee4c2d93e3cc6c0
@@ -19336,7 +19408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stringify-entities@npm:^3.0.1":
+"stringify-entities@npm:^3.0.1, stringify-entities@npm:^3.1.0":
   version: 3.1.0
   resolution: "stringify-entities@npm:3.1.0"
   dependencies:
@@ -21367,6 +21439,13 @@ __metadata:
     react:
       optional: true
   checksum: 18f025b1b666a311121d3855303ff58e6a21fd107920ca474307e86984c13338d6c4cfa5cdf13382a9e0f76821f2554a12d4d200a98a66b58637e729f149797b
+  languageName: node
+  linkType: hard
+
+"zwitch@npm:^1.0.0":
+  version: 1.0.5
+  resolution: "zwitch@npm:1.0.5"
+  checksum: 28a1bebacab3bc60150b6b0a2ba1db2ad033f068e81f05e4892ec0ea13ae63f5d140a1d692062ac0657840c8da076f35b94433b5f1c329d7803b247de80f064a
   languageName: node
   linkType: hard
 
