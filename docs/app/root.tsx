@@ -28,10 +28,20 @@ export const meta: MetaFunction = () => {
       'Bring your components to life with simple spring animation primitives for React',
     'og:site_name': 'React Spring',
     'og:title': 'React Spring',
+    'og:description':
+      'Bring your components to life with simple spring animation primitives for React',
     'og:image': 'https://beta.react-spring.dev/share.jpg',
+    'og:type': 'website',
     'og:image:width': '1200',
     'og:image:height': '630',
     'og:url': 'https://beta.react-spring.dev',
+    'twitter:card': 'summary_large_image',
+    'twitter:domain': 'beta.react-spring.dev',
+    'twitter:url': 'https://beta.react-spring.dev',
+    'twitter:title': 'React Spring',
+    'twitter:description':
+      'Bring your components to life with simple spring animation primitives for React',
+    'twitter:image': 'https://beta.react-spring.dev/share.jpg',
   }
 }
 
