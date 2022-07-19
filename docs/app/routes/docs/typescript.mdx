@@ -6,13 +6,41 @@ sidebar_position: 8
 
 # Typescript Glossary
 
+## Lookup
+
+`Lookup` is typically infered, so you probably won't need to use it.
+It's primarily used to infer the animatable properties from our hooks, e.g. `opacity`
+
+```ts
+interface Lookup<T = any> {
+  [key: string]: T
+}
+```
+
 ## SpringValues
 
-SpringValues is contextual to the values you pass to your hook e.g. `opacity`
+`SpringValues` is contextual to the values you pass to your hook e.g. `opacity`.
+It's type signature is quite complicated, so it's easier to show how you use it.
 
 ```ts
 type MySpringValues = SpringValues<{
   opacity: number
   y: string
 }>
+```
+
+## TransitionState
+
+`TransitionState` is the internal state attached to a particular `Item`
+(a single datum from the data array you pass).
+
+```ts
+interface TransitionState<Item = any, State extends Lookup = Lookup> {
+  key: any
+  item: Item
+  ctrl: Controller<State>
+  phase: TransitionPhase
+  expired?: boolean
+  expirationId?: number
+}
 ```

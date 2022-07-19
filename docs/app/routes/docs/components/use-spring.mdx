@@ -6,10 +6,7 @@ sidebar_position: 1
 
 # useSpring
 
-As with all our APIs we have a component and hook version. We personally
-recommend using the hook version as it is more inline with react's vision
-of the future of react. However, we understand there are codebases out there
-that still use class components and we want to support those too.
+Our flagship hook. Applicable to most use-cases. If you want to orchestrate many of these hooks, consider using [`useSprings`](/components/use-springs).
 
 ## Usage
 
@@ -21,10 +18,13 @@ Whether you're using a function or not, it's all about passing a config object t
 import { useSpring, animated } from '@react-spring/web'
 
 function MyComponent() {
-  const [props, api] = useSpring(() => ({
-    from: { opacity: 0 },
-    to: { opacity: 1 },
-  }))
+  const [props, api] = useSpring(
+    () => ({
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+    }),
+    []
+  )
 
   return <animated.div style={props}>Hello World</animated.div>
 }

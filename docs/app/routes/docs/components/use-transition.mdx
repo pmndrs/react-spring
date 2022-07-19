@@ -1,0 +1,78 @@
+---
+meta:
+  title: useTransition | React Spring
+sidebar_position: 3
+---
+
+# useTransition
+
+This hook is best suited for animating in & out datasets or items you don't particularly
+want to be left in the DOM, e.g. a dialog.
+
+## Usage
+
+`useTransition` depends on an `array` of data. That data can be anything you want, we
+use a lot of internals to track each datum including inferring the keys, this is the
+first argument. The second is a you're config object, this is different to
+[`useSpring`](/docs/components/use-spring) or [`useSprings`](/docs/components/use-springs) so take note!
+
+### With a config object
+
+```jsx lines=1,4-8,10-12
+import { useTransition, animated } from '@react-spring/web'
+
+function MyComponent({ data = [1, 2, 3] }) {
+  const transitions = useTransition(data, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 1 },
+  })
+
+  return transitions((style, item) => (
+    <animated.div style={style}>{item}</animated.div>
+  ))
+}
+```
+
+## Reference
+
+`Item` is defined alot below, it's automatically inferred from what you pass as the
+content of the array you pass as the first argument to the hook. Therefore, if you
+passed `[1, 2, 3]` then `Item` would be `number`.
+
+import { TablesConfiguration } from '~/components/Tables/TablesConfig'
+import { TRANSITION_CONFIG_DATA } from '~/data/fixtures'
+
+<TablesConfiguration data={TRANSITION_CONFIG_DATA} />
+
+## Typescript
+
+```tsx
+function useTransition<Item extends any>(
+  data: Item[],
+  configuration: ConfigObject
+): TransitionFn<Item>
+
+function useTransition<Item extends any>(
+  data: Item[],
+  configurationFn: () => ConfigObject
+  deps?: any[]
+): [transition: TransitionFn<Item>, api: SpringRef]
+
+type TransitionFn = (
+  style: SpringValues,
+  item: Item,
+  transitionState: TransitionState<Item>,
+  index: number
+) => ReactNode
+```
+
+Where `ConfigObject` is described [above](#reference)
+
+### TS Glossary
+
+- [`TransitionState`](/docs/typescript#transitionstate)
+
+## Examples
+
+Coming soon.

@@ -322,3 +322,280 @@ export const easingData: CellData[][] = [
   ['easeInQuint', 'easeOutQuint', 'easeOutQuint'],
   ['easeInSine', 'easeOutSine', 'easeOutSine'],
 ]
+
+const EVENTS_CELL: CellData[] = [
+  {
+    label: 'events',
+    content: (
+      <p>
+        This is not a prop but rather a collection, see{' '}
+        <a href="/docs/advanced/events">Events</a> for more information.
+      </p>
+    ),
+  },
+  'function',
+  null,
+]
+
+const REF_CELL: CellData[] = [
+  {
+    label: 'ref',
+    content: (
+      <p>
+        Used to access the imperative API. Animations never auto-start when{' '}
+        <code>ref</code> is defined.
+      </p>
+    ),
+  },
+  'SpringRef',
+  null,
+]
+
+const ToContent = (
+  <p>
+    The <code>to</code> prop, is very versatile, for more information checkout
+    out <a href="/docs/advanced/async-animations">Async Animations</a>.
+  </p>
+)
+
+export const DEFAULT_CONFIG_DATA: CellData[][] = [
+  ['from', 'object', null],
+  [
+    {
+      label: 'to',
+      content: ToContent,
+    },
+    {
+      label: 'object | object[] | function',
+      content: (
+        <code>{`(next: (props?: object) => Promise<void>, cancel: () => void) => Promise<void>`}</code>
+      ),
+    },
+    null,
+  ],
+  [
+    'loop',
+    {
+      label: 'boolean | object | function',
+      content: <code>{`() => boolean`}</code>,
+    },
+    null,
+  ],
+  [
+    {
+      label: 'delay',
+      content: <p>Delay in ms before the animation starts.</p>,
+    },
+    {
+      label: 'number | function',
+      content: <code>{`(key: string) => number`}</code>,
+    },
+    null,
+  ],
+  [
+    {
+      label: 'immediate',
+      content: <p>Prevents the animation if true.</p>,
+    },
+    {
+      label: 'boolean | function',
+      content: <code>{`(key: string) => boolean`}</code>,
+    },
+    null,
+  ],
+  [
+    {
+      label: 'reset',
+      content: (
+        <p>Resets the spring so it plays from the start again when true.</p>
+      ),
+    },
+    'boolean',
+    null,
+  ],
+  [
+    {
+      label: 'reverse',
+      content: (
+        <p>
+          Reverse the <code>to</code> and <code>from</code> prop so that{' '}
+          <code>to</code> is the initial starting state.
+        </p>
+      ),
+    },
+    'boolean',
+    null,
+  ],
+  [
+    {
+      label: 'pause',
+      content: <p>Pause an animation at it's current point.</p>,
+    },
+    'boolean',
+    null,
+  ],
+  [
+    'cancel',
+    {
+      label: 'boolean | string | string[] | function',
+      content: <code>{`(key: string) => boolean`}</code>,
+    },
+    null,
+  ],
+  REF_CELL,
+  [
+    {
+      label: 'config',
+      content: (
+        <p>
+          Spring config (mass / tension etc.), see{' '}
+          <a href="/docs/advanced/config">Config</a> for more information.
+        </p>
+      ),
+    },
+    {
+      label: 'object | function',
+      content: <code>{`(key: string) => boolean`}</code>,
+    },
+    {
+      label: 'object',
+      content: <code>{`{ mass: 1, tension: 170, friction: 26 }`}</code>,
+    },
+  ],
+  EVENTS_CELL,
+]
+
+export const TRANSITION_CONFIG_DATA: CellData[][] = [
+  [
+    'from',
+    {
+      label: 'object | function',
+      content: <code>{`(item: Item, index: number) => object`}</code>,
+    },
+    null,
+  ],
+  [
+    'intial',
+    {
+      label: 'object | function',
+      content: <code>{`(item: Item, index: number) => object`}</code>,
+    },
+    null,
+  ],
+  [
+    {
+      label: 'enter',
+      content: ToContent,
+    },
+    {
+      label: 'object | object[] | function',
+      content: (
+        <code>{`(item: Item, index: number) => object | object[] | (next: (props?: object) => Promise<void>, cancel: () => void) => Promise<void>`}</code>
+      ),
+    },
+    null,
+  ],
+  [
+    {
+      label: 'update',
+      content: ToContent,
+    },
+    {
+      label: 'object | object[] | function',
+      content: (
+        <code>{`(item: Item, index: number) => object | object[] | (next: (props?: object) => Promise<void>, cancel: () => void) => Promise<void>`}</code>
+      ),
+    },
+    null,
+  ],
+  [
+    {
+      label: 'leave',
+      content: ToContent,
+    },
+    {
+      label: 'object | object[] | function',
+      content: (
+        <code>{`(item: Item, index: number) => object | object[] | (next: (props?: object) => Promise<void>, cancel: () => void) => Promise<void>`}</code>
+      ),
+    },
+    null,
+  ],
+  [
+    {
+      label: 'keys',
+      content: (
+        <p>
+          Keys are automatically created so this prop is typically not required
+        </p>
+      ),
+    },
+    {
+      label: 'Array<string | number> | function | null',
+      content: <code>{`(item: Item) =>  string | number`}</code>,
+    },
+    null,
+  ],
+  [
+    'sort',
+    {
+      label: 'function',
+      content: <code>{`(a: Item, b: Item) => number`}</code>,
+    },
+    null,
+  ],
+  ['trail', 'number', '0'],
+  ['exitBeforeEnter', 'boolean', 'false'],
+  [
+    {
+      label: 'expires',
+      content: (
+        <>
+          <p>
+            When <code>true</code> or <code>{'<= 0'}</code>, each item is
+            unmounted immediately after its `leave` animation is finished.
+          </p>
+          <br />
+          <p>
+            When <code>false</code>, items are never unmounted.
+          </p>
+          <br />
+          <p>
+            When <code>{'> 0'}</code>, this prop is used in a{' '}
+            <code>setTimeout</code> call that forces a rerender if the component
+            that called <code>useTransition</code> doesn't rerender on its own
+            after an item's <code>leave</code> animation is finished.
+          </p>
+        </>
+      ),
+    },
+    {
+      label: 'boolean | number | function',
+      content: <code>{`(item: Item) => boolean | number`}</code>,
+    },
+    'true',
+  ],
+  REF_CELL,
+  [
+    {
+      label: 'config',
+      content: (
+        <p>
+          Spring config (mass / tension etc.), see{' '}
+          <a href="/docs/advanced/config">Config</a> for more information.
+        </p>
+      ),
+    },
+    {
+      label: 'object | function',
+      content: (
+        <code>{`(item: Item, index: number, state: TransitionPhase) => boolean`}</code>
+      ),
+    },
+    {
+      label: 'object',
+      content: <code>{`{ mass: 1, tension: 170, friction: 26 }`}</code>,
+    },
+  ],
+  EVENTS_CELL,
+]

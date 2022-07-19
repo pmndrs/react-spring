@@ -33,7 +33,7 @@
   {
     "href": "/docs/components",
     "id": "components",
-    "noPage": true,
+    "noPage": false,
     "children": [
       {
         "id": "use-spring",
@@ -49,6 +49,14 @@
         "sidebarPosition": 2,
         "children": [],
         "href": "/docs/components/use-springs",
+        "noPage": false
+      },
+      {
+        "id": "use-transition",
+        "title": "useTransition",
+        "sidebarPosition": 3,
+        "children": [],
+        "href": "/docs/components/use-transition",
         "noPage": false
       }
     ],
