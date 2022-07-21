@@ -104,19 +104,15 @@ export function useTransition(
 
   useOnce(() => {
     /**
-     * This _should_ only run in `StrictMode` where everything
-     * is destroyed and remounted, because the enter animation
-     * was most likely cancelled we run it again on initial mount.
+     * If transitions exist on mount of the component
+     * then reattach their refs on-mount, this was required
+     * for react18 strict mode to work properly.
      *
-     * This does nothing when `StrictMode` isn't enabled,
-     * because usedTransitions on mount is typically null.
+     * See https://github.com/pmndrs/react-spring/issues/1890
      */
-    each(usedTransitions.current!, t => {
-      t.ctrl.ref?.add(t.ctrl)
-      const change = changes.get(t)
-      if (change) {
-        t.ctrl.start(change.payload)
-      }
+    each(transitions, t => {
+      ref?.add(t.ctrl)
+      t.ctrl.ref = ref
     })
 
     // Destroy all transitions on dismount.
@@ -159,6 +155,7 @@ export function useTransition(
         if (~i) transitions[i] = t
       }
     })
+
   // Mount new items with fresh transitions.
   each(items, (item, i) => {
     if (!transitions[i]) {
