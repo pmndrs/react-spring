@@ -52,6 +52,17 @@
     { "href": "#deep-dive", "label": "Deep dive", "id": "deep-dive" }
   ],
   "/concepts/index": [],
+  "/components/use-chain": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    {
+      "href": "#timesteps-explained",
+      "label": "Timesteps Explained",
+      "id": "timesteps-explained"
+    },
+    { "href": "#reference", "label": "Reference", "id": "reference" },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" },
+    { "href": "#examples", "label": "Examples", "id": "examples" }
+  ],
   "/components/use-spring": [
     { "href": "#usage", "label": "Usage", "id": "usage" },
     { "href": "#reference", "label": "Reference", "id": "reference" },

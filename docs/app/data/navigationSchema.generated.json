@@ -58,6 +58,14 @@
         "children": [],
         "href": "/docs/components/use-transition",
         "noPage": false
+      },
+      {
+        "id": "use-chain",
+        "title": "useChain",
+        "sidebarPosition": 4,
+        "children": [],
+        "href": "/docs/components/use-chain",
+        "noPage": false
       }
     ],
     "sidebarPosition": 4,

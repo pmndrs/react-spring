@@ -16,6 +16,24 @@ use a lot of internals to track each datum including inferring the keys, this is
 first argument. The second is a you're config object, this is different to
 [`useSpring`](/docs/components/use-spring) or [`useSprings`](/docs/components/use-springs) so take note!
 
+### With a function & deps
+
+```jsx lines=1,4-8,10-12
+import { useTransition, animated } from '@react-spring/web'
+
+function MyComponent({ data = [1, 2, 3] }) {
+  const [transitions, api] = useTransition(data, () => ({
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 1 },
+  }))
+
+  return transitions((style, item) => (
+    <animated.div style={style}>{item}</animated.div>
+  ))
+}
+```
+
 ### With a config object
 
 ```jsx lines=1,4-8,10-12
