@@ -110,6 +110,7 @@ export function useTransition(
      *
      * See https://github.com/pmndrs/react-spring/issues/1890
      */
+
     each(transitions, t => {
       ref?.add(t.ctrl)
       t.ctrl.ref = ref
@@ -406,7 +407,7 @@ export function useTransition(
              * Unless we have exitBeforeEnter in which case will skip
              * to enter the new animation straight away as if they "overlapped"
              */
-            if (ctrl.ref && !forceChange.current) {
+            if ((ctrl.ref || ref) && !forceChange.current) {
               ctrl.update(payload)
             } else {
               ctrl.start(payload)
