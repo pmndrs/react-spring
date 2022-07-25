@@ -75,6 +75,12 @@
     { "href": "#typescript", "label": "Typescript", "id": "typescript" },
     { "href": "#examples", "label": "Examples", "id": "examples" }
   ],
+  "/components/use-trail": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    { "href": "#reference", "label": "Reference", "id": "reference" },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" },
+    { "href": "#examples", "label": "Examples", "id": "examples" }
+  ],
   "/components/use-transition": [
     { "href": "#usage", "label": "Usage", "id": "usage" },
     { "href": "#reference", "label": "Reference", "id": "reference" },

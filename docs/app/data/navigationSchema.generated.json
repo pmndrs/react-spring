@@ -66,6 +66,14 @@
         "children": [],
         "href": "/docs/components/use-chain",
         "noPage": false
+      },
+      {
+        "id": "use-trail",
+        "title": "useTrail",
+        "sidebarPosition": 5,
+        "children": [],
+        "href": "/docs/components/use-trail",
+        "noPage": false
       }
     ],
     "sidebarPosition": 4,
