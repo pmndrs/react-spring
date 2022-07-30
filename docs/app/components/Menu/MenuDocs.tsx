@@ -34,6 +34,7 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
           renderSubMenu({ ...item, location, onClick: handleNavClick }, 0)
         )}
       <ExternalAnchor
+        shouldBeHidden={location.pathname === '/'}
         href="https://github.com/pmndrs/react-spring/releases"
         rel="noopener noreferrer"
         target="_blank"
@@ -155,6 +156,11 @@ const AnchorStyles = css({
         hover: {
           backgroundColor: '#ff6d6d99',
         },
+      },
+    },
+    shouldBeHidden: {
+      true: {
+        display: 'none',
       },
     },
   },
