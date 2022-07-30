@@ -50,7 +50,7 @@ export const globalStyles = globalCss({
     textDecoration: 'none',
   },
 
-  '*:focus': {
+  '*:focus-visible': {
     boxShadow: '0 0 0 3px $red-outline',
     outline: 'none',
     borderRadius: '$r4',
