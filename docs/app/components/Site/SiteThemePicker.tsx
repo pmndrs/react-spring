@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { atom, useAtom } from 'jotai'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import { MoonStars, Sun } from 'phosphor-react'
 import { animated, useSpring } from '@react-spring/web'
@@ -8,13 +8,15 @@ import { styled } from '~/styles/stitches.config'
 import { AccessibleIcon } from '../AccessibleIcon'
 import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
 
-enum ThemeValue {
+export enum ThemeValue {
   Dark = 'dark',
   Light = 'light',
 }
 
+export const themeAtom = atom(ThemeValue.Light)
+
 export const SiteThemePicker = () => {
-  const [theme, setTheme] = useState<ThemeValue>(ThemeValue.Light)
+  const [theme, setTheme] = useAtom(themeAtom)
 
   const [styles, api] = useSpring(
     () => ({

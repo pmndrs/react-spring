@@ -6,6 +6,7 @@ import { HomeBlockCopy } from './HomeBlockCopy'
 import { Section } from './HomeBlockSection'
 import { Pre } from '../Code/Pre'
 import { useState } from 'react'
+import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
 
 const listItems = [
   'Animate any value – strings, numbers, css variables...',
@@ -174,6 +175,8 @@ const dataFixtures = [
 ]
 
 export const HomeBlockMore = () => {
+  const isDarkMode = useIsDarkTheme()
+
   const [springs, api] = useSprings(
     5,
     i => ({
@@ -208,7 +211,10 @@ export const HomeBlockMore = () => {
               style={{
                 color: springs[i].opacity.to(
                   [0, 1],
-                  ['var(--colors-steel40)', 'var(--colors-black)']
+                  [
+                    'var(--colors-steel40)',
+                    isDarkMode ? 'rgba(250,250,250,1)' : '#1B1A22',
+                  ]
                 ),
               }}>
               {str}

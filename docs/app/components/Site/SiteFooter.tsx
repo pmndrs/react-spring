@@ -46,7 +46,7 @@ export const SiteFooter = () => {
         </a>{' '}
         & more...
       </FooterCopy>
-      <FooterCopy>{`© 2022 react-spring`}</FooterCopy>
+      <FooterCopy>{`© ${new Date().getFullYear()} react-spring`}</FooterCopy>
     </Footer>
   )
 }
