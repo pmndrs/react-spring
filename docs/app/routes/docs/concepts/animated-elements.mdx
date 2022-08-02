@@ -130,7 +130,9 @@ export default function () {
       <Dialog.Portal forceMount>
         {transition((style, isOpen) => (
           <>
-            <OverlayBackground style={{ opacity: style.opacity }} />
+            {isOpen ? (
+              <OverlayBackground style={{ opacity: style.opacity }} />
+            ) : null}
             {isOpen ? (
               <Content forceMount style={style}>
                 <DialogHeader>
@@ -292,7 +294,7 @@ Similar to how the `style` prop is handled with regards to it being specific to 
 the animated values to the native element is also specific to the target. In the instance of the `web` target,
 we in the process of wrapping the element in the `animated` HOC attach a ref to the elment.
 
-We are then able to directly change the DOM node imperatively. For further reading, check out [`Controller`](/concepts/controller).
+We are then able to directly change the DOM node imperatively. For further reading, check out [`Controller`](/docs/concepts/controllers-and-springs#Controller).
 
 ### How can I make my own animated components?
 
