@@ -35,7 +35,7 @@
     "@react-spring/zdog": "~9.5.0"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*"
+    "react": "^16.8.0  || >=17.0.0 || >=18.0.0",
+    "react-dom": "^16.8.0  || >=17.0.0 || >=18.0.0"
   }
 }
