@@ -3,6 +3,7 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { DefaultSeo } from 'next-seo'
 import { MDXProvider } from '@mdx-js/react'
 import { useEffect } from 'react'
+import styled from 'styled-components'
 
 import { GLOBAL } from 'styles/global'
 import { RESET } from 'styles/reset'
@@ -15,7 +16,7 @@ import { Footer } from 'components/Footer'
 import { CodeBlock } from 'components/CodeBlock'
 
 import { DEFAULT_SEO } from 'references/defaultSeo'
-import { FeedbackPopover } from 'components/FeedbackPopover'
+// import { FeedbackPopover } from 'components/FeedbackPopover'
 
 const GlobalStyle = createGlobalStyle`
   ${RESET}
@@ -27,7 +28,26 @@ interface MyAppProps extends AppProps {}
 
 const components = {
   code: CodeBlock,
+  h1: props => <H1 {...props} />,
 }
+
+const H1 = styled.h1`
+  &::before {
+    display: block;
+    content: ' ';
+    margin-top: -140px;
+    height: 140px;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  @media (min-width: 768px) {
+    &::before {
+      height: unset;
+      margin-top: unset;
+    }
+  }
+`
 
 function App({ Component, pageProps }: MyAppProps) {
   useEffect(() => {
@@ -52,7 +72,7 @@ function App({ Component, pageProps }: MyAppProps) {
           <Component {...pageProps} />
         </PageContainer>
         <Footer />
-        <FeedbackPopover />
+        {/* <FeedbackPopover /> */}
         <GlobalStyle />
       </MDXProvider>
     </ThemeProvider>

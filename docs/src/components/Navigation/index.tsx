@@ -96,14 +96,18 @@ const NavTree = (page: Page) => {
 }
 
 const NavContainer = styled.nav`
-  position: sticky;
   top: 20px;
   left: 20px;
-  width: 260px;
   max-height: calc(100vh - 40px);
   overflow: auto;
   background: rgba(54, 54, 69, 0.05);
   border-radius: 20px;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    position: sticky;
+    width: 260px;
+  }
 `
 
 const MainMenuUl = styled.ul`
