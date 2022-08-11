@@ -468,8 +468,33 @@ function describeConfigProp() {
       })
     })
     describe('the "precision" prop', () => {
-      describe('stops decay animation when step difference is less than precision', () => {
-        it.each([0.1, 0.01, 0.001, 0.0001])(
+      describe('stops spring easing when step difference is less than precision', () => {
+        it.each([100, 10, 1, 0.1, 0.01, 0.001, 0.0001])(
+          'with precision: %d',
+          async precision => {
+            const spring = new SpringValue(0)
+
+            spring.start(precision * 10, {
+              config: {
+                precision,
+              },
+            })
+
+            await global.advanceUntilIdle()
+            const frames = global.getFrames(spring)
+
+            expect(spring.get() - frames[frames.length - 2]).toBeGreaterThan(
+              precision
+            )
+
+            expect(
+              spring.get() - frames[frames.length - 1]
+            ).toBeLessThanOrEqual(precision)
+          }
+        )
+      })
+      describe('stops decay easing when step difference is less than precision', () => {
+        it.each([100, 10, 1, 0.1, 0.01, 0.001, 0.0001])(
           'with precision: %d',
           async precision => {
             const spring = new SpringValue(0)
