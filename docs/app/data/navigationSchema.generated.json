@@ -105,6 +105,31 @@
     "title": "Advanced API"
   },
   {
+    "href": "/docs/utilities",
+    "id": "utilities",
+    "noPage": true,
+    "children": [
+      {
+        "id": "use-isomorphic-layout-effect",
+        "title": "useIsomorphicLayout",
+        "sidebarPosition": 1,
+        "children": [],
+        "href": "/docs/utilities/use-isomorphic-layout-effect",
+        "noPage": false
+      },
+      {
+        "id": "use-reduced-motion",
+        "title": "useReducedMotion",
+        "sidebarPosition": 2,
+        "children": [],
+        "href": "/docs/utilities/use-reduced-motion",
+        "noPage": false
+      }
+    ],
+    "sidebarPosition": 6,
+    "title": "Utilities"
+  },
+  {
     "href": "/docs/typescript",
     "id": "typescript",
     "title": "Typescript",

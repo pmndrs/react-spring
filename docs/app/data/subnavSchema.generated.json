@@ -28,6 +28,35 @@
       "id": "transitionstate"
     }
   ],
+  "/utilities/index": [],
+  "/utilities/use-isomorphic-layout-effect": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    {
+      "href": "#why-do-we-need-this",
+      "label": "Why do we need this?",
+      "id": "why-do-we-need-this"
+    },
+    {
+      "href": "#what-does-it-do",
+      "label": "What does it do?",
+      "id": "what-does-it-do"
+    },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" }
+  ],
+  "/utilities/use-reduced-motion": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    {
+      "href": "#stopping-animations",
+      "label": "Stopping animations",
+      "id": "stopping-animations"
+    },
+    {
+      "href": "#why-is-it-important",
+      "label": "Why is it important?",
+      "id": "why-is-it-important"
+    },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" }
+  ],
   "/concepts/animated-elements": [
     {
       "href": "#what-are-they",
