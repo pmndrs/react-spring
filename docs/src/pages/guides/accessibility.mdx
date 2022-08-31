@@ -14,13 +14,12 @@ Vestibular dysfunction, a balance disorder of the inner ear, is surprisingly com
   />
 </p>
 
-Combine `skipAnimation` with [prefers-reduced-motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) to gracefully disable or reduce the motion of your animations. [react-reduce-motion](https://github.com/infiniteluke/react-reduce-motion) is a cross platform hook that exposes this OS level setting, enabling you to disable or lessen your animations for users that want to opt out.
+Combine `skipAnimation` with [prefers-reduced-motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) to gracefully disable or reduce the motion of your animations. `useReducedMotion` enables you to disable or reduce your animations for users that want to opt out.
 
 To disable animations using this hook you can use react-spring's `skipAnimation` global:
 
 ```jsx
-import { useReducedMotion } from 'react-reduce-motion'
-import { Globals } from 'react-spring'
+import { Globals, useReducedMotion } from 'react-spring'
 
 const MyApp = () => {
   const prefersReducedMotion = useReducedMotion()
@@ -36,7 +35,7 @@ const MyApp = () => {
 Animations can also be disable on a case by case basis using the `immediate` property.
 
 ```jsx
-import { useReducedMotion } from 'react-reduce-motion'
+import { useReducedMotion } from 'react-spring'
 
 const MyComponent = () => {
   const prefersReducedMotion = useReducedMotion()
@@ -48,7 +47,7 @@ const MyComponent = () => {
 Finally, animations can be lessened by applying your own heuristic.
 
 ```jsx
-import { useReducedMotion } from 'react-reduce-motion'
+import { useReducedMotion } from 'react-spring'
 
 const MyComponent = () => {
   const prefersReducedMotion = useReducedMotion()
@@ -58,5 +57,3 @@ const MyComponent = () => {
   // ...
 }
 ```
-
-Check out [react-reduce-motion](https://github.com/infiniteluke/react-reduce-motion) to learn more.
