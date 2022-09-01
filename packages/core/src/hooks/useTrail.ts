@@ -8,6 +8,7 @@ import { Controller } from '../Controller'
 
 import { UseSpringProps } from './useSpring'
 import { useSprings } from './useSprings'
+import { Lookup } from 'packages/types'
 
 export type UseTrailProps<Props extends object = any> = UseSpringProps<Props>
 
@@ -18,7 +19,7 @@ export function useTrail<Props extends object>(
     ctrl: Controller
   ) => UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps?: readonly any[]
-): PickAnimated<Props> extends infer State
+): PickAnimated<Props> extends infer State extends Lookup<any>
   ? [SpringValues<State>[], SpringRef<State>]
   : never
 
@@ -31,7 +32,7 @@ export function useTrail<Props extends object>(
   length: number,
   props: UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps: readonly any[]
-): PickAnimated<Props> extends infer State
+): PickAnimated<Props> extends infer State extends Lookup<any>
   ? [SpringValues<State>[], SpringRef<State>]
   : never
 
