@@ -3,9 +3,9 @@ meta:
   title: Animated Elements | React Spring
   'og:title': Animated Elements | React Spring
   'twitter:title': Animated Elements | React Spring
-  description: An indepth conceptual guide to animated elements and what they are in React Spring.
-  'og:description': An indepth conceptual guide to animated elements and what they are in React Spring.
-  'twitter:description': An indepth conceptual guide to animated elements and what they are in React Spring.
+  description: An in-depth conceptual guide to animated elements and what they are in React Spring.
+  'og:description': An in-depth conceptual guide to animated elements and what they are in React Spring.
+  'twitter:description': An in-depth conceptual guide to animated elements and what they are in React Spring.
   'og:url': https://beta.react-spring.dev/docs/concepts/animated-elements
   'twitter:url': https://beta.react-spring.dev/docs/concepts/animated-elements
 sidebar_position: 1
@@ -16,8 +16,8 @@ sidebar_position: 1
 ## What are they?
 
 The basis of `react-spring` depends on two things, `SpringValues` & `animated` components. Lets explore the latter.
-An `animated` component recieves `SpringValues` through the `style` prop and updates the element without causing a
-react render. It works because it is a [Higher-Order compoonent](https://reactjs.org/docs/higher-order-components.html) (HOC)
+An `animated` component receives `SpringValues` through the `style` prop and updates the element without causing a
+react render. It works because it is a [Higher-Order component](https://reactjs.org/docs/higher-order-components.html) (HOC)
 assigned to a dictionary of elements depending on the target you've selected thus being able to pass the props you
 desire for your application but also containing the logic to interpolate the `SpringValues` from the hook you've used.
 
@@ -38,7 +38,7 @@ import { animated } from '@react-spring/web'
 <animated.mesh />
 ```
 
-If you've used `framer-motion` before, will most like be familar with the dot notation of accessing a dictionary of components.
+If you've used `framer-motion` before, will most like be familiar with the dot notation of accessing a dictionary of components.
 
 So while being able to use `animated.element` is useful, most cases you'll want to style said element. `react-spring` has no preference on styling techniques,
 common techniques like `css modules` or [`tailwind`](https://tailwindcss.com/) can work because every animated element can accept the properties of the native element, e.g. `className`.
@@ -70,7 +70,7 @@ const ExternalComponent = props => {
 
 // MyApp.js
 import { ExternalComponent } from 'external-library'
-import { aniamted, useSpring } from '@react-spring/web'
+import { animated, useSpring } from '@react-spring/web'
 
 const AnimatedDialog = animated(ExternalComponent)
 
@@ -292,7 +292,7 @@ through the object making the values "animated".
 
 Similar to how the `style` prop is handled with regards to it being specific to the target, how we apply
 the animated values to the native element is also specific to the target. In the instance of the `web` target,
-we in the process of wrapping the element in the `animated` HOC attach a ref to the elment.
+we in the process of wrapping the element in the `animated` HOC attach a ref to the element.
 
 We are then able to directly change the DOM node imperatively. For further reading, check out [`Controller`](/docs/concepts/controllers-and-springs#Controller).
 
