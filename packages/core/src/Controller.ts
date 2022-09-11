@@ -27,6 +27,8 @@ import {
   OnChange,
   OnRest,
   OnStart,
+  SpringChain,
+  SpringToFn,
   SpringValues,
 } from './types'
 
@@ -401,7 +403,14 @@ export async function flushUpdate(
               resolve(getCancelledResult(ctrl))
             } else {
               props.onRest = onRest
-              resolve(runAsync(asyncTo!, props, state, ctrl))
+              resolve(
+                runAsync(
+                  asyncTo as SpringChain | SpringToFn,
+                  props,
+                  state,
+                  ctrl
+                )
+              )
             }
           },
         },
