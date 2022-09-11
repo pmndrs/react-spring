@@ -450,7 +450,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   start(to: T, props?: SpringProps<T>): AsyncResult<this>
 
-  start(to?: T | SpringUpdate<T>, arg2?: SpringProps<T>) {
+  start(to?: any, arg2?: any) {
     let queue: SpringUpdate<T>[]
     if (!is.und(to)) {
       queue = [is.obj(to) ? to : { ...arg2, to }]

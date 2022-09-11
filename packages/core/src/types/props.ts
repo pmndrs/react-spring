@@ -106,7 +106,7 @@ export type GoalProp<T> = [T] extends [IsPlainObject<T>]
   : GoalValue<T>
 
 /** A set of values for a `Controller` to animate from/to. */
-export type GoalValues<T extends Lookup> = FluidProps<T> extends infer Props
+export type GoalValues<T> = FluidProps<T> extends infer Props
   ? { [P in keyof Props]?: Props[P] | null }
   : never
 
