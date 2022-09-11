@@ -1,4 +1,4 @@
-import { Remap } from '@react-spring/types'
+import { Lookup, Remap } from '@react-spring/types'
 import { is } from '@react-spring/shared'
 
 import { ControllerUpdate, PickAnimated, SpringValues } from '../types'
@@ -10,7 +10,7 @@ import { useSprings } from './useSprings'
  * The props that `useSpring` recognizes.
  */
 export type UseSpringProps<Props extends object = any> = unknown &
-  PickAnimated<Props> extends infer State
+  PickAnimated<Props> extends infer State extends Lookup<any>
   ? Remap<
       ControllerUpdate<State> & {
         /**
@@ -32,7 +32,7 @@ export function useSpring<Props extends object>(
     | Function
     | (() => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps),
   deps?: readonly any[] | undefined
-): PickAnimated<Props> extends infer State
+): PickAnimated<Props> extends infer State extends Lookup<any> 
   ? [SpringValues<State>, SpringRef<State>]
   : never
 
@@ -49,7 +49,7 @@ export function useSpring<Props extends object>(
 export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps: readonly any[] | undefined
-): PickAnimated<Props> extends infer State
+): PickAnimated<Props> extends infer State extends Lookup<any>
   ? [SpringValues<State>, SpringRef<State>]
   : never
 

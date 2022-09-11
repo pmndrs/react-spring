@@ -10,7 +10,7 @@ import { SpringValue } from './SpringValue'
 import { to } from './interpolate'
 
 function spring<T>(value: T): SpringValue<T> {
-  return new SpringValue(value)
+  return new SpringValue(value!)
 }
 
 describe('AnimatedValue interpolation options', () => {

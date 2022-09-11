@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useContext, useRef, useMemo } from 'react'
-import { OneOrMore, UnknownProps } from '@react-spring/types'
+import { Lookup, OneOrMore, UnknownProps } from '@react-spring/types'
 import {
   is,
   toArray,
@@ -45,7 +45,7 @@ export function useTransition<Item, Props extends object>(
     | UseTransitionProps<Item>
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps?: any[]
-): PickAnimated<Props> extends infer State
+): PickAnimated<Props> extends infer State extends Lookup
   ? [TransitionFn<Item, PickAnimated<Props>>, SpringRefType<State>]
   : never
 
@@ -62,7 +62,7 @@ export function useTransition<Item, Props extends object>(
     | UseTransitionProps<Item>
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps: any[] | undefined
-): PickAnimated<Props> extends infer State
+): PickAnimated<Props> extends infer State extends Lookup
   ? [TransitionFn<Item, State>, SpringRefType<State>]
   : never
 
@@ -110,6 +110,7 @@ export function useTransition(
      *
      * See https://github.com/pmndrs/react-spring/issues/1890
      */
+
     each(transitions, t => {
       ref?.add(t.ctrl)
       t.ctrl.ref = ref
@@ -406,7 +407,7 @@ export function useTransition(
              * Unless we have exitBeforeEnter in which case will skip
              * to enter the new animation straight away as if they "overlapped"
              */
-            if (ctrl.ref && !forceChange.current) {
+            if ((ctrl.ref || ref) && !forceChange.current) {
               ctrl.update(payload)
             } else {
               ctrl.start(payload)

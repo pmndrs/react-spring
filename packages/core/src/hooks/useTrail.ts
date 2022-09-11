@@ -1,4 +1,5 @@
 import { each, is, useIsomorphicLayoutEffect } from '@react-spring/shared'
+import { Lookup } from '@react-spring/types'
 
 import { Valid } from '../types/common'
 import { PickAnimated, SpringValues, AsyncResult } from '../types'
@@ -18,7 +19,7 @@ export function useTrail<Props extends object>(
     ctrl: Controller
   ) => UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps?: readonly any[]
-): PickAnimated<Props> extends infer State
+): PickAnimated<Props> extends infer State extends Lookup<any>
   ? [SpringValues<State>[], SpringRef<State>]
   : never
 
@@ -31,7 +32,7 @@ export function useTrail<Props extends object>(
   length: number,
   props: UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps: readonly any[]
-): PickAnimated<Props> extends infer State
+): PickAnimated<Props> extends infer State extends Lookup<any>
   ? [SpringValues<State>[], SpringRef<State>]
   : never
 
