@@ -51,7 +51,7 @@ export type Constrain<T, U> = [T] extends [Any] ? U : [T] extends [U] ? T : U
 
 /** Try to simplify `&` out of an object type */
 export type Remap<T> = {} & {
-  [P in keyof T]: T[P]
+  [P in keyof Extract<T, object>]: Extract<T, object>[P]
 }
 
 export type Pick<T, K extends keyof T> = {} & {
@@ -85,6 +85,8 @@ export interface Lookup<T = any> {
   [key: string]: T
 }
 
+export type LoosePick<T, K> = {} & Pick<T, K & keyof T>
+
 /** Intersected with other object types to allow for unknown properties */
 export interface UnknownProps extends Lookup<unknown> {}
 
@@ -101,15 +103,13 @@ export type AnyFn<In extends ReadonlyArray<any> = any[], Out = any> = (
 export type ObjectType<T> = T extends object ? T : {}
 
 /** Intersect a union of objects but merge property types with _unions_ */
-export type ObjectFromUnion<T extends object> = Remap<
-  {
-    [P in keyof Intersect<T>]: T extends infer U
-      ? P extends keyof U
-        ? U[P]
-        : never
+export type ObjectFromUnion<T extends object> = Remap<{
+  [P in keyof Intersect<T>]: T extends infer U
+    ? P extends keyof U
+      ? U[P]
       : never
-  }
->
+    : never
+}>
 
 /** Convert a union to an intersection */
 type Intersect<U> = (U extends any ? (k: U) => void : never) extends (
@@ -118,15 +118,13 @@ type Intersect<U> = (U extends any ? (k: U) => void : never) extends (
   ? I
   : never
 
-export type Exclusive<T> = keyof T extends infer Keys
-  ? Keys extends infer Key
+export type Exclusive<T> = AllKeys<T> extends infer K
+  ? T extends any
     ? Remap<
-        { [P in Extract<keyof T, Key>]: T[P] } &
-          { [P in Exclude<keyof T, Key>]?: undefined }
+        LoosePick<T, K> & { [P in Exclude<K & keyof any, keyof T>]?: undefined }
       >
     : never
   : never
-
 /** An object that needs to be manually disposed of */
 export interface Disposable {
   dispose(): void
