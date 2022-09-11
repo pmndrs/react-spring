@@ -1,4 +1,5 @@
 import { each, is, useIsomorphicLayoutEffect } from '@react-spring/shared'
+import { Lookup } from '@react-spring/types'
 
 import { Valid } from '../types/common'
 import { PickAnimated, SpringValues, AsyncResult } from '../types'
@@ -8,7 +9,6 @@ import { Controller } from '../Controller'
 
 import { UseSpringProps } from './useSpring'
 import { useSprings } from './useSprings'
-import { Lookup } from 'packages/types'
 
 export type UseTrailProps<Props extends object = any> = UseSpringProps<Props>
 

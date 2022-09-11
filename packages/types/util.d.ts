@@ -51,7 +51,7 @@ export type Constrain<T, U> = [T] extends [Any] ? U : [T] extends [U] ? T : U
 
 /** Try to simplify `&` out of an object type */
 export type Remap<T> = {} & {
-  [P in keyof Extract<T, object>]: Extract<T, object>[P]
+  [P in keyof T]: T[P]
 }
 
 export type Pick<T, K extends keyof T> = {} & {
