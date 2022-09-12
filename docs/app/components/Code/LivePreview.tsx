@@ -124,6 +124,10 @@ const PreviewContainer = styled('div', {
     mb: '$5',
   },
 
+  '& .preview__stack': {
+    backgroundColor: 'transparent',
+  },
+
   '& .preview__overlay': {
     display: 'none',
   },

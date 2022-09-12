@@ -1,8 +1,8 @@
 diff --git a/dist/compiler/plugins/mdx.js b/dist/compiler/plugins/mdx.js
-index 09bbf5578cf08c0e4dea4a25ac80fd1748169947..7cd36a345a91db6a8c728fb31cb0b3e12a33981e 100644
+index ed4befeed2bad93957a45f96c3e2cbd6ead31829..e7db6627384e28e3ae4f9494b322720b81c58730 100644
 --- a/dist/compiler/plugins/mdx.js
 +++ b/dist/compiler/plugins/mdx.js
-@@ -101,7 +101,8 @@ export const links = undefined;
+@@ -102,7 +102,8 @@ export const meta = typeof attributes !== "undefined" && attributes.meta;
              pragma: "React.createElement",
              pragmaFrag: "React.Fragment",
              rehypePlugins,
