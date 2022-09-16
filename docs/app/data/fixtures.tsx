@@ -599,3 +599,58 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
   ],
   EVENTS_CELL,
 ]
+
+export const CONTROLLER_PROPERTIES_DATA: CellData[][] = [
+  [
+    {
+      label: 'idle',
+      content: (
+        <p>
+          The animated values. This is what you pass to your{' '}
+          <code>animted</code> component.
+        </p>
+      ),
+    },
+    'SpringValues',
+    '{}',
+  ],
+  ['item', 'any', null],
+  [
+    {
+      label: 'springs',
+      content: (
+        <p>
+          The animated values. This is what you pass to your{' '}
+          <code>animted</code> component.
+        </p>
+      ),
+    },
+    'SpringValues',
+    '{}',
+  ],
+  [
+    {
+      label: 'queue',
+      content: (
+        <p>
+          The queue of props passed to the <code>update</code> method.
+        </p>
+      ),
+    },
+    'ControllerQueue',
+    '[]',
+  ],
+  [
+    {
+      label: 'ref',
+      content: (
+        <p>
+          The injected ref. When defined, render-based updates are pushed onto
+          the <code>queue</code> instead of being auto-started.
+        </p>
+      ),
+    },
+    'SpringRef',
+    null,
+  ],
+]
