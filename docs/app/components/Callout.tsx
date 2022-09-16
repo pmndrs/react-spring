@@ -1,4 +1,4 @@
-import { CheckCircle, Fire, Warning } from 'phosphor-react'
+import { CheckCircle, Fire, Note, Warning } from 'phosphor-react'
 import { ReactNode } from 'react'
 import { getFontStyles } from '~/styles/fontStyles'
 
@@ -6,13 +6,14 @@ import { styled } from '~/styles/stitches.config'
 
 interface CalloutProps {
   children?: ReactNode
-  variant?: 'warning' | 'danger' | 'success'
+  variant?: 'warning' | 'danger' | 'success' | 'note'
 }
 
 const icons = {
   warning: Warning,
   danger: Fire,
   success: CheckCircle,
+  note: Note,
 }
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
@@ -52,6 +53,9 @@ const CalloutWrapper = styled('div', {
       success: {
         backgroundColor: 'green',
       },
+      note: {
+        background: '#569AFF33',
+      },
     },
   },
 })
@@ -74,6 +78,9 @@ const Label = styled('div', {
       },
       success: {
         color: '#FF7019CC',
+      },
+      note: {
+        color: '#569AFF',
       },
     },
   },

@@ -201,6 +201,9 @@ const comps = {
   warning: (props: { children?: ReactNode }) => (
     <Callout variant="warning" {...props} />
   ),
+  note: (props: { children?: ReactNode }) => (
+    <Callout variant="note" {...props} />
+  ),
 }
 
 export default function DocsLayout() {

@@ -12,7 +12,8 @@ module.exports = function parseCallouts() {
         if (
           node.name !== 'danger' &&
           node.name !== 'warning' &&
-          node.name !== 'success'
+          node.name !== 'success' &&
+          node.name !== 'note'
         ) {
           return
         }
