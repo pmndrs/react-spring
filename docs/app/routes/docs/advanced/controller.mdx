@@ -13,15 +13,15 @@ sidebar_position: 3
 
 # Controller
 
-Manages [`SpringValue`s](/docs/advanced/spring-value) for our spring hooks. Can be used
-in any framework, we recommend in react hooks!
+Manages [`SpringValue`s](/docs/advanced/spring-value) for our spring hooks.
 
 ## Usage
 
 Basic usage, the Controller class you initialise can be used as an [`imperative api`](/docs/concepts/imperative-api)
-to control your `SpringValues`. Meanwhile you pass`Controller.springs`to your`animated` component.
+to control your `SpringValues`. Meanwhile you pass `Controller.springs` to your `animated` component.
 
 ```tsx
+import { Component, createRef } from 'react'
 import { Controller, animated } from '@react-spring/web'
 
 class AnimatedComponent extends Component {
@@ -42,6 +42,25 @@ class AnimatedComponent extends Component {
       </>
     )
   }
+}
+```
+
+### Constructor Arguments
+
+Below is the arguments that can passed to the constructor of the `Controller` class.
+
+```ts
+const ControllerProps = {
+  ref,
+  from,
+  loop,
+  onStart,
+  onRest,
+  onChange,
+  onPause,
+  onResume,
+  onProps,
+  onResolve,
 }
 ```
 

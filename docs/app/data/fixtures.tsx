@@ -600,6 +600,81 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
   EVENTS_CELL,
 ]
 
+export const SPRINGVALUE_PROPERTIES_DATA: CellData[][] = [
+  ['animation', 'Animation', 'Animation'],
+  [
+    {
+      label: 'defaultProps',
+      content: <p>Some props have customizable default values.</p>,
+    },
+    'SpringConfig',
+    '{}',
+  ],
+  ['goal', 'any', null],
+  [
+    {
+      label: 'hasAnimated',
+      content: <p>When true, this value has been animated at least once.</p>,
+    },
+    'boolean',
+    'false',
+  ],
+  [
+    {
+      label: 'idle',
+      content: <p>Equals true when not advancing on each frame.</p>,
+    },
+    'boolean',
+    null,
+  ],
+  [
+    {
+      label: 'isAnimating',
+      content: <p>When true, this value has been animated at least once.</p>,
+    },
+    'boolean',
+    'false',
+  ],
+  [
+    {
+      label: 'isDelayed',
+      content: <p>When true the value has delay before it can animate.</p>,
+    },
+    'boolean',
+    'false',
+  ],
+  [
+    {
+      label: 'isPaused',
+      content: <p>When true, all current and future animations are paused.</p>,
+    },
+    'boolean',
+    'false',
+  ],
+  [
+    {
+      label: 'key',
+      content: (
+        <p>
+          The property name used when `to` or `from` is an object. Useful when
+          debugging too.
+        </p>
+      ),
+    },
+    'string | undefined',
+    'undefined',
+  ],
+  [
+    {
+      label: 'queue',
+      content: <p>The queue of pending props</p>,
+    },
+    'SpringUpdate[]',
+    '[]',
+  ],
+  ['velocity', 'number | number[]', null],
+]
+
 export const CONTROLLER_PROPERTIES_DATA: CellData[][] = [
   [
     {
@@ -615,19 +690,6 @@ export const CONTROLLER_PROPERTIES_DATA: CellData[][] = [
     '{}',
   ],
   ['item', 'any', null],
-  [
-    {
-      label: 'springs',
-      content: (
-        <p>
-          The animated values. This is what you pass to your{' '}
-          <code>animted</code> component.
-        </p>
-      ),
-    },
-    'SpringValues',
-    '{}',
-  ],
   [
     {
       label: 'queue',
@@ -652,5 +714,18 @@ export const CONTROLLER_PROPERTIES_DATA: CellData[][] = [
     },
     'SpringRef',
     null,
+  ],
+  [
+    {
+      label: 'springs',
+      content: (
+        <p>
+          The animated values. This is what you pass to your{' '}
+          <code>animted</code> component.
+        </p>
+      ),
+    },
+    'SpringValues',
+    '{}',
   ],
 ]

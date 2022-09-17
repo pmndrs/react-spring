@@ -13,6 +13,51 @@ sidebar_position: 8
 
 # Typescript Glossary
 
+## Animation
+
+An animation being executed by the frameloop. Normally found attached to a [`SpringValue`](/docs/advanced/spring-value).
+
+```ts
+class Animation<T = any> {
+  changed: boolean
+  values: readonly AnimatedValue[]
+  toValues: readonly number[] | null
+  fromValues: readonly number[]
+  to: T | FluidValue<T>
+  from: T | FluidValue<T>
+  config: AnimationConfig
+  immediate: boolean
+}
+```
+
+## AnimationProps
+
+Most of the reserved animation props, except `to`, `from`, `loop`, and the event props.
+
+```ts
+interface AnimationProps<T = any> {
+  config?: SpringConfig | ((key: StringKeys<T>) => SpringConfig)
+  delay?: number | ((key: StringKeys<T>) => number)
+  immediate?: MatchProp<T>
+  cancel?: MatchProp<T>
+  pause?: MatchProp<T>
+  reset?: MatchProp<T>
+  reverse?: boolean
+  default?: boolean | SpringProps<T>
+}
+```
+
+## ControllerUpdate
+
+A value that any `SpringValue` or `Controller` can animate to.
+
+```ts
+export declare type ControllerUpdate<
+  State extends Lookup = Lookup,
+  Item = undefined
+> = unknown & ToProps<State> & ControllerProps<State, Item>
+```
+
 ## Lookup
 
 `Lookup` is typically inferred, so you probably won't need to use it.
@@ -22,6 +67,25 @@ It's primarily used to infer the animatable properties from our hooks, e.g. `opa
 interface Lookup<T = any> {
   [key: string]: T
 }
+```
+
+## OneOrMore
+
+```ts
+export type OneOrMore<T> = T | readonly T[]
+```
+
+## SpringUpdate
+
+The props of a `useSpring` call or its async `update` function. The `T` parameter can
+be a set of animated values (as an object type) or a primitive type for a single
+animated value.
+
+```ts
+type SpringUpdate<T = any> = ToProps<T> & SpringProps<T>
+type SpringsUpdate<State extends Lookup = UnknownProps> =
+  | OneOrMore<ControllerUpdate<State>>
+  | ((index: number, ctrl: Controller<State>) => ControllerUpdate<State> | null)
 ```
 
 ## SpringValues
@@ -50,4 +114,12 @@ interface TransitionState<Item = any, State extends Lookup = Lookup> {
   expired?: boolean
   expirationId?: number
 }
+```
+
+## UnknownProps
+
+Intersected with other object types to allow for unknown properties.
+
+```ts
+export interface UnknownProps extends Lookup<unknown> {}
 ```
