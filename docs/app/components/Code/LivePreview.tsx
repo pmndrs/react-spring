@@ -61,7 +61,7 @@ export const LivePreview = ({
     <PreviewContainer
       className={className}
       isDemo={template !== 'spring'}
-      largeSize={template === 'configPlayground'}>
+      largeSize={template === 'configPlayground' || template === 'imperative'}>
       <SandpackProvider
         template="react"
         files={{
