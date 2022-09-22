@@ -43,8 +43,10 @@ export function useSprings<Props extends UseSpringProps>(
   length: number,
   props: (i: number, ctrl: Controller) => Props,
   deps?: readonly any[]
-): PickAnimated<Props> extends infer State extends Lookup<any>
-  ? [SpringValues<State>[], SpringRefType<State>]
+): PickAnimated<Props> extends infer State
+  ? State extends Lookup<any>
+    ? [SpringValues<State>[], SpringRefType<State>]
+    : never
   : never
 
 /**
@@ -62,8 +64,10 @@ export function useSprings<Props extends UseSpringsProps>(
   length: number,
   props: Props[] & UseSpringsProps<PickAnimated<Props>>[],
   deps: readonly any[] | undefined
-): PickAnimated<Props> extends infer State extends Lookup<any>
-  ? [SpringValues<State>[], SpringRefType<State>]
+): PickAnimated<Props> extends infer State
+  ? State extends Lookup<any>
+    ? [SpringValues<State>[], SpringRefType<State>]
+    : never
   : never
 
 /** @internal */
