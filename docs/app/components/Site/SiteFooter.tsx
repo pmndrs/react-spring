@@ -60,7 +60,9 @@ const Footer = styled('footer', {
     mt: '$100',
     px: '$50',
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column-reverse',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
   },
 })
 

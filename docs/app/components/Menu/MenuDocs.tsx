@@ -29,20 +29,22 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
       <WidgetContainer shouldBeHidden={location.pathname === '/'}>
         <WidgetSearch />
       </WidgetContainer>
-      {Array.isArray(submenu) &&
-        submenu.map(item =>
-          renderSubMenu({ ...item, location, onClick: handleNavClick }, 0)
-        )}
-      <ExternalAnchor
-        shouldBeHidden={location.pathname === '/'}
-        href="https://github.com/pmndrs/react-spring/releases"
-        rel="noopener noreferrer"
-        target="_blank"
-        title={true}
-        active={false}
-        onClick={handleNavClick}>
-        {`Changelog`}
-      </ExternalAnchor>
+      <ScrollArea>
+        {Array.isArray(submenu) &&
+          submenu.map(item =>
+            renderSubMenu({ ...item, location, onClick: handleNavClick }, 0)
+          )}
+        <ExternalAnchor
+          shouldBeHidden={location.pathname === '/'}
+          href="https://github.com/pmndrs/react-spring/releases"
+          rel="noopener noreferrer"
+          target="_blank"
+          title={true}
+          active={false}
+          onClick={handleNavClick}>
+          {`Changelog`}
+        </ExternalAnchor>
+      </ScrollArea>
     </DocsList>
   )
 }
@@ -111,10 +113,20 @@ const DocsList = styled('ul', {
   },
 
   '@tabletUp': {
+    overflowY: 'unset',
+    height: '100%',
     pl: '$50',
     pr: '$25',
     py: 4,
     mt: -4,
+  },
+})
+
+const ScrollArea = styled('div', {
+  '@tabletUp': {
+    maxHeight: '100%',
+    overflowY: 'scroll',
+    pb: '$60',
   },
 })
 

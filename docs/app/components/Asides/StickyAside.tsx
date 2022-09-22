@@ -34,6 +34,7 @@ const Aside = styled(animated.aside, {
   '@tabletUp': {
     display: 'block',
     pt: '$25',
+    height: '100%',
   },
 
   variants: {
