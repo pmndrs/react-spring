@@ -96,7 +96,7 @@ export function runAsync<T extends AnimationTarget>(
       // Create the bail signal outside the returned promise,
       // so the generated stack trace is relevant.
       const bailSignal = new BailSignal()
-      const skipAnimationSignal = new SkipAniamtionSignal()
+      const skipAnimationSignal = new SkipAnimationSignal()
 
       return (async () => {
         if (G.skipAnimation) {
@@ -172,7 +172,7 @@ export function runAsync<T extends AnimationTarget>(
     } catch (err) {
       if (err instanceof BailSignal) {
         result = err.result
-      } else if (err instanceof SkipAniamtionSignal) {
+      } else if (err instanceof SkipAnimationSignal) {
         result = err.result
       } else {
         throw err
@@ -217,7 +217,7 @@ export class BailSignal extends Error {
   }
 }
 
-export class SkipAniamtionSignal extends Error {
+export class SkipAnimationSignal extends Error {
   result!: AnimationResult
 
   constructor() {
