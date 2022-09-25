@@ -13,6 +13,70 @@
 | output           | undefined | Array of mapped output ranges                    |
 | map              | undefined | Value filter applied to input value              |
 
+## Example 
+
 A range shortcut: `value.to([...inputRange], [...outputRange])`
 
 Or a function: `value.to(v => ...)`
+
+## Alternate method using `to` function
+#### For single variables
+
+Example is using `to` for interpolating `y` style for a `transform: translate3d(x,y,z)` animation
+
+```
+import { useTransition, to } from "react-spring";
+
+const transitions = useTransition(
+    elements.map((element, index) => ({
+      ...element,
+      y: ...logic,
+      x: ...logic
+    })),
+    {
+      ...settings
+    }
+  );
+
+  return (
+      {transitions((styles, item, { key }) => (
+        <a.div
+          key={key}
+          className="card"
+          style={{
+            transform: to(
+              styles.y,
+              (y) => `translate3d(0,${y}px,0)`
+            ),
+          }}....
+```
+
+#### For multiple variables
+
+Example is using `to` for interpolating `x` and `y` styles
+
+
+```
+import { useTransition, to } from "react-spring";
+  const transitions = useTransition(
+    elements.map((element, index) => ({
+      ...element,
+      y: ...logic,
+      x: ...logic
+    })),
+    {
+      ...settings
+    }
+  );
+  return (
+      {transitions((styles, item, { key }) => (
+          <a.div
+          key={key}
+          className="card"
+          style={{
+              transform: to(
+                  [styles.x, styles.y],
+              (x, y) => `translate3d(${x}px,${y}px,0)`
+            ),
+          }}....
+```
