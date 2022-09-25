@@ -17,5 +17,7 @@
     "@react-spring/web": "9.5.4",
     "@react-spring/zdog": "9.5.4"
   },
-  "changesets": []
+  "changesets": [
+    "cuddly-dolls-sit"
+  ]
 }
