@@ -36,6 +36,11 @@ export interface SpringRef<State extends Lookup = Lookup> {
   /** Update the state of each controller without animating. */
   set(values: Partial<State>): void
 
+  /** Update the state of each controller without animating. */
+  set(props: ControllerUpdate<State>): this
+  /** Update the seperate state of each controller without animating. */
+  set(props: ControllerUpdateFn<State>): this
+  
   /** Start the queued animations of each controller. */
   start(): AsyncResult<Controller<State>>[]
   /** Update every controller with the same props. */
@@ -127,7 +132,8 @@ export const SpringRef = <
 
   /** Update the state of each controller without animating. */
   SpringRef.set = function (values: Partial<State>) {
-    each(current, ctrl => ctrl.set(values))
+    each(current, (ctrl, i) => ctrl.set(this._getProps(props, ctrl, i)))
+    return this
   }
 
   SpringRef.start = function (props?: object | ControllerUpdateFn<State>) {
