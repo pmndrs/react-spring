@@ -1,4 +1,4 @@
-import { MetaFunction } from '@remix-run/node'
+import { json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node'
 import { GradientButton } from '~/components/Buttons/GradientButton'
 
 import { Header } from '~/components/Header/Header'
@@ -78,6 +78,46 @@ c///(///////////////////////////////////////////                                
                                  /QQQQc                                                                                                                                                                 
                                                                                                                                                                                                         
 `
+
+export const loader: LoaderFunction = ({ request }) => {
+  const url = new URL(request.url)
+
+  switch (url.pathname) {
+    case '/common/props':
+    case '/components/spring-context':
+      return redirect('/docs')
+    case '/basics':
+      return redirect('/docs/getting-started')
+    case '/common/configs':
+      return redirect('/docs/advanced/config')
+    case '/common/imperatives-and-refs':
+      return redirect('/docs/advanced/spring-ref')
+    case '/common/interpolation':
+      return redirect('/docs/advanced/interpolation')
+    case '/classes/controller':
+      return redirect('/docs/advanced/controller')
+    case '/classes/spring-value':
+      return redirect('/docs/advanced/spring-value')
+    case '/guides/accessibility':
+      return redirect('/docs/utilities/use-reduced-motion')
+    case '/guides/r3f':
+      return redirect('/docs/guides/react-three-fiber')
+    case '/guides/testing':
+      return redirect('/docs/guides/testing')
+    case '/components/parallax':
+      return redirect('/docs/components/parallax')
+  }
+
+  const [_, type, comp] = url.pathname.split('/')
+
+  if (type === 'hooks' || type === 'components') {
+    return redirect(
+      `/docs/components/${type === 'components' ? `use-${comp}` : comp}`
+    )
+  }
+
+  return json({})
+}
 
 export default function Index() {
   return (
