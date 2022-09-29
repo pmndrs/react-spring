@@ -729,3 +729,57 @@ export const CONTROLLER_PROPERTIES_DATA: CellData[][] = [
     '{}',
   ],
 ]
+
+export const INTERPOLATONS_DATA: CellData[][] = [
+  [
+    'extrapolateLeft',
+    {
+      label: 'string',
+      content: <code>{`"identity" | "clamp" | "extend"`}</code>,
+    },
+    'extend',
+  ],
+  [
+    'extrapolateRight',
+    {
+      label: 'string',
+      content: <code>{`"identity" | "clamp" | "extend"`}</code>,
+    },
+    'extend',
+  ],
+  [
+    'extrapolate',
+    {
+      label: 'string',
+      content: <code>{`"identity" | "clamp" | "extend"`}</code>,
+    },
+    'extend',
+  ],
+  [
+    {
+      label: 'range',
+      content: <p>Array of input ranges</p>,
+    },
+    'number[]',
+    '[0,1]',
+  ],
+  [
+    {
+      label: 'output',
+      content: <p>Array of mapped output ranges</p>,
+    },
+    'number[]',
+    null,
+  ],
+  [
+    {
+      label: 'map',
+      content: <p>Value filter applied to input value</p>,
+    },
+    {
+      label: 'function',
+      content: <code>{`(value: number) => number`}</code>,
+    },
+    'null',
+  ],
+]
