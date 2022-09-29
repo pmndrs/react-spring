@@ -161,5 +161,85 @@ export const globalStyles = globalCss({
     },
   },
 
+  '#carbonads': {
+    '& *': {
+      margin: 'initial',
+      padding: 'initial',
+    },
+
+    fontFamily:
+      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    display: 'flex',
+    justifyContent: 'stretch',
+    mb: 40,
+    mx: 'auto',
+    backgroundColor: '$codeBackground',
+    borderRadius: '$r8',
+    overflow: 'hidden',
+    boxShadow: '0 1px 4px 1px hsla(0, 0%, 0%, 0.1)',
+    zIndex: 100,
+
+    '@tabletUp': {
+      maxWidth: '60%',
+    },
+
+    '& > span': {
+      width: '100%',
+    },
+
+    '& a': {
+      color: 'inherit',
+      textDecoration: 'none',
+
+      '&:hover': {
+        color: 'inerhit',
+      },
+    },
+
+    '& span': {
+      position: 'relative',
+      display: 'block',
+      overflow: 'hidden',
+    },
+
+    '& .carbon-wrap': {
+      display: 'flex',
+    },
+
+    '& .carbon-img': {
+      display: 'block',
+      margin: 0,
+      lineHeight: 1,
+
+      '& img': {
+        display: 'block',
+      },
+    },
+
+    '& .carbon-text': {
+      fontSize: '14px',
+      p: 10,
+      mb: 16,
+      lineHeight: 1.5,
+      textAlign: 'left',
+    },
+
+    '& .carbon-poweredby': {
+      display: 'block',
+      p: '6px 8px',
+      background: '$white',
+      textAlign: 'center',
+      textTransform: 'uppercase',
+      letterSpacing: '0.5px',
+      fontWeight: 600,
+      fontSize: 8,
+      lineHeight: 1,
+      borderTopLeftRadius: 3,
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+    },
+  },
+
   [`${dark}`]: {},
 })
