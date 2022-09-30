@@ -105,7 +105,7 @@ const TitleContent = styled('div', {
 
   '@tabletUp': {
     px: '$50',
-    pt: 175,
+    pt: 'calc((175 / 1440) * 100%)',
   },
 })
 
