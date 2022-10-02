@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useEffect, useMemo } from 'react'
 import { Outlet, useLocation } from '@remix-run/react'
 import { MDXProvider } from '@mdx-js/react'
 import { PencilSimple } from 'phosphor-react'
@@ -220,6 +220,15 @@ export default function DocsLayout() {
   )
 
   const activeRoute = flatRoutes.find(item => item.href === location.pathname)
+
+  useEffect(() => {
+    const element = document.getElementById('carbonads')
+
+    if (typeof window._carbonads !== 'undefined' && element) {
+      window._carbonads.remove(element)
+      window._carbonads.refresh()
+    }
+  }, [location.pathname])
 
   return (
     <>
