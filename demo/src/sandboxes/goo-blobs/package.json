@@ -1,5 +1,13 @@
 {
-  "name": "spring-goo-blobs",
+  "name": "Goo Blobs",
+  "description": "2D SVG metaballs animated with react-spring",
+  "keywords": [
+    "useTrail",
+    "useMeasure",
+    "svg",
+    "metaballs",
+    "filters"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

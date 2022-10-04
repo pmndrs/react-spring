@@ -1,5 +1,11 @@
 {
-  "name": "spring-simple-transition",
+  "name": "Basic Transition",
+  "description": "Basic viewport sized transition of cards animating with the imperative API",
+  "keywords": [
+    "imperative",
+    "useTransition",
+    "SpringRef"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

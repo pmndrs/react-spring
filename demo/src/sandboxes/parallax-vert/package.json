@@ -1,5 +1,10 @@
 {
-  "name": "spring-notification-hub",
+  "name": "Vertical Parallax",
+  "description": "Showcasing a basic use of vertical parallax",
+  "keywords": [
+    "Parallax",
+    "vertical"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

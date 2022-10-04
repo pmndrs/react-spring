@@ -35,11 +35,14 @@ import ParallaxSticky from './sandboxes/parallax-sticky/src/App'
 import SimpleTransition from './sandboxes/simple-transition/src/App'
 import Slide from './sandboxes/slide/src/App'
 import SvgFilter from './sandboxes/svg-filter/src/App'
+import SpringBoxes from './sandboxes/springy-boxes/src/App'
 
 import Trail from './sandboxes/trail/src/App'
 import Tree from './sandboxes/tree/src/App'
 
 import Viewpager from './sandboxes/viewpager/src/App'
+
+import WebGlSwitch from './sandboxes/webgl-switch/src/App'
 
 const links = {
   'animating-auto': AnimatingAuto,
@@ -63,10 +66,12 @@ const links = {
   'parallax-sticky': ParallaxSticky,
   'simple-transition': SimpleTransition,
   slide: Slide,
+  'spring-boxes': SpringBoxes,
   'svg-filter': SvgFilter,
   trail: Trail,
   viewpager: Viewpager,
   tree: Tree,
+  'webgl-switch': WebGlSwitch,
 }
 
 const Example = ({ link }) => {

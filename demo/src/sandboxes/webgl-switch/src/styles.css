@@ -1,0 +1,71 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+#root {
+  overflow: auto;
+}
+
+body {
+  position: fixed;
+  overflow: hidden;
+  overscroll-behavior-y: none;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+  color: black;
+  perspective: 3000px;
+  perspective-origin: 50% 50%;
+  background: #c9ffed;
+  color: aquamarine;
+}
+
+h1 {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0) rotate3d(1, 0, 0, 55deg) rotate3d(0, 0, 1, 45deg);
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  margin: 0;
+  margin-bottom: 0.5rem;
+  font-size: 600px;
+  letter-spacing: -40px;
+  color: inherit;
+}
+
+.container,
+.bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.container > .close,
+.container > .open {
+  margin-top: -270px;
+  letter-spacing: -10px;
+  font-size: 250px;
+}
+
+.container > .close {
+  margin-top: 300px;
+}

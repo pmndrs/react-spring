@@ -1,5 +1,12 @@
 {
-  "name": "spring-slide",
+  "name": "Native Slide",
+  "description": "A native-esque slider component animated with useSpring and useDrag",
+  "keywords": [
+    "useSpring",
+    "useDrag",
+    "native",
+    "interpolation"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

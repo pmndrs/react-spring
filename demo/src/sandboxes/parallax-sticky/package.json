@@ -1,7 +1,12 @@
 {
-  "name": "spring-notification-hub",
+  "name": "Sticky Parallax",
   "version": "1.0.0",
   "main": "src/index.tsx",
+  "description": "Showcasing the sticky prop used with the Parallax component",
+  "keywords": [
+    "Parallax",
+    "sticky"
+  ],
   "dependencies": {
     "@react-spring/parallax": "*",
     "@react-spring/web": "*",
