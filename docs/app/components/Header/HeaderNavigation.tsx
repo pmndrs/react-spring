@@ -30,11 +30,11 @@ const MAIN_NAV: NavigationButtonProps[] = [
   //   href: '/tutorials',
   //   Icon: Books,
   // },
-  // {
-  //   title: 'Examples',
-  //   href: '/examples',
-  //   Icon: Code,
-  // },
+  {
+    title: 'Examples',
+    href: '/examples',
+    Icon: Code,
+  },
 ]
 
 export const HeaderNavigation = ({

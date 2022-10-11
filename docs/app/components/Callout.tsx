@@ -1,5 +1,6 @@
 import { CheckCircle, Fire, Note, Warning } from 'phosphor-react'
 import { ReactNode } from 'react'
+import { capitalize } from '~/helpers/strings'
 import { getFontStyles } from '~/styles/fontStyles'
 
 import { styled } from '~/styles/stitches.config'
@@ -15,8 +16,6 @@ const icons = {
   success: CheckCircle,
   note: Note,
 }
-
-const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
 
 export const Callout = ({ children, variant = 'warning' }: CalloutProps) => {
   const Icon = icons[variant]

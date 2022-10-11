@@ -1,5 +1,5 @@
 import { DiscordLogo, GithubLogo, TwitterLogo } from 'phosphor-react'
-import type { Quote } from '~/components/Carousels/CarouselQuotes'
+import type { Quote } from '~/components/Cards/CardCarouselQuote'
 import { Tile } from '~/components/Grids/NavigationGrid'
 import { CellData } from '~/components/Tables/TablesConfig'
 
@@ -105,7 +105,6 @@ export const NAV_TILES: Tile[] = [
     label: 'Examples',
     description:
       'Be inspired by exploring all our examples, why not contribute your own?',
-    comingSoon: true,
   },
 ]
 
