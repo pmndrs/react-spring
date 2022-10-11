@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Suspense } from "react"
+import React, { useState, useEffect, Suspense } from "react"
 import { Canvas } from "@react-three/fiber"
 import { useGLTF, useTexture, Shadow, meshBounds } from "@react-three/drei"
 import { animated, SpringValue, useSpring } from "@react-spring/web"

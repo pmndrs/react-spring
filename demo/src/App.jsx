@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { Link, Route } from 'wouter'
 import styles from './styles.module.css'
 
