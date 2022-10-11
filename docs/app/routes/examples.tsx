@@ -141,6 +141,7 @@ const Main = styled('main', {
   padding: '0 $25',
   width: '100%',
   margin: '0 auto',
+  maxWidth: '$largeDoc',
 
   '@tabletUp': {
     padding: '0 $15',

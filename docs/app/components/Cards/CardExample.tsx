@@ -9,10 +9,10 @@ import type { Sandbox } from '../../routes/examples'
 
 export const CardExample = ({
   urlTitle,
-  screenshotUrl,
   title,
   description,
   tags,
+  id,
 }: Sandbox) => {
   return (
     <ExampleAnchor
@@ -20,7 +20,12 @@ export const CardExample = ({
       <ExampleCard>
         <ExternalLinkIcon />
         <ExampleImage height={9} width={16}>
-          <img src={screenshotUrl} alt={title} />
+          <img
+            src={`https://codesandbox.io/api/v1/sandboxes/${id}/screenshot.png`}
+            placeholder="empty"
+            loading="lazy"
+            alt={title}
+          />
         </ExampleImage>
         <ExampleContent>
           <ExampleDescription
@@ -54,6 +59,7 @@ const ExternalLinkIcon = styled('div', {
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   zIndex: '$1',
+  mixBlendMode: 'difference',
 
   '@media (hover:hover)': {
     opacity: 0,
