@@ -7,6 +7,8 @@ import { styled } from '~/styles/stitches.config'
 import { Header } from '~/components/Header/Header'
 import { CardExample } from '~/components/Cards/CardExample'
 import { Heading } from '~/components/Text/Heading'
+import { InlineLinkStyles } from '~/components/InlineLink'
+import { Copy } from '~/components/Text/Copy'
 
 interface CodesandboxDirectory {
   directory_shortid: null
@@ -125,6 +127,23 @@ export default function DocsLayout() {
           }}>
           Examples
         </Heading>
+        <Copy
+          css={{
+            '& > a': {
+              ...InlineLinkStyles,
+            },
+            maxWidth: 680,
+          }}>
+          {`Got an example you want to see here & share with the community?`}{' '}
+          Check out{' '}
+          <a
+            href="https://github.com/pmndrs/react-spring/tree/master/demo/CONTRIBUTING.md"
+            rel="noopener noreferrer"
+            target="_blank">
+            this guide
+          </a>
+          .
+        </Copy>
         <SandboxesList>
           {sandboxes.map(props => (
             <li>
