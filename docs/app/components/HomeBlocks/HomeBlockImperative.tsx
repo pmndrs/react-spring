@@ -47,7 +47,7 @@ export const HomeBlockImperative = () => (
       title={`Run animations without \nre-rendering`}
       cta={{
         label: 'View imperative API',
-        href: '/concepts/imperative-api',
+        href: '/docs/concepts/imperative-api',
       }}>
       <p>
         Use our imperative API methods to run animations without updating state.
