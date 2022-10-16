@@ -821,3 +821,57 @@ export const PARALLAX_CONFIG_DATA: CellData[][] = [
   ['horizontal', 'boolean', 'false'],
   ['innerStyle', 'CSSProperties', null],
 ]
+
+export const PARALLAX_LAYER_CONFIG_DATA: CellData[][] = [
+  ['horizontal', 'boolean', null],
+  [
+    {
+      label: 'factor',
+      content: <p>Size of a page, (1=100%, 1.5=1 and 1/2, ...)</p>,
+    },
+    'number',
+    '1',
+  ],
+  [
+    {
+      label: 'offset',
+      content: (
+        <p>
+          Determines where the layer will be at when scrolled to (0=start, 1=1st
+          page, ...)
+        </p>
+      ),
+    },
+    'number',
+    '0',
+  ],
+  [
+    {
+      label: 'speed',
+      content: (
+        <p>
+          Shifts the layer in accordance to its offset, values can be positive
+          or negative
+        </p>
+      ),
+    },
+    'number',
+    '0',
+  ],
+  [
+    {
+      label: 'sticky',
+      content: (
+        <p>
+          Layer will be sticky between these two offsets, all other props are
+          ignored
+        </p>
+      ),
+    },
+    {
+      label: 'StickyConfig',
+      content: <code>{`{ start?: number; end?: number } | undefined`}</code>,
+    },
+    null,
+  ],
+]
