@@ -13,7 +13,6 @@
     "@codesandbox/sandpack-react": "^1.7.2",
     "@docsearch/react": "^3.2.1",
     "@mdx-js/react": "^1.6.22",
-    "@netlify/functions": "^1.2.0",
     "@radix-ui/react-accordion": "^1.0.0",
     "@radix-ui/react-dialog": "patch:@radix-ui/react-dialog@npm:0.1.7#../.yarn/patches/@radix-ui-react-dialog-npm-1.0.0-61b8140da9.patch",
     "@radix-ui/react-popover": "^1.0.0",

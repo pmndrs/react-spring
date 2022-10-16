@@ -1,5 +1,6 @@
-import { json, LoaderFunction } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { json, LoaderFunction, redirect } from '@remix-run/node'
+import { useLoaderData, Form } from '@remix-run/react'
+
 import { capitalize } from '~/helpers/strings'
 
 import { styled } from '~/styles/stitches.config'
@@ -9,6 +10,7 @@ import { CardExample } from '~/components/Cards/CardExample'
 import { Heading } from '~/components/Text/Heading'
 import { InlineLinkStyles } from '~/components/InlineLink'
 import { Copy } from '~/components/Text/Copy'
+import { Anchor } from '~/components/Text/Anchor'
 
 interface CodesandboxDirectory {
   directory_shortid: null
@@ -41,65 +43,60 @@ type CodesandboxSandboxResponse = {
   data: CodesandboxSandbox
 }
 
-const componentTitles = [
-  'useSpring',
-  'useSprings',
-  'useTransition',
-  'useTrail',
-  'useChain',
-  'Parallax',
-]
-
 export const loader: LoaderFunction = async () => {
-  const directories = await fetch(
-    'https://codesandbox.io/api/v1/sandboxes/github/pmndrs/react-spring/tree/master/demo/src/sandboxes'
-  )
-    .then(res => res.json())
-    .then((res: CodesandboxDirectoriesResponse) =>
-      res.data.directories
-        .filter(direct => direct.title !== 'public' && direct.title !== 'src')
-        .map(direct => direct.title)
+  try {
+    const directories = await fetch(
+      'https://codesandbox.io/api/v1/sandboxes/github/pmndrs/react-spring/tree/master/demo/src/sandboxes'
     )
-
-  const hookRegex = new RegExp(/^use/)
-
-  const sandboxes = await Promise.all(
-    directories.map(async directoryTitle => {
-      const sandbox = await fetch(
-        `https://codesandbox.io/api/v1/sandboxes/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/${directoryTitle}`
+      .then(res => res.json())
+      .then((res: CodesandboxDirectoriesResponse) =>
+        res.data.directories
+          .filter(direct => direct.title !== 'public' && direct.title !== 'src')
+          .map(direct => direct.title)
       )
-        .then(res => res.json())
-        .then((res: CodesandboxSandboxResponse) => {
-          const {
-            data: { id, title, tags, screenshot_url, description },
-          } = res
 
-          return {
-            id,
-            urlTitle: directoryTitle,
-            title,
-            tags: tags.map(tag => {
-              if (hookRegex.test(tag)) {
-                const stringSplit = tag.split('use')
+    const hookRegex = new RegExp(/^use/)
 
-                return `use${capitalize(stringSplit[1])}`
-              } else if (tag === 'parallax') {
-                return capitalize(tag)
-              }
-              return tag
-            }),
-            screenshotUrl: screenshot_url,
-            description,
-          }
-        })
+    const sandboxes = await Promise.all(
+      directories.map(async directoryTitle => {
+        const sandbox = await fetch(
+          `https://codesandbox.io/api/v1/sandboxes/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/${directoryTitle}`
+        )
+          .then(res => res.json())
+          .then((res: CodesandboxSandboxResponse) => {
+            const {
+              data: { id, title, tags, screenshot_url, description },
+            } = res
 
-      return sandbox
+            return {
+              id,
+              urlTitle: directoryTitle,
+              title,
+              tags: tags.map(tag => {
+                if (hookRegex.test(tag)) {
+                  const stringSplit = tag.split('use')
+
+                  return `use${capitalize(stringSplit[1])}`
+                } else if (tag === 'parallax') {
+                  return capitalize(tag)
+                }
+                return tag
+              }),
+              screenshotUrl: screenshot_url,
+              description,
+            }
+          })
+
+        return sandbox
+      })
+    ).then(boxes => boxes.sort((a, b) => a.title.localeCompare(b.title)))
+
+    return json({
+      sandboxes,
     })
-  ).then(boxes => boxes.sort((a, b) => a.title.localeCompare(b.title)))
-
-  return json({
-    sandboxes,
-  })
+  } catch (err) {
+    return redirect('/500')
+  }
 }
 
 export interface Sandbox {
@@ -136,14 +133,16 @@ export default function DocsLayout() {
           }}>
           {`Got an example you want to see here & share with the community?`}{' '}
           Check out{' '}
-          <a
-            href="https://github.com/pmndrs/react-spring/tree/master/demo/CONTRIBUTING.md"
-            rel="noopener noreferrer"
-            target="_blank">
+          <Anchor href="https://github.com/pmndrs/react-spring/tree/master/demo/CONTRIBUTING.md">
             this guide
-          </a>
+          </Anchor>
           .
         </Copy>
+        <ExampleFilters>
+          <Heading tag="h2" fontStyle="$XS">
+            Alternatively, check out examples by
+          </Heading>
+        </ExampleFilters>
         <SandboxesList>
           {sandboxes.map(props => (
             <li>
@@ -185,5 +184,13 @@ const SandboxesList = styled('ul', {
 
   '@desktopUp': {
     gridTemplateColumns: 'repeat(3, 1fr)',
+  },
+})
+
+const ExampleFilters = styled(Form, {
+  mb: '$20',
+
+  '@tabletUp': {
+    mb: '$40',
   },
 })

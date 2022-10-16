@@ -4267,15 +4267,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/functions@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@netlify/functions@npm:1.2.0"
-  dependencies:
-    is-promise: ^4.0.0
-  checksum: 190187fd97314a20b98b6d65b37fd325df350ae683f5cf17ec73364604094b6c7150eb5d9524b4814e99a423ea67f5ee98746cd9a347a45586478e246007f31c
-  languageName: node
-  linkType: hard
-
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -5397,7 +5388,6 @@ __metadata:
     "@codesandbox/sandpack-react": ^1.7.2
     "@docsearch/react": ^3.2.1
     "@mdx-js/react": ^1.6.22
-    "@netlify/functions": ^1.2.0
     "@radix-ui/react-accordion": ^1.0.0
     "@radix-ui/react-dialog": "patch:@radix-ui/react-dialog@npm:0.1.7#../.yarn/patches/@radix-ui-react-dialog-npm-1.0.0-61b8140da9.patch"
     "@radix-ui/react-popover": ^1.0.0
@@ -13417,13 +13407,6 @@ __metadata:
   version: 1.0.1
   resolution: "is-potential-custom-element-name@npm:1.0.1"
   checksum: ced7bbbb6433a5b684af581872afe0e1767e2d1146b2207ca0068a648fb5cab9d898495d1ac0583524faaf24ca98176a7d9876363097c2d14fee6dd324f3a1ab
-  languageName: node
-  linkType: hard
-
-"is-promise@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "is-promise@npm:4.0.0"
-  checksum: 0b46517ad47b00b6358fd6553c83ec1f6ba9acd7ffb3d30a0bf519c5c69e7147c132430452351b8a9fc198f8dd6c4f76f8e6f5a7f100f8c77d57d9e0f4261a8a
   languageName: node
   linkType: hard
 
