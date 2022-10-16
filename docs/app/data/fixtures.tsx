@@ -455,7 +455,7 @@ export const DEFAULT_CONFIG_DATA: CellData[][] = [
     },
     {
       label: 'object | function',
-      content: <code>{`(key: string) => boolean`}</code>,
+      content: <code>{`(key: string) => SpringConfig`}</code>,
     },
     {
       label: 'object',
@@ -589,7 +589,7 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
     {
       label: 'object | function',
       content: (
-        <code>{`(item: Item, index: number, state: TransitionPhase) => boolean`}</code>
+        <code>{`(item: Item, index: number, state: TransitionPhase) => SpringConfig`}</code>
       ),
     },
     {
@@ -782,4 +782,42 @@ export const INTERPOLATONS_DATA: CellData[][] = [
     },
     'null',
   ],
+]
+
+export const PARALLAX_CONFIG_DATA: CellData[][] = [
+  [
+    {
+      label: 'pages',
+      content: (
+        <p>
+          Determines the total space of the inner content where each page takes
+          100% of the visible container.
+        </p>
+      ),
+    },
+    'number',
+    null,
+  ],
+  [
+    {
+      label: 'config',
+      content: (
+        <p>
+          Spring config (mass / tension etc.), see{' '}
+          <a href="/docs/advanced/config">Config</a> for more information.
+        </p>
+      ),
+    },
+    {
+      label: 'object | function',
+      content: <code>{`(key: string) => SpringConfig`}</code>,
+    },
+    {
+      label: 'object',
+      content: <code>{`{ mass: 1, tension: 280, friction: 60 }`}</code>,
+    },
+  ],
+  ['enabled', 'boolean', 'true'],
+  ['horizontal', 'boolean', 'false'],
+  ['innerStyle', 'CSSProperties', null],
 ]
