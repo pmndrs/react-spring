@@ -19,8 +19,10 @@ export function useTrail<Props extends object>(
     ctrl: Controller
   ) => UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps?: readonly any[]
-): PickAnimated<Props> extends infer State extends Lookup<any>
-  ? [SpringValues<State>[], SpringRef<State>]
+): PickAnimated<Props> extends infer State
+  ? State extends Lookup<any>
+    ? [SpringValues<State>[], SpringRef<State>]
+    : never
   : never
 
 export function useTrail<Props extends object>(
@@ -32,8 +34,10 @@ export function useTrail<Props extends object>(
   length: number,
   props: UseTrailProps | (Props & Valid<Props, UseTrailProps<Props>>),
   deps: readonly any[]
-): PickAnimated<Props> extends infer State extends Lookup<any>
-  ? [SpringValues<State>[], SpringRef<State>]
+): PickAnimated<Props> extends infer State
+  ? State extends Lookup<any>
+    ? [SpringValues<State>[], SpringRef<State>]
+    : never
   : never
 
 export function useTrail(

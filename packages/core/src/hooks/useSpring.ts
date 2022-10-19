@@ -10,17 +10,19 @@ import { useSprings } from './useSprings'
  * The props that `useSpring` recognizes.
  */
 export type UseSpringProps<Props extends object = any> = unknown &
-  PickAnimated<Props> extends infer State extends Lookup<any>
-  ? Remap<
-      ControllerUpdate<State> & {
-        /**
-         * Used to access the imperative API.
-         *
-         * When defined, the render animation won't auto-start.
-         */
-        ref?: SpringRef<State>
-      }
-    >
+  PickAnimated<Props> extends infer State
+  ? State extends Lookup
+    ? Remap<
+        ControllerUpdate<State> & {
+          /**
+           * Used to access the imperative API.
+           *
+           * When defined, the render animation won't auto-start.
+           */
+          ref?: SpringRef<State>
+        }
+      >
+    : never
   : never
 
 /**
@@ -32,8 +34,10 @@ export function useSpring<Props extends object>(
     | Function
     | (() => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps),
   deps?: readonly any[] | undefined
-): PickAnimated<Props> extends infer State extends Lookup<any> 
-  ? [SpringValues<State>, SpringRef<State>]
+): PickAnimated<Props> extends infer State
+  ? State extends Lookup
+    ? [SpringValues<State>, SpringRef<State>]
+    : never
   : never
 
 /**
@@ -49,8 +53,10 @@ export function useSpring<Props extends object>(
 export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps: readonly any[] | undefined
-): PickAnimated<Props> extends infer State extends Lookup<any>
-  ? [SpringValues<State>, SpringRef<State>]
+): PickAnimated<Props> extends infer State
+  ? State extends Lookup
+    ? [SpringValues<State>, SpringRef<State>]
+    : never
   : never
 
 /** @internal */

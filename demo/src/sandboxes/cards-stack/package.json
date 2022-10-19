@@ -1,7 +1,15 @@
 {
-  "name": "spring-cards-stack",
+  "name": "Cards Stack",
   "version": "1.0.0",
   "main": "src/index.tsx",
+  "description": "Animating a stack of cards with @use-gesture/react's useDrag hook, useSprings and interpolation",
+  "keywords": [
+    "cards",
+    "use-gesture",
+    "useDrag",
+    "useSprings",
+    "interpolation"
+  ],
   "dependencies": {
     "@react-spring/web": "*",
     "react": "^18.0.0",

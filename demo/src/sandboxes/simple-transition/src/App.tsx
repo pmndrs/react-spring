@@ -1,4 +1,4 @@
-import React, { useState, useCallback, CSSProperties, useEffect } from 'react'
+import React, { useState, CSSProperties, useEffect } from 'react'
 import { useTransition, animated, AnimatedProps, useSpringRef } from '@react-spring/web'
 
 import styles from './styles.module.css'
@@ -11,7 +11,7 @@ const pages: ((props: AnimatedProps<{ style: CSSProperties }>) => React.ReactEle
 
 export default function App() {
   const [index, set] = useState(0)
-  const onClick = useCallback(() => set(state => (state + 1) % 3), [])
+  const onClick = () => set(state => (state + 1) % 3)
   const transRef = useSpringRef()
   const transitions = useTransition(index, {
     ref: transRef,

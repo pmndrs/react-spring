@@ -45,8 +45,10 @@ export function useTransition<Item, Props extends object>(
     | UseTransitionProps<Item>
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps?: any[]
-): PickAnimated<Props> extends infer State extends Lookup
-  ? [TransitionFn<Item, PickAnimated<Props>>, SpringRefType<State>]
+): PickAnimated<Props> extends infer State
+  ? State extends Lookup
+    ? [TransitionFn<Item, PickAnimated<Props>>, SpringRefType<State>]
+    : never
   : never
 
 export function useTransition<Item, Props extends object>(
@@ -62,8 +64,10 @@ export function useTransition<Item, Props extends object>(
     | UseTransitionProps<Item>
     | (Props & Valid<Props, UseTransitionProps<Item>>),
   deps: any[] | undefined
-): PickAnimated<Props> extends infer State extends Lookup
-  ? [TransitionFn<Item, State>, SpringRefType<State>]
+): PickAnimated<Props> extends infer State
+  ? State extends Lookup
+    ? [TransitionFn<Item, State>, SpringRefType<State>]
+    : never
   : never
 
 export function useTransition(

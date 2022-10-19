@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { useSpring, animated } from '@react-spring/web'
 import { useDrag } from 'react-use-gesture'
 
@@ -13,7 +13,7 @@ const right = {
   justifySelf: 'start',
 }
 
-const Slider: React.FC = ({ children }) => {
+const Slider = ({ children }: { children: ReactNode }) => {
   const [{ x, bg, scale, justifySelf }, api] = useSpring(() => ({
     x: 0,
     scale: 1,

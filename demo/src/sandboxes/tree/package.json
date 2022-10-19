@@ -1,5 +1,13 @@
 {
-  "name": "spring-tree",
+  "name": "Tree List",
+  "description": "Animated tree styled menu list",
+  "keywords": [
+    "useSpring",
+    "useMeasure",
+    "tree",
+    "menu",
+    "list"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

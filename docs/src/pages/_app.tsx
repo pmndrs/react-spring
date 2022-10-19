@@ -16,6 +16,7 @@ import { Footer } from 'components/Footer'
 import { CodeBlock } from 'components/CodeBlock'
 
 import { DEFAULT_SEO } from 'references/defaultSeo'
+import { COLORS } from '../styles/colors'
 // import { FeedbackPopover } from 'components/FeedbackPopover'
 
 const GlobalStyle = createGlobalStyle`
@@ -67,6 +68,14 @@ function App({ Component, pageProps }: MyAppProps) {
     <ThemeProvider theme={SpringTheme}>
       <MDXProvider components={components}>
         <DefaultSeo {...DEFAULT_SEO} />
+        <Banner>
+          <p>
+            Psst! Why not try out our new beta docs site 👀{' '}
+            <a href="https://beta.react-spring.dev" rel="noopener noreferrer">
+              beta.react-spring.dev
+            </a>
+          </p>
+        </Banner>
         <Header />
         <PageContainer>
           <Component {...pageProps} />
@@ -78,5 +87,31 @@ function App({ Component, pageProps }: MyAppProps) {
     </ThemeProvider>
   )
 }
+
+const Banner = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #2b2b37;
+  z-index: 1000;
+  width: 100%;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: center;
+
+  & > p {
+    font-size: 18px;
+    color: ${COLORS.white};
+
+    & > a {
+      color: inherit;
+      transition: color 200ms ease-out;
+
+      &:hover {
+        color: ${COLORS.red};
+      }
+    }
+  }
+`
 
 export default App
