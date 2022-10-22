@@ -48,13 +48,15 @@ export const LivePreview = ({
     []
   )
 
-  /**
-   * TODO: make this instant on initial mount
-   */
+  const isMounted = useRef(false)
+
   useEffect(() => {
     api.start({
       height: value === '' ? 0 : preRef.current.getBoundingClientRect().height,
+      immediate: !isMounted.current,
     })
+
+    isMounted.current = true
   }, [value])
 
   return (
