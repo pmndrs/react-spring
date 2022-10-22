@@ -123,4 +123,20 @@ export const LIVE_PREVIEW_STYLES = {
       will-change: transform;
     }
   `,
+
+  r3f: /* css */ `
+    html,
+    body {
+      height: 100%;
+      margin: 0
+    }
+
+    *, *:before, *:after {
+      box-sizing: border-box;
+    }
+
+    #root {
+      height: 100%;
+    }
+  `,
 }
