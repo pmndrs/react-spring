@@ -1,11 +1,11 @@
 ---
 meta:
-  title: R3F | React Spring
-  'og:title': R3F | React Spring
-  'twitter:title': R3F | React Spring
-  description: A detailed guide to using React Spring with R3F.
-  'og:description': A detailed guide to using React Spring with R3F.
-  'twitter:description': A detailed guide to using React Spring with R3F.
+  title: React Three Fiber | React Spring
+  'og:title': React Three Fiber | React Spring
+  'twitter:title': React Three Fiber | React Spring
+  description: A detailed guide to using React Spring with React Three Fiber.
+  'og:description': A detailed guide to using React Spring with React Three Fiber.
+  'twitter:description': A detailed guide to using React Spring with React Three Fiber.
   'og:url': https://beta.react-spring.dev/docs/guides/react-three-fiber
   'twitter:url': https://beta.react-spring.dev/docs/guides/react-three-fiber
 sidebar_position: 1
@@ -15,24 +15,35 @@ sidebar_position: 1
 
 :::note
 It's assumed you have a base understanding of `react-spring` and `react-three-fiber`. If you're new to
-either, check out our [getting started](/docs/getting-started) or alternatively, the [r3f](https://docs.pmnd.rs/react-three-fiber) docs.
+either, check out our [getting started](/docs/getting-started) or alternatively, the [react-three-fiber](https://docs.pmnd.rs/react-three-fiber) docs.
 :::
 
 ## Introduction
 
-In this guide we'll explore why `react-spring` is a valuable addition to your `r3f` project, working with the [`imperative API`](/docs/concepts/imperative-api)
+In this guide we'll explore why `react-spring` is a valuable addition to your `react-three-fiber` project, working with the `imperative API`
 to create performant animation updates on objects in the scene graph and with the [event system](/docs/advanced/events) of the library
 to update parts of your scene that are not wrapped in our [`animated` HOC](/docs/concepts/animated-elements). To work with `react-spring`
 and `react-three-fiber` you'll need to install the `@react-spring/three` package.
 
 ```bash
-yarn add @react-spring/three
+yarn add @react-spring/three @react-three/fiber three
 ```
 
 ## Why use the library?
 
 A common question asked is why use `react-spring` with `react-three-fiber` when you can use the `useFrame` hook to update your meshes & objects
-instead without knowing another API. Well this is a great question, lets consider a simple use-case.
+instead without knowing another API. Well this is a great question – its critical of motion design for animations to look realistic, and the beauty
+of `react-spring` is the animations are physically correct.
+
+When we consider that the animations you create with `react-spring` can not be interrupted per se, that is when you edit the value you don't have
+the animation halt and start again, it responds to it's new goal value creating a seamless experience incredibly valuable to a 3D scene, you don't
+ee items in real life free fall and when an external force is applied they stall, they react accordingly. The dampening of a spring gives you the
+additional feeling of real life physics whilst in combination of even the three most basic config parameter `mass`, `tension` and `friction` you can
+create a wide range of animations that belong to different objects in your scenes, you might have a metal-like sphere that needs to move slowly compared
+to your light translucent sphere that should be falling and bouncing around the scene.
+
+Furthermore, the flexibility to start/stop and replay animations, particularly with state and device motion preferences, makes this a uniquely
+accessible library from both a DX and UX perspective. Lets take a look at a simple use-case.
 
 I have a distortion blob and I want to it to change color on click. You could do this with `useFrame` to perform frame by frame updates, `useRef`
 to access the material object and use the `THREE.Color.lerp` function, slowly incrementing by the lerp value until the color is reached. But this then
@@ -81,6 +92,9 @@ export default function MyComponent() {
 
 ## Use the imperative API
 
+The example above demonstrates the declarative approach to using `react-spring` hooks by passing a `config` object to the hook.
+However, it can also receive a function argument instead, similar to react's `useEffect` hook.
+
 In the example below, we use the power of the `react-spring`'s api to lean into the imperative requirements
 of working with performant webGL scenes. The blob follows you round the canvas (lines 70-82) & scales on
 interaction (lines 46-56) without a single react render to cause these updates.
@@ -90,9 +104,8 @@ config for the spring in general, but to give the blob a bouncy feel when the `s
 
 Finally, because we're using the position of the mouse which can be considered a `Vector2` and the `position`
 of a `mesh` is a `Vector3` we use a custom interpolation via the `to` method of a `SpringValue` to interpolate
-the array, this can be seen on line 97.
-
-Why not read more about the [imperative](/docs/concepts/imperative-api) and [interpolation](/docs/advanced/interpolation) APIs?
+the array, this can be seen on line 97 (also see [imperative API](/docs/concepts/imperative-api) and
+[interpolation](/docs/advanced/interpolation)).
 
 ```tsx live=true template=r3f lines=18-30,46-56,70-82,97 showLineNumbers defaultOpen=true
 import { useRef, useEffect, useCallback } from 'react'
@@ -218,7 +231,7 @@ export default function MyComponent() {
 }
 ```
 
-## Working with spring events
+## Syncing spring values
 
 Sometimes, it's necessary to sync the state of a spring with the an external source. This can be done with the [event system](/docs/advanced/events)
 built into react-spring.
@@ -395,6 +408,21 @@ which is visible in [this demo](https://y18m1.csb.app/). It's not pretty, is it?
 Whilst by default it would be nice to have this issue resolved without you having
 to interact and this is something we'll consider for the next `breaking change`
 in the meantime what you can use is the [`precision` config prop](/common/configs#configs) to avoid this.
+
+```tsx
+import { useSpring } from '@react-spring/three'
+
+export default function MyComponent() {
+  const [springs, api] = useSpring(() => ({
+    position: [0, 0, 0],
+    config: {
+      precision: 0.0001,
+    },
+  }))
+
+  // ...
+}
+```
 
 By setting the prop to a value like `0.0001` you can notice there is no jump towards 0.
 This is because the precision prop is used to figure out how close the animated value
