@@ -227,7 +227,7 @@ Take the following example, we have multiple blobs on our screen that start in d
 the position of each blob. Because the `position` is controlled by `useSpring` you can't simple submit `springs.position` to the store because you'll
 be dispatching the whole `SpringValue` object, which is unnecessary and can weigh down your external store.
 
-Instead, you can use the `onChange` event handler to `get` the value of your springs and react to them accordingly. The code below is a conveluted example
+Instead, you can use the `onChange` event handler to `get` the value of your springs and react to them accordingly. The code below is a convoluted example
 but demonstrates how you _could_ use the `onChange` event handler to sync a `THREE.Vector2` that is then returned when the parent component requires it via
 `useImperativeHandle`.
 
