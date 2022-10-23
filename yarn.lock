@@ -4267,15 +4267,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/functions@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@netlify/functions@npm:1.2.0"
-  dependencies:
-    is-promise: ^4.0.0
-  checksum: 190187fd97314a20b98b6d65b37fd325df350ae683f5cf17ec73364604094b6c7150eb5d9524b4814e99a423ea67f5ee98746cd9a347a45586478e246007f31c
-  languageName: node
-  linkType: hard
-
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -5397,7 +5388,6 @@ __metadata:
     "@codesandbox/sandpack-react": ^1.7.2
     "@docsearch/react": ^3.2.1
     "@mdx-js/react": ^1.6.22
-    "@netlify/functions": ^1.2.0
     "@radix-ui/react-accordion": ^1.0.0
     "@radix-ui/react-dialog": "patch:@radix-ui/react-dialog@npm:0.1.7#../.yarn/patches/@radix-ui-react-dialog-npm-1.0.0-61b8140da9.patch"
     "@radix-ui/react-popover": ^1.0.0
@@ -5411,7 +5401,6 @@ __metadata:
     "@stitches/react": ^1.2.8
     "@use-gesture/react": ^10.2.16
     "@vercel/node": ^2.5.14
-    cross-env: ^7.0.3
     front-matter: ^4.0.2
     fs-extra: ^10.1.0
     hast-util-to-html: 7.1.3
@@ -5427,7 +5416,6 @@ __metadata:
     rehype-slug: 4.0.1
     remark-directive: 1.0.1
     remix: ^1.7.0
-    tiny-invariant: ^1.2.0
     unified: 9.2.2
     unist-util-visit: 2.0.3
     zod: ^3.19.0
@@ -9113,18 +9101,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-env@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "cross-env@npm:7.0.3"
-  dependencies:
-    cross-spawn: ^7.0.1
-  bin:
-    cross-env: src/bin/cross-env.js
-    cross-env-shell: src/bin/cross-env-shell.js
-  checksum: 26f2f3ea2ab32617f57effb70d329c2070d2f5630adc800985d8b30b56e8bf7f5f439dd3a0358b79cee6f930afc23cf8e23515f17ccfb30092c6b62c6b630a79
-  languageName: node
-  linkType: hard
-
 "cross-spawn@npm:^5.1.0":
   version: 5.1.0
   resolution: "cross-spawn@npm:5.1.0"
@@ -9149,7 +9125,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.1, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
+"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
   dependencies:
@@ -13417,13 +13393,6 @@ __metadata:
   version: 1.0.1
   resolution: "is-potential-custom-element-name@npm:1.0.1"
   checksum: ced7bbbb6433a5b684af581872afe0e1767e2d1146b2207ca0068a648fb5cab9d898495d1ac0583524faaf24ca98176a7d9876363097c2d14fee6dd324f3a1ab
-  languageName: node
-  linkType: hard
-
-"is-promise@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "is-promise@npm:4.0.0"
-  checksum: 0b46517ad47b00b6358fd6553c83ec1f6ba9acd7ffb3d30a0bf519c5c69e7147c132430452351b8a9fc198f8dd6c4f76f8e6f5a7f100f8c77d57d9e0f4261a8a
   languageName: node
   linkType: hard
 
@@ -20268,13 +20237,6 @@ __metadata:
   dependencies:
     convert-hrtime: ^3.0.0
   checksum: 8bcecbda97142e804ba03acf52117cc771c2933277b299bdf2e8a949960fda3e70d8159b3ba5f49495d662c4b8cc15e30dbb1a703b1a735eecce11682b98e8f9
-  languageName: node
-  linkType: hard
-
-"tiny-invariant@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "tiny-invariant@npm:1.2.0"
-  checksum: e09a718a7c4a499ba592cdac61f015d87427a0867ca07f50c11fd9b623f90cdba18937b515d4a5e4f43dac92370498d7bdaee0d0e7a377a61095e02c4a92eade
   languageName: node
   linkType: hard
 
