@@ -35,7 +35,7 @@ A common question asked is why use `react-spring` with `react-three-fiber` when 
 instead without knowing another API. Well this is a great question, lets consider a simple use-case.
 
 I have a distortion blob and I want to it to change color on click. You could do this with `useFrame` to perform frame by frame updates, `useRef`
-to access the material object and use the `THREE.Color.lerp` function, slowly incrementing by lerp value until the color is reached. But this then
+to access the material object and use the `THREE.Color.lerp` function, slowly incrementing by the lerp value until the color is reached. But this then
 requires that I keep track of a `THREE` instance of `Color` which _can_ lead to memory leaks if not handled correctly and not only that, but it would
 be a lot of code. Then you'd need to think about writing your own easing functions. With `react-spring` you can do this in a few lines of code.
 
