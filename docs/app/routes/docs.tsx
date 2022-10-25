@@ -242,12 +242,14 @@ export default function DocsLayout() {
             <MainStickyMenu subnav={navigation.subnav} />
           ) : null}
           <Article hasStickySubnav={hasStickySubnav}>
-            <script
-              async
-              type="text/javascript"
-              src="//cdn.carbonads.com/carbon.js?serve=CEAIPK7I&placement=react-springdev"
-              id="_carbonads_js"
-            />
+            {typeof window !== 'undefined' && window.env.ENABLE_CARBON ? (
+              <script
+                async
+                type="text/javascript"
+                src="//cdn.carbonads.com/carbon.js?serve=CEAIPK7I&placement=react-springdev"
+                id="_carbonads_js"
+              />
+            ) : null}
             <MDXProvider components={comps}>
               <Outlet />
             </MDXProvider>
