@@ -1,7 +1,7 @@
 {
   "name": "@react-spring/docs",
-  "description": "",
-  "license": "",
+  "license": "MIT",
+  "author": "Josh Ellis",
   "scripts": {
     "build": "remix build",
     "dev": "concurrently \"yarn dev:remix\" \"yarn scripts:watch\"",
