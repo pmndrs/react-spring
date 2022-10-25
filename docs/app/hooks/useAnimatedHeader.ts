@@ -67,7 +67,7 @@ export const useAnimatedHeader = ({
         })
       }
     } else if (direction === 'up') {
-      if (scrollTop <= limit) {
+      if (scrollTop <= limit && !isStuck) {
         api.set({
           top: 0,
           y: 0,
