@@ -28,6 +28,7 @@ export const useAnimatedHeader = ({
 
   const [styles, api] = useSpring(() => ({
     top: 0,
+    y: 0,
   }))
 
   /**
@@ -43,14 +44,39 @@ export const useAnimatedHeader = ({
     const limit = innerWidth < 768 ? heights[1] : heights[0]
 
     if (direction === 'down') {
-      api.start({
-        top: isHeader ? limit * -1 : 0,
-        immediate: alwaysAnimate ? false : !isStuck,
-      })
+      if (!isStuck) {
+        api.set({
+          top: isHeader ? limit * -1 : 0,
+        })
+      }
+
+      if (alwaysAnimate && !isStuck) {
+        api.start({
+          from: {
+            y: limit,
+          },
+          to: {
+            y: 0,
+          },
+        })
+      }
+
+      if (isStuck) {
+        api.start({
+          y: 0,
+        })
+      }
     } else if (direction === 'up') {
-      api.start({
-        top: isHeader ? 0 : limit,
-      })
+      if (scrollTop <= limit) {
+        api.set({
+          top: 0,
+          y: 0,
+        })
+      } else {
+        api.start({
+          y: limit,
+        })
+      }
     }
   }, [direction, isStuck])
 
