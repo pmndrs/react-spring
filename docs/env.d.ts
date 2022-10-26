@@ -8,6 +8,8 @@ declare global {
       // Algolia
       ALGOLIA_APP_ID: string
       ALGOLIA_API_KEY: string
+      // Carbon
+      ENABLE_CARBON: string
     }
   }
 }

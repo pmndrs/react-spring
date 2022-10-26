@@ -122,7 +122,7 @@ export const loader: LoaderFunction = ({ request }) => {
 export default function Index() {
   return (
     <>
-      <Header addMarginToMain={false} position="fixed" alwaysAnimateHeader />
+      <Header addMarginToMain={false} position="fixed" />
       <Main>
         <Pre>{CAR}</Pre>
         <ErrorHeading tag="h2" fontStyle="$XL">
