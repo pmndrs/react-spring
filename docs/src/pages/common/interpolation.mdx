@@ -1,8 +1,20 @@
+import { DemoGrid } from 'components/Demo/DemoGrid'
+import { Demo } from 'components/Demo/Demo'
+import { useSpring, a } from '@react-spring/web'
+import AnimatedNumberDemo from '@react-spring/demo/src/sandboxes/animating-number/src/App'
+
 # Interpolations
 
-🚧 We'd love to add some examples to this, consider submitting a [PR](https://github.com/pmndrs/react-spring) 🚧
+We want to animate a number over time. We can use the `useSpring` hook to do this.
+We'll use the `from` prop to set the initial value, and the `to` prop to set the final value. 
+We could also pass in a `delay` prop. 
 
-`value.to` either takes an object of the following shape:
+This is a simple example which you could wrap in a declarative React function like the AnimateNumber component used in the demo.
+```
+<a.div className={styles.number}>{number.to(n => n.toFixed(0))}</a.div>
+``` 
+
+`number.to` either takes an object of the following shape:
 
 | Value            | default   | Description                                      |
 | ---------------- | --------- | ------------------------------------------------ |
@@ -16,3 +28,32 @@
 A range shortcut: `value.to([...inputRange], [...outputRange])`
 
 Or a function: `value.to(v => ...)`
+
+```jsx
+const AnimateNumber: React.FC<{ from: int; to: int; delay: int; isReset: bool }> = ({
+  from = 0,
+  to = 100,
+  delay = 100,
+  isReset = true,
+}) => {
+  const [flip, set] = useState(false)
+  const { number } = useSpring({
+    reset: isReset,
+    reverse: flip,
+    from: { number: from },
+    number: to,
+    delay,
+    onRest: () => set(!flip),
+  })
+  return <a.div className={styles.number}>{number.to(n => n.toFixed(0))}</a.div>
+}
+```
+<DemoGrid>
+    <Demo title="Animated Numbers">
+    <AnimatedNumberDemo from={0} to={65_323} customStyle={{fontSize: 40, color: "#018558", fontWeight: 'bold'}} delay={0} />
+    <AnimatedNumberDemo from={0} to={45_321} customStyle={{fontSize: 30, color: "#bde902"}} delay={1000} />
+    <AnimatedNumberDemo from={0} to={23_451} customStyle={{fontSize: 20, color: "#a79d17"}} delay={3000} />
+  </Demo>
+</DemoGrid>
+
+🚧 Want to improve this? Consider submitting a [PR](https://github.com/pmndrs/react-spring) 🚧

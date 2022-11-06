@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  justify-content: center;
+}
+
+.number {
+  margin: 0px;
+  padding: 0px;
+  font-size: 40px;
+  font-weight: 500;
+  margin: 0px;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-variant-numeric: tabular-nums;
+}
