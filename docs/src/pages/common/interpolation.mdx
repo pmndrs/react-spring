@@ -50,9 +50,27 @@ const AnimateNumber: React.FC<{ from: int; to: int; delay: int; isReset: bool }>
 ```
 <DemoGrid>
     <Demo title="Animated Numbers">
-    <AnimatedNumberDemo from={0} to={65_323} customStyle={{fontSize: 40, color: "#018558", fontWeight: 'bold'}} delay={0} />
-    <AnimatedNumberDemo from={0} to={45_321} customStyle={{fontSize: 30, color: "#bde902"}} delay={1000} />
-    <AnimatedNumberDemo from={0} to={23_451} customStyle={{fontSize: 20, color: "#a79d17"}} delay={3000} />
+    <AnimatedNumberDemo demos={[
+          {
+          from: 0,
+          to: 65_323,
+          customStyle: {height: 40, fontSize: 40, color: "#018558", fontWeight: 'bold', margin: 8},
+          delay: 0,
+          },
+          {
+          from: 0,
+          to: 45_321,
+          customStyle: {height: 30, fontSize: 30, color: "#bde902", fontWeight: 'bold', margin: 8},
+          delay: 1000,
+          },
+          {
+          from: 0,
+          to: 23_451,
+          customStyle: {height: 20, fontSize: 20, color: "#a79d17", fontWeight: 'bold', margin: 8},
+          delay: 3000,
+          }
+       ]}
+      />
   </Demo>
 </DemoGrid>
 

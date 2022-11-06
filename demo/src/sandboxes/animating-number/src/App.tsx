@@ -26,11 +26,12 @@ const AnimateNumber: React.FC<{ from: int; to: int; delay: int; isReset: bool; c
   )
 }
 
-export default function App(props) {
+export default function App({ demos }) {
   const [open, set] = useState(true)
+  const demosList = demos ? demos.map((demo, index) => <AnimateNumber {...demo} />) : null
   return (
-    <div className={styles.container} style={{ height: 40 }} onClick={() => set(state => !state)}>
-      <AnimateNumber {...props} />
+    <div className={styles.container} style={{ flexDirection: 'column' }} onClick={() => set(state => !state)}>
+      {demosList}
     </div>
   )
 }
