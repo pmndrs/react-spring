@@ -1,8 +1,8 @@
 {
-  "name": "Basic Trail",
-  "description": "Introduction to using the useTrail hook as part of a wrapper component",
+  "name": "Animate Number",
+  "description": "Animating a number with react-spring.",
   "keywords": [
-    "useTrail",
+    "useSpring",
     "Basic",
     "coniguration"
   ],
