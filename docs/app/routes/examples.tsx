@@ -11,6 +11,7 @@ import { Heading } from '~/components/Text/Heading'
 import { InlineLinkStyles } from '~/components/InlineLink'
 import { Copy } from '~/components/Text/Copy'
 import { Anchor } from '~/components/Text/Anchor'
+import { Select } from '~/components/Select'
 
 interface CodesandboxDirectory {
   directory_shortid: null
@@ -91,8 +92,35 @@ export const loader: LoaderFunction = async () => {
       })
     ).then(boxes => boxes.sort((a, b) => a.title.localeCompare(b.title)))
 
+    const [tags, components] = sandboxes
+      .reduce<[tags: string[], components: string[]]>(
+        (acc, sandbox) => {
+          sandbox.tags.forEach(tag => {
+            if (hookRegex.test(tag) || tag === 'Parallax') {
+              acc[1].push(tag)
+            } else {
+              acc[0].push(tag)
+            }
+          })
+
+          return acc
+        },
+        [[], []]
+      )
+      .map(arr =>
+        arr
+          .filter((val, ind, self) => self.indexOf(val) === ind)
+          .sort()
+          .map(tag => ({
+            value: tag,
+            label: tag,
+          }))
+      )
+
     return json({
       sandboxes,
+      tags,
+      components,
     })
   } catch (err) {
     return redirect('/500')
@@ -109,7 +137,12 @@ export interface Sandbox {
 }
 
 export default function DocsLayout() {
-  const { sandboxes } = useLoaderData<{ sandboxes: Sandbox[] }>()
+  const { components, sandboxes, tags } = useLoaderData<{
+    components: { value: string; label: string }[]
+    sandboxes: Sandbox[]
+    tags: { value: string; label: string }[]
+  }>()
+
   return (
     <>
       <Header />
@@ -138,10 +171,15 @@ export default function DocsLayout() {
           </Anchor>
           .
         </Copy>
-        <ExampleFilters>
-          <Heading tag="h2" fontStyle="$XS">
+        <ExampleFilters reloadDocument method="get">
+          <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
             Alternatively, check out examples by
           </Heading>
+          <Select placeholder="Tags" options={tags} />
+          <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
+            or
+          </Heading>
+          <Select placeholder="Components" options={components} />
         </ExampleFilters>
         <SandboxesList>
           {sandboxes.map(props => (
