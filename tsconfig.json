@@ -12,7 +12,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["DOM", "ESNext"],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "noEmit": true,
     "downlevelIteration": true,
     "strict": true,

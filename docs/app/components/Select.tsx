@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import ReactSelect, {
   ControlProps,
   MenuProps,
@@ -12,67 +11,60 @@ import { styled } from '~/styles/stitches.config'
 export interface SelectProps {
   options?: { value: string; label: string }[]
   placeholder: string
+  onChange?: (newValue: MultiValue<{ value: string }>) => void
 }
 
-export const Select = ({ placeholder, options = [] }: SelectProps) => {
-  const [selectValue, setSelectValue] = useState('')
-
+export const Select = ({
+  placeholder,
+  options = [],
+  onChange,
+}: SelectProps) => {
   const handleChange = (newValue: MultiValue<{ value: string }>) => {
-    setSelectValue(newValue.map(({ value }) => value).join(','))
+    if (onChange) {
+      onChange(newValue)
+    }
   }
 
   return (
-    <>
-      <VisuallyHiddenSelect
-        value={selectValue}
-        onChange={() => {}}
-        id={placeholder.toLowerCase()}
-        name={placeholder.toLowerCase()}
-      />
-      <ReactSelect
-        placeholder={placeholder}
-        options={options}
-        isClearable={false}
-        isMulti
-        isSearchable={false}
-        hideSelectedOptions={false}
-        // @ts-ignore
-        onChange={handleChange}
-        components={{
-          Control: SelectControl,
-          DropdownIndicator: null,
-          IndicatorSeparator: null,
-          Menu: SelectMenu,
-          Placeholder: SelectPlaceholder,
-          ValueContainer: props => (
-            // @ts-ignore
-            <SelectValueContainer {...props} placeholder={placeholder} />
-          ),
-        }}
-        styles={{
-          container: () => ({
-            position: 'relative',
-            display: 'inline-block',
-            margin: '0 6px',
-          }),
-          option: (provided, state) => ({
-            ...provided,
-            cursor: 'pointer',
-            backgroundColor: state.isFocused
-              ? '#ff6d6d99'
-              : state.isSelected
-              ? '#ff6d6d99'
-              : 'transparent',
-          }),
-        }}
-      />
-    </>
+    <ReactSelect
+      placeholder={placeholder}
+      options={options}
+      isClearable={false}
+      isMulti
+      isSearchable={false}
+      hideSelectedOptions={false}
+      // @ts-ignore
+      onChange={handleChange}
+      components={{
+        Control: SelectControl,
+        DropdownIndicator: null,
+        IndicatorSeparator: null,
+        Menu: SelectMenu,
+        Placeholder: SelectPlaceholder,
+        ValueContainer: props => (
+          // @ts-ignore
+          <SelectValueContainer {...props} placeholder={placeholder} />
+        ),
+      }}
+      styles={{
+        container: () => ({
+          position: 'relative',
+          display: 'inline-block',
+          margin: '0 6px',
+        }),
+        option: (provided, state) => ({
+          ...provided,
+          cursor: 'pointer',
+          backgroundColor: state.isFocused
+            ? '#ff6d6d99'
+            : state.isSelected
+            ? '#ff6d6d99'
+            : 'transparent',
+        }),
+      }}
+    />
   )
 }
-
-const VisuallyHiddenSelect = styled('select', {
-  visuallyHidden: '',
-})
 
 const SelectControl = (props: ControlProps) => {
   const { children, isFocused, innerRef, innerProps } = props

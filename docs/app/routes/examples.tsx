@@ -1,5 +1,5 @@
-import { json, LoaderFunction, redirect } from '@remix-run/node'
-import { useLoaderData, Form } from '@remix-run/react'
+import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node'
+import { useLoaderData, Form, useFetcher } from '@remix-run/react'
 
 import { capitalize } from '~/helpers/strings'
 
@@ -12,6 +12,8 @@ import { InlineLinkStyles } from '~/components/InlineLink'
 import { Copy } from '~/components/Text/Copy'
 import { Anchor } from '~/components/Text/Anchor'
 import { Select } from '~/components/Select'
+import { useEffect, useRef, useState } from 'react'
+import { MultiValue } from 'react-select'
 
 interface CodesandboxDirectory {
   directory_shortid: null
@@ -44,8 +46,13 @@ type CodesandboxSandboxResponse = {
   data: CodesandboxSandbox
 }
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
   try {
+    const url = new URL(request.url)
+
+    const tagsParam = url.searchParams.get('tags')?.split(',') ?? []
+    const componentsParam = url.searchParams.get('components')?.split(',') ?? []
+
     const directories = await fetch(
       'https://codesandbox.io/api/v1/sandboxes/github/pmndrs/react-spring/tree/master/demo/src/sandboxes'
     )
@@ -92,6 +99,21 @@ export const loader: LoaderFunction = async () => {
       })
     ).then(boxes => boxes.sort((a, b) => a.title.localeCompare(b.title)))
 
+    const filteredSandboxes = sandboxes.filter(sandbox => {
+      if (tagsParam.length === 0 && componentsParam.length === 0) {
+        return sandbox
+      }
+
+      const tags = sandbox.tags.filter(tag => tagsParam.includes(tag))
+      const components = sandbox.tags.filter(tag =>
+        componentsParam.includes(tag)
+      )
+
+      if (tags.length > 0 || components.length > 0) {
+        return sandbox
+      }
+    })
+
     const [tags, components] = sandboxes
       .reduce<[tags: string[], components: string[]]>(
         (acc, sandbox) => {
@@ -118,13 +140,30 @@ export const loader: LoaderFunction = async () => {
       )
 
     return json({
-      sandboxes,
+      sandboxes: filteredSandboxes,
       tags,
       components,
     })
   } catch (err) {
     return redirect('/500')
   }
+}
+
+export const action: ActionFunction = async ({ request }) => {
+  const form = await request.formData()
+
+  const tags = form.get('tags') ?? ''
+  const components = form.get('components') ?? ''
+
+  if (tags !== '' || components !== '') {
+    return redirect(
+      `/examples?${tags !== '' ? `tags=${tags}` : ''}${
+        components !== '' ? `&components=${components}` : ''
+      }`
+    )
+  }
+
+  return redirect(`/examples`)
 }
 
 export interface Sandbox {
@@ -136,12 +175,34 @@ export interface Sandbox {
   id: string
 }
 
-export default function DocsLayout() {
+export default function Examples() {
   const { components, sandboxes, tags } = useLoaderData<{
     components: { value: string; label: string }[]
     sandboxes: Sandbox[]
     tags: { value: string; label: string }[]
   }>()
+
+  const [selectStates, setSelectState] = useState({
+    tags: '',
+    components: '',
+  })
+
+  const formRef = useRef<HTMLFormElement>(null!)
+
+  const fetcher = useFetcher()
+
+  const handleSelectChange =
+    (name: 'tags' | 'components') =>
+    (newValue: MultiValue<{ value: string }>) => {
+      setSelectState(prevState => ({
+        ...prevState,
+        [name]: newValue.map(val => val.value).join(','),
+      }))
+    }
+
+  useEffect(() => {
+    fetcher.submit({ ...selectStates }, { method: 'post', action: '/examples' })
+  }, [selectStates])
 
   return (
     <>
@@ -171,15 +232,26 @@ export default function DocsLayout() {
           </Anchor>
           .
         </Copy>
-        <ExampleFilters reloadDocument method="get">
+        <ExampleFilters
+          method="post"
+          ref={formRef}
+          onChange={() => console.log('form change')}>
           <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
             Alternatively, check out examples by
           </Heading>
-          <Select placeholder="Tags" options={tags} />
+          <Select
+            placeholder="Tags"
+            options={tags}
+            onChange={handleSelectChange('tags')}
+          />
           <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
             or
           </Heading>
-          <Select placeholder="Components" options={components} />
+          <Select
+            placeholder="Components"
+            options={components}
+            onChange={handleSelectChange('components')}
+          />
         </ExampleFilters>
         <SandboxesList>
           {sandboxes.map(props => (
@@ -198,6 +270,7 @@ const Main = styled('main', {
   width: '100%',
   margin: '0 auto',
   maxWidth: '$largeDoc',
+  flexGrow: 1,
 
   '@tabletUp': {
     padding: '0 $15',
