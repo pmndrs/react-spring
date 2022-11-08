@@ -1,5 +1,12 @@
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { MultiValue } from 'react-select'
 import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node'
-import { useLoaderData, Form, useFetcher } from '@remix-run/react'
+import {
+  useLoaderData,
+  Form,
+  useFetcher,
+  useTransition,
+} from '@remix-run/react'
 
 import { capitalize } from '~/helpers/strings'
 
@@ -12,8 +19,6 @@ import { InlineLinkStyles } from '~/components/InlineLink'
 import { Copy } from '~/components/Text/Copy'
 import { Anchor } from '~/components/Text/Anchor'
 import { Select } from '~/components/Select'
-import { useEffect, useRef, useState } from 'react'
-import { MultiValue } from 'react-select'
 
 interface CodesandboxDirectory {
   directory_shortid: null
@@ -191,18 +196,19 @@ export default function Examples() {
 
   const fetcher = useFetcher()
 
+  const { state } = useTransition()
+
   const handleSelectChange =
     (name: 'tags' | 'components') =>
     (newValue: MultiValue<{ value: string }>) => {
-      setSelectState(prevState => ({
-        ...prevState,
+      const data = {
+        ...selectStates,
         [name]: newValue.map(val => val.value).join(','),
-      }))
-    }
+      }
 
-  useEffect(() => {
-    fetcher.submit({ ...selectStates }, { method: 'post', action: '/examples' })
-  }, [selectStates])
+      setSelectState(data)
+      fetcher.submit({ ...data }, { method: 'post', action: '/examples' })
+    }
 
   return (
     <>
@@ -253,7 +259,10 @@ export default function Examples() {
             onChange={handleSelectChange('components')}
           />
         </ExampleFilters>
-        <SandboxesList>
+        <SandboxesList
+          css={{
+            opacity: state === 'loading' ? 0.5 : 1,
+          }}>
           {sandboxes.map(props => (
             <li>
               <CardExample key={props.urlTitle} {...props} />
