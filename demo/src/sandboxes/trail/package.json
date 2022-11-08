@@ -4,7 +4,7 @@
   "keywords": [
     "useTrail",
     "Basic",
-    "coniguration"
+    "configuration"
   ],
   "version": "1.0.0",
   "main": "src/index.tsx",
