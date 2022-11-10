@@ -303,14 +303,21 @@ export default function Examples() {
             onChange={handleSelectChange('components')}
             value={selectStates.components}
           />
-          .
           {selectStates.tags.length > 0 ||
           selectStates.components.length > 0 ? (
             <Heading
               tag="h2"
               fontStyle="$XS"
-              style={{ display: 'inline-block' }}>
-              {' Or maybe, you want to see them '}
+              css={{
+                display: 'inline-block',
+                ml: -6,
+
+                '& > a': {
+                  ...InlineLinkStyles,
+                  fontWeight: '$bold',
+                },
+              }}>
+              {'. Or maybe, you want to see them '}
               <Anchor href="/examples">all?</Anchor>
             </Heading>
           ) : null}
