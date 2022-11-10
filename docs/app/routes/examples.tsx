@@ -1,11 +1,19 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { MultiValue } from 'react-select'
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node'
+import {
+  ActionFunction,
+  json,
+  LoaderFunction,
+  MetaFunction,
+  redirect,
+} from '@remix-run/node'
 import {
   useLoaderData,
   Form,
   useFetcher,
   useTransition,
+  useLocation,
+  useSearchParams,
 } from '@remix-run/react'
 
 import { capitalize } from '~/helpers/strings'
@@ -75,11 +83,17 @@ export const loader: LoaderFunction = async ({ request }) => {
         const sandbox = await fetch(
           `https://codesandbox.io/api/v1/sandboxes/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/${directoryTitle}`
         )
-          .then(res => res.json())
+          .then(res => {
+            if (res.status === 200) {
+              return res.json()
+            } else {
+              throw new Error('Bad response from codesandbox')
+            }
+          })
           .then((res: CodesandboxSandboxResponse) => {
-            const {
-              data: { id, title, tags, screenshot_url, description },
-            } = res
+            const { data } = res
+
+            const { id, title, tags, screenshot_url, description } = data ?? {}
 
             return {
               id,
@@ -144,12 +158,20 @@ export const loader: LoaderFunction = async ({ request }) => {
           }))
       )
 
-    return json({
-      sandboxes: filteredSandboxes,
-      tags,
-      components,
-    })
+    return json(
+      {
+        sandboxes: filteredSandboxes,
+        tags,
+        components,
+      },
+      {
+        headers: {
+          'Cache-Control': 'public, max-age=60, s-max-age=60',
+        },
+      }
+    )
   } catch (err) {
+    console.error(err)
     return redirect('/500')
   }
 }
@@ -171,6 +193,13 @@ export const action: ActionFunction = async ({ request }) => {
   return redirect(`/examples`)
 }
 
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Examples | React Spring',
+    description: `The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions`,
+  }
+}
+
 export interface Sandbox {
   urlTitle: string
   title: string
@@ -187,9 +216,17 @@ export default function Examples() {
     tags: { value: string; label: string }[]
   }>()
 
+  const [searchParams] = useSearchParams()
+
+  const defaultTags = searchParams.getAll('tags')
+  const defaultComponents = searchParams.getAll('components')
+
   const [selectStates, setSelectState] = useState({
-    tags: '',
-    components: '',
+    tags: defaultTags.map(tag => ({ value: tag, label: tag })),
+    components: defaultComponents.map(component => ({
+      value: component,
+      label: component,
+    })),
   })
 
   const formRef = useRef<HTMLFormElement>(null!)
@@ -203,11 +240,17 @@ export default function Examples() {
     (newValue: MultiValue<{ value: string }>) => {
       const data = {
         ...selectStates,
-        [name]: newValue.map(val => val.value).join(','),
+        [name]: newValue,
       }
 
       setSelectState(data)
-      fetcher.submit({ ...data }, { method: 'post', action: '/examples' })
+      fetcher.submit(
+        {
+          tags: data.tags.map(val => val.value).join(','),
+          components: data.components.map(val => val.value).join(','),
+        },
+        { method: 'post', action: '/examples' }
+      )
     }
 
   return (
@@ -249,6 +292,7 @@ export default function Examples() {
             placeholder="Tags"
             options={tags}
             onChange={handleSelectChange('tags')}
+            value={selectStates.tags}
           />
           <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
             or
@@ -257,7 +301,19 @@ export default function Examples() {
             placeholder="Components"
             options={components}
             onChange={handleSelectChange('components')}
+            value={selectStates.components}
           />
+          .
+          {selectStates.tags.length > 0 ||
+          selectStates.components.length > 0 ? (
+            <Heading
+              tag="h2"
+              fontStyle="$XS"
+              style={{ display: 'inline-block' }}>
+              {' Or maybe, you want to see them '}
+              <Anchor href="/examples">all?</Anchor>
+            </Heading>
+          ) : null}
         </ExampleFilters>
         <SandboxesList
           css={{
