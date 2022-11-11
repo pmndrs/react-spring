@@ -286,7 +286,7 @@ export default function Examples() {
           ref={formRef}
           onChange={() => console.log('form change')}>
           <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
-            Alternatively, check out examples by
+            {`Alternatively, check out examples by `}
           </Heading>
           <Select
             placeholder="Tags"
@@ -295,7 +295,7 @@ export default function Examples() {
             value={selectStates.tags}
           />
           <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
-            or
+            {` or `}
           </Heading>
           <Select
             placeholder="Components"
@@ -309,7 +309,7 @@ export default function Examples() {
               tag="h2"
               fontStyle="$XS"
               css={{
-                display: 'inline-block',
+                display: 'inline',
                 ml: -6,
 
                 '& > a': {

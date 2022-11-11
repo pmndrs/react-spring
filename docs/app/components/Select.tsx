@@ -5,6 +5,7 @@ import ReactSelect, {
   ValueContainerProps,
   MultiValue,
   OptionProps,
+  useStateManager,
 } from 'react-select'
 
 import { dark, styled } from '~/styles/stitches.config'
@@ -36,6 +37,7 @@ export const Select = ({
       isMulti
       isSearchable={false}
       hideSelectedOptions={false}
+      // menuIsOpen
       // @ts-ignore
       onChange={handleChange}
       components={{
@@ -55,9 +57,12 @@ export const Select = ({
       }}
       styles={{
         container: () => ({
-          position: 'relative',
           display: 'inline-block',
           margin: '0 6px',
+
+          '@media(min-width: 768px)': {
+            position: 'relative',
+          },
         }),
       }}
       value={value}
@@ -127,25 +132,40 @@ const SelectMenu = (props: MenuProps) => {
   const { children, innerRef, innerProps } = props
 
   return (
-    // @ts-ignore
-    <Menu ref={innerRef} {...innerProps}>
-      {children}
-    </Menu>
+    <>
+      <MenuBackground />
+      {/* @ts-ignore */}
+      <Menu ref={innerRef} {...innerProps}>
+        {children}
+      </Menu>
+    </>
   )
 }
 
+const MenuBackground = styled('div', {
+  backgroundColor: '$white',
+  opacity: 0.2,
+  position: 'absolute',
+  inset: 0,
+  zIndex: '$1',
+})
+
 const Menu = styled('div', {
   position: 'absolute',
-  zIndex: '$1',
+  zIndex: '$2',
   background: '$codeBackground',
-  borderRadius: '$r8',
   color: '$black',
   fontSize: '$XXS',
   lineHeight: '$XXS',
   overflow: 'hidden',
-  width: 200,
   boxShadow:
     'rgba(27,31,36,0.12) 0px 1px 3px, rgba(66,74,83,0.12) 0px 8px 24px',
+  width: '100%',
+  borderTopRightRadius: '$r8',
+  borderTopLeftRadius: '$r8',
+
+  bottom: 0,
+  left: 0,
 
   [`.${dark} &`]: {
     boxShadow:
@@ -153,6 +173,9 @@ const Menu = styled('div', {
   },
 
   '@tabletUp': {
+    bottom: 'unset',
+    borderRadius: '$r8',
+    width: 200,
     fontSize: '$XS',
     lineHeight: '$XS',
   },
