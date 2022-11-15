@@ -41,6 +41,8 @@ export const fetchSandbox = async (
 
       const { id, title, tags, screenshot_url, description } = data ?? {}
 
+      console.log(data)
+
       return {
         id,
         urlTitle: title,

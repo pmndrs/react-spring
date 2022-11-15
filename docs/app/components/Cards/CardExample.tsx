@@ -7,16 +7,9 @@ import { GradientButton } from '../Buttons/GradientButton'
 
 import type { Sandbox } from '../../routes/examples'
 
-export const CardExample = ({
-  urlTitle,
-  title,
-  description,
-  tags,
-  id,
-}: Sandbox) => {
+export const CardExample = ({ title, description, tags, id }: Sandbox) => {
   return (
-    <ExampleAnchor
-      href={`https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/${urlTitle}`}>
+    <ExampleAnchor href={`https://codesandbox.io/s/${id}`}>
       <ExampleCard>
         <ExternalLinkIcon />
         <ExampleImage height={9} width={16}>
