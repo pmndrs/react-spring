@@ -11,8 +11,11 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.0.1",
     "@react-three/drei": "^9.40.0",
     "@react-three/fiber": "^8.9.1",
+    "@stitches/react": "^1.2.8",
+    "@use-gesture/react": "^10.2.22",
     "lodash-move": "1.1.1",
     "lodash.clamp": "^4.0.3",
     "lodash.shuffle": "^4.2.0",
@@ -30,8 +33,6 @@
   },
   "devDependencies": {
     "@types/lodash.clamp": "^4.0.7",
-    "@types/lodash.shuffle": "^4.2.6",
-    "@vitejs/plugin-react-refresh": "^1.3.6",
-    "vite": "^3.2.3"
+    "@types/lodash.shuffle": "^4.2.6"
   }
 }

@@ -1,5 +1,7 @@
 import * as React from 'react'
 import { Link, Route } from 'wouter'
+import { Globals } from '@react-spring/web'
+
 import styles from './styles.module.css'
 
 import AnimatingAuto from './sandboxes/animating-auto/src/App'
@@ -16,6 +18,7 @@ import DraggableList from './sandboxes/draggable-list/src/App'
 import ExitBeforeEnter from './sandboxes/exit-before-enter/src/App'
 
 import FlipCard from './sandboxes/flip-card/src/App'
+import FloatingButton from './sandboxes/floating-button/src/App'
 
 import GooBlobs from './sandboxes/goo-blobs/src/App'
 
@@ -44,6 +47,10 @@ import Viewpager from './sandboxes/viewpager/src/App'
 
 import WebGlSwitch from './sandboxes/webgl-switch/src/App'
 
+Globals.assign({
+  frameLoop: 'always',
+})
+
 const links = {
   'animating-auto': AnimatingAuto,
   card: Card,
@@ -55,6 +62,7 @@ const links = {
   'draggable-list': DraggableList,
   'exit-before-enter': ExitBeforeEnter,
   'flip-card': FlipCard,
+  'floating-button': FloatingButton,
   'goo-blobs': GooBlobs,
   'image-fade': ImageFade,
   'list-reordering': ListReordering,
