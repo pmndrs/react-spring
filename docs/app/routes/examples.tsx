@@ -12,11 +12,8 @@ import {
   Form,
   useFetcher,
   useTransition,
-  useLocation,
   useSearchParams,
 } from '@remix-run/react'
-
-import { capitalize } from '~/helpers/strings'
 
 import { styled } from '~/styles/stitches.config'
 
@@ -28,36 +25,9 @@ import { Copy } from '~/components/Text/Copy'
 import { Anchor } from '~/components/Text/Anchor'
 import { Select } from '~/components/Select'
 
-interface CodesandboxDirectory {
-  directory_shortid: null
-  id: string
-  inserted_at: string
-  shortid: string
-  source_id: string
-  title: string
-  updated_at: string
-}
+import { SANDBOXES } from '~/data/sandboxes'
 
-interface CodesandboxSandbox {
-  title: string
-  tags: string[]
-  screenshot_url: string
-  description: string
-  id: string
-}
-
-/**
- * Partial implementations of the response, focussed on what we want exactly.
- */
-type CodesandboxDirectoriesResponse = {
-  data: {
-    directories: CodesandboxDirectory[]
-  }
-}
-
-type CodesandboxSandboxResponse = {
-  data: CodesandboxSandbox
-}
+import { fetchSandbox, getTagsAndComponents } from '~/helpers/sandboxes'
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -66,56 +36,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     const tagsParam = url.searchParams.get('tags')?.split(',') ?? []
     const componentsParam = url.searchParams.get('components')?.split(',') ?? []
 
-    const directories = await fetch(
-      'https://codesandbox.io/api/v1/sandboxes/github/pmndrs/react-spring/tree/master/demo/src/sandboxes'
-    )
-      .then(res => res.json())
-      .then((res: CodesandboxDirectoriesResponse) =>
-        res.data.directories
-          .filter(direct => direct.title !== 'public' && direct.title !== 'src')
-          .map(direct => direct.title)
-      )
-
-    const hookRegex = new RegExp(/^use/)
-
     const sandboxes = await Promise.all(
-      directories.map(async directoryTitle => {
-        const sandbox = await fetch(
-          `https://codesandbox.io/api/v1/sandboxes/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/${directoryTitle}`
-        )
-          .then(res => {
-            if (res.status === 200) {
-              return res.json()
-            } else {
-              throw new Error('Bad response from codesandbox')
-            }
-          })
-          .then((res: CodesandboxSandboxResponse) => {
-            const { data } = res
-
-            const { id, title, tags, screenshot_url, description } = data ?? {}
-
-            return {
-              id,
-              urlTitle: directoryTitle,
-              title,
-              tags: tags.map(tag => {
-                if (hookRegex.test(tag)) {
-                  const stringSplit = tag.split('use')
-
-                  return `use${capitalize(stringSplit[1])}`
-                } else if (tag === 'parallax') {
-                  return capitalize(tag)
-                }
-                return tag
-              }),
-              screenshotUrl: screenshot_url,
-              description,
-            }
-          })
-
-        return sandbox
-      })
+      Object.values(SANDBOXES).map(fetchSandbox)
     ).then(boxes => boxes.sort((a, b) => a.title.localeCompare(b.title)))
 
     const filteredSandboxes = sandboxes.filter(sandbox => {
@@ -133,30 +55,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       }
     })
 
-    const [tags, components] = sandboxes
-      .reduce<[tags: string[], components: string[]]>(
-        (acc, sandbox) => {
-          sandbox.tags.forEach(tag => {
-            if (hookRegex.test(tag) || tag === 'Parallax') {
-              acc[1].push(tag)
-            } else {
-              acc[0].push(tag)
-            }
-          })
-
-          return acc
-        },
-        [[], []]
-      )
-      .map(arr =>
-        arr
-          .filter((val, ind, self) => self.indexOf(val) === ind)
-          .sort()
-          .map(tag => ({
-            value: tag,
-            label: tag,
-          }))
-      )
+    const [tags, components] = getTagsAndComponents(sandboxes)
 
     return json(
       {
