@@ -24,9 +24,11 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
     }
   }
 
+  const isDocs = location.pathname.includes('docs')
+
   return (
     <DocsList>
-      <WidgetContainer shouldBeHidden={location.pathname === '/'}>
+      <WidgetContainer shouldBeHidden={!isDocs}>
         <WidgetSearch />
       </WidgetContainer>
       <ScrollArea>
@@ -35,7 +37,7 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
             renderSubMenu({ ...item, location, onClick: handleNavClick }, 0)
           )}
         <ExternalAnchor
-          shouldBeHidden={location.pathname === '/'}
+          shouldBeHidden={!isDocs}
           href="https://github.com/pmndrs/react-spring/releases"
           rel="noopener noreferrer"
           target="_blank"
