@@ -1,5 +1,11 @@
 {
-  "name": "spring-notification-hub",
+  "name": "Notification Hub",
+  "description": "Creating toast notifications with useTransition",
+  "keywords": [
+    "notifications",
+    "toast",
+    "useTransition"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

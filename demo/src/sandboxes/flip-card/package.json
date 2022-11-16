@@ -1,5 +1,12 @@
 {
-  "name": "spring-flip-card",
+  "name": "Flip Card",
+  "description": "Using interpolations & CSS 3D create a flip card effect",
+  "keywords": [
+    "css",
+    "3D",
+    "useSpring",
+    "interpolation"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

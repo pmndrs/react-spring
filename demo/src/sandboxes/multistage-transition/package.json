@@ -1,5 +1,11 @@
 {
-  "name": "spring-multistage-transition",
+  "name": "Multistage Transitions",
+  "description": "Async animation scripts for entering and leaving using useTransition",
+  "keywords": [
+    "async",
+    "scripts",
+    "useTransition"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

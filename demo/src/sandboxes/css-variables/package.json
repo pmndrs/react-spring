@@ -2,6 +2,13 @@
   "name": "spring-css-variables",
   "version": "1.0.0",
   "main": "src/index.tsx",
+  "description": "Using CSS variables with react-springs useSpring hook",
+  "keywords": [
+    "useSpring",
+    "css",
+    "variables",
+    "loop"
+  ],
   "dependencies": {
     "@react-spring/web": "*",
     "react": "^18.0.0",

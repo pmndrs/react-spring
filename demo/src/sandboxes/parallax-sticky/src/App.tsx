@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import { Parallax, ParallaxLayer } from '@react-spring/parallax'
 import styles from './styles.module.css'
 

@@ -1,5 +1,11 @@
 {
-  "name": "spring-masonry",
+  "name": "Masonry Grid",
+  "description": "A pintrest-esque homepage with animations",
+  "keywords": [
+    "useTransition",
+    "masonry",
+    "pintrest"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

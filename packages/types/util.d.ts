@@ -118,6 +118,8 @@ type Intersect<U> = (U extends any ? (k: U) => void : never) extends (
   ? I
   : never
 
+export type AllKeys<T> = T extends any ? keyof T : never
+
 export type Exclusive<T> = AllKeys<T> extends infer K
   ? T extends any
     ? Remap<

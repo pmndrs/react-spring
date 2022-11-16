@@ -1,8 +1,15 @@
 {
-  "name": "initial-rocket",
+  "name": "Rocket decay",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Create intertia with the velocity and decay config options combined with interpolation",
+  "keywords": [
+    "velocity",
+    "intertia",
+    "decay",
+    "interpolation",
+    "useSpring",
+    "useDrag"
+  ],
   "homepage": "https://codesandbox.io/s/new",
   "main": "src/index.js",
   "dependencies": {
