@@ -1,5 +1,10 @@
 {
-  "name": "spring-list-reordering",
+  "name": "List Reordering",
+  "description": "Automatic list reordering with animation",
+  "keywords": [
+    "useTransition",
+    "list"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

@@ -1,7 +1,14 @@
 {
-  "name": "spring-chain",
+  "name": "Chaining Transition and a Spring",
   "version": "1.0.0",
   "main": "src/index.tsx",
+  "description": "Orchestrating a useTransition and useSpring hook with the useChain hook.",
+  "keywords": [
+    "useTransition",
+    "useSpring",
+    "useChain",
+    "SpringRef"
+  ],
   "dependencies": {
     "@react-spring/web": "*",
     "react": "^18.0.0",

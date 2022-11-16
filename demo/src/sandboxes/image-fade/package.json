@@ -1,5 +1,12 @@
 {
-  "name": "spring-image-fade",
+  "name": "Image Fade",
+  "description": "Simple image fading illustrating the exitBeforeEnter prop on useTransition",
+  "keywords": [
+    "image",
+    "exitBeforeEnter",
+    "useTransition",
+    "onRest"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

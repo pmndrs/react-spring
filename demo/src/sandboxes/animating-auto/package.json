@@ -1,7 +1,15 @@
 {
-  "name": "spring-animating-auto",
+  "name": "Animating Auto",
   "version": "1.0.0",
   "main": "src/index.tsx",
+  "description": "Animating widths with react-spring, use-measure and interpolation",
+  "keywords": [
+    "useSpring",
+    "useMeasure",
+    "auto",
+    "width",
+    "interpolation"
+  ],
   "dependencies": {
     "@react-spring/web": "*",
     "react": "^18.0.0",

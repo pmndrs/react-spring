@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSpring, to, animated, config } from 'react-spring'
+import * as React from 'react'
+import { useSpring, to, animated, config } from '@react-spring/web'
 import { scale, dist } from 'vec-la'
 import { useDrag } from 'react-use-gesture'
 

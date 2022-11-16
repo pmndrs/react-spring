@@ -1,5 +1,11 @@
 {
-  "name": "spring-trail",
+  "name": "Basic Trail",
+  "description": "Introduction to using the useTrail hook as part of a wrapper component",
+  "keywords": [
+    "useTrail",
+    "Basic",
+    "configuration"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

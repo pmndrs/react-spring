@@ -1,5 +1,12 @@
 {
-  "name": "spring-css-keyframes",
+  "name": "CSS Keyframes",
+  "description": "Simulating CSS keyframes with interpolations",
+  "keywords": [
+    "useSpring",
+    "interpolation",
+    "css",
+    "keyframes"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

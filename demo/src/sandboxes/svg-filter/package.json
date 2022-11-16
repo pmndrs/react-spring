@@ -1,5 +1,12 @@
 {
-  "name": "spring-svg-filter",
+  "name": "Svg Filter",
+  "description": "Animating SVG filter nodes to distort a path",
+  "keywords": [
+    "useSpring",
+    "svg",
+    "filters",
+    "path"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

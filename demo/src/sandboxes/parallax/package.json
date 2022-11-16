@@ -1,5 +1,10 @@
 {
-  "name": "spring-notification-hub",
+  "name": "Horizontal Parallax",
+  "description": "The real test of a parallax component, horizontal scrolling",
+  "keywords": [
+    "Parallax",
+    "horizontal"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

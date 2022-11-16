@@ -1,5 +1,12 @@
 {
-  "name": "spring-viewpager",
+  "name": "Viewpager",
+  "description": "Animating a viewport sized image carousel with useDrag, useMeasure and useSprings",
+  "keywords": [
+    "useSprings",
+    "useDrag",
+    "useMeasure",
+    "carousel"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {

@@ -5,11 +5,9 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 export default defineConfig({
   resolve: {
     alias: {
-      '@react-spring/web': path.resolve('../targets/web/src/index.ts'),
-      '@react-spring/parallax': path.resolve(
-        '../packages/parallax/src/index.tsx'
-      ),
-      '@react-spring/three': path.resolve('../targets/three/src/index.ts'),
+      '@react-spring/web': path.resolve(__dirname, '../targets/web'),
+      '@react-spring/parallax': path.resolve(__dirname, '../packages/parallax'),
+      '@react-spring/three': path.resolve(__dirname, '../targets/three'),
     },
   },
   server: {

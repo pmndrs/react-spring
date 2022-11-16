@@ -1,5 +1,13 @@
 {
-  "name": "spring-draggable-list",
+  "name": "Draggable List",
+  "description": "Using @use-gesture/react with react-spring to create a draggable re-orderable list",
+  "keywords": [
+    "useSprings",
+    "useDrag",
+    "interpolation",
+    "draggable",
+    "list"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {
