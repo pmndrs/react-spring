@@ -1,6 +1,6 @@
-import { is } from '@react-spring/shared'
+import { is, easings } from '@react-spring/shared'
 import { EasingFunction } from '@react-spring/types'
-import { config as configs, easings } from './constants'
+import { config as configs } from './constants'
 
 const defaults: any = {
   ...configs.default,
