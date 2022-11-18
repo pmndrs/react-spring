@@ -1,6 +1,6 @@
 import { Globals } from '@react-spring/core'
 import { unstable_batchedUpdates } from 'react-dom'
-import { createStringInterpolator, colors } from '@react-spring/shared'
+import { createStringInterpolator, colors, easings } from '@react-spring/shared'
 import { createHost } from '@react-spring/animated'
 import { applyAnimatedValues } from './applyAnimatedValues'
 import { AnimatedStyle } from './AnimatedStyle'
@@ -24,3 +24,4 @@ export { animated as a }
 
 export * from './animated'
 export * from '@react-spring/core'
+export { easings }
