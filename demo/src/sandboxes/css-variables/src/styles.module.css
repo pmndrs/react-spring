@@ -1,13 +1,50 @@
-.block {
-  width: 20vw;
-  height: 20vw;
-  display: block;
-  border-radius: 8px;
-}
-
 .container {
   display: flex;
   align-items: center;
   height: 100%;
   justify-content: center;
+  position: relative;
+}
+
+.background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  inset: 0;
+  opacity: 0.3;
+}
+
+.squares {
+  display: grid;
+  height: 450px;
+  width: 450px;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.squares > div {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.squares > div:first-child,
+.squares > div:nth-child(2) {
+  grid-column: 1 / 6;
+  grid-row: 4 / 9;
+  position: relative;
+  z-index: 0;
+  background: rgb(255, 255, 255);
+}
+
+.squares > div:nth-child(2) {
+  z-index: 1;
+  opacity: 0.7;
+}
+
+.squares > div:last-child {
+  grid-column: 4 / 9;
+  grid-row: 1 / 6;
+  position: relative;
+  z-index: 0;
 }

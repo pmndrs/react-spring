@@ -17,6 +17,9 @@ body {
 }
 
 :root {
-  --from: #3cffd0;
-  --to: #277ef4;
+  --step0: #ff615d;
+  --step1: #bad5ea;
+  --step2: #fd8769;
+  --step3: #356d94;
+  --step4: #ffdcb3;
 }
