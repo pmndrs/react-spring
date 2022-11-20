@@ -16,6 +16,7 @@ const App = () => {
   const buttonRef = React.useRef<HTMLDivElement>(null!)
   const avatarRefs = React.useRef<HTMLDivElement[]>([])
   const avatarRefInitialPositions = React.useRef<number[]>([])
+  const containerRef = React.useRef<HTMLDivElement>(null!)
 
   const isVisible = React.useRef(false)
 
@@ -49,54 +50,90 @@ const App = () => {
     }))
   }, [])
 
+  const getBounds = React.useCallback(() => {
+    const { height, width } = containerRef.current.getBoundingClientRect()
+
+    return {
+      top: 0,
+      left: 0,
+      right: window.innerWidth - width,
+      bottom: window.innerHeight - height,
+    }
+  }, [])
+
   const backgroundTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>()
   const avatarTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>()
 
-  const bindGestures = useGesture({
-    onDrag: ({ down, offset: [ox, oy], velocity, direction }) => {
-      api.start({
-        x: ox,
-        y: oy,
-        immediate: down,
-        // TODO: add decay
-      })
-    },
-    onHover: ({ hovering }) => {
-      if (hovering) {
-        if (backgroundTimeoutRef.current) {
-          clearTimeout(backgroundTimeoutRef.current)
-        }
-        if (avatarTimeoutRef.current) {
-          clearTimeout(avatarTimeoutRef.current)
-        }
-
-        isVisible.current = true
-
+  const bindGestures = useGesture(
+    {
+      onDrag: ({ down, offset: [ox, oy], velocity: [vx, vy], direction: [dx, dy] }) => {
         api.start({
-          opacity: 1,
+          x: ox,
+          y: oy,
+          immediate: down,
+          onChange: ({ value }) => {
+            const bounds = getBounds()
+            if (
+              !(value.x >= bounds.left && value.x <= bounds.right && value.y >= bounds.top && value.y <= bounds.bottom)
+            ) {
+              api.set({
+                x: value.x < bounds.left ? bounds.left : value.x > bounds.right ? bounds.right : value.x,
+                y: value.y < bounds.top ? bounds.top : value.y > bounds.bottom ? bounds.bottom : value.y,
+              })
+            }
+          },
+          config: key => {
+            return {
+              velocity: key === 'x' ? vx * dx : vy * dy,
+              decay: true,
+            }
+          },
         })
+      },
+      onHover: ({ hovering }) => {
+        if (hovering) {
+          if (backgroundTimeoutRef.current) {
+            clearTimeout(backgroundTimeoutRef.current)
+          }
+          if (avatarTimeoutRef.current) {
+            clearTimeout(avatarTimeoutRef.current)
+          }
 
-        avatarApi.start({
-          y: 0,
-        })
-      } else {
-        backgroundTimeoutRef.current = setTimeout(() => {
+          isVisible.current = true
+
           api.start({
-            opacity: 0,
+            opacity: 1,
           })
-        }, 1000)
 
-        avatarTimeoutRef.current = setTimeout(() => {
-          avatarApi.start(i => ({
-            y: avatarRefInitialPositions.current[i],
-            onRest: () => {
-              isVisible.current = false
-            },
-          }))
-        }, 2000)
-      }
+          avatarApi.start({
+            y: 0,
+          })
+        } else {
+          backgroundTimeoutRef.current = setTimeout(() => {
+            api.start({
+              opacity: 0,
+            })
+          }, 1000)
+
+          avatarTimeoutRef.current = setTimeout(() => {
+            avatarApi.start(i => ({
+              y: avatarRefInitialPositions.current[i],
+              onRest: () => {
+                isVisible.current = false
+              },
+            }))
+          }, 2000)
+        }
+      },
     },
-  })
+    {
+      drag: {
+        from: () => [x.get(), y.get()],
+        bounds: getBounds,
+        rubberband: true,
+      },
+    }
+  )
 
   const { onPointerEnter, onPointerLeave, onPointerDown, ...restGestures } = bindGestures()
 
@@ -113,6 +150,7 @@ const App = () => {
   return (
     <>
       <BlurredBackground
+        ref={containerRef}
         onPointerLeave={onPointerLeave}
         onPointerDown={handlePointerDown(true)}
         {...restGestures}
