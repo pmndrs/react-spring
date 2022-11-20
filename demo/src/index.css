@@ -30,6 +30,9 @@ body {
 }
 
 :root {
-  --from: #3cffd0;
-  --to: #277ef4;
+  --step0: #ff403c;
+  --step1: #86bfea;
+  --step2: #f9a033;
+  --step3: rgb(219, 86, 152);
+  --step4: #88ff88;
 }

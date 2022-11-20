@@ -1,13 +1,15 @@
 {
-  "name": "spring-css-variables",
+  "name": "Async CSS variables",
   "version": "1.0.0",
   "main": "src/index.tsx",
-  "description": "Using CSS variables with react-springs useSpring hook",
+  "description": "Using CSS variables with the useSpring hook and animation chains",
   "keywords": [
     "useSpring",
     "css",
     "variables",
-    "loop"
+    "loop",
+    "async",
+    "chain"
   ],
   "dependencies": {
     "@react-spring/web": "*",
