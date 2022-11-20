@@ -17,8 +17,8 @@
 
 .squares {
   display: grid;
-  height: 450px;
-  width: 450px;
+  height: 30vw;
+  width: 30vw;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
 }
