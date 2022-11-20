@@ -58,7 +58,6 @@ const links = {
   chain: Chain,
   'css-keyframes': CssKeyframes,
   'css-variables': CssVariables,
-  'decay-rocket': DecayRocket,
   'draggable-list': DraggableList,
   'exit-before-enter': ExitBeforeEnter,
   'flip-card': FlipCard,
@@ -70,15 +69,16 @@ const links = {
   'multistage-transition': MultiStageTransition,
   'notification-hub': NotificationHub,
   parallax: Parallax,
-  'parallax-vert': ParallaxVert,
   'parallax-sticky': ParallaxSticky,
+  'parallax-vert': ParallaxVert,
+  'rocket-decay': DecayRocket,
   'simple-transition': SimpleTransition,
   slide: Slide,
-  'spring-boxes': SpringBoxes,
+  'springy-boxes': SpringBoxes,
   'svg-filter': SvgFilter,
   trail: Trail,
-  viewpager: Viewpager,
   tree: Tree,
+  viewpager: Viewpager,
   'webgl-switch': WebGlSwitch,
 }
 
@@ -102,17 +102,36 @@ export default function App() {
         <div className={styles.page}>
           <h1>React Spring demos</h1>
           <h2>Sandboxes</h2>
-          <div className={styles.linkList}>
+          <ul className={styles.linkList}>
             {Object.keys(links).map(link => (
-              <Link key={link} href={`/${link}`}>
-                {/*eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                <a className={styles.link}>{link}</a>
-              </Link>
+              <li key={link}>
+                <DemoCard link={link}>{link}</DemoCard>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </Route>
       <Route path="/:link">{params => <Example link={params.link} />}</Route>
     </>
+  )
+}
+
+const DemoCard = ({ children, link }) => {
+  return (
+    <Link key={link} href={`/${link}`}>
+      <a>
+        <figure className={styles.card}>
+          <div className={styles['image-container']}>
+            <img
+              src={`https://raw.githubusercontent.com/pmndrs/react-spring/master/demo/src/sandboxes/${link}/thumbnail.png`}
+              placeholder="empty"
+              loading="lazy"
+              alt={children}
+            />
+          </div>
+          <figcaption className={styles.title}>{children}</figcaption>
+        </figure>
+      </a>
+    </Link>
   )
 }

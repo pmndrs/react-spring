@@ -1,6 +1,6 @@
 .page {
   margin: 0 auto;
-  max-width: 720px;
+  max-width: 1200px;
   padding: 40px 16px 0;
   min-height: 100vh;
   display: flex;
@@ -24,14 +24,55 @@
   border: 1px solid #333;
 }
 
-.link {
-  display: inline-block;
-  color: inherit;
-}
-
 .linkList {
   display: grid;
-  justify-content: flex-start;
-  gap: 10px;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
   margin-bottom: 80px;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  width: 100%;
+}
+
+.linkList li {
+  list-style: none;
+}
+
+.linkList a {
+  text-decoration: none;
+}
+
+.card {
+  background-color: #f0f2f4;
+  margin: 0;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-container {
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16 / 9;
+}
+
+.image-container > * {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.title {
+  font-size: -apple-system, system-ui, sans-serif;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 400;
+  color: #1b1a22;
 }
