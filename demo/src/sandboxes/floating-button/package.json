@@ -12,7 +12,6 @@
   ],
   "main": "src/index.tsx",
   "dependencies": {
-    "@radix-ui/react-dropdown-menu": "^2.0.1",
     "@react-spring/web": "*",
     "@stitches/react": "^1.2.8",
     "@use-gesture/react": "^10.2.22",

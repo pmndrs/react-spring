@@ -11,11 +11,12 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@radix-ui/react-dropdown-menu": "^2.0.1",
     "@react-three/drei": "^9.40.0",
     "@react-three/fiber": "^8.9.1",
     "@stitches/react": "^1.2.8",
     "@use-gesture/react": "^10.2.22",
+    "easing-coordinates": "2.0.2",
+    "leva": "0.9.34",
     "lodash-move": "1.1.1",
     "lodash.clamp": "^4.0.3",
     "lodash.shuffle": "^4.2.0",
