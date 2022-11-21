@@ -2,13 +2,14 @@ import { each, is, useIsomorphicLayoutEffect } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
 
 import { Valid } from '../types/common'
-import { PickAnimated, SpringValues, AsyncResult } from '../types'
+import { PickAnimated, SpringValues } from '../types'
 
-import { ControllerUpdateFn, SpringRef } from '../SpringRef'
+import { SpringRef } from '../SpringRef'
 import { Controller } from '../Controller'
 
 import { UseSpringProps } from './useSpring'
 import { useSprings } from './useSprings'
+import { replaceRef } from '../helpers'
 
 export type UseTrailProps<Props extends object = any> = UseSpringProps<Props>
 
@@ -58,6 +59,7 @@ export function useTrail(
       const props = propsFn ? propsFn(i, ctrl) : propsArg
       passedRef = props.ref
       reverse = reverse && props.reverse
+
       return props
     },
     // Ensure the props function is called when no deps exist.
@@ -65,11 +67,31 @@ export function useTrail(
     deps || [{}]
   )
 
-  const ref = passedRef ?? result[1]
-
   useIsomorphicLayoutEffect(() => {
-    each(ref.current, (ctrl, i) => {
-      const parent = ref.current[i + (reverse ? 1 : -1)]
+    /**
+     * Run through the ref passed by the `useSprings` hook.
+     */
+    each(result[1].current, (ctrl, i) => {
+      const parent = result[1].current[i + (reverse ? 1 : -1)]
+
+      /**
+       * If there's a passed ref then we replace the ctrl ref with it
+       */
+      replaceRef(ctrl, passedRef)
+
+      /**
+       * And if there's a ctrl ref then we update instead of start
+       * which means nothing is fired until the start method
+       * of said passedRef is called.
+       */
+      if (ctrl.ref) {
+        if (parent) {
+          ctrl.update({ to: parent.springs })
+        }
+
+        return
+      }
+
       if (parent) {
         ctrl.start({ to: parent.springs })
       } else {
@@ -79,6 +101,8 @@ export function useTrail(
   }, deps)
 
   if (propsFn || arguments.length == 3) {
+    const ref = passedRef ?? result[1]
+
     ref['_getProps'] = (propsArg, ctrl, i) => {
       const props = is.fun(propsArg) ? propsArg(i, ctrl) : propsArg
       if (props) {
@@ -88,33 +112,6 @@ export function useTrail(
       }
     }
     return result
-  }
-
-  /**
-   * Overwrite the start function so it runs our
-   * specific trail-making way
-   * WARNING: we don't want to replace the `start` function
-   * if the props are fn, it will cause an error.
-   * See: https://github.com/pmndrs/react-spring/issues/1810
-   * But we need this to be done for:
-   * https://github.com/pmndrs/react-spring/issues/1512
-   */
-  ref['start'] = (propsArg?: object | ControllerUpdateFn) => {
-    const results: AsyncResult[] = []
-
-    each(ref.current, (ctrl, i) => {
-      const props = is.fun(propsArg) ? propsArg(i, ctrl) : propsArg
-
-      const parent = ref.current[i + (reverse ? 1 : -1)]
-
-      if (parent) {
-        results.push(ctrl.start({ ...props, to: parent.springs }))
-      } else {
-        results.push(ctrl.start({ ...props }))
-      }
-    })
-
-    return results
   }
 
   return result[0]
