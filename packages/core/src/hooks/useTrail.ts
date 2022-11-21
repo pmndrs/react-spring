@@ -2,9 +2,9 @@ import { each, is, useIsomorphicLayoutEffect } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
 
 import { Valid } from '../types/common'
-import { PickAnimated, SpringValues, AsyncResult } from '../types'
+import { PickAnimated, SpringValues } from '../types'
 
-import { ControllerUpdateFn, SpringRef } from '../SpringRef'
+import { SpringRef } from '../SpringRef'
 import { Controller } from '../Controller'
 
 import { UseSpringProps } from './useSpring'
