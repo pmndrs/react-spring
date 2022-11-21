@@ -6,9 +6,11 @@
     "/demo/src/sandboxes/cards-stack",
     "/demo/src/sandboxes/chain",
     "/demo/src/sandboxes/css-keyframes",
+    "/demo/src/sandboxes/css-variables",
     "/demo/src/sandboxes/draggable-list",
     "/demo/src/sandboxes/exit-before-enter",
     "/demo/src/sandboxes/flip-card",
+    "/demo/src/sandboxes/floating-button",
     "/demo/src/sandboxes/goo-blobs",
     "/demo/src/sandboxes/image-fade",
     "/demo/src/sandboxes/list-reordering",
@@ -16,14 +18,18 @@
     "/demo/src/sandboxes/multistage-transition",
     "/demo/src/sandboxes/notification-hub",
     "/demo/src/sandboxes/parallax",
+    "/demo/src/sandboxes/parallax-sticky",
     "/demo/src/sandboxes/parallax-vert",
     "/demo/src/sandboxes/rocket-decay",
     "/demo/src/sandboxes/simple-transition",
-    "/demo/src/sandboxes/svg-filter",
     "/demo/src/sandboxes/slide",
-    "/demo/src/sandboxes/train",
+    "/demo/src/sandboxes/smile-grid",
+    "/demo/src/sandboxes/springy-boxes",
+    "/demo/src/sandboxes/svg-filter",
+    "/demo/src/sandboxes/trail",
     "/demo/src/sandboxes/tree",
-    "/demo/src/sandboxes/viewpager"
+    "/demo/src/sandboxes/viewpager",
+    "/demo/src/sandboxes/webgl-switch"
   ],
   "node": "14"
 }
