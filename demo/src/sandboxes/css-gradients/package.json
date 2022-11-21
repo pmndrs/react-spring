@@ -1,28 +1,22 @@
 {
-  "name": "Floating Button",
-  "version": "1.0.0",
-  "description": "A small floating button like Facebook's desktop messenger built with radix & stitches",
+  "name": "CSS Gradients",
+  "description": "Use interpolations & easings to create the CSS gradients you've been seeing all over the web.",
   "keywords": [
-    "use-gesture",
     "useSpring",
-    "useSprings",
     "interpolation",
-    "stitches",
-    "radix-ui"
+    "leva",
+    "css",
+    "gradients"
   ],
+  "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {
     "@react-spring/web": "*",
-    "@stitches/react": "^1.2.8",
-    "@use-gesture/react": "^10.2.22",
+    "easing-coordinates": "2.0.2",
+    "leva": "0.9.34",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "5.0.1"
-  },
-  "devDependencies": {
-    "@types/react": "^18.0.8",
-    "@types/react-dom": "^18.0.3",
-    "typescript": "^4.8.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -35,5 +29,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@types/react": "^18.0.8",
+    "@types/react-dom": "^18.0.3",
+    "typescript": "^4.8.3"
+  }
 }

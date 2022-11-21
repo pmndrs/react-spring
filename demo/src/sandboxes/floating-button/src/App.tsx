@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as Menu from '@radix-ui/react-dropdown-menu'
 import { useGesture } from '@use-gesture/react'
 import { animated, useSpring, useSprings } from '@react-spring/web'
 
@@ -272,7 +271,5 @@ const FloatingButton = styled(animated.div, {
     backgroundColor: '#fafafa',
   },
 })
-
-const Content = animated(Menu.Content)
 
 export default App
