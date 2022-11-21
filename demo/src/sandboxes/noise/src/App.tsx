@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { animated, useSpring, easings } from '@react-spring/web'
 
 import styles from './styles.module.css'

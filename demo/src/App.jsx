@@ -9,6 +9,7 @@ import AnimatingAuto from './sandboxes/animating-auto/src/App'
 import Card from './sandboxes/card/src/App'
 import CardsStack from './sandboxes/cards-stack/src/App'
 import Chain from './sandboxes/chain/src/App'
+import CssGradients from './sandboxes/css-gradients/src/App'
 import CssKeyframes from './sandboxes/css-keyframes/src/App'
 import CssVariables from './sandboxes/css-variables/src/App'
 
@@ -30,6 +31,7 @@ import Masonry from './sandboxes/masonry/src/App'
 import MultiStageTransition from './sandboxes/multistage-transition/src/App'
 
 import NotificationHub from './sandboxes/notification-hub/src/App'
+import Noise from './sandboxes/noise/src/App'
 
 import Parallax from './sandboxes/parallax/src/App'
 import ParallaxVert from './sandboxes/parallax-vert/src/App'
@@ -57,6 +59,7 @@ const links = {
   card: Card,
   'cards-stack': CardsStack,
   chain: Chain,
+  'css-gradients': CssGradients,
   'css-keyframes': CssKeyframes,
   'css-variables': CssVariables,
   'draggable-list': DraggableList,
@@ -68,6 +71,7 @@ const links = {
   'list-reordering': ListReordering,
   masonry: Masonry,
   'multistage-transition': MultiStageTransition,
+  noise: Noise,
   'notification-hub': NotificationHub,
   parallax: Parallax,
   'parallax-sticky': ParallaxSticky,
@@ -76,7 +80,7 @@ const links = {
   'simple-transition': SimpleTransition,
   slide: Slide,
   'smile-grid': SmileGrid,
-  'spring-boxes': SpringBoxes,
+  'springy-boxes': SpringBoxes,
   'svg-filter': SvgFilter,
   trail: Trail,
   tree: Tree,
