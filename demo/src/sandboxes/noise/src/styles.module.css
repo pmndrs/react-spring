@@ -1,0 +1,18 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: black;
+}
+
+.noise {
+  opacity: 0.2;
+  inset: -200%;
+  width: 400%;
+  height: 400%;
+  position: absolute;
+  background-size: 256px 256px;
+  background-repeat: repeat;
+  background: url('https://framerusercontent.com/images/rR6HYXBrMmX4cRpXfXUOvpvpB0.png');
+}

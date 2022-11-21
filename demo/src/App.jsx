@@ -39,6 +39,7 @@ import SimpleTransition from './sandboxes/simple-transition/src/App'
 import Slide from './sandboxes/slide/src/App'
 import SvgFilter from './sandboxes/svg-filter/src/App'
 import SpringBoxes from './sandboxes/springy-boxes/src/App'
+import SmileGrid from './sandboxes/smile-grid/src/App'
 
 import Trail from './sandboxes/trail/src/App'
 import Tree from './sandboxes/tree/src/App'
@@ -74,7 +75,8 @@ const links = {
   'rocket-decay': DecayRocket,
   'simple-transition': SimpleTransition,
   slide: Slide,
-  'springy-boxes': SpringBoxes,
+  'smile-grid': SmileGrid,
+  'spring-boxes': SpringBoxes,
   'svg-filter': SvgFilter,
   trail: Trail,
   tree: Tree,
