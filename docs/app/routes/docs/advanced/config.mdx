@@ -207,12 +207,51 @@ moves like that. Springs don’t have a defined curve or a set duration.
 As Andy Matuschak (ex Apple UI-Kit developer) expressed – “Animation APIs parameterized by duration
 and curve are fundamentally opposed to continuous, fluid interactivity.”
 
-### Available Easings
+### Available generic easings
+
+All the following easings are part of the `easings` object imported like so:
+
+```jsx
+import { easings } from '@react-spring/web'
+```
 
 import { TableGeneric } from '~/components/Tables/TablesConfig'
 import { easingData } from '~/data/fixtures'
 
 <TableGeneric data={easingData} headData={[null, null, null]} />
+
+### Steps easing
+
+This unique easing function returns the standard `EasingFunction` a `config` object expects. Its still part
+of the `easings` object but you need to set it up before passing.
+
+```jsx
+import { easings } from '@react-spring/web'
+
+const MyComponent = () => {
+  const [springs, api] = useSpring(
+    () => ({
+      y: 0,
+      config: {
+        easing: easings.steps(5),
+      },
+    }),
+    []
+  )
+
+  return <animated.div style={springs} />
+}
+```
+
+It can also take a `Direction` as a second argument, which can be either `start` or `end`. The signature
+for the function is shown below:
+
+```ts
+export function steps(
+  steps: number,
+  direction: Direction = 'end'
+): EasingFunction
+```
 
 ## Reference
 

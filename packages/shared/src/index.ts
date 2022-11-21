@@ -2,10 +2,12 @@ import * as Globals from './globals'
 export { Globals }
 
 export * from './FrameLoop'
+export * from './clamp'
 export * from './colors'
 export * from './colorToRgba'
 export * from './colorMatchers'
 export * from './createInterpolator'
+export * from './easings'
 export * from './stringInterpolation'
 export * from './deprecations'
 export * from './helpers'
