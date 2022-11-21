@@ -1,0 +1,15 @@
+.background-container {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 255);
+  color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  max-width: 800px;
+  width: 50vw;
+  margin: 0 auto;
+}
