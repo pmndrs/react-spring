@@ -15,6 +15,8 @@ export class AnimationConfig {
    * With higher tension, the spring will resist bouncing and try harder to stop at its end value.
    *
    * When tension is zero, no animation occurs.
+   *
+   * @default 170
    */
   tension!: number
 
@@ -24,6 +26,8 @@ export class AnimationConfig {
    * When `speed` is defined, this value should be between 0 and 1.
    *
    * Higher friction means the spring will slow down faster.
+   *
+   * @default 26
    */
   friction!: number
 
@@ -44,7 +48,7 @@ export class AnimationConfig {
    *
    * Only works when `frequency` is defined.
    *
-   * Defaults to 1
+   * @default 1
    */
   damping!: number
 
@@ -52,11 +56,15 @@ export class AnimationConfig {
    * Higher mass means more friction is required to slow down.
    *
    * Defaults to 1, which works fine most of the time.
+   *
+   * @default 1
    */
   mass!: number
 
   /**
    * The initial velocity of one or more values.
+   *
+   * @default 0
    */
   velocity: number | number[] = 0
 
@@ -73,6 +81,8 @@ export class AnimationConfig {
    * This helps in deciding when a spring is "at rest". The spring must be within
    * this distance from its final value, and its velocity must be lower than this
    * value too (unless `restVelocity` is defined).
+   *
+   * @default 0.01
    */
   precision?: number
 
@@ -104,6 +114,8 @@ export class AnimationConfig {
 
   /**
    * Avoid overshooting by ending abruptly at the goal value.
+   *
+   * @default false
    */
   clamp!: boolean
 
@@ -125,6 +137,8 @@ export class AnimationConfig {
    * When a `number` between `0` and `1` is given, a lower number makes the
    * animation slow down faster. And setting to `1` would make an unending
    * animation.
+   *
+   * @default false
    */
   decay?: boolean | number
 
