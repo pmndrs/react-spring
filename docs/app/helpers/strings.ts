@@ -9,3 +9,6 @@ export const isValidHttpUrl = (string: string) => {
 
   return url.protocol === 'http:' || url.protocol === 'https:'
 }
+
+export const capitalize = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1)

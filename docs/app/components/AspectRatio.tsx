@@ -53,5 +53,8 @@ const Container = styled('div', {
     transform: 'translate(-50%, -50%)',
     minWidth: '100%',
     maxWidth: '100%',
+    minHeight: '100%',
+    maxHeight: '100%',
+    objectFit: 'cover',
   },
 })

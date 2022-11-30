@@ -24,8 +24,6 @@ export const HeaderSubnav = ({ className, subnav }: HeaderSubnavProps) => {
   const handleScroll = (e: WheelEvent<HTMLDivElement>) => {
     const el = e.target as HTMLDivElement
 
-    console.log(el.scrollLeft)
-
     if (el.scrollLeft === el.scrollWidth - el.clientWidth) {
       ref.start(i => ({
         opacity: Number(!i),

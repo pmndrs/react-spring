@@ -2,13 +2,22 @@ import { ReactNode } from 'react'
 import { dark, styled } from '~/styles/stitches.config'
 
 interface GradientButtonProps {
-  href: string
   children: ReactNode
+  href?: string
+  tag?: keyof JSX.IntrinsicElements
+  className?: string
+  variant?: 'regular' | 'small'
 }
 
-export const GradientButton = ({ href, children }: GradientButtonProps) => {
+export const GradientButton = ({
+  className,
+  href,
+  children,
+  tag,
+  variant = 'regular',
+}: GradientButtonProps) => {
   return (
-    <Button href={href}>
+    <Button size={variant} className={className} as={tag} href={href}>
       <span>{children}</span>
     </Button>
   )
@@ -20,8 +29,6 @@ const Button = styled('a', {
   p: 2,
   backgroundClip: 'content-box',
   position: 'relative',
-  fontSize: '$XXS',
-  lineHeight: '$XXS',
   display: 'inline-block',
   zIndex: 0,
 
@@ -45,7 +52,6 @@ const Button = styled('a', {
   },
 
   '& > span': {
-    p: '$10 $15',
     display: 'block',
     backgroundColor: '$white',
     borderRadius: 'inherit',
@@ -57,5 +63,32 @@ const Button = styled('a', {
 
   [`.${dark} &:hover:before`]: {
     filter: 'brightness(140%)',
+  },
+
+  variants: {
+    size: {
+      small: {
+        fontSize: 12,
+        fontWeight: 400,
+        lineHeight: '140%',
+
+        '& > span': {
+          px: '$10',
+          py: 5,
+        },
+
+        [`.${dark} &`]: {
+          fontWeight: 300,
+        },
+      },
+      regular: {
+        fontSize: '$XXS',
+        lineHeight: '$XXS',
+
+        '& > span': {
+          p: '$10 $15',
+        },
+      },
+    },
   },
 })

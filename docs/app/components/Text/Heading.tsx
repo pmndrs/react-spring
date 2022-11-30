@@ -16,6 +16,7 @@ export interface HeadingProps {
   isLink?: boolean
   css?: CSS
   weight?: ScaleValue<'fontWeights'> | CSSProperties['fontWeight']
+  style?: CSSProperties
 }
 
 export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(

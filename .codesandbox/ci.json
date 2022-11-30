@@ -17,6 +17,7 @@
     "/demo/src/sandboxes/list-reordering",
     "/demo/src/sandboxes/masonry",
     "/demo/src/sandboxes/multistage-transition",
+    "/demo/src/sandboxes/noise",
     "/demo/src/sandboxes/notification-hub",
     "/demo/src/sandboxes/parallax",
     "/demo/src/sandboxes/parallax-sticky",
@@ -32,5 +33,5 @@
     "/demo/src/sandboxes/viewpager",
     "/demo/src/sandboxes/webgl-switch"
   ],
-  "node": "14"
+  "node": "16"
 }

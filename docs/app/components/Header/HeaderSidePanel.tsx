@@ -12,6 +12,7 @@ import { MenuDocs } from '../Menu/MenuDocs'
 
 import { NavigationSchema } from '../../../scripts/docs/navigation'
 import { SiteThemePicker } from '../Site/SiteThemePicker'
+import { forwardRef } from 'react'
 
 interface HeaderSidePanelProps {
   isOpen: boolean
@@ -19,14 +20,11 @@ interface HeaderSidePanelProps {
   onNavigationClick?: () => void
 }
 
-export const HeaderSidePanel = ({
-  isOpen,
-  submenu,
-  onNavigationClick,
-}: HeaderSidePanelProps) => {
-  const location = useLocation()
+export const HeaderSidePanel = forwardRef<HTMLDivElement, HeaderSidePanelProps>(
+  ({ isOpen, submenu, onNavigationClick }, ref) => {
+    const location = useLocation()
 
-  const isDocs = location.pathname.includes('/docs')
+    const isDocs = location.pathname.includes('/docs')
 
   const transitions = useTransition(isOpen, {
     from: {
@@ -48,48 +46,49 @@ export const HeaderSidePanel = ({
     },
   })
 
-  const handleNavClick = () => {
-    if (onNavigationClick) {
-      onNavigationClick()
+    const handleNavClick = () => {
+      if (onNavigationClick) {
+        onNavigationClick()
+      }
     }
-  }
 
-  return transitions(({ opacity, x }, item) =>
-    item ? (
-      <>
-        <Dialog.Overlay forceMount asChild>
-          <MobileMenuOverlay style={{ opacity }} />
-        </Dialog.Overlay>
-        {/* @ts-ignore */}
-        <Dialog.Content trapFocus={false} forceMount asChild>
-          <MobileMenu style={{ x }}>
-            <div>
-              <MobileDialogHeader>
-                <MobileMenuClose>
-                  <X />
-                </MobileMenuClose>
-                <MobileThemePicker>
-                  <SiteThemePicker />
-                </MobileThemePicker>
-              </MobileDialogHeader>
-              <HiddenTitle>Main Menu</HiddenTitle>
-              <MainNavigation
-                isDocsSection={isDocs}
-                showSubNav={false}
-                showThemePicker={false}
-                showLabels={!isDocs}
-              />
-            </div>
-            <MenuDocs submenu={submenu} onNavClick={handleNavClick} />
-            <SubNavContainer isDocsSection={isDocs}>
-              <HeaderSubNavigation showLabels={!isDocs} />
-            </SubNavContainer>
-          </MobileMenu>
-        </Dialog.Content>
-      </>
-    ) : null
-  )
-}
+    return transitions(({ opacity, x }, item) =>
+      item ? (
+        <>
+          <Dialog.Overlay forceMount asChild>
+            <MobileMenuOverlay style={{ opacity }} />
+          </Dialog.Overlay>
+          {/* @ts-ignore */}
+          <Dialog.Content trapFocus={false} forceMount asChild>
+            <MobileMenu ref={ref} style={{ x }}>
+              <div>
+                <MobileDialogHeader>
+                  <MobileMenuClose>
+                    <X />
+                  </MobileMenuClose>
+                  <MobileThemePicker>
+                    <SiteThemePicker />
+                  </MobileThemePicker>
+                </MobileDialogHeader>
+                <HiddenTitle>Main Menu</HiddenTitle>
+                <MainNavigation
+                  isDocsSection={isDocs}
+                  showSubNav={false}
+                  showThemePicker={false}
+                  showLabels={!isDocs}
+                />
+              </div>
+              <MenuDocs submenu={submenu} onNavClick={handleNavClick} />
+              <SubNavContainer isDocsSection={isDocs}>
+                <HeaderSubNavigation showLabels={!isDocs} />
+              </SubNavContainer>
+            </MobileMenu>
+          </Dialog.Content>
+        </>
+      ) : null
+    )
+  }
+)
 
 const MobileMenuOverlay = styled(animated.div, {
   position: 'fixed',
