@@ -13,6 +13,7 @@ export * from './deprecations'
 export * from './helpers'
 export * from './isAnimatedString'
 
+export * from './hooks/useConstant'
 export * from './hooks/useForceUpdate'
 export * from './hooks/useMemoOne'
 export * from './hooks/useOnce'
