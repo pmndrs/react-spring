@@ -184,12 +184,14 @@ const Head = styled(animated.header, {
 
 const FlexContainer = styled('div', {
   display: 'flex',
+  flexDirection: 'row-reverse',
   alignItems: 'center',
   justifyContent: 'space-between',
   width: '100%',
   px: '$25',
 
   '@tabletUp': {
+    flexDirection: 'row',
     px: '$50',
 
     /**

@@ -28,7 +28,7 @@ export const HeaderSidePanel = forwardRef<HTMLDivElement, HeaderSidePanelProps>(
 
     const transitions = useTransition(isOpen, {
       from: {
-        x: '-100%',
+        x: '100%',
         opacity: 0,
       },
       enter: {
@@ -36,12 +36,12 @@ export const HeaderSidePanel = forwardRef<HTMLDivElement, HeaderSidePanelProps>(
         opacity: 1,
       },
       leave: {
-        x: '-100%',
+        x: '100%',
         opacity: 0,
       },
       config: {
         tension: 210,
-        friction: 25,
+        friction: 30,
         mass: 1,
       },
     })
@@ -109,7 +109,6 @@ const MobileMenuOverlay = styled(animated.div, {
 
 const MobileMenu = styled(animated.div, {
   position: 'fixed',
-  left: 0,
   right: 0,
   top: 0,
   bottom: 0,
