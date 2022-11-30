@@ -16,6 +16,7 @@ export {
   createInterpolator,
   useIsomorphicLayoutEffect,
   useReducedMotion,
+  easings,
 } from '@react-spring/shared'
 export { inferTo } from './helpers'
 
