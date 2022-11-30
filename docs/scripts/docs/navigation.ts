@@ -32,6 +32,7 @@ export interface NavigationSchemaItem {
   id: string
   href: string
   noPage?: boolean
+  isNew?: boolean
 }
 
 export type NavigationSchema = Array<NavigationSchemaItem>
@@ -69,6 +70,7 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
                 : `/docs/${route}`,
               id: route,
               noPage: doc.noPage,
+              isNew: doc.isNew,
               children: doesSchemaAtRouteExist
                 ? doesSchemaAtRouteExist.children
                 : [],
@@ -117,6 +119,7 @@ export const makeNavigation = (docs: ProcessedDoc[]): NavigationSchema => {
           children: [],
           href: `${schemaAtRoute.href}/${doc.baseID}`,
           noPage: doc.noPage,
+          isNew: doc.isNew,
         })
 
         return schemas

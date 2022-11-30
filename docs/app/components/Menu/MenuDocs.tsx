@@ -9,6 +9,7 @@ import {
   NavigationSchemaItem,
 } from '../../../scripts/docs/navigation'
 import { WidgetSearch } from '../Widgets/WidgetSearch'
+import { BadgeNew } from '../BadgeNew'
 
 interface MenuDocsProps {
   submenu?: NavigationSchema
@@ -57,7 +58,16 @@ interface SubMenuSchema extends NavigationSchemaItem {
 }
 
 const renderSubMenu = (
-  { children, id, title, href, location, onClick, noPage }: SubMenuSchema,
+  {
+    children,
+    id,
+    title,
+    href,
+    location,
+    onClick,
+    noPage,
+    isNew,
+  }: SubMenuSchema,
   level: number
 ) => {
   const handleClick = () => {
@@ -79,11 +89,13 @@ const renderSubMenu = (
           title={isTitle}
           active={location.pathname === href}
           onClick={handleClick}>
-          {title}
+          <span>{title}</span>
+          {isNew ? <BadgeNew /> : null}
         </Anchor>
       ) : (
         <Anchor title={isTitle} as="span" hasNoLink>
-          {title}
+          <span>{title}</span>
+          {isNew ? <BadgeNew /> : null}
         </Anchor>
       )}
       {hasRenderableChildren ? (
@@ -141,7 +153,9 @@ const AnchorStyles = css({
     backgroundColor: '#ff6d6d33',
   },
 
-  display: 'block',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
   position: 'relative',
   p: '0.5rem 1.2rem',
   borderRadius: '$r8',
