@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { animated, useSpring, useSpringValue } from '@react-spring/web'
+import { animated, useSpringValue } from '@react-spring/web'
 
 import { useMousePosition } from '../hooks/useMousePosition'
 import { useDock } from './DockContext'

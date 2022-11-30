@@ -16,6 +16,7 @@ export const SANDBOXES = {
   'Horizontal Parallax': '3zqcj',
   'Image Fade': '1t9hh',
   'List Reordering': '279ct',
+  // 'MacOS Dock': '',
   'Masonry Grid': 'mdovb',
   'Multistage Transitions': 'k467x',
   'Native Slide': '3filx',
