@@ -15,6 +15,7 @@
     "/demo/src/sandboxes/goo-blobs",
     "/demo/src/sandboxes/image-fade",
     "/demo/src/sandboxes/list-reordering",
+    "/demo/src/sandboxes/macos-dock",
     "/demo/src/sandboxes/masonry",
     "/demo/src/sandboxes/multistage-transition",
     "/demo/src/sandboxes/noise",

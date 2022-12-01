@@ -24,6 +24,7 @@ import FloatingButton from './sandboxes/floating-button/src/App'
 import GooBlobs from './sandboxes/goo-blobs/src/App'
 
 import ImageFade from './sandboxes/image-fade/src/App'
+import MacOSDock from './sandboxes/macos-dock/src/App'
 
 import ListReordering from './sandboxes/list-reordering/src/App'
 
@@ -69,6 +70,7 @@ const links = {
   'goo-blobs': GooBlobs,
   'image-fade': ImageFade,
   'list-reordering': ListReordering,
+  'macos-dock': MacOSDock,
   masonry: Masonry,
   'multistage-transition': MultiStageTransition,
   noise: Noise,

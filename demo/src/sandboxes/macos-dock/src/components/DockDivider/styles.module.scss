@@ -1,0 +1,17 @@
+.divider {
+  width: 1px;
+  height: 100%;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+
+  &__container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+
+    &:hover {
+      cursor: ns-resize;
+    }
+  }
+}

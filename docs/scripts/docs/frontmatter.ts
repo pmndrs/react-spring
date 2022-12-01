@@ -13,6 +13,7 @@ const DocFrontmatterSchema = z.object({
   sidebar_label: z.string().optional(),
   noSubnav: z.boolean().optional(),
   noPage: z.boolean().optional(),
+  isNew: z.boolean().optional(),
 })
 
 export const validateFrontmatter = (

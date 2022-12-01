@@ -26,25 +26,25 @@ export const HeaderSidePanel = forwardRef<HTMLDivElement, HeaderSidePanelProps>(
 
     const isDocs = location.pathname.includes('/docs')
 
-  const transitions = useTransition(isOpen, {
-    from: {
-      x: '100%',
-      opacity: 0,
-    },
-    enter: {
-      x: '0',
-      opacity: 1,
-    },
-    leave: {
-      x: '100%',
-      opacity: 0,
-    },
-    config: {
-      tension: 210,
-      friction: 30,
-      mass: 1,
-    },
-  })
+    const transitions = useTransition(isOpen, {
+      from: {
+        x: '100%',
+        opacity: 0,
+      },
+      enter: {
+        x: '0',
+        opacity: 1,
+      },
+      leave: {
+        x: '100%',
+        opacity: 0,
+      },
+      config: {
+        tension: 210,
+        friction: 30,
+        mass: 1,
+      },
+    })
 
     const handleNavClick = () => {
       if (onNavigationClick) {

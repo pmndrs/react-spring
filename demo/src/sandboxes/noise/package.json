@@ -1,11 +1,12 @@
 {
-  "name": "react-typescript",
+  "name": "Noise",
   "version": "1.0.0",
-  "description": "React and TypeScript example starter project",
+  "description": "Create noise with just a small image and useSpring",
   "keywords": [
-    "typescript",
-    "react",
-    "starter"
+    "useSpring",
+    "easing",
+    "steps",
+    "interpolation"
   ],
   "main": "src/index.tsx",
   "dependencies": {

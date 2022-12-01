@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { DiscordLogo, GithubLogo, TwitterLogo } from 'phosphor-react'
 import type { Quote } from '~/components/Cards/CardCarouselQuote'
 import { Tile } from '~/components/Grids/NavigationGrid'
@@ -442,6 +443,111 @@ export const DEFAULT_CONFIG_DATA: CellData[][] = [
     null,
   ],
   REF_CELL,
+  [
+    {
+      label: 'config',
+      content: (
+        <p>
+          Spring config (mass / tension etc.), see{' '}
+          <a href="/docs/advanced/config">Config</a> for more information.
+        </p>
+      ),
+    },
+    {
+      label: 'object | function',
+      content: <code>{`(key: string) => SpringConfig`}</code>,
+    },
+    {
+      label: 'object',
+      content: <code>{`{ mass: 1, tension: 170, friction: 26 }`}</code>,
+    },
+  ],
+  EVENTS_CELL,
+]
+
+export const USESPRINGVALUE_CONFIG_DATA: CellData[][] = [
+  [
+    {
+      label: 'to',
+      content: ToContent,
+    },
+    {
+      label: 'object | object[] | function',
+      content: (
+        <code>{`(next: (props?: object) => Promise<void>, cancel: () => void) => Promise<void>`}</code>
+      ),
+    },
+    null,
+  ],
+  [
+    'loop',
+    {
+      label: 'boolean | object | function',
+      content: <code>{`() => boolean`}</code>,
+    },
+    null,
+  ],
+  [
+    {
+      label: 'delay',
+      content: <p>Delay in ms before the animation starts.</p>,
+    },
+    {
+      label: 'number | function',
+      content: <code>{`(key: string) => number`}</code>,
+    },
+    null,
+  ],
+  [
+    {
+      label: 'immediate',
+      content: <p>Prevents the animation if true.</p>,
+    },
+    {
+      label: 'boolean | function',
+      content: <code>{`(key: string) => boolean`}</code>,
+    },
+    null,
+  ],
+  [
+    {
+      label: 'reset',
+      content: (
+        <p>Resets the spring so it plays from the start again when true.</p>
+      ),
+    },
+    'boolean',
+    null,
+  ],
+  [
+    {
+      label: 'reverse',
+      content: (
+        <p>
+          Reverse the <code>to</code> and <code>from</code> prop so that{' '}
+          <code>to</code> is the initial starting state.
+        </p>
+      ),
+    },
+    'boolean',
+    null,
+  ],
+  [
+    {
+      label: 'pause',
+      content: <p>Pause an animation at it's current point.</p>,
+    },
+    'boolean',
+    null,
+  ],
+  [
+    'cancel',
+    {
+      label: 'boolean | string | string[] | function',
+      content: <code>{`(key: string) => boolean`}</code>,
+    },
+    null,
+  ],
   [
     {
       label: 'config',

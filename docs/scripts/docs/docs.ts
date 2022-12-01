@@ -96,6 +96,7 @@ export interface ProcessedDoc {
   docPath: string
   noSubnav: boolean
   noPage: boolean
+  isNew: boolean
 }
 
 const processDoc = ({ content, source, docPath }: DocFile): ProcessedDoc => {
@@ -130,6 +131,8 @@ const processDoc = ({ content, source, docPath }: DocFile): ProcessedDoc => {
 
   const noPage: boolean = frontMatter.noPage ?? false
 
+  const isNew: boolean = frontMatter.isNew ?? false
+
   return {
     docPath,
     frontMatter,
@@ -142,6 +145,7 @@ const processDoc = ({ content, source, docPath }: DocFile): ProcessedDoc => {
     sourceDirName,
     noSubnav,
     noPage,
+    isNew,
   }
 }
 
