@@ -1,0 +1,35 @@
+{
+  "name": "Wordle",
+  "version": "1.0.0",
+  "description": "Wordle tiles with useTrail",
+  "keywords": [
+    "useTrail",
+    "stitches",
+    "interpolation"
+  ],
+  "main": "src/index.tsx",
+  "dependencies": {
+    "@react-spring/web": "9.5.2",
+    "@stitches/react": "1.2.8",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.0.0",
+    "@types/react-dom": "18.0.0",
+    "typescript": "4.4.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
