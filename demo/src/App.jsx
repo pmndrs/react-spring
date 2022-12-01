@@ -50,6 +50,7 @@ import Tree from './sandboxes/tree/src/App'
 import Viewpager from './sandboxes/viewpager/src/App'
 
 import WebGlSwitch from './sandboxes/webgl-switch/src/App'
+import Wordle from './sandboxes/wordle/src/App'
 
 Globals.assign({
   frameLoop: 'always',
@@ -88,6 +89,7 @@ const links = {
   tree: Tree,
   viewpager: Viewpager,
   'webgl-switch': WebGlSwitch,
+  wordle: Wordle,
 }
 
 const Example = ({ link }) => {

@@ -31,4 +31,5 @@ export const SANDBOXES = {
   'Vertical Parallax': 'h1rrv',
   Viewpager: '8s3kf',
   'WebGL Switch': 's0w9i0',
+  Wordle: '90qj1i',
 }
