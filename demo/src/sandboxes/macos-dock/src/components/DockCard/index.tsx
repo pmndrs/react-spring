@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { animated, useSpringValue } from '@react-spring/web'
+import { animated, useIsomorphicLayoutEffect, useSpringValue } from '@react-spring/web'
 
 import { useMousePosition } from '../hooks/useMousePosition'
-import { useDock } from './DockContext'
+import { useWindowResize } from '../hooks/useWindowResize'
+
+import { useDock } from '../Dock/DockContext'
 
 import styles from './styles.module.scss'
-import { useWindowResize } from '../hooks/useWindowResize'
 
 interface DockCardProps {
   children: React.ReactNode
@@ -29,7 +30,12 @@ export const DockCard = ({ children }: DockCardProps) => {
   })
 
   const opacity = useSpringValue(0)
-  const y = useSpringValue(0)
+  const y = useSpringValue(0, {
+    config: {
+      friction: 29,
+      tension: 238,
+    },
+  })
 
   const dock = useDock()
 
@@ -48,8 +54,6 @@ export const DockCard = ({ children }: DockCardProps) => {
 
           if (dock.hovered) {
             size.start(transformedValue)
-          } else {
-            size.start(INITIAL_WIDTH)
           }
         }
       },
@@ -57,19 +61,55 @@ export const DockCard = ({ children }: DockCardProps) => {
     [elCenterX, dock]
   )
 
+  useIsomorphicLayoutEffect(() => {
+    if (!dock.hovered) {
+      size.start(INITIAL_WIDTH)
+    }
+  }, [dock.hovered])
+
   useWindowResize(() => {
     const { x } = cardRef.current.getBoundingClientRect()
 
     setElCenterX(x + INITIAL_WIDTH / 2)
   })
 
-  const handleClick = () => {
-    opacity.start(0.5)
+  const timesLooped = React.useRef(0)
+  const timeoutRef = React.useRef<number>()
+  const isAnimating = React.useRef(false)
 
-    y.start(-INITIAL_WIDTH, {
-      loop: { reverse: true },
-    })
+  const handleClick = () => {
+    if (!isAnimating.current) {
+      isAnimating.current = true
+      opacity.start(0.5)
+
+      timesLooped.current = 0
+
+      y.start(-INITIAL_WIDTH / 2, {
+        loop: () => {
+          if (3 > timesLooped.current++) {
+            return { reverse: true }
+          } else {
+            timeoutRef.current = setTimeout(() => {
+              opacity.start(0)
+              timeoutRef.current = undefined
+            }, 1000)
+            return false
+          }
+        },
+      })
+    } else {
+      /**
+       * Allow premature exit of animation
+       * on a second click if we're currently animating
+       */
+      clearTimeout(timeoutRef.current)
+      opacity.start(0)
+      y.reset()
+      isAnimating.current = false
+    }
   }
+
+  React.useEffect(() => () => clearTimeout(timeoutRef.current), [])
 
   return (
     <div className={styles['dock-card-container']}>

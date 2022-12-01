@@ -2,10 +2,17 @@
   "name": "MacOS Dock",
   "version": "1.0.0",
   "main": "src/index.tsx",
-  "description": "",
-  "keywords": [],
+  "description": "A MacOS-esque dock created in HTML with all the animations you'd expect!",
+  "keywords": [
+    "useSpringValue",
+    "useSpring",
+    "interpolation",
+    "useDrag",
+    "loop"
+  ],
   "dependencies": {
     "@react-spring/web": "*",
+    "@use-gesture/react": "^10.2.22",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-scripts": "5.0.1"
