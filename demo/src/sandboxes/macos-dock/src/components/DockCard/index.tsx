@@ -86,15 +86,16 @@ export const DockCard = ({ children }: DockCardProps) => {
 
       y.start(-INITIAL_WIDTH / 2, {
         loop: () => {
-          if (3 > timesLooped.current++) {
-            return { reverse: true }
-          } else {
+          if (3 === timesLooped.current++) {
             timeoutRef.current = setTimeout(() => {
               opacity.start(0)
+              y.set(0)
+              isAnimating.current = false
               timeoutRef.current = undefined
-            }, 1000)
-            return false
+            }, 2000)
+            y.stop()
           }
+          return { reverse: true }
         },
       })
     } else {
@@ -104,7 +105,7 @@ export const DockCard = ({ children }: DockCardProps) => {
        */
       clearTimeout(timeoutRef.current)
       opacity.start(0)
-      y.reset()
+      y.start(0)
       isAnimating.current = false
     }
   }
