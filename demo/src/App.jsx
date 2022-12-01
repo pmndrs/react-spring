@@ -38,6 +38,7 @@ import Parallax from './sandboxes/parallax/src/App'
 import ParallaxVert from './sandboxes/parallax-vert/src/App'
 import ParallaxSticky from './sandboxes/parallax-sticky/src/App'
 
+import ScrollingGrid from './sandboxes/scrolling-grid/src/App'
 import SimpleTransition from './sandboxes/simple-transition/src/App'
 import Slide from './sandboxes/slide/src/App'
 import SvgFilter from './sandboxes/svg-filter/src/App'
@@ -80,6 +81,7 @@ const links = {
   'parallax-sticky': ParallaxSticky,
   'parallax-vert': ParallaxVert,
   'rocket-decay': DecayRocket,
+  'scrolling-grid': ScrollingGrid,
   'simple-transition': SimpleTransition,
   slide: Slide,
   'smile-grid': SmileGrid,
