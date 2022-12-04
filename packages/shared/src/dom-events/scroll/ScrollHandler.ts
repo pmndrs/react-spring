@@ -61,6 +61,7 @@ export class ScrollHandler {
     axis.current = this.container[`scroll${position}`]
     axis.scrollLength =
       this.container['scroll' + length] - this.container['client' + length]
+
     axis.progress = progress(0, axis.scrollLength, axis.current)
   }
 

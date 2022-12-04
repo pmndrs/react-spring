@@ -65,7 +65,7 @@ export const onScroll = (
     window.addEventListener('resize', listener, { passive: true })
 
     if (container !== document.documentElement) {
-      resizeListeners.set(container, onResize(container, listener))
+      resizeListeners.set(container, onResize(listener, { container }))
     }
 
     /**

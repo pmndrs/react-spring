@@ -11,3 +11,4 @@ export * from './useTransition'
  * But then it wouldn't be available in `konva` or `three`...
  */
 export * from './useScroll'
+export * from './useResize'

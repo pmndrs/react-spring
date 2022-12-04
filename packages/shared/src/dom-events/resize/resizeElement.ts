@@ -1,13 +1,15 @@
+import type { OnResizeCallback } from '.'
+
 let observer: ResizeObserver | undefined
 
-const resizeHandlers = new WeakMap<Element, Set<VoidFunction>>()
+const resizeHandlers = new WeakMap<Element, Set<OnResizeCallback>>()
 
 const handleObservation = (entries: ResizeObserverEntry[]) =>
-  entries.forEach(({ target }) =>
-    resizeHandlers.get(target)?.forEach(handler => handler())
-  )
+  entries.forEach(({ target, contentRect }) => {
+    return resizeHandlers.get(target)?.forEach(handler => handler(contentRect))
+  })
 
-export function onResize(target: HTMLElement, handler: VoidFunction) {
+export function resizeElement(handler: OnResizeCallback, target: HTMLElement) {
   /**
    * If there's a resize observer in the ENV then use that too.
    */
