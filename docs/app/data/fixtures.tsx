@@ -465,6 +465,14 @@ export const DEFAULT_CONFIG_DATA: CellData[][] = [
   EVENTS_CELL,
 ]
 
+export const USE_SCROLL_CONFIG_DATA: CellData[][] = [
+  ['container', 'React.MutableRefObject<HTMLElement>', null],
+  ...DEFAULT_CONFIG_DATA.filter(
+    row =>
+      row[0] !== 'from' && typeof row[0] === 'object' && row[0]?.label !== 'to'
+  ),
+]
+
 export const USESPRINGVALUE_CONFIG_DATA: CellData[][] = [
   [
     {
