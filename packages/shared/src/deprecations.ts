@@ -1,8 +1,8 @@
 declare const console: any
 
-const prefix = 'react-spring: '
+export const prefix = 'react-spring: '
 
-const once = <TFunc extends (...args: any) => any>(fn: TFunc) => {
+export const once = <TFunc extends (...args: any) => any>(fn: TFunc) => {
   const func = fn
   let called = false
 
