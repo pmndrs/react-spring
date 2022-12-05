@@ -1,9 +1,14 @@
 {
-  "name": "Scrolling Grid",
+  "name": "Scrolling Wave",
   "version": "1.0.0",
   "main": "src/index.tsx",
-  "description": "",
-  "keywords": [],
+  "description": "React to scroll progress and values to create exciting landing pages",
+  "keywords": [
+    "useScroll",
+    "interpolation",
+    "useSpring",
+    "events"
+  ],
   "dependencies": {
     "@react-spring/web": "*",
     "react": "^18.0.0",
