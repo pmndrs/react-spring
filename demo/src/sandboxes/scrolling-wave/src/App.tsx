@@ -20,7 +20,7 @@ export default function App() {
   const { scrollYProgress } = useScroll({
     container: containerRef,
     onChange: ({ value: { scrollYProgress } }) => {
-      if (scrollYProgress > 0.9) {
+      if (scrollYProgress > 0.7) {
         textApi.start({ y: '0' })
       } else {
         textApi.start({ y: '100%' })
