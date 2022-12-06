@@ -2,18 +2,9 @@ import {
   ForwardRefExoticComponent,
   MouseEventHandler,
   RefAttributes,
-  useRef,
-  useState,
 } from 'react'
-import { Link, useLocation } from '@remix-run/react'
-import {
-  animated,
-  SpringValue,
-  useSpring,
-  useTransition,
-} from '@react-spring/web'
+import { useLocation } from '@remix-run/react'
 import * as Toolbar from '@radix-ui/react-toolbar'
-import * as Tooltip from '@radix-ui/react-tooltip'
 import { IconProps } from 'phosphor-react'
 
 import { dark, styled } from '~/styles/stitches.config'

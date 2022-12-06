@@ -7,7 +7,11 @@
     "**/*.test.ts",
     "targets/zdog/@types/**/*"
   ],
-  "exclude": ["packages/*/src/types/**/*", "targets/*/src/types/**/*"],
+  "exclude": [
+    "packages/*/src/types/**/*",
+    "targets/*/src/types/**/*",
+    "docs/**/*"
+  ],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
