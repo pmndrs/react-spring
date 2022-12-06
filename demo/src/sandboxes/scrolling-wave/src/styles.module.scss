@@ -1,0 +1,71 @@
+.body {
+  background-color: #171717;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.full__page {
+  width: 100vw;
+  height: 100vh;
+}
+
+.bar__container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 2;
+  justify-content: space-between;
+
+  &__inverted {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 2;
+  }
+}
+
+.bar {
+  height: 1vh;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.animated__layers {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  & > * {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    inset: 0;
+  }
+}
+
+.dot {
+  background-color: orange;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.title {
+  color: rgb(5, 74, 238);
+  font-size: 8vw;
+  padding-left: 8vw;
+
+  & > span {
+    display: block;
+    overflow: hidden;
+
+    & > span {
+      display: block;
+    }
+  }
+}

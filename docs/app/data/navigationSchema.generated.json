@@ -265,6 +265,33 @@
         "href": "/docs/utilities/use-reduced-motion",
         "noPage": false,
         "isNew": false
+      },
+      {
+        "id": "use-scroll",
+        "title": "useScroll",
+        "sidebarPosition": 3,
+        "children": [],
+        "href": "/docs/utilities/use-scroll",
+        "noPage": false,
+        "isNew": true
+      },
+      {
+        "id": "use-resize",
+        "title": "useResize",
+        "sidebarPosition": 4,
+        "children": [],
+        "href": "/docs/utilities/use-resize",
+        "noPage": false,
+        "isNew": true
+      },
+      {
+        "id": "use-in-view",
+        "title": "useInView",
+        "sidebarPosition": 5,
+        "children": [],
+        "href": "/docs/utilities/use-in-view",
+        "noPage": false,
+        "isNew": true
       }
     ],
     "sidebarPosition": 7,

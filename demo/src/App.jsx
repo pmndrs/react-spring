@@ -37,7 +37,9 @@ import Noise from './sandboxes/noise/src/App'
 import Parallax from './sandboxes/parallax/src/App'
 import ParallaxVert from './sandboxes/parallax-vert/src/App'
 import ParallaxSticky from './sandboxes/parallax-sticky/src/App'
+import PopupModal from './sandboxes/popup-modal/src/App'
 
+import ScrollingWave from './sandboxes/scrolling-wave/src/App'
 import SimpleTransition from './sandboxes/simple-transition/src/App'
 import Slide from './sandboxes/slide/src/App'
 import SvgFilter from './sandboxes/svg-filter/src/App'
@@ -79,7 +81,9 @@ const links = {
   parallax: Parallax,
   'parallax-sticky': ParallaxSticky,
   'parallax-vert': ParallaxVert,
+  'popup-modal': PopupModal,
   'rocket-decay': DecayRocket,
+  'scrolling-wave': ScrollingWave,
   'simple-transition': SimpleTransition,
   slide: Slide,
   'smile-grid': SmileGrid,

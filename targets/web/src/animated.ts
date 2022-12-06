@@ -22,15 +22,15 @@ export type WithAnimated = {
 } & AnimatedPrimitives
 
 /** The type of an `animated()` component */
-export type AnimatedComponent<
-  T extends ElementType
-> = ForwardRefExoticComponent<
-  AnimatedProps<Merge<ComponentPropsWithRef<T>, { style?: StyleProps }>> &
-    FluidProps<{
-      scrollTop?: number
-      scrollLeft?: number
-    }>
->
+export type AnimatedComponent<T extends ElementType> =
+  ForwardRefExoticComponent<
+    AnimatedProps<Merge<ComponentPropsWithRef<T>, { style?: StyleProps }>> &
+      FluidProps<{
+        scrollTop?: number
+        scrollLeft?: number
+        viewBox?: string
+      }>
+  >
 
 /** The props of an `animated()` component */
 export type AnimatedProps<Props extends object> = {

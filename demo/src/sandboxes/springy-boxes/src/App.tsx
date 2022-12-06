@@ -65,9 +65,11 @@ function Lights() {
 
 export default function App() {
   return (
-    <Canvas linear flat shadows camera={{ position: [0, 0, 100], fov: 100 }}>
-      <Lights />
-      <Content />
-    </Canvas>
+    <div className="body">
+      <Canvas linear flat shadows camera={{ position: [0, 0, 100], fov: 100 }}>
+        <Lights />
+        <Content />
+      </Canvas>
+    </div>
   )
 }

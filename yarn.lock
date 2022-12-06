@@ -6116,6 +6116,7 @@ __metadata:
     react-feather: ^2.0.10
     react-use-gesture: ^9.1.3
     react-use-measure: ^2.1.1
+    react95: ^4.0.0
     sass: ^1.56.1
     styled-components: ^5.3.6
     three: ^0.146.0
@@ -7358,12 +7359,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.0.8":
-  version: 18.0.8
-  resolution: "@types/react-dom@npm:18.0.8"
+"@types/react-dom@npm:^18.0.9":
+  version: 18.0.9
+  resolution: "@types/react-dom@npm:18.0.9"
   dependencies:
     "@types/react": "*"
-  checksum: 522e5e949d05f35c6037a2290838c9c7ff92a9d06f7d96b993c7c3f5a86d8f3a6337e059c94e6fb0920227f445e5d1ce10fbfe3d9bbd95fb82a5539249d90646
+  checksum: e744e3feba25fc43733289d4df4d9c0e59fcca7f34e8c89d75f81a339accb2bd70236d69382d47d2c0ad06a1529b2e56aa6171fe175854d60e07156ddceedfcb
   languageName: node
   linkType: hard
 
@@ -7423,14 +7424,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18.0.25":
-  version: 18.0.25
-  resolution: "@types/react@npm:18.0.25"
+"@types/react@npm:^18.0.26":
+  version: 18.0.26
+  resolution: "@types/react@npm:18.0.26"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 231d658c45abdef044a716b4502774f1585d8336d73b2f5bd68f181acbfc874b7a457686ecd29b415b43ed0922c309bab7e2cf96832d188a3f4f1b02f2af760a
+  checksum: b62f0ea3cdfa68e106391728325057ad36f1bde7ba2dfae029472c47e01e482bc77c6ba4f1dad59f3f04ee81cb597618ff7c30a33c157c0a20462b6dd6aa2d4d
   languageName: node
   linkType: hard
 
@@ -19254,8 +19255,8 @@ __metadata:
     "@types/lodash.clamp": ^4.0.7
     "@types/lodash.shuffle": ^4.2.7
     "@types/mdx-js__react": ^1.5.5
-    "@types/react": ^18.0.25
-    "@types/react-dom": ^18.0.8
+    "@types/react": ^18.0.26
+    "@types/react-dom": ^18.0.9
     "@types/react-lazyload": ^3.2.0
     "@types/react-native": ^0.69.1
     "@types/styled-components": ^5.1.26
@@ -19374,6 +19375,17 @@ __metadata:
     react-dom: ">=16.8"
     zdog: ">=1.1"
   checksum: 0ba37c3cc135ec10223861bd277d9e4db0dea75240623ab67ce4cd68bee245cbfbc40b7bdd759d83ce4b5be6f4b617801e5db039dfd8e6388747eba148d5ffde
+  languageName: node
+  linkType: hard
+
+"react95@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "react95@npm:4.0.0"
+  peerDependencies:
+    react: ">= 16.8.0"
+    react-dom: ">= 16.8.0"
+    styled-components: ">= 5.3.3"
+  checksum: 5d468c26f5667efb695139f25612735f0707e1c451ed9af2f19e59bf9616fea80a95fa0a6c07c650c955e27685ab18bacada5a4a61d03ac1dc435513da6ba364
   languageName: node
   linkType: hard
 

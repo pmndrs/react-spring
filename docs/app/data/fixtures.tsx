@@ -465,6 +465,14 @@ export const DEFAULT_CONFIG_DATA: CellData[][] = [
   EVENTS_CELL,
 ]
 
+export const USE_SCROLL_CONFIG_DATA: CellData[][] = [
+  ['container', 'React.MutableRefObject<HTMLElement>', null],
+  ...DEFAULT_CONFIG_DATA.filter(
+    row =>
+      row[0] !== 'from' && typeof row[0] === 'object' && row[0]?.label !== 'to'
+  ),
+]
+
 export const USESPRINGVALUE_CONFIG_DATA: CellData[][] = [
   [
     {
@@ -979,4 +987,12 @@ export const PARALLAX_LAYER_CONFIG_DATA: CellData[][] = [
     },
     null,
   ],
+]
+
+export const USE_INVIEW_INTERSECTION_ARGS: CellData[][] = [
+  ['amount', '"any" | "all" | number | number[]', 'any'],
+  ['root', 'React.MutableRefObject', null],
+  ['rootMargin', 'string', null],
+  ['once', 'boolean', 'false'],
+  ['threshold', 'number | number[]', null],
 ]

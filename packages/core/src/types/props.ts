@@ -364,7 +364,7 @@ export type PickAnimated<Props extends object, Fwd = true> = unknown &
 /**
  * Pick the values of the `to` prop. Forward props are *not* included.
  */
-type ToValues<Props extends object, AndForward = true> = unknown &
+export type ToValues<Props extends object, AndForward = true> = unknown &
   (AndForward extends true ? ForwardProps<Props> : unknown) &
   (Props extends { to?: any }
     ? Exclude<Props['to'], Function | ReadonlyArray<any>> extends infer To

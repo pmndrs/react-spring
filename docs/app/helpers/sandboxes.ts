@@ -49,6 +49,12 @@ export const fetchSandbox = async (
           if (hookRegex.test(tag)) {
             const stringSplit = tag.split('use')
 
+            if (tag === 'usespringvalue') {
+              return `useSpringValue`
+            } else if (tag === 'usespringref') {
+              return `useSpringRef`
+            }
+
             return `use${capitalize(stringSplit[1])}`
           } else if (tag === 'parallax') {
             return capitalize(tag)
@@ -70,6 +76,17 @@ interface SelectData {
 
 type TagsAndComponents = [tags: SelectData[], components: SelectData[]]
 
+const components = [
+  'useSpring',
+  'useSprings',
+  'useTrail',
+  'useChain',
+  'useTransition',
+  'Parallax',
+  'useSpringValue',
+  'useSpringRef',
+]
+
 export const getTagsAndComponents = (
   sandboxes: CodesandboxSandboxFetched[]
 ): TagsAndComponents =>
@@ -77,7 +94,7 @@ export const getTagsAndComponents = (
     .reduce<[tags: string[], components: string[]]>(
       (acc, sandbox) => {
         sandbox.tags.forEach(tag => {
-          if (hookRegex.test(tag) || tag === 'Parallax') {
+          if (components.includes(tag)) {
             acc[1].push(tag)
           } else {
             acc[0].push(tag)

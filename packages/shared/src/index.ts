@@ -12,6 +12,12 @@ export * from './stringInterpolation'
 export * from './deprecations'
 export * from './helpers'
 export * from './isAnimatedString'
+/**
+ * Should these be moved to a DOM only
+ * package to avoid native issues?
+ */
+export * from './dom-events/scroll'
+export * from './dom-events/resize'
 
 export * from './hooks/useConstant'
 export * from './hooks/useForceUpdate'
