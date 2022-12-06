@@ -1,15 +1,16 @@
-import { MutableRefObject, useRef, useState } from 'react'
+import { RefObject, useRef, useState } from 'react'
 import { is, useIsomorphicLayoutEffect } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
 
 import { PickAnimated, SpringValues } from '../types'
 import { useSpring, UseSpringProps } from './useSpring'
+import { Valid } from '../types/common'
 
 export interface IntersectionArgs
   extends Omit<IntersectionObserverInit, 'root' | 'threshold'> {
   root?: React.MutableRefObject<HTMLElement>
   once?: boolean
-  amount?: 'any' | 'all' | number
+  amount?: 'any' | 'all' | number | number[]
 }
 
 const defaultThresholdOptions = {
@@ -17,15 +18,16 @@ const defaultThresholdOptions = {
   all: 1,
 }
 
-export function useInView<TElement extends HTMLElement>(
-  args?: IntersectionArgs
-): [React.MutableRefObject<TElement>, boolean]
-export function useInView<Props extends object, TElement extends HTMLElement>(
-  props: () => UseSpringProps<any>,
+export function useInView(args?: IntersectionArgs): [RefObject<any>, boolean]
+export function useInView<Props extends object>(
+  /**
+   * TODO: make this narrower to only accept reserved props.
+   */
+  props: () => Props & Valid<Props, UseSpringProps<Props>>,
   args?: IntersectionArgs
 ): PickAnimated<Props> extends infer State
   ? State extends Lookup
-    ? [MutableRefObject<TElement>, SpringValues<State>]
+    ? [RefObject<any>, SpringValues<State>]
     : never
   : never
 export function useInView<TElement extends HTMLElement>(
@@ -40,7 +42,7 @@ export function useInView<TElement extends HTMLElement>(
   const springsProps = propsFn ? propsFn() : {}
   const { to = {}, from = {}, ...restSpringProps } = springsProps
 
-  const intersectionArguments = propsFn ? args : (propsFn as IntersectionArgs)
+  const intersectionArguments = propsFn ? args : props
 
   const [springs, api] = useSpring(() => ({ from, ...restSpringProps }), [])
 
@@ -104,7 +106,9 @@ export function useInView<TElement extends HTMLElement>(
     const observer = new IntersectionObserver(handleIntersection, {
       root: (root && root.current) || undefined,
       threshold:
-        typeof amount === 'number' ? amount : defaultThresholdOptions[amount],
+        typeof amount === 'number' || Array.isArray(amount)
+          ? amount
+          : defaultThresholdOptions[amount],
       ...restArgs,
     })
 

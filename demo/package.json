@@ -26,6 +26,7 @@
     "react-feather": "^2.0.10",
     "react-use-gesture": "^9.1.3",
     "react-use-measure": "^2.1.1",
+    "react95": "^4.0.0",
     "sass": "^1.56.1",
     "styled-components": "^5.3.6",
     "three": "^0.146.0",

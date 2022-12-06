@@ -1,20 +1,15 @@
 {
-  "name": "Notification Hub",
-  "description": "Creating toast notifications with useTransition",
-  "keywords": [
-    "notifications",
-    "toast",
-    "useTransition"
-  ],
+  "name": "Popup Modal",
   "version": "1.0.0",
   "main": "src/index.tsx",
+  "description": "",
+  "keywords": [],
   "dependencies": {
     "@react-spring/web": "*",
-    "lorem-ipsum": "2.0.3",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-feather": "2.0.9",
     "react-scripts": "5.0.1",
+    "react95": "^4.0.0",
     "styled-components": "^5.3.6"
   },
   "scripts": {

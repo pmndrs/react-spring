@@ -12,3 +12,4 @@ export * from './useTransition'
  */
 export * from './useScroll'
 export * from './useResize'
+export * from './useInView'
