@@ -988,3 +988,11 @@ export const PARALLAX_LAYER_CONFIG_DATA: CellData[][] = [
     null,
   ],
 ]
+
+export const USE_INVIEW_INTERSECTION_ARGS: CellData[][] = [
+  ['amount', '"any" | "all" | number | number[]', 'any'],
+  ['root', 'React.MutableRefObject', null],
+  ['rootMargin', 'string', null],
+  ['once', 'boolean', 'false'],
+  ['threshold', 'number | number[]', null],
+]

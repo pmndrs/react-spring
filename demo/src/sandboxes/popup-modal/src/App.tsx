@@ -40,7 +40,7 @@ export default function App() {
       <GlobalStyles />
       <ThemeProviderProxy theme={original}>
         {PAGE_TITLES.map(title => (
-          <Page>
+          <Page key={title}>
             <Title>{title}</Title>
           </Page>
         ))}

@@ -2,8 +2,13 @@
   "name": "Popup Modal",
   "version": "1.0.0",
   "main": "src/index.tsx",
-  "description": "",
-  "keywords": [],
+  "description": "Animate on intersections with the viewport",
+  "keywords": [
+    "useInView",
+    "useSpring",
+    "Windows95",
+    "styled-components"
+  ],
   "dependencies": {
     "@react-spring/web": "*",
     "react": "^18.0.0",

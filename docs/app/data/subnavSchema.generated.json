@@ -43,6 +43,12 @@
     { "href": "#unknownprops", "label": "UnknownProps", "id": "unknownprops" }
   ],
   "/utilities/index": [],
+  "/utilities/use-in-view": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    { "href": "#references", "label": "References", "id": "references" },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" },
+    { "href": "#examples", "label": "Examples", "id": "examples" }
+  ],
   "/utilities/use-isomorphic-layout-effect": [
     { "href": "#usage", "label": "Usage", "id": "usage" },
     {
@@ -70,6 +76,17 @@
       "id": "why-is-it-important"
     },
     { "href": "#typescript", "label": "Typescript", "id": "typescript" }
+  ],
+  "/utilities/use-resize": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    { "href": "#reference", "label": "Reference", "id": "reference" },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" }
+  ],
+  "/utilities/use-scroll": [
+    { "href": "#usage", "label": "Usage", "id": "usage" },
+    { "href": "#reference", "label": "Reference", "id": "reference" },
+    { "href": "#typescript", "label": "Typescript", "id": "typescript" },
+    { "href": "#examples", "label": "Examples", "id": "examples" }
   ],
   "/guides/index": [],
   "/guides/react-three-fiber": [
