@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { Link, useLocation } from '@remix-run/react'
 import { Location } from 'react-router'
 
@@ -221,6 +222,7 @@ const WidgetContainer = styled('li', {
     backgroundColor: 'transparent',
     border: '1px solid $steel40',
     alignItems: 'center',
+    transition: 'border-color 200ms ease-out',
 
     hover: {
       background: 'transparent',

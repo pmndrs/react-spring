@@ -19,6 +19,7 @@ import { Code } from '~/components/Code/Code'
 import { LivePreviewStyles } from '~/components/Code/LivePreviewStyles'
 import { InlineLinkStyles } from '../components/InlineLink'
 import { Callout } from '~/components/Callout'
+import { Feedback } from '~/components/Feedback/Feedback'
 
 import {
   flattenNavigationWithChildren,
@@ -254,6 +255,7 @@ export default function DocsLayout() {
               <Outlet />
             </MDXProvider>
             <Footer>
+              <Feedback location={activeRoute?.href} />
               <EditAnchor href={getDocFilePathToGithub(activeRoute)}>
                 <PencilSimple
                   size={20}
