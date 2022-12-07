@@ -2,6 +2,7 @@ export enum EventNames {
   OutboundLink = 'Outbound Link',
   DocLiked = 'Doc Liked',
   DocDisliked = 'Doc Disliked',
+  LinkedToSandbox = 'Linked to Sandbox',
 }
 
 type EventFactory<
@@ -26,7 +27,14 @@ type VotingEvent = EventFactory<
   }
 >
 
-type Events = OutboundLinkEvent | VotingEvent
+type SandboxEvent = EventFactory<
+  EventNames.LinkedToSandbox,
+  {
+    title: string
+  }
+>
+
+type Events = OutboundLinkEvent | VotingEvent | SandboxEvent
 
 export const firePlausibleEvent = (event: Events) => {
   if (window.plausible) {

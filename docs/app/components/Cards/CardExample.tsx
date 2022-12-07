@@ -7,9 +7,22 @@ import { GradientButton } from '../Buttons/GradientButton'
 
 import type { Sandbox } from '../../routes/examples'
 
+import { EventNames, firePlausibleEvent } from '~/helpers/analytics'
+
 export const CardExample = ({ title, description, tags, id }: Sandbox) => {
+  const handleClick = () => {
+    firePlausibleEvent({
+      name: EventNames.LinkedToSandbox,
+      additionalProps: {
+        title,
+      },
+    })
+  }
+
   return (
-    <ExampleAnchor href={`https://codesandbox.io/s/${id}`}>
+    <ExampleAnchor
+      href={`https://codesandbox.io/s/${id}`}
+      onClick={handleClick}>
       <ExampleCard>
         <ExternalLinkIcon />
         <ExampleImage height={9} width={16}>

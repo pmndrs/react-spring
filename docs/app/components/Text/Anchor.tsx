@@ -8,10 +8,17 @@ export interface AnchorProps {
   href: string
   children: ReactNode
   className?: string
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>
 }
 
-export const Anchor = ({ href, children, className }: AnchorProps) => {
+export const Anchor = ({ href, children, className, onClick }: AnchorProps) => {
   const isExternal = isValidHttpUrl(href)
+
+  const handleClick: React.MouseEventHandler<HTMLAnchorElement> = e => {
+    if (onClick) {
+      onClick(e)
+    }
+  }
 
   if (isExternal) {
     return (
@@ -20,12 +27,17 @@ export const Anchor = ({ href, children, className }: AnchorProps) => {
         as="a"
         href={href}
         rel="noopener noreferrer"
-        target="_blank">
+        target="_blank"
+        onClick={handleClick}>
         {children}
       </AnchorElement>
     )
   } else {
-    return <AnchorElement to={href}>{children}</AnchorElement>
+    return (
+      <AnchorElement onClick={handleClick} to={href}>
+        {children}
+      </AnchorElement>
+    )
   }
 }
 
