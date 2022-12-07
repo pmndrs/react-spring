@@ -17,6 +17,7 @@ export const GradientButton = ({
   tag,
   variant = 'regular',
   type = 'button',
+  ...props
 }: GradientButtonProps) => {
   return (
     <Button
@@ -24,7 +25,8 @@ export const GradientButton = ({
       className={className}
       as={tag}
       href={href}
-      type={tag === 'button' ? type : undefined}>
+      type={tag === 'button' ? type : undefined}
+      {...props}>
       <span>{children}</span>
     </Button>
   )

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as Popover from '@radix-ui/react-popover'
 import { ThumbsDown, ThumbsUp, X } from 'phosphor-react'
-import { useLocation } from '@remix-run/react'
+import { useLocation, useFetcher } from '@remix-run/react'
 
 import { Heading } from '~/components/Text/Heading'
 import { Copy } from '~/components/Text/Copy'
@@ -18,6 +18,7 @@ interface FeedbackProps {
 }
 
 export const Feedback = ({ location }: FeedbackProps) => {
+  const [pageTitle, setPageTitle] = React.useState('')
   const [selected, setSelected] = React.useState<'upvote' | 'downvote' | null>(
     null
   )
@@ -34,10 +35,19 @@ export const Feedback = ({ location }: FeedbackProps) => {
         name,
         additionalProps: {
           location,
+          title: pageTitle,
         },
       })
     }
   }
+
+  React.useEffect(() => {
+    const element = document.querySelector('h1 > a')
+
+    if (element) {
+      setPageTitle(element.innerHTML)
+    }
+  }, [])
 
   return (
     <div>
@@ -52,14 +62,16 @@ export const Feedback = ({ location }: FeedbackProps) => {
         <FeedbackButton
           onClick={handleClick('upvote')}
           disabled={selected === 'downvote'}
-          selected={selected === 'upvote'}>
+          selected={selected === 'upvote'}
+          pageTitle={pageTitle}>
           <ThumbsUp size={16} weight={isDarkMode ? 'light' : 'regular'} />
         </FeedbackButton>
         <FeedbackButton
           onClick={handleClick('downvote')}
           disabled={selected === 'upvote'}
           selected={selected === 'downvote'}
-          variant="downvote">
+          variant="downvote"
+          pageTitle={pageTitle}>
           <ThumbsDown size={16} weight={isDarkMode ? 'light' : 'regular'} />
         </FeedbackButton>
       </Stack>
@@ -73,16 +85,21 @@ interface FeedbackButtonProps {
   disabled?: boolean
   selected?: boolean
   variant?: 'upvote' | 'downvote'
+  pageTitle: string
 }
 
 const FeedbackButton = ({
   children,
   onClick,
+  pageTitle,
   disabled = false,
   selected = false,
   variant = 'upvote',
 }: FeedbackButtonProps) => {
+  const [isOpen, setIsOpen] = React.useState(false)
+  const formRef = React.useRef<HTMLFormElement>(null!)
   const location = useLocation()
+  const { data, state, Form } = useFetcher()
 
   const handleClick = () => {
     if (onClick) {
@@ -90,8 +107,19 @@ const FeedbackButton = ({
     }
   }
 
+  const handleOpenChange = (isOpen: boolean) => setIsOpen(isOpen)
+
+  React.useEffect(() => {
+    if (data?.success) {
+      formRef.current.reset()
+      setIsOpen(false)
+    }
+  }, [data])
+
+  const isLoading = state === 'submitting'
+
   return (
-    <Popover.Root>
+    <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
       <Trigger disabled={disabled} onClick={handleClick} selected={selected}>
         {children}
       </Trigger>
@@ -106,13 +134,29 @@ const FeedbackButton = ({
               <X />
             </PopoverClose>
           </PopoverHeader>
-          <PopoverForm>
-            <PopoverInputLabel>
+          <Form ref={formRef} method="post" action="/api/feedback" replace>
+            <HiddenInput
+              name="variant"
+              type="checkbox"
+              value={variant}
+              checked
+            />
+            <HiddenInput name="pageTitle" type="text" value={pageTitle} />
+            <PopoverInputLabel tag="label">
               <span>Feedback</span>
-              <PopoverInput placeholder="Type your feedback here" type="text" />
+              <PopoverInput
+                name="feedback"
+                placeholder="Type your feedback here"
+                type="text"
+                disabled={isLoading}
+              />
             </PopoverInputLabel>
             <PopoverFormFooter>
-              <PopoverButton variant="small" tag="button" type="submit">
+              <PopoverButton
+                aria-disabled={isLoading}
+                variant="small"
+                tag="button"
+                type="submit">
                 Send
               </PopoverButton>
               <Outbound
@@ -129,7 +173,7 @@ const FeedbackButton = ({
                   : 'Open an issue'}
               </Outbound>
             </PopoverFormFooter>
-          </PopoverForm>
+          </Form>
         </PopoverContent>
       </Popover.Portal>
     </Popover.Root>
@@ -231,9 +275,8 @@ const PopoverClose = styled(Popover.Close, {
   },
 })
 
-const PopoverForm = styled('form', {})
-
 const PopoverInputLabel = styled(Copy, {
+  display: 'block',
   mb: '$15',
 
   '& > span': {
@@ -258,6 +301,15 @@ const PopoverInput = styled('input', {
   hover: {
     borderColor: '$red100',
   },
+
+  '&:disabled': {
+    opacity: 0.5,
+    pointerEvents: 'none',
+
+    hover: {
+      borderColor: '$steel40',
+    },
+  },
 })
 
 const PopoverFormFooter = styled('div', {
@@ -271,6 +323,11 @@ const PopoverButton = styled(GradientButton, {
 
   '& > span': {
     background: '$codeBackground',
+  },
+
+  '&[aria-disabled="true"]': {
+    opacity: 0.5,
+    pointerEvents: 'none',
   },
 })
 
@@ -286,4 +343,8 @@ const Outbound = styled(GradientButton, {
   [`.${dark} &:hover:before`]: {
     filter: 'brightness(120%)',
   },
+})
+
+const HiddenInput = styled('input', {
+  visuallyHidden: '',
 })

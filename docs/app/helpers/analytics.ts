@@ -24,6 +24,7 @@ type VotingEvent = EventFactory<
   EventNames.DocLiked | EventNames.DocDisliked,
   {
     location: string
+    title: string
   }
 >
 

@@ -222,8 +222,6 @@ export default function DocsLayout() {
 
   const activeRoute = flatRoutes.find(item => item.href === location.pathname)
 
-  console.log(activeRoute)
-
   useEffect(() => {
     const element = document.getElementById('carbonads')
 
