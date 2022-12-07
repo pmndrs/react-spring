@@ -7,6 +7,7 @@ interface GradientButtonProps {
   tag?: keyof JSX.IntrinsicElements
   className?: string
   variant?: 'regular' | 'small'
+  type?: 'button' | 'submit'
 }
 
 export const GradientButton = ({
@@ -15,9 +16,15 @@ export const GradientButton = ({
   children,
   tag,
   variant = 'regular',
+  type = 'button',
 }: GradientButtonProps) => {
   return (
-    <Button size={variant} className={className} as={tag} href={href}>
+    <Button
+      size={variant}
+      className={className}
+      as={tag}
+      href={href}
+      type={tag === 'button' ? type : undefined}>
       <span>{children}</span>
     </Button>
   )
@@ -25,6 +32,7 @@ export const GradientButton = ({
 
 const Button = styled('a', {
   color: '$steel100',
+  border: 'none',
   borderRadius: '$r8',
   p: 2,
   backgroundClip: 'content-box',
