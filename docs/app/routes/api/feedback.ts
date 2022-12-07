@@ -1,12 +1,19 @@
 import { ActionFunction, json } from '@remix-run/node'
 import { createClient } from '@supabase/supabase-js'
+import z from 'zod'
 
 export const action: ActionFunction = async ({ request }) => {
+  const schema = z.object({
+    feedback: z.string().min(1),
+    page_title: z.string().min(1),
+    variant: z.string(),
+  })
+
   const url = process.env.SUPABASE_URL
   const key = process.env.SUPABASE_ANON_KEY
 
   if (!url || !key) {
-    return json({ error: 'Missing Supabase URL or key' }, 500)
+    return json({ success: false, error: 'Missing Supabase URL or key' }, 500)
   }
 
   const supabase = createClient(url, key, {
@@ -20,11 +27,19 @@ export const action: ActionFunction = async ({ request }) => {
       try {
         const body = await request.formData()
 
-        const res = await supabase.from('feedback').insert({
+        const data = {
           feedback: body.get('feedback'),
           page_title: body.get('pageTitle'),
           upvoted: body.get('variant') === 'upvote',
-        })
+        }
+
+        const parsedSchema = schema.safeParse(data)
+
+        if (!parsedSchema.success) {
+          return json({ success: false, error: 'Feedback is required' }, 405)
+        }
+
+        const res = await supabase.from('feedback').insert(parsedSchema.data)
 
         console.log('SUPABASE RESPONSE', res)
 
