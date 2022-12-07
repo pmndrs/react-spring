@@ -26,8 +26,11 @@ export const action: ActionFunction = async ({ request }) => {
           upvoted: body.get('variant') === 'upvote',
         })
 
+        console.log('SUPABASE RESPONSE', res)
+
         return json({ success: true }, 200)
       } catch (err) {
+        console.error('ERROR DOING SUPABASE', err)
         return json({ success: false, error: err.message }, 405)
       }
     }
