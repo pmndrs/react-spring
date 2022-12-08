@@ -49,6 +49,14 @@ export const Feedback = ({ location }: FeedbackProps) => {
     }
   }, [])
 
+  React.useEffect(() => {
+    setSelected(null)
+    /**
+     * if the location changes, reset the selected state
+     * otherwise you vote once somewhere and can never do it again
+     */
+  }, [location])
+
   return (
     <div>
       <Heading
