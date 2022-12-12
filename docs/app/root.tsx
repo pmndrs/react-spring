@@ -30,18 +30,18 @@ export const meta: MetaFunction = () => {
     'og:title': 'React Spring',
     'og:description':
       'Bring your components to life with simple spring animation primitives for React',
-    'og:image': 'https://react-spring.dev/share.jpg',
+    'og:image': 'https://www.react-spring.dev/share.jpg',
     'og:type': 'website',
     'og:image:width': '1200',
     'og:image:height': '630',
-    'og:url': 'https://react-spring.dev',
+    'og:url': 'https://www.react-spring.dev',
     'twitter:card': 'summary_large_image',
     'twitter:domain': 'react-spring.dev',
-    'twitter:url': 'https://react-spring.dev',
+    'twitter:url': 'https://www.react-spring.dev',
     'twitter:title': 'React Spring',
     'twitter:description':
       'Bring your components to life with simple spring animation primitives for React',
-    'twitter:image': 'https://react-spring.dev/share.jpg',
+    'twitter:image': 'https://www.react-spring.dev/share.jpg',
   }
 }
 
