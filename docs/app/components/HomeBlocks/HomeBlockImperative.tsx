@@ -51,7 +51,7 @@ export const HomeBlockImperative = () => (
       }}>
       <p>
         Use our imperative API methods to run animations without updating state.
-        Repsond to events without the react rendering overhead to achieve
+        Respond to events without the react rendering overhead to achieve
         smooth, fluid animation.
       </p>
     </HomeBlockCopy>
