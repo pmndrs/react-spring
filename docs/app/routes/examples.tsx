@@ -180,10 +180,7 @@ export default function Examples() {
           </Anchor>
           .
         </Copy>
-        <ExampleFilters
-          method="post"
-          ref={formRef}
-          onChange={() => console.log('form change')}>
+        <ExampleFilters method="post" ref={formRef}>
           <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
             {`Alternatively, check out examples by `}
           </Heading>

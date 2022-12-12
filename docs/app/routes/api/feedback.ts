@@ -6,7 +6,7 @@ export const action: ActionFunction = async ({ request }) => {
   const schema = z.object({
     feedback: z.string().min(1),
     page_title: z.string().min(1),
-    variant: z.string(),
+    upvoted: z.boolean(),
   })
 
   const url = process.env.SUPABASE_URL
