@@ -96,6 +96,14 @@ export const meta: MetaFunction = () => {
   return {
     title: 'Examples | React Spring',
     description: `The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions`,
+    'og:title': 'Examples | React Spring',
+    'og:description':
+      'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
+    'og:url': 'https://www.react-spring.dev/examples',
+    'twitter:url': 'https://www.react-spring.dev/examples',
+    'twitter:title': 'Examples | React Spring',
+    'twitter:description':
+      'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
   }
 }
 
