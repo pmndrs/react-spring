@@ -274,8 +274,7 @@
   "/advanced/controller": [
     { "href": "#usage", "label": "Usage", "id": "usage" },
     { "href": "#properties", "label": "Properties", "id": "properties" },
-    { "href": "#methods", "label": "Methods", "id": "methods" },
-    { "href": "#examples", "label": "Examples", "id": "examples" }
+    { "href": "#methods", "label": "Methods", "id": "methods" }
   ],
   "/advanced/events": [
     {
@@ -319,7 +318,6 @@
     { "href": "#usage", "label": "Usage", "id": "usage" },
     { "href": "#properties", "label": "Properties", "id": "properties" },
     { "href": "#methods", "label": "Methods", "id": "methods" },
-    { "href": "#ts-glossary", "label": "TS Glossary", "id": "ts-glossary" },
-    { "href": "#examples", "label": "Examples", "id": "examples" }
+    { "href": "#ts-glossary", "label": "TS Glossary", "id": "ts-glossary" }
   ]
 }
