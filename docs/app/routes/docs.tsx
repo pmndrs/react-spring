@@ -247,7 +247,7 @@ export default function DocsLayout() {
               <script
                 async
                 type="text/javascript"
-                src="//cdn.carbonads.com/carbon.js?serve=CEAIPK7I&placement=react-springdev"
+                src="cdn.carbonads.com/carbon.js?serve=CEAIPK7I&placement=react-springdev"
                 id="_carbonads_js"
               />
             ) : null}
