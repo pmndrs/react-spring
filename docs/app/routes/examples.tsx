@@ -164,68 +164,86 @@ export default function Examples() {
     <>
       <Header />
       <Main>
-        <Heading
-          fontStyle="$XL"
-          css={{
-            mb: 20,
-            '@tabletUp': {
-              mb: 30,
-            },
-          }}>
-          Examples
-        </Heading>
-        <Copy
-          css={{
-            '& > a': {
-              ...InlineLinkStyles,
-            },
-            maxWidth: 680,
-          }}>
-          {`Got an example you want to see here & share with the community?`}{' '}
-          Check out{' '}
-          <Anchor href="https://github.com/pmndrs/react-spring/tree/master/demo/CONTRIBUTING.md">
-            this guide
-          </Anchor>
-          .
-        </Copy>
-        <ExampleFilters method="post" ref={formRef}>
-          <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
-            {`Alternatively, check out examples by `}
-          </Heading>
-          <Select
-            placeholder="Tags"
-            options={tags}
-            onChange={handleSelectChange('tags')}
-            value={selectStates.tags}
-          />
-          <Heading tag="h2" fontStyle="$XS" style={{ display: 'inline-block' }}>
-            {` or `}
-          </Heading>
-          <Select
-            placeholder="Components"
-            options={components}
-            onChange={handleSelectChange('components')}
-            value={selectStates.components}
-          />
-          {selectStates.tags.length > 0 ||
-          selectStates.components.length > 0 ? (
+        <Flex>
+          <div>
             <Heading
-              tag="h2"
-              fontStyle="$XS"
+              fontStyle="$XL"
               css={{
-                display: 'inline',
-                ml: -6,
-
-                '& > a': {
-                  ...InlineLinkStyles,
-                  fontWeight: '$bold',
+                mb: 20,
+                '@tabletUp': {
+                  mb: 30,
                 },
               }}>
-              {'. Or maybe, you want to see them '}
-              <Anchor href="/examples">all?</Anchor>
+              Examples
             </Heading>
-          ) : null}
-        </ExampleFilters>
+            <Copy
+              css={{
+                '& > a': {
+                  ...InlineLinkStyles,
+                },
+                maxWidth: 680,
+              }}>
+              {`Got an example you want to see here & share with the community?`}{' '}
+              Check out{' '}
+              <Anchor href="https://github.com/pmndrs/react-spring/tree/master/demo/CONTRIBUTING.md">
+                this guide
+              </Anchor>
+              .
+            </Copy>
+            <ExampleFilters method="post" ref={formRef}>
+              <Heading
+                tag="h2"
+                fontStyle="$XS"
+                style={{ display: 'inline-block' }}>
+                {`Alternatively, check out examples by `}
+              </Heading>
+              <Select
+                placeholder="Tags"
+                options={tags}
+                onChange={handleSelectChange('tags')}
+                value={selectStates.tags}
+              />
+              <Heading
+                tag="h2"
+                fontStyle="$XS"
+                style={{ display: 'inline-block' }}>
+                {` or `}
+              </Heading>
+              <Select
+                placeholder="Components"
+                options={components}
+                onChange={handleSelectChange('components')}
+                value={selectStates.components}
+              />
+              {selectStates.tags.length > 0 ||
+              selectStates.components.length > 0 ? (
+                <Heading
+                  tag="h2"
+                  fontStyle="$XS"
+                  css={{
+                    display: 'inline',
+                    ml: -6,
+
+                    '& > a': {
+                      ...InlineLinkStyles,
+                      fontWeight: '$bold',
+                    },
+                  }}>
+                  {'. Or maybe, you want to see them '}
+                  <Anchor href="/examples">all?</Anchor>
+                </Heading>
+              ) : null}
+            </ExampleFilters>
+          </div>
+          <div>
+            <script
+              async
+              type="text/javascript"
+              src="https://cdn.carbonads.com/carbon.js?serve=CEAIPK7I&placement=react-springdev"
+              id="_carbonads_js"
+            />
+          </div>
+        </Flex>
         <SandboxesList
           css={{
             opacity: state === 'loading' ? 0.5 : 1,
@@ -254,6 +272,24 @@ const Main = styled('main', {
 
   '@desktopUp': {
     px: '$50',
+  },
+})
+
+const Flex = styled('div', {
+  '#carbonads': {
+    mb: '$20',
+  },
+
+  '@tabletUp': {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    gap: '$40',
+
+    '#carbonads': {
+      maxWidth: '400px',
+      mb: '$40',
+    },
   },
 })
 
