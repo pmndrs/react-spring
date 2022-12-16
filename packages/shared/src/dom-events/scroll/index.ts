@@ -50,7 +50,7 @@ export const onScroll = (
      * Return true so RAFZ continues to run it
      */
     const listener = () => {
-      containerHandler.advance()
+      containerHandlers?.forEach(handler => handler.advance())
       return true
     }
 

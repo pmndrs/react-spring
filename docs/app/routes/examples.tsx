@@ -249,8 +249,8 @@ export default function Examples() {
             opacity: state === 'loading' ? 0.5 : 1,
           }}>
           {sandboxes.map(props => (
-            <li>
-              <CardExample key={props.urlTitle} {...props} />
+            <li key={props.urlTitle}>
+              <CardExample {...props} />
             </li>
           ))}
         </SandboxesList>
