@@ -13,7 +13,7 @@ export interface UseResizeOptions extends Omit<SpringProps, 'to' | 'from'> {
  * A small abstraction around the `useSpring` hook. It returns a `SpringValues` 
  * object with the `width` and `height` of the element it's attached to & doesn't 
  * necessarily have to be attached to the window, by passing a `container` you 
- * can obsere that element's size instead.
+ * can observe that element's size instead.
  * 
  ```jsx
     import { useResize, animated } from '@react-spring/web'
