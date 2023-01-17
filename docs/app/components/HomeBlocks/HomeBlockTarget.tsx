@@ -127,7 +127,7 @@ export const HomeBlockTarget = () => {
         title="It’s not just for web"
         cta={{
           label: 'Learn more about targets',
-          href: '/docs/concept/targets',
+          href: '/docs/concepts/targets',
         }}>
         <p>Choose from our five targets:</p>
         <List>
