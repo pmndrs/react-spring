@@ -1,0 +1,29 @@
+name: Bundle-size
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  size:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install
+        run: yarn install
+
+      - name: Build packages
+        run: yarn build
+
+      - uses: preactjs/compressed-size-action@v2
+        with:
+          pattern: '**/dist/**/*.{mjs,js}'
