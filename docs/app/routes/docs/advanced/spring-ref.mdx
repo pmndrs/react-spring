@@ -110,10 +110,12 @@ resume(keys?: OneOrMore<string>): this
 
 ### Set
 
-Update the state of each controller without animating.
+Update the state of each controller without animating. Accepts either a partial state object or a
+function that returns a partial state object.
 
 ```ts
 set(values: Partial<State>): void
+set(values: (index: number, ctrl: Controller<State>) => Partial<State>): void
 ```
 
 ### Start
