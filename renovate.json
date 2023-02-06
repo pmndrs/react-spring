@@ -5,6 +5,7 @@
     "group:allNonMajor",
     "schedule:monthly",
     ":maintainLockFilesMonthly",
+    ":disablePeerDependencies",
     ":labels(dependencies,kind:chore)"
   ],
   "rangeStrategy": "bump",
