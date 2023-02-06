@@ -1,6 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
-  ]
+    "config:base",
+    "group:allNonMajor",
+    "schedule:monthly",
+    ":maintainLockFilesMonthly",
+    ":labels(dependencies,kind:chore)"
+  ],
+  "rangeStrategy": "bump",
+  "postUpdateOptions": ["yarnDedupeHighest"],
+  "rebaseWhen": "conflicted"
 }
