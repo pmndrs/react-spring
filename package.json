@@ -116,8 +116,5 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-spring"
   },
-  "packageManager": "yarn@3.2.1",
-  "resolutions": {
-    "@babel/core": "^7.19.0"
-  }
+  "packageManager": "yarn@3.2.1"
 }
