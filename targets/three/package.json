@@ -1,8 +1,9 @@
 {
   "name": "@react-spring/three",
   "version": "9.6.1",
-  "main": "dist/react-spring-three.cjs.js",
-  "module": "dist/react-spring-three.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*",
     "README.md",

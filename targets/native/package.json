@@ -1,8 +1,9 @@
 {
   "name": "@react-spring/native",
   "version": "9.6.1",
-  "main": "dist/react-spring-native.cjs.js",
-  "module": "dist/react-spring-native.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*",
     "README.md",
@@ -35,5 +36,9 @@
   "peerDependencies": {
     "react": "^16.8.0  || >=17.0.0 || >=18.0.0",
     "react-native": ">=0.58"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup"
   }
 }

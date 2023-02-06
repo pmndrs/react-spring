@@ -1,8 +1,9 @@
 {
   "name": "@react-spring/core",
   "version": "9.6.1",
-  "main": "dist/react-spring-core.cjs.js",
-  "module": "dist/react-spring-core.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*",
     "README.md",
@@ -30,6 +31,10 @@
   "maintainers": [
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup"
+  },
   "dependencies": {
     "@react-spring/animated": "~9.6.1",
     "@react-spring/rafz": "~9.6.1",

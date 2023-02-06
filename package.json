@@ -29,29 +29,23 @@
       "docs"
     ]
   },
-  "preconstruct": {
-    "packages": [
-      "packages/*",
-      "targets/*",
-      "!packages/types"
-    ]
-  },
   "scripts": {
-    "changeset:add": "changeset add",
-    "build": "preconstruct build",
-    "watch": "preconstruct watch",
-    "dev": "preconstruct dev",
+    "build": "turbo run build",
+    "changeset": "changeset",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "dev": "turbo run dev --no-cache --parallel --continue",
     "docs:dev": "yarn workspace @react-spring/docs dev",
     "docs:build": "yarn workspace @react-spring/docs build",
     "demo:dev": "yarn workspace @react-spring/demo dev",
-    "postinstall": "preconstruct dev && remix setup node",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "postinstall": "remix setup node",
     "prepare": "husky install",
+    "test": "yarn test:ts && yarn test:unit && yarn test:e2e",
     "test:unit": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
     "test:e2e": "start-server-and-test 'yarn vite serve packages/parallax/test --host' http-get://localhost:3000 'yarn cypress run'",
-    "test": "yarn test:ts && yarn test:unit && yarn test:e2e",
-    "release": "yarn test:ts && yarn test:unit && yarn build && yarn changeset publish && yarn",
+    "release": "yarn test:ts && yarn test:unit && yarn build && yarn changeset publish",
     "vers": "yarn changeset version"
   },
   "commitlint": {
@@ -72,7 +66,6 @@
     "@changesets/cli": "^2.25.2",
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
-    "@preconstruct/cli": "^2.2.2",
     "@react-three/fiber": "^8.0.27",
     "@remix-run/dev": "patch:@remix-run/dev@npm:1.7.0#./.yarn/patches/@remix-run-dev-npm-1.7.0-fe40e11b54.patch",
     "@remix-run/serve": "^1.7.0",
@@ -115,6 +108,8 @@
     "three": "^0.146.0",
     "ts-jest": "^27.1.5",
     "ts-node": "^10.9.1",
+    "tsup": "^6.5.0",
+    "turbo": "^1.7.3",
     "typescript": "4.8.4",
     "vite": "^3.2.3",
     "zdog": "^1.1.3"
