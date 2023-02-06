@@ -33,8 +33,8 @@
     "@react-spring/types": "~9.6.1"
   },
   "peerDependencies": {
-    "@react-three/fiber": ">=6.0",
+    "@react-three/fiber": ">=6.2.3",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
-    "three": ">=0.126"
+    "three": ">=0.149.0"
   }
 }
