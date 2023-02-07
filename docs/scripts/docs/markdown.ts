@@ -49,7 +49,7 @@ const parseMarkdownForSubheadings = (
   return {
     content: '',
     subtitles: subtitles ?? [],
-    contentTitle: title,
+    contentTitle: title ?? '',
   }
 }
 
