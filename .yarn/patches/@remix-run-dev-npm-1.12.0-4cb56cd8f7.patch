@@ -1,14 +1,14 @@
 diff --git a/dist/compiler/plugins/mdx.js b/dist/compiler/plugins/mdx.js
-index ed4befeed2bad93957a45f96c3e2cbd6ead31829..e7db6627384e28e3ae4f9494b322720b81c58730 100644
+index 727fa32c7ff0db6fd1db6ab81aa9c6d9d819d4a4..51ab32cb5a62dfe54883d7004f5c3499f3dc2422 100644
 --- a/dist/compiler/plugins/mdx.js
 +++ b/dist/compiler/plugins/mdx.js
-@@ -102,7 +102,8 @@ export const meta = typeof attributes !== "undefined" && attributes.meta;
+@@ -96,7 +96,8 @@ export const handle = typeof attributes !== "undefined" && attributes.handle;
              pragma: "React.createElement",
              pragmaFrag: "React.Fragment",
              rehypePlugins,
 -            remarkPlugins
 +            remarkPlugins,
-+            providerImportSource: "@mdx-js/react",
++            providerImportSource: "@mdx-js/react"
            });
            let contents = `
  ${compiled.value}
