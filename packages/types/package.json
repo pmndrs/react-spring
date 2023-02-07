@@ -3,6 +3,7 @@
   "version": "9.6.1",
   "description": "Internal package with TypeScript stuff",
   "main": "index.js",
+  "types": "index.d.ts",
   "repository": "pmndrs/react-spring",
   "homepage": "https://github.com/pmndrs/react-spring#readme",
   "keywords": [

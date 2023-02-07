@@ -1,8 +1,9 @@
 {
   "name": "@react-spring/parallax",
   "version": "9.6.1",
-  "main": "dist/react-spring-parallax.cjs.js",
-  "module": "dist/react-spring-parallax.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*",
     "README.md",
@@ -27,6 +28,8 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "scripts": {
+    "build": "tsup",
+    "dev": "tsup",
     "test": "vite serve ./test"
   },
   "dependencies": {

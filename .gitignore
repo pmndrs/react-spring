@@ -50,6 +50,7 @@ report.*.json
 .cache
 .vercel
 .output
+.turbo
 
 #
 # Remix 

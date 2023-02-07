@@ -1,8 +1,9 @@
 {
   "name": "@react-spring/konva",
   "version": "9.6.1",
-  "main": "dist/react-spring-konva.cjs.js",
-  "module": "dist/react-spring-konva.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*",
     "README.md",
@@ -36,5 +37,9 @@
     "konva": ">=2.6",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
     "react-konva": "^16.8.0 || ^16.8.7-0 || ^16.9.0-0 || ^16.10.1-0 || ^16.12.0-0 || ^16.13.0-0 || ^17.0.0-0 || ^17.0.1-0 || ^17.0.2-0 || ^18.0.0-0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup"
   }
 }

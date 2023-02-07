@@ -2,8 +2,9 @@
   "name": "@react-spring/animated",
   "version": "9.6.1",
   "description": "Animated component props for React",
-  "main": "dist/react-spring-animated.cjs.js",
-  "module": "dist/react-spring-animated.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*",
     "README.md",
@@ -27,6 +28,10 @@
   "maintainers": [
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup"
+  },
   "dependencies": {
     "@react-spring/shared": "~9.6.1",
     "@react-spring/types": "~9.6.1"

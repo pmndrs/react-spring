@@ -2,8 +2,9 @@
   "name": "@react-spring/shared",
   "version": "9.6.1",
   "description": "Globals and shared modules",
-  "main": "dist/react-spring-shared.cjs.js",
-  "module": "dist/react-spring-shared.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*",
     "README.md",
@@ -33,5 +34,9 @@
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup"
   }
 }

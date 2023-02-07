@@ -1,8 +1,9 @@
 {
   "name": "@react-spring/three",
   "version": "9.6.1",
-  "main": "dist/react-spring-three.cjs.js",
-  "module": "dist/react-spring-three.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/*",
     "README.md",
@@ -36,5 +37,9 @@
     "@react-three/fiber": ">=6.0",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
     "three": ">=0.126"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup"
   }
 }
