@@ -74,7 +74,7 @@
     "@commitlint/config-conventional": "^17.4.2",
     "@preconstruct/cli": "^2.3.0",
     "@react-three/fiber": "^8.11.0",
-    "@remix-run/dev": "patch:@remix-run/dev@npm:1.7.0#./.yarn/patches/@remix-run-dev-npm-1.7.0-fe40e11b54.patch",
+    "@remix-run/dev": "patch:@remix-run/dev@npm%3A1.12.0#./.yarn/patches/@remix-run-dev-npm-1.12.0-4cb56cd8f7.patch",
     "@remix-run/serve": "^1.12.0",
     "@studiocompanion/scripts": "^1.2.2",
     "@testing-library/cypress": "^8.0.7",
