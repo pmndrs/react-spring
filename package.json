@@ -70,7 +70,7 @@
     "@testing-library/cypress": "^8.0.7",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@types/fs-extra": "^9.0.13",
+    "@types/fs-extra": "^11.0.1",
     "@types/jest": "^27.5.2",
     "@types/lodash.clamp": "^4.0.7",
     "@types/lodash.shuffle": "^4.2.7",
