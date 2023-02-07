@@ -26,4 +26,4 @@ jobs:
 
       - uses: preactjs/compressed-size-action@v2
         with:
-          pattern: '{**/dist/**/*.{mjs,js}, packages/types/*.{js,d.ts}}'
+          pattern: '{**/dist/**/*.{mjs,js},packages/types/*.{js,d.ts}}'
