@@ -46,7 +46,7 @@
     "zod": "^3.20.2"
   },
   "engines": {
-    "node": ">=v14.21.2"
+    "node": ">=v18.14.0"
   },
   "sideEffects": false
 }
