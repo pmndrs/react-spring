@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Outlet, useLocation } from '@remix-run/react'
 import { MDXProvider } from '@mdx-js/react'
 import { PencilSimple } from 'phosphor-react'
@@ -28,6 +28,7 @@ import {
 import { getDocFilePathToGithub } from '~/helpers/links'
 
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
+import { WidgetCarbon } from '~/components/Widgets/WidgetCarbon'
 
 const comps = {
   h1: (props: HeadingProps) => (
@@ -222,15 +223,6 @@ export default function DocsLayout() {
 
   const activeRoute = flatRoutes.find(item => item.href === location.pathname)
 
-  useEffect(() => {
-    const element = document.getElementById('carbonads')
-
-    if (typeof window._carbonads !== 'undefined' && element) {
-      window._carbonads.remove(element)
-      window._carbonads.refresh()
-    }
-  }, [location.pathname])
-
   return (
     <>
       <Grid>
@@ -243,12 +235,7 @@ export default function DocsLayout() {
             <MainStickyMenu subnav={navigation.subnav} />
           ) : null}
           <Article hasStickySubnav={hasStickySubnav}>
-            <script
-              async
-              type="text/javascript"
-              src="https://cdn.carbonads.com/carbon.js?serve=CEAIPK7I&placement=react-springdev"
-              id="_carbonads_js"
-            />
+            <WidgetCarbon />
             <MDXProvider components={comps}>
               <Outlet />
             </MDXProvider>

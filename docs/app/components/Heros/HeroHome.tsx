@@ -8,6 +8,7 @@ import { CodeField } from '../Fields/FieldCode'
 import { Copy } from '../Text/Copy'
 
 import { useWindowSize } from '~/hooks/useWindowSize'
+import { WidgetCarbon } from '../Widgets/WidgetCarbon'
 
 export const HeroHome = () => {
   const { width, height } = useWindowSize()
@@ -27,6 +28,9 @@ export const HeroHome = () => {
               <ArrowCircleRight size={24} color="var(--colors-steel100)" />
             </NavLink>
           </TopFields>
+          <CarbonBanner>
+            <WidgetCarbon />
+          </CarbonBanner>
         </TitleContent>
       </TitleTop>
       <TitleBottom style={{ width, height }}>
@@ -282,5 +286,12 @@ const BlueBall = styled('div', {
 
   [`.${dark} &`]: {
     boxShadow: `inset 0 0 100px -40px #fafafa, inset 0px 0px max(70px, 8vw) max(70px, 8vw) #569AFF, 0 0 70px 40px #569AFF`,
+  },
+})
+
+const CarbonBanner = styled('div', {
+  '& > #carbonads': {
+    margin: 0,
+    mt: '$60',
   },
 })
