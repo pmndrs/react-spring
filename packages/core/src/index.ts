@@ -22,5 +22,5 @@ export { inferTo } from './helpers'
 
 export * from './types'
 export type { UnknownProps } from '@react-spring/types'
-export * from '@react-spring/types/animated'
-export * from '@react-spring/types/interpolation'
+export * from '@react-spring/types/animated.js'
+export * from '@react-spring/types/interpolation.js'
