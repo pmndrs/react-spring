@@ -2,8 +2,14 @@
   "name": "@react-spring/types",
   "version": "9.7.0",
   "description": "Internal package with TypeScript stuff",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/*",
+    "README.md",
+    "LICENSE"
+  ],
   "repository": "pmndrs/react-spring",
   "homepage": "https://github.com/pmndrs/react-spring#readme",
   "keywords": [
@@ -21,5 +27,9 @@
   "author": "Paul Henschel",
   "maintainers": [
     "Josh Ellis (https://github.com/joshuaellis)"
-  ]
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup"
+  }
 }

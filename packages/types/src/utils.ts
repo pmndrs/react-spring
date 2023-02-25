@@ -92,6 +92,7 @@ export interface UnknownProps extends Lookup<unknown> {}
 
 /** Use `[T] extends [Any]` to know if a type parameter is `any` */
 export class Any {
+  // @ts-ignore
   private _: never
 }
 
