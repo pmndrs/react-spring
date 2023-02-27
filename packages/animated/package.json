@@ -3,8 +3,17 @@
   "version": "9.7.0",
   "description": "Animated component props for React",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "module": "./dist/esm/index.js",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist/*",
     "README.md",
@@ -29,7 +38,7 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup --legacy-output",
     "dev": "tsup"
   },
   "dependencies": {

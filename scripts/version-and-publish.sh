@@ -18,9 +18,6 @@ if [[ -z "$distTag" ]]; then
   read -r distTag
 fi
 
-
-echo "$version"
-
 # publish packages
 ./node_modules/.bin/changeset version --snapshot "$version"
 ./node_modules/.bin/changeset publish --no-git-tag --snapshot --tag "$distTag"

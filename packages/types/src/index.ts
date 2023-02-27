@@ -1,3 +1,3 @@
 export * from './animated'
 export * from './interpolation'
-export * from './util'
+export * from './utils'
