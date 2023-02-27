@@ -38,6 +38,9 @@ jobs:
       - name: Install
         run: yarn install
 
+      - name: Install
+        run: yarn build
+
       - run: ./scripts/version-and-publish.sh
         env:
           VERSION: '${{ github.sha }}'
