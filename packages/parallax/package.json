@@ -7,7 +7,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/esm/index.js",
       "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -36,7 +36,7 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup --legacy-output",
     "dev": "tsup",
     "test": "vite serve ./test"
   },

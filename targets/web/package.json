@@ -7,7 +7,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/esm/index.js",
       "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -46,7 +46,7 @@
     "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup --legacy-output",
     "dev": "tsup"
   }
 }

@@ -8,7 +8,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/esm/index.js",
       "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -34,7 +34,7 @@
   "license": "MIT",
   "author": "Josh Ellis",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup --legacy-output",
     "dev": "tsup"
   }
 }

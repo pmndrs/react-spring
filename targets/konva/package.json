@@ -7,7 +7,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
+      "import": "./dist/esm/index.js",
       "require": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -47,7 +47,7 @@
     "react-konva": "^16.8.0 || ^16.8.7-0 || ^16.9.0-0 || ^16.10.1-0 || ^16.12.0-0 || ^16.13.0-0 || ^17.0.0-0 || ^17.0.1-0 || ^17.0.2-0 || ^18.0.0-0"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup --legacy-output",
     "dev": "tsup"
   }
 }
