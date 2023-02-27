@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/zdog",
-  "version": "9.7.0",
+  "version": "9.7.1",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
@@ -37,10 +37,10 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/animated": "~9.7.0",
-    "@react-spring/core": "~9.7.0",
-    "@react-spring/shared": "~9.7.0",
-    "@react-spring/types": "~9.7.0"
+    "@react-spring/animated": "~9.7.1",
+    "@react-spring/core": "~9.7.1",
+    "@react-spring/shared": "~9.7.1",
+    "@react-spring/types": "~9.7.1"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",

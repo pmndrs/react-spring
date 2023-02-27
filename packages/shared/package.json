@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/shared",
-  "version": "9.7.0",
+  "version": "9.7.1",
   "description": "Globals and shared modules",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -38,8 +38,8 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/rafz": "~9.7.0",
-    "@react-spring/types": "~9.7.0"
+    "@react-spring/rafz": "~9.7.1",
+    "@react-spring/types": "~9.7.1"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"

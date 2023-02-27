@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/parallax",
-  "version": "9.7.0",
+  "version": "9.7.1",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
@@ -42,8 +42,8 @@
     "test": "vite serve ./test"
   },
   "dependencies": {
-    "@react-spring/shared": "~9.7.0",
-    "@react-spring/web": "~9.7.0"
+    "@react-spring/shared": "~9.7.1",
+    "@react-spring/web": "~9.7.1"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",

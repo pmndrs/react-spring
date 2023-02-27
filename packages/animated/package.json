@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/animated",
-  "version": "9.7.0",
+  "version": "9.7.1",
   "description": "Animated component props for React",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -42,8 +42,8 @@
     "dev": "tsup"
   },
   "dependencies": {
-    "@react-spring/shared": "~9.7.0",
-    "@react-spring/types": "~9.7.0"
+    "@react-spring/shared": "~9.7.1",
+    "@react-spring/types": "~9.7.1"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
