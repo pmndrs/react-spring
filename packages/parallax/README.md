@@ -88,6 +88,6 @@ The `ref` for the inner container `div` of `Parallax`.
 
 ## Demos
 
-- [Parallax - vertical](https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/parallax-vert)
-- [Parallax - horizontal](https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/parallax)
-- [Parallax - sticky](https://codesandbox.io/s/github/pmndrs/react-spring/tree/master/demo/src/sandboxes/parallax-sticky)
+- [Parallax - vertical](https://codesandbox.io/s/github/pmndrs/react-spring/tree/main/demo/src/sandboxes/parallax-vert)
+- [Parallax - horizontal](https://codesandbox.io/s/github/pmndrs/react-spring/tree/main/demo/src/sandboxes/parallax)
+- [Parallax - sticky](https://codesandbox.io/s/github/pmndrs/react-spring/tree/main/demo/src/sandboxes/parallax-sticky)

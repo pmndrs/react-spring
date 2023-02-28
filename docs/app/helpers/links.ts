@@ -1,7 +1,7 @@
 import { FlattenedNavigation } from './navigation'
 
 const BASE_URL =
-  'https://github.com/pmndrs/react-spring/tree/master/docs/app/routes/docs/'
+  'https://github.com/pmndrs/react-spring/tree/main/docs/app/routes/docs/'
 
 export const getDocFilePathToGithub = (item?: FlattenedNavigation): string => {
   if (!item) {

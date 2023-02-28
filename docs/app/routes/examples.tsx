@@ -185,7 +185,7 @@ export default function Examples() {
               }}>
               {`Got an example you want to see here & share with the community?`}{' '}
               Check out{' '}
-              <Anchor href="https://github.com/pmndrs/react-spring/tree/master/demo/CONTRIBUTING.md">
+              <Anchor href="https://github.com/pmndrs/react-spring/tree/main/demo/CONTRIBUTING.md">
                 this guide
               </Anchor>
               .

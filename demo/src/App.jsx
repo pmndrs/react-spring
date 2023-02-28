@@ -137,7 +137,7 @@ const DemoCard = ({ children, link }) => {
         <figure className={styles.card}>
           <div className={styles['image-container']}>
             <img
-              src={`https://raw.githubusercontent.com/pmndrs/react-spring/master/demo/src/sandboxes/${link}/thumbnail.png`}
+              src={`https://raw.githubusercontent.com/pmndrs/react-spring/main/demo/src/sandboxes/${link}/thumbnail.png`}
               placeholder="empty"
               loading="lazy"
               alt={children}

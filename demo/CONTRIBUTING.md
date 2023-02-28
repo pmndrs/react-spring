@@ -2,7 +2,7 @@
 
 ## Preface
 
-Thanks for being interested in contributing a demo! Before you read more, have you read the [contribution guide](https://github.com/pmndrs/react-spring/blob/master/CONTRIBUTING.md) for the repo? If not, give it a look first!
+Thanks for being interested in contributing a demo! Before you read more, have you read the [contribution guide](https://github.com/pmndrs/react-spring/blob/main/CONTRIBUTING.md) for the repo? If not, give it a look first!
 
 ## What is required
 
