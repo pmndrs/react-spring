@@ -69,7 +69,7 @@
     "@studiocompanion/scripts": "^1.2.2",
     "@testing-library/cypress": "^8.0.7",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
+    "@testing-library/react": "^14.0.0",
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^27.5.2",
     "@types/lodash.clamp": "^4.0.7",
