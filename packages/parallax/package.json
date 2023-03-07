@@ -38,6 +38,7 @@
   ],
   "scripts": {
     "build": "tsup --legacy-output",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsup",
     "test": "vite serve ./test"
   },

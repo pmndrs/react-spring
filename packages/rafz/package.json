@@ -36,6 +36,7 @@
   "author": "Josh Ellis",
   "scripts": {
     "build": "tsup --legacy-output",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsup"
   }
 }

@@ -64,7 +64,7 @@
     "@commitlint/config-conventional": "^17.4.4",
     "@preconstruct/cli": "^2.3.0",
     "@react-three/fiber": "^8.11.9",
-    "@remix-run/dev": "patch:@remix-run/dev@npm%3A1.12.0#./.yarn/patches/@remix-run-dev-npm-1.12.0-4cb56cd8f7.patch",
+    "@remix-run/dev": "^1.14.0",
     "@remix-run/serve": "^1.14.0",
     "@studiocompanion/scripts": "^1.2.2",
     "@testing-library/cypress": "^8.0.7",
@@ -118,5 +118,8 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-spring"
   },
-  "packageManager": "yarn@3.4.1"
+  "packageManager": "yarn@3.4.1",
+  "resolutions": {
+    "@remix-run/dev@^1.14.0": "patch:@remix-run/dev@npm%3A1.14.0#./.yarn/patches/@remix-run-dev-npm-1.14.0-33b55fa3ee.patch"
+  }
 }

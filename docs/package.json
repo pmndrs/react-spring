@@ -8,6 +8,7 @@
     "build": "remix build",
     "dev": "concurrently \"yarn dev:remix\" \"yarn scripts:watch\"",
     "dev:remix": "remix dev",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .cache && rm -rf api",
     "scripts:build": "ts-node ./scripts/build.ts",
     "scripts:watch": "ts-node ./scripts/watch.ts"
   },

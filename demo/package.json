@@ -8,6 +8,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "clean": "rm -rf .turbo && rm -rf node_modules",
     "serve": "vite preview"
   },
   "dependencies": {
