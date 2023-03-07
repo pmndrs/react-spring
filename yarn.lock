@@ -18012,7 +18012,7 @@ __metadata:
     "@commitlint/config-conventional": ^17.4.4
     "@preconstruct/cli": ^2.3.0
     "@react-three/fiber": ^8.11.9
-    "@remix-run/dev": ^1.14.0
+    "@remix-run/dev": "patch:@remix-run/dev@npm%3A1.14.0#./.yarn/patches/@remix-run-dev-npm-1.14.0-33b55fa3ee.patch"
     "@remix-run/serve": ^1.14.0
     "@studiocompanion/scripts": ^1.2.2
     "@testing-library/cypress": ^8.0.7
