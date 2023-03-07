@@ -5150,9 +5150,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/dev@npm:1.12.0":
-  version: 1.12.0
-  resolution: "@remix-run/dev@npm:1.12.0"
+"@remix-run/dev@npm:1.14.0":
+  version: 1.14.0
+  resolution: "@remix-run/dev@npm:1.14.0"
   dependencies:
     "@babel/core": ^7.18.6
     "@babel/generator": ^7.18.6
@@ -5165,7 +5165,7 @@ __metadata:
     "@babel/types": ^7.20.2
     "@esbuild-plugins/node-modules-polyfill": ^0.1.4
     "@npmcli/package-json": ^2.0.0
-    "@remix-run/server-runtime": 1.12.0
+    "@remix-run/server-runtime": 1.14.0
     "@vanilla-extract/integration": ^6.0.2
     arg: ^5.0.1
     cacache: ^15.0.5
@@ -5191,10 +5191,12 @@ __metadata:
     ora: ^5.4.1
     postcss: ^8.4.19
     postcss-discard-duplicates: ^5.1.0
+    postcss-load-config: ^4.0.1
     postcss-modules: ^6.0.0
     prettier: 2.7.1
     pretty-ms: ^7.0.1
     proxy-agent: ^5.0.0
+    react-refresh: ^0.14.0
     recast: ^0.21.5
     remark-frontmatter: 4.0.1
     remark-mdx-frontmatter: ^1.0.1
@@ -5205,19 +5207,19 @@ __metadata:
     ws: ^7.4.5
     xdm: ^2.0.0
   peerDependencies:
-    "@remix-run/serve": ^1.12.0
+    "@remix-run/serve": ^1.14.0
   peerDependenciesMeta:
     "@remix-run/serve":
       optional: true
   bin:
     remix: dist/cli.js
-  checksum: 318a9aa0f6074500fd049133008da171e6b2dd7be0c38d4590dcedf6d58d3abc7d9eaf38d6acbc88d402d5d2a1fb3c396e3f0c36ebd1fe46652122e9cb81de2c
+  checksum: b35aae74411f501d8f65d7e3f50d202ae3e1e3c3aec9082bf8373721e8858430f1e2021644e320c7aa3f967cc72793bacf7fa7c16b91920dd9b2aa5154eb9ccf
   languageName: node
   linkType: hard
 
-"@remix-run/dev@patch:@remix-run/dev@npm%3A1.12.0#./.yarn/patches/@remix-run-dev-npm-1.12.0-4cb56cd8f7.patch::locator=react-spring--root%40workspace%3A.":
-  version: 1.12.0
-  resolution: "@remix-run/dev@patch:@remix-run/dev@npm%3A1.12.0#./.yarn/patches/@remix-run-dev-npm-1.12.0-4cb56cd8f7.patch::version=1.12.0&hash=e65a8a&locator=react-spring--root%40workspace%3A."
+"@remix-run/dev@patch:@remix-run/dev@npm%3A1.14.0#./.yarn/patches/@remix-run-dev-npm-1.14.0-33b55fa3ee.patch::locator=react-spring--root%40workspace%3A.":
+  version: 1.14.0
+  resolution: "@remix-run/dev@patch:@remix-run/dev@npm%3A1.14.0#./.yarn/patches/@remix-run-dev-npm-1.14.0-33b55fa3ee.patch::version=1.14.0&hash=d43cfe&locator=react-spring--root%40workspace%3A."
   dependencies:
     "@babel/core": ^7.18.6
     "@babel/generator": ^7.18.6
@@ -5230,7 +5232,7 @@ __metadata:
     "@babel/types": ^7.20.2
     "@esbuild-plugins/node-modules-polyfill": ^0.1.4
     "@npmcli/package-json": ^2.0.0
-    "@remix-run/server-runtime": 1.12.0
+    "@remix-run/server-runtime": 1.14.0
     "@vanilla-extract/integration": ^6.0.2
     arg: ^5.0.1
     cacache: ^15.0.5
@@ -5256,10 +5258,12 @@ __metadata:
     ora: ^5.4.1
     postcss: ^8.4.19
     postcss-discard-duplicates: ^5.1.0
+    postcss-load-config: ^4.0.1
     postcss-modules: ^6.0.0
     prettier: 2.7.1
     pretty-ms: ^7.0.1
     proxy-agent: ^5.0.0
+    react-refresh: ^0.14.0
     recast: ^0.21.5
     remark-frontmatter: 4.0.1
     remark-mdx-frontmatter: ^1.0.1
@@ -5270,13 +5274,13 @@ __metadata:
     ws: ^7.4.5
     xdm: ^2.0.0
   peerDependencies:
-    "@remix-run/serve": ^1.12.0
+    "@remix-run/serve": ^1.14.0
   peerDependenciesMeta:
     "@remix-run/serve":
       optional: true
   bin:
     remix: dist/cli.js
-  checksum: 3e5b29cb4a0b431fa1e6b4a70660d4903a736ef716c9ba5b5a5399a2d79b495183fe6b50bfce4cf7925769e0aea0ce874e6863d936e6d1b5cbf720e69ef7f050
+  checksum: 567fea5bc936011b4471c553e151b19f36ebc91c1f7328c6f022e926f003bbdd438d6bb814b7001518b1b8cc92d1e077d77380f54480e8e9a1bb4c048a0c1760
   languageName: node
   linkType: hard
 
@@ -5322,13 +5326,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:1.3.1":
-  version: 1.3.1
-  resolution: "@remix-run/router@npm:1.3.1"
-  checksum: c91cba100b13fbb83cdaf43ca66b0d9fc1ab9dfe0bc58ac80ff2a4889488bf518a111267c790350eac8c7f764cc7809402430de15bdf70282d0bd60acf06d9de
-  languageName: node
-  linkType: hard
-
 "@remix-run/router@npm:1.3.3":
   version: 1.3.3
   resolution: "@remix-run/router@npm:1.3.3"
@@ -5347,21 +5344,6 @@ __metadata:
   bin:
     remix-serve: dist/cli.js
   checksum: 307b8e2c23f509fd30757e5044fe6bcadfa732e383f03bbff329b21d97c46306a943ce139523c1dea8dab5012e4b6e04d927297e1f696e0ed214c8f08d6ab1a9
-  languageName: node
-  linkType: hard
-
-"@remix-run/server-runtime@npm:1.12.0":
-  version: 1.12.0
-  resolution: "@remix-run/server-runtime@npm:1.12.0"
-  dependencies:
-    "@remix-run/router": 1.3.1
-    "@types/cookie": ^0.4.0
-    "@types/react": ^18.0.15
-    "@web3-storage/multipart-parser": ^1.0.0
-    cookie: ^0.4.1
-    set-cookie-parser: ^2.4.8
-    source-map: ^0.7.3
-  checksum: 67b4d433a9b9ef494b9e2c5691a08b627697f197f7973d9c0b36904becf402d8389b19cf4978ed69a2e918045206bb7382c1f5933b562c7b0358dfbc1eecda0b
   languageName: node
   linkType: hard
 
@@ -17431,6 +17413,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss-load-config@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "postcss-load-config@npm:4.0.1"
+  dependencies:
+    lilconfig: ^2.0.5
+    yaml: ^2.1.1
+  peerDependencies:
+    postcss: ">=8.0.9"
+    ts-node: ">=9.0.0"
+  peerDependenciesMeta:
+    postcss:
+      optional: true
+    ts-node:
+      optional: true
+  checksum: b61f890499ed7dcda1e36c20a9582b17d745bad5e2b2c7bc96942465e406bc43ae03f270c08e60d1e29dab1ee50cb26970b5eb20c9aae30e066e20bd607ae4e4
+  languageName: node
+  linkType: hard
+
 "postcss-modules-extract-imports@npm:^3.0.0":
   version: 3.0.0
   resolution: "postcss-modules-extract-imports@npm:3.0.0"
@@ -18129,6 +18129,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-refresh@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "react-refresh@npm:0.14.0"
+  checksum: dc69fa8c993df512f42dd0f1b604978ae89bd747c0ed5ec595c0cc50d535fb2696619ccd98ae28775cc01d0a7c146a532f0f7fb81dc22e1977c242a4912312f4
+  languageName: node
+  linkType: hard
+
 "react-refresh@npm:^0.4.0":
   version: 0.4.3
   resolution: "react-refresh@npm:0.4.3"
@@ -18236,7 +18243,7 @@ __metadata:
     "@commitlint/config-conventional": ^17.4.4
     "@preconstruct/cli": ^2.3.0
     "@react-three/fiber": ^8.11.9
-    "@remix-run/dev": "patch:@remix-run/dev@npm%3A1.12.0#./.yarn/patches/@remix-run-dev-npm-1.12.0-4cb56cd8f7.patch"
+    "@remix-run/dev": ^1.14.0
     "@remix-run/serve": ^1.14.0
     "@studiocompanion/scripts": ^1.2.2
     "@testing-library/cypress": ^8.0.7
@@ -22138,6 +22145,13 @@ __metadata:
   version: 1.10.2
   resolution: "yaml@npm:1.10.2"
   checksum: ce4ada136e8a78a0b08dc10b4b900936912d15de59905b2bf415b4d33c63df1d555d23acb2a41b23cf9fb5da41c256441afca3d6509de7247daa062fd2c5ea5f
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^2.1.1":
+  version: 2.2.1
+  resolution: "yaml@npm:2.2.1"
+  checksum: 84f68cbe462d5da4e7ded4a8bded949ffa912bc264472e5a684c3d45b22d8f73a3019963a32164023bdf3d83cfb6f5b58ff7b2b10ef5b717c630f40bd6369a23
   languageName: node
   linkType: hard
 
