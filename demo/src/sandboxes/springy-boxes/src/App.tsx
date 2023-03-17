@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import * as React from 'react'
 import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
 import { useSprings, a } from '@react-spring/three'
@@ -31,7 +31,7 @@ function Content() {
     config: { mass: 20, tension: 150, friction: 50 }
   }))
 
-  useEffect(() => void setInterval(() => api.start((i) => ({ ...random(i), delay: i * 40 })), 3000), [])
+  React.useEffect(() => void setInterval(() => api.start((i) => ({ ...random(i), delay: i * 40 })), 3000), [])
 
   return (
     <>

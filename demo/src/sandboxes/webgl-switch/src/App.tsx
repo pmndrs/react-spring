@@ -1,15 +1,16 @@
-import React, { useState, useEffect, Suspense } from "react"
+import * as React from "react"
 import { Canvas } from "@react-three/fiber"
 import { useGLTF, useTexture, Shadow, meshBounds } from "@react-three/drei"
 import { animated, SpringValue, useSpring } from "@react-spring/web"
 import { a } from "@react-spring/three"
+import "./app.css"
 
 function Switch({ x, set }: { set: React.Dispatch<React.SetStateAction<number>>; x: SpringValue<number> }) {
   const { nodes, materials } = useGLTF("/switch.glb")
   const texture = useTexture("/cross.jpg")
   // Hover state
-  const [hovered, setHover] = useState(false)
-  useEffect(() => void (document.body.style.cursor = hovered ? "pointer" : "auto"), [hovered])
+  const [hovered, setHover] = React.useState(false)
+  React.useEffect(() => void (document.body.style.cursor = hovered ? "pointer" : "auto"), [hovered])
   // Events
   const onClick = () => set((toggle) => Number(!toggle))
   const onPointerOver = () => setHover(true)
@@ -35,7 +36,7 @@ function Switch({ x, set }: { set: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function App() {
-  const [toggle, set] = useState(0)
+  const [toggle, set] = React.useState(0)
   // Set up a shared spring which simply animates the toggle above
   // We use this spring to interpolate all the colors, position and rotations
   const [{ x }] = useSpring({ x: toggle, config: { mass: 5, tension: 1000, friction: 50, precision: 0.0001 } }, [toggle])
@@ -53,9 +54,9 @@ export default function App() {
         <a.directionalLight position={[-20, -20, -20]} intensity={0.5} color={color} />
         <a.pointLight position={[0, 0, 5]} distance={5} intensity={5} color={color} />
         <a.spotLight color={color} position={[10, 20, 20]} angle={0.1} intensity={2} shadow-mapSize-width={2048} shadow-mapSize-height={2048} shadow-bias={-0.00001} castShadow />
-        <Suspense fallback={null}>
+        <React.Suspense fallback={null}>
           <Switch x={x} set={set} />
-        </Suspense>
+        </React.Suspense>
         <mesh receiveShadow renderOrder={1000} position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[10, 10]} />
           <a.shadowMaterial transparent opacity={x.to((x) => 0.1 + x * 0.2)} />
