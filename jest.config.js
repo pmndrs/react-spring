@@ -1,7 +1,7 @@
 const path = require('path')
 
+/** @type {import('jest').Config} */
 module.exports = {
-  preset: 'ts-jest',
   setupFilesAfterEnv: [path.join(__dirname, 'packages/core/test/setup.ts')],
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: [
@@ -27,5 +27,8 @@ module.exports = {
   },
   moduleFileExtensions: ['js', 'ts', 'tsx'],
   coverageReporters: ['json', 'html', 'text'],
-  timers: 'fake',
+  fakeTimers: { enableGlobally: true },
+  transform: {
+    '^.+\\.(t|j)sx?$': '@swc/jest',
+  },
 }
