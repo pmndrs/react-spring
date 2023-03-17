@@ -30,6 +30,7 @@
     "@supabase/supabase-js": "^2.10.0",
     "@use-gesture/react": "^10.2.24",
     "@vercel/node": "^2.9.10",
+    "gray-matter": "^4.0.3",
     "hast-util-to-html": "7.1.3",
     "jotai": "^2.0.3",
     "parse-numeric-range": "^1.3.0",
@@ -47,6 +48,11 @@
     "unified": "9.2.2",
     "unist-util-visit": "2.0.3",
     "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "concurrently": "^7.6.0",
+    "ts-node": "^10.9.1"
   },
   "engines": {
     "node": ">=v18.14.2"

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SpringValue can animate a number 1`] = `
-Array [
+[
   0.100002,
   0.200004,
   0.300006,
@@ -16,7 +16,7 @@ Array [
 `;
 
 exports[`SpringValue can animate a string 1`] = `
-Array [
+[
   "1.00002px 2.00004px",
   "2.00004px 4.00008px",
   "3.00006px 6.00012px",
@@ -31,44 +31,44 @@ Array [
 `;
 
 exports[`SpringValue can animate an array of numbers 1`] = `
-Array [
-  Array [
+[
+  [
     1.00002,
     2.00004,
   ],
-  Array [
+  [
     2.00004,
     4.00008,
   ],
-  Array [
+  [
     3.00006,
     6.00012,
   ],
-  Array [
+  [
     4.00008,
     8.00016,
   ],
-  Array [
+  [
     5.0001,
     10.0002,
   ],
-  Array [
+  [
     6.00012,
     12.00024,
   ],
-  Array [
+  [
     7.00014,
     14.00028,
   ],
-  Array [
+  [
     8.00016,
     16.00032,
   ],
-  Array [
+  [
     9.00018,
     18.00036,
   ],
-  Array [
+  [
     10,
     20,
   ],
@@ -76,7 +76,7 @@ Array [
 `;
 
 exports[`SpringValue can have an animated string as its target 1`] = `
-Array [
+[
   "rgba(255, 255, 0, 1)",
   "rgba(255, 229, 0, 1)",
   "rgba(255, 204, 0, 1)",
@@ -92,7 +92,7 @@ Array [
 `;
 
 exports[`SpringValue the "loop" prop can be combined with the "reverse" prop 1`] = `
-Array [
+[
   0.33334,
   0.66668,
   1,
@@ -106,7 +106,7 @@ Array [
 `;
 
 exports[`SpringValue the "loop" prop resets the animation once finished 1`] = `
-Array [
+[
   0.33334,
   0.66668,
   1,
@@ -114,7 +114,7 @@ Array [
 `;
 
 exports[`SpringValue when "reverse" prop is true swaps the "to" and "from" props 1`] = `
-Array [
+[
   0.9773651566921419,
   0.9238447110500605,
   0.852727045431224,
@@ -161,7 +161,7 @@ Array [
 `;
 
 exports[`SpringValue when "reverse" prop is true works when "from" was set by an earlier update 1`] = `
-Array [
+[
   0.9773651566921419,
   0.9238447110500605,
   0.852727045431224,
@@ -208,7 +208,7 @@ Array [
 `;
 
 exports[`SpringValue when "reverse" prop is true works when "to" and "from" were set by an earlier update 1`] = `
-Array [
+[
   0.022634843307857987,
   0.07615528894993949,
   0.14727295456877587,
@@ -265,7 +265,7 @@ Array [
 `;
 
 exports[`SpringValue when "to" prop equals current value avoids interrupting an active animation 1`] = `
-Array [
+[
   0.022634843307857987,
   0.05403278177365278,
   0.07284142865128296,

@@ -5,8 +5,8 @@
       "outputs": ["dist/**", "public/build/**", "api/**"],
       "dependsOn": ["^build"]
     },
-    "test:unit": {
-      "inputs": ["packages/**/src/**", "targets/**/src/**"]
+    "lint": {
+      "outputs": []
     },
     "dev": {
       "dependsOn": ["^build"],
