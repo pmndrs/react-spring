@@ -1,5 +1,5 @@
 diff --git a/dist/compiler/plugins/mdx.js b/dist/compiler/plugins/mdx.js
-index 727fa32c7ff0db6fd1db6ab81aa9c6d9d819d4a4..51ab32cb5a62dfe54883d7004f5c3499f3dc2422 100644
+index 727fa32c7ff0db6fd1db6ab81aa9c6d9d819d4a4..94d32e0b3d4cc6017c21e99780f4ab82cf08da2a 100644
 --- a/dist/compiler/plugins/mdx.js
 +++ b/dist/compiler/plugins/mdx.js
 @@ -96,7 +96,8 @@ export const handle = typeof attributes !== "undefined" && attributes.handle;
@@ -8,7 +8,28 @@ index 727fa32c7ff0db6fd1db6ab81aa9c6d9d819d4a4..51ab32cb5a62dfe54883d7004f5c3499
              rehypePlugins,
 -            remarkPlugins
 +            remarkPlugins,
-+            providerImportSource: "@mdx-js/react"
++            providerImportSource: '@mdx-js/react'
            });
            let contents = `
  ${compiled.value}
+diff --git a/package.json b/package.json
+index 3a0b67f47e82302b698991bab0efc796e544a429..279c6d030d75b51d880fbdb28ac950fb975c293e 100644
+--- a/package.json
++++ b/package.json
+@@ -28,6 +28,7 @@
+     "@babel/traverse": "^7.18.6",
+     "@babel/types": "^7.20.2",
+     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
++    "@mdx-js/react": "1.6.22",
+     "@npmcli/package-json": "^2.0.0",
+     "@remix-run/server-runtime": "1.12.0",
+     "@vanilla-extract/integration": "^6.0.2",
+@@ -67,7 +68,7 @@
+     "tar-fs": "^2.1.1",
+     "tsconfig-paths": "^4.0.0",
+     "ws": "^7.4.5",
+-    "xdm": "^2.0.0"
++    "xdm": "2.1.0"
+   },
+   "devDependencies": {
+     "@remix-run/serve": "1.12.0",

@@ -10,8 +10,11 @@ const parseCallouts = require('./scripts/mdx/remark-plugin-parser')
  * @type {import('@remix-run/dev/config').AppConfig}
  */
 module.exports = {
-  serverBuildTarget: 'vercel',
-  server: process.env.NODE_ENV === 'development' ? undefined : './server.js',
+  server:
+    process.env.NETLIFY || process.env.NETLIFY_LOCAL
+      ? './server.js'
+      : undefined,
+  serverBuildPath: '.netlify/functions-internal/server.js',
   ignoredRouteFiles: ['**/.*', '**/concepts/index.mdx', '**/api/index.mdx'],
   mdx: () => {
     return {

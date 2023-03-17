@@ -57,3 +57,6 @@ report.*.json
 #
 docs/public/build
 docs/api/*
+
+# Local Netlify folder
+.netlify
