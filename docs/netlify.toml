@@ -1,5 +1,5 @@
 [build]
-  command = "yarn build"
+  command = "cd ../ && yarn build"
   publish = "public"
 
 [[redirects]]
