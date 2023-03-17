@@ -34,7 +34,6 @@
     "three": "^0.150.1",
     "three-stdlib": "^2.21.8",
     "vec-la": "^1.5.0",
-    "vite": "^4.1.4",
     "wouter": "^2.10.0"
   },
   "devDependencies": {
