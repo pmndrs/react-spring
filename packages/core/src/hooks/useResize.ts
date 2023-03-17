@@ -6,7 +6,7 @@ import { SpringProps, SpringValues } from '../types'
 import { useSpring } from './useSpring'
 
 export interface UseResizeOptions extends Omit<SpringProps, 'to' | 'from'> {
-  container?: MutableRefObject<HTMLElement>
+  container?: MutableRefObject<HTMLElement | null | undefined>
 }
 
 /**
