@@ -30,7 +30,7 @@ const App = () => {
 
   const [avatarSprings, avatarApi] = useSprings(
     COLORS.length,
-    i => ({
+    () => ({
       y: 0,
     }),
     []
@@ -47,7 +47,7 @@ const App = () => {
       y: avatarRefInitialPositions.current[i],
       immediate: true,
     }))
-  }, [])
+  }, [avatarApi])
 
   const getBounds = React.useCallback(() => {
     const { height, width } = containerRef.current.getBoundingClientRect()

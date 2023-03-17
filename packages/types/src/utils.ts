@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-interface */
 /**
  * MIT License
  * Copyright (c) Alec Larson
@@ -92,7 +94,7 @@ export interface UnknownProps extends Lookup<unknown> {}
 
 /** Use `[T] extends [Any]` to know if a type parameter is `any` */
 export class Any {
-  // @ts-ignore
+  // @ts-expect-error – dont worry about this.
   private _: never
 }
 

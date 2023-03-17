@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { animated, config, useTransition } from '@react-spring/web'
+import { animated, useTransition } from '@react-spring/web'
 
 import { styled } from '~/styles/stitches.config'
 

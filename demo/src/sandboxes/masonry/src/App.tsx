@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import * as React from 'react'
 import useMeasure from 'react-use-measure'
 import { useTransition, a } from '@react-spring/web'
 import shuffle from 'lodash.shuffle'
@@ -14,16 +14,16 @@ function Masonry() {
   // Hook2: Measure the width of the container element
   const [ref, { width }] = useMeasure()
   // Hook3: Hold items
-  const [items, set] = useState(data)
+  const [items, set] = React.useState(data)
   // Hook4: shuffle data every 2 seconds
-  useEffect(() => {
+  React.useEffect(() => {
     const t = setInterval(() => set(shuffle), 2000)
     return () => clearInterval(t)
   }, [])
   // Hook5: Form a grid of stacked items using width & columns we got from hooks 1 & 2
-  const [heights, gridItems] = useMemo(() => {
-    let heights = new Array(columns).fill(0) // Each column gets a height starting with zero
-    let gridItems = items.map((child, i) => {
+  const [heights, gridItems] = React.useMemo(() => {
+    const heights = new Array(columns).fill(0) // Each column gets a height starting with zero
+    const gridItems = items.map(child => {
       const column = heights.indexOf(Math.min(...heights)) // Basic masonry-grid placing, puts tile into the smallest column using Math.min
       const x = (width / columns) * column // x = container width / number of columns * column index,
       const y = (heights[column] += child.height / 2) - child.height / 2 // y = it's just the height of the current column

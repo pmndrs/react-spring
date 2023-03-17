@@ -93,6 +93,7 @@ function interpolate(
 }
 
 function findRange(input: number, inputRange: readonly number[]) {
+  // eslint-disable-next-line no-var
   for (var i = 1; i < inputRange.length - 1; ++i)
     if (inputRange[i] >= input) break
   return i - 1

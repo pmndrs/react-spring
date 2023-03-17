@@ -17,7 +17,7 @@ interface HeaderSubnavProps {
 
 export const HeaderSubnav = ({ className, subnav }: HeaderSubnavProps) => {
   const subNavScrollRef = useRef<HTMLDivElement>(null!)
-  const [springs, ref] = useSprings(2, i => ({
+  const [springs, ref] = useSprings(2, () => ({
     opacity: 0,
   }))
 

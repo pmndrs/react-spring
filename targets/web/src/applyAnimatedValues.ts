@@ -50,7 +50,7 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
   }
 
   // Apply CSS styles
-  for (let name in style) {
+  for (const name in style) {
     if (style.hasOwnProperty(name)) {
       const value = dangerousStyleValue(name, style[name])
       if (isCustomPropRE.test(name)) {

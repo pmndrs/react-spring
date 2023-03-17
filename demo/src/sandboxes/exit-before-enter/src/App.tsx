@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react'
+import * as React from 'react'
 import {
   useSpringRef,
   animated,
@@ -15,7 +15,7 @@ const IMAGES = [
 ]
 
 export default function App() {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = React.useState(0)
   const springApi = useSpringRef()
 
   const transitions = useTransition(activeIndex, {
@@ -55,9 +55,9 @@ export default function App() {
     ref: springApi,
   })
 
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     springApi.start()
-  }, [activeIndex])
+  }, [activeIndex, springApi])
 
   return (
     <div className={styles.container}>

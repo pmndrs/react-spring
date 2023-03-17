@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import * as React from 'react'
 import { useSprings, animated } from '@react-spring/web'
 import { useDrag } from 'react-use-gesture'
 import clamp from 'lodash.clamp'
@@ -6,25 +6,27 @@ import swap from 'lodash-move'
 
 import styles from './styles.module.css'
 
-const fn = (order: number[], active = false, originalIndex = 0, curIndex = 0, y = 0) => (index: number) =>
-  active && index === originalIndex
-    ? {
-        y: curIndex * 50 + y,
-        scale: 1.1,
-        zIndex: 1,
-        shadow: 15,
-        immediate: (key: string) => key === 'y' || key === 'zIndex',
-      }
-    : {
-        y: order.indexOf(index) * 50,
-        scale: 1,
-        zIndex: 0,
-        shadow: 1,
-        immediate: false,
-      }
+const fn =
+  (order: number[], active = false, originalIndex = 0, curIndex = 0, y = 0) =>
+  (index: number) =>
+    active && index === originalIndex
+      ? {
+          y: curIndex * 50 + y,
+          scale: 1.1,
+          zIndex: 1,
+          shadow: 15,
+          immediate: (key: string) => key === 'y' || key === 'zIndex',
+        }
+      : {
+          y: order.indexOf(index) * 50,
+          scale: 1,
+          zIndex: 0,
+          shadow: 1,
+          immediate: false,
+        }
 
 function DraggableList({ items }: { items: string[] }) {
-  const order = useRef(items.map((_, index) => index)) // Store indicies as a local ref, this represents the item order
+  const order = React.useRef(items.map((_, index) => index)) // Store indicies as a local ref, this represents the item order
   const [springs, api] = useSprings(items.length, fn(order.current)) // Create springs, each corresponds to an item, controlling its transform, scale, etc.
   const bind = useDrag(({ args: [originalIndex], active, movement: [, y] }) => {
     const curIndex = order.current.indexOf(originalIndex)
@@ -44,9 +46,9 @@ function DraggableList({ items }: { items: string[] }) {
             boxShadow: shadow.to(s => `rgba(0, 0, 0, 0.15) 0px ${s}px ${2 * s}px 0px`),
             y,
             scale,
-          }}
-          children={items[i]}
-        />
+          }}>
+          {items[i]}
+        </animated.div>
       ))}
     </div>
   )

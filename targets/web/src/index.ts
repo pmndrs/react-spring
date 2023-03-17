@@ -16,6 +16,7 @@ Globals.assign({
 const host = createHost(primitives, {
   applyAnimatedValues,
   createAnimatedStyle: style => new AnimatedStyle(style),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getComponentProps: ({ scrollTop, scrollLeft, ...props }) => props,
 })
 

@@ -21,7 +21,7 @@ export class AnimatedString extends AnimatedValue<Value> {
   }
 
   getValue() {
-    let value = this._string
+    const value = this._string
     return value == null ? (this._string = this._toString(this._value)) : value
   }
 

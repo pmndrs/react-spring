@@ -5,7 +5,6 @@ import { styled } from '~/styles/stitches.config'
 import { HomeBlockCopy } from './HomeBlockCopy'
 import { Section } from './HomeBlockSection'
 import { Pre } from '../Code/Pre'
-import { useState } from 'react'
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
 
 const listItems = [
@@ -233,6 +232,7 @@ export const HomeBlockMore = () => {
         />
         {springs.map((style, i) => (
           <animated.code
+            key={i}
             className="language-jsx"
             dangerouslySetInnerHTML={{ __html: dataFixtures[i] }}
             style={{ ...style, position: 'absolute', top: 30, left: 30 }}

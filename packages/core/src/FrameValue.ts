@@ -105,6 +105,7 @@ export abstract class FrameValue<T = any> extends FluidValue<
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace FrameValue {
   /** A parent changed its value */
   interface ChangeEvent<T = any> {

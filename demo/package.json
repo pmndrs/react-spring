@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "clean": "rm -rf .turbo && rm -rf node_modules",
+    "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
     "serve": "vite preview"
   },
   "dependencies": {
