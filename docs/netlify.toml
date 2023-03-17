@@ -1,10 +1,10 @@
 [build]
   command = "yarn build"
-  publish = "docs/public"
+  publish = "public"
 
 [[redirects]]
   from = "/*"
-  to = "/docs/.netlify/functions-internal/server"
+  to = "/.netlify/functions-internal/server"
   status = 200
 
 [[headers]]
