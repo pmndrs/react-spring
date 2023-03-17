@@ -4895,7 +4895,7 @@ __metadata:
     "@use-gesture/react": ^10.2.24
     "@vercel/node": ^2.9.10
     hast-util-to-html: 7.1.3
-    jotai: ^1.13.1
+    jotai: ^2.0.3
     parse-numeric-range: ^1.3.0
     phosphor-react: ^1.4.1
     react: ^18.2.0
@@ -13844,46 +13844,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jotai@npm:^1.13.1":
-  version: 1.13.1
-  resolution: "jotai@npm:1.13.1"
+"jotai@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "jotai@npm:2.0.3"
   peerDependencies:
-    "@babel/core": "*"
-    "@babel/template": "*"
-    jotai-devtools: "*"
-    jotai-immer: "*"
-    jotai-optics: "*"
-    jotai-redux: "*"
-    jotai-tanstack-query: "*"
-    jotai-urql: "*"
-    jotai-valtio: "*"
-    jotai-xstate: "*"
-    jotai-zustand: "*"
-    react: ">=16.8"
+    react: ">=17.0.0"
   peerDependenciesMeta:
-    "@babel/core":
+    react:
       optional: true
-    "@babel/template":
-      optional: true
-    jotai-devtools:
-      optional: true
-    jotai-immer:
-      optional: true
-    jotai-optics:
-      optional: true
-    jotai-redux:
-      optional: true
-    jotai-tanstack-query:
-      optional: true
-    jotai-urql:
-      optional: true
-    jotai-valtio:
-      optional: true
-    jotai-xstate:
-      optional: true
-    jotai-zustand:
-      optional: true
-  checksum: bc1f88ec1d52dda7c2aa39d278b15c128a6babc91fe9294862feb1b2d8467e47fc37cd193fd1358107212b9a4e5f5a8ae9a5a5ed1e845b74421d4476ce5d9efd
+  checksum: 3ad1d6a9b7e40a8dd8cdc423441164c25852a328c98806ed0e2a283a4e07af661f4a88b50528367aeae582932171bc8979e45cbc9023af30b9f4a348faeed567
   languageName: node
   linkType: hard
 
