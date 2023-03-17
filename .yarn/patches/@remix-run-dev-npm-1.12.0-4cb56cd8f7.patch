@@ -1,5 +1,5 @@
 diff --git a/dist/compiler/plugins/mdx.js b/dist/compiler/plugins/mdx.js
-index 651ba9dfe532b84c3f74e47c20e7b71b6b34e0dd..0184a5ad6ef5b1c68aeb2503f5d96537ec6bea2d 100644
+index 727fa32c7ff0db6fd1db6ab81aa9c6d9d819d4a4..51ab32cb5a62dfe54883d7004f5c3499f3dc2422 100644
 --- a/dist/compiler/plugins/mdx.js
 +++ b/dist/compiler/plugins/mdx.js
 @@ -96,7 +96,8 @@ export const handle = typeof attributes !== "undefined" && attributes.handle;
