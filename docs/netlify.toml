@@ -1,5 +1,5 @@
 [build]
-command = "cd ../ && build && cd docs && cp _app_redirects public/_redirects"
+command = "cd ../ && yarn build && cd docs && cp _app_redirects public/_redirects"
 publish = "public"
 
 [dev]
