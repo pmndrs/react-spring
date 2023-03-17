@@ -1,0 +1,7 @@
+# This template uses this file instead of the typicial Netlify _redirects file.
+# For more information about redirects and rewrites, see https://docs.netlify.com/routing/redirects/.
+
+# Do not remove the line below. This is required to serve the site when deployed.
+/* /.netlify/functions/server 200
+
+# Add other redirects and rewrites here and/or in your netlify.toml

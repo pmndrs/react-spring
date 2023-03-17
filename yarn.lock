@@ -4708,7 +4708,7 @@ __metadata:
     "@radix-ui/react-tooltip": ^1.0.3
     "@react-spring/rafz": "workspace:^"
     "@react-spring/web": 9.7.1
-    "@remix-run/netlify": ^1.14.3
+    "@remix-run/netlify": 1.12.0
     "@remix-run/node": 1.12.0
     "@remix-run/react": 1.12.0
     "@stitches/react": ^1.2.8
@@ -5055,14 +5055,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/netlify@npm:^1.14.3":
-  version: 1.14.3
-  resolution: "@remix-run/netlify@npm:1.14.3"
+"@remix-run/netlify@npm:1.12.0":
+  version: 1.12.0
+  resolution: "@remix-run/netlify@npm:1.12.0"
   dependencies:
-    "@remix-run/node": 1.14.3
+    "@remix-run/node": 1.12.0
   peerDependencies:
     "@netlify/functions": ^0.10.0 || ^0.11.0 || ^1.0.0
-  checksum: ec1270164fcdf2836e1ef0b5a3422381c41cbbd63453ecf852718b966150019f0c9f63db8c2b02c6a623170c82b8ef385f4cf6429d9ec68bdef3cd7a7fabbe9c
+  checksum: 7997ba1987a3d60479ca90a09f7a58130965be27336c903eb87ce6dcda3d63fb84856a8a98d7d1fe95c660988db0f4a0ae2da5910816bbeb6114482b76c76c96
   languageName: node
   linkType: hard
 
@@ -5080,23 +5080,6 @@ __metadata:
     source-map-support: ^0.5.21
     stream-slice: ^0.1.2
   checksum: 20e0fa5298b8dc8801adc3721e71983ce0b13183f504f491a21229db937285e44dbad1e6075423ab0edcae70a82e20620af22a5d5dbc4911782c0e623ed5bb8a
-  languageName: node
-  linkType: hard
-
-"@remix-run/node@npm:1.14.3":
-  version: 1.14.3
-  resolution: "@remix-run/node@npm:1.14.3"
-  dependencies:
-    "@remix-run/server-runtime": 1.14.3
-    "@remix-run/web-fetch": ^4.3.2
-    "@remix-run/web-file": ^3.0.2
-    "@remix-run/web-stream": ^1.0.3
-    "@web3-storage/multipart-parser": ^1.0.0
-    abort-controller: ^3.0.0
-    cookie-signature: ^1.1.0
-    source-map-support: ^0.5.21
-    stream-slice: ^0.1.2
-  checksum: 29776fe04034970f2db97655bdaa4327fdd110731e2ca339bc4798df1a7879a8790b2570c29d61c7c51beee7da97b2e968c147bba85532916fd171e07839bacc
   languageName: node
   linkType: hard
 
@@ -5118,13 +5101,6 @@ __metadata:
   version: 1.3.1
   resolution: "@remix-run/router@npm:1.3.1"
   checksum: c91cba100b13fbb83cdaf43ca66b0d9fc1ab9dfe0bc58ac80ff2a4889488bf518a111267c790350eac8c7f764cc7809402430de15bdf70282d0bd60acf06d9de
-  languageName: node
-  linkType: hard
-
-"@remix-run/router@npm:1.3.3":
-  version: 1.3.3
-  resolution: "@remix-run/router@npm:1.3.3"
-  checksum: 9280f1c3e44c0fb84a74b401b5a47022dace06d5da0f26a7a68c7c0e57ad5ef95d30f3c2d333df2db3b63f84de81f7f8caa7e53189a7709d6c3eb466d126ed76
   languageName: node
   linkType: hard
 
@@ -5154,21 +5130,6 @@ __metadata:
     set-cookie-parser: ^2.4.8
     source-map: ^0.7.3
   checksum: 67b4d433a9b9ef494b9e2c5691a08b627697f197f7973d9c0b36904becf402d8389b19cf4978ed69a2e918045206bb7382c1f5933b562c7b0358dfbc1eecda0b
-  languageName: node
-  linkType: hard
-
-"@remix-run/server-runtime@npm:1.14.3":
-  version: 1.14.3
-  resolution: "@remix-run/server-runtime@npm:1.14.3"
-  dependencies:
-    "@remix-run/router": 1.3.3
-    "@types/cookie": ^0.4.0
-    "@types/react": ^18.0.15
-    "@web3-storage/multipart-parser": ^1.0.0
-    cookie: ^0.4.1
-    set-cookie-parser: ^2.4.8
-    source-map: ^0.7.3
-  checksum: 02ac5df4085d04a1d71ffc906c8b43587708e52f338d41285298f59e9cbdea75a845a96776783f255646daf5a43620c93892906fd3829ae7ec01518464f33b9f
   languageName: node
   linkType: hard
 
