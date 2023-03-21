@@ -128,7 +128,7 @@ describe('useSpringValue', () => {
     expect(spring2Frames).not.toEqual(spring1Frames)
   })
 
-  it('should not update the intial value on rerender', () => {
+  it('should not update the initial value on rerender', () => {
     const { result, rerender } = renderHook(props => useSpringValue(props), {
       initialProps: 0,
     })
