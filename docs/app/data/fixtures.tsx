@@ -596,7 +596,7 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
     null,
   ],
   [
-    'intial',
+    'initial',
     {
       label: 'object | function',
       content: <code>{`(item: Item, index: number) => object`}</code>,
