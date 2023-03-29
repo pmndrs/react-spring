@@ -4,6 +4,8 @@ import type { AnimationConfig } from '../AnimationConfig'
 import type { SpringValue } from '../SpringValue'
 import type { Readable } from './internal'
 
+export type { AnimationConfig }
+
 /** The object type of the `config` prop. */
 export type SpringConfig = Partial<AnimationConfig>
 
