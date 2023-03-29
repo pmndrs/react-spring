@@ -7,6 +7,7 @@ set -e
 
 version=$VERSION
 distTag=$DIST_TAG
+withTag=$WITH_TAG
 
 if [[ -z "$version" ]]; then
   echo "Please enter the version you want to publish"
@@ -20,4 +21,9 @@ fi
 
 # publish packages
 ./node_modules/.bin/changeset version --snapshot "$version"
-./node_modules/.bin/changeset publish --no-git-tag --snapshot --tag "$distTag"
+
+if [[ "$withTag" == "true" ]]; then
+  ./node_modules/.bin/changeset publish --snapshot --tag "$distTag"
+else
+  ./node_modules/.bin/changeset publish --no-git-tag --snapshot --tag "$distTag"
+fi
