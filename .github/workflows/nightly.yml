@@ -76,4 +76,5 @@ jobs:
         if: steps.version.outputs.NEXT_VERSION
         env:
           VERSION: ${{ steps.version.outputs.NEXT_VERSION }}
+          WITH_TAG: true
           DIST_TAG: nightly
