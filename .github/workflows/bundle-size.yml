@@ -7,22 +7,35 @@ on:
 
 jobs:
   size:
+    name: 'Bundle Size'
+    if: github.repository == 'pmndrs/react-spring'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup node
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Restore yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install
-        run: yarn install
+        run: yarn install --immutable
 
       - name: Build packages
-        run: yarn build
+        run: yarn build --filter=!@react-spring/doc
 
       - uses: preactjs/compressed-size-action@v2
         with:
