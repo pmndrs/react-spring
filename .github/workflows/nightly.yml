@@ -9,6 +9,8 @@ jobs:
     name: 'Nightly Release'
     if: github.repository == 'pmndrs/react-spring'
     runs-on: ubuntu-latest
+    outputs:
+      NEXT_VERSION: ${{ steps.version.outputs.NEXT_VERSION }}
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -40,10 +42,33 @@ jobs:
       - name: Install
         run: yarn install --immutable
 
+      - name: Check for changes
+        id: version
+        run: |
+          # get latest commit sha
+          SHA=$(git rev-parse HEAD)
+          # get first 7 characters of sha
+          SHORT_SHA=${SHA::7}
+          # get latest nightly tag
+          LATEST_NIGHTLY_TAG=$(git tag -l v0.0.0-nightly-\* --sort=-creatordate | head -n 1)
+          # check if last commit to dev starts would be the nightly tag we're about to create (minus the date)
+          # if it is, we'll skip the nightly creation
+          # if not, we'll create a new nightly tag
+          if [[ ${LATEST_NIGHTLY_TAG} == v0.0.0-nightly-${SHORT_SHA}-* ]]; then
+            echo "🛑 Latest nightly tag is the same as the latest commit sha, skipping nightly release"
+          else
+            # v0.0.0-nightly-<short sha>-<date>
+            NEXT_VERSION=nightly-${SHORT_SHA}
+            # set output so it can be used in other jobs
+            echo "NEXT_VERSION=${NEXT_VERSION}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build
+        if: steps.version.outputs.NEXT_VERSION
         run: yarn build --filter=!@react-spring/docs
 
       - run: ./scripts/version-and-publish.sh
+        if: steps.version.outputs.NEXT_VERSION
         env:
-          VERSION: 'nightly'
+          VERSION: ${{ steps.version.outputs.NEXT_VERSION }}
           DIST_TAG: nightly
