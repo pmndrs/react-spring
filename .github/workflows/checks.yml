@@ -1,11 +1,13 @@
-name: release
+name: Checks
 on:
   push:
     branches:
       - 'main'
   pull_request: {}
+
 jobs:
-  main:
+  checks:
+    name: 'Style Checks'
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
@@ -35,19 +37,10 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install
-        run: yarn install
-
-      - name: Build
-        run: yarn build
+        run: yarn install --immutable
 
       - name: Lint
         run: yarn lint
 
-      - name: Typecheck
-        run: yarn test:ts
-
-      - name: Tests (Jest)
-        run: yarn test:unit
-
-      - name: Test (Cypress)
-        run: yarn test:e2e
+      - name: Format
+        run: yarn prettier:check
