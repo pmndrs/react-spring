@@ -4,8 +4,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
-    name: 'Release'
+  experimental:
+    name: 'Experimental Release'
+    if: github.repository == 'pmndrs/react-spring'
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
@@ -36,10 +37,10 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install
-        run: yarn install
+        run: yarn install --immutable
 
-      - name: Install
-        run: yarn build
+      - name: Build
+        run: yarn build --filter=!@react-spring/doc
 
       - run: ./scripts/version-and-publish.sh
         env:
