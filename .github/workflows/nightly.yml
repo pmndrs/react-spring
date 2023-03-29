@@ -19,29 +19,6 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: Setup npmrc
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Restore yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install
-        run: yarn install --immutable
-
       - name: Check for changes
         id: version
         run: |
@@ -51,7 +28,7 @@ jobs:
           SHORT_SHA=${SHA::7}
           # get latest nightly tag
           LATEST_NIGHTLY_TAG=$(git tag -l v0.0.0-nightly-\* --sort=-creatordate | head -n 1)
-          # check if last commit to dev starts would be the nightly tag we're about to create (minus the date)
+          # check if last commit to main would be the nightly tag we're about to create (minus the date)
           # if it is, we'll skip the nightly creation
           # if not, we'll create a new nightly tag
           if [[ ${LATEST_NIGHTLY_TAG} == v0.0.0-nightly-${SHORT_SHA}-* ]]; then
@@ -63,9 +40,37 @@ jobs:
             echo "NEXT_VERSION=${NEXT_VERSION}" >> $GITHUB_OUTPUT
           fi
 
+      - uses: actions/setup-node@v3
+        if: steps.version.outputs.NEXT_VERSION
+        with:
+          node-version: 18
+
+      - name: Get yarn cache directory path
+        if: steps.version.outputs.NEXT_VERSION
+        id: yarn-cache-dir
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Restore yarn cache
+        uses: actions/cache@v3
+        if: steps.version.outputs.NEXT_VERSION
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        if: steps.version.outputs.NEXT_VERSION
+        run: yarn install --immutable
+
       - name: Build
         if: steps.version.outputs.NEXT_VERSION
         run: yarn build --filter=!@react-spring/docs
+
+      - name: Setup npmrc
+        if: steps.version.outputs.NEXT_VERSION
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
 
       - run: ./scripts/version-and-publish.sh
         if: steps.version.outputs.NEXT_VERSION
