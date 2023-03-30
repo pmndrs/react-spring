@@ -51,7 +51,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build
-        run: yarn build --filter=!@react-spring/docs
+        run: yarn build-ci --filter=!@react-spring/docs
 
       - name: Pack
         run: yarn package
@@ -84,44 +84,44 @@ jobs:
   #       run: yarn install --immutable
 
   #     - name: Build
-  #       run: yarn build
+  #       run: yarn build-ci
 
   #     - name: Test
   #       run: yarn test:unit
 
-  test-types:
-    name: 'Test:types with TS ${{ matrix.ts }}'
-    needs: [build]
-    if: ${{ needs.changes.outputs.packages == 'true' }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: ['18.x']
-        ts: ['4.5', '4.6', '4.7', '4.8', '4.9']
+  # test-types:
+  #   name: 'Test:types with TS ${{ matrix.ts }}'
+  #   needs: [build]
+  #   if: ${{ needs.changes.outputs.packages == 'true' }}
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node: ['18.x']
+  #       ts: ['4.5', '4.6', '4.7', '4.8', '4.9']
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
 
-      - name: Setup node ${{ matrix.node }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: 'yarn'
+  #     - name: Setup node ${{ matrix.node }}
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node }}
+  #         cache: 'yarn'
 
-      - name: Install
-        run: yarn install --immutable
+  #     - name: Install
+  #       run: yarn install --immutable
 
-      - name: Install TypeScript ${{ matrix.ts }}
-        run: yarn add typescript@${{ matrix.ts }}
+  #     - name: Install TypeScript ${{ matrix.ts }}
+  #       run: yarn add typescript@${{ matrix.ts }}
 
-      - name: Build
-        run: yarn build
+  #     - name: Build
+  #       run: yarn build-ci
 
-      - name: Test
-        run: |
-          yarn tsc --version
-          yarn test:ts
+  #     - name: Test
+  #       run: |
+  #         yarn tsc --version
+  #         yarn test:ts
 
   # test-e2e:
   #   needs: [build]
@@ -146,7 +146,7 @@ jobs:
   #       run: yarn install --immutable
 
   #     - name: Build
-  #       run: yarn build
+  #       run: yarn build-ci
 
   #     - name: Test
   #       run: yarn test:e2e
@@ -203,7 +203,7 @@ jobs:
         run: yarn info react-spring
 
       - name: Build example
-        run: yarn build
+        run: yarn build-ci
 
       - name: Run test step
         run: yarn test

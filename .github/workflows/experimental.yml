@@ -32,7 +32,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build
-        run: yarn build --filter=!@react-spring/doc
+        run: yarn build-ci
 
       - run: ./scripts/version-and-publish.sh
         env:
