@@ -45,19 +45,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Restore yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: 'yarn'
 
       - name: Install
         run: yarn install --immutable
@@ -68,7 +56,10 @@ jobs:
       - name: Pack
         run: yarn package
 
-      # Upload artifact...
+      - uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: packages/react-spring/package.tgz
 
   test-unit:
     name: 'Test:unit'
@@ -87,19 +78,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Restore yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: 'yarn'
 
       - name: Install
         run: yarn install --immutable
@@ -128,19 +107,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Restore yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: 'yarn'
 
       - name: Install
         run: yarn install --immutable
@@ -173,19 +140,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Restore yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: 'yarn'
 
       - name: Install
         run: yarn install --immutable
@@ -204,14 +159,13 @@ jobs:
     strategy:
       matrix:
         node: ['18.x']
-        example:
-          [
-            'cra4',
-            'cra5',
-            'next',
-            'vite',
-            'node-standard',
-            'node-esm',
+        example: [
+            # 'cra4',
+            # 'cra5',
+            # 'next',
+            # 'vite',
+            # 'node-standard',
+            # 'node-esm',
             'are-the-types-wrong',
           ]
 
@@ -223,19 +177,30 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Restore yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: 'yarn'
 
       - name: Install
         run: yarn install --immutable
+
+      - name: Remove existing react-spring
+        run: yarn remove react-spring
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: package
+          path: ./.github/publish-ci/${{ matrix.example }}
+
+      - name: Check folder contents
+        run: ls -l .
+
+      - name: Install RTK build artifact
+        run: yarn add ./package.tgz
+
+      - name: Show installed RTK versions
+        run: yarn info react-spring
+
+      - name: Build example
+        run: yarn build
+
+      - name: Run test step
+        run: yarn test
