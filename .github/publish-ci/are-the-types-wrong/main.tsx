@@ -113,13 +113,15 @@ function Traces({
                 <Box
                   width="100%"
                   key={`resolutionDetails-${resolutionKind}-${subpath}`}
-                  flexDirection="column">
+                  flexDirection="column"
+                >
                   <Text bold>{resolutionKind} Traces:</Text>
                   <Box flexDirection="column">
                     {details.trace.map((traceLine, i) => {
                       return (
                         <Text
-                          key={`resolutionDetails-traces-${subpath}-${resolutionKind}-${i}`}>
+                          key={`resolutionDetails-traces-${subpath}-${resolutionKind}-${i}`}
+                        >
                           {traceLine}
                         </Text>
                       )
