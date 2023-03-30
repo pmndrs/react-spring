@@ -13,6 +13,7 @@ export const hsla = new RegExp(
   'hsla' + call(NUMBER, PERCENTAGE, PERCENTAGE, NUMBER)
 )
 export const hex3 = /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/
-export const hex4 = /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/
+export const hex4 =
+  /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/
 export const hex6 = /^#([0-9a-fA-F]{6})$/
 export const hex8 = /^#([0-9a-fA-F]{8})$/
