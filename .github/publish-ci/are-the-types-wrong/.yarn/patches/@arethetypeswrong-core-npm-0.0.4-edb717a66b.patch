@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index 60791b6ccd3575279eddef2ac795802bd5044abd..41be518d2f21a659ca71095850cb18264a814f8d 100644
+--- a/package.json
++++ b/package.json
+@@ -25,6 +25,7 @@
+     "prepublishOnly": "npm run tsc && npm run test"
+   },
+   "type": "module",
++  "types": "./dist/index.d.ts",
+   "exports": {
+     ".": {
+       "development": "./src/index.ts",
