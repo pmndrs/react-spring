@@ -97,7 +97,7 @@ jobs:
     strategy:
       matrix:
         node: ['18.x']
-        ts: ['4.4', '4.5', '4.6', '4.7', '4.8', '4.9']
+        ts: ['4.5', '4.6', '4.7', '4.8', '4.9']
 
     steps:
       - name: Checkout repo
