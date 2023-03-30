@@ -160,8 +160,8 @@ jobs:
       matrix:
         node: ['18.x']
         example: [
-            # 'cra4',
-            # 'cra5',
+            'cra4',
+            'cra5',
             # 'next',
             # 'vite',
             # 'node-standard',
