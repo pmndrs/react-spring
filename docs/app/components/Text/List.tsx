@@ -21,7 +21,8 @@ export const List = forwardRef<HTMLUListElement, ListProps>(
         css={{
           ...getFontStyles(fontStyle),
           ...css,
-        }}>
+        }}
+      >
         {children}
       </ListElement>
     )

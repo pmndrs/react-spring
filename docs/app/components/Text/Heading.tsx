@@ -43,7 +43,8 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
           ...getFontStyles(fontStyle),
           ...css,
         }}
-        {...restProps}>
+        {...restProps}
+      >
         {children}
         {isLink ? <LinkIcon size={16} /> : null}
       </HeadingElement>

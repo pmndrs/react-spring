@@ -194,7 +194,8 @@ const comps = {
         copy={copy}
         defaultOpen={defaultOpen === 'true'}
         showCode={showCode !== 'false'}
-        template={template}>
+        template={template}
+      >
         {children}
       </Code>
     )

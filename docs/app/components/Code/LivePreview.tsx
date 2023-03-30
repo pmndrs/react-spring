@@ -67,7 +67,8 @@ export const LivePreview = ({
         template === 'configPlayground' ||
         template === 'imperative' ||
         template === 'r3f'
-      }>
+      }
+    >
       <SandpackProvider
         template="react"
         files={{
@@ -95,7 +96,8 @@ export const LivePreview = ({
             'sp-overlay': 'preview__overlay',
             'sp-button': 'preview__button',
           },
-        }}>
+        }}
+      >
         <SandpackPreview />
       </SandpackProvider>
       {showCode ? (
@@ -103,7 +105,8 @@ export const LivePreview = ({
           type="single"
           collapsible
           value={value}
-          onValueChange={handleValueChange}>
+          onValueChange={handleValueChange}
+        >
           <Accordion.Item value="code">
             <AccordionHeader>
               <Accordion.Trigger asChild>

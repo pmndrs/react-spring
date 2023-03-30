@@ -201,7 +201,8 @@ export const HomeBlockMore = () => {
         cta={{
           label: 'Get started now',
           href: '/docs/getting-started',
-        }}>
+        }}
+      >
         <List>
           {listItems.map((str, i) => (
             <ListItem
@@ -215,7 +216,8 @@ export const HomeBlockMore = () => {
                     isDarkMode ? 'rgba(250,250,250,1)' : '#1B1A22',
                   ]
                 ),
-              }}>
+              }}
+            >
               {str}
             </ListItem>
           ))}

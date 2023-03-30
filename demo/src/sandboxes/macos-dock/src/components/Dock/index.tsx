@@ -56,7 +56,8 @@ export const Dock = ({ children }: DockProps) => {
               output: [2, 1, 0.5],
             })
             .to(value => clamp(0.5, 2, value)),
-        }}>
+        }}
+      >
         {children}
       </animated.div>
     </DockContext.Provider>

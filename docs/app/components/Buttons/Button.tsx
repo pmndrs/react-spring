@@ -42,7 +42,8 @@ export const Button = ({
       type={type}
       onClick={handleClick}
       disabled={disabled}
-      variant={variant}>
+      variant={variant}
+    >
       {children}
     </StyledButton>
   )

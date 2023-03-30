@@ -45,7 +45,8 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
           target="_blank"
           title={true}
           active={false}
-          onClick={handleNavClick}>
+          onClick={handleNavClick}
+        >
           {`Changelog`}
         </ExternalAnchor>
       </ScrollArea>
@@ -89,7 +90,8 @@ const renderSubMenu = (
           to={href}
           title={isTitle}
           active={location.pathname === href}
-          onClick={handleClick}>
+          onClick={handleClick}
+        >
           <span>{title}</span>
           {isNew ? <BadgeNew /> : null}
         </Anchor>

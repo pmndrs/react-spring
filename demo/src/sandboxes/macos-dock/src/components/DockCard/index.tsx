@@ -122,7 +122,8 @@ export const DockCard = ({ children }: DockCardProps) => {
           width: size,
           height: size,
           y,
-        }}>
+        }}
+      >
         {children}
       </animated.button>
       <animated.div className={styles['dock-dot']} style={{ opacity }} />

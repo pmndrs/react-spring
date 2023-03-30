@@ -26,7 +26,8 @@ export const GradientButton = ({
       as={tag}
       href={href}
       type={tag === 'button' ? type : undefined}
-      {...props}>
+      {...props}
+    >
       <span>{children}</span>
     </Button>
   )

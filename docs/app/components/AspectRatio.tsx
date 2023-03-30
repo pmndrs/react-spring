@@ -26,7 +26,8 @@ export const AspectRatio = ({
           paddingTop: `${(height / width) * 100}%`,
         },
       },
-    }}>
+    }}
+  >
     {children}
   </Container>
 )

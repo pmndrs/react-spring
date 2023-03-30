@@ -18,7 +18,8 @@ export const renderCell =
       return (
         <TableCell
           key={`${datum}_${index}`}
-          isThirdItem={template === 'config' ? index === 2 : false}>
+          isThirdItem={template === 'config' ? index === 2 : false}
+        >
           {'–'}
         </TableCell>
       )
@@ -29,7 +30,8 @@ export const renderCell =
         <Popover.Root>
           <TableCell
             isPropName={template === 'config' ? index === 0 : false}
-            isThirdItem={template === 'config' ? index === 2 : false}>
+            isThirdItem={template === 'config' ? index === 2 : false}
+          >
             <code>{datum.label}</code>
             <PopoverTrigger>
               <Info size={16} weight={isDarkMode ? 'light' : 'regular'} />
@@ -38,7 +40,8 @@ export const renderCell =
               onOpenAutoFocus={e => e.preventDefault()}
               side="top"
               sideOffset={10}
-              isProp={index === 0}>
+              isProp={index === 0}
+            >
               {datum.content}
               <PopoverArrow />
             </PopoverContent>
@@ -51,7 +54,8 @@ export const renderCell =
       <TableCell
         key={datum}
         isPropName={template === 'config' ? index === 0 : false}
-        isThirdItem={template === 'config' ? index === 2 : false}>
+        isThirdItem={template === 'config' ? index === 2 : false}
+      >
         <code>{datum}</code>
       </TableCell>
     )

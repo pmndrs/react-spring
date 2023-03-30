@@ -22,7 +22,8 @@ export const CardExample = ({ title, description, tags, id }: Sandbox) => {
   return (
     <ExampleAnchor
       href={`https://codesandbox.io/s/${id}`}
-      onClick={handleClick}>
+      onClick={handleClick}
+    >
       <ExampleCard>
         <ExternalLinkIcon />
         <ExampleImage height={9} width={16}>
@@ -37,7 +38,8 @@ export const CardExample = ({ title, description, tags, id }: Sandbox) => {
           <ExampleDescription
             tag="figcaption"
             fontStyle="$code"
-            weight="$default">
+            weight="$default"
+          >
             <span>{title}</span>
             <span>{description}</span>
           </ExampleDescription>

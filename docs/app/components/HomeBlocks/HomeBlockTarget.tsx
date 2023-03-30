@@ -128,7 +128,8 @@ export const HomeBlockTarget = () => {
         cta={{
           label: 'Learn more about targets',
           href: '/docs/concepts/targets',
-        }}>
+        }}
+      >
         <p>Choose from our five targets:</p>
         <List>
           <li>web</li>

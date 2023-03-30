@@ -8,7 +8,8 @@ export const SiteFooter = () => {
         <a
           href="https://twitter.com/_josh_ellis_"
           rel="noopener noreferrer"
-          target="_blank">
+          target="_blank"
+        >
           Josh
         </a>
         {'. '}
@@ -16,7 +17,8 @@ export const SiteFooter = () => {
         <a
           href="https://www.vercel.com/"
           rel="noopener noreferrer"
-          target="_blank">
+          target="_blank"
+        >
           Vercel
         </a>
         ,{' '}
@@ -27,21 +29,24 @@ export const SiteFooter = () => {
         <a
           href="https://www.algolia.com/"
           rel="noopener noreferrer"
-          target="_blank">
+          target="_blank"
+        >
           Algolia
         </a>
         ,{' '}
         <a
           href="https://plausible.io"
           rel="noopener noreferrer"
-          target="_blank">
+          target="_blank"
+        >
           Plausible
         </a>
         ,{' '}
         <a
           href="https://stitches.dev/"
           rel="noopener noreferrer"
-          target="_blank">
+          target="_blank"
+        >
           Stitches
         </a>{' '}
         & more...
