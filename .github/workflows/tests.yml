@@ -196,14 +196,14 @@ jobs:
       - name: Check folder contents
         run: ls -l .
 
-      - name: Install RTK build artifact
+      - name: Install RS build artifact
         run: yarn add ./package.tgz
 
-      - name: Show installed RTK versions
+      - name: Show installed RS versions
         run: yarn info react-spring
 
       - name: Build example
-        run: yarn build-ci
+        run: yarn build
 
       - name: Run test step
         run: yarn test
