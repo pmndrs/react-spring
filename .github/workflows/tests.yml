@@ -104,6 +104,9 @@ jobs:
       - name: Install
         run: yarn install --immutable
 
+      - name: Build
+        run: yarn build
+
       - name: Test
         run: yarn test:unit
 
@@ -146,6 +149,9 @@ jobs:
       - name: Install TypeScript ${{ matrix.ts }}
         run: yarn add typescript@${{ matrix.ts }}
 
+      - name: Build
+        run: yarn build
+
       - name: Test
         run: |
           yarn tsc --version
@@ -184,6 +190,9 @@ jobs:
 
       - name: Install
         run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
 
       - name: Test
         run: yarn test:e2e
