@@ -76,5 +76,10 @@ jobs:
         if: steps.version.outputs.NEXT_VERSION
         env:
           VERSION: ${{ steps.version.outputs.NEXT_VERSION }}
-          WITH_TAG: true
           DIST_TAG: nightly
+
+      - name: Tag
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.version.outputs.NEXT_VERSION }}
