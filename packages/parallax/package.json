@@ -41,6 +41,7 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsup",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
+    "pack": "yarn pack",
     "test": "vite serve ./test"
   },
   "dependencies": {

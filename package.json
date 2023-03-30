@@ -40,6 +40,7 @@
     "prettier:write": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prettier:check": "prettier --check \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
+    "package": "turbo run pack",
     "postinstall": "remix setup node",
     "prepare": "husky install",
     "test": "yarn test:ts && yarn test:unit && yarn test:e2e",

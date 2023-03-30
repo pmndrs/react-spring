@@ -6,6 +6,7 @@
       "dependsOn": ["^build"]
     },
     "lint": {},
+    "pack": {},
     "dev": {
       "dependsOn": ["^build"],
       "cache": false,
