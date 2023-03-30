@@ -12,7 +12,7 @@ function App() {
 
   useEffect(() => {
     api.start({ opacity: 1 })
-  }, [])
+  }, [api])
 
   return (
     <div className="App">

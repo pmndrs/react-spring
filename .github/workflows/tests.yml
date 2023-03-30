@@ -158,7 +158,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['18.x']
+        # keep at 16 because of webpack 4
+        node: ['16.x']
         example: [
             'cra4',
             'cra5',
