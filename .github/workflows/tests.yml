@@ -205,3 +205,6 @@ jobs:
 
       - name: Build example
         run: yarn build
+
+      - name: Run test step
+        run: yarn test

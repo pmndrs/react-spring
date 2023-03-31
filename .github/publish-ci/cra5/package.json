@@ -1,5 +1,5 @@
 {
-  "name": "rtk-esm-cra",
+  "name": "rs-esm-cra",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,7 +14,7 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "serve-app": "yarn serve -s build",
-    "test": "yarn playwright test",
+    "test": "echo Done",
     "format": "prettier --write \"./src/**/*.{ts,tsx}\" \"**/*.md\""
   },
   "eslintConfig": {

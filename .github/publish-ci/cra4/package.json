@@ -14,6 +14,7 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "serve-app": "yarn serve -s build",
+    "test": "echo Done",
     "format": "prettier --write \"./src/**/*.{ts,tsx}\" \"**/*.md\""
   },
   "eslintConfig": {

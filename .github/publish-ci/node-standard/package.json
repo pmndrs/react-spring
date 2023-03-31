@@ -1,0 +1,17 @@
+{
+  "name": "dual-module-test",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "echo Done",
+    "test": "node test-cjs.js"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-spring": "^9.7.0"
+  },
+  "devDependencies": {
+    "resolve-esm": "^1.4.0"
+  }
+}
