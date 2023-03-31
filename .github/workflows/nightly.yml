@@ -31,7 +31,7 @@ jobs:
           # check if last commit to main would be the nightly tag we're about to create (minus the date)
           # if it is, we'll skip the nightly creation
           # if not, we'll create a new nightly tag
-          if [[ ${LATEST_NIGHTLY_TAG} == v0.0.0-nightly-${SHORT_SHA}-* ]]; then
+          if [[ ${LATEST_NIGHTLY_TAG} == v0.0.0-nightly-${SHORT_SHA} ]]; then
             echo "🛑 Latest nightly tag is the same as the latest commit sha, skipping nightly release"
           else
             # v0.0.0-nightly-<short sha>-<date>
@@ -82,4 +82,4 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: ${{ steps.version.outputs.NEXT_VERSION }}
+          custom_tag: '0.0.0-${{ steps.version.outputs.NEXT_VERSION }}'
