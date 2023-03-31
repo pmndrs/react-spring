@@ -10871,9 +10871,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rtk-esm-cra@workspace:.":
+"rs-esm-cra@workspace:.":
   version: 0.0.0-use.local
-  resolution: "rtk-esm-cra@workspace:."
+  resolution: "rs-esm-cra@workspace:."
   dependencies:
     "@types/jest": ^27.5.2
     "@types/node": ^17.0.45
