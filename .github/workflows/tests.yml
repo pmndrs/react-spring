@@ -164,8 +164,8 @@ jobs:
             'cra4',
             'cra5',
             # 'next',
-            # 'vite',
-            # 'node-standard',
+            'vite',
+            'node-standard',
             # 'node-esm',
             'are-the-types-wrong',
           ]
