@@ -2,7 +2,7 @@ name: 'Nightly Releases'
 
 on:
   schedule:
-    - cron: '0 7 * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   nightly:
