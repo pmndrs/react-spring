@@ -46,7 +46,7 @@
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
     "test:e2e": "start-server-and-test 'yarn vite serve packages/parallax/test --host' http-get://localhost:3000 'yarn cypress run'",
-    "release": "yarn test:ts && yarn test:unit && yarn build && yarn changeset publish --no-git-tag",
+    "release": "yarn clean && yarn && yarn build && yarn test:ts && yarn test:unit && yarn changeset publish --no-git-tag",
     "vers": "yarn changeset version"
   },
   "commitlint": {
