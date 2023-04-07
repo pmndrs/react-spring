@@ -51,6 +51,7 @@
   "scripts": {
     "build": "tsup --legacy-output",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "dev": "tsup"
+    "dev": "tsup",
+    "lint": "TIMING=1 eslint \"src/**/*.ts*\""
   }
 }

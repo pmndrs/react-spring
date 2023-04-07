@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useEffect, MouseEvent } from 'react'
+import * as React from 'react'
 import { loremIpsum } from 'lorem-ipsum'
 import { X } from 'react-feather'
 import { useTransition } from '@react-spring/web'
@@ -28,9 +28,9 @@ function MessageHub({
   timeout = 3000,
   children,
 }: MessageHubProps) {
-  const refMap = useMemo(() => new WeakMap(), [])
-  const cancelMap = useMemo(() => new WeakMap(), [])
-  const [items, setItems] = useState<Item[]>([])
+  const refMap = React.useMemo(() => new WeakMap(), [])
+  const cancelMap = React.useMemo(() => new WeakMap(), [])
+  const [items, setItems] = React.useState<Item[]>([])
 
   const transitions = useTransition(items, {
     from: { opacity: 0, height: 0, life: '100%' },
@@ -51,11 +51,11 @@ function MessageHub({
     config: (item, index, phase) => key => phase === 'enter' && key === 'life' ? { duration: timeout } : config,
   })
 
-  useEffect(() => {
+  React.useEffect(() => {
     children((msg: string) => {
       setItems(state => [...state, { key: id++, msg }])
     })
-  }, [])
+  }, [children])
 
   return (
     <Container>
@@ -65,7 +65,7 @@ function MessageHub({
             <Life style={{ right: life }} />
             <p>{item.msg}</p>
             <Button
-              onClick={(e: MouseEvent) => {
+              onClick={e => {
                 e.stopPropagation()
                 if (cancelMap.has(item) && life.get() !== '0%') cancelMap.get(item)()
               }}>
@@ -79,7 +79,7 @@ function MessageHub({
 }
 
 export default function App() {
-  const ref = useRef<null | AddFunction>(null)
+  const ref = React.useRef<null | AddFunction>(null)
 
   const handleClick = () => {
     ref.current?.(loremIpsum())
@@ -88,11 +88,11 @@ export default function App() {
   return (
     <Main onClick={handleClick}>
       Click here to create notifications
-      <MessageHub
-        children={(add: AddFunction) => {
+      <MessageHub>
+        {(add: AddFunction) => {
           ref.current = add
         }}
-      />
+      </MessageHub>
     </Main>
   )
 }

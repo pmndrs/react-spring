@@ -473,6 +473,14 @@ export const USE_SCROLL_CONFIG_DATA: CellData[][] = [
   ),
 ]
 
+export const USE_RESIZE_CONFIG_DATA: CellData[][] = [
+  ['container', 'React.MutableRefObject<HTMLElement | null | undefined>', null],
+  ...DEFAULT_CONFIG_DATA.filter(
+    row =>
+      row[0] !== 'from' && typeof row[0] === 'object' && row[0]?.label !== 'to'
+  ),
+]
+
 export const USESPRINGVALUE_CONFIG_DATA: CellData[][] = [
   [
     {
@@ -588,7 +596,7 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
     null,
   ],
   [
-    'intial',
+    'initial',
     {
       label: 'object | function',
       content: <code>{`(item: Item, index: number) => object`}</code>,

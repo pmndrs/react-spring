@@ -57,7 +57,7 @@ export const LivePreview = ({
     })
 
     isMounted.current = true
-  }, [value])
+  }, [value, api])
 
   return (
     <PreviewContainer

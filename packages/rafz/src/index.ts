@@ -31,14 +31,14 @@ raf.onFinish = fn => schedule(fn, onFinishQueue)
 
 let timeouts: Timeout[] = []
 raf.setTimeout = (handler, ms) => {
-  let time = raf.now() + ms
-  let cancel = () => {
-    let i = timeouts.findIndex(t => t.cancel == cancel)
+  const time = raf.now() + ms
+  const cancel = () => {
+    const i = timeouts.findIndex(t => t.cancel == cancel)
     if (~i) timeouts.splice(i, 1)
     pendingCount -= ~i ? 1 : 0
   }
 
-  let timeout: Timeout = { time, handler, cancel }
+  const timeout: Timeout = { time, handler, cancel }
   timeouts.splice(findTimeout(time), 0, timeout)
   pendingCount += 1
 
@@ -47,7 +47,7 @@ raf.setTimeout = (handler, ms) => {
 }
 
 /** Find the index where the given time is not greater. */
-let findTimeout = (time: number) =>
+const findTimeout = (time: number) =>
   ~(~timeouts.findIndex(t => t.time > time) || ~timeouts.length)
 
 raf.cancel = fn => {
@@ -88,7 +88,8 @@ raf.throttle = fn => {
 let nativeRaf =
   typeof window != 'undefined'
     ? (window.requestAnimationFrame as NativeRaf)
-    : () => {}
+    : // eslint-disable-next-line @typescript-eslint/no-empty-function
+      () => {}
 
 raf.use = impl => (nativeRaf = impl)
 raf.now = typeof performance != 'undefined' ? () => performance.now() : Date.now
@@ -147,11 +148,11 @@ function loop() {
 }
 
 function update() {
-  let prevTs = ts
+  const prevTs = ts
   ts = raf.now()
 
   // Flush timeouts whose time is up.
-  let count = findTimeout(ts)
+  const count = findTimeout(ts)
   if (count) {
     eachSafely(timeouts.splice(0, count), t => t.handler())
     pendingCount -= count

@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { House, Files, Code, Books } from 'phosphor-react'
+import { House, Files, Code } from 'phosphor-react'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import * as Tooltip from '@radix-ui/react-tooltip'
 
-import { dark, styled } from '~/styles/stitches.config'
+import { styled } from '~/styles/stitches.config'
 import { NavigationButton, NavigationButtonProps } from '../Buttons/NavButton'
 import { HeaderSubNavigation } from './HeaderSubNavigation'
 import { SiteThemePicker } from '../Site/SiteThemePicker'

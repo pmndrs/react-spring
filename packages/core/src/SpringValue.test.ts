@@ -787,8 +787,7 @@ function describeEvents() {
   describe('the "onRest" event', () => {
     it('is called on the last frame', async () => {
       const onRest = jest.fn()
-      // @ts-ignore
-      const spring = new SpringValue({
+      new SpringValue({
         from: 0,
         to: 1,
         onRest,

@@ -174,7 +174,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
     let changed = false
 
     const anim = this.animation
-    let { config, toValues } = anim
+    let { toValues } = anim
+    const { config } = anim
 
     const payload = getPayload(anim.to)
     if (!payload && hasFluidValue(anim.to)) {
@@ -1036,7 +1037,7 @@ export function createLoopUpdate<T>(
   loop = props.loop,
   to = props.to
 ): T | undefined {
-  let loopRet = callProp(loop)
+  const loopRet = callProp(loop)
   if (loopRet) {
     const overrides = loopRet !== true && inferTo(loopRet)
     const reverse = (overrides || props).reverse

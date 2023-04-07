@@ -24,6 +24,7 @@ describe('raf looping', () => {
     expect(__raf.isRunning()).toBe(true)
   })
   it('stops looping after single job', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     raf(() => {})
     mockRaf.step()
     expect(__raf.isRunning()).toBe(true)

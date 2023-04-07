@@ -41,10 +41,11 @@ export const action: ActionFunction = async ({ request }) => {
 
         const res = await supabase.from('feedback').insert(parsedSchema.data)
 
+        // eslint-disable-next-line no-console
         console.log('SUPABASE RESPONSE', res)
 
         return json({ success: true }, 200)
-      } catch (err) {
+      } catch (err: any) {
         console.error('ERROR DOING SUPABASE', err)
         return json({ success: false, error: err.message }, 405)
       }

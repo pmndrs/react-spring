@@ -28,7 +28,7 @@ export const getNoopResult = (value: any) => ({
 export const getFinishedResult = (
   value: any,
   finished: boolean,
-  cancelled: boolean = false
+  cancelled = false
 ) => ({
   value,
   finished,

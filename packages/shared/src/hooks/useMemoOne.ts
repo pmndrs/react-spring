@@ -37,6 +37,7 @@ export function useMemoOne<T>(getResult: () => T, inputs?: any[]): T {
     if (prevCache == initial) {
       initial.inputs = initial.result = undefined
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cache])
 
   return cache.result!

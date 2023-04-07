@@ -35,7 +35,7 @@ export default function App() {
   useEffect(() => {
     reset()
     return () => ref.current.forEach(clearTimeout)
-  }, [])
+  }, [reset])
 
   return (
     <div className={styles.container}>

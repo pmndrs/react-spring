@@ -221,7 +221,7 @@ export const Parallax = React.memo(
     const [ready, setReady] = useState(false)
     const {
       pages,
-      innerStyle,
+      innerStyle: _innerStyle,
       config = configs.slow,
       enabled = true,
       horizontal = false,
@@ -253,6 +253,7 @@ export const Parallax = React.memo(
 
     useEffect(() => {
       state.config = config
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [config])
 
     React.useImperativeHandle(ref, () => state)

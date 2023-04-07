@@ -14,7 +14,7 @@ export const useMousePosition = (springProps?: UseSpringProps, springDeps?: read
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
     }
-  }, [])
+  }, [api])
 
   return useMemo(
     () => ({

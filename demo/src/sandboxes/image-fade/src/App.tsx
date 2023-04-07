@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import * as React from 'react'
 import { useTransition, animated } from '@react-spring/web'
 import styles from './styles.module.css'
 
@@ -10,7 +10,7 @@ const slides = [
 ]
 
 export default function App() {
-  const [index, set] = useState(0)
+  const [index, set] = React.useState(0)
   const transitions = useTransition(index, {
     key: index,
     from: { opacity: 0 },

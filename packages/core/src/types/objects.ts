@@ -4,6 +4,8 @@ import type { AnimationConfig } from '../AnimationConfig'
 import type { SpringValue } from '../SpringValue'
 import type { Readable } from './internal'
 
+export type { AnimationConfig }
+
 /** The object type of the `config` prop. */
 export type SpringConfig = Partial<AnimationConfig>
 
@@ -22,8 +24,9 @@ export interface AnimationResult<T extends Readable = any> {
 export type AsyncResult<T extends Readable = any> = Promise<AnimationResult<T>>
 
 /** Map an object type to allow `SpringValue` for any property */
-export type Springify<T> = Lookup<SpringValue<unknown> | undefined> &
-  { [P in keyof T]: T[P] | SpringValue<T[P]> }
+export type Springify<T> = Lookup<SpringValue<unknown> | undefined> & {
+  [P in keyof T]: T[P] | SpringValue<T[P]>
+}
 
 /**
  * The set of `SpringValue` objects returned by a `useSpring` call (or similar).

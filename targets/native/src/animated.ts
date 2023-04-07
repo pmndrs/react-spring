@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ForwardRefExoticComponent, ReactNode } from 'react'
 import { ViewStyle, RecursiveArray } from 'react-native'
 import {

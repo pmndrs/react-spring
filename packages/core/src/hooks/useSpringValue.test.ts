@@ -14,7 +14,7 @@ describe('useSpringValue', () => {
     const frames = global.getFrames(result.current)
 
     expect(frames).toMatchInlineSnapshot(`
-      Array [
+      [
         0.022634843307857987,
         0.07615528894993949,
         0.14727295456877587,
@@ -81,7 +81,7 @@ describe('useSpringValue', () => {
     expect(onChange).toHaveBeenCalledTimes(spring1Frames.length)
 
     expect(spring1Frames).toMatchInlineSnapshot(`
-      Array [
+      [
         0.03322035282414196,
         0.11115235982150365,
         0.2130842922652568,
@@ -128,7 +128,7 @@ describe('useSpringValue', () => {
     expect(spring2Frames).not.toEqual(spring1Frames)
   })
 
-  it('should not update the intial value on rerender', () => {
+  it('should not update the initial value on rerender', () => {
     const { result, rerender } = renderHook(props => useSpringValue(props), {
       initialProps: 0,
     })

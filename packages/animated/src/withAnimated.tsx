@@ -34,6 +34,7 @@ export const withAnimated = (Component: any, host: HostConfig) => {
     // the `useCallback` invocation when `hasInstance` is false.
     const ref =
       hasInstance &&
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       useCallback(
         (value: any) => {
           instanceRef.current = updateRef(givenRef, value)
@@ -83,6 +84,7 @@ export const withAnimated = (Component: any, host: HostConfig) => {
       }
     })
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(callback, [])
     // Stop observing on unmount.
     useOnce(() => () => {

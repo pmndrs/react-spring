@@ -9,7 +9,7 @@ describe('Parallax - vertical', () => {
   })
 
   it('should translate layers as expected', () => {
-    // intial snapshot
+    // initial snapshot
     console.log(HEIGHT, WIDTH)
 
     cy.findByTestId('container').matchImageSnapshot('vertical #1', {
@@ -100,7 +100,7 @@ describe('Parallax - horizontal', () => {
   })
 
   it('should translate layers as expected', () => {
-    // intial snapshot
+    // initial snapshot
     cy.findByTestId('container').matchImageSnapshot('horizontal #1', {
       clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
     })

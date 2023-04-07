@@ -125,7 +125,7 @@ describe('useTransition', () => {
     const props = {
       ref,
     }
-    const children = [<div />, <div />, <div />]
+    const children = [<div key={1} />, <div key={2} />, <div key={3} />]
 
     update(children, props)
 

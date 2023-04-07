@@ -6,9 +6,10 @@
   "private": true,
   "scripts": {
     "build": "remix build",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .cache && rm -rf api",
     "dev": "concurrently \"yarn dev:remix\" \"yarn scripts:watch\"",
     "dev:remix": "remix dev",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .cache && rm -rf api",
+    "lint": "TIMING=1 eslint \"app/**/*.ts*\" \"scripts/**/*.ts*\"",
     "scripts:build": "ts-node ./scripts/build.ts",
     "scripts:watch": "ts-node ./scripts/watch.ts"
   },
@@ -30,8 +31,9 @@
     "@supabase/supabase-js": "^2.10.0",
     "@use-gesture/react": "^10.2.24",
     "@vercel/node": "^2.10.2",
+    "gray-matter": "^4.0.3",
     "hast-util-to-html": "7.1.3",
-    "jotai": "^1.13.1",
+    "jotai": "^2.0.3",
     "parse-numeric-range": "^1.3.0",
     "phosphor-react": "^1.4.1",
     "react": "^18.2.0",
@@ -43,10 +45,15 @@
     "rehype-parse": "7.0.1",
     "rehype-slug": "4.0.1",
     "remark-directive": "1.0.1",
-    "remix": "^1.14.0",
+    "remix": "^1.12.0",
     "unified": "9.2.2",
     "unist-util-visit": "2.0.3",
     "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "concurrently": "^7.6.0",
+    "ts-node": "^10.9.1"
   },
   "engines": {
     "node": ">=v18.14.2"

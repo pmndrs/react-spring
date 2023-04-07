@@ -73,7 +73,7 @@ function callFluidObservers<E extends FluidEvent>(
 function callFluidObservers(target: object, event: FluidEvent): void
 
 function callFluidObservers(target: any, event: FluidEvent) {
-  let observers: Set<FluidObserver> = target[$observers]
+  const observers: Set<FluidObserver> = target[$observers]
   if (observers) {
     observers.forEach(observer => {
       callFluidObserver(observer, event)
@@ -103,9 +103,9 @@ export interface FluidEvent<T = any> {
  * value to `fluids`-compatible libraries.
  */
 abstract class FluidValue<T = any, E extends FluidEvent<T> = any> {
-  // @ts-ignore
+  // @ts-expect-error (TS 4.4)
   private [$get]: () => T
-  // @ts-ignore
+  // @ts-expect-error (TS 4.4)
   private [$observers]?: Set<FluidObserver<E>>
 
   constructor(get?: () => T) {
@@ -181,7 +181,7 @@ function removeFluidObserver<E extends FluidEvent>(
 ): void
 
 function removeFluidObserver(target: any, observer: FluidObserver) {
-  let observers: Set<FluidObserver> = target[$observers]
+  const observers: Set<FluidObserver> = target[$observers]
   if (observers && observers.has(observer)) {
     const count = observers.size - 1
     if (count) {
