@@ -33,11 +33,13 @@ jobs:
           # if not, we'll create a new nightly tag
           if [[ ${LATEST_NIGHTLY_TAG} == v0.0.0-nightly-${SHORT_SHA} ]]; then
             echo "🛑 Latest nightly tag is the same as the latest commit sha, skipping nightly release"
+            exit 1
           else
             # v0.0.0-nightly-<short sha>-<date>
             NEXT_VERSION=nightly-${SHORT_SHA}
             # set output so it can be used in other jobs
             echo "NEXT_VERSION=${NEXT_VERSION}" >> $GITHUB_OUTPUT
+            exit 0
           fi
 
       - uses: actions/setup-node@v3
