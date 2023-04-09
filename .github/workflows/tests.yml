@@ -163,7 +163,7 @@ jobs:
         example: [
             'cra4',
             'cra5',
-            # 'next',
+            'next',
             'vite',
             'node-standard',
             # 'node-esm',
