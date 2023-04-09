@@ -63,7 +63,8 @@ export const Feedback = ({ location }: FeedbackProps) => {
         tag="h4"
         fontStyle="$XS"
         weight="$bold"
-        css={{ color: '$steel40' }}>
+        css={{ color: '$steel40' }}
+      >
         Found this helpful?
       </Heading>
       <Stack>
@@ -71,7 +72,8 @@ export const Feedback = ({ location }: FeedbackProps) => {
           onClick={handleClick('upvote')}
           disabled={selected === 'downvote'}
           selected={selected === 'upvote'}
-          pageTitle={pageTitle}>
+          pageTitle={pageTitle}
+        >
           <ThumbsUp size={16} weight={isDarkMode ? 'light' : 'regular'} />
         </FeedbackButton>
         <FeedbackButton
@@ -79,7 +81,8 @@ export const Feedback = ({ location }: FeedbackProps) => {
           disabled={selected === 'upvote'}
           selected={selected === 'downvote'}
           variant="downvote"
-          pageTitle={pageTitle}>
+          pageTitle={pageTitle}
+        >
           <ThumbsDown size={16} weight={isDarkMode ? 'light' : 'regular'} />
         </FeedbackButton>
       </Stack>
@@ -164,7 +167,8 @@ const FeedbackButton = ({
                 aria-disabled={isLoading}
                 variant="small"
                 tag="button"
-                type="submit">
+                type="submit"
+              >
                 Send
               </PopoverButton>
               <Outbound
@@ -175,7 +179,8 @@ const FeedbackButton = ({
                       )}`
                     : 'https://github.com/pmndrs/react-spring/issues/new/choose'
                 }
-                variant="small">
+                variant="small"
+              >
                 {variant === 'upvote'
                   ? 'Tweet about react-spring'
                   : 'Open an issue'}

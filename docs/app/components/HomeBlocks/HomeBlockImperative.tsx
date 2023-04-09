@@ -48,7 +48,8 @@ export const HomeBlockImperative = () => (
       cta={{
         label: 'View imperative API',
         href: '/docs/concepts/imperative-api',
-      }}>
+      }}
+    >
       <p>
         Use our imperative API methods to run animations without updating state.
         Respond to events without the react rendering overhead to achieve

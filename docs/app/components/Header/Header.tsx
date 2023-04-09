@@ -82,7 +82,8 @@ export const Header = ({
               },
             }
           : {}
-      }>
+      }
+    >
       <FlexContainer>
         <DesktopNavigation />
         <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>

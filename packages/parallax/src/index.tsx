@@ -354,7 +354,8 @@ export const Parallax = React.memo(
           msTransform: START_TRANSLATE,
           transform: START_TRANSLATE_3D,
           ...rest.style,
-        }}>
+        }}
+      >
         {ready && (
           <>
             <a.div
@@ -368,7 +369,8 @@ export const Parallax = React.memo(
                 msTransform: START_TRANSLATE,
                 transform: START_TRANSLATE_3D,
                 ...props.innerStyle,
-              }}>
+              }}
+            >
               <ParentContext.Provider value={state}>
                 {mapChildrenRecursive(
                   children,

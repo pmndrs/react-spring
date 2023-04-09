@@ -46,7 +46,8 @@ function DraggableList({ items }: { items: string[] }) {
             boxShadow: shadow.to(s => `rgba(0, 0, 0, 0.15) 0px ${s}px ${2 * s}px 0px`),
             y,
             scale,
-          }}>
+          }}
+        >
           {items[i]}
         </animated.div>
       ))}

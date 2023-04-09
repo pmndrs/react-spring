@@ -53,13 +53,15 @@ export const Logo = ({ large = false }: LogoProps) => {
       style={{
         cursor,
       }}
-      large={large}>
+      large={large}
+    >
       <radialGradient
         id="a"
         cx="33.434395%"
         cy="32.389247%"
         gradientTransform="matrix(.57850251 .81411613 -.8156806 .57739294 .405118 -.135316)"
-        r="64.015025%">
+        r="64.015025%"
+      >
         <stop offset="0" stopColor="#fff" stopOpacity=".904382" />
         <stop offset="1" stopColor="#ff6d6d" />
       </radialGradient>

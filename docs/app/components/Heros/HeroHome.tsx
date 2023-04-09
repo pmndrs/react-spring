@@ -43,7 +43,8 @@ export const HeroHome = () => {
             css={{
               mt: '$25',
               whiteSpace: 'pre-line',
-            }}>
+            }}
+          >
             {`We think of animation in terms of time and curves, but that causes most of the struggle we face when trying to make elements on the screen move naturally, because nothing in the real world moves like that. \n\nSprings don’t have a defined curve or a set duration.`}
           </Copy>
         </Left>
@@ -66,7 +67,8 @@ export const HeroHome = () => {
             '@tabletUp': {
               mt: '-70vh',
             },
-          }}>
+          }}
+        >
           <GreenBall />
         </BallContainer>
         <BallContainer
@@ -76,7 +78,8 @@ export const HeroHome = () => {
               mt: '-70vh',
             },
             mb: '10vh',
-          }}>
+          }}
+        >
           <BlueBall />
         </BallContainer>
       </Background>

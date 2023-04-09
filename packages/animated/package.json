@@ -5,15 +5,6 @@
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "module": "./dist/esm/index.js",
-      "require": "./dist/index.js"
-    },
-    "./package.json": "./package.json"
-  },
   "files": [
     "dist/*",
     "README.md",
@@ -41,7 +32,8 @@
     "build": "tsup --legacy-output",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsup",
-    "lint": "TIMING=1 eslint \"src/**/*.ts*\""
+    "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
+    "pack": "yarn pack"
   },
   "dependencies": {
     "@react-spring/shared": "~9.7.2",

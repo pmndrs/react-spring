@@ -68,7 +68,8 @@ export default function App() {
           className={styles.dot}
           style={{
             clipPath: scrollYProgress.to(val => `circle(${val * 100}%)`),
-          }}>
+          }}
+        >
           <h1 className={styles.title}>
             <span>
               <animated.span style={textStyles}>Aha!</animated.span>

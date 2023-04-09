@@ -68,7 +68,8 @@ function MessageHub({
               onClick={e => {
                 e.stopPropagation()
                 if (cancelMap.has(item) && life.get() !== '0%') cancelMap.get(item)()
-              }}>
+              }}
+            >
               <X size={18} />
             </Button>
           </Content>

@@ -81,14 +81,16 @@ export default function App() {
               style={{
                 transform: rotateX.to(val => `perspective(600px) rotateX(${val}deg)`),
                 transformStyle: 'preserve-3d',
-              }}>
+              }}
+            >
               {'?'}
             </FrontBox>
             <BackBox
               style={{
                 transform: rotateX.to(val => `perspective(600px) rotateX(${180 - val}deg)`),
                 transformStyle: 'preserve-3d',
-              }}>
+              }}
+            >
               {items[i]}
             </BackBox>
           </Box>

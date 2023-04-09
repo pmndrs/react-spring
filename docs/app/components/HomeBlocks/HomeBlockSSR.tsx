@@ -75,7 +75,8 @@ export const HomeBlockSSR = () => {
     <SSRSection ref={sectionRef}>
       <HomeBlockCopy
         subtitle="Designed with you in mind"
-        title={`Production ready with SSR support`}>
+        title={`Production ready with SSR support`}
+      >
         <p>
           Forget about useRef & useEffect to attach your animations to dom
           nodes. animated takes care of it for you.{' '}

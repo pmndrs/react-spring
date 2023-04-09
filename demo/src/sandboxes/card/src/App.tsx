@@ -75,7 +75,8 @@ export default function App() {
           rotateX,
           rotateY,
           rotateZ,
-        }}>
+        }}
+      >
         <animated.div style={{ transform: wheelY.to(wheel) }}>
           {imgs.map((img, i) => (
             <div key={i} style={{ backgroundImage: `url(${img})` }} />

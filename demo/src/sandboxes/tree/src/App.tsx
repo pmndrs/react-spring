@@ -38,7 +38,8 @@ const Tree = React.memo<
         style={{
           opacity,
           height: isOpen && previous === isOpen ? 'auto' : height,
-        }}>
+        }}
+      >
         <a.div ref={ref} style={{ y }}>
           {children}
         </a.div>
@@ -65,7 +66,8 @@ export default function App() {
                   width: '100%',
                   height: 200,
                   padding: 10,
-                }}>
+                }}
+              >
                 <div
                   style={{
                     width: '100%',

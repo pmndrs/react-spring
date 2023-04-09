@@ -45,7 +45,8 @@ export default function App() {
       <animated.div
         style={{ ...rest, width: size, height: size }}
         className={styles.container}
-        onClick={() => set(open => !open)}>
+        onClick={() => set(open => !open)}
+      >
         {transition((style, item) => (
           <animated.div
             className={styles.item}

@@ -58,7 +58,8 @@ export const NavigationGrid = ({
             gridColumnGap: '$40',
             gridRowGap: '$40',
           },
-        }}>
+        }}
+      >
         {tiles.map(tile => (
           <NavigationItem
             key={tile.label}

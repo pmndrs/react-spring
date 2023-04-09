@@ -61,7 +61,8 @@ export default function App() {
             alignItems: 'center',
             justifyContent: 'center',
             pointerEvents: 'none',
-          }}>
+          }}
+        >
           <img src={url('earth')} style={{ width: '60%' }} />
         </ParallaxLayer>
 
@@ -83,7 +84,8 @@ export default function App() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-          }}>
+          }}
+        >
           <img src={url('server')} style={{ width: '20%' }} />
         </ParallaxLayer>
 
@@ -95,7 +97,8 @@ export default function App() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-          }}>
+          }}
+        >
           <img src={url('bash')} style={{ width: '40%' }} />
         </ParallaxLayer>
 
@@ -107,7 +110,8 @@ export default function App() {
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          onClick={() => parallax.current.scrollTo(0)}>
+          onClick={() => parallax.current.scrollTo(0)}
+        >
           <img src={url('clients-main')} style={{ width: '40%' }} />
         </ParallaxLayer>
       </Parallax>

@@ -28,7 +28,8 @@ export const Anchor = ({ href, children, className, onClick }: AnchorProps) => {
         href={href}
         rel="noopener noreferrer"
         target="_blank"
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         {children}
       </AnchorElement>
     )

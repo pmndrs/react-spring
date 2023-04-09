@@ -173,7 +173,8 @@ export default function Examples() {
                 '@tabletUp': {
                   mb: 30,
                 },
-              }}>
+              }}
+            >
               Examples
             </Heading>
             <Copy
@@ -182,7 +183,8 @@ export default function Examples() {
                   ...InlineLinkStyles,
                 },
                 maxWidth: 680,
-              }}>
+              }}
+            >
               {`Got an example you want to see here & share with the community?`}{' '}
               Check out{' '}
               <Anchor href="https://github.com/pmndrs/react-spring/tree/main/demo/CONTRIBUTING.md">
@@ -194,7 +196,8 @@ export default function Examples() {
               <Heading
                 tag="h2"
                 fontStyle="$XS"
-                style={{ display: 'inline-block' }}>
+                style={{ display: 'inline-block' }}
+              >
                 {`Alternatively, check out examples by `}
               </Heading>
               <Select
@@ -206,7 +209,8 @@ export default function Examples() {
               <Heading
                 tag="h2"
                 fontStyle="$XS"
-                style={{ display: 'inline-block' }}>
+                style={{ display: 'inline-block' }}
+              >
                 {` or `}
               </Heading>
               <Select
@@ -228,7 +232,8 @@ export default function Examples() {
                       ...InlineLinkStyles,
                       fontWeight: '$bold',
                     },
-                  }}>
+                  }}
+                >
                   {'. Or maybe, you want to see them '}
                   <Anchor href="/examples">all?</Anchor>
                 </Heading>
@@ -247,7 +252,8 @@ export default function Examples() {
         <SandboxesList
           css={{
             opacity: state === 'loading' ? 0.5 : 1,
-          }}>
+          }}
+        >
           {sandboxes.map(props => (
             <li key={props.urlTitle}>
               <CardExample {...props} />

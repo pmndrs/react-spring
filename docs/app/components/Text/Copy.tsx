@@ -21,7 +21,8 @@ export const Copy = forwardRef<HTMLHeadingElement, CopyProps>(
         css={{
           ...getFontStyles(fontStyle),
           ...css,
-        }}>
+        }}
+      >
         {children}
       </Text>
     )

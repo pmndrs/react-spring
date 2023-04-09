@@ -94,7 +94,8 @@ export const SiteThemePicker = () => {
       <ThemePicker
         onPointerEnter={handlePointerEnter(ThemeValue.Light)}
         onPointerOut={handlePointerOut(ThemeValue.Light)}
-        value="light">
+        value="light"
+      >
         <AccessibleIcon label="Enable light mode">
           <Sun size={20} weight={isDarkMode ? 'light' : 'regular'} />
         </AccessibleIcon>
@@ -102,7 +103,8 @@ export const SiteThemePicker = () => {
       <ThemePicker
         onPointerEnter={handlePointerEnter(ThemeValue.Dark)}
         onPointerOut={handlePointerOut(ThemeValue.Dark)}
-        value="dark">
+        value="dark"
+      >
         <AccessibleIcon label="Enable dark mode">
           <MoonStars size={20} weight={isDarkMode ? 'light' : 'regular'} />
         </AccessibleIcon>

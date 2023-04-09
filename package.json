@@ -30,6 +30,7 @@
     ]
   },
   "scripts": {
+    "build-ci": "turbo run build --filter=!@react-spring/doc",
     "build": "turbo run build",
     "changeset": "changeset",
     "clean": "turbo run clean && rm -rf node_modules",
@@ -37,8 +38,10 @@
     "docs:dev": "yarn workspace @react-spring/docs dev",
     "docs:build": "yarn workspace @react-spring/docs build",
     "demo:dev": "yarn workspace @react-spring/demo dev",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prettier:write": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prettier:check": "prettier --check \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
+    "package": "turbo run pack",
     "postinstall": "remix setup node",
     "prepare": "husky install",
     "test": "yarn test:ts && yarn test:unit && yarn test:e2e",

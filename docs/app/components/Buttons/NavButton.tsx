@@ -56,14 +56,16 @@ export const NavigationButton = ({
       href={href}
       variant={showLabel ? 'withLabel' : undefined}
       active={isRoute}
-      {...externalLinkProps}>
+      {...externalLinkProps}
+    >
       <NavIconWrapper
         css={{
           color: isRoute ? 'var(--colors-steel100)' : 'unset',
           [`.${dark} &`]: {
             color: isRoute ? '#363645' : 'unset',
           },
-        }}>
+        }}
+      >
         <Icon size={20} weight={isDarkMode ? 'light' : 'regular'} />
         {showLabel ? <span>{title}</span> : null}
       </NavIconWrapper>

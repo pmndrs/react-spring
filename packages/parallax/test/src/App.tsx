@@ -22,7 +22,8 @@ const BaseDemo = ({ horizontal = false }: BaseDemoProps) => {
       pages={3}
       horizontal={horizontal}
       data-testid="container"
-      className="container">
+      className="container"
+    >
       <ParallaxLayer
         horizontal={!horizontal}
         offset={1}
@@ -41,7 +42,8 @@ const BaseDemo = ({ horizontal = false }: BaseDemoProps) => {
       <ParallaxLayer
         sticky={{ start: 1, end: 2 }}
         data-testid="sticky-layer"
-        className="sticky">
+        className="sticky"
+      >
         <div className="sticky-content flex-center">Sticky</div>
       </ParallaxLayer>
 

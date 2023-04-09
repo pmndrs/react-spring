@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
 jobs:
   nightly:
     name: 'Nightly Release'
@@ -46,21 +50,7 @@ jobs:
         if: steps.version.outputs.NEXT_VERSION
         with:
           node-version: 18
-
-      - name: Get yarn cache directory path
-        if: steps.version.outputs.NEXT_VERSION
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Restore yarn cache
-        uses: actions/cache@v3
-        if: steps.version.outputs.NEXT_VERSION
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          cache: 'yarn'
 
       - name: Install
         if: steps.version.outputs.NEXT_VERSION
@@ -68,7 +58,7 @@ jobs:
 
       - name: Build
         if: steps.version.outputs.NEXT_VERSION
-        run: yarn build --filter=!@react-spring/docs
+        run: yarn build-ci
 
       - name: Setup npmrc
         if: steps.version.outputs.NEXT_VERSION
