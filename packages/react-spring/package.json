@@ -1,8 +1,8 @@
 {
   "name": "react-spring",
   "version": "9.7.1",
-  "main": "dist/index.js",
-  "module": "dist/esm/index.js",
+  "main": "dist/esm/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist/*",
