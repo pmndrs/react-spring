@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "chokidar": "^3.5.3",
-    "concurrently": "^7.6.0",
+    "concurrently": "^8.0.1",
     "ts-node": "^10.9.1"
   },
   "engines": {
