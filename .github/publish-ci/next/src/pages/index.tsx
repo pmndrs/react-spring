@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import type { NextPage } from 'next'
 import { animated, useSpring } from 'react-spring'
 
-import style from '../styles/home.module.css'
+import style from '../styles/index.module.css'
 
 const IndexPage: NextPage = () => {
   const [styles, api] = useSpring(
