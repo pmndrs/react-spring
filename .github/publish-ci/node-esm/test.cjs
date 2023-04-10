@@ -1,7 +1,7 @@
 const assert = require('node:assert')
 const path = require('path')
 
-const { animated, useSpring } = require('react-spring')
+const { animated, useSpring } = require('@react-spring/web')
 
 console.log('Testing Node with CJS imports...')
 
@@ -14,8 +14,8 @@ function checkFunctionName(fn, name, category) {
 }
 
 const entries = [
-  [animated, 'animated', 'react-spring'],
-  [useSpring, 'useSpring', 'react-spring'],
+  [animated, 'animated', '@react-spring/web'],
+  [useSpring, 'useSpring', '@react-spring/web'],
 ]
 
 for (let [fn, name, category] of entries) {
@@ -26,7 +26,7 @@ for (let [fn, name, category] of entries) {
   }
 }
 
-const moduleNames = [['react-spring', 'dist/index.js']]
+const moduleNames = [['@react-spring/web', 'dist/cjs/index.js']]
 
 for (let [moduleName, expectedFilename] of moduleNames) {
   const modulePath = require.resolve(moduleName)

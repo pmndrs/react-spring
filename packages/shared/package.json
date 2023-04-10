@@ -2,11 +2,19 @@
   "name": "@react-spring/shared",
   "version": "9.7.2",
   "description": "Globals and shared modules",
-  "main": "dist/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts",
+  "module": "./dist/react-spring_shared.legacy-esm.js",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/react-spring_shared.modern.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/react-spring_shared.modern.d.ts",
+      "import": "./dist/react-spring_shared.modern.mjs",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "files": [
-    "dist/*",
+    "dist/**/*",
     "README.md",
     "LICENSE"
   ],
@@ -29,16 +37,15 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/rafz": "~9.7.2",
     "@react-spring/types": "~9.7.2"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "scripts": {
-    "build": "tsup --legacy-output",
+    "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "dev": "tsup",
+    "dev": "tsup --watch",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
     "pack": "yarn pack"
   }

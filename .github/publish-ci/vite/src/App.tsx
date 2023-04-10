@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { animated, useSpring } from 'react-spring'
+import { animated, useSpring } from '@react-spring/web'
 import './App.css'
 
 function App() {

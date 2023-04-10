@@ -7,10 +7,12 @@ module.exports = {
   testPathIgnorePatterns: [
     '.+/(types|__snapshots__)/.+',
     '<rootDir>/node_modules/',
+    '<rootDir>/.github/',
   ],
   modulePathIgnorePatterns: ['dist', 'cypress'],
   moduleNameMapper: {
     '^react$': '<rootDir>/node_modules/react',
+    '@react-spring/(.*)': '<rootDir>/packages/$1/src/index.ts',
   },
   collectCoverageFrom: [
     '<rootDir>/packages/{animated,core,rafz,shared}/src/*.{ts,tsx}',

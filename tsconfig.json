@@ -13,7 +13,7 @@
     "docs/**/*"
   ],
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2020",
     "module": "ESNext",
     "lib": ["DOM", "ESNext"],
     "jsx": "react",

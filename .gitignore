@@ -18,6 +18,7 @@ ehthumbs.db
 .env.development.local
 .env.test.local
 .env.production.local
+*.tgz
 
 npm-debug.log*
 yarn-debug.log*

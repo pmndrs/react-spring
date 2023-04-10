@@ -72,6 +72,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"callsites@npm:~4.0.0":
+  version: 4.0.0
+  resolution: "callsites@npm:4.0.0"
+  checksum: ad3c3a57328a539c0d671cf1ca500abf09461b762807fc545a132026bdf87705fee9c299e1adb38b133c29201a3b04fbf4f2b90d8fa1d9e00ef507e803737cf2
+  languageName: node
+  linkType: hard
+
 "dual-module-test@workspace:.":
   version: 0.0.0-use.local
   resolution: "dual-module-test@workspace:."
@@ -79,6 +86,7 @@ __metadata:
     "@react-spring/web": "*"
     react: ^18.2.0
     react-dom: ^18.2.0
+    resolve-esm: ^1.4.0
   languageName: unknown
   linkType: soft
 
@@ -118,6 +126,15 @@ __metadata:
   dependencies:
     loose-envify: ^1.1.0
   checksum: 88e38092da8839b830cda6feef2e8505dec8ace60579e46aa5490fc3dc9bba0bd50336507dc166f43e3afc1c42939c09fe33b25fae889d6f402721dcd78fca1b
+  languageName: node
+  linkType: hard
+
+"resolve-esm@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "resolve-esm@npm:1.4.0"
+  dependencies:
+    callsites: ~4.0.0
+  checksum: f0e1fad4c49abe41012ec9f59958d9d8d356b12c92a784765b6d69f8dccd07a609656f83a86278c76b579a953b02b893d3c3ea7c2ad2be607b15d7f0c942b8f8
   languageName: node
   linkType: hard
 
