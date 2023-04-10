@@ -29,6 +29,8 @@ export interface ScrollInfo {
   y: ScrollAxis
 }
 
+type ScrollKeys = 'scrollHeight' | 'scrollWidth' | 'scrollLeft' | 'scrollTop'
+
 /**
  * Why use a class? More extensible in the future.
  */
@@ -58,9 +60,10 @@ export class ScrollHandler {
     const axis = this.info[axisName]
     const { length, position } = SCROLL_KEYS[axisName]
 
-    axis.current = this.container[`scroll${position}`]
+    axis.current = this.container[`scroll${position}` as ScrollKeys]
     axis.scrollLength =
-      this.container['scroll' + length] - this.container['client' + length]
+      this.container[('scroll' + length) as ScrollKeys] -
+      this.container[('client' + length) as ScrollKeys]
 
     axis.progress = progress(0, axis.scrollLength, axis.current)
   }
