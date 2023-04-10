@@ -4,7 +4,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    
-    "jsx": "react", 
+
+    "jsx": "react"
   }
 }
