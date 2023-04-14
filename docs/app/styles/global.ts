@@ -27,6 +27,10 @@ export const globalStyles = globalCss({
     '@motion': {
       scrollBehavior: 'smooth',
     },
+
+    '@-moz-document url-prefix()': {
+      fontVariantLigatures: 'none',
+    },
   },
 
   html: {
