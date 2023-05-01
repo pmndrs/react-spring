@@ -57,7 +57,7 @@ jobs:
       - name: Pack
         run: yarn package
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: package
           path: packages/react-spring/package.tgz
