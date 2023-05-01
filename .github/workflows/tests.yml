@@ -190,7 +190,7 @@ jobs:
       - name: Remove existing react-spring
         run: yarn remove react-spring
 
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: package
           path: ./.github/publish-ci/${{ matrix.example }}
