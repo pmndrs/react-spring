@@ -42,7 +42,7 @@ of the `from` config object). The value of said key is a [`SpringValue`](#spring
 Explained in `typescript` terms the signature looks like:
 
 ```ts
-type SpringValues<SpringConfig extends Record<string, any> = {
+type SpringValues<SpringConfig extends Record<string, any>> = {
   [Key in keyof OnlyAnimatableKeys<SpringConfig>]: SpringValue
 }
 ```
