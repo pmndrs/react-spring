@@ -11,7 +11,8 @@
     },
     "build": {
       "outputs": ["dist/**", "public/build/**", "api/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "../../tsup.config.base.ts"]
     },
     "lint": {},
     "pack": {}

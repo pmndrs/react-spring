@@ -59,8 +59,33 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: package
-          path: packages/react-spring/package.tgz
+          name: animated
+          path: packages/animated/package.tgz
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: core
+          path: packages/core/package.tgz
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: rafz
+          path: packages/rafz/package.tgz
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: shared
+          path: packages/shared/package.tgz
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: types
+          path: packages/types/package.tgz
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: web
+          path: targets/web/package.tgz
 
   test-unit:
     name: 'Test:unit'
@@ -161,13 +186,14 @@ jobs:
       matrix:
         # keep at 16 because of webpack 4
         node: ['16.x']
-        example: [
+        example:
+          [
             'cra4',
             'cra5',
             'next',
             'vite',
             'node-standard',
-            # 'node-esm',
+            'node-esm',
             'are-the-types-wrong',
           ]
     defaults:
@@ -187,25 +213,30 @@ jobs:
       - name: Install
         run: yarn install --immutable
 
-      - name: Remove existing react-spring
-        run: yarn remove react-spring
+      - name: Remove existing @react-spring/web
+        run: yarn remove @react-spring/web
 
       - uses: actions/download-artifact@v3
         with:
-          name: package
           path: ./.github/publish-ci/${{ matrix.example }}
 
       - name: Check folder contents
         run: ls -l .
 
-      - name: Install RS build artifact
-        run: yarn add ./package.tgz
+      - name: Install RS build artifacts
+        run: yarn add ./web/package.tgz ./animated/package.tgz ./core/package.tgz ./rafz/package.tgz ./shared/package.tgz ./types/package.tgz
 
       - name: Show installed RS versions
-        run: yarn info react-spring
+        run: yarn info @react-spring/web && yarn why @react-spring/web
 
       - name: Build example
         run: yarn build
 
       - name: Run test step
         run: yarn test
+        if: matrix.example != 'are-the-types-wrong'
+
+      - name: Run test step (attw)
+        # Ignore "FalseCJS" errors in the `attw` job
+        run: yarn test -n FalseCJS
+        if: matrix.example == 'are-the-types-wrong'

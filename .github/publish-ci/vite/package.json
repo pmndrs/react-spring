@@ -11,9 +11,9 @@
     "test": "echo Done"
   },
   "dependencies": {
+    "@react-spring/web": "*",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-spring": "^9.7.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.45",

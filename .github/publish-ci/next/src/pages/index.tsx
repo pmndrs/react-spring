@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import type { NextPage } from 'next'
-import { animated, useSpring } from 'react-spring'
+import { animated, useSpring } from '@react-spring/web'
 
 import style from '../styles/index.module.css'
 
