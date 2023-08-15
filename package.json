@@ -85,7 +85,7 @@
     "@types/react-native": "^0.71.3",
     "@types/styled-components": "^5.1.26",
     "@types/three": "^0.149.0",
-    "cypress": "^9.7.0",
+    "cypress": "^12.17.4",
     "cypress-image-snapshot": "^4.0.1",
     "eslint": "^8.36.0",
     "flush-microtasks": "^1.0.1",
