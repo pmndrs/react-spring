@@ -56,7 +56,7 @@ However, a `SpringRef` can manage multiple `Controller`s. For more information, 
 
 ## Controller
 
-So where does the `Controller` come into all this? Well, every "spring" is infact, a `Controller`. Therefore, when you use the
+So where does the `Controller` come into all this? Well, every "spring" is in fact, a `Controller`. Therefore, when you use the
 hook `useSpring` you initialise a new `Controller` class and when you pass the number X to the `useSprings` hook, you're creating
 X amount of `Controller`s.
 
@@ -115,7 +115,7 @@ for your animation.
 In addition to controlling a "Fluid value" – a value that changes over time (see [Fluids](#fluids) for more information). `SpringValues`
 also apply their updates to the `animated node` they're passed to. You might recall if you had read the [animated elements](/docs/concepts/animated-elements)
 concept page that on creation of the `animated` component, we convert any `SpringValues` into `AnimatedValues` which seems like a one way direction,
-infact we attach this `AnimatedValue` to the original `SpringValue`, which allows the spring to update the animated node (e.g. `<animated.p>`.)
+in fact we attach this `AnimatedValue` to the original `SpringValue`, which allows the spring to update the animated node (e.g. `<animated.p>`.)
 via the animated value when the `advance` function is called on the `SpringValue` via our `rafz` package. `SpringValue` is able to do this
 because it extends the `FrameValue` which is a kind of `FluidValue`.
 
