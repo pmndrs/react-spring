@@ -128,7 +128,8 @@ export function useSprings(
   )
 
   const ctrls = useRef([...state.ctrls])
-  const updates: any[] = []
+  const updatesRef = useRef([])
+  const { current: updates } = updatesRef
 
   // Cache old controllers to dispose in the commit phase.
   const prevLength = usePrev(length) || 0
@@ -153,6 +154,8 @@ export function useSprings(
 
   /** Fill the `updates` array with declarative updates for the given index range. */
   function declareUpdates(startIndex: number, endIndex: number) {
+    updates.splice(0, updates.length)
+    
     for (let i = startIndex; i < endIndex; i++) {
       const ctrl =
         ctrls.current[i] ||
