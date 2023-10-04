@@ -123,7 +123,7 @@ jobs:
     strategy:
       matrix:
         node: ['18.x']
-        ts: ['4.5', '4.6', '4.7', '4.8', '4.9']
+        ts: ['5.0', '5.1', '5.2']
 
     steps:
       - name: Checkout repo
