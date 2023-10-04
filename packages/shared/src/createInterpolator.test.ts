@@ -23,8 +23,8 @@ describe('Interpolation', () => {
   })
 
   it('should work with interpolation function as argument', () => {
-    const interpolation = createInterpolator(
-      (value: number) => `scale(${value})`
+    const interpolation = createInterpolator<number, string>(
+      value => `scale(${value})`
     )
 
     expect(interpolation(0)).toBe('scale(0)')

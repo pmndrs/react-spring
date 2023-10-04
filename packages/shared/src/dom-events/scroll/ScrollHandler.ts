@@ -11,7 +11,7 @@ const SCROLL_KEYS = {
     length: 'Height',
     position: 'Top',
   },
-}
+} as const
 
 /**
  * Whilst user's may not need the scrollLength, it's easier to return
@@ -60,7 +60,7 @@ export class ScrollHandler {
 
     axis.current = this.container[`scroll${position}`]
     axis.scrollLength =
-      this.container['scroll' + length] - this.container['client' + length]
+      this.container[`scroll${length}`] - this.container[`client${length}`]
 
     axis.progress = progress(0, axis.scrollLength, axis.current)
   }

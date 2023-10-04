@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 import createMockRaf, { MockRaf } from 'mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { act } from '@testing-library/react'
@@ -107,7 +108,12 @@ global.countBounces = spring => {
   let prev = from
   let count = 0
   global.getFrames(spring, true).forEach(value => {
-    if (value !== to && value > to !== prev > to) {
+    if (
+      value !== to &&
+      is.num(to) &&
+      is.num(prev) &&
+      value > to !== prev > to
+    ) {
       count += 1
     }
     prev = value
@@ -174,11 +180,12 @@ global.advanceUntilValue = (spring, value) => {
     const frames = global.getFrames(spring, true)
     const value = frames.length - offset > 0 ? frames[frames.length - 1] : from
 
-    const stop = is.num(goal)
-      ? goal > from
-        ? goal <= value
-        : goal >= value
-      : isEqual(value, goal)
+    const stop =
+      is.num(goal) && is.num(value) && is.num(from)
+        ? goal > from
+          ? goal <= value
+          : goal >= value
+        : isEqual(value, goal)
 
     return stop
   })
