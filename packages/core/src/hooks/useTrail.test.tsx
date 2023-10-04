@@ -11,6 +11,7 @@ describe('useTrail', () => {
   // Call the "useSprings" hook and update local variables.
   const update = createUpdater(({ args }) => {
     const result = useTrail(...args)
+    // @ts-expect-error - TODO: fix this type error.
     springs = is.arr(result[0]) ? result[0] : result
     return null
   })

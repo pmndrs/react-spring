@@ -66,6 +66,7 @@ export function useInView<TElement extends HTMLElement>(
 
     const onEnter = () => {
       if (to) {
+        // @ts-expect-error – TODO: fix this type error
         api.start(to)
       }
 
