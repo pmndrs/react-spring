@@ -46,7 +46,7 @@ jobs:
             exit 0
           fi
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         if: steps.version.outputs.NEXT_VERSION
         with:
           node-version: 18
