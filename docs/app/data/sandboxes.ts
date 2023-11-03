@@ -2,6 +2,7 @@ export const SANDBOXES = {
   'Animating Auto': 'ucvbf',
   'Basic Trail': 'yps54',
   'Basic Transition': 'cisbc',
+  'bouncing-ball': 'jnjfpm',
   Card: 'pf74x',
   'Cards Stack': 'to6uf',
   'Chaining Transition and a Spring': 'q6ffu',
