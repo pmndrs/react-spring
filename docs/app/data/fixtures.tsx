@@ -92,7 +92,7 @@ export const NAV_TILES: Tile[] = [
     href: '/docs/getting-started',
     label: 'Getting Started',
     description:
-      'Learn about how use react-spring with step by step explanations',
+      'Learn about how to use react-spring with step by step explanations',
   },
   {
     href: '/docs/guides',
