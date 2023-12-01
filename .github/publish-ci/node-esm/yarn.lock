@@ -72,10 +72,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"callsites@npm:~4.0.0":
-  version: 4.0.0
-  resolution: "callsites@npm:4.0.0"
-  checksum: ad3c3a57328a539c0d671cf1ca500abf09461b762807fc545a132026bdf87705fee9c299e1adb38b133c29201a3b04fbf4f2b90d8fa1d9e00ef507e803737cf2
+"callsites@npm:~4.1.0":
+  version: 4.1.0
+  resolution: "callsites@npm:4.1.0"
+  checksum: 4ad31de7b7615fa25bdab9c2373865209d2d5190f895cdf2e2f518bd1dafa7ebcda2e6e9cc9640f2dfde6b3893d82fa4359a78ffc27baad2503227553c6882fa
   languageName: node
   linkType: hard
 
@@ -86,7 +86,7 @@ __metadata:
     "@react-spring/web": "*"
     react: ^18.2.0
     react-dom: ^18.2.0
-    resolve-esm: ^1.4.0
+    resolve-esm: ^2.0.3
   languageName: unknown
   linkType: soft
 
@@ -129,12 +129,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve-esm@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "resolve-esm@npm:1.4.0"
+"resolve-esm@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "resolve-esm@npm:2.0.3"
   dependencies:
-    callsites: ~4.0.0
-  checksum: f0e1fad4c49abe41012ec9f59958d9d8d356b12c92a784765b6d69f8dccd07a609656f83a86278c76b579a953b02b893d3c3ea7c2ad2be607b15d7f0c942b8f8
+    callsites: ~4.1.0
+  checksum: ac8a5ad94055646f791b7a8c6f65c65b18d8cb9b2fd262ccb087158d85e52d45e85e1b80ebc72ed939c5e80e51de676f992ca254a9af502174f3e42fb07df198
   languageName: node
   linkType: hard
 
