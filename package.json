@@ -92,7 +92,7 @@
     "husky": "^8.0.3",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
-    "konva": "^8.4.2",
+    "konva": "^9.2.3",
     "mock-raf": "npm:@react-spring/mock-raf@1.1.1",
     "prettier": "^2.8.4",
     "pretty-quick": "^3.1.3",
