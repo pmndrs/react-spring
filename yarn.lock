@@ -13976,10 +13976,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"konva@npm:^8.4.2":
-  version: 8.4.2
-  resolution: "konva@npm:8.4.2"
-  checksum: 5be3d723ac2391ec8c0939cf627a98e520608d95c03a8a84f10bd010f47f5908617d2fff280bd94f00f9ce81dd44d455893ab61804c9ff92d97ff08372ee76b9
+"konva@npm:^9.2.3":
+  version: 9.2.3
+  resolution: "konva@npm:9.2.3"
+  checksum: 9b89adafa3f01e19fd7a36dff4f16cdcabead5f3e65ea35bf018773f20cb4ea4b4e426fa4e271a02dbd734502f92fccb456bc2b13bc43b44550643b2509de565
   languageName: node
   linkType: hard
 
@@ -17719,7 +17719,7 @@ __metadata:
     husky: ^8.0.3
     jest: ^29.5.0
     jest-environment-jsdom: ^29.5.0
-    konva: ^8.4.2
+    konva: ^9.2.3
     mock-raf: "npm:@react-spring/mock-raf@1.1.1"
     prettier: ^2.8.4
     pretty-quick: ^3.1.3
