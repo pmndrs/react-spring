@@ -7,7 +7,7 @@ export enum EventNames {
 
 type EventFactory<
   TEventName extends EventNames,
-  TAdditionalProps extends object = object
+  TAdditionalProps extends object = object,
 > = {
   name: TEventName
   additionalProps?: TAdditionalProps

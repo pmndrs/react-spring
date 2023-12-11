@@ -41,10 +41,10 @@ export type TransitionValues<Props extends object> = unknown &
             ? T extends ReadonlyArray<infer Element>
               ? Element
               : T extends (...args: any[]) => infer Return
-              ? Return extends ReadonlyArray<infer ReturnElement>
-                ? ReturnElement
-                : Return
-              : T
+                ? Return extends ReadonlyArray<infer ReturnElement>
+                  ? ReturnElement
+                  : Return
+                : T
             : never
         >,
         {}
@@ -97,7 +97,7 @@ export type UseTransitionProps<Item = any> = Merge<
 
 export type TransitionComponentProps<
   Item,
-  Props extends object = any
+  Props extends object = any,
 > = unknown &
   UseTransitionProps<Item> & {
     keys?: ItemKeys<NoInfer<Item>>

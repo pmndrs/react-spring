@@ -12091,12 +12091,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.8.4":
-  version: 2.8.4
-  resolution: "prettier@npm:2.8.4"
+"prettier@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "prettier@npm:3.1.1"
   bin:
-    prettier: bin-prettier.js
-  checksum: c173064bf3df57b6d93d19aa98753b9b9dd7657212e33b41ada8e2e9f9884066bb9ca0b4005b89b3ab137efffdf8fbe0b462785aba20364798ff4303aadda57e
+    prettier: bin/prettier.cjs
+  checksum: e386855e3a1af86a748e16953f168be555ce66d6233f4ba54eb6449b88eb0c6b2ca79441b11eae6d28a7f9a5c96440ce50864b9d5f6356d331d39d6bb66c648e
   languageName: node
   linkType: hard
 
@@ -13142,7 +13142,7 @@ __metadata:
     "@types/node": ^20.10.4
     "@types/react": ^18.0.26
     "@types/react-dom": ^18.0.10
-    prettier: ^2.8.4
+    prettier: ^3.1.1
     react: ^18.2.0
     react-dom: ^18.2.0
     react-scripts: ^4

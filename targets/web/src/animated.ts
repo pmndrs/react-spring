@@ -52,16 +52,16 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
   ? [DT] extends [never]
     ? never
     : DT extends void
-    ? undefined
-    : DT extends string | number
-    ? DT | AnimatedLeaf<T>
-    : DT extends object
-    ? [ValidStyleProps<DT>] extends [never]
-      ? DT extends ReadonlyArray<any>
-        ? AnimatedStyles<DT>
-        : DT
-      : AnimatedStyle<T>
-    : DT | AnimatedLeaf<T>
+      ? undefined
+      : DT extends string | number
+        ? DT | AnimatedLeaf<T>
+        : DT extends object
+          ? [ValidStyleProps<DT>] extends [never]
+            ? DT extends ReadonlyArray<any>
+              ? AnimatedStyles<DT>
+              : DT
+            : AnimatedStyle<T>
+          : DT | AnimatedLeaf<T>
   : never
 
 // An animated array of style objects
@@ -82,12 +82,12 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
   ? DT extends void
     ? undefined
     : [DT] extends [never]
-    ? never
-    : DT extends string | number
-    ? DT | AnimatedLeaf<T>
-    : DT extends object
-    ? AnimatedObject<DT>
-    : DT | AnimatedLeaf<T>
+      ? never
+      : DT extends string | number
+        ? DT | AnimatedLeaf<T>
+        : DT extends object
+          ? AnimatedObject<DT>
+          : DT | AnimatedLeaf<T>
   : never
 
 type AnimatedObject<T extends object> =
@@ -150,6 +150,6 @@ type TransformProps = {
     number, // a4
     number,
     number,
-    number
+    number,
   ]
 }

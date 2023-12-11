@@ -55,8 +55,5 @@
     "concurrently": "^8.0.1",
     "ts-node": "^10.9.1"
   },
-  "engines": {
-    "node": ">=20.10.0"
-  },
   "sideEffects": false
 }

@@ -8,7 +8,7 @@ type Source = AnimatedValue<Value>[]
 
 /** An array of animated nodes */
 export class AnimatedArray<
-  T extends ReadonlyArray<Value> = Value[]
+  T extends ReadonlyArray<Value> = Value[],
 > extends AnimatedObject {
   protected declare source: Source
   constructor(source: T) {

@@ -45,8 +45,8 @@ const isValueIdentity = (value: OneOrMore<Value>, id: number): boolean =>
   is.arr(value)
     ? value.every(v => isValueIdentity(v, id))
     : is.num(value)
-    ? value === id
-    : parseFloat(value) === id
+      ? value === id
+      : parseFloat(value) === id
 
 type Inputs = ReadonlyArray<Value | FluidValue<Value>>[]
 type Transforms = ((value: any) => [string, boolean])[]
@@ -91,8 +91,8 @@ export class AnimatedStyle extends AnimatedObject {
         const unit = pxTransforms.test(key)
           ? 'px'
           : degTransforms.test(key)
-          ? 'deg'
-          : ''
+            ? 'deg'
+            : ''
 
         inputs.push(toArray(value))
         transforms.push(
@@ -121,7 +121,10 @@ export class AnimatedStyle extends AnimatedObject {
 class FluidTransform extends FluidValue<string> {
   protected _value: string | null = null
 
-  constructor(readonly inputs: Inputs, readonly transforms: Transforms) {
+  constructor(
+    readonly inputs: Inputs,
+    readonly transforms: Transforms
+  ) {
     super()
   }
 

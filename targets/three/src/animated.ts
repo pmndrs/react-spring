@@ -33,14 +33,14 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
   ? [DT] extends [never]
     ? never
     : DT extends void
-    ? undefined
-    : DT extends object
-    ? [AssignableKeys<DT, CSSProperties>] extends [never]
-      ? DT extends ReadonlyArray<any>
-        ? AnimatedStyles<DT>
-        : DT
-      : AnimatedStyle<T>
-    : DT | AnimatedLeaf<T>
+      ? undefined
+      : DT extends object
+        ? [AssignableKeys<DT, CSSProperties>] extends [never]
+          ? DT extends ReadonlyArray<any>
+            ? AnimatedStyles<DT>
+            : DT
+          : AnimatedStyle<T>
+        : DT | AnimatedLeaf<T>
   : never
 
 // An animated array of style objects
@@ -61,10 +61,10 @@ type AnimatedStyle<T> = [T, T] extends [infer T, infer DT]
   ? DT extends void
     ? undefined
     : [DT] extends [never]
-    ? never
-    : DT extends object
-    ? { [P in keyof DT]: AnimatedStyle<DT[P]> }
-    : DT | AnimatedLeaf<T>
+      ? never
+      : DT extends object
+        ? { [P in keyof DT]: AnimatedStyle<DT[P]> }
+        : DT | AnimatedLeaf<T>
   : never
 
 // An animated primitive (or an array of them)

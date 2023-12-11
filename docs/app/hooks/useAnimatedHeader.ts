@@ -17,7 +17,7 @@ export const useAnimatedHeader = ({
   styles: { top: SpringValue<number> },
   isStuck: boolean,
   scrollTop: number,
-  direction: SCROLL_DIR | undefined
+  direction: SCROLL_DIR | undefined,
 ] => {
   const [direction, scrollTop] = useWindowScrolling({
     active: true,
