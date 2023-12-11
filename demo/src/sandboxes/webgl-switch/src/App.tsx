@@ -23,6 +23,7 @@ function Switch({ x, set }: { set: React.Dispatch<React.SetStateAction<number>>;
 
   return (
     <group scale={[1.25, 1.25, 1.25]} dispose={null}>
+      {/* @ts-expect-error */}
       <a.mesh receiveShadow castShadow material={materials.track} geometry={nodes.Cube.geometry} material-color={color} material-roughness={0.5} material-metalness={0.8} />
       <a.group position-y={0.85} position-z={pZ}>
         <a.mesh receiveShadow castShadow raycast={meshBounds} rotation-x={rX} onClick={onClick} onPointerOver={onPointerOver} onPointerOut={onPointerOut}>
