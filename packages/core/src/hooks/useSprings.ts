@@ -1,4 +1,4 @@
-import { useContext, useMemo, useRef } from 'react'
+import { DependencyList, useContext, useMemo, useRef } from 'react'
 import { Lookup } from '@react-spring/types'
 import {
   is,
@@ -74,7 +74,7 @@ export function useSprings<Props extends UseSpringsProps>(
 export function useSprings(
   length: number,
   props: any[] | ((i: number, ctrl: Controller) => any),
-  deps?: readonly any[]
+  deps: DependencyList = []
 ): any {
   const propsFn = is.fun(props) && props
   if (propsFn && !deps) deps = []
