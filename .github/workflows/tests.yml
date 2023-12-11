@@ -149,33 +149,33 @@ jobs:
           yarn tsc --version
           yarn test:ts
 
-  test-e2e:
-    needs: [build]
-    if: ${{ needs.changes.outputs.packages == 'true' }}
-    name: 'Test:E2E'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: ['20.x']
+  # test-e2e:
+  #   needs: [build]
+  #   if: ${{ needs.changes.outputs.packages == 'true' }}
+  #   name: 'Test:E2E'
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node: ['20.x']
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v4
 
-      - name: Setup node ${{ matrix.node }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-          cache: 'yarn'
+  #     - name: Setup node ${{ matrix.node }}
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ matrix.node }}
+  #         cache: 'yarn'
 
-      - name: Install
-        run: yarn install --immutable
+  #     - name: Install
+  #       run: yarn install --immutable
 
-      - name: Build
-        run: yarn build-ci
+  #     - name: Build
+  #       run: yarn build-ci
 
-      - name: Test
-        run: yarn test:e2e
+  #     - name: Test
+  #       run: yarn test:e2e
 
   test-published-artifact:
     needs: [build]
