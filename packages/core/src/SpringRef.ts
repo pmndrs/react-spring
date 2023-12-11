@@ -8,9 +8,9 @@ export interface ControllerUpdateFn<State extends Lookup = Lookup> {
 }
 
 export interface SpringRef<State extends Lookup = Lookup> {
-  (props?: ControllerUpdate<State> | ControllerUpdateFn<State>): AsyncResult<
-    Controller<State>
-  >[]
+  (
+    props?: ControllerUpdate<State> | ControllerUpdateFn<State>
+  ): AsyncResult<Controller<State>>[]
   current: Controller<State>[]
 
   /** Add a controller to this ref */
@@ -77,7 +77,7 @@ export interface SpringRef<State extends Lookup = Lookup> {
 }
 
 export const SpringRef = <
-  State extends Lookup = Lookup
+  State extends Lookup = Lookup,
 >(): SpringRef<State> => {
   const current: Controller<State>[] = []
 

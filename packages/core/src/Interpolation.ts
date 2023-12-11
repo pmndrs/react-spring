@@ -34,7 +34,7 @@ import {
  */
 export class Interpolation<
   Input = any,
-  Output = any
+  Output = any,
 > extends FrameValue<Output> {
   /** Useful for debugging. */
   key?: string

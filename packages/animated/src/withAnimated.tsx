@@ -98,7 +98,10 @@ export const withAnimated = (Component: any, host: HostConfig) => {
 }
 
 class PropsObserver {
-  constructor(readonly update: () => void, readonly deps: Set<FluidValue>) {}
+  constructor(
+    readonly update: () => void,
+    readonly deps: Set<FluidValue>
+  ) {}
   eventObserved(event: FluidEvent) {
     if (event.type == 'change') {
       raf.write(this.update)

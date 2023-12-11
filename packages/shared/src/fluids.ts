@@ -86,9 +86,9 @@ type GetFluidValue = {
 }
 
 type GetFluidObservers = {
-  <E extends FluidEvent>(target: FluidValue<any, E>): ReadonlySet<
-    FluidObserver<E>
-  > | null
+  <E extends FluidEvent>(
+    target: FluidValue<any, E>
+  ): ReadonlySet<FluidObserver<E>> | null
   (target: object): ReadonlySet<FluidObserver> | null
 }
 

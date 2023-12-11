@@ -18,15 +18,15 @@ export interface Readable<T = any> {
 export type InferState<T extends Readable> = T extends Controller<infer State>
   ? State
   : T extends SpringValue<infer U>
-  ? U
-  : unknown
+    ? U
+    : unknown
 
 /** @internal */
 export type InferProps<T extends Readable> = T extends Controller<infer State>
   ? ControllerUpdate<State>
   : T extends SpringValue<infer U>
-  ? SpringUpdate<U>
-  : Lookup
+    ? SpringUpdate<U>
+    : Lookup
 
 /** @internal */
 export type InferTarget<T> = T extends object

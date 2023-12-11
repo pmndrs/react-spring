@@ -48,7 +48,7 @@ function MessageHub({
         })
       )
     },
-    config: (item, index, phase) => key => phase === 'enter' && key === 'life' ? { duration: timeout } : config,
+    config: (item, index, phase) => key => (phase === 'enter' && key === 'life' ? { duration: timeout } : config),
   })
 
   React.useEffect(() => {

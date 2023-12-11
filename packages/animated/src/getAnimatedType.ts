@@ -11,8 +11,8 @@ export function getAnimatedType(value: any): AnimatedType {
   return parentNode
     ? (parentNode.constructor as any)
     : is.arr(value)
-    ? AnimatedArray
-    : isAnimatedString(value)
-    ? AnimatedString
-    : AnimatedValue
+      ? AnimatedArray
+      : isAnimatedString(value)
+        ? AnimatedString
+        : AnimatedValue
 }

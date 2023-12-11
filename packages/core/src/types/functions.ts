@@ -48,7 +48,7 @@ export type SpringUpdateFn<T = any> = T extends IsPlainObject<T>
 interface AnyUpdateFn<
   T extends SpringValue | Controller<any>,
   Props extends object = InferProps<T>,
-  State = InferState<T>
+  State = InferState<T>,
 > {
   (to: SpringTo<State>, props?: Props): AsyncResult<T>
   (props: { to?: SpringToFn<T> | Falsy } & Props): AsyncResult<T>
@@ -82,7 +82,7 @@ interface UpdateValueFn<T = any> extends AnyUpdateFn<SpringValue<T>> {
 type EventHandler<
   TResult extends Readable = any,
   TSource = unknown,
-  Item = undefined
+  Item = undefined,
 > = Item extends undefined
   ? (result: AnimationResult<TResult>, ctrl: TSource, item?: Item) => void
   : (result: AnimationResult<TResult>, ctrl: TSource, item: Item) => void
@@ -94,39 +94,39 @@ type EventHandler<
 export type OnStart<
   TResult extends Readable,
   TSource,
-  Item = undefined
+  Item = undefined,
 > = EventHandler<TResult, TSource, Item>
 
 /** Called when a `SpringValue` changes */
 export type OnChange<
   TResult extends Readable,
   TSource,
-  Item = undefined
+  Item = undefined,
 > = EventHandler<TResult, TSource, Item>
 
 export type OnPause<
   TResult extends Readable,
   TSource,
-  Item = undefined
+  Item = undefined,
 > = EventHandler<TResult, TSource, Item>
 
 export type OnResume<
   TResult extends Readable,
   TSource,
-  Item = undefined
+  Item = undefined,
 > = EventHandler<TResult, TSource, Item>
 
 /** Called once the animation comes to a halt */
 export type OnRest<
   TResult extends Readable,
   TSource,
-  Item = undefined
+  Item = undefined,
 > = EventHandler<TResult, TSource, Item>
 
 export type OnResolve<
   TResult extends Readable,
   TSource,
-  Item = undefined
+  Item = undefined,
 > = EventHandler<TResult, TSource, Item>
 
 /**

@@ -190,8 +190,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
         node.constructor == AnimatedString
           ? 1
           : payload
-          ? payload[i].lastPosition
-          : toValues![i]
+            ? payload[i].lastPosition
+            : toValues![i]
 
       let finished = anim.immediate
       let position = to
@@ -800,8 +800,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
         anim.toValues = hasFluidValue(to)
           ? null
           : goalType == AnimatedString
-          ? [1]
-          : toArray(goal)
+            ? [1]
+            : toArray(goal)
       }
 
       if (anim.immediate != immediate) {

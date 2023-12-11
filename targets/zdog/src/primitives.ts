@@ -6,8 +6,8 @@ type ZdogElements = {
   [P in keyof ZdogExports]: P extends 'Illustration'
     ? never
     : ZdogExports[P] extends ElementType
-    ? P
-    : never
+      ? P
+      : never
 }[keyof ZdogExports]
 
 export const primitives: { [key in ZdogElements]: ElementType } = {

@@ -6,7 +6,7 @@ interface HProps {
 export const H = ({ index, id, ...props }: HProps) => {
   const getHighlightedWords = (): [
     targetIndex: number[],
-    allHighlightWords: Element[]
+    allHighlightWords: Element[],
   ] => {
     const codeBlock = document.getElementById(id)
     if (!codeBlock) return [[], []]

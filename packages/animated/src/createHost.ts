@@ -69,5 +69,5 @@ const getDisplayName = (arg: AnimatableComponent) =>
   is.str(arg)
     ? arg
     : arg && is.str(arg.displayName)
-    ? arg.displayName
-    : (is.fun(arg) && arg.name) || null
+      ? arg.displayName
+      : (is.fun(arg) && arg.name) || null

@@ -9,13 +9,13 @@ export const getCombinedResult = <T extends Readable>(
   results.length == 1
     ? results[0]
     : results.some(result => result.cancelled)
-    ? getCancelledResult(target.get())
-    : results.every(result => result.noop)
-    ? getNoopResult(target.get())
-    : getFinishedResult(
-        target.get(),
-        results.every(result => result.finished)
-      )
+      ? getCancelledResult(target.get())
+      : results.every(result => result.noop)
+        ? getNoopResult(target.get())
+        : getFinishedResult(
+            target.get(),
+            results.every(result => result.finished)
+          )
 
 /** No-op results are for updates that never start an animation. */
 export const getNoopResult = (value: any) => ({

@@ -29,8 +29,8 @@ export type RawValues<T extends object> = {
 export type IsPlainObject<T> = T extends ReadonlyArray<any>
   ? Any
   : T extends object
-  ? object
-  : Any
+    ? object
+    : Any
 
 export type StringKeys<T> = T extends IsPlainObject<T>
   ? string & keyof T

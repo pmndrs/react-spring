@@ -37,16 +37,16 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT] // T is a union, DT is
   ? [DT] extends [never]
     ? never
     : DT extends void
-    ? undefined
-    : DT extends ReadonlyArray<number | string>
-    ? AnimatedArray<DT> | AnimatedLeaf<T>
-    : DT extends ReadonlyArray<any>
-    ? TransformArray extends DT
-      ? AnimatedTransform
-      : AnimatedStyles<DT>
-    : [AssignableKeys<DT, ViewStyle>] extends [never]
-    ? DT | AnimatedLeaf<T>
-    : AnimatedStyle<DT>
+      ? undefined
+      : DT extends ReadonlyArray<number | string>
+        ? AnimatedArray<DT> | AnimatedLeaf<T>
+        : DT extends ReadonlyArray<any>
+          ? TransformArray extends DT
+            ? AnimatedTransform
+            : AnimatedStyles<DT>
+          : [AssignableKeys<DT, ViewStyle>] extends [never]
+            ? DT | AnimatedLeaf<T>
+            : AnimatedStyle<DT>
   : never
 
 type AnimatedArray<T extends ReadonlyArray<number | string>> = {
@@ -62,10 +62,10 @@ type AnimatedStyles<T extends ReadonlyArray<any>> = unknown &
         ? DT extends ReadonlyArray<any>
           ? AnimatedStyles<DT>
           : DT extends object
-          ? [AssignableKeys<DT, ViewStyle>] extends [never]
-            ? AnimatedProp<DT>
-            : { [P in keyof DT]: AnimatedProp<DT[P]> }
-          : DT
+            ? [AssignableKeys<DT, ViewStyle>] extends [never]
+              ? AnimatedProp<DT>
+              : { [P in keyof DT]: AnimatedProp<DT[P]> }
+            : DT
         : never
     }
 
@@ -74,14 +74,14 @@ export type AnimatedStyle<T> = [T, T] extends [infer T, infer DT] // T is a unio
   ? DT extends void
     ? undefined
     : [DT] extends [never]
-    ? never
-    : DT extends object
-    ? {
-        [P in keyof T]: P extends 'transform'
-          ? AnimatedTransform
-          : AnimatedStyle<T[P]>
-      }
-    : DT | AnimatedLeaf<T>
+      ? never
+      : DT extends object
+        ? {
+            [P in keyof T]: P extends 'transform'
+              ? AnimatedTransform
+              : AnimatedStyle<T[P]>
+          }
+        : DT | AnimatedLeaf<T>
   : never
 
 type TransformArray = Exclude<ViewStyle['transform'], void>

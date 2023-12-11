@@ -143,7 +143,7 @@ export type SpringTo<T = any> =
 
 export type ControllerUpdate<
   State extends Lookup = Lookup,
-  Item = undefined
+  Item = undefined,
 > = unknown & ToProps<State> & ControllerProps<State, Item>
 
 /**
@@ -151,7 +151,7 @@ export type ControllerUpdate<
  */
 export interface ControllerProps<
   State extends Lookup = Lookup,
-  Item = undefined
+  Item = undefined,
 > extends AnimationProps<State> {
   ref?: SpringRef<State>
   from?: GoalValues<State> | Falsy
@@ -350,16 +350,16 @@ export type PickAnimated<Props extends object, Fwd = true> = unknown &
   ([Props] extends [Any]
     ? Lookup // Preserve "any" instead of resolving to "{}"
     : [object] extends [Props]
-    ? Lookup
-    : ObjectFromUnion<
-        Props extends { from: infer From } // extract prop from the `from` prop if it exists
-          ? From extends () => any
-            ? ReturnType<From>
-            : ObjectType<From>
-          : TransitionKey & keyof Props extends never
-          ? ToValues<Props, Fwd>
-          : TransitionValues<Props>
-      >)
+      ? Lookup
+      : ObjectFromUnion<
+          Props extends { from: infer From } // extract prop from the `from` prop if it exists
+            ? From extends () => any
+              ? ReturnType<From>
+              : ObjectType<From>
+            : TransitionKey & keyof Props extends never
+              ? ToValues<Props, Fwd>
+              : TransitionValues<Props>
+        >)
 
 /**
  * Pick the values of the `to` prop. Forward props are *not* included.

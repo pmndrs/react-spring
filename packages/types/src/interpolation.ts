@@ -10,9 +10,9 @@ export interface InterpolatorFactory {
     interpolator: InterpolatorFn<Input, Output>
   ): typeof interpolator
 
-  <Output>(config: InterpolatorConfig<Output>): (
-    input: number
-  ) => Animatable<Output>
+  <Output>(
+    config: InterpolatorConfig<Output>
+  ): (input: number) => Animatable<Output>
 
   <Output>(
     range: readonly number[],
@@ -20,10 +20,9 @@ export interface InterpolatorFactory {
     extrapolate?: ExtrapolateType
   ): (input: number) => Animatable<Output>
 
-  <Input, Output>(...args: InterpolatorArgs<Input, Output>): InterpolatorFn<
-    Input,
-    Output
-  >
+  <Input, Output>(
+    ...args: InterpolatorArgs<Input, Output>
+  ): InterpolatorFn<Input, Output>
 }
 
 export type InterpolatorArgs<Input = any, Output = any> =
@@ -32,7 +31,7 @@ export type InterpolatorArgs<Input = any, Output = any> =
   | [
       readonly number[],
       readonly Constrain<Output, Animatable>[],
-      (ExtrapolateType | undefined)?
+      (ExtrapolateType | undefined)?,
     ]
 
 export type InterpolatorFn<Input, Output> = (...inputs: Arrify<Input>) => Output

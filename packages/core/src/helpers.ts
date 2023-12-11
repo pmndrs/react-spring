@@ -51,8 +51,8 @@ export const getDefaultProp = <T extends Lookup, P extends keyof T>(
   props.default === true
     ? props[key]
     : props.default
-    ? props.default[key]
-    : undefined
+      ? props.default[key]
+      : undefined
 
 const noopTransform = (value: any) => value
 
@@ -187,11 +187,11 @@ export function computeGoal<T>(value: T | FluidValue<T>): T {
   return is.arr(value)
     ? value.map(computeGoal)
     : isAnimatedString(value)
-    ? (G.createStringInterpolator({
-        range: [0, 1],
-        output: [value, value] as any,
-      })(1) as any)
-    : value
+      ? (G.createStringInterpolator({
+          range: [0, 1],
+          output: [value, value] as any,
+        })(1) as any)
+      : value
 }
 
 export function hasProps(props: object) {
