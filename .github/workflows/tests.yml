@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['18.x']
+        node: ['20.x']
 
     steps:
       - name: Checkout repo
@@ -94,7 +94,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['18.x']
+        node: ['20.x']
 
     steps:
       - name: Checkout repo
@@ -122,7 +122,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['18.x']
+        node: ['20.x']
         ts: ['5.0', '5.1', '5.2']
 
     steps:
@@ -156,7 +156,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['18.x']
+        node: ['20.x']
 
     steps:
       - name: Checkout repo
