@@ -39,11 +39,11 @@
     "workerDirectory": "public"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.2",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.10.4",
-    "@types/react": "^18.0.26",
-    "@types/react-dom": "^18.0.10",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
     "prettier": "^3.1.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   }
 }
