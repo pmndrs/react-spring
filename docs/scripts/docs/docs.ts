@@ -1,4 +1,4 @@
-import fs from 'fs/promises'
+import fs from 'fs-extra'
 import chokidar from 'chokidar'
 import path from 'path'
 
@@ -152,15 +152,15 @@ const processDoc = ({ content, source, docPath }: DocFile): ProcessedDoc => {
 const writeData = async (data: GeneratedDataFromDocs) => {
   const generatedDataPath = path.resolve(__dirname, '../../app/data')
   try {
-    await fs.mkdir(generatedDataPath, { recursive: true })
+    await fs.mkdirs(generatedDataPath)
 
     const dataEntries = Object.entries(data)
 
     await Promise.all(
       dataEntries.map(([key, datum]) => {
-        return fs.writeFile(
+        fs.writeJson(
           path.join(generatedDataPath, `${key}.generated.json`),
-          JSON.stringify(datum)
+          datum
         )
       })
     )
