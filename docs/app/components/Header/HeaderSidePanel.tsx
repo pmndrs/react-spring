@@ -1,8 +1,8 @@
 import { useLocation } from '@remix-run/react'
-import * as Dialog from '@radix-ui/react-dialog'
+import Dialog from '@radix-ui/react-dialog'
 import { X } from 'phosphor-react'
 import { animated, useTransition } from '@react-spring/web'
-import * as Toolbar from '@radix-ui/react-toolbar'
+import Toolbar from '@radix-ui/react-toolbar'
 
 import { styled } from '~/styles/stitches.config'
 

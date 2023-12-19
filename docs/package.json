@@ -4,7 +4,6 @@
   "author": "Josh Ellis",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "build": "vite build && vite build --ssr",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .cache && rm -rf api",

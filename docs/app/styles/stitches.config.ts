@@ -1,4 +1,8 @@
-import * as Stitches from '@stitches/react'
+import {
+  createStitches,
+  type CSS as StitchesCSS,
+  type ScaleValue as StitchesScaleValue,
+} from '@stitches/react'
 
 interface GradientBorderParams {
   width?: number
@@ -6,7 +10,7 @@ interface GradientBorderParams {
 }
 
 const { styled, globalCss, getCssText, config, createTheme, keyframes, css } =
-  Stitches.createStitches({
+  createStitches({
     theme: {
       colors: {
         red120: '#cc5757',
@@ -227,8 +231,8 @@ const dark = createTheme('dark', {
 })
 
 type StitchesConfig = typeof config
-type CSS = Stitches.CSS<StitchesConfig>
-type ScaleValue<TValue> = Stitches.ScaleValue<TValue, StitchesConfig>
+type CSS = StitchesCSS<StitchesConfig>
+type ScaleValue<TValue> = StitchesScaleValue<TValue, StitchesConfig>
 
 export type { StitchesConfig, CSS, ScaleValue }
 

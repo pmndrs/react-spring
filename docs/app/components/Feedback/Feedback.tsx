@@ -1,5 +1,5 @@
 import * as React from 'react'
-import * as Popover from '@radix-ui/react-popover'
+import Popover from '@radix-ui/react-popover'
 import { ThumbsDown, ThumbsUp, X } from 'phosphor-react'
 import { useLocation, useFetcher } from '@remix-run/react'
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { SandpackPreview, SandpackProvider } from '@codesandbox/sandpack-react'
-import * as Accordion from '@radix-ui/react-accordion'
+import Accordion from '@radix-ui/react-accordion'
 import { animated, useSpring } from '@react-spring/web'
 
 import { dark, styled } from '~/styles/stitches.config'

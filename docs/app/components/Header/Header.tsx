@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import * as Dialog from '@radix-ui/react-dialog'
+import Dialog from '@radix-ui/react-dialog'
 import { List } from 'phosphor-react'
 import { animated } from '@react-spring/web'
 import { Property } from '@stitches/react/types/css'
