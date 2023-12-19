@@ -13,7 +13,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react'
-import docusearch from '@docsearch/css/dist/style.css'
+import docusearch from '@docsearch/css/dist/style.css?url'
 
 import { globalStyles } from './styles/global'
 

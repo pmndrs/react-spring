@@ -37,7 +37,8 @@ function MyComponent() {
 
   return (
     <animated.div
-      style={{ transform: props.x.to(value => `rotateZ(${value}deg)`) }}>
+      style={{ transform: props.x.to(value => `rotateZ(${value}deg)`) }}
+    >
       Hello World
     </animated.div>
   )
@@ -59,7 +60,8 @@ function MyComponent() {
 
   return (
     <animated.div
-      style={{ transform: to(props.x, value => `rotateZ(${value}deg)`) }}>
+      style={{ transform: to(props.x, value => `rotateZ(${value}deg)`) }}
+    >
       Hello World
     </animated.div>
   )
@@ -89,7 +91,8 @@ export default function MyComponent() {
           [props.x, props.y, props.z],
           (x, y, z) => `rotate3d(${x}, ${y}, ${z}, 45deg)`
         ),
-      }}>
+      }}
+    >
       Hello World
     </animated.div>
   )
@@ -117,7 +120,8 @@ function MyComponent() {
         transform: props.x
           .to([0, 1], [0, 360])
           .to(value => `rotateZ(${value}deg)`),
-      }}>
+      }}
+    >
       Hello World
     </animated.div>
   )
@@ -129,8 +133,8 @@ function MyComponent() {
 An interpolation can also take a config object as the second argument if using the `to` function or the first
 argument when using the `to` method of a `SpringValue`.
 
-import { TablesConfiguration } from '~/components/Tables/TablesConfig'
-import { INTERPOLATONS_DATA } from '~/data/fixtures'
+import { TablesConfiguration } from '../../../components/Tables/TablesConfig'
+import { INTERPOLATONS_DATA } from '../../../data/fixtures'
 
 <TablesConfiguration data={INTERPOLATONS_DATA} />
 

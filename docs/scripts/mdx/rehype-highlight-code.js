@@ -6,10 +6,15 @@ import rangeParser from 'parse-numeric-range'
 import { visit } from 'unist-util-visit'
 import { toString } from 'hast-util-to-string'
 import { refractor } from 'refractor'
+import tsx from 'refractor/lang/tsx'
+import jsx from 'refractor/lang/jsx'
 import highlightLine from './rehype-highlight-line.js'
 import highlightWord from './rehype-highlight-word.js'
 
 export default () => {
+  refractor.register(tsx)
+  refractor.register(jsx)
+
   return tree => {
     visit(tree, 'element', visitor)
   }

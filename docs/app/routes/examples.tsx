@@ -11,7 +11,7 @@ import {
   useLoaderData,
   Form,
   useFetcher,
-  useTransition,
+  useNavigation,
   useSearchParams,
 } from '@remix-run/react'
 
@@ -140,7 +140,7 @@ export default function Examples() {
 
   const fetcher = useFetcher()
 
-  const { state } = useTransition()
+  const { state } = useNavigation()
 
   const handleSelectChange =
     (name: 'tags' | 'components') =>

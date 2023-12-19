@@ -33,7 +33,6 @@ export default defineConfig({
     }),
     tsconfigPaths(),
     mdx({
-      jsxImportSource: '@mdx-js/react',
       rehypePlugins: [
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: 'wrap' }],

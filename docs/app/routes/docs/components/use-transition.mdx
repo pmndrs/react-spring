@@ -73,8 +73,8 @@ signature see the [`Typescript`](#typescript) section.
 content of the array you pass as the first argument to the hook. Therefore, if you
 passed `[1, 2, 3]` then `Item` would be `number`.
 
-import { TablesConfiguration } from '~/components/Tables/TablesConfig'
-import { TRANSITION_CONFIG_DATA } from '~/data/fixtures'
+import { TablesConfiguration } from '../../../components/Tables/TablesConfig'
+import { TRANSITION_CONFIG_DATA } from '../../../data/fixtures'
 
 <TablesConfiguration data={TRANSITION_CONFIG_DATA} />
 
@@ -108,7 +108,7 @@ Where `ConfigObject` is described [above](#reference)
 
 ## Examples
 
-import { ExampleGrid } from '~/components/Grids/ExampleGrid'
+import { ExampleGrid } from '../../../components/Grids/ExampleGrid'
 
 <ExampleGrid
   sandboxTitles={[

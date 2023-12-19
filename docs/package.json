@@ -4,6 +4,7 @@
   "author": "Josh Ellis",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "vite build && vite build --ssr",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .cache && rm -rf api",
@@ -16,7 +17,7 @@
   "dependencies": {
     "@codesandbox/sandpack-react": "^1.20.9",
     "@docsearch/react": "^3.5.2",
-    "@mdx-js/react": "^1.6.22",
+    "@mdx-js/react": "^3.0.0",
     "@mdx-js/rollup": "^3.0.0",
     "@radix-ui/react-accordion": "^1.1.0",
     "@radix-ui/react-dialog": "patch:@radix-ui/react-dialog@npm:0.1.7#../.yarn/patches/@radix-ui-react-dialog-npm-1.0.0-61b8140da9.patch",
