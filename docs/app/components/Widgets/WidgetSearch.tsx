@@ -1,4 +1,6 @@
-import { DocSearch } from '@docsearch/react'
+import pkg from '@docsearch/react'
+const { DocSearch } = pkg
+
 import { memo } from 'react'
 
 export const WidgetSearch = memo(() => {

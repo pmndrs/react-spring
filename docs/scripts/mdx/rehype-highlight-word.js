@@ -2,13 +2,13 @@
  * Credit to https://ped.ro/writing/code-blocks-but-better
  */
 
-const hastToHtml = require('hast-util-to-html')
-const unified = require('unified')
-const parse = require('rehype-parse')
+import hastToHtml from 'hast-util-to-html'
+import { unified } from 'unified'
+import parse from 'rehype-parse'
 
 const CALLOUT = /__(.*?)__/g
 
-module.exports = code => {
+export default function (code) {
   const html = hastToHtml(code)
   const result = html.replace(
     CALLOUT,
