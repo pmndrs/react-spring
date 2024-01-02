@@ -116,6 +116,60 @@ const MyComponent = () => {
 }
 ```
 
+## Config Visualizer
+
+```jsx live=true template=configPlayground showCode=false
+import { useRef, useState } from 'react'
+import { useSpring, animated } from '@react-spring/web'
+import { useControls } from 'leva'
+
+export default function Card() {
+  const cardRef = useRef(null)
+  const config = useControls({
+    mass: 1,
+    tension: 170,
+    friction: 26,
+    clamp: false,
+    precision: 0.01,
+    velocity: 0,
+  })
+
+  const [{ xys }, api] = useSpring(() => ({ xys: [0, 0, 1], config }), [config])
+
+  const handleMouseLeave = () =>
+    api.start({
+      xys: [0, 0, 1],
+    })
+
+  const handleMouseMove = e => {
+    const rect = cardRef.current.getBoundingClientRect()
+    api.start({
+      xys: calc(e.clientX, e.clientY, rect),
+    })
+  }
+
+  return (
+    <div className="card-main" ref={cardRef}>
+      <animated.div
+        className="card"
+        style={{ transform: xys.to(trans) }}
+        onMouseLeave={handleMouseLeave}
+        onMouseMove={handleMouseMove}
+      />
+    </div>
+  )
+}
+
+const calc = (x, y, rect) => [
+  -(y - rect.top - rect.height / 2) / 5,
+  (x - rect.left - rect.width / 2) / 5,
+  1.4,
+]
+
+const trans = (x, y, s) =>
+  `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`
+```
+
 ### Presets
 
 Additionally to being able to configure your own spring, we export a
@@ -140,27 +194,26 @@ import { DescriptiveList } from '~/components/Text/List'
   ]}
 />
 
-## Config Visualizer
-
 ```jsx live=true template=configPlayground showCode=false
 import { useRef, useState } from 'react'
-import { useSpring, animated } from '@react-spring/web'
+import { useSpring, animated, config } from '@react-spring/web'
 import { useControls } from 'leva'
 
+const configList = Object.keys(config);
+
 export default function Card() {
-  const cardRef = useRef(null)
-  const config = useControls({
-    mass: 1,
-    tension: 170,
-    friction: 26,
-    clamp: false,
-    precision: 0.01,
-    velocity: 0,
-  })
+  const cardRef = useRef(null);
+  const { preset } = useControls({
+    preset: { value: "default", options: configList }
+  });
 
-  const [{ xys }, api] = useSpring(() => ({ xys: [0, 0, 1], config }), [config])
+  const [{ xys }, api] = useSpring(() => ({
+    xys: [0, 0, 1],
+    config: config[preset]
+    })
+  ,[preset]);
 
-  const handleMouseLeave = () =>
+const handleMouseLeave = () =>
     api.start({
       xys: [0, 0, 1],
     })
