@@ -141,9 +141,10 @@ const DocsList = styled('ul', {
 
 const ScrollArea = styled('div', {
   '@tabletUp': {
-    maxHeight: '100%',
+    maxHeight: 'calc(90vh - 89px)',
     overflowY: 'scroll',
     pb: '$60',
+    overscrollBehaviorBlock: 'contain',
   },
 })
 
