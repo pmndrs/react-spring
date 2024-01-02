@@ -84,6 +84,7 @@ export function useTransition(
     expires = true,
     exitBeforeEnter = false,
     onDestroyed,
+    toggleReverse = false,
     ref: propsRef,
     config: propsConfig,
   }: UseTransitionProps<any> = propsFn ? propsFn() : props
@@ -208,6 +209,11 @@ export function useTransition(
   const exitingTransitions = useRef(new Map<TransitionState, Change>())
 
   const forceChange = useRef(false)
+
+  if (toggleReverse) {
+    transitions.reverse()
+  }
+
   each(transitions, (t, i) => {
     const key = t.key
     const prevPhase = t.phase
@@ -427,9 +433,9 @@ export function useTransition(
     reset ? void 0 : deps
   )
 
-  const renderTransitions: TransitionFn = render => (
+  const renderTransitions: TransitionFn = (render) => (
     <>
-      {transitions.map((t, i) => {
+      {(toggleReverse ? transitions.reverse() : transitions).map((t, i) => {
         const { springs } = changes.get(t) || t.ctrl
         const elem: any = render({ ...springs }, t.item, t, i)
         return elem && elem.type ? (

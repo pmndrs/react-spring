@@ -62,6 +62,7 @@ export type UseTransitionProps<Item = any> = Merge<
     leave?: TransitionTo<Item>
     keys?: ItemKeys<Item>
     sort?: (a: Item, b: Item) => number
+    toggleReverse?: boolean
     trail?: number
     exitBeforeEnter?: boolean
     /**
