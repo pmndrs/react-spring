@@ -54,7 +54,7 @@ A value that any `SpringValue` or `Controller` can animate to.
 ```ts
 export declare type ControllerUpdate<
   State extends Lookup = Lookup,
-  Item = undefined
+  Item = undefined,
 > = unknown & ToProps<State> & ControllerProps<State, Item>
 ```
 

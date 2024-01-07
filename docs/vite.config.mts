@@ -1,5 +1,6 @@
 import { unstable_vitePlugin as remix } from '@remix-run/dev'
 import { defineConfig } from 'vite'
+import path from 'node:path'
 import { createRoutesFromFolders } from '@remix-run/v1-route-convention'
 import { installGlobals } from '@remix-run/node'
 import tsconfigPaths from 'vite-tsconfig-paths'
@@ -23,6 +24,22 @@ export default defineConfig({
     'rehype-autolink-headings',
     'rehype-parse',
   ],
+  optimizeDeps: {
+    include: ['react/jsx-runtime'],
+    exclude: ['@react-spring/rafz', '@react-spring/web'],
+  },
+  resolve: {
+    alias: {
+      '@react-spring/rafz': path.resolve(
+        __dirname,
+        '../packages/rafz/src/index.ts'
+      ),
+      '@react-spring/web': path.resolve(
+        __dirname,
+        '../targets/web/src/index.ts'
+      ),
+    },
+  },
   plugins: [
     remix({
       ignoredRouteFiles: ['**/.*', '**/concepts/index.mdx', '**/api/index.mdx'],
@@ -33,6 +50,7 @@ export default defineConfig({
     }),
     tsconfigPaths(),
     mdx({
+      providerImportSource: '@mdx-js/react',
       rehypePlugins: [
         rehypeSlug,
         [rehypeAutolinkHeadings, { behavior: 'wrap' }],

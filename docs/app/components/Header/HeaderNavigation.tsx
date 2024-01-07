@@ -1,6 +1,6 @@
 import { House, Files, Code } from 'phosphor-react'
-import Toolbar from '@radix-ui/react-toolbar'
-import Tooltip from '@radix-ui/react-tooltip'
+import * as Toolbar from '@radix-ui/react-toolbar'
+import * as Tooltip from '@radix-ui/react-tooltip'
 
 import { styled } from '~/styles/stitches.config'
 import { NavigationButton, NavigationButtonProps } from '../Buttons/NavButton'

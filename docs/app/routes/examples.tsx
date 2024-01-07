@@ -93,18 +93,38 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export const meta: MetaFunction = () => {
-  return {
-    title: 'Examples | React Spring',
-    description: `The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions`,
-    'og:title': 'Examples | React Spring',
-    'og:description':
-      'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
-    'og:url': 'https://www.react-spring.dev/examples',
-    'twitter:url': 'https://www.react-spring.dev/examples',
-    'twitter:title': 'Examples | React Spring',
-    'twitter:description':
-      'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
-  }
+  return [
+    {
+      title: 'Examples | React Spring',
+    },
+    {
+      name: 'description',
+      content: `The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions`,
+    },
+    { property: 'og:title', content: 'Examples | React Spring' },
+    {
+      name: 'og:description',
+      contnet:
+        'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
+    },
+    {
+      name: 'og:url',
+      content: 'https://www.react-spring.dev/examples',
+    },
+    {
+      name: 'twitter:url',
+      content: 'https://www.react-spring.dev/examples',
+    },
+    {
+      name: 'twitter:title',
+      content: 'Examples | React Spring',
+    },
+    {
+      name: 'twitter:description',
+      content:
+        'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
+    },
+  ]
 }
 
 export interface Sandbox {

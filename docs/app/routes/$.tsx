@@ -7,10 +7,15 @@ import { Heading } from '~/components/Text/Heading'
 import { styled } from '~/styles/stitches.config'
 
 export const meta: MetaFunction = () => {
-  return {
-    title: '404 | react-spring',
-    description: `With naturally fluid animations you will elevate your UI & interactions. Bringing your apps to life has never been simpler.`,
-  }
+  return [
+    {
+      title: '404 | react-spring',
+    },
+    {
+      name: 'description',
+      contnet: `With naturally fluid animations you will elevate your UI & interactions. Bringing your apps to life has never been simpler.`,
+    },
+  ]
 }
 
 const CAR = `                                                    7%;;WW/                                                                                                                                             

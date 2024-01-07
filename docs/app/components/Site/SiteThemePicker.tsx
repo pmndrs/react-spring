@@ -1,5 +1,5 @@
 import { atom, useAtom } from 'jotai'
-import Toolbar from '@radix-ui/react-toolbar'
+import * as Toolbar from '@radix-ui/react-toolbar'
 import { MoonStars, Sun } from 'phosphor-react'
 import { animated, useSpring } from '@react-spring/web'
 

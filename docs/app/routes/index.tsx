@@ -12,10 +12,15 @@ import { COMMUNITY_TILES, QUOTES, TOOL_TILES } from '~/data/fixtures'
 import { styled } from '~/styles/stitches.config'
 
 export const meta: MetaFunction = () => {
-  return {
-    title: 'react-spring',
-    description: `With naturally fluid animations you will elevate your UI & interactions. Bringing your apps to life has never been simpler.`,
-  }
+  return [
+    {
+      title: 'react-spring',
+    },
+    {
+      name: 'description',
+      content: `With naturally fluid animations you will elevate your UI & interactions. Bringing your apps to life has never been simpler.`,
+    },
+  ]
 }
 
 export default function Index() {

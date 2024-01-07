@@ -22,27 +22,39 @@ import { WidgetPlausible } from './components/Widgets/WidgetPlausible'
 import { SiteFooter } from './components/Site/SiteFooter'
 
 export const meta: MetaFunction = () => {
-  return {
-    title: 'react-spring',
-    description:
-      'Bring your components to life with simple spring animation primitives for React',
-    'og:site_name': 'React Spring',
-    'og:title': 'React Spring',
-    'og:description':
-      'Bring your components to life with simple spring animation primitives for React',
-    'og:image': 'https://www.react-spring.dev/share.jpg',
-    'og:type': 'website',
-    'og:image:width': '1200',
-    'og:image:height': '630',
-    'og:url': 'https://www.react-spring.dev',
-    'twitter:card': 'summary_large_image',
-    'twitter:domain': 'react-spring.dev',
-    'twitter:url': 'https://www.react-spring.dev',
-    'twitter:title': 'React Spring',
-    'twitter:description':
-      'Bring your components to life with simple spring animation primitives for React',
-    'twitter:image': 'https://www.react-spring.dev/share.jpg',
-  }
+  return [
+    { title: 'react-spring' },
+    {
+      name: 'description',
+      content:
+        'Bring your components to life with simple spring animation primitives for React',
+    },
+    { property: 'og:site_name', content: 'React Spring' },
+    { property: 'og:title', content: 'React Spring' },
+    {
+      property: 'og:description',
+      content:
+        'Bring your components to life with simple spring animation primitives for React',
+    },
+    { property: 'og:image', content: 'https://www.react-spring.dev/share.jpg' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:url', content: 'https://www.react-spring.dev' },
+    { property: 'twitter:card', content: 'summary_large_image' },
+    { property: 'twitter:domain', content: 'react-spring.dev' },
+    { property: 'twitter:url', content: 'https://www.react-spring.dev' },
+    { property: 'twitter:title', content: 'React Spring' },
+    {
+      property: 'twitter:description',
+      content:
+        'Bring your components to life with simple spring animation primitives for React',
+    },
+    {
+      property: 'twitter:image',
+      content: 'https://www.react-spring.dev/share.jpg',
+    },
+  ]
 }
 
 export const links: LinksFunction = () => [
