@@ -1,5 +1,5 @@
 import { useLocation } from '@remix-run/react'
-import Dialog from '@radix-ui/react-dialog'
+import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'phosphor-react'
 import { animated, useTransition } from '@react-spring/web'
 import * as Toolbar from '@radix-ui/react-toolbar'

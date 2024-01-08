@@ -1,9 +1,4 @@
-import {
-  createStitches,
-  type CSS as StitchesCSS,
-  type ScaleValue as StitchesScaleValue,
-  type PropertyValue as StitchesPropertyValue,
-} from '@stitches/react'
+import * as Stitches from '@stitches/react'
 
 interface GradientBorderParams {
   width?: number
@@ -11,7 +6,7 @@ interface GradientBorderParams {
 }
 
 const { styled, globalCss, getCssText, config, createTheme, keyframes, css } =
-  createStitches({
+  Stitches.createStitches({
     theme: {
       colors: {
         red120: '#cc5757',
@@ -124,54 +119,54 @@ const { styled, globalCss, getCssText, config, createTheme, keyframes, css } =
       documentUp: '(min-width: 1200px)',
     },
     utils: {
-      p: (value: StitchesPropertyValue<'padding'>) => ({
+      p: (value: Stitches.PropertyValue<'padding'>) => ({
         padding: value,
       }),
-      pt: (value: StitchesPropertyValue<'paddingTop'>) => ({
+      pt: (value: Stitches.PropertyValue<'paddingTop'>) => ({
         paddingTop: value,
       }),
-      pr: (value: StitchesPropertyValue<'paddingRight'>) => ({
+      pr: (value: Stitches.PropertyValue<'paddingRight'>) => ({
         paddingRight: value,
       }),
-      pb: (value: StitchesPropertyValue<'paddingBottom'>) => ({
+      pb: (value: Stitches.PropertyValue<'paddingBottom'>) => ({
         paddingBottom: value,
       }),
-      pl: (value: StitchesPropertyValue<'paddingLeft'>) => ({
+      pl: (value: Stitches.PropertyValue<'paddingLeft'>) => ({
         paddingLeft: value,
       }),
-      px: (value: StitchesPropertyValue<'paddingLeft'>) => ({
+      px: (value: Stitches.PropertyValue<'paddingLeft'>) => ({
         paddingLeft: value,
         paddingRight: value,
       }),
-      py: (value: StitchesPropertyValue<'paddingTop'>) => ({
+      py: (value: Stitches.PropertyValue<'paddingTop'>) => ({
         paddingTop: value,
         paddingBottom: value,
       }),
 
-      m: (value: StitchesPropertyValue<'margin'>) => ({
+      m: (value: Stitches.PropertyValue<'margin'>) => ({
         margin: value,
       }),
-      mt: (value: StitchesPropertyValue<'marginTop'>) => ({
+      mt: (value: Stitches.PropertyValue<'marginTop'>) => ({
         marginTop: value,
       }),
-      mr: (value: StitchesPropertyValue<'marginRight'>) => ({
+      mr: (value: Stitches.PropertyValue<'marginRight'>) => ({
         marginRight: value,
       }),
-      mb: (value: StitchesPropertyValue<'marginBottom'>) => ({
+      mb: (value: Stitches.PropertyValue<'marginBottom'>) => ({
         marginBottom: value,
       }),
-      ml: (value: StitchesPropertyValue<'marginLeft'>) => ({
+      ml: (value: Stitches.PropertyValue<'marginLeft'>) => ({
         marginLeft: value,
       }),
-      mx: (value: StitchesPropertyValue<'marginLeft'>) => ({
+      mx: (value: Stitches.PropertyValue<'marginLeft'>) => ({
         marginLeft: value,
         marginRight: value,
       }),
-      my: (value: StitchesPropertyValue<'marginTop'>) => ({
+      my: (value: Stitches.PropertyValue<'marginTop'>) => ({
         marginTop: value,
         marginBottom: value,
       }),
-      debug: (value: StitchesPropertyValue<'color'>) => ({
+      debug: (value: Stitches.PropertyValue<'color'>) => ({
         border: `solid 1px ${value}`,
       }),
       // require unused variable to allow custom CSS type to be used
@@ -232,8 +227,8 @@ const dark = createTheme('dark', {
 })
 
 type StitchesConfig = typeof config
-type CSS = StitchesCSS<StitchesConfig>
-type ScaleValue<TValue> = StitchesScaleValue<TValue, StitchesConfig>
+type CSS = Stitches.CSS<StitchesConfig>
+type ScaleValue<TValue> = Stitches.ScaleValue<TValue, StitchesConfig>
 
 export type { StitchesConfig, CSS, ScaleValue }
 

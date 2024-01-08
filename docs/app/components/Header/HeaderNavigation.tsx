@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { House, Files, Code } from 'phosphor-react'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import * as Tooltip from '@radix-ui/react-tooltip'
