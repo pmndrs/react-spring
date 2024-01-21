@@ -11,6 +11,10 @@ meta:
 sidebar_position: 2
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # Events
 
 There are a handful of events you can use to react to the state of animation at certain points in time.

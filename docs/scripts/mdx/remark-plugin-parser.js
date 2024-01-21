@@ -1,7 +1,7 @@
-const visit = require('unist-util-visit')
+import { visit } from 'unist-util-visit'
 
 /** @type {import('unified').Plugin<[], import('mdast').Root>} */
-module.exports = function parseCallouts() {
+export default function parseCallouts() {
   return (tree, file) => {
     visit(tree, node => {
       if (

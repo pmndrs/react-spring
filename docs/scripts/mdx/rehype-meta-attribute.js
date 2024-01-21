@@ -2,17 +2,17 @@
  * Credit to https://ped.ro/writing/code-blocks-but-better
  */
 
-const visit = require('unist-util-visit')
+import { visit } from 'unist-util-visit'
 
-var re = /\b([-\w]+)(?:=(?:"([^"]*)"|'([^']*)'|([^"'\s]+)))?/g
+const re = /\b([-\w]+)(?:=(?:"([^"]*)"|'([^']*)'|([^"'\s]+)))?/g
 
-module.exports = (options = {}) => {
+export default (options = {}) => {
   return tree => {
     visit(tree, 'element', visitor)
   }
 
   function visitor(node, index, parentNode) {
-    var match
+    let match
 
     if (node.tagName === 'code' && node.data && node.data.meta) {
       re.lastIndex = 0 // Reset regex.

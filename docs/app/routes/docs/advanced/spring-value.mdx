@@ -11,6 +11,10 @@ meta:
 sidebar_position: 4
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # SpringValue
 
 The very driving force of `react-spring`. It's a class that can be used to create a single
@@ -52,8 +56,8 @@ class AnimatedComponent extends Component {
 
 ## Properties
 
-import { TablesConfiguration } from '~/components/Tables/TablesConfig'
-import { SPRINGVALUE_PROPERTIES_DATA } from '~/data/fixtures'
+import { TablesConfiguration } from '../../../components/Tables/TablesConfig'
+import { SPRINGVALUE_PROPERTIES_DATA } from '../../../data/fixtures'
 
 <TablesConfiguration data={SPRINGVALUE_PROPERTIES_DATA} />
 

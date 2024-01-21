@@ -12,6 +12,10 @@ sidebar_position: 4
 isNew: true
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useResize
 
 A small abstraction around the [`useSpring`](/docs/components/use-spring) hook. It returns a `SpringValues`
@@ -32,8 +36,8 @@ function MyComponent() {
 
 ## Reference
 
-import { TablesConfiguration } from '~/components/Tables/TablesConfig'
-import { USE_RESIZE_CONFIG_DATA } from '~/data/fixtures'
+import { TablesConfiguration } from '../../../components/Tables/TablesConfig'
+import { USE_RESIZE_CONFIG_DATA } from '../../../data/fixtures'
 
 <TablesConfiguration data={USE_RESIZE_CONFIG_DATA} />
 

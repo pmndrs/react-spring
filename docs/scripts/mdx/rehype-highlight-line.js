@@ -2,9 +2,9 @@
  * Credit to https://ped.ro/writing/code-blocks-but-better
  */
 
-const hastToHtml = require('hast-util-to-html')
-const unified = require('unified')
-const parse = require('rehype-parse')
+import hastToHtml from 'hast-util-to-html'
+import { unified } from 'unified'
+import parse from 'rehype-parse'
 
 const lineNumberify = function lineNumberify(ast, lineNum = 1) {
   let lineNumber = lineNum
@@ -111,7 +111,7 @@ const applyMultilineFix = function (ast) {
   return hast.children
 }
 
-module.exports = function (ast, lines) {
+export default function (ast, lines) {
   const formattedAst = applyMultilineFix(ast)
   const numbered = lineNumberify(formattedAst).nodes
 

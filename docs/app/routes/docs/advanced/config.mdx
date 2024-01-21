@@ -11,6 +11,10 @@ meta:
 sidebar_position: 1
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # Spring Configs
 
 Part of a component's `configuration` argument, the `config` prop is an object
@@ -127,7 +131,7 @@ import { config } from '@react-spring/web'
 
 The presets are:
 
-import { DescriptiveList } from '~/components/Text/List'
+import { DescriptiveList } from '../../../components/Text/List'
 
 <DescriptiveList
   data={[
@@ -215,8 +219,8 @@ All the following easings are part of the `easings` object imported like so:
 import { easings } from '@react-spring/web'
 ```
 
-import { TableGeneric } from '~/components/Tables/TablesConfig'
-import { easingData } from '~/data/fixtures'
+import { TableGeneric } from '../../../components/Tables/TablesConfig'
+import { easingData } from '../../../data/fixtures'
 
 <TableGeneric data={easingData} headData={[null, null, null]} />
 
@@ -255,8 +259,8 @@ export function steps(
 
 ## Reference
 
-import { TablesConfiguration } from '~/components/Tables/TablesConfig'
-import { configData } from '~/data/fixtures'
+import { TablesConfiguration } from '../../../components/Tables/TablesConfig'
+import { configData } from '../../../data/fixtures'
 
 <TablesConfiguration data={configData} />
 

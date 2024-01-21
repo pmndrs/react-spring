@@ -12,6 +12,10 @@ sidebar_position: 5
 isNew: true
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useInView
 
 A helpful utility hook tracking the visibility of an element in the viewport. Using the native `IntersectionObserver`,
@@ -72,11 +76,11 @@ function MyComponent() {
 
 ## References
 
-import { TablesConfiguration } from '~/components/Tables/TablesConfig'
+import { TablesConfiguration } from '../../../components/Tables/TablesConfig'
 import {
   DEFAULT_CONFIG_DATA,
   USE_INVIEW_INTERSECTION_ARGS,
-} from '~/data/fixtures'
+} from '../../../data/fixtures'
 
 ### IntersectionArgs
 
@@ -116,7 +120,7 @@ Where `ConfigObject` is described [above](#reference)
 
 ## Examples
 
-import { ExampleGrid } from '~/components/Grids/ExampleGrid'
+import { ExampleGrid } from '../../../components/Grids/ExampleGrid'
 
 <ExampleGrid sandboxTitles={['Popup Modal']} />
 

@@ -3,7 +3,7 @@ import {
   MouseEventHandler,
   RefAttributes,
 } from 'react'
-import { useLocation } from '@remix-run/react'
+import { Link, useLocation } from '@remix-run/react'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import { IconProps } from 'phosphor-react'
 
@@ -56,19 +56,22 @@ export const NavigationButton = ({
       href={href}
       variant={showLabel ? 'withLabel' : undefined}
       active={isRoute}
+      asChild
       {...externalLinkProps}
     >
-      <NavIconWrapper
-        css={{
-          color: isRoute ? 'var(--colors-steel100)' : 'unset',
-          [`.${dark} &`]: {
-            color: isRoute ? '#363645' : 'unset',
-          },
-        }}
-      >
-        <Icon size={20} weight={isDarkMode ? 'light' : 'regular'} />
-        {showLabel ? <span>{title}</span> : null}
-      </NavIconWrapper>
+      <Link to={href}>
+        <NavIconWrapper
+          css={{
+            color: isRoute ? 'var(--colors-steel100)' : 'unset',
+            [`.${dark} &`]: {
+              color: isRoute ? '#363645' : 'unset',
+            },
+          }}
+        >
+          <Icon size={20} weight={isDarkMode ? 'light' : 'regular'} />
+          {showLabel ? <span>{title}</span> : null}
+        </NavIconWrapper>
+      </Link>
     </NavAnchor>
   )
 }

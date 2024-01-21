@@ -12,6 +12,10 @@ sidebar_position: 3
 isNew: true
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useScroll
 
 A small utility abstraction around our signature [`useSpring`](/docs/components/use-spring) hook. It's a great way to
@@ -39,8 +43,8 @@ function MyComponent() {
 
 ## Reference
 
-import { TablesConfiguration } from '~/components/Tables/TablesConfig'
-import { USE_SCROLL_CONFIG_DATA } from '~/data/fixtures'
+import { TablesConfiguration } from '../../../components/Tables/TablesConfig'
+import { USE_SCROLL_CONFIG_DATA } from '../../../data/fixtures'
 
 <TablesConfiguration data={USE_SCROLL_CONFIG_DATA} />
 
@@ -54,7 +58,7 @@ Where `ConfigObject` is described [above](#reference)
 
 ## Examples
 
-import { ExampleGrid } from '~/components/Grids/ExampleGrid'
+import { ExampleGrid } from '../../../components/Grids/ExampleGrid'
 
 <ExampleGrid sandboxTitles={['Scrolling Wave']} />
 

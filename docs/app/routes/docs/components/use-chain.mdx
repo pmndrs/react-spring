@@ -11,6 +11,10 @@ meta:
 sidebar_position: 5
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useChain
 
 `useChain` is used to orchestrate animation hooks in sequence with one another.
@@ -58,7 +62,8 @@ function MyComponent() {
         height: springs.size,
         width: springs.size,
         background: 'blue',
-      }}>
+      }}
+    >
       {transitions((style, item) => (
         <animated.div
           style={{
@@ -66,7 +71,8 @@ function MyComponent() {
             height: '120px',
             background: 'green',
             ...style,
-          }}>
+          }}
+        >
           {item}
         </animated.div>
       ))}
@@ -141,7 +147,7 @@ function useChain(
 
 ## Examples
 
-import { ExampleGrid } from '~/components/Grids/ExampleGrid'
+import { ExampleGrid } from '../../../components/Grids/ExampleGrid'
 
 <ExampleGrid
   sandboxTitles={['Chaining Transition and a Spring', 'Smile Grid']}
