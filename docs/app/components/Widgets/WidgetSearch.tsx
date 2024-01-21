@@ -1,5 +1,4 @@
-import pkg from '@docsearch/react'
-const { DocSearch } = pkg
+import { DocSearch } from '@docsearch/react'
 
 import { memo } from 'react'
 

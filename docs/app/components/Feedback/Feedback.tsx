@@ -25,6 +25,7 @@ export const Feedback = ({ location }: FeedbackProps) => {
   const isDarkMode = useIsDarkTheme()
 
   const handleClick = (type: 'upvote' | 'downvote') => () => {
+    console.log('clicked!')
     setSelected(type)
 
     const name =
@@ -110,7 +111,7 @@ const FeedbackButton = ({
   const [isOpen, setIsOpen] = React.useState(false)
   const formRef = React.useRef<HTMLFormElement>(null!)
   const location = useLocation()
-  const { data, state, Form } = useFetcher()
+  const { data, state, Form } = useFetcher<{ success: boolean }>()
 
   const handleClick = () => {
     if (onClick) {

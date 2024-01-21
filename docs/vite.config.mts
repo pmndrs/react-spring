@@ -19,6 +19,9 @@ import parseCallouts from './scripts/mdx/remark-plugin-parser'
 installGlobals()
 
 export default defineConfig({
+  ssr: {
+    noExternal: ['@docsearch/react', /@algolia/, 'algoliasearch'],
+  },
   optimizeDeps: {
     include: ['react/jsx-runtime'],
     exclude: ['@react-spring/rafz', '@react-spring/web'],

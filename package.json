@@ -78,7 +78,6 @@
     "@types/jest": "^29.5.11",
     "@types/lodash.clamp": "^4.0.7",
     "@types/lodash.shuffle": "^4.2.7",
-    "@types/mdx-js__react": "^1.5.5",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "@types/react-lazyload": "^3.2.0",
