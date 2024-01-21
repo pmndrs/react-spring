@@ -12,6 +12,10 @@ sidebar_position: 4
 isNew: true
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useResize
 
 A small abstraction around the [`useSpring`](/docs/components/use-spring) hook. It returns a `SpringValues`

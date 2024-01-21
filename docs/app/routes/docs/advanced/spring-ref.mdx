@@ -11,6 +11,10 @@ meta:
 sidebar_position: 5
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # SpringRef
 
 Our imperative API. You can initialise it via function call, or for better practice use the hook `useSpringRef`.

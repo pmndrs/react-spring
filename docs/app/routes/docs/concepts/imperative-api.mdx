@@ -11,6 +11,10 @@ meta:
 sidebar_position: 3
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # Imperative API
 
 The imperative API enables you to update your animations without requiring a react-render to occur. This is useful

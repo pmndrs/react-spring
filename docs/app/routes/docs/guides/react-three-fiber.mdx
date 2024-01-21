@@ -11,6 +11,10 @@ meta:
 sidebar_position: 1
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # React Three Fiber
 
 :::note
@@ -209,7 +213,8 @@ const MyScene = () => {
       onPointerLeave={handlePointerLeave}
       onClick={handleClick()}
       scale={springs.scale}
-      position={springs.position.to((x, y) => [x, y, 0])}>
+      position={springs.position.to((x, y) => [x, y, 0])}
+    >
       <sphereGeometry args={[1.5, 64, 32]} />
       <AnimatedMeshDistortMaterial
         speed={5}
@@ -362,7 +367,8 @@ const MyScene = forwardRef(({}, ref) => {
       onPointerLeave={handlePointerLeave}
       onClick={handleClick()}
       scale={springs.scale}
-      position={springs.position.to((x, y) => [x, y, 0])}>
+      position={springs.position.to((x, y) => [x, y, 0])}
+    >
       <sphereGeometry args={[1.5, 64, 32]} />
       <AnimatedMeshDistortMaterial
         speed={5}

@@ -11,6 +11,10 @@ meta:
 sidebar_position: 3
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # Controller
 
 Manages [`SpringValue`s](/docs/advanced/spring-value) for our spring hooks.

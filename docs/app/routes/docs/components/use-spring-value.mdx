@@ -12,6 +12,10 @@ sidebar_position: 3
 isNew: true
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useSpringValue
 
 Love the imperative API but you need _too many_ different springs running in parallel? Then this

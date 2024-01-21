@@ -6,6 +6,8 @@ import { installGlobals } from '@remix-run/node'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import mdx from '@mdx-js/rollup'
 
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeSlug from 'rehype-slug'
 import remarkDirective from 'remark-directive'
@@ -45,7 +47,12 @@ export default defineConfig({
         rehypeHighlightCode,
         rehypeMetaAttribute,
       ],
-      remarkPlugins: [remarkDirective, parseCallouts],
+      remarkPlugins: [
+        remarkFrontmatter,
+        remarkMdxFrontmatter,
+        remarkDirective,
+        parseCallouts,
+      ],
     }),
   ],
 })

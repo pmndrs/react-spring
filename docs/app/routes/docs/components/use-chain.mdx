@@ -11,6 +11,10 @@ meta:
 sidebar_position: 5
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useChain
 
 `useChain` is used to orchestrate animation hooks in sequence with one another.

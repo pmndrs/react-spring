@@ -11,6 +11,10 @@ meta:
 sidebar_position: 4
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useTransition
 
 This hook is best suited for animating in & out datasets or items you don't particularly

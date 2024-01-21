@@ -12,6 +12,10 @@ sidebar_position: 3
 isNew: true
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useScroll
 
 A small utility abstraction around our signature [`useSpring`](/docs/components/use-spring) hook. It's a great way to

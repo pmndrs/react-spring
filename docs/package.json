@@ -55,6 +55,8 @@
     "@remix-run/v1-route-convention": "^0.1.4",
     "chokidar": "^3.5.3",
     "concurrently": "^8.2.2",
+    "remark-frontmatter": "^5.0.0",
+    "remark-mdx-frontmatter": "^4.0.0",
     "ts-node": "^10.9.2",
     "vite-tsconfig-paths": "^4.3.1"
   },

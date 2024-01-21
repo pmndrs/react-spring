@@ -11,6 +11,10 @@ meta:
 sidebar_position: 1
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useIsomorphicLayoutEffect
 
 ## Usage

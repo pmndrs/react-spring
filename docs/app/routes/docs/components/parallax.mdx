@@ -11,6 +11,10 @@ meta:
 sidebar_position: 7
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # Parallax
 
 Used in collaboration with [`ParallaxLayer`](/docs/components/parallax-layer) to create visual displacements declaratively and simply.

@@ -12,6 +12,10 @@ sidebar_position: 5
 isNew: true
 ---
 
+import { formatFrontmatterToRemixMeta } from '../../../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
 # useInView
 
 A helpful utility hook tracking the visibility of an element in the viewport. Using the native `IntersectionObserver`,
