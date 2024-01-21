@@ -5,17 +5,17 @@
     "**/*.tsx",
     "**/*.js",
     "*.d.ts",
-    "vite.config.mts"
+    "vite.config.ts"
   ],
   "exclude": ["build"],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
-    "target": "ES2019",
+    "target": "ESNext",
     "strict": true,
     "paths": {
       "~/*": ["./app/*"]

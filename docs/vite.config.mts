@@ -17,27 +17,14 @@ import parseCallouts from './scripts/mdx/remark-plugin-parser'
 installGlobals()
 
 export default defineConfig({
-  noExternal: [
-    '@mdx-js/rollup',
-    'hast-util-to-string',
-    'refractor',
-    'rehype-autolink-headings',
-    'rehype-parse',
-  ],
   optimizeDeps: {
     include: ['react/jsx-runtime'],
     exclude: ['@react-spring/rafz', '@react-spring/web'],
   },
   resolve: {
     alias: {
-      '@react-spring/rafz': path.resolve(
-        __dirname,
-        '../packages/rafz/src/index.ts'
-      ),
-      '@react-spring/web': path.resolve(
-        __dirname,
-        '../targets/web/src/index.ts'
-      ),
+      '@react-spring/rafz': path.resolve(__dirname, '../packages/rafz/src'),
+      '@react-spring/web': path.resolve(__dirname, '../targets/web/src'),
     },
   },
   plugins: [
@@ -49,6 +36,7 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
+    // @ts-expect-error – TODO: fix mdx plugin failing with Vite types.
     mdx({
       providerImportSource: '@mdx-js/react',
       rehypePlugins: [
