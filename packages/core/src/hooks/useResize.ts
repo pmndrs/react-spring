@@ -16,16 +16,30 @@ export interface UseResizeOptions extends Omit<SpringProps, 'to' | 'from'> {
  * can observe that element's size instead.
  * 
  ```jsx
+    import { useRef } from "react";
     import { useResize, animated } from '@react-spring/web'
 
     function MyComponent() {
-      const { width } = useResize()
+        const resizeRef = useRef(null);
 
-      return (
-        <animated.div style={{ width }}>
-          Hello World
-        </animated.div>
-      )
+        const { width, height } = useResize({
+          container: resizeRef,
+        });
+      
+        return (
+          <div ref={resizeRef} style={{ width: "100%", height: "300px" }}>
+            <animated.div
+              style={{
+                width: width.to((w) => `${w}px`),
+                height: height.to((h) => `${h}px`),
+                background: "rgba(27, 26, 34, 0.8)",
+                color: "white",
+              }}
+            >
+              Hello World
+            </animated.div>
+          </div>
+        );
     }
   ```
  * 
