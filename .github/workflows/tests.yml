@@ -57,32 +57,32 @@ jobs:
       - name: Pack
         run: yarn package
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: animated
           path: packages/animated/package.tgz
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: core
           path: packages/core/package.tgz
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: rafz
           path: packages/rafz/package.tgz
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: shared
           path: packages/shared/package.tgz
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: types
           path: packages/types/package.tgz
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: web
           path: targets/web/package.tgz
@@ -216,7 +216,7 @@ jobs:
       - name: Remove existing @react-spring/web
         run: yarn remove @react-spring/web
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           path: ./.github/publish-ci/${{ matrix.example }}
 
