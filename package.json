@@ -64,8 +64,8 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.3",
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
     "@react-three/fiber": "^8.11.9",
     "@remix-run/dev": "patch:@remix-run/dev@npm%3A1.15.0#./.yarn/patches/@remix-run-dev-npm-1.15.0-33b55fa3ee.patch",
     "@remix-run/serve": "^1.15.0",
