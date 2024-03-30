@@ -8,17 +8,17 @@
     "test": "echo Done"
   },
   "dependencies": {
-    "@react-spring/web": "0.0.0-d80cafe1f0ccd7ce193b8f558285515ede3b8afc-20230625160448",
-    "next": "^13.2",
+    "@react-spring/web": "0.0.0-nightly-f50b673-20230330070501",
+    "next": "^13.5.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "^20.10.4",
-    "@types/react": "^18.0.26",
-    "@types/react-dom": "^18.0.10",
-    "prettier": "^3.1.1",
-    "typescript": "^4.9.4"
+    "@types/node": "^20.12.2",
+    "@types/react": "^18.2.73",
+    "@types/react-dom": "^18.2.23",
+    "prettier": "^3.2.5",
+    "typescript": "^4.9.5"
   },
   "msw": {
     "workerDirectory": "public"

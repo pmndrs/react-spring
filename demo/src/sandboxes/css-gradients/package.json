@@ -13,7 +13,7 @@
   "dependencies": {
     "@react-spring/web": "*",
     "easing-coordinates": "2.0.2",
-    "leva": "0.9.34",
+    "leva": "0.9.35",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1"
@@ -31,8 +31,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^18.2.73",
+    "@types/react-dom": "^18.2.23",
     "typescript": "^4.9.5"
   }
 }

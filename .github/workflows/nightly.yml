@@ -17,7 +17,7 @@ jobs:
       NEXT_VERSION: ${{ steps.version.outputs.NEXT_VERSION }}
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
+        uses: styfle/cancel-workflow-action@0.12.1
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -71,7 +71,7 @@ jobs:
           DIST_TAG: nightly
 
       - name: Tag
-        uses: mathieudutour/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: '0.0.0-${{ steps.version.outputs.NEXT_VERSION }}'
