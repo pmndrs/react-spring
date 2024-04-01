@@ -117,5 +117,5 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-spring"
   },
-  "packageManager": "yarn@3.4.1"
+  "packageManager": "yarn@4.1.1"
 }

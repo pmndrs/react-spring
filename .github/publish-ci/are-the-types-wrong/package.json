@@ -1,6 +1,6 @@
 {
   "name": "are-the-types-wrong",
-  "packageManager": "yarn@3.2.4",
+  "packageManager": "yarn@4.1.1",
   "type": "module",
   "scripts": {
     "build": "echo Nothing to build",
