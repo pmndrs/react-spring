@@ -14,7 +14,7 @@
     "scripts:watch": "ts-node ./scripts/watch.ts"
   },
   "dependencies": {
-    "@codesandbox/sandpack-react": "^1.20.9",
+    "@codesandbox/sandpack-react": "^2.13.7",
     "@docsearch/react": "^3.3.3",
     "@mdx-js/react": "^1.6.22",
     "@radix-ui/react-accordion": "^1.1.0",
