@@ -39,6 +39,7 @@
     "@react-spring/core": "~9.7.3",
     "@react-spring/konva": "~9.7.3",
     "@react-spring/native": "~9.7.3",
+    "@react-spring/rafz": "~9.7.3",
     "@react-spring/three": "~9.7.3",
     "@react-spring/web": "~9.7.3",
     "@react-spring/zdog": "~9.7.3"

@@ -5219,7 +5219,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/rafz@workspace:^, @react-spring/rafz@workspace:packages/rafz":
+"@react-spring/rafz@workspace:^, @react-spring/rafz@workspace:packages/rafz, @react-spring/rafz@~9.7.3":
   version: 0.0.0-use.local
   resolution: "@react-spring/rafz@workspace:packages/rafz"
   languageName: unknown
@@ -18937,6 +18937,7 @@ __metadata:
     "@react-spring/core": ~9.7.3
     "@react-spring/konva": ~9.7.3
     "@react-spring/native": ~9.7.3
+    "@react-spring/rafz": ~9.7.3
     "@react-spring/three": ~9.7.3
     "@react-spring/web": ~9.7.3
     "@react-spring/zdog": ~9.7.3
