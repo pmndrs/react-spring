@@ -5,7 +5,7 @@
     "**/*.tsx",
     "**/*.js",
     "*.d.ts",
-    "vite.config.ts"
+    "vite.config.mts"
   ],
   "exclude": ["build"],
   "compilerOptions": {

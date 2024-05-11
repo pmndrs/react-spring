@@ -4,6 +4,7 @@
   "author": "Josh Ellis",
   "version": "2.0.0",
   "private": true,
+  "type": "module",
   "sideEffects": false,
   "scripts": {
     "build": "remix vite:build",
@@ -13,6 +14,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@mdx-js/react": "^3.0.1",
     "@remix-run/node": "^2.9.2",
     "@remix-run/react": "^2.9.2",
     "@remix-run/serve": "^2.9.2",
@@ -24,9 +26,12 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@mdx-js/rollup": "^3.0.1",
     "@remix-run/dev": "^2.9.2",
     "@types/react": "^18.2.62",
     "@types/react-dom": "^18.2.19",
+    "remark-frontmatter": "^5.0.0",
+    "remark-mdx-frontmatter": "^4.0.0",
     "typescript": "^5.3.3",
     "vite": "^5.1.0",
     "vite-tsconfig-paths": "^4.2.1"

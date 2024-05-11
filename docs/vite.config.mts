@@ -1,4 +1,7 @@
 import { vitePlugin as remix } from '@remix-run/dev'
+import mdx from '@mdx-js/rollup'
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import { installGlobals } from '@remix-run/node'
 import { vercelPreset } from '@vercel/remix/vite'
 import { defineConfig } from 'vite'
@@ -11,10 +14,14 @@ export default defineConfig({
     port: 3000,
   },
   plugins: [
+    // @ts-expect-error shh.
+    mdx({
+      providerImportSource: '@mdx-js/react',
+      remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+    }),
     remix({
       ignoredRouteFiles: ['**/.*', '**/*.css'],
       presets: [vercelPreset()],
-      serverModuleFormat: 'cjs',
     }),
     tsconfigPaths(),
   ],
