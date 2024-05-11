@@ -13,6 +13,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
+    "module": "ESNext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "target": "ESNext",
@@ -20,6 +21,7 @@
     "paths": {
       "~/*": ["./app/*"]
     },
+    "skipLibCheck": true,
     "noEmit": true,
     "baseUrl": ".",
     "allowJs": true,
