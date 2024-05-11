@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 import {
   MetaFunction,
   LinksFunction,
@@ -6,7 +8,6 @@ import {
 } from '@remix-run/node'
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -20,6 +21,7 @@ import { globalStyles } from './styles/global'
 import { WidgetTheme } from './components/Widgets/WidgetTheme'
 import { WidgetPlausible } from './components/Widgets/WidgetPlausible'
 import { SiteFooter } from './components/Site/SiteFooter'
+import { ClientStyleContext } from './styles/client.context'
 
 export const meta: MetaFunction = () => {
   return [
@@ -82,7 +84,15 @@ export const loader: LoaderFunction = () => {
 function Document({ children }: { children: React.ReactNode }) {
   globalStyles()
 
-  const data = useLoaderData()
+  const clientStyleData = React.useContext(ClientStyleContext)
+
+  // Only executed on client
+  React.useEffect(() => {
+    // reset cache to re-apply global styles
+    clientStyleData.reset()
+  }, [clientStyleData])
+
+  const data = useLoaderData<{ ENV: object }>()
 
   return (
     <html lang="en">
@@ -91,8 +101,13 @@ function Document({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+        <style
+          id="stitches"
+          dangerouslySetInnerHTML={{ __html: clientStyleData.sheet }}
+          suppressHydrationWarning
+        />
         <WidgetPlausible />
-        <WidgetTheme />
+        {/* <WidgetTheme /> */}
       </head>
       <body>
         {children}
@@ -103,7 +118,6 @@ function Document({ children }: { children: React.ReactNode }) {
           }}
         />
         <Scripts />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
   )

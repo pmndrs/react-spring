@@ -1,10 +1,11 @@
-import { unstable_vitePlugin as remix } from '@remix-run/dev'
+import { vitePlugin as remix } from '@remix-run/dev'
 import { defineConfig } from 'vite'
 import path from 'node:path'
 import { createRoutesFromFolders } from '@remix-run/v1-route-convention'
 import { installGlobals } from '@remix-run/node'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import mdx from '@mdx-js/rollup'
+import { vercelPreset } from '@vercel/remix/vite'
 
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
@@ -22,10 +23,6 @@ export default defineConfig({
   ssr: {
     noExternal: ['@docsearch/react', /@algolia/, 'algoliasearch'],
   },
-  optimizeDeps: {
-    include: ['react/jsx-runtime'],
-    exclude: ['@react-spring/rafz', '@react-spring/web'],
-  },
   resolve: {
     alias: {
       '@react-spring/rafz': path.resolve(__dirname, '../packages/rafz/src'),
@@ -33,14 +30,6 @@ export default defineConfig({
     },
   },
   plugins: [
-    remix({
-      ignoredRouteFiles: ['**/.*', '**/concepts/index.mdx', '**/api/index.mdx'],
-      async routes(defineRoutes) {
-        // uses the v1 convention, works in v1.15+ and v2
-        return createRoutesFromFolders(defineRoutes)
-      },
-    }),
-    tsconfigPaths(),
     // @ts-expect-error – TODO: fix mdx plugin failing with Vite types.
     mdx({
       providerImportSource: '@mdx-js/react',
@@ -57,5 +46,14 @@ export default defineConfig({
         parseCallouts,
       ],
     }),
+    remix({
+      ignoredRouteFiles: ['**/.*', '**/concepts/index.mdx', '**/api/index.mdx'],
+      presets: [vercelPreset()],
+      async routes(defineRoutes) {
+        // uses the v1 convention, works in v1.15+ and v2
+        return createRoutesFromFolders(defineRoutes)
+      },
+    }),
+    tsconfigPaths(),
   ],
 })

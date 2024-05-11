@@ -25,7 +25,6 @@ export const Feedback = ({ location }: FeedbackProps) => {
   const isDarkMode = useIsDarkTheme()
 
   const handleClick = (type: 'upvote' | 'downvote') => () => {
-    console.log('clicked!')
     setSelected(type)
 
     const name =
@@ -146,7 +145,7 @@ const FeedbackButton = ({
               <X />
             </PopoverClose>
           </PopoverHeader>
-          <Form ref={formRef} method="post" action="/api/feedback" replace>
+          <Form ref={formRef} method="post" action="/api/feedback">
             <HiddenInput
               name="variant"
               type="checkbox"
