@@ -24,7 +24,7 @@
     "@radix-ui/react-toolbar": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-spring/rafz": "workspace:^",
-    "@react-spring/web": "9.7.3",
+    "@react-spring/web": "workspace:^",
     "@remix-run/node": "^2.9.2",
     "@remix-run/react": "^2.9.2",
     "@remix-run/serve": "^2.9.2",

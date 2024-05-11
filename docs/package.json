@@ -17,7 +17,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@docsearch/react": "3.6.0",
     "@mdx-js/react": "3.0.1",
+    "@react-spring/rafz": "workspace:^",
+    "@react-spring/web": "workspace:^",
     "@remix-run/node": "2.9.2",
     "@remix-run/react": "2.9.2",
     "@remix-run/serve": "2.9.2",
@@ -25,6 +28,8 @@
     "@vercel/analytics": "1.2.2",
     "@vercel/remix": "2.9.2-patch.2",
     "isbot": "4",
+    "jotai": "^2.8.0",
+    "phosphor-react": "^1.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "zod": "3.21.4"
