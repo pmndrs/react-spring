@@ -1,4 +1,4 @@
-import { ActionFunction, json } from '@remix-run/node'
+import { ActionFunction, json } from '@vercel/remix'
 import { createClient } from '@supabase/supabase-js'
 import z from 'zod'
 

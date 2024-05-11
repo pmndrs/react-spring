@@ -1,4 +1,4 @@
-import { json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node'
+import { json, LoaderFunction, MetaFunction, redirect } from '@vercel/remix'
 import { GradientButton } from '~/components/Buttons/GradientButton'
 
 import { Header } from '~/components/Header/Header'

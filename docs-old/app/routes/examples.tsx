@@ -6,7 +6,7 @@ import {
   LoaderFunction,
   MetaFunction,
   redirect,
-} from '@remix-run/node'
+} from '@vercel/remix'
 import {
   useLoaderData,
   Form,
