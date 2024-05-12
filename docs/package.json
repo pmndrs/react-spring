@@ -19,17 +19,25 @@
   "dependencies": {
     "@docsearch/react": "3.6.0",
     "@mdx-js/react": "3.0.1",
+    "@radix-ui/react-dialog": "1.0.5",
+    "@radix-ui/react-toolbar": "1.0.4",
+    "@radix-ui/react-tooltip": "1.0.7",
     "@react-spring/rafz": "workspace:^",
     "@react-spring/web": "workspace:^",
     "@remix-run/node": "2.9.2",
     "@remix-run/react": "2.9.2",
     "@remix-run/serve": "2.9.2",
     "@remix-run/server-runtime": "2.9.2",
+    "@supabase/supabase-js": "2.39.3",
+    "@vanilla-extract/css": "1.15.1",
+    "@vanilla-extract/dynamic": "2.1.0",
+    "@vanilla-extract/recipes": "0.5.2",
     "@vercel/analytics": "1.2.2",
     "@vercel/remix": "2.9.2-patch.2",
+    "clsx": "2.1.1",
     "isbot": "4",
-    "jotai": "^2.8.0",
-    "phosphor-react": "^1.4.1",
+    "jotai": "2.8.0",
+    "phosphor-react": "1.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "zod": "3.21.4"
@@ -37,8 +45,7 @@
   "devDependencies": {
     "@mdx-js/rollup": "3.0.1",
     "@remix-run/dev": "2.9.2",
-    "@types/react": "18.2.62",
-    "@types/react-dom": "18.2.19",
+    "@vanilla-extract/vite-plugin": "4.0.9",
     "chokidar": "3.5.3",
     "concurrently": "8.2.2",
     "esbuild": "0.20.2",
@@ -56,7 +63,7 @@
     "typescript": "5.3.3",
     "unified": "11.0.4",
     "unist-util-visit": "5.0.0",
-    "vite": "5.1.0",
+    "vite": "5.2.11",
     "vite-tsconfig-paths": "4.2.1"
   }
 }

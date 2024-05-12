@@ -4,6 +4,7 @@ import { installGlobals } from '@remix-run/node'
 import { vercelPreset } from '@vercel/remix/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin'
 
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
@@ -18,6 +19,9 @@ import parseCallouts from './scripts/mdx/remark-plugin-parser'
 installGlobals()
 
 export default defineConfig({
+  ssr: {
+    noExternal: ['@docsearch/react', /@algolia/, 'algoliasearch'],
+  },
   server: {
     port: 3000,
   },
@@ -42,6 +46,7 @@ export default defineConfig({
       ignoredRouteFiles: ['**/.*', '**/*.css'],
       presets: [vercelPreset()],
     }),
+    vanillaExtractPlugin(),
     tsconfigPaths(),
   ],
 })

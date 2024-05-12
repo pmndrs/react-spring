@@ -2,6 +2,7 @@
   "extends": ["//"],
   "pipeline": {
     "build": {
+      "inputs": ["app/**"],
       "outputs": ["build/**", "public/build/**"]
     }
   }
