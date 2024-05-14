@@ -2,6 +2,8 @@ import { Valid } from '../types/common'
 import { TransitionComponentProps } from '../types'
 import { useTransition } from '../hooks'
 
+import type { JSX } from "react";
+
 export function Transition<Item, Props extends TransitionComponentProps<Item>>(
   props:
     | TransitionComponentProps<Item>

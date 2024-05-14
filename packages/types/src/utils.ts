@@ -145,7 +145,7 @@ export type ElementType<P = any> =
 
 // Function component without children
 type LeafFunctionComponent<P> = {
-  (props: P): ReactElement | null
+  (props: P): ReactElement<any> | null
   displayName?: string
 }
 

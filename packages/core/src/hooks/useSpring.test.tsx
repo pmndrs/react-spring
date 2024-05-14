@@ -7,6 +7,8 @@ import { SpringValue } from '../SpringValue'
 import { SpringRef } from '../SpringRef'
 import { useSpring } from './useSpring'
 
+import type { JSX } from "react";
+
 describe('useSpring', () => {
   let springs: Lookup<SpringValue>
   let ref: SpringRef

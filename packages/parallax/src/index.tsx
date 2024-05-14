@@ -143,7 +143,7 @@ export const ParallaxLayer = React.memo(
 
       React.useImperativeHandle(ref, () => layer)
 
-      const layerRef = useRef<any>()
+      const layerRef = useRef<any>(undefined)
 
       const setSticky = (height: number, scrollTop: number) => {
         const start = layer.sticky!.start! * height
@@ -229,8 +229,8 @@ export const Parallax = React.memo(
       ...rest
     } = props
 
-    const containerRef = useRef<any>()
-    const contentRef = useRef<any>()
+    const containerRef = useRef<any>(undefined)
+    const contentRef = useRef<any>(undefined)
 
     const state: IParallax = useMemoOne(
       () => ({
