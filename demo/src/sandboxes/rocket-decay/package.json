@@ -14,8 +14,8 @@
   "main": "src/index.js",
   "dependencies": {
     "@react-spring/web": "*",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "beta",
+    "react-dom": "beta",
     "react-scripts": "5.0.1",
     "react-use-gesture": "9.1.3",
     "vec-la": "1.5.0"

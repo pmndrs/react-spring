@@ -5111,8 +5111,8 @@ __metadata:
     lodash.clamp: ^4.0.3
     lodash.shuffle: ^4.2.0
     lorem-ipsum: ^2.0.8
-    react: ^18.2.0
-    react-dom: ^18.2.0
+    react: beta
+    react-dom: beta
     react-feather: ^2.0.10
     react-use-gesture: ^9.1.3
     react-use-measure: ^2.1.1
@@ -5154,8 +5154,8 @@ __metadata:
     jotai: ^2.0.3
     parse-numeric-range: ^1.3.0
     phosphor-react: ^1.4.1
-    react: ^18.2.0
-    react-dom: ^18.2.0
+    react: beta
+    react-dom: beta
     react-select: ^5.7.0
     react-use-measure: ^2.1.1
     refractor: 3.6.0
@@ -6645,12 +6645,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.0.0, @types/react-dom@npm:^18.0.11":
+"@types/react-dom@npm:^18.0.0":
   version: 18.0.11
   resolution: "@types/react-dom@npm:18.0.11"
   dependencies:
     "@types/react": "*"
   checksum: 579691e4d5ec09688087568037c35edf8cfb1ab3e07f6c60029280733ee7b5c06d66df6fcc90786702c93ac8cb13bc7ff16c79ddfc75d082938fbaa36e1cdbf4
+  languageName: node
+  linkType: hard
+
+"@types/react-dom@npm:types-react-dom@beta":
+  version: 19.0.0-beta.1
+  resolution: "types-react-dom@npm:19.0.0-beta.1"
+  dependencies:
+    "@types/react": "*"
+  checksum: a235d72485e3ed50f2b4fe5e6412646b24c0bfd3971fe061ed001be250abaa9c68e979d1fd29ebc28540c6e5deb69e1ad9e53723dce265b88c548d3d07636d07
   languageName: node
   linkType: hard
 
@@ -6699,7 +6708,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.15, @types/react@npm:^18.0.28":
+"@types/react@npm:*, @types/react@npm:^18.0.15":
   version: 18.0.28
   resolution: "@types/react@npm:18.0.28"
   dependencies:
@@ -6707,6 +6716,15 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: e752df961105e5127652460504785897ca6e77259e0da8f233f694f9e8f451cde7fa0709d4456ade0ff600c8ce909cfe29f9b08b9c247fa9b734e126ec53edd7
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:types-react@beta":
+  version: 19.0.0-beta.1
+  resolution: "types-react@npm:19.0.0-beta.1"
+  dependencies:
+    csstype: ^3.0.2
+  checksum: a4aaebc38791e620d9ab2956aca7baeda2fd2deea386859880eb7fa0f3d04f07074ea572214a36ce31d57f2a73b7f0329213f166fb53922c3e72755df3755594
   languageName: node
   linkType: hard
 
@@ -18589,15 +18607,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^18.2.0":
-  version: 18.2.0
-  resolution: "react-dom@npm:18.2.0"
+"react-dom@npm:beta":
+  version: 19.0.0-beta-9d76c954cf-20240510
+  resolution: "react-dom@npm:19.0.0-beta-9d76c954cf-20240510"
   dependencies:
-    loose-envify: ^1.1.0
-    scheduler: ^0.23.0
+    scheduler: 0.25.0-beta-9d76c954cf-20240510
   peerDependencies:
-    react: ^18.2.0
-  checksum: 7d323310bea3a91be2965f9468d552f201b1c27891e45ddc2d6b8f717680c95a75ae0bc1e3f5cf41472446a2589a75aed4483aee8169287909fcd59ad149e8cc
+    react: 19.0.0-beta-9d76c954cf-20240510
+  checksum: 9f0ca75d345177abdb04ec8f66ac260f8b2766ae13b9453d94cd9c8a35fd472b9aca3ebf6a5095ba1c61e19d77232bfe2cc6c2cbac4e0ae1e92bc4650850120e
   languageName: node
   linkType: hard
 
@@ -18898,8 +18915,8 @@ __metadata:
     "@types/lodash.clamp": ^4.0.7
     "@types/lodash.shuffle": ^4.2.7
     "@types/mdx-js__react": ^1.5.5
-    "@types/react": ^18.0.28
-    "@types/react-dom": ^18.0.11
+    "@types/react": "npm:types-react@beta"
+    "@types/react-dom": "npm:types-react-dom@beta"
     "@types/react-lazyload": ^3.2.0
     "@types/react-native": ^0.71.3
     "@types/styled-components": ^5.1.26
@@ -18914,8 +18931,8 @@ __metadata:
     mock-raf: "npm:@react-spring/mock-raf@1.1.1"
     prettier: ^3.1.1
     pretty-quick: ^3.1.3
-    react: ^18.2.0
-    react-dom: ^18.2.0
+    react: beta
+    react-dom: beta
     react-konva: ^18.2.5
     react-native: ^0.71.3
     react-zdog: ^1.0.11
@@ -19028,12 +19045,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.2.0":
-  version: 18.2.0
-  resolution: "react@npm:18.2.0"
-  dependencies:
-    loose-envify: ^1.1.0
-  checksum: 88e38092da8839b830cda6feef2e8505dec8ace60579e46aa5490fc3dc9bba0bd50336507dc166f43e3afc1c42939c09fe33b25fae889d6f402721dcd78fca1b
+"react@npm:beta":
+  version: 19.0.0-beta-9d76c954cf-20240510
+  resolution: "react@npm:19.0.0-beta-9d76c954cf-20240510"
+  checksum: 5a58ac89b85fa9547bd570166b9c3796902db1802cc9fc0c2b44b6df7741b0b6d607a423561912bcad27af0ee590998610dee1d51c75d4ddb33daaa8bf45b986
   languageName: node
   linkType: hard
 
@@ -19892,6 +19907,13 @@ __metadata:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
   checksum: 9bc5dd6de9a22b56d0f80497b1620bef50c86f67f32c0165375d6a4ac8fa6613e1abf5759d7760b02a9277568ff60e02be0a4fcd209df7eabe851943079e42bf
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:0.25.0-beta-9d76c954cf-20240510":
+  version: 0.25.0-beta-9d76c954cf-20240510
+  resolution: "scheduler@npm:0.25.0-beta-9d76c954cf-20240510"
+  checksum: 823f30e799324fabb2073f06d0dd4dd5edb993c1e62556a83fe04d1b357bd9ddf22324ba97f244f037f2c1cf2f65c518cabd18f0deada6534bc06fa4aa00123e
   languageName: node
   linkType: hard
 

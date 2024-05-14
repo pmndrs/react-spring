@@ -43,7 +43,7 @@ import ScrollingWave from './sandboxes/scrolling-wave/src/App'
 import SimpleTransition from './sandboxes/simple-transition/src/App'
 import Slide from './sandboxes/slide/src/App'
 import SvgFilter from './sandboxes/svg-filter/src/App'
-import SpringBoxes from './sandboxes/springy-boxes/src/App'
+// import SpringBoxes from './sandboxes/springy-boxes/src/App'
 import SmileGrid from './sandboxes/smile-grid/src/App'
 
 import Trail from './sandboxes/trail/src/App'
@@ -51,7 +51,7 @@ import Tree from './sandboxes/tree/src/App'
 
 import Viewpager from './sandboxes/viewpager/src/App'
 
-import WebGlSwitch from './sandboxes/webgl-switch/src/App'
+// import WebGlSwitch from './sandboxes/webgl-switch/src/App'
 import Wordle from './sandboxes/wordle/src/App'
 
 Globals.assign({
@@ -87,12 +87,12 @@ const links = {
   'simple-transition': SimpleTransition,
   slide: Slide,
   'smile-grid': SmileGrid,
-  'springy-boxes': SpringBoxes,
+  // 'springy-boxes': SpringBoxes,
   'svg-filter': SvgFilter,
   trail: Trail,
   tree: Tree,
   viewpager: Viewpager,
-  'webgl-switch': WebGlSwitch,
+  // 'webgl-switch': WebGlSwitch,
   wordle: Wordle,
 }
 
