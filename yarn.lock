@@ -5390,12 +5390,12 @@ __metadata:
     chokidar: 3.5.3
     clsx: 2.1.1
     concurrently: 8.2.2
+    cookie: ^0.6.0
     esbuild: 0.20.2
     esbuild-register: 3.5.0
     gray-matter: 4.0.3
     hast-util-to-html: 7.1.3
     isbot: 4
-    jotai: 2.8.0
     parse-numeric-range: 1.3.0
     phosphor-react: 1.4.1
     react: 18.2.0
@@ -14731,21 +14731,6 @@ __metadata:
     "@sideway/formula": ^3.0.0
     "@sideway/pinpoint": ^2.0.0
   checksum: 767a847936cb66787256c4351ff86e1b9e8d7383cbe81a5c827064032c2a8e8b6e938baef5ad32c4035fe4c56e537bd90aa2a952be8a0658601c920cdeb4fb3c
-  languageName: node
-  linkType: hard
-
-"jotai@npm:2.8.0":
-  version: 2.8.0
-  resolution: "jotai@npm:2.8.0"
-  peerDependencies:
-    "@types/react": ">=17.0.0"
-    react: ">=17.0.0"
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    react:
-      optional: true
-  checksum: b24e7676fb659e72fcd6ccd57b1e120b80fa9172353e5d9e9f980b29d4d176238e3fd0c1b555c51476a0a8dc0d2ea391c6b2840d3e7bfb315892e8a621fd8dfb
   languageName: node
   linkType: hard
 

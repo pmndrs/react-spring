@@ -1,8 +1,9 @@
 import {
   MetaFunction,
   LinksFunction,
-  LoaderFunction,
   json,
+  LoaderFunctionArgs,
+  ActionFunctionArgs,
 } from '@vercel/remix'
 import {
   Links,
@@ -17,6 +18,10 @@ import { WidgetPlausible } from './components/Widgets/WidgetPlausible'
 import { lightThemeClass } from './styles/light-theme.css'
 import global from './styles/global.css?url'
 import docusearch from '@docsearch/css/dist/style.css?url'
+import { getTheme, setTheme } from './helpers/theme.server'
+import { darkThemeClass } from './styles/dark-theme.css'
+import { ClientHintCheck, getHints } from './components/Site/SiteClientHints'
+import { useTheme } from './hooks/useTheme'
 
 export const meta: MetaFunction = () => {
   return [
@@ -66,8 +71,14 @@ export const links: LinksFunction = () => [
   },
 ]
 
-export const loader: LoaderFunction = () => {
+export const loader = ({ request }: LoaderFunctionArgs) => {
   return json({
+    requestInfo: {
+      hints: getHints(request),
+      userPrefs: {
+        theme: getTheme(request),
+      },
+    },
     ENV: {
       ENABLE_PLAUSIBLE: process.env.ENABLE_PLAUSIBLE,
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
@@ -77,19 +88,31 @@ export const loader: LoaderFunction = () => {
   })
 }
 
+export async function action({ request }: ActionFunctionArgs) {
+  const body = await request.json()
+  const theme = body.theme ?? 'light'
+
+  const responseInit = {
+    headers: { 'set-cookie': setTheme(theme) },
+  }
+  return json({ ok: true }, responseInit)
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
-  const data = useLoaderData<{ ENV: object }>()
+  const data = useLoaderData<typeof loader>()
+  const theme = useTheme()
 
   return (
     <html lang="en">
       <head>
+        <ClientHintCheck />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
         <WidgetPlausible />
       </head>
-      <body className={lightThemeClass}>
+      <body className={theme === 'light' ? lightThemeClass : darkThemeClass}>
         {children}
         <script
           dangerouslySetInnerHTML={{

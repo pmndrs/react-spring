@@ -1,63 +1,52 @@
-import { atom, useAtom } from 'jotai'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import { MoonStars, Sun } from 'phosphor-react'
 import { animated, useSpring } from '@react-spring/web'
 
 import { AccessibleIcon } from '../AccessibleIcon'
-import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
 import { themeActiveBlob, themeGroup, themePicker } from './SiteThemePicker.css'
+import { useOptimisticThemeMode, useTheme } from '../../hooks/useTheme'
+import { useFetcher } from '@remix-run/react'
+import { action } from '../../root'
 
 export enum ThemeValue {
   Dark = 'dark',
   Light = 'light',
 }
 
-export const themeAtom = atom(ThemeValue.Light)
-
 export const SiteThemePicker = () => {
-  const [theme, setTheme] = useAtom(themeAtom)
+  const fetcher = useFetcher<typeof action>()
+
+  const optimisticMode = useOptimisticThemeMode()
+  const userPreference = useTheme()
+  const mode = optimisticMode ?? userPreference ?? 'light'
 
   const [styles, api] = useSpring(
     () => ({
-      width: 0,
-      left: theme === 'light' ? '2px' : 'unset',
-      right: theme === 'light' ? 'unset' : '2px',
+      width: 42,
+      left: mode === 'light' ? '2px' : 'unset',
+      right: mode === 'light' ? 'unset' : '2px',
       config: {
         tension: 300,
         clamp: true,
       },
     }),
-    []
+    [mode]
   )
 
-  useIsomorphicLayoutEffect(() => {
-    const isDefaultDark = document.documentElement.classList.contains('dark')
-
-    api.start({
-      width: 42,
-      left: !isDefaultDark ? '2px' : 'unset',
-      right: !isDefaultDark ? 'unset' : '2px',
-      immediate: true,
-    })
-
-    setTheme(isDefaultDark ? ThemeValue.Dark : ThemeValue.Light)
-  }, [])
-
-  useIsomorphicLayoutEffect(() => {
-    const dClass = document.documentElement.classList
-
-    dClass.remove('dark', 'light')
-
-    dClass.add(theme)
-
-    window.localStorage.setItem('theme', theme)
-  }, [theme])
-
-  const isDarkMode = theme === ThemeValue.Dark
+  const isDarkMode = mode === ThemeValue.Dark
 
   const handleValueChange = async (value: ThemeValue) => {
-    if (value && value !== theme) {
-      setTheme(value)
+    if (value && value !== mode) {
+      fetcher.submit(
+        {
+          theme: value,
+        },
+        {
+          method: 'POST',
+          encType: 'application/json',
+          action: '/',
+        }
+      )
 
       api.start({
         to: async animate => {
@@ -73,7 +62,7 @@ export const SiteThemePicker = () => {
   }
 
   const handlePointerEnter = (value: ThemeValue) => () => {
-    if (theme !== value) {
+    if (mode !== value) {
       api.start({
         width: 52,
       })
@@ -81,7 +70,7 @@ export const SiteThemePicker = () => {
   }
 
   const handlePointerOut = (value: ThemeValue) => () => {
-    if (theme !== value) {
+    if (mode !== value) {
       api.start({
         width: 42,
       })
@@ -92,7 +81,7 @@ export const SiteThemePicker = () => {
     <Toolbar.ToggleGroup
       className={themeGroup}
       onValueChange={handleValueChange}
-      value={theme}
+      value={mode}
       type="single"
     >
       <Toolbar.ToggleItem

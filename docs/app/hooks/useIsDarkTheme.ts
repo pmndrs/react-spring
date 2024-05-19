@@ -1,9 +1,8 @@
-import { useAtom } from 'jotai'
-
-import { themeAtom, ThemeValue } from '~/components/Site/SiteThemePicker'
+import { ThemeValue } from '~/components/Site/SiteThemePicker'
+import { useTheme } from './useTheme'
 
 export const useIsDarkTheme = () => {
-  const [theme] = useAtom(themeAtom)
+  const theme = useTheme()
 
   const isDarkMode = theme === ThemeValue.Dark
 
