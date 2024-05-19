@@ -24,7 +24,7 @@ export const header = style({
 })
 
 globalStyle(`${header} + aside + main > article > h2`, {
-  position: 'relative',
+  pointerEvents: 'none',
 })
 
 globalStyle(`${header} + aside + main > article > h2::before`, {

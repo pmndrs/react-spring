@@ -17,14 +17,42 @@ interface DocFile {
   docPath: string
 }
 
-const readDoc = async (source: string): Promise<DocFile> => {
+const readDoc = async (src: string): Promise<DocFile> => {
   const pathToDocs = path.resolve(__dirname, '../../app/routes')
 
-  const [_, docPathWithSrc] = source.split(pathToDocs)
+  const [_, docPathWithSrc] = src.split(pathToDocs)
 
-  const docPath = path.dirname(docPathWithSrc)
+  /**
+   * Converts:
+   * - /docs._index.mdx
+   * - /docs.advanced._index.mdx
+   * - /docs.advanced.async-animations.mdx
+   *
+   * To:
+   * - /index.mdx
+   * - /advanced/index.mdx
+   * - /advanced/async-animations.mdx
+   *
+   * Which is how the script worked with V1 remix routing.
+   * If we change the source here, everything else works as it should.
+   */
+  const source = `${docPathWithSrc
+    .split('.')
+    .map(path => {
+      if (path === '/docs') {
+        return ''
+      } else if (path === '_index') {
+        return 'index'
+      }
 
-  const content = await fs.readFile(source, 'utf-8')
+      return path
+    })
+    .slice(0, -1)
+    .join('/')}.mdx`
+
+  const docPath = path.dirname(source)
+
+  const content = await fs.readFile(src, 'utf-8')
 
   return {
     source,
@@ -110,11 +138,7 @@ const processDoc = ({ content, source, docPath }: DocFile): ProcessedDoc => {
 
   // ex: api/plugins/myDoc -> myDoc
   // ex: myDoc -> myDoc
-  const baseID = path
-    .basename(source, path.extname(source))
-    .split('.')
-    .map(path => (path === '_index' ? 'index' : path))
-    .join('/')
+  const baseID = path.basename(source, path.extname(source))
 
   // ex: api/plugins/myDoc -> api/plugins
   // ex: myDoc -> .

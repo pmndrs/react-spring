@@ -1,4 +1,5 @@
 import { recipe } from '@vanilla-extract/recipes'
+import { BREAKPOINTS } from '../styles/breakpoints.css'
 
 export const svg = recipe({
   base: {
@@ -11,9 +12,11 @@ export const svg = recipe({
         width: '48px',
         height: '48px',
 
-        '@tabletUp': {
-          height: '64px',
-          width: '64px',
+        '@media': {
+          [`screen and ${BREAKPOINTS.tabletUp}`]: {
+            height: '64px',
+            width: '64px',
+          },
         },
       },
       true: {

@@ -46,6 +46,8 @@ export const ButtonCopy = ({ children, className }: ButtonCopyProps) => {
     2,
     i => ({
       scale: copied && i === 0 ? 0 : !copied && i === 1 ? 0 : 1,
+      y: '-50%',
+      x: '-50%',
       onRest: () => {
         if (i === 0) {
           setTimeout(() => setCopied(false), 800)
@@ -61,8 +63,8 @@ export const ButtonCopy = ({ children, className }: ButtonCopyProps) => {
       type="button"
       onClick={handleCopyClick}
     >
-      <AccessibleIcon label={`Copy ${children}`}>
-        <span className={absoluteContainer}>
+      <AccessibleIcon className={absoluteContainer} label={`Copy ${children}`}>
+        <span>
           {springs.map((style, i) =>
             i === 0 ? (
               <AnimatedCopy

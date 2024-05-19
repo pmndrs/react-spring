@@ -16,6 +16,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { WidgetPlausible } from './components/Widgets/WidgetPlausible'
 import { lightThemeClass } from './styles/light-theme.css'
 import global from './styles/global.css?url'
+import docusearch from '@docsearch/css/dist/style.css?url'
 
 export const meta: MetaFunction = () => {
   return [
@@ -54,7 +55,7 @@ export const meta: MetaFunction = () => {
 }
 
 export const links: LinksFunction = () => [
-  // { rel: 'stylesheet', href: docusearch },
+  { rel: 'stylesheet', href: docusearch },
   { rel: 'stylesheet', href: global },
   { rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },

@@ -1,5 +1,6 @@
 import { globalStyle } from '@vanilla-extract/css'
 import { vars } from './theme-contract.css'
+import { BREAKPOINTS } from './breakpoints.css'
 
 export default globalStyle('html, body', {
   color: vars.colors.black,
@@ -24,189 +25,6 @@ export default globalStyle('html, body', {
       scrollBehavior: 'smooth',
     },
   },
-
-  //   '.DocSearch': {
-  //     fontSize: '$XS',
-
-  //     '&.DocSearch-Container, &.DocSearch-Container *': {
-  //       pointerEvents: 'auto',
-  //     },
-
-  //     '&.DocSearch-Container': {
-  //       backgroundColor: '$white80',
-  //       borderRadius: '$r8',
-  //     },
-
-  //     '.DocSearch-Modal': {
-  //       boxShadow: 'unset',
-  //       backgroundColor: '$codeBackground',
-  //     },
-
-  //     '.DocSearch-MagnifierLabel': {
-  //       display: 'none',
-  //     },
-
-  //     '.DocSearch-Form': {
-  //       p: 0,
-  //       background: 'transparent',
-  //       boxShadow: 'unset',
-  //       border: '1px solid $steel40',
-  //     },
-
-  //     '.DocSearch-Input': {
-  //       fontSize: 'inherit',
-  //       p: '$5 11px',
-  //       background: 'transparent',
-  //       color: '$black',
-
-  //       '&::placeholder': {
-  //         color: '$black',
-  //       },
-  //     },
-
-  //     '.DocSearch-Reset:hover': {
-  //       color: '#ff6d6dcc',
-  //     },
-
-  //     '.DocSearch-Help': {
-  //       fontSize: 'inherit',
-  //       color: '$steel40',
-  //     },
-
-  //     '.DocSearch-Dropdown': {
-  //       minHeight: '20vh',
-  //     },
-
-  //     '.DocSearch-Footer': {
-  //       background: 'transparent',
-  //       boxShadow: 'unset',
-  //     },
-
-  //     '.DocSearch-Label': {
-  //       color: '$steel40',
-  //     },
-
-  //     '.DocSearch-Commands-Key': {
-  //       background: 'transparent',
-  //       border: '1px solid $steel40',
-  //       borderRadius: 4,
-  //       p: 4,
-  //       height: 'unset',
-  //       width: 'unset',
-  //       boxShadow: 'unset',
-  //     },
-
-  //     '.DocSearch-Hit-source': {
-  //       background: 'transparent',
-  //       color: '$black',
-  //     },
-
-  //     '.DocSearch-Hit > a': {
-  //       background: 'transparent',
-  //       boxShadow: 'unset',
-  //       borderRadius: '$r8',
-
-  //       hover: {
-  //         backgroundColor: '#ff6d6d33',
-  //       },
-  //     },
-
-  //     '.DocSearch-Hit[aria-selected=true] > a': {
-  //       backgroundColor: '#ff6d6d33',
-  //     },
-
-  //     '.DocSearch-Hit-Container, .DocSearch-Prefill': {
-  //       color: '$black',
-  //     },
-
-  //     '.DocSearch-Hit-title': {
-  //       fontSize: 'inherit',
-  //     },
-
-  //     mark: {
-  //       color: '$red100',
-  //     },
-  //   },
-
-  //   '#carbonads': {
-  //     '& *': {
-  //       margin: 'initial',
-  //       padding: 'initial',
-  //     },
-
-  //     fontFamily:
-  //       "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif",
-  //     display: 'flex',
-  //     justifyContent: 'stretch',
-  //     mb: 40,
-  //     mx: 'auto',
-  //     backgroundColor: '$codeBackground',
-  //     borderRadius: '$r8',
-  //     overflow: 'hidden',
-  //     boxShadow: '0 1px 4px 1px hsla(0, 0%, 0%, 0.1)',
-  //     zIndex: 100,
-
-  //     '@tabletUp': {
-  //       maxWidth: '60%',
-  //     },
-
-  //     '& > span': {
-  //       width: '100%',
-  //     },
-
-  //     '& a': {
-  //       color: 'inherit',
-  //       textDecoration: 'none',
-
-  //       '&:hover': {
-  //         color: 'inerhit',
-  //       },
-  //     },
-
-  //     '& span': {
-  //       position: 'relative',
-  //       display: 'block',
-  //       overflow: 'hidden',
-  //     },
-
-  //     '& .carbon-wrap': {
-  //       display: 'flex',
-  //     },
-
-  //     '& .carbon-img': {
-  //       display: 'block',
-  //       margin: 0,
-  //       lineHeight: 1,
-
-  //       '& img': {
-  //         display: 'block',
-  //       },
-  //     },
-
-  //     '& .carbon-text': {
-  //       fontSize: '14px',
-  //       p: 10,
-  //       mb: 16,
-  //       lineHeight: 1.5,
-  //       textAlign: 'left',
-  //     },
-
-  //     '& .carbon-poweredby': {
-  //       display: 'block',
-  //       p: '6px 8px',
-  //       background: '$white',
-  //       textAlign: 'center',
-  //       textTransform: 'uppercase',
-  //       letterSpacing: '0.5px',
-  //       fontWeight: 600,
-  //       fontSize: 8,
-  //       lineHeight: 1,
-  //       borderTopLeftRadius: 3,
-  //       position: 'absolute',
-  //       bottom: 0,
-  //       right: 0,
-  //     },
-  //   },
 })
 
 globalStyle('*, *:before, *:after', {
@@ -238,4 +56,189 @@ globalStyle('*:focus-visible', {
   boxShadow: `0 0 0 3px ${vars.colors['red-outline']}`,
   outline: 'none',
   borderRadius: vars.radii.r4,
+})
+
+globalStyle('#carbonads', {
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif",
+  display: 'flex',
+  justifyContent: 'stretch',
+  margin: '0 auto',
+  marginBottom: 40,
+  backgroundColor: vars.colors.codeBackground,
+  borderRadius: vars.radii.r8,
+  overflow: 'hidden',
+  boxShadow: '0 1px 4px 1px hsla(0, 0%, 0%, 0.1)',
+  zIndex: 100,
+
+  '@media': {
+    [`screen and ${BREAKPOINTS.tabletUp}`]: {
+      maxWidth: '60%',
+    },
+  },
+})
+
+globalStyle('#carbonads *', {
+  margin: 'initial',
+  padding: 'initial',
+})
+
+globalStyle('#carbonads > span', {
+  width: '100%',
+})
+
+globalStyle('#carbonads a', {
+  color: 'inherit',
+  textDecoration: 'none',
+})
+
+globalStyle('#carbonads a:hover', {
+  color: 'inherit',
+})
+
+globalStyle('#carbonads span', {
+  position: 'relative',
+  display: 'block',
+  overflow: 'hidden',
+})
+
+globalStyle('#carbonads .carbon-wrap', {
+  display: 'flex',
+})
+
+globalStyle('#carbonads .carbon-img', {
+  display: 'block',
+  margin: 0,
+  lineHeight: 1,
+})
+
+globalStyle('#carbonads .carbon-img img', {
+  display: 'block',
+})
+
+globalStyle('#carbonads .carbon-text', {
+  fontSize: '14px',
+  padding: 10,
+  marginBottom: 16,
+  lineHeight: 1.5,
+  textAlign: 'left',
+})
+
+globalStyle('#carbonads .carbon-poweredby', {
+  display: 'block',
+  padding: '6px 8px',
+  background: vars.colors.white,
+  textAlign: 'center',
+  textTransform: 'uppercase',
+  letterSpacing: '0.5px',
+  fontWeight: 600,
+  fontSize: 8,
+  lineHeight: 1,
+  borderTopLeftRadius: 3,
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+})
+
+globalStyle('.DocSearch', {
+  fontSize: vars.fontSizes.XS,
+})
+
+globalStyle('.DocSearch-Container, .DocSearch-Container *', {
+  pointerEvents: 'auto',
+})
+
+globalStyle('.DocSearch-Container', {
+  backgroundColor: vars.colors.white80,
+  borderRadius: vars.radii.r8,
+})
+
+globalStyle('.DocSearch-Modal', {
+  boxShadow: 'unset',
+  backgroundColor: vars.colors.codeBackground,
+})
+
+globalStyle('.DocSearch-MagnifierLabel', {
+  display: 'none',
+})
+
+globalStyle('.DocSearch-Form', {
+  padding: 0,
+  background: 'transparent',
+  boxShadow: 'unset',
+  border: `1px solid ${vars.colors.steel40}`,
+})
+
+globalStyle('.DocSearch-Input', {
+  fontSize: 'inherit',
+  padding: `${vars.space['5']} 11px`,
+  background: 'transparent',
+  color: vars.colors.black,
+})
+
+globalStyle('.DocSearch-Input::placeholder', {
+  color: vars.colors.black,
+})
+
+globalStyle('.DocSearch-Reset:hover', {
+  color: vars.colors.steel40,
+})
+
+globalStyle('.DocSearch-Help', {
+  fontSize: 'inherit',
+  color: vars.colors.steel40,
+})
+
+globalStyle('.DocSearch-Dropdown', {
+  minHeight: '20vh',
+})
+
+globalStyle('.DocSearch-Footer', {
+  background: 'transparent',
+  boxShadow: 'unset',
+})
+
+globalStyle('.DocSearch-Label', {
+  color: vars.colors.steel40,
+})
+
+globalStyle('.DocSearch-Commands-Key', {
+  background: 'transparent',
+  border: `1px solid ${vars.colors.steel40}`,
+  borderRadius: 4,
+  padding: 4,
+  height: 'unset',
+  width: 'unset',
+  boxShadow: 'unset',
+})
+
+globalStyle('.DocSearch-Hit-source', {
+  background: 'transparent',
+  color: vars.colors.black,
+})
+
+globalStyle('.DocSearch-Hit > a', {
+  background: 'transparent',
+  boxShadow: 'unset',
+  borderRadius: vars.radii.r8,
+})
+
+globalStyle('.DocSearch-Hit > a:hover', {
+  backgroundColor: vars.colors.red100,
+})
+
+globalStyle('.DocSearch-Hit[aria-selected=true] > a', {
+  backgroundColor: vars.colors.red100,
+})
+
+globalStyle('.DocSearch-Hit-Container, .DocSearch-Prefill', {
+  color: vars.colors.black,
+})
+
+globalStyle('.DocSearch-Hit-title', {
+  fontSize: 'inherit',
+})
+
+globalStyle('.DocSearch mark', {
+  color: vars.colors.red100,
 })

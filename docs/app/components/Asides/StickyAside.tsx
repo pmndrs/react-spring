@@ -3,9 +3,8 @@ import { animated } from '@react-spring/web'
 
 import { useAnimatedHeader } from '~/hooks/useAnimatedHeader'
 
-import { styled } from '~/styles/stitches.config'
-
 import { getHeaderHeights } from '../Header/Header'
+import { aside } from './StickyAside.css'
 
 interface StickyAsideProps {
   children?: ReactNode
@@ -19,29 +18,13 @@ export const StickyAside = ({ children }: StickyAsideProps) => {
   })
 
   return (
-    <Aside style={styles} isStuck={isStuck}>
+    <animated.aside
+      className={aside({
+        isStuck,
+      })}
+      style={styles}
+    >
       {children}
-    </Aside>
+    </animated.aside>
   )
 }
-
-const Aside = styled(animated.aside, {
-  display: 'none',
-  flexShrink: 1,
-  width: '30rem',
-  gridArea: 'aside',
-
-  '@tabletUp': {
-    display: 'block',
-    pt: '$25',
-    height: '100%',
-  },
-
-  variants: {
-    isStuck: {
-      true: {
-        position: 'fixed',
-      },
-    },
-  },
-})

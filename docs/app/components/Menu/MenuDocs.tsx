@@ -38,7 +38,7 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
     <ul className={docsList}>
       <li
         className={widgetContainer}
-        style={{ display: !isDocs ? 'none' : '' }}
+        style={{ display: !isDocs ? 'none' : 'flex' }}
       >
         <WidgetSearch />
       </li>
@@ -47,16 +47,18 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
           submenu.map(item =>
             renderSubMenu({ ...item, location, onClick: handleNavClick }, 0)
           )}
-        <a
-          className={clsx(anchorStyles, anchorTitle)}
-          style={{ display: !isDocs ? 'none' : '' }}
-          href="https://github.com/pmndrs/react-spring/releases"
-          rel="noopener noreferrer"
-          target="_blank"
-          onClick={handleNavClick}
-        >
-          {`Changelog`}
-        </a>
+        <li>
+          <a
+            className={clsx(anchorStyles, anchorTitle)}
+            style={{ display: !isDocs ? 'none' : 'flex' }}
+            href="https://github.com/pmndrs/react-spring/releases"
+            rel="noopener noreferrer"
+            target="_blank"
+            onClick={handleNavClick}
+          >
+            {`Changelog`}
+          </a>
+        </li>
       </div>
     </ul>
   )

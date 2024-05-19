@@ -25,10 +25,6 @@ globalStyle(`${heading} > a`, {
   fontWeight: 'inherit',
 })
 
-globalStyle(`${heading} > a + ${linkIcon}`, {
-  '@media': {
-    '(hover:hover)': {
-      opacity: 1,
-    },
-  },
+globalStyle(`${heading}:hover > a + ${linkIcon}`, {
+  opacity: 1,
 })

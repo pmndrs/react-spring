@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode } from 'react'
+import { MouseEventHandler, ReactNode, forwardRef } from 'react'
 import { Link } from '@remix-run/react'
 import clsx from 'clsx'
 import { sharedStyles } from './Button.css'
@@ -13,50 +13,57 @@ interface ButtonProps {
   variant?: 'regular' | 'large'
 }
 
-export const Button = ({
-  children,
-  className,
-  type = 'button',
-  onClick,
-  disabled = false,
-  href,
-  variant = 'regular',
-}: ButtonProps) => {
-  const handleClick: MouseEventHandler<HTMLButtonElement> = e => {
-    if (onClick) {
-      onClick(e)
+export const Button = forwardRef(
+  (
+    {
+      children,
+      className,
+      type = 'button',
+      onClick,
+      disabled = false,
+      href,
+      variant = 'regular',
+    }: ButtonProps,
+    forwardedRef: any
+  ) => {
+    const handleClick: MouseEventHandler<HTMLButtonElement> = e => {
+      if (onClick) {
+        onClick(e)
+      }
     }
-  }
 
-  if (href) {
+    if (href) {
+      return (
+        <Link
+          ref={forwardedRef}
+          className={clsx(
+            sharedStyles({
+              variant,
+            }),
+            className
+          )}
+          to={href}
+        >
+          {children}
+        </Link>
+      )
+    }
+
     return (
-      <Link
+      <button
+        ref={forwardedRef}
         className={clsx(
           sharedStyles({
             variant,
           }),
           className
         )}
-        to={href}
+        type={type}
+        onClick={handleClick}
+        disabled={disabled}
       >
         {children}
-      </Link>
+      </button>
     )
   }
-
-  return (
-    <button
-      className={clsx(
-        sharedStyles({
-          variant,
-        }),
-        className
-      )}
-      type={type}
-      onClick={handleClick}
-      disabled={disabled}
-    >
-      {children}
-    </button>
-  )
-}
+)

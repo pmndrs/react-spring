@@ -4,7 +4,9 @@ import { darkThemeClass } from '../../styles/dark-theme.css'
 
 export const animatedIcon = style({
   position: 'absolute',
-  inset: 0,
+  left: '50%',
+  top: '50%',
+  transform: 'translate(-50%, -50%)',
 })
 
 export const absoluteContainer = style({
@@ -17,7 +19,7 @@ export const absoluteContainer = style({
 export const copyButton = style({
   backgroundColor: vars.colors.codeBackground,
   border: 'none',
-  padding: '4px 4px 1px 4px',
+  padding: 0,
   height: 32,
   width: 32,
   overflow: 'hidden',
