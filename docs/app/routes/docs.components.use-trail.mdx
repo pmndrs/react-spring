@@ -70,9 +70,9 @@ export default function MyComponent() {
 
 ## Reference
 
-{/* import { TablesConfiguration } from '../../../components/Tables/TablesConfig' */}
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
 
-{/* <TablesConfiguration /> */}
+<TablesConfiguration />
 
 ## Typescript
 
@@ -93,5 +93,11 @@ Where `ConfigObject` is described [above](#reference)
 - [`SpringValues`](/docs/typescript#springvalues)
 
 ## Examples
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid
+  sandboxTitles={['Basic Trail', 'Goo Blobs', 'Smile Grid', 'Wordle']}
+/>
 
 Can't find what you're looking for? Check out all our [examples!](/examples)

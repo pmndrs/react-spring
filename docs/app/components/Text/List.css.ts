@@ -1,5 +1,6 @@
 import { globalStyle, style } from '@vanilla-extract/css'
 import { vars } from '../../styles/theme-contract.css'
+import { XS } from '../../styles/fontStyles.css'
 
 export const list = style({
   paddingLeft: vars.space['20'],
@@ -12,7 +13,7 @@ globalStyle(`${list} code`, {
   padding: '0.2rem 0.5rem',
 })
 
-export const descriptiveList = style({})
+export const descriptiveList = style([XS])
 
 globalStyle(`${descriptiveList} code`, {
   backgroundColor: vars.colors.steel20,
@@ -32,5 +33,7 @@ globalStyle(`${descriptiveList} dt`, {
 
 globalStyle(`${descriptiveList} dd`, {
   display: 'flex',
+  margin: 0,
   gap: vars.space['5'],
+  marginBottom: vars.space['15'],
 })

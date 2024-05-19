@@ -75,10 +75,10 @@ export const inner = recipe({
   variants: {
     size: {
       small: {
-        padding: `${vars.space['10']} ${vars.space['5']}`,
+        padding: `${vars.space['5']} ${vars.space['10']}`,
       },
       regular: {
-        padding: `${vars.space['10']} ${vars.space['15']}`,
+        padding: `${vars.space['15']} ${vars.space['10']} `,
       },
     },
   },
