@@ -205,14 +205,14 @@ export function isAsyncTo(to: any) {
 
 /** Detach `ctrl` from `ctrl.ref` and (optionally) the given `ref` */
 export function detachRefs(ctrl: Controller, ref?: SpringRef) {
-  ctrl.ref?.delete(ctrl)
-  ref?.delete(ctrl)
+  ctrl.ref && ctrl.ref.delete(ctrl)
+  ref && ref.delete(ctrl)
 }
 
 /** Replace `ctrl.ref` with the given `ref` (if defined) */
 export function replaceRef(ctrl: Controller, ref?: SpringRef) {
   if (ref && ctrl.ref !== ref) {
-    ctrl.ref?.delete(ctrl)
+    ctrl.ref && ctrl.ref.delete(ctrl)
     ref.add(ctrl)
     ctrl.ref = ref
   }
