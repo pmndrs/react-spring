@@ -106,9 +106,10 @@ export type GoalProp<T> = [T] extends [IsPlainObject<T>]
   : GoalValue<T>
 
 /** A set of values for a `Controller` to animate from/to. */
-export type GoalValues<T> = FluidProps<T> extends infer Props
-  ? { [P in keyof Props]?: Props[P] | null }
-  : never
+export type GoalValues<T> =
+  FluidProps<T> extends infer Props
+    ? { [P in keyof Props]?: Props[P] | null }
+    : never
 
 /**
  * A value that `SpringValue` objects can animate from/to.
@@ -233,9 +234,8 @@ export interface ControllerProps<
 
 export type LoopProp<T extends object> = boolean | T | (() => boolean | T)
 
-export type VelocityProp<T = any> = T extends ReadonlyArray<number | string>
-  ? number[]
-  : number
+export type VelocityProp<T = any> =
+  T extends ReadonlyArray<number | string> ? number[] : number
 
 /** For props that can be set on a per-key basis. */
 export type MatchProp<T> =

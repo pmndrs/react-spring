@@ -10,8 +10,8 @@
   "dependencies": {
     "@react-spring/web": "0.0.0-d80cafe1f0ccd7ce193b8f558285515ede3b8afc-20230625160448",
     "next": "^13.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.4",

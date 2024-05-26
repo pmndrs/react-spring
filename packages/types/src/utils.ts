@@ -123,13 +123,16 @@ type Intersect<U> = (U extends any ? (k: U) => void : never) extends (
 
 export type AllKeys<T> = T extends any ? keyof T : never
 
-export type Exclusive<T> = AllKeys<T> extends infer K
-  ? T extends any
-    ? Remap<
-        LoosePick<T, K> & { [P in Exclude<K & keyof any, keyof T>]?: undefined }
-      >
+export type Exclusive<T> =
+  AllKeys<T> extends infer K
+    ? T extends any
+      ? Remap<
+          LoosePick<T, K> & {
+            [P in Exclude<K & keyof any, keyof T>]?: undefined
+          }
+        >
+      : never
     : never
-  : never
 /** An object that needs to be manually disposed of */
 export interface Disposable {
   dispose(): void

@@ -10,7 +10,7 @@
     "@react-spring/web": "*",
     "ink": "^4.0.0",
     "object-hash": "^3.0.0",
-    "react": "^18.2.0"
+    "react": "18.2.0"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.0.4",

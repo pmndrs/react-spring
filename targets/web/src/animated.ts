@@ -95,11 +95,12 @@ type AnimatedObject<T extends object> =
   | (T extends ReadonlyArray<number | string> ? FluidValue<Readonly<T>> : never)
 
 // An animated primitive (or an array of them)
-type AnimatedLeaf<T> = NonObject<T> extends infer U
-  ? [U] extends [never]
-    ? never
-    : FluidValue<U>
-  : never
+type AnimatedLeaf<T> =
+  NonObject<T> extends infer U
+    ? [U] extends [never]
+      ? never
+      : FluidValue<U>
+    : never
 
 type NonObject<T> =
   | Extract<T, string | number | ReadonlyArray<string | number>>

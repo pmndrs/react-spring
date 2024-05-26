@@ -41,9 +41,8 @@ type StopFn<T> = InferTarget<T> extends { stop: infer T } ? T : never
  * The `T` parameter can be a set of animated values (as an object type)
  * or a primitive type for a single animated value.
  */
-export type SpringUpdateFn<T = any> = T extends IsPlainObject<T>
-  ? UpdateValuesFn<T>
-  : UpdateValueFn<T>
+export type SpringUpdateFn<T = any> =
+  T extends IsPlainObject<T> ? UpdateValuesFn<T> : UpdateValueFn<T>
 
 interface AnyUpdateFn<
   T extends SpringValue | Controller<any>,

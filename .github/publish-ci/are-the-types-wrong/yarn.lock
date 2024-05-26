@@ -445,7 +445,7 @@ __metadata:
     "@types/react": ^18.0.28
     ink: ^4.0.0
     object-hash: ^3.0.0
-    react: ^18.2.0
+    react: 18.2.0
     shelljs: ^0.8.5
     tsx: ^3.12.5
     yargs: ^17.7.1
@@ -1484,7 +1484,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.2.0":
+"react@npm:18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:

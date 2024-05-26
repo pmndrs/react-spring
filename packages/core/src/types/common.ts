@@ -26,12 +26,8 @@ export type RawValues<T extends object> = {
  *
  * When `any` is passed, the resolved type is `true | false`.
  */
-export type IsPlainObject<T> = T extends ReadonlyArray<any>
-  ? Any
-  : T extends object
-    ? object
-    : Any
+export type IsPlainObject<T> =
+  T extends ReadonlyArray<any> ? Any : T extends object ? object : Any
 
-export type StringKeys<T> = T extends IsPlainObject<T>
-  ? string & keyof T
-  : string
+export type StringKeys<T> =
+  T extends IsPlainObject<T> ? string & keyof T : string

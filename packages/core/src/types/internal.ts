@@ -15,18 +15,20 @@ export interface Readable<T = any> {
 }
 
 /** @internal */
-export type InferState<T extends Readable> = T extends Controller<infer State>
-  ? State
-  : T extends SpringValue<infer U>
-    ? U
-    : unknown
+export type InferState<T extends Readable> =
+  T extends Controller<infer State>
+    ? State
+    : T extends SpringValue<infer U>
+      ? U
+      : unknown
 
 /** @internal */
-export type InferProps<T extends Readable> = T extends Controller<infer State>
-  ? ControllerUpdate<State>
-  : T extends SpringValue<infer U>
-    ? SpringUpdate<U>
-    : Lookup
+export type InferProps<T extends Readable> =
+  T extends Controller<infer State>
+    ? ControllerUpdate<State>
+    : T extends SpringValue<infer U>
+      ? SpringUpdate<U>
+      : Lookup
 
 /** @internal */
 export type InferTarget<T> = T extends object
