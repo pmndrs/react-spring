@@ -16,7 +16,7 @@
     "@arethetypeswrong/core": "0.0.4",
     "@types/react": "18.0.28",
     "shelljs": "0.8.5",
-    "tsx": "3.12.5",
+    "tsx": "4.11.0",
     "yargs": "17.7.1"
   },
   "resolutions": {
