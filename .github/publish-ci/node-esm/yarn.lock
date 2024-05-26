@@ -86,7 +86,7 @@ __metadata:
     "@react-spring/web": "*"
     react: 18.2.0
     react-dom: 18.2.0
-    resolve-esm: ^2.0.3
+    resolve-esm: 2.0.3
   languageName: unknown
   linkType: soft
 
@@ -129,7 +129,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve-esm@npm:^2.0.3":
+"resolve-esm@npm:2.0.3":
   version: 2.0.3
   resolution: "resolve-esm@npm:2.0.3"
   dependencies:

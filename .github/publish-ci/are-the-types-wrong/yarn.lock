@@ -24,18 +24,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@arethetypeswrong/core@patch:@arethetypeswrong/core@npm%3A0.0.4#./.yarn/patches/@arethetypeswrong-core-npm-0.0.4-edb717a66b.patch::locator=are-the-types-wrong%40workspace%3A.":
-  version: 0.0.4
-  resolution: "@arethetypeswrong/core@patch:@arethetypeswrong/core@npm%3A0.0.4#./.yarn/patches/@arethetypeswrong-core-npm-0.0.4-edb717a66b.patch::version=0.0.4&hash=f21913&locator=are-the-types-wrong%40workspace%3A."
-  dependencies:
-    "@andrewbranch/untar.js": ^1.0.0
-    fetch-ponyfill: ^7.1.0
-    fflate: ^0.7.4
-    typescript: ^5.0.0-dev.20230207
-  checksum: 7d0034bf02cfd1473cbf6beeaabbb84057be26068cfdd2ed351cacbd8b8945dc8403965b3140524c7f3c41d6608c01988c2396300e01436fc77ca52ebfd2359c
-  languageName: node
-  linkType: hard
-
 "@esbuild-kit/cjs-loader@npm:^2.4.2":
   version: 2.4.2
   resolution: "@esbuild-kit/cjs-loader@npm:2.4.2"
@@ -328,7 +316,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18.0.28":
+"@types/react@npm:18.0.28":
   version: 18.0.28
   resolution: "@types/react@npm:18.0.28"
   dependencies:
@@ -440,15 +428,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "are-the-types-wrong@workspace:."
   dependencies:
-    "@arethetypeswrong/core": ^0.0.4
+    "@arethetypeswrong/core": 0.0.4
     "@react-spring/web": "*"
-    "@types/react": ^18.0.28
-    ink: ^4.0.0
-    object-hash: ^3.0.0
+    "@types/react": 18.0.28
+    ink: 4.0.0
+    object-hash: 3.0.0
     react: 18.2.0
-    shelljs: ^0.8.5
-    tsx: ^3.12.5
-    yargs: ^17.7.1
+    shelljs: 0.8.5
+    tsx: 3.12.5
+    yargs: 17.7.1
   languageName: unknown
   linkType: soft
 
@@ -1045,7 +1033,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ink@npm:^4.0.0":
+"ink@npm:4.0.0":
   version: 4.0.0
   resolution: "ink@npm:4.0.0"
   dependencies:
@@ -1400,7 +1388,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-hash@npm:^3.0.0":
+"object-hash@npm:3.0.0":
   version: 3.0.0
   resolution: "object-hash@npm:3.0.0"
   checksum: 80b4904bb3857c52cc1bfd0b52c0352532ca12ed3b8a6ff06a90cd209dfda1b95cee059a7625eb9da29537027f68ac4619363491eedb2f5d3dddbba97494fd6c
@@ -1615,7 +1603,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shelljs@npm:^0.8.5":
+"shelljs@npm:0.8.5":
   version: 0.8.5
   resolution: "shelljs@npm:0.8.5"
   dependencies:
@@ -1785,7 +1773,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsx@npm:^3.12.5":
+"tsx@npm:3.12.5":
   version: 3.12.5
   resolution: "tsx@npm:3.12.5"
   dependencies:
@@ -1972,9 +1960,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.7.1":
-  version: 17.7.2
-  resolution: "yargs@npm:17.7.2"
+"yargs@npm:17.7.1":
+  version: 17.7.1
+  resolution: "yargs@npm:17.7.1"
   dependencies:
     cliui: ^8.0.1
     escalade: ^3.1.1
@@ -1983,7 +1971,7 @@ __metadata:
     string-width: ^4.2.3
     y18n: ^5.0.5
     yargs-parser: ^21.1.1
-  checksum: 73b572e863aa4a8cbef323dd911d79d193b772defd5a51aab0aca2d446655216f5002c42c5306033968193bdbf892a7a4c110b0d77954a7fdf563e653967b56a
+  checksum: 3d8a43c336a4942bc68080768664aca85c7bd406f018bad362fd255c41c8f4e650277f42fd65d543fce99e084124ddafee7bbfc1a5c6a8fda4cec78609dcf8d4
   languageName: node
   linkType: hard
 

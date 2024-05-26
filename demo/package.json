@@ -13,32 +13,32 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@react-three/drei": "^9.57.0",
-    "@react-three/fiber": "^8.11.9",
-    "@stitches/react": "^1.2.8",
-    "@use-gesture/react": "^10.2.24",
-    "@vitejs/plugin-react-refresh": "^1.3.6",
+    "@react-three/drei": "9.57.0",
+    "@react-three/fiber": "8.11.9",
+    "@stitches/react": "1.2.8",
+    "@use-gesture/react": "10.2.24",
+    "@vitejs/plugin-react-refresh": "1.3.6",
     "easing-coordinates": "2.0.2",
     "leva": "0.9.34",
     "lodash-move": "1.1.1",
-    "lodash.clamp": "^4.0.3",
-    "lodash.shuffle": "^4.2.0",
-    "lorem-ipsum": "^2.0.8",
+    "lodash.clamp": "4.0.3",
+    "lodash.shuffle": "4.2.0",
+    "lorem-ipsum": "2.0.8",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-feather": "^2.0.10",
-    "react-use-gesture": "^9.1.3",
-    "react-use-measure": "^2.1.1",
-    "react95": "^4.0.0",
-    "sass": "^1.58.3",
-    "styled-components": "^5.3.8",
-    "three": "^0.150.1",
-    "three-stdlib": "^2.21.8",
-    "vec-la": "^1.5.0",
-    "wouter": "^2.10.0"
+    "react-feather": "2.0.10",
+    "react-use-gesture": "9.1.3",
+    "react-use-measure": "2.1.1",
+    "react95": "4.0.0",
+    "sass": "1.58.3",
+    "styled-components": "5.3.8",
+    "three": "0.150.1",
+    "three-stdlib": "2.21.8",
+    "vec-la": "1.5.0",
+    "wouter": "2.10.0"
   },
   "devDependencies": {
-    "@types/lodash.clamp": "^4.0.7",
-    "@types/lodash.shuffle": "^4.2.7"
+    "@types/lodash.clamp": "4.0.7",
+    "@types/lodash.shuffle": "4.2.7"
   }
 }
