@@ -10,6 +10,10 @@ env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   changes:
     name: Check for changes
@@ -27,6 +31,7 @@ jobs:
               - 'targets/**'
               - 'cypress/**'
               - 'yarn.lock'
+              - '.github/publish-ci/**/yarn.lock'
               - '.github/workflows/checks.yml'
               - '.github/workflows/tests.yml'
   build:
@@ -184,11 +189,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # keep at 16 because of webpack 4
-        node: ['16.x']
+        node: ['18.x']
         example:
           [
-            'cra4',
             'cra5',
             'next',
             'vite',
