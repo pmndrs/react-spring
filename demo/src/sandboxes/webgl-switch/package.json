@@ -22,9 +22,9 @@
     "three-stdlib": "2.21.8"
   },
   "devDependencies": {
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
-    "typescript": "^4.9.5"
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "typescript": "4.9.5"
   },
   "scripts": {
     "start": "react-scripts start",
