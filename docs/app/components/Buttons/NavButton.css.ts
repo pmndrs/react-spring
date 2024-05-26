@@ -74,7 +74,7 @@ export const navAnchor = recipe({
   variants: {
     active: {
       true: {
-        background: '$redYellowGradient100',
+        background: vars.colors.redYellowGradient100,
       },
       false: {
         backgroundColor: '$white',

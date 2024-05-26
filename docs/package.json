@@ -38,11 +38,12 @@
     "@vercel/analytics": "1.2.2",
     "@vercel/remix": "2.9.2-patch.2",
     "clsx": "2.1.1",
-    "cookie": "^0.6.0",
+    "cookie": "0.6.0",
     "isbot": "4",
     "phosphor-react": "1.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-select": "5.8.0",
     "zod": "3.21.4"
   },
   "devDependencies": {

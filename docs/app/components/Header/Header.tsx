@@ -27,6 +27,7 @@ import {
   headerScrolledDown,
   headerTransparentBackground,
   headerAddMarginToMain,
+  headerSpacing,
 } from './Header.css'
 import clsx from 'clsx'
 
@@ -43,7 +44,7 @@ interface HeaderProps {
 }
 
 export const getHeaderHeights = (): [desktop: number, mobile: number] => [
-  89, 63,
+  114, 78,
 ]
 
 export const Header = ({
@@ -72,41 +73,54 @@ export const Header = ({
   const [desktopHeight, mobileHeight] = headerHeights
 
   return (
-    <animated.header
-      className={clsx(
-        header,
-        isStuck && headerStuck,
-        (subnav.length > 0 || (scrollTop > 20 && direction === 'up')) &&
-          headerScrolledDown,
-        transparentBackground && headerTransparentBackground,
-        addMarginToMain && headerAddMarginToMain,
-        className
+    <>
+      {isStuck && (
+        <div
+          className={headerSpacing}
+          style={{
+            ...assignInlineVars({
+              [mobileHeightVar]: `${mobileHeight}px`,
+              [desktopHeightVar]: `${desktopHeight}px`,
+            }),
+          }}
+        />
       )}
-      style={{
-        ...styles,
-        position,
-        ...assignInlineVars({
-          [mobileHeightVar]: `${mobileHeight}px`,
-          [desktopHeightVar]: `${desktopHeight}px`,
-        }),
-      }}
-    >
-      <div className={flexContainer}>
-        <HeaderNavigation className={desktopNavigation} />
-        <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>
-          <Dialog.Trigger className={mobileMenuButton}>
-            <List className={hamburgerMenu} size={20} />
-          </Dialog.Trigger>
-          <Dialog.Portal forceMount>
-            <HeaderSidePanel
-              onNavigationClick={handleNavigationClick}
-              isOpen={dialogOpen}
-              submenu={sidebar}
-            />
-          </Dialog.Portal>
-        </Dialog.Root>
-        <Logo />
-      </div>
-    </animated.header>
+      <animated.header
+        className={clsx(
+          header,
+          isStuck && headerStuck,
+          (subnav.length > 0 || (scrollTop > 20 && direction === 'up')) &&
+            headerScrolledDown,
+          transparentBackground && headerTransparentBackground,
+          addMarginToMain && headerAddMarginToMain,
+          className
+        )}
+        style={{
+          ...styles,
+          position,
+          ...assignInlineVars({
+            [mobileHeightVar]: `${mobileHeight}px`,
+            [desktopHeightVar]: `${desktopHeight}px`,
+          }),
+        }}
+      >
+        <div className={flexContainer}>
+          <HeaderNavigation className={desktopNavigation} />
+          <Dialog.Root open={dialogOpen} onOpenChange={handleDialogChange}>
+            <Dialog.Trigger className={mobileMenuButton}>
+              <List className={hamburgerMenu} size={20} />
+            </Dialog.Trigger>
+            <Dialog.Portal forceMount>
+              <HeaderSidePanel
+                onNavigationClick={handleNavigationClick}
+                isOpen={dialogOpen}
+                submenu={sidebar}
+              />
+            </Dialog.Portal>
+          </Dialog.Root>
+          <Logo />
+        </div>
+      </animated.header>
+    </>
   )
 }

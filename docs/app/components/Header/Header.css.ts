@@ -10,6 +10,7 @@ export const desktopHeight = createVar()
 export const header = style({
   width: '100%',
   paddingTop: vars.space['15'],
+  paddingBottom: vars.space['15'],
   zIndex: vars.zIndices['1'],
 
   '@media': {
@@ -19,6 +20,17 @@ export const header = style({
 
     [`screen and ${BREAKPOINTS.tabletUp}`]: {
       paddingTop: vars.space['25'],
+      paddingBottom: vars.space['25'],
+    },
+  },
+})
+
+export const headerSpacing = style({
+  height: mobileHeight,
+
+  '@media': {
+    [`screen and ${BREAKPOINTS.tabletUp}`]: {
+      height: desktopHeight,
     },
   },
 })

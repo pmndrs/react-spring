@@ -6,8 +6,13 @@ import ReactSelect, {
   MultiValue,
   OptionProps,
 } from 'react-select'
-
-import { dark, styled } from '~/styles/stitches.config'
+import {
+  controlDiv,
+  menu,
+  menuBackground,
+  option,
+  placeholderSpan,
+} from './Select.css'
 
 export interface SelectProps {
   options?: { value: string; label: string }[]
@@ -58,7 +63,6 @@ export const Select = ({
         container: () => ({
           display: 'inline-block',
           margin: '0 6px',
-
           '@media(min-width: 768px)': {
             position: 'relative',
           },
@@ -73,40 +77,24 @@ const SelectControl = (props: ControlProps) => {
   const { children, isFocused, innerRef, innerProps } = props
 
   return (
-    <ControlDiv
+    <div
+      className={controlDiv({
+        isFocused,
+      })}
       // @ts-ignore
       ref={innerRef}
       {...innerProps}
-      css={{
-        borderBottom: isFocused ? 'solid 2px $red100' : 'solid 2px $black',
-      }}
     >
       {children}
-    </ControlDiv>
+    </div>
   )
 }
-
-const ControlDiv = styled('div', {
-  background: 'transparent',
-  fontWeight: '$default',
-  cursor: 'pointer',
-})
 
 const SelectPlaceholder = ({
   children,
 }: Pick<PlaceholderProps, 'children'>) => (
-  <PlaceholderSpan>{children}</PlaceholderSpan>
+  <span className={placeholderSpan}>{children}</span>
 )
-
-const PlaceholderSpan = styled('span', {
-  fontSize: '$XXS',
-  lineHeight: '$XXS',
-
-  '@tabletUp': {
-    fontSize: '$XS',
-    lineHeight: '$XS',
-  },
-})
 
 const SelectValueContainer = ({
   children,
@@ -116,78 +104,39 @@ const SelectValueContainer = ({
 
   if (placeholderChild.key !== 'placeholder') {
     return (
-      <ValueContainerDiv>
+      <div>
         <SelectPlaceholder>{placeholder}</SelectPlaceholder>
         {menu}
-      </ValueContainerDiv>
+      </div>
     )
   }
 
-  return <ValueContainerDiv>{children}</ValueContainerDiv>
+  return <div>{children}</div>
 }
-
-const ValueContainerDiv = styled('div', {})
 
 const SelectMenu = (props: MenuProps) => {
   const { children, innerRef, innerProps } = props
 
   return (
     <>
-      <MenuBackground />
+      <div className={menuBackground} />
       {/* @ts-ignore */}
-      <Menu ref={innerRef} {...innerProps}>
+      <div className={menu} ref={innerRef} {...innerProps}>
         {children}
-      </Menu>
+      </div>
     </>
   )
 }
-
-const MenuBackground = styled('div', {
-  backgroundColor: '$white',
-  opacity: 0.2,
-  position: 'absolute',
-  inset: 0,
-  zIndex: '$1',
-})
-
-const Menu = styled('div', {
-  position: 'absolute',
-  zIndex: '$2',
-  background: '$codeBackground',
-  color: '$black',
-  fontSize: '$XXS',
-  lineHeight: '$XXS',
-  overflow: 'hidden',
-  boxShadow:
-    'rgba(27,31,36,0.12) 0px 1px 3px, rgba(66,74,83,0.12) 0px 8px 24px',
-  width: '100%',
-  borderTopRightRadius: '$r8',
-  borderTopLeftRadius: '$r8',
-
-  bottom: 0,
-  left: 0,
-
-  [`.${dark} &`]: {
-    boxShadow:
-      'rgba(27,31,36,0.5) 0px 1px 3px, rgba(18 21 23 / 40%) 0px 8px 24px',
-  },
-
-  '@tabletUp': {
-    bottom: 'unset',
-    borderRadius: '$r8',
-    width: 200,
-    fontSize: '$XS',
-    lineHeight: '$XS',
-  },
-})
 
 const SelectOption = (props: OptionProps) => {
   const { children, isFocused, isSelected, innerRef, innerProps } = props
 
   return (
-    <Option
+    <div
+      className={option}
       // @ts-ignore
       ref={innerRef}
+      // @ts-expect-error - innerProps is not typed
       isFocused={isFocused}
       style={{ backgroundColor: isFocused ? '#ff6d6d99' : 'transparent' }}
       {...innerProps}
@@ -209,14 +158,6 @@ const SelectOption = (props: OptionProps) => {
           ></path>
         </svg>
       ) : null}
-    </Option>
+    </div>
   )
 }
-
-const Option = styled('div', {
-  cursor: 'pointer',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: '$10 $40 $10 $20',
-})
