@@ -19,18 +19,18 @@ export const meta = formatFrontmatterToRemixMeta(frontmatter)
 
 ## What are they?
 
-The basis of `react-spring` depends on two things, `SpringValues` & `animated` components. Lets explore the latter.
+The basis of `react-spring` depends on two things, `SpringValues` & `animated` components. Let's explore the latter.
 An `animated` component receives `SpringValues` through the `style` prop and updates the element without causing a
-react render. It works because it is a [Higher-Order component](https://reactjs.org/docs/higher-order-components.html) (HOC)
+React render. It works because it is a [Higher-Order component](https://reactjs.org/docs/higher-order-components.html) (HOC)
 assigned to a dictionary of elements depending on the target you've selected thus being able to pass the props you
 desire for your application but also containing the logic to interpolate the `SpringValues` from the hook you've used.
 
 ## Animating elements
 
 The `animated` component can be imported from any of our targets. However, an `animated` component is specific to the target
-because they use the native elements of said target. These native elements are elements that are understood by the `react-reconciler`
-of choice e.g. [`@react-three/fiber`](https://github.com/pmndrs/react-three-fiber) is a reconciler for [`three.js`](https://threejs.org/)
-elements. So therefore any element that is understood by the reconciler can be animated.
+because it uses the native elements of said target. These native elements are elements that are understood by the `react-reconciler`
+of choice: e.g. [`@react-three/fiber`](https://github.com/pmndrs/react-three-fiber) is a reconciler for [`three.js`](https://threejs.org/)
+elements. Therefore, any element that the reconciler understands can be animated.
 
 ```jsx
 import { animated } from '@react-spring/web'
@@ -42,12 +42,12 @@ import { animated } from '@react-spring/web'
 <animated.mesh />
 ```
 
-If you've used `framer-motion` before, you will most likely be familiar with the dot notation of accessing a dictionary of components.
+If you used `framer-motion` before, you will most likely be familiar with the dot notation of accessing a dictionary of components.
 
-So while being able to use `animated.element` is useful, most cases you'll want to style said element. `react-spring` has no preference on styling techniques,
-common techniques like `css modules` or [`tailwind`](https://tailwindcss.com/) can work because every animated element can accept the properties of the native element, e.g. `className`.
+So, while being able to use `animated.element` is useful, in most cases you'll want to style said element. `react-spring` has no preference about styling techniques:
+common techniques like `css modules` or [`tailwind`](https://tailwindcss.com/) all work, because every animated element accepts the properties of the native element, e.g. `className`.
 
-If you're using a css-in-js library to style your components then typically you'll have access to a `styled` function. Just like composing components you can compose
+If you're using a CSS-in-JS library to style your components, you'll typically have access to a `styled` function. Just like composing components you can compose
 your animated element with the `styled` function:
 
 ```jsx
@@ -63,8 +63,8 @@ const MyModal = styled(animated.div, {
 
 ## Animating components
 
-Sometimes it's not possible to animate an element directly e.g. because it comes from another library, for example [`radix-ui`](https://www.radix-ui.com/).
-Because `animated` is a HOC we can simply wrap our components with it and assuming the component you're wrapping passes to the `style` prop to the native element.
+Sometimes it's impossible to animate an element directly because it comes from another library, like [`radix-ui`](https://www.radix-ui.com/).
+Because `animated` is a HOC, we can simply wrap our components with it, assuming the component you're wrapping passes to the `style` prop to the native element.
 
 ```jsx
 // This comes from another library e.g. radix-ui
@@ -282,21 +282,21 @@ const Title = styled(Dialog.Title, {
 ### How does it work?
 
 Higher-order components have access to the props you're passing to the child. Therefore,
-the `animated` component is able to scan through the passed `style` prop and handle said values.
-How the component handles the style prop is dependant of the target you're using. For the
-purpose of explanation, we'll focus on the `web` target.
+the `animated` component can scan through the passed `style` prop and handle said values.
+How the component handles the style prop is dependent on the target you're using. 
+Let's concentrate on the `web` target for the sake of explanation.
 
-We start by extracting the whole `style` prop and wrapping it in an `AnimatedStyle` class, this
+We start by extracting the whole `style` prop and wrapping it in an `AnimatedStyle` class; this
 class is unique to the `web` target and handles the shorthands for transformations and in theory
-could handle a multitude of interpolations if we were to add them. Once we've performed the specific
-target alterations to the style prop we call the `super` of it's class `AnimatedObject` which then runs
+could handle a multitude of interpolations if we were to add them. Once we performed the specific
+target alterations to the style prop we call the `super` of its class `AnimatedObject`, which then runs
 through the object making the values "animated".
 
 ### How does it update the native element without causing a react render?
 
-Similar to how the `style` prop is handled with regards to it being specific to the target, how we apply
+Similar to how the `style` prop is handled in a target-specific manner, how we apply
 the animated values to the native element is also specific to the target. In the instance of the `web` target,
-we in the process of wrapping the element in the `animated` HOC attach a ref to the element.
+during the process of wrapping the element in the `animated` HOC we attach a `ref` to the element.
 
 We are then able to directly change the DOM node imperatively. For further reading, check out [`Controller`](/docs/concepts/controllers-and-springs#Controller).
 
@@ -304,7 +304,7 @@ We are then able to directly change the DOM node imperatively. For further readi
 
 Because animated components belong to the target, to create your own registry of animated components
 e.g. for a [D3](https://d3js.org/) react renderer, you would need to use the `createHost` function
-exported from the `@react-spring/animated` package. The signature for which looks like:
+exported from the `@react-spring/animated` package. Its signature looks like this:
 
 ```ts
 interface HostConfig {
