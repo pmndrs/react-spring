@@ -63,6 +63,7 @@ export const anchorStyles = style([
 
 export const anchorTitle = style({
   fontWeight: vars.fontWeights.bold,
+  paddingLeft: '1.2rem',
 })
 
 export const anchorHasNoLink = style({

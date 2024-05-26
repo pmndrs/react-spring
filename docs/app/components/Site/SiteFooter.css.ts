@@ -9,7 +9,8 @@ export const footer = style({
   '@media': {
     [`screen and ${BREAKPOINTS.tabletUp}`]: {
       marginTop: vars.space['100'],
-      padding: `0 ${vars.space['50']}`,
+      paddingLeft: `${vars.space['50']}`,
+      paddingRight: `${vars.space['50']}`,
       display: 'flex',
       flexDirection: 'column-reverse',
       alignItems: 'flex-end',

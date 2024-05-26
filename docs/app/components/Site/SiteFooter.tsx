@@ -53,11 +53,11 @@ export const SiteFooter = () => {
         ,{' '}
         <a
           className={anchor}
-          href="https://stitches.dev/"
+          href="https://vanilla-extract.style/"
           rel="noopener noreferrer"
           target="_blank"
         >
-          Stitches
+          Vanilla Extract
         </a>{' '}
         & more...
       </p>

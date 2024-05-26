@@ -44,13 +44,13 @@ export const grid = recipe({
             gridRowGap: vars.space['40'],
           },
         },
-        false: {
-          '@media': {
-            [`screen and ${BREAKPOINTS.desktopUp}`]: {
-              gridTemplateColumns: `repeat(${colsVar}, 1fr)`,
-              gridColumnGap: vars.space['40'],
-              gridRowGap: vars.space['40'],
-            },
+      },
+      false: {
+        '@media': {
+          [`screen and ${BREAKPOINTS.desktopUp}`]: {
+            gridTemplateColumns: `repeat(${colsVar}, 1fr)`,
+            gridColumnGap: vars.space['40'],
+            gridRowGap: vars.space['40'],
           },
         },
       },

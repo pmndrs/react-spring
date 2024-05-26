@@ -11,6 +11,8 @@ export default globalStyle('html, body', {
   fontSize: '62.5%',
   letterSpacing: '-0.005em',
 
+  WebkitFontSmoothing: 'antialiased',
+
   margin: 0,
   minHeight: '100%',
 

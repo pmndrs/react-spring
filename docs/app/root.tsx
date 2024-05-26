@@ -22,6 +22,7 @@ import { getTheme, setTheme } from './helpers/theme.server'
 import { darkThemeClass } from './styles/dark-theme.css'
 import { ClientHintCheck, getHints } from './components/Site/SiteClientHints'
 import { useTheme } from './hooks/useTheme'
+import { SiteFooter } from './components/Site/SiteFooter'
 
 export const meta: MetaFunction = () => {
   return [
@@ -114,6 +115,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className={theme === 'light' ? lightThemeClass : darkThemeClass}>
         {children}
+        <SiteFooter />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.env = ${JSON.stringify(data.ENV)}`,

@@ -63,7 +63,7 @@ export const NavigationGrid = ({
       ) : null}
       <div
         className={grid({
-          smallTiles,
+          smallTiles: Boolean(smallTiles),
         })}
         style={{
           ...assignInlineVars({

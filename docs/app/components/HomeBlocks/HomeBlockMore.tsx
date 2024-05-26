@@ -1,11 +1,11 @@
 import { animated, useSprings } from '@react-spring/web'
 
-import { styled } from '~/styles/stitches.config'
-
 import { HomeBlockCopy } from './HomeBlockCopy'
-import { Section } from './HomeBlockSection'
-import { Pre } from '../Code/Pre'
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
+import { pre } from '../Code/Pre.css'
+import clsx from 'clsx'
+import { homeBlockCode, list, listItem } from './HomeBlockMore.css'
+import { section } from './shared.css'
 
 const listItems = [
   'Animate any value – strings, numbers, css variables...',
@@ -194,7 +194,7 @@ export const HomeBlockMore = () => {
   }
 
   return (
-    <Section>
+    <section className={section}>
       <HomeBlockCopy
         subtitle="Wow, that's a lot!"
         title={`And there's even more`}
@@ -203,9 +203,10 @@ export const HomeBlockMore = () => {
           href: '/docs/getting-started',
         }}
       >
-        <List>
+        <ul className={list}>
           {listItems.map((str, i) => (
-            <ListItem
+            <animated.li
+              className={listItem}
               key={str}
               onMouseEnter={handleMouseEnter(i)}
               style={{
@@ -219,11 +220,11 @@ export const HomeBlockMore = () => {
               }}
             >
               {str}
-            </ListItem>
+            </animated.li>
           ))}
-        </List>
+        </ul>
       </HomeBlockCopy>
-      <HomeBlockCode>
+      <pre className={clsx(pre, homeBlockCode)}>
         <code
           className="language-jsx"
           dangerouslySetInnerHTML={{ __html: dataFixtures[0] }}
@@ -240,21 +241,7 @@ export const HomeBlockMore = () => {
             style={{ ...style, position: 'absolute', top: 30, left: 30 }}
           />
         ))}
-      </HomeBlockCode>
-    </Section>
+      </pre>
+    </section>
   )
 }
-
-const List = styled('ul', {
-  my: 0,
-  pl: 26,
-})
-
-const ListItem = styled(animated.li, {
-  cursor: 'pointer',
-})
-
-const HomeBlockCode = styled(Pre, {
-  mt: '$40',
-  position: 'relative',
-})
