@@ -62,6 +62,10 @@ globalStyle(`${previewContainer} .preview__button`, {
   },
 })
 
+globalStyle(`${previewContainer} .preview__button > span`, {
+  display: 'none',
+})
+
 globalStyle(`${previewContainer} .preview__button:hover`, {
   '@supports': {
     '(hover: hover)': {
@@ -72,7 +76,7 @@ globalStyle(`${previewContainer} .preview__button:hover`, {
 })
 
 globalStyle(`${darkThemeClass} ${previewContainer} .preview__button`, {
-  color: vars.colors.white,
+  color: vars.colors.black,
 })
 
 globalStyle(`${previewContainer} .preview__iframe`, {

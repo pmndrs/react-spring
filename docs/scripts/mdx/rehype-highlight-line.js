@@ -2,7 +2,7 @@
  * Credit to https://ped.ro/writing/code-blocks-but-better
  */
 
-import hastToHtml from 'hast-util-to-html'
+import { toHtml } from 'hast-util-to-html'
 import { unified } from 'unified'
 import parse from 'rehype-parse'
 
@@ -96,7 +96,7 @@ const MULTILINE_TOKEN_SPAN = /<span class="token ([^"]+)">[^<]*\n[^<]*<\/span>/g
 
 const applyMultilineFix = function (ast) {
   // AST to HTML
-  let html = hastToHtml(ast)
+  let html = toHtml(ast)
 
   // Fix JSX issue
   html = html.replace(MULTILINE_TOKEN_SPAN, (match, token) =>

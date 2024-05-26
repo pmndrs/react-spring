@@ -37,6 +37,21 @@ export const SiteThemePicker = () => {
 
   const handleValueChange = async (value: ThemeValue) => {
     if (value && value !== mode) {
+      const css = document.createElement('style')
+      css.type = 'text/css'
+      css.appendChild(
+        document.createTextNode(
+          `* {
+       -webkit-transition: none !important;
+       -moz-transition: none !important;
+       -o-transition: none !important;
+       -ms-transition: none !important;
+       transition: none !important;
+    }`
+        )
+      )
+      document.head.appendChild(css)
+
       fetcher.submit(
         {
           theme: value,
@@ -56,6 +71,9 @@ export const SiteThemePicker = () => {
             right: value === 'light' ? 'unset' : '2px',
           })
           await animate({ width: 42 })
+
+          const _ = window.getComputedStyle(css).opacity
+          document.head.removeChild(css)
         },
       })
     }

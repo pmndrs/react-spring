@@ -2,14 +2,14 @@
  * Credit to https://ped.ro/writing/code-blocks-but-better
  */
 
-import hastToHtml from 'hast-util-to-html'
+import { toHtml } from 'hast-util-to-html'
 import { unified } from 'unified'
 import parse from 'rehype-parse'
 
 const CALLOUT = /__(.*?)__/g
 
 export default function (code) {
-  const html = hastToHtml(code)
+  const html = toHtml(code)
   const result = html.replace(
     CALLOUT,
     (_, text) => `<span class="highlight-word">${text}</span>`
