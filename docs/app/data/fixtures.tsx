@@ -606,7 +606,12 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
   [
     {
       label: 'enter',
-      content: ToContent,
+      content: (
+        <p>
+          The <code>enter</code> prop is used to pass styles to the animation
+          when the transition is entering.
+        </p>
+      ),
     },
     {
       label: 'object | object[] | function',
@@ -619,7 +624,12 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
   [
     {
       label: 'update',
-      content: ToContent,
+      content: (
+        <p>
+          The <code>update</code> prop is used to pass styles to the animation
+          when the transition is updating.
+        </p>
+      ),
     },
     {
       label: 'object | object[] | function',
@@ -632,7 +642,12 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
   [
     {
       label: 'leave',
-      content: ToContent,
+      content: (
+        <p>
+          The <code>leave</code> prop is used to pass styles to the animation
+          when the transition is leaving.
+        </p>
+      ),
     },
     {
       label: 'object | object[] | function',
