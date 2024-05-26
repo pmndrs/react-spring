@@ -818,7 +818,7 @@ export const CONTROLLER_PROPERTIES_DATA: CellData[][] = [
       content: (
         <p>
           The animated values. This is what you pass to your{' '}
-          <code>animted</code> component.
+          <code>animated</code> component.
         </p>
       ),
     },
@@ -857,7 +857,7 @@ export const CONTROLLER_PROPERTIES_DATA: CellData[][] = [
       content: (
         <p>
           The animated values. This is what you pass to your{' '}
-          <code>animted</code> component.
+          <code>animated</code> component.
         </p>
       ),
     },

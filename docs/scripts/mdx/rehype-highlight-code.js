@@ -2,14 +2,19 @@
  * Credit to https://ped.ro/writing/code-blocks-but-better
  */
 
-const rangeParser = require('parse-numeric-range')
-const visit = require('unist-util-visit')
-const nodeToString = require('hast-util-to-string')
-const refractor = require('refractor')
-const highlightLine = require('./rehype-highlight-line')
-const highlightWord = require('./rehype-highlight-word')
+import rangeParser from 'parse-numeric-range'
+import { visit } from 'unist-util-visit'
+import { toString } from 'hast-util-to-string'
+import { refractor } from 'refractor'
+import tsx from 'refractor/lang/tsx'
+import jsx from 'refractor/lang/jsx'
+import highlightLine from './rehype-highlight-line.js'
+import highlightWord from './rehype-highlight-word.js'
 
-module.exports = () => {
+export default () => {
+  refractor.register(tsx)
+  refractor.register(jsx)
+
   return tree => {
     visit(tree, 'element', visitor)
   }
@@ -20,7 +25,7 @@ module.exports = () => {
       const lang = node.properties.className
         ? node.properties.className[0].split('-')[1]
         : 'md'
-      const data = nodeToString(node)
+      const data = toString(node)
       let result = refractor.highlight(data, lang)
 
       const linesToHighlight = [0]

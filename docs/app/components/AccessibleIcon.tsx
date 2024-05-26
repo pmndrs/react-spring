@@ -1,9 +1,5 @@
 import { Children, cloneElement, ReactNode } from 'react'
-import { styled } from '~/styles/stitches.config'
-
-const VisuallyHiddenLabel = styled('span', {
-  visuallyHidden: '',
-})
+import { visuallyHidden } from '../styles/utilities.css'
 
 interface AccessibleIconProps {
   children: ReactNode
@@ -24,7 +20,7 @@ export const AccessibleIcon = ({
         focusable: 'false',
         className,
       })}
-      <VisuallyHiddenLabel>{label}</VisuallyHiddenLabel>
+      <span className={visuallyHidden}>{label}</span>
     </>
   )
 }

@@ -1,0 +1,111 @@
+---
+meta:
+  title: useSprings | React Spring
+  'og:title': useSprings | React Spring
+  'twitter:title': useSprings | React Spring
+  description: API documentation for the useSprings hook in React Spring.
+  'og:description': API documentation for the useSprings hook in React Spring.
+  'twitter:description': API documentation for the useSprings hook in React Spring.
+  'og:url': https://www.react-spring.dev/docs/components/use-springs
+  'twitter:url': https://www.react-spring.dev/docs/components/use-springs
+sidebar_position: 2
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# useSprings
+
+If you want to orchestrate multiple springs with a unified API, this is probably the best hook for you.
+
+## Usage
+
+`useSprings` differs because we supply the amount of springs we want and then pass our configuration,
+whether you're using a function or not.
+
+### With a function & deps
+
+```jsx lines=1,4-11,15-17
+import { useSprings, animated } from '@react-spring/web'
+
+function MyComponent() {
+  const [springs, api] = useSprings(
+    2,
+    () => ({
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+    }),
+    []
+  )
+
+  return (
+    <div>
+      {springs.map(props => (
+        <animated.div style={props}>Hello World</animated.div>
+      ))}
+    </div>
+  )
+}
+```
+
+### With a config object
+
+```jsx lines=1,4-7,11-13
+import { useSprings, animated } from '@react-spring/web'
+
+function MyComponent() {
+  const springs = useSprings(2, {
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  })
+
+  return (
+    <div>
+      {springs.map(props => (
+        <animated.div style={props}>Hello World</animated.div>
+      ))}
+    </div>
+  )
+}
+```
+
+## Reference
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+
+<TablesConfiguration />
+
+## Typescript
+
+```tsx
+function useSprings(count: number, configuration: ConfigObject): SpringValues[]
+
+function useSprings(
+  count: number,
+  configurationFn: (springIndex: number) => ConfigObject,
+  deps?: any[]
+): [springs: SpringValues[], api: SpringRef]
+```
+
+Where `ConfigObject` is described [above](#reference)
+
+### TS Glossary
+
+- [`SpringValues`](/docs/typescript#springvalues)
+
+## Examples
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid
+  sandboxTitles={[
+    'Cards Stack',
+    'Draggable List',
+    'Floating Button',
+    'Smile Grid',
+    'Viewpager',
+  ]}
+/>
+
+Can't find what you're looking for? Check out all our [examples!](/examples)

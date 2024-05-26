@@ -3,13 +3,12 @@ import {
   MouseEventHandler,
   RefAttributes,
 } from 'react'
-import { useLocation } from '@remix-run/react'
+import { Link, useLocation } from '@remix-run/react'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import { IconProps } from 'phosphor-react'
 
-import { dark, styled } from '~/styles/stitches.config'
-import { getFontStyles } from '~/styles/fontStyles'
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
+import { navAnchor, navIconLabel, navIconWrapper } from './NavButton.css'
 
 export interface NavigationButtonProps {
   title: string
@@ -51,91 +50,26 @@ export const NavigationButton = ({
    * TODO: refactor to use `Link` component
    */
   return (
-    <NavAnchor
+    <Toolbar.Link
       onClick={handleClick}
       href={href}
-      variant={showLabel ? 'withLabel' : undefined}
-      active={isRoute}
+      className={navAnchor({
+        active: isRoute,
+        variant: showLabel ? 'withLabel' : undefined,
+      })}
+      asChild
       {...externalLinkProps}
     >
-      <NavIconWrapper
-        css={{
-          color: isRoute ? 'var(--colors-steel100)' : 'unset',
-          [`.${dark} &`]: {
-            color: isRoute ? '#363645' : 'unset',
-          },
-        }}
-      >
-        <Icon size={20} weight={isDarkMode ? 'light' : 'regular'} />
-        {showLabel ? <span>{title}</span> : null}
-      </NavIconWrapper>
-    </NavAnchor>
+      <Link to={href}>
+        <span
+          className={navIconWrapper({
+            isRoute,
+          })}
+        >
+          <Icon size={20} weight={isDarkMode ? 'light' : 'regular'} />
+          {showLabel ? <span className={navIconLabel}>{title}</span> : null}
+        </span>
+      </Link>
+    </Toolbar.Link>
   )
 }
-
-const NavAnchor = styled(Toolbar.Link, {
-  height: '4.6rem',
-  width: '4.6rem',
-  color: '$steel100',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  position: 'relative',
-  borderRadius: '$r8',
-  p: 2,
-  backgroundClip: 'content-box',
-
-  '&:before': {
-    content: '',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    zIndex: -1,
-    borderRadius: 'inherit',
-    opacity: 0,
-    background: '$redYellowGradient100',
-
-    '@motion': {
-      transition: 'opacity 250ms ease-out',
-    },
-  },
-
-  variants: {
-    active: {
-      true: {
-        background: '$redYellowGradient100',
-      },
-      false: {
-        backgroundColor: '$white',
-
-        hover: {
-          '&::before': {
-            opacity: 1,
-          },
-        },
-      },
-    },
-    variant: {
-      withLabel: {
-        width: '100%',
-        justifyContent: 'flex-start',
-      },
-    },
-  },
-})
-
-const NavIconWrapper = styled('span', {
-  position: 'relative',
-  zIndex: '$2',
-  display: 'flex',
-  alignItems: 'center',
-  m: '$15',
-
-  '& > span': {
-    ...getFontStyles('$XXS'),
-    fontWeight: '$bold',
-    ml: '$15',
-  },
-})

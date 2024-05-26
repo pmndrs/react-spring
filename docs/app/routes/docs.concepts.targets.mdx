@@ -1,0 +1,92 @@
+---
+meta:
+  title: Targets | React Spring
+  'og:title': Targets | React Spring
+  'twitter:title': Targets | React Spring
+  description: An in-depth conceptual guide to react-spring targets and how to make your own.
+  'og:description': An in-depth conceptual guide to react-spring targets and how to make your own.
+  'twitter:description': An in-depth conceptual guide to react-spring targets and how to make your own.
+  'og:url': https://www.react-spring.dev/docs/concepts/targets
+  'twitter:url': https://www.react-spring.dev/docs/concepts/targets
+sidebar_position: 4
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# Targets
+
+## What is a target?
+
+When a target is discussed it is sometimes in reference to the platform, e.g. you create a client side react application
+chances are it's targetted at the browser. However, if you write a server-side application then you're targetting node.
+Whilst `react-spring` does support the targets `web` and `native` and _can_ be server-side rendered. This is not the type
+of target we're referring to.
+
+A target in `react-spring` is a `react reconciler` a.k.a `react renderer`. That is, a custom renderer that can process different
+JSX components, it's duty is to create / update and remove these elements from the browser. `react-dom` is a prime example of
+a `reconciler`, it handles DOM elements _exclusively_ and understands how to apply attributes to those DOM nodes via react `props`.
+
+Therefore, in `react-spring` we have the following targets that correspond to their respective reconcilers:
+
+- `web` - `react-dom`
+- `native` - `react-native`
+- `three` - `react-three-fiber`
+- `konva` - `react-konva`
+- `zdog` - `react-zdog`
+
+To download a target you can use the `@react-spring/[target]` format:
+
+```bash
+yarn add @react-spring/web
+```
+
+## Adding a target
+
+To create your own target, we offer the `createHost` function. This function returns the `animated` components related to the
+specific target, e.g. the host created in `@react-spring/web` returns the animated dom components such as `animated.div`.
+
+The signature for `createHost` function looks like this:
+
+```ts
+type CreateHost = (
+  components: AnimatableComponent[] | { [key: string]: AnimatableComponent },
+  config: Partial<HostConfig>
+) => {
+  animated: WithAnimated
+}
+```
+
+### AnimatableComponent
+
+The first argument `AnimatableComponent[] | { [key: string]: AnimatableComponent }`, is a list of strings that relate the native
+elements of the renderer you're targeting. Using the same example of `@react-spring/web`, the components would include the strings
+`'div', 'li'` etc. These components are then created into `Animated` components in the `createHost` function via the `withAnimated`
+HOC.
+
+### HostConfig
+
+```ts
+interface HostConfig {
+  /** Provide custom logic for native updates */
+  applyAnimatedValues: (node: any, props: Lookup) => boolean | void
+  /** Wrap the `style` prop with an animated node */
+  createAnimatedStyle: (style: Lookup) => Animated
+  /** Intercept props before they're passed to an animated component */
+  getComponentProps: (props: Lookup) => typeof props
+}
+```
+
+Whilst the entire config object is wrapped in `Partial`, meaning that the keys are optional, realistically `applyAnimatedValues` is
+required. This is the logic for how the `Animated` components apply their `SpringValues`, this typically would come from the reconciler
+either attached to the `instance` in the case of `react-konva` or an exported function like in `@react-three/fiber`.
+
+The `createAnimatedStyle` key of the config object by default takes wraps the `style` prop in an `AnimatedObject` instance which has
+generic rules on applying keys. In the case of `@react-spring/web`, we pass a custom function which is how we support shorthands for
+transformation styles.
+
+The getComponentProps is a middleware function that allows you to intercept props before they're passed to the animated component, therefore
+you could omit props e.g. `scrollTop` for the web because `@react-spring/web` expects this to be in the `style` object.
+
+For more information on `animated` elements, see [here](/docs/concepts/animated-elements).

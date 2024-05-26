@@ -1,16 +1,20 @@
-import { json, LoaderFunction, MetaFunction, redirect } from '@remix-run/node'
+import { json, LoaderFunction, MetaFunction, redirect } from '@vercel/remix'
 import { GradientButton } from '~/components/Buttons/GradientButton'
 
 import { Header } from '~/components/Header/Header'
 import { Heading } from '~/components/Text/Heading'
-
-import { styled } from '~/styles/stitches.config'
+import { errorHeading, main, pre } from './../styles/routes/$.css'
 
 export const meta: MetaFunction = () => {
-  return {
-    title: '404 | react-spring',
-    description: `With naturally fluid animations you will elevate your UI & interactions. Bringing your apps to life has never been simpler.`,
-  }
+  return [
+    {
+      title: '404 | react-spring',
+    },
+    {
+      name: 'description',
+      contnet: `With naturally fluid animations you will elevate your UI & interactions. Bringing your apps to life has never been simpler.`,
+    },
+  ]
 }
 
 const CAR = `                                                    7%;;WW/                                                                                                                                             
@@ -123,43 +127,13 @@ export default function Index() {
   return (
     <>
       <Header addMarginToMain={false} position="fixed" />
-      <Main>
-        <Pre>{CAR}</Pre>
-        <ErrorHeading tag="h2" fontStyle="$XL">
+      <main className={main}>
+        <pre className={pre}>{CAR}</pre>
+        <Heading tag="h2" fontStyle="XL" className={errorHeading}>
           404, not found
-        </ErrorHeading>
+        </Heading>
         <GradientButton href="/">Go home</GradientButton>
-      </Main>
+      </main>
     </>
   )
 }
-
-const Main = styled('main', {
-  width: '100%',
-  height: '100%',
-  overflowX: 'hidden',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexDirection: 'column',
-  mt: '$40',
-
-  '@tabletUp': {
-    mt: '$100',
-  },
-})
-
-const Pre = styled('pre', {
-  fontSize: 'clamp(2px, 1vw, 8px)',
-  transform: 'translateX(clamp(1px, 17vw, 130px))',
-})
-
-const ErrorHeading = styled(Heading, {
-  mt: '$10',
-  mb: '$20',
-
-  '@tabletUp': {
-    mt: '$20',
-    mb: '$40',
-  },
-})

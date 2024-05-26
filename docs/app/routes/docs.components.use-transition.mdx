@@ -1,0 +1,130 @@
+---
+meta:
+  title: useTransition | React Spring
+  'og:title': useTransition | React Spring
+  'twitter:title': useTransition | React Spring
+  description: API documentation for the useTransition hook in React Spring.
+  'og:description': API documentation for the useTransition hook in React Spring.
+  'twitter:description': API documentation for the useTransition hook in React Spring.
+  'og:url': https://www.react-spring.dev/docs/components/use-transition
+  'twitter:url': https://www.react-spring.dev/docs/components/use-transition
+sidebar_position: 4
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# useTransition
+
+This hook is best suited for animating in & out datasets or items you don't particularly
+want to be left in the DOM, e.g. a dialog.
+
+## Usage
+
+`useTransition` depends on an `array` of data. That data can be anything you want, we
+use a lot of internals to track each datum including inferring the keys, this is the
+first argument. The second is a config object, which is different to
+[`useSpring`](/docs/components/use-spring) or [`useSprings`](/docs/components/use-springs) so take note!
+
+### With a function & deps
+
+```jsx lines=1,4-8,10-12
+import { useTransition, animated } from '@react-spring/web'
+
+function MyComponent({ data = [1, 2, 3] }) {
+  const [transitions, api] = useTransition(data, () => ({
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 1 },
+  }))
+
+  return transitions((style, item) => (
+    <animated.div style={style}>{item}</animated.div>
+  ))
+}
+```
+
+### With a config object
+
+```jsx lines=1,4-8,10-12
+import { useTransition, animated } from '@react-spring/web'
+
+function MyComponent({ data = [1, 2, 3] }) {
+  const transitions = useTransition(data, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 1 },
+  })
+
+  return transitions((style, item) => (
+    <animated.div style={style}>{item}</animated.div>
+  ))
+}
+```
+
+### Transition function
+
+The transition function takes a `render` function as an argument. This is how we append `keys`.
+From the example above you can see we pass a `style` argument to the function, this `style` object
+relates to the state of the animation, e.g. if the animation is `ENTERING` then the we use the
+keys from the `enter` property of of your config object. For a deeper dive into the function
+signature see the [`Typescript`](#typescript) section.
+
+## Reference
+
+`Item` is defined a lot below, it's automatically inferred from what you pass as the
+content of the array you pass as the first argument to the hook. Therefore, if you
+passed `[1, 2, 3]` then `Item` would be `number`.
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { TRANSITION_CONFIG_DATA } from '../data/fixtures'
+
+<TablesConfiguration data={TRANSITION_CONFIG_DATA} />
+
+## Typescript
+
+```tsx
+function useTransition<Item extends any>(
+  data: Item[],
+  configuration: ConfigObject
+): TransitionFn<Item>
+
+function useTransition<Item extends any>(
+  data: Item[],
+  configurationFn: () => ConfigObject
+  deps?: any[]
+): [transition: TransitionFn<Item>, api: SpringRef]
+
+type TransitionFn = (
+  style: SpringValues,
+  item: Item,
+  transitionState: TransitionState<Item>,
+  index: number
+) => ReactNode
+```
+
+Where `ConfigObject` is described [above](#reference)
+
+### TS Glossary
+
+- [`TransitionState`](/docs/typescript#transitionstate)
+
+## Examples
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid
+  sandboxTitles={[
+    'Basic Transition',
+    'Chaining Transition and a Spring',
+    'Exit Before Enter',
+    'Image Fade',
+    'List Reordering',
+    'Masonry Grid',
+    'Multistage Transitions',
+    'Notification Hub',
+  ]}
+/>
+
+Can't find what you're looking for? Check out all our [examples!](/examples)

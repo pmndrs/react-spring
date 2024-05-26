@@ -58,3 +58,4 @@ report.*.json
 #
 docs/public/build
 docs/api/*
+docs/vite.config.mts.timestamp-*.mjs

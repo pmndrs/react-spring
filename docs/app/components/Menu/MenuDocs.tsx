@@ -1,9 +1,5 @@
-import * as React from 'react'
 import { Link, useLocation } from '@remix-run/react'
 import { Location } from 'react-router'
-
-import { getFontStyles } from '~/styles/fontStyles'
-import { css, styled } from '~/styles/stitches.config'
 
 import {
   NavigationSchema,
@@ -11,6 +7,16 @@ import {
 } from '../../../scripts/docs/navigation'
 import { WidgetSearch } from '../Widgets/WidgetSearch'
 import { BadgeNew } from '../BadgeNew'
+import {
+  anchorActive,
+  anchorHasNoLink,
+  anchorStyles,
+  anchorTitle,
+  docsList,
+  scrollArea,
+  widgetContainer,
+} from './MenuDocs.css'
+import clsx from 'clsx'
 
 interface MenuDocsProps {
   submenu?: NavigationSchema
@@ -29,28 +35,32 @@ export const MenuDocs = ({ submenu, onNavClick }: MenuDocsProps) => {
   const isDocs = location.pathname.includes('docs')
 
   return (
-    <DocsList>
-      <WidgetContainer shouldBeHidden={!isDocs}>
+    <ul className={docsList}>
+      <li
+        className={widgetContainer}
+        style={{ display: !isDocs ? 'none' : 'flex' }}
+      >
         <WidgetSearch />
-      </WidgetContainer>
-      <ScrollArea>
+      </li>
+      <div className={scrollArea}>
         {Array.isArray(submenu) &&
           submenu.map(item =>
             renderSubMenu({ ...item, location, onClick: handleNavClick }, 0)
           )}
-        <ExternalAnchor
-          shouldBeHidden={!isDocs}
-          href="https://github.com/pmndrs/react-spring/releases"
-          rel="noopener noreferrer"
-          target="_blank"
-          title={true}
-          active={false}
-          onClick={handleNavClick}
-        >
-          {`Changelog`}
-        </ExternalAnchor>
-      </ScrollArea>
-    </DocsList>
+        <li>
+          <a
+            className={clsx(anchorStyles, anchorTitle)}
+            style={{ display: !isDocs ? 'none' : 'flex' }}
+            href="https://github.com/pmndrs/react-spring/releases"
+            rel="noopener noreferrer"
+            target="_blank"
+            onClick={handleNavClick}
+          >
+            {`Changelog`}
+          </a>
+        </li>
+      </div>
+    </ul>
   )
 }
 
@@ -84,22 +94,31 @@ const renderSubMenu = (
   const doesNotWantPage = Boolean(noPage)
 
   return (
-    <ListItem key={id}>
+    <li key={id}>
       {!doesNotWantPage ? (
-        <Anchor
+        <Link
           to={href}
-          title={isTitle}
-          active={location.pathname === href}
+          className={clsx(
+            anchorStyles,
+            isTitle && anchorTitle,
+            location.pathname === href && anchorActive
+          )}
           onClick={handleClick}
         >
           <span>{title}</span>
           {isNew ? <BadgeNew /> : null}
-        </Anchor>
+        </Link>
       ) : (
-        <Anchor title={isTitle} as="span" hasNoLink>
+        <span
+          className={clsx(
+            anchorStyles,
+            isTitle && anchorTitle,
+            anchorHasNoLink
+          )}
+        >
           <span>{title}</span>
           {isNew ? <BadgeNew /> : null}
-        </Anchor>
+        </span>
       )}
       {hasRenderableChildren ? (
         <ul>
@@ -111,155 +130,6 @@ const renderSubMenu = (
           )}
         </ul>
       ) : null}
-    </ListItem>
+    </li>
   )
 }
-
-const DocsList = styled('ul', {
-  m: 0,
-  p: '$15 $10',
-  listStyle: 'none',
-  overflowY: 'auto',
-  flexShrink: 1,
-  flexGrow: 1,
-
-  '& ul': {
-    m: 0,
-    p: 0,
-    listStyle: 'none',
-  },
-
-  '@tabletUp': {
-    overflowY: 'unset',
-    height: '100%',
-    pl: '$50',
-    pr: '$25',
-    py: 4,
-    mt: -4,
-  },
-})
-
-const ScrollArea = styled('div', {
-  '@tabletUp': {
-    maxHeight: '100%',
-    overflowY: 'scroll',
-    pb: '$60',
-  },
-})
-
-const ListItem = styled('li')
-
-const AnchorStyles = css({
-  ...getFontStyles('$XS'),
-
-  hover: {
-    backgroundColor: '#ff6d6d33',
-  },
-
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  position: 'relative',
-  p: '0.5rem 1.2rem',
-  borderRadius: '$r8',
-
-  variants: {
-    title: {
-      true: {
-        fontWeight: '$bold',
-      },
-      false: {
-        fontWeight: '$default',
-        pl: '$20',
-      },
-    },
-    hasNoLink: {
-      true: {
-        hover: {
-          background: 'transparent',
-        },
-      },
-    },
-    active: {
-      true: {
-        backgroundColor: '#ff6d6d99',
-
-        hover: {
-          backgroundColor: '#ff6d6d99',
-        },
-      },
-    },
-    shouldBeHidden: {
-      true: {
-        display: 'none',
-      },
-    },
-  },
-})
-
-const WidgetContainer = styled('li', {
-  variants: {
-    shouldBeHidden: {
-      true: {
-        display: 'none',
-      },
-    },
-  },
-
-  '.DocSearch': {
-    fontSize: '$XS',
-    color: '$steel40',
-  },
-
-  '.DocSearch-Container, .DocSearch-Container *': {
-    pointerEvents: 'auto',
-  },
-
-  '.DocSearch-Button': {
-    borderRadius: '$r8',
-    margin: 0,
-    padding: '$5 11px',
-    width: '100%',
-    marginBottom: '$10',
-    backgroundColor: 'transparent',
-    border: '1px solid $steel40',
-    alignItems: 'center',
-    transition: 'border-color 200ms ease-out',
-
-    hover: {
-      background: 'transparent',
-      boxShadow: 'unset',
-      borderColor: '$red100',
-    },
-  },
-
-  '.DocSearch-Button-Placeholder': {
-    fontSize: '$XS',
-    padding: 0,
-    display: 'unset',
-  },
-
-  '.DocSearch-Search-Icon': {
-    display: 'none',
-  },
-
-  '.DocSearch-Button-Keys': {
-    justifyContent: 'flex-end',
-  },
-
-  '.DocSearch-Button-Key': {
-    border: 'none',
-    background: 'transparent',
-    boxShadow: 'unset',
-    width: 'unset',
-    height: 'unset',
-    padding: 0,
-    margin: 0,
-    color: '$steel60',
-    fontFamily: '$sans-var',
-  },
-})
-
-const ExternalAnchor = styled('a', AnchorStyles)
-
-const Anchor = styled(Link, AnchorStyles)

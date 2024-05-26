@@ -1,0 +1,150 @@
+---
+meta:
+  title: Controller | React Spring
+  'og:title': Controller | React Spring
+  'twitter:title': Controller | React Spring
+  description: An advanced API guide to the Controller class in React Spring.
+  'og:description': An advanced API guide to the Controller class in React Spring.
+  'twitter:description': An advanced API guide to the Controller class in React Spring.
+  'og:url': https://www.react-spring.dev/docs/advanced/controller
+  'twitter:url': https://www.react-spring.dev/docs/advanced/controller
+sidebar_position: 3
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# Controller
+
+Manages [`SpringValue`s](/docs/advanced/spring-value) for our spring hooks.
+
+## Usage
+
+Basic usage, the Controller class you initialise can be used as an [`imperative api`](/docs/concepts/imperative-api)
+to control your `SpringValues`. Meanwhile you pass `Controller.springs` to your `animated` component.
+
+```tsx
+import { Component, createRef } from 'react'
+import { Controller, animated } from '@react-spring/web'
+
+class AnimatedComponent extends Component {
+  isShowing = createRef(false)
+  animations = new Controller({ opacity: 0 })
+
+  toggle = () => {
+    this.animations.start({ opacity: this.isShowing ? 1 : 0 })
+
+    this.isShowing = !this.isShowing
+  }
+
+  render() {
+    return (
+      <>
+        <button onClick={this.toggle}>click</button>
+        <animated.div style={this.animations.springs}>I will fade</animated.div>
+      </>
+    )
+  }
+}
+```
+
+### Constructor Arguments
+
+Below is the arguments that can passed to the constructor of the `Controller` class.
+
+```ts
+const ControllerProps = {
+  ref,
+  from,
+  loop,
+  onStart,
+  onRest,
+  onChange,
+  onPause,
+  onResume,
+  onProps,
+  onResolve,
+}
+```
+
+## Properties
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { CONTROLLER_PROPERTIES_DATA } from '../data/fixtures'
+
+<TablesConfiguration data={CONTROLLER_PROPERTIES_DATA} />
+
+## Methods
+
+### Get
+
+Gets the current values of our springs.
+
+```ts
+get(): State & UnknownProps;
+```
+
+### Set
+
+Set the current values without animating.
+
+```ts
+set(values: Partial<State>): void;
+```
+
+### Update
+
+Push an update onto the queue of each value.
+
+```ts
+update(props: ControllerUpdate<State> | Falsy): this;
+```
+
+### Start
+
+Start the queued animations for every spring, and resolve the returned promise once all queued
+animations have finished or been cancelled. When you pass a queue (instead of nothing), that
+queue is used instead of the queued animations added with the `update` method, which are left alone.
+
+```ts
+start(props?: OneOrMore<ControllerUpdate<State>> | null): AsyncResult<this>;
+```
+
+### Stop
+
+Stop all queued animations for every spring at the same time, or alternatively provide a selection
+of keys that should be stopped.
+
+```ts
+stop(): this;
+stop(keys: OneOrMore<string>): this;
+stop(cancel: boolean): this;
+stop(cancel: boolean, keys: OneOrMore<string>): this;
+stop(keys?: OneOrMore<string>): this;
+stop(cancel: boolean, keys?: OneOrMore<string>): this;
+```
+
+### Pause
+
+Freeze the active animation in time.
+
+```ts
+pause(keys?: OneOrMore<string>): this;
+```
+
+### Resume
+
+Resume the animation if paused.
+
+```ts
+resume(keys?: OneOrMore<string>): this;
+```
+
+### Each
+
+Call a function once per spring value.
+
+```ts
+each(iterator: (spring: SpringValue, key: string) => void): void
+```

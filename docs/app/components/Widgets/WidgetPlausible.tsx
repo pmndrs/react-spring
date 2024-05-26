@@ -1,5 +1,5 @@
 export const WidgetPlausible = () => {
-  if (typeof window !== 'undefined' && !window.env.ENABLE_PLAUSIBLE) {
+  if (typeof window !== 'undefined' && window.env.ENABLE_PLAUSIBLE !== 'true') {
     return null
   }
 

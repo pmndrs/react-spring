@@ -1,0 +1,146 @@
+---
+meta:
+  title: SpringValue | React Spring
+  'og:title': SpringValue | React Spring
+  'twitter:title': SpringValue | React Spring
+  description: An advanced API guide to the SpringValue class in React Spring.
+  'og:description': An advanced API guide to the SpringValue class in React Spring.
+  'twitter:description': An advanced API guide to the SpringValue class in React Spring.
+  'og:url': https://www.react-spring.dev/docs/advanced/spring-value
+  'twitter:url': https://www.react-spring.dev/docs/advanced/spring-value
+sidebar_position: 4
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# SpringValue
+
+The very driving force of `react-spring`. It's a class that can be used to create a single
+value that can be animated.
+
+## Usage
+
+Basic usage, the `SpringValue` class you initialise can be used just like our [`imperative api`](/docs/concepts/imperative-api).
+Meanwhile you pass the `SpringValue` to your `animated` component. Any type is valid, but only certain types are actually animated.
+Types that cannot be animated are basically immediate: true animations. Such types include:
+a `boolean`, a display string like `"none"`, etc.
+
+```tsx
+import { Component, createRef } from 'react'
+import { SpringValue, animated } from '@react-spring/web'
+
+class AnimatedComponent extends Component {
+  isShowing = createRef(false)
+  springOpacity = new SpringValue(0)
+
+  toggle = () => {
+    this.springOpacity.start(isShowing ? 0 : 1)
+
+    this.isShowing = !this.isShowing
+  }
+
+  render() {
+    return (
+      <>
+        <button onClick={this.toggle}>click</button>
+        <animated.div style={{ opacity: this.springOpacity }}>
+          I will fade
+        </animated.div>
+      </>
+    )
+  }
+}
+```
+
+## Properties
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { SPRINGVALUE_PROPERTIES_DATA } from '../data/fixtures'
+
+<TablesConfiguration data={SPRINGVALUE_PROPERTIES_DATA} />
+
+## Methods
+
+### Advance
+
+Advance the current animation by a number of milliseconds.
+
+```ts
+advance(dt: number): void;
+```
+
+### Finish
+
+Skip to the end of the current animation.
+
+```ts
+finish(): this;
+```
+
+### Pause
+
+Freeze the active animation in time, as well as any updates merged before `resume` is called.
+
+```ts
+pause(): void;
+```
+
+### Reset
+
+Restart the animation.
+
+```ts
+reset(): void;
+```
+
+### Resume
+
+Resume the animation if paused.
+
+```ts
+resume(): void;
+```
+
+### Set
+
+Set the current value, while stopping the current animation.
+
+```ts
+set(value: T | FluidValue<T>): this;
+```
+
+### Start
+
+Update this value's animation using the queue of pending props, and unpause the current
+animation (if one is frozen). When arguments are passed, a new animation is created, and
+the queued animations are left alone.
+
+```ts
+start(): AsyncResult<this>;
+start(props: SpringUpdate<T>): AsyncResult<this>;
+start(to: T, props?: SpringProps<T>): AsyncResult<this>;
+```
+
+### Stop
+
+Stop the current animation, and cancel any delayed updates. Pass `true` to call `onRest`
+with `cancelled: true`.
+
+```ts
+stop(cancel?: boolean): this
+```
+
+### Update
+
+Push props into the pending queue.
+
+```ts
+update(props: SpringUpdate<T>): this;
+```
+
+## TS Glossary
+
+- [`Animation`](/docs/typescript#animation)
+- [`SpringUpdate`](/docs/typescript#springupdate)

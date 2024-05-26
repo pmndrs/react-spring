@@ -1,0 +1,168 @@
+---
+meta:
+  title: Controllers & Springs | React Spring
+  'og:title': Controllers & Springs | React Spring
+  'twitter:title': Controllers & Springs | React Spring
+  description: An in-depth conceptual guide to Controllers & Springs and what they are in React Spring.
+  'og:description': An in-depth conceptual guide to Controllers & Springs and what they are in React Spring.
+  'twitter:description': An in-depth conceptual guide to Controllers & Springs and what they are in React Spring.
+  'og:url': https://www.react-spring.dev/docs/concepts/animated-elements
+  'twitter:url': https://www.react-spring.dev/docs/concepts/animated-elements
+sidebar_position: 2
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# Controllers & Springs
+
+:::note
+This is an advanced guide into the workings of react-spring with some prerequisites
+of your own knowledge. You should be confident with [classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes) & [Typescript](https://www.typescriptlang.org/) before reading this.
+:::
+
+## What you know
+
+If you've already used the `useSpring` hook then you'll be familiar with the following code:
+
+```tsx
+const [styles, api] = useSpring(() => ({
+  x: 0,
+  y: 0,
+  backgroundColor: '#ff0000',
+  scale: [1, 1, 1],
+  config: {
+    precision: 0.0001,
+  },
+}))
+```
+
+If we look only at the return value from our hook we can see it's an array with two items `styles` and `api`.
+We'll initially focus on what `styles` are. This is an `object` of `SpringValue`s where the key of said `object`
+correlates to the animatable keys referenced in the config object you passed (either in the way above or as part
+of the `from` config object). The value of said key is a [`SpringValue`](#spring-value).
+
+Explained in `typescript` terms the signature looks like:
+
+```ts
+type SpringValues<SpringConfig extends Record<string, any>> = {
+  [Key in keyof OnlyAnimatableKeys<SpringConfig>]: SpringValue
+}
+```
+
+In the example above, `OnlyAnimatableKeys` would narrow `SpringConfig` to only include the keys `x, y, backgroundColor, scale`.
+Then because we know they're animatable, they will therefore be `SpringValue`s _note_ this is a simplified version of the types
+in the library.
+
+The second item in the array, `api` is a `SpringRef` which is an abstraction around the methods of the [`Controller`](#controller) class.
+However, a `SpringRef` can manage multiple `Controller`s. For more information, see [`Imperative Api`](/docs/concepts/imperative-api).
+
+## Controller
+
+So where does the `Controller` come into all this? Well, every "spring" is in fact, a `Controller`. Therefore, when you use the
+hook `useSpring` you initialise a new `Controller` class and when you pass the number X to the `useSprings` hook, you're creating
+X amount of `Controller`s.
+
+These `Controller`s manage the `SpringValue`s you create in your config object. It's methods are very similar to that of the
+[`SpringValue` class](/docs/advanced/spring-value), the primary methods used such as `start`, `stop`, `pause` run through the
+array of managed SpringValues and call the exact same method:
+
+```ts
+// The set method from the Controller class
+set(values) {
+  for (const key in values) {
+    const value = values[key]
+    if (!is.und(value)) {
+      this.springs[key].set(value)
+    }
+  }
+}
+
+// Would be used like this
+controller.set({
+  x: 0,
+  scale: [0,0,0]
+})
+```
+
+The signature of `useSpring` hook's config object is identical to the `Controller` class constructor first argument. You can
+therefore draw the conclusion that the `useSpring` hook handles the lifecycle of the `Controller` class in the react environment
+and adds the controllers to a provided (or generated in the hook) `SpringRef`, providing a very straight forward and clear
+interface for managing one or more `Controller` classes. Meaning, if you so choose, you could omit using a hook and instead
+use `Controller` class directly!
+
+For a more detailed API description, see the [advanced api reference](/docs/advanced/controller) entry for Controller.
+
+## Spring value
+
+SpringValues are what you normally interact with, they're the props that are specifically passed to the `animated` component,
+they can be interpolated and don't necessarily need to be named after properties of the element they're being used on:
+
+```ts
+const {
+  backgroundColor, // SpringValue<string>
+  o, // SpringValue<number>
+  trans, // SpringValue<number[]>
+} = useSpring({
+  backgroundColor: '#00ff00',
+  o: 0,
+  trans: [0, 1, 2],
+})
+```
+
+This is because the names you give are just the keys used in the `Controller` and the `SpringValue` only cares about the type of
+value you're passing. Inside the `SpringValue` class we have the entire lifecycle of the animation, from the [event handlers](/docs/advanced/events)
+being called to the type of advancement being used (e.g. `spring physics` or `duration`) the `SpringValue` is the driving force
+for your animation.
+
+In addition to controlling a "Fluid value" – a value that changes over time (see [Fluids](#fluids) for more information). `SpringValues`
+also apply their updates to the `animated node` they're passed to. You might recall if you had read the [animated elements](/docs/concepts/animated-elements)
+concept page that on creation of the `animated` component, we convert any `SpringValues` into `AnimatedValues` which seems like a one way direction,
+in fact we attach this `AnimatedValue` to the original `SpringValue`, which allows the spring to update the animated node (e.g. `<animated.p>`.)
+via the animated value when the `advance` function is called on the `SpringValue` via our `rafz` package. `SpringValue` is able to do this
+because it extends the `FrameValue` which is a kind of `FluidValue`.
+
+```ts
+// Taken from `@react-spring/core/src/SpringValue.ts
+class SpringValue<T = any> extends FrameValue<T>
+
+// Taken from `@react-spring/core/src/FrameValue.ts
+abstract class FrameValue<T = any> extends FluidValue<
+  T,
+  FrameValue.Event<T>
+>
+
+// Taken from `@react-spring/shared/src/FluidValue.ts`
+abstract class FluidValue<T = any, E extends FluidEvent<T> = any>
+```
+
+Similar to the `Controller` class because it does not rely on react internals (this is how we animate outside the react render system) you can
+use this class directly, however the lifecycle events that are associated with Controllers & hooks will not be applied and is something you
+would need to manage yourself. For a more detailed API description of `SpringValue`, see the [advanced api reference](/docs/advanced/spring-value)
+entry for `SpringValue`.
+
+## Frame value
+
+The first thing you'll notice about the `FrameValue` class is that is considered "abstract", this is a feature unique `typescript` and means that
+you cannot instantiate the class directly. The point of an abstract class is to provide a base class that other classes can extend from in their shape
+(methods / properties) but usually require some additional implementation. In the case of `FrameValue` we have the `advance` method which is abstract,
+the `SpringValue` class extends `FrameValue` and implements it's own `advance` method. You can read more about abstract classes [here](https://www.typescriptlang.org/docs/handbook/2/classes.html#abstract-classes-and-members).
+
+## Fluids
+
+Fluids is a small glue layer for observable events. It allows parent nodes send events to their children creating an event-driven system. Therefore,
+when a `FluidObserver` has an event observered, it can perform an action. In the case of `SpringValue`, the `_start` function is called, thus animating
+the `SpringValue`'s value, which in turn animates the `animated` node you're passing this value too.
+
+Fluids are used all over this library, in the case of our `animated` HOC, we use Fluids to schedule animated updates with our `rafz` package.
+
+If you want to learn more about Fluids, I recommend looking at our [source code!](https://github.com/pmndrs/react-spring/blob/main/packages/shared/src/fluids.ts)
+
+## What you learnt
+
+You've probably learnt _alot_ about how the internals of `react-spring` works! But more importantly, you've specifically learnt about these things:
+
+- How the `useSpring` hook works under the hood
+- What is a `Controller` & `SpringValue`
+- How we have an event-driven system embeded in the library!

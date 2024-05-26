@@ -1,4 +1,5 @@
 import { DocSearch } from '@docsearch/react'
+
 import { memo } from 'react'
 
 export const WidgetSearch = memo(() => {

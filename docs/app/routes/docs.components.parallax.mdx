@@ -1,0 +1,89 @@
+---
+meta:
+  title: Parallax | React Spring
+  'og:title': Parallax | React Spring
+  'twitter:title': Parallax | React Spring
+  description: API documentation for the Parallax component in React Spring.
+  'og:description': API documentation for the Parallax component in React Spring.
+  'twitter:description': API documentation for the Parallax component in React Spring.
+  'og:url': https://www.react-spring.dev/docs/components/parallax
+  'twitter:url': https://www.react-spring.dev/docs/components/parallax
+sidebar_position: 7
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# Parallax
+
+Used in collaboration with [`ParallaxLayer`](/docs/components/parallax-layer) to create visual displacements declaratively and simply.
+
+## Usage
+
+:::note
+This component is only available in the `@react-spring/web` package and is therefore only usable in the browser.
+:::
+
+The `Parallax` component creates a scrollable container in which `ParallaxLayer`s can be placed or `React.Fragment`s whose only
+direct `children` are `ParallaxLayer`s. Because `Parallax` is a scrollable container all scroll events are fired from the container
+itself therefore, listening for scroll on `window` won't work. However, if you want to attach additional events you _can_ use [`ref.current.container`](#ref)
+
+```jsx
+import { Parallax, ParallaxLayer } from '@react-spring/parallax'
+
+function MyComponent() {
+  return (
+    <Parallax pages={1} style={{ top: '0', left: '0' }}>
+      <ParallaxLayer offset={0} speed={2.5}>
+        <p>Parallax</p>
+      </ParallaxLayer>
+    </Parallax>
+  )
+}
+```
+
+## Reference
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { PARALLAX_CONFIG_DATA } from '../data/fixtures'
+
+All props that can be passed to `HTMLDivElement` can be passed to `Parallax`.
+
+<TablesConfiguration data={PARALLAX_CONFIG_DATA} />
+
+## Ref
+
+Passing a `ref` to the `Parallax` component will give you access to the internal state of the `Parallax` component via `ref.current`:
+
+```tsx
+interface IParallax {
+  config: ConfigProp
+  horizontal: boolean
+  busy: boolean
+  space: number
+  offset: number
+  current: number
+  controller: Controller<{ scroll: number }>
+  layers: Set<IParallaxLayer>
+  container: React.MutableRefObject<any>
+  content: React.MutableRefObject<any>
+  scrollTo(offset: number): void
+  update(): void
+  stop(): void
+}
+```
+
+## Examples
+
+Can't find what you're looking for? Check out all our [examples!](/examples)
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid
+  sandboxTitles={[
+    'Horizontal Parallax',
+    'Sticky Parallax',
+    'Vertical Parallax',
+  ]}
+/>

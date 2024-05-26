@@ -1,0 +1,140 @@
+---
+meta:
+  title: Async Animations | React Spring
+  'og:title': Async Animations | React Spring
+  'twitter:title': Async Animations | React Spring
+  description: An advanced guide to Async Animations and what they are in React Spring.
+  'og:description': An advanced guide to Async Animations and what they are in React Spring.
+  'twitter:description': An advanced guide to Async Animations and what they are in React Spring.
+  'og:url': https://www.react-spring.dev/docs/advanced/async-animations
+  'twitter:url': https://www.react-spring.dev/docs/advanced/async-animations
+sidebar_position: 7
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# Async Animations
+
+:::note
+This is an advanced guide. If you're new to `react-spring`, you should start with the [getting started](/docs/getting-started) page
+and become familar with the library before jumping into async animations.
+:::
+
+## Aren't all animations async?
+
+Well technically in `react-spring` yes, you could consider animations to be async? The `start` function of a `Controller` is async and therefore
+the `imperative api` is too, async. And then your styles are updated asynchronously... But that's not what this guide is referring too.
+
+When we talk about async animations we refer to the ability to perform X amount of transformations with only one call of the APIs and each
+animation chunk will finish before the other begins. If you look at the example below, this animation has only a config object, `loop` prop
+and a `to` prop.
+
+```tsx live=true showCode=false
+import { useSpring, animated } from '@react-spring/web'
+
+export default function MyComponent() {
+  const springs = useSpring({
+    from: { background: '#ff6d6d', y: -40, x: 0 },
+    to: [
+      { x: 80, background: '#fff59a' },
+      { y: 40, background: '#88DFAB' },
+      { x: 0, background: '#569AFF' },
+      { y: -40, background: '#ff6d6d' },
+    ],
+    loop: true,
+  })
+
+  return (
+    <animated.div
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: 4,
+        ...springs,
+      }}
+    />
+  )
+}
+```
+
+## The to prop
+
+If you've read any of the `component` pages, you'll know we accept a `to` prop, it's typically used as an object,
+but alternatively, you can also use an array (chaining the animations) or a function (writing an animation script).
+
+When you consider the options you have as to what you can pass to the `to` prop, you'll begin to understand how complicated
+your animations _can_ be, it's then a matter of understand what you're trying to achieve and applying the best solution.
+
+## Chaining animations
+
+The array syntax is a middleground between total control of async animations and the simplicity of passing just an `object`.
+Just like the `start` method of the imperative api, you don't need to reference every key for each update. Each update will fire
+when the previous one has finished.
+
+```tsx lines=6-11 live=true defaultOpen=true
+import { useSpring, animated } from '@react-spring/web'
+
+export default function MyComponent() {
+  const springs = useSpring({
+    from: { background: '#ff6d6d', y: -40, x: 0 },
+    to: [
+      { x: 80, background: '#fff59a' },
+      { y: 40, background: '#88DFAB' },
+      { x: 0, background: '#569AFF' },
+      { y: -40, background: '#ff6d6d' },
+    ],
+    loop: true,
+  })
+
+  return (
+    <animated.div
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: 4,
+        ...springs,
+      }}
+    />
+  )
+}
+```
+
+## Writing animation scripts
+
+When you need most control of your animation, it's best to write a `script` by providing a `function` to the `to` prop.
+The function receives two arguments, the `next` function which accepts an object of updates, again similar to the start
+method of the imperative API and a `cancel` function which works the same as the `stop` method of the `imperative API`.
+
+This therefore allows you to cancel scripts at any time meaning you can react to external events & conditions.
+
+For further reading, see [`imperative API`](/docs/advanced/spring-ref#stop).
+
+```tsx lines=6-11 live=true defaultOpen=true
+import { useSpring, animated } from '@react-spring/web'
+
+export default function MyComponent() {
+  const springs = useSpring({
+    from: { background: '#ff6d6d', y: -40, x: 0 },
+    to: async (next, cancel) => {
+      await next({ x: 80, background: '#fff59a' })
+      await next({ y: 40, background: '#88DFAB' })
+      await next({ x: 0, background: '#569AFF' })
+      await next({ y: -40, background: '#ff6d6d' })
+    },
+    loop: true,
+  })
+
+  return (
+    <animated.div
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: 4,
+        ...springs,
+      }}
+    />
+  )
+}
+```

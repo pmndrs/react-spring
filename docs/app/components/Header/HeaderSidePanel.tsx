@@ -4,8 +4,6 @@ import { X } from 'phosphor-react'
 import { animated, useTransition } from '@react-spring/web'
 import * as Toolbar from '@radix-ui/react-toolbar'
 
-import { styled } from '~/styles/stitches.config'
-
 import { HeaderNavigation } from './HeaderNavigation'
 import { HeaderSubNavigation } from './HeaderSubNavigation'
 import { MenuDocs } from '../Menu/MenuDocs'
@@ -13,6 +11,16 @@ import { MenuDocs } from '../Menu/MenuDocs'
 import { NavigationSchema } from '../../../scripts/docs/navigation'
 import { SiteThemePicker } from '../Site/SiteThemePicker'
 import { forwardRef } from 'react'
+import {
+  mainNavigation,
+  mobileDialogHeader,
+  mobileMenu,
+  mobileMenuClose,
+  mobileMenuOverlay,
+  mobileThemePicker,
+  subNavContainer,
+} from './HeaderSidePanel.css'
+import { visuallyHidden } from '../../styles/utilities.css'
 
 interface HeaderSidePanelProps {
   isOpen: boolean
@@ -56,130 +64,42 @@ export const HeaderSidePanel = forwardRef<HTMLDivElement, HeaderSidePanelProps>(
       item ? (
         <>
           <Dialog.Overlay forceMount asChild>
-            <MobileMenuOverlay style={{ opacity }} />
+            <animated.div className={mobileMenuOverlay} style={{ opacity }} />
           </Dialog.Overlay>
           {/* @ts-ignore */}
           <Dialog.Content trapFocus={false} forceMount asChild>
-            <MobileMenu ref={ref} style={{ x }}>
+            <animated.div className={mobileMenu} ref={ref} style={{ x }}>
               <div>
-                <MobileDialogHeader>
-                  <MobileMenuClose>
+                <header className={mobileDialogHeader}>
+                  <Dialog.Close className={mobileMenuClose}>
                     <X />
-                  </MobileMenuClose>
-                  <MobileThemePicker>
+                  </Dialog.Close>
+                  <Toolbar.Root className={mobileThemePicker}>
                     <SiteThemePicker />
-                  </MobileThemePicker>
-                </MobileDialogHeader>
-                <HiddenTitle>Main Menu</HiddenTitle>
-                <MainNavigation
-                  isDocsSection={isDocs}
+                  </Toolbar.Root>
+                </header>
+                <Dialog.Title className={visuallyHidden}>
+                  Main Menu
+                </Dialog.Title>
+                <HeaderNavigation
+                  className={mainNavigation({ isDocsSection: isDocs })}
                   showSubNav={false}
                   showThemePicker={false}
                   showLabels={!isDocs}
                 />
               </div>
               <MenuDocs submenu={submenu} onNavClick={handleNavClick} />
-              <SubNavContainer isDocsSection={isDocs}>
+              <Toolbar.Root
+                className={subNavContainer({
+                  isDocsSection: isDocs,
+                })}
+              >
                 <HeaderSubNavigation showLabels={!isDocs} />
-              </SubNavContainer>
-            </MobileMenu>
+              </Toolbar.Root>
+            </animated.div>
           </Dialog.Content>
         </>
       ) : null
     )
   }
 )
-
-const MobileMenuOverlay = styled(animated.div, {
-  position: 'fixed',
-  left: 0,
-  right: 0,
-  top: 0,
-  bottom: 0,
-  width: '100vw',
-  height: '100vh',
-  zIndex: '$1',
-  backgroundColor: 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(5px)',
-
-  '@supports not (backdrop-filter: blur(10px))': {
-    backgroundColor: 'rgba(0,0,0,0.1)',
-  },
-})
-
-const MobileMenu = styled(animated.div, {
-  position: 'fixed',
-  right: 0,
-  top: 0,
-  bottom: 0,
-  height: '100vh',
-  width: '30rem',
-  background: '$white',
-  zIndex: '$1',
-  boxShadow: '3px 0 12px -10px rgba(0,0,0,0.5)',
-  padding: '$25 0 $10',
-  display: 'flex',
-  flexDirection: 'column',
-})
-
-const MobileDialogHeader = styled('header', {
-  display: 'flex',
-  justifyContent: 'space-between',
-})
-
-const MobileMenuClose = styled(Dialog.Close, {
-  border: 'none',
-  color: '$steel100',
-  background: 'transparent',
-  mb: '$20',
-  ml: '$15',
-  p: '1.1rem 1.2rem',
-  cursor: 'pointer',
-})
-
-const MobileThemePicker = styled(Toolbar.Root, {
-  mr: '$15',
-})
-
-const HiddenTitle = styled(Dialog.Title, {
-  visuallyHidden: '',
-})
-
-const MainNavigation = styled(HeaderNavigation, {
-  mx: '$10',
-  pb: '$20',
-
-  variants: {
-    isDocsSection: {
-      true: {
-        borderBottom: 'solid 1px $steel20',
-      },
-      false: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-      },
-    },
-  },
-})
-
-const SubNavContainer = styled(Toolbar.Root, {
-  listStyle: 'none',
-  margin: '0 $10',
-  padding: 0,
-  display: 'flex',
-  gap: '$10',
-  pt: '$10',
-
-  variants: {
-    isDocsSection: {
-      true: {
-        alignItems: 'center',
-        borderTop: 'solid 1px $steel20',
-      },
-      false: {
-        alignItems: 'flex-start',
-        flexDirection: 'column',
-      },
-    },
-  },
-})

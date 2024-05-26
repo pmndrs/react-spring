@@ -1,13 +1,25 @@
 import { IconProps } from 'phosphor-react'
+import { assignInlineVars } from '@vanilla-extract/dynamic'
 import { ForwardRefExoticComponent, RefAttributes } from 'react'
 import { Link } from '@remix-run/react'
 import { isStringGuard } from '~/helpers/guards'
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
-import { styled } from '~/styles/stitches.config'
 import { Button } from '../Buttons/Button'
 import { Copy } from '../Text/Copy'
-import { GradiantHeader } from '../Text/GradientHeader'
+import { GradientHeader } from '../Text/GradientHeader'
 import { Heading } from '../Text/Heading'
+import clsx from 'clsx'
+import {
+  backgroundTile,
+  colsVar,
+  grid,
+  iconWrapper,
+  navSection,
+  tile,
+  tileButton,
+  tileCanHover,
+  tileCopy,
+} from './NavigationGrid.css'
 
 export interface Tile {
   href: string
@@ -38,26 +50,25 @@ export const NavigationGrid = ({
   className,
 }: NavigationGridProps) => {
   return (
-    <NavSection className={className}>
+    <section className={clsx(navSection, className)}>
       {subheading ? (
-        <GradiantHeader fontStyle="$XXS" tag="h2" weight="$semiblack">
+        <GradientHeader fontStyle="XXS" tag="h2" weight="semiblack">
           {subheading}
-        </GradiantHeader>
+        </GradientHeader>
       ) : null}
       {heading ? (
-        <Heading fontStyle="$M" tag="h3">
+        <Heading fontStyle="M" tag="h3">
           {heading}
         </Heading>
       ) : null}
-      <Grid
-        css={{
-          [smallTiles ? '@tabletUp' : '@desktopUp']: {
-            gridTemplateColumns: `repeat(${cols}, ${
-              smallTiles ? 'minmax(100px, 238px)' : '1fr'
-            })`,
-            gridColumnGap: '$40',
-            gridRowGap: '$40',
-          },
+      <div
+        className={grid({
+          smallTiles: Boolean(smallTiles),
+        })}
+        style={{
+          ...assignInlineVars({
+            [colsVar]: `${cols}`,
+          }),
         }}
       >
         {tiles.map(tile => (
@@ -67,32 +78,10 @@ export const NavigationGrid = ({
             {...tile}
           />
         ))}
-      </Grid>
-    </NavSection>
+      </div>
+    </section>
   )
 }
-
-const NavSection = styled('section', {
-  my: '$20',
-
-  '& + &': {
-    mt: '$40',
-  },
-
-  '@desktopUp': {
-    my: '$40',
-
-    '& + &': {
-      mt: '$80',
-    },
-  },
-})
-
-const Grid = styled('div', {
-  display: 'grid',
-  gridRowGap: '$20',
-  mt: '$20',
-})
 
 interface NavigationItemProps extends Tile {
   variant: 'small' | 'large'
@@ -112,25 +101,32 @@ const NavigationItem = ({
   const isDarkMode = useIsDarkTheme()
 
   const renderTile = () => (
-    <Tile variant={variant} canHover={canHover}>
-      <BackgroundTile />
+    <span
+      className={clsx(
+        tile({
+          small: variant === 'small',
+        }),
+        canHover && tileCanHover
+      )}
+    >
+      <span className={backgroundTile} />
       {Icon && isStringGuard(Icon) ? (
-        <IconWrapper isString>{Icon}</IconWrapper>
+        <span className={iconWrapper({ isString: true })}>{Icon}</span>
       ) : Icon && !isStringGuard(Icon) ? (
-        <IconWrapper>
+        <span className={iconWrapper({ isString: false })}>
           <Icon size={32} weight={isDarkMode ? 'light' : 'regular'} />
-        </IconWrapper>
+        </span>
       ) : null}
-      <Heading tag="h2" fontStyle="$S" weight="$semiblack">
+      <Heading tag="h2" fontStyle="S" weight="semiblack">
         {label}
       </Heading>
-      <TileCopy>{description}</TileCopy>
+      <Copy className={tileCopy}>{description}</Copy>
       {variant === 'large' ? (
-        <TileButton disabled={comingSoon}>
+        <Button className={tileButton} disabled={comingSoon}>
           {comingSoon ? <span>Coming soon!</span> : <span>Read more</span>}
-        </TileButton>
+        </Button>
       ) : null}
-    </Tile>
+    </span>
   )
 
   if (comingSoon) {
@@ -147,75 +143,3 @@ const NavigationItem = ({
 
   return <Link to={href}>{renderTile()}</Link>
 }
-
-const TileButton = styled(Button)
-
-const BackgroundTile = styled('span', {
-  display: 'block',
-  position: 'absolute',
-  inset: 0,
-  opacity: 0,
-  zIndex: '-1',
-  background: '$redYellowGradient40',
-
-  '@motion': {
-    transition: 'opacity 250ms ease-out',
-  },
-})
-
-const Tile = styled('span', {
-  position: 'relative',
-  display: 'block',
-  margin: 0,
-  borderRadius: '$r8',
-  zIndex: 0,
-  backgroundColor: '$codeBackground',
-  p: '$15 $20',
-  overflow: 'hidden',
-
-  '@motion': {
-    transition: 'background-color 250ms ease-out',
-  },
-
-  variants: {
-    variant: {
-      small: {
-        maxWidth: 238,
-      },
-      large: {},
-    },
-    canHover: {
-      true: {
-        hover: {
-          backgroundColor: 'transparent',
-
-          [`& ${BackgroundTile}`]: {
-            opacity: 1,
-          },
-
-          [`& ${TileButton}`]: {
-            borderColor: '$red100',
-          },
-        },
-      },
-    },
-  },
-})
-
-const IconWrapper = styled('span', {
-  display: 'block',
-  mb: '$10',
-
-  variants: {
-    isString: {
-      true: {
-        fontSize: '$S',
-      },
-    },
-  },
-})
-
-const TileCopy = styled(Copy, {
-  mt: '$10',
-  mb: '$20',
-})

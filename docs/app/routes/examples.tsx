@@ -6,21 +6,18 @@ import {
   LoaderFunction,
   MetaFunction,
   redirect,
-} from '@remix-run/node'
+} from '@vercel/remix'
 import {
   useLoaderData,
   Form,
   useFetcher,
-  useTransition,
+  useNavigation,
   useSearchParams,
 } from '@remix-run/react'
-
-import { styled } from '~/styles/stitches.config'
 
 import { Header } from '~/components/Header/Header'
 import { CardExample } from '~/components/Cards/CardExample'
 import { Heading } from '~/components/Text/Heading'
-import { InlineLinkStyles } from '~/components/InlineLink'
 import { Copy } from '~/components/Text/Copy'
 import { Anchor } from '~/components/Text/Anchor'
 import { Select } from '~/components/Select'
@@ -28,6 +25,16 @@ import { Select } from '~/components/Select'
 import { SANDBOXES } from '~/data/sandboxes'
 
 import { fetchSandbox, getTagsAndComponents } from '~/helpers/sandboxes'
+import { WidgetCarbon } from '../components/Widgets/WidgetCarbon'
+import {
+  copy,
+  exampleFilters,
+  flex,
+  h2,
+  main,
+  sandboxesList,
+  xlHeading,
+} from '../styles/routes/examples.css'
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -93,18 +100,38 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export const meta: MetaFunction = () => {
-  return {
-    title: 'Examples | React Spring',
-    description: `The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions`,
-    'og:title': 'Examples | React Spring',
-    'og:description':
-      'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
-    'og:url': 'https://www.react-spring.dev/examples',
-    'twitter:url': 'https://www.react-spring.dev/examples',
-    'twitter:title': 'Examples | React Spring',
-    'twitter:description':
-      'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
-  }
+  return [
+    {
+      title: 'Examples | React Spring',
+    },
+    {
+      name: 'description',
+      content: `The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions`,
+    },
+    { property: 'og:title', content: 'Examples | React Spring' },
+    {
+      name: 'og:description',
+      contnet:
+        'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
+    },
+    {
+      name: 'og:url',
+      content: 'https://www.react-spring.dev/examples',
+    },
+    {
+      name: 'twitter:url',
+      content: 'https://www.react-spring.dev/examples',
+    },
+    {
+      name: 'twitter:title',
+      content: 'Examples | React Spring',
+    },
+    {
+      name: 'twitter:description',
+      content:
+        'The home of examples using react-spring to bring naturally fluid animations elevating UI & interactions',
+    },
+  ]
 }
 
 export interface Sandbox {
@@ -140,7 +167,7 @@ export default function Examples() {
 
   const fetcher = useFetcher()
 
-  const { state } = useTransition()
+  const { state } = useNavigation()
 
   const handleSelectChange =
     (name: 'tags' | 'components') =>
@@ -163,28 +190,13 @@ export default function Examples() {
   return (
     <>
       <Header />
-      <Main>
-        <Flex>
+      <main className={main}>
+        <div className={flex}>
           <div>
-            <Heading
-              fontStyle="$XL"
-              css={{
-                mb: 20,
-                '@tabletUp': {
-                  mb: 30,
-                },
-              }}
-            >
+            <Heading fontStyle="XL" className={xlHeading}>
               Examples
             </Heading>
-            <Copy
-              css={{
-                '& > a': {
-                  ...InlineLinkStyles,
-                },
-                maxWidth: 680,
-              }}
-            >
+            <Copy className={copy}>
               {`Got an example you want to see here & share with the community?`}{' '}
               Check out{' '}
               <Anchor href="https://github.com/pmndrs/react-spring/tree/main/demo/CONTRIBUTING.md">
@@ -192,10 +204,10 @@ export default function Examples() {
               </Anchor>
               .
             </Copy>
-            <ExampleFilters method="post" ref={formRef}>
+            <Form className={exampleFilters} method="post" ref={formRef}>
               <Heading
                 tag="h2"
-                fontStyle="$XS"
+                fontStyle="XS"
                 style={{ display: 'inline-block' }}
               >
                 {`Alternatively, check out examples by `}
@@ -208,7 +220,7 @@ export default function Examples() {
               />
               <Heading
                 tag="h2"
-                fontStyle="$XS"
+                fontStyle="XS"
                 style={{ display: 'inline-block' }}
               >
                 {` or `}
@@ -221,36 +233,20 @@ export default function Examples() {
               />
               {selectStates.tags.length > 0 ||
               selectStates.components.length > 0 ? (
-                <Heading
-                  tag="h2"
-                  fontStyle="$XS"
-                  css={{
-                    display: 'inline',
-                    ml: -6,
-
-                    '& > a': {
-                      ...InlineLinkStyles,
-                      fontWeight: '$bold',
-                    },
-                  }}
-                >
+                <Heading tag="h2" fontStyle="XS" className={h2}>
                   {'. Or maybe, you want to see them '}
                   <Anchor href="/examples">all?</Anchor>
                 </Heading>
               ) : null}
-            </ExampleFilters>
+            </Form>
           </div>
           <div>
-            <script
-              async
-              type="text/javascript"
-              src="https://cdn.carbonads.com/carbon.js?serve=CEAIPK7I&placement=react-springdev"
-              id="_carbonads_js"
-            />
+            <WidgetCarbon />
           </div>
-        </Flex>
-        <SandboxesList
-          css={{
+        </div>
+        <ul
+          className={sandboxesList}
+          style={{
             opacity: state === 'loading' ? 0.5 : 1,
           }}
         >
@@ -259,67 +255,8 @@ export default function Examples() {
               <CardExample {...props} />
             </li>
           ))}
-        </SandboxesList>
-      </Main>
+        </ul>
+      </main>
     </>
   )
 }
-
-const Main = styled('main', {
-  padding: '0 $25',
-  width: '100%',
-  margin: '0 auto',
-  maxWidth: '$largeDoc',
-  flexGrow: 1,
-
-  '@tabletUp': {
-    padding: '0 $15',
-  },
-
-  '@desktopUp': {
-    px: '$50',
-  },
-})
-
-const Flex = styled('div', {
-  '#carbonads': {
-    mb: '$20',
-  },
-
-  '@tabletUp': {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    gap: '$40',
-
-    '#carbonads': {
-      maxWidth: '400px',
-      mb: '$40',
-    },
-  },
-})
-
-const SandboxesList = styled('ul', {
-  display: 'grid',
-  gridRowGap: '20px',
-  m: 0,
-  p: 0,
-  listStyle: 'none',
-
-  '@tabletUp': {
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gridColumnGap: '20px',
-  },
-
-  '@desktopUp': {
-    gridTemplateColumns: 'repeat(3, 1fr)',
-  },
-})
-
-const ExampleFilters = styled(Form, {
-  mb: '$20',
-
-  '@tabletUp': {
-    mb: '$40',
-  },
-})

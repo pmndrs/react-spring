@@ -1,9 +1,8 @@
-import { styled } from '~/styles/stitches.config'
-
 import { Code } from '../Code/Code'
 
 import { HomeBlockCopy } from './HomeBlockCopy'
-import { Section } from './HomeBlockSection'
+import { imperativeCode } from './HomeBlockImperative.css'
+import { section } from './shared.css'
 
 const example = /* jsx */ `
 import { animated, useSpring } from '@react-spring/web'
@@ -41,7 +40,7 @@ export default function () {
 `
 
 export const HomeBlockImperative = () => (
-  <Section>
+  <section className={section}>
     <HomeBlockCopy
       subtitle="Avoid unnecessary overhead"
       title={`Run animations without \nre-rendering`}
@@ -56,10 +55,6 @@ export const HomeBlockImperative = () => (
         smooth, fluid animation.
       </p>
     </HomeBlockCopy>
-    <ImperativeCode isLive code={example} showCode={false} />
-  </Section>
+    <Code className={imperativeCode} isLive code={example} showCode={false} />
+  </section>
 )
-
-const ImperativeCode = styled(Code, {
-  mt: '$40',
-})

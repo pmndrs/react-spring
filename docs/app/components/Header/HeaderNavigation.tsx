@@ -1,12 +1,12 @@
-import * as React from 'react'
 import { House, Files, Code } from 'phosphor-react'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import * as Tooltip from '@radix-ui/react-tooltip'
 
-import { styled } from '~/styles/stitches.config'
 import { NavigationButton, NavigationButtonProps } from '../Buttons/NavButton'
 import { HeaderSubNavigation } from './HeaderSubNavigation'
 import { SiteThemePicker } from '../Site/SiteThemePicker'
+import clsx from 'clsx'
+import { navList, navSeperator } from './HeaderNavigation.css'
 
 interface NavigationProps {
   className?: string
@@ -46,7 +46,7 @@ export const HeaderNavigation = ({
 }: NavigationProps) => {
   return (
     <Tooltip.TooltipProvider>
-      <NavList className={className}>
+      <Toolbar.Root className={clsx(navList, className)}>
         {MAIN_NAV.map(props => (
           <NavigationButton
             showLabel={showLabels}
@@ -56,33 +56,17 @@ export const HeaderNavigation = ({
         ))}
         {showSubNav && (
           <>
-            <NavSeperator />
+            <Toolbar.Separator className={navSeperator} />
             <HeaderSubNavigation showLabels={showLabels} />
           </>
         )}
         {showThemePicker && (
           <>
-            <NavSeperator />
+            <Toolbar.Separator className={navSeperator} />
             <SiteThemePicker />
           </>
         )}
-      </NavList>
+      </Toolbar.Root>
     </Tooltip.TooltipProvider>
   )
 }
-
-const NavList = styled(Toolbar.Root, {
-  listStyle: 'none',
-  margin: 0,
-  padding: 0,
-  display: 'flex',
-  alignItems: 'center',
-  gap: '$10',
-})
-
-const NavSeperator = styled(Toolbar.Separator, {
-  width: '0.1rem',
-  background: '$steel40',
-  margin: '0 $15',
-  height: '2rem',
-})

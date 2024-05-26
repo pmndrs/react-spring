@@ -2,9 +2,9 @@ import { animated, useSprings } from '@react-spring/web'
 import { CheckCircle, CopySimple } from 'phosphor-react'
 import { useState } from 'react'
 
-import { dark, styled } from '~/styles/stitches.config'
-
 import { AccessibleIcon } from '../AccessibleIcon'
+import { absoluteContainer, animatedIcon, copyButton } from './ButtonCopy.css'
+import clsx from 'clsx'
 
 interface ButtonCopyProps {
   children: string
@@ -46,6 +46,8 @@ export const ButtonCopy = ({ children, className }: ButtonCopyProps) => {
     2,
     i => ({
       scale: copied && i === 0 ? 0 : !copied && i === 1 ? 0 : 1,
+      y: '-50%',
+      x: '-50%',
       onRest: () => {
         if (i === 0) {
           setTimeout(() => setCopied(false), 800)
@@ -56,61 +58,36 @@ export const ButtonCopy = ({ children, className }: ButtonCopyProps) => {
   )
 
   return (
-    <CopyButton className={className} type="button" onClick={handleCopyClick}>
-      <AccessibleIcon label={`Copy ${children}`}>
-        <AbsoluteContainer>
+    <button
+      className={clsx(copyButton, className)}
+      type="button"
+      onClick={handleCopyClick}
+    >
+      <AccessibleIcon className={absoluteContainer} label={`Copy ${children}`}>
+        <span>
           {springs.map((style, i) =>
             i === 0 ? (
-              <AnimatedCopy key={i} size={24} style={style} />
+              <AnimatedCopy
+                className={animatedIcon}
+                key={i}
+                size={24}
+                style={style}
+              />
             ) : (
-              <AnimatedCheck key={i} size={24} style={style} />
+              <AnimatedCheck
+                className={animatedIcon}
+                key={i}
+                size={24}
+                style={style}
+              />
             )
           )}
-        </AbsoluteContainer>
+        </span>
       </AccessibleIcon>
-    </CopyButton>
+    </button>
   )
 }
 
-const CopyButton = styled('button', {
-  backgroundColor: '$codeBackground',
-  border: 'none',
-  padding: '4px 4px 1px 4px',
-  height: 32,
-  width: 32,
-  overflow: 'hidden',
-  borderRadius: '$r4',
-  ml: 14,
-  cursor: 'pointer',
+const AnimatedCheck = animated(CheckCircle)
 
-  hover: {
-    backgroundColor: '$red40',
-  },
-
-  [`.${dark} &`]: {
-    hover: {
-      backgroundColor: '#ff6d6d66',
-    },
-  },
-
-  '@motion': {
-    transition: 'background-color 250ms ease-out',
-  },
-})
-
-const AbsoluteContainer = styled('span', {
-  display: 'block',
-  position: 'relative',
-  height: '100%',
-  width: '100%',
-})
-
-const AnimatedCheck = styled(animated(CheckCircle), {
-  position: 'absolute',
-  inset: 0,
-})
-
-const AnimatedCopy = styled(animated(CopySimple), {
-  position: 'absolute',
-  inset: 0,
-})
+const AnimatedCopy = animated(CopySimple)

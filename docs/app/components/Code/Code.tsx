@@ -1,9 +1,9 @@
-import { styled } from '~/styles/stitches.config'
-
+// @ts-nocheck
 import { ButtonCopy } from '../Buttons/ButtonCopy'
 import { LivePreview, LivePreviewProps } from './LivePreview'
-
-import { Pre } from './Pre'
+import { pre } from './Pre.css'
+import clsx from 'clsx'
+import { preCopy } from './Code.css'
 
 interface CodeProps
   extends Pick<
@@ -27,6 +27,10 @@ export const Code = ({
   copy,
   defaultOpen,
   template,
+  showLineNumbers,
+  id,
+  'data-showing-lines': dataShowingLines,
+  children,
   ...restProps
 }: CodeProps) => {
   if (isLive) {
@@ -36,43 +40,21 @@ export const Code = ({
         showCode={showCode}
         className={className}
         defaultOpen={defaultOpen}
-        preProps={{ ...restProps }}
+        preProps={{
+          showLineNumbers,
+          id,
+          ['data-showing-lines']: dataShowingLines,
+          children,
+        }}
         template={template}
       />
     )
   } else {
     return (
-      <CodePre className={className} {...restProps}>
-        {copy ? <PreCopy>{copy}</PreCopy> : null}
-        {restProps.children}
-      </CodePre>
+      <pre className={clsx(pre, className)} {...restProps}>
+        {copy ? <ButtonCopy className={preCopy}>{copy}</ButtonCopy> : null}
+        {children}
+      </pre>
     )
   }
 }
-
-const PreCopy = styled(ButtonCopy, {
-  position: 'absolute',
-  top: 24,
-  right: 24,
-  display: 'none',
-
-  '@tabletUp': {
-    display: 'block',
-  },
-})
-
-const CodePre = styled(Pre, {
-  [`${PreCopy}`]: {
-    opacity: 0,
-
-    '@motion': {
-      transition: 'opacity 200ms ease-out',
-    },
-  },
-
-  hover: {
-    [`${PreCopy}`]: {
-      opacity: 1,
-    },
-  },
-})

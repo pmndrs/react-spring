@@ -1,21 +1,21 @@
 import { CSSProperties, forwardRef, ReactNode } from 'react'
-import { getFontStyles } from '~/styles/fontStyles'
 
 import { Link } from 'phosphor-react'
 
-import { styled, ScaleValue, CSS } from '~/styles/stitches.config'
+import { heading, linkIcon } from './Heading.css'
+import clsx from 'clsx'
+import * as FontSizes from '../../styles/fontStyles.css'
 
 export interface HeadingProps {
   tag?: keyof Pick<
     JSX.IntrinsicElements,
     'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'figcaption'
   >
-  fontStyle?: ScaleValue<'fontSizes'>
+  fontStyle?: keyof FontSizes.FontSizes
   className?: string
   children?: ReactNode
   isLink?: boolean
-  css?: CSS
-  weight?: ScaleValue<'fontWeights'> | CSSProperties['fontWeight']
+  weight?: keyof FontSizes.FontWeights
   style?: CSSProperties
 }
 
@@ -23,59 +23,31 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
   (
     {
       tag = 'h1',
-      fontStyle = '$S',
-      weight = '$default',
+      fontStyle = 'S',
+      weight = 'default',
       className,
       children,
-      css,
       isLink = false,
       ...restProps
     },
     ref
   ) => {
+    const Element = tag
+
     return (
-      <HeadingElement
-        className={className}
+      <Element
+        className={clsx(
+          FontSizes[fontStyle],
+          FontSizes.WEIGHTS[weight],
+          heading,
+          className
+        )}
         ref={ref}
-        as={tag}
-        css={{
-          fontWeight: weight,
-          ...getFontStyles(fontStyle),
-          ...css,
-        }}
         {...restProps}
       >
         {children}
-        {isLink ? <LinkIcon size={16} /> : null}
-      </HeadingElement>
+        {isLink ? <Link className={linkIcon} size={16} /> : null}
+      </Element>
     )
   }
 )
-
-const LinkIcon = styled(Link, {
-  position: 'absolute',
-  left: -24,
-  bottom: 2,
-  transform: 'translateY(-50%)',
-  opacity: 0,
-
-  '@motion': {
-    transition: 'opacity 200ms ease-out',
-  },
-})
-
-const HeadingElement = styled('h1', {
-  whiteSpace: 'pre-line',
-  position: 'relative',
-
-  '& > a': {
-    pointerEvents: 'auto',
-    textDecoration: 'none',
-    fontWeight: 'inherit',
-    hover: {
-      [`& + ${LinkIcon}`]: {
-        opacity: 1,
-      },
-    },
-  },
-})

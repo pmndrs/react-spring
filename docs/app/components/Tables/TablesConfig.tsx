@@ -2,9 +2,15 @@ import { ReactNode } from 'react'
 
 import { DEFAULT_CONFIG_DATA } from '~/data/fixtures'
 
-import { styled } from '~/styles/stitches.config'
-
 import { renderCell } from './TableCell'
+import {
+  firstTableCell,
+  secondTableCell,
+  table,
+  tableHeadCell,
+  thirdTableCell,
+} from './TablesConfig.css'
+import clsx from 'clsx'
 
 export type CellData = string | null | { label: string; content: ReactNode }
 
@@ -15,18 +21,12 @@ interface TablesConfigurationProps {
 export const TablesConfiguration = ({
   data = DEFAULT_CONFIG_DATA,
 }: TablesConfigurationProps) => (
-  <Table>
+  <table className={table}>
     <thead>
       <tr>
-        <TableHeadCell css={{ width: '40%', '@tabletUp': { width: '30%' } }}>
-          Prop
-        </TableHeadCell>
-        <TableHeadCell css={{ width: '60%', '@tabletUp': { width: '50%' } }}>
-          Type
-        </TableHeadCell>
-        <TableHeadCell css={{ '@tabletUp': { width: '20%' } }} isThirdItem>
-          Default
-        </TableHeadCell>
+        <th className={clsx(tableHeadCell, firstTableCell)}>Prop</th>
+        <th className={clsx(tableHeadCell, secondTableCell)}>Type</th>
+        <th className={clsx(tableHeadCell, thirdTableCell)}>Default</th>
       </tr>
     </thead>
     <tbody>
@@ -34,7 +34,7 @@ export const TablesConfiguration = ({
         <tr key={index}>{row.map(renderCell())}</tr>
       ))}
     </tbody>
-  </Table>
+  </table>
 )
 
 interface TableGenericProps extends TablesConfigurationProps {
@@ -45,11 +45,15 @@ export const TableGeneric = ({
   data = [],
   headData = [],
 }: TableGenericProps) => (
-  <Table>
+  <table className={table}>
     <thead>
       <tr>
         {headData.map(head =>
-          head ? <TableHeadCell key={head}>{head}</TableHeadCell> : null
+          head ? (
+            <th className={tableHeadCell} key={head}>
+              {head}
+            </th>
+          ) : null
         )}
       </tr>
     </thead>
@@ -58,39 +62,5 @@ export const TableGeneric = ({
         <tr key={index}>{row.map(renderCell('generic'))}</tr>
       ))}
     </tbody>
-  </Table>
+  </table>
 )
-
-export const TableScrollWrapper = styled('div', {
-  width: '100%',
-  overflow: 'scroll',
-})
-
-const Table = styled('table', {
-  width: '100%',
-  textAlign: 'left',
-  borderCollapse: 'collapse',
-
-  '& td, & th': {
-    borderBottom: '2px solid $codeBackground',
-  },
-})
-
-const TableHeadCell = styled('th', {
-  fontFamily: '$sans-var',
-  fontSize: '$XXS',
-  lineHeight: '$XXS',
-  py: '$15',
-
-  variants: {
-    isThirdItem: {
-      true: {
-        display: 'none',
-
-        '@tabletUp': {
-          display: 'table-cell',
-        },
-      },
-    },
-  },
-})

@@ -1,13 +1,27 @@
-import { dark, styled } from '~/styles/stitches.config'
-
 import { Anchor } from '../Text/Anchor'
 import { AspectRatio } from '../AspectRatio'
 import { Heading } from '../Text/Heading'
 import { GradientButton } from '../Buttons/GradientButton'
 
-import type { Sandbox } from '../../routes/examples'
-
 import { EventNames, firePlausibleEvent } from '~/helpers/analytics'
+import {
+  exampleAnchor,
+  exampleCard,
+  exampleContent,
+  exampleDescription,
+  exampleTag,
+  exampleTags,
+  externalLinkIcon,
+} from './CardExample.css'
+
+export interface Sandbox {
+  urlTitle: string
+  title: string
+  tags: string[]
+  screenshotUrl: string
+  description: string
+  id: string
+}
 
 export const CardExample = ({ title, description, tags, id }: Sandbox) => {
   const handleClick = () => {
@@ -20,136 +34,45 @@ export const CardExample = ({ title, description, tags, id }: Sandbox) => {
   }
 
   return (
-    <ExampleAnchor
+    <Anchor
+      className={exampleAnchor}
       href={`https://codesandbox.io/s/${id}`}
       onClick={handleClick}
     >
-      <ExampleCard>
-        <ExternalLinkIcon />
-        <ExampleImage height={9} width={16}>
+      <figure className={exampleCard}>
+        <div className={externalLinkIcon} />
+        <AspectRatio height={9} width={16}>
           <img
             src={`https://codesandbox.io/api/v1/sandboxes/${id}/screenshot.png`}
             placeholder="empty"
             loading="lazy"
             alt={title}
           />
-        </ExampleImage>
-        <ExampleContent>
-          <ExampleDescription
+        </AspectRatio>
+        <div className={exampleContent}>
+          <Heading
+            className={exampleDescription}
             tag="figcaption"
-            fontStyle="$code"
-            weight="$default"
+            fontStyle="code"
+            weight="default"
           >
             <span>{title}</span>
             <span>{description}</span>
-          </ExampleDescription>
-          <ExampleTags>
+          </Heading>
+          <ul className={exampleTags}>
             {tags.map(tag => (
-              <ExampleTag variant="small" tag="li" key={tag}>
+              <GradientButton
+                className={exampleTag}
+                variant="small"
+                tag="li"
+                key={tag}
+              >
                 {tag}
-              </ExampleTag>
+              </GradientButton>
             ))}
-          </ExampleTags>
-        </ExampleContent>
-      </ExampleCard>
-    </ExampleAnchor>
+          </ul>
+        </div>
+      </figure>
+    </Anchor>
   )
 }
-
-const ExternalLinkIcon = styled('div', {
-  position: 'absolute',
-  top: 16,
-  right: 20,
-  height: 24,
-  width: 24,
-  background: 'url(/images/icons/ArrowSquareOutBlue.png)',
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  zIndex: '$1',
-  mixBlendMode: 'difference',
-
-  '@media (hover:hover)': {
-    opacity: 0,
-  },
-
-  [`.${dark} &`]: {
-    background: 'url(/images/icons/ArrowSquareOutRed.png)',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  },
-
-  '@motion': {
-    transition: 'opacity 250ms ease-out',
-  },
-})
-
-const ExampleAnchor = styled(Anchor, {
-  textDecoration: 'none',
-  zIndex: 0,
-  position: 'relative',
-
-  '&:focus-visible': {
-    boxShadow: 'none',
-
-    [`& ${ExternalLinkIcon}`]: {
-      opacity: 1,
-      boxShadow: '0 0 0 3px $red-outline',
-      outline: 'none',
-      borderRadius: '$r4',
-
-      ['-webkit-tap-highlight-color']: '3px solid $red-outline',
-    },
-  },
-
-  hover: {
-    [`& ${ExternalLinkIcon}`]: {
-      opacity: 1,
-    },
-  },
-})
-
-const ExampleCard = styled('figure', {
-  backgroundColor: '$codeBackground',
-  m: 0,
-  position: 'relative',
-  borderRadius: '$r8',
-  overflow: 'hidden',
-})
-
-const ExampleImage = styled(AspectRatio)
-
-const ExampleContent = styled('div', {
-  p: '$20',
-})
-
-const ExampleDescription = styled(Heading, {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 4,
-  mb: '$10',
-
-  '& > span + span': {
-    color: '$steel40',
-  },
-})
-
-const ExampleTags = styled('ul', {
-  listStyle: 'none',
-  m: 0,
-  p: 0,
-  display: 'flex',
-  gap: '$10 ',
-  flexWrap: 'wrap',
-})
-
-const ExampleTag = styled(GradientButton, {
-  '& > span': {
-    backgroundColor: '$codeBackground',
-  },
-
-  '&:hover:before': {
-    filter: 'none !important',
-  },
-})

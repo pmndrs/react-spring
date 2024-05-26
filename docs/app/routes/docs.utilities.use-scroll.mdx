@@ -1,0 +1,65 @@
+---
+meta:
+  title: useScroll | React Spring
+  'og:title': useScroll | React Spring
+  'twitter:title': useScroll | React Spring
+  description: API documentation for the useScroll utility hook in React Spring.
+  'og:description': API documentation for the useScroll utility hook in React Spring.
+  'twitter:description': API documentation for the useScroll utility hook in React Spring.
+  'og:url': https://www.react-spring.dev/docs/utilities/use-scroll
+  'twitter:url': https://www.react-spring.dev/docs/utilities/use-scroll
+sidebar_position: 3
+isNew: true
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# useScroll
+
+A small utility abstraction around our signature [`useSpring`](/docs/components/use-spring) hook. It's a great way to
+create a scroll-linked animation. With either the raw value of distance or a 0-1 progress value. You can either use the
+scroll values of the whole document, or just a specific element.
+
+## Usage
+
+The example below will start off with an `opacity` of `0` but when the user scrolls to the bottom of the page it will have
+reached an `opacity` of `1`.
+
+```tsx
+import { useScroll, animated } from '@react-spring/web'
+
+function MyComponent() {
+  const { scrollYProgress } = useScroll()
+
+  return (
+    <animated.div style={{ opacity: scrollYProgress }}>
+      Hello World
+    </animated.div>
+  )
+}
+```
+
+## Reference
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { USE_SCROLL_CONFIG_DATA } from '../data/fixtures'
+
+<TablesConfiguration data={USE_SCROLL_CONFIG_DATA} />
+
+## Typescript
+
+```tsx
+function useScroll(configuration: ConfigObject): SpringValues
+```
+
+Where `ConfigObject` is described [above](#reference)
+
+## Examples
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid sandboxTitles={['Scrolling Wave']} />
+
+Can't find what you're looking for? Check out all our [examples!](/examples)

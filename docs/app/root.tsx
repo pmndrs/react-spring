@@ -1,52 +1,68 @@
 import {
   MetaFunction,
   LinksFunction,
-  LoaderFunction,
   json,
-} from '@remix-run/node'
+  LoaderFunctionArgs,
+  ActionFunctionArgs,
+} from '@vercel/remix'
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react'
-import docusearch from '@docsearch/css/dist/style.css'
-
-import { globalStyles } from './styles/global'
-
-import { WidgetTheme } from './components/Widgets/WidgetTheme'
+import { Analytics } from '@vercel/analytics/react'
 import { WidgetPlausible } from './components/Widgets/WidgetPlausible'
+import { lightThemeClass } from './styles/light-theme.css'
+import global from './styles/global.css?url'
+import docusearch from '@docsearch/css/dist/style.css?url'
+import { getTheme, setTheme } from './helpers/theme.server'
+import { darkThemeClass } from './styles/dark-theme.css'
+import { ClientHintCheck, getHints } from './components/Site/SiteClientHints'
+import { useTheme } from './hooks/useTheme'
 import { SiteFooter } from './components/Site/SiteFooter'
 
 export const meta: MetaFunction = () => {
-  return {
-    title: 'react-spring',
-    description:
-      'Bring your components to life with simple spring animation primitives for React',
-    'og:site_name': 'React Spring',
-    'og:title': 'React Spring',
-    'og:description':
-      'Bring your components to life with simple spring animation primitives for React',
-    'og:image': 'https://www.react-spring.dev/share.jpg',
-    'og:type': 'website',
-    'og:image:width': '1200',
-    'og:image:height': '630',
-    'og:url': 'https://www.react-spring.dev',
-    'twitter:card': 'summary_large_image',
-    'twitter:domain': 'react-spring.dev',
-    'twitter:url': 'https://www.react-spring.dev',
-    'twitter:title': 'React Spring',
-    'twitter:description':
-      'Bring your components to life with simple spring animation primitives for React',
-    'twitter:image': 'https://www.react-spring.dev/share.jpg',
-  }
+  return [
+    { title: 'react-spring' },
+    {
+      name: 'description',
+      content:
+        'Bring your components to life with simple spring animation primitives for React',
+    },
+    { property: 'og:site_name', content: 'React Spring' },
+    { property: 'og:title', content: 'React Spring' },
+    {
+      property: 'og:description',
+      content:
+        'Bring your components to life with simple spring animation primitives for React',
+    },
+    { property: 'og:image', content: 'https://www.react-spring.dev/share.jpg' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:image:width', content: '1200' },
+    { property: 'og:image:height', content: '630' },
+    { property: 'og:url', content: 'https://www.react-spring.dev' },
+    { property: 'twitter:card', content: 'summary_large_image' },
+    { property: 'twitter:domain', content: 'react-spring.dev' },
+    { property: 'twitter:url', content: 'https://www.react-spring.dev' },
+    { property: 'twitter:title', content: 'React Spring' },
+    {
+      property: 'twitter:description',
+      content:
+        'Bring your components to life with simple spring animation primitives for React',
+    },
+    {
+      property: 'twitter:image',
+      content: 'https://www.react-spring.dev/share.jpg',
+    },
+  ]
 }
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: docusearch },
+  { rel: 'stylesheet', href: global },
   { rel: 'stylesheet', href: 'https://rsms.me/inter/inter.css' },
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
@@ -56,8 +72,14 @@ export const links: LinksFunction = () => [
   },
 ]
 
-export const loader: LoaderFunction = () => {
+export const loader = ({ request }: LoaderFunctionArgs) => {
   return json({
+    requestInfo: {
+      hints: getHints(request),
+      userPrefs: {
+        theme: getTheme(request),
+      },
+    },
     ENV: {
       ENABLE_PLAUSIBLE: process.env.ENABLE_PLAUSIBLE,
       ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
@@ -67,22 +89,31 @@ export const loader: LoaderFunction = () => {
   })
 }
 
-function Document({ children }: { children: React.ReactNode }) {
-  globalStyles()
+export async function action({ request }: ActionFunctionArgs) {
+  const body = await request.json()
+  const theme = body.theme ?? 'light'
 
-  const data = useLoaderData()
+  const responseInit = {
+    headers: { 'set-cookie': setTheme(theme) },
+  }
+  return json({ ok: true }, responseInit)
+}
+
+export function Layout({ children }: { children: React.ReactNode }) {
+  const data = useLoaderData<typeof loader>()
+  const theme = useTheme()
 
   return (
     <html lang="en">
       <head>
+        <ClientHintCheck />
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
         <WidgetPlausible />
-        <WidgetTheme />
       </head>
-      <body>
+      <body className={theme === 'light' ? lightThemeClass : darkThemeClass}>
         {children}
         <SiteFooter />
         <script
@@ -90,18 +121,14 @@ function Document({ children }: { children: React.ReactNode }) {
             __html: `window.env = ${JSON.stringify(data.ENV)}`,
           }}
         />
+        <ScrollRestoration />
         <Scripts />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}
+        <Analytics />
       </body>
     </html>
   )
 }
 
 export default function App() {
-  return (
-    <Document>
-      <Outlet />
-      <ScrollRestoration />
-    </Document>
-  )
+  return <Outlet />
 }

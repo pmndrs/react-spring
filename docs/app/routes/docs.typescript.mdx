@@ -1,0 +1,129 @@
+---
+meta:
+  title: Typescript | React Spring
+  'og:title': Typescript | React Spring
+  'twitter:title': Typescript | React Spring
+  description: Documentation hub for lesser used typescript types in React Spring.
+  'og:description': Documentation hub for lesser used typescript types in React Spring.
+  'twitter:description': Documentation hub for lesser used typescript types in React Spring.
+  'og:url': https://www.react-spring.dev/docs/typescript
+  'twitter:url': https://www.react-spring.dev/docs/typescript
+sidebar_position: 8
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# Typescript Glossary
+
+## Animation
+
+An animation being executed by the frameloop. Normally found attached to a [`SpringValue`](/docs/advanced/spring-value).
+
+```ts
+class Animation<T = any> {
+  changed: boolean
+  values: readonly AnimatedValue[]
+  toValues: readonly number[] | null
+  fromValues: readonly number[]
+  to: T | FluidValue<T>
+  from: T | FluidValue<T>
+  config: AnimationConfig
+  immediate: boolean
+}
+```
+
+## AnimationProps
+
+Most of the reserved animation props, except `to`, `from`, `loop`, and the event props.
+
+```ts
+interface AnimationProps<T = any> {
+  config?: SpringConfig | ((key: StringKeys<T>) => SpringConfig)
+  delay?: number | ((key: StringKeys<T>) => number)
+  immediate?: MatchProp<T>
+  cancel?: MatchProp<T>
+  pause?: MatchProp<T>
+  reset?: MatchProp<T>
+  reverse?: boolean
+  default?: boolean | SpringProps<T>
+}
+```
+
+## ControllerUpdate
+
+A value that any `SpringValue` or `Controller` can animate to.
+
+```ts
+export declare type ControllerUpdate<
+  State extends Lookup = Lookup,
+  Item = undefined,
+> = unknown & ToProps<State> & ControllerProps<State, Item>
+```
+
+## Lookup
+
+`Lookup` is typically inferred, so you probably won't need to use it.
+It's primarily used to infer the animatable properties from our hooks, e.g. `opacity`
+
+```ts
+interface Lookup<T = any> {
+  [key: string]: T
+}
+```
+
+## OneOrMore
+
+```ts
+export type OneOrMore<T> = T | readonly T[]
+```
+
+## SpringUpdate
+
+The props of a `useSpring` call or its async `update` function. The `T` parameter can
+be a set of animated values (as an object type) or a primitive type for a single
+animated value.
+
+```ts
+type SpringUpdate<T = any> = ToProps<T> & SpringProps<T>
+type SpringsUpdate<State extends Lookup = UnknownProps> =
+  | OneOrMore<ControllerUpdate<State>>
+  | ((index: number, ctrl: Controller<State>) => ControllerUpdate<State> | null)
+```
+
+## SpringValues
+
+`SpringValues` is contextual to the values you pass to your hook e.g. `opacity`.
+It's type signature is quite complicated, so it's easier to show how you use it.
+
+```ts
+type MySpringValues = SpringValues<{
+  opacity: number
+  y: string
+}>
+```
+
+## TransitionState
+
+`TransitionState` is the internal state attached to a particular `Item`
+(a single datum from the data array you pass).
+
+```ts
+interface TransitionState<Item = any, State extends Lookup = Lookup> {
+  key: any
+  item: Item
+  ctrl: Controller<State>
+  phase: TransitionPhase
+  expired?: boolean
+  expirationId?: number
+}
+```
+
+## UnknownProps
+
+Intersected with other object types to allow for unknown properties.
+
+```ts
+export interface UnknownProps extends Lookup<unknown> {}
+```

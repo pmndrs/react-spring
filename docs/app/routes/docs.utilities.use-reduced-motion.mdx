@@ -1,0 +1,110 @@
+---
+meta:
+  title: useReducedMotion | React Spring
+  'og:title': useReducedMotion | React Spring
+  'twitter:title': useReducedMotion | React Spring
+  description: API documentation for the useReducedMotion utility hook in React Spring.
+  'og:description': API documentation for the useReducedMotion utility hook in React Spring.
+  'twitter:description': API documentation for the useReducedMotion utility hook in React Spring.
+  'og:url': https://www.react-spring.dev/docs/utilities/use-reduced-motion
+  'twitter:url': https://www.react-spring.dev/docs/utilities/use-reduced-motion
+sidebar_position: 2
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# useReducedMotion
+
+A utility hook designed to stop the running of animations in `react-spring` through
+determining whether a user prefers reduced motion.
+
+## Usage
+
+To get the most out of this hook, I recommend that you call it in the `root` of your app.
+However, you may need to directly know the preference to synchronize a third-party system e.g.
+autoplaying a video.
+
+```tsx
+import { useReducedMotion } from '@react-spring/web'
+
+export default function MyApp() {
+  const reducedMotion = useReducedMotion()
+
+  return (
+    <main>
+      <h1>Hello World</h1>
+      {reducedMotion ? <p>You're using reduced motion!</p> : null}
+    </main>
+  )
+}
+```
+
+## Stopping animations
+
+So how does this hook have the ability to stop all animations? `react-spring` has a `Globals` object,
+these global objects are used for to synchronize hooks across your application. One property that can
+be set is called `skipAnimation`. This property is a boolean and is checked by either the `Controller`
+or `SpringValue` to see if it should animate. If `skipAnimation` is set to `true` then the animation
+will "jump" to the goal value, similar to if the immediate prop is `true`.
+
+The animation below has it's `skipAnimation` set to `true` so it will instantly jump to the goal value,
+check the code to learn more.
+
+```jsx live=true
+import { useRef, useEffect } from 'react'
+import { useSpring, animated, Globals } from '@react-spring/web'
+
+export default function MyApp() {
+  const isRight = useRef(false)
+
+  const [springs, api] = useSpring(
+    () => ({
+      x: 0,
+    }),
+    []
+  )
+
+  const handleClick = () => {
+    api.start({
+      x: isRight.current ? 0 : 200,
+      onRest: () => {
+        isRight.current = !isRight.current
+      },
+    })
+  }
+
+  useEffect(() => {
+    Globals.assign({
+      skipAnimation: true,
+    })
+
+    return () => {
+      Globals.assign({
+        skipAnimation: false,
+      })
+    }
+  })
+
+  return (
+    <animated.div onClick={handleClick} className="spring-box" style={springs}>
+      Click me!
+    </animated.div>
+  )
+}
+```
+
+## Why is it important?
+
+Vestibular dysfunction, a balance disorder of the inner ear, is surprisingly common
+among US adults. A study from the early 2000's found that approximately 69 million
+Americans had vestibular dysfunction which results in vertigo, nausea, migraines and
+hearing loss. Many people affected by vestibular dysfunction will choose to set the
+"Reduce motion" setting in their operating system.
+
+## Typescript
+
+```ts
+function useReducedMotion(): boolean
+```

@@ -1,6 +1,8 @@
+import clsx from 'clsx'
 import { ReactNode } from 'react'
+import { assignInlineVars } from '@vanilla-extract/dynamic'
 
-import { styled } from '~/styles/stitches.config'
+import { container, heightVar, widthVar } from './AspectRatio.css'
 
 interface AspectRatioProps {
   children: ReactNode
@@ -15,47 +17,15 @@ export const AspectRatio = ({
   height = 1,
   className,
 }: AspectRatioProps) => (
-  <Container
-    className={className}
-    css={{
-      '@supports(aspect-ratio: 1)': {
-        aspectRatio: `${width} / ${height}`,
-      },
-      '@supports not (aspect-ratio: 1)': {
-        '&:before': {
-          paddingTop: `${(height / width) * 100}%`,
-        },
-      },
+  <div
+    className={clsx(container, className)}
+    style={{
+      ...assignInlineVars({
+        [widthVar]: `${width}`,
+        [heightVar]: `${height}`,
+      }),
     }}
   >
     {children}
-  </Container>
+  </div>
 )
-
-const Container = styled('div', {
-  '@supports(aspect-ratio: 1)': {
-    overflow: 'hidden',
-  },
-
-  '@supports not (aspect-ratio: 1)': {
-    '&:before': {
-      display: 'block',
-      content: '',
-      width: '100%',
-    },
-  },
-
-  position: 'relative',
-
-  '& > *': {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    minWidth: '100%',
-    maxWidth: '100%',
-    minHeight: '100%',
-    maxHeight: '100%',
-    objectFit: 'cover',
-  },
-})

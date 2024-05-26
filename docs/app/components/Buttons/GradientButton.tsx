@@ -1,5 +1,6 @@
+import clsx from 'clsx'
 import { ReactNode } from 'react'
-import { dark, styled } from '~/styles/stitches.config'
+import { button, inner } from './GradientButton.css'
 
 interface GradientButtonProps {
   children: ReactNode
@@ -14,92 +15,22 @@ export const GradientButton = ({
   className,
   href,
   children,
-  tag,
+  tag = 'a',
   variant = 'regular',
   type = 'button',
   ...props
 }: GradientButtonProps) => {
+  const Element = tag
+
   return (
-    <Button
-      size={variant}
-      className={className}
-      as={tag}
+    <Element
+      className={clsx(button({ size: variant }), className)}
       href={href}
+      // @ts-expect-error – polymorphic component
       type={tag === 'button' ? type : undefined}
       {...props}
     >
-      <span>{children}</span>
-    </Button>
+      <span className={inner({ size: variant })}>{children}</span>
+    </Element>
   )
 }
-
-const Button = styled('a', {
-  color: '$steel100',
-  border: 'none',
-  borderRadius: '$r8',
-  p: 2,
-  backgroundClip: 'content-box',
-  position: 'relative',
-  display: 'inline-block',
-  zIndex: 0,
-
-  '&:before': {
-    content: '',
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    zIndex: -1,
-    borderRadius: 'inherit',
-    background: '$redYellowGradient100',
-    transition: 'filter 250ms ease-out',
-  },
-
-  [`.${dark} &:before`]: {
-    background: '$blueGreenGradient100',
-  },
-
-  '& > span': {
-    display: 'block',
-    backgroundColor: '$white',
-    borderRadius: 'inherit',
-  },
-
-  '&:hover:before': {
-    filter: 'brightness(120%)',
-  },
-
-  [`.${dark} &:hover:before`]: {
-    filter: 'brightness(140%)',
-  },
-
-  variants: {
-    size: {
-      small: {
-        fontSize: 12,
-        fontWeight: 400,
-        lineHeight: '140%',
-
-        '& > span': {
-          px: '$10',
-          py: 5,
-        },
-
-        [`.${dark} &`]: {
-          fontWeight: 300,
-        },
-      },
-      regular: {
-        fontSize: '$XXS',
-        lineHeight: '$XXS',
-
-        '& > span': {
-          p: '$10 $15',
-        },
-      },
-    },
-  },
-})

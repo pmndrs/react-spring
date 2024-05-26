@@ -2,7 +2,8 @@ import { ReactNode } from 'react'
 import { Link } from '@remix-run/react'
 
 import { isValidHttpUrl } from '~/helpers/strings'
-import { styled } from '~/styles/stitches.config'
+import clsx from 'clsx'
+import { anchor } from './Anchor.css'
 
 export interface AnchorProps {
   href: string
@@ -22,33 +23,21 @@ export const Anchor = ({ href, children, className, onClick }: AnchorProps) => {
 
   if (isExternal) {
     return (
-      <AnchorElement
-        className={className}
-        as="a"
+      <a
+        className={clsx(anchor, className)}
         href={href}
         rel="noopener noreferrer"
         target="_blank"
         onClick={handleClick}
       >
         {children}
-      </AnchorElement>
+      </a>
     )
   } else {
     return (
-      <AnchorElement onClick={handleClick} to={href}>
+      <Link className={clsx(anchor, className)} onClick={handleClick} to={href}>
         {children}
-      </AnchorElement>
+      </Link>
     )
   }
 }
-
-/**
- * TODO: add anchor hover & active states
- * and maybe a nice animation to go with it
- */
-const AnchorElement = styled(Link, {
-  fontSize: 'inherit',
-  lineHeight: 'inherit',
-  fontWeight: '$bold',
-  textDecoration: 'underline',
-})

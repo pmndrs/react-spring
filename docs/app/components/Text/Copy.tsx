@@ -1,35 +1,33 @@
+import clsx from 'clsx'
 import { forwardRef, ReactNode } from 'react'
-import { getFontStyles } from '~/styles/fontStyles'
 
-import { styled, ScaleValue, CSS } from '~/styles/stitches.config'
+import { copy } from './Copy.css'
+import * as FontSizes from '../../styles/fontStyles.css'
 
 export interface CopyProps {
-  fontStyle?: ScaleValue<'fontSizes'>
+  fontStyle?: keyof FontSizes.FontSizes
   className?: string
   children?: ReactNode
-  css?: CSS
   tag?: keyof Pick<JSX.IntrinsicElements, 'p' | 'blockquote' | 'div' | 'label'>
 }
 
-export const Copy = forwardRef<HTMLHeadingElement, CopyProps>(
-  ({ fontStyle = '$XS', className, children, css, tag = 'p' }, ref) => {
-    return (
-      <Text
-        className={className}
-        as={tag}
-        ref={ref}
-        css={{
-          ...getFontStyles(fontStyle),
-          ...css,
-        }}
-      >
-        {children}
-      </Text>
-    )
-  }
-)
+export const Copy = forwardRef<
+  | HTMLHeadingElement
+  | HTMLQuoteElement
+  | HTMLDivElement
+  | HTMLLabelElement
+  | HTMLParagraphElement,
+  CopyProps
+>(({ fontStyle = 'XS', className, children, tag = 'p' }, ref) => {
+  const Element = tag
 
-const Text = styled('p', {
-  margin: 0,
-  fontWeight: '$default',
+  return (
+    <Element
+      className={clsx(FontSizes[fontStyle], copy, className)}
+      // @ts-expect-error – TODO: fix this
+      ref={ref}
+    >
+      {children}
+    </Element>
+  )
 })

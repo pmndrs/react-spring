@@ -1,64 +1,67 @@
-import { atom, useAtom } from 'jotai'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import { MoonStars, Sun } from 'phosphor-react'
 import { animated, useSpring } from '@react-spring/web'
 
-import { styled } from '~/styles/stitches.config'
-
 import { AccessibleIcon } from '../AccessibleIcon'
-import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
+import { themeActiveBlob, themeGroup, themePicker } from './SiteThemePicker.css'
+import { useOptimisticThemeMode, useTheme } from '../../hooks/useTheme'
+import { useFetcher } from '@remix-run/react'
+import { action } from '../../root'
 
 export enum ThemeValue {
   Dark = 'dark',
   Light = 'light',
 }
 
-export const themeAtom = atom(ThemeValue.Light)
-
 export const SiteThemePicker = () => {
-  const [theme, setTheme] = useAtom(themeAtom)
+  const fetcher = useFetcher<typeof action>()
+
+  const optimisticMode = useOptimisticThemeMode()
+  const userPreference = useTheme()
+  const mode = optimisticMode ?? userPreference ?? 'light'
 
   const [styles, api] = useSpring(
     () => ({
-      width: 0,
-      left: theme === 'light' ? '2px' : 'unset',
-      right: theme === 'light' ? 'unset' : '2px',
+      width: 42,
+      left: mode === 'light' ? '2px' : 'unset',
+      right: mode === 'light' ? 'unset' : '2px',
       config: {
         tension: 300,
         clamp: true,
       },
     }),
-    []
+    [mode]
   )
 
-  useIsomorphicLayoutEffect(() => {
-    const isDefaultDark = document.documentElement.classList.contains('dark')
-
-    api.start({
-      width: 42,
-      left: !isDefaultDark ? '2px' : 'unset',
-      right: !isDefaultDark ? 'unset' : '2px',
-      immediate: true,
-    })
-
-    setTheme(isDefaultDark ? ThemeValue.Dark : ThemeValue.Light)
-  }, [])
-
-  useIsomorphicLayoutEffect(() => {
-    const dClass = document.documentElement.classList
-
-    dClass.remove('dark', 'light')
-
-    dClass.add(theme)
-
-    window.localStorage.setItem('theme', theme)
-  }, [theme])
-
-  const isDarkMode = theme === ThemeValue.Dark
+  const isDarkMode = mode === ThemeValue.Dark
 
   const handleValueChange = async (value: ThemeValue) => {
-    if (value && value !== theme) {
-      setTheme(value)
+    if (value && value !== mode) {
+      const css = document.createElement('style')
+      css.type = 'text/css'
+      css.appendChild(
+        document.createTextNode(
+          `* {
+       -webkit-transition: none !important;
+       -moz-transition: none !important;
+       -o-transition: none !important;
+       -ms-transition: none !important;
+       transition: none !important;
+    }`
+        )
+      )
+      document.head.appendChild(css)
+
+      fetcher.submit(
+        {
+          theme: value,
+        },
+        {
+          method: 'POST',
+          encType: 'application/json',
+          action: '/',
+        }
+      )
 
       api.start({
         to: async animate => {
@@ -68,13 +71,16 @@ export const SiteThemePicker = () => {
             right: value === 'light' ? 'unset' : '2px',
           })
           await animate({ width: 42 })
+
+          const _ = window.getComputedStyle(css).opacity
+          document.head.removeChild(css)
         },
       })
     }
   }
 
   const handlePointerEnter = (value: ThemeValue) => () => {
-    if (theme !== value) {
+    if (mode !== value) {
       api.start({
         width: 52,
       })
@@ -82,7 +88,7 @@ export const SiteThemePicker = () => {
   }
 
   const handlePointerOut = (value: ThemeValue) => () => {
-    if (theme !== value) {
+    if (mode !== value) {
       api.start({
         width: 42,
       })
@@ -90,64 +96,41 @@ export const SiteThemePicker = () => {
   }
 
   return (
-    <ThemeGroup onValueChange={handleValueChange} value={theme} type="single">
-      <ThemePicker
+    <Toolbar.ToggleGroup
+      className={themeGroup}
+      onValueChange={handleValueChange}
+      value={mode}
+      type="single"
+    >
+      <Toolbar.ToggleItem
+        className={themePicker}
         onPointerEnter={handlePointerEnter(ThemeValue.Light)}
         onPointerOut={handlePointerOut(ThemeValue.Light)}
         value="light"
       >
         <AccessibleIcon label="Enable light mode">
-          <Sun size={20} weight={isDarkMode ? 'light' : 'regular'} />
+          <Sun
+            size={20}
+            weight={isDarkMode ? 'light' : 'regular'}
+            style={{ pointerEvents: 'none' }}
+          />
         </AccessibleIcon>
-      </ThemePicker>
-      <ThemePicker
+      </Toolbar.ToggleItem>
+      <Toolbar.ToggleItem
+        className={themePicker}
         onPointerEnter={handlePointerEnter(ThemeValue.Dark)}
         onPointerOut={handlePointerOut(ThemeValue.Dark)}
         value="dark"
       >
         <AccessibleIcon label="Enable dark mode">
-          <MoonStars size={20} weight={isDarkMode ? 'light' : 'regular'} />
+          <MoonStars
+            size={20}
+            weight={isDarkMode ? 'light' : 'regular'}
+            style={{ pointerEvents: 'none' }}
+          />
         </AccessibleIcon>
-      </ThemePicker>
-      <ThemeActiveBlob style={styles} />
-    </ThemeGroup>
+      </Toolbar.ToggleItem>
+      <animated.div className={themeActiveBlob} style={styles} />
+    </Toolbar.ToggleGroup>
   )
 }
-
-const ThemeGroup = styled(Toolbar.ToggleGroup, {
-  height: '4.6rem',
-  width: '9.2rem',
-  position: 'relative',
-  backgroundColor: '$codeBackground',
-  borderRadius: '$r8',
-  zIndex: 0,
-})
-
-const ThemePicker = styled(Toolbar.ToggleItem, {
-  background: 'transparent',
-  border: 'none',
-  width: '50%',
-  height: '100%',
-  display: 'inline-flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: '$r8',
-  p: 2,
-  cursor: 'pointer',
-  position: 'relative',
-  zIndex: 1,
-
-  svg: {
-    pointerEvents: 'none',
-  },
-})
-
-const ThemeActiveBlob = styled(animated.div, {
-  height: 42,
-  backgroundColor: '$white',
-  position: 'absolute',
-  zIndex: 0,
-  top: 2,
-  borderRadius: '$r8',
-  transition: 'left 400ms ease-out, right 400ms ease-out',
-})

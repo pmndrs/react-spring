@@ -1,7 +1,10 @@
-import { styled } from '~/styles/stitches.config'
-
 import { CardCarouselQuote, Quote } from '../Cards/CardCarouselQuote'
 import { Heading } from '../Text/Heading'
+import {
+  quoteHeading,
+  quotesContainer,
+  quotesSection,
+} from './CarouselQuotes.css'
 
 interface CarouselQuotesProps {
   quotes: Quote[]
@@ -13,47 +16,15 @@ interface CarouselQuotesProps {
  */
 export const CarouselQuotes = ({ quotes }: CarouselQuotesProps) => {
   return (
-    <QuotesSection>
-      <QuoteHeading fontStyle="$M" tag="h2">
+    <section className={quotesSection}>
+      <Heading className={quoteHeading} fontStyle="M" tag="h2">
         Hear what our fans say
-      </QuoteHeading>
-      <QuotesContainer>
+      </Heading>
+      <div className={quotesContainer}>
         {quotes.map(quote => (
           <CardCarouselQuote key={quote.handle} {...quote} />
         ))}
-      </QuotesContainer>
-    </QuotesSection>
+      </div>
+    </section>
   )
 }
-
-const QuotesSection = styled('section', {
-  mb: '$10',
-
-  '@tabletUp': {
-    mb: '$30',
-  },
-})
-
-const QuoteHeading = styled(Heading, {
-  px: '$25',
-
-  '@tabletUp': {
-    px: '$50',
-    margin: '0 auto',
-    maxWidth: '$largeDoc',
-  },
-})
-
-const QuotesContainer = styled('div', {
-  display: 'flex',
-  gap: '$20',
-  alignItems: 'flex-start',
-  overflow: 'auto',
-  pt: '$20',
-  pb: '$10',
-  px: '$25',
-
-  '@tabletUp': {
-    px: '$50',
-  },
-})

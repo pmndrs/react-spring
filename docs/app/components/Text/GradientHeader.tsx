@@ -1,21 +1,10 @@
-import { Heading } from './Heading'
+import clsx from 'clsx'
+import { Heading, HeadingProps } from './Heading'
 
-import { dark, styled } from '~/styles/stitches.config'
+import { gradientHeader } from './GradientHeader.css'
 
-export const GradiantHeader = styled(Heading, {
-  display: 'inline',
-  background: '$blueGreenGradient100',
-  '-webkit-background-clip': 'text',
-  '-webkit-text-fill-color': 'transparent',
-  backgroundClip: 'text',
-  textFillColor: 'transparent',
-  mb: 4,
+const GradientHeader = ({ className, ...restProps }: HeadingProps) => {
+  return <Heading className={clsx(gradientHeader, className)} {...restProps} />
+}
 
-  [`.${dark} &`]: {
-    background: '$redYellowGradient100',
-    '-webkit-background-clip': 'text',
-    '-webkit-text-fill-color': 'transparent',
-    backgroundClip: 'text',
-    textFillColor: 'transparent',
-  },
-})
+export { GradientHeader }

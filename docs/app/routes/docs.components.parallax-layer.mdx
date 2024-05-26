@@ -1,0 +1,79 @@
+---
+meta:
+  title: Parallax Layer | React Spring
+  'og:title': Parallax Layer | React Spring
+  'twitter:title': Parallax Layer | React Spring
+  description: API documentation for the Parallax Layer component in React Spring.
+  'og:description': API documentation for the Parallax Layer component in React Spring.
+  'twitter:description': API documentation for the Parallax Layer component in React Spring.
+  'og:url': https://www.react-spring.dev/docs/components/parallax-layer
+  'twitter:url': https://www.react-spring.dev/docs/components/parallax-layer
+sidebar_position: 8
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# Parallax
+
+Used in collaboration with [`Parallax`](/docs/components/parallax) to create visual displacements declaratively and simply.
+
+## Usage
+
+:::note
+This component is only available in the `@react-spring/web` package and is therefore only usable in the browser.
+:::
+
+```jsx
+import { Parallax, ParallaxLayer } from '@react-spring/parallax'
+
+function MyComponent() {
+  return (
+    <Parallax pages={1} style={{ top: '0', left: '0' }}>
+      <ParallaxLayer offset={0} speed={2.5}>
+        <p>Parallax</p>
+      </ParallaxLayer>
+    </Parallax>
+  )
+}
+```
+
+## Reference
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { PARALLAX_LAYER_CONFIG_DATA } from '../data/fixtures'
+
+All props that can be passed to `HTMLDivElement` can be passed to `Parallax`.
+
+<TablesConfiguration data={PARALLAX_LAYER_CONFIG_DATA} />
+
+## Ref
+
+Passing a `ref` to the `ParallaxLayer` component will give you access to the layer state of the `ParallaxLayer` component via `ref.current`:
+
+```tsx
+interface IParallaxLayer {
+  horizontal: boolean
+  sticky: StickyConfig
+  isSticky: boolean
+  setHeight(height: number, immediate?: boolean): void
+  setPosition(height: number, scrollTop: number, immediate?: boolean): void
+}
+
+type StickyConfig = { start?: number; end?: number } | undefined
+```
+
+## Examples
+
+Can't find what you're looking for? Check out all our [examples!](/examples)
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid
+  sandboxTitles={[
+    'Horizontal Parallax',
+    'Sticky Parallax',
+    'Vertical Parallax',
+  ]}
+/>

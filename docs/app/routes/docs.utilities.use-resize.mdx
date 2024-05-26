@@ -1,0 +1,50 @@
+---
+meta:
+  title: useResize | React Spring
+  'og:title': useResize | React Spring
+  'twitter:title': useResize | React Spring
+  description: API documentation for the useResize utility hook in React Spring.
+  'og:description': API documentation for the useResize utility hook in React Spring.
+  'twitter:description': API documentation for the useResize utility hook in React Spring.
+  'og:url': https://www.react-spring.dev/docs/utilities/use-resize
+  'twitter:url': https://www.react-spring.dev/docs/utilities/use-resize
+sidebar_position: 4
+isNew: true
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# useResize
+
+A small abstraction around the [`useSpring`](/docs/components/use-spring) hook. It returns a `SpringValues`
+object with the `width` and `height` of the element it's attached to & doesn't necessarily have to be attached
+to the window, by passing a `container` you can observe that element's size instead.
+
+## Usage
+
+```tsx
+import { useResize, animated } from '@react-spring/web'
+
+function MyComponent() {
+  const { width, height } = useResize()
+
+  return <animated.div style={{ width, height }}>Hello World</animated.div>
+}
+```
+
+## Reference
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { USE_RESIZE_CONFIG_DATA } from '../data/fixtures'
+
+<TablesConfiguration data={USE_RESIZE_CONFIG_DATA} />
+
+## Typescript
+
+```tsx
+function useResize(configuration: ConfigObject): SpringValues
+```
+
+Where `ConfigObject` is described [above](#reference)

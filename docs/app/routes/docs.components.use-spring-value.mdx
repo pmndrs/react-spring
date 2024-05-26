@@ -1,0 +1,109 @@
+---
+meta:
+  title: useSpringValue | React Spring
+  'og:title': useSpringValue | React Spring
+  'twitter:title': useSpringValue | React Spring
+  description: API documentation for the useSpringValue hook in React Spring.
+  'og:description': API documentation for the useSpringValue hook in React Spring.
+  'twitter:description': API documentation for the useSpringValue hook in React Spring.
+  'og:url': https://www.react-spring.dev/docs/components/use-spring-value
+  'twitter:url': https://www.react-spring.dev/docs/components/use-spring-value
+sidebar_position: 3
+isNew: true
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# useSpringValue
+
+Love the imperative API but you need _too many_ different springs running in parallel? Then this
+hook is for you! It's a simple wrapper around a [`SpringValue`](/docs/components/spring-value) and
+therefore behaves the same, so you can access it's methods imperatively.
+
+## Usage
+
+### Value only
+
+```tsx
+import { useSpringValue, animated } from '@react-spring/web'
+
+function MyComponent() {
+  const opacity = useSpringValue(0)
+
+  return <animated.div style={{ opacity }}>Hello World</animated.div>
+}
+```
+
+### With configuration
+
+```tsx
+import { useSpringValue, animated } from '@react-spring/web'
+
+function MyComponent() {
+  const opacity = useSpringValue(0, {
+    config: {
+      mass: 2,
+      friction: 5,
+      tension: 80,
+    },
+  })
+
+  return <animated.div style={{ opacity }}>Hello World</animated.div>
+}
+```
+
+## Updating
+
+:::warning
+Unlike our other hooks, this one **will not** react to updates in the component. This is by design.
+You **must** use the methods on the returned `SpringValue` to update said value.
+:::
+
+```tsx
+import { useSpringValue, animated } from '@react-spring/web'
+
+function MyComponent() {
+  const opacity = useSpringValue(0, {
+    config: {
+      mass: 2,
+      friction: 5,
+      tension: 80,
+    },
+  })
+
+  const handleClick = () => opacity.start(1)
+
+  return (
+    <animated.div onClick={handleClick} style={{ opacity }}>
+      Hello World
+    </animated.div>
+  )
+}
+```
+
+## Reference
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { USESPRINGVALUE_CONFIG_DATA } from '../data/fixtures'
+
+<TablesConfiguration data={USESPRINGVALUE_CONFIG_DATA} />
+
+## Typescript
+
+```tsx
+function useSpringValue<T>(value: T): SpringValue<T>
+
+function useSpringValue<T>(value: T, config: ConfigObject): SpringValue<T>
+```
+
+Where `ConfigObject` is described [above](#reference)
+
+## Examples
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid sandboxTitles={['MacOS Dock']} />
+
+Can't find what you're looking for? Check out all our [examples!](/examples)

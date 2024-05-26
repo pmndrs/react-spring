@@ -3,9 +3,6 @@ import { Outlet, useLocation } from '@remix-run/react'
 import { MDXProvider } from '@mdx-js/react'
 import { PencilSimple } from 'phosphor-react'
 
-import { styled } from '~/styles/stitches.config'
-import { getFontStyles } from '~/styles/fontStyles'
-
 import { Header } from '../components/Header/Header'
 import { Heading, HeadingProps } from '~/components/Text/Heading'
 import { Copy, CopyProps } from '~/components/Text/Copy'
@@ -17,7 +14,6 @@ import { MenuSticky } from '~/components/Menu/MenuSticky'
 import { StickyAside } from '~/components/Asides/StickyAside'
 import { Code } from '~/components/Code/Code'
 import { LivePreviewStyles } from '~/components/Code/LivePreviewStyles'
-import { InlineLinkStyles } from '../components/InlineLink'
 import { Callout } from '~/components/Callout'
 import { Feedback } from '~/components/Feedback/Feedback'
 
@@ -29,136 +25,45 @@ import { getDocFilePathToGithub } from '~/helpers/links'
 
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
 import { WidgetCarbon } from '~/components/Widgets/WidgetCarbon'
+import {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  list,
+  p,
+  article,
+  blockQuote,
+  editAnchor,
+  footer,
+  grid,
+  main,
+  mainStickyMenu,
+} from '../styles/routes/docs.css'
 
 const comps = {
   h1: (props: HeadingProps) => (
-    <Heading
-      fontStyle="$XL"
-      css={{
-        mb: 20,
-        '@tabletUp': {
-          mb: 30,
-        },
-      }}
-      isLink
-      {...props}
-    />
+    <Heading className={h1} fontStyle="XL" isLink {...props} />
   ),
   h2: (props: HeadingProps) => {
-    return (
-      <Heading
-        tag="h2"
-        fontStyle="$L"
-        css={{
-          mt: 30,
-          mb: 15,
-
-          '@tabletUp': {
-            mt: 40,
-            mb: 20,
-          },
-        }}
-        isLink
-        {...props}
-      />
-    )
+    return <Heading tag="h2" fontStyle="L" className={h2} isLink {...props} />
   },
   h3: (props: HeadingProps) => (
-    <Heading
-      tag="h3"
-      fontStyle="$M"
-      css={{
-        mt: 30,
-        mb: 15,
-
-        '@tabletUp': {
-          mt: 40,
-          mb: 20,
-        },
-      }}
-      isLink
-      {...props}
-    />
+    <Heading tag="h3" fontStyle="M" className={h3} isLink {...props} />
   ),
   h4: (props: HeadingProps) => (
-    <Heading
-      tag="h4"
-      fontStyle="$S"
-      css={{
-        mt: 30,
-        mb: 15,
-
-        '@tabletUp': {
-          mt: 40,
-          mb: 20,
-        },
-      }}
-      {...props}
-    />
+    <Heading tag="h4" fontStyle="S" className={h4} {...props} />
   ),
   h5: (props: HeadingProps) => (
-    <Heading
-      tag="h5"
-      fontStyle="$XS"
-      css={{
-        mt: 30,
-        mb: 4,
-        textTransform: 'uppercase',
-
-        '@tabletUp': {
-          mt: 40,
-          mb: 6,
-        },
-      }}
-      {...props}
-    />
+    <Heading tag="h5" fontStyle="XS" className={h5} {...props} />
   ),
   h6: () => null,
-  p: (props: CopyProps) => (
-    <Copy
-      css={{
-        '& + &': {
-          mt: 15,
-        },
-        '& + pre': {
-          my: 40,
-        },
-        'pre + &': {
-          mt: 30,
-        },
-        '& code': {
-          backgroundColor: '$steel20',
-          borderRadius: '$r4',
-          py: 2,
-          px: 5,
-        },
-        '& > a': {
-          ...InlineLinkStyles,
-        },
-        maxWidth: 680,
-      }}
-      {...props}
-    />
-  ),
-  ul: (props: ListProps) => (
-    <List
-      css={{
-        mt: 15,
-      }}
-      {...props}
-    />
-  ),
-  ol: (props: ListProps) => (
-    <List
-      tag="ol"
-      css={{
-        mt: 15,
-      }}
-      {...props}
-    />
-  ),
+  p: (props: CopyProps) => <Copy className={p} {...props} />,
+  ul: (props: ListProps) => <List className={list} {...props} />,
+  ol: (props: ListProps) => <List tag="ol" className={list} {...props} />,
   a: (props: AnchorProps) => <Anchor {...props} />,
-  blockquote: (props: any) => <BlockQuote as="blockquote" {...props} />,
+  blockquote: (props: any) => <blockquote className={blockQuote} {...props} />,
   pre: (props: {
     children: string
     showLineNumbers?: string
@@ -226,132 +131,41 @@ export default function DocsLayout() {
 
   return (
     <>
-      <Grid>
+      <div className={grid}>
         <Header data={navigation} />
         <StickyAside hasSubNav={hasStickySubnav}>
           <MenuDocs submenu={navigation.sidebar} />
         </StickyAside>
-        <Main>
+        <main className={main}>
           {hasStickySubnav ? (
-            <MainStickyMenu subnav={navigation.subnav} />
+            <MenuSticky className={mainStickyMenu} subnav={navigation.subnav} />
           ) : null}
-          <Article hasStickySubnav={hasStickySubnav}>
+          <article
+            className={article({
+              hasStickySubnav,
+            })}
+          >
             <WidgetCarbon />
+            {/* @ts-expect-error */}
             <MDXProvider components={comps}>
               <Outlet />
             </MDXProvider>
-            <Footer>
+            <footer className={footer}>
               <Feedback location={activeRoute?.href} />
-              <EditAnchor href={getDocFilePathToGithub(activeRoute)}>
+              <Anchor
+                className={editAnchor}
+                href={getDocFilePathToGithub(activeRoute)}
+              >
                 <PencilSimple
                   size={20}
                   weight={isDarkMode ? 'light' : 'regular'}
                 />
                 <span>Edit this page</span>
-              </EditAnchor>
-            </Footer>
-          </Article>
-        </Main>
-      </Grid>
+              </Anchor>
+            </footer>
+          </article>
+        </main>
+      </div>
     </>
   )
 }
-
-const Grid = styled('div', {
-  '@tabletUp': {
-    display: 'grid',
-    maxHeight: '100%',
-    overflow: 'hidden',
-    gridTemplateColumns: '30rem 1fr 1fr',
-    gridTemplateAreas: `
-      "header header header"
-      "aside main main"
-    `,
-  },
-
-  '& > header': {
-    gridArea: 'header',
-  },
-})
-
-const Main = styled('main', {
-  position: 'relative',
-  flex: '1',
-  gridArea: 'main',
-  width: '100%',
-  margin: '0 auto',
-
-  '@tabletUp': {
-    maxWidth: 'calc(100vw - 30rem)',
-  },
-})
-
-const MainStickyMenu = styled(MenuSticky, {
-  width: 'inherit',
-  maxWidth: 'inherit',
-
-  '@tabletUp': {
-    display: 'flex',
-  },
-})
-
-const Article = styled('article', {
-  padding: '0 $25 $30 $25',
-  width: '100%',
-  mt: '$15',
-
-  '@tabletUp': {
-    padding: '0 6.2rem $80 6.2rem',
-    maxWidth: '$document',
-    margin: '0 auto',
-    mt: '$25',
-  },
-
-  variants: {
-    hasStickySubnav: {
-      false: {
-        paddingTop: 27,
-      },
-    },
-  },
-})
-
-const Footer = styled('footer', {
-  mt: '$40',
-})
-
-const EditAnchor = styled(Anchor, {
-  ...getFontStyles('$XXS'),
-  textDecoration: 'none',
-  fontWeight: '$default',
-  color: '$steel40',
-  display: 'inline-flex',
-  alignItems: 'center',
-
-  '& > span': {
-    ml: '$5',
-  },
-
-  '&:hover': {
-    '& > span': {
-      textDecoration: 'underline',
-    },
-  },
-})
-
-const BlockQuote = styled('blockquote', {
-  my: '$30',
-  position: 'relative',
-  ml: '$20',
-  opacity: 0.7,
-
-  '&:before': {
-    content: '""',
-    height: '100%',
-    width: 1,
-    backgroundColor: '$black',
-    position: 'absolute',
-    top: 0,
-    left: -20,
-  },
-})

@@ -5,10 +5,17 @@ import {
   useSprings,
 } from '@react-spring/web'
 
-import { getFontStyles } from '~/styles/fontStyles'
-import { styled } from '~/styles/stitches.config'
-
 import { SubtitleSchemaItem } from '../../../scripts/docs/navigation'
+import clsx from 'clsx'
+import {
+  gradientLeft,
+  gradientRight,
+  subNavAnchor,
+  subNavContainer,
+  subNavList,
+  subNavListItem,
+  subNavScroller,
+} from './HeaderSubnav.css'
 
 interface HeaderSubnavProps {
   className?: string
@@ -66,98 +73,24 @@ export const HeaderSubnav = ({ className, subnav }: HeaderSubnavProps) => {
   }, [])
 
   return (
-    <SubNavContainer className={className}>
-      <GradientLeft style={{ ...springs[0] }} />
-      <SubNavScroller ref={subNavScrollRef} onScroll={handleScroll}>
-        <SubNavList>
+    <nav className={clsx(subNavContainer, className)}>
+      <animated.div className={gradientLeft} style={{ ...springs[0] }} />
+      <div
+        className={subNavScroller}
+        ref={subNavScrollRef}
+        onScroll={handleScroll}
+      >
+        <ul className={subNavList}>
           {subnav.map(({ href, label, id }) => (
-            <SubNavListItem key={id}>
-              <SubNavAnchor href={href}>{label}</SubNavAnchor>
-            </SubNavListItem>
+            <li className={subNavListItem} key={id}>
+              <a className={subNavAnchor} href={href}>
+                {label}
+              </a>
+            </li>
           ))}
-        </SubNavList>
-      </SubNavScroller>
-      <GradientRight style={{ ...springs[1] }} />
-    </SubNavContainer>
+        </ul>
+      </div>
+      <animated.div className={gradientRight} style={{ ...springs[1] }} />
+    </nav>
   )
 }
-
-const SubNavContainer = styled('nav', {
-  m: '$30 0',
-  position: 'relative',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-})
-
-const SubNavScroller = styled('div', {
-  overflow: '-moz-scrollbars-none',
-  overflowX: 'auto',
-  mx: -28,
-  px: 28,
-
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
-
-  '@tabletUp': {
-    mx: 0,
-    px: 0,
-  },
-})
-
-const GradientShared = {
-  position: 'absolute',
-  top: 0,
-  height: '100%',
-  width: '2rem',
-}
-
-const GradientRight = styled(animated.div, {
-  ...GradientShared,
-  right: -28,
-  backgroundImage: 'linear-gradient(90deg, $white0 0%, $white 100%)',
-
-  '@tabletUp': {
-    right: 0,
-  },
-})
-
-const GradientLeft = styled(animated.div, {
-  ...GradientShared,
-  left: -28,
-  backgroundImage: 'linear-gradient(90deg, $white 0%, $white0 100%)',
-
-  '@tabletUp': {
-    left: 0,
-  },
-})
-
-const SubNavList = styled('ul', {
-  listStyle: 'none',
-  display: 'flex',
-  margin: 0,
-  padding: '0 0.4rem',
-  gap: '$20',
-
-  '@tabletUp': {
-    gap: '$30',
-  },
-})
-
-const SubNavListItem = styled('li', {
-  '&:last-child': {
-    pr: 28,
-  },
-
-  '@tabletUp': {
-    '&:last-child': {
-      pr: 0,
-    },
-  },
-})
-
-const SubNavAnchor = styled('a', {
-  ...getFontStyles('$XXS'),
-  whiteSpace: 'nowrap',
-})

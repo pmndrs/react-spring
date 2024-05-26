@@ -1,0 +1,435 @@
+---
+meta:
+  title: React Three Fiber | React Spring
+  'og:title': React Three Fiber | React Spring
+  'twitter:title': React Three Fiber | React Spring
+  description: A detailed guide to using React Spring with React Three Fiber.
+  'og:description': A detailed guide to using React Spring with React Three Fiber.
+  'twitter:description': A detailed guide to using React Spring with React Three Fiber.
+  'og:url': https://www.react-spring.dev/docs/guides/react-three-fiber
+  'twitter:url': https://www.react-spring.dev/docs/guides/react-three-fiber
+sidebar_position: 1
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# React Three Fiber
+
+:::note
+It's assumed you have a base understanding of `react-spring` and `react-three-fiber`. If you're new to
+either, check out our [getting started](/docs/getting-started) or alternatively, the [react-three-fiber](https://docs.pmnd.rs/react-three-fiber) docs.
+:::
+
+## Introduction
+
+In this guide we'll explore why `react-spring` is a valuable addition to your `react-three-fiber` project, working with the `imperative API`
+to create performant animation updates on objects in the scene graph and with the [event system](/docs/advanced/events) of the library
+to update parts of your scene that are not wrapped in our [`animated` HOC](/docs/concepts/animated-elements). To work with `react-spring`
+and `react-three-fiber` you'll need to install the `@react-spring/three` package.
+
+```bash
+yarn add @react-spring/three @react-three/fiber three
+```
+
+## Why use the library?
+
+A common question asked is why use `react-spring` with `react-three-fiber` when you can use the `useFrame` hook to update your meshes & objects
+instead without knowing another API. Well this is a great question – its critical of motion design for animations to look realistic, and the beauty
+of `react-spring` is the animations are physically correct.
+
+When we consider that the animations you create with `react-spring` can not be interrupted per se, that is when you edit the value you don't have
+the animation halt and start again, it responds to it's new goal value creating a seamless experience incredibly valuable to a 3D scene, you don't
+see items in real life free fall and when an external force is applied they stall, they react accordingly. The dampening of a spring gives you the
+additional feeling of real life physics whilst in combination of even the three most basic config parameter `mass`, `tension` and `friction` you can
+create a wide range of animations that belong to different objects in your scenes, you might have a metal-like sphere that needs to move slowly compared
+to your light translucent sphere that should be falling and bouncing around the scene.
+
+Furthermore, the flexibility to start/stop and replay animations, particularly with state and device motion preferences, makes this a uniquely
+accessible library from both a DX and UX perspective. Lets take a look at a simple use-case.
+
+I have a distortion blob and I want to it to change color on click. You could do this with `useFrame` to perform frame by frame updates, `useRef`
+to access the material object and use the `THREE.Color.lerp` function, slowly incrementing by the lerp value until the color is reached. But this then
+requires that I keep track of a `THREE` instance of `Color` which _can_ lead to memory leaks if not handled correctly and not only that, but it would
+be a lot of code. Then you'd need to think about writing your own easing functions. With `react-spring` you can do this in a few lines of code.
+
+```tsx live=true template=r3f showLineNumbers lines=9,12,20 defaultOpen=true
+import { useState } from 'react'
+import { useSpring, animated } from '@react-spring/three'
+import { MeshDistortMaterial } from '@react-three/drei'
+import { Canvas } from '@react-three/fiber'
+
+const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
+
+const MyScene = () => {
+  const [clicked, setClicked] = useState(false)
+
+  const springs = useSpring({
+    color: clicked ? '#569AFF' : '#ff6d6d',
+  })
+
+  const handleClick = () => setClicked(s => !s)
+
+  return (
+    <mesh onClick={handleClick}>
+      <sphereGeometry args={[1.5, 64, 32]} />
+      <AnimatedMeshDistortMaterial
+        speed={5}
+        distort={0.5}
+        color={springs.color}
+      />
+    </mesh>
+  )
+}
+
+export default function MyComponent() {
+  return (
+    <Canvas>
+      <ambientLight intensity={0.8} />
+      <pointLight intensity={1} position={[0, 6, 0]} />
+      <MyScene />
+    </Canvas>
+  )
+}
+```
+
+## Use the imperative API
+
+The example above demonstrates the declarative approach to using `react-spring` hooks by passing a `config` object to the hook.
+However, it can also receive a function argument instead, similar to react's `useEffect` hook.
+
+In the example below, we use the power of the `react-spring`'s api to lean into the imperative requirements
+of working with performant webGL scenes. The blob follows you round the canvas (lines 70-82) & scales on
+interaction (lines 46-56) without a single react render to cause these updates.
+
+In addition we use the provide a function to the `config` prop instead of an object to deliver a more sticky
+config for the spring in general, but to give the blob a bouncy feel when the `scale` key is changed – lines 18-30.
+
+Finally, because we're using the position of the mouse which can be considered a `Vector2` and the `position`
+of a `mesh` is a `Vector3` we use a custom interpolation via the `to` method of a `SpringValue` to interpolate
+the array, this can be seen on line 97 (also see [imperative API](/docs/concepts/imperative-api) and
+[interpolation](/docs/advanced/interpolation)).
+
+```tsx live=true template=r3f lines=18-30,46-56,70-82,97 showLineNumbers defaultOpen=true
+import { useRef, useEffect, useCallback } from 'react'
+import { useSpring, animated } from '@react-spring/three'
+import { Canvas, useThree } from '@react-three/fiber'
+import { MeshDistortMaterial } from '@react-three/drei'
+
+const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
+
+const MyScene = () => {
+  const isOver = useRef(false)
+
+  const { width, height } = useThree(state => state.size)
+
+  const [springs, api] = useSpring(
+    () => ({
+      scale: 1,
+      position: [0, 0],
+      color: '#ff6d6d',
+      config: key => {
+        switch (key) {
+          case 'scale':
+            return {
+              mass: 4,
+              friction: 10,
+            }
+          case 'position':
+            return { mass: 4, friction: 220 }
+          default:
+            return {}
+        }
+      },
+    }),
+    []
+  )
+
+  const handleClick = useCallback(() => {
+    let clicked = false
+
+    return () => {
+      clicked = !clicked
+      api.start({
+        color: clicked ? '#569AFF' : '#ff6d6d',
+      })
+    }
+  }, [])
+
+  const handlePointerEnter = () => {
+    api.start({
+      scale: 1.5,
+    })
+  }
+
+  const handlePointerLeave = () => {
+    api.start({
+      scale: 1,
+    })
+  }
+
+  const handleWindowPointerOver = useCallback(() => {
+    isOver.current = true
+  }, [])
+
+  const handleWindowPointerOut = useCallback(() => {
+    isOver.current = false
+
+    api.start({
+      position: [0, 0],
+    })
+  }, [])
+
+  const handlePointerMove = useCallback(
+    e => {
+      if (isOver.current) {
+        const x = (e.offsetX / width) * 2 - 1
+        const y = (e.offsetY / height) * -2 + 1
+
+        api.start({
+          position: [x * 5, y * 2],
+        })
+      }
+    },
+    [api, width, height]
+  )
+
+  useEffect(() => {
+    window.addEventListener('pointerover', handleWindowPointerOver)
+    window.addEventListener('pointerout', handleWindowPointerOut)
+    window.addEventListener('pointermove', handlePointerMove)
+
+    return () => {
+      window.removeEventListener('pointerover', handleWindowPointerOver)
+      window.removeEventListener('pointerout', handleWindowPointerOut)
+      window.removeEventListener('pointermove', handlePointerMove)
+    }
+  }, [handleWindowPointerOver, handleWindowPointerOut, handlePointerMove])
+
+  return (
+    <animated.mesh
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      onClick={handleClick()}
+      scale={springs.scale}
+      position={springs.position.to((x, y) => [x, y, 0])}
+    >
+      <sphereGeometry args={[1.5, 64, 32]} />
+      <AnimatedMeshDistortMaterial
+        speed={5}
+        distort={0.5}
+        color={springs.color}
+      />
+    </animated.mesh>
+  )
+}
+
+export default function MyComponent() {
+  return (
+    <Canvas>
+      <ambientLight intensity={0.8} />
+      <pointLight intensity={1} position={[0, 6, 0]} />
+      <MyScene />
+    </Canvas>
+  )
+}
+```
+
+## Syncing spring values
+
+Sometimes, it's necessary to sync the state of a spring with an external source. This can be done with the [event system](/docs/advanced/events)
+built into react-spring.
+
+Take the following example, we have multiple blobs on our screen that start in different places and a component higher in our scene graph needs to to know
+the position of each blob. Because the `position` is controlled by `useSpring` you can't simple submit `springs.position` to the store because you'll
+be dispatching the whole `SpringValue` object, which is unnecessary and can weigh down your external store.
+
+Instead, you can use the `onChange` event handler to `get` the value of your springs and react to them accordingly. The code below is a convoluted example
+but demonstrates how you _could_ use the `onChange` event handler to sync a `THREE.Vector2` that is then returned when the parent component requires it via
+`useImperativeHandle`.
+
+```tsx live=true template=r3f defaultOpen=true showLineNumbers lines=11,20-22,40-42,114-125
+import {
+  useRef,
+  useEffect,
+  useCallback,
+  forwardRef,
+  useState,
+  useImperativeHandle,
+} from 'react'
+import { useSpring, animated } from '@react-spring/three'
+import { Canvas, useThree } from '@react-three/fiber'
+import { MeshDistortMaterial } from '@react-three/drei'
+import { Vector2 } from 'three'
+
+const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial)
+
+const MyScene = forwardRef(({}, ref) => {
+  const isOver = useRef(false)
+  const [vector2] = useState(() => new Vector2())
+
+  const { width, height } = useThree(state => state.size)
+
+  const [springs, api] = useSpring(
+    () => ({
+      scale: 1,
+      position: [0, 0],
+      color: '#ff6d6d',
+      onChange: ({ value }) => {
+        vector2.set(value.position[0], value.position[1])
+      },
+      config: key => {
+        switch (key) {
+          case 'scale':
+            return {
+              mass: 4,
+              friction: 10,
+            }
+          case 'position':
+            return { mass: 4, friction: 220 }
+          default:
+            return {}
+        }
+      },
+    }),
+    []
+  )
+
+  useImperativeHandle(ref, () => ({
+    getCurrentPosition: () => vector2,
+  }))
+
+  const handleClick = useCallback(() => {
+    let clicked = false
+
+    return () => {
+      clicked = !clicked
+      api.start({
+        color: clicked ? '#569AFF' : '#ff6d6d',
+      })
+    }
+  }, [])
+
+  const handlePointerEnter = () => {
+    api.start({
+      scale: 1.5,
+    })
+  }
+
+  const handlePointerLeave = () => {
+    api.start({
+      scale: 1,
+    })
+  }
+
+  const handleWindowPointerOver = useCallback(() => {
+    isOver.current = true
+  }, [])
+
+  const handleWindowPointerOut = useCallback(() => {
+    isOver.current = false
+
+    api.start({
+      position: [0, 0],
+    })
+  }, [])
+
+  const handlePointerMove = useCallback(
+    e => {
+      if (isOver.current) {
+        const x = (e.offsetX / width) * 2 - 1
+        const y = (e.offsetY / height) * -2 + 1
+
+        api.start({
+          position: [x * 5, y * 2],
+        })
+      }
+    },
+    [api, width, height]
+  )
+
+  useEffect(() => {
+    window.addEventListener('pointerover', handleWindowPointerOver)
+    window.addEventListener('pointerout', handleWindowPointerOut)
+    window.addEventListener('pointermove', handlePointerMove)
+
+    return () => {
+      window.removeEventListener('pointerover', handleWindowPointerOver)
+      window.removeEventListener('pointerout', handleWindowPointerOut)
+      window.removeEventListener('pointermove', handlePointerMove)
+    }
+  }, [handleWindowPointerOver, handleWindowPointerOut, handlePointerMove])
+
+  return (
+    <animated.mesh
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      onClick={handleClick()}
+      scale={springs.scale}
+      position={springs.position.to((x, y) => [x, y, 0])}
+    >
+      <sphereGeometry args={[1.5, 64, 32]} />
+      <AnimatedMeshDistortMaterial
+        speed={5}
+        distort={0.5}
+        color={springs.color}
+      />
+    </animated.mesh>
+  )
+})
+
+export default function MyComponent() {
+  const blobApi = useRef(null)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (blobApi.current) {
+        const { x, y } = blobApi.current.getCurrentPosition()
+        console.log('the blob is at position', { x, y })
+      }
+    }, 2000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <Canvas>
+      <ambientLight intensity={0.8} />
+      <pointLight intensity={1} position={[0, 6, 0]} />
+      <MyScene ref={blobApi} />
+    </Canvas>
+  )
+}
+```
+
+## Troubleshooting
+
+### Experiencing Jank?
+
+Whilst jank in `react-three-fiber` cannot be purely blamed on `react-spring` you
+might find toward the end of an animation that there's a subtle jump,
+which is visible in [this demo](https://y18m1.csb.app/). It's not pretty, is it?
+
+Whilst by default it would be nice to have this issue resolved without you having
+to interact and this is something we'll consider for the next `breaking change`
+in the meantime what you can use is the [`precision` config prop](/common/configs#configs) to avoid this.
+
+```tsx
+import { useSpring } from '@react-spring/three'
+
+export default function MyComponent() {
+  const [springs, api] = useSpring(() => ({
+    position: [0, 0, 0],
+    config: {
+      precision: 0.0001,
+    },
+  }))
+
+  // ...
+}
+```
+
+By setting the prop to a value like `0.0001` you can notice there is no jump towards 0.
+This is because the precision prop is used to figure out how close the animated value
+can get to the end goal before we consider the animated value to be equal to the end goal.

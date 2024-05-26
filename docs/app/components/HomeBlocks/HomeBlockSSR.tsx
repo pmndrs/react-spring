@@ -5,10 +5,10 @@ import useMeasure from 'react-use-measure'
 import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
 import { useWindowSize } from '~/hooks/useWindowSize'
 
-import { styled } from '~/styles/stitches.config'
-
 import { HomeBlockCopy } from './HomeBlockCopy'
-import { Section } from './HomeBlockSection'
+import clsx from 'clsx'
+import { section } from './shared.css'
+import { bar, graphBar, sizeGraph, ssrSection } from './HomeBlockSSR.css'
 
 const ASPECT = 259 / 140
 
@@ -72,7 +72,7 @@ export const HomeBlockSSR = () => {
   const isTablet = (windowWidth ?? 0) > 768
 
   return (
-    <SSRSection ref={sectionRef}>
+    <section className={clsx(section, ssrSection)} ref={sectionRef}>
       <HomeBlockCopy
         subtitle="Designed with you in mind"
         title={`Production ready with SSR support`}
@@ -92,80 +92,23 @@ export const HomeBlockSSR = () => {
           the core for an even smaller package.
         </p>
       </HomeBlockCopy>
-      <SizeGraph>
-        <GraphBar>
+      <div className={sizeGraph}>
+        <div className={graphBar}>
           <h4>{`55.1kb`}</h4>
-          <Bar ref={measureRef} style={springs[0]} />
+          <animated.div className={bar} ref={measureRef} style={springs[0]} />
           <h5>{`react-spring`}</h5>
-        </GraphBar>
-        <GraphBar>
+        </div>
+        <div className={graphBar}>
           <h4>{`19.2kb`}</h4>
-          <Bar style={springs[1]} />
+          <animated.div className={bar} style={springs[1]} />
           <h5>{isTablet ? `@react-spring/web` : 'web'}</h5>
-        </GraphBar>
-        <GraphBar>
+        </div>
+        <div className={graphBar}>
           <h4>{`15.2kb`}</h4>
-          <Bar style={springs[2]} />
+          <animated.div className={bar} style={springs[2]} />
           <h5>{isTablet ? `@react-spring/core` : 'core'}</h5>
-        </GraphBar>
-      </SizeGraph>
-    </SSRSection>
+        </div>
+      </div>
+    </section>
   )
 }
-
-const SSRSection = styled(Section, {
-  '@tabletUp': {
-    '& > *': {
-      flex: '1 1',
-    },
-  },
-})
-
-const SizeGraph = styled('div', {
-  position: 'relative',
-  border: '1px solid $steel20',
-  borderRadius: '$r8',
-  p: '$30 $40 $40',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-end',
-  gap: 'clamp($10, 10%, $40)',
-  aspectRatio: 570 / 380,
-  mt: '$20',
-})
-
-const GraphBar = styled('div', {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-end',
-  width: 'calc((100% - 80rem) / 3)',
-  flex: '1 1 calc((100% - 80rem) / 3)',
-
-  '& > h4': {
-    fontSize: '1.2rem',
-    fontWeight: 700,
-    lineHeight: '180%',
-    textAlign: 'center',
-    color: '$black',
-  },
-
-  '& > h5': {
-    fontSize: '1.4rem',
-    fontWeight: '$default',
-    lineHeight: '180%',
-    textAlign: 'center',
-    color: '$black',
-    whiteSpace: 'nowrap',
-    display: 'flex',
-    justifyContent: 'space-evenly',
-  },
-})
-
-const Bar = styled(animated.div, {
-  width: '100%',
-  background: '$redYellowGradient100',
-  height: 1,
-  mb: 4,
-  mt: 2,
-  borderRadius: '$r4',
-})

@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { animated, useTransition } from '@react-spring/web'
 
-import { styled } from '~/styles/stitches.config'
-
-import { Pre } from '../Code/Pre'
-
 import { HomeBlockCopy } from './HomeBlockCopy'
 import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
-import { Section } from './HomeBlockSection'
+import { section } from './shared.css'
+import clsx from 'clsx'
+import { pre } from '../Code/Pre.css'
+import { homeBlockCode, list } from './HomeBlockTarget.css'
 
 const webHtml = /* html */ `<div data-line="1" class="highlight-line" data-highlighted="true"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/web'</span>
 </div><div data-line="2" class="highlight-line" data-highlighted="false">
@@ -121,7 +120,7 @@ export const HomeBlockTarget = () => {
   }, [index])
 
   return (
-    <Section>
+    <section className={section}>
       <HomeBlockCopy
         subtitle="But wait, there’s more"
         title="It’s not just for web"
@@ -131,19 +130,19 @@ export const HomeBlockTarget = () => {
         }}
       >
         <p>Choose from our five targets:</p>
-        <List>
+        <ul className={list}>
           <li>web</li>
           <li>native</li>
           <li>three</li>
           <li>konva</li>
           <li>zdog</li>
-        </List>
+        </ul>
         <p>
           Missing a target you want? Request we add it or create it yourself
           with our advanced API usage.
         </p>
       </HomeBlockCopy>
-      <HomeBlockCode>
+      <pre className={clsx(pre, homeBlockCode)}>
         <code
           className="language-jsx"
           dangerouslySetInnerHTML={{ __html: dataFixtures[0] }}
@@ -158,17 +157,7 @@ export const HomeBlockTarget = () => {
             style={{ ...style, position: 'absolute', top: 30, left: 30 }}
           />
         ))}
-      </HomeBlockCode>
-    </Section>
+      </pre>
+    </section>
   )
 }
-
-const List = styled('ul', {
-  my: 8,
-  pl: 26,
-})
-
-const HomeBlockCode = styled(Pre, {
-  mt: '$40',
-  position: 'relative',
-})

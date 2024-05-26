@@ -1,0 +1,103 @@
+---
+meta:
+  title: useTrail | React Spring
+  'og:title': useTrail | React Spring
+  'twitter:title': useTrail | React Spring
+  description: API documentation for the useTrail hook in React Spring.
+  'og:description': API documentation for the useTrail hook in React Spring.
+  'twitter:description': API documentation for the useTrail hook in React Spring.
+  'og:url': https://www.react-spring.dev/docs/components/use-trail
+  'twitter:url': https://www.react-spring.dev/docs/components/use-trail
+sidebar_position: 6
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# useTrail
+
+`useTrail` has an identical API signature to [`useSprings`](/docs/components/use-springs) the
+difference is the hook automatically orchestrates the springs to stagger one after the other.
+
+## Usage
+
+### With a function & deps
+
+```jsx lines=1,4-11,15-17
+import { useTrail, animated } from '@react-spring/web'
+
+export default function MyComponent() {
+  const [trails, api] = useTrail(
+    2,
+    () => ({
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+    }),
+    []
+  )
+
+  return (
+    <div>
+      {trails.map(props => (
+        <animated.div style={props}>Hello World</animated.div>
+      ))}
+    </div>
+  )
+}
+```
+
+### With a config object
+
+```jsx lines=1,4-7,11-13
+import { useTrail, animated } from '@react-spring/web'
+
+export default function MyComponent() {
+  const trails = useTrail(2, {
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  })
+
+  return (
+    <div>
+      {trails.map(props => (
+        <animated.div style={props}>Hello World</animated.div>
+      ))}
+    </div>
+  )
+}
+```
+
+## Reference
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+
+<TablesConfiguration />
+
+## Typescript
+
+```tsx
+function useTrail(count: number, configuration: ConfigObject): SpringValues[]
+
+function useTrail(
+  count: number,
+  configurationFn: (springIndex: number) => ConfigObject,
+  deps?: any[]
+): [springs: SpringValues[], api: SpringRef]
+```
+
+Where `ConfigObject` is described [above](#reference)
+
+### TS Glossary
+
+- [`SpringValues`](/docs/typescript#springvalues)
+
+## Examples
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid
+  sandboxTitles={['Basic Trail', 'Goo Blobs', 'Smile Grid', 'Wordle']}
+/>
+
+Can't find what you're looking for? Check out all our [examples!](/examples)

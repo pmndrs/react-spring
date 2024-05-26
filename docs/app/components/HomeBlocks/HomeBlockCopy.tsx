@@ -1,10 +1,10 @@
 import { ReactNode } from 'react'
-import { styled } from '~/styles/stitches.config'
-import { GradientButton } from '../Buttons/GradientButton'
 
+import { GradientButton } from '../Buttons/GradientButton'
 import { Copy } from '../Text/Copy'
-import { GradiantHeader } from '../Text/GradientHeader'
+import { GradientHeader } from '../Text/GradientHeader'
 import { Heading } from '../Text/Heading'
+import { block, blockCopy } from './HomeBlockCopy.css'
 
 interface HomeBlockCopyProps {
   subtitle: string
@@ -22,25 +22,16 @@ export const HomeBlockCopy = ({
   children,
   cta,
 }: HomeBlockCopyProps) => (
-  <Block>
-    <GradiantHeader tag="h2" fontStyle="$XXS" weight="$bold">
+  <div className={block}>
+    <GradientHeader tag="h2" fontStyle="XXS" weight="bold">
       {subtitle}
-    </GradiantHeader>
-    <Heading tag="h3" fontStyle="$XL">
+    </GradientHeader>
+    <Heading tag="h3" fontStyle="XL">
       {title}
     </Heading>
-    <BlockCopy tag="div" fontStyle="$S">
+    <Copy className={blockCopy} tag="div" fontStyle="S">
       {children}
-    </BlockCopy>
+    </Copy>
     {cta ? <GradientButton href={cta.href}>{cta.label}</GradientButton> : null}
-  </Block>
+  </div>
 )
-
-const Block = styled('div', {
-  maxWidth: 630,
-})
-
-const BlockCopy = styled(Copy, {
-  py: '$20',
-  maxWidth: 600,
-})

@@ -1,9 +1,8 @@
 import { useSpring, animated } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 
-import { styled } from '~/styles/stitches.config'
-
 import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
+import { svg } from './Logo.css'
 
 interface LogoProps {
   large?: boolean
@@ -47,13 +46,15 @@ export const Logo = ({ large = false }: LogoProps) => {
   }, [api])
 
   return (
-    <Svg
+    <animated.svg
       viewBox="0 0 139 139"
       {...bind()}
       style={{
         cursor,
       }}
-      large={large}
+      className={svg({
+        large,
+      })}
     >
       <radialGradient
         id="a"
@@ -93,27 +94,6 @@ export const Logo = ({ large = false }: LogoProps) => {
           <path d="m39.1991 76.0178c-8.5317 2.6756-14.8898 2.76-17.914.5024l2.8156-3.1833c.2662.2527.969.5301 1.541.652.6823.1472 2.0632.2406 2.9279.2012 3.136-.1377 7.3339-1.2102 12.1517-3.0802.874-.3438 1.6693-.6537 1.7613-.705l8.533-4.1659c3.5922-2.008 7.2875-4.4024 10.8547-7.0251 6.0784-4.4721 10.9468-9.1008 15.0194-14.2626.2356-.2983.4853-.626.7277-.9527l4.6829-5.9425c.441.1746.541.2281 1.0189.7977.452.5387.5081.6661.6097 1.1346.1202.5996.0421 1.3698-.2426 2.111-.9395 2.4723-5.4878 8.2438-10.181 12.8685-5.1792 5.1093-12.9563 10.8316-20.2348 14.8918-1.99 1.1091-5.2149 2.7202-6.7084 3.3518l-.0543.0455-3.7357 1.5315c-.9609.3492-2.8898 1.0162-3.573 1.2293z" />
         </g>
       </g>
-    </Svg>
+    </animated.svg>
   )
 }
-
-const Svg = styled(animated.svg, {
-  touchAction: 'none',
-
-  variants: {
-    large: {
-      false: {
-        width: '48px',
-        height: '48px',
-
-        '@tabletUp': {
-          height: '64px',
-          width: '64px',
-        },
-      },
-      true: {
-        width: '100%',
-      },
-    },
-  },
-})
