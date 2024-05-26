@@ -27,6 +27,7 @@ jobs:
               - 'targets/**'
               - 'cypress/**'
               - 'yarn.lock'
+              - '.github/publish-ci/**/yarn.lock'
               - '.github/workflows/checks.yml'
               - '.github/workflows/tests.yml'
   build:
