@@ -8,10 +8,12 @@ export const getDocFilePathToGithub = (item?: FlattenedNavigation): string => {
     return BASE_URL
   }
 
-  let filePath = item.href.split('/docs/')[1].split('/').join('.')
+  let filePath = item.href.split('/docs/')[1]
 
   if (!filePath) {
     filePath = '_index'
+  } else {
+    filePath = filePath.split('.').join('')
   }
 
   if (item.hasChildren) {
