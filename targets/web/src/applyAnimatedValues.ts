@@ -22,7 +22,7 @@ const attributeCache: Lookup<string> = {}
 type Instance = HTMLDivElement & { style?: Lookup }
 
 export function applyAnimatedValues(instance: Instance, props: Lookup) {
-  if (!instance.nodeType || !instance.setAttribute) {
+  if (!instance.nodeType || !instance.setAttribute || !instance.removeAttribute) {
     return false
   }
 
@@ -52,7 +52,7 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
         ))
   )
 
-  if (children !== void 0) {
+  if (props.hasOwnProperty('children')) {
     instance.textContent = children
   }
 
@@ -70,7 +70,12 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
 
   // Apply DOM attributes
   names.forEach((name, i) => {
-    instance.setAttribute(name, values[i])
+    const value = values[i]
+    if (value !== void 0) {
+      instance.setAttribute(name, value)
+    } else {
+      instance.removeAttribute(name)
+    }
   })
 
   if (className !== void 0) {
@@ -82,7 +87,7 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
   if (scrollLeft !== void 0) {
     instance.scrollLeft = scrollLeft
   }
-  if (viewBox !== void 0) {
+  if (props.hasOwnProperty('viewBox')) {
     instance.setAttribute('viewBox', viewBox)
   }
 }
