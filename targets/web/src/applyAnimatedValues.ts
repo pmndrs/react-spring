@@ -78,7 +78,11 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
     instance.scrollLeft = scrollLeft
   }
   if (props.hasOwnProperty('viewBox')) {
-    instance.setAttribute('viewBox', viewBox)
+    if (viewBox !== void 0) {
+      instance.setAttribute('viewBox', viewBox)
+    } else {
+      instance.removeAttribute('viewBox')
+    }
   }
 }
 
