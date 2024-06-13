@@ -2,4 +2,4 @@
 '@react-spring/web': patch
 ---
 
-fix: recognize `className` attribute to `AnimatedComponent`s
+fix: recognize `className` prop to `AnimatedComponent`s
