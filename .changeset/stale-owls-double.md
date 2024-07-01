@@ -1,5 +1,5 @@
 ---
-'@react-spring/shared': minor
+'@react-spring/shared': patch
 ---
 
 fix: MediaQueryList.addListener safari 13 (and older) compatibility
