@@ -30,7 +30,7 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
     instance.nodeName === 'filter' ||
     (instance.parentNode && instance.parentNode.nodeName === 'filter')
 
-  const { style, children, scrollTop, scrollLeft, viewBox, ...attributes } =
+  const { className, style, children, scrollTop, scrollLeft, viewBox, ...attributes } =
     props!
 
   const values = Object.values(attributes)
@@ -66,6 +66,9 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
     instance.setAttribute(name, values[i])
   })
 
+  if (className !== void 0) {
+    instance.className = className
+  }
   if (scrollTop !== void 0) {
     instance.scrollTop = scrollTop
   }
