@@ -26,14 +26,14 @@ export const useReducedMotion = () => {
 
     handleMediaChange(mql)
 
-    if(mql.addEventListener) {
+    if (mql.addEventListener) {
       mql.addEventListener('change', handleMediaChange)
     } else {
       mql.addListener(handleMediaChange)
     }
 
     return () => {
-      if(mql.removeEventListener) {
+      if (mql.removeEventListener) {
         mql.removeEventListener('change', handleMediaChange)
       } else {
         mql.removeListener(handleMediaChange)
