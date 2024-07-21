@@ -5074,7 +5074,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/rafz@workspace:^, @react-spring/rafz@workspace:packages/rafz":
+"@react-spring/rafz@workspace:^, @react-spring/rafz@workspace:packages/rafz, @react-spring/rafz@~9.7.3":
   version: 0.0.0-use.local
   resolution: "@react-spring/rafz@workspace:packages/rafz"
   languageName: unknown
@@ -5096,6 +5096,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-spring/shared@workspace:packages/shared"
   dependencies:
+    "@react-spring/rafz": ~9.7.3
     "@react-spring/types": ~9.7.3
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
