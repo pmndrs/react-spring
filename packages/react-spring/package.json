@@ -1,6 +1,6 @@
 {
   "name": "react-spring",
-  "version": "9.7.3",
+  "version": "9.7.4",
   "module": "./dist/react-spring.legacy-esm.js",
   "main": "./dist/cjs/index.js",
   "types": "./dist/react-spring.modern.d.ts",
@@ -36,12 +36,12 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/core": "~9.7.3",
-    "@react-spring/konva": "~9.7.3",
-    "@react-spring/native": "~9.7.3",
-    "@react-spring/three": "~9.7.3",
-    "@react-spring/web": "~9.7.3",
-    "@react-spring/zdog": "~9.7.3"
+    "@react-spring/core": "~9.7.4",
+    "@react-spring/konva": "~9.7.4",
+    "@react-spring/native": "~9.7.4",
+    "@react-spring/three": "~9.7.4",
+    "@react-spring/web": "~9.7.4",
+    "@react-spring/zdog": "~9.7.4"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
