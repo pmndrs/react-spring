@@ -63,7 +63,7 @@
     "rehype-slug": "6.0.0",
     "remark-directive": "3.0.0",
     "remark-frontmatter": "5.0.0",
-    "remark-mdx-frontmatter": "4.0.0",
+    "remark-mdx-frontmatter": "5.0.0",
     "typescript": "5.3.3",
     "unified": "11.0.4",
     "unist-util-visit": "5.0.0",
