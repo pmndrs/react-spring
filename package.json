@@ -103,7 +103,7 @@
     "start-server-and-test": "2.0.3",
     "three": "0.150.1",
     "tsup": "6.7.0",
-    "turbo": "1.13.3",
+    "turbo": "2.0.12",
     "typescript": "5.3.3",
     "vite": "5.2.11",
     "zdog": "1.1.3"

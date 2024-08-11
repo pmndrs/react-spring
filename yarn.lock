@@ -3115,16 +3115,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/create-cache-key-function@npm:^29.2.1":
-  version: 29.4.1
-  resolution: "@jest/create-cache-key-function@npm:29.4.1"
-  dependencies:
-    "@jest/types": ^29.4.1
-  checksum: cbd2718f63457c476fc7ecd21129b9aa35f58820678d49e5b163d6c85d866071f581968acc93d28e32734a91e5a7bfb99d617120a53d48cfa0e30ad2fbb76799
-  languageName: node
-  linkType: hard
-
-"@jest/create-cache-key-function@npm:^29.7.0":
+"@jest/create-cache-key-function@npm:^29.2.1, @jest/create-cache-key-function@npm:^29.7.0":
   version: 29.7.0
   resolution: "@jest/create-cache-key-function@npm:29.7.0"
   dependencies:
@@ -3320,7 +3311,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/types@npm:^29.4.1, @jest/types@npm:^29.6.3":
+"@jest/types@npm:^29.6.3":
   version: 29.6.3
   resolution: "@jest/types@npm:29.6.3"
   dependencies:
@@ -6227,17 +6218,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*":
-  version: 29.5.11
-  resolution: "@types/jest@npm:29.5.11"
-  dependencies:
-    expect: ^29.0.0
-    pretty-format: ^29.0.0
-  checksum: f892a06ec9f0afa9a61cd7fa316ec614e21d4df1ad301b5a837787e046fcb40dfdf7f264a55e813ac6b9b633cb9d366bd5b8d1cea725e84102477b366df23fdd
-  languageName: node
-  linkType: hard
-
-"@types/jest@npm:29.5.12":
+"@types/jest@npm:*, @types/jest@npm:29.5.12":
   version: 29.5.12
   resolution: "@types/jest@npm:29.5.12"
   dependencies:
@@ -12554,14 +12535,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ignore@npm:^5.2.0, ignore@npm:^5.2.4":
-  version: 5.3.0
-  resolution: "ignore@npm:5.3.0"
-  checksum: 2736da6621f14ced652785cb05d86301a66d70248597537176612bd0c8630893564bd5f6421f8806b09e8472e75c591ef01672ab8059c07c6eb2c09cefe04bf9
-  languageName: node
-  linkType: hard
-
-"ignore@npm:^5.3.0":
+"ignore@npm:^5.2.0, ignore@npm:^5.2.4, ignore@npm:^5.3.0":
   version: 5.3.1
   resolution: "ignore@npm:5.3.1"
   checksum: 71d7bb4c1dbe020f915fd881108cbe85a0db3d636a0ea3ba911393c53946711d13a9b1143c7e70db06d571a5822c0a324a6bcde5c9904e7ca5047f01f1bf8cd3
@@ -18651,7 +18625,7 @@ __metadata:
     start-server-and-test: 2.0.3
     three: 0.150.1
     tsup: 6.7.0
-    turbo: 1.13.3
+    turbo: 2.0.12
     typescript: 5.3.3
     vite: 5.2.11
     zdog: 1.1.3
@@ -19608,16 +19582,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.23.0":
-  version: 0.23.0
-  resolution: "scheduler@npm:0.23.0"
-  dependencies:
-    loose-envify: ^1.1.0
-  checksum: d79192eeaa12abef860c195ea45d37cbf2bbf5f66e3c4dcd16f54a7da53b17788a70d109ee3d3dde1a0fd50e6a8fc171f4300356c5aee4fc0171de526bf35f8a
-  languageName: node
-  linkType: hard
-
-"scheduler@npm:^0.23.2":
+"scheduler@npm:^0.23.0, scheduler@npm:^0.23.2":
   version: 0.23.2
   resolution: "scheduler@npm:0.23.2"
   dependencies:
@@ -21197,30 +21162,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo-darwin-64@npm:1.13.3":
-  version: 1.13.3
-  resolution: "turbo-darwin-64@npm:1.13.3"
+"turbo-darwin-64@npm:2.0.12":
+  version: 2.0.12
+  resolution: "turbo-darwin-64@npm:2.0.12"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-darwin-arm64@npm:1.13.3":
-  version: 1.13.3
-  resolution: "turbo-darwin-arm64@npm:1.13.3"
+"turbo-darwin-arm64@npm:2.0.12":
+  version: 2.0.12
+  resolution: "turbo-darwin-arm64@npm:2.0.12"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo-linux-64@npm:1.13.3":
-  version: 1.13.3
-  resolution: "turbo-linux-64@npm:1.13.3"
+"turbo-linux-64@npm:2.0.12":
+  version: 2.0.12
+  resolution: "turbo-linux-64@npm:2.0.12"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-linux-arm64@npm:1.13.3":
-  version: 1.13.3
-  resolution: "turbo-linux-arm64@npm:1.13.3"
+"turbo-linux-arm64@npm:2.0.12":
+  version: 2.0.12
+  resolution: "turbo-linux-arm64@npm:2.0.12"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
@@ -21232,30 +21197,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo-windows-64@npm:1.13.3":
-  version: 1.13.3
-  resolution: "turbo-windows-64@npm:1.13.3"
+"turbo-windows-64@npm:2.0.12":
+  version: 2.0.12
+  resolution: "turbo-windows-64@npm:2.0.12"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"turbo-windows-arm64@npm:1.13.3":
-  version: 1.13.3
-  resolution: "turbo-windows-arm64@npm:1.13.3"
+"turbo-windows-arm64@npm:2.0.12":
+  version: 2.0.12
+  resolution: "turbo-windows-arm64@npm:2.0.12"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"turbo@npm:1.13.3":
-  version: 1.13.3
-  resolution: "turbo@npm:1.13.3"
+"turbo@npm:2.0.12":
+  version: 2.0.12
+  resolution: "turbo@npm:2.0.12"
   dependencies:
-    turbo-darwin-64: 1.13.3
-    turbo-darwin-arm64: 1.13.3
-    turbo-linux-64: 1.13.3
-    turbo-linux-arm64: 1.13.3
-    turbo-windows-64: 1.13.3
-    turbo-windows-arm64: 1.13.3
+    turbo-darwin-64: 2.0.12
+    turbo-darwin-arm64: 2.0.12
+    turbo-linux-64: 2.0.12
+    turbo-linux-arm64: 2.0.12
+    turbo-windows-64: 2.0.12
+    turbo-windows-arm64: 2.0.12
   dependenciesMeta:
     turbo-darwin-64:
       optional: true
@@ -21271,7 +21236,7 @@ __metadata:
       optional: true
   bin:
     turbo: bin/turbo
-  checksum: d00655987e5d2e714d5e5a8d5950624508fb69e8671ca17e8ac7b9316ce01e518308ec4eaa472306950782704caa2eaa3c4fb328192818fcd9fcc05423bc29e7
+  checksum: 14b83df73e5a88439fad99d260f2c35b3f69923658ce43bf65abeebd4fd89e1d8b392fae023417d18125cedb18055cb722ca23ffd02fe7279e9189a5712b05a9
   languageName: node
   linkType: hard
 
