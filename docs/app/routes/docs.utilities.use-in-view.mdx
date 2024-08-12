@@ -100,7 +100,7 @@ The reference below describes the return value of the optional function argument
 
 ```tsx
 interface IntersectionArgs
-  extends Omit<IntersectionObserverInit, 'root' | 'threshold'> {
+  extends Omit<IntersectionObserverInit, 'root'> {
   root?: React.MutableRefObject<HTMLElement>
   once?: boolean
   amount?: 'any' | 'all' | number | number[]

@@ -7,7 +7,7 @@ import { useSpring, UseSpringProps } from './useSpring'
 import { Valid } from '../types/common'
 
 export interface IntersectionArgs
-  extends Omit<IntersectionObserverInit, 'root' | 'threshold'> {
+  extends Omit<IntersectionObserverInit, 'root'> {
   root?: React.MutableRefObject<HTMLElement>
   once?: boolean
   amount?: 'any' | 'all' | number | number[]
