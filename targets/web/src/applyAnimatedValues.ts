@@ -22,7 +22,11 @@ const attributeCache: Lookup<string> = {}
 type Instance = HTMLDivElement & { style?: Lookup }
 
 export function applyAnimatedValues(instance: Instance, props: Lookup) {
-  if (!instance.nodeType || !instance.setAttribute || !instance.removeAttribute) {
+  if (
+    !instance.nodeType ||
+    !instance.setAttribute ||
+    !instance.removeAttribute
+  ) {
     return false
   }
 
