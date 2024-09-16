@@ -1017,5 +1017,4 @@ export const USE_INVIEW_INTERSECTION_ARGS: CellData[][] = [
   ['root', 'React.MutableRefObject', null],
   ['rootMargin', 'string', null],
   ['once', 'boolean', 'false'],
-  ['threshold', 'number | number[]', null],
 ]
