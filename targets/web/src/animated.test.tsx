@@ -106,6 +106,16 @@ describe('animated component', () => {
     mockRaf.step()
     expect(wrapper.scrollTop).toBe(20)
   })
+  it('accepts the className property', () => {
+    const className = spring('test')
+    const { getByTestId } = render(
+      <a.div className={className} data-testid="wrapper" />
+    )
+    expect(getByTestId('wrapper').className).toBe('test')
+    className.set('new')
+    mockRaf.step()
+    expect(getByTestId('wrapper').className).toBe('new')
+  })
   it('accepts x/y/z as style keys equivalent to `translate3d`transform function', () => {
     const { queryByTestId, rerender } = render(
       <a.div style={{ x: 10 }} data-testid="wrapper" />
