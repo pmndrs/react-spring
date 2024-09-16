@@ -30,8 +30,15 @@ export function applyAnimatedValues(instance: Instance, props: Lookup) {
     instance.nodeName === 'filter' ||
     (instance.parentNode && instance.parentNode.nodeName === 'filter')
 
-  const { className, style, children, scrollTop, scrollLeft, viewBox, ...attributes } =
-    props!
+  const {
+    className,
+    style,
+    children,
+    scrollTop,
+    scrollLeft,
+    viewBox,
+    ...attributes
+  } = props!
 
   const values = Object.values(attributes)
   const names = Object.keys(attributes).map(name =>
