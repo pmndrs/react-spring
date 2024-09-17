@@ -13,7 +13,7 @@ export const getDocFilePathToGithub = (item?: FlattenedNavigation): string => {
   if (!filePath) {
     filePath = '_index'
   } else {
-    filePath = filePath.split('.').join('')
+    filePath = filePath.replace(/\//g, '.')
   }
 
   if (item.hasChildren) {
