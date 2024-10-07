@@ -6,11 +6,17 @@ function call(...parts: string[]) {
   return '\\(\\s*(' + parts.join(')\\s*,\\s*(') + ')\\s*\\)'
 }
 
-export const rgb = new RegExp('rgb' + call(NUMBER, NUMBER, NUMBER))
-export const rgba = new RegExp('rgba' + call(NUMBER, NUMBER, NUMBER, NUMBER))
-export const hsl = new RegExp('hsl' + call(NUMBER, PERCENTAGE, PERCENTAGE))
+export const rgb = new RegExp(
+  'rgb' + /* @__PURE__ */ call(NUMBER, NUMBER, NUMBER)
+)
+export const rgba = new RegExp(
+  'rgba' + /* @__PURE__ */ call(NUMBER, NUMBER, NUMBER, NUMBER)
+)
+export const hsl = new RegExp(
+  'hsl' + /* @__PURE__ */ call(NUMBER, PERCENTAGE, PERCENTAGE)
+)
 export const hsla = new RegExp(
-  'hsla' + call(NUMBER, PERCENTAGE, PERCENTAGE, NUMBER)
+  'hsla' + /* @__PURE__ */ call(NUMBER, PERCENTAGE, PERCENTAGE, NUMBER)
 )
 export const hex3 = /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/
 export const hex4 =
