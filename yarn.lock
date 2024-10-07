@@ -5007,7 +5007,7 @@ __metadata:
     rehype-slug: 6.0.0
     remark-directive: 3.0.0
     remark-frontmatter: 5.0.0
-    remark-mdx-frontmatter: 4.0.0
+    remark-mdx-frontmatter: 5.0.0
     typescript: 5.3.3
     unified: 11.0.4
     unist-util-visit: 5.0.0
@@ -19017,9 +19017,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remark-mdx-frontmatter@npm:4.0.0":
-  version: 4.0.0
-  resolution: "remark-mdx-frontmatter@npm:4.0.0"
+"remark-mdx-frontmatter@npm:5.0.0":
+  version: 5.0.0
+  resolution: "remark-mdx-frontmatter@npm:5.0.0"
   dependencies:
     "@types/mdast": ^4.0.0
     estree-util-is-identifier-name: ^3.0.0
@@ -19027,7 +19027,7 @@ __metadata:
     toml: ^3.0.0
     unified: ^11.0.0
     yaml: ^2.0.0
-  checksum: 01f3874bf5728c7ec314a0802d53de46ed0730a7f53fd9d8305ab95593b4b411336789fd84581157c7bd3398e4848082d84d17d656475846b9bd08be6ef6d71d
+  checksum: 31323fba5b2c44aecbede7a817d2a31606409395a049e3f278e09946c7c3798b9c15437e094dff0b7e477df36595c1cc483727279c03edf0f8b64c029a2fdc0c
   languageName: node
   linkType: hard
 
