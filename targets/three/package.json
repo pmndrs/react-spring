@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/three",
-  "version": "9.7.4",
+  "version": "9.7.5",
   "module": "./dist/react-spring_three.legacy-esm.js",
   "main": "./dist/cjs/index.js",
   "types": "./dist/react-spring_three.modern.d.ts",
@@ -36,10 +36,10 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/animated": "~9.7.4",
-    "@react-spring/core": "~9.7.4",
-    "@react-spring/shared": "~9.7.4",
-    "@react-spring/types": "~9.7.4"
+    "@react-spring/animated": "~9.7.5",
+    "@react-spring/core": "~9.7.5",
+    "@react-spring/shared": "~9.7.5",
+    "@react-spring/types": "~9.7.5"
   },
   "peerDependencies": {
     "@react-three/fiber": ">=6.0",

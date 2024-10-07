@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/rafz",
-  "version": "9.7.4",
+  "version": "9.7.5",
   "description": "react-spring's fork of rafz one frameloop to rule them all",
   "module": "./dist/react-spring_rafz.legacy-esm.js",
   "main": "./dist/cjs/index.js",
