@@ -422,7 +422,9 @@ export function useTransition(
             }
           }
         }
-      )
+      );
+
+      if (ref) ref.start();
     },
     reset ? void 0 : deps
   )
