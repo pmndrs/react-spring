@@ -1,6 +1,6 @@
 {
   "name": "are-the-types-wrong",
-  "packageManager": "yarn@3.2.4",
+  "packageManager": "yarn@3.8.5",
   "type": "module",
   "scripts": {
     "build": "echo Nothing to build",
@@ -8,15 +8,15 @@
   },
   "dependencies": {
     "@react-spring/web": "*",
-    "ink": "5.0.0",
+    "ink": "5.0.1",
     "object-hash": "3.0.0",
-    "react": "18.2.0"
+    "react": "18.3.1"
   },
   "devDependencies": {
-    "@arethetypeswrong/core": "0.0.4",
-    "@types/react": "18.0.28",
+    "@arethetypeswrong/core": "0.16.4",
+    "@types/react": "18.3.11",
     "shelljs": "0.8.5",
-    "tsx": "4.11.0",
+    "tsx": "4.19.1",
     "yargs": "17.7.2"
   },
   "resolutions": {
