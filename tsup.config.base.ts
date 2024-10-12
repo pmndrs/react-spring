@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 
 interface BuildOptions {
-  format: 'cjs' | 'umd' | 'esm'
+  format: 'cjs' | 'esm'
   name:
     | 'development'
     | 'production.min'
@@ -11,8 +11,6 @@ interface BuildOptions {
     | 'modern'
     | 'modern.development'
     | 'modern.production.min'
-    | 'umd'
-    | 'umd.min'
   minify: boolean
   env: 'development' | 'production' | ''
   target?:
@@ -33,6 +31,7 @@ const buildTargets: BuildOptions[] = [
     target: 'es2020',
     minify: false,
     env: 'development',
+    dts: true,
   },
   {
     format: 'cjs',
