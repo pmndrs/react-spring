@@ -4,13 +4,18 @@
   "description": "Globals and shared modules",
   "module": "./dist/react-spring_shared.legacy-esm.js",
   "main": "./dist/cjs/index.js",
-  "types": "./dist/react-spring_shared.modern.d.ts",
+  "types": "./dist/react-spring_shared.modern.d.mts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/react-spring_shared.modern.d.ts",
-      "import": "./dist/react-spring_shared.modern.mjs",
-      "require": "./dist/cjs/index.js"
+      "import": {
+        "types": "./dist/react-spring_shared.modern.d.mts",
+        "default": "./dist/react-spring_shared.modern.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/react-spring_shared.development.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     }
   },
   "files": [

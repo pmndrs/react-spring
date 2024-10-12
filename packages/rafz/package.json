@@ -4,13 +4,18 @@
   "description": "react-spring's fork of rafz one frameloop to rule them all",
   "module": "./dist/react-spring_rafz.legacy-esm.js",
   "main": "./dist/cjs/index.js",
-  "types": "./dist/react-spring_rafz.modern.d.ts",
+  "types": "./dist/react-spring_rafz.modern.d.mts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/react-spring_rafz.modern.d.ts",
-      "import": "./dist/react-spring_rafz.modern.mjs",
-      "require": "./dist/cjs/index.js"
+      "import": {
+        "types": "./dist/react-spring_rafz.modern.d.mts",
+        "default": "./dist/react-spring_rafz.modern.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/react-spring_rafz.development.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     }
   },
   "files": [

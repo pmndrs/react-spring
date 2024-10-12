@@ -3,13 +3,18 @@
   "version": "9.7.5",
   "module": "./dist/react-spring_web.legacy-esm.js",
   "main": "./dist/cjs/index.js",
-  "types": "./dist/react-spring_web.modern.d.ts",
+  "types": "./dist/react-spring_web.modern.d.mts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/react-spring_web.modern.d.ts",
-      "import": "./dist/react-spring_web.modern.mjs",
-      "require": "./dist/cjs/index.js"
+      "import": {
+        "types": "./dist/react-spring_web.modern.d.mts",
+        "default": "./dist/react-spring_web.modern.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/react-spring_web.development.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
     }
   },
   "files": [
