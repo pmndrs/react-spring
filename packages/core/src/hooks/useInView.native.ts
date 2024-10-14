@@ -1,6 +1,6 @@
 import { once, prefix } from '@react-spring/shared'
 
-const warnImplementation = once(console.warn)
+const warnImplementation = /* @__PURE__ */ once(console.warn)
 
 export const useInView = () => {
   warnImplementation(
