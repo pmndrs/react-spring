@@ -39,7 +39,7 @@ export function getHintUtils<Hints extends Record<string, ClientHint<any>>>(
       typeof document !== 'undefined'
         ? document.cookie
         : typeof request !== 'undefined'
-          ? request.headers.get('Cookie') ?? ''
+          ? (request.headers.get('Cookie') ?? '')
           : ''
 
     return Object.entries(hints).reduce((acc, [name, hint]) => {
