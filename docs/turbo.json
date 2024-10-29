@@ -1,6 +1,6 @@
 {
   "extends": ["//"],
-  "pipeline": {
+  "tasks": {
     "build": {
       "inputs": ["app/**"],
       "outputs": ["build/**", "public/build/**"]
