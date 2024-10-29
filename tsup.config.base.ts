@@ -129,7 +129,7 @@ export const defaultConfig = (
         target,
         outExtension: () => ({ js: extension }),
         minify,
-        sourcemap: true,
+        sourcemap: false,
         clean: !options.watch,
         external: [
           'react',
