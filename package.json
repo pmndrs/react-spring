@@ -73,7 +73,7 @@
     "@swc/jest": "0.2.36",
     "@testing-library/cypress": "10.0.2",
     "@testing-library/jest-dom": "6.5.0",
-    "@testing-library/react": "15.0.7",
+    "@testing-library/react": "16.0.1",
     "@types/fs-extra": "11.0.4",
     "@types/jest": "29.5.13",
     "@types/lodash.clamp": "4.0.9",
