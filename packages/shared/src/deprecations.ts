@@ -18,14 +18,14 @@ export const once = <TFunc extends (...args: any) => any>(fn: TFunc) => {
   }
 }
 
-const warnInterpolate = once(console.warn)
+const warnInterpolate = /* @__PURE__ */ once(console.warn)
 export function deprecateInterpolate() {
   warnInterpolate(
     `${prefix}The "interpolate" function is deprecated in v9 (use "to" instead)`
   )
 }
 
-const warnDirectCall = once(console.warn)
+const warnDirectCall = /* @__PURE__ */ once(console.warn)
 export function deprecateDirectCall() {
   warnDirectCall(
     `${prefix}Directly calling start instead of using the api object is deprecated in v9 (use ".start" instead), this will be removed in later 0.X.0 versions`

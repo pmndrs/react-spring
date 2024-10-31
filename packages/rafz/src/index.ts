@@ -9,7 +9,7 @@ import type {
 
 export type { FrameFn, FrameUpdateFn, Timeout, Throttled, Rafz }
 
-let updateQueue = makeQueue<FrameUpdateFn>()
+let updateQueue = /* @__PURE__ */ makeQueue<FrameUpdateFn>()
 
 /**
  * Schedule an update for next frame.
@@ -17,16 +17,16 @@ let updateQueue = makeQueue<FrameUpdateFn>()
  */
 export const raf: Rafz = fn => schedule(fn, updateQueue)
 
-let writeQueue = makeQueue<FrameFn>()
+let writeQueue = /* @__PURE__ */ makeQueue<FrameFn>()
 raf.write = fn => schedule(fn, writeQueue)
 
-let onStartQueue = makeQueue<FrameFn>()
+let onStartQueue = /* @__PURE__ */ makeQueue<FrameFn>()
 raf.onStart = fn => schedule(fn, onStartQueue)
 
-let onFrameQueue = makeQueue<FrameFn>()
+let onFrameQueue = /* @__PURE__ */ makeQueue<FrameFn>()
 raf.onFrame = fn => schedule(fn, onFrameQueue)
 
-let onFinishQueue = makeQueue<FrameFn>()
+let onFinishQueue = /* @__PURE__ */ makeQueue<FrameFn>()
 raf.onFinish = fn => schedule(fn, onFinishQueue)
 
 let timeouts: Timeout[] = []
