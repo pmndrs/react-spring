@@ -33,6 +33,18 @@ and `react-three-fiber` you'll need to install the `@react-spring/three` package
 yarn add @react-spring/three @react-three/fiber three
 ```
 
+:::warning
+By default, importing `@react-spring/three` hands frameloop control over to r3f - this is a global setting and means that any other reconcilers 
+(such as `@react-spring/web`) will no longer advance on their own, and will appear to be paused. A workaround is to adjust the global setting after 
+import using - 
+```typescript
+import { Globals } from '@react-spring/web'
+Globals.assign({
+    frameLoop: 'always',
+})
+```
+:::
+
 ## Why use the library?
 
 A common question asked is why use `react-spring` with `react-three-fiber` when you can use the `useFrame` hook to update your meshes & objects
