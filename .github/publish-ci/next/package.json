@@ -8,7 +8,7 @@
     "test": "echo Done"
   },
   "dependencies": {
-    "@react-spring/web": "0.0.0-nightly-f50b673-20230330070501",
+    "@react-spring/web": "9.7.5",
     "next": "14.2.15",
     "react": "18.3.1",
     "react-dom": "18.3.1"
