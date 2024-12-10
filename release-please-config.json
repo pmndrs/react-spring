@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "always-link-local": true,
+  "bootstrap-sha": "8b09751fbde6c20e542312db75c48df61714e3b1",
+  "plugins": [
+    {
+      "type": "node-workspace",
+      "updatePeerDependencies": true
+    }
+  ],
+  "packages": {
+    "packages/animated": {},
+    "packages/core": {},
+    "packages/parallax": {},
+    "packages/rafz": {},
+    "packages/react-spring": {},
+    "packages/shared": {},
+    "packages/types": {},
+    "targets/konva": {},
+    "targets/nativ": {},
+    "targets/three": {},
+    "targets/web": {},
+    "targets/zdog": {}
+  }
+}

@@ -3,7 +3,7 @@ name: Bundle-size
 on:
   pull_request:
     branches:
-      - main
+      - next
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
