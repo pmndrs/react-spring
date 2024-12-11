@@ -24,6 +24,8 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       # Publish to NPM on new releases
       - uses: actions/checkout@v4
