@@ -7,7 +7,7 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 
 env:
@@ -36,7 +36,9 @@ jobs:
         with:
           cache: yarn
           node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > .npmrc
 
       - name: Install
         if: ${{ steps.release.outputs.releases_created }}
@@ -50,5 +52,3 @@ jobs:
         # need to publish all unpublished versions to NPM here
       - run: yarn workspaces foreach npm publish --access=public
         if: ${{ steps.release.outputs.releases_created }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
