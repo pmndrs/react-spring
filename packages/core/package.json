@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/core",
-  "version": "9.7.5",
+  "version": "9.7.6",
   "module": "./dist/react-spring_core.legacy-esm.js",
   "main": "./dist/cjs/index.js",
   "types": "./dist/react-spring_core.modern.d.mts",
