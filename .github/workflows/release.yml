@@ -50,5 +50,5 @@ jobs:
 
         # Release Please has already incremented versions and published tags, so we just
         # need to publish all unpublished versions to NPM here
-      - run: yarn workspaces foreach npm publish --access=public
+      - run: yarn workspaces foreach --all --parallel --no-private npm publish --access=public
         if: ${{ steps.release.outputs.releases_created }}
