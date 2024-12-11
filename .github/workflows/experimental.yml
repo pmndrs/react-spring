@@ -36,7 +36,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build
-        run: yarn build-ci
+        run: yarn build:ci
 
       - run: ./scripts/version-and-publish.sh
         env:
