@@ -4626,7 +4626,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/core@workspace:packages/core, @react-spring/core@~9.7.4, @react-spring/core@~9.7.5":
+"@react-spring/core@workspace:packages/core, @react-spring/core@~9.7.5":
   version: 0.0.0-use.local
   resolution: "@react-spring/core@workspace:packages/core"
   dependencies:
@@ -4727,7 +4727,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-spring/konva@workspace:targets/konva, @react-spring/konva@~9.7.4":
+"@react-spring/konva@workspace:targets/konva, @react-spring/konva@~9.7.5":
   version: 0.0.0-use.local
   resolution: "@react-spring/konva@workspace:targets/konva"
   dependencies:
@@ -4742,7 +4742,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-spring/native@workspace:targets/native, @react-spring/native@~9.7.4":
+"@react-spring/native@workspace:targets/native, @react-spring/native@~9.7.5":
   version: 0.0.0-use.local
   resolution: "@react-spring/native@workspace:targets/native"
   dependencies:
@@ -4820,7 +4820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-spring/three@workspace:targets/three, @react-spring/three@~9.7.4":
+"@react-spring/three@workspace:targets/three, @react-spring/three@~9.7.5":
   version: 0.0.0-use.local
   resolution: "@react-spring/three@workspace:targets/three"
   dependencies:
@@ -4848,7 +4848,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-spring/web@workspace:^, @react-spring/web@workspace:targets/web, @react-spring/web@~9.7.4, @react-spring/web@~9.7.5":
+"@react-spring/web@workspace:^, @react-spring/web@workspace:targets/web, @react-spring/web@~9.7.5":
   version: 0.0.0-use.local
   resolution: "@react-spring/web@workspace:targets/web"
   dependencies:
@@ -4862,7 +4862,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-spring/zdog@workspace:targets/zdog, @react-spring/zdog@~9.7.4":
+"@react-spring/zdog@workspace:targets/zdog, @react-spring/zdog@~9.7.5":
   version: 0.0.0-use.local
   resolution: "@react-spring/zdog@workspace:targets/zdog"
   dependencies:
@@ -17178,12 +17178,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "react-spring@workspace:packages/react-spring"
   dependencies:
-    "@react-spring/core": ~9.7.4
-    "@react-spring/konva": ~9.7.4
-    "@react-spring/native": ~9.7.4
-    "@react-spring/three": ~9.7.4
-    "@react-spring/web": ~9.7.4
-    "@react-spring/zdog": ~9.7.4
+    "@react-spring/core": ~9.7.5
+    "@react-spring/konva": ~9.7.5
+    "@react-spring/native": ~9.7.5
+    "@react-spring/three": ~9.7.5
+    "@react-spring/web": ~9.7.5
+    "@react-spring/zdog": ~9.7.5
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
