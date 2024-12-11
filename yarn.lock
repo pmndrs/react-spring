@@ -4717,7 +4717,7 @@ __metadata:
     rehype-slug: "npm:6.0.0"
     remark-directive: "npm:3.0.0"
     remark-frontmatter: "npm:5.0.0"
-    remark-mdx-frontmatter: "npm:4.0.0"
+    remark-mdx-frontmatter: "npm:5.0.0"
     typescript: "npm:5.6.3"
     unified: "npm:11.0.5"
     unist-util-visit: "npm:5.0.0"
@@ -5912,17 +5912,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*":
-  version: 29.5.13
-  resolution: "@types/jest@npm:29.5.13"
-  dependencies:
-    expect: "npm:^29.0.0"
-    pretty-format: "npm:^29.0.0"
-  checksum: 10/7d6e3e4ef4b1cab0f61270d55764709512fdfbcb1bd47c0ef44117d48490529c1f264dacf3440b9188363e99e290b80b79c529eadc3af2184116a90f6856b192
-  languageName: node
-  linkType: hard
-
-"@types/jest@npm:29.5.14":
+"@types/jest@npm:*, @types/jest@npm:29.5.14":
   version: 29.5.14
   resolution: "@types/jest@npm:29.5.14"
   dependencies:
@@ -17528,9 +17518,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"remark-mdx-frontmatter@npm:4.0.0":
-  version: 4.0.0
-  resolution: "remark-mdx-frontmatter@npm:4.0.0"
+"remark-mdx-frontmatter@npm:5.0.0":
+  version: 5.0.0
+  resolution: "remark-mdx-frontmatter@npm:5.0.0"
   dependencies:
     "@types/mdast": "npm:^4.0.0"
     estree-util-is-identifier-name: "npm:^3.0.0"
@@ -17538,7 +17528,7 @@ __metadata:
     toml: "npm:^3.0.0"
     unified: "npm:^11.0.0"
     yaml: "npm:^2.0.0"
-  checksum: 10/01f3874bf5728c7ec314a0802d53de46ed0730a7f53fd9d8305ab95593b4b411336789fd84581157c7bd3398e4848082d84d17d656475846b9bd08be6ef6d71d
+  checksum: 10/533f89b4a1ddde50e3443b8c8a730cb86a3845addf3502fd1c0b16860f1addd26058f8ce2edd11b0e615e9b704557ed7f1559a599d65fd53a2b16ba2fdeac6de
   languageName: node
   linkType: hard
 
