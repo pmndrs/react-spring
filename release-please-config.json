@@ -6,6 +6,24 @@
     {
       "type": "node-workspace",
       "updatePeerDependencies": true
+    },
+    {
+      "type": "linked-versions",
+      "groupName": "my group",
+      "components": [
+        "animated",
+        "core",
+        "parallax",
+        "rafz",
+        "react-spring",
+        "shared",
+        "types",
+        "konva",
+        "native",
+        "three",
+        "web",
+        "zdog"
+      ]
     }
   ],
   "packages": {
