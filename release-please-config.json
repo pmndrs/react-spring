@@ -17,7 +17,7 @@
     "packages/shared": {},
     "packages/types": {},
     "targets/konva": {},
-    "targets/nativ": {},
+    "targets/native": {},
     "targets/three": {},
     "targets/web": {},
     "targets/zdog": {}
