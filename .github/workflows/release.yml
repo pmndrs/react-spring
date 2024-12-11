@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  id-token: write
 
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -37,9 +38,6 @@ jobs:
           cache: yarn
           node-version: '20.x'
 
-      - name: Setup npmrc
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > .npmrc
-
       - name: Install
         if: ${{ steps.release.outputs.releases_created }}
         run: yarn install --immutable
@@ -47,6 +45,8 @@ jobs:
       - name: Build
         if: ${{ steps.release.outputs.releases_created }}
         run: yarn build:ci
+
+      - run: yarn config set npmAuthToken ${{ secrets.NPM_PUBLISH_TOKEN }}
 
         # Release Please has already incremented versions and published tags, so we just
         # need to publish all unpublished versions to NPM here
