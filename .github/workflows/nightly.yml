@@ -62,7 +62,7 @@ jobs:
 
       - name: Build
         if: steps.version.outputs.NEXT_VERSION
-        run: yarn build-ci
+        run: yarn build:ci
 
       - name: Setup npmrc
         if: steps.version.outputs.NEXT_VERSION
