@@ -1,0 +1,54 @@
+---
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Publish to NPM on new releases
+      - uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.releases_created }}
+
+      - uses: actions/setup-node@v4
+        if: ${{ steps.release.outputs.releases_created }}
+        with:
+          cache: yarn
+          node-version: '20.x'
+
+      - name: Setup npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > .npmrc
+
+      - name: Install
+        if: ${{ steps.release.outputs.releases_created }}
+        run: yarn install --immutable
+
+      - name: Build
+        if: ${{ steps.release.outputs.releases_created }}
+        run: yarn build:ci
+
+        # Release Please has already incremented versions and published tags, so we just
+        # need to publish all unpublished versions to NPM here
+      - run: yarn workspaces foreach npm publish --access=public
+        if: ${{ steps.release.outputs.releases_created }}

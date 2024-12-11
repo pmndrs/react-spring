@@ -30,7 +30,7 @@
     ]
   },
   "scripts": {
-    "build-ci": "turbo run build --filter=!@react-spring/doc",
+    "build:ci": "turbo run build --filter=!@react-spring/docs",
     "build": "turbo run build",
     "changeset": "changeset",
     "clean": "turbo run clean",
@@ -48,9 +48,7 @@
     "test:unit": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
-    "test:e2e": "start-server-and-test 'yarn vite serve packages/parallax/test --host' http-get://localhost:3000 'yarn cypress run'",
-    "release": "yarn clean && yarn && yarn build && yarn test:ts && yarn test:unit && yarn changeset publish --no-git-tag",
-    "vers": "yarn changeset version"
+    "test:e2e": "start-server-and-test 'yarn vite serve packages/parallax/test --host' http-get://localhost:3000 'yarn cypress run'"
   },
   "commitlint": {
     "extends": [
@@ -63,7 +61,6 @@
     }
   },
   "devDependencies": {
-    "@changesets/cli": "2.27.9",
     "@commitlint/cli": "19.5.0",
     "@commitlint/config-conventional": "19.5.0",
     "@react-three/fiber": "8.17.10",
@@ -116,5 +113,5 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-spring"
   },
-  "packageManager": "yarn@3.8.5"
+  "packageManager": "yarn@4.5.3"
 }

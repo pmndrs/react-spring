@@ -3,7 +3,7 @@ name: Tests
 on:
   push:
     branches:
-      - 'main'
+      - next
   pull_request: {}
 
 env:
@@ -57,7 +57,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build
-        run: yarn build-ci --filter=!@react-spring/docs
+        run: yarn build:ci
 
       - name: Pack
         run: yarn package
@@ -115,7 +115,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build
-        run: yarn build-ci
+        run: yarn build:ci
 
       - name: Test
         run: yarn test:unit
@@ -147,7 +147,7 @@ jobs:
         run: yarn add typescript@${{ matrix.ts }}
 
       - name: Build
-        run: yarn build-ci
+        run: yarn build:ci
 
       - name: Test
         run: |
@@ -177,7 +177,7 @@ jobs:
   #       run: yarn install --immutable
 
   #     - name: Build
-  #       run: yarn build-ci
+  #       run: yarn build:ci
 
   #     - name: Test
   #       run: yarn test:e2e
