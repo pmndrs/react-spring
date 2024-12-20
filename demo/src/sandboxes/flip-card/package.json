@@ -28,8 +28,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/react": "18.3.11",
-    "@types/react-dom": "18.3.1",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
     "typescript": "4.9.5"
   }
 }
