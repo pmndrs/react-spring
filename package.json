@@ -30,7 +30,7 @@
     ]
   },
   "scripts": {
-    "build-ci": "turbo run build --filter=!@react-spring/doc",
+    "build-ci": "turbo run build --filter=!@react-spring/docs",
     "build": "turbo run build",
     "changeset": "changeset",
     "clean": "turbo run clean",

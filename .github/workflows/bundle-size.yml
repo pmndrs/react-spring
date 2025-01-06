@@ -31,7 +31,7 @@ jobs:
         run: yarn install --immutable
 
       - name: Build packages
-        run: yarn build --filter=!@react-spring/doc
+        run: yarn build --filter=!@react-spring/docs
 
       - uses: preactjs/compressed-size-action@v2
         with:
