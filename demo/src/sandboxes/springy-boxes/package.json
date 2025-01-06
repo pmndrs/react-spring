@@ -15,11 +15,11 @@
     "react-dom": "18.3.1",
     "react-scripts": "5.0.1",
     "@react-spring/three": "*",
-    "three": "0.169.0"
+    "three": "0.172.0"
   },
   "devDependencies": {
-    "@types/react": "18.3.11",
-    "@types/react-dom": "18.3.1",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
     "typescript": "4.9.5"
   },
   "scripts": {

@@ -9,14 +9,14 @@
   },
   "dependencies": {
     "@react-spring/web": "0.0.0-nightly-f50b673-20230330070501",
-    "next": "14.2.15",
+    "next": "14.2.22",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@types/node": "20.16.11",
-    "@types/react": "18.3.11",
-    "@types/react-dom": "18.3.1",
+    "@types/node": "20.17.11",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
     "typescript": "4.9.5"
   },
   "msw": {
