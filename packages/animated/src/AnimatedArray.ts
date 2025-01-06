@@ -10,7 +10,7 @@ type Source = AnimatedValue<Value>[]
 export class AnimatedArray<
   T extends ReadonlyArray<Value> = Value[],
 > extends AnimatedObject {
-  protected declare source: Source
+  declare protected source: Source
   constructor(source: T) {
     super(source)
   }

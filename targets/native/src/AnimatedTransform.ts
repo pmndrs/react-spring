@@ -6,7 +6,7 @@ type Transform = { [key: string]: string | number | Animated }
 type Source = Transform[]
 
 export class AnimatedTransform extends AnimatedObject {
-  protected declare source: Source
+  declare protected source: Source
   constructor(source: Source) {
     super(source)
   }
