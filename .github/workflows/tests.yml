@@ -32,8 +32,8 @@ jobs:
               - 'cypress/**'
               - 'yarn.lock'
               - '.github/publish-ci/**/yarn.lock'
-              - '.github/workflows/checks.yml'
-              - '.github/workflows/tests.yml'
+              - '.github/workflows/*.yml'
+              - 'package.json'
   build:
     needs: changes
     if: ${{ needs.changes.outputs.packages == 'true' }}
