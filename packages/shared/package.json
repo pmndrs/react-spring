@@ -23,7 +23,10 @@
     "README.md",
     "LICENSE"
   ],
-  "repository": "pmndrs/react-spring",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pmndrs/react-spring.git"
+  },
   "homepage": "https://github.com/pmndrs/react-spring#readme",
   "keywords": [
     "animated",
