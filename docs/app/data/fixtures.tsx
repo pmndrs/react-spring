@@ -517,7 +517,11 @@ export const USESPRINGVALUE_CONFIG_DATA: CellData[][] = [
   [
     {
       label: 'immediate',
-      content: <p>Prevents the animation if true, applying the `to` styles immediately.</p>,
+      content: (
+        <p>
+          Prevents the animation if true, applying the `to` styles immediately.
+        </p>
+      ),
     },
     {
       label: 'boolean | function',
