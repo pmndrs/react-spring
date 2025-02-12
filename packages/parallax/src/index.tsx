@@ -8,7 +8,7 @@ import {
   config as configs,
 } from '@react-spring/web'
 
-const ParentContext = React.createContext<any>(null)
+const ParentContext = /* @__PURE__ */ React.createContext<any>(null)
 
 function getScrollType(horizontal: boolean) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
@@ -75,8 +75,8 @@ export interface ParallaxLayerProps extends ViewProps {
   sticky?: StickyConfig
 }
 
-export const ParallaxLayer = React.memo(
-  React.forwardRef<IParallaxLayer, ParallaxLayerProps>(
+export const ParallaxLayer = /* @__PURE__ */ React.memo(
+  /* @__PURE__ */ React.forwardRef<IParallaxLayer, ParallaxLayerProps>(
     (
       { horizontal, factor = 1, offset = 0, speed = 0, sticky, ...rest },
       ref
@@ -216,8 +216,8 @@ export interface ParallaxProps extends ViewProps {
   children: React.ReactNode
 }
 
-export const Parallax = React.memo(
-  React.forwardRef<IParallax, ParallaxProps>((props, ref) => {
+export const Parallax = /* @__PURE__ */ React.memo(
+  /* @__PURE__ */ React.forwardRef<IParallax, ParallaxProps>((props, ref) => {
     const [ready, setReady] = useState(false)
     const {
       pages,
