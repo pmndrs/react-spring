@@ -128,7 +128,8 @@ export function useSprings(
   )
 
   const ctrls = useRef([...state.ctrls])
-  const updates: any[] = []
+  const updates = useRef<any[]>(null!)
+  updates.current ??= []
 
   // Cache old controllers to dispose in the commit phase.
   const prevLength = usePrev(length) || 0
@@ -164,7 +165,7 @@ export function useSprings(
         : (props as any)[i]
 
       if (update) {
-        updates[i] = declareUpdate(update)
+        updates.current[i] = declareUpdate(update)
       }
     }
   }
@@ -172,7 +173,9 @@ export function useSprings(
   // New springs are created during render so users can pass them to
   // their animated components, but new springs aren't cached until the
   // commit phase (see the `useIsomorphicLayoutEffect` callback below).
-  const springs = ctrls.current.map((ctrl, i) => getSprings(ctrl, updates[i]))
+  const springs = ctrls.current.map((ctrl, i) =>
+    getSprings(ctrl, updates.current[i])
+  )
 
   const context = useContext(SpringContext)
   const prevContext = usePrev(context)
@@ -202,7 +205,7 @@ export function useSprings(
       }
 
       // Apply updates created during render.
-      const update = updates[i]
+      const update = updates.current[i]
       if (update) {
         // Update the injected ref if needed.
         replaceRef(ctrl, update.ref)
@@ -214,6 +217,8 @@ export function useSprings(
         } else {
           ctrl.start(update)
         }
+
+        updates.current[i] = null
       }
     })
   })
