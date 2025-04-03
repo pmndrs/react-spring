@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { ReactNode } from 'react'
+import { forwardRef, ReactNode } from 'react'
 import * as FontSizes from '../../styles/fontStyles.css'
 import { descriptiveList, list } from './List.css'
 
@@ -8,24 +8,22 @@ export interface ListProps {
   fontStyle?: keyof FontSizes.FontSizes
   className?: string
   children?: ReactNode
-  ref?: React.RefObject<any>
 }
 
-export const List = ({
-  tag = 'ul',
-  fontStyle = 'XS',
-  className,
-  children,
-  ref,
-}: ListProps) => {
-  const Element = tag
+export const List = forwardRef<HTMLOListElement, ListProps>(
+  ({ tag = 'ul', fontStyle = 'XS', className, children }, ref) => {
+    const Element = tag
 
-  return (
-    <Element className={clsx(FontSizes[fontStyle], list, className)} ref={ref}>
-      {children}
-    </Element>
-  )
-}
+    return (
+      <Element
+        className={clsx(FontSizes[fontStyle], list, className)}
+        ref={ref}
+      >
+        {children}
+      </Element>
+    )
+  }
+)
 
 interface DescriptiveListProps {
   data: [title: string, item: ReactNode][]

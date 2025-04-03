@@ -26,16 +26,18 @@ describe('animated component', () => {
     expect(queryByTitle('Foo')).toBeTruthy()
   })
   it('wraps a component', () => {
-    const Name = (props: {
-      name: string
-      other: string
-      children: React.ReactNode
-      ref?: React.RefObject<HTMLHeadingElement>
-    }) => (
-      <h2 title={props.name} ref={props.ref}>
+    const Name = React.forwardRef<
+      HTMLHeadingElement,
+      {
+        name: string
+        other: string
+        children: React.ReactNode
+      }
+    >((props, ref) => (
+      <h2 title={props.name} ref={ref}>
         {props.children}
       </h2>
-    )
+    ))
     const AnimatedName = a(Name)
     const child = spring('Animated Text')
     const name = spring('name')
@@ -61,15 +63,17 @@ describe('animated component', () => {
     expect(div.style.opacity).toBe('1')
   })
   it('accepts Animated values in custom style prop', () => {
-    const Name = (props: {
-      style: { color: string; opacity?: number }
-      children: React.ReactNode
-      ref?: React.RefObject<HTMLHeadingElement>
-    }) => (
-      <h2 ref={props.ref} style={props.style}>
+    const Name = React.forwardRef<
+      HTMLHeadingElement,
+      {
+        style: { color: string; opacity?: number }
+        children: React.ReactNode
+      }
+    >((props, ref) => (
+      <h2 ref={ref} style={props.style}>
         {props.children}
       </h2>
-    )
+    ))
     const AnimatedName = a(Name)
     const opacity = spring(0.5)
     const { queryByText } = render(

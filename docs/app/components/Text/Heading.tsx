@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode } from 'react'
+import { CSSProperties, forwardRef, ReactNode } from 'react'
 
 import { Link } from 'phosphor-react'
 
@@ -17,34 +17,37 @@ export interface HeadingProps {
   isLink?: boolean
   weight?: keyof FontSizes.FontWeights
   style?: CSSProperties
-  ref?: React.RefObject<any>
 }
 
-export const Heading = ({
-  tag = 'h1',
-  fontStyle = 'S',
-  weight = 'default',
-  className,
-  children,
-  isLink = false,
-  ref,
-  ...restProps
-}: HeadingProps) => {
-  const Element = tag
+export const Heading = forwardRef<any, HeadingProps>(
+  (
+    {
+      tag = 'h1',
+      fontStyle = 'S',
+      weight = 'default',
+      className,
+      children,
+      isLink = false,
+      ...restProps
+    },
+    ref
+  ) => {
+    const Element = tag
 
-  return (
-    <Element
-      className={clsx(
-        FontSizes[fontStyle],
-        FontSizes.WEIGHTS[weight],
-        heading,
-        className
-      )}
-      ref={ref}
-      {...restProps}
-    >
-      {children}
-      {isLink ? <Link className={linkIcon} size={16} /> : null}
-    </Element>
-  )
-}
+    return (
+      <Element
+        className={clsx(
+          FontSizes[fontStyle],
+          FontSizes.WEIGHTS[weight],
+          heading,
+          className
+        )}
+        ref={ref}
+        {...restProps}
+      >
+        {children}
+        {isLink ? <Link className={linkIcon} size={16} /> : null}
+      </Element>
+    )
+  }
+)

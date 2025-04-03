@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { ReactNode } from 'react'
+import { forwardRef, ReactNode } from 'react'
 
 import { copy } from './Copy.css'
 import * as FontSizes from '../../styles/fontStyles.css'
@@ -9,21 +9,19 @@ export interface CopyProps {
   className?: string
   children?: ReactNode
   tag?: keyof Pick<JSX.IntrinsicElements, 'p' | 'blockquote' | 'div' | 'label'>
-  ref?: React.RefObject<any>
 }
 
-export const Copy = ({
-  fontStyle = 'XS',
-  className,
-  children,
-  tag = 'p',
-  ref,
-}: CopyProps) => {
-  const Element = tag
+export const Copy = forwardRef<any, CopyProps>(
+  ({ fontStyle = 'XS', className, children, tag = 'p' }, ref) => {
+    const Element = tag
 
-  return (
-    <Element className={clsx(FontSizes[fontStyle], copy, className)} ref={ref}>
-      {children}
-    </Element>
-  )
-}
+    return (
+      <Element
+        className={clsx(FontSizes[fontStyle], copy, className)}
+        ref={ref}
+      >
+        {children}
+      </Element>
+    )
+  }
+)
