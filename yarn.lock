@@ -4653,8 +4653,8 @@ __metadata:
     lodash.clamp: 4.0.3
     lodash.shuffle: 4.2.0
     lorem-ipsum: 2.0.8
-    react: 19.1.0
-    react-dom: 18.3.1
+    react: ^19.1.0
+    react-dom: ^19.1.0
     react-feather: 2.0.10
     react-use-gesture: 9.1.3
     react-use-measure: 2.1.1
@@ -4706,8 +4706,8 @@ __metadata:
     isbot: 5.1.19
     parse-numeric-range: 1.3.0
     phosphor-react: 1.4.1
-    react: 19.1.0
-    react-dom: 18.3.1
+    react: ^19.1.0
+    react-dom: ^19.1.0
     react-select: 5.9.0
     refractor: 4.8.1
     rehype-autolink-headings: 7.1.0
@@ -6052,12 +6052,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:18.3.5":
-  version: 18.3.5
-  resolution: "@types/react-dom@npm:18.3.5"
+"@types/react-dom@npm:^19.1.2":
+  version: 19.1.2
+  resolution: "@types/react-dom@npm:19.1.2"
   peerDependencies:
-    "@types/react": ^18.0.0
-  checksum: 95c757684f71e761515c5a11299e5feec550c72bb52975487f360e6f0d359b26454c26eaf2ce45dd22748205aa9b2c2fe0abe7005ebcbd233a7615283ac39a7d
+    "@types/react": ^19.0.0
+  checksum: 62a5c398e87b5a42f34497152c67367db70d5e348a05fc4bd78c119fc8d4367c02833c022b2f5dba4df33ae65b7ff76409847722ce6b8f9ea5d31983832688da
   languageName: node
   linkType: hard
 
@@ -6116,7 +6116,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:19.1.2":
+"@types/react@npm:^19.1.2":
   version: 19.1.2
   resolution: "@types/react@npm:19.1.2"
   dependencies:
@@ -16929,7 +16929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:18.3.1, react-dom@npm:^18.2.0":
+"react-dom@npm:^18.2.0":
   version: 18.3.1
   resolution: "react-dom@npm:18.3.1"
   dependencies:
@@ -16938,6 +16938,17 @@ __metadata:
   peerDependencies:
     react: ^18.3.1
   checksum: 298954ecd8f78288dcaece05e88b570014d8f6dce5db6f66e6ee91448debeb59dcd31561dddb354eee47e6c1bb234669459060deb238ed0213497146e555a0b9
+  languageName: node
+  linkType: hard
+
+"react-dom@npm:^19.1.0":
+  version: 19.1.0
+  resolution: "react-dom@npm:19.1.0"
+  dependencies:
+    scheduler: ^0.26.0
+  peerDependencies:
+    react: ^19.1.0
+  checksum: 1d154b6543467095ac269e61ca59db546f34ef76bcdeb90f2dad41d682cd210aae492e70c85010ed5d0a2caea225e9a55139ebc1a615ee85bf197d7f99678cdf
   languageName: node
   linkType: hard
 
@@ -17192,8 +17203,8 @@ __metadata:
     "@types/jest": 29.5.14
     "@types/lodash.clamp": 4.0.9
     "@types/lodash.shuffle": 4.2.9
-    "@types/react": 19.1.2
-    "@types/react-dom": 18.3.5
+    "@types/react": ^19.1.2
+    "@types/react-dom": ^19.1.2
     "@types/react-lazyload": 3.2.3
     "@types/react-native": 0.73.0
     "@types/styled-components": 5.1.34
@@ -17208,8 +17219,8 @@ __metadata:
     mock-raf: "npm:@react-spring/mock-raf@1.1.1"
     prettier: 3.4.2
     pretty-quick: 4.0.0
-    react: 19.1.0
-    react-dom: 18.3.1
+    react: ^19.1.0
+    react-dom: ^19.1.0
     react-konva: 18.2.10
     react-native: 0.76.5
     react-zdog: 1.2.2
@@ -17327,19 +17338,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:19.1.0":
-  version: 19.1.0
-  resolution: "react@npm:19.1.0"
-  checksum: c0905f8cfb878b0543a5522727e5ed79c67c8111dc16ceee135b7fe19dce77b2c1c19293513061a8934e721292bfc1517e0487e262d1906f306bdf95fa54d02f
-  languageName: node
-  linkType: hard
-
 "react@npm:^18.2.0":
   version: 18.3.1
   resolution: "react@npm:18.3.1"
   dependencies:
     loose-envify: ^1.1.0
   checksum: a27bcfa8ff7c15a1e50244ad0d0c1cb2ad4375eeffefd266a64889beea6f6b64c4966c9b37d14ee32d6c9fcd5aa6ba183b6988167ab4d127d13e7cb5b386a376
+  languageName: node
+  linkType: hard
+
+"react@npm:^19.1.0":
+  version: 19.1.0
+  resolution: "react@npm:19.1.0"
+  checksum: c0905f8cfb878b0543a5522727e5ed79c67c8111dc16ceee135b7fe19dce77b2c1c19293513061a8934e721292bfc1517e0487e262d1906f306bdf95fa54d02f
   languageName: node
   linkType: hard
 
@@ -18125,6 +18136,13 @@ __metadata:
   version: 0.25.0
   resolution: "scheduler@npm:0.25.0"
   checksum: b7bb9fddbf743e521e9aaa5198a03ae823f5e104ebee0cb9ec625392bb7da0baa1c28ab29cee4b1e407a94e76acc6eee91eeb749614f91f853efda2613531566
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.26.0":
+  version: 0.26.0
+  resolution: "scheduler@npm:0.26.0"
+  checksum: c63a9f1c0e5089b537231cff6c11f75455b5c8625ae09535c1d7cd0a1b0c77ceecdd9f1074e5e063da5d8dc11e73e8033dcac3361791088be08a6e60c0283ed9
   languageName: node
   linkType: hard
 

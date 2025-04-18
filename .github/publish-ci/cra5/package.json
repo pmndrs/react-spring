@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@react-spring/web": "*",
-    "react": "19.1.0",
-    "react-dom": "18.3.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-scripts": "5.0.1"
   },
   "scripts": {
@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "@types/node": "20.17.11",
-    "@types/react": "19.1.2",
-    "@types/react-dom": "18.3.5",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
     "typescript": "4.9.5"
   }
 }
