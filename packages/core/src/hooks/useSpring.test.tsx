@@ -2,7 +2,7 @@ import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { is } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
-import { SpringContext } from '../SpringContext'
+import { ISpringContext, SpringContext } from '../SpringContext'
 import { SpringValue } from '../SpringValue'
 import { SpringRef } from '../SpringRef'
 import { useSpring } from './useSpring'
@@ -110,8 +110,8 @@ describe('useSpring', () => {
   })
 })
 
-interface TestContext extends SpringContext {
-  set(values: SpringContext): void
+interface TestContext extends ISpringContext {
+  set(values: ISpringContext): void
 }
 
 function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {

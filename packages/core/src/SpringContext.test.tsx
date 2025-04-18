@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import { SpringContext } from './SpringContext'
+import { ISpringContext, SpringContext } from './SpringContext'
 import { SpringValue } from './SpringValue'
 import { useSpring } from './hooks'
 
@@ -19,7 +19,7 @@ describe('SpringContext', () => {
   ))
 
   it('only merges when changed', () => {
-    const context: SpringContext = {}
+    const context: ISpringContext = {}
     const onProps = jest.fn()
     const Test = () => {
       useSpring({ onProps, x: 0 })
@@ -114,12 +114,12 @@ describe('SpringContext', () => {
   })
 })
 
-function createUpdater(Component: React.ComponentType<SpringContext>) {
+function createUpdater(Component: React.ComponentType<ISpringContext>) {
   let result: RenderResult | undefined
   afterEach(() => {
     result = undefined
   })
-  return (props: SpringContext) => {
+  return (props: ISpringContext) => {
     const elem = <Component {...props} />
     if (result) result.rerender(elem)
     else result = render(elem)
