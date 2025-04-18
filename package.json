@@ -66,7 +66,7 @@
     "@changesets/cli": "2.27.11",
     "@commitlint/cli": "19.6.1",
     "@commitlint/config-conventional": "19.6.0",
-    "@react-three/fiber": "8.17.10",
+    "@react-three/fiber": "~9.1.2",
     "@remix-run/dev": "2.15.2",
     "@simonsmith/cypress-image-snapshot": "9.1.0",
     "@swc/core": "1.10.4",
