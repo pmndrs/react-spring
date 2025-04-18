@@ -4620,7 +4620,7 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: ">=16.8.0 <20"
   languageName: unknown
   linkType: soft
 
@@ -4632,7 +4632,7 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: "*"
   languageName: unknown
   linkType: soft
 
@@ -4653,7 +4653,7 @@ __metadata:
     lodash.clamp: 4.0.3
     lodash.shuffle: 4.2.0
     lorem-ipsum: 2.0.8
-    react: 18.3.1
+    react: 19.1.0
     react-dom: 18.3.1
     react-feather: 2.0.10
     react-use-gesture: 9.1.3
@@ -4706,7 +4706,7 @@ __metadata:
     isbot: 5.1.19
     parse-numeric-range: 1.3.0
     phosphor-react: 1.4.1
-    react: 18.3.1
+    react: 19.1.0
     react-dom: 18.3.1
     react-select: 5.9.0
     refractor: 4.8.1
@@ -4735,7 +4735,7 @@ __metadata:
     "@react-spring/types": ~9.7.5
   peerDependencies:
     konva: ">=2.6"
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: ">=16.8.0 <20"
     react-konva: ^16.8.0 || ^16.8.7-0 || ^16.9.0-0 || ^16.10.1-0 || ^16.12.0-0 || ^16.13.0-0 || ^17.0.0-0 || ^17.0.1-0 || ^17.0.2-0 || ^18.0.0-0
   languageName: unknown
   linkType: soft
@@ -4761,7 +4761,7 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/web": ~9.7.5
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: ">=16.8.0 <20"
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
   languageName: unknown
   linkType: soft
@@ -4779,7 +4779,7 @@ __metadata:
     "@react-spring/rafz": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: ">=16.8.0 <20"
   languageName: unknown
   linkType: soft
 
@@ -4793,7 +4793,7 @@ __metadata:
     "@react-spring/types": ~9.7.5
   peerDependencies:
     "@react-three/fiber": ">=6.0"
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: ">=16.8.0 <20"
     three: ">=0.126"
   languageName: unknown
   linkType: soft
@@ -4813,7 +4813,7 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: ">=16.8.0 <20"
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
   languageName: unknown
   linkType: soft
@@ -4827,7 +4827,7 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: ">=16.8.0 <20"
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-zdog: ">=1.0"
     zdog: ">=1.0"
@@ -6115,13 +6115,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:18.3.18":
+"@types/react@npm:*":
   version: 18.3.18
   resolution: "@types/react@npm:18.3.18"
   dependencies:
     "@types/prop-types": "*"
     csstype: ^3.0.2
   checksum: 5933597bc9f53e282f0438f0bb76d0f0fab60faabe760ea806e05ffe6f5c61b9b4d363e1a03a8fea47c510d493c6cf926cdeeba9f7074fa97b61940c350245e7
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:19.1.2":
+  version: 19.1.2
+  resolution: "@types/react@npm:19.1.2"
+  dependencies:
+    csstype: ^3.0.2
+  checksum: 5a911a2c84be0c9451bb8a7c75c907af1f52afbb4d51b0d62e7516a9b0b1e63c3c1cdc35b79bfc6e66176c76cfff9d43023a781cd3dc59e2744715ced7d7e7c4
   languageName: node
   linkType: hard
 
@@ -17193,7 +17202,7 @@ __metadata:
     "@types/jest": 29.5.14
     "@types/lodash.clamp": 4.0.9
     "@types/lodash.shuffle": 4.2.9
-    "@types/react": 18.3.18
+    "@types/react": 19.1.2
     "@types/react-dom": 18.3.5
     "@types/react-lazyload": 3.2.3
     "@types/react-native": 0.73.0
@@ -17209,7 +17218,7 @@ __metadata:
     mock-raf: "npm:@react-spring/mock-raf@1.1.1"
     prettier: 3.4.2
     pretty-quick: 4.0.0
-    react: 18.3.1
+    react: 19.1.0
     react-dom: 18.3.1
     react-konva: 18.2.10
     react-native: 0.76.5
@@ -17236,7 +17245,7 @@ __metadata:
     "@react-spring/web": ~9.7.4
     "@react-spring/zdog": ~9.7.4
   peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react: ">=16.8.0 <20"
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
   languageName: unknown
   linkType: soft
@@ -17315,7 +17324,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.3.1, react@npm:^18.2.0":
+"react@npm:19.1.0":
+  version: 19.1.0
+  resolution: "react@npm:19.1.0"
+  checksum: c0905f8cfb878b0543a5522727e5ed79c67c8111dc16ceee135b7fe19dce77b2c1c19293513061a8934e721292bfc1517e0487e262d1906f306bdf95fa54d02f
+  languageName: node
+  linkType: hard
+
+"react@npm:^18.2.0":
   version: 18.3.1
   resolution: "react@npm:18.3.1"
   dependencies:
