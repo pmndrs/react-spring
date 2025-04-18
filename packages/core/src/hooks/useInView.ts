@@ -35,7 +35,7 @@ export function useInView<TElement extends HTMLElement>(
   args?: IntersectionArgs
 ) {
   const [isInView, setIsInView] = useState(false)
-  const ref = useRef<TElement>()
+  const ref = useRef<TElement>(null)
 
   const propsFn = is.fun(props) && props
 

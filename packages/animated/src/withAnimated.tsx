@@ -66,7 +66,7 @@ export const withAnimated = (Component: any, host: HostConfig) => {
 
     const observer = new PropsObserver(callback, deps)
 
-    const observerRef = useRef<PropsObserver>()
+    const observerRef = useRef<PropsObserver>(null)
     useIsomorphicLayoutEffect(() => {
       observerRef.current = observer
 

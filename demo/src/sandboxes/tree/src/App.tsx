@@ -5,7 +5,7 @@ import { Container, Title, Frame, Content, toggle } from './styles'
 import * as Icons from './icons'
 
 function usePrevious<T>(value: T) {
-  const ref = React.useRef<T>()
+  const ref = React.useRef<T>(null)
   React.useEffect(() => void (ref.current = value), [value])
   return ref.current
 }

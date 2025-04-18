@@ -14,7 +14,7 @@ export function useMemoOne<T>(getResult: () => T, inputs?: any[]): T {
     })
   )
 
-  const committed = useRef<Cache<T>>()
+  const committed = useRef<Cache<T>>(null)
   const prevCache = committed.current
 
   let cache = prevCache
