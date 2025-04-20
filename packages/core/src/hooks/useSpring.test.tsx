@@ -2,7 +2,7 @@ import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
 import { is } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
-import { ISpringContext, SpringContext } from '../SpringContext'
+import { SpringContextProvider, type ISpringContext } from '../SpringContext'
 import { SpringValue } from '../SpringValue'
 import { SpringRef } from '../SpringRef'
 import { useSpring } from './useSpring'
@@ -140,7 +140,7 @@ function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {
   })
 
   function renderWithContext(elem: JSX.Element) {
-    const wrapped = <SpringContext {...context}>{elem}</SpringContext>
+    const wrapped = <SpringContextProvider {...context}>{elem}</SpringContextProvider>
     if (result) result.rerender(wrapped)
     else result = render(wrapped)
     return result

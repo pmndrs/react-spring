@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useContext, PropsWithChildren } from 'react'
-import { useMemoOne } from '@react-spring/shared'
 
 /**
  * This context affects all new and existing `SpringValue` objects
@@ -13,37 +12,29 @@ export interface ISpringContext {
   immediate?: boolean
 }
 
-type SpringFC = React.Context<ISpringContext> & React.FC<PropsWithChildren<ISpringContext>>
+export const SpringContext = React.createContext<ISpringContext>({
+  pause: false,
+  immediate: false,
+})
 
-const ContextFactory = ({
+export const SpringContextProvider = ({
   children,
   ...props
 }: PropsWithChildren<ISpringContext>) => {
-  const inherited = useContext(ctx)
+  const inherited = useContext(SpringContext)
 
   // Inherited values are dominant when truthy.
-  const pause = props.pause || !!inherited.pause,
-    immediate = props.immediate || !!inherited.immediate
+  const pause = props.pause ?? inherited.pause ?? false
+  const immediate = props.immediate ?? inherited.immediate ?? false
 
   // Memoize the context to avoid unwanted renders.
-  props = useMemoOne(() => ({ pause, immediate }), [pause, immediate])
-
-  const { Provider } = ctx
-  return <Provider value={props}>{children}</Provider>
+  const contextValue = React.useMemo(
+    () => ({ pause, immediate }),
+    [pause, immediate]
+  )
+  return (
+    <SpringContext.Provider value={contextValue}>
+      {children}
+    </SpringContext.Provider>
+  )
 }
-
-const ctx = makeContext(ContextFactory, {} as ISpringContext)
-
-// Allow `useContext(SpringContext)` in TypeScript.
-ContextFactory.Provider = ctx.Provider
-ContextFactory.Consumer = ctx.Consumer
-
-/** Make the `target` compatible with `useContext` */
-function makeContext<T>(target: any, init: T): React.Context<T> {
-  Object.assign(target, React.createContext(init))
-  target.Provider._context = target
-  target.Consumer._context = target
-  return target
-}
-
-export const SpringContext = ContextFactory as SpringFC

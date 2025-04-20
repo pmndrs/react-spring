@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import { ISpringContext, SpringContext } from './SpringContext'
+import { type ISpringContext, SpringContextProvider } from './SpringContext'
 import { SpringValue } from './SpringValue'
 import { useSpring } from './hooks'
 
@@ -13,9 +13,9 @@ describe('SpringContext', () => {
   }
 
   const update = createUpdater(props => (
-    <SpringContext {...props}>
+    <SpringContextProvider {...props}>
       <Child />
-    </SpringContext>
+    </SpringContextProvider>
   ))
 
   it('only merges when changed', () => {
@@ -27,9 +27,9 @@ describe('SpringContext', () => {
     }
 
     const getRoot = () => (
-      <SpringContext {...context}>
+      <SpringContextProvider {...context}>
         <Test />
-      </SpringContext>
+      </SpringContextProvider>
     )
 
     const expectUpdates = (updates: any[]) => {
