@@ -31,7 +31,7 @@
     "react-use-measure": "2.1.1",
     "react95": "4.0.0",
     "sass": "1.83.1",
-    "styled-components": "5.3.11",
+    "styled-components": "6.1.13",
     "three": "0.172.0",
     "three-stdlib": "2.35.2",
     "vec-la": "1.5.0",
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@types/lodash.clamp": "4.0.9",
-    "@types/lodash.shuffle": "4.2.9"
+    "@types/lodash.shuffle": "4.2.9",
+    "@types/react-transition-group": "4.4.12"
   }
 }

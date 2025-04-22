@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import '@react-three/fiber'
+import { JSX } from 'react'
 
 export type Primitives = keyof JSX.IntrinsicElements
 

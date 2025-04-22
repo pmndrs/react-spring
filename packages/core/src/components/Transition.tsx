@@ -1,3 +1,4 @@
+import { JSX } from 'react'
 import { Valid } from '../types/common'
 import { TransitionComponentProps } from '../types'
 import { useTransition } from '../hooks'

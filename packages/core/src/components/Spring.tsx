@@ -1,3 +1,4 @@
+import { JSX } from 'react'
 import { NoInfer, UnknownProps } from '@react-spring/types'
 import { useSpring, UseSpringProps } from '../hooks/useSpring'
 import { SpringValues, SpringToFn, SpringChain } from '../types'
