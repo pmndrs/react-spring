@@ -45,3 +45,28 @@ vote, followed by the option to then add written feedback.
 
 If you're interested in adding an example to the site then why not check out the specific
 [contributing guide](https://github.com/pmndrs/react-spring/tree/main/demo/CONTRIBUTING.md).
+
+
+# Breaking changes
+
+## from v9 to v10
+
+v10 introduced the move to React 19 and brought a breaking change to the SpringContext API. To add the Spring context provider, you must explicitly use SpringContextProvider.
+
+before:
+```tsx
+import { SpringContext } from 'react-spring'
+
+...
+<SpringContext ...>
+...
+```
+
+now:
+```tsx
+import { SpringContextProvider } from 'react-spring'
+
+...
+<SpringContextProvider ...>
+...
+```
