@@ -46,7 +46,7 @@
     "@react-spring/types": "~9.7.5"
   },
   "peerDependencies": {
-    "react": ">=16.8.0 <20"
+    "react": "^19"
   },
   "scripts": {
     "build": "tsup",

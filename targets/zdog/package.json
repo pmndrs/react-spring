@@ -47,8 +47,8 @@
     "@react-spring/types": "~9.7.5"
   },
   "peerDependencies": {
-    "react": ">=16.8.0 <20",
-    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "react": "^19",
+    "react-dom": "^19",
     "react-zdog": ">=1.0",
     "zdog": ">=1.0"
   },

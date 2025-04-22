@@ -57,6 +57,6 @@
     "@react-spring/types": "~9.7.5"
   },
   "peerDependencies": {
-    "react": "*"
+    "react": "^19"
   }
 }
