@@ -91,13 +91,16 @@ if (process.env.NODE_ENV === 'production') {
 interface ConfigOptions {
   name: string
   entry: string
+  buildFilter?: Array<BuildOptions["name"]>
 }
 
 export const defaultConfig = (
-  { name: prefix, entry }: ConfigOptions,
+  { name: prefix, entry, buildFilter }: ConfigOptions,
   options: Options
 ): Options[] => {
-  const artifactOptions: Options[] = buildTargets.map(
+  const artifactOptions: Options[] = buildTargets
+    .filter(target => !buildFilter || buildFilter.includes(target.name))
+    .map(
     ({ format, minify, env, name, target, dts }) => {
       const outputFilename = `${prefix}.${name}`
 

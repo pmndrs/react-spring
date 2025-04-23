@@ -6,6 +6,7 @@ export default defineConfig(opts => {
     {
       entry: 'src/index.ts',
       name: 'react-spring_native',
+      buildFilter: ['development', 'production.min']
     },
     opts
   )

@@ -7,14 +7,8 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "import": {
-        "types": "./dist/react-spring_native.modern.d.mts",
-        "default": "./dist/react-spring_native.modern.mjs"
-      },
-      "require": {
-        "types": "./dist/cjs/react-spring_native.development.d.ts",
-        "default": "./dist/cjs/index.js"
-      }
+      "types": "./dist/cjs/react-spring_native.development.d.ts",
+      "default": "./dist/cjs/index.js"
     }
   },
   "files": [
