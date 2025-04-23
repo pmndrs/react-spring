@@ -6,7 +6,7 @@ import { SpringValues, SpringToFn, SpringChain } from '../types'
 export type SpringComponentProps<State extends object = UnknownProps> =
   unknown &
     UseSpringProps<State> & {
-      children: (values: SpringValues<State>) => JSX.Element | null
+      children: (values: SpringValues<State>) => React.JSX.Element | null
     }
 
 // Infer state from "from" object prop.

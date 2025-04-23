@@ -48,7 +48,7 @@
   },
   "peerDependencies": {
     "konva": ">=2.6",
-    "react": "^19",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-konva": "^19"
   },
   "scripts": {

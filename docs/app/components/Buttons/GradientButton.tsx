@@ -5,7 +5,7 @@ import { button, inner } from './GradientButton.css'
 interface GradientButtonProps {
   children: ReactNode
   href?: string
-  tag?: keyof JSX.IntrinsicElements
+  tag?: keyof React.JSX.IntrinsicElements
   className?: string
   variant?: 'regular' | 'small'
   type?: 'button' | 'submit'

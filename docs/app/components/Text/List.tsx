@@ -4,7 +4,7 @@ import * as FontSizes from '../../styles/fontStyles.css'
 import { descriptiveList, list } from './List.css'
 
 export interface ListProps {
-  tag?: keyof Pick<JSX.IntrinsicElements, 'ul' | 'ol'>
+  tag?: keyof Pick<React.JSX.IntrinsicElements, 'ul' | 'ol'>
   fontStyle?: keyof FontSizes.FontSizes
   className?: string
   children?: ReactNode

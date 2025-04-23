@@ -8,7 +8,7 @@ export interface CopyProps {
   fontStyle?: keyof FontSizes.FontSizes
   className?: string
   children?: ReactNode
-  tag?: keyof Pick<JSX.IntrinsicElements, 'p' | 'blockquote' | 'div' | 'label'>
+  tag?: keyof Pick<React.JSX.IntrinsicElements, 'p' | 'blockquote' | 'div' | 'label'>
 }
 
 export const Copy = forwardRef<

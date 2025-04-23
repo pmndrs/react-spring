@@ -10,7 +10,7 @@ import clsx from 'clsx'
 import { stickyMenu, stickyMenuStuck } from './MenuSticky.css'
 
 interface MenuStickyProps {
-  tag?: keyof JSX.IntrinsicElements
+  tag?: keyof React.JSX.IntrinsicElements
   className?: string
   subnav: SubtitleSchemaItem
 }

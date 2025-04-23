@@ -115,7 +115,7 @@ interface TestContext extends ISpringContext {
 }
 
 function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {
-  let prevElem: JSX.Element | undefined
+  let prevElem: React.JSX.Element | undefined
   let result: RenderResult | undefined
 
   const context: TestContext = {
@@ -139,7 +139,7 @@ function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {
     }
   })
 
-  function renderWithContext(elem: JSX.Element) {
+  function renderWithContext(elem: React.JSX.Element) {
     const wrapped = <SpringContextProvider {...context}>{elem}</SpringContextProvider>
     if (result) result.rerender(wrapped)
     else result = render(wrapped)

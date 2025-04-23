@@ -13,7 +13,7 @@ function usePrevious<T>(value: T) {
 const Tree = React.memo<
   React.HTMLAttributes<HTMLDivElement> & {
     defaultOpen?: boolean
-    name: string | JSX.Element
+    name: string | React.JSX.Element
   }
 >(({ children, name, style, defaultOpen = false }) => {
   const [isOpen, setOpen] = React.useState(defaultOpen)

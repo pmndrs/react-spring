@@ -8,7 +8,7 @@ import * as FontSizes from '../../styles/fontStyles.css'
 
 export interface HeadingProps {
   tag?: keyof Pick<
-    JSX.IntrinsicElements,
+    React.JSX.IntrinsicElements,
     'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'figcaption'
   >
   fontStyle?: keyof FontSizes.FontSizes

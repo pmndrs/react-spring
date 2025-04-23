@@ -3997,7 +3997,7 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   languageName: unknown
   linkType: soft
 
@@ -4009,7 +4009,7 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   languageName: unknown
   linkType: soft
 
@@ -4113,7 +4113,7 @@ __metadata:
     "@react-spring/types": ~9.7.5
   peerDependencies:
     konva: ">=2.6"
-    react: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-konva: ^19
   languageName: unknown
   linkType: soft
@@ -4127,7 +4127,7 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-native: ">=0.78"
   languageName: unknown
   linkType: soft
@@ -4139,8 +4139,8 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/web": ~9.7.5
   peerDependencies:
-    react: ^19
-    react-dom: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   languageName: unknown
   linkType: soft
 
@@ -4157,7 +4157,7 @@ __metadata:
     "@react-spring/rafz": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   languageName: unknown
   linkType: soft
 
@@ -4171,7 +4171,7 @@ __metadata:
     "@react-spring/types": ~9.7.5
   peerDependencies:
     "@react-three/fiber": ">=6.0"
-    react: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     three: ">=0.126"
   languageName: unknown
   linkType: soft
@@ -4191,8 +4191,8 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^19
-    react-dom: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   languageName: unknown
   linkType: soft
 
@@ -4205,8 +4205,8 @@ __metadata:
     "@react-spring/shared": ~9.7.5
     "@react-spring/types": ~9.7.5
   peerDependencies:
-    react: ^19
-    react-dom: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-zdog: ">=1.0"
     zdog: ">=1.0"
   languageName: unknown
@@ -16233,8 +16233,8 @@ __metadata:
     "@react-spring/web": ~9.7.4
     "@react-spring/zdog": ~9.7.4
   peerDependencies:
-    react: ^19
-    react-dom: ^19
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   languageName: unknown
   linkType: soft
 
