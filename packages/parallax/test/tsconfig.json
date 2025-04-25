@@ -6,6 +6,7 @@
     "allowJs": true,
     "skipLibCheck": false,
     "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "module": "ESNext",
     "moduleResolution": "Node",
