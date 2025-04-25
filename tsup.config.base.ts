@@ -145,12 +145,15 @@ export const defaultConfig = (
           'react-zdog',
           'zdog',
         ],
-        esbuildOptions(options) {
-          // Needed to prevent auto-replacing of process.env.NODE_ENV in all builds
-          options.platform = 'neutral'
-          // Needed to return to normal lookup behavior when platform: 'neutral'
-          options.mainFields = ['browser', 'module', 'main']
-          options.conditions = ['browser']
+        esbuildOptions(options, context) {
+          if(context.format !== 'cjs') {
+            
+            // Needed to prevent auto-replacing of process.env.NODE_ENV in all builds
+            options.platform = 'neutral'
+            // Needed to return to normal lookup behavior when platform: 'neutral'
+            options.mainFields = ['browser', 'module', 'main']
+            options.conditions = ['browser']
+          }
         },
 
         define: defineValues,
