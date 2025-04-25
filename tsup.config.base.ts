@@ -146,8 +146,8 @@ export const defaultConfig = (
           'zdog',
         ],
         esbuildOptions(options, context) {
+          // Prevent compiling ES while context is set to CJS
           if(context.format !== 'cjs') {
-            
             // Needed to prevent auto-replacing of process.env.NODE_ENV in all builds
             options.platform = 'neutral'
             // Needed to return to normal lookup behavior when platform: 'neutral'
