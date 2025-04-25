@@ -39,7 +39,6 @@
   },
   "devDependencies": {
     "@types/lodash.clamp": "4.0.9",
-    "@types/lodash.shuffle": "4.2.9",
-    "@types/react-transition-group": "4.4.12"
+    "@types/lodash.shuffle": "4.2.9"
   }
 }
