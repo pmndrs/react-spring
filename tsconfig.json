@@ -23,7 +23,6 @@
     "noUnusedLocals": true,
     "moduleResolution": "nodenext",
     "baseUrl": "./",
-    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strictNullChecks": true
