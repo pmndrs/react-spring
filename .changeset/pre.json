@@ -1,0 +1,24 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@react-spring/demo": "1.0.0",
+    "@react-spring/docs": "2.0.0",
+    "@react-spring/animated": "9.7.5",
+    "@react-spring/core": "9.7.5",
+    "eslint-config-react-spring": "0.0.1",
+    "@react-spring/parallax": "9.7.5",
+    "@react-spring/rafz": "9.7.5",
+    "react-spring": "9.7.4",
+    "@react-spring/shared": "9.7.5",
+    "@react-spring/types": "9.7.5",
+    "@react-spring/konva": "9.7.5",
+    "@react-spring/native": "9.7.5",
+    "@react-spring/three": "9.7.5",
+    "@react-spring/web": "9.7.5",
+    "@react-spring/zdog": "9.7.5"
+  },
+  "changesets": [
+    "proud-socks-refuse"
+  ]
+}
