@@ -91,7 +91,7 @@ if (process.env.NODE_ENV === 'production') {
 interface ConfigOptions {
   name: string
   entry: string
-  buildFilter?: Array<BuildOptions["name"]>
+  buildFilter?: Array<BuildOptions['name']>
 }
 
 export const defaultConfig = (
@@ -100,8 +100,7 @@ export const defaultConfig = (
 ): Options[] => {
   const artifactOptions: Options[] = buildTargets
     .filter(target => !buildFilter || buildFilter.includes(target.name))
-    .map(
-    ({ format, minify, env, name, target, dts }) => {
+    .map(({ format, minify, env, name, target, dts }) => {
       const outputFilename = `${prefix}.${name}`
 
       const folderSegments = ['dist']
@@ -147,7 +146,7 @@ export const defaultConfig = (
         ],
         esbuildOptions(options, context) {
           // Prevent compiling ES while context is set to CJS
-          if(context.format !== 'cjs') {
+          if (context.format !== 'cjs') {
             // Needed to prevent auto-replacing of process.env.NODE_ENV in all builds
             options.platform = 'neutral'
             // Needed to return to normal lookup behavior when platform: 'neutral'
@@ -163,8 +162,7 @@ export const defaultConfig = (
           }
         },
       }
-    }
-  )
+    })
 
   return artifactOptions
 }
