@@ -1130,13 +1130,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@colors/colors@npm:1.5.0":
-  version: 1.5.0
-  resolution: "@colors/colors@npm:1.5.0"
-  checksum: d64d5260bed1d5012ae3fc617d38d1afc0329fec05342f4e6b838f46998855ba56e0a73833f4a80fa8378c84810da254f76a8a19c39d038260dc06dc4e007425
-  languageName: node
-  linkType: hard
-
 "@commitlint/cli@npm:19.6.1":
   version: 19.6.1
   resolution: "@commitlint/cli@npm:19.6.1"
@@ -1328,7 +1321,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cypress/request@npm:^3.0.6":
+"@cypress/request@npm:^3.0.8":
   version: 3.0.8
   resolution: "@cypress/request@npm:3.0.8"
   dependencies:
@@ -6174,27 +6167,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vanilla-extract/css@npm:^1.14.0":
-  version: 1.17.1
-  resolution: "@vanilla-extract/css@npm:1.17.1"
-  dependencies:
-    "@emotion/hash": ^0.9.0
-    "@vanilla-extract/private": ^1.0.6
-    css-what: ^6.1.0
-    cssesc: ^3.0.0
-    csstype: ^3.0.7
-    dedent: ^1.5.3
-    deep-object-diff: ^1.1.9
-    deepmerge: ^4.2.2
-    lru-cache: ^10.4.3
-    media-query-parser: ^2.0.2
-    modern-ahocorasick: ^1.0.0
-    picocolors: ^1.0.0
-  checksum: e8c8702691fe871cad236a702eeaf9081404de970f1c407c358ed428771072abebd228df91ab721e28bc42887af1ea63df80f069fc94afa55405e58eb5115230
-  languageName: node
-  linkType: hard
-
-"@vanilla-extract/css@npm:^1.17.2":
+"@vanilla-extract/css@npm:^1.14.0, @vanilla-extract/css@npm:^1.17.2":
   version: 1.17.2
   resolution: "@vanilla-extract/css@npm:1.17.2"
   dependencies:
@@ -7575,7 +7548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ci-info@npm:^4.0.0":
+"ci-info@npm:^4.1.0":
   version: 4.2.0
   resolution: "ci-info@npm:4.2.0"
   checksum: 0e3726721526f54c5b17cf44ab2ed69b842c756bcb4d2b26ce279e595a80a856aec9fb38a2986a2baca3de73d15895f3a01d2771c4aad93c898aae7e3ca0ceb1
@@ -7619,16 +7592,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cli-table3@npm:~0.6.1":
-  version: 0.6.5
-  resolution: "cli-table3@npm:0.6.5"
+"cli-table3@npm:0.6.1":
+  version: 0.6.1
+  resolution: "cli-table3@npm:0.6.1"
   dependencies:
-    "@colors/colors": 1.5.0
+    colors: 1.4.0
     string-width: ^4.2.0
   dependenciesMeta:
-    "@colors/colors":
+    colors:
       optional: true
-  checksum: ab7afbf4f8597f1c631f3ee6bb3481d0bfeac8a3b81cffb5a578f145df5c88003b6cfff46046a7acae86596fdd03db382bfa67f20973b6b57425505abc47e42c
+  checksum: 956e175f8eb019c26465b9f1e51121c08d8978e2aab04be7f8520ea8a4e67906fcbd8516dfb77e386ae3730ef0281aa21a65613dffbfa3d62969263252bd25a9
   languageName: node
   linkType: hard
 
@@ -7722,6 +7695,13 @@ __metadata:
   version: 2.0.20
   resolution: "colorette@npm:2.0.20"
   checksum: 0c016fea2b91b733eb9f4bcdb580018f52c0bc0979443dad930e5037a968237ac53d9beb98e218d2e9235834f8eebce7f8e080422d6194e957454255bde71d3d
+  languageName: node
+  linkType: hard
+
+"colors@npm:1.4.0":
+  version: 1.4.0
+  resolution: "colors@npm:1.4.0"
+  checksum: 98aa2c2418ad87dedf25d781be69dc5fc5908e279d9d30c34d8b702e586a0474605b3a189511482b9d5ed0d20c867515d22749537f7bc546256c6014f3ebdcec
   languageName: node
   linkType: hard
 
@@ -8159,11 +8139,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:13.17.0":
-  version: 13.17.0
-  resolution: "cypress@npm:13.17.0"
+"cypress@npm:14.3.3":
+  version: 14.3.3
+  resolution: "cypress@npm:14.3.3"
   dependencies:
-    "@cypress/request": ^3.0.6
+    "@cypress/request": ^3.0.8
     "@cypress/xvfb": ^1.2.4
     "@types/sinonjs__fake-timers": 8.1.1
     "@types/sizzle": ^2.3.2
@@ -8174,9 +8154,9 @@ __metadata:
     cachedir: ^2.3.0
     chalk: ^4.1.0
     check-more-types: ^2.24.0
-    ci-info: ^4.0.0
+    ci-info: ^4.1.0
     cli-cursor: ^3.1.0
-    cli-table3: ~0.6.1
+    cli-table3: 0.6.1
     commander: ^6.2.1
     common-tags: ^1.8.0
     dayjs: ^1.10.4
@@ -8200,7 +8180,7 @@ __metadata:
     process: ^0.11.10
     proxy-from-env: 1.0.0
     request-progress: ^3.0.0
-    semver: ^7.5.3
+    semver: ^7.7.1
     supports-color: ^8.1.1
     tmp: ~0.2.3
     tree-kill: 1.2.2
@@ -8208,7 +8188,7 @@ __metadata:
     yauzl: ^2.10.0
   bin:
     cypress: bin/cypress
-  checksum: c1d87358e8b92e19e3bf5246a8787dcdd5083e27fa7b816d26c28b4678ecd87b5b3b8661fb812bc993845ca30a482d3f18837af1ac6d9e142e41049dccbc51e0
+  checksum: c76b58e25a3dfa8eefd8047f247fed9a6ad21a3f277c1273dd49caeef8ae2916f472f8dad4870c32d5fdefee46766dc54655b30eb451c238bf9f22ffa78fd59f
   languageName: node
   linkType: hard
 
@@ -16691,7 +16671,7 @@ __metadata:
     "@types/react": ^19.1.2
     "@types/react-dom": ^19.1.2
     "@types/three": 0.172.0
-    cypress: 13.17.0
+    cypress: 14.3.3
     eslint: 8.57.1
     flush-microtasks: 1.0.1
     husky: 9.1.7
@@ -17594,12 +17574,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.1.1, semver@npm:^7.1.3, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.0":
-  version: 7.7.1
-  resolution: "semver@npm:7.7.1"
+"semver@npm:^7.1.1, semver@npm:^7.1.3, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.6.0, semver@npm:^7.7.1":
+  version: 7.7.2
+  resolution: "semver@npm:7.7.2"
   bin:
     semver: bin/semver.js
-  checksum: 586b825d36874007c9382d9e1ad8f93888d8670040add24a28e06a910aeebd673a2eb9e3bf169c6679d9245e66efb9057e0852e70d9daa6c27372aab1dda7104
+  checksum: dd94ba8f1cbc903d8eeb4dd8bf19f46b3deb14262b6717d0de3c804b594058ae785ef2e4b46c5c3b58733c99c83339068203002f9e37cfe44f7e2cc5e3d2f621
   languageName: node
   linkType: hard
 
@@ -19782,7 +19762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-node@npm:^1.2.0":
+"vite-node@npm:^1.2.0, vite-node@npm:^1.6.0":
   version: 1.6.1
   resolution: "vite-node@npm:1.6.1"
   dependencies:
@@ -19794,21 +19774,6 @@ __metadata:
   bin:
     vite-node: vite-node.mjs
   checksum: a42d2ee0110133c4c7cf19fafca74b3115d3b85b6234ed6057ad8de12ca9ece67655a0b5ba50942f253fb6c428b902f738aabdd62835b9142e8219725bbb895d
-  languageName: node
-  linkType: hard
-
-"vite-node@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "vite-node@npm:1.6.0"
-  dependencies:
-    cac: ^6.7.14
-    debug: ^4.3.4
-    pathe: ^1.1.1
-    picocolors: ^1.0.0
-    vite: ^5.0.0
-  bin:
-    vite-node: vite-node.mjs
-  checksum: ce111c5c7a4cf65b722baa15cbc065b7bfdbf1b65576dd6372995f6a72b2b93773ec5df59f6c5f08cfe1284806597b44b832efcea50d5971102428159ff4379f
   languageName: node
   linkType: hard
 

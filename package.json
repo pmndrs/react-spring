@@ -85,7 +85,7 @@
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@types/three": "0.172.0",
-    "cypress": "13.17.0",
+    "cypress": "14.3.3",
     "eslint": "8.57.1",
     "flush-microtasks": "1.0.1",
     "husky": "9.1.7",
