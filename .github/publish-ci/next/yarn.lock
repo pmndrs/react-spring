@@ -159,12 +159,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:20.17.11":
-  version: 20.17.11
-  resolution: "@types/node@npm:20.17.11"
+"@types/node@npm:22.15.18":
+  version: 22.15.18
+  resolution: "@types/node@npm:22.15.18"
   dependencies:
-    undici-types: ~6.19.2
-  checksum: 8841a85ce5cbc402d87492527721d32b2c3ab9159a362a6ba05e957807e1991a056df61ce5e58166489d07d90f1ad61516121d6fd4c9e62c5429ce67f4b82d98
+    undici-types: ~6.21.0
+  checksum: 16fb2c1f7be4156578648bfe074c856fca309ac66b9b74f9c5887ce778ce6cbd06d2883eaa397837e3628cddb02a5b0859764c5db0ea24f55f0cfbf54cca06fc
   languageName: node
   linkType: hard
 
@@ -331,7 +331,7 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@react-spring/web": 0.0.0-nightly-f50b673-20230330070501
-    "@types/node": 20.17.11
+    "@types/node": 22.15.18
     "@types/react": ^19.1.2
     "@types/react-dom": ^19.1.2
     next: 14.2.22
@@ -405,9 +405,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.19.2":
-  version: 6.19.8
-  resolution: "undici-types@npm:6.19.8"
-  checksum: de51f1b447d22571cf155dfe14ff6d12c5bdaec237c765085b439c38ca8518fc360e88c70f99469162bf2e14188a7b0bcb06e1ed2dc031042b984b0bb9544017
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 46331c7d6016bf85b3e8f20c159d62f5ae471aba1eb3dc52fff35a0259d58dcc7d592d4cc4f00c5f9243fa738a11cfa48bd20203040d4a9e6bc25e807fab7ab3
   languageName: node
   linkType: hard
