@@ -218,7 +218,6 @@ export function useSprings(
           ctrl.start(update)
         }
       }
-      updates.current[i] = null
     })
   })
 
