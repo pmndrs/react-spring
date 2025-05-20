@@ -26,6 +26,14 @@ describe('useSprings', () => {
   }, isStrictMode)
 
   describe('when only a props function is passed', () => {
+    it('should reach final value in strict mode', async () => {
+      update(1, () => ({
+        from: { x: 0 },
+        to: { x: 1 }
+      }))
+      expect(mapSprings(s => s.goal)).toEqual([{ x: 1 }])
+    })
+
     it('calls the props function once per new spring', () => {
       const getProps = jest.fn((i: number) => ({ x: i * 100 }))
 
