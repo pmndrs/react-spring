@@ -29,7 +29,7 @@ describe('useSprings', () => {
     it('should reach final value in strict mode', async () => {
       update(1, () => ({
         from: { x: 0 },
-        to: { x: 1 }
+        to: { x: 1 },
       }))
       expect(mapSprings(s => s.goal)).toEqual([{ x: 1 }])
     })
