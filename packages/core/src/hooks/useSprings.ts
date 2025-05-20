@@ -127,6 +127,10 @@ export function useSprings(
     []
   )
 
+  // useRef is needed to get the same references accross renders.
+  // Note that controllers are a shallow copy of the final array.
+  // So any array manipulation won't impact the final array until
+  // the commit phase, in the useIsomorphicLayoutEffect callback
   const ctrls = useRef([...state.ctrls])
   const updates = useRef<any[]>([])
 
@@ -180,6 +184,10 @@ export function useSprings(
   const prevContext = usePrev(context)
   const hasContext = context !== prevContext && hasProps(context)
 
+  // This is the commit phase where the new transition will begin.
+  // - updated animation values will be passed to the controlers.
+  // - state will be updated
+  // - springs will start or the new update will be queued if the spring is not started yet.
   useIsomorphicLayoutEffect(() => {
     layoutId.current++
 
