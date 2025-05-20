@@ -129,7 +129,6 @@ export function useSprings(
 
   const ctrls = useRef([...state.ctrls])
   const updates = useRef<any[]>([])
-  updates.current ??= []
 
   // Cache old controllers to dispose in the commit phase.
   const prevLength = usePrev(length) || 0
