@@ -436,7 +436,6 @@ export function useTransition(
           <elem.type
             {...elem.props}
             key={is.str(t.key) || is.num(t.key) ? t.key : t.ctrl.id}
-            ref={elem.ref}
           />
         ) : (
           elem
