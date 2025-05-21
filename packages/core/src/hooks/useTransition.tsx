@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { version as reactVersion } from 'react/package.json'
 import { useContext, useRef, useMemo } from 'react'
 import { Lookup, OneOrMore, UnknownProps } from '@react-spring/types'
 import {
@@ -437,7 +436,7 @@ export function useTransition(
           <elem.type
             {...elem.props}
             key={is.str(t.key) || is.num(t.key) ? t.key : t.ctrl.id}
-            ref={reactVersion < '19.0.0' ? elem.ref : elem.props.ref}
+            ref={React.version < '19.0.0' ? elem.ref : elem.props.ref}
           />
         ) : (
           elem

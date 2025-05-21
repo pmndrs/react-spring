@@ -26,7 +26,6 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strictNullChecks": true,
-    "resolveJsonModule": true
+    "strictNullChecks": true
   }
 }
