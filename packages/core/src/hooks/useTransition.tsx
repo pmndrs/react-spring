@@ -432,14 +432,18 @@ export function useTransition(
       {transitions.map((t, i) => {
         const { springs } = changes.get(t) || t.ctrl
         const elem: any = render({ ...springs }, t.item, t, i)
-        return elem && elem.type ? (
+
+        if (!elem || !elem.type) return elem
+
+        const key = is.str(t.key) || is.num(t.key) ? t.key : t.ctrl.id
+        const isLegacyReact = React.version < '19.0.0'
+
+        return (
           <elem.type
             {...elem.props}
-            key={is.str(t.key) || is.num(t.key) ? t.key : t.ctrl.id}
-            ref={React.version < '19.0.0' ? elem.ref : elem.props.ref}
+            key={key}
+            {...(isLegacyReact && { ref: elem.ref })}
           />
-        ) : (
-          elem
         )
       })}
     </>
