@@ -57,7 +57,9 @@ export const useResize = ({
           width,
           height,
           immediate:
-            sizeValues.width.get() === 0 || sizeValues.height.get() === 0,
+            sizeValues.width.get() === 0 ||
+            sizeValues.height.get() === 0 ||
+            springOptions.immediate === true,
         })
       },
       { container: container?.current || undefined }
