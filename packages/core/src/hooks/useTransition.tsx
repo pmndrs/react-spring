@@ -436,9 +436,7 @@ export function useTransition(
         const key = is.str(t.key) || is.num(t.key) ? t.key : t.ctrl.id
         const isLegacyReact = React.version < '19.0.0'
 
-        const props = {
-          ...elem.props,
-        }
+        const props = elem?.props ?? {}
 
         if (isLegacyReact) {
           props.ref = elem.ref
