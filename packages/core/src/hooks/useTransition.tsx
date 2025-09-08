@@ -438,11 +438,9 @@ export function useTransition(
 
         const props = elem?.props ?? {}
 
-        if (isLegacyReact) {
-          props.ref = elem.ref
-        }
+        const elemRef = isLegacyReact && elem?.ref ? elem.ref : null;
 
-        return elem && elem.type ? <elem.type key={key} {...props} /> : elem
+        return elem && elem.type ? <elem.type {...props} key={key} ref={elemRef} /> : elem
       })}
     </>
   )
