@@ -1,0 +1,24 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@react-spring/demo": "1.0.0",
+    "@react-spring/docs": "2.0.0",
+    "@react-spring/animated": "10.0.2",
+    "@react-spring/core": "10.0.2",
+    "eslint-config-react-spring": "0.0.1",
+    "@react-spring/parallax": "10.0.2",
+    "@react-spring/rafz": "10.0.2",
+    "react-spring": "10.0.1",
+    "@react-spring/shared": "10.0.2",
+    "@react-spring/types": "10.0.2",
+    "@react-spring/konva": "10.0.2",
+    "@react-spring/native": "10.0.2",
+    "@react-spring/three": "10.0.2",
+    "@react-spring/web": "10.0.2",
+    "@react-spring/zdog": "10.0.2"
+  },
+  "changesets": [
+    "khaki-rice-peel"
+  ]
+}
