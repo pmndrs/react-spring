@@ -1,3 +1,22 @@
+<h2 align="center" style="font-size: 10px">
+ <sup>
+ Special thanks to:
+ </sup>
+</h2>
+
+<a href="http://go.warp.dev/awesome-cursorrules">
+  <p align="center">
+    <img src="https://github.com/warpdotdev/brand-assets/blob/main/Github/Sponsor/Warp-Github-LG-02.png?raw=true" width="320" />
+  </p>
+  <p align="center" style="color: white; font-size: 14px">
+  Warp is built for coding with multiple AI agents
+  </p>
+</a>
+
+<hr />
+
+<br />
+
 <p align="center">
   <img src="https://i.imgur.com/QZownhg.png" width="240" />
 </p>
