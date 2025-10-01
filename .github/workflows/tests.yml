@@ -21,7 +21,7 @@ jobs:
     outputs:
       packages: ${{ steps.filter.outputs.packages }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -45,7 +45,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node ${{ matrix.node }}
         uses: actions/setup-node@v4
@@ -103,7 +103,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node ${{ matrix.node }}
         uses: actions/setup-node@v4
@@ -132,7 +132,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node ${{ matrix.node }}
         uses: actions/setup-node@v4
@@ -197,7 +197,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node ${{ matrix.node }}
         uses: actions/setup-node@v4
@@ -241,7 +241,7 @@ jobs:
         node: ['18.x']
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - uses: actions/download-artifact@v4
         with:
