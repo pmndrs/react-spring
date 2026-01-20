@@ -307,6 +307,9 @@ export function useTransition(
       if (t.ctrl.idle) {
         const idle = transitions.every(t => t.ctrl.idle)
         if (t.phase == TransitionPhase.LEAVE) {
+          // Remove this transition from exitingTransitions as soon as it completes.
+          exitingTransitions.current.delete(t)
+
           const expiry = callProp(expires, t.item)
           if (expiry !== false) {
             const expiryMs = expiry === true ? 0 : expiry
@@ -323,12 +326,6 @@ export function useTransition(
         }
         // Force update once idle and expired items exist.
         if (idle && transitions.some(t => t.expired)) {
-          /**
-           * Remove the exited transition from the list
-           * this may not exist but we'll try anyway.
-           */
-          exitingTransitions.current.delete(t)
-
           if (exitBeforeEnter) {
             /**
              * If we have exitBeforeEnter == true

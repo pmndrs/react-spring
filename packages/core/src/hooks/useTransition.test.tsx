@@ -195,6 +195,36 @@ describe('useTransition', () => {
 
     expect(rendered).toEqual([1])
   })
+
+  it('should work with both exitBeforeEnter and trail together', async () => {
+    const props = {
+      from: { t: 0 },
+      enter: { t: 1 },
+      leave: { t: 0 },
+      exitBeforeEnter: true,
+      trail: 100,
+    }
+
+    // Start with two items
+    update([0, 1], props)
+    expect(rendered).toEqual([0, 1])
+
+    global.mockRaf.step()
+
+    // Replace with two new items - the old ones should leave first with trail
+    update([2, 3], props)
+
+    global.mockRaf.step()
+
+    // Old items should still be visible (leaving with trail)
+    expect(rendered).toEqual([0, 1])
+
+    // Wait for all leave animations to complete
+    await global.advanceUntilIdle()
+
+    // New items should now be visible
+    expect(rendered).toEqual([2, 3])
+  })
 })
 
 let result: RenderResult | undefined
