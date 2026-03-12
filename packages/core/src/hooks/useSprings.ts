@@ -134,6 +134,16 @@ export function useSprings(
   const ctrls = useRef([...state.ctrls])
   const updates = useRef<any[]>([])
 
+  // Backup of the most recently applied updates. The layout effect drains
+  // `updates.current` after applying so a parent re-render with unchanged
+  // deps doesn't re-apply stale entries (see #2376). StrictMode mounts
+  // twice (mount → simulated unmount via `useOnce` cleanup → mount), and the
+  // second mount needs to restart the controllers after they've been stopped,
+  // so we keep this snapshot to fall back to. Reset each render so a snapshot
+  // from a previous commit can never bleed into a subsequent layout effect.
+  const strictModeRestartSnapshot = useRef<any[]>([])
+  strictModeRestartSnapshot.current = []
+
   // Cache old controllers to dispose in the commit phase.
   const prevLength = usePrev(length) || 0
 
@@ -201,6 +211,14 @@ export function useSprings(
       each(queue, cb => cb())
     }
 
+    // Fall back to the restart snapshot when the primary array has been
+    // consumed — this lets StrictMode's second mount re-apply updates after
+    // the simulated cleanup stops the controllers.
+    const activeUpdates =
+      updates.current.length > 0
+        ? updates.current
+        : strictModeRestartSnapshot.current
+
     // Update existing controllers.
     each(ctrls.current, (ctrl, i) => {
       // Attach the controller to the local ref.
@@ -212,7 +230,7 @@ export function useSprings(
       }
 
       // Apply updates created during render.
-      const update = updates.current[i]
+      const update = activeUpdates[i]
       if (update) {
         // Update the injected ref if needed.
         replaceRef(ctrl, update.ref)
@@ -234,6 +252,13 @@ export function useSprings(
         }
       }
     })
+
+    // Snapshot updates before clearing so StrictMode's second mount can
+    // still access them (see activeUpdates above).
+    if (updates.current.length > 0) {
+      strictModeRestartSnapshot.current = updates.current
+    }
+    updates.current = []
   })
 
   // Cancel the animations of all controllers on unmount.
