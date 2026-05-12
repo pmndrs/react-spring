@@ -1,12 +1,43 @@
 import type { OnResizeCallback } from '.'
 
 let observer: ResizeObserver | undefined
+let supportsBorderBox = true
 
 const resizeHandlers = new WeakMap<Element, Set<OnResizeCallback>>()
 
+const getBorderBoxSize = (
+  target: Element,
+  { borderBoxSize, contentRect }: ResizeObserverEntry
+): Pick<DOMRectReadOnly, 'width' | 'height'> &
+  Partial<Omit<DOMRectReadOnly, 'width' | 'height'>> => {
+  const boxSize = Array.isArray(borderBoxSize)
+    ? borderBoxSize[0]
+    : borderBoxSize
+
+  if (boxSize) {
+    const isVerticalWritingMode = getComputedStyle(target)
+      .getPropertyValue('writing-mode')
+      .startsWith('vertical-')
+
+    return isVerticalWritingMode
+      ? {
+          width: boxSize.blockSize,
+          height: boxSize.inlineSize,
+        }
+      : {
+          width: boxSize.inlineSize,
+          height: boxSize.blockSize,
+        }
+  }
+
+  return contentRect
+}
+
 const handleObservation = (entries: ResizeObserverEntry[]) =>
-  entries.forEach(({ target, contentRect }) => {
-    return resizeHandlers.get(target)?.forEach(handler => handler(contentRect))
+  entries.forEach(entry => {
+    return resizeHandlers
+      .get(entry.target)
+      ?.forEach(handler => handler(getBorderBoxSize(entry.target, entry)))
   })
 
 export function resizeElement(handler: OnResizeCallback, target: HTMLElement) {
@@ -40,7 +71,16 @@ export function resizeElement(handler: OnResizeCallback, target: HTMLElement) {
   elementHandlers.add(handler)
 
   if (observer) {
-    observer.observe(target)
+    if (supportsBorderBox) {
+      try {
+        observer.observe(target, { box: 'border-box' })
+      } catch {
+        supportsBorderBox = false
+        observer.observe(target)
+      }
+    } else {
+      observer.observe(target)
+    }
   }
 
   /**
