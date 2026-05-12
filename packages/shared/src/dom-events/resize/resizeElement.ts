@@ -1,7 +1,6 @@
 import type { OnResizeCallback } from '.'
 
 let observer: ResizeObserver | undefined
-let supportsBorderBox = true
 
 const resizeHandlers = new WeakMap<Element, Set<OnResizeCallback>>()
 
@@ -15,11 +14,12 @@ const getBorderBoxSize = (
     : borderBoxSize
 
   if (boxSize) {
-    const isVerticalWritingMode = getComputedStyle(target)
-      .getPropertyValue('writing-mode')
-      .startsWith('vertical-')
+    const writingMode =
+      getComputedStyle(target).getPropertyValue('writing-mode')
+    const isOrthogonalWritingMode =
+      writingMode.startsWith('vertical-') || writingMode.startsWith('sideways-')
 
-    return isVerticalWritingMode
+    return isOrthogonalWritingMode
       ? {
           width: boxSize.blockSize,
           height: boxSize.inlineSize,
@@ -71,14 +71,11 @@ export function resizeElement(handler: OnResizeCallback, target: HTMLElement) {
   elementHandlers.add(handler)
 
   if (observer) {
-    if (supportsBorderBox) {
-      try {
-        observer.observe(target, { box: 'border-box' })
-      } catch {
-        supportsBorderBox = false
-        observer.observe(target)
-      }
-    } else {
+    try {
+      observer.observe(target, { box: 'border-box' })
+    } catch (error) {
+      if (!(error instanceof TypeError)) throw error
+
       observer.observe(target)
     }
   }

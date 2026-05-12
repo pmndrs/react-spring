@@ -46,7 +46,7 @@ describe('resizeElement', () => {
           target,
           borderBoxSize: [{ inlineSize: 120, blockSize: 80 }],
           contentRect: { width: 100, height: 60 },
-        } as ResizeObserverEntry,
+        } as unknown as ResizeObserverEntry,
       ],
       {} as ResizeObserver
     )
@@ -67,7 +67,29 @@ describe('resizeElement', () => {
           target,
           borderBoxSize: [{ inlineSize: 120, blockSize: 80 }],
           contentRect: { width: 100, height: 60 },
-        } as ResizeObserverEntry,
+        } as unknown as ResizeObserverEntry,
+      ],
+      {} as ResizeObserver
+    )
+
+    expect(handler).toHaveBeenCalledWith({ width: 80, height: 120 })
+  })
+
+  it('maps border box size for sideways writing modes', () => {
+    const target = document.createElement('div')
+    const handler = jest.fn()
+
+    target.style.writingMode = 'sideways-rl'
+
+    cleanup = resizeElement(handler, target)
+
+    callback?.(
+      [
+        {
+          target,
+          borderBoxSize: [{ inlineSize: 120, blockSize: 80 }],
+          contentRect: { width: 100, height: 60 },
+        } as unknown as ResizeObserverEntry,
       ],
       {} as ResizeObserver
     )
@@ -86,7 +108,7 @@ describe('resizeElement', () => {
         {
           target,
           contentRect: { width: 100, height: 60 },
-        } as ResizeObserverEntry,
+        } as unknown as ResizeObserverEntry,
       ],
       {} as ResizeObserver
     )
@@ -105,5 +127,17 @@ describe('resizeElement', () => {
 
     expect(observe).toHaveBeenNthCalledWith(1, target, { box: 'border-box' })
     expect(observe).toHaveBeenNthCalledWith(2, target)
+  })
+
+  it('does not swallow non-TypeError observe failures', () => {
+    const target = document.createElement('div')
+    const boom = new Error('boom')
+
+    observe.mockImplementationOnce(() => {
+      throw boom
+    })
+
+    expect(() => resizeElement(jest.fn(), target)).toThrow(boom)
+    expect(observe).toHaveBeenCalledTimes(1)
   })
 })
