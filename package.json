@@ -37,7 +37,7 @@
     "lint": "oxlint packages/*/src targets/*/src docs/app docs/scripts demo/src",
     "package": "turbo run pack",
     "postinstall": "remix setup node",
-    "prepare": "husky install",
+    "prepare": "husky",
     "test": "pnpm test:ts && pnpm test:unit && pnpm test:e2e",
     "test:unit": "vitest run --project unit",
     "test:cov": "vitest run --project unit --coverage",
