@@ -1,11 +1,14 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@1.6.0/schema.json",
-  "changelog": false,
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "pmndrs/react-spring" }
+  ],
   "commit": false,
   "fixed": [["@react-spring/*"]],
   "linked": [],
   "access": "public",
-  "baseBranch": "main",
+  "baseBranch": "next",
   "updateInternalDependencies": "patch",
   "ignore": ["@react-spring/demo", "@react-spring/docs"]
 }

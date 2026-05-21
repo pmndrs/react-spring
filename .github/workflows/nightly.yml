@@ -17,6 +17,9 @@ jobs:
     name: 'Nightly Release'
     if: github.repository == 'pmndrs/react-spring'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     outputs:
       NEXT_VERSION: ${{ steps.version.outputs.NEXT_VERSION }}
     steps:

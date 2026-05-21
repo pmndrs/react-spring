@@ -41,6 +41,9 @@
   ],
   "license": "MIT",
   "author": "Josh Ellis",
+  "publishConfig": {
+    "provenance": true
+  },
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
