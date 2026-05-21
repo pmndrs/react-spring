@@ -67,7 +67,7 @@
     "rehype-autolink-headings": "7.1.0",
     "rehype-parse": "9.0.1",
     "rehype-slug": "6.0.0",
-    "remark-directive": "3.0.0",
+    "remark-directive": "4.0.0",
     "remark-frontmatter": "5.0.0",
     "remark-mdx-frontmatter": "4.0.0",
     "typescript": "5.7.2",
