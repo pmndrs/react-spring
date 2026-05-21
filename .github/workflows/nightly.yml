@@ -57,7 +57,7 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.version.outputs.NEXT_VERSION
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install
