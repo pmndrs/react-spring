@@ -15,7 +15,8 @@ export const to: Interpolator = (source: any, ...args: [any]) =>
 
 /** @deprecated Use the `to` export instead */
 export const interpolate: Interpolator = (source: any, ...args: [any]) => (
-  deprecateInterpolate(), new Interpolation(source, args)
+  deprecateInterpolate(),
+  new Interpolation(source, args)
 )
 
 /** Extract the raw value types that are being interpolated */

@@ -78,7 +78,6 @@ As a contributor writing animation tests, I rely on the existing test helpers (`
 - **FR-004**: The animation testing helpers (`advance`, `advanceByTime`, `advanceUntil`, `advanceUntilIdle`, `advanceUntilValue`, `getFrames`, `countBounces`, `setSkipAnimation`) MUST remain available with identical signatures and identical deterministic behaviour.
 - **FR-005**: The global setup file currently at `packages/core/test/setup.ts` (which resets `rafz`, `frameLoop`, and `__raf` between tests) MUST be ported so that frame scheduling is reset between every test, with no cross-test leakage.
 - **FR-006**: All existing test files MUST keep their test bodies (assertion logic, helper call sites, control flow) intact. The following **migration-only** edits are explicitly in scope and acceptable:
-
   - Runner-global renames: `jest.*` → `vi.*`, Jest globals → Vitest imports.
   - React rendering boundary swap: `@testing-library/react` → `vitest-browser-react`. The `render` return-type annotation (`RenderResult`) is dropped; `renderHook` is imported from `vitest-browser-react` (it ships one natively as of `0.1.1`).
   - `act` source change: `@testing-library/react` → `react` (React 19 native).

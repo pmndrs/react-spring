@@ -38,13 +38,12 @@ const BATCHED_EVENTS = ['onStart', 'onChange', 'onRest'] as const
 let nextId = 1
 
 /** Queue of pending updates for a `Controller` instance. */
-export interface ControllerQueue<State extends Lookup = Lookup>
-  extends Array<
-    ControllerUpdate<State, any> & {
-      /** The keys affected by this update. When null, all keys are affected. */
-      keys: string[] | null
-    }
-  > {}
+export interface ControllerQueue<State extends Lookup = Lookup> extends Array<
+  ControllerUpdate<State, any> & {
+    /** The keys affected by this update. When null, all keys are affected. */
+    keys: string[] | null
+  }
+> {}
 
 export class Controller<State extends Lookup = Lookup> {
   readonly id = nextId++
