@@ -49,8 +49,5 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsup --watch",
     "pack": "pnpm pack && mv *.tgz package.tgz"
-  },
-  "devDependencies": {
-    "@react-spring/shared": "workspace:~"
   }
 }

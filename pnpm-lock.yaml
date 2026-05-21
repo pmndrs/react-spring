@@ -426,11 +426,7 @@ importers:
         specifier: 2.12.1
         version: 2.12.1(react@19.2.6)
 
-  packages/rafz:
-    devDependencies:
-      '@react-spring/shared':
-        specifier: workspace:~
-        version: link:../shared
+  packages/rafz: {}
 
   packages/react-spring:
     dependencies:

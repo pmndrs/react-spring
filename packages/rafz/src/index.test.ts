@@ -1,14 +1,9 @@
 import createMockRaf, { MockRaf } from '@react-spring/mock-raf'
 import { raf, __raf } from './index'
-import { Globals } from '@react-spring/shared'
 
 let mockRaf: MockRaf
 beforeEach(() => {
   mockRaf = createMockRaf()
-  Globals.assign({
-    now: mockRaf.now,
-    requestAnimationFrame: mockRaf.raf,
-  })
   raf.use(mockRaf.raf)
   __raf.clear()
 })
