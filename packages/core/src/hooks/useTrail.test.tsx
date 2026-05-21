@@ -54,6 +54,45 @@ describe('useTrail', () => {
       it.todo('has each spring follow the spring before it')
     })
   })
+
+  // Issue #1063: with `loop: true`, every parent change re-enters the child's
+  // `_start` → `AnimatedValue.reset()`, zeroing its progress each frame. Each
+  // child acts as a low-pass filter on its parent, so under looping, deeper
+  // children trap in a narrowing band near the mid-range and never sweep the
+  // full from→to distance. The fix subscribes every non-head child to the
+  // head's loop restarts so they snap back to `from` in phase.
+  describe('with the "loop" prop (issue #1063)', () => {
+    it('phase-syncs every spring on each loop iteration', async () => {
+      const length = 4
+      update(length, { from: { x: 0 }, to: { x: 100 }, loop: true })
+
+      expect(springs.length).toBe(length)
+
+      // Warm up past the first cycle so steady-state behaviour dominates the
+      // sample. Default physics (tension 170, friction 26) settles in ~80
+      // frames per head loop; 300 frames covers ~3 head cycles.
+      await global.advance(300)
+
+      // Drain warm-up frames so the next window measures only steady state.
+      springs.forEach(s => global.getFrames(s.x))
+
+      // Sample long enough to cover multiple head loops.
+      await global.advance(300)
+
+      springs.forEach((s, i) => {
+        const frames = global.getFrames(s.x)
+        expect(
+          frames.length,
+          `spring[${i}] produced no frames in the sample window`
+        ).toBeGreaterThan(0)
+        const min = Math.min(...(frames as number[]))
+        // Every spring should return close to `from` (0) on every iteration.
+        // Without the phase-sync, deeper children trap above ~50 and never
+        // approach 0 (e.g. spring[3] sits ~70 in steady state).
+        expect(min, `spring[${i}] min over window: ${min}`).toBeLessThan(20)
+      })
+    })
+  })
 })
 
 function createUpdater(

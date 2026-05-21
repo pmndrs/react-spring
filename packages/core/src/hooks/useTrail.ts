@@ -121,11 +121,21 @@ export function useTrail(
   )
 
   useIsomorphicLayoutEffect(() => {
+    const ctrls = result[1].current
+    // The head is the only controller whose `flushUpdate` reaches the loop
+    // recursion: it animates to a static `to`, so its result finishes. Every
+    // other ctrl chains via `to: parent.springs` (fluid), which never settles
+    // and so never triggers `createLoopUpdate`. Subscribing children to their
+    // immediate parent would cascade exactly one level; subscribing every
+    // non-head child directly to the head keeps the whole trail in phase.
+    const head = ctrls[reverse ? ctrls.length - 1 : 0]
+    const unsubscribers: Array<() => void> = []
+
     /**
      * Run through the ref passed by the `useSprings` hook.
      */
-    each(result[1].current, (ctrl, i) => {
-      const parent = result[1].current[i + (reverse ? 1 : -1)]
+    each(ctrls, (ctrl, i) => {
+      const parent = ctrls[i + (reverse ? 1 : -1)]
 
       /**
        * If there's a passed ref then we replace the ctrl ref with it
@@ -141,16 +151,28 @@ export function useTrail(
         if (parent) {
           ctrl.update({ to: parent.springs })
         }
-
-        return
-      }
-
-      if (parent) {
+      } else if (parent) {
         ctrl.start({ to: parent.springs })
       } else {
         ctrl.start()
       }
+
+      // Phase-sync non-head children to the head's loop iterations. Without
+      // this, the parent snap-resets each cycle and every child filters the
+      // ramp asymmetrically, trapping deeper children in a narrow mid-range
+      // oscillation instead of completing the full sweep. See issue #1063.
+      if (ctrl !== head) {
+        unsubscribers.push(
+          head.onLoopReset(() => {
+            ctrl.start({ reset: true })
+          })
+        )
+      }
     })
+
+    return () => {
+      each(unsubscribers, unsubscribe => unsubscribe())
+    }
   }, deps)
 
   if (propsFn || arguments.length == 3) {
