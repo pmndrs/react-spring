@@ -7,6 +7,7 @@
 
 import { beforeEach, afterEach, vi } from 'vitest'
 import { act } from 'react'
+import { configure } from 'vitest-browser-react/pure'
 import createMockRaf, { MockRaf } from '@react-spring/mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import {
@@ -51,6 +52,10 @@ declare global {
 // per "advanceUntil" call to 1000. This keeps the "isRunning" variable
 // from interfering with the debugger.
 vi.setConfig({ testTimeout: 6e8 })
+
+// Run every render/renderHook under React.StrictMode. If a test passes
+// here it passes without StrictMode; the inverse hides real bugs.
+configure({ reactStrictMode: true })
 
 let isRunning = false
 let frameCache: WeakMap<any, any[]>

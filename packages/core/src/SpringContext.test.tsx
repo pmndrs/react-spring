@@ -46,7 +46,17 @@ describe('SpringContext', () => {
     }
 
     const elem = render(getRoot())
-    expectUpdates([{ onProps, to: { x: 0 } }])
+    // React.StrictMode runs the layout effect twice on initial mount
+    // (mount → simulated unmount → remount). Both passes apply the
+    // user update, and the second pass also re-broadcasts the default-
+    // context update — because `defaultProps.onProps` was set by the
+    // first pass's user update, so the otherwise-quiet default merge
+    // now reaches the spy. Subsequent rerenders are not affected.
+    expectUpdates([
+      { onProps, to: { x: 0 } },
+      { default: { pause: false, immediate: false } },
+      { onProps, to: { x: 0 } },
+    ])
 
     context.pause = true
     elem.rerender(getRoot())
