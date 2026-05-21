@@ -477,8 +477,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
   stop(cancel?: boolean) {
     const { to } = this.animation
 
-    // The current value becomes the goal value.
-    this._focus(this.get())
+    // The current value becomes the goal value — but only if a goal
+    // ever existed. Otherwise we'd be establishing one where none was
+    // set (matters for paused/uninitialised springs whose underlying
+    // value was seeded via `from` during `_prepareNode`). This becomes
+    // observable under React.StrictMode, whose simulated unmount fires
+    // the useSprings cleanup `ctrl.stop(true)` on springs that never
+    // got a chance to start.
+    if (!is.und(to)) {
+      this._focus(this.get())
+    }
 
     stopAsync(this._state, cancel && this._lastCallId)
     raf.batchedUpdates(() => this._stop(to, cancel))
