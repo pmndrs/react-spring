@@ -117,6 +117,6 @@ For prereleases enter pre-mode first: `pnpm changeset pre enter beta|alpha|next`
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-[specs/001-migrate-to-pnpm/plan.md](./specs/001-migrate-to-pnpm/plan.md)
+[specs/002-vitest-browser-migration/plan.md](./specs/002-vitest-browser-migration/plan.md)
 
 <!-- SPECKIT END -->
