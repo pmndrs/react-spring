@@ -1,0 +1,32 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "react-hooks"],
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
+  },
+  "settings": {
+    "react": { "version": "19.0" }
+  },
+  "rules": {
+    "prefer-const": "error",
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-unused-vars": "off",
+    "no-sparse-arrays": "off",
+    "no-useless-escape": "off",
+    "typescript/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ]
+  },
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/api/**",
+    "**/public/**",
+    "**/.turbo/**",
+    "**/coverage/**",
+    "**/build/**"
+  ]
+}
