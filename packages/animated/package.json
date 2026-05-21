@@ -48,7 +48,6 @@
     "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsup --watch",
-    "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
     "pack": "pnpm pack && mv *.tgz package.tgz"
   },
   "dependencies": {
