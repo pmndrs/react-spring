@@ -7,9 +7,9 @@ git clone https://github.com/pmndrs/react-spring
 cd react-spring
 ```
 
-2. Install `yarn` (https://yarnpkg.com/en/docs/install)
+2. Enable Corepack so the pinned pnpm version activates automatically: `corepack enable`. (See `.nvmrc` for the matching Node version.)
 
-3. Preconstruct will link the packages up in a postinstall function
+3. Install dependencies: `pnpm install`
 
 4. Let's get cooking! 👨🏻‍🍳🥓
 
@@ -57,7 +57,7 @@ All our dependencies are fixed using ~ after [1414](https://github.com/pmndrs/re
 You want to release some new features that haven't been released yet:
 
 ```shell
-yarn changeset:add
+pnpm changeset
 ```
 
 Follow the prompt to flag which packages need to update although with `react-spring` we keep all our packages at the same version.
@@ -65,7 +65,7 @@ Follow the prompt to flag which packages need to update although with `react-spr
 Then you'll run:
 
 ```shell
-yarn vers
+pnpm vers
 ```
 
 This will update all the packages correctly according to what version you just set with the `add` script & possibly update the deps within those packages.
@@ -73,7 +73,7 @@ This will update all the packages correctly according to what version you just s
 Finally:
 
 ```shell
-yarn release
+pnpm release
 ```
 
 This will build the packages, publish them & push the tags to github to signify a new release. Please then update the `releases` on github & the changelog on `react-spring.io`
@@ -83,11 +83,11 @@ This will build the packages, publish them & push the tags to github to signify 
 Everything above applies but you must first run:
 
 ```shell
-yarn changeset pre enter beta | alpha | next
+pnpm changeset pre enter beta | alpha | next
 ```
 
 If you find you're stuck in a prerelease and trying to do a Simple Release, try running:
 
 ```shell
-yarn changeset pre exit
+pnpm changeset pre exit
 ```

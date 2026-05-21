@@ -91,12 +91,12 @@ they only work if every test goes through them.
 All published packages share a single version line and are released together.
 
 - Every PR that changes runtime behaviour, public API, or a published export MUST
-  include a changeset (`yarn changeset`).
+  include a changeset (`pnpm changeset`).
 - A breaking change to any package's public API requires a MAJOR changeset and MUST
   bump every target.
 - Additive, backward-compatible changes use MINOR; bug fixes and internal refactors
   that preserve public APIs use PATCH.
-- Prereleases go through `yarn changeset pre enter alpha|beta|next` first.
+- Prereleases go through `pnpm changeset pre enter alpha|beta|next` first.
 
 **Rationale**: Targets share the core engine; staggered versions across packages
 would silently desynchronise users' lockfiles and produce hard-to-diagnose runtime
@@ -124,19 +124,19 @@ every consuming app. A regression here is amplified across the entire ecosystem.
 
 Every PR MUST pass, locally and in CI, before review approval:
 
-- `yarn lint` — ESLint via `eslint-config-react-spring` is clean. `no-console`
+- `pnpm lint` — ESLint via `eslint-config-react-spring` is clean. `no-console`
   errors are blocking except `console.warn`/`console.error`. Unused variables MUST
   be `_`-prefixed.
-- `yarn test:ts` — `tsc --noEmit` is clean across all packages.
-- `yarn test:unit` — Jest unit tests pass. The configured coverage thresholds (80%
+- `pnpm test:ts` — `tsc --noEmit` is clean across all packages.
+- `pnpm test:unit` — Jest unit tests pass. The configured coverage thresholds (80%
   statements / 74% branches / 71% functions / 82% lines) MUST be met when running
-  `yarn test:cov`.
-- `yarn prettier:check` — Prettier reports no diff. The Husky `pre-commit` hook
+  `pnpm test:cov`.
+- `pnpm prettier:check` — Prettier reports no diff. The Husky `pre-commit` hook
   enforces this; do not bypass it.
 - Commit messages and PR titles MUST follow Conventional Commits. `commitlint`
   enforces this via the Husky `commit-msg` hook.
 
-Cypress E2E (`yarn test:e2e`) covers `@react-spring/parallax` and MUST pass locally
+Cypress E2E (`pnpm test:e2e`) covers `@react-spring/parallax` and MUST pass locally
 for any change touching that package. CI does not currently gate on E2E (the
 workflow job is commented out); contributors and reviewers MUST treat local
 Cypress as the gate until that changes.
@@ -151,9 +151,9 @@ Cypress as the gate until that changes.
 - All PRs are squash-merged.
 - Never push to remote without explicit confirmation from the maintainer.
 - Jest's `moduleNameMapper` rewrites `@react-spring/*` to source, so unit tests run
-  without `yarn build`. Anything outside Jest (Cypress, docs, publish-ci) MUST be
-  preceded by `yarn build`.
-- Releases follow: `yarn changeset` → `yarn vers` → `yarn release`. Do not bump
+  without `pnpm build`. Anything outside Jest (Cypress, docs, publish-ci) MUST be
+  preceded by `pnpm build`.
+- Releases follow: `pnpm changeset` → `pnpm vers` → `pnpm release`. Do not bump
   versions by hand.
 
 ## Governance

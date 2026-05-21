@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "serve-app": "yarn serve -s dist",
+    "serve-app": "npx serve -s dist",
     "test": "echo Done"
   },
   "dependencies": {

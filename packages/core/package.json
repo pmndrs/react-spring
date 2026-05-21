@@ -52,12 +52,15 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsup --watch",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
-    "pack": "yarn pack"
+    "pack": "pnpm pack && mv *.tgz package.tgz"
   },
   "dependencies": {
     "@react-spring/animated": "~10.0.3",
     "@react-spring/shared": "~10.0.3",
     "@react-spring/types": "~10.0.3"
+  },
+  "devDependencies": {
+    "@react-spring/rafz": "~10.0.3"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"

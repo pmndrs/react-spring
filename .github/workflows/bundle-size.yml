@@ -22,16 +22,19 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: yarn build --filter=!@react-spring/docs
+        run: pnpm build --filter=!@react-spring/docs
 
       - uses: preactjs/compressed-size-action@v2
         with:

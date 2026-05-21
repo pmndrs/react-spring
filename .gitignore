@@ -21,8 +21,7 @@ ehthumbs.db
 *.tgz
 
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
 
 
 Desktop.ini
@@ -33,17 +32,6 @@ report.*.json
 # Changesets
 #
 **/CHANGELOG.md
-
-#
-# Yarn
-#
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
 
 #
 # dot files

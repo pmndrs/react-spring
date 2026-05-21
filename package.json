@@ -23,37 +23,28 @@
   "maintainers": [
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "targets/*",
-      "packages/parallax/@react-spring/parallax-demo",
-      "demo",
-      "docs"
-    ]
-  },
   "scripts": {
     "build-ci": "turbo run build --filter=!@react-spring/docs",
     "build": "turbo run build",
     "changeset": "changeset",
     "clean": "turbo run clean",
     "dev": "turbo run dev --no-cache --parallel --continue",
-    "docs:dev": "yarn workspace @react-spring/docs dev",
-    "docs:build": "yarn workspace @react-spring/docs build",
-    "demo:dev": "yarn workspace @react-spring/demo dev",
+    "docs:dev": "pnpm --filter @react-spring/docs dev",
+    "docs:build": "pnpm --filter @react-spring/docs build",
+    "demo:dev": "pnpm --filter @react-spring/demo dev",
     "prettier:write": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prettier:check": "prettier --check \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "package": "turbo run pack",
     "postinstall": "remix setup node",
     "prepare": "husky install",
-    "test": "yarn test:ts && yarn test:unit && yarn test:e2e",
+    "test": "pnpm test:ts && pnpm test:unit && pnpm test:e2e",
     "test:unit": "jest",
     "test:cov": "jest --coverage",
     "test:ts": "tsc --noEmit",
-    "test:e2e": "start-server-and-test 'yarn vite serve packages/parallax/test --host' http-get://localhost:3000 'yarn cypress run'",
-    "release": "yarn clean && yarn && yarn build && yarn test:ts && yarn test:unit && yarn changeset publish --no-git-tag",
-    "vers": "yarn changeset version"
+    "test:e2e": "start-server-and-test 'pnpm vite serve packages/parallax/test --host' http-get://localhost:3000 'pnpm cypress run'",
+    "release": "pnpm clean && pnpm install && pnpm build && pnpm test:ts && pnpm test:unit && pnpm changeset publish --no-git-tag",
+    "vers": "pnpm changeset version"
   },
   "commitlint": {
     "extends": [
@@ -116,5 +107,17 @@
     "type": "opencollective",
     "url": "https://opencollective.com/react-spring"
   },
-  "packageManager": "yarn@3.8.7"
+  "packageManager": "pnpm@9.15.9",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@remix-run/dev",
+      "@swc/core",
+      "core-js",
+      "core-js-pure",
+      "cypress",
+      "es5-ext",
+      "esbuild"
+    ]
+  }
 }

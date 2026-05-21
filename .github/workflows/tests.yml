@@ -30,8 +30,9 @@ jobs:
               - 'packages/**'
               - 'targets/**'
               - 'cypress/**'
-              - 'yarn.lock'
-              - '.github/publish-ci/**/yarn.lock'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - '.github/publish-ci/**/package-lock.json'
               - '.github/workflows/*.yml'
               - 'package.json'
   build:
@@ -47,20 +48,23 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup node ${{ matrix.node }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build-ci --filter=!@react-spring/docs
+        run: pnpm build-ci --filter=!@react-spring/docs
 
       - name: Pack
-        run: yarn package
+        run: pnpm package
 
       - uses: actions/upload-artifact@v4
         with:
@@ -105,20 +109,23 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup node ${{ matrix.node }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: yarn build-ci
+        run: pnpm build-ci
 
       - name: Test
-        run: yarn test:unit
+        run: pnpm test:unit
 
   test-types:
     name: 'Test:types with TS ${{ matrix.ts }}'
@@ -134,25 +141,28 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Setup node ${{ matrix.node }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - name: Install TypeScript ${{ matrix.ts }}
-        run: yarn add typescript@${{ matrix.ts }}
+        run: pnpm add -w typescript@${{ matrix.ts }}
 
       - name: Build
-        run: yarn build-ci
+        run: pnpm build-ci
 
       - name: Test
         run: |
-          yarn tsc --version
-          yarn test:ts
+          pnpm tsc --version
+          pnpm test:ts
 
   # test-e2e:
   #   needs: [build]
@@ -167,20 +177,23 @@ jobs:
   #     - name: Checkout repo
   #       uses: actions/checkout@v4
 
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@v4
+
   #     - name: Setup node ${{ matrix.node }}
   #       uses: actions/setup-node@v4
   #       with:
   #         node-version: ${{ matrix.node }}
-  #         cache: 'yarn'
+  #         cache: 'pnpm'
 
   #     - name: Install
-  #       run: yarn install --immutable
+  #       run: pnpm install --frozen-lockfile
 
   #     - name: Build
-  #       run: yarn build-ci
+  #       run: pnpm build-ci
 
   #     - name: Test
-  #       run: yarn test:e2e
+  #       run: pnpm test:e2e
 
   test-published-artifact:
     needs: [build]
@@ -203,13 +216,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: 'yarn'
+          cache: 'npm'
+          cache-dependency-path: .github/publish-ci/${{ matrix.example }}/package-lock.json
 
       - name: Install
-        run: yarn install --immutable
+        run: npm ci
 
       - name: Remove existing @react-spring/web
-        run: yarn remove @react-spring/web
+        run: npm uninstall @react-spring/web
 
       - uses: actions/download-artifact@v4
         with:
@@ -219,16 +233,16 @@ jobs:
         run: ls -l .
 
       - name: Install RS build artifacts
-        run: yarn add ./web/package.tgz ./animated/package.tgz ./core/package.tgz ./rafz/package.tgz ./shared/package.tgz ./types/package.tgz
+        run: npm install ./web/package.tgz ./animated/package.tgz ./core/package.tgz ./rafz/package.tgz ./shared/package.tgz ./types/package.tgz
 
       - name: Show installed RS versions
-        run: yarn info @react-spring/web && yarn why @react-spring/web
+        run: npm info @react-spring/web && npm ls @react-spring/web
 
       - name: Build example
-        run: yarn build
+        run: npm run build
 
       - name: Run test step
-        run: yarn test
+        run: npm test
 
   are-the-types-wrong:
     name: Check package config with are-the-types-wrong
@@ -251,4 +265,8 @@ jobs:
         run: ls -l .
 
       - name: Run are-the-types-wrong
-        run: npx @arethetypeswrong/cli ./package.tgz --format table --ignore-rules false-cjs
+        # TODO: unpin once https://github.com/arethetypeswrong/arethetypeswrong.github.io
+        # ships a fix for the "Cannot read properties of undefined (reading 'filename')"
+        # crash that began in 0.15.x. Pre-migration baseline yarn pack tarballs hit the
+        # same crash, so this is unrelated to yarn → pnpm.
+        run: npx @arethetypeswrong/cli@0.13.6 ./package.tgz --format table --ignore-rules false-cjs

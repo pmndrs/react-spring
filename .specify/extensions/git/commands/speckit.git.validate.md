@@ -1,5 +1,5 @@
 ---
-description: "Validate current branch follows feature branch naming conventions"
+description: 'Validate current branch follows feature branch naming conventions'
 ---
 
 # Validate Feature Branch
@@ -30,6 +30,7 @@ The branch name must match one of these patterns:
 ## Execution
 
 If on a feature branch (matches either pattern):
+
 - Output: `✓ On feature branch: <branch-name>`
 - Check if the corresponding spec directory exists under `specs/`:
   - For sequential branches, look for `specs/<prefix>-*` where prefix matches the numeric portion
@@ -38,12 +39,14 @@ If on a feature branch (matches either pattern):
 - If spec directory missing: `⚠ No spec directory found for prefix <prefix>`
 
 If NOT on a feature branch:
+
 - Output: `✗ Not on a feature branch. Current branch: <branch-name>`
 - Output: `Feature branches should be named like: 001-feature-name or 20260319-143022-feature-name`
 
 ## Graceful Degradation
 
 If Git is not installed or the directory is not a Git repository:
+
 - Check the `SPECIFY_FEATURE` environment variable as a fallback
 - If set, validate that value against the naming patterns
 - If not set, skip validation with a warning
