@@ -41,9 +41,6 @@ jobs:
     if: ${{ needs.changes.outputs.packages == 'true' }}
     name: 'Build'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: ['22.x', '24.x']
 
     steps:
       - name: Checkout repo
@@ -52,10 +49,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup node ${{ matrix.node }}
+      - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node }}
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install
@@ -144,7 +141,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['22.x', '24.x']
         ts: ['5.0', '5.1', '5.2']
 
     steps:
@@ -154,10 +150,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup node ${{ matrix.node }}
+      - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node }}
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install
@@ -179,9 +175,6 @@ jobs:
     if: ${{ needs.changes.outputs.packages == 'true' }}
     name: 'Test:E2E'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: ['22.x', '24.x']
 
     steps:
       - name: Checkout repo
@@ -190,10 +183,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup node ${{ matrix.node }}
+      - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node }}
+          node-version: '24.x'
           cache: 'pnpm'
 
       - name: Install
@@ -218,7 +211,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['22.x']
         example: ['cra5', 'next', 'vite', 'node-standard', 'node-esm']
     defaults:
       run:
@@ -228,10 +220,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
 
-      - name: Setup node ${{ matrix.node }}
+      - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node }}
+          node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: .github/publish-ci/${{ matrix.example }}/package-lock.json
 
@@ -265,13 +257,14 @@ jobs:
 
     needs: [build]
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        node: ['22.x']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
 
       - uses: actions/download-artifact@v4
         with:
