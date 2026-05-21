@@ -10,7 +10,11 @@ import styles from './styles.module.css'
 
 function Masonry() {
   // Hook1: Tie media queries to the number of columns
-  const columns = useMedia(['(min-width: 1500px)', '(min-width: 1000px)', '(min-width: 600px)'], [5, 4, 3], 2)
+  const columns = useMedia(
+    ['(min-width: 1500px)', '(min-width: 1000px)', '(min-width: 600px)'],
+    [5, 4, 3],
+    2
+  )
   // Hook2: Measure the width of the container element
   const [ref, { width }] = useMeasure()
   // Hook3: Hold items
@@ -27,7 +31,13 @@ function Masonry() {
       const column = heights.indexOf(Math.min(...heights)) // Basic masonry-grid placing, puts tile into the smallest column using Math.min
       const x = (width / columns) * column // x = container width / number of columns * column index,
       const y = (heights[column] += child.height / 2) - child.height / 2 // y = it's just the height of the current column
-      return { ...child, x, y, width: width / columns, height: child.height / 2 }
+      return {
+        ...child,
+        x,
+        y,
+        width: width / columns,
+        height: child.height / 2,
+      }
     })
     return [heights, gridItems]
   }, [columns, items, width])
@@ -43,10 +53,18 @@ function Masonry() {
   })
   // Render the grid
   return (
-    <div ref={ref} className={styles.list} style={{ height: Math.max(...heights) }}>
+    <div
+      ref={ref}
+      className={styles.list}
+      style={{ height: Math.max(...heights) }}
+    >
       {transitions((style, item) => (
         <a.div style={style}>
-          <div style={{ backgroundImage: `url(${item.css}?auto=compress&dpr=2&h=500&w=500)` }} />
+          <div
+            style={{
+              backgroundImage: `url(${item.css}?auto=compress&dpr=2&h=500&w=500)`,
+            }}
+          />
         </a.div>
       ))}
     </div>

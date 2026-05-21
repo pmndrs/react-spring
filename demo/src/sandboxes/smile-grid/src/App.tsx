@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { useTrail, useChain, useSprings, animated, useSpringRef } from '@react-spring/web'
+import {
+  useTrail,
+  useChain,
+  useSprings,
+  animated,
+  useSpringRef,
+} from '@react-spring/web'
 
 import styles from './styles.module.css'
 

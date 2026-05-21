@@ -2,7 +2,9 @@ import * as React from 'react'
 
 import { useCallbackRef } from './useCallbackRef'
 
-export const useWindowResize = (callback: (width: number, height: number) => void) => {
+export const useWindowResize = (
+  callback: (width: number, height: number) => void
+) => {
   const callbackRef = useCallbackRef(callback)
 
   React.useEffect(() => {

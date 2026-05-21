@@ -1,6 +1,11 @@
 import * as React from 'react'
 import { cubicCoordinates, stepsCoordinates } from 'easing-coordinates'
-import { useSpring, animated, to as interpolate, createInterpolator } from '@react-spring/web'
+import {
+  useSpring,
+  animated,
+  to as interpolate,
+  createInterpolator,
+} from '@react-spring/web'
 import { useControls } from 'leva'
 
 import styles from './styles.module.css'
@@ -30,7 +35,14 @@ export default function App() {
     },
     easing: {
       value: 'ease-in-out',
-      options: ['linear', 'ease', 'ease-in', 'ease-out', 'ease-in-out', 'steps'],
+      options: [
+        'linear',
+        'ease',
+        'ease-in',
+        'ease-out',
+        'ease-in-out',
+        'steps',
+      ],
     },
     easeCustom: '',
   })
@@ -52,27 +64,41 @@ export default function App() {
         coordinates = cubicCoordinates(x1, y1, x2, y2, stops)
       }
     } else {
-      coordinates = cubicCoordinates(customBezier[0], customBezier[1], customBezier[2], customBezier[3], stops)
+      coordinates = cubicCoordinates(
+        customBezier[0],
+        customBezier[1],
+        customBezier[2],
+        customBezier[3],
+        stops
+      )
     }
 
     return coordinates
   }, [easing, easeCustom, stops])
 
-  const allStops = interpolate([colorFrom, colorMid, colorTo], (from, mid, to) => {
-    const blend = createInterpolator({ range: [0, 0.5, 1], output: [from, mid, to] })
+  const allStops = interpolate(
+    [colorFrom, colorMid, colorTo],
+    (from, mid, to) => {
+      const blend = createInterpolator({
+        range: [0, 0.5, 1],
+        output: [from, mid, to],
+      })
 
-    return coordinates.map(({ x, y }) => {
-      const color = blend(y)
+      return coordinates.map(({ x, y }) => {
+        const color = blend(y)
 
-      return `${color} ${x * 100}%`
-    })
-  })
+        return `${color} ${x * 100}%`
+      })
+    }
+  )
 
   return (
     <animated.div
       className={styles.container}
       style={{
-        backgroundImage: allStops.to((...args) => `linear-gradient(${angle}deg, ${args.join(', ')})`),
+        backgroundImage: allStops.to(
+          (...args) => `linear-gradient(${angle}deg, ${args.join(', ')})`
+        ),
       }}
     />
   )

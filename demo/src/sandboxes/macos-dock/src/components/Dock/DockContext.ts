@@ -8,7 +8,11 @@ type DockApi = {
   setIsZooming: (isZooming: boolean) => void
 }
 
-export const DockContext = createContext<DockApi>({ width: 0, hovered: false, setIsZooming: () => {} })
+export const DockContext = createContext<DockApi>({
+  width: 0,
+  hovered: false,
+  setIsZooming: () => {},
+})
 
 export const useDock = () => {
   return useContext(DockContext)

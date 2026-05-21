@@ -79,7 +79,9 @@ export default function App() {
             <FrontBox
               key={items[i]}
               style={{
-                transform: rotateX.to(val => `perspective(600px) rotateX(${val}deg)`),
+                transform: rotateX.to(
+                  val => `perspective(600px) rotateX(${val}deg)`
+                ),
                 transformStyle: 'preserve-3d',
               }}
             >
@@ -87,7 +89,9 @@ export default function App() {
             </FrontBox>
             <BackBox
               style={{
-                transform: rotateX.to(val => `perspective(600px) rotateX(${180 - val}deg)`),
+                transform: rotateX.to(
+                  val => `perspective(600px) rotateX(${180 - val}deg)`
+                ),
                 transformStyle: 'preserve-3d',
               }}
             >

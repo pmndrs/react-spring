@@ -13,7 +13,9 @@ export default function App() {
     <div className={styles.container}>
       <div ref={ref} className={styles.main} onClick={() => toggle(!open)}>
         <animated.div className={styles.fill} style={props} />
-        <animated.div className={styles.content}>{props.width.to(x => x.toFixed(0))}</animated.div>
+        <animated.div className={styles.content}>
+          {props.width.to(x => x.toFixed(0))}
+        </animated.div>
       </div>
     </div>
   )
