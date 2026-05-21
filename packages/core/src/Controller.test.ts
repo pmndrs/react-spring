@@ -258,26 +258,58 @@ describe('Controller', () => {
     })
 
     describe('when skipAnimations is true', () => {
-      it('should not run at all', async () => {
+      it('applies values from an async function `to` (regression for #1429)', async () => {
+        const ctrl = new Controller({ from: { opacity: 0 } })
+
+        global.setSkipAnimation(true)
+
+        await ctrl.start({
+          to: async next => {
+            await next({ opacity: 1 })
+          },
+        })
+
+        expect(ctrl.springs.opacity.get()).toEqual(1)
+      })
+
+      it('runs an async script to completion and lands on its final value', async () => {
+        const ctrl = new Controller({ from: { x: 0 } })
+
+        global.setSkipAnimation(true)
+
+        await ctrl.start({
+          to: async next => {
+            await next({ x: 1 })
+            await next({ x: 2 })
+          },
+        })
+
+        // End state matches the final `next(...)` call, as if all
+        // animations had run normally.
+        expect(ctrl.springs.x.get()).toEqual(2)
+      })
+
+      it('does not hang on an unterminating async script', async () => {
         const ctrl = new Controller({ from: { x: 0 } })
         let n = 0
 
         global.setSkipAnimation(true)
 
-        ctrl.start({
+        await ctrl.start({
           to: async next => {
             while (true) {
               n += 1
-              await next({ x: 1, reset: true })
+              await next({ x: n, reset: true })
             }
           },
         })
 
-        await flushMicroTasks()
-        expect(n).toBe(0)
+        // The safety cap kicks in and the script is bailed.
+        expect(n).toBeGreaterThan(1)
+        expect(ctrl.springs.x.get()).toBeGreaterThan(0)
       })
 
-      it('should stop running and push the animation to the finished state when called mid animation', async () => {
+      it('lets the script run to completion when set mid animation', async () => {
         const ctrl = new Controller({ from: { x: 0 } })
         let n = 0
 
@@ -298,7 +330,9 @@ describe('Controller', () => {
         await global.advanceUntilIdle()
 
         const { x } = ctrl.springs
-        expect(n).toBe(2)
+        // Remaining iterations apply immediately rather than animating,
+        // and the loop terminates naturally instead of being aborted.
+        expect(n).toBe(5)
         expect(x.get()).toEqual(10)
       })
     })

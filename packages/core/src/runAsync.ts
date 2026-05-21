@@ -92,6 +92,12 @@ export function runAsync<T extends AnimationTarget>(
       }
     }
 
+    // Safety cap for unterminating async scripts under `skipAnimation`.
+    // Without animation frames to pace it, `while (true) await next(...)`
+    // becomes a tight microtask loop that would hang the host.
+    let skipAnimationCallCount = 0
+    const SKIP_ANIMATION_CALL_LIMIT = 1024
+
     const animate: any = (arg1: any, arg2?: any) => {
       // Create the bail signal outside the returned promise,
       // so the generated stack trace is relevant.
@@ -99,20 +105,6 @@ export function runAsync<T extends AnimationTarget>(
       const skipAnimationSignal = new SkipAnimationSignal()
 
       return (async () => {
-        if (G.skipAnimation) {
-          /**
-           * We need to stop animations if `skipAnimation`
-           * is set in the Globals
-           *
-           */
-          stopAsync(state)
-
-          // create the rejection error that's handled gracefully
-          skipAnimationSignal.result = getFinishedResult(target, false)
-          bail(skipAnimationSignal)
-          throw skipAnimationSignal
-        }
-
         bailIfEnded(bailSignal)
 
         const props: any = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 }
@@ -123,6 +115,21 @@ export function runAsync<T extends AnimationTarget>(
             props[key] = value
           }
         })
+
+        if (G.skipAnimation) {
+          if (++skipAnimationCallCount > SKIP_ANIMATION_CALL_LIMIT) {
+            stopAsync(state)
+            skipAnimationSignal.result = getFinishedResult(target, false)
+            bail(skipAnimationSignal)
+            throw skipAnimationSignal
+          }
+
+          // Apply each step immediately so the script can run to completion
+          // and the spring lands on whatever value the final `next(...)` call
+          // would set under normal animation.
+          props.immediate = true
+          return await target.start(props)
+        }
 
         const result = await target.start(props)
         bailIfEnded(bailSignal)
@@ -138,15 +145,6 @@ export function runAsync<T extends AnimationTarget>(
     }
 
     let result!: AnimationResult<T>
-
-    if (G.skipAnimation) {
-      /**
-       * We need to stop animations if `skipAnimation`
-       * is set in the Globals
-       */
-      stopAsync(state)
-      return getFinishedResult(target, false)
-    }
 
     try {
       let animating!: Promise<void>
