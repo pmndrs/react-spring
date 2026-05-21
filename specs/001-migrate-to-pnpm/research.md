@@ -17,9 +17,9 @@
 
 **Alternatives considered**:
 
-- *pnpm 10.x*: more recent, but adoption noise (some integrations still catching up) outweighs the marginal gains for a migration whose goal is "no surprises". Defer to a follow-up upgrade.
-- *No `packageManager` pin, rely on `engines.pnpm`*: less reliable across contributor environments; Corepack-aware tooling already keys off `packageManager`.
-- *Globally installed pnpm without Corepack*: contributors will drift; the whole point of pinning is reproducibility.
+- _pnpm 10.x_: more recent, but adoption noise (some integrations still catching up) outweighs the marginal gains for a migration whose goal is "no surprises". Defer to a follow-up upgrade.
+- _No `packageManager` pin, rely on `engines.pnpm`_: less reliable across contributor environments; Corepack-aware tooling already keys off `packageManager`.
+- _Globally installed pnpm without Corepack_: contributors will drift; the whole point of pinning is reproducibility.
 
 ---
 
@@ -45,8 +45,8 @@ Remove the existing `packages/parallax/@react-spring/parallax-demo` entry — th
 
 **Alternatives considered**:
 
-- *Keep the stale entry "just in case"*: rejected — it's silent rot, the kind that bites someone in six months.
-- *Use explicit per-workspace paths instead of globs*: rejected — the glob form is the same shape Yarn used and we benefit from auto-pickup of new packages.
+- _Keep the stale entry "just in case"_: rejected — it's silent rot, the kind that bites someone in six months.
+- _Use explicit per-workspace paths instead of globs_: rejected — the glob form is the same shape Yarn used and we benefit from auto-pickup of new packages.
 
 ---
 
@@ -76,8 +76,8 @@ Remove the existing `packages/parallax/@react-spring/parallax-demo` entry — th
 
 **Alternatives considered**:
 
-- *`pnpm config set unsafe-perm` or disabling the safety check globally*: rejected — this is exactly the kind of correctness setting we should respect, not bypass.
-- *Maintaining a separate `.pnpm-allowlist`*: rejected — `package.json` is the right home (committed, reviewed, scoped to the repo).
+- _`pnpm config set unsafe-perm` or disabling the safety check globally_: rejected — this is exactly the kind of correctness setting we should respect, not bypass.
+- _Maintaining a separate `.pnpm-allowlist`_: rejected — `package.json` is the right home (committed, reviewed, scoped to the repo).
 
 ---
 
@@ -93,7 +93,7 @@ Remove the existing `packages/parallax/@react-spring/parallax-demo` entry — th
 
 **Alternatives considered**:
 
-- *Switch from Husky to `simple-git-hooks` or `lefthook`*: out of scope. The migration's goal is "swap package manager, change nothing else".
+- _Switch from Husky to `simple-git-hooks` or `lefthook`_: out of scope. The migration's goal is "swap package manager, change nothing else".
 
 ---
 
@@ -110,8 +110,8 @@ Remove the existing `packages/parallax/@react-spring/parallax-demo` entry — th
 
 **Alternatives considered**:
 
-- *Keep yarn in fixtures*: rejected — requires the workflow to also pin yarn, doubling the package-manager surface in CI.
-- *Use pnpm in fixtures*: rejected — fixtures should simulate the broadest set of end users; pnpm is not yet dominant downstream.
+- _Keep yarn in fixtures_: rejected — requires the workflow to also pin yarn, doubling the package-manager surface in CI.
+- _Use pnpm in fixtures_: rejected — fixtures should simulate the broadest set of end users; pnpm is not yet dominant downstream.
 
 ---
 
@@ -119,16 +119,16 @@ Remove the existing `packages/parallax/@react-spring/parallax-demo` entry — th
 
 **Decision**: Treat the first `pnpm install` as the discovery step. Expected phantom-dep failures and their likely fixes:
 
-| Workspace | Likely Missing Declaration | Hypothesis |
-|-----------|----------------------------|------------|
-| `targets/three` | `@react-three/fiber` in `peerDependencies` | Used at module-load time per CLAUDE.md (`addEffect` integration). |
-| `targets/konva` | `konva`, `react-konva` in `peerDependencies` | Currently only at root; targets/konva imports them. |
-| `targets/zdog` | `zdog`, `react-zdog` in `peerDependencies` | Same pattern. |
-| `targets/web` | `react-dom` in `peerDependencies` | Likely already declared, but verify. |
-| `targets/native` | `react-native` in `peerDependencies` | Likely already declared, but verify. |
-| `packages/core` | `react` in `peerDependencies` | Likely already declared, but verify. |
-| `docs` | Any Remix loader-time dependency (e.g., `@remix-run/node`) | Verify postinstall + dev server. |
-| `demo` | `@react-spring/web` (workspace) + React | Likely already declared, but verify. |
+| Workspace                | Likely Missing Declaration                                                       | Hypothesis                                                                                                                         |
+| ------------------------ | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `targets/three`          | `@react-three/fiber` in `peerDependencies`                                       | Used at module-load time per CLAUDE.md (`addEffect` integration).                                                                  |
+| `targets/konva`          | `konva`, `react-konva` in `peerDependencies`                                     | Currently only at root; targets/konva imports them.                                                                                |
+| `targets/zdog`           | `zdog`, `react-zdog` in `peerDependencies`                                       | Same pattern.                                                                                                                      |
+| `targets/web`            | `react-dom` in `peerDependencies`                                                | Likely already declared, but verify.                                                                                               |
+| `targets/native`         | `react-native` in `peerDependencies`                                             | Likely already declared, but verify.                                                                                               |
+| `packages/core`          | `react` in `peerDependencies`                                                    | Likely already declared, but verify.                                                                                               |
+| `docs`                   | Any Remix loader-time dependency (e.g., `@remix-run/node`)                       | Verify postinstall + dev server.                                                                                                   |
+| `demo`                   | `@react-spring/web` (workspace) + React                                          | Likely already declared, but verify.                                                                                               |
 | Cypress / Jest dev infra | `@types/jest`, `jest-environment-jsdom` reachable from workspaces that run tests | These live at root; if a workspace's `jest.config.*` references them directly, they need to be declared locally (or root-hoisted). |
 
 **Action**: The phantom-dep fix is part of the migration PR (FR-001 / "Resolution mode" / "Implication for FR-001"). The exact list will be derived empirically — pnpm will surface them as install errors or `tsc` errors.
@@ -137,8 +137,8 @@ Remove the existing `packages/parallax/@react-spring/parallax-demo` entry — th
 
 **Alternatives considered**:
 
-- *Add `public-hoist-pattern[]=*` to `.npmrc`*: rejected — that re-creates the Yarn hoisted layout and defeats the migration.
-- *Targeted `public-hoist-pattern[]` for `@types/*` and ESLint plugins*: deferred — only apply if the bare strict mode produces genuinely unfixable noise. Decide during implementation, not pre-emptively.
+- _Add `public-hoist-pattern[]=_`to`.npmrc`\*: rejected — that re-creates the Yarn hoisted layout and defeats the migration.
+- _Targeted `public-hoist-pattern[]` for `@types/_` and ESLint plugins\*: deferred — only apply if the bare strict mode produces genuinely unfixable noise. Decide during implementation, not pre-emptively.
 
 ---
 
@@ -146,18 +146,18 @@ Remove the existing `packages/parallax/@react-spring/parallax-demo` entry — th
 
 **Decision**: Mapping (full list in `contracts/developer-commands.md`):
 
-| Yarn invocation | pnpm equivalent |
-|-----------------|-----------------|
-| `yarn install --immutable` | `pnpm install --frozen-lockfile` |
-| `yarn` (alias for install) | `pnpm install` |
-| `yarn build` (top-level script) | `pnpm build` |
-| `yarn workspace <name> <cmd>` | `pnpm --filter <name> <cmd>` |
-| `yarn add <pkg>` | `pnpm add <pkg>` |
-| `yarn add <pkg> -W` (root) | `pnpm add -w <pkg>` |
-| `yarn remove <pkg>` | `pnpm remove <pkg>` |
-| `yarn info <pkg>` | `pnpm info <pkg>` (or `pnpm view <pkg>`) |
-| `yarn why <pkg>` | `pnpm why <pkg>` |
-| `yarn pack` (inside a workspace) | `pnpm pack` (inside a workspace) |
+| Yarn invocation                                         | pnpm equivalent                                                                       |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `yarn install --immutable`                              | `pnpm install --frozen-lockfile`                                                      |
+| `yarn` (alias for install)                              | `pnpm install`                                                                        |
+| `yarn build` (top-level script)                         | `pnpm build`                                                                          |
+| `yarn workspace <name> <cmd>`                           | `pnpm --filter <name> <cmd>`                                                          |
+| `yarn add <pkg>`                                        | `pnpm add <pkg>`                                                                      |
+| `yarn add <pkg> -W` (root)                              | `pnpm add -w <pkg>`                                                                   |
+| `yarn remove <pkg>`                                     | `pnpm remove <pkg>`                                                                   |
+| `yarn info <pkg>`                                       | `pnpm info <pkg>` (or `pnpm view <pkg>`)                                              |
+| `yarn why <pkg>`                                        | `pnpm why <pkg>`                                                                      |
+| `yarn pack` (inside a workspace)                        | `pnpm pack` (inside a workspace)                                                      |
 | `yarn cypress ...`, `yarn vite ...` (binary delegation) | `pnpm cypress ...`, `pnpm vite ...` (pnpm resolves binaries from `node_modules/.bin`) |
 
 **Rationale**: pnpm's CLI is mostly drop-in. The notable differences are the filter syntax (`--filter` vs `workspace …`) and the lockfile flag (`--frozen-lockfile` vs `--immutable`).
@@ -192,5 +192,5 @@ The cache key is automatically derived from `pnpm-lock.yaml`.
 
 **Alternatives considered**:
 
-- *Install pnpm manually via `corepack enable`*: works, but adds one extra step and gives up the `pnpm/action-setup` cache layer.
-- *Custom `actions/cache` with a hand-rolled key*: brittle and unnecessary.
+- _Install pnpm manually via `corepack enable`_: works, but adds one extra step and gives up the `pnpm/action-setup` cache layer.
+- _Custom `actions/cache` with a hand-rolled key_: brittle and unnecessary.

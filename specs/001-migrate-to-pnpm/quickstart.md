@@ -34,21 +34,21 @@ present and committed; do not modify it by hand.
 
 ## Day-to-day commands
 
-| Task | Command |
-|------|---------|
-| Build all packages | `pnpm build` |
-| Watch-build all packages | `pnpm dev` |
-| Run docs dev server | `pnpm docs:dev` |
-| Run demo dev server | `pnpm demo:dev` |
-| Full test suite | `pnpm test` |
-| Unit tests only | `pnpm test:unit` |
-| Single test file | `pnpm jest packages/core/src/SpringValue.test.ts` |
-| Filter unit tests by name | `pnpm jest -t "interpolation"` |
-| Type-check | `pnpm test:ts` |
-| Cypress E2E (parallax) | `pnpm test:e2e` |
-| Lint | `pnpm lint` |
-| Format (write) | `pnpm prettier:write` |
-| Format (check) | `pnpm prettier:check` |
+| Task                      | Command                                           |
+| ------------------------- | ------------------------------------------------- |
+| Build all packages        | `pnpm build`                                      |
+| Watch-build all packages  | `pnpm dev`                                        |
+| Run docs dev server       | `pnpm docs:dev`                                   |
+| Run demo dev server       | `pnpm demo:dev`                                   |
+| Full test suite           | `pnpm test`                                       |
+| Unit tests only           | `pnpm test:unit`                                  |
+| Single test file          | `pnpm jest packages/core/src/SpringValue.test.ts` |
+| Filter unit tests by name | `pnpm jest -t "interpolation"`                    |
+| Type-check                | `pnpm test:ts`                                    |
+| Cypress E2E (parallax)    | `pnpm test:e2e`                                   |
+| Lint                      | `pnpm lint`                                       |
+| Format (write)            | `pnpm prettier:write`                             |
+| Format (check)            | `pnpm prettier:check`                             |
 
 ## Working inside a single workspace
 
@@ -94,14 +94,14 @@ pnpm test:e2e   # optional — currently local-only
 
 Each step is verifying one acceptance scenario from the spec:
 
-| Step | Verifies |
-|------|----------|
-| `pnpm install --frozen-lockfile` | US1 scenario 1 (clean install) + FR-001 / FR-002 |
-| `pnpm build-ci` | US1 scenario 2 (build) + FR-005 |
-| `pnpm test:ts` | US1 scenario 2 (types) + FR-006 |
-| `pnpm test:unit` | US1 scenario 2 (unit) + FR-006 |
-| `pnpm package` | US3 scenario 1 (pack reflects publish shape) + FR-015 |
-| `pnpm test:e2e` | US4 scenario 1 (Cypress parallax) + FR-006 |
+| Step                             | Verifies                                              |
+| -------------------------------- | ----------------------------------------------------- |
+| `pnpm install --frozen-lockfile` | US1 scenario 1 (clean install) + FR-001 / FR-002      |
+| `pnpm build-ci`                  | US1 scenario 2 (build) + FR-005                       |
+| `pnpm test:ts`                   | US1 scenario 2 (types) + FR-006                       |
+| `pnpm test:unit`                 | US1 scenario 2 (unit) + FR-006                        |
+| `pnpm package`                   | US3 scenario 1 (pack reflects publish shape) + FR-015 |
+| `pnpm test:e2e`                  | US4 scenario 1 (Cypress parallax) + FR-006            |
 
 ## Releasing
 

@@ -1,5 +1,5 @@
 ---
-description: "Auto-commit changes after a Spec Kit command completes"
+description: 'Auto-commit changes after a Spec Kit command completes'
 ---
 
 # Auto-Commit Changes
@@ -32,13 +32,13 @@ In `.specify/extensions/git/git-config.yml`:
 
 ```yaml
 auto_commit:
-  default: false          # Global toggle — set true to enable for all commands
+  default: false # Global toggle — set true to enable for all commands
   after_specify:
-    enabled: true          # Override per-command
-    message: "[Spec Kit] Add specification"
+    enabled: true # Override per-command
+    message: '[Spec Kit] Add specification'
   after_plan:
     enabled: false
-    message: "[Spec Kit] Add implementation plan"
+    message: '[Spec Kit] Add implementation plan'
 ```
 
 ## Graceful Degradation

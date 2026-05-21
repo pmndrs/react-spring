@@ -1,5 +1,5 @@
 ---
-description: "Task list for: Migrate package manager from Yarn 3 Berry to pnpm"
+description: 'Task list for: Migrate package manager from Yarn 3 Berry to pnpm'
 ---
 
 # Tasks: Migrate package manager from Yarn 3 Berry to pnpm
@@ -7,6 +7,7 @@ description: "Task list for: Migrate package manager from Yarn 3 Berry to pnpm"
 **Input**: Design documents from `/specs/001-migrate-to-pnpm/`
 
 **Prerequisites**:
+
 - `plan.md` ✅
 - `spec.md` ✅
 - `research.md` ✅
@@ -260,5 +261,5 @@ Everything else benefits more from a single mind holding the change in their hea
 - "Phantom dep" tasks (T006–T021) may turn out to be no-ops for workspaces that already declared everything they import. The task still exists — completing it confirms "no missing declarations" was verified, not silently skipped.
 - Commit after each logical group (Phase 0 → Phase 1 → Phase 2 → each user story). The history will be reviewable PR-by-task.
 - Do NOT skip Husky hooks (`--no-verify`) at any point in this migration.
-- If T022 surfaces a phantom dep that genuinely cannot be fixed (e.g. a third-party package that imports an undeclared peer), add a *targeted* `public-hoist-pattern[]=<exact-pkg>` to `.npmrc` and document it inline with the reason. Do NOT broaden to `public-hoist-pattern[]=*`.
+- If T022 surfaces a phantom dep that genuinely cannot be fixed (e.g. a third-party package that imports an undeclared peer), add a _targeted_ `public-hoist-pattern[]=<exact-pkg>` to `.npmrc` and document it inline with the reason. Do NOT broaden to `public-hoist-pattern[]=*`.
 - `baseline.md` and `specs/001-migrate-to-pnpm/baseline/<workspace>.tgz` are scratch artefacts produced by T001 and consumed by T033–T035, T055, T059, T063, and T064. The tarballs are deleted in T065; `baseline.md` survives the merge as the SC audit trail.

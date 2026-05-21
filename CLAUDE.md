@@ -4,33 +4,35 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Stack
 
-- **Package manager**: Yarn 3.8.7 (Berry, `nodeLinker: node-modules`). All scripts assume `yarn`, not `npm`/`pnpm`. Pinned via `.yarnrc.yml`/`.yarn/releases`.
+- **Package manager**: pnpm 9.15.9 with strict isolated `node_modules` (default). Pinned via `packageManager` in root `package.json` and activated through Corepack. Scripts assume `pnpm`.
 - **Node**: `.nvmrc` is `22.15.0`; CI runs Node 18/20.
-- **Monorepo**: Turborepo + Yarn workspaces. Workspaces: `packages/*`, `targets/*`, `demo`, `docs`, plus `packages/parallax/@react-spring/parallax-demo`.
+- **Monorepo**: Turborepo + pnpm workspaces. Workspaces declared in `pnpm-workspace.yaml`: `packages/*`, `targets/*`, `demo`, `docs`.
 - **Bundler**: `tsup` per package, sharing `tsup.config.base.ts` which emits CJS (dev + prod.min) and ESM (legacy, modern, modern.dev, modern.prod.min) plus a CJS entry shim that switches on `NODE_ENV`.
 - **Tests**: Jest + jsdom + `@swc/jest` (unit), `tsc --noEmit` (types), Cypress (E2E, parallax only).
 - **Lint/format**: ESLint via shared `eslint-config-react-spring` package + Prettier. Husky `pre-commit` runs `prettier --check`; `commit-msg` runs commitlint with `@commitlint/config-conventional`.
 
 ## Common commands
 
-| Task | Command |
-| --- | --- |
-| Install | `yarn install --immutable` |
-| Build all packages | `yarn build` (turbo, respects `^build` deps) |
-| Build everything except docs | `yarn build-ci` |
-| Watch-build all packages in parallel | `yarn dev` |
-| Run docs / demo dev servers | `yarn docs:dev` / `yarn demo:dev` |
-| Full test suite | `yarn test` (ts + unit + e2e) |
-| Unit tests | `yarn test:unit` |
-| Single test file | `yarn jest packages/core/src/SpringValue.test.ts` |
-| Filter by test name | `yarn jest -t "interpolation"` |
-| Coverage | `yarn test:cov` (thresholds: 80% statements / 74% branches / 71% functions / 82% lines) |
-| Type-check | `yarn test:ts` |
-| Cypress E2E | `yarn test:e2e` (serves `packages/parallax/test` on :3000 via Vite, then runs Cypress) |
-| Lint | `yarn lint` (turbo across packages) |
-| Format | `yarn prettier:write` / `yarn prettier:check` |
+| Task                                 | Command                                                                                 |
+| ------------------------------------ | --------------------------------------------------------------------------------------- |
+| Install                              | `pnpm install --frozen-lockfile`                                                        |
+| Build all packages                   | `pnpm build` (turbo, respects `^build` deps)                                            |
+| Build everything except docs         | `pnpm build-ci`                                                                         |
+| Watch-build all packages in parallel | `pnpm dev`                                                                              |
+| Run docs / demo dev servers          | `pnpm docs:dev` / `pnpm demo:dev`                                                       |
+| Full test suite                      | `pnpm test` (ts + unit + e2e)                                                           |
+| Unit tests                           | `pnpm test:unit`                                                                        |
+| Single test file                     | `pnpm jest packages/core/src/SpringValue.test.ts`                                       |
+| Filter by test name                  | `pnpm jest -t "interpolation"`                                                          |
+| Coverage                             | `pnpm test:cov` (thresholds: 80% statements / 74% branches / 71% functions / 82% lines) |
+| Type-check                           | `pnpm test:ts`                                                                          |
+| Cypress E2E                          | `pnpm test:e2e` (serves `packages/parallax/test` on :3000 via Vite, then runs Cypress)  |
+| Lint                                 | `pnpm lint` (turbo across packages)                                                     |
+| Format                               | `pnpm prettier:write` / `pnpm prettier:check`                                           |
 
-Note: Jest `moduleNameMapper` rewrites `@react-spring/*` to the package source under `packages/*/src/index.ts`, so unit tests run **without** a prior build. Anything outside Jest (Cypress, docs, publish-ci) needs `yarn build` first.
+Note: Jest `moduleNameMapper` rewrites `@react-spring/*` to the package source under `packages/*/src/index.ts`, so unit tests run **without** a prior build. Anything outside Jest (Cypress, docs, publish-ci) needs `pnpm build` first.
+
+Strict isolation: `node_modules` is non-hoisted, so a workspace can only `import` packages it declares in its own `package.json`. If you see a `Cannot find module 'foo'` error after adding an import, add `foo` to that workspace's `dependencies` / `peerDependencies` / `devDependencies` — do not add a hoist rule.
 
 ## Architecture
 
@@ -97,12 +99,12 @@ Cypress only covers `@react-spring/parallax` (`cypress/e2e/parallax.cy.ts`); the
 All packages are version-locked. Workflow:
 
 ```sh
-yarn changeset    # add a changeset describing the change
-yarn vers         # bumps versions + internal deps
-yarn release      # clean install, build, type-check, unit test, then changeset publish
+pnpm changeset    # add a changeset describing the change
+pnpm vers         # bumps versions + internal deps
+pnpm release      # clean install, build, type-check, unit test, then changeset publish
 ```
 
-For prereleases enter pre-mode first: `yarn changeset pre enter beta|alpha|next`.
+For prereleases enter pre-mode first: `pnpm changeset pre enter beta|alpha|next`.
 
 ## Conventions
 
@@ -112,7 +114,9 @@ For prereleases enter pre-mode first: `yarn changeset pre enter beta|alpha|next`
 - The default branch is `next` (also treated as the PR base). `main` may exist but `next` is the active line.
 
 <!-- SPECKIT START -->
+
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
 [specs/001-migrate-to-pnpm/plan.md](./specs/001-migrate-to-pnpm/plan.md)
+
 <!-- SPECKIT END -->

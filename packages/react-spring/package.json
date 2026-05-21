@@ -60,6 +60,6 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsup --watch",
     "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
-    "pack": "yarn pack"
+    "pack": "pnpm pack && mv *.tgz package.tgz"
   }
 }

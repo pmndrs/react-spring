@@ -31,31 +31,31 @@ The `Setup pnpm` step MUST appear **before** `Setup node`, because
 
 ## Per-command rewrites inside workflows
 
-| Workflow | Step | Pre-migration `run:` | Post-migration `run:` |
-|----------|------|----------------------|----------------------|
-| `bundle-size.yml` | Build packages | `yarn build --filter=!@react-spring/docs` | `pnpm build --filter=!@react-spring/docs` |
-| `checks.yml` | Lint | `yarn lint` | `pnpm lint` |
-| `checks.yml` | Format | `yarn prettier:check` | `pnpm prettier:check` |
-| `experimental.yml` | Build | `yarn build-ci` | `pnpm build-ci` |
-| `nightly.yml` | Build | `yarn build-ci` | `pnpm build-ci` |
-| `tests.yml` (build job) | Build | `yarn build-ci --filter=!@react-spring/docs` | `pnpm build-ci --filter=!@react-spring/docs` |
-| `tests.yml` (build job) | Pack | `yarn package` | `pnpm package` |
-| `tests.yml` (test-unit) | Build | `yarn build-ci` | `pnpm build-ci` |
-| `tests.yml` (test-unit) | Test | `yarn test:unit` | `pnpm test:unit` |
-| `tests.yml` (test-types) | Install TS pin | `yarn add typescript@${{ matrix.ts }}` | `pnpm add -w typescript@${{ matrix.ts }}` |
-| `tests.yml` (test-types) | Build | `yarn build-ci` | `pnpm build-ci` |
-| `tests.yml` (test-types) | Test | `yarn tsc --version` && `yarn test:ts` | `pnpm tsc --version` && `pnpm test:ts` |
-| `tests.yml` (test-published-artifact) | Remove `@react-spring/web` | `yarn remove @react-spring/web` | `npm uninstall @react-spring/web` *(fixture is now npm — see R-005)* |
-| `tests.yml` (test-published-artifact) | Install tarballs | `yarn add ./web/package.tgz ./animated/package.tgz ./core/package.tgz ./rafz/package.tgz ./shared/package.tgz ./types/package.tgz` | `npm install ./web/package.tgz ./animated/package.tgz ./core/package.tgz ./rafz/package.tgz ./shared/package.tgz ./types/package.tgz` |
-| `tests.yml` (test-published-artifact) | Inspect | `yarn info @react-spring/web && yarn why @react-spring/web` | `npm info @react-spring/web && npm ls @react-spring/web` |
-| `tests.yml` (test-published-artifact) | Build example | `yarn build` | `npm run build` |
-| `tests.yml` (test-published-artifact) | Test example | `yarn test` | `npm test` |
+| Workflow                              | Step                       | Pre-migration `run:`                                                                                                               | Post-migration `run:`                                                                                                                 |
+| ------------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `bundle-size.yml`                     | Build packages             | `yarn build --filter=!@react-spring/docs`                                                                                          | `pnpm build --filter=!@react-spring/docs`                                                                                             |
+| `checks.yml`                          | Lint                       | `yarn lint`                                                                                                                        | `pnpm lint`                                                                                                                           |
+| `checks.yml`                          | Format                     | `yarn prettier:check`                                                                                                              | `pnpm prettier:check`                                                                                                                 |
+| `experimental.yml`                    | Build                      | `yarn build-ci`                                                                                                                    | `pnpm build-ci`                                                                                                                       |
+| `nightly.yml`                         | Build                      | `yarn build-ci`                                                                                                                    | `pnpm build-ci`                                                                                                                       |
+| `tests.yml` (build job)               | Build                      | `yarn build-ci --filter=!@react-spring/docs`                                                                                       | `pnpm build-ci --filter=!@react-spring/docs`                                                                                          |
+| `tests.yml` (build job)               | Pack                       | `yarn package`                                                                                                                     | `pnpm package`                                                                                                                        |
+| `tests.yml` (test-unit)               | Build                      | `yarn build-ci`                                                                                                                    | `pnpm build-ci`                                                                                                                       |
+| `tests.yml` (test-unit)               | Test                       | `yarn test:unit`                                                                                                                   | `pnpm test:unit`                                                                                                                      |
+| `tests.yml` (test-types)              | Install TS pin             | `yarn add typescript@${{ matrix.ts }}`                                                                                             | `pnpm add -w typescript@${{ matrix.ts }}`                                                                                             |
+| `tests.yml` (test-types)              | Build                      | `yarn build-ci`                                                                                                                    | `pnpm build-ci`                                                                                                                       |
+| `tests.yml` (test-types)              | Test                       | `yarn tsc --version` && `yarn test:ts`                                                                                             | `pnpm tsc --version` && `pnpm test:ts`                                                                                                |
+| `tests.yml` (test-published-artifact) | Remove `@react-spring/web` | `yarn remove @react-spring/web`                                                                                                    | `npm uninstall @react-spring/web` _(fixture is now npm — see R-005)_                                                                  |
+| `tests.yml` (test-published-artifact) | Install tarballs           | `yarn add ./web/package.tgz ./animated/package.tgz ./core/package.tgz ./rafz/package.tgz ./shared/package.tgz ./types/package.tgz` | `npm install ./web/package.tgz ./animated/package.tgz ./core/package.tgz ./rafz/package.tgz ./shared/package.tgz ./types/package.tgz` |
+| `tests.yml` (test-published-artifact) | Inspect                    | `yarn info @react-spring/web && yarn why @react-spring/web`                                                                        | `npm info @react-spring/web && npm ls @react-spring/web`                                                                              |
+| `tests.yml` (test-published-artifact) | Build example              | `yarn build`                                                                                                                       | `npm run build`                                                                                                                       |
+| `tests.yml` (test-published-artifact) | Test example               | `yarn test`                                                                                                                        | `npm test`                                                                                                                            |
 
 ## `paths-filter` watch list (in `tests.yml` `changes` job)
 
-| Path | Pre-migration | Post-migration |
-|------|---------------|----------------|
-| Root lockfile | `yarn.lock` | `pnpm-lock.yaml` |
+| Path              | Pre-migration                     | Post-migration                            |
+| ----------------- | --------------------------------- | ----------------------------------------- |
+| Root lockfile     | `yarn.lock`                       | `pnpm-lock.yaml`                          |
 | Fixture lockfiles | `.github/publish-ci/**/yarn.lock` | `.github/publish-ci/**/package-lock.json` |
 
 All other entries in the filter (`packages/**`, `targets/**`, `cypress/**`, `.github/workflows/*.yml`, `package.json`) remain unchanged.

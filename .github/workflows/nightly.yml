@@ -50,23 +50,27 @@ jobs:
             exit 0
           fi
 
+      - name: Setup pnpm
+        if: steps.version.outputs.NEXT_VERSION
+        uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         if: steps.version.outputs.NEXT_VERSION
         with:
           node-version: 20
-          cache: 'yarn'
+          cache: 'pnpm'
 
       - name: Install
         if: steps.version.outputs.NEXT_VERSION
-        run: yarn install --immutable
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         if: steps.version.outputs.NEXT_VERSION
-        run: yarn build-ci
+        run: pnpm build-ci
 
       - name: Setup npmrc
         if: steps.version.outputs.NEXT_VERSION
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
 
       - run: ./scripts/version-and-publish.sh
         if: steps.version.outputs.NEXT_VERSION

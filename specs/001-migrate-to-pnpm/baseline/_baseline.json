@@ -1,0 +1,555 @@
+[
+  {
+    "file_count": 12,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_animated.development.cjs",
+      "package/dist/cjs/react-spring_animated.development.d.ts",
+      "package/dist/cjs/react-spring_animated.production.min.cjs",
+      "package/dist/react-spring_animated.legacy-esm.js",
+      "package/dist/react-spring_animated.modern.d.mts",
+      "package/dist/react-spring_animated.modern.development.mjs",
+      "package/dist/react-spring_animated.modern.mjs",
+      "package/dist/react-spring_animated.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_animated.modern.mjs",
+            "types": "./dist/react-spring_animated.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_animated.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_animated.legacy-esm.js",
+      "name": "@react-spring/animated",
+      "types": "./dist/react-spring_animated.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/animated",
+    "pack_ms": 242,
+    "tgz_bytes": 10003,
+    "version": "10.0.3",
+    "ws": "packages/animated"
+  },
+  {
+    "file_count": 12,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_core.development.cjs",
+      "package/dist/cjs/react-spring_core.development.d.ts",
+      "package/dist/cjs/react-spring_core.production.min.cjs",
+      "package/dist/react-spring_core.legacy-esm.js",
+      "package/dist/react-spring_core.modern.d.mts",
+      "package/dist/react-spring_core.modern.development.mjs",
+      "package/dist/react-spring_core.modern.mjs",
+      "package/dist/react-spring_core.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_core.modern.mjs",
+            "types": "./dist/react-spring_core.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_core.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_core.legacy-esm.js",
+      "name": "@react-spring/core",
+      "types": "./dist/react-spring_core.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/core",
+    "pack_ms": 238,
+    "tgz_bytes": 119760,
+    "version": "10.0.3",
+    "ws": "packages/core"
+  },
+  {
+    "file_count": 13,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_parallax.development.cjs",
+      "package/dist/cjs/react-spring_parallax.development.d.ts",
+      "package/dist/cjs/react-spring_parallax.production.min.cjs",
+      "package/dist/react-spring_parallax.legacy-esm.js",
+      "package/dist/react-spring_parallax.modern.d.mts",
+      "package/dist/react-spring_parallax.modern.development.mjs",
+      "package/dist/react-spring_parallax.modern.mjs",
+      "package/dist/react-spring_parallax.modern.production.min.mjs",
+      "package/package.json",
+      "package/test/README.md"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_parallax.modern.mjs",
+            "types": "./dist/react-spring_parallax.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_parallax.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_parallax.legacy-esm.js",
+      "name": "@react-spring/parallax",
+      "types": "./dist/react-spring_parallax.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/parallax",
+    "pack_ms": 208,
+    "tgz_bytes": 10665,
+    "version": "10.0.3",
+    "ws": "packages/parallax"
+  },
+  {
+    "file_count": 12,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_rafz.development.cjs",
+      "package/dist/cjs/react-spring_rafz.development.d.ts",
+      "package/dist/cjs/react-spring_rafz.production.min.cjs",
+      "package/dist/react-spring_rafz.legacy-esm.js",
+      "package/dist/react-spring_rafz.modern.d.mts",
+      "package/dist/react-spring_rafz.modern.development.mjs",
+      "package/dist/react-spring_rafz.modern.mjs",
+      "package/dist/react-spring_rafz.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_rafz.modern.mjs",
+            "types": "./dist/react-spring_rafz.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_rafz.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_rafz.legacy-esm.js",
+      "name": "@react-spring/rafz",
+      "types": "./dist/react-spring_rafz.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/rafz",
+    "pack_ms": 207,
+    "tgz_bytes": 6912,
+    "version": "10.0.3",
+    "ws": "packages/rafz"
+  },
+  {
+    "file_count": 12,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring.development.cjs",
+      "package/dist/cjs/react-spring.development.d.ts",
+      "package/dist/cjs/react-spring.production.min.cjs",
+      "package/dist/react-spring.legacy-esm.js",
+      "package/dist/react-spring.modern.d.mts",
+      "package/dist/react-spring.modern.development.mjs",
+      "package/dist/react-spring.modern.mjs",
+      "package/dist/react-spring.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring.modern.mjs",
+            "types": "./dist/react-spring.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring.legacy-esm.js",
+      "name": "react-spring",
+      "types": "./dist/react-spring.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "react-spring",
+    "pack_ms": 206,
+    "tgz_bytes": 3841,
+    "version": "10.0.3",
+    "ws": "packages/react-spring"
+  },
+  {
+    "file_count": 12,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_shared.development.cjs",
+      "package/dist/cjs/react-spring_shared.development.d.ts",
+      "package/dist/cjs/react-spring_shared.production.min.cjs",
+      "package/dist/react-spring_shared.legacy-esm.js",
+      "package/dist/react-spring_shared.modern.d.mts",
+      "package/dist/react-spring_shared.modern.development.mjs",
+      "package/dist/react-spring_shared.modern.mjs",
+      "package/dist/react-spring_shared.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_shared.modern.mjs",
+            "types": "./dist/react-spring_shared.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_shared.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_shared.legacy-esm.js",
+      "name": "@react-spring/shared",
+      "types": "./dist/react-spring_shared.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/shared",
+    "pack_ms": 220,
+    "tgz_bytes": 59568,
+    "version": "10.0.3",
+    "ws": "packages/shared"
+  },
+  {
+    "file_count": 11,
+    "files": [
+      "package/LICENSE",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_types.development.cjs",
+      "package/dist/cjs/react-spring_types.development.d.ts",
+      "package/dist/cjs/react-spring_types.production.min.cjs",
+      "package/dist/react-spring_types.legacy-esm.js",
+      "package/dist/react-spring_types.modern.d.mts",
+      "package/dist/react-spring_types.modern.development.mjs",
+      "package/dist/react-spring_types.modern.mjs",
+      "package/dist/react-spring_types.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_types.modern.mjs",
+            "types": "./dist/react-spring_types.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_types.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_types.legacy-esm.js",
+      "name": "@react-spring/types",
+      "types": "./dist/react-spring_types.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/types",
+    "pack_ms": 209,
+    "tgz_bytes": 4673,
+    "version": "10.0.3",
+    "ws": "packages/types"
+  },
+  {
+    "file_count": 12,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_konva.development.cjs",
+      "package/dist/cjs/react-spring_konva.development.d.ts",
+      "package/dist/cjs/react-spring_konva.production.min.cjs",
+      "package/dist/react-spring_konva.legacy-esm.js",
+      "package/dist/react-spring_konva.modern.d.mts",
+      "package/dist/react-spring_konva.modern.development.mjs",
+      "package/dist/react-spring_konva.modern.mjs",
+      "package/dist/react-spring_konva.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_konva.modern.mjs",
+            "types": "./dist/react-spring_konva.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_konva.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_konva.legacy-esm.js",
+      "name": "@react-spring/konva",
+      "types": "./dist/react-spring_konva.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/konva",
+    "pack_ms": 226,
+    "tgz_bytes": 3844,
+    "version": "10.0.3",
+    "ws": "targets/konva"
+  },
+  {
+    "file_count": 7,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_native.development.cjs",
+      "package/dist/cjs/react-spring_native.development.d.ts",
+      "package/dist/cjs/react-spring_native.production.min.cjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "default": "./dist/cjs/index.js",
+          "types": "./dist/cjs/react-spring_native.development.d.ts"
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_native.legacy-esm.js",
+      "name": "@react-spring/native",
+      "types": "./dist/react-spring_native.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/native",
+    "pack_ms": 212,
+    "tgz_bytes": 4328,
+    "version": "10.0.3",
+    "ws": "targets/native"
+  },
+  {
+    "file_count": 12,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_three.development.cjs",
+      "package/dist/cjs/react-spring_three.development.d.ts",
+      "package/dist/cjs/react-spring_three.production.min.cjs",
+      "package/dist/react-spring_three.legacy-esm.js",
+      "package/dist/react-spring_three.modern.d.mts",
+      "package/dist/react-spring_three.modern.development.mjs",
+      "package/dist/react-spring_three.modern.mjs",
+      "package/dist/react-spring_three.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_three.modern.mjs",
+            "types": "./dist/react-spring_three.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_three.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_three.legacy-esm.js",
+      "name": "@react-spring/three",
+      "types": "./dist/react-spring_three.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/three",
+    "pack_ms": 243,
+    "tgz_bytes": 4221,
+    "version": "10.0.3",
+    "ws": "targets/three"
+  },
+  {
+    "file_count": 12,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_web.development.cjs",
+      "package/dist/cjs/react-spring_web.development.d.ts",
+      "package/dist/cjs/react-spring_web.production.min.cjs",
+      "package/dist/react-spring_web.legacy-esm.js",
+      "package/dist/react-spring_web.modern.d.mts",
+      "package/dist/react-spring_web.modern.development.mjs",
+      "package/dist/react-spring_web.modern.mjs",
+      "package/dist/react-spring_web.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_web.modern.mjs",
+            "types": "./dist/react-spring_web.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_web.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_web.legacy-esm.js",
+      "name": "@react-spring/web",
+      "types": "./dist/react-spring_web.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/web",
+    "pack_ms": 205,
+    "tgz_bytes": 10130,
+    "version": "10.0.3",
+    "ws": "targets/web"
+  },
+  {
+    "file_count": 12,
+    "files": [
+      "package/LICENSE",
+      "package/README.md",
+      "package/dist/cjs/index.js",
+      "package/dist/cjs/react-spring_zdog.development.cjs",
+      "package/dist/cjs/react-spring_zdog.development.d.ts",
+      "package/dist/cjs/react-spring_zdog.production.min.cjs",
+      "package/dist/react-spring_zdog.legacy-esm.js",
+      "package/dist/react-spring_zdog.modern.d.mts",
+      "package/dist/react-spring_zdog.modern.development.mjs",
+      "package/dist/react-spring_zdog.modern.mjs",
+      "package/dist/react-spring_zdog.modern.production.min.mjs",
+      "package/package.json"
+    ],
+    "key_fields": {
+      "exports": {
+        ".": {
+          "import": {
+            "default": "./dist/react-spring_zdog.modern.mjs",
+            "types": "./dist/react-spring_zdog.modern.d.mts"
+          },
+          "require": {
+            "default": "./dist/cjs/index.js",
+            "types": "./dist/cjs/react-spring_zdog.development.d.ts"
+          }
+        },
+        "./package.json": "./package.json"
+      },
+      "files": [
+        "dist/**/*",
+        "README.md",
+        "LICENSE"
+      ],
+      "main": "./dist/cjs/index.js",
+      "module": "./dist/react-spring_zdog.legacy-esm.js",
+      "name": "@react-spring/zdog",
+      "types": "./dist/react-spring_zdog.modern.d.mts",
+      "version": "10.0.3"
+    },
+    "name": "@react-spring/zdog",
+    "pack_ms": 206,
+    "tgz_bytes": 4121,
+    "version": "10.0.3",
+    "ws": "targets/zdog"
+  }
+]

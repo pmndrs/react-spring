@@ -8,7 +8,7 @@
 
 **Input**: User description: "lets migrate the repo over to use pnpm"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Contributor installs and runs the project after migration (Priority: P1)
 
@@ -81,7 +81,7 @@ The `@react-spring/parallax` Cypress end-to-end tests, served from a Vite app in
 - **Turborepo cache**: The turbo task graph references package names, not the package manager. Cache invalidation should occur once (because lockfile changes), then settle.
 - **Engine pinning**: `.nvmrc` is `22.15.0`; CI runs Node 18/20. The pnpm version must be pinned via `packageManager` in the root `package.json` so contributors and CI converge on the same release.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -108,7 +108,7 @@ The `@react-spring/parallax` Cypress end-to-end tests, served from a Vite app in
 - **Package manager pin**: The mechanism that ensures every contributor and CI environment uses the same package manager version. Migration moves this from `.yarnrc.yml` / `.yarn/releases/` to the `packageManager` field plus Corepack.
 - **Hoisting / resolution mode**: The strategy for how dependencies are exposed to package code. Yarn Berry's `nodeLinker: node-modules` gave a flat hoisted tree; the migration adopts pnpm's strict isolated `node_modules` (the pnpm default) so each workspace sees only its declared dependencies.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

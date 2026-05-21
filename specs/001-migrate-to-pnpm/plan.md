@@ -40,17 +40,17 @@ Replace Yarn 3 Berry (`yarn@3.8.7`, `nodeLinker: node-modules`) with pnpm using 
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 The constitution ([../../.specify/memory/constitution.md](../../.specify/memory/constitution.md)) defines five principles. Evaluation:
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| I. Layered Architecture (NON-NEGOTIABLE) | Pass | Migration touches build/install tooling only; no imports across layers. |
-| II. Target-Agnostic Core | Pass | No source code in `core`, `animated`, `shared`, or targets is modified by the package-manager change. |
-| III. Test-First Animation Behaviour (NON-NEGOTIABLE) | Pass | Existing tests must keep passing. Phantom-dep fixes will be code-level `package.json` edits — no test changes other than possibly minor invocation updates. |
-| IV. Version-Locked, Changeset-Driven Releases | Pass | The release workflow itself is preserved end-to-end (FR-007, SC-005). The migration ships under a single `chore:` changeset. |
-| V. Performance Discipline on the Hot Path | Pass | No runtime code changes; the hot path is untouched. |
+| Principle                                            | Status | Notes                                                                                                                                                       |
+| ---------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| I. Layered Architecture (NON-NEGOTIABLE)             | Pass   | Migration touches build/install tooling only; no imports across layers.                                                                                     |
+| II. Target-Agnostic Core                             | Pass   | No source code in `core`, `animated`, `shared`, or targets is modified by the package-manager change.                                                       |
+| III. Test-First Animation Behaviour (NON-NEGOTIABLE) | Pass   | Existing tests must keep passing. Phantom-dep fixes will be code-level `package.json` edits — no test changes other than possibly minor invocation updates. |
+| IV. Version-Locked, Changeset-Driven Releases        | Pass   | The release workflow itself is preserved end-to-end (FR-007, SC-005). The migration ships under a single `chore:` changeset.                                |
+| V. Performance Discipline on the Hot Path            | Pass   | No runtime code changes; the hot path is untouched.                                                                                                         |
 
 **Quality Gates**: All gates (lint, types, unit, prettier, commitlint) must still pass after migration — that's FR-006 / FR-008 directly. No principle relief requested.
 
@@ -118,7 +118,7 @@ react-spring/
 > No constitution violations to justify. Section retained per template, populated only if a deviation is uncovered during Phase 0 / Phase 1.
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
+| --------- | ---------- | ------------------------------------ |
 | _(none)_  | _(n/a)_    | _(n/a)_                              |
 
 ## Phase 0 — Research

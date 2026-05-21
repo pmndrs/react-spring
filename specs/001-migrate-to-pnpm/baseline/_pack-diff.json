@@ -1,0 +1,148 @@
+[
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "animated",
+    "pack_ms": 633,
+    "pnpm_file_count": 12,
+    "verdict": "PASS",
+    "ws": "packages/animated",
+    "yarn_file_count": 12
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "core",
+    "pack_ms": 619,
+    "pnpm_file_count": 12,
+    "verdict": "PASS",
+    "ws": "packages/core",
+    "yarn_file_count": 12
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": false,
+    "missing_in_pnpm": [
+      "package/test/README.md"
+    ],
+    "name": "parallax",
+    "pack_ms": 666,
+    "pnpm_file_count": 12,
+    "verdict": "DIFF",
+    "ws": "packages/parallax",
+    "yarn_file_count": 13
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "rafz",
+    "pack_ms": 634,
+    "pnpm_file_count": 12,
+    "verdict": "PASS",
+    "ws": "packages/rafz",
+    "yarn_file_count": 12
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "react-spring",
+    "pack_ms": 643,
+    "pnpm_file_count": 12,
+    "verdict": "PASS",
+    "ws": "packages/react-spring",
+    "yarn_file_count": 12
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "shared",
+    "pack_ms": 572,
+    "pnpm_file_count": 12,
+    "verdict": "PASS",
+    "ws": "packages/shared",
+    "yarn_file_count": 12
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "types",
+    "pack_ms": 825,
+    "pnpm_file_count": 11,
+    "verdict": "PASS",
+    "ws": "packages/types",
+    "yarn_file_count": 11
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "konva",
+    "pack_ms": 813,
+    "pnpm_file_count": 12,
+    "verdict": "PASS",
+    "ws": "targets/konva",
+    "yarn_file_count": 12
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "native",
+    "pack_ms": 786,
+    "pnpm_file_count": 7,
+    "verdict": "PASS",
+    "ws": "targets/native",
+    "yarn_file_count": 7
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "three",
+    "pack_ms": 740,
+    "pnpm_file_count": 12,
+    "verdict": "PASS",
+    "ws": "targets/three",
+    "yarn_file_count": 12
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "web",
+    "pack_ms": 768,
+    "pnpm_file_count": 12,
+    "verdict": "PASS",
+    "ws": "targets/web",
+    "yarn_file_count": 12
+  },
+  {
+    "extra_in_pnpm": [],
+    "field_diffs": {},
+    "files_match": true,
+    "missing_in_pnpm": [],
+    "name": "zdog",
+    "pack_ms": 606,
+    "pnpm_file_count": 12,
+    "verdict": "PASS",
+    "ws": "targets/zdog",
+    "yarn_file_count": 12
+  }
+]
