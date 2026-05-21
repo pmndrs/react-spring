@@ -110,3 +110,8 @@ For prereleases enter pre-mode first: `yarn changeset pre enter beta|alpha|next`
 - Prettier config: no semis, single quotes, 2-space tabs, ES5 trailing commas, `arrowParens: 'avoid'`, 80-col print width.
 - ESLint: `no-console` is `error` except `warn`/`error`; unused vars must be prefixed `_`; `@typescript-eslint/no-explicit-any` is **off** intentionally (the spring engine leans on `any` for variance).
 - The default branch is `next` (also treated as the PR base). `main` may exist but `next` is the active line.
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
