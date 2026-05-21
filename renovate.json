@@ -1,14 +1,136 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
-    "group:allNonMajor",
+    "config:recommended",
     "schedule:monthly",
     ":maintainLockFilesMonthly",
     ":disablePeerDependencies",
     ":labels(dependencies,kind: chore)"
   ],
   "rangeStrategy": "bump",
-  "postUpdateOptions": ["yarnDedupeHighest"],
-  "rebaseWhen": "conflicted"
+  "rebaseWhen": "conflicted",
+  "separateMajorMinor": true,
+  "separateMultipleMajor": true,
+  "packageRules": [
+    {
+      "groupName": "react",
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ]
+    },
+    {
+      "groupName": "react-native",
+      "matchPackageNames": ["react-native"]
+    },
+    {
+      "groupName": "react-three",
+      "matchPackageNames": [
+        "@react-three/fiber",
+        "@react-three/drei",
+        "three",
+        "@types/three",
+        "three-stdlib"
+      ]
+    },
+    {
+      "groupName": "konva",
+      "matchPackageNames": ["konva", "react-konva"]
+    },
+    {
+      "groupName": "zdog",
+      "matchPackageNames": ["zdog", "react-zdog"]
+    },
+    {
+      "groupName": "remix",
+      "matchPackageNames": ["@remix-run/**", "@vercel/remix"]
+    },
+    {
+      "groupName": "radix-ui",
+      "matchPackageNames": ["@radix-ui/**"]
+    },
+    {
+      "groupName": "vanilla-extract",
+      "matchPackageNames": ["@vanilla-extract/**"]
+    },
+    {
+      "groupName": "mdx",
+      "matchPackageNames": ["@mdx-js/**"]
+    },
+    {
+      "groupName": "remark-rehype",
+      "matchPackageNames": [
+        "unified",
+        "refractor",
+        "/^remark-/",
+        "/^rehype-/",
+        "/^hast-util-/",
+        "/^unist-util-/"
+      ]
+    },
+    {
+      "groupName": "docsearch",
+      "matchPackageNames": ["@docsearch/**"]
+    },
+    {
+      "groupName": "supabase",
+      "matchPackageNames": ["@supabase/**"]
+    },
+    {
+      "groupName": "vercel",
+      "matchPackageNames": ["@vercel/analytics"]
+    },
+    {
+      "groupName": "changesets",
+      "matchPackageNames": ["@changesets/**"]
+    },
+    {
+      "groupName": "commitlint",
+      "matchPackageNames": ["@commitlint/**"]
+    },
+    {
+      "groupName": "vitest",
+      "matchPackageNames": [
+        "vitest",
+        "@vitest/**",
+        "vitest-browser-react",
+        "playwright"
+      ]
+    },
+    {
+      "groupName": "oxc",
+      "matchPackageNames": ["oxlint", "oxfmt"]
+    },
+    {
+      "groupName": "build-tooling",
+      "matchPackageNames": ["tsup", "turbo", "@swc/core"]
+    },
+    {
+      "groupName": "vite",
+      "matchPackageNames": ["vite", "@vitejs/**", "vite-tsconfig-paths"]
+    },
+    {
+      "groupName": "typescript",
+      "matchPackageNames": ["typescript"]
+    },
+    {
+      "groupName": "lodash",
+      "matchPackageNames": [
+        "lodash-move",
+        "/^lodash\\./",
+        "/^@types\\/lodash\\./"
+      ]
+    },
+    {
+      "groupName": "use-gesture",
+      "matchPackageNames": ["@use-gesture/react", "react-use-gesture"]
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "groupName": null,
+      "addLabels": ["major-update"]
+    }
+  ]
 }
