@@ -73,6 +73,6 @@
     "unified": "11.0.5",
     "unist-util-visit": "5.0.0",
     "vite": "6.0.7",
-    "vite-tsconfig-paths": "5.1.4"
+    "vite-tsconfig-paths": "6.1.1"
   }
 }
