@@ -113,5 +113,6 @@ For prereleases enter pre-mode first: `yarn changeset pre enter beta|alpha|next`
 
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+shell commands, and other important information, read the current plan:
+[specs/001-migrate-to-pnpm/plan.md](./specs/001-migrate-to-pnpm/plan.md)
 <!-- SPECKIT END -->
