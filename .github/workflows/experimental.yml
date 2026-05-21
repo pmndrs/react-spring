@@ -22,7 +22,7 @@ jobs:
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup npmrc
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
