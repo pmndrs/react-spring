@@ -88,6 +88,13 @@ export class Controller<State extends Lookup = Lookup> {
     timeouts: new Set(),
   }
 
+  /**
+   * Listeners notified synchronously each time `flushUpdate` recurses into
+   * the next loop iteration. Used by `useTrail` to keep chained children
+   * phase-aligned with the head controller's loop restarts.
+   */
+  protected _onLoopReset?: Set<() => void>
+
   /** The event queues that are flushed once per frame maximum */
   protected _events = {
     onStart: new Map<
@@ -238,6 +245,20 @@ export class Controller<State extends Lookup = Lookup> {
   /** Call a function once per spring value */
   each(iterator: (spring: SpringValue, key: string) => void) {
     eachProp(this.springs, iterator as any)
+  }
+
+  /**
+   * Subscribe to loop iteration restarts on this controller. Returns an
+   * unsubscribe function. Listeners fire synchronously inside `flushUpdate`
+   * just before the next iteration is dispatched.
+   * @internal
+   */
+  onLoopReset(fn: () => void): () => void {
+    const set = (this._onLoopReset ??= new Set())
+    set.add(fn)
+    return () => {
+      set.delete(fn)
+    }
   }
 
   /** @internal Called at the end of every animation frame */
@@ -431,6 +452,10 @@ export async function flushUpdate(
   if (loop && result.finished && !(isLoop && result.noop)) {
     const nextProps = createLoopUpdate(props, loop, to)
     if (nextProps) {
+      // Notify subscribers that the next loop iteration is about to start
+      // so dependent controllers (e.g. useTrail children) can phase-sync
+      // before this controller's springs snap back to their `from` value.
+      ctrl['_onLoopReset']?.forEach(fn => fn())
       prepareKeys(ctrl, [nextProps])
       return flushUpdate(ctrl, nextProps, true)
     }
