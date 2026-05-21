@@ -22,6 +22,11 @@ fi
 # publish packages
 ./node_modules/.bin/changeset version --snapshot "$version"
 
+# Attach SLSA provenance to every tarball npm publishes (changeset publish
+# shells out to `npm publish` per package). Requires `id-token: write` on the
+# workflow job.
+export NPM_CONFIG_PROVENANCE=true
+
 if [[ "$withTag" == "true" ]]; then
   ./node_modules/.bin/changeset publish --snapshot --tag "$distTag"
 else

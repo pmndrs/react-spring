@@ -43,6 +43,9 @@
   "maintainers": [
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
+  "publishConfig": {
+    "provenance": true
+  },
   "dependencies": {
     "@react-spring/animated": "~10.0.3",
     "@react-spring/core": "~10.0.3",

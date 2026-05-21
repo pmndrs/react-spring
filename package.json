@@ -57,6 +57,7 @@
     }
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "2.27.11",
     "@commitlint/cli": "19.6.1",
     "@commitlint/config-conventional": "19.6.0",
