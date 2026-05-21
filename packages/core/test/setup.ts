@@ -1,5 +1,5 @@
 /* eslint-disable no-var */
-import createMockRaf, { MockRaf } from 'mock-raf'
+import createMockRaf, { MockRaf } from '@react-spring/mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
 import { act } from '@testing-library/react'
 import {

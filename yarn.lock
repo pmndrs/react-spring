@@ -4530,6 +4530,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@react-spring/mock-raf@1.1.1, @react-spring/mock-raf@workspace:packages/mock-raf":
+  version: 0.0.0-use.local
+  resolution: "@react-spring/mock-raf@workspace:packages/mock-raf"
+  languageName: unknown
+  linkType: soft
+
 "@react-spring/native@workspace:targets/native, @react-spring/native@~10.0.3":
   version: 0.0.0-use.local
   resolution: "@react-spring/native@workspace:targets/native"
@@ -14965,13 +14971,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mock-raf@npm:@react-spring/mock-raf@1.1.1":
-  version: 1.1.1
-  resolution: "@react-spring/mock-raf@npm:1.1.1"
-  checksum: f5cfa832f99d841dad3ec08620229f5c9e5fb535cd0105109911549defafbc1f8fcbea3fc8a0b23927f0ac6a110b841fa9cbf1279a9055ce09896ec12f90a2bc
-  languageName: node
-  linkType: hard
-
 "modern-ahocorasick@npm:^1.0.0":
   version: 1.1.0
   resolution: "modern-ahocorasick@npm:1.1.0"
@@ -16655,6 +16654,7 @@ __metadata:
     "@changesets/cli": 2.27.11
     "@commitlint/cli": 19.6.1
     "@commitlint/config-conventional": 19.6.0
+    "@react-spring/mock-raf": 1.1.1
     "@react-three/fiber": ~9.1.2
     "@remix-run/dev": 2.15.2
     "@simonsmith/cypress-image-snapshot": 9.1.0
@@ -16678,7 +16678,6 @@ __metadata:
     jest: 29.7.0
     jest-environment-jsdom: 29.7.0
     konva: 9.3.18
-    mock-raf: "npm:@react-spring/mock-raf@1.1.1"
     prettier: 3.4.2
     pretty-quick: 4.0.0
     react: ^19
