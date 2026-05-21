@@ -32,7 +32,7 @@ describe('raf looping', () => {
     expect(__raf.isRunning()).toBe(false)
   })
   it('resumes running jobs after stopping looping', () => {
-    const fn = jest.fn().mockReturnValue(false)
+    const fn = vi.fn().mockReturnValue(false)
     raf(fn)
     mockRaf.step()
     expect(fn).toHaveBeenCalledTimes(1)

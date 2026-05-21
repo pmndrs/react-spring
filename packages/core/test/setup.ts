@@ -1,7 +1,14 @@
 /* eslint-disable no-var */
+
+// Browser shim: tests written for jsdom/Jest reference `global.X` to access the
+// helpers attached in this file. In a real browser there is no `global` — alias
+// it to `globalThis` so existing test bodies work unchanged.
+;(globalThis as { global?: typeof globalThis }).global = globalThis
+
+import { beforeEach, afterEach, vi } from 'vitest'
+import { act } from 'react'
 import createMockRaf, { MockRaf } from '@react-spring/mock-raf'
 import { flushMicroTasks } from 'flush-microtasks'
-import { act } from '@testing-library/react'
 import {
   isEqual,
   is,
@@ -43,21 +50,22 @@ declare global {
 // Allow indefinite tests, since we limit the number of animation frames
 // per "advanceUntil" call to 1000. This keeps the "isRunning" variable
 // from interfering with the debugger.
-jest.setTimeout(6e8)
+vi.setConfig({ testTimeout: 6e8 })
 
 let isRunning = false
 let frameCache: WeakMap<any, any[]>
 
 beforeEach(() => {
+  vi.useFakeTimers()
   isRunning = true
   frameCache = new WeakMap()
   frameLoop.clear()
   raf.clear()
 
-  global.mockRaf = createMockRaf()
+  globalThis.mockRaf = createMockRaf()
   Globals.assign({
-    now: global.mockRaf.now,
-    requestAnimationFrame: global.mockRaf.raf,
+    now: globalThis.mockRaf.now,
+    requestAnimationFrame: globalThis.mockRaf.raf,
     colors,
     skipAnimation: false,
   })
@@ -65,6 +73,7 @@ beforeEach(() => {
 
 afterEach(() => {
   isRunning = false
+  vi.useRealTimers()
 })
 
 // This observes every SpringValue animation when "advanceUntil" is used.
@@ -78,7 +87,7 @@ const frameObserver = (event: FrameValue.Event) => {
   }
 }
 
-global.getFrames = (target, preserve) => {
+globalThis.getFrames = (target, preserve) => {
   let frames = frameCache.get(target)!
   if (!preserve) {
     frameCache.delete(target)
@@ -87,7 +96,7 @@ global.getFrames = (target, preserve) => {
     frames = []
     if (target instanceof Controller) {
       target.each(spring => {
-        global.getFrames(spring, preserve).forEach((value, i) => {
+        globalThis.getFrames(spring, preserve).forEach((value, i) => {
           const frame = frames[i] || (frames[i] = {})
           frame[spring.key!] = value
         })
@@ -100,11 +109,11 @@ global.getFrames = (target, preserve) => {
   return frames
 }
 
-global.countBounces = spring => {
+globalThis.countBounces = spring => {
   const { to, from } = spring.animation
   let prev = from
   let count = 0
-  global.getFrames(spring, true).forEach(value => {
+  globalThis.getFrames(spring, true).forEach(value => {
     if (
       value !== to &&
       is.num(to) &&
@@ -118,7 +127,7 @@ global.countBounces = spring => {
   return count
 }
 
-global.advanceUntil = async test => {
+globalThis.advanceUntil = async test => {
   let steps = 0
   while (isRunning && !test()) {
     // Observe animations scheduled for next frame.
@@ -135,8 +144,8 @@ global.advanceUntil = async test => {
       willAdvance: observe,
     })
 
-    await act(() => jest.advanceTimersByTimeAsync(1000 / 60))
-    global.mockRaf.step()
+    await act(() => vi.advanceTimersByTimeAsync(1000 / 60))
+    globalThis.mockRaf.step()
 
     // Stop observing after the frame is processed.
     for (const value of values) {
@@ -153,28 +162,28 @@ global.advanceUntil = async test => {
   }
 }
 
-global.advance = (n = 1) => {
-  return global.advanceUntil(() => --n < 0)
+globalThis.advance = (n = 1) => {
+  return globalThis.advanceUntil(() => --n < 0)
 }
 
-global.advanceByTime = ms => {
+globalThis.advanceByTime = ms => {
   let fired = false
   setTimeout(() => (fired = true), ms)
-  return global.advanceUntil(() => fired)
+  return globalThis.advanceUntil(() => fired)
 }
 
-global.advanceUntilIdle = () => {
-  return global.advanceUntil(() => frameLoop.idle && raf.count() == 0)
+globalThis.advanceUntilIdle = () => {
+  return globalThis.advanceUntil(() => frameLoop.idle && raf.count() == 0)
 }
 
 // TODO: support "value" as an array or animatable string
-global.advanceUntilValue = (spring, value) => {
+globalThis.advanceUntilValue = (spring, value) => {
   const from = computeGoal(spring.get())
   const goal = computeGoal(value)
 
-  const offset = global.getFrames(spring, true).length
-  return global.advanceUntil(() => {
-    const frames = global.getFrames(spring, true)
+  const offset = globalThis.getFrames(spring, true).length
+  return globalThis.advanceUntil(() => {
+    const frames = globalThis.getFrames(spring, true)
     const value = frames.length - offset > 0 ? frames[frames.length - 1] : from
 
     const stop =
@@ -188,7 +197,7 @@ global.advanceUntilValue = (spring, value) => {
   })
 }
 
-global.setSkipAnimation = skip => {
+globalThis.setSkipAnimation = skip => {
   Globals.assign({
     skipAnimation: skip,
   })

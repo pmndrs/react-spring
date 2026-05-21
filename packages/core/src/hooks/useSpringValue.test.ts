@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook } from 'vitest-browser-react'
 
 import { useSpringValue } from './useSpringValue'
 
@@ -62,7 +62,7 @@ describe('useSpringValue', () => {
   })
 
   it('should pass the props to the SpringValue', async () => {
-    const onChange = jest.fn()
+    const onChange = vi.fn()
 
     const { result: spring1Result } = renderHook(() =>
       useSpringValue(0, {

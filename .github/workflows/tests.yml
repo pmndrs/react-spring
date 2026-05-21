@@ -29,9 +29,10 @@ jobs:
             packages:
               - 'packages/**'
               - 'targets/**'
-              - 'cypress/**'
+              - 'tests/**'
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
+              - 'vitest.config.ts'
               - '.github/publish-ci/**/package-lock.json'
               - '.github/workflows/*.yml'
               - 'package.json'
@@ -124,6 +125,15 @@ jobs:
       - name: Build
         run: pnpm build-ci
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Test
         run: pnpm test:unit
 
@@ -164,36 +174,42 @@ jobs:
           pnpm tsc --version
           pnpm test:ts
 
-  # test-e2e:
-  #   needs: [build]
-  #   if: ${{ needs.changes.outputs.packages == 'true' }}
-  #   name: 'Test:E2E'
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       node: ['20.x']
+  test-e2e:
+    needs: [build]
+    if: ${{ needs.changes.outputs.packages == 'true' }}
+    name: 'Test:E2E'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['20.x']
 
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-  #     - name: Setup pnpm
-  #       uses: pnpm/action-setup@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-  #     - name: Setup node ${{ matrix.node }}
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: ${{ matrix.node }}
-  #         cache: 'pnpm'
+      - name: Setup node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
 
-  #     - name: Install
-  #       run: pnpm install --frozen-lockfile
+      - name: Install
+        run: pnpm install --frozen-lockfile
 
-  #     - name: Build
-  #       run: pnpm build-ci
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
-  #     - name: Test
-  #       run: pnpm test:e2e
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test
+        run: pnpm test:e2e
 
   test-published-artifact:
     needs: [build]

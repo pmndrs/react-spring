@@ -135,7 +135,7 @@ describe('Controller', () => {
     describe('the "animate" function', () => {
       it('inherits any default props', async () => {
         const ctrl = new Controller({ from: { x: 0 } })
-        const onStart = jest.fn()
+        const onStart = vi.fn()
         ctrl.start({
           onStart,
           to: async animate => {
@@ -153,9 +153,9 @@ describe('Controller', () => {
         const ctrl = new Controller({ from: { x: 0 } })
 
         // Call this from inside the nested "to" prop.
-        const nestedFn = jest.fn()
+        const nestedFn = vi.fn()
         // Call this after the nested "to" prop is done.
-        const afterFn = jest.fn()
+        const afterFn = vi.fn()
 
         ctrl.start({
           to: async animate => {
@@ -182,7 +182,7 @@ describe('Controller', () => {
         const ctrl = new Controller({ from: { x: 0 } })
         const { x } = ctrl.springs
 
-        const afterFn = jest.fn()
+        const afterFn = vi.fn()
         ctrl.start({
           to: async animate => {
             await animate({
@@ -208,7 +208,7 @@ describe('Controller', () => {
         const ctrl = new Controller<{ t: number }>({ t: 0 })
         const { t } = ctrl.springs
 
-        const onRest = jest.fn()
+        const onRest = vi.fn()
         ctrl.start({
           to: next => next({ t: 1 }),
           onRest,
@@ -308,7 +308,7 @@ describe('Controller', () => {
     it('is called once per "start" call maximum', async () => {
       const ctrl = new Controller({ x: 0, y: 0 })
 
-      const onStart = jest.fn()
+      const onStart = vi.fn()
       ctrl.start({
         x: 1,
         y: 1,
@@ -322,10 +322,10 @@ describe('Controller', () => {
     it('can be different per key', async () => {
       const ctrl = new Controller({ x: 0, y: 0 })
 
-      const onStart1 = jest.fn()
+      const onStart1 = vi.fn()
       ctrl.start({ x: 1, onStart: onStart1 })
 
-      const onStart2 = jest.fn()
+      const onStart2 = vi.fn()
       ctrl.start({ y: 1, onStart: onStart2 })
 
       await global.advanceUntilIdle()
@@ -458,7 +458,7 @@ describe('Controller', () => {
       it('does not loop', async () => {
         const ctrl = new Controller({ t: 0 })
 
-        const loop = jest.fn(() => true)
+        const loop = vi.fn(() => true)
         ctrl.start({ t: 0, loop })
 
         await global.advanceUntilIdle()
@@ -559,9 +559,9 @@ describe('Controller', () => {
     test('events recieve an AnimationResult and the Controller as the first two args', async () => {
       const ctrl = new Controller<{ t: number }>({ t: 0 })
 
-      const onRest = jest.fn()
-      const onStart = jest.fn()
-      const onChange = jest.fn()
+      const onRest = vi.fn()
+      const onStart = vi.fn()
+      const onChange = vi.fn()
 
       ctrl.start({
         to: next => next({ t: 1 }),
@@ -599,9 +599,9 @@ describe('Controller', () => {
       const item = { msg: 'hello world', key: 1 }
       ctrl.item = item
 
-      const onRest = jest.fn()
-      const onStart = jest.fn()
-      const onChange = jest.fn()
+      const onRest = vi.fn()
+      const onStart = vi.fn()
+      const onChange = vi.fn()
 
       ctrl.start({
         to: next => next({ t: 1 }),
@@ -634,8 +634,8 @@ describe('Controller', () => {
     })
 
     test('onStart & onRest are flushed even if the `immediate` prop is true', async () => {
-      const onRest = jest.fn()
-      const onStart = jest.fn()
+      const onRest = vi.fn()
+      const onStart = vi.fn()
 
       const ctrl = new Controller<{ t: number }>({
         t: 0,

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { forwardRef } from 'react'
-import { render } from '@testing-library/react'
+import { render } from 'vitest-browser-react'
 import createMockRaf, { MockRaf } from '@react-spring/mock-raf'
 import { Globals } from '@react-spring/shared'
 import { SpringValue, Animatable } from '@react-spring/core'
@@ -19,12 +19,12 @@ beforeEach(() => {
 describe('animated component', () => {
   it('creates an HTML element from a tag name', () => {
     const AnimatedH1 = a('h1')
-    const { queryByTitle } = render(
+    const { getByTitle } = render(
       <AnimatedH1 title="Foo" style={{ color: 'red' }}>
         Bar
       </AnimatedH1>
     )
-    expect(queryByTitle('Foo')).toBeTruthy()
+    expect(getByTitle('Foo').element()).toBeTruthy()
   })
   it('wraps a component', () => {
     const Name = forwardRef<
@@ -38,21 +38,21 @@ describe('animated component', () => {
     const AnimatedName = a(Name)
     const child = spring('Animated Text')
     const name = spring('name')
-    const { queryByTitle } = render(
+    const { getByTitle } = render(
       <AnimatedName name={name} other="test">
         {child}
       </AnimatedName>
     )
-    const el: any = queryByTitle('name')!
+    const el = getByTitle('name').element() as HTMLElement
     expect(el).toBeTruthy()
     expect(el.textContent).toBe('Animated Text')
   })
   it('accepts Animated values in style prop', () => {
     const opacity = spring(0)
-    const { queryByText } = render(
+    const { getByText } = render(
       <a.div style={{ opacity, color: 'red' }}>Text</a.div>
     )
-    const div: any = queryByText('Text')!
+    const div = getByText('Text').element() as HTMLElement
     expect(div).toBeTruthy()
     expect(div.style.opacity).toBe('0')
     opacity.set(1)
@@ -70,7 +70,7 @@ describe('animated component', () => {
     ))
     const AnimatedName = a(Name)
     const opacity = spring(0.5)
-    const { queryByText } = render(
+    const { getByText } = render(
       <AnimatedName
         style={{
           opacity: opacity,
@@ -80,7 +80,7 @@ describe('animated component', () => {
         Text
       </AnimatedName>
     )
-    const div: any = queryByText('Text')!
+    const div = getByText('Text').element() as HTMLElement
     expect(div).toBeTruthy()
     expect(div.style.opacity).toBe('0.5')
     opacity.set(1)
@@ -89,17 +89,17 @@ describe('animated component', () => {
   })
   it('accepts scrollTop and scrollLeft properties', () => {
     const scrollTop = spring(0)
-    const { queryByTestId } = render(
+    const { getByTestId } = render(
       <a.div
         scrollTop={scrollTop}
         scrollLeft={0}
-        style={{ height: 100 }}
+        style={{ height: 100, overflow: 'auto' }}
         data-testid="wrapper"
       >
         <div style={{ height: 200 }} />
       </a.div>
     )
-    const wrapper: any = queryByTestId('wrapper')!
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
     expect(wrapper.scrollTop).toBe(0)
     expect(wrapper.scrollLeft).toBe(0)
     scrollTop.set(20)
@@ -111,58 +111,58 @@ describe('animated component', () => {
     const { getByTestId } = render(
       <a.div className={className} data-testid="wrapper" />
     )
-    expect(getByTestId('wrapper').className).toBe('test')
+    expect(getByTestId('wrapper').element().className).toBe('test')
     className.set('new')
     mockRaf.step()
-    expect(getByTestId('wrapper').className).toBe('new')
+    expect(getByTestId('wrapper').element().className).toBe('new')
   })
   it('accepts x/y/z as style keys equivalent to `translate3d`transform function', () => {
-    const { queryByTestId, rerender } = render(
+    const { getByTestId, rerender } = render(
       <a.div style={{ x: 10 }} data-testid="wrapper" />
     )
-    const wrapper: any = queryByTestId('wrapper')!
-    expect(wrapper.style.transform).toBe('translate3d(10px,0,0)')
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
+    expect(wrapper.style.transform).toBe('translate3d(10px, 0px, 0px)')
     rerender(<a.div style={{ y: '10%' }} data-testid="wrapper" />)
-    expect(wrapper.style.transform).toBe('translate3d(0,10%,0)')
+    expect(wrapper.style.transform).toBe('translate3d(0px, 10%, 0px)')
     rerender(<a.div style={{ z: 0.3 }} data-testid="wrapper" />)
-    expect(wrapper.style.transform).toBe('translate3d(0,0,0.3px)')
+    expect(wrapper.style.transform).toBe('translate3d(0px, 0px, 0.3px)')
     rerender(
       <a.div style={{ x: 10, y: '10%', z: 0.3 }} data-testid="wrapper" />
     )
-    expect(wrapper.style.transform).toBe('translate3d(10px,10%,0.3px)')
+    expect(wrapper.style.transform).toBe('translate3d(10px, 10%, 0.3px)')
   })
   it('accepts arrays for transform functions used as style keys', () => {
-    const { queryByTestId } = render(
+    const { getByTestId } = render(
       <a.div style={{ scale: [1, 2] }} data-testid="wrapper" />
     )
-    const wrapper: any = queryByTestId('wrapper')!
-    expect(wrapper.style.transform).toBe('scale(1,2)')
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
+    expect(wrapper.style.transform).toBe('scale(1, 2)')
   })
   it('accepts Animated values or Animated arrays as attributes', () => {
     const scale = spring(2)
     const translate = spring([10, 20] as const)
     const translate3d = [spring(30), spring(40), '50px'] as const
-    const { queryByTestId } = render(
+    const { getByTestId } = render(
       <a.div style={{ scale, translate, translate3d }} data-testid="wrapper" />
     )
-    const wrapper: any = queryByTestId('wrapper')!
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
     expect(wrapper.style.transform).toBe(
-      'scale(2) translate(10px,20px) translate3d(30px,40px,50px)'
+      'scale(2) translate(10px, 20px) translate3d(30px, 40px, 50px)'
     )
   })
   it('updates all values of Animated arrays', () => {
     const translate3d = spring([10, 20, 30] as const)
-    const { queryByTestId } = render(
+    const { getByTestId } = render(
       <a.div style={{ translate3d }} data-testid="wrapper" />
     )
-    const wrapper: any = queryByTestId('wrapper')!
-    expect(wrapper.style.transform).toBe('translate3d(10px,20px,30px)')
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
+    expect(wrapper.style.transform).toBe('translate3d(10px, 20px, 30px)')
     translate3d.set([11, 21, 31] as const)
     mockRaf.step()
-    expect(wrapper.style.transform).toBe('translate3d(11px,21px,31px)')
+    expect(wrapper.style.transform).toBe('translate3d(11px, 21px, 31px)')
   })
   it('sets default units to unit-less values passed as transform functions', () => {
-    const { queryByTestId } = render(
+    const { getByTestId } = render(
       <a.div
         style={{
           x: 10,
@@ -174,21 +174,21 @@ describe('animated component', () => {
         data-testid="wrapper"
       />
     )
-    const wrapper: any = queryByTestId('wrapper')!
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
     expect(wrapper.style.transform).toBe(
-      'translate3d(10px,0,0) scale(1,2) rotate(30deg) skewX(10deg) translateX(10px)'
+      'translate3d(10px, 0px, 0px) scale(1, 2) rotate(30deg) skewX(10deg) translateX(10px)'
     )
   })
   it('only applies default units to the fourth value of `rotate3d`', () => {
-    const { queryByTestId } = render(
+    const { getByTestId } = render(
       <a.div style={{ rotate3d: [1, 0, 0, 30] }} data-testid="wrapper" />
     )
-    const wrapper: any = queryByTestId('wrapper')!
-    expect(wrapper.style.transform).toBe('rotate3d(1,0,0,30deg)')
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
+    expect(wrapper.style.transform).toBe('rotate3d(1, 0, 0, 30deg)')
   })
   it('applies `transform:none` when identity transform is detected', () => {
     const z = spring(0)
-    const { queryByTestId } = render(
+    const { getByTestId } = render(
       <a.div
         style={{
           x: 0,
@@ -202,11 +202,11 @@ describe('animated component', () => {
         data-testid="wrapper"
       />
     )
-    const wrapper: any = queryByTestId('wrapper')!
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
     expect(wrapper.style.transform).toBe('none')
   })
   it('preserves transform-style and transform-origin properties', () => {
-    const { queryByTestId } = render(
+    const { getByTestId } = render(
       <a.div
         style={{
           transformOrigin: 'bottom center',
@@ -217,10 +217,10 @@ describe('animated component', () => {
         data-testid="wrapper"
       />
     )
-    const wrapper: any = queryByTestId('wrapper')!
-    expect(wrapper.style.transformOrigin).toBe('bottom center')
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
+    expect(wrapper.style.transformOrigin).toBe('center bottom')
     expect(wrapper.style.transformStyle).toBe('preserve-3d')
-    expect(wrapper.style.transform).toBe('translateX(40px) scale(1,2)')
+    expect(wrapper.style.transform).toBe('translateX(40px) scale(1, 2)')
   })
 })
 

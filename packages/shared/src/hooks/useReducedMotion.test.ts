@@ -1,11 +1,12 @@
-import { act, renderHook } from '@testing-library/react'
+import { act } from 'react'
+import { renderHook } from 'vitest-browser-react'
 
 import { useReducedMotion } from './useReducedMotion'
 
 describe('useReducedMotion', () => {
   let EVENTS: Record<string, MediaQueryHandler> = {}
 
-  const removeEventListenerMock = jest.fn()
+  const removeEventListenerMock = vi.fn()
 
   type MediaQueryHandler = (mediaQuery: typeof mqDefaults) => void
 
@@ -22,11 +23,11 @@ describe('useReducedMotion', () => {
     // reset events
     EVENTS = {}
 
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('returns true if "Reduce motion" is enabled', async () => {
-    window.matchMedia = jest.fn().mockImplementation(query => {
+    window.matchMedia = vi.fn().mockImplementation(query => {
       return {
         ...mqDefaults,
         matches: true,
@@ -40,7 +41,7 @@ describe('useReducedMotion', () => {
   })
 
   it('returns false if "Reduce motion" is disabled', async () => {
-    window.matchMedia = jest.fn().mockImplementation(query => {
+    window.matchMedia = vi.fn().mockImplementation(query => {
       return {
         ...mqDefaults,
         media: query,
@@ -53,7 +54,7 @@ describe('useReducedMotion', () => {
   })
 
   it('handles change of "prefers-reduce-motion" media query value', async () => {
-    window.matchMedia = jest.fn().mockImplementation(query => {
+    window.matchMedia = vi.fn().mockImplementation(query => {
       return {
         ...mqDefaults,
         media: query,
@@ -75,7 +76,7 @@ describe('useReducedMotion', () => {
   })
 
   it('successfully removes listener on unmount', () => {
-    window.matchMedia = jest.fn().mockImplementation(query => {
+    window.matchMedia = vi.fn().mockImplementation(query => {
       return {
         ...mqDefaults,
         media: query,

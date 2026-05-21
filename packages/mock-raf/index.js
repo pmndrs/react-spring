@@ -29,5 +29,4 @@ function createMockRaf() {
   }
 }
 
-module.exports = createMockRaf
-Object.defineProperty(createMockRaf, 'default', { value: createMockRaf })
+export default createMockRaf

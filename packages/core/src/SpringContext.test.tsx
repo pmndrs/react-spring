@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { render, RenderResult } from '@testing-library/react'
+import { render } from 'vitest-browser-react'
 import { type ISpringContext, SpringContextProvider } from './SpringContext'
 import { SpringValue } from './SpringValue'
 import { useSpring } from './hooks'
@@ -20,7 +20,7 @@ describe('SpringContext', () => {
 
   it('only merges when changed', () => {
     const context: ISpringContext = {}
-    const onProps = jest.fn()
+    const onProps = vi.fn()
     const Test = () => {
       useSpring({ onProps, x: 0 })
       return null
@@ -115,7 +115,7 @@ describe('SpringContext', () => {
 })
 
 function createUpdater(Component: React.ComponentType<ISpringContext>) {
-  let result: RenderResult | undefined
+  let result: ReturnType<typeof render> | undefined
   afterEach(() => {
     result = undefined
   })
