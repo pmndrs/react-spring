@@ -76,7 +76,7 @@ Finally:
 pnpm release
 ```
 
-This will build the packages, publish them & push the tags to github to signify a new release. Please then update the `releases` on github & the changelog on `react-spring.io`
+This will build the packages, publish them & push the tags to github to signify a new release. Please then update the `releases` on github & the changelog on `react-spring.dev`
 
 ## Prerelease
 

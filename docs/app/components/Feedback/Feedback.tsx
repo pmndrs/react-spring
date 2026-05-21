@@ -197,7 +197,7 @@ const FeedbackButton = ({
                 href={
                   variant === 'upvote'
                     ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                        `I've found this #reactspring doc page helpful! https://react-spring.io/${location.pathname}`
+                        `I've found this #reactspring doc page helpful! https://react-spring.dev/${location.pathname}`
                       )}`
                     : 'https://github.com/pmndrs/react-spring/issues/new/choose'
                 }

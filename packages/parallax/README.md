@@ -33,13 +33,13 @@ const Example = () => {
 
 ## Parallax
 
-| Property    | Type          | Description                                                                                             |
-| ----------- | ------------- | ------------------------------------------------------------------------------------------------------- |
-| pages       | number        | Total space of the container. Each page takes up 100% of the viewport.                                  |
-| config?     | SpringConfig  | The spring behavior. Defaults to `config.slow` (see [configs](https://react-spring.io/common/configs)). |
-| enabled?    | boolean       | Whether or not the content can be scrolled. Defaults to `true`.                                         |
-| horizontal? | boolean       | Whether or not the container scrolls horizontally. Defaults to `false`.                                 |
-| innerStyle? | CSSProperties | CSS object to style the inner `Parallax` wrapper (not the scrollable container)                         |
+| Property    | Type          | Description                                                                                              |
+| ----------- | ------------- | -------------------------------------------------------------------------------------------------------- |
+| pages       | number        | Total space of the container. Each page takes up 100% of the viewport.                                   |
+| config?     | SpringConfig  | The spring behavior. Defaults to `config.slow` (see [configs](https://react-spring.dev/common/configs)). |
+| enabled?    | boolean       | Whether or not the content can be scrolled. Defaults to `true`.                                          |
+| horizontal? | boolean       | Whether or not the container scrolls horizontally. Defaults to `false`.                                  |
+| innerStyle? | CSSProperties | CSS object to style the inner `Parallax` wrapper (not the scrollable container)                          |
 
 ### `ref` Properties
 
