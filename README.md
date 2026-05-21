@@ -76,9 +76,9 @@ It's as simple as that to create scroll-in animations when value of `isVisible` 
 
 ### 📖 Documentation and Examples
 
-More documentation on the project can be found [here](https://www.react-spring.io).
+More documentation on the project can be found [here](https://www.react-spring.dev).
 
-Pages contain their own [examples](https://react-spring.io/hooks/use-spring#demos) which you can check out there, or [open in codesandbox](https://codesandbox.io/s/github/pmndrs/react-spring/tree/main/demo/src/sandboxes/card) for a more in-depth view!
+Pages contain their own [examples](https://react-spring.dev/hooks/use-spring#demos) which you can check out there, or [open in codesandbox](https://codesandbox.io/s/github/pmndrs/react-spring/tree/main/demo/src/sandboxes/card) for a more in-depth view!
 
 ---
 
