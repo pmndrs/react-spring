@@ -220,7 +220,15 @@ export function useSprings(
         // When an injected ref exists, the update is postponed
         // until the ref has its `start` method called.
         if (ctrl.ref) {
-          ctrl.queue.push(update)
+          // Push a shallow copy so `flushUpdate` mutations (e.g. wrapping event
+          // handlers for batching) do not leak back into `updates.current[i]`,
+          // which is reused across renders and StrictMode double-mounts.
+          ctrl.queue.push({
+            ...update,
+            default: is.obj(update.default)
+              ? { ...update.default }
+              : update.default,
+          })
         } else {
           ctrl.start(update)
         }

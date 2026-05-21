@@ -6,6 +6,7 @@ import { SpringContextProvider, type ISpringContext } from '../SpringContext'
 import { SpringValue } from '../SpringValue'
 import { SpringRef } from '../SpringRef'
 import { useSpring } from './useSpring'
+import { useSpringRef } from './useSpringRef'
 
 describe('useSpring', () => {
   let springs: Lookup<SpringValue>
@@ -106,6 +107,119 @@ describe('useSpring', () => {
     it('returns a ref', () => {
       update(() => ({ x: 0 }), [1])
       testIsRef(ref)
+    })
+  })
+
+  // Regression test for https://github.com/pmndrs/react-spring/issues/1991
+  describe('when an external SpringRef is attached via the `ref` prop', () => {
+    it('fires events declared on render when `ref.start()` is called with no args', async () => {
+      const externalRef = SpringRef()
+      const onStart = vi.fn()
+      const onRest = vi.fn()
+
+      function Component() {
+        useSpring({
+          ref: externalRef,
+          from: { x: 0 },
+          to: { x: 100 },
+          onStart,
+          onRest,
+        })
+        return null
+      }
+
+      render(<Component />)
+
+      // Animation should not start until `ref.start()` is called.
+      expect(onStart).not.toHaveBeenCalled()
+
+      externalRef.start()
+      await advanceUntilIdle()
+
+      expect(onStart).toHaveBeenCalledTimes(1)
+      expect(onRest).toHaveBeenCalledTimes(1)
+    })
+
+    it('fires events under StrictMode (double-mount)', async () => {
+      const onStart = vi.fn()
+      const onRest = vi.fn()
+      let capturedRef: SpringRef | undefined
+
+      function Component() {
+        const springRef = useSpringRef()
+        capturedRef = springRef
+
+        useSpring({
+          ref: springRef,
+          from: { x: 0 },
+          to: { x: 100 },
+          onStart,
+          onRest,
+        })
+
+        React.useEffect(() => {
+          springRef.start()
+        }, [springRef])
+
+        return null
+      }
+
+      render(
+        <React.StrictMode>
+          <Component />
+        </React.StrictMode>
+      )
+      await advanceUntilIdle()
+
+      expect(capturedRef).toBeDefined()
+      expect(onStart).toHaveBeenCalledTimes(1)
+      expect(onRest).toHaveBeenCalledTimes(1)
+    })
+
+    // Exact reproduction from the issue body.
+    it('fires events when `springRef.start()` is called from a useEffect (issue #1991 repro)', async () => {
+      const onStart = vi.fn()
+      const onRest = vi.fn()
+      let capturedRef: SpringRef | undefined
+
+      function Component() {
+        const springRef = useSpringRef()
+        capturedRef = springRef
+
+        useSpring({
+          ref: springRef,
+          config: { duration: 1000 },
+          from: {
+            position: 'relative',
+            opacity: 1,
+            right: 0,
+          },
+          to: {
+            position: 'relative',
+            opacity: 0,
+            right: -300,
+          },
+          onStart,
+          onRest,
+        })
+
+        React.useEffect(() => {
+          springRef.start()
+        }, [springRef])
+
+        return null
+      }
+
+      render(
+        <React.StrictMode>
+          <Component />
+        </React.StrictMode>
+      )
+      await advanceUntilIdle()
+
+      expect(capturedRef).toBeDefined()
+      expect(onStart).toHaveBeenCalledTimes(1)
+      expect(onRest).toHaveBeenCalledTimes(1)
     })
   })
 })
