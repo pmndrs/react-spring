@@ -4,9 +4,33 @@ let observer: ResizeObserver | undefined
 
 const resizeHandlers = new WeakMap<Element, Set<OnResizeCallback>>()
 
+const getBorderBoxSize = (entry: ResizeObserverEntry) => {
+  // `borderBoxSize` is an array in modern browsers and a plain object in
+  // older Firefox; both expose `inlineSize`/`blockSize`. Fall back to
+  // `contentRect` when the entry doesn't carry border-box data.
+  const boxSize = Array.isArray(entry.borderBoxSize)
+    ? entry.borderBoxSize[0]
+    : (entry.borderBoxSize as unknown as ResizeObserverSize | undefined)
+
+  if (!boxSize) return entry.contentRect
+
+  // `contentRect` always reports visual width/height regardless of writing
+  // mode; `inlineSize`/`blockSize` are logical, so flip them back for
+  // vertical/sideways writing modes to keep the public shape consistent.
+  const writingMode = getComputedStyle(entry.target).writingMode
+  const isVertical =
+    writingMode.startsWith('vertical-') || writingMode.startsWith('sideways-')
+
+  return isVertical
+    ? { width: boxSize.blockSize, height: boxSize.inlineSize }
+    : { width: boxSize.inlineSize, height: boxSize.blockSize }
+}
+
 const handleObservation = (entries: ResizeObserverEntry[]) =>
-  entries.forEach(({ target, contentRect }) => {
-    return resizeHandlers.get(target)?.forEach(handler => handler(contentRect))
+  entries.forEach(entry => {
+    return resizeHandlers
+      .get(entry.target)
+      ?.forEach(handler => handler(getBorderBoxSize(entry)))
   })
 
 export function resizeElement(handler: OnResizeCallback, target: HTMLElement) {
@@ -40,7 +64,7 @@ export function resizeElement(handler: OnResizeCallback, target: HTMLElement) {
   elementHandlers.add(handler)
 
   if (observer) {
-    observer.observe(target)
+    observer.observe(target, { box: 'border-box' })
   }
 
   /**
