@@ -7,8 +7,9 @@ import { SpringValue } from '../SpringValue'
 import { useSprings } from './useSprings'
 
 describe('useSprings', () => {
-  const isStrictMode = true
-  const strictModeFunctionCallMultiplier = isStrictMode ? 2 : 1
+  // StrictMode is enabled globally via configure() in test/setup.ts, so
+  // props functions are invoked twice per render.
+  const strictModeFunctionCallMultiplier = 2
   let springs: Lookup<SpringValue>[]
   let ref: SpringRef
 
@@ -23,7 +24,7 @@ describe('useSprings', () => {
       ref = undefined as any
     }
     return null
-  }, isStrictMode)
+  })
 
   describe('when only a props function is passed', () => {
     it('should reach final value in strict mode', async () => {
@@ -174,8 +175,7 @@ describe('useSprings', () => {
 })
 
 function createUpdater(
-  Component: React.ComponentType<{ args: [any, any, any?] }>,
-  isStrictMode: boolean
+  Component: React.ComponentType<{ args: [any, any, any?] }>
 ) {
   let result: ReturnType<typeof render> | undefined
   afterEach(() => {
@@ -184,12 +184,7 @@ function createUpdater(
 
   type Args = [number, any[] | ((i: number) => any), any[]?]
   return (...args: Args) => {
-    const component = <Component args={args} />
-    const elem = isStrictMode ? (
-      <React.StrictMode>{component}</React.StrictMode>
-    ) : (
-      component
-    )
+    const elem = <Component args={args} />
     if (result) result.rerender(elem)
     else result = render(elem)
     return result
