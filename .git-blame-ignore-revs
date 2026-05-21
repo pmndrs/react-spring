@@ -1,0 +1,6 @@
+# Bulk reformat commits — ignore in `git blame` to keep line history meaningful.
+# Configure once locally with:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# chore(format): consolidate prettier configs — reformat sandboxes + __tests__ to root style
+397c97ec
