@@ -54,7 +54,7 @@ jobs:
         if: steps.version.outputs.NEXT_VERSION
         uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.version.outputs.NEXT_VERSION
         with:
           node-version-file: '.nvmrc'
