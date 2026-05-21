@@ -78,6 +78,22 @@ describe('useSprings', () => {
       expect(springs.length).toBe(4)
       expect(ref.current.length).toBe(4)
     })
+
+    it('imperative start is not overridden by stale declarative updates on re-render', () => {
+      // Regression for #2376 / #2377: declarative initial values via props fn
+      // are stored in a ref during render and applied in the layout effect. If
+      // the ref is not cleared after applying, every subsequent re-render's
+      // layout effect re-applies them, clobbering imperative `ref.start(...)`
+      // targets and resetting the goal back to the initial value.
+      update(1, () => ({ x: 0 }))
+
+      ref.start({ x: 1 })
+      expect(mapSprings(s => s.goal)).toEqual([{ x: 1 }])
+
+      // Re-render — props fn unchanged, no new declarative updates expected.
+      update(1, () => ({ x: 0 }))
+      expect(mapSprings(s => s.goal)).toEqual([{ x: 1 }])
+    })
   })
 
   describe('when both a props function and a deps array are passed', () => {
