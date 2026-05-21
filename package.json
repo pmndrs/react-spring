@@ -102,6 +102,9 @@
     "url": "https://opencollective.com/react-spring"
   },
   "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22"
+  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",

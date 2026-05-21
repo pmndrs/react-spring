@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['20.x']
+        node: ['22.x', '24.x']
 
     steps:
       - name: Checkout repo
@@ -104,7 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['20.x']
+        node: ['22.x', '24.x']
 
     steps:
       - name: Checkout repo
@@ -144,7 +144,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['20.x']
+        node: ['22.x', '24.x']
         ts: ['5.0', '5.1', '5.2']
 
     steps:
@@ -181,7 +181,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['20.x']
+        node: ['22.x', '24.x']
 
     steps:
       - name: Checkout repo
@@ -218,7 +218,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['18.x']
+        node: ['22.x']
         example: ['cra5', 'next', 'vite', 'node-standard', 'node-esm']
     defaults:
       run:
@@ -268,7 +268,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ['18.x']
+        node: ['22.x']
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
