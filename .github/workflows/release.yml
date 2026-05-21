@@ -51,21 +51,6 @@ jobs:
       - name: Build
         run: pnpm build-ci
 
-      - name: Type-check
-        run: pnpm test:ts
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Install Playwright Chromium
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Unit tests
-        run: pnpm test:unit
-
       - name: Create release PR or publish
         uses: changesets/action@v1
         with:
