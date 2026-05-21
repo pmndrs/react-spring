@@ -47,10 +47,10 @@
     "provenance": true
   },
   "dependencies": {
-    "@react-spring/animated": "~10.0.3",
-    "@react-spring/core": "~10.0.3",
-    "@react-spring/shared": "~10.0.3",
-    "@react-spring/types": "~10.0.3",
+    "@react-spring/animated": "workspace:~",
+    "@react-spring/core": "workspace:~",
+    "@react-spring/shared": "workspace:~",
+    "@react-spring/types": "workspace:~",
     "csstype": "^3.1.0"
   },
   "peerDependencies": {

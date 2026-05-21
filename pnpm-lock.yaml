@@ -374,11 +374,11 @@ importers:
   packages/animated:
     dependencies:
       '@react-spring/shared':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../shared
       '@react-spring/types':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../types
       react:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.2.6
@@ -386,32 +386,32 @@ importers:
   packages/core:
     dependencies:
       '@react-spring/animated':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../animated
       '@react-spring/shared':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../shared
       '@react-spring/types':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../types
       react:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.2.6
     devDependencies:
       '@react-spring/rafz':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../rafz
 
   packages/mock-raf: {}
 
   packages/parallax:
     dependencies:
       '@react-spring/shared':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../shared
       '@react-spring/web':
-        specifier: ~10.0.3
-        version: 10.0.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../targets/web
       react:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.2.6
@@ -429,29 +429,29 @@ importers:
   packages/rafz:
     devDependencies:
       '@react-spring/shared':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../shared
 
   packages/react-spring:
     dependencies:
       '@react-spring/core':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../core
       '@react-spring/konva':
-        specifier: ~10.0.3
-        version: 10.0.3(konva@9.3.18)(react-konva@19.2.4(@types/react@19.2.15)(konva@9.3.18)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../targets/konva
       '@react-spring/native':
-        specifier: ~10.0.3
-        version: 10.0.3(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../targets/native
       '@react-spring/three':
-        specifier: ~10.0.3
-        version: 10.0.3(@react-three/fiber@9.1.4(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)(three@0.172.0))(react@19.2.6)(three@0.172.0)
+        specifier: workspace:~
+        version: link:../../targets/three
       '@react-spring/web':
-        specifier: ~10.0.3
-        version: 10.0.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../targets/web
       '@react-spring/zdog':
-        specifier: ~10.0.3
-        version: 10.0.3(react-dom@19.2.6(react@19.2.6))(react-zdog@1.2.2)(react@19.2.6)(zdog@1.1.3)
+        specifier: workspace:~
+        version: link:../../targets/zdog
       react:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.2.6
@@ -462,11 +462,11 @@ importers:
   packages/shared:
     dependencies:
       '@react-spring/rafz':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../rafz
       '@react-spring/types':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../types
       react:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.2.6
@@ -476,17 +476,17 @@ importers:
   targets/konva:
     dependencies:
       '@react-spring/animated':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/animated
       '@react-spring/core':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/core
       '@react-spring/shared':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/shared
       '@react-spring/types':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../../packages/types
       konva:
         specifier: '>=2.6'
         version: 9.3.18
@@ -500,17 +500,17 @@ importers:
   targets/native:
     dependencies:
       '@react-spring/animated':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/animated
       '@react-spring/core':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/core
       '@react-spring/shared':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/shared
       '@react-spring/types':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../../packages/types
       react:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.2.6
@@ -521,17 +521,17 @@ importers:
   targets/three:
     dependencies:
       '@react-spring/animated':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/animated
       '@react-spring/core':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/core
       '@react-spring/shared':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/shared
       '@react-spring/types':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../../packages/types
       '@react-three/fiber':
         specifier: '>=6.0'
         version: 9.1.4(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)(three@0.172.0)
@@ -545,17 +545,17 @@ importers:
   targets/web:
     dependencies:
       '@react-spring/animated':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/animated
       '@react-spring/core':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/core
       '@react-spring/shared':
-        specifier: ~10.0.3
-        version: 10.0.3(react@19.2.6)
+        specifier: workspace:~
+        version: link:../../packages/shared
       '@react-spring/types':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../../packages/types
       csstype:
         specifier: ^3.1.0
         version: 3.2.3
@@ -569,17 +569,17 @@ importers:
   targets/zdog:
     dependencies:
       '@react-spring/animated':
-        specifier: ~10.0.3
-        version: 10.0.3(react@18.3.1)
+        specifier: workspace:~
+        version: link:../../packages/animated
       '@react-spring/core':
-        specifier: ~10.0.3
-        version: 10.0.3(react@18.3.1)
+        specifier: workspace:~
+        version: link:../../packages/core
       '@react-spring/shared':
-        specifier: ~10.0.3
-        version: 10.0.3(react@18.3.1)
+        specifier: workspace:~
+        version: link:../../packages/shared
       '@react-spring/types':
-        specifier: ~10.0.3
-        version: 10.0.3
+        specifier: workspace:~
+        version: link:../../packages/types
       react:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
         version: 18.3.1
@@ -2426,63 +2426,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@react-spring/animated@10.0.3':
-    resolution: {integrity: sha512-7MrxADV3vaUADn2V9iYhaIL6iOWRx9nCJjYrsk2AHD2kwPr6fg7Pt0v+deX5RnCDmCKNnD6W5fasiyM8D+wzJQ==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@react-spring/core@10.0.3':
-    resolution: {integrity: sha512-D4DwNO68oohDf/0HG2G0Uragzb9IA1oXblxrd6MZAcBcUQG2EHUWXewjdECMPLNmQvlYVyyBRH6gPxXM5DX7DQ==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@react-spring/konva@10.0.3':
-    resolution: {integrity: sha512-nA1VoC94RnGY4jhhuOln+ZSXOjfBdvwnyBcVt4ojq2JRcqNTmYv+ftfo1V3qAJlDccucdjAWlJbkQEQ9bVVcQg==}
-    peerDependencies:
-      konva: '>=2.6'
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-konva: ^19
-
   '@react-spring/mock-raf@1.1.1':
     resolution: {integrity: sha512-SPgq9cenqdkqzxg1zYKEOkao5Boob2sG8QTxiSoHT7NyZoTZKnDcalvRtW9AmZBcbUHy8UtqCKfBWKyB2PSlmQ==}
-
-  '@react-spring/native@10.0.3':
-    resolution: {integrity: sha512-ypfKsfqn+Ll3LeZCp+noFBJdJOVomIfnGjpQzpXibrfqWlPgl0Ckj9sy+U3fLGPyrbbCSw9KLvsgSwZwDCScKA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-native: '>=0.78'
-
-  '@react-spring/rafz@10.0.3':
-    resolution: {integrity: sha512-Ri2/xqt8OnQ2iFKkxKMSF4Nqv0LSWnxXT4jXFzBDsHgeeH/cHxTLupAWUwmV9hAGgmEhBmh5aONtj3J6R/18wg==}
-
-  '@react-spring/shared@10.0.3':
-    resolution: {integrity: sha512-geCal66nrkaQzUVhPkGomylo+Jpd5VPK8tPMEDevQEfNSWAQP15swHm+MCRG4wVQrQlTi9lOzKzpRoTL3CA84Q==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@react-spring/three@10.0.3':
-    resolution: {integrity: sha512-hZP7ChF/EwnWn+H2xuzAsRRfQdhquoBTI1HKgO6X9V8tcVCuR69qJmsA9N00CA4Nzx0bo/zwBtqONmi55Ffm5w==}
-    peerDependencies:
-      '@react-three/fiber': '>=6.0'
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      three: '>=0.126'
-
-  '@react-spring/types@10.0.3':
-    resolution: {integrity: sha512-H5Ixkd2OuSIgHtxuHLTt7aJYfhMXKXT/rK32HPD/kSrOB6q6ooeiWAXkBy7L8F3ZxdkBb9ini9zP9UwnEFzWgQ==}
-
-  '@react-spring/web@10.0.3':
-    resolution: {integrity: sha512-ndU+kWY81rHsT7gTFtCJ6mrVhaJ6grFmgTnENipzmKqot4HGf5smPNK+cZZJqoGeDsj9ZsiWPW4geT/NyD484A==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@react-spring/zdog@10.0.3':
-    resolution: {integrity: sha512-YCJPhPGdLLiUnM++u/1qd/7b5p70zZWdPhDOBC8TAr/zlQABZR4ivYlv5JAiS/oPLSFAwlTGFkTxD4M1sDVd0g==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-zdog: '>=1.0'
-      zdog: '>=1.0'
 
   '@react-three/drei@10.0.8':
     resolution: {integrity: sha512-ZE9LgtzMWutpfwrUYFM//kdInzkzWT/3keHdqNQ2s/+IBEuNHPII4QJTS6e8Ko2uYdL/mPeCRFcmEKFUNFrhBQ==}
@@ -9263,98 +9208,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.15
 
-  '@react-spring/animated@10.0.3(react@18.3.1)':
-    dependencies:
-      '@react-spring/shared': 10.0.3(react@18.3.1)
-      '@react-spring/types': 10.0.3
-      react: 18.3.1
-
-  '@react-spring/animated@10.0.3(react@19.2.6)':
-    dependencies:
-      '@react-spring/shared': 10.0.3(react@19.2.6)
-      '@react-spring/types': 10.0.3
-      react: 19.2.6
-
-  '@react-spring/core@10.0.3(react@18.3.1)':
-    dependencies:
-      '@react-spring/animated': 10.0.3(react@18.3.1)
-      '@react-spring/shared': 10.0.3(react@18.3.1)
-      '@react-spring/types': 10.0.3
-      react: 18.3.1
-
-  '@react-spring/core@10.0.3(react@19.2.6)':
-    dependencies:
-      '@react-spring/animated': 10.0.3(react@19.2.6)
-      '@react-spring/shared': 10.0.3(react@19.2.6)
-      '@react-spring/types': 10.0.3
-      react: 19.2.6
-
-  '@react-spring/konva@10.0.3(konva@9.3.18)(react-konva@19.2.4(@types/react@19.2.15)(konva@9.3.18)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)':
-    dependencies:
-      '@react-spring/animated': 10.0.3(react@19.2.6)
-      '@react-spring/core': 10.0.3(react@19.2.6)
-      '@react-spring/shared': 10.0.3(react@19.2.6)
-      '@react-spring/types': 10.0.3
-      konva: 9.3.18
-      react: 19.2.6
-      react-konva: 19.2.4(@types/react@19.2.15)(konva@9.3.18)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-
   '@react-spring/mock-raf@1.1.1': {}
-
-  '@react-spring/native@10.0.3(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)':
-    dependencies:
-      '@react-spring/animated': 10.0.3(react@19.2.6)
-      '@react-spring/core': 10.0.3(react@19.2.6)
-      '@react-spring/shared': 10.0.3(react@19.2.6)
-      '@react-spring/types': 10.0.3
-      react: 19.2.6
-      react-native: 0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6)
-
-  '@react-spring/rafz@10.0.3': {}
-
-  '@react-spring/shared@10.0.3(react@18.3.1)':
-    dependencies:
-      '@react-spring/rafz': 10.0.3
-      '@react-spring/types': 10.0.3
-      react: 18.3.1
-
-  '@react-spring/shared@10.0.3(react@19.2.6)':
-    dependencies:
-      '@react-spring/rafz': 10.0.3
-      '@react-spring/types': 10.0.3
-      react: 19.2.6
-
-  '@react-spring/three@10.0.3(@react-three/fiber@9.1.4(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)(three@0.172.0))(react@19.2.6)(three@0.172.0)':
-    dependencies:
-      '@react-spring/animated': 10.0.3(react@19.2.6)
-      '@react-spring/core': 10.0.3(react@19.2.6)
-      '@react-spring/shared': 10.0.3(react@19.2.6)
-      '@react-spring/types': 10.0.3
-      '@react-three/fiber': 9.1.4(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)(three@0.172.0)
-      react: 19.2.6
-      three: 0.172.0
-
-  '@react-spring/types@10.0.3': {}
-
-  '@react-spring/web@10.0.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
-    dependencies:
-      '@react-spring/animated': 10.0.3(react@19.2.6)
-      '@react-spring/core': 10.0.3(react@19.2.6)
-      '@react-spring/shared': 10.0.3(react@19.2.6)
-      '@react-spring/types': 10.0.3
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-
-  '@react-spring/zdog@10.0.3(react-dom@19.2.6(react@19.2.6))(react-zdog@1.2.2)(react@19.2.6)(zdog@1.1.3)':
-    dependencies:
-      '@react-spring/animated': 10.0.3(react@19.2.6)
-      '@react-spring/core': 10.0.3(react@19.2.6)
-      '@react-spring/shared': 10.0.3(react@19.2.6)
-      '@react-spring/types': 10.0.3
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-      react-zdog: 1.2.2
-      zdog: 1.1.3
 
   '@react-three/drei@10.0.8(@react-three/fiber@9.1.4(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)(three@0.172.0))(@types/react@19.2.15)(@types/three@0.172.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(three@0.172.0)':
     dependencies:

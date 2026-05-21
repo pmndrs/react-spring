@@ -51,6 +51,6 @@
     "pack": "pnpm pack && mv *.tgz package.tgz"
   },
   "devDependencies": {
-    "@react-spring/shared": "~10.0.3"
+    "@react-spring/shared": "workspace:~"
   }
 }
