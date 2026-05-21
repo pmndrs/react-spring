@@ -27,7 +27,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -35,13 +35,13 @@ jobs:
         uses: pnpm/action-setup@v4
 
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
-      # npm Trusted Publishing requires npm >= 11.5.1; Node 20 ships npm 10.x
+      # npm Trusted Publishing requires npm >= 11.5.1; Node 22 LTS still ships npm 10.x
       - name: Upgrade npm
         run: npm install -g npm@latest
 
