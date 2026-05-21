@@ -19,7 +19,11 @@ export default function App() {
       { transform: 'perspective(600px) rotateX(180deg)', color: '#28d79f' },
       { transform: 'perspective(600px) rotateX(0deg)' },
     ],
-    leave: [{ color: '#c23369' }, { innerHeight: 0 }, { opacity: 0, height: 0 }],
+    leave: [
+      { color: '#c23369' },
+      { innerHeight: 0 },
+      { opacity: 0, height: 0 },
+    ],
     update: { color: '#28b4d7' },
   })
 
@@ -27,9 +31,13 @@ export default function App() {
     ref.current.forEach(clearTimeout)
     ref.current = []
     set([])
-    ref.current.push(setTimeout(() => set(['Apples', 'Oranges', 'Kiwis']), 2000))
+    ref.current.push(
+      setTimeout(() => set(['Apples', 'Oranges', 'Kiwis']), 2000)
+    )
     ref.current.push(setTimeout(() => set(['Apples', 'Kiwis']), 5000))
-    ref.current.push(setTimeout(() => set(['Apples', 'Bananas', 'Kiwis']), 8000))
+    ref.current.push(
+      setTimeout(() => set(['Apples', 'Bananas', 'Kiwis']), 8000)
+    )
   }, [])
 
   useEffect(() => {
@@ -41,8 +49,14 @@ export default function App() {
     <div className={styles.container}>
       <div className={styles.main}>
         {transitions(({ innerHeight, ...rest }, item) => (
-          <animated.div className={styles.transitionsItem} style={rest} onClick={reset}>
-            <animated.div style={{ overflow: 'hidden', height: innerHeight }}>{item}</animated.div>
+          <animated.div
+            className={styles.transitionsItem}
+            style={rest}
+            onClick={reset}
+          >
+            <animated.div style={{ overflow: 'hidden', height: innerHeight }}>
+              {item}
+            </animated.div>
           </animated.div>
         ))}
       </div>

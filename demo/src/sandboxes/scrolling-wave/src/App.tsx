@@ -43,7 +43,14 @@ export default function App() {
                 width: scrollYProgress.to(scrollP => {
                   const percentilePosition = (i + 1) / X_LINES
 
-                  return INITIAL_WIDTH / 4 + 40 * Math.cos(((percentilePosition - scrollP) * Math.PI) / 1.5) ** 32
+                  return (
+                    INITIAL_WIDTH / 4 +
+                    40 *
+                      Math.cos(
+                        ((percentilePosition - scrollP) * Math.PI) / 1.5
+                      ) **
+                        32
+                  )
                 }),
               }}
             />
@@ -58,7 +65,14 @@ export default function App() {
                 width: scrollYProgress.to(scrollP => {
                   const percentilePosition = 1 - (i + 1) / X_LINES
 
-                  return INITIAL_WIDTH / 4 + 40 * Math.cos(((percentilePosition - scrollP) * Math.PI) / 1.5) ** 32
+                  return (
+                    INITIAL_WIDTH / 4 +
+                    40 *
+                      Math.cos(
+                        ((percentilePosition - scrollP) * Math.PI) / 1.5
+                      ) **
+                        32
+                  )
                 }),
               }}
             />

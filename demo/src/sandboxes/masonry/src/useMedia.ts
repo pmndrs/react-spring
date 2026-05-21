@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 
-export default function useMedia(queries: string[], values: number[], defaultValue: number) {
+export default function useMedia(
+  queries: string[],
+  values: number[],
+  defaultValue: number
+) {
   const match = useCallback(
     () => values[queries.findIndex(q => matchMedia(q).matches)] || defaultValue,
     [defaultValue, queries, values]

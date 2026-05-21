@@ -28,11 +28,15 @@ const Tree = React.memo<
     },
   })
   // @ts-ignore
-  const Icon = Icons[`${children ? (isOpen ? 'Minus' : 'Plus') : 'Close'}SquareO`]
+  const Icon =
+    Icons[`${children ? (isOpen ? 'Minus' : 'Plus') : 'Close'}SquareO`]
   return (
     <Frame>
       {/* @ts-ignore */}
-      <Icon style={{ ...toggle, opacity: children ? 1 : 0.3 }} onClick={() => setOpen(!isOpen)} />
+      <Icon
+        style={{ ...toggle, opacity: children ? 1 : 0.3 }}
+        onClick={() => setOpen(!isOpen)}
+      />
       <Title style={style}>{name}</Title>
       <Content
         style={{

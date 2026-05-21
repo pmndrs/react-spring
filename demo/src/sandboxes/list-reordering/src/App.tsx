@@ -27,9 +27,15 @@ function List() {
   return (
     <div className={styles.list} style={{ height }}>
       {transitions((style, item, t, index) => (
-        <animated.div className={styles.card} style={{ zIndex: data.length - index, ...style }}>
+        <animated.div
+          className={styles.card}
+          style={{ zIndex: data.length - index, ...style }}
+        >
           <div className={styles.cell}>
-            <div className={styles.details} style={{ backgroundImage: item.css }} />
+            <div
+              className={styles.details}
+              style={{ backgroundImage: item.css }}
+            />
           </div>
         </animated.div>
       ))}

@@ -20,10 +20,20 @@ export default function App() {
 
   return (
     <div className={styles.container} onClick={() => toggle(!open)}>
-      <animated.svg className={styles.svg} style={{ scale, opacity }} viewBox="0 0 1278 446">
+      <animated.svg
+        className={styles.svg}
+        style={{ scale, opacity }}
+        viewBox="0 0 1278 446"
+      >
         <defs>
           <filter id="water">
-            <AnimFeTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="2" result="TURB" seed="8" />
+            <AnimFeTurbulence
+              type="fractalNoise"
+              baseFrequency={freq}
+              numOctaves="2"
+              result="TURB"
+              seed="8"
+            />
             <AnimFeDisplacementMap
               xChannelSelector="R"
               yChannelSelector="G"

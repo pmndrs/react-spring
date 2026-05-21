@@ -1,5 +1,9 @@
 import * as React from 'react'
-import { animated, useIsomorphicLayoutEffect, useSpringValue } from '@react-spring/web'
+import {
+  animated,
+  useIsomorphicLayoutEffect,
+  useSpringValue,
+} from '@react-spring/web'
 
 import { useMousePosition } from '../hooks/useMousePosition'
 import { useWindowResize } from '../hooks/useWindowResize'
@@ -50,7 +54,10 @@ export const DockCard = ({ children }: DockCardProps) => {
 
         if (dock.width > 0) {
           const transformedValue =
-            INITIAL_WIDTH + 36 * Math.cos((((mouseX - elCenterX) / dock.width) * Math.PI) / 2) ** 12
+            INITIAL_WIDTH +
+            36 *
+              Math.cos((((mouseX - elCenterX) / dock.width) * Math.PI) / 2) **
+                12
 
           if (dock.hovered) {
             size.start(transformedValue)

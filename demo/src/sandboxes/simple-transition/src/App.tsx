@@ -1,12 +1,27 @@
 import * as React from 'react'
-import { useTransition, animated, AnimatedProps, useSpringRef } from '@react-spring/web'
+import {
+  useTransition,
+  animated,
+  AnimatedProps,
+  useSpringRef,
+} from '@react-spring/web'
 
 import styles from './styles.module.css'
 
-const pages: ((props: AnimatedProps<{ style: React.CSSProperties }>) => React.ReactElement)[] = [
-  ({ style }) => <animated.div style={{ ...style, background: 'lightpink' }}>A</animated.div>,
-  ({ style }) => <animated.div style={{ ...style, background: 'lightblue' }}>B</animated.div>,
-  ({ style }) => <animated.div style={{ ...style, background: 'lightgreen' }}>C</animated.div>,
+const pages: ((
+  props: AnimatedProps<{ style: React.CSSProperties }>
+) => React.ReactElement)[] = [
+  ({ style }) => (
+    <animated.div style={{ ...style, background: 'lightpink' }}>A</animated.div>
+  ),
+  ({ style }) => (
+    <animated.div style={{ ...style, background: 'lightblue' }}>B</animated.div>
+  ),
+  ({ style }) => (
+    <animated.div style={{ ...style, background: 'lightgreen' }}>
+      C
+    </animated.div>
+  ),
 ]
 
 export default function App() {
