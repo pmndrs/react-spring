@@ -9,8 +9,8 @@
   ],
   "rangeStrategy": "bump",
   "rebaseWhen": "conflicted",
-  "separateMajorMinor": true,
-  "separateMultipleMajor": true,
+  "separateMajorMinor": false,
+  "separateMultipleMajor": false,
   "packageRules": [
     {
       "groupName": "react",
@@ -129,7 +129,6 @@
     },
     {
       "matchUpdateTypes": ["major"],
-      "groupName": null,
       "addLabels": ["major-update"]
     }
   ]
