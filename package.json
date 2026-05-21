@@ -63,7 +63,7 @@
     "@react-spring/mock-raf": "1.1.1",
     "@react-three/fiber": "~9.1.2",
     "@remix-run/dev": "2.15.2",
-    "@simonsmith/cypress-image-snapshot": "9.1.0",
+    "@simonsmith/cypress-image-snapshot": "10.0.4",
     "@swc/core": "1.10.4",
     "@swc/jest": "0.2.37",
     "@testing-library/cypress": "10.0.2",

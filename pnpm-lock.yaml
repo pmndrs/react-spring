@@ -27,8 +27,8 @@ importers:
         specifier: 2.15.2
         version: 2.15.2(@remix-run/react@2.15.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.2))(@remix-run/serve@2.15.2(typescript@5.7.2))(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(sass@1.83.1)(terser@5.47.1)(typescript@5.7.2)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.83.1)(terser@5.47.1)(yaml@2.9.0))
       '@simonsmith/cypress-image-snapshot':
-        specifier: 9.1.0
-        version: 9.1.0(cypress@14.3.3)(jest@29.7.0(@types/node@25.9.1)(babel-plugin-macros@3.1.0))
+        specifier: 10.0.4
+        version: 10.0.4(cypress@14.3.3)(jest@29.7.0(@types/node@25.9.1)(babel-plugin-macros@3.1.0))
       '@swc/core':
         specifier: 1.10.4
         version: 1.10.4
@@ -2747,10 +2747,10 @@ packages:
   '@sideway/pinpoint@2.0.0':
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
 
-  '@simonsmith/cypress-image-snapshot@9.1.0':
-    resolution: {integrity: sha512-Lme+POO6mQi9eXEe3OB/6mBhdb73qbDgE/VkSCNZWVQlCt6wOOZCjVKCvfO8mPPmKjnEiePzSTSjTvpwDSogBg==}
+  '@simonsmith/cypress-image-snapshot@10.0.4':
+    resolution: {integrity: sha512-DIxnlRLnicyCVf6QXvdj72FTvKWX1u3dmAPRPBWmTq5or/BDLcOJYwxEkt0CsXTAIOyCi1SdQHFlzWbWok5e4g==}
     peerDependencies:
-      cypress: '>10.0.0'
+      cypress: '>13.0.0'
 
   '@sinclair/typebox@0.27.10':
     resolution: {integrity: sha512-MTBk/3jGLNB2tVxv6uLlFh1iu64iYOQ2PbdOSK3NW8JZsmlaOh2q6sdtKowBhfw8QFLmYNzTW4/oK4uATIi6ZA==}
@@ -2970,9 +2970,6 @@ packages:
 
   '@types/istanbul-reports@3.0.4':
     resolution: {integrity: sha512-pk2B1NWalF9toCRu6gjBzR69syFjP4Od8WRAX+0mmf9lAjCRicLOWc+ZrxZHx/0XRjotgkF9t6iaMJ+aXcOdZQ==}
-
-  '@types/jest-image-snapshot@6.4.1':
-    resolution: {integrity: sha512-pj3Sdc7Cx5mMLUttPprazSDQCur2cr512Dm38e9aAHI55LDxEhqdyqzK9myC4EmEy7sPAF2nGJ8zifX4qso7sQ==}
 
   '@types/jest@29.5.14':
     resolution: {integrity: sha512-ZN+4sdnLUbo8EVvVc2ao0GFW6oVrQRPn4K2lglySj7APvSrgzxHiNNK99us4WDMi57xxA2yggblIAMNhXOotLQ==}
@@ -10920,12 +10917,13 @@ snapshots:
 
   '@sideway/pinpoint@2.0.0': {}
 
-  '@simonsmith/cypress-image-snapshot@9.1.0(cypress@14.3.3)(jest@29.7.0(@types/node@25.9.1)(babel-plugin-macros@3.1.0))':
+  '@simonsmith/cypress-image-snapshot@10.0.4(cypress@14.3.3)(jest@29.7.0(@types/node@25.9.1)(babel-plugin-macros@3.1.0))':
     dependencies:
-      '@types/jest-image-snapshot': 6.4.1
+      '@types/pixelmatch': 5.2.6
       chalk: 4.1.2
       cypress: 14.3.3
       jest-image-snapshot: 6.5.2(jest@29.7.0(@types/node@25.9.1)(babel-plugin-macros@3.1.0))
+      ssim.js: 3.5.0
     transitivePeerDependencies:
       - jest
 
@@ -11167,12 +11165,6 @@ snapshots:
   '@types/istanbul-reports@3.0.4':
     dependencies:
       '@types/istanbul-lib-report': 3.0.3
-
-  '@types/jest-image-snapshot@6.4.1':
-    dependencies:
-      '@types/jest': 29.5.14
-      '@types/pixelmatch': 5.2.6
-      ssim.js: 3.5.0
 
   '@types/jest@29.5.14':
     dependencies:
