@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { render, RenderResult } from '@testing-library/react'
+import { render } from 'vitest-browser-react'
 import { is } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
 import { SpringValue } from '../SpringValue'
@@ -59,7 +59,7 @@ describe('useTrail', () => {
 function createUpdater(
   Component: React.ComponentType<{ args: [any, any, any?] }>
 ) {
-  let result: RenderResult | undefined
+  let result: ReturnType<typeof render> | undefined
   afterEach(() => {
     result = undefined
   })

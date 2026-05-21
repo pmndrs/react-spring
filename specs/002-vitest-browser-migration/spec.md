@@ -80,7 +80,7 @@ As a contributor writing animation tests, I rely on the existing test helpers (`
 - **FR-006**: All existing test files MUST keep their test bodies (assertion logic, helper call sites, control flow) intact. The following **migration-only** edits are explicitly in scope and acceptable:
 
   - Runner-global renames: `jest.*` → `vi.*`, Jest globals → Vitest imports.
-  - React rendering boundary swap: `@testing-library/react` → `vitest-browser-react`. The `render` return-type annotation (`RenderResult`) is dropped; `renderHook` is replaced with an in-repo helper at `tests/helpers/renderHook.tsx`.
+  - React rendering boundary swap: `@testing-library/react` → `vitest-browser-react`. The `render` return-type annotation (`RenderResult`) is dropped; `renderHook` is imported from `vitest-browser-react` (it ships one natively as of `0.1.1`).
   - `act` source change: `@testing-library/react` → `react` (React 19 native).
   - DOM-matcher migration in exactly one file (`packages/core/src/hooks/useTransition.test.tsx`): replace `@testing-library/jest-dom` matchers with `vitest-browser-react` locator-based assertions via `@vitest/browser/context`.
 

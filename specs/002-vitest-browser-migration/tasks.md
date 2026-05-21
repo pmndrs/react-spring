@@ -28,12 +28,12 @@ Repo root: `/Users/josh.ellis/code/react-spring/`. Paths below are repo-rooted.
 
 **Purpose**: Add the new toolchain. No tests run yet, no removals.
 
-- [ ] T001 Add devDependencies in `package.json`: `vitest`, `@vitest/browser`, `@vitest/coverage-v8`, `vitest-browser-react`, `playwright`. Run `pnpm install` and commit the lockfile change.
-- [ ] T002 Install Chromium binary once locally: run `pnpm exec playwright install chromium` (no file change; documents the contributor step).
-- [ ] T003 Create `vitest.config.ts` at repo root per `data-model.md` §RunnerConfig with the `unit` and `e2e` projects, alias map, fakeTimers config, coverage config, and `setupFiles: ['./packages/core/test/setup.ts']` for the `unit` project (no separate root shim). Also include the typed `ProvidedContext` `declare module 'vitest'` block (see `research.md` §R7) so the E2E spec can `inject('baseUrl')` with types.
-- [ ] T004 _REMOVED — collapsed into T003. The root `vitest.setup.ts` shim is no longer needed; `setupFiles` references `packages/core/test/setup.ts` directly._
-- [ ] T005 [P] Create `tests/helpers/renderHook.tsx` per `research.md` §R8 (the 15-line probe-component shim returning `{ result, rerender, unmount }`).
-- [ ] T006 [P] Create `tests/e2e/` directory with a placeholder `.gitkeep` so subsequent tasks have a stable location.
+- [x] T001 Add devDependencies in `package.json`: `vitest`, `@vitest/browser`, `@vitest/coverage-v8`, `vitest-browser-react`, `playwright`. Run `pnpm install` and commit the lockfile change.
+- [x] T002 Install Chromium binary once locally: run `pnpm exec playwright install chromium` (no file change; documents the contributor step).
+- [x] T003 Create `vitest.config.ts` at repo root per `data-model.md` §RunnerConfig with the `unit` and `e2e` projects, alias map, fakeTimers config, coverage config, and `setupFiles: ['./packages/core/test/setup.ts']` for the `unit` project (no separate root shim). Also include the typed `ProvidedContext` `declare module 'vitest'` block (see `research.md` §R7) so the E2E spec can `inject('baseUrl')` with types.
+- [x] T004 _REMOVED — collapsed into T003. The root `vitest.setup.ts` shim is no longer needed; `setupFiles` references `packages/core/test/setup.ts` directly._
+- [x] T005 _SUPERSEDED — `vitest-browser-react@0.1.1` ships `renderHook` natively; no in-repo shim needed. (A separate `tests/helpers/render.tsx` was added later as an RTL-query compat layer for `animated.test.tsx`, which is a different concern.)_
+- [x] T006 [P] Create `tests/e2e/` directory with a placeholder `.gitkeep` so subsequent tasks have a stable location.
 
 **Checkpoint**: `pnpm vitest run --project unit` boots Chromium and discovers zero tests (because no tests are migrated yet). This proves the runner is wired up.
 
@@ -45,8 +45,8 @@ Repo root: `/Users/josh.ellis/code/react-spring/`. Paths below are repo-rooted.
 
 **⚠️ CRITICAL**: Phase 3 (US1/US3) is fully blocked on this phase.
 
-- [ ] T007 In `packages/core/test/setup.ts`: replace `jest.setTimeout(6e8)` → `vi.setConfig({ testTimeout: 6e8 })`; `jest.advanceTimersByTimeAsync(1000/60)` → `vi.advanceTimersByTimeAsync(1000/60)`; add `import { beforeEach, afterEach, vi } from 'vitest'`; `import { act } from '@testing-library/react'` → `import { act } from 'react'`. Verify against `contracts/test-helpers.md` "Acceptance checks for the ported `setup.ts`" — every "Verified?" row ticked.
-- [ ] T008 Verify the eight helper globals (`mockRaf`, `advance`, `advanceByTime`, `advanceUntil`, `advanceUntilIdle`, `advanceUntilValue`, `getFrames`, `countBounces`, `setSkipAnimation`) are still attached to `globalThis` after the rename. Sanity-check: `pnpm vitest run packages/rafz/src/index.test.ts` (smallest test file, fewest dependencies) — must pass.
+- [x] T007 In `packages/core/test/setup.ts`: replace `jest.setTimeout(6e8)` → `vi.setConfig({ testTimeout: 6e8 })`; `jest.advanceTimersByTimeAsync(1000/60)` → `vi.advanceTimersByTimeAsync(1000/60)`; add `import { beforeEach, afterEach, vi } from 'vitest'`; `import { act } from '@testing-library/react'` → `import { act } from 'react'`. Verify against `contracts/test-helpers.md` "Acceptance checks for the ported `setup.ts`" — every "Verified?" row ticked.
+- [x] T008 Verify the eight helper globals (`mockRaf`, `advance`, `advanceByTime`, `advanceUntil`, `advanceUntilIdle`, `advanceUntilValue`, `getFrames`, `countBounces`, `setSkipAnimation`) are still attached to `globalThis` after the rename. Sanity-check: `pnpm vitest run packages/rafz/src/index.test.ts` (smallest test file, fewest dependencies) — must pass.
 
 **Checkpoint**: Helpers work under Vitest. We can now migrate the rest of the suite.
 
@@ -60,17 +60,17 @@ Repo root: `/Users/josh.ellis/code/react-spring/`. Paths below are repo-rooted.
 
 ### Implementation for US1/US3
 
-- [ ] T009 [P] [US1] Update imports in `packages/core/src/SpringContext.test.tsx`: `@testing-library/react` → `vitest-browser-react`. Drop `RenderResult` type. Switch any `jest.*` calls to `vi.*`.
-- [ ] T010 [P] [US1] Update imports in `packages/core/src/hooks/useSpring.test.tsx`: same swap as T009.
-- [ ] T011 [P] [US1] Update imports in `packages/core/src/hooks/useSprings.test.tsx`: same swap as T009.
-- [ ] T012 [P] [US1] Update imports in `packages/core/src/hooks/useTrail.test.tsx`: same swap as T009.
-- [ ] T013 [P] [US1] Update imports + matchers in `packages/core/src/hooks/useTransition.test.tsx`: drop `@testing-library/jest-dom` line; swap `@testing-library/react` → `vitest-browser-react`; rewrite any `.toBeInTheDocument()` / `.toHaveStyle()` etc. as `expect.element(locator).toBeInTheDocument()` via `@vitest/browser/context`.
-- [ ] T014 [P] [US1] Update imports in `packages/core/src/hooks/useSpringValue.test.ts`: `renderHook` from `@testing-library/react` → `tests/helpers/renderHook`.
-- [ ] T015 [P] [US1] Update imports in `packages/shared/src/hooks/useReducedMotion.test.ts`: `act` → from `react`; `renderHook` → from `tests/helpers/renderHook`.
-- [ ] T016 [P] [US1] Update imports in `targets/web/src/animated.test.tsx`: `@testing-library/react` → `vitest-browser-react`.
-- [ ] T017 [P] [US1] Sweep `jest.*` → `vi.*` in pure-logic test files (no rendering): `packages/core/src/{Controller,interpolate,AnimationConfig,SpringValue,Interpolation,helpers}.test.ts`, `packages/core/src/hooks/useSpringValue.test.ts` (mocks only), `packages/shared/src/createInterpolator.test.ts`, `packages/shared/src/hooks/useReducedMotion.test.ts` (mocks only), `packages/rafz/src/index.test.ts`. Add `import { ... } from 'vitest'` only where Jest globals were used implicitly that Vitest does not auto-expose with `globals: true`.
-- [ ] T018 [US3] Run `pnpm vitest run --project unit` end-to-end. Fix any divergence (snapshot serialisation, async timing edge cases). Target: same pass count as the current `pnpm test:unit` on `next` (SC-001).
-- [ ] T019 [US1] Wire `pnpm test:cov` to `vitest run --project unit --coverage` in `package.json`. Run it. Confirm thresholds (80/74/71/82) all pass (SC-004). If coverage dropped because V8 reports differently from `@swc/jest`, adjust includes in `vitest.config.ts` to match the previous `collectCoverageFrom` exactly before considering threshold tweaks.
+- [x] T009 [P] [US1] Update imports in `packages/core/src/SpringContext.test.tsx`: `@testing-library/react` → `vitest-browser-react`. Drop `RenderResult` type. Switch any `jest.*` calls to `vi.*`.
+- [x] T010 [P] [US1] Update imports in `packages/core/src/hooks/useSpring.test.tsx`: same swap as T009.
+- [x] T011 [P] [US1] Update imports in `packages/core/src/hooks/useSprings.test.tsx`: same swap as T009.
+- [x] T012 [P] [US1] Update imports in `packages/core/src/hooks/useTrail.test.tsx`: same swap as T009.
+- [x] T013 [P] [US1] Update imports + matchers in `packages/core/src/hooks/useTransition.test.tsx`: drop `@testing-library/jest-dom` line; swap `@testing-library/react` → `vitest-browser-react`; rewrite any `.toBeInTheDocument()` / `.toHaveStyle()` etc. as `expect.element(locator).toBeInTheDocument()` via `@vitest/browser/context`.
+- [x] T014 [P] [US1] Update imports in `packages/core/src/hooks/useSpringValue.test.ts`: `renderHook` from `@testing-library/react` → `vitest-browser-react`.
+- [x] T015 [P] [US1] Update imports in `packages/shared/src/hooks/useReducedMotion.test.ts`: `act` → from `react`; `renderHook` → from `vitest-browser-react`.
+- [x] T016 [P] [US1] Update imports in `targets/web/src/animated.test.tsx`: `@testing-library/react` → `vitest-browser-react`.
+- [x] T017 [P] [US1] Sweep `jest.*` → `vi.*` in pure-logic test files (no rendering): `packages/core/src/{Controller,interpolate,AnimationConfig,SpringValue,Interpolation,helpers}.test.ts`, `packages/core/src/hooks/useSpringValue.test.ts` (mocks only), `packages/shared/src/createInterpolator.test.ts`, `packages/shared/src/hooks/useReducedMotion.test.ts` (mocks only), `packages/rafz/src/index.test.ts`. Add `import { ... } from 'vitest'` only where Jest globals were used implicitly that Vitest does not auto-expose with `globals: true`.
+- [x] T018 [US3] Run `pnpm vitest run --project unit` end-to-end. Fix any divergence (snapshot serialisation, async timing edge cases). Target: same pass count as the current `pnpm test:unit` on `next` (SC-001).
+- [x] T019 [US1] Wire `pnpm test:cov` to `vitest run --project unit --coverage` in `package.json`. Run it. Confirm thresholds (80/74/71/82) all pass (SC-004). If coverage dropped because V8 reports differently from `@swc/jest`, adjust includes in `vitest.config.ts` to match the previous `collectCoverageFrom` exactly before considering threshold tweaks.
 
 **Checkpoint**: MVP done. Unit suite runs in Chromium; helpers preserved; coverage floor holds.
 
@@ -84,17 +84,17 @@ Repo root: `/Users/josh.ellis/code/react-spring/`. Paths below are repo-rooted.
 
 ### Implementation for US2
 
-- [ ] T020 [P] [US2] Create `tests/e2e/global-setup.ts` per `research.md` §R7: programmatic Vite `createServer({ root: 'packages/parallax/test', server: { port: 0 } })`, then `provide('baseUrl', `http://localhost:${port}`)` (typed via the `ProvidedContext` declaration added in T003); export a `teardown` function that calls `server.close()`. **Do not** set `process.env.BASE_URL` — the browser-side test cannot read Node env vars.
-- [ ] T021 [US2] Create `tests/e2e/parallax.spec.ts` by porting the assertions from `cypress/e2e/parallax.cy.ts`:
+- [x] T020 [P] [US2] Create `tests/e2e/global-setup.ts` per `research.md` §R7: programmatic Vite `createServer({ root: 'packages/parallax/test', server: { port: 0 } })`, then `provide('baseUrl', `http://localhost:${port}`)` (typed via the `ProvidedContext` declaration added in T003); export a `teardown` function that calls `server.close()`. **Do not** set `process.env.BASE_URL` — the browser-side test cannot read Node env vars.
+- [x] T021 [US2] Create `tests/e2e/parallax.spec.ts` by porting the assertions from `cypress/e2e/parallax.cy.ts`:
   - At the top of the file: `import { inject } from 'vitest'`; `import { page } from '@vitest/browser/context'`; `const baseUrl = inject('baseUrl')`. In `beforeEach`: `await page.goto(`${baseUrl}/vertical`)`.
   - Translate `cy.findByTestId('container')` → `page.getByTestId('container')`.
   - Translate `cy.findByTestId('default-layer').then(layer => layer[0].style.transform).then(transform => expect(transform).to.equal(...))` → `expect(await page.getByTestId('default-layer').evaluate(el => el.style.transform)).toBe(...)`.
   - Translate `cy.findByTestId('container').scrollTo(0, HEIGHT)` → `await page.getByTestId('container').evaluate((el, h) => el.scrollTo(0, h), HEIGHT)`.
   - Replace `cy.wait(4000)` with `await expect.poll(() => page.getByTestId(id).evaluate(el => el.style.transform)).toBe(expected)` (no wall-clock waits).
   - **Drop** all `matchImageSnapshot(...)` calls per spec assumption (out of scope).
-- [ ] T022 [US2] Run `pnpm vitest run --project e2e` locally. Iterate until every previously-Cypress-asserted behaviour passes (SC-002).
-- [ ] T023 [US2] Delete `cypress/` directory, `cypress.config.ts`, and `cypress/screenshots`/`cypress/snapshots` if not removed by the directory deletion. Verify `grep -ri 'cypress\|Cypress\|cy\.' . --exclude-dir=node_modules --exclude-dir=.git` returns no source-code hits (SC-003).
-- [ ] T024 [US2] Remove devDependencies from `package.json`: `cypress`, `@simonsmith/cypress-image-snapshot`, `@testing-library/cypress`, `start-server-and-test`. Run `pnpm install`.
+- [x] T022 [US2] Run `pnpm vitest run --project e2e` locally. Iterate until every previously-Cypress-asserted behaviour passes (SC-002).
+- [x] T023 [US2] Delete `cypress/` directory, `cypress.config.ts`, and `cypress/screenshots`/`cypress/snapshots` if not removed by the directory deletion. Verify `grep -ri 'cypress\|Cypress\|cy\.' . --exclude-dir=node_modules --exclude-dir=.git` returns no source-code hits (SC-003).
+- [x] T024 [US2] Remove devDependencies from `package.json`: `cypress`, `@simonsmith/cypress-image-snapshot`, `@testing-library/cypress`, `start-server-and-test`. Run `pnpm install`.
 
 **Checkpoint**: Parallax E2E runs in the same runner. Cypress is gone.
 
@@ -104,22 +104,22 @@ Repo root: `/Users/josh.ellis/code/react-spring/`. Paths below are repo-rooted.
 
 **Purpose**: Now that everything green passes under Vitest, remove the old toolchain and rewire CI.
 
-- [ ] T025 [P] Delete `jest.config.js` at repo root.
-- [ ] T026 [P] Remove devDependencies from `package.json`: `jest`, `@swc/jest`, `@types/jest`, `@testing-library/react`, `@testing-library/dom`, `@testing-library/jest-dom`. Run `pnpm install`.
-- [ ] T027 Update `package.json` scripts:
+- [x] T025 [P] Delete `jest.config.js` at repo root.
+- [x] T026 [P] Remove devDependencies from `package.json`: `jest`, `@swc/jest`, `@types/jest`, `@testing-library/react`, `@testing-library/dom`, `@testing-library/jest-dom`. Run `pnpm install`.
+- [x] T027 Update `package.json` scripts:
   - `test:unit` → `vitest run --project unit`
   - `test:cov` → `vitest run --project unit --coverage`
   - `test:e2e` → `vitest run --project e2e`
   - `test` → `pnpm test:ts && pnpm test:unit && pnpm test:e2e` (unchanged shape; only sub-commands changed).
   - Remove `postinstall` if it only existed for Cypress / remix-related Cypress dep (audit and leave Remix's setup line untouched).
-- [ ] T028 Update `.github/workflows/tests.yml`:
+- [x] T028 Update `.github/workflows/tests.yml`:
   - In the `changes` filter, remove `cypress/**`.
   - In `test-unit` job, before the `Test` step add:
     - `Cache Playwright browsers` step (`actions/cache@v4`, path `~/.cache/ms-playwright`, key `playwright-chromium-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}`).
     - `Install Playwright Chromium` step running `pnpm exec playwright install --with-deps chromium`.
   - Uncomment the `test-e2e` job, rewrite its `Test` step to `pnpm test:e2e`, and add the same Playwright cache + install steps. Drop the `Build` step in `test-e2e` if E2E doesn't need built packages (the fixture is served from source via Vite).
-- [ ] T029 [P] Update `CLAUDE.md` "Stack" and "Testing model" sections: rename Jest → Vitest, jsdom → Chromium/Playwright, remove `@swc/jest`, point to `vitest.config.ts` and the new commands. Mirror the table from `quickstart.md` "Day-to-day commands".
-- [ ] T030 Bump the constitution to **1.0.1** in `.specify/memory/constitution.md`: in the Quality Gates section, rename "Jest unit tests pass" → "Vitest unit tests pass (browser mode, Chromium via Playwright)" and rename the Cypress E2E paragraph to reference Vitest browser. Prepend a Sync Impact Report comment block noting the PATCH bump and that no principle changed. Update `Last Amended` date. **Must land in the same PR as T025–T029** — the constitution must not lag the code change on `next`.
+- [x] T029 [P] Update `CLAUDE.md` "Stack" and "Testing model" sections: rename Jest → Vitest, jsdom → Chromium/Playwright, remove `@swc/jest`, point to `vitest.config.ts` and the new commands. Mirror the table from `quickstart.md` "Day-to-day commands".
+- [x] T030 Bump the constitution to **1.0.1** in `.specify/memory/constitution.md`: in the Quality Gates section, rename "Jest unit tests pass" → "Vitest unit tests pass (browser mode, Chromium via Playwright)" and rename the Cypress E2E paragraph to reference Vitest browser. Prepend a Sync Impact Report comment block noting the PATCH bump and that no principle changed. Update `Last Amended` date. **Must land in the same PR as T025–T029** — the constitution must not lag the code change on `next`.
 
 **Checkpoint**: `pnpm test` is green end-to-end (types + unit + E2E), CI passes, constitution and CLAUDE.md are accurate.
 
@@ -128,8 +128,8 @@ Repo root: `/Users/josh.ellis/code/react-spring/`. Paths below are repo-rooted.
 ## Phase 6: Polish & Cross-Cutting
 
 - [ ] T031 [P] Capture wall-clock numbers for SC-005 (full test run vs. pre-migration baseline), SC-006 (watch-mode first-results), SC-007 (CI total). Add them to the PR description.
-- [ ] T032 [P] Audit for stray `RenderResult`, `screen`, `fireEvent`, `userEvent` (from `@testing-library/*`) imports across `packages/` and `targets/`. Replace or remove.
-- [ ] T033 [P] Audit `pnpm` workspace dependencies: confirm no published package's `package.json` lists `jest`, `cypress`, or `@testing-library/*` (these should only have ever been root devDependencies; flag if any leaked).
+- [x] T032 [P] Audit for stray `RenderResult`, `screen`, `fireEvent`, `userEvent` (from `@testing-library/*`) imports across `packages/` and `targets/`. Replace or remove.
+- [x] T033 [P] Audit `pnpm` workspace dependencies: confirm no published package's `package.json` lists `jest`, `cypress`, or `@testing-library/*` (these should only have ever been root devDependencies; flag if any leaked).
 - [ ] T034 Update PR description with: migration summary, link to `quickstart.md`, constitution amendment note, and the SC-005/006/007 numbers from T031.
 
 ---

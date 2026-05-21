@@ -1,6 +1,5 @@
 import * as React from 'react'
-import '@testing-library/jest-dom'
-import { RenderResult, render } from '@testing-library/react'
+import { render } from 'vitest-browser-react'
 import { toArray } from '@react-spring/shared'
 import { TransitionFn, UseTransitionProps } from '../types'
 import { useTransition } from './useTransition'
@@ -86,7 +85,7 @@ describe('useTransition', () => {
 
   describe('when "enter" is a function', () => {
     it('still has its "onRest" prop called', async () => {
-      const onRest = jest.fn()
+      const onRest = vi.fn()
       update(true, {
         from: { x: 0 },
         enter: () => ({
@@ -227,7 +226,7 @@ describe('useTransition', () => {
   })
 })
 
-let result: RenderResult | undefined
+let result: ReturnType<typeof render> | undefined
 function createUpdater(
   Component: React.ComponentType<{ args: [any, any, any?] }>
 ) {

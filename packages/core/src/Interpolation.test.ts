@@ -21,11 +21,11 @@ describe('Interpolation', () => {
       const b = new SpringValue({ from: 1, to: 0 })
       global.mockRaf.step()
 
-      const calc = jest.fn((a: number, b: number) => Math.abs(a - b))
+      const calc = vi.fn((a: number, b: number) => Math.abs(a - b))
       const c = to([a, b], calc)
 
       // For interpolation to be active, it must be observed.
-      const observer = jest.fn()
+      const observer = vi.fn()
       addFluidObserver(c, observer)
 
       // Pause the first input.

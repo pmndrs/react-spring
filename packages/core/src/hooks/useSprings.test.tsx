@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { render, RenderResult } from '@testing-library/react'
+import { render } from 'vitest-browser-react'
 import { is, eachProp } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
 import { SpringRef } from '../SpringRef'
@@ -35,7 +35,7 @@ describe('useSprings', () => {
     })
 
     it('calls the props function once per new spring', () => {
-      const getProps = jest.fn((i: number) => ({ x: i * 100 }))
+      const getProps = vi.fn((i: number) => ({ x: i * 100 }))
 
       // Create two springs.
       update(2, getProps)
@@ -81,7 +81,7 @@ describe('useSprings', () => {
 
   describe('when both a props function and a deps array are passed', () => {
     it('updates each spring when the deps have changed', () => {
-      const getProps = jest.fn((i: number) => ({ x: i * 100 }))
+      const getProps = vi.fn((i: number) => ({ x: i * 100 }))
 
       update(2, getProps, [1])
       expect(getProps).toHaveBeenCalledTimes(
@@ -177,7 +177,7 @@ function createUpdater(
   Component: React.ComponentType<{ args: [any, any, any?] }>,
   isStrictMode: boolean
 ) {
-  let result: RenderResult | undefined
+  let result: ReturnType<typeof render> | undefined
   afterEach(() => {
     result = undefined
   })

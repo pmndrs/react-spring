@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { render, RenderResult } from '@testing-library/react'
+import { render } from 'vitest-browser-react'
 import { is } from '@react-spring/shared'
 import { Lookup } from '@react-spring/types'
 import { SpringContextProvider, type ISpringContext } from '../SpringContext'
@@ -116,7 +116,7 @@ interface TestContext extends ISpringContext {
 
 function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {
   let prevElem: React.JSX.Element | undefined
-  let result: RenderResult | undefined
+  let result: ReturnType<typeof render> | undefined
 
   const context: TestContext = {
     set(values) {

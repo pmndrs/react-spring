@@ -1,35 +1,43 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: TEMPLATE (uninitialised) → 1.0.0
-Bump rationale: Initial ratification — first concrete constitution for react-spring,
-replacing the placeholder template. Treated as MINOR-equivalent first release (1.0.0)
-because there is no prior version to break compatibility with.
+Version change: 1.0.0 → 1.0.1
+Bump rationale: PATCH — wording-only update to the Quality Gates section to reflect
+the test-infrastructure migration from Jest/jsdom + Cypress to Vitest browser mode
+(Chromium via Playwright). No principle changed; no governance rule changed; the
+intent of the gates ("unit tests pass with the same coverage floor", "parallax E2E
+covered") is preserved.
 
 Modified principles:
-  (none — initial set)
+  (none)
+
+Modified sections:
+  - Quality Gates — renamed Jest → Vitest; renamed Cypress → Vitest browser E2E;
+    updated the coverage-threshold sentence to reference the new runner.
+  - CLAUDE.md root has been updated in the same PR to match.
 
 Added sections:
-  - Core Principles (I–V)
-  - Quality Gates
-  - Development Workflow
-  - Governance
+  (none)
 
 Removed sections:
   (none)
 
 Templates requiring updates:
-  ✅ .specify/templates/plan-template.md — Constitution Check section is generic
-     ("[Gates determined based on constitution file]"); no edits required.
-  ✅ .specify/templates/spec-template.md — No constitution-specific bindings; compatible.
-  ✅ .specify/templates/tasks-template.md — No constitution-specific bindings; compatible.
-  ✅ .specify/templates/checklist-template.md — Not inspected in depth; generic checklist
-     scaffold, no principle bindings.
-  ✅ CLAUDE.md (root) — Existing project guidance already aligns with the principles
-     ratified here; no edits required.
+  ✅ .specify/templates/plan-template.md — generic Constitution Check; no edits.
+  ✅ .specify/templates/spec-template.md — no constitution bindings; no edits.
+  ✅ .specify/templates/tasks-template.md — no constitution bindings; no edits.
+  ✅ .specify/templates/checklist-template.md — no edits.
+  ✅ CLAUDE.md (root) — updated in the same PR.
 
 Follow-up TODOs:
   (none)
+
+------------------------------------------------------------------------------
+PRIOR VERSION 1.0.0 (initial ratification — kept for traceability):
+Version change: TEMPLATE (uninitialised) → 1.0.0
+Bump rationale: Initial ratification — first concrete constitution for react-spring,
+replacing the placeholder template. Treated as MINOR-equivalent first release (1.0.0)
+because there is no prior version to break compatibility with.
 -->
 
 # react-spring Constitution
@@ -128,18 +136,17 @@ Every PR MUST pass, locally and in CI, before review approval:
   errors are blocking except `console.warn`/`console.error`. Unused variables MUST
   be `_`-prefixed.
 - `pnpm test:ts` — `tsc --noEmit` is clean across all packages.
-- `pnpm test:unit` — Jest unit tests pass. The configured coverage thresholds (80%
-  statements / 74% branches / 71% functions / 82% lines) MUST be met when running
-  `pnpm test:cov`.
+- `pnpm test:unit` — Vitest unit tests pass (browser mode, Chromium via Playwright).
+  The configured coverage thresholds (80% statements / 74% branches / 71% functions
+  / 82% lines) MUST be met when running `pnpm test:cov` (`@vitest/coverage-v8`).
 - `pnpm prettier:check` — Prettier reports no diff. The Husky `pre-commit` hook
   enforces this; do not bypass it.
 - Commit messages and PR titles MUST follow Conventional Commits. `commitlint`
   enforces this via the Husky `commit-msg` hook.
 
-Cypress E2E (`pnpm test:e2e`) covers `@react-spring/parallax` and MUST pass locally
-for any change touching that package. CI does not currently gate on E2E (the
-workflow job is commented out); contributors and reviewers MUST treat local
-Cypress as the gate until that changes.
+Vitest browser E2E (`pnpm test:e2e`) covers `@react-spring/parallax` and MUST pass
+locally for any change touching that package. CI runs the E2E job as part of the
+standard workflow.
 
 ## Development Workflow
 
@@ -150,9 +157,9 @@ Cypress as the gate until that changes.
   keep the stack current.
 - All PRs are squash-merged.
 - Never push to remote without explicit confirmation from the maintainer.
-- Jest's `moduleNameMapper` rewrites `@react-spring/*` to source, so unit tests run
-  without `pnpm build`. Anything outside Jest (Cypress, docs, publish-ci) MUST be
-  preceded by `pnpm build`.
+- `vitest.config.ts`'s `resolve.alias` rewrites `@react-spring/*` to source, so
+  unit and E2E tests run without `pnpm build`. Anything outside Vitest (docs,
+  publish-ci) MUST be preceded by `pnpm build`.
 - Releases follow: `pnpm changeset` → `pnpm vers` → `pnpm release`. Do not bump
   versions by hand.
 
@@ -186,4 +193,4 @@ they conflict. CLAUDE.md and other guidance files are subordinate to it.
 - Reviewers SHOULD cite the relevant principle (e.g. "Principle II: Target-Agnostic
   Core") when requesting changes for principle-driven reasons.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-21 | **Last Amended**: 2026-05-21
+**Version**: 1.0.1 | **Ratified**: 2026-05-21 | **Last Amended**: 2026-05-21

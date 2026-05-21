@@ -94,26 +94,6 @@ Helper bodies (`advance`, `advanceUntil`, …) are **not modified**.
 
 ---
 
-## Entity: RenderHookHelper
-
-**Location**: `tests/helpers/renderHook.tsx` (NEW, in-repo).
-
-**Purpose**: Replace `@testing-library/react`'s `renderHook` (not provided by `vitest-browser-react`).
-
-**Shape**:
-
-```ts
-function renderHook<R>(hook: () => R): {
-  result: { readonly current: R }
-  rerender: () => void
-  unmount: () => void
-}
-```
-
-Used by `useSpringValue.test.ts` and `useReducedMotion.test.ts`.
-
----
-
 ## Entity: TestHelpers
 
 See `contracts/test-helpers.md`. Frozen contract — any breaking change requires a major review.

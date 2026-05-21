@@ -4,6 +4,7 @@
   "private": true,
   "description": "Vendored copy of mock-raf for react-spring tests",
   "license": "MIT",
+  "type": "module",
   "main": "./index.js",
   "types": "./index.d.ts",
   "files": [

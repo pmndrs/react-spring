@@ -37,7 +37,7 @@ describe('SpringValue', () => {
   })
 
   // FIXME: This test fails.
-  xit('animates a number the same as a numeric string', async () => {
+  it.skip('animates a number the same as a numeric string', async () => {
     const spring1 = new SpringValue(0)
     spring1.start(10)
 
@@ -52,7 +52,7 @@ describe('SpringValue', () => {
   })
 
   it('can animate an array of numbers', async () => {
-    const onChange = jest.fn()
+    const onChange = vi.fn()
     const spring = new SpringValue()
     spring.start({
       to: [10, 20],
@@ -118,7 +118,7 @@ describe('SpringValue', () => {
       spring.start(1)
 
       // Create a no-op update.
-      const resolve = jest.fn()
+      const resolve = vi.fn()
       spring.start(1).then(resolve)
 
       await flushMicroTasks()
@@ -203,7 +203,7 @@ function describeFromProp() {
 function describeResetProp() {
   describe('when "reset" prop is true', () => {
     it('calls "onRest" before jumping back to its "from" value', async () => {
-      const onRest = jest.fn((result: any) => {
+      const onRest = vi.fn((result: any) => {
         expect(result.value).not.toBe(0)
       })
 
@@ -458,7 +458,7 @@ function describeConfigProp() {
     })
     describe('when "damping" is less than 1.0', () => {
       // FIXME: This test fails.
-      xit('should bounce', async () => {
+      it.skip('should bounce', async () => {
         const spring = new SpringValue(0)
         spring.start(1, {
           config: { frequency: 1.5, damping: 1 },
@@ -658,7 +658,7 @@ function describeDelayProp() {
 function describeEvents() {
   describe('the "onStart" event', () => {
     it('is called on the first frame', async () => {
-      const onStart = jest.fn()
+      const onStart = vi.fn()
       const spring = new SpringValue(0, { onStart })
 
       spring.start(1)
@@ -671,7 +671,7 @@ function describeEvents() {
       expect(onStart).toBeCalledTimes(1)
     })
     it('is called by the "finish" method', () => {
-      const onStart = jest.fn()
+      const onStart = vi.fn()
       const spring = new SpringValue({ from: 0, to: 1, onStart })
       expect(onStart).toBeCalledTimes(0)
 
@@ -679,7 +679,7 @@ function describeEvents() {
       expect(onStart).toBeCalledTimes(1)
     })
     it('is called when immediate is set to true', async () => {
-      const onStart = jest.fn()
+      const onStart = vi.fn()
       new SpringValue({
         from: 0,
         to: 1,
@@ -693,7 +693,7 @@ function describeEvents() {
   })
   describe('the "onChange" event', () => {
     it('is called on every frame', async () => {
-      const onChange = jest.fn()
+      const onChange = vi.fn()
       const spring = new SpringValue({ from: 0, to: 1, onChange })
 
       await global.advanceUntilIdle()
@@ -701,7 +701,7 @@ function describeEvents() {
       expect(onChange).toBeCalledTimes(frames.length)
     })
     it('receives the "to" value on the last frame', async () => {
-      const onChange = jest.fn()
+      const onChange = vi.fn()
       const spring = new SpringValue('blue', { onChange })
 
       spring.start('red')
@@ -711,7 +711,7 @@ function describeEvents() {
       expect(lastValue).toBe('red')
     })
     it('is called by the "set" method', () => {
-      const onChange = jest.fn()
+      const onChange = vi.fn()
       const spring = new SpringValue({ from: 0, to: 1, onChange })
 
       global.mockRaf.step()
@@ -734,7 +734,7 @@ function describeEvents() {
       it('is never called by the "set" method', () => {
         const spring = new SpringValue(0)
 
-        const onChange = jest.fn()
+        const onChange = vi.fn()
         spring.start(1, { onChange })
 
         // Before first frame
@@ -753,7 +753,7 @@ function describeEvents() {
   })
   describe('the "onPause" event', () => {
     it('is called by the "pause" method', () => {
-      const onPause = jest.fn()
+      const onPause = vi.fn()
       const spring = new SpringValue({ from: 0, to: 1, onPause })
 
       global.mockRaf.step()
@@ -770,7 +770,7 @@ function describeEvents() {
   })
   describe('the "onResume" event', () => {
     it('is called by the "resume" method', () => {
-      const onResume = jest.fn()
+      const onResume = vi.fn()
       const spring = new SpringValue({ from: 0, to: 1, onResume })
 
       global.mockRaf.step()
@@ -786,7 +786,7 @@ function describeEvents() {
   })
   describe('the "onRest" event', () => {
     it('is called on the last frame', async () => {
-      const onRest = jest.fn()
+      const onRest = vi.fn()
       new SpringValue({
         from: 0,
         to: 1,
@@ -805,7 +805,7 @@ function describeEvents() {
       expect(onRest).toBeCalledTimes(1)
     })
     it('is called by the "stop" method', () => {
-      const onRest = jest.fn()
+      const onRest = vi.fn()
       const spring = new SpringValue({ from: 0, to: 1, onRest })
 
       global.mockRaf.step()
@@ -818,7 +818,7 @@ function describeEvents() {
       })
     })
     it('is called by the "finish" method', () => {
-      const onRest = jest.fn()
+      const onRest = vi.fn()
       const spring = new SpringValue({ from: 0, to: 1, onRest })
 
       global.mockRaf.step()
@@ -831,7 +831,7 @@ function describeEvents() {
       })
     })
     it('is called when the "cancel" prop is true', () => {
-      const onRest = jest.fn()
+      const onRest = vi.fn()
       const spring = new SpringValue({ from: 0, to: 1, onRest })
 
       global.mockRaf.step()
@@ -844,7 +844,7 @@ function describeEvents() {
       })
     })
     it('is called after an async animation', async () => {
-      const onRest = jest.fn()
+      const onRest = vi.fn()
       const spring = new SpringValue(0)
 
       await spring.start({
@@ -859,7 +859,7 @@ function describeEvents() {
       })
     })
     it('is called when immediate is set to true', async () => {
-      const onRest = jest.fn()
+      const onRest = vi.fn()
       new SpringValue({
         from: 0,
         to: 1,
@@ -1077,9 +1077,9 @@ function describeGlobals() {
     it('still calls "onStart", "onChange", and "onRest" props', async () => {
       const spring = new SpringValue(0)
 
-      const onStart = jest.fn()
-      const onChange = jest.fn()
-      const onRest = jest.fn()
+      const onStart = vi.fn()
+      const onChange = vi.fn()
+      const onRest = vi.fn()
 
       Globals.assign({ skipAnimation: true })
       await spring.start(1, { onStart, onChange, onRest })

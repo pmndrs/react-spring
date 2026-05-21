@@ -5,6 +5,9 @@
     "targets/*/src/**/*",
     "packages/types/*",
     "**/*.test.ts",
+    "**/*.test.tsx",
+    "tests/**/*",
+    "vitest.config.ts",
     "targets/zdog/@types/**/*"
   ],
   "exclude": [
@@ -14,18 +17,19 @@
   ],
   "compilerOptions": {
     "target": "ES2020",
-    "module": "NodeNext",
+    "module": "ESNext",
     "lib": ["DOM", "ESNext"],
     "jsx": "react",
     "noEmit": true,
     "downlevelIteration": true,
     "strict": true,
     "noUnusedLocals": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "Bundler",
     "baseUrl": "./",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "types": ["vitest/globals", "@vitest/browser/providers/playwright"]
   }
 }

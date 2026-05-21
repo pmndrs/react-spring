@@ -99,7 +99,7 @@ react-spring/
 │   └── web/src/animated.test.tsx     # IMPORTS UPDATED
 ├── tests/
 │   ├── helpers/
-│   │   └── renderHook.tsx            # NEW — 15-line probe-component shim
+│   │   └── render.tsx                # NEW — RTL-style query compat for animated.test.tsx
 │   └── e2e/
 │       ├── global-setup.ts           # NEW — programmatic Vite createServer + provide('baseUrl', …)
 │       └── parallax.spec.ts          # NEW — re-port of cypress/e2e/parallax.cy.ts (behavioural only)
@@ -185,7 +185,7 @@ The full plan is broken into work-items below. `/speckit-tasks` will turn these 
   - Add `import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'` only where files relied on Jest globals not exposed by Vitest's default globals.
   - **Swap `@testing-library/react` → `vitest-browser-react`** at every call site (8 files total). Concretely:
     - `import { render, RenderResult } from '@testing-library/react'` → `import { render } from 'vitest-browser-react'`. The `RenderResult` type is dropped; the new return shape is `{ container, baseElement, rerender, unmount }` plus locator helpers — tests destructure only the fields they actually use.
-    - `import { renderHook } from '@testing-library/react'` (used in `useSpringValue.test.ts`, `useReducedMotion.test.ts`) — replace with a tiny in-repo helper `tests/helpers/renderHook.tsx` that renders a probe component and exposes the hook's return value via ref. `vitest-browser-react` intentionally does not ship `renderHook`; a 15-line helper is acceptable and is documented in the contract.
+    - `import { renderHook } from '@testing-library/react'` (used in `useSpringValue.test.ts`, `useReducedMotion.test.ts`) → `import { renderHook } from 'vitest-browser-react'`. `vitest-browser-react` 0.1.1+ ships `renderHook` natively with a Testing-Library-compatible signature, so no in-repo shim is needed.
     - `import { act } from '@testing-library/react'` (in `useReducedMotion.test.ts` and the setup file) → `import { act } from 'react'` (React 19 native).
     - Drop `import '@testing-library/jest-dom'` (one occurrence, `useTransition.test.tsx`); replace any `toBeInTheDocument()`-style matchers with locator-based assertions (`expect.element(locator).toBeInTheDocument()` via `@vitest/browser/context`, or direct DOM assertions). Audit during W3.
   - Run `pnpm vitest run` — fix any divergence.

@@ -189,7 +189,9 @@ const baseUrl = inject('baseUrl')
 
 ## R8. React rendering — `vitest-browser-react` (no Testing Library)
 
-**Decision**: Adopt `vitest-browser-react`'s `render` as the single React-rendering primitive. Remove `@testing-library/react`, `@testing-library/dom`, and `@testing-library/jest-dom` entirely. Take `act` from `react` (React 19's native export). Provide a small in-repo `renderHook` helper (~15 lines) since `vitest-browser-react` deliberately does not ship one.
+**Decision**: Adopt `vitest-browser-react`'s `render` and `renderHook` as the React-rendering primitives. Remove `@testing-library/react`, `@testing-library/dom`, and `@testing-library/jest-dom` entirely. Take `act` from `react` (React 19's native export).
+
+**Note (correction to earlier draft)**: an earlier version of this research item claimed `vitest-browser-react` "deliberately does not ship `renderHook`" and proposed an in-repo shim. That is wrong as of `vitest-browser-react@0.1.1` — the package exports `renderHook` natively with the same `(callback, { initialProps })` → `{ result, rerender, unmount }` signature as Testing Library's. No shim required.
 
 **Rationale**:
 
@@ -208,39 +210,13 @@ const baseUrl = inject('baseUrl')
 | `packages/core/src/hooks/useSprings.test.tsx`        | same as above                                                                                          | same as above                                                                                                           |
 | `packages/core/src/hooks/useTrail.test.tsx`          | same as above                                                                                          | same as above                                                                                                           |
 | `packages/core/src/hooks/useTransition.test.tsx`     | `import '@testing-library/jest-dom'` + `import { RenderResult, render } from '@testing-library/react'` | drop jest-dom import; use locator-based `expect.element(...)` matchers; `import { render } from 'vitest-browser-react'` |
-| `packages/core/src/hooks/useSpringValue.test.ts`     | `import { renderHook } from '@testing-library/react'`                                                  | `import { renderHook } from 'tests/helpers/renderHook'` (in-repo)                                                       |
-| `packages/shared/src/hooks/useReducedMotion.test.ts` | `import { act, renderHook } from '@testing-library/react'`                                             | `import { act } from 'react'`; `import { renderHook } from 'tests/helpers/renderHook'`                                  |
+| `packages/core/src/hooks/useSpringValue.test.ts`     | `import { renderHook } from '@testing-library/react'`                                                  | `import { renderHook } from 'vitest-browser-react'`                                                                     |
+| `packages/shared/src/hooks/useReducedMotion.test.ts` | `import { act, renderHook } from '@testing-library/react'`                                             | `import { act } from 'react'`; `import { renderHook } from 'vitest-browser-react'`                                      |
 | `targets/web/src/animated.test.tsx`                  | `import { render } from '@testing-library/react'`                                                      | `import { render } from 'vitest-browser-react'`                                                                         |
-
-**In-repo `renderHook` helper sketch** (`tests/helpers/renderHook.tsx`):
-
-```tsx
-import { render } from 'vitest-browser-react'
-
-export function renderHook<R>(hook: () => R) {
-  const ref: { current: R } = { current: undefined as unknown as R }
-  function Probe() {
-    ref.current = hook()
-    return null
-  }
-  const utils = render(<Probe />)
-  return {
-    get result() {
-      return ref
-    },
-    rerender: () => utils.rerender(<Probe />),
-    unmount: utils.unmount,
-  }
-}
-```
-
-This matches the subset of Testing Library's `renderHook` API actually used by `useSpringValue.test.ts` and `useReducedMotion.test.ts` (both consume `result.current` and `unmount`; neither uses `rerender` with new args — verify during W3 and extend the helper if needed).
 
 **Alternatives considered**:
 
 - **Keep `@testing-library/react` alongside `vitest-browser-react`** — pragmatic short-term but defeats the user's explicit ask and leaves two query APIs in the suite. Rejected.
-- **Use `@testing-library/react` only for `renderHook`** — same objection; also leaves a dependency for one helper.
-- **Write hook tests as full component tests instead of using `renderHook`** — bigger rewrite than the helper.
 
 ---
 
