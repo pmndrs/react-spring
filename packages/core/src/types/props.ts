@@ -128,12 +128,11 @@ export type GoalValue<T> = T | FluidValue<T> | UnknownProps | null | undefined
 export type InlineToProps<T = any> = Remap<GoalValues<T> & { to?: undefined }>
 
 /** A serial queue of spring updates. */
-export interface SpringChain<T = any>
-  extends Array<
-    [T] extends [IsPlainObject<T>]
-      ? ControllerUpdate<T>
-      : SpringTo<T> | SpringUpdate<T>
-  > {}
+export interface SpringChain<T = any> extends Array<
+  [T] extends [IsPlainObject<T>]
+    ? ControllerUpdate<T>
+    : SpringTo<T> | SpringUpdate<T>
+> {}
 
 /** A value that any `SpringValue` or `Controller` can animate to. */
 export type SpringTo<T = any> =

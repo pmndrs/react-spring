@@ -59,8 +59,9 @@ interface AnyUpdateFn<
  *
  * The `T` parameter must be a set of animated values (as an object type).
  */
-interface UpdateValuesFn<State extends Lookup = Lookup>
-  extends AnyUpdateFn<Controller<State>> {
+interface UpdateValuesFn<State extends Lookup = Lookup> extends AnyUpdateFn<
+  Controller<State>
+> {
   (props: InlineToProps<State> & ControllerProps<State>): AsyncResult<Controller<State>> // prettier-ignore
   (
     props: {

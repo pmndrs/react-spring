@@ -67,7 +67,8 @@ import {
 declare const console: any
 
 interface DefaultSpringProps<T>
-  extends Pick<SpringProps<T>, 'pause' | 'cancel' | 'immediate' | 'config'>,
+  extends
+    Pick<SpringProps<T>, 'pause' | 'cancel' | 'immediate' | 'config'>,
     PickEventFns<SpringProps<T>> {}
 
 /**

@@ -5,11 +5,10 @@ import { pre } from './Pre.css'
 import clsx from 'clsx'
 import { preCopy } from './Code.css'
 
-interface CodeProps
-  extends Pick<
-    LivePreviewProps,
-    'code' | 'defaultOpen' | 'showCode' | 'template'
-  > {
+interface CodeProps extends Pick<
+  LivePreviewProps,
+  'code' | 'defaultOpen' | 'showCode' | 'template'
+> {
   id?: string
   isLive?: boolean
   showLineNumbers?: boolean

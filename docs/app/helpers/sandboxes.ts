@@ -12,8 +12,10 @@ type CodesandboxSandboxResponse = {
   data: CodesandboxSandbox
 }
 
-export interface CodesandboxSandboxFetched
-  extends Omit<CodesandboxSandbox, 'screenshot_url'> {
+export interface CodesandboxSandboxFetched extends Omit<
+  CodesandboxSandbox,
+  'screenshot_url'
+> {
   screenshotUrl: string
   urlTitle: string
 }

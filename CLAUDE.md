@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Monorepo**: Turborepo + pnpm workspaces. Workspaces declared in `pnpm-workspace.yaml`: `packages/*`, `targets/*`, `demo`, `docs`.
 - **Bundler**: `tsup` per package, sharing `tsup.config.base.ts` which emits CJS (dev + prod.min) and ESM (legacy, modern, modern.dev, modern.prod.min) plus a CJS entry shim that switches on `NODE_ENV`.
 - **Tests**: Vitest in browser mode (Chromium via Playwright) for both unit and E2E projects, `vitest-browser-react` for rendering, `tsc --noEmit` (types). Root config: `vitest.config.ts`.
-- **Lint/format**: ESLint via shared `eslint-config-react-spring` package + Prettier. Husky `pre-commit` runs `prettier --check`; `commit-msg` runs commitlint with `@commitlint/config-conventional`.
+- **Lint/format**: [oxlint](https://oxc.rs/docs/guide/usage/linter) (root `.oxlintrc.json`) + [oxfmt](https://oxc.rs/docs/guide/usage/formatter) (root `.oxfmtrc.json`). Husky `pre-commit` runs `oxfmt --check`; `commit-msg` runs commitlint with `@commitlint/config-conventional`. VS Code users should install the [oxc extension](https://marketplace.visualstudio.com/items?itemName=oxc.oxc-vscode) — see `.vscode/extensions.json`.
 
 ## Common commands
 
@@ -31,7 +31,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Type-check                           | `pnpm test:ts`                                                                                |
 | Parallax E2E                         | `pnpm test:e2e` (programmatically serves `packages/parallax/test`, runs Vitest browser specs) |
 | Lint                                 | `pnpm lint` (turbo across packages)                                                           |
-| Format                               | `pnpm prettier:write` / `pnpm prettier:check`                                                 |
+| Format                               | `pnpm format` / `pnpm format:check`                                                           |
 
 Note: `vitest.config.ts` aliases `@react-spring/*` to the package source under `packages/*/src/index.ts`, so unit tests run **without** a prior build. Anything outside Vitest (docs, publish-ci) needs `pnpm build` first.
 

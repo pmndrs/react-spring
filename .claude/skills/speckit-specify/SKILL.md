@@ -31,7 +31,6 @@ You **MUST** consider the user input before proceeding (if not empty).
   - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
 - When constructing slash commands from hook command names, replace dots (`.`) with hyphens (`-`). For example, `speckit.git.commit` → `/speckit-git-commit`.
 - For each executable hook, output the following based on its `optional` flag:
-
   - **Optional hook** (`optional: true`):
 
     ```
@@ -66,7 +65,6 @@ The text the user typed after `/speckit-specify` in the triggering message **is*
 Given that feature description, do this:
 
 1. **Generate a concise short name** (2-4 words) for the feature:
-
    - Analyze the feature description and extract the most meaningful keywords
    - Create a 2-4 word short name that captures the essence of the feature
    - Use action-noun format when possible (e.g., "add-user-auth", "fix-payment-bug")
@@ -89,7 +87,6 @@ Given that feature description, do this:
    Specs live under the default `specs/` directory unless the user explicitly provides `SPECIFY_FEATURE_DIRECTORY`.
 
    **Resolution order for `SPECIFY_FEATURE_DIRECTORY`**:
-
    1. If the user explicitly provided `SPECIFY_FEATURE_DIRECTORY` (e.g., via environment variable, argument, or configuration), use it as-is
    2. Otherwise, auto-generate it under `specs/`:
       - Check `.specify/init-options.json` for `branch_numbering`
@@ -99,7 +96,6 @@ Given that feature description, do this:
       - Set `SPECIFY_FEATURE_DIRECTORY` to `specs/<directory-name>`
 
    **Create the directory and spec file**:
-
    - `mkdir -p SPECIFY_FEATURE_DIRECTORY`
    - Copy `.specify/templates/spec-template.md` to `SPECIFY_FEATURE_DIRECTORY/spec.md` as the starting point
    - Set `SPEC_FILE` to `SPECIFY_FEATURE_DIRECTORY/spec.md`
@@ -113,7 +109,6 @@ Given that feature description, do this:
      This allows downstream commands (`/speckit-plan`, `/speckit-tasks`, etc.) to locate the feature directory without relying on git branch name conventions.
 
    **IMPORTANT**:
-
    - You must only create one feature per `/speckit-specify` invocation
    - The spec directory name and the git branch name are independent — they may be the same but that is the user's choice
    - The spec directory and file are always created by this command, never by the hook
@@ -121,7 +116,6 @@ Given that feature description, do this:
 4. Load `.specify/templates/spec-template.md` to understand required sections.
 
 5. Follow this execution flow:
-
    1. Parse user description from arguments
       If empty: ERROR "No feature description provided"
    2. Extract key concepts from description
@@ -190,23 +184,19 @@ Given that feature description, do this:
    ```
 
    b. **Run Validation Check**: Review the spec against each checklist item:
-
    - For each item, determine if it passes or fails
    - Document specific issues found (quote relevant spec sections)
 
    c. **Handle Validation Results**:
-
    - **If all items pass**: Mark checklist complete and proceed to step 8
 
    - **If items fail (excluding [NEEDS CLARIFICATION])**:
-
      1. List the failing items and specific issues
      2. Update the spec to address each issue
      3. Re-run validation until all items pass (max 3 iterations)
      4. If still failing after 3 iterations, document remaining issues in checklist notes and warn user
 
    - **If [NEEDS CLARIFICATION] markers remain**:
-
      1. Extract all [NEEDS CLARIFICATION: ...] markers from the spec
      2. **LIMIT CHECK**: If more than 3 markers exist, keep only the 3 most critical (by scope/security/UX impact) and make informed guesses for the rest
      3. For each clarification needed (max 3), present options to user in this format:
@@ -244,14 +234,12 @@ Given that feature description, do this:
    d. **Update Checklist**: After each validation iteration, update the checklist file with current pass/fail status
 
 8. **Report completion** to the user with:
-
    - `SPECIFY_FEATURE_DIRECTORY` — the feature directory path
    - `SPEC_FILE` — the spec file path
    - Checklist results summary
    - Readiness for the next phase (`/speckit-clarify` or `/speckit-plan`)
 
 9. **Check for extension hooks**: After reporting completion, check if `.specify/extensions.yml` exists in the project root.
-
    - If it exists, read it and look for entries under the `hooks.after_specify` key
    - If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
    - Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
@@ -260,7 +248,6 @@ Given that feature description, do this:
      - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
    - When constructing slash commands from hook command names, replace dots (`.`) with hyphens (`-`). For example, `speckit.git.commit` → `/speckit-git-commit`.
    - For each executable hook, output the following based on its `optional` flag:
-
      - **Optional hook** (`optional: true`):
 
        ```

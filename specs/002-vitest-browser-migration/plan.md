@@ -147,7 +147,6 @@ Producing the file is part of this command's output below.
 ## Phase 1 — Design Artifacts
 
 1. **`data-model.md`** — captures the test-infra entities:
-
    - `RunnerConfig` (root `vitest.config.ts`) with two `projects`: `unit`, `e2e`.
    - `SetupModule` (`packages/core/test/setup.ts`, referenced directly from `setupFiles`) — fields: `beforeEach reset list`, `helper globals`, `Globals.assign payload`.
    - `TestHelpers` — the public contract (see contracts/).
@@ -169,18 +168,15 @@ The full plan is broken into work-items below. `/speckit-tasks` will turn these 
 ### Work items
 
 - **W1 — Add Vitest toolchain** (no behaviour change yet)
-
   - Add `vitest`, `@vitest/browser`, `@vitest/coverage-v8`, `vitest-browser-react`, `playwright` to root `devDependencies`.
   - Create `vitest.config.ts` with `unit` project: browser mode, Playwright/Chromium, alias map, `setupFiles: ['./packages/core/test/setup.ts']` (referenced directly — no separate root shim), coverage thresholds.
   - Verify `pnpm vitest run` boots Chromium and discovers zero tests yet.
 
 - **W2 — Port setup file**
-
   - In `packages/core/test/setup.ts`: replace `jest.setTimeout(6e8)` → `vi.setConfig({ testTimeout: 6e8 })`; `jest.advanceTimersByTimeAsync` → `vi.advanceTimersByTimeAsync`; `beforeEach`/`afterEach` from `vitest`; `import { act } from '@testing-library/react'` → `import { act } from 'react'`. Keep `mockRaf`, `Globals.assign`, frame observers byte-for-byte equivalent.
   - Enable Vitest fake timers globally in config (`fakeTimers: { toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'Date'] }` — explicitly _not_ faking `requestAnimationFrame` since `mock-raf` owns it).
 
 - **W3 — Migrate unit tests**
-
   - Search-and-replace `jest.fn` / `jest.mock` / `jest.spyOn` → `vi.fn` / `vi.mock` / `vi.spyOn` across `packages/**/*.test.ts(x)` and `targets/**/*.test.tsx`.
   - Add `import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'` only where files relied on Jest globals not exposed by Vitest's default globals.
   - **Swap `@testing-library/react` → `vitest-browser-react`** at every call site (8 files total). Concretely:
@@ -191,27 +187,23 @@ The full plan is broken into work-items below. `/speckit-tasks` will turn these 
   - Run `pnpm vitest run` — fix any divergence.
 
 - **W4 — Re-implement parallax E2E**
-
   - Create `tests/e2e/parallax.spec.ts` using Vitest browser + `@vitest/browser/context` (`page`, `userEvent`).
   - Translate each `cy.findByTestId` → `screen.getByTestId` / `page.getByTestId`; `cy.scrollTo` → element scroll via `evaluate`; `cy.wait(4000)` → explicit `waitFor` on the transform value rather than wall-clock.
   - Drop `matchImageSnapshot` calls (out of scope per spec).
   - Wire the Vite fixture: `vitest.config.ts`'s `e2e` project gets a `setupFiles` that starts the Vite dev server on a free port and exposes `BASE_URL`, or use Vitest's `serve` integration directly.
 
 - **W5 — Coverage**
-
   - Configure `@vitest/coverage-v8` with the same `collectCoverageFrom` globs and thresholds.
   - Add `test:cov` script: `vitest run --coverage`.
   - Verify thresholds still pass.
 
 - **W6 — Scripts and removals**
-
   - `package.json`: `test:unit` → `vitest run --project unit`; `test:e2e` → `vitest run --project e2e`; `test:cov` → `vitest run --coverage --project unit`; keep `test` aggregate.
   - Remove `jest`, `@swc/jest`, `@types/jest`, `cypress`, `@simonsmith/cypress-image-snapshot`, `@testing-library/cypress`, `start-server-and-test` from devDependencies.
   - Delete `jest.config.js`, `cypress.config.ts`, `cypress/`.
   - Run `pnpm install` to update the lockfile.
 
 - **W7 — CI**
-
   - `.github/workflows/tests.yml`:
     - Drop `cypress/**` from the path filter.
     - In `test-unit`, add a step before `pnpm test:unit`: `pnpm exec playwright install --with-deps chromium` (cached via `~/.cache/ms-playwright`).
