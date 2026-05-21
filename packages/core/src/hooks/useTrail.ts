@@ -88,15 +88,30 @@ export function useTrail(
   if (propsFn && !deps) deps = []
 
   // The trail is reversed when every render-based update is reversed.
-  let reverse = true
+  // For the object-form props, derive reverse and ref directly from the
+  // shared props — every spring receives the same props, so accumulating
+  // them via the useSprings wrapper is unnecessary and unsafe: under
+  // React.StrictMode the wrapper is not invoked on the second render
+  // pass (useSprings caches via useMemo with [length] deps), which would
+  // leave the accumulator stuck at its initial value.
+  let reverse: boolean | undefined
   let passedRef: SpringRef | undefined = undefined
+
+  if (!propsFn) {
+    reverse = (propsArg as UseTrailProps).reverse
+    passedRef = (propsArg as UseTrailProps).ref
+  } else {
+    reverse = true
+  }
 
   const result = useSprings(
     length,
     (i, ctrl) => {
       const props = propsFn ? propsFn(i, ctrl) : propsArg
-      passedRef = props.ref
-      reverse = reverse && props.reverse
+      if (propsFn) {
+        passedRef = props.ref
+        reverse = reverse && props.reverse
+      }
 
       return props
     },
