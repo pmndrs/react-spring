@@ -2,7 +2,7 @@ import * as React from 'react'
 import { forwardRef } from 'react'
 import { render } from 'vitest-browser-react'
 import createMockRaf, { MockRaf } from '@react-spring/mock-raf'
-import { Globals } from '@react-spring/shared'
+import { FluidValue, Globals, callFluidObservers } from '@react-spring/shared'
 import { SpringValue, Animatable } from '@react-spring/core'
 
 import { a } from './index'
@@ -224,6 +224,89 @@ describe('animated component', () => {
   })
 })
 
+describe('animated component attribute removal', () => {
+  it('removes a boolean-style attribute when its animated value becomes undefined', () => {
+    const inert = new TestFluid<true | undefined>(true)
+    const { getByTestId } = render(
+      <a.div inert={inert as any} data-testid="wrapper" />
+    )
+    const el = getByTestId('wrapper').element() as HTMLElement
+    expect(el.hasAttribute('inert')).toBe(true)
+    inert.set(undefined)
+    mockRaf.step()
+    expect(el.hasAttribute('inert')).toBe(false)
+  })
+  it('removes a generic attribute when its animated value becomes undefined', () => {
+    const value = new TestFluid<string | undefined>('bar')
+    const { getByTestId } = render(
+      <a.div data-foo={value as any} data-testid="wrapper" />
+    )
+    const el = getByTestId('wrapper').element() as HTMLElement
+    expect(el.getAttribute('data-foo')).toBe('bar')
+    value.set(undefined)
+    mockRaf.step()
+    expect(el.hasAttribute('data-foo')).toBe(false)
+  })
+  it('removes the viewBox attribute when its animated value becomes undefined', () => {
+    const viewBox = new TestFluid<string | undefined>('0 0 100 100')
+    const { getByTestId } = render(
+      <a.svg viewBox={viewBox as any} data-testid="wrapper" />
+    )
+    const el = getByTestId('wrapper').element() as unknown as SVGSVGElement
+    expect(el.getAttribute('viewBox')).toBe('0 0 100 100')
+    viewBox.set(undefined)
+    mockRaf.step()
+    expect(el.hasAttribute('viewBox')).toBe(false)
+  })
+  it('removes the class attribute when className becomes undefined', () => {
+    const className = new TestFluid<string | undefined>('initial')
+    const { getByTestId } = render(
+      <a.div className={className as any} data-testid="wrapper" />
+    )
+    const el = getByTestId('wrapper').element() as HTMLElement
+    expect(el.getAttribute('class')).toBe('initial')
+    className.set(undefined)
+    mockRaf.step()
+    expect(el.hasAttribute('class')).toBe(false)
+  })
+  it('clears textContent when children becomes undefined', () => {
+    const children = new TestFluid<string | undefined>('hello')
+    const { getByTestId } = render(
+      <a.div data-testid="wrapper">{children as any}</a.div>
+    )
+    const el = getByTestId('wrapper').element() as HTMLElement
+    expect(el.textContent).toBe('hello')
+    children.set(undefined)
+    mockRaf.step()
+    expect(el.textContent).toBe('')
+  })
+  it('still applies defined falsy attribute values rather than removing them', () => {
+    const value = new TestFluid<string>('1')
+    const { getByTestId } = render(
+      <a.div tabIndex={value as any} data-testid="wrapper" />
+    )
+    const el = getByTestId('wrapper').element() as HTMLElement
+    expect(el.getAttribute('tabindex')).toBe('1')
+    value.set('0')
+    mockRaf.step()
+    expect(el.getAttribute('tabindex')).toBe('0')
+    expect(el.hasAttribute('tabindex')).toBe(true)
+  })
+})
+
 function spring<T>(value: T): SpringValue<Animatable<T>> {
   return new SpringValue(value!)
+}
+
+class TestFluid<T> extends FluidValue<T> {
+  constructor(private _value: T) {
+    super()
+  }
+  protected get(): T {
+    return this._value
+  }
+  set(next: T): void {
+    this._value = next
+    callFluidObservers(this, { type: 'change', parent: this })
+  }
 }
