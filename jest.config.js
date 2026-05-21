@@ -12,6 +12,7 @@ module.exports = {
   modulePathIgnorePatterns: ['dist', 'cypress'],
   moduleNameMapper: {
     '^react$': '<rootDir>/node_modules/react',
+    '^@react-spring/mock-raf$': '<rootDir>/packages/mock-raf/index.js',
     '@react-spring/(.*)': '<rootDir>/packages/$1/src/index.ts',
   },
   collectCoverageFrom: [

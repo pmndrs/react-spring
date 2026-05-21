@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { forwardRef } from 'react'
 import { render } from '@testing-library/react'
-import createMockRaf, { MockRaf } from 'mock-raf'
+import createMockRaf, { MockRaf } from '@react-spring/mock-raf'
 import { Globals } from '@react-spring/shared'
 import { SpringValue, Animatable } from '@react-spring/core'
 
