@@ -533,6 +533,29 @@ function describeConfigProp() {
       spring.start({ to: 200 })
       expect(config.velocity).toBe(0)
     })
+    it('preserves velocity across "to" updates when decay is set', () => {
+      const spring = new SpringValue(0)
+      spring.start({ to: 100, config: { velocity: 10, decay: true } })
+
+      const { config } = spring.animation
+      expect(config.velocity).toBe(10)
+
+      // Retargeting must NOT wipe velocity for decay animations.
+      spring.start({ to: 200, config: { decay: true } })
+      expect(config.velocity).toBe(10)
+    })
+    it('decay continues animating after retarget (#1843)', async () => {
+      const spring = new SpringValue(0)
+      spring.start(100, { config: { velocity: 10, decay: 0.48 } })
+      await global.advanceUntilIdle()
+      const firstRest = spring.get()
+      expect(firstRest).toBeGreaterThan(1)
+
+      // Simulate a mid-gesture retarget with a new velocity.
+      spring.start(200, { config: { velocity: 5, decay: 0.48 } })
+      await global.advanceUntilIdle()
+      expect(spring.get()).toBeGreaterThan(firstRest)
+    })
     describe('when "damping" is 1.0', () => {
       it('should prevent bouncing', async () => {
         const spring = new SpringValue(0)

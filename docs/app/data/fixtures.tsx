@@ -268,7 +268,11 @@ export const configData: CellData[][] = [
       label: 'number | boolean',
       content: (
         <p>
-          If <code>true</code>, default value is <code>0.998</code>.
+          Decelerates from an initial <code>velocity</code>. Requires a non-zero{' '}
+          <code>config.velocity</code> — the <code>to</code> value is not a goal
+          for decay animations. Typically paired with gesture velocity (see the
+          rocket-decay example). Pass <code>true</code> for the default
+          exponential factor (<code>0.998</code>).
         </p>
       ),
     },
