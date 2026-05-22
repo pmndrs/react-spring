@@ -54,7 +54,7 @@
     "chokidar": "4.0.3",
     "concurrently": "9.1.2",
     "esbuild": "0.24.2",
-    "fs-extra": "10.1.0",
+    "fs-extra": "11.3.5",
     "gray-matter": "4.0.3",
     "hast-util-to-html": "9.0.4",
     "hast-util-to-string": "3.0.1",
