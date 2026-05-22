@@ -52,7 +52,7 @@
     "@react-router/fs-routes": "7.15.1",
     "@vanilla-extract/vite-plugin": "5.0.2",
     "chokidar": "4.0.3",
-    "concurrently": "9.1.2",
+    "concurrently": "9.2.1",
     "esbuild": "0.24.2",
     "fs-extra": "10.1.0",
     "gray-matter": "4.0.3",
