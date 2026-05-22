@@ -5,7 +5,10 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "**/*.css.ts"
+  ],
   "scripts": {
     "build": "react-router build",
     "dev": "concurrently \"pnpm dev:rr\" \"pnpm scripts:watch\"",
@@ -33,8 +36,6 @@
     "@vanilla-extract/css": "1.20.1",
     "@vanilla-extract/dynamic": "2.1.5",
     "@vanilla-extract/recipes": "0.5.7",
-    "@vercel/analytics": "2.0.1",
-    "@vercel/react-router": "1.3.0",
     "clsx": "2.1.1",
     "cookie": "1.1.1",
     "isbot": "5.1.40",

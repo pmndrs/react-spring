@@ -1,0 +1,23 @@
+.git
+.github
+.husky
+.claude
+.vercel
+.vscode
+.idea
+.DS_Store
+
+# build outputs and caches (rebuilt inside container)
+**/node_modules
+**/.turbo
+**/build
+**/dist
+**/.cache
+**/.react-router
+**/__screenshots__
+**/coverage
+**/*.log
+
+# editor / OS noise
+*.tgz
+Thumbs.db
