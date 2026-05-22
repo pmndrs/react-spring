@@ -96,6 +96,36 @@ const App = () => {
 
 If the component you are wrapping does not pass this element then <strong>nothing will animate</strong>.
 
+## Typing components that receive animated styles
+
+When you wrap a third-party component with `animated()`, the wrapper's `style`
+prop is typed correctly for you. But when you forward `SpringValues` through a
+component you wrote — for example, the styles handed back by a `useTransition`
+render callback — the receiving prop has to be typed as `SpringValues`, not
+`React.CSSProperties`. Each entry is a `SpringValue` instance, not the
+underlying primitive.
+
+```tsx
+import { animated, SpringValues, useTransition } from '@react-spring/web'
+
+const Item = ({ styles }: { styles: SpringValues<{ opacity: number }> }) => (
+  <animated.div style={styles}>Hello</animated.div>
+)
+
+const List = ({ items }: { items: number[] }) => {
+  const transitions = useTransition(items, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+  })
+
+  return transitions(styles => <Item styles={styles} />)
+}
+```
+
+See [`SpringValues`](/docs/typescript#springvalues) for related notes on
+literal-value widening inside `useSpring`.
+
 ## Example: using stitches & radix-ui
 
 ```jsx live=true template=dialog

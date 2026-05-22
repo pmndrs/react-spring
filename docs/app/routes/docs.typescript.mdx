@@ -104,6 +104,34 @@ type MySpringValues = SpringValues<{
 }>
 ```
 
+### Passing animated styles to a child component
+
+`SpringValues` is **not** `React.CSSProperties`. Each entry is a `SpringValue`
+instance, not the underlying primitive — so a prop typed as `CSSProperties` will
+reject them. Type the receiving prop as `SpringValues` instead:
+
+```tsx
+import { animated, SpringValues, useTransition } from '@react-spring/web'
+
+const Item = ({ styles }: { styles: SpringValues<{ opacity: number }> }) => (
+  <animated.div style={styles}>Hello</animated.div>
+)
+```
+
+### Widening literal values
+
+`useSpring` infers each value's type from your config. A ternary like
+`showMenu ? 'all' : 'none'` widens to `string`, which doesn't satisfy a literal
+union such as `CSSProperties['pointerEvents']`. Narrow the value at the call
+site:
+
+```tsx
+const styles = useSpring({
+  opacity: showMenu ? 1 : 0,
+  pointerEvents: showMenu ? ('all' as const) : ('none' as const),
+})
+```
+
 ## TransitionState
 
 `TransitionState` is the internal state attached to a particular `Item`
