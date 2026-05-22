@@ -67,8 +67,32 @@ export const createStringInterpolator = (
     createInterpolator({ ...config, output })
   )
 
+  const inputRange = config.range || [0, 1]
+
+  // Per number-position, the shared fractional-digit count across all
+  // keyframes — or `null` when keyframes disagree or every keyframe is
+  // a whole number. Whole-number keyframes are left untouched so that
+  // values like the alpha channel in `rgba(…, 0)` → `rgba(…, 1)` keep
+  // their natural sub-frame precision.
+  const decimalCounts = output[0].match(numberRegex)!.map((_, pos) => {
+    const counts = output.map(value => {
+      const token = value.match(numberRegex)![pos]
+      const dot = token.indexOf('.')
+      return dot === -1 ? 0 : token.length - dot - 1
+    })
+    return counts.every(c => c === counts[0]) && counts[0] > 0
+      ? counts[0]
+      : null
+  })
+
   // Use the first `output` as a template for each call
   return (input: number) => {
+    // When `input` lands exactly on a keyframe, return that keyframe's
+    // output verbatim so token-level formatting (trailing zeros, signs,
+    // locale separators) survives the round-trip through `numberRegex`.
+    const keyIdx = inputRange.indexOf(input)
+    if (keyIdx !== -1) return output[keyIdx]
+
     // Convert numbers to units if available (allows for ["0", "100%"])
     const missingUnit =
       !unitRegex.test(output[0]) &&
@@ -76,10 +100,13 @@ export const createStringInterpolator = (
 
     let i = 0
     return output[0]
-      .replace(
-        numberRegex,
-        () => `${interpolators[i++](input)}${missingUnit || ''}`
-      )
+      .replace(numberRegex, () => {
+        const pos = i++
+        const value = interpolators[pos](input)
+        const decimals = decimalCounts[pos]
+        const formatted = decimals != null ? value.toFixed(decimals) : value
+        return `${formatted}${missingUnit || ''}`
+      })
       .replace(rgbaRegex, rgbaRound)
   }
 }
