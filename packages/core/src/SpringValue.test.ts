@@ -259,8 +259,23 @@ function describeResetProp() {
       expect(spring.get()).toBe(0)
     })
 
-    it.todo('resolves the "start" promise with (finished: false)')
-    it.todo('calls the "onRest" prop with (finished: false)')
+    it('resolves the "start" promise with (finished: false)', async () => {
+      const spring = new SpringValue<number>()
+      const promise = spring.start({ from: 0, to: 1 })
+      await global.advance(5)
+      spring.start({ reset: true })
+      const result = await promise
+      expect(result.finished).toBe(false)
+    })
+
+    it('calls the "onRest" prop with (finished: false)', async () => {
+      const onRest = vi.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onRest })
+      await global.advance(5)
+      spring.start({ reset: true })
+      expect(onRest).toBeCalledTimes(1)
+      expect(onRest.mock.calls[0][0]).toMatchObject({ finished: false })
+    })
   })
 }
 
