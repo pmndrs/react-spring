@@ -186,8 +186,8 @@ importers:
         specifier: 1.5.0
         version: 1.5.0
       wouter:
-        specifier: 2.12.1
-        version: 2.12.1(react@19.2.6)
+        specifier: 3.10.0
+        version: 3.10.0(react@19.2.6)
     devDependencies:
       '@types/lodash.clamp':
         specifier: 4.0.9
@@ -414,8 +414,8 @@ importers:
         specifier: 1.3.6
         version: 1.3.6
       wouter:
-        specifier: 2.12.1
-        version: 2.12.1(react@19.2.6)
+        specifier: 3.10.0
+        version: 3.10.0(react@19.2.6)
 
   packages/rafz: {}
 
@@ -5043,6 +5043,9 @@ packages:
     resolution: {integrity: sha512-OBwBN9AL4dqmETlpS2zasx+vTeWclWzkblfZk7KTA5j3jeOONz/tRCnZomUyvNg83wL5Zv9Ss6HMJXAgL8R2Yg==}
     engines: {node: '>=16 || 14 >=14.17'}
 
+  mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+
   mixin-deep@1.3.2:
     resolution: {integrity: sha512-WRoDn//mXBiJ1H40rqa3vH0toePwSsGb45iInWlTySa+Uu4k3tYUSxa2v1KqAiLtvlrSzaExqS1gtk96A9zvEA==}
     engines: {node: '>=0.10.0'}
@@ -5620,6 +5623,10 @@ packages:
 
   regenerator-runtime@0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
+
+  regexparam@3.0.0:
+    resolution: {integrity: sha512-RSYAtP31mvYLkAHrOlh25pCNQ5hWnT106VukGaaFfuJrZFkGRX5GhUAdPqpSDXxOhA2c4akmRuplv1mRqnBn6Q==}
+    engines: {node: '>=8'}
 
   rehype-autolink-headings@7.1.0:
     resolution: {integrity: sha512-rItO/pSdvnvsP4QRB1pmPiNHUskikqtPojZKJPPPAVx9Hj8i8TwMBhofrrAYRhYOOBZH9tgmG5lPqDLuIWPWmw==}
@@ -6429,8 +6436,8 @@ packages:
     engines: {node: '>=8'}
     hasBin: true
 
-  wouter@2.12.1:
-    resolution: {integrity: sha512-G7a6JMSLSNcu6o8gdOfIzqxuo8Qx1qs+9rpVnlurH69angsSFPZP5gESNuVNeJct/MGpQg191pDo4HUjTx7IIQ==}
+  wouter@3.10.0:
+    resolution: {integrity: sha512-zTfddD80zc2/J5l8JKcdvzOK6AwP0kpyHEI3DxRN2bn8U1oJPnrSVm8v+X3WwDamvLAOxTO7ZvkxkpRWlyeJ1Q==}
     peerDependencies:
       react: '>=16.8.0'
 
@@ -11517,6 +11524,8 @@ snapshots:
     dependencies:
       brace-expansion: 2.1.0
 
+  mitt@3.0.1: {}
+
   mixin-deep@1.3.2:
     dependencies:
       for-in: 1.0.2
@@ -12131,6 +12140,8 @@ snapshots:
       parse-entities: 4.0.2
 
   regenerator-runtime@0.13.11: {}
+
+  regexparam@3.0.0: {}
 
   rehype-autolink-headings@7.1.0:
     dependencies:
@@ -12998,9 +13009,11 @@ snapshots:
       siginfo: 2.0.0
       stackback: 0.0.2
 
-  wouter@2.12.1(react@19.2.6):
+  wouter@3.10.0(react@19.2.6):
     dependencies:
+      mitt: 3.0.1
       react: 19.2.6
+      regexparam: 3.0.0
       use-sync-external-store: 1.6.0(react@19.2.6)
 
   wrap-ansi@7.0.0:
