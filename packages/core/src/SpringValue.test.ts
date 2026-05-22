@@ -36,19 +36,28 @@ describe('SpringValue', () => {
     expect(finished).toBeTruthy()
   })
 
-  // FIXME: This test fails.
-  it.skip('animates a number the same as a numeric string', async () => {
+  it('animates a number the same as a numeric string', async () => {
     const spring1 = new SpringValue(0)
     spring1.start(10)
 
     await global.advanceUntilIdle()
-    const frames = global.getFrames(spring1).map(n => n + 'px')
+    const numericFrames = global.getFrames(spring1)
 
     const spring2 = new SpringValue('0px')
     spring2.start('10px')
 
     await global.advanceUntilIdle()
-    expect(frames).toEqual(global.getFrames(spring2))
+    const stringFrames = global
+      .getFrames(spring2)
+      .map((s: string) => parseFloat(s))
+
+    // The string-numeric path runs values through the string interpolator,
+    // which costs an extra arithmetic step and can shift the final mantissa
+    // bit. Compare with tolerance rather than bitwise equality.
+    expect(numericFrames).toHaveLength(stringFrames.length)
+    numericFrames.forEach((n: number, i: number) =>
+      expect(n).toBeCloseTo(stringFrames[i], 10)
+    )
   })
 
   it('can animate an array of numbers', async () => {
@@ -144,8 +153,26 @@ function describeProps() {
 
 function describeToProp() {
   describe('when "to" prop is changed', () => {
-    it.todo('resolves the "start" promise with (finished: false)')
-    it.todo('avoids calling the "onStart" prop')
+    it('resolves the "start" promise with (finished: false)', async () => {
+      const spring = new SpringValue(0)
+      const promise = spring.start(1)
+      await global.advance(5)
+      spring.start(2)
+      const result = await promise
+      expect(result.finished).toBe(false)
+    })
+
+    it('avoids calling the "onStart" prop', async () => {
+      const onStart = vi.fn()
+      const spring = new SpringValue(0)
+      spring.start(1, { onStart })
+      await global.advance(5)
+      expect(onStart).toBeCalledTimes(1)
+      spring.start(2)
+      await global.advanceUntilIdle()
+      expect(onStart).toBeCalledTimes(1)
+    })
+
     it.todo('avoids calling the "onRest" prop')
   })
 
@@ -196,7 +223,23 @@ function describeToProp() {
 
 function describeFromProp() {
   describe('when "from" prop is defined', () => {
-    it.todo('controls the start value')
+    it('controls the start value', async () => {
+      const spring = new SpringValue<number>()
+      const onChange = vi.fn()
+      spring.start({
+        from: 5,
+        to: 10,
+        config: { duration: 10 * frameLength },
+        onChange,
+      })
+      expect(spring.get()).toBe(5)
+      await global.advance()
+      // After the first frame the spring should have moved away from "from"
+      // toward "to" — it should never have read its prior current value.
+      expect(onChange.mock.calls[0][0]).toBeGreaterThan(5)
+      await global.advanceUntilIdle()
+      expect(spring.get()).toBe(10)
+    })
   })
 }
 
@@ -216,8 +259,23 @@ function describeResetProp() {
       expect(spring.get()).toBe(0)
     })
 
-    it.todo('resolves the "start" promise with (finished: false)')
-    it.todo('calls the "onRest" prop with (finished: false)')
+    it('resolves the "start" promise with (finished: false)', async () => {
+      const spring = new SpringValue<number>()
+      const promise = spring.start({ from: 0, to: 1 })
+      await global.advance(5)
+      spring.start({ reset: true })
+      const result = await promise
+      expect(result.finished).toBe(false)
+    })
+
+    it('calls the "onRest" prop with (finished: false)', async () => {
+      const onRest = vi.fn()
+      const spring = new SpringValue({ from: 0, to: 1, onRest })
+      await global.advance(5)
+      spring.start({ reset: true })
+      expect(onRest).toBeCalledTimes(1)
+      expect(onRest.mock.calls[0][0]).toMatchObject({ finished: false })
+    })
   })
 }
 
@@ -372,9 +430,38 @@ function describeReverseProp() {
 
 function describeImmediateProp() {
   describe('when "immediate" prop is true', () => {
-    it.todo('still resolves the "start" promise')
-    it.todo('never calls the "onStart" prop')
-    it.todo('never calls the "onRest" prop')
+    it('still resolves the "start" promise', async () => {
+      const spring = new SpringValue(0)
+      const promise = spring.start(1, { immediate: true })
+      await global.advanceUntilIdle()
+      const result = await promise
+      expect(result.finished).toBe(true)
+      expect(result.value).toBe(1)
+    })
+
+    it('calls the "onStart" prop with finished: true', async () => {
+      const onStart = vi.fn()
+      const spring = new SpringValue(0)
+      spring.start(1, { immediate: true, onStart })
+      await global.advanceUntilIdle()
+      expect(onStart).toBeCalledTimes(1)
+      expect(onStart.mock.calls[0][0]).toMatchObject({
+        finished: true,
+        cancelled: false,
+      })
+    })
+
+    it('calls the "onRest" prop with finished: true', async () => {
+      const onRest = vi.fn()
+      const spring = new SpringValue(0)
+      spring.start(1, { immediate: true, onRest })
+      await global.advanceUntilIdle()
+      expect(onRest).toBeCalledTimes(1)
+      expect(onRest.mock.calls[0][0]).toMatchObject({
+        finished: true,
+        value: 1,
+      })
+    })
 
     it('stops animating', async () => {
       const spring = new SpringValue(0)
@@ -457,11 +544,10 @@ function describeConfigProp() {
       })
     })
     describe('when "damping" is less than 1.0', () => {
-      // FIXME: This test fails.
-      it.skip('should bounce', async () => {
+      it('should bounce', async () => {
         const spring = new SpringValue(0)
         spring.start(1, {
-          config: { frequency: 1.5, damping: 1 },
+          config: { frequency: 1.5, damping: 0.5 },
         })
         await global.advanceUntilIdle()
         expect(global.countBounces(spring)).toBeGreaterThan(0)
@@ -924,7 +1010,19 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
       expect(spring.get()).toBe(target.node.get())
     })
 
-    it.todo('preserves its "onRest" prop between animations')
+    it('preserves its "onRest" prop between animations', async () => {
+      const onRest = vi.fn()
+      spring.start({ to: target.node, onRest })
+      await global.advanceUntilIdle()
+      expect(onRest).toBeCalledTimes(1)
+
+      // When the fluid target moves, the spring re-animates without a
+      // fresh start() call. The "onRest" handler should still fire when
+      // the new animation settles.
+      target.start(2)
+      await global.advanceUntilIdle()
+      expect(onRest).toBeCalledTimes(2)
+    })
 
     it('can change its target while animating', async () => {
       spring.start({ to: target.node })

@@ -41,17 +41,45 @@ describe('useTrail', () => {
   })
 
   describe('when a props function is passed', () => {
-    it.todo('does nothing on rerender')
+    it('does nothing on rerender', async () => {
+      const propsFn = vi.fn((_i: number) => ({ x: 100 }))
+      await update(2, propsFn)
+      propsFn.mockClear()
+      await update(2, propsFn)
+      expect(propsFn).not.toBeCalled()
+    })
   })
 
   describe('with the "reverse" prop', () => {
     describe('when "reverse" becomes true', () => {
-      it.todo('swaps the "to" and "from" props')
-      it.todo('has each spring follow the spring after it')
+      it('swaps the "to" and "from" props', async () => {
+        await update(2, { x: 100, from: { x: 0 } })
+        await update(2, { x: 100, from: { x: 0 }, reverse: true })
+        // The head with reverse:true is the last spring, with to/from swapped.
+        expect(springs[1].x.animation.to).toBe(0)
+        expect(springs[1].x.animation.from).toBe(100)
+      })
+
+      it('has each spring follow the spring after it', async () => {
+        await update(2, { x: 100, from: { x: 0 } })
+        await update(2, { x: 100, from: { x: 0 }, reverse: true })
+        expect(springs[0].x.animation.to).toBe(springs[1].x)
+      })
     })
     describe('when "reverse" becomes false', () => {
-      it.todo('uses the "to" and "from" props as-is')
-      it.todo('has each spring follow the spring before it')
+      it('uses the "to" and "from" props as-is', async () => {
+        await update(2, { x: 100, from: { x: 0 }, reverse: true })
+        await update(2, { x: 100, from: { x: 0 }, reverse: false })
+        // The head with reverse:false is springs[0], with to/from as passed.
+        expect(springs[0].x.animation.to).toBe(100)
+        expect(springs[0].x.animation.from).toBe(0)
+      })
+
+      it('has each spring follow the spring before it', async () => {
+        await update(2, { x: 100, from: { x: 0 }, reverse: true })
+        await update(2, { x: 100, from: { x: 0 }, reverse: false })
+        expect(springs[1].x.animation.to).toBe(springs[0].x)
+      })
     })
   })
 
