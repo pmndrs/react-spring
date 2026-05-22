@@ -81,6 +81,7 @@ export function useTransition(
     reset,
     sort,
     trail = 0,
+    reverse = false,
     expires = true,
     exitBeforeEnter = false,
     onDestroyed,
@@ -197,6 +198,12 @@ export function useTransition(
 
   // Track cumulative delay for the "trail" prop.
   let delay = -trail
+  // Payloads that received a trail-step delay, in iteration order. Used to
+  // flip the trail when `reverse` is true.
+  const trailedPayloads: Array<{
+    payload: ControllerUpdate<UnknownProps>
+    propsDelay: number
+  }> = []
 
   // Expired transitions use this to dismount.
   const forceUpdate = useForceUpdate()
@@ -341,6 +348,8 @@ export function useTransition(
 
     const springs = getSprings(t.ctrl, payload)
 
+    trailedPayloads.push({ payload, propsDelay })
+
     /**
      * Make a separate map for the exiting changes and "regular" changes
      */
@@ -350,6 +359,17 @@ export function useTransition(
       changes.set(t, { phase, springs, payload })
     }
   })
+
+  // When `reverse` is true, flip the trail step so the last transitioning
+  // item gets delay 0 and the first gets `(N - 1) * trail`. Payload refs are
+  // the same objects stored in `changes` / `exitingTransitions`, so mutating
+  // them updates the values the effect reads later.
+  if (reverse && trail) {
+    const total = trailedPayloads.length
+    each(trailedPayloads, ({ payload, propsDelay }, i) => {
+      payload.delay = propsDelay + (total - 1 - i) * trail
+    })
+  }
 
   // The prop overrides from an ancestor.
   const context = useContext(SpringContext)

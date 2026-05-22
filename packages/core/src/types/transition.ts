@@ -63,6 +63,18 @@ export type UseTransitionProps<Item = any> = Merge<
     keys?: ItemKeys<Item>
     sort?: (a: Item, b: Item) => number
     trail?: number
+    /**
+     * Reverses the order in which `trail` delays are assigned to transitioning
+     * items. When `true`, the last visible item starts first and the trail
+     * accumulates backward across the remaining items. Does not affect render
+     * order — use `sort` for that.
+     *
+     * Toggle this with your open/close state (e.g. `reverse: !open`) to make
+     * items animate in forward on `enter` and backward on `leave`.
+     *
+     * @default false
+     */
+    reverse?: boolean
     exitBeforeEnter?: boolean
     /**
      * When `true` or `<= 0`, each item is unmounted immediately after its
