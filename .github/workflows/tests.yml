@@ -141,7 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ts: ['5.0', '5.4', '5.7', '5.9']
+        ts: ['5.0', '5.4', '5.7', '5.9', '6.0']
 
     steps:
       - name: Checkout repo
@@ -161,6 +161,14 @@ jobs:
 
       - name: Install TypeScript ${{ matrix.ts }}
         run: pnpm add -w typescript@${{ matrix.ts }}
+
+      # tsup's dts plugin injects `baseUrl: "."` unconditionally, which TS 6
+      # flags as deprecated. Silence it only for the TS 6 matrix entry —
+      # earlier versions reject "6.0" as an invalid value. Track upstream:
+      # https://github.com/egoist/tsup/issues/1388
+      - name: Patch tsconfig for TS 6.0 dts build
+        if: matrix.ts == '6.0'
+        run: jq '.compilerOptions.ignoreDeprecations = "6.0"' tsconfig.json > tsconfig.tmp && mv tsconfig.tmp tsconfig.json
 
       - name: Build
         run: pnpm build-ci
