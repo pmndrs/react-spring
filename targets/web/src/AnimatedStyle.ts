@@ -20,7 +20,8 @@ import {
  * animated. Perspective has been left out as it would conflict with the
  * non-transform perspective style.
  */
-const domTransforms = /^(matrix|translate|scale|rotate|skew)/
+const domTransforms =
+  /^(matrix3d|matrix|translate3d|translate[XYZ]?|scale3d|scale[XYZ]?|rotate3d|rotate[XYZ]?|skew[XY]?)$/
 
 // These keys have "px" units by default
 const pxTransforms = /^(translate)/
