@@ -544,7 +544,7 @@ importers:
         specifier: workspace:~
         version: link:../../packages/types
       csstype:
-        specifier: ^3.1.0
+        specifier: ^3.2.3
         version: 3.2.3
       react:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
