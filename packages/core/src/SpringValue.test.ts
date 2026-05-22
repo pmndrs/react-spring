@@ -153,8 +153,26 @@ function describeProps() {
 
 function describeToProp() {
   describe('when "to" prop is changed', () => {
-    it.todo('resolves the "start" promise with (finished: false)')
-    it.todo('avoids calling the "onStart" prop')
+    it('resolves the "start" promise with (finished: false)', async () => {
+      const spring = new SpringValue(0)
+      const promise = spring.start(1)
+      await global.advance(5)
+      spring.start(2)
+      const result = await promise
+      expect(result.finished).toBe(false)
+    })
+
+    it('avoids calling the "onStart" prop', async () => {
+      const onStart = vi.fn()
+      const spring = new SpringValue(0)
+      spring.start(1, { onStart })
+      await global.advance(5)
+      expect(onStart).toBeCalledTimes(1)
+      spring.start(2)
+      await global.advanceUntilIdle()
+      expect(onStart).toBeCalledTimes(1)
+    })
+
     it.todo('avoids calling the "onRest" prop')
   })
 
