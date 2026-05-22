@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "2.20.0",
-    "@docsearch/css": "3.8.2",
-    "@docsearch/react": "3.8.2",
+    "@docsearch/css": "4.6.3",
+    "@docsearch/react": "4.6.3",
     "@mdx-js/react": "3.1.1",
     "@radix-ui/react-accordion": "1.2.12",
     "@radix-ui/react-dialog": "1.1.15",
