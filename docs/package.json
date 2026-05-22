@@ -53,7 +53,7 @@
     "@vanilla-extract/vite-plugin": "5.0.2",
     "chokidar": "4.0.3",
     "concurrently": "9.2.1",
-    "esbuild": "0.24.2",
+    "esbuild": "0.28.0",
     "fs-extra": "11.3.5",
     "gray-matter": "4.0.3",
     "hast-util-to-html": "9.0.5",
