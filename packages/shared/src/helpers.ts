@@ -68,7 +68,7 @@ export function eachProp<T extends object, This>(
 }
 
 export const toArray = <T>(a: T): Arrify<Exclude<T, void>> =>
-  is.und(a) ? [] : is.arr(a) ? (a as any) : [a]
+  (is.und(a) ? [] : is.arr(a) ? a : [a]) as Arrify<Exclude<T, void>>
 
 /** Copy the `queue`, then iterate it after the `queue` is cleared */
 export function flush<P, T>(
