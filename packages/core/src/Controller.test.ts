@@ -500,6 +500,37 @@ describe('Controller', () => {
       })
     })
 
+    // Regression test for https://github.com/pmndrs/react-spring/issues/1193
+    describe('when changed on a later update', () => {
+      it('stops looping when toggled from true to false', async () => {
+        const ctrl = new Controller<{ t: number }>({ t: 0 })
+        const { t } = ctrl.springs
+
+        ctrl.start({
+          from: { t: 0 },
+          to: { t: 1 },
+          loop: true,
+          config: { duration: 3000 / 60 },
+        })
+
+        await global.advanceUntilValue(t, 1)
+        expect(t.idle).toBeFalsy()
+
+        // Re-render with the same goal but `loop` flipped to false.
+        // The captured `loop: true` in the prior chain would otherwise
+        // keep scheduling iterations even though the user wants to stop.
+        ctrl.start({
+          from: { t: 0 },
+          to: { t: 1 },
+          loop: false,
+          config: { duration: 3000 / 60 },
+        })
+
+        await global.advanceUntilIdle()
+        expect(t.idle).toBeTruthy()
+      })
+    })
+
     describe('when "finish" is called while paused', () => {
       async function getPausedLoop() {
         const ctrl = new Controller<{ t: number }>({
