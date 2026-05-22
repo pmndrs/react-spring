@@ -58,7 +58,7 @@
     "@react-spring/web": "workspace:~"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "4.7.0",
+    "@vitejs/plugin-react": "6.0.2",
     "wouter": "3.10.0"
   },
   "peerDependencies": {

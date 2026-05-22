@@ -88,7 +88,7 @@
     "tsup": "8.5.1",
     "turbo": "2.9.14",
     "typescript": "5.7.2",
-    "vite": "6.0.7",
+    "vite": "8.0.14",
     "vitest": "^4.1.7",
     "vitest-browser-react": "^2.2.0",
     "zdog": "1.1.3"
