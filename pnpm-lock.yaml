@@ -84,7 +84,7 @@ importers:
         specifier: ^19
         version: 19.2.4(@types/react@19.2.15)(konva@9.3.18)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-native:
-        specifier: '>=0.78'
+        specifier: '>=0.85.3'
         version: 0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6)
       react-zdog:
         specifier: 1.2.2
