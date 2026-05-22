@@ -10,12 +10,12 @@
   ],
   "main": "src/index.js",
   "dependencies": {
-    "@react-three/fiber": "~9.1.2",
+    "@react-three/fiber": "~9.6.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-scripts": "5.0.1",
     "@react-spring/three": "*",
-    "three": "0.172.0"
+    "three": "0.184.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.15",
