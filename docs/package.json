@@ -5,7 +5,10 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "**/*.css.ts"
+  ],
   "scripts": {
     "build": "react-router build",
     "dev": "concurrently \"pnpm dev:rr\" \"pnpm scripts:watch\"",

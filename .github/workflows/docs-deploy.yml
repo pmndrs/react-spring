@@ -1,0 +1,109 @@
+name: Docs deploy
+
+on:
+  push:
+    branches: [next]
+    paths:
+      - 'docs/**'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - '.github/workflows/docs-deploy.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+env:
+  GCP_PROJECT_NUMBER: 204644970562
+  CLOUD_RUN_SERVICE: react-spring
+  CLOUD_RUN_REGION: europe-west1
+
+jobs:
+  pr-changes:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    outputs:
+      docs: ${{ steps.filter.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'docs/**'
+              - 'Dockerfile'
+              - '.dockerignore'
+              - '.github/workflows/docs-deploy.yml'
+
+  deploy-prod:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Deploy to Cloud Run (prod)
+        run: |
+          gcloud run deploy "$CLOUD_RUN_SERVICE" \
+            --source . \
+            --region "$CLOUD_RUN_REGION" \
+            --quiet
+
+  deploy-preview:
+    needs: pr-changes
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.action != 'closed' &&
+      needs.pr-changes.outputs.docs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Deploy preview revision
+        id: deploy
+        run: |
+          TAG="pr-${{ github.event.number }}"
+          gcloud run deploy "$CLOUD_RUN_SERVICE" \
+            --source . \
+            --region "$CLOUD_RUN_REGION" \
+            --tag "$TAG" \
+            --no-traffic \
+            --quiet
+          URL="https://${TAG}---${CLOUD_RUN_SERVICE}-${GCP_PROJECT_NUMBER}.${CLOUD_RUN_REGION}.run.app"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: docs-preview
+          message: |
+            **Docs preview:** ${{ steps.deploy.outputs.url }}
+
+            Deployed at `${{ github.sha }}`. Updates on every push.
+
+  cleanup-preview:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+      - uses: google-github-actions/setup-gcloud@v2
+      # tolerate failure: the PR may not have triggered a preview deploy
+      - name: Remove preview tag
+        run: |
+          gcloud run services update-traffic "$CLOUD_RUN_SERVICE" \
+            --region "$CLOUD_RUN_REGION" \
+            --remove-tags "pr-${{ github.event.number }}" \
+            --quiet || echo "No preview tag to remove"
