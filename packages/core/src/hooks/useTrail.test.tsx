@@ -16,8 +16,8 @@ describe('useTrail', () => {
     return null
   })
 
-  it('has each spring follow the spring before it', () => {
-    update(2, { x: 100, from: { x: 0 } })
+  it('has each spring follow the spring before it', async () => {
+    await update(2, { x: 100, from: { x: 0 } })
     expect(springs.length).toBe(2)
     expect(springs[1].x.animation.to).toBe(springs[0].x)
 
@@ -26,15 +26,15 @@ describe('useTrail', () => {
   })
 
   describe('when a props object is passed', () => {
-    it('updates every spring on rerender', () => {
+    it('updates every spring on rerender', async () => {
       const props = { opacity: 1, config: { tension: 100 } }
-      update(2, props)
+      await update(2, props)
 
       const configs = springs.map(s => s.opacity.animation.config)
       expect(configs.every(config => config.tension == 100)).toBeTruthy()
 
       props.config.tension = 50
-      update(2, props)
+      await update(2, props)
 
       expect(configs.every(config => config.tension == 50)).toBeTruthy()
     })
@@ -64,7 +64,7 @@ describe('useTrail', () => {
   describe('with the "loop" prop (issue #1063)', () => {
     it('phase-syncs every spring on each loop iteration', async () => {
       const length = 4
-      update(length, { from: { x: 0 }, to: { x: 100 }, loop: true })
+      await update(length, { from: { x: 0 }, to: { x: 100 }, loop: true })
 
       expect(springs.length).toBe(length)
 
@@ -98,16 +98,16 @@ describe('useTrail', () => {
 function createUpdater(
   Component: React.ComponentType<{ args: [any, any, any?] }>
 ) {
-  let result: ReturnType<typeof render> | undefined
+  let result: Awaited<ReturnType<typeof render>> | undefined
   afterEach(() => {
     result = undefined
   })
 
   type Args = [number, UseTrailProps, any[]?]
-  return (...args: Args) => {
+  return async (...args: Args) => {
     const elem = <Component args={args} />
-    if (result) result.rerender(elem)
-    else result = render(elem)
+    if (result) await result.rerender(elem)
+    else result = await render(elem)
     return result
   }
 }

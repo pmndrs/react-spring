@@ -26,86 +26,86 @@ describe('useSpring', () => {
   })
 
   describe('when only a props object is passed', () => {
-    it('is updated every render', () => {
-      update({ x: 0 })
+    it('is updated every render', async () => {
+      await update({ x: 0 })
       expect(springs.x.goal).toBe(0)
 
-      update({ x: 1 })
+      await update({ x: 1 })
       expect(springs.x.goal).toBe(1)
     })
-    it('does not return a ref', () => {
-      update({ x: 0 })
+    it('does not return a ref', async () => {
+      await update({ x: 0 })
       expect(ref).toBeUndefined()
     })
 
     describe('when SpringContext has "pause={false}"', () => {
-      it('stays paused if last rendered with "pause: true"', () => {
+      it('stays paused if last rendered with "pause: true"', async () => {
         const props = { from: { t: 0 }, to: { t: 1 } }
 
         // Paused by context.
-        context.set({ pause: true })
-        update({ ...props, pause: false })
+        await context.set({ pause: true })
+        await update({ ...props, pause: false })
         expect(springs.t.isPaused).toBeTruthy()
 
         // Paused by props and context.
-        update({ ...props, pause: true })
+        await update({ ...props, pause: true })
         expect(springs.t.isPaused).toBeTruthy()
 
         // Paused by props.
-        context.set({ pause: false })
+        await context.set({ pause: false })
         expect(springs.t.isPaused).toBeTruthy()
 
         // Resumed.
-        update({ ...props, pause: false })
+        await update({ ...props, pause: false })
         expect(springs.t.isPaused).toBeFalsy()
       })
     })
   })
 
   describe('when both a props object and a deps array are passed', () => {
-    it('is updated only when a dependency changes', () => {
-      update({ x: 0 }, [1])
+    it('is updated only when a dependency changes', async () => {
+      await update({ x: 0 }, [1])
       expect(springs.x.goal).toBe(0)
 
-      update({ x: 1 }, [1])
+      await update({ x: 1 }, [1])
       expect(springs.x.goal).toBe(0)
 
-      update({ x: 1 }, [2])
+      await update({ x: 1 }, [2])
       expect(springs.x.goal).toBe(1)
     })
-    it('returns a ref', () => {
-      update({ x: 0 }, [1])
+    it('returns a ref', async () => {
+      await update({ x: 0 }, [1])
       testIsRef(ref)
     })
   })
 
   describe('when only a props function is passed', () => {
-    it('is never updated on render', () => {
-      update(() => ({ x: 0 }))
+    it('is never updated on render', async () => {
+      await update(() => ({ x: 0 }))
       expect(springs.x.goal).toBe(0)
 
-      update(() => ({ x: 1 }))
+      await update(() => ({ x: 1 }))
       expect(springs.x.goal).toBe(0)
     })
-    it('returns a ref', () => {
-      update(() => ({ x: 0 }))
+    it('returns a ref', async () => {
+      await update(() => ({ x: 0 }))
       testIsRef(ref)
     })
   })
 
   describe('when both a props function and a deps array are passed', () => {
-    it('is updated when a dependency changes', () => {
-      update(() => ({ x: 0 }), [1])
+    it('is updated when a dependency changes', async () => {
+      await update(() => ({ x: 0 }), [1])
       expect(springs.x.goal).toBe(0)
 
-      update(() => ({ x: 1 }), [1])
+      await update(() => ({ x: 1 }), [1])
       expect(springs.x.goal).toBe(0)
 
-      update(() => ({ x: 1 }), [2])
+      await update(() => ({ x: 1 }), [2])
       expect(springs.x.goal).toBe(1)
     })
-    it('returns a ref', () => {
-      update(() => ({ x: 0 }), [1])
+    it('returns a ref', async () => {
+      await update(() => ({ x: 0 }), [1])
       testIsRef(ref)
     })
   })
@@ -128,7 +128,7 @@ describe('useSpring', () => {
         return null
       }
 
-      render(<Component />)
+      await render(<Component />)
 
       // Animation should not start until `ref.start()` is called.
       expect(onStart).not.toHaveBeenCalled()
@@ -164,7 +164,7 @@ describe('useSpring', () => {
         return null
       }
 
-      render(
+      await render(
         <React.StrictMode>
           <Component />
         </React.StrictMode>
@@ -210,7 +210,7 @@ describe('useSpring', () => {
         return null
       }
 
-      render(
+      await render(
         <React.StrictMode>
           <Component />
         </React.StrictMode>
@@ -225,18 +225,18 @@ describe('useSpring', () => {
 })
 
 interface TestContext extends ISpringContext {
-  set(values: ISpringContext): void
+  set(values: ISpringContext): Promise<void>
 }
 
 function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {
   let prevElem: React.JSX.Element | undefined
-  let result: ReturnType<typeof render> | undefined
+  let result: Awaited<ReturnType<typeof render>> | undefined
 
   const context: TestContext = {
-    set(values) {
+    async set(values) {
       Object.assign(this, values)
       if (prevElem) {
-        renderWithContext(prevElem)
+        await renderWithContext(prevElem)
       }
     },
   }
@@ -253,12 +253,12 @@ function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {
     }
   })
 
-  function renderWithContext(elem: React.JSX.Element) {
+  async function renderWithContext(elem: React.JSX.Element) {
     const wrapped = (
       <SpringContextProvider {...context}>{elem}</SpringContextProvider>
     )
-    if (result) result.rerender(wrapped)
-    else result = render(wrapped)
+    if (result) await result.rerender(wrapped)
+    else result = await render(wrapped)
     return result
   }
 

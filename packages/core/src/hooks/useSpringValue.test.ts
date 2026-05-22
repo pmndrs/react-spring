@@ -4,7 +4,7 @@ import { useSpringValue } from './useSpringValue'
 
 describe('useSpringValue', () => {
   it('should return a SpringValue with the initial value set & be animatable', async () => {
-    const { result } = renderHook(() => useSpringValue(0))
+    const { result } = await renderHook(() => useSpringValue(0))
 
     expect(result.current.get()).toBe(0)
 
@@ -64,7 +64,7 @@ describe('useSpringValue', () => {
   it('should pass the props to the SpringValue', async () => {
     const onChange = vi.fn()
 
-    const { result: spring1Result } = renderHook(() =>
+    const { result: spring1Result } = await renderHook(() =>
       useSpringValue(0, {
         onChange,
         config: {
@@ -118,7 +118,7 @@ describe('useSpringValue', () => {
       ]
     `)
 
-    const { result: spring2Result } = renderHook(() => useSpringValue(0))
+    const { result: spring2Result } = await renderHook(() => useSpringValue(0))
 
     spring2Result.current.start(1)
 
@@ -128,26 +128,29 @@ describe('useSpringValue', () => {
     expect(spring2Frames).not.toEqual(spring1Frames)
   })
 
-  it('should not update the initial value on rerender', () => {
-    const { result, rerender } = renderHook(props => useSpringValue(props), {
-      initialProps: 0,
-    })
+  it('should not update the initial value on rerender', async () => {
+    const { result, rerender } = await renderHook(
+      props => useSpringValue(props),
+      {
+        initialProps: 0,
+      }
+    )
 
     expect(result.current.get()).toBe(0)
 
-    rerender(1)
+    await rerender(1)
 
     expect(result.current.get()).toBe(0)
   })
 
   it('should stop the animation when the hook is unmounted', async () => {
-    const { result, unmount } = renderHook(() => useSpringValue(0))
+    const { result, unmount } = await renderHook(() => useSpringValue(0))
 
     const promise = result.current.start(1)
 
     await global.advanceUntilValue(result.current, 0.5)
 
-    unmount()
+    await unmount()
 
     await global.advanceUntilIdle()
 
