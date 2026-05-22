@@ -439,8 +439,29 @@ function describeImmediateProp() {
       expect(result.value).toBe(1)
     })
 
-    it.todo('never calls the "onStart" prop')
-    it.todo('never calls the "onRest" prop')
+    it('calls the "onStart" prop with finished: true', async () => {
+      const onStart = vi.fn()
+      const spring = new SpringValue(0)
+      spring.start(1, { immediate: true, onStart })
+      await global.advanceUntilIdle()
+      expect(onStart).toBeCalledTimes(1)
+      expect(onStart.mock.calls[0][0]).toMatchObject({
+        finished: true,
+        cancelled: false,
+      })
+    })
+
+    it('calls the "onRest" prop with finished: true', async () => {
+      const onRest = vi.fn()
+      const spring = new SpringValue(0)
+      spring.start(1, { immediate: true, onRest })
+      await global.advanceUntilIdle()
+      expect(onRest).toBeCalledTimes(1)
+      expect(onRest.mock.calls[0][0]).toMatchObject({
+        finished: true,
+        value: 1,
+      })
+    })
 
     it('stops animating', async () => {
       const spring = new SpringValue(0)
