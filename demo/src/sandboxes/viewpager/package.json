@@ -11,7 +11,7 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@react-spring/web": "*",
-    "lodash-es": "4.17.21",
+    "lodash-es": "4.18.1",
     "lodash-move": "1.1.1",
     "lodash.clamp": "4.0.3",
     "react": "^19.2.6",
