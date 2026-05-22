@@ -63,8 +63,8 @@ importers:
         specifier: 9.1.7
         version: 9.1.7
       konva:
-        specifier: 9.3.18
-        version: 9.3.18
+        specifier: 10.3.0
+        version: 10.3.0
       oxfmt:
         specifier: 0.51.0
         version: 0.51.0
@@ -81,8 +81,8 @@ importers:
         specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
       react-konva:
-        specifier: ^19
-        version: 19.2.4(@types/react@19.2.15)(konva@9.3.18)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^19.2.4
+        version: 19.2.4(@types/react@19.2.15)(konva@10.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-native:
         specifier: '>=0.85.3'
         version: 0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6)
@@ -4685,6 +4685,9 @@ packages:
   kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
+
+  konva@10.3.0:
+    resolution: {integrity: sha512-gt19K2gzY4lHbnkvsku7eSmB+A9PTS2jG4F9coBMsdjM1UKfJNxJbDbXVpeCW1wjEGRwBD3nBamcHnqJhAeKlg==}
 
   konva@9.3.18:
     resolution: {integrity: sha512-ad5h0Y9phUrinBrKXyIISbURRHQO7Rx5cz7mAEEfdVCs45gDqRD8Y0I0nJRk8S6iqEbiRE87CEZu5GVSnU8oow==}
@@ -10846,6 +10849,8 @@ snapshots:
 
   kind-of@6.0.3: {}
 
+  konva@10.3.0: {}
+
   konva@9.3.18: {}
 
   leva@0.9.35(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
@@ -11923,6 +11928,18 @@ snapshots:
   react-is@17.0.2: {}
 
   react-is@18.3.1: {}
+
+  react-konva@19.2.4(@types/react@19.2.15)(konva@10.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+    dependencies:
+      '@types/react-reconciler': 0.33.0(@types/react@19.2.15)
+      its-fine: 2.0.0(@types/react@19.2.15)(react@19.2.6)
+      konva: 10.3.0
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
+      react-reconciler: 0.33.0(react@19.2.6)
+      scheduler: 0.27.0
+    transitivePeerDependencies:
+      - '@types/react'
 
   react-konva@19.2.4(@types/react@19.2.15)(konva@9.3.18)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
