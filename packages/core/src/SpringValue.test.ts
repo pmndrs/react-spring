@@ -381,7 +381,15 @@ function describeReverseProp() {
 
 function describeImmediateProp() {
   describe('when "immediate" prop is true', () => {
-    it.todo('still resolves the "start" promise')
+    it('still resolves the "start" promise', async () => {
+      const spring = new SpringValue(0)
+      const promise = spring.start(1, { immediate: true })
+      await global.advanceUntilIdle()
+      const result = await promise
+      expect(result.finished).toBe(true)
+      expect(result.value).toBe(1)
+    })
+
     it.todo('never calls the "onStart" prop')
     it.todo('never calls the "onRest" prop')
 
