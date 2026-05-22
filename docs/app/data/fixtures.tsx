@@ -519,7 +519,9 @@ export const USESPRINGVALUE_CONFIG_DATA: CellData[][] = [
       label: 'immediate',
       content: (
         <p>
-          Prevents the animation if true, applying the `to` styles immediately.
+          Skips interpolation if true, jumping to the `to` value on the next
+          frame. The animation lifecycle (`onStart`, `onRest`) still fires; use
+          `SpringValue.set()` if you want to assign without lifecycle events.
         </p>
       ),
     },
