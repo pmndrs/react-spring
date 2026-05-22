@@ -69,6 +69,16 @@ export class Controller<State extends Lookup = Lookup> {
   /** The counter for tracking `scheduleProps` calls */
   protected _lastAsyncId = 0
 
+  /**
+   * Token identifying the in-flight loop chain. Bumped on every top-level
+   * `flushUpdate` so a subsequent loop iteration can detect that a newer
+   * external update has superseded it, and exit instead of dispatching
+   * another iteration. Without this, a `loop: true → loop: false` (or any
+   * non-loop) update from a re-render would race against the captured
+   * `loop` of the prior chain, which keeps recursing. See issue #1193.
+   */
+  protected _lastLoopId = 0
+
   /** The values currently being animated */
   protected _active = new Set<FrameValue>()
 
@@ -347,6 +357,21 @@ export async function flushUpdate(
     props.loop = false
   }
 
+  // Top-level external calls bump the loop generation so an earlier loop
+  // chain can notice it has been superseded — but only when this update
+  // could express a different loop intent. Updates from `runAsync`'s
+  // internal `animate` carry a `parentId`, and pure lifecycle updates
+  // (`ctrl.pause()` / `ctrl.resume()`) don't mention `loop`; in both
+  // cases bumping would kill the very loop chain that scheduled them.
+  // Recursive iterations (isLoop) inherit the id from the props.
+  const propsAny = props as any
+  const isExternalLoopIntent = !isLoop && !propsAny.parentId && 'loop' in props
+  const loopId: number = isExternalLoopIntent
+    ? ++ctrl['_lastLoopId']
+    : isLoop
+      ? propsAny.loopId
+      : ctrl['_lastLoopId']
+
   // Treat false like null, which gets ignored.
   if (to === false) props.to = null
   if (from === false) props.from = null
@@ -449,9 +474,19 @@ export async function flushUpdate(
   }
 
   const result = getCombinedResult<any>(ctrl, await Promise.all(promises))
-  if (loop && result.finished && !(isLoop && result.noop)) {
+  if (
+    loop &&
+    result.finished &&
+    !(isLoop && result.noop) &&
+    // A newer top-level update would have bumped `_lastLoopId`; if our
+    // captured id no longer matches, the user's loop intent has changed
+    // (or restarted under a fresh chain) so this iteration must not
+    // dispatch another one.
+    loopId === ctrl['_lastLoopId']
+  ) {
     const nextProps = createLoopUpdate(props, loop, to)
     if (nextProps) {
+      ;(nextProps as any).loopId = loopId
       // Notify subscribers that the next loop iteration is about to start
       // so dependent controllers (e.g. useTrail children) can phase-sync
       // before this controller's springs snap back to their `from` value.
