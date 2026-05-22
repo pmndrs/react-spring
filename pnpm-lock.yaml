@@ -165,8 +165,8 @@ importers:
         specifier: 9.1.3
         version: 9.1.3(react@19.2.6)
       react-use-measure:
-        specifier: 2.1.1
-        version: 2.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: 2.1.7
+        version: 2.1.7(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react95:
         specifier: 4.0.0
         version: 4.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.1.13(react-dom@19.2.6(react@19.2.6))(react@19.2.6))
@@ -280,8 +280,8 @@ importers:
         specifier: 5.10.2
         version: 5.10.2(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react-use-measure:
-        specifier: 2.1.1
-        version: 2.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: 2.1.7
+        version: 2.1.7(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       zod:
         specifier: 4.4.3
         version: 4.4.3
@@ -3623,9 +3623,6 @@ packages:
   dataloader@1.4.0:
     resolution: {integrity: sha512-68s5jYdlvasItOJnCuI2Q9s4q98g0pCyL3HrcKJu8KNugUl8ahgmZYg38ysLTgQjjXX3H8CJLkAvWrclWfcalw==}
 
-  debounce@1.2.1:
-    resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
-
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
     peerDependencies:
@@ -5361,12 +5358,6 @@ packages:
     deprecated: This package is no longer maintained. Please use @use-gesture/react instead
     peerDependencies:
       react: '>= 16.8.0'
-
-  react-use-measure@2.1.1:
-    resolution: {integrity: sha512-nocZhN26cproIiIduswYpV5y5lQpSQS1y/4KuvUCjSKmw7ZWIS/+g3aFnX3WdBkyuGUtTLif3UTqnLLhbDoQig==}
-    peerDependencies:
-      react: '>=16.13'
-      react-dom: '>=16.13'
 
   react-use-measure@2.1.7:
     resolution: {integrity: sha512-KrvcAo13I/60HpwGO5jpW7E9DfusKyLPLvuHlUyP5zqnmAPhNc6qTRjUQrdTADl0lpPpDVU2/Gg51UlOGHXbdg==}
@@ -9454,8 +9445,6 @@ snapshots:
 
   dataloader@1.4.0: {}
 
-  debounce@1.2.1: {}
-
   debug@2.6.9:
     dependencies:
       ms: 2.0.0
@@ -11710,12 +11699,6 @@ snapshots:
   react-use-gesture@9.1.3(react@19.2.6):
     dependencies:
       react: 19.2.6
-
-  react-use-measure@2.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
-    dependencies:
-      debounce: 1.2.1
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
 
   react-use-measure@2.1.7(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
