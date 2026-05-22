@@ -18,7 +18,7 @@
     "react-dom": "^19.2.6",
     "react-scripts": "5.0.1",
     "react-use-gesture": "9.1.3",
-    "react-use-measure": "2.1.1"
+    "react-use-measure": "2.1.7"
   },
   "scripts": {
     "start": "react-scripts start",

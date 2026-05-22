@@ -15,7 +15,7 @@
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-scripts": "5.0.1",
-    "react-use-measure": "2.1.1",
+    "react-use-measure": "2.1.7",
     "styled-components": "6.1.13"
   },
   "scripts": {
