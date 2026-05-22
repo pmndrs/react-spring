@@ -59,9 +59,9 @@
     "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "rm -rf dist && tsdown",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "dev": "tsup --watch",
+    "dev": "tsdown --watch",
     "pack": "pnpm pack && mv *.tgz package.tgz"
   }
 }
