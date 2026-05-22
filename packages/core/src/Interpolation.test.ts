@@ -22,7 +22,7 @@ describe('Interpolation', () => {
 
   it('can use a non-animated FluidValue', () => {
     class StaticFluid extends FluidValue<number> {
-      constructor(private value: number) {
+      constructor(value: number) {
         super(() => value)
       }
     }
