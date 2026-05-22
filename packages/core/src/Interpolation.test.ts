@@ -1,18 +1,63 @@
 import { SpringValue } from './SpringValue'
 import { to } from './interpolate'
-import { addFluidObserver } from '@react-spring/shared'
+import { FluidValue, addFluidObserver } from '@react-spring/shared'
 
 describe('Interpolation', () => {
-  it.todo('can use a SpringValue')
-  it.todo('can use another Interpolation')
-  it.todo('can use a non-animated FluidValue')
+  it('can use a SpringValue', async () => {
+    const source = new SpringValue({ from: 0, to: 10 })
+    const interp = to(source, (n: number) => n * 2)
+    addFluidObserver(interp, () => {})
+    await global.advanceUntilIdle()
+    expect(interp.get()).toBe(20)
+  })
+
+  it('can use another Interpolation', async () => {
+    const source = new SpringValue({ from: 0, to: 10 })
+    const inner = to(source, (n: number) => n * 2)
+    const interp = to(inner, (n: number) => n + 1)
+    addFluidObserver(interp, () => {})
+    await global.advanceUntilIdle()
+    expect(interp.get()).toBe(21)
+  })
+
+  it('can use a non-animated FluidValue', () => {
+    class StaticFluid extends FluidValue<number> {
+      constructor(private value: number) {
+        super(() => value)
+      }
+    }
+    const source = new StaticFluid(5)
+    const interp = to(source, (n: number) => n * 2)
+    expect(interp.get()).toBe(10)
+  })
 
   describe('when multiple inputs change in the same frame', () => {
-    it.todo('only computes its value once')
+    it('only computes its value once', async () => {
+      const a = new SpringValue({ from: 0, to: 1 })
+      const b = new SpringValue({ from: 0, to: 1 })
+      const calc = vi.fn((x: number, y: number) => x + y)
+      const interp = to([a, b], calc)
+      addFluidObserver(interp, () => {})
+
+      calc.mockClear()
+      await global.advance(1)
+      expect(calc).toBeCalledTimes(1)
+    })
   })
 
   describe('when an input resets its animation', () => {
-    it.todo('computes its value before the first frame')
+    it('computes its value before the first frame', async () => {
+      const source = new SpringValue({ from: 0, to: 10 })
+      const interp = to(source, (n: number) => n * 2)
+      addFluidObserver(interp, () => {})
+      await global.advanceUntilIdle()
+      expect(interp.get()).toBe(20)
+
+      // Reset the source: it jumps back to "from" (0). The interpolation
+      // should reflect that immediately, without waiting for the next frame.
+      source.start({ reset: true })
+      expect(interp.get()).toBe(0)
+    })
   })
 
   describe('when all inputs are paused', () => {
