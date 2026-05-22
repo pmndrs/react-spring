@@ -35,8 +35,10 @@ export const maxWrapper = style({
 export const homeBlocks = style({
   margin: `${vars.space['40']} 0`,
 
-  [`screen and ${BREAKPOINTS.tabletUp}`]: {
-    marginTop: vars.space['100'],
-    marginBottom: vars.space['80'],
+  '@media': {
+    [`screen and ${BREAKPOINTS.tabletUp}`]: {
+      marginTop: vars.space['100'],
+      marginBottom: vars.space['80'],
+    },
   },
 })

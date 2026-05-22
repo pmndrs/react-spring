@@ -27,7 +27,7 @@ export const calloutWrapper = recipe({
   },
 })
 
-globalStyle(`${calloutWrapper} + pre`, {
+globalStyle(`${calloutWrapper.classNames.base} + pre`, {
   marginTop: vars.space['40'],
 })
 

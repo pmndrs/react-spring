@@ -33,8 +33,10 @@ globalStyle(`${tableCellIsPropName} > code`, {
 export const tableCellIsThirdItem = style({
   display: 'none',
 
-  [`screen and ${BREAKPOINTS.tabletUp}`]: {
-    display: 'table-cell',
+  '@media': {
+    [`screen and ${BREAKPOINTS.tabletUp}`]: {
+      display: 'table-cell',
+    },
   },
 })
 
