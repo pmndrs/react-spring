@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from 'react'
-import { Outlet, useLocation } from '@remix-run/react'
+import { Outlet, useLocation } from 'react-router'
 import { MDXProvider } from '@mdx-js/react'
 import { PencilSimple } from 'phosphor-react'
 
@@ -15,7 +15,6 @@ import { StickyAside } from '~/components/Asides/StickyAside'
 import { Code } from '~/components/Code/Code'
 import { LivePreviewStyles } from '~/components/Code/LivePreviewStyles'
 import { Callout } from '~/components/Callout'
-import { Feedback } from '~/components/Feedback/Feedback'
 
 import {
   flattenNavigationWithChildren,
@@ -146,12 +145,10 @@ export default function DocsLayout() {
             })}
           >
             <WidgetCarbon />
-            {/* @ts-expect-error */}
             <MDXProvider components={comps}>
               <Outlet />
             </MDXProvider>
             <footer className={footer}>
-              <Feedback location={activeRoute?.href} />
               <Anchor
                 className={editAnchor}
                 href={getDocFilePathToGithub(activeRoute)}

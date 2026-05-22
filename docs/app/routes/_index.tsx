@@ -1,4 +1,4 @@
-import { MetaFunction } from '@vercel/remix'
+import type { MetaFunction } from 'react-router'
 import { CarouselQuotes } from '~/components/Carousels/CarouselQuotes'
 import { NavigationGrid } from '~/components/Grids/NavigationGrid'
 import { Header } from '~/components/Header/Header'

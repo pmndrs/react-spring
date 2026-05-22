@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Link } from '@remix-run/react'
+import { Link } from 'react-router'
 
 import { isValidHttpUrl } from '~/helpers/strings'
 import clsx from 'clsx'

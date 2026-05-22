@@ -14,40 +14,45 @@ import {
   externalLinkIcon,
 } from './CardExample.css'
 
-export interface Sandbox {
-  urlTitle: string
+export interface CardExampleProps {
+  slug: string
   title: string
   tags: string[]
-  screenshotUrl: string
-  description: string
-  id: string
+  description?: string
+  thumbnailUrl: string
+  codesandboxId: string | null
 }
 
-export const CardExample = ({ title, description, tags, id }: Sandbox) => {
+const REPO_DEMO_URL = (slug: string) =>
+  `https://github.com/pmndrs/react-spring/tree/main/demo/src/sandboxes/${slug}`
+
+export const CardExample = ({
+  slug,
+  title,
+  description,
+  tags,
+  thumbnailUrl,
+  codesandboxId,
+}: CardExampleProps) => {
+  const href = codesandboxId
+    ? `https://codesandbox.io/s/${codesandboxId}`
+    : REPO_DEMO_URL(slug)
+
   const handleClick = () => {
     firePlausibleEvent({
       name: EventNames.LinkedToSandbox,
-      additionalProps: {
-        title,
-      },
+      additionalProps: { title },
     })
   }
 
   return (
-    <Anchor
-      className={exampleAnchor}
-      href={`https://codesandbox.io/s/${id}`}
-      onClick={handleClick}
-    >
+    <Anchor className={exampleAnchor} href={href} onClick={handleClick}>
       <figure className={exampleCard}>
         <div className={externalLinkIcon} />
         <AspectRatio height={9} width={16}>
-          <img
-            src={`https://codesandbox.io/api/v1/sandboxes/${id}/screenshot.png`}
-            placeholder="empty"
-            loading="lazy"
-            alt={title}
-          />
+          {thumbnailUrl ? (
+            <img src={thumbnailUrl} loading="lazy" alt={title} />
+          ) : null}
         </AspectRatio>
         <div className={exampleContent}>
           <Heading
@@ -57,7 +62,7 @@ export const CardExample = ({ title, description, tags, id }: Sandbox) => {
             weight="default"
           >
             <span>{title}</span>
-            <span>{description}</span>
+            {description ? <span>{description}</span> : null}
           </Heading>
           <ul className={exampleTags}>
             {tags.map(tag => (

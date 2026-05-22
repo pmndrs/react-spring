@@ -1,5 +1,18 @@
+import { useRouteLoaderData } from 'react-router'
+
+interface RootLoaderData {
+  ENV?: {
+    ENABLE_PLAUSIBLE?: string
+  }
+}
+
+const useGtmEnabled = () => {
+  const data = useRouteLoaderData('root') as RootLoaderData | undefined
+  return data?.ENV?.ENABLE_PLAUSIBLE === 'true'
+}
+
 export const WidgetGoogleTagManagerHead = () => {
-  if (typeof window !== 'undefined' && window.env.ENABLE_PLAUSIBLE !== 'true') {
+  if (!useGtmEnabled()) {
     return null
   }
 
@@ -20,7 +33,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 }
 
 export const WidgetGoogleTagManagerBody = () => {
-  if (typeof window !== 'undefined' && window.env.ENABLE_PLAUSIBLE !== 'true') {
+  if (!useGtmEnabled()) {
     return null
   }
 

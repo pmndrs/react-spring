@@ -5,7 +5,7 @@ import { animated, useSpring } from '@react-spring/web'
 import { AccessibleIcon } from '../AccessibleIcon'
 import { themeActiveBlob, themeGroup, themePicker } from './SiteThemePicker.css'
 import { useOptimisticThemeMode, useTheme } from '../../hooks/useTheme'
-import { useFetcher } from '@remix-run/react'
+import { useFetcher } from 'react-router'
 import { action } from '../../root'
 
 export enum ThemeValue {

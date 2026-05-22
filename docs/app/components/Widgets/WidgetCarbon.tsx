@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useLocation } from '@remix-run/react'
+import { useLocation } from 'react-router'
 
 export const WidgetCarbon = () => {
   const location = useLocation()

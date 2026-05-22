@@ -1,6 +1,7 @@
 node_modules/
 # production
 build/
+.react-router/
 dist/
 .cache/
 .parcel-cache/

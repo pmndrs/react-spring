@@ -2,8 +2,13 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "inputs": ["app/**"],
-      "outputs": ["build/**", "public/build/**"]
+      "inputs": [
+        "app/**",
+        "public/**",
+        "react-router.config.ts",
+        "vite.config.mts"
+      ],
+      "outputs": ["build/**", ".react-router/**"]
     }
   }
 }

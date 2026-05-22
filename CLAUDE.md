@@ -124,6 +124,6 @@ For prereleases enter pre-mode first: `pnpm changeset pre enter beta|alpha|next`
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-[specs/002-vitest-browser-migration/plan.md](./specs/002-vitest-browser-migration/plan.md)
+[specs/003-remix-to-react-router-7/plan.md](./specs/003-remix-to-react-router-7/plan.md)
 
 <!-- SPECKIT END -->
