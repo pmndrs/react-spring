@@ -15,7 +15,7 @@
     "react-dom": "^19.2.6",
     "react-feather": "2.0.10",
     "react-scripts": "5.0.1",
-    "styled-components": "6.1.13"
+    "styled-components": "6.4.2"
   },
   "scripts": {
     "start": "react-scripts start",
