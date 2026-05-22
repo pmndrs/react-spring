@@ -1026,10 +1026,8 @@ export class SpringValue<T = any> extends FrameValue<T> {
         : getFinishedResult(this.get(), checkFinished(this, goal ?? anim.to))
 
       flushCalls(this._pendingCalls, result)
-      if (anim.changed) {
-        anim.changed = false
-        sendEvent(this, 'onRest', result, this)
-      }
+      anim.changed = false
+      sendEvent(this, 'onRest', result, this)
     }
   }
 }

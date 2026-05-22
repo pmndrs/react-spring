@@ -956,6 +956,21 @@ function describeEvents() {
       global.mockRaf.step()
       expect(onRest).toBeCalledTimes(1)
     })
+    // https://github.com/pmndrs/react-spring/issues/1802
+    it('is called when two starts cancel each other before the first frame', async () => {
+      const onRest = vi.fn()
+      const spring = new SpringValue({ from: 0, onRest })
+
+      // Both starts happen synchronously, before any rAF tick.
+      // The second start returns to the current value, so the engine
+      // stops the animation before any frame has rendered.
+      spring.start(1)
+      spring.start(0)
+
+      await global.advanceUntilIdle()
+
+      expect(onRest).toBeCalled()
+    })
   })
 }
 
