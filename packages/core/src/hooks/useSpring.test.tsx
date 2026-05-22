@@ -222,6 +222,73 @@ describe('useSpring', () => {
       expect(onRest).toHaveBeenCalledTimes(1)
     })
   })
+
+  // Regression test for https://github.com/pmndrs/react-spring/issues/1638
+  // The original bug (v9.2.4): a spring with initial value 0 would not
+  // animate when api.start() was called from useLayoutEffect on first render.
+  // Workarounds were useEffect or initial value 0.0000001.
+  describe('when the initial value is 0 and start() is called in useLayoutEffect', () => {
+    it('animates to the new goal via imperative ref.start()', async () => {
+      let api!: SpringRef<{ x: number }>
+      let spring!: SpringValue<number>
+      let getValue!: () => number
+
+      function Component() {
+        const [springs, springApi] = useSpring(() => ({ x: 0 }))
+        api = springApi
+        spring = springs.x
+        getValue = () => springs.x.get()
+
+        React.useLayoutEffect(() => {
+          api.start({ x: 20 })
+        }, [])
+
+        return null
+      }
+
+      await render(<Component />)
+
+      expect(spring.goal).toBe(20)
+      expect(spring.isAnimating).toBe(true)
+
+      await advance(1)
+      expect(getValue()).toBeGreaterThan(0)
+      expect(getValue()).toBeLessThan(20)
+
+      await advanceUntilIdle()
+      expect(getValue()).toBe(20)
+    })
+
+    it('animates when state set in useLayoutEffect drives a declarative useSpring', async () => {
+      let spring!: SpringValue<number>
+      let getValue!: () => number
+
+      function Component({ target }: { target: number }) {
+        const [v, setV] = React.useState(0)
+        const springs = useSpring({ x: v })
+        spring = springs.x
+        getValue = () => springs.x.get()
+
+        React.useLayoutEffect(() => {
+          setV(target)
+        }, [target])
+
+        return null
+      }
+
+      await render(<Component target={20} />)
+
+      expect(spring.goal).toBe(20)
+      expect(spring.isAnimating).toBe(true)
+
+      await advance(1)
+      expect(getValue()).toBeGreaterThan(0)
+      expect(getValue()).toBeLessThan(20)
+
+      await advanceUntilIdle()
+      expect(getValue()).toBe(20)
+    })
+  })
 })
 
 interface TestContext extends ISpringContext {
