@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { useSpring, animated, to } from '@react-spring/web'
-import { useGesture } from 'react-use-gesture'
+import { useGesture } from '@use-gesture/react'
 import imgs from './data'
 
 import styles from './styles.module.css'
@@ -60,7 +60,7 @@ export default function App() {
         wheelApi.set({ wheelY: y })
       },
     },
-    { domTarget, eventOptions: { passive: false } }
+    { target: domTarget, eventOptions: { passive: false } }
   )
   return (
     <div className={styles.container}>
