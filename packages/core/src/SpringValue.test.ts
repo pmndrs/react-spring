@@ -457,11 +457,10 @@ function describeConfigProp() {
       })
     })
     describe('when "damping" is less than 1.0', () => {
-      // FIXME: This test fails.
-      it.skip('should bounce', async () => {
+      it('should bounce', async () => {
         const spring = new SpringValue(0)
         spring.start(1, {
-          config: { frequency: 1.5, damping: 1 },
+          config: { frequency: 1.5, damping: 0.5 },
         })
         await global.advanceUntilIdle()
         expect(global.countBounces(spring)).toBeGreaterThan(0)
