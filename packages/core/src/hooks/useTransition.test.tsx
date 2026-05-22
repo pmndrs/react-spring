@@ -254,6 +254,66 @@ describe('useTransition', () => {
     // New items should now be visible
     expect(rendered).toEqual([2, 3])
   })
+
+  describe('when "reverse" is true', () => {
+    // Regression for https://github.com/pmndrs/react-spring/issues/1794 —
+    // reverses the trail order so items can animate in forward on enter
+    // and backward on leave by toggling `reverse` with caller state.
+    it('reverses the trail order across leaving items', async () => {
+      const leaveStart: number[] = []
+      const props: UseTransitionProps<number> = {
+        from: { n: 0 },
+        enter: { n: 1 },
+        leave: item => ({
+          n: 0,
+          onStart: () => leaveStart.push(item),
+        }),
+        trail: 100,
+        reverse: true,
+      }
+
+      await update([0, 1, 2], props)
+      await global.advanceUntilIdle()
+
+      await update([], props)
+
+      global.mockRaf.step()
+      expect(leaveStart).toEqual([2])
+
+      await global.advanceByTime(100)
+      expect(leaveStart).toEqual([2, 1])
+
+      await global.advanceByTime(100)
+      expect(leaveStart).toEqual([2, 1, 0])
+    })
+
+    it('keeps trail order forward when reverse is false (default)', async () => {
+      const leaveStart: number[] = []
+      const props: UseTransitionProps<number> = {
+        from: { n: 0 },
+        enter: { n: 1 },
+        leave: item => ({
+          n: 0,
+          onStart: () => leaveStart.push(item),
+        }),
+        trail: 100,
+      }
+
+      await update([0, 1, 2], props)
+      await global.advanceUntilIdle()
+
+      await update([], props)
+
+      global.mockRaf.step()
+      expect(leaveStart).toEqual([0])
+
+      await global.advanceByTime(100)
+      expect(leaveStart).toEqual([0, 1])
+
+      await global.advanceByTime(100)
+      expect(leaveStart).toEqual([0, 1, 2])
+    })
+  })
 })
 
 let result: Awaited<ReturnType<typeof render>> | undefined

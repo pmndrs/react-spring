@@ -687,6 +687,22 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
     null,
   ],
   ['trail', 'number', '0'],
+  [
+    {
+      label: 'reverse',
+      content: (
+        <p>
+          Reverses the order in which <code>trail</code> delays are assigned to
+          transitioning items. Toggle with your open/close state (e.g.{' '}
+          <code>reverse: !open</code>) to animate in forward on{' '}
+          <code>enter</code> and backward on <code>leave</code>. Does not affect
+          render order — use <code>sort</code> for that.
+        </p>
+      ),
+    },
+    'boolean',
+    'false',
+  ],
   ['exitBeforeEnter', 'boolean', 'false'],
   [
     {
