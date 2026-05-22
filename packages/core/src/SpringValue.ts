@@ -698,7 +698,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
     const { decay, velocity } = config
 
     // Reset to default velocity when goal values are defined.
-    if (hasToProp || hasFromProp) {
+    // Skip the reset when `decay` is configured — decay animations are
+    // driven by velocity, so wiping it on every retarget breaks gesture-driven
+    // throws (e.g. mouse-flick decay). See #1843.
+    if ((hasToProp || hasFromProp) && !config.decay) {
       config.velocity = 0
     }
 

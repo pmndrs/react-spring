@@ -129,13 +129,21 @@ export class AnimationConfig {
   bounce?: number
 
   /**
-   * "Decay animations" decelerate without an explicit goal value.
-   * Useful for scrolling animations.
+   * "Decay animations" decelerate from an initial velocity. They do **not**
+   * ease toward a `to` value — `to` is ignored by the decay integration.
+   *
+   * Requires a non-zero `config.velocity` (otherwise the animation produces
+   * no movement). Typically paired with gesture libraries that supply
+   * velocity, e.g. `@use-gesture/react`'s `useDrag`:
+   *
+   * ```ts
+   * api.start({ pos, config: { velocity: [vx, vy], decay: true } })
+   * ```
    *
    * Use `true` for the default exponential decay factor (`0.998`).
    *
    * When a `number` between `0` and `1` is given, a lower number makes the
-   * animation slow down faster. And setting to `1` would make an unending
+   * animation slow down faster. Setting to `1` would make an unending
    * animation.
    *
    * @default false
