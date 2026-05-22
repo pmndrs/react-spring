@@ -44,7 +44,7 @@
     "react-router": "7.15.1",
     "react-select": "5.10.1",
     "react-use-measure": "2.1.1",
-    "zod": "3.24.1"
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@mdx-js/rollup": "3.1.0",
