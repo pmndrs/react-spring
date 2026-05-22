@@ -254,7 +254,7 @@ importers:
         version: 1.4.1(@remix-run/react@2.15.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.2))(react@19.2.6)
       '@vercel/react-router':
         specifier: 1.3.0
-        version: 1.3.0(@react-router/dev@7.15.1(@react-router/serve@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(typescript@5.7.2)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0))(@react-router/node@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(isbot@5.1.19)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 1.3.0(@react-router/dev@7.15.1(@react-router/serve@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(typescript@5.7.2)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0))(@react-router/node@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(isbot@5.1.40)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       clsx:
         specifier: 2.1.1
         version: 2.1.1
@@ -262,8 +262,8 @@ importers:
         specifier: 1.0.2
         version: 1.0.2
       isbot:
-        specifier: 5.1.19
-        version: 5.1.19
+        specifier: 5.1.40
+        version: 5.1.40
       phosphor-react:
         specifier: 1.4.1
         version: 1.4.1(react@19.2.6)
@@ -4385,8 +4385,8 @@ packages:
     resolution: {integrity: sha512-fKzAra0rGJUUBwGBgNkHZuToZcn+TtXHpeCgmkMJMMYx1sQDYaCSyjJBSCa2nH1DGm7s3n1oBnohoVTBaN7Lww==}
     engines: {node: '>=8'}
 
-  isbot@5.1.19:
-    resolution: {integrity: sha512-8krWJBGKC3lVymkncvmBTpIEWMD5kKmjAvkM3/Xh6veE0bAydwgSNrI5h493DGrG2UNJCy0HuHpNPSKRy0dBJA==}
+  isbot@5.1.40:
+    resolution: {integrity: sha512-yNeeynhhtIVRBk12tBV4eHNxwB42HzR4Q3Ea7vCOiJhImGaAIdIMrbJtacQlBizGLjUPw+akkFI5Dn9T70XoVQ==}
     engines: {node: '>=18'}
 
   isexe@2.0.0:
@@ -8229,7 +8229,7 @@ snapshots:
       dedent: 1.7.2(babel-plugin-macros@3.1.0)
       es-module-lexer: 1.7.0
       exit-hook: 2.2.1
-      isbot: 5.1.19
+      isbot: 5.1.40
       jsesc: 3.0.2
       lodash: 4.18.1
       p-map: 7.0.4
@@ -8851,12 +8851,12 @@ snapshots:
       '@remix-run/react': 2.15.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.2)
       react: 19.2.6
 
-  '@vercel/react-router@1.3.0(@react-router/dev@7.15.1(@react-router/serve@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(typescript@5.7.2)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0))(@react-router/node@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(isbot@5.1.19)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@vercel/react-router@1.3.0(@react-router/dev@7.15.1(@react-router/serve@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(typescript@5.7.2)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0))(@react-router/node@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(isbot@5.1.40)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
       '@react-router/dev': 7.15.1(@react-router/serve@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(typescript@5.7.2)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)
       '@react-router/node': 7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2)
       '@vercel/static-config': 3.3.0
-      isbot: 5.1.19
+      isbot: 5.1.40
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
       ts-morph: 12.0.0
@@ -10359,7 +10359,7 @@ snapshots:
     dependencies:
       is-docker: 2.2.1
 
-  isbot@5.1.19: {}
+  isbot@5.1.40: {}
 
   isexe@2.0.0: {}
 
