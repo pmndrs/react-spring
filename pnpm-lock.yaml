@@ -208,8 +208,8 @@ importers:
         specifier: 3.8.2
         version: 3.8.2(@algolia/client-search@5.52.1)(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(search-insights@2.17.3)
       '@mdx-js/react':
-        specifier: 3.1.0
-        version: 3.1.0(@types/react@19.2.15)(react@19.2.6)
+        specifier: 3.1.1
+        version: 3.1.1(@types/react@19.2.15)(react@19.2.6)
       '@radix-ui/react-accordion':
         specifier: 1.2.12
         version: 1.2.12(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -287,8 +287,8 @@ importers:
         version: 3.24.1
     devDependencies:
       '@mdx-js/rollup':
-        specifier: 3.1.0
-        version: 3.1.0(rollup@4.60.4)
+        specifier: 3.1.1
+        version: 3.1.1(rollup@4.60.4)
       '@react-router/dev':
         specifier: 7.15.1
         version: 7.15.1(@react-router/serve@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(typescript@5.7.2)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.83.1)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)
@@ -1611,14 +1611,14 @@ packages:
   '@mdx-js/mdx@3.1.1':
     resolution: {integrity: sha512-f6ZO2ifpwAQIpzGWaBQT2TXxPv6z3RBzQKpVftEWN78Vl/YweF1uwussDx8ECAXVtr3Rs89fKyG9YlzUs9DyGQ==}
 
-  '@mdx-js/react@3.1.0':
-    resolution: {integrity: sha512-QjHtSaoameoalGnKDT3FoIl4+9RwyTmo9ZJGBdLOks/YOiWHoRDI3PUwEzOE7kEmGcV3AFcp9K6dYu9rEuKLAQ==}
+  '@mdx-js/react@3.1.1':
+    resolution: {integrity: sha512-f++rKLQgUVYDAtECQ6fn/is15GkEH9+nZPM3MS0RcxVqoTfawHvDlSCH7JbMhAM6uJ32v3eXLvLmLvjGu7PTQw==}
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
 
-  '@mdx-js/rollup@3.1.0':
-    resolution: {integrity: sha512-q4xOtUXpCzeouE8GaJ8StT4rDxm/U5j6lkMHL2srb2Q3Y7cobE0aXyPzXVVlbeIMBi+5R5MpbiaVE5/vJUdnHg==}
+  '@mdx-js/rollup@3.1.1':
+    resolution: {integrity: sha512-v8satFmBB+DqDzYohnm1u2JOvxx6Hl3pUvqzJvfs2Zk/ngZ1aRUhsWpXvwPkNeGN9c2NCm/38H29ZqXQUjf8dw==}
     peerDependencies:
       rollup: '>=2'
 
@@ -7721,13 +7721,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mdx-js/react@3.1.0(@types/react@19.2.15)(react@19.2.6)':
+  '@mdx-js/react@3.1.1(@types/react@19.2.15)(react@19.2.6)':
     dependencies:
       '@types/mdx': 2.0.13
       '@types/react': 19.2.15
       react: 19.2.6
 
-  '@mdx-js/rollup@3.1.0(rollup@4.60.4)':
+  '@mdx-js/rollup@3.1.1(rollup@4.60.4)':
     dependencies:
       '@mdx-js/mdx': 3.1.1
       '@rollup/pluginutils': 5.3.0(rollup@4.60.4)
