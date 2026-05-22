@@ -205,7 +205,23 @@ function describeToProp() {
 
 function describeFromProp() {
   describe('when "from" prop is defined', () => {
-    it.todo('controls the start value')
+    it('controls the start value', async () => {
+      const spring = new SpringValue<number>()
+      const onChange = vi.fn()
+      spring.start({
+        from: 5,
+        to: 10,
+        config: { duration: 10 * frameLength },
+        onChange,
+      })
+      expect(spring.get()).toBe(5)
+      await global.advance()
+      // After the first frame the spring should have moved away from "from"
+      // toward "to" — it should never have read its prior current value.
+      expect(onChange.mock.calls[0][0]).toBeGreaterThan(5)
+      await global.advanceUntilIdle()
+      expect(spring.get()).toBe(10)
+    })
   })
 }
 
