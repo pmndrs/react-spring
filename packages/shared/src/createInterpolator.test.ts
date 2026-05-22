@@ -168,6 +168,100 @@ describe('Interpolation', () => {
     expect(interpolation(0.5)).toBe('grayscale(50%)')
   })
 
+  // https://github.com/pmndrs/react-spring/issues/1461
+  describe('preserves keyframe formatting at exact range values', () => {
+    it('keeps trailing zeros on floats', () => {
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['0.00', '1.50'],
+      })
+
+      expect(interpolation(0)).toBe('0.00')
+      expect(interpolation(1)).toBe('1.50')
+    })
+
+    it('keeps trailing zeros across multi-stop ranges', () => {
+      const interpolation = createInterpolator({
+        range: [0, 0.5, 1],
+        output: ['0.00', '0.50', '1.00'],
+      })
+
+      expect(interpolation(0)).toBe('0.00')
+      expect(interpolation(0.5)).toBe('0.50')
+      expect(interpolation(1)).toBe('1.00')
+    })
+
+    it('keeps non-numeric template text intact', () => {
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['0 kr', '1.500 kr'],
+      })
+
+      expect(interpolation(0)).toBe('0 kr')
+      expect(interpolation(1)).toBe('1.500 kr')
+    })
+  })
+
+  // https://github.com/pmndrs/react-spring/issues/1461
+  describe('preserves decimal precision mid-animation', () => {
+    it('pads to the shared decimal count of the keyframes', () => {
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['0.00', '1.50'],
+      })
+
+      // value(0.4) = 0.6 — without padding this would be '0.6'
+      expect(interpolation(0.4)).toBe('0.60')
+      // value(0.2) = 0.3 — without padding this would be '0.3'
+      expect(interpolation(0.2)).toBe('0.30')
+    })
+
+    it('rounds when the raw value has more precision than the template', () => {
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['0.00', '1.00'],
+      })
+
+      // value(1/3) ≈ 0.333… — round to 2 dp
+      expect(interpolation(1 / 3)).toBe('0.33')
+    })
+
+    it('pads each number-position independently', () => {
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['0.00 0px', '1.50 100px'],
+      })
+
+      // pos 0: decimals match (2,2) → pad to 2
+      // pos 1: decimals match (0,0) → pad to 0
+      expect(interpolation(0.5)).toBe('0.75 50px')
+      expect(interpolation(0.4)).toBe('0.60 40px')
+    })
+
+    it('skips padding when keyframes have differing decimal counts', () => {
+      // Regression guard: the existing '-100.5deg → 100deg' contract must
+      // keep emitting '-0.25deg' at the midpoint, not '-0.3deg'.
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['-100.5deg', '100deg'],
+      })
+
+      expect(interpolation(0.5)).toBe('-0.25deg')
+    })
+
+    it('does not pad whole-number keyframes (preserves fractional alpha)', () => {
+      // Regression guard: rgba alpha goes 0 → 1 as whole numbers, but
+      // mid-animation we must keep the fractional value (e.g. 0.5),
+      // otherwise toFixed(0) would force-round it to 1.
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['rgba(0, 0, 0, 0)', 'rgba(3, 3, 3, 1)'],
+      })
+
+      expect(interpolation(0.5)).toBe('rgba(2, 2, 2, 0.5)')
+    })
+  })
+
   describe('CSS Variables', () => {
     const originalGetComputedStyle = window.getComputedStyle
 
