@@ -205,6 +205,25 @@ describe('animated component', () => {
     const wrapper = getByTestId('wrapper').element() as HTMLElement
     expect(wrapper.style.transform).toBe('none')
   })
+  it('does not treat custom spring keys that start with transform-function names as transforms', async () => {
+    // Issue #1912: user-defined interpolation keys like `scale3dValue` or
+    // `translateY_v2` were hijacked by the `^scale` / `^translate` prefix
+    // match in `AnimatedStyle`, corrupting the composed `transform`.
+    const scale3dValue = spring(0.5)
+    const { getByTestId } = await render(
+      <a.div
+        style={
+          {
+            scale3dValue,
+            transform: 'rotate(45deg)',
+          } as React.CSSProperties
+        }
+        data-testid="wrapper"
+      />
+    )
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
+    expect(wrapper.style.transform).toBe('rotate(45deg)')
+  })
   it('preserves transform-style and transform-origin properties', async () => {
     const { getByTestId } = await render(
       <a.div
