@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useRef } from 'react'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { page } from '@vitest/browser/context'
+import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 import { Parallax, ParallaxLayer, type IParallax } from '@react-spring/parallax'
 

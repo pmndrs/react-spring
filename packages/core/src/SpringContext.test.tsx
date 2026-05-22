@@ -18,7 +18,7 @@ describe('SpringContext', () => {
     </SpringContextProvider>
   ))
 
-  it('only merges when changed', () => {
+  it('only merges when changed', async () => {
     const context: ISpringContext = {}
     const onProps = vi.fn()
     const Test = () => {
@@ -45,7 +45,7 @@ describe('SpringContext', () => {
       onProps.mockClear()
     }
 
-    const elem = render(getRoot())
+    const elem = await render(getRoot())
     // React.StrictMode runs the layout effect twice on initial mount
     // (mount → simulated unmount → remount). Both passes apply the
     // user update, and the second pass also re-broadcasts the default-
@@ -59,29 +59,29 @@ describe('SpringContext', () => {
     ])
 
     context.pause = true
-    elem.rerender(getRoot())
+    await elem.rerender(getRoot())
     expectUpdates([{ default: context }, { onProps, to: { x: 0 } }])
 
-    elem.rerender(getRoot())
+    await elem.rerender(getRoot())
     expectUpdates([{ onProps, to: { x: 0 } }])
   })
 
-  it('can pause current animations', () => {
-    update({})
+  it('can pause current animations', async () => {
+    await update({})
     global.mockRaf.step()
     expect(t.idle).toBeFalsy()
 
-    update({ pause: true })
+    await update({ pause: true })
     expect(t.idle).toBeTruthy()
     expect(t.goal).toBe(1)
 
-    update({ pause: false })
+    await update({ pause: false })
     expect(t.idle).toBeFalsy()
     expect(t.goal).toBe(1)
   })
-  it('can pause future animations', () => {
+  it('can pause future animations', async () => {
     // Paused right away.
-    update({ pause: true })
+    await update({ pause: true })
     expect(t.idle).toBeTruthy()
     expect(t.goal).toBeUndefined()
 
@@ -91,26 +91,26 @@ describe('SpringContext', () => {
     expect(t.goal).toBeUndefined()
 
     // Let it roll.
-    update({ pause: false })
+    await update({ pause: false })
     expect(t.idle).toBeFalsy()
     // The `goal` is not 2, because the `useSpring` hook is
     // executed by the SpringContext update.
     expect(t.goal).toBe(1)
   })
 
-  it('can make current animations immediate', () => {
-    update({})
+  it('can make current animations immediate', async () => {
+    await update({})
     global.mockRaf.step()
     expect(t.idle).toBeFalsy()
 
-    update({ immediate: true })
+    await update({ immediate: true })
     global.mockRaf.step()
 
     expect(t.idle).toBeTruthy()
     expect(t.get()).toBe(1)
   })
-  it('can make future animations immediate', () => {
-    update({ immediate: true })
+  it('can make future animations immediate', async () => {
+    await update({ immediate: true })
     global.mockRaf.step()
 
     expect(t.idle).toBeTruthy()
@@ -125,14 +125,14 @@ describe('SpringContext', () => {
 })
 
 function createUpdater(Component: React.ComponentType<ISpringContext>) {
-  let result: ReturnType<typeof render> | undefined
+  let result: Awaited<ReturnType<typeof render>> | undefined
   afterEach(() => {
     result = undefined
   })
-  return (props: ISpringContext) => {
+  return async (props: ISpringContext) => {
     const elem = <Component {...props} />
-    if (result) result.rerender(elem)
-    else result = render(elem)
+    if (result) await result.rerender(elem)
+    else result = await render(elem)
     return result
   }
 }

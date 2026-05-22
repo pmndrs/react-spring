@@ -27,12 +27,12 @@ describe('useTransition', () => {
       leave: { n: 0 },
     }
 
-    update(true, props)
+    await update(true, props)
     expect(rendered).toEqual([true])
 
     global.mockRaf.step()
 
-    update(false, props)
+    await update(false, props)
     expect(rendered).toEqual([true, false])
 
     await global.advanceUntilIdle()
@@ -47,12 +47,12 @@ describe('useTransition', () => {
         leave: [{ n: 0 }],
       }
 
-      update(true, props)
+      await update(true, props)
       expect(rendered).toEqual([true])
 
       global.mockRaf.step()
 
-      update(false, props)
+      await update(false, props)
       expect(rendered).toEqual([true, false])
 
       await global.advanceUntilIdle()
@@ -70,12 +70,12 @@ describe('useTransition', () => {
         },
       }
 
-      update(true, props)
+      await update(true, props)
       expect(rendered).toEqual([true])
 
       global.mockRaf.step()
 
-      update(false, props)
+      await update(false, props)
       expect(rendered).toEqual([true, false])
 
       await global.advanceUntilIdle()
@@ -86,7 +86,7 @@ describe('useTransition', () => {
   describe('when "enter" is a function', () => {
     it('still has its "onRest" prop called', async () => {
       const onRest = vi.fn()
-      update(true, {
+      await update(true, {
         from: { x: 0 },
         enter: () => ({
           x: 1,
@@ -107,11 +107,11 @@ describe('useTransition', () => {
         leave: { t: 1 },
       }
 
-      update(true, props)
+      await update(true, props)
       expect(rendered).toEqual([true])
       await global.advanceUntilIdle()
 
-      update(false, props)
+      await update(false, props)
       expect(rendered).toEqual([true, false])
 
       await global.advanceUntilIdle()
@@ -126,14 +126,14 @@ describe('useTransition', () => {
     }
     const children = [<div key={1} />, <div key={2} />, <div key={3} />]
 
-    update(children, props)
+    await update(children, props)
 
     expect(ref.current).toHaveLength(3)
 
     testIsRef(ref)
   })
 
-  it('returns a ref if the props argument is a function', () => {
+  it('returns a ref if the props argument is a function', async () => {
     let transRef: SpringRef | null = null
     const update = createUpdater(({ args }) => {
       const [transition, ref] = useTransition(...args)
@@ -142,7 +142,7 @@ describe('useTransition', () => {
       return null
     })
 
-    update(true, () => ({
+    await update(true, () => ({
       from: { n: 0 },
       enter: { n: 1 },
       leave: { n: 0 },
@@ -161,7 +161,7 @@ describe('useTransition', () => {
       immediate: true,
     }
 
-    update(true, props)
+    await update(true, props)
 
     transition(style => {
       expect(style.n.animation.immediate).toEqual(true)
@@ -178,13 +178,13 @@ describe('useTransition', () => {
       exitBeforeEnter: true,
     }
 
-    update(0, props)
+    await update(0, props)
 
     expect(rendered).toEqual([0])
 
     global.mockRaf.step()
 
-    update(1, props)
+    await update(1, props)
 
     global.mockRaf.step()
 
@@ -205,13 +205,13 @@ describe('useTransition', () => {
     }
 
     // Start with two items
-    update([0, 1], props)
+    await update([0, 1], props)
     expect(rendered).toEqual([0, 1])
 
     global.mockRaf.step()
 
     // Replace with two new items - the old ones should leave first with trail
-    update([2, 3], props)
+    await update([2, 3], props)
 
     global.mockRaf.step()
 
@@ -226,15 +226,15 @@ describe('useTransition', () => {
   })
 })
 
-let result: ReturnType<typeof render> | undefined
+let result: Awaited<ReturnType<typeof render>> | undefined
 function createUpdater(
   Component: React.ComponentType<{ args: [any, any, any?] }>
 ) {
   type Args = [any, UseTransitionProps | (() => UseTransitionProps), any[]?]
-  return (...args: Args) => {
+  return async (...args: Args) => {
     const elem = <Component args={args} />
-    if (result) result.rerender(elem)
-    else result = render(elem)
+    if (result) await result.rerender(elem)
+    else result = await render(elem)
     return result
   }
 }

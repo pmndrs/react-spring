@@ -35,7 +35,7 @@ describe('useReducedMotion', () => {
       }
     })
 
-    const { result } = renderHook(useReducedMotion)
+    const { result } = await renderHook(useReducedMotion)
 
     expect(result.current).toBe(true)
   })
@@ -48,7 +48,7 @@ describe('useReducedMotion', () => {
       }
     })
 
-    const { result } = renderHook(useReducedMotion)
+    const { result } = await renderHook(useReducedMotion)
 
     expect(result.current).toBe(false)
   })
@@ -61,7 +61,7 @@ describe('useReducedMotion', () => {
       }
     })
 
-    const { result } = renderHook(useReducedMotion)
+    const { result } = await renderHook(useReducedMotion)
 
     expect(result.current).toBe(false)
 
@@ -75,7 +75,7 @@ describe('useReducedMotion', () => {
     expect(result.current).toBe(true)
   })
 
-  it('successfully removes listener on unmount', () => {
+  it('successfully removes listener on unmount', async () => {
     window.matchMedia = vi.fn().mockImplementation(query => {
       return {
         ...mqDefaults,
@@ -83,9 +83,9 @@ describe('useReducedMotion', () => {
       }
     })
 
-    const { unmount } = renderHook(useReducedMotion)
+    const { unmount } = await renderHook(useReducedMotion)
 
-    unmount()
+    await unmount()
 
     expect(removeEventListenerMock).toHaveBeenCalled()
   })

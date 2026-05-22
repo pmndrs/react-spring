@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitest/config'
+import { playwright } from '@vitest/browser-playwright'
 import path from 'node:path'
 
 const repoRoot = __dirname
@@ -34,7 +35,6 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'json'],
       reportOnFailure: true,
-      all: false,
       include: [
         'packages/animated/src/*.{ts,tsx}',
         'packages/core/src/*.{ts,tsx}',
@@ -90,7 +90,7 @@ export default defineConfig({
           },
           browser: {
             enabled: true,
-            provider: 'playwright',
+            provider: playwright(),
             headless: true,
             screenshotFailures: false,
             instances: [{ browser: 'chromium' }],
@@ -104,7 +104,7 @@ export default defineConfig({
           include: ['tests/e2e/**/*.spec.{ts,tsx}'],
           browser: {
             enabled: true,
-            provider: 'playwright',
+            provider: playwright(),
             headless: true,
             screenshotFailures: false,
             instances: [{ browser: 'chromium' }],
