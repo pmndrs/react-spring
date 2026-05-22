@@ -22,7 +22,7 @@
     "lodash-move": "1.1.1",
     "lodash.clamp": "4.0.3",
     "lodash.shuffle": "4.2.0",
-    "lorem-ipsum": "2.0.8",
+    "lorem-ipsum": "3.0.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-feather": "2.0.10",
