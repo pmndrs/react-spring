@@ -12,10 +12,16 @@ import { ReservedProps, ForwardProps, InferTo } from './types'
 import type { Controller } from './Controller'
 import type { SpringRef } from './SpringRef'
 
+export function callProp<T extends AnyFn>(
+  value: T,
+  ...args: Parameters<T>
+): ReturnType<T>
+export function callProp<T>(value: Exclude<T, AnyFn>, ...args: unknown[]): T
 export function callProp<T>(
   value: T,
   ...args: T extends AnyFn ? Parameters<T> : unknown[]
-): T extends AnyFn<any, infer U> ? U : T {
+): T extends AnyFn<any, infer U> ? U : T
+export function callProp(value: unknown, ...args: unknown[]) {
   return is.fun(value) ? value(...args) : value
 }
 
@@ -47,7 +53,7 @@ export const hasDefaultProp = <T extends Lookup>(props: T, key: keyof T) =>
 export const getDefaultProp = <T extends Lookup, P extends keyof T>(
   props: T,
   key: P
-): T[P] =>
+): T[P] | undefined =>
   props.default === true
     ? props[key]
     : props.default
@@ -183,15 +189,17 @@ export function inferTo<T extends object>(props: T): InferTo<T> {
 
 // Compute the goal value, converting "red" to "rgba(255, 0, 0, 1)" in the process
 export function computeGoal<T>(value: T | FluidValue<T>): T {
-  value = getFluidValue(value)
-  return is.arr(value)
-    ? value.map(computeGoal)
-    : isAnimatedString(value)
-      ? (G.createStringInterpolator({
-          range: [0, 1],
-          output: [value, value] as any,
-        })(1) as any)
-      : value
+  const resolved = getFluidValue(value)
+  if (is.arr(resolved)) {
+    return resolved.map(computeGoal) as T
+  }
+  if (isAnimatedString(resolved)) {
+    return G.createStringInterpolator({
+      range: [0, 1],
+      output: [resolved, resolved],
+    })(1) as T
+  }
+  return resolved as T
 }
 
 export function hasProps(props: object) {
