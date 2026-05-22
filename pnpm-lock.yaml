@@ -305,8 +305,8 @@ importers:
         specifier: 9.2.1
         version: 9.2.1
       esbuild:
-        specifier: 0.24.2
-        version: 0.24.2
+        specifier: 0.28.0
+        version: 0.28.0
       fs-extra:
         specifier: 11.3.5
         version: 11.3.5
@@ -8801,7 +8801,7 @@ snapshots:
       '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
       '@vanilla-extract/css': 1.20.1(babel-plugin-macros@3.1.0)
       dedent: 1.7.2(babel-plugin-macros@3.1.0)
-      esbuild: 0.24.2
+      esbuild: 0.28.0
       eval: 0.1.8
       find-up: 5.0.0
       javascript-stringify: 2.1.0
