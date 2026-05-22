@@ -851,18 +851,16 @@ export class SpringValue<T = any> extends FrameValue<T> {
             // Ensure `onStart` can be called after a reset.
             anim.changed = !reset
 
-            // Call the active `onRest` handler from the interrupted animation.
-            onRest?.(result, this)
-
-            // Notify the default `onRest` of the reset, but wait for the
-            // first frame to pass before sending an `onStart` event.
             if (reset) {
+              // Notify the previous animation's `onRest` that it did not
+              // finish, then the default `onRest`, before jumping back to
+              // `from` on the next frame.
+              onRest?.(result, this)
               callProp(defaultProps.onRest, result)
-            }
-            // Call the active `onStart` handler here since the first frame
-            // has already passed, which means this is a goal update and not
-            // an entirely new animation.
-            else {
+            } else {
+              // Goal update mid-flight: notify the active `onStart` that we
+              // are animating toward a new target. The spring never came to
+              // a stand-still, so do not fire `onRest`.
               anim.onStart?.(result, this)
             }
           })
