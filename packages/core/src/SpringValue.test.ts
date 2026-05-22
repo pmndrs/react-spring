@@ -989,7 +989,19 @@ function describeTarget(name: string, create: (from: number) => OpaqueTarget) {
       expect(spring.get()).toBe(target.node.get())
     })
 
-    it.todo('preserves its "onRest" prop between animations')
+    it('preserves its "onRest" prop between animations', async () => {
+      const onRest = vi.fn()
+      spring.start({ to: target.node, onRest })
+      await global.advanceUntilIdle()
+      expect(onRest).toBeCalledTimes(1)
+
+      // When the fluid target moves, the spring re-animates without a
+      // fresh start() call. The "onRest" handler should still fire when
+      // the new animation settles.
+      target.start(2)
+      await global.advanceUntilIdle()
+      expect(onRest).toBeCalledTimes(2)
+    })
 
     it('can change its target while animating', async () => {
       spring.start({ to: target.node })
