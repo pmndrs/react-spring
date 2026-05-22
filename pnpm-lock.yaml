@@ -283,8 +283,8 @@ importers:
         specifier: 2.1.1
         version: 2.1.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       zod:
-        specifier: 3.24.1
-        version: 3.24.1
+        specifier: 4.4.3
+        version: 4.4.3
     devDependencies:
       '@mdx-js/rollup':
         specifier: 3.1.0
@@ -6518,8 +6518,8 @@ packages:
   zdog@1.1.3:
     resolution: {integrity: sha512-raRj6r0gPzopFm5XWBJZr/NuV4EEnT4iE+U3dp5FV5pCb588Gmm3zLIp/j9yqqcMiHH8VNQlerLTgOqL7krh6w==}
 
-  zod@3.24.1:
-    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
   zustand@3.7.2:
     resolution: {integrity: sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==}
@@ -13072,7 +13072,7 @@ snapshots:
 
   zdog@1.1.3: {}
 
-  zod@3.24.1: {}
+  zod@4.4.3: {}
 
   zustand@3.7.2(react@19.2.6):
     optionalDependencies:
