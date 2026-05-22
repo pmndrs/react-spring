@@ -195,6 +195,36 @@ describe('useTransition', () => {
     expect(rendered).toEqual([1])
   })
 
+  it('exposes phase === "leave" to the render fn during a normal leave', async () => {
+    // Regression test for https://github.com/pmndrs/react-spring/issues/1654
+    // The render function receives the transition state `t` as its third
+    // argument; consumers read `t.phase` to branch on lifecycle.
+    const phaseLog: string[] = []
+    const update = createUpdater(({ args }) => {
+      const t = toArray(useTransition(...args))[0] as TransitionFn
+      rendered = t((_, item, state) => {
+        phaseLog.push(`${item}:${state.phase}`)
+        return item
+      }).props.children
+      return null
+    })
+
+    const props = {
+      from: { n: 0 },
+      enter: { n: 1 },
+      leave: { n: 0 },
+    }
+
+    await update(true, props)
+    await global.advanceUntilIdle()
+
+    phaseLog.length = 0
+    await update(false, props)
+    await global.advanceUntilIdle()
+
+    expect(phaseLog.some(entry => entry.endsWith(':leave'))).toBe(true)
+  })
+
   it('should work with both exitBeforeEnter and trail together', async () => {
     const props = {
       from: { t: 0 },

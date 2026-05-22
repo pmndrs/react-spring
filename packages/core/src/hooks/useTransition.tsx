@@ -427,8 +427,13 @@ export function useTransition(
   const renderTransitions: TransitionFn = render => (
     <>
       {transitions.map((t, i) => {
-        const { springs } = changes.get(t) || t.ctrl
-        const elem: any = render({ ...springs }, t.item, t, i)
+        const change = changes.get(t) || exitingTransitions.current.get(t)
+        const { springs } = change || t.ctrl
+        // Expose the phase that will be assigned in the upcoming layout
+        // effect so the render fn sees `leave` during the leave animation,
+        // not the stale phase from the previous render. See #1654.
+        const state = change ? { ...t, phase: change.phase } : t
+        const elem: any = render({ ...springs }, t.item, state, i)
 
         const key = is.str(t.key) || is.num(t.key) ? t.key : t.ctrl.id
         const isLegacyReact = React.version < '19.0.0'
