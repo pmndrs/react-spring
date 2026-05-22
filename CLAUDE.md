@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Stack
 
 - **Package manager**: pnpm 9.15.9 with strict isolated `node_modules` (default). Pinned via `packageManager` in root `package.json` and activated through Corepack. Scripts assume `pnpm`.
-- **Node**: `.nvmrc` is `22.15.0`; CI runs Node 18/20.
+- **Node**: `.nvmrc` is `24.16.0`; `engines.node` in root `package.json` is `>=24.16.0`; CI runs the unit-test matrix on Node `22.x` and `24.x` and every other job off `.nvmrc`.
 - **Monorepo**: Turborepo + pnpm workspaces. Workspaces declared in `pnpm-workspace.yaml`: `packages/*`, `targets/*`, `demo`, `docs`.
 - **Bundler**: `tsup` per package, sharing `tsup.config.base.ts` which emits CJS (dev + prod.min) and ESM (legacy, modern, modern.dev, modern.prod.min) plus a CJS entry shim that switches on `NODE_ENV`.
 - **Tests**: Vitest in browser mode (Chromium via Playwright) for both unit and E2E projects, `vitest-browser-react` for rendering, `tsc --noEmit` (types). Root config: `vitest.config.ts`.
