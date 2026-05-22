@@ -1,7 +1,7 @@
 import { IconProps } from 'phosphor-react'
 import { assignInlineVars } from '@vanilla-extract/dynamic'
 import { ForwardRefExoticComponent, RefAttributes } from 'react'
-import { Link } from '@remix-run/react'
+import { Link } from 'react-router'
 import { isStringGuard } from '~/helpers/guards'
 import { useIsDarkTheme } from '~/hooks/useIsDarkTheme'
 import { Button } from '../Buttons/Button'

@@ -1,18 +1,15 @@
 import {
-  MetaFunction,
-  LinksFunction,
-  json,
-  LoaderFunctionArgs,
-  ActionFunctionArgs,
-} from '@vercel/remix'
-import {
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
-} from '@remix-run/react'
+  type MetaFunction,
+  type LinksFunction,
+  type LoaderFunctionArgs,
+  type ActionFunctionArgs,
+} from 'react-router'
 import { Analytics } from '@vercel/analytics/react'
 import {
   WidgetGoogleTagManagerHead,
@@ -76,7 +73,7 @@ export const links: LinksFunction = () => [
 ]
 
 export const loader = ({ request }: LoaderFunctionArgs) => {
-  return json({
+  return {
     requestInfo: {
       hints: getHints(request),
       userPrefs: {
@@ -89,17 +86,17 @@ export const loader = ({ request }: LoaderFunctionArgs) => {
       ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY,
       ENABLE_CARBON: process.env.ENABLE_CARBON,
     },
-  })
+  }
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const body = await request.json()
   const theme = body.theme ?? 'light'
 
-  const responseInit = {
-    headers: { 'set-cookie': setTheme(theme) },
-  }
-  return json({ ok: true }, responseInit)
+  return Response.json(
+    { ok: true },
+    { headers: { 'set-cookie': setTheme(theme) } }
+  )
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {

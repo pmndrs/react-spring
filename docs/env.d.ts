@@ -1,2 +1,2 @@
 /// <reference types="vite/client" />
-/// <reference types="@vercel/remix" />
+/// <reference types="@react-router/node" />

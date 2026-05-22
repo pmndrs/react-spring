@@ -36,7 +36,6 @@
     "format:check": "oxfmt --check \"**/*.{ts,tsx,md}\"",
     "lint": "oxlint packages/*/src targets/*/src docs/app docs/scripts demo/src",
     "package": "turbo run pack",
-    "postinstall": "remix setup node",
     "prepare": "husky",
     "test": "pnpm test:ts && pnpm test:unit && pnpm test:e2e",
     "test:unit": "vitest run --project unit",
@@ -64,7 +63,6 @@
     "@react-spring/mock-raf": "1.1.1",
     "@react-spring/parallax": "workspace:*",
     "@react-three/fiber": "~9.1.2",
-    "@remix-run/dev": "2.15.2",
     "@swc/core": "1.15.33",
     "@types/fs-extra": "11.0.4",
     "@types/lodash.clamp": "4.0.9",
@@ -109,7 +107,6 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",
-      "@remix-run/dev",
       "@swc/core",
       "core-js",
       "core-js-pure",

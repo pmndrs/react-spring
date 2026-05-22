@@ -1,19 +1,16 @@
 import { useRef, useState } from 'react'
 import { MultiValue } from 'react-select'
 import {
-  ActionFunction,
-  json,
-  LoaderFunction,
-  MetaFunction,
   redirect,
-} from '@vercel/remix'
-import {
   useLoaderData,
   Form,
   useFetcher,
   useNavigation,
   useSearchParams,
-} from '@remix-run/react'
+  type ActionFunction,
+  type LoaderFunction,
+  type MetaFunction,
+} from 'react-router'
 
 import { Header } from '~/components/Header/Header'
 import { CardExample } from '~/components/Cards/CardExample'
@@ -24,7 +21,7 @@ import { Select } from '~/components/Select'
 
 import { SANDBOXES } from '~/data/sandboxes'
 
-import { fetchSandbox, getTagsAndComponents } from '~/helpers/sandboxes'
+import { getTagsAndComponents } from '~/helpers/sandboxes'
 import { WidgetCarbon } from '../components/Widgets/WidgetCarbon'
 import {
   copy,
@@ -36,50 +33,45 @@ import {
   xlHeading,
 } from '../styles/routes/examples.css'
 
-export const loader: LoaderFunction = async ({ request }) => {
-  try {
-    const url = new URL(request.url)
+export const loader: LoaderFunction = ({ request }) => {
+  const url = new URL(request.url)
 
-    const tagsParam = url.searchParams.get('tags')?.split(',') ?? []
-    const componentsParam = url.searchParams.get('components')?.split(',') ?? []
+  const tagsParam = url.searchParams.get('tags')?.split(',') ?? []
+  const componentsParam = url.searchParams.get('components')?.split(',') ?? []
 
-    const sandboxes = await Promise.all(
-      Object.values(SANDBOXES).map(fetchSandbox)
-    ).then(boxes => boxes.sort((a, b) => a.title.localeCompare(b.title)))
+  const sandboxes = [...SANDBOXES].sort((a, b) =>
+    a.title.localeCompare(b.title)
+  )
 
-    const filteredSandboxes = sandboxes.filter(sandbox => {
-      if (tagsParam.length === 0 && componentsParam.length === 0) {
-        return sandbox
-      }
+  const filteredSandboxes = sandboxes.filter(sandbox => {
+    if (tagsParam.length === 0 && componentsParam.length === 0) {
+      return sandbox
+    }
 
-      const tags = sandbox.tags.filter(tag => tagsParam.includes(tag))
-      const components = sandbox.tags.filter(tag =>
-        componentsParam.includes(tag)
-      )
-
-      if (tags.length > 0 || components.length > 0) {
-        return sandbox
-      }
-    })
-
-    const [tags, components] = getTagsAndComponents(sandboxes)
-
-    return json(
-      {
-        sandboxes: filteredSandboxes,
-        tags,
-        components,
-      },
-      {
-        headers: {
-          'Cache-Control': 'public, max-age=60, s-max-age=60',
-        },
-      }
+    const matchedTags = sandbox.tags.filter(tag => tagsParam.includes(tag))
+    const matchedComponents = sandbox.tags.filter(tag =>
+      componentsParam.includes(tag)
     )
-  } catch (err) {
-    console.error(err)
-    return redirect('/500')
-  }
+
+    if (matchedTags.length > 0 || matchedComponents.length > 0) {
+      return sandbox
+    }
+  })
+
+  const [tags, components] = getTagsAndComponents(sandboxes)
+
+  return Response.json(
+    {
+      sandboxes: filteredSandboxes,
+      tags,
+      components,
+    },
+    {
+      headers: {
+        'Cache-Control': 'public, max-age=60, s-max-age=60',
+      },
+    }
+  )
 }
 
 export const action: ActionFunction = async ({ request }) => {
@@ -134,19 +126,12 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-export interface Sandbox {
-  urlTitle: string
-  title: string
-  tags: string[]
-  screenshotUrl: string
-  description: string
-  id: string
-}
+import type { SandboxEntry } from '~/data/sandboxes'
 
 export default function Examples() {
   const { components, sandboxes, tags } = useLoaderData<{
     components: { value: string; label: string }[]
-    sandboxes: Sandbox[]
+    sandboxes: SandboxEntry[]
     tags: { value: string; label: string }[]
   }>()
 
@@ -251,7 +236,7 @@ export default function Examples() {
           }}
         >
           {sandboxes.map(props => (
-            <li key={props.urlTitle}>
+            <li key={props.slug}>
               <CardExample {...props} />
             </li>
           ))}

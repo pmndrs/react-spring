@@ -1,4 +1,4 @@
-import { json, LoaderFunction, MetaFunction, redirect } from '@vercel/remix'
+import { redirect, type LoaderFunction, type MetaFunction } from 'react-router'
 import { GradientButton } from '~/components/Buttons/GradientButton'
 
 import { Header } from '~/components/Header/Header'
@@ -120,7 +120,7 @@ export const loader: LoaderFunction = ({ request }) => {
     )
   }
 
-  return json({})
+  return Response.json({})
 }
 
 export default function Index() {

@@ -29,11 +29,11 @@ description: 'Task list for the Remix 2 → React Router 7 docs-site migration'
 
 **Purpose**: Branch hygiene + the dependency swap. Touches `docs/package.json` and the root lockfile only; nothing built or tested yet.
 
-- [ ] T001 Confirm working branch is `003-remix-to-react-router-7` and worktree is clean before edits (`git status` reports no uncommitted noise)
-- [ ] T002 Rewrite the `dependencies` block in `docs/package.json`: remove `@remix-run/node`, `@remix-run/react`, `@remix-run/serve`, `@remix-run/server-runtime`, `@vercel/remix`, `@supabase/supabase-js`; add `@react-router/node@^7`, `@react-router/serve@^7`, `@vercel/react-router@^7`; bump `react-router` from `6.28.1` to `^7` (per `data-model.md` §1)
-- [ ] T003 Rewrite the `devDependencies` block in `docs/package.json`: remove `@remix-run/dev`; add `@react-router/dev@^7` and `@react-router/fs-routes@^7`
-- [ ] T004 Run `pnpm install` from repo root to regenerate `pnpm-lock.yaml`; verify no peer-dep warnings about mismatched React Router majors
-- [ ] T005 Assert post-install invariants: `grep -E '"@remix-run/' pnpm-lock.yaml` returns empty (INV-P1) and `pnpm ls react-router -r --depth -1 --json | jq -r '..|.version? // empty' | grep -E '^[0-9]+' | cut -d. -f1 | sort -u` outputs only `7` (INV-P2); `grep '@supabase/supabase-js' pnpm-lock.yaml` returns empty (INV-P4)
+- [x] T001 Confirm working branch is `003-remix-to-react-router-7` and worktree is clean before edits (`git status` reports no uncommitted noise)
+- [x] T002 Rewrite the `dependencies` block in `docs/package.json`: remove `@remix-run/node`, `@remix-run/react`, `@remix-run/serve`, `@remix-run/server-runtime`, `@vercel/remix`, `@supabase/supabase-js`; add `@react-router/node@^7`, `@react-router/serve@^7`, `@vercel/react-router@^7`; bump `react-router` from `6.28.1` to `^7` (per `data-model.md` §1)
+- [x] T003 Rewrite the `devDependencies` block in `docs/package.json`: remove `@remix-run/dev`; add `@react-router/dev@^7` and `@react-router/fs-routes@^7`
+- [x] T004 Run `pnpm install` from repo root to regenerate `pnpm-lock.yaml`; verify no peer-dep warnings about mismatched React Router majors
+- [x] T005 Assert post-install invariants: `grep -E '"@remix-run/' pnpm-lock.yaml` returns empty (INV-P1) and `pnpm ls react-router -r --depth -1 --json | jq -r '..|.version? // empty' | grep -E '^[0-9]+' | cut -d. -f1 | sort -u` outputs only `7` (INV-P2); `grep '@supabase/supabase-js' pnpm-lock.yaml` returns empty (INV-P4)
 
 **Checkpoint**: Dependency tree is on RR7. Build still broken (no config rewire yet); type-check still broken (imports still point at removed packages). Expected.
 
@@ -45,13 +45,13 @@ description: 'Task list for the Remix 2 → React Router 7 docs-site migration'
 
 **⚠️ CRITICAL**: All user stories depend on these config files existing. Without them, nothing else builds.
 
-- [ ] T006 [P] Create `docs/react-router.config.ts` exporting `{ presets: [vercelPreset()] }` from `@vercel/react-router/vite`, typed via `Config` from `@react-router/dev/config` (per `research.md` §R5)
-- [ ] T007 [P] Create `docs/app/routes.ts` exporting `flatRoutes({ ignoredRouteFiles: ['**/.*', '**/*.css'] })` from `@react-router/fs-routes`, typed via `RouteConfig` from `@react-router/dev/routes` (per `research.md` §R3)
-- [ ] T008 [P] Edit `docs/vite.config.mts`: remove `installGlobals()` and its import from `@remix-run/node`; remove the `mdx` `@ts-expect-error`-suppressed call site only if it becomes unnecessary (keep otherwise); replace `import { vitePlugin as remix } from '@remix-run/dev'` with `import { reactRouter } from '@react-router/dev/vite'`; remove `@vercel/remix/vite` import; replace the `remix({ ignoredRouteFiles, presets: [vercelPreset()] })` plugin entry with `reactRouter()` (presets now live in `react-router.config.ts`); leave `mdx(...)`, `vanillaExtractPlugin()`, `tsconfigPaths()` untouched (per `research.md` §R4)
-- [ ] T009 [P] Edit `docs/tsconfig.json`: add `"./.react-router/types/**/*"` to the `include` array; add `".react-router"` to the `exclude` array
-- [ ] T010 [P] Edit `docs/env.d.ts`: replace `/// <reference types="@vercel/remix" />` with `/// <reference types="@react-router/node" />`
-- [ ] T011 [P] Edit `docs/turbo.json`: change `outputs` to `["build/**", ".react-router/**"]` and expand `inputs` to `["app/**", "public/**", "react-router.config.ts", "vite.config.mts"]` (per `research.md` §R9)
-- [ ] T012 [P] Add `.react-router/` to the root `.gitignore` (immediately under the existing `build/` line, around line 4) so the typegen output isn't committed (per `data-model.md` INV-C2)
+- [x] T006 [P] Create `docs/react-router.config.ts` exporting `{ presets: [vercelPreset()] }` from `@vercel/react-router/vite`, typed via `Config` from `@react-router/dev/config` (per `research.md` §R5)
+- [x] T007 [P] Create `docs/app/routes.ts` exporting `flatRoutes({ ignoredRouteFiles: ['**/.*', '**/*.css'] })` from `@react-router/fs-routes`, typed via `RouteConfig` from `@react-router/dev/routes` (per `research.md` §R3)
+- [x] T008 [P] Edit `docs/vite.config.mts`: remove `installGlobals()` and its import from `@remix-run/node`; remove the `mdx` `@ts-expect-error`-suppressed call site only if it becomes unnecessary (keep otherwise); replace `import { vitePlugin as remix } from '@remix-run/dev'` with `import { reactRouter } from '@react-router/dev/vite'`; remove `@vercel/remix/vite` import; replace the `remix({ ignoredRouteFiles, presets: [vercelPreset()] })` plugin entry with `reactRouter()` (presets now live in `react-router.config.ts`); leave `mdx(...)`, `vanillaExtractPlugin()`, `tsconfigPaths()` untouched (per `research.md` §R4)
+- [x] T009 [P] Edit `docs/tsconfig.json`: add `"./.react-router/types/**/*"` to the `include` array; add `".react-router"` to the `exclude` array
+- [x] T010 [P] Edit `docs/env.d.ts`: replace `/// <reference types="@vercel/remix" />` with `/// <reference types="@react-router/node" />`
+- [x] T011 [P] Edit `docs/turbo.json`: change `outputs` to `["build/**", ".react-router/**"]` and expand `inputs` to `["app/**", "public/**", "react-router.config.ts", "vite.config.mts"]` (per `research.md` §R9)
+- [x] T012 [P] Add `.react-router/` to the root `.gitignore` (immediately under the existing `build/` line, around line 4) so the typegen output isn't committed (per `data-model.md` INV-C2)
 
 **Checkpoint**: Config wired. `react-router typegen` should now succeed (produces `.react-router/types/`). `react-router build` still fails because app code imports `@remix-run/*` and `@vercel/remix`.
 
@@ -65,44 +65,44 @@ description: 'Task list for the Remix 2 → React Router 7 docs-site migration'
 
 ### Feedback module deletion (FR-019) — do first, removes 4 of the 17 Remix-importing files from the rewrite list
 
-- [ ] T013 [US1] Delete `docs/app/components/Feedback/Feedback.tsx`
-- [ ] T014 [US1] Delete `docs/app/components/Feedback/Feedback.css.ts`
-- [ ] T015 [US1] Delete the now-empty directory `docs/app/components/Feedback/`
-- [ ] T016 [US1] Delete `docs/app/routes/api.feedback.ts`
-- [ ] T017 [US1] Edit `docs/app/routes/docs.tsx`: remove the `import { Feedback } from '~/components/Feedback/Feedback'` line (≈line 18) and the `<Feedback location={activeRoute?.href} />` JSX (≈line 154); leave the rest of the layout intact
-- [ ] T018 [US1] Edit `docs/app/routes/docs._index.mdx`: rewrite lines around 42–44 that describe the per-page feedback button — keep the GitHub Discussions link as the canonical feedback channel; do not mention a "feedback button" anywhere in the prose
+- [x] T013 [US1] Delete `docs/app/components/Feedback/Feedback.tsx`
+- [x] T014 [US1] Delete `docs/app/components/Feedback/Feedback.css.ts`
+- [x] T015 [US1] Delete the now-empty directory `docs/app/components/Feedback/`
+- [x] T016 [US1] Delete `docs/app/routes/api.feedback.ts`
+- [x] T017 [US1] Edit `docs/app/routes/docs.tsx`: remove the `import { Feedback } from '~/components/Feedback/Feedback'` line (≈line 18) and the `<Feedback location={activeRoute?.href} />` JSX (≈line 154); leave the rest of the layout intact
+- [x] T018 [US1] Edit `docs/app/routes/docs._index.mdx`: rewrite lines around 42–44 that describe the per-page feedback button — keep the GitHub Discussions link as the canonical feedback channel; do not mention a "feedback button" anywhere in the prose
 
 ### Server-entry rewire (the highest-risk single file)
 
-- [ ] T019 [US1] Rewire `docs/app/root.tsx` imports: replace the `@vercel/remix` block (`MetaFunction`, `LinksFunction`, `json`, `LoaderFunctionArgs`, `ActionFunctionArgs`) with type-only imports from `react-router`; replace the `@remix-run/react` block (`Links`, `Meta`, `Outlet`, `Scripts`, `ScrollRestoration`, `useLoaderData`) with value imports from `react-router`; replace `json(...)` call sites with `Response.json(...)` (or RR7's `data()` helper if type inference benefits); ensure the action/loader signatures and return shapes are unchanged
+- [x] T019 [US1] Rewire `docs/app/root.tsx` imports: replace the `@vercel/remix` block (`MetaFunction`, `LinksFunction`, `json`, `LoaderFunctionArgs`, `ActionFunctionArgs`) with type-only imports from `react-router`; replace the `@remix-run/react` block (`Links`, `Meta`, `Outlet`, `Scripts`, `ScrollRestoration`, `useLoaderData`) with value imports from `react-router`; replace `json(...)` call sites with `Response.json(...)` (or RR7's `data()` helper if type inference benefits); ensure the action/loader signatures and return shapes are unchanged
 
 ### Route-file import rewrites (parallel — each file is independent)
 
-- [ ] T020 [P] [US1] Rewire `docs/app/routes/$.tsx` imports: replace `@vercel/remix` imports (`json`, `LoaderFunction`, `MetaFunction`, `redirect`) with `react-router` (use type-only imports for the `*Function` types; `redirect` is a value import; replace `json(...)` with `Response.json(...)`)
-- [ ] T021 [P] [US1] Rewire `docs/app/routes/_index.tsx` imports per `data-model.md` §3
-- [ ] T022 [P] [US1] Rewire `docs/app/routes/examples.tsx` imports per `data-model.md` §3
-- [ ] T023 [P] [US1] Rewire `docs/app/routes/docs.tsx` remaining imports (after T017): any `@remix-run/react` value imports → `react-router`; any `@vercel/remix` type imports → type-only from `react-router`
+- [x] T020 [P] [US1] Rewire `docs/app/routes/$.tsx` imports: replace `@vercel/remix` imports (`json`, `LoaderFunction`, `MetaFunction`, `redirect`) with `react-router` (use type-only imports for the `*Function` types; `redirect` is a value import; replace `json(...)` with `Response.json(...)`)
+- [x] T021 [P] [US1] Rewire `docs/app/routes/_index.tsx` imports per `data-model.md` §3
+- [x] T022 [P] [US1] Rewire `docs/app/routes/examples.tsx` imports per `data-model.md` §3
+- [x] T023 [P] [US1] Rewire `docs/app/routes/docs.tsx` remaining imports (after T017): any `@remix-run/react` value imports → `react-router`; any `@vercel/remix` type imports → type-only from `react-router`
 
 ### Component / hook import rewrites (parallel — different files)
 
-- [ ] T024 [P] [US1] Rewire imports in `docs/app/components/Buttons/Button.tsx` (`@remix-run/react` → `react-router`)
-- [ ] T025 [P] [US1] Rewire imports in `docs/app/components/Buttons/NavButton.tsx`
-- [ ] T026 [P] [US1] Rewire imports in `docs/app/components/Menu/MenuDocs.tsx`
-- [ ] T027 [P] [US1] Rewire imports in `docs/app/components/Site/SiteThemePicker.tsx`
-- [ ] T028 [P] [US1] Rewire imports in `docs/app/components/Site/SiteClientHints.tsx`
-- [ ] T029 [P] [US1] Rewire imports in `docs/app/components/Grids/NavigationGrid.tsx`
-- [ ] T030 [P] [US1] Rewire imports in `docs/app/components/Text/Anchor.tsx`
-- [ ] T031 [P] [US1] Rewire imports in `docs/app/components/Header/HeaderSidePanel.tsx`
-- [ ] T032 [P] [US1] Rewire imports in `docs/app/components/Widgets/WidgetCarbon.tsx`
-- [ ] T033 [P] [US1] Rewire imports in `docs/app/hooks/useRequestInfo.ts`
-- [ ] T034 [P] [US1] Rewire imports in `docs/app/hooks/useTheme.ts`
+- [x] T024 [P] [US1] Rewire imports in `docs/app/components/Buttons/Button.tsx` (`@remix-run/react` → `react-router`)
+- [x] T025 [P] [US1] Rewire imports in `docs/app/components/Buttons/NavButton.tsx`
+- [x] T026 [P] [US1] Rewire imports in `docs/app/components/Menu/MenuDocs.tsx`
+- [x] T027 [P] [US1] Rewire imports in `docs/app/components/Site/SiteThemePicker.tsx`
+- [x] T028 [P] [US1] Rewire imports in `docs/app/components/Site/SiteClientHints.tsx`
+- [x] T029 [P] [US1] Rewire imports in `docs/app/components/Grids/NavigationGrid.tsx`
+- [x] T030 [P] [US1] Rewire imports in `docs/app/components/Text/Anchor.tsx`
+- [x] T031 [P] [US1] Rewire imports in `docs/app/components/Header/HeaderSidePanel.tsx`
+- [x] T032 [P] [US1] Rewire imports in `docs/app/components/Widgets/WidgetCarbon.tsx`
+- [x] T033 [P] [US1] Rewire imports in `docs/app/hooks/useRequestInfo.ts`
+- [x] T034 [P] [US1] Rewire imports in `docs/app/hooks/useTheme.ts`
 
 ### Verification (sequential — each depends on the previous succeeding)
 
-- [ ] T035 [US1] `grep -rE "from '@(remix-run|vercel/remix)" docs/app docs/vite.config.mts docs/env.d.ts` returns empty (INV-T1)
-- [ ] T036 [US1] `grep -rE 'Feedback|/api/feedback|@supabase' docs/app docs/scripts` returns empty across source files (INV-F1, SC-010)
-- [ ] T037 [US1] Run `pnpm --filter @react-spring/docs test:ts` and confirm exit code 0 with no errors (FR-017, SC-008, INV-T2)
-- [ ] T038 [US1] Run `pnpm docs:dev`; load `http://localhost:3000/` and `http://localhost:3000/docs/components/use-spring`; confirm SSR renders correct theme on first paint (no flash, FR-013), no hydration warnings in console, search modal opens, an embedded `<Sandpack>` block renders, and — with DevTools → Network filtered to `_vercel/insights` — a client-side navigation between the two pages triggers at least one analytics beacon (FR-14)
+- [x] T035 [US1] `grep -rE "from '@(remix-run|vercel/remix)" docs/app docs/vite.config.mts docs/env.d.ts` returns empty (INV-T1)
+- [x] T036 [US1] `grep -rE 'Feedback|/api/feedback|@supabase' docs/app docs/scripts` returns empty across source files (INV-F1, SC-010)
+- [x] T037 [US1] Run `pnpm --filter @react-spring/docs test:ts` and confirm exit code 0 with no errors (FR-017, SC-008, INV-T2)
+- [x] T038 [US1] Run `pnpm docs:dev`; load `http://localhost:3000/` and `http://localhost:3000/docs/components/use-spring`; confirm SSR renders correct theme on first paint (no flash, FR-013), no hydration warnings in console, search modal opens, an embedded `<Sandpack>` block renders, and — with DevTools → Network filtered to `_vercel/insights` — a client-side navigation between the two pages triggers at least one analytics beacon (FR-14)
 
 **Checkpoint**: Site builds and renders on RR7 in local dev. The Feedback module is gone. URL surface intact. This is the MVP — the migration is functionally complete after this phase.
 
@@ -114,11 +114,11 @@ description: 'Task list for the Remix 2 → React Router 7 docs-site migration'
 
 **Independent Test**: Iterate over `contracts/routes.md` C1, hit every path against the local production build (`pnpm --filter @react-spring/docs build && pnpm --filter @react-spring/docs start`), and confirm 200 + non-empty body for each.
 
-- [ ] T039 [US2] Run `pnpm --filter @react-spring/docs build` and confirm `docs/build/client/` and `docs/build/server/` exist; `docs/public/build/` is **not** produced (verifies INV-C1 and the Turbo outputs glob from T011)
+- [x] T039 [US2] Run `pnpm --filter @react-spring/docs build` and confirm `docs/build/client/` and `docs/build/server/` exist; `docs/public/build/` is **not** produced (verifies INV-C1 and the Turbo outputs glob from T011)
 - [ ] T040 [US2] Run `pnpm --filter @react-spring/docs start` (uses `react-router-serve` per `research.md` §R6); leave it running on its default port for the subsequent route-walk
 - [ ] T041 [US2] Walk every path in `specs/003-remix-to-react-router-7/contracts/routes.md` C1 with `curl -s -o /dev/null -w "%{http_code}"` against the local prod-serve URL; every path MUST return 200; capture failures (if any) in PR notes (verifies SC-001, INV-R1)
-- [ ] T042 [US2] Hit a deliberately-invalid path (e.g. `/this-does-not-exist`) and confirm the splat route renders the 404 page with `<title>` containing `404` (per `contracts/routes.md` C2)
-- [ ] T043 [US2] Hit `GET /api/feedback` and confirm it returns 404 (the route file is deleted; the splat handles it — verifies INV-R3, SC-010, INV-F2)
+- [x] T042 [US2] Hit a deliberately-invalid path (e.g. `/this-does-not-exist`) and confirm the splat route renders the 404 page with `<title>` containing `404` (per `contracts/routes.md` C2)
+- [x] T043 [US2] Hit `GET /api/feedback` and confirm it returns 404 (the route file is deleted; the splat handles it — verifies INV-R3, SC-010, INV-F2)
 
 **Checkpoint**: Local build serves every contracted URL correctly. Vercel-preview verification waits for US4.
 
@@ -130,8 +130,8 @@ description: 'Task list for the Remix 2 → React Router 7 docs-site migration'
 
 **Independent Test**: A fresh checkout of the branch + `pnpm install --frozen-lockfile && pnpm docs:dev` brings up the site on port 3000 with HMR for both component code and MDX.
 
-- [ ] T044 [US3] Update the `scripts` block in `docs/package.json`: `build` → `react-router build`; `dev:remix` → `dev:rr` (value: `react-router dev`); `start` → `react-router-serve ./build/server/index.js`; `test:ts` → `react-router typegen && tsc --noEmit`; update the `dev` script to invoke `pnpm dev:rr` instead of `pnpm dev:remix` (per `research.md` §R11)
-- [ ] T045 [US3] Update `docs/README.md` to reference the new commands (`pnpm dev`, `pnpm build`, `pnpm start`, `pnpm test:ts`) and mention that the framework is now React Router 7 framework mode; remove any Remix-specific guidance
+- [x] T044 [US3] Update the `scripts` block in `docs/package.json`: `build` → `react-router build`; `dev:remix` → `dev:rr` (value: `react-router dev`); `start` → `react-router-serve ./build/server/index.js`; `test:ts` → `react-router typegen && tsc --noEmit`; update the `dev` script to invoke `pnpm dev:rr` instead of `pnpm dev:remix` (per `research.md` §R11)
+- [x] T045 [US3] Update `docs/README.md` to reference the new commands (`pnpm dev`, `pnpm build`, `pnpm start`, `pnpm test:ts`) and mention that the framework is now React Router 7 framework mode; remove any Remix-specific guidance
 - [ ] T046 [US3] Verify HMR end-to-end: with `pnpm docs:dev` running, edit `docs/app/routes/docs.getting-started.mdx` (add a trailing space), save, and confirm the change appears in the browser within ~2 seconds without a full server restart (FR-011)
 - [ ] T047 [US3] Verify HMR for component code: edit `docs/app/components/Site/SiteFooter.tsx` (add a no-op comment), save, and confirm the change is picked up without losing client state
 
@@ -145,10 +145,10 @@ description: 'Task list for the Remix 2 → React Router 7 docs-site migration'
 
 **Independent Test**: `git push -u origin 003-remix-to-react-router-7` triggers a Vercel build; the resulting preview URL passes the contract route-walk from US2.
 
-- [ ] T048 [US4] Confirm Vercel project settings will auto-detect React Router 7 (no manual framework override needed); document in the PR description that the `@vercel/react-router` preset is wired via `docs/react-router.config.ts` (no `vercel.json` changes required)
+- [x] T048 [US4] Confirm Vercel project settings will auto-detect React Router 7 (no manual framework override needed); document in the PR description that the `@vercel/react-router` preset is wired via `docs/react-router.config.ts` (no `vercel.json` changes required)
 - [ ] T049 [US4] Push the branch to remote (only after explicit user confirmation per the repo's "never push without confirmation" rule); record the Vercel preview URL once produced
 - [ ] T050 [US4] Re-run the contract route-walk from T041 against the Vercel preview URL; all paths return 200 (SC-001, SC-005)
-- [ ] T051 [US4] Note in PR notes the manual post-merge cleanup: Vercel project env vars `SUPABASE_URL` and `SUPABASE_ANON_KEY` can be unset (FR-019 follow-up)
+- [x] T051 [US4] Note in PR notes the manual post-merge cleanup: Vercel project env vars `SUPABASE_URL` and `SUPABASE_ANON_KEY` can be unset (FR-019 follow-up)
 
 **Checkpoint**: Production-equivalent deployment confirmed.
 
@@ -158,14 +158,14 @@ description: 'Task list for the Remix 2 → React Router 7 docs-site migration'
 
 **Purpose**: Final quality gates, performance verification, and the housekeeping items that fall outside any single story.
 
-- [ ] T052 [P] Run `pnpm lint` from repo root; confirm clean (Quality Gate)
-- [ ] T053 [P] Run `pnpm format` from repo root; commit any whitespace fixups (oxfmt — the project moved off Prettier)
+- [x] T052 [P] Run `pnpm lint` from repo root; confirm clean (Quality Gate)
+- [x] T053 [P] Run `pnpm format` from repo root; commit any whitespace fixups (oxfmt — the project moved off Prettier)
 - [ ] T054 Run Lighthouse against the Vercel preview's `/` and `/docs/components/use-spring`; compare scores against current `https://www.react-spring.dev/...`; SC-006 requires within 5 points on Performance, SEO, Accessibility; SC-007 requires LCP within 10%
 - [ ] T055 [P] Open browser dev-tools on the preview URL across 3 sampled routes (`/`, `/docs/getting-started`, `/docs/components/parallax`); confirm zero console errors and zero hydration warnings (SC-009)
-- [ ] T055a [P] Assert server-only modules don't leak into the client bundle: after `pnpm --filter @react-spring/docs build`, `grep -rE 'getTheme|setTheme|SUPABASE_|theme\.server' docs/build/client/ 2>/dev/null` returns empty (FR-009)
-- [ ] T056 Walk the done-criteria checklist in `specs/003-remix-to-react-router-7/quickstart.md` §"Done criteria"; each box ticked
-- [ ] T057 Update the `CLAUDE.md` `SPECKIT START`/`END` block (already done at plan time — re-verify it still points at `specs/003-remix-to-react-router-7/plan.md`)
-- [ ] T058 Self-review the diff with `git diff --stat next...003-remix-to-react-router-7` — confirm no library workspace (`packages/*`, `targets/*`, `demo/`) files were touched; only `docs/`, root `pnpm-lock.yaml`, root `.gitignore`, root `CLAUDE.md`, and `specs/003-remix-to-react-router-7/` should appear
+- [x] T055a [P] Assert server-only modules don't leak into the client bundle: after `pnpm --filter @react-spring/docs build`, `grep -rE 'getTheme|setTheme|SUPABASE_|theme\.server' docs/build/client/ 2>/dev/null` returns empty (FR-009)
+- [x] T056 Walk the done-criteria checklist in `specs/003-remix-to-react-router-7/quickstart.md` §"Done criteria"; each box ticked
+- [x] T057 Update the `CLAUDE.md` `SPECKIT START`/`END` block (already done at plan time — re-verify it still points at `specs/003-remix-to-react-router-7/plan.md`)
+- [x] T058 Self-review the diff with `git diff --stat next...003-remix-to-react-router-7` — confirm no library workspace (`packages/*`, `targets/*`, `demo/`) files were touched; only `docs/`, root `pnpm-lock.yaml`, root `.gitignore`, root `CLAUDE.md`, and `specs/003-remix-to-react-router-7/` should appear
 
 ---
 

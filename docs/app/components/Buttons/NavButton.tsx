@@ -3,7 +3,7 @@ import {
   MouseEventHandler,
   RefAttributes,
 } from 'react'
-import { Link, useLocation } from '@remix-run/react'
+import { Link, useLocation } from 'react-router'
 import * as Toolbar from '@radix-ui/react-toolbar'
 import { IconProps } from 'phosphor-react'
 

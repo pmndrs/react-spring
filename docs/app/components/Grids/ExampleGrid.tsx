@@ -1,20 +1,25 @@
+import { useMemo } from 'react'
 import { CardExample } from '~/components/Cards/CardExample'
-import { SANDBOXES } from '~/data/sandboxes'
+import { sandboxesByTitle } from '~/data/sandboxes'
 
-import { useCSB } from '~/hooks/useCSB'
 import { exampleGridRoot } from './ExampleGrid.css'
 
 interface ExampleGridProps {
-  sandboxTitles: Array<keyof typeof SANDBOXES>
+  sandboxTitles: string[]
 }
 
 export const ExampleGrid = ({ sandboxTitles }: ExampleGridProps) => {
-  const sandboxes = useCSB(sandboxTitles)
+  const sandboxes = useMemo(() => {
+    const byTitle = sandboxesByTitle()
+    return sandboxTitles
+      .map(title => byTitle[title])
+      .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry))
+  }, [sandboxTitles])
 
   return (
     <ul className={exampleGridRoot}>
       {sandboxes.map(sandbox => (
-        <li key={sandbox.id}>
+        <li key={sandbox.slug}>
           <CardExample {...sandbox} />
         </li>
       ))}

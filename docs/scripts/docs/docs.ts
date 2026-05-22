@@ -1,6 +1,7 @@
 import fs from 'fs-extra'
 import chokidar from 'chokidar'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
 import { parseMarkdownString } from './markdown'
 import { DocFrontmatter, validateFrontmatter } from './frontmatter'
@@ -10,6 +11,8 @@ import {
   NavigationSchema,
   SubtitleSchema,
 } from './navigation'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 interface DocFile {
   source: string
@@ -197,7 +200,15 @@ const writeData = async (data: GeneratedDataFromDocs) => {
   }
 }
 
-const DOCS_DIR = path.resolve(__dirname, '../../app/routes/*.{mdx,json}')
+const DOCS_DIR = path.resolve(__dirname, '../../app/routes')
+
+const isDocFile = (filePath: string) =>
+  /\.(mdx|MDX|json)$/.test(path.basename(filePath))
+
+const chokidarOptions = {
+  ignored: (filePath: string, stats?: { isFile: () => boolean }) =>
+    !!stats?.isFile() && !isDocFile(filePath),
+}
 
 export const watchDocs = () => {
   const watcher = chokidar.watch(DOCS_DIR, {
@@ -207,6 +218,7 @@ export const watchDocs = () => {
       stabilityThreshold: 100,
       pollInterval: 100,
     },
+    ...chokidarOptions,
   })
 
   /**
@@ -254,6 +266,7 @@ export const watchDocs = () => {
 export const buildDocs = () => {
   const watcher = chokidar.watch(DOCS_DIR, {
     persistent: false,
+    ...chokidarOptions,
   })
 
   watcher.on('ready', async () => {
