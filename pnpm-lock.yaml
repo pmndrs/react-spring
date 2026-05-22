@@ -241,14 +241,14 @@ importers:
         specifier: 10.3.1
         version: 10.3.1(react@19.2.6)
       '@vanilla-extract/css':
-        specifier: 1.17.0
-        version: 1.17.0(babel-plugin-macros@3.1.0)
+        specifier: 1.20.1
+        version: 1.20.1(babel-plugin-macros@3.1.0)
       '@vanilla-extract/dynamic':
-        specifier: 2.1.2
-        version: 2.1.2
+        specifier: 2.1.5
+        version: 2.1.5
       '@vanilla-extract/recipes':
-        specifier: 0.5.5
-        version: 0.5.5(@vanilla-extract/css@1.17.0(babel-plugin-macros@3.1.0))
+        specifier: 0.5.7
+        version: 0.5.7(@vanilla-extract/css@1.20.1(babel-plugin-macros@3.1.0))
       '@vercel/analytics':
         specifier: 2.0.1
         version: 2.0.1(@remix-run/react@2.15.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(typescript@5.7.2))(react@19.2.6)
@@ -296,8 +296,8 @@ importers:
         specifier: 7.15.1
         version: 7.15.1(@react-router/dev@7.15.1(@react-router/serve@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(typescript@5.7.2)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0))(typescript@5.7.2)
       '@vanilla-extract/vite-plugin':
-        specifier: 5.0.2
-        version: 5.0.2(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)
+        specifier: 5.2.2
+        version: 5.2.2(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)
       chokidar:
         specifier: 5.0.0
         version: 5.0.0
@@ -3011,17 +3011,14 @@ packages:
   '@vanilla-extract/babel-plugin-debug-ids@1.2.2':
     resolution: {integrity: sha512-MeDWGICAF9zA/OZLOKwhoRlsUW+fiMwnfuOAqFVohL31Agj7Q/RBWAYweqjHLgFBCsdnr6XIfwjJnmb2znEWxw==}
 
-  '@vanilla-extract/compiler@0.1.3':
-    resolution: {integrity: sha512-dSkRFwHfOccEZGlQ6hdRDGQMLko8RZnAKd06u9+gPkRyjNt96nG6ZE/wEh4+3cdY27DPdTLh+TPlTp2DYo94OA==}
-
-  '@vanilla-extract/css@1.17.0':
-    resolution: {integrity: sha512-W6FqVFDD+C71ZlKsuj0MxOXSvHb1tvQ9h/+79aYfi097wLsALrnnBzd0by8C///iurrpQ3S+SH74lXd7Lr9MvA==}
+  '@vanilla-extract/compiler@0.7.0':
+    resolution: {integrity: sha512-rZQ40HVmsxfGLjoflwwsaUBLfpbpKDoZC19oiDA0FHq4LdrYtyVbFkc0MfqkNo/qBCvaZfsRezCqk0QQxCqZ8w==}
 
   '@vanilla-extract/css@1.20.1':
     resolution: {integrity: sha512-5I9RNo5uZW9tsBnqrWzJqELegOqTHBrZyDFnES0gR9gJJHBB9dom1N0bwITM9tKwBcfKrTX4a6DHVeQdJ2ubQA==}
 
-  '@vanilla-extract/dynamic@2.1.2':
-    resolution: {integrity: sha512-9BGMciD8rO1hdSPIAh1ntsG4LPD3IYKhywR7VOmmz9OO4Lx1hlwkSg3E6X07ujFx7YuBfx0GDQnApG9ESHvB2A==}
+  '@vanilla-extract/dynamic@2.1.5':
+    resolution: {integrity: sha512-QGIFGb1qyXQkbzx6X6i3+3LMc/iv/ZMBttMBL+Wm/DetQd36KsKsFg5CtH3qy+1hCA/5w93mEIIAiL4fkM8ycw==}
 
   '@vanilla-extract/integration@8.0.10':
     resolution: {integrity: sha512-01IB5gbrgTe8IIrtfRXXTmACl5D8Enzqp2cKbCWaMKXmnoilXXVCPbJoA96q88PXkNDXsXepCxUugMvEmL3c7A==}
@@ -3029,15 +3026,15 @@ packages:
   '@vanilla-extract/private@1.0.9':
     resolution: {integrity: sha512-gT2jbfZuaaCLrAxwXbRgIhGhcXbRZCG3v4TTUnjw0EJ7ArdBRxkq4msNJkbuRkCgfIK5ATmprB5t9ljvLeFDEA==}
 
-  '@vanilla-extract/recipes@0.5.5':
-    resolution: {integrity: sha512-VadU7+IFUwLNLMgks29AHav/K5h7DOEfTU91RItn5vwdPfzduodNg317YbgWCcpm7FSXkuR3B3X8ZOi95UOozA==}
+  '@vanilla-extract/recipes@0.5.7':
+    resolution: {integrity: sha512-Fvr+htdyb6LVUu+PhH61UFPhwkjgDEk8L4Zq9oIdte42sntpKrgFy90MyTRtGwjVALmrJ0pwRUVr8UoByYeW8A==}
     peerDependencies:
       '@vanilla-extract/css': ^1.0.0
 
-  '@vanilla-extract/vite-plugin@5.0.2':
-    resolution: {integrity: sha512-R2yFqeZm6/Z+uZp1teldPHM74ihOjCYvu9ST05mezYVM/g40Pyyz6BDrWY6txNAtuRUQIg6q3Ev66FB9rD2l7w==}
+  '@vanilla-extract/vite-plugin@5.2.2':
+    resolution: {integrity: sha512-AUyB4fDR2b/Mo0lcXhhlf6RxnDPYwFMyKKopalJ4BwQNKYzZSoTwHJ1PLPO9SKhpz7lzXc0Z18GHQZOewzl3YA==}
     peerDependencies:
-      vite: ^5.0.0 || ^6.0.0
+      vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
 
   '@vercel/analytics@2.0.1':
     resolution: {integrity: sha512-MTQG6V9qQrt1tsDeF+2Uoo5aPjqbVPys1xvnIftXSJYG2SrwXRHnqEvVoYID7BTruDz4lCd2Z7rM1BdkUehk2g==}
@@ -3590,11 +3587,6 @@ packages:
   css-what@6.2.2:
     resolution: {integrity: sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==}
     engines: {node: '>= 6'}
-
-  cssesc@3.0.0:
-    resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
-    engines: {node: '>=4'}
-    hasBin: true
 
   cssom@0.3.8:
     resolution: {integrity: sha512-b0tGHbfegbhPJpxpiBPU2sCkigAqtM9O121le6bbOlgyV+NyGyCmVfJ6QW9eRjz8CpNfWEOYBIMIGRYkLwsIYg==}
@@ -8736,7 +8728,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vanilla-extract/compiler@0.1.3(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0)':
+  '@vanilla-extract/compiler@0.7.0(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0)':
     dependencies:
       '@vanilla-extract/css': 1.20.1(babel-plugin-macros@3.1.0)
       '@vanilla-extract/integration': 8.0.10(babel-plugin-macros@3.1.0)
@@ -8757,23 +8749,6 @@ snapshots:
       - tsx
       - yaml
 
-  '@vanilla-extract/css@1.17.0(babel-plugin-macros@3.1.0)':
-    dependencies:
-      '@emotion/hash': 0.9.2
-      '@vanilla-extract/private': 1.0.9
-      css-what: 6.2.2
-      cssesc: 3.0.0
-      csstype: 3.2.3
-      dedent: 1.7.2(babel-plugin-macros@3.1.0)
-      deep-object-diff: 1.1.9
-      deepmerge: 4.3.1
-      lru-cache: 10.4.3
-      media-query-parser: 2.0.2
-      modern-ahocorasick: 1.1.0
-      picocolors: 1.1.1
-    transitivePeerDependencies:
-      - babel-plugin-macros
-
   '@vanilla-extract/css@1.20.1(babel-plugin-macros@3.1.0)':
     dependencies:
       '@emotion/hash': 0.9.2
@@ -8790,7 +8765,7 @@ snapshots:
     transitivePeerDependencies:
       - babel-plugin-macros
 
-  '@vanilla-extract/dynamic@2.1.2':
+  '@vanilla-extract/dynamic@2.1.5':
     dependencies:
       '@vanilla-extract/private': 1.0.9
 
@@ -8812,13 +8787,13 @@ snapshots:
 
   '@vanilla-extract/private@1.0.9': {}
 
-  '@vanilla-extract/recipes@0.5.5(@vanilla-extract/css@1.17.0(babel-plugin-macros@3.1.0))':
+  '@vanilla-extract/recipes@0.5.7(@vanilla-extract/css@1.20.1(babel-plugin-macros@3.1.0))':
     dependencies:
-      '@vanilla-extract/css': 1.17.0(babel-plugin-macros@3.1.0)
+      '@vanilla-extract/css': 1.20.1(babel-plugin-macros@3.1.0)
 
-  '@vanilla-extract/vite-plugin@5.0.2(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)':
+  '@vanilla-extract/vite-plugin@5.2.2(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(vite@6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)':
     dependencies:
-      '@vanilla-extract/compiler': 0.1.3(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0)
+      '@vanilla-extract/compiler': 0.7.0(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0)
       '@vanilla-extract/integration': 8.0.10(babel-plugin-macros@3.1.0)
       vite: 6.0.7(@types/node@25.9.1)(jiti@2.6.1)(sass@1.100.0)(terser@5.47.1)(tsx@4.22.3)(yaml@2.9.0)
     transitivePeerDependencies:
@@ -9422,8 +9397,6 @@ snapshots:
       postcss-value-parser: 4.2.0
 
   css-what@6.2.2: {}
-
-  cssesc@3.0.0: {}
 
   cssom@0.3.8:
     optional: true
