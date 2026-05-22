@@ -13,13 +13,13 @@
   "dependencies": {
     "@react-spring/three": "*",
     "@react-spring/web": "*",
-    "@react-three/drei": "~10.0.6",
-    "@react-three/fiber": "~9.1.2",
+    "@react-three/drei": "~10.7.7",
+    "@react-three/fiber": "~9.6.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-scripts": "5.0.1",
-    "three": "0.172.0",
-    "three-stdlib": "2.35.2"
+    "three": "0.184.0",
+    "three-stdlib": "2.36.1"
   },
   "devDependencies": {
     "@types/react": "^19.2.15",
