@@ -289,6 +289,63 @@ describe('useSpring', () => {
       expect(getValue()).toBe(20)
     })
   })
+
+  // Regression test for https://github.com/pmndrs/react-spring/issues/1661
+  // The bug (v9.2.4): api.set called inside an onResolve callback that also
+  // triggers a React setState would not actually update the spring value —
+  // the spring stayed at its previous goal.
+  describe('when api.set is called inside onResolve alongside a React setState', () => {
+    it('snaps the spring to the set value (event-driven repro from #1661)', async () => {
+      let spring!: SpringValue<number>
+
+      function Component() {
+        const [count, setCount] = React.useState(0)
+        const [springs, api] = useSpring(() => ({ opacity: 0 }))
+        spring = springs.opacity as SpringValue<number>
+
+        const onClick = () => {
+          api.start({
+            opacity: 1,
+            onResolve: () => {
+              setCount(c => c + 1)
+              api.set({ opacity: 0 })
+            },
+          })
+        }
+
+        return (
+          <button type="button" onClick={onClick}>
+            count: {count}
+          </button>
+        )
+      }
+
+      const { getByRole } = await render(<Component />)
+      await advanceUntilIdle()
+
+      expect(spring.get()).toBe(0)
+      expect(spring.goal).toBe(0)
+
+      // First click: animate 0 -> 1, then onResolve snaps back to 0.
+      await getByRole('button').click()
+      await advanceUntilIdle()
+
+      expect(spring.get()).toBe(0)
+      expect(spring.goal).toBe(0)
+
+      // Second click: must animate from 0 -> 1 again. In the v9.2.4 bug,
+      // the spring's goal would still be 1 after the first cycle, so the
+      // second click would do nothing.
+      await getByRole('button').click()
+      await advance(1)
+      const valueMidAnim = spring.get()
+      expect(valueMidAnim).toBeGreaterThan(0)
+      expect(valueMidAnim).toBeLessThan(1)
+
+      await advanceUntilIdle()
+      expect(spring.get()).toBe(0)
+    })
+  })
 })
 
 interface TestContext extends ISpringContext {
