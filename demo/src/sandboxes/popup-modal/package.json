@@ -11,8 +11,8 @@
   ],
   "dependencies": {
     "@react-spring/web": "*",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "react-scripts": "5.0.1",
     "react95": "4.0.0",
     "styled-components": "6.1.13"
@@ -30,8 +30,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
     "typescript": "4.9.5"
   }
 }

@@ -45,10 +45,10 @@ importers:
         specifier: 4.2.9
         version: 4.2.9
       '@types/react':
-        specifier: ^19.1.2
+        specifier: ^19.2.15
         version: 19.2.15
       '@types/react-dom':
-        specifier: ^19.1.2
+        specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.15)
       '@types/three':
         specifier: 0.172.0
@@ -78,10 +78,10 @@ importers:
         specifier: ^1.52.0
         version: 1.60.0
       react:
-        specifier: ^19
+        specifier: ^19.2.6
         version: 19.2.6
       react-dom:
-        specifier: ^19
+        specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
       react-konva:
         specifier: ^19
@@ -156,10 +156,10 @@ importers:
         specifier: 2.0.8
         version: 2.0.8
       react:
-        specifier: ^19.1.0
+        specifier: ^19.2.6
         version: 19.2.6
       react-dom:
-        specifier: ^19.1.0
+        specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
       react-feather:
         specifier: 2.0.10
@@ -280,10 +280,10 @@ importers:
         specifier: 1.4.1
         version: 1.4.1(react@19.2.6)
       react:
-        specifier: ^19.1.0
+        specifier: ^19.2.6
         version: 19.2.6
       react-dom:
-        specifier: ^19.1.0
+        specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
       react-router:
         specifier: 6.28.1
