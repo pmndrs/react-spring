@@ -141,7 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ts: ['5.0', '5.4', '5.7', '5.9']
+        ts: ['5.0', '5.4', '5.7', '5.9', '6.0']
 
     steps:
       - name: Checkout repo
