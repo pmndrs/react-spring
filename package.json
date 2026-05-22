@@ -60,7 +60,7 @@
     "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "2.31.0",
     "@commitlint/cli": "21.0.1",
-    "@commitlint/config-conventional": "19.6.0",
+    "@commitlint/config-conventional": "21.0.1",
     "@react-spring/mock-raf": "1.1.1",
     "@react-spring/parallax": "workspace:*",
     "@react-three/fiber": "~9.1.2",
