@@ -223,9 +223,20 @@ export class SpringValue<T = any> extends FrameValue<T> {
          * TODO: make this value ~0.0001 by default in next breaking change
          * for more info see – https://github.com/pmndrs/react-spring/issues/1389
          */
+        // Floor the adaptive default at the smallest difference doubles can
+        // represent around the values being animated. Without this, callers
+        // whose layout math introduces floating-point drift (e.g.
+        // `Math.cos(Math.PI / 2)` returning `6e-17` instead of `0`) produce a
+        // precision smaller than any delta the spring can express, so the
+        // spring never settles. See #2208.
         const precision =
           config.precision ||
-          (from == to ? 0.005 : Math.min(1, Math.abs(to - from) * 0.001))
+          (from == to
+            ? 0.005
+            : Math.max(
+                Math.max(Math.abs(to), Math.abs(from), 1) * Number.EPSILON,
+                Math.min(1, Math.abs(to - from) * 0.001)
+              ))
 
         // Duration easing
         if (!is.und(config.duration)) {

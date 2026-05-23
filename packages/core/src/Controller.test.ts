@@ -720,4 +720,31 @@ describe('Controller', () => {
       expect(onRest).toHaveBeenCalled()
     })
   })
+
+  // Regression test for https://github.com/pmndrs/react-spring/issues/2208
+  it('settles when a target differs from the current value by less than float precision', async () => {
+    // Caller-side trigonometry produces a tiny floating-point drift:
+    // `Math.cos(Math.PI / 2)` returns `6.12e-17` rather than exactly `0`, so
+    // the "logical 160" the caller intended becomes `159.99999999999997`. The
+    // current value is exactly `160`, and the difference is smaller than what
+    // doubles can represent at that magnitude — but not `=== 0`, so the
+    // spring previously entered animation with an unsatisfiable adaptive
+    // precision and never settled.
+    const driftedTarget = 160 * Math.cos(Math.PI + Math.PI / 2) + 160
+    expect(driftedTarget).not.toBe(160)
+    expect(Math.abs(driftedTarget - 160)).toBeLessThan(1e-13)
+
+    const ctrl = new Controller({ x: 160, y: 0, scale: 1 })
+
+    let resolved = false
+    const promise = ctrl.start({ x: driftedTarget, y: 110, scale: 0 })
+    void promise.then(() => (resolved = true))
+
+    await global.advanceUntilIdle()
+    await flushMicroTasks()
+
+    expect(resolved).toBe(true)
+    const result = await promise
+    expect(result.finished).toBe(true)
+  })
 })
