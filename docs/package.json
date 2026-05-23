@@ -68,7 +68,7 @@
     "remark-frontmatter": "5.0.0",
     "remark-mdx-frontmatter": "5.2.0",
     "tsx": "4.22.3",
-    "typescript": "5.7.2",
+    "typescript": "6.0.3",
     "unified": "11.0.5",
     "unist-util-visit": "5.1.0",
     "vite": "8.0.14",
