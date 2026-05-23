@@ -1,93 +1,81 @@
 # How to Contribute
 
-1. Clone this repository:
+Thanks for helping out! This guide covers everything you need to get a local checkout running, send a PR, and (if you have publish access) cut a release.
+
+## Prerequisites
+
+- **Node**: see `.nvmrc` (`nvm use` or `fnm use` picks it up). `engines.node` is the same version.
+- **pnpm**: pinned via `packageManager` in the root `package.json`. Enable Corepack so the correct version activates automatically:
+  ```sh
+  corepack enable
+  ```
+
+## Getting started
 
 ```sh
 git clone https://github.com/pmndrs/react-spring
 cd react-spring
+pnpm install
+pnpm exec playwright install chromium   # one-off, needed for browser-mode Vitest
 ```
 
-2. Enable Corepack so the pinned pnpm version activates automatically: `corepack enable`. (See `.nvmrc` for the matching Node version.)
+Now you're cooking. 👨🏻‍🍳🥓
 
-3. Install dependencies: `pnpm install`
+## Day-to-day commands
 
-4. Let's get cooking! 👨🏻‍🍳🥓
+| Task                     | Command                                                 |
+| ------------------------ | ------------------------------------------------------- |
+| Watch-build all packages | `pnpm dev`                                              |
+| Run the docs site        | `pnpm docs:dev`                                         |
+| Run the demo hub         | `pnpm demo:dev`                                         |
+| Full test suite          | `pnpm test` (types + unit + e2e)                        |
+| Unit tests (watch)       | `pnpm vitest --project unit`                            |
+| Single test file         | `pnpm vitest run packages/core/src/SpringValue.test.ts` |
+| Type-check               | `pnpm test:ts`                                          |
+| Lint                     | `pnpm lint`                                             |
+| Format                   | `pnpm format`                                           |
 
-## Guidelines
+Vitest aliases `@react-spring/*` to the package source, so unit tests don't need a prior build. Anything outside Vitest (docs, publishing) does — run `pnpm build` first.
 
-Be sure your commit messages follow this specification: https://www.conventionalcommits.org/en/v1.0.0-beta.4/
+> **pnpm isolation gotcha**: `node_modules` is non-hoisted. If you hit `Cannot find module 'foo'` after adding an import, add `foo` to the workspace's `package.json` — don't add a hoist rule.
 
-### Windows permission errors
+## Sending a PR
 
-Some Windows users may need to [enable developer mode](https://howtogeek.com/292914/what-is-developer-mode-in-windows-10) if experiencing `EPERM: operation not permitted, symlink` with Preconstruct. If this persists, you might be running on an unsupported drive/format. In which case, consider using [Docker](https://docs.docker.com/docker-for-windows).
+- **Target branch**: `next` (the active line). `main` may exist but isn't the merge base.
+- **Commits**: follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, …). commitlint enforces this on the `commit-msg` hook.
+- **Pre-commit**: `oxfmt --check` runs via husky. If it fails, run `pnpm format` and re-commit.
+- **Keep PRs small and focused** — easier to review, easier to land.
 
-### Duplicate `react` errors
+## Publishing
 
-React 16.8+ has global state to support its "hooks" feature, so you need to ensure only one copy of `react` exists in your program. Otherwise, you'll most likely see [this error](https://reactjs.org/warnings/invalid-hook-call-warning.html). Please try the following solutions, and let us know if it still doesn't work for you.
+(Maintainers only — needs npm publish access.) We use [changesets](https://github.com/changesets/changesets). All packages are version-locked.
 
-- **For `create-react-app` users:** Follow this guide: https://github.com/facebook/react/issues/13991#issuecomment-496383268
+### Simple release
 
-- **For `webpack` users:** Add an alias to `webpack.config.js` like this:
+1. Add a changeset describing the change. With `react-spring` we bump every package to the same version, so flag them all:
+   ```sh
+   pnpm changeset
+   ```
+2. Apply the bump (updates package versions and internal deps):
+   ```sh
+   pnpm vers
+   ```
+3. Publish. This cleans, installs, builds, type-checks, runs unit tests, and publishes via changesets:
+   ```sh
+   pnpm release
+   ```
+   Tags are not pushed automatically (`pnpm release` runs `changeset publish --no-git-tag`). After publishing, draft the GitHub release notes manually and update the changelog on `react-spring.dev`.
 
-  ```js
-  alias: {
-    react: path.resolve('node_modules/react'),
-  }
-  ```
+### Prerelease
 
-- **For `gatsby` users:** Install `gatsby-plugin-alias-imports` and add this to your `gatsby-config.js` module:
-  ```js
-  {
-    resolve: `gatsby-plugin-alias-imports`,
-    options: {
-      alias: {
-        react: path.resolve('node_modules/react'),
-      },
-    },
-  },
-  ```
+Enter pre-mode first, then follow the simple release flow:
 
-# Publishing
-
-We use [`changesets`](https://github.com/atlassian/changesets) to publish our package now.
-All our dependencies are fixed using ~ after [1414](https://github.com/pmndrs/react-spring/issues/1414) but luckily changesets will bump them for every minor version we release.
-
-## Simple release
-
-You want to release some new features that haven't been released yet:
-
-```shell
-pnpm changeset
+```sh
+pnpm changeset pre enter beta   # or alpha, next
 ```
 
-Follow the prompt to flag which packages need to update although with `react-spring` we keep all our packages at the same version.
+If you're stuck in pre-mode and need a normal release:
 
-Then you'll run:
-
-```shell
-pnpm vers
-```
-
-This will update all the packages correctly according to what version you just set with the `add` script & possibly update the deps within those packages.
-
-Finally:
-
-```shell
-pnpm release
-```
-
-This will build the packages, publish them & push the tags to github to signify a new release. Please then update the `releases` on github & the changelog on `react-spring.dev`
-
-## Prerelease
-
-Everything above applies but you must first run:
-
-```shell
-pnpm changeset pre enter beta | alpha | next
-```
-
-If you find you're stuck in a prerelease and trying to do a Simple Release, try running:
-
-```shell
+```sh
 pnpm changeset pre exit
 ```
