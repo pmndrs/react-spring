@@ -48,11 +48,8 @@
   },
   "dependencies": {
     "@react-spring/core": "workspace:~",
-    "@react-spring/konva": "workspace:~",
-    "@react-spring/native": "workspace:~",
     "@react-spring/three": "workspace:~",
-    "@react-spring/web": "workspace:~",
-    "@react-spring/zdog": "workspace:~"
+    "@react-spring/web": "workspace:~"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",

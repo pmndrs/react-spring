@@ -16,7 +16,7 @@ export default defineConfig({
         replacement: path.join(repoRoot, 'packages/parallax/src/index.tsx'),
       },
       {
-        find: /^@react-spring\/(web|native|three|konva|zdog)$/,
+        find: /^@react-spring\/(web|three)$/,
         replacement: path.join(repoRoot, 'targets/$1/src/index.ts'),
       },
       {
@@ -50,7 +50,7 @@ export default defineConfig({
         '**/node_modules/**',
         'demo/**',
         'docs/**',
-        'targets/{native,three,konva,zdog}/**',
+        'targets/three/**',
         'packages/{eslint-config,mock-raf,parallax,react-spring,types}/**',
         'tests/**',
       ],

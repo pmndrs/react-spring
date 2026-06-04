@@ -13,7 +13,7 @@ if [[ -z "$tag" ]]; then
 fi
 
 # This is the list of packages to remove the tag from
-packages=('react-spring' '@react-spring/animated' '@react-spring/core' '@react-spring/parallax' '@react-spring/rafz' '@react-spring/shared' '@react-spring/types' '@react-spring/web' '@react-spring/konva' '@react-spring/native' '@react-spring/three' '@react-spring/zdog')
+packages=('react-spring' '@react-spring/animated' '@react-spring/core' '@react-spring/parallax' '@react-spring/rafz' '@react-spring/shared' '@react-spring/types' '@react-spring/web' '@react-spring/three')
 
 # Loop over the packages
 for package in "${packages[@]}"; do
