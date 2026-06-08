@@ -96,13 +96,8 @@ if (process.env.NODE_ENV === 'production') {
 const sharedExternal = [
   'react',
   'react-dom',
-  'react-native',
   '@react-three/fiber',
   'three',
-  'react-konva',
-  'konva',
-  'react-zdog',
-  'zdog',
 ]
 
 /**

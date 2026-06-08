@@ -10,11 +10,11 @@
 <br>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/react-spring" target="_blank">
-    <img src="https://img.shields.io/npm/v/react-spring.svg?style=flat&colorA=000000&colorB=000000" />
+  <a href="https://www.npmjs.com/package/@react-spring/web" target="_blank">
+    <img src="https://img.shields.io/npm/v/@react-spring/web.svg?style=flat&colorA=000000&colorB=000000" />
   </a>
-  <a href="https://www.npmjs.com/package/react-spring" target="_blank">
-    <img src="https://img.shields.io/npm/dm/react-spring.svg?style=flat&colorA=000000&colorB=000000" />
+  <a href="https://www.npmjs.com/package/@react-spring/web" target="_blank">
+    <img src="https://img.shields.io/npm/dm/@react-spring/web.svg?style=flat&colorA=000000&colorB=000000" />
   </a>
   <a href="https://discord.gg/AXfNsGx64f" target="_blank">
     <img src="https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff" alt="Chat on Discord">
@@ -53,10 +53,10 @@ There's a lot more to be had! Give it a try and find out.
 ### ⚡️ Jump Start
 
 ```shell
-# Install the entire library
-npm install react-spring
-# or just install your specific target (recommended)
+# Install the target you need
 npm install @react-spring/web
+# or, for react-three-fiber
+npm install @react-spring/three
 ```
 
 ```jsx

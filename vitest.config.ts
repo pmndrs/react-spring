@@ -51,7 +51,7 @@ export default defineConfig({
         'demo/**',
         'docs/**',
         'targets/three/**',
-        'packages/{eslint-config,mock-raf,parallax,react-spring,types}/**',
+        'packages/{eslint-config,mock-raf,parallax,types}/**',
         'tests/**',
       ],
       thresholds: {

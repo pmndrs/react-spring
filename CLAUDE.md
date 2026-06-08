@@ -39,15 +39,12 @@ Strict isolation: `node_modules` is non-hoisted, so a workspace can only `import
 
 ## Architecture
 
-The library is a layered monorepo. Read packages bottom-up — each layer is target-agnostic until you reach `targets/*`.
+The library is a layered monorepo. Read packages bottom-up — each layer is target-agnostic until you reach `targets/*`. There is no umbrella package: consumers install a target directly (`@react-spring/web` or `@react-spring/three`).
 
 ```
-                react-spring (umbrella, re-exports all targets)
-                       │
-       ┌───────────────┼───────────────┬─────────┬─────────┐
-   targets/web   targets/native   targets/three  konva   zdog
-       │              │               │
-       └──────────────┴───────────────┘
+          targets/web     targets/three
+              │                 │
+              └────────┬────────┘
                        │
               packages/core    ─── declarative API: hooks, components, SpringValue, Controller, SpringRef
                        │
@@ -68,9 +65,8 @@ The library is a layered monorepo. Read packages bottom-up — each layer is tar
   - `applyAnimatedValues(node, props)` — push the latest values to the platform's native node.
   - `createAnimatedStyle(style)` — wrap the `style` prop.
   - `getComponentProps(props)` — filter props before forwarding (e.g. web drops `scrollTop`/`scrollLeft`).
-- **`@react-spring/core`** — platform-agnostic spring engine. `SpringValue` (single animated value), `Controller` (group of springs), `SpringRef` (imperative handle), `Interpolation`. Public hooks/components live under `src/hooks` and `src/components`. Hooks with native variants ship a `.native.ts` sibling (`useInView.native.ts`, `useResize.native.ts`, `useScroll.native.ts`) that React Native picks up via Metro's platform extensions.
+- **`@react-spring/core`** — platform-agnostic spring engine. `SpringValue` (single animated value), `Controller` (group of springs), `SpringRef` (imperative handle), `Interpolation`. Public hooks/components live under `src/hooks` and `src/components`.
 - **Targets** — thin adapters. Each `targets/<name>/src/index.ts` follows the same template: `Globals.assign(...)`, define `primitives`, build a host via `createHost(primitives, { applyAnimatedValues, ... })`, then `export const animated = host.animated` and `export * from '@react-spring/core'`. To add an `animated.X` shorthand for a new element, add it to that target's `primitives.ts`.
-- **`react-spring`** (umbrella) — depends on every target and only re-exports. Don't add logic here.
 - **`@react-spring/parallax`** — extra component layered on `@react-spring/web`. Its `test/` folder is the Vite app the E2E project serves and drives (`tests/e2e/parallax.spec.ts`).
 
 ### Where animation values flow

@@ -22,10 +22,6 @@
       ]
     },
     {
-      "groupName": "react-native",
-      "matchPackageNames": ["react-native"]
-    },
-    {
       "groupName": "react-three",
       "matchPackageNames": [
         "@react-three/fiber",
@@ -34,14 +30,6 @@
         "@types/three",
         "three-stdlib"
       ]
-    },
-    {
-      "groupName": "konva",
-      "matchPackageNames": ["konva", "react-konva"]
-    },
-    {
-      "groupName": "zdog",
-      "matchPackageNames": ["zdog", "react-zdog"]
     },
     {
       "groupName": "remix",

@@ -1,5 +1,9 @@
 ---
-'react-spring': major
+'@react-spring/web': major
 ---
 
-Remove the deprecated `@react-spring/native`, `@react-spring/konva`, and `@react-spring/zdog` targets and their umbrella entry points (`react-spring/native`, `react-spring/konva`, and `react-spring/zdog`). Use the active `web` and `three` targets instead.
+refactor!: remove deprecated targets and the `react-spring` umbrella
+
+Removes the deprecated `@react-spring/native`, `@react-spring/konva`, and `@react-spring/zdog` targets (along with the React Native hook variants), plus the `react-spring` umbrella package. Install a target directly — `@react-spring/web` or `@react-spring/three`.
+
+For React Native, use [Reanimated](https://docs.swmansion.com/react-native-reanimated/) — its springs run on the UI thread, unlike react-spring's JS-thread engine.
