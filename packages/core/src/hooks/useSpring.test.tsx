@@ -223,6 +223,72 @@ describe('useSpring', () => {
     })
   })
 
+  // Regression tests for https://github.com/pmndrs/react-spring/issues/2361
+  // (and the earlier https://github.com/pmndrs/react-spring/issues/2146).
+  // A declarative `useSpring` with no ref should auto-animate on mount even
+  // under StrictMode, whose double-mount (mount → simulated unmount → mount)
+  // used to leave the controller stopped with an empty `updates` array.
+  describe('when a declarative props object is passed with no ref (StrictMode)', () => {
+    it('animates from→to on mount', async () => {
+      const onStart = vi.fn()
+      const onRest = vi.fn()
+      let spring: SpringValue<number> | undefined
+
+      function Component() {
+        const springs = useSpring({
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+          config: { duration: 100 },
+          onStart,
+          onRest,
+        })
+        spring = springs.opacity as unknown as SpringValue<number>
+        return null
+      }
+
+      await render(
+        <React.StrictMode>
+          <Component />
+        </React.StrictMode>
+      )
+      await advanceUntilIdle()
+
+      expect(spring?.get()).toBe(1)
+      expect(onStart).toHaveBeenCalledTimes(1)
+      expect(onRest).toHaveBeenCalledTimes(1)
+    })
+
+    it('keeps a looped animation running on mount', async () => {
+      const onStart = vi.fn()
+      let spring: SpringValue<number> | undefined
+
+      function Component() {
+        const springs = useSpring({
+          from: { x: 0 },
+          to: { x: 100 },
+          loop: true,
+          config: { duration: 100 },
+          onStart,
+        })
+        spring = springs.x as unknown as SpringValue<number>
+        return null
+      }
+
+      await render(
+        <React.StrictMode>
+          <Component />
+        </React.StrictMode>
+      )
+
+      // A loop never goes idle, so step until it has driven the value forward.
+      await advanceUntilValue(spring!, 50)
+
+      expect(spring!.get()).toBeGreaterThanOrEqual(50)
+      expect(spring!.isAnimating).toBe(true)
+      expect(onStart).toHaveBeenCalled()
+    })
+  })
+
   // Regression test for https://github.com/pmndrs/react-spring/issues/1638
   // The original bug (v9.2.4): a spring with initial value 0 would not
   // animate when api.start() was called from useLayoutEffect on first render.
