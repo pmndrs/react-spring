@@ -27,6 +27,15 @@ Meanwhile you pass the `SpringValue` to your `animated` component. Any type is v
 Types that cannot be animated are basically immediate: true animations. Such types include:
 a `boolean`, a display string like `"none"`, etc.
 
+> **`null` and `undefined` mean "leave this value alone".** They are not goals — a
+> spring cannot animate _to_ `null`. When a key's value is `null`/`undefined` (or
+> `false`) it is skipped, and the spring keeps whatever value it already holds. A key
+> that has _only ever_ been `null`/`undefined` is never created at all.
+>
+> If you need to represent "no value", model it explicitly rather than relying on the
+> spring to store `null` — for example keep the nullable state in React and feed the
+> spring a real number (or toggle `immediate`/visibility) based on it.
+
 ```tsx
 import { Component, createRef } from 'react'
 import { SpringValue, animated } from '@react-spring/web'
