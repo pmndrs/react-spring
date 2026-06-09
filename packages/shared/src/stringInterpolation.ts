@@ -21,6 +21,12 @@ let namedColorRegex: RegExp
 const rgbaRound = (_: any, p1: number, p2: number, p3: number, p4: number) =>
   `rgba(${Math.round(p1)}, ${Math.round(p2)}, ${Math.round(p3)}, ${p4})`
 
+// Extract the numeric tokens from a string. Strings with no numbers — e.g.
+// `boxShadow: 'none'` or an unresolved CSS variable that falls through as its
+// literal `var(--x)` text — yield `[]` rather than throwing on a null match.
+// See https://github.com/pmndrs/react-spring/issues/2327
+const getNumbers = (value: string) => value.match(numberRegex) ?? []
+
 /**
  * Supports string shapes by extracting numbers so new values can be computed,
  * and recombines those values into new strings of the same shape.  Supports
@@ -50,7 +56,7 @@ export const createStringInterpolator = (
   })
 
   // Convert ["1px 2px", "0px 0px"] into [[1, 2], [0, 0]]
-  const keyframes = output.map(value => value.match(numberRegex)!.map(Number))
+  const keyframes = output.map(value => getNumbers(value).map(Number))
 
   // Convert ["1px 2px", "0px 0px"] into [[1, 0], [2, 0]]
   const outputRanges = keyframes[0].map((_, i) =>
@@ -74,9 +80,9 @@ export const createStringInterpolator = (
   // a whole number. Whole-number keyframes are left untouched so that
   // values like the alpha channel in `rgba(…, 0)` → `rgba(…, 1)` keep
   // their natural sub-frame precision.
-  const decimalCounts = output[0].match(numberRegex)!.map((_, pos) => {
+  const decimalCounts = getNumbers(output[0]).map((_, pos) => {
     const counts = output.map(value => {
-      const token = value.match(numberRegex)![pos]
+      const token = getNumbers(value)[pos]
       const dot = token.indexOf('.')
       return dot === -1 ? 0 : token.length - dot - 1
     })
