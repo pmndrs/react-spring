@@ -3,6 +3,8 @@ import { render } from 'vitest-browser-react'
 import { toArray } from '@react-spring/shared'
 import { TransitionFn, UseTransitionProps } from '../types'
 import { useTransition } from './useTransition'
+import { useSpring } from './useSpring'
+import { useChain } from './useChain'
 import { SpringRef } from '../SpringRef'
 
 describe('useTransition', () => {
@@ -151,6 +153,142 @@ describe('useTransition', () => {
     expect(rendered).toEqual([true])
 
     testIsRef(transRef)
+  })
+
+  // See https://github.com/pmndrs/react-spring/issues/2287
+  it('auto-starts the enter animation when props is a function with deps', async () => {
+    let enterSpring: any = null
+    const update = createUpdater(({ args }) => {
+      const transition = toArray(useTransition(...args))[0]
+      transition(style => {
+        enterSpring = style.n
+        return null
+      })
+      return null
+    })
+
+    await update(
+      true,
+      () => ({
+        from: { n: 0 },
+        enter: { n: 1 },
+        leave: { n: 0 },
+      }),
+      []
+    )
+
+    await global.advanceUntilIdle()
+
+    expect(enterSpring.get()).toEqual(1)
+  })
+
+  // Guard for the #2287 fix: only the *internal* ref should auto-start. An
+  // injected ref must keep deferring so manual/imperative control still works.
+  // This is the inverse of the test above and locks issue #1944.
+  it('defers the enter animation when an injected ref is provided', async () => {
+    const ref = SpringRef()
+    let enterSpring: any = null
+    const update = createUpdater(({ args }) => {
+      const transition = toArray(useTransition(...args))[0]
+      transition(style => {
+        enterSpring = style.n
+        return null
+      })
+      return null
+    })
+
+    await update(true, {
+      ref,
+      from: { n: 0 },
+      enter: { n: 1 },
+      leave: { n: 0 },
+    })
+
+    // No `ref.start()` yet — the injected ref defers the enter animation.
+    await global.advanceUntilIdle()
+    expect(enterSpring.get()).toEqual(0)
+
+    // ...and the ref still drives it imperatively.
+    ref.start()
+    await global.advanceUntilIdle()
+    expect(enterSpring.get()).toEqual(1)
+  })
+
+  // Guard for the #2287 fix: `useChain` works by draining each controller's
+  // queue and replaying it in order, which only happens when injected refs
+  // defer (populate the queue). There was previously zero coverage for useChain.
+  it('sequences a transition behind a spring with useChain', async () => {
+    const springRef = SpringRef()
+    const transRef = SpringRef()
+    let enterSpring: any = null
+
+    function Component() {
+      useSpring({ ref: springRef, from: { x: 0 }, to: { x: 1 } })
+      const transition = toArray(
+        useTransition(true, {
+          ref: transRef,
+          from: { n: 0 },
+          enter: { n: 1 },
+          leave: { n: 0 },
+        })
+      )[0]
+      transition(style => {
+        enterSpring = style.n
+        return null
+      })
+      useChain([springRef, transRef])
+      return null
+    }
+
+    await render(<Component />)
+
+    // While the spring is mid-flight, the chained transition stays at `from`.
+    global.mockRaf.step()
+    expect(enterSpring.get()).toEqual(0)
+
+    // Once the chain reaches it, the transition animates to `enter`.
+    await global.advanceUntilIdle()
+    expect(enterSpring.get()).toEqual(1)
+  })
+
+  // Guard for the #2287 fix: injected-ref deferral must survive React
+  // StrictMode's mount → unmount → remount cycle. This is the reattachment
+  // behaviour `useTransition` adds on mount (#1890/#1944).
+  it('keeps an injected ref deferred across a StrictMode double-mount', async () => {
+    const ref = SpringRef()
+    let enterSpring: any = null
+
+    function Component() {
+      const transition = toArray(
+        useTransition(true, {
+          ref,
+          from: { n: 0 },
+          enter: { n: 1 },
+          leave: { n: 0 },
+        })
+      )[0]
+      transition(style => {
+        enterSpring = style.n
+        return null
+      })
+      return null
+    }
+
+    await render(
+      <React.StrictMode>
+        <Component />
+      </React.StrictMode>
+    )
+
+    // Deferred even after the simulated unmount/remount.
+    await global.advanceUntilIdle()
+    expect(enterSpring.get()).toEqual(0)
+
+    // Controllers are still attached to the ref, which still drives them.
+    expect(ref.current).toHaveLength(1)
+    ref.start()
+    await global.advanceUntilIdle()
+    expect(enterSpring.get()).toEqual(1)
   })
 
   it('passes immediate through to payload', async () => {

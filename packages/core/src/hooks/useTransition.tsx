@@ -113,12 +113,18 @@ export function useTransition(
      * then reattach their refs on-mount, this was required
      * for react18 strict mode to work properly.
      *
+     * StrictMode's simulated unmount detaches the controller from its ref but
+     * leaves `ctrl.ref` set, so we reset it here to let the commit phase's
+     * `replaceRef` reattach an *injected* ref. We must NOT assign the local
+     * `ref` to `ctrl.ref` — that would make a function/deps-form transition
+     * defer its enter animation as if a ref were injected (see #2287).
+     *
      * See https://github.com/pmndrs/react-spring/issues/1890
      */
 
     each(transitions, t => {
       ref?.add(t.ctrl)
-      t.ctrl.ref = ref
+      t.ctrl.ref = undefined
     })
 
     // Destroy all transitions on dismount.
@@ -428,7 +434,7 @@ export function useTransition(
              * Unless we have exitBeforeEnter in which case will skip
              * to enter the new animation straight away as if they "overlapped"
              */
-            if ((ctrl.ref || ref) && !forceChange.current) {
+            if (ctrl.ref && !forceChange.current) {
               ctrl.update(payload)
             } else {
               ctrl.start(payload)
