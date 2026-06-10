@@ -108,4 +108,13 @@ export interface Rafz {
    * only if `.frameLoop === 'demand'`
    */
   advance: () => void
+
+  /**
+   * Called while `.frameLoop === 'demand'` whenever there is frame work
+   * pending — when new work is scheduled and at the end of each `advance`
+   * while work remains. A demand-mode host (e.g. `@react-spring/three`) wires
+   * this to request the next frame, so animations don't stall between the
+   * frames the host happens to render. Does nothing by default.
+   */
+  onDemand: () => void
 }

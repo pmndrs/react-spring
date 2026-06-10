@@ -98,6 +98,9 @@ raf.catch = console.error
 
 raf.frameLoop = 'always'
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+raf.onDemand = () => {}
+
 raf.advance = () => {
   if (raf.frameLoop !== 'demand') {
     console.warn(
@@ -124,6 +127,11 @@ function schedule<T extends Function>(fn: T, queue: Queue<T>) {
   } else {
     queue.add(fn)
     start()
+    // New work was scheduled (animation start, loop/sequence restart, delay).
+    // In demand mode the host must be told, since it may have stopped driving.
+    if (raf.frameLoop === 'demand') {
+      raf.onDemand()
+    }
   }
 }
 
@@ -169,6 +177,14 @@ function update() {
   onFrameQueue.flush()
   writeQueue.flush()
   onFinishQueue.flush()
+
+  // Work remains for the next frame (e.g. an animation still in flight).
+  // In demand mode, ask the host to render it — flushing re-queues via the
+  // queue's internal `add`, which bypasses `schedule`, so this is the only
+  // signal for a continuing animation.
+  if (raf.frameLoop === 'demand' && pendingCount > 0) {
+    raf.onDemand()
+  }
 }
 
 interface Queue<T extends Function = any> {

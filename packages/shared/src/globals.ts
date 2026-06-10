@@ -55,6 +55,12 @@ export interface AnimatedGlobals {
   willAdvance?: typeof willAdvance
   /** sets the global frameLoop setting for the global raf instance */
   frameLoop?: Rafz['frameLoop']
+  /**
+   * Called in demand mode when rafz has frame work pending. Targets that let a
+   * host drive the frameloop (e.g. `@react-spring/three`) wire this to request
+   * the next frame so animations don't stall between host-rendered frames.
+   */
+  onDemand?: Rafz['onDemand']
 }
 
 export const assign = (globals: AnimatedGlobals) => {
@@ -68,4 +74,5 @@ export const assign = (globals: AnimatedGlobals) => {
   if (globals.batchedUpdates) raf.batchedUpdates = globals.batchedUpdates
   if (globals.willAdvance) willAdvance = globals.willAdvance
   if (globals.frameLoop) raf.frameLoop = globals.frameLoop
+  if (globals.onDemand) raf.onDemand = globals.onDemand
 }
