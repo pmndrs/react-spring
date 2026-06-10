@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/konva",
-  "version": "10.1.0",
+  "version": "10.1.1",
   "module": "./dist/react-spring_konva.legacy-esm.js",
   "main": "./dist/cjs/index.js",
   "types": "./dist/react-spring_konva.modern.d.mts",
