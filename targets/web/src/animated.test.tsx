@@ -2,7 +2,12 @@ import * as React from 'react'
 import { forwardRef } from 'react'
 import { render } from 'vitest-browser-react'
 import createMockRaf, { MockRaf } from '@react-spring/mock-raf'
-import { FluidValue, Globals, callFluidObservers } from '@react-spring/shared'
+import {
+  FluidValue,
+  Globals,
+  callFluidObservers,
+  getFluidObservers,
+} from '@react-spring/shared'
 import { SpringValue, Animatable } from '@react-spring/core'
 
 import { a } from './index'
@@ -241,6 +246,62 @@ describe('animated component', () => {
     expect(wrapper.style.transformStyle).toBe('preserve-3d')
     expect(wrapper.style.transform).toBe('translateX(40px) scale(1, 2)')
   })
+  it('composes a `matrix` transform from an array of values', async () => {
+    const { getByTestId } = await render(
+      <a.div style={{ matrix: [1, 2, 3, 4, 5, 6] }} data-testid="wrapper" />
+    )
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
+    expect(wrapper.style.transform).toBe('matrix(1, 2, 3, 4, 5, 6)')
+  })
+  it('composes a `matrix3d` transform from an array of values', async () => {
+    const { getByTestId } = await render(
+      <a.div
+        style={{
+          matrix3d: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 10, 20, 30, 1],
+        }}
+        data-testid="wrapper"
+      />
+    )
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
+    expect(wrapper.style.transform).toBe(
+      'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 10, 20, 30, 1)'
+    )
+  })
+  it('applies `deg` units to each value of a `skew` array', async () => {
+    const { getByTestId } = await render(
+      <a.div style={{ skew: [10, 20] }} data-testid="wrapper" />
+    )
+    const wrapper = getByTestId('wrapper').element() as HTMLElement
+    expect(wrapper.style.transform).toBe('skew(10deg, 20deg)')
+  })
+  it('sets CSS custom properties without appending a `px` unit', async () => {
+    const size = spring(10)
+    const { getByTestId } = await render(
+      <a.div style={{ '--size': size } as any} data-testid="wrapper" />
+    )
+    const el = getByTestId('wrapper').element() as HTMLElement
+    expect(el.style.getPropertyValue('--size')).toBe('10')
+    size.set(20)
+    mockRaf.step()
+    expect(el.style.getPropertyValue('--size')).toBe('20')
+  })
+  it('does not append `px` to unitless SVG style props (strokeDashoffset)', async () => {
+    const dashoffset = spring(10)
+    const { getByTestId } = await render(
+      <a.svg viewBox="0 0 100 100">
+        <a.path
+          d="M0 0 L100 100"
+          style={{ strokeDashoffset: dashoffset }}
+          data-testid="path"
+        />
+      </a.svg>
+    )
+    const path = getByTestId('path').element() as unknown as SVGPathElement
+    expect(path.style.strokeDashoffset).toBe('10')
+    dashoffset.set(25)
+    mockRaf.step()
+    expect(path.style.strokeDashoffset).toBe('25')
+  })
 })
 
 describe('animated component attribute removal', () => {
@@ -310,6 +371,22 @@ describe('animated component attribute removal', () => {
     mockRaf.step()
     expect(el.getAttribute('tabindex')).toBe('0')
     expect(el.hasAttribute('tabindex')).toBe(true)
+  })
+})
+
+describe('animated component lifecycle', () => {
+  it('stops observing an animated value after it unmounts', async () => {
+    const opacity = spring(0)
+    const { unmount } = await render(
+      <a.div style={{ opacity }} data-testid="wrapper" />
+    )
+
+    // While mounted, the animated node observes the spring.
+    expect(getFluidObservers(opacity)?.size ?? 0).toBeGreaterThan(0)
+
+    // Unmounting must detach that observer so the spring can be collected.
+    unmount()
+    expect(getFluidObservers(opacity)?.size ?? 0).toBe(0)
   })
 })
 
