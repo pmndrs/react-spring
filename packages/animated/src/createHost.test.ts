@@ -1,5 +1,4 @@
 import { createHost } from './createHost'
-import { withAnimated } from './withAnimated'
 import { AnimatedObject } from './AnimatedObject'
 
 const hostConfig = {
@@ -10,7 +9,9 @@ const hostConfig = {
 
 describe('createHost', () => {
   it('caches the animated wrapper on the component itself', () => {
-    function MyComponent() {}
+    function MyComponent() {
+      return null
+    }
     const { animated } = createHost({ MyComponent }, hostConfig)
 
     const A = animated(MyComponent)
@@ -21,7 +22,9 @@ describe('createHost', () => {
   })
 
   it('falls back to a WeakMap when the component is non-extensible', () => {
-    function MyComponent() {}
+    function MyComponent() {
+      return null
+    }
     Object.preventExtensions(MyComponent)
 
     // Should not throw even though MyComponent is non-extensible
@@ -36,7 +39,9 @@ describe('createHost', () => {
   })
 
   it('handles frozen components without throwing', () => {
-    function MyComponent() {}
+    function MyComponent() {
+      return null
+    }
     Object.freeze(MyComponent)
 
     const { animated } = createHost({ MyComponent }, hostConfig)
@@ -46,7 +51,9 @@ describe('createHost', () => {
   })
 
   it('sets displayName on the animated wrapper', () => {
-    function NamedComponent() {}
+    function NamedComponent() {
+      return null
+    }
     const { animated } = createHost({ NamedComponent }, hostConfig)
 
     const A = animated(NamedComponent)
@@ -54,7 +61,9 @@ describe('createHost', () => {
   })
 
   it('sets displayName on wrappers for non-extensible components', () => {
-    function NamedComponent() {}
+    function NamedComponent() {
+      return null
+    }
     Object.preventExtensions(NamedComponent)
 
     const { animated } = createHost({ NamedComponent }, hostConfig)
