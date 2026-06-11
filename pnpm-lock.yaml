@@ -62,9 +62,6 @@ importers:
       husky:
         specifier: 9.1.7
         version: 9.1.7
-      konva:
-        specifier: 10.3.0
-        version: 10.3.0
       oxfmt:
         specifier: 0.51.0
         version: 0.51.0
@@ -80,15 +77,6 @@ importers:
       react-dom:
         specifier: ^19.2.6
         version: 19.2.6(react@19.2.6)
-      react-konva:
-        specifier: ^19.2.4
-        version: 19.2.4(@types/react@19.2.15)(konva@10.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      react-native:
-        specifier: '>=0.85.3'
-        version: 0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6)
-      react-zdog:
-        specifier: 1.2.2
-        version: 1.2.2
       spec.ts:
         specifier: 1.1.3
         version: 1.1.3
@@ -113,9 +101,6 @@ importers:
       vitest-browser-react:
         specifier: ^2.2.0
         version: 2.2.0(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(vitest@4.1.7)
-      zdog:
-        specifier: 1.1.3
-        version: 1.1.3
 
   demo:
     dependencies:
@@ -410,33 +395,6 @@ importers:
 
   packages/rafz: {}
 
-  packages/react-spring:
-    dependencies:
-      '@react-spring/core':
-        specifier: workspace:~
-        version: link:../core
-      '@react-spring/konva':
-        specifier: workspace:~
-        version: link:../../targets/konva
-      '@react-spring/native':
-        specifier: workspace:~
-        version: link:../../targets/native
-      '@react-spring/three':
-        specifier: workspace:~
-        version: link:../../targets/three
-      '@react-spring/web':
-        specifier: workspace:~
-        version: link:../../targets/web
-      '@react-spring/zdog':
-        specifier: workspace:~
-        version: link:../../targets/zdog
-      react:
-        specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-        version: 19.2.6
-      react-dom:
-        specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-        version: 19.2.6(react@19.2.6)
-
   packages/shared:
     dependencies:
       '@react-spring/rafz':
@@ -450,51 +408,6 @@ importers:
         version: 19.2.6
 
   packages/types: {}
-
-  targets/konva:
-    dependencies:
-      '@react-spring/animated':
-        specifier: workspace:~
-        version: link:../../packages/animated
-      '@react-spring/core':
-        specifier: workspace:~
-        version: link:../../packages/core
-      '@react-spring/shared':
-        specifier: workspace:~
-        version: link:../../packages/shared
-      '@react-spring/types':
-        specifier: workspace:~
-        version: link:../../packages/types
-      konva:
-        specifier: '>=2.6'
-        version: 10.3.0
-      react:
-        specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-        version: 19.2.6
-      react-konva:
-        specifier: ^19
-        version: 19.2.4(@types/react@19.2.15)(konva@10.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-
-  targets/native:
-    dependencies:
-      '@react-spring/animated':
-        specifier: workspace:~
-        version: link:../../packages/animated
-      '@react-spring/core':
-        specifier: workspace:~
-        version: link:../../packages/core
-      '@react-spring/shared':
-        specifier: workspace:~
-        version: link:../../packages/shared
-      '@react-spring/types':
-        specifier: workspace:~
-        version: link:../../packages/types
-      react:
-        specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-        version: 19.2.6
-      react-native:
-        specifier: '>=0.78'
-        version: 0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6)
 
   targets/three:
     dependencies:
@@ -543,33 +456,6 @@ importers:
       react-dom:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.2.6(react@19.2.6)
-
-  targets/zdog:
-    dependencies:
-      '@react-spring/animated':
-        specifier: workspace:~
-        version: link:../../packages/animated
-      '@react-spring/core':
-        specifier: workspace:~
-        version: link:../../packages/core
-      '@react-spring/shared':
-        specifier: workspace:~
-        version: link:../../packages/shared
-      '@react-spring/types':
-        specifier: workspace:~
-        version: link:../../packages/types
-      react:
-        specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
-        version: 18.3.1(react@18.3.1)
-      react-zdog:
-        specifier: '>=1.0'
-        version: 1.2.2
-      zdog:
-        specifier: '>=1.0'
-        version: 1.1.3
 
 packages:
 
@@ -2870,11 +2756,6 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@types/react-reconciler@0.33.0':
-    resolution: {integrity: sha512-HZOXsKT0tGI9LlUw2LuedXsVeB88wFa536vVL0M6vE8zN63nI+sSr1ByxmPToP5K5bukaVscyeCJcF9guVNJ1g==}
-    peerDependencies:
-      '@types/react': '*'
-
   '@types/react-transition-group@4.4.12':
     resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
     peerDependencies:
@@ -4220,9 +4101,6 @@ packages:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
 
-  konva@10.3.0:
-    resolution: {integrity: sha512-gt19K2gzY4lHbnkvsku7eSmB+A9PTS2jG4F9coBMsdjM1UKfJNxJbDbXVpeCW1wjEGRwBD3nBamcHnqJhAeKlg==}
-
   leva@0.10.1:
     resolution: {integrity: sha512-BcjnfUX8jpmwZUz2L7AfBtF9vn4ggTH33hmeufDULbP3YgNZ/C+ss/oO3stbrqRQyaOmRwy70y7BGTGO81S3rA==}
     peerDependencies:
@@ -4971,11 +4849,6 @@ packages:
   react-devtools-inline@4.4.0:
     resolution: {integrity: sha512-ES0GolSrKO8wsKbsEkVeiR/ZAaHQTY4zDh1UW8DImVmm8oaGLl3ijJDvSGe+qDRKPZdPRnDtWWnSvvrgxXdThQ==}
 
-  react-dom@18.3.1:
-    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
-    peerDependencies:
-      react: ^18.3.1
-
   react-dom@19.2.6:
     resolution: {integrity: sha512-0prMI+hvBbPjsWnxDLxlCGyM8PN6UuWjEUCYmZhO67xIV9Xasa/r/vDnq+Xyq4Lo27g8QSbO5YzARu0D1Sps3g==}
     peerDependencies:
@@ -5001,13 +4874,6 @@ packages:
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
 
-  react-konva@19.2.4:
-    resolution: {integrity: sha512-AjRT4CwGprm/DV7fTXAjLCjYgNKZlwL+ghhw1pb1RSL7E0BKOlXeiiUSfF/ajd7OdSJOhkf9iuVUNlFk1PvlzQ==}
-    peerDependencies:
-      konva: ^8.0.1 || ^7.2.5 || ^9.0.0 || ^10.0.0
-      react: ^19.2.0
-      react-dom: ^19.2.0
-
   react-native@0.85.3:
     resolution: {integrity: sha512-HN/fGC+3nZVcDNcw7gfbM/DuqZAvI9Mz+/SxuhODaua4JY0BPzhfTzWXRyTR4mRgMHmShTPpH2PYMTxvZrsdZA==}
     engines: {node: ^20.19.4 || ^22.13.0 || ^24.3.0 || >= 25.0.0}
@@ -5021,12 +4887,6 @@ packages:
         optional: true
       '@types/react':
         optional: true
-
-  react-reconciler@0.33.0:
-    resolution: {integrity: sha512-KetWRytFv1epdpJc3J4G75I4WrplZE5jOL7Yq0p34+OVOKF4Se7WrdIdVC45XsSSmUTlht2FM/fM1FZb1mfQeA==}
-    engines: {node: '>=0.10.0'}
-    peerDependencies:
-      react: ^19.2.0
 
   react-refresh@0.14.2:
     resolution: {integrity: sha512-jCvmsr+1IUSMUyzOkRcvnVbX3ZYC6g9TDrDbFuFmRDq7PD4yaGbLKNQL6k2jnArV8hjYxh7hVhAZB6s9HDGpZA==}
@@ -5093,19 +4953,12 @@ packages:
       react-dom:
         optional: true
 
-  react-zdog@1.2.2:
-    resolution: {integrity: sha512-Ix7ALha91aOEwiHuxumCeYbARS5XNpc/w0v145oGkM6poF/CvhKJwzLhM5sEZbtrghMA+psAhOJkCTzJoseicA==}
-
   react95@4.0.0:
     resolution: {integrity: sha512-C/2Ecws+ShHMJa3/ki6d3ufCukEYyZ+up45NJhX+uecFh5sXNdkEX8bPZ4pKTGl0mSTMkiCJTGOJB1Gmf1W3dA==}
     peerDependencies:
       react: '>= 16.8.0'
       react-dom: '>= 16.8.0'
       styled-components: '>= 5.3.3'
-
-  react@18.3.1:
-    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
-    engines: {node: '>=0.10.0'}
 
   react@19.2.6:
     resolution: {integrity: sha512-sfWGGfavi0xr8Pg0sVsyHMAOziVYKgPLNrS7ig+ivMNb3wbCBw3KxtflsGBAwD3gYQlE/AEZsTLgToRrSCjb0Q==}
@@ -5188,9 +5041,6 @@ packages:
   require-like@0.1.2:
     resolution: {integrity: sha512-oyrU88skkMtDdauHDuKVrgR+zuItqr6/c//FXzvmxRGMexSDc6hNvJInGW3LL46n+8b50RykrvwSUIIQH2LQ5A==}
 
-  resize-observer-polyfill@1.5.1:
-    resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
-
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
     engines: {node: '>=4'}
@@ -5259,9 +5109,6 @@ packages:
     resolution: {integrity: sha512-B5j0rYMlinhhOo9tjQebMVVn0TfyXAF+wB3b2ggZUuJ/is/Y+7+JGjirAMxHZ9Z3hIP98NPfamlAkBHa1lAaXQ==}
     engines: {node: '>=20.19.0'}
     hasBin: true
-
-  scheduler@0.23.2:
-    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
 
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
@@ -6043,9 +5890,6 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-
-  zdog@1.1.3:
-    resolution: {integrity: sha512-raRj6r0gPzopFm5XWBJZr/NuV4EEnT4iE+U3dp5FV5pCb588Gmm3zLIp/j9yqqcMiHH8VNQlerLTgOqL7krh6w==}
 
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
@@ -7091,11 +6935,13 @@ snapshots:
     optionalDependencies:
       '@types/node': 25.9.1
 
-  '@isaacs/ttlcache@1.4.1': {}
+  '@isaacs/ttlcache@1.4.1':
+    optional: true
 
   '@jest/schemas@29.6.3':
     dependencies:
       '@sinclair/typebox': 0.27.10
+    optional: true
 
   '@jest/types@29.6.3':
     dependencies:
@@ -7105,6 +6951,7 @@ snapshots:
       '@types/node': 25.9.1
       '@types/yargs': 17.0.35
       chalk: 4.1.2
+    optional: true
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -7122,6 +6969,7 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
+    optional: true
 
   '@jridgewell/sourcemap-codec@1.5.5': {}
 
@@ -7827,7 +7675,8 @@ snapshots:
     dependencies:
       react: 19.2.6
 
-  '@react-native/assets-registry@0.85.3': {}
+  '@react-native/assets-registry@0.85.3':
+    optional: true
 
   '@react-native/codegen@0.85.3(@babel/core@7.29.0)':
     dependencies:
@@ -7838,6 +7687,7 @@ snapshots:
       nullthrows: 1.1.1
       tinyglobby: 0.2.16
       yargs: 17.7.2
+    optional: true
 
   '@react-native/community-cli-plugin@0.85.3':
     dependencies:
@@ -7852,8 +7702,10 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    optional: true
 
-  '@react-native/debugger-frontend@0.85.3': {}
+  '@react-native/debugger-frontend@0.85.3':
+    optional: true
 
   '@react-native/debugger-shell@0.85.3':
     dependencies:
@@ -7862,6 +7714,7 @@ snapshots:
       fb-dotslash: 0.5.8
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   '@react-native/dev-middleware@0.85.3':
     dependencies:
@@ -7881,12 +7734,16 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    optional: true
 
-  '@react-native/gradle-plugin@0.85.3': {}
+  '@react-native/gradle-plugin@0.85.3':
+    optional: true
 
-  '@react-native/js-polyfills@0.85.3': {}
+  '@react-native/js-polyfills@0.85.3':
+    optional: true
 
-  '@react-native/normalize-colors@0.85.3': {}
+  '@react-native/normalize-colors@0.85.3':
+    optional: true
 
   '@react-native/virtualized-lists@0.85.3(@types/react@19.2.15)(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)':
     dependencies:
@@ -7896,6 +7753,7 @@ snapshots:
       react-native: 0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6)
     optionalDependencies:
       '@types/react': 19.2.15
+    optional: true
 
   '@react-router/dev@7.15.1(@react-router/serve@7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@5.7.2))(@types/node@25.9.1)(babel-plugin-macros@3.1.0)(jiti@2.6.1)(lightningcss@1.32.0)(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(sass@1.100.0)(terser@5.48.0)(tsx@4.22.3)(typescript@5.7.2)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.6.1)(sass@1.100.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0))(yaml@2.9.0)':
     dependencies:
@@ -8182,7 +8040,8 @@ snapshots:
 
   '@simple-libs/stream-utils@1.2.0': {}
 
-  '@sinclair/typebox@0.27.10': {}
+  '@sinclair/typebox@0.27.10':
+    optional: true
 
   '@standard-schema/spec@1.1.0': {}
 
@@ -8307,15 +8166,18 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/istanbul-lib-coverage@2.0.6': {}
+  '@types/istanbul-lib-coverage@2.0.6':
+    optional: true
 
   '@types/istanbul-lib-report@3.0.3':
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
+    optional: true
 
   '@types/istanbul-reports@3.0.4':
     dependencies:
       '@types/istanbul-lib-report': 3.0.3
+    optional: true
 
   '@types/jsesc@2.5.1': {}
 
@@ -8361,10 +8223,6 @@ snapshots:
     dependencies:
       '@types/react': 19.2.15
 
-  '@types/react-reconciler@0.33.0(@types/react@19.2.15)':
-    dependencies:
-      '@types/react': 19.2.15
-
   '@types/react-transition-group@4.4.12(@types/react@19.2.15)':
     dependencies:
       '@types/react': 19.2.15
@@ -8390,11 +8248,13 @@ snapshots:
 
   '@types/webxr@0.5.24': {}
 
-  '@types/yargs-parser@21.0.3': {}
+  '@types/yargs-parser@21.0.3':
+    optional: true
 
   '@types/yargs@17.0.35':
     dependencies:
       '@types/yargs-parser': 21.0.3
+    optional: true
 
   '@ungap/structured-clone@1.3.1': {}
 
@@ -8591,6 +8451,7 @@ snapshots:
   abort-controller@3.0.0:
     dependencies:
       event-target-shim: 5.0.1
+    optional: true
 
   accepts@1.3.8:
     dependencies:
@@ -8601,6 +8462,7 @@ snapshots:
     dependencies:
       mime-types: 3.0.2
       negotiator: 1.0.0
+    optional: true
 
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
@@ -8608,7 +8470,8 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  agent-base@7.1.4: {}
+  agent-base@7.1.4:
+    optional: true
 
   ajv@8.20.0:
     dependencies:
@@ -8634,7 +8497,8 @@ snapshots:
       '@algolia/requester-fetch': 5.52.1
       '@algolia/requester-node-http': 5.52.1
 
-  anser@1.4.10: {}
+  anser@1.4.10:
+    optional: true
 
   anser@2.3.5: {}
 
@@ -8648,7 +8512,8 @@ snapshots:
     dependencies:
       color-convert: 2.0.1
 
-  ansi-styles@5.2.0: {}
+  ansi-styles@5.2.0:
+    optional: true
 
   ansi-styles@6.2.3: {}
 
@@ -8672,7 +8537,8 @@ snapshots:
 
   array-union@2.1.0: {}
 
-  asap@2.0.6: {}
+  asap@2.0.6:
+    optional: true
 
   assertion-error@2.0.1: {}
 
@@ -8712,6 +8578,7 @@ snapshots:
   babel-plugin-syntax-hermes-parser@0.33.3:
     dependencies:
       hermes-parser: 0.33.3
+    optional: true
 
   bail@2.0.2: {}
 
@@ -8771,6 +8638,7 @@ snapshots:
   bser@2.1.1:
     dependencies:
       node-int64: 0.4.0
+    optional: true
 
   buffer-from@1.1.2: {}
 
@@ -8797,7 +8665,8 @@ snapshots:
 
   callsites@3.1.0: {}
 
-  camelcase@6.3.0: {}
+  camelcase@6.3.0:
+    optional: true
 
   camera-controls@3.1.2(three@0.184.0):
     dependencies:
@@ -8840,6 +8709,7 @@ snapshots:
       lighthouse-logger: 1.4.2
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   chromium-edge-launcher@0.3.0:
     dependencies:
@@ -8850,10 +8720,13 @@ snapshots:
       mkdirp: 1.0.4
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
-  ci-info@2.0.0: {}
+  ci-info@2.0.0:
+    optional: true
 
-  ci-info@3.9.0: {}
+  ci-info@3.9.0:
+    optional: true
 
   clean-set@1.1.2: {}
 
@@ -8883,9 +8756,11 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
-  commander@12.1.0: {}
+  commander@12.1.0:
+    optional: true
 
-  commander@2.20.3: {}
+  commander@2.20.3:
+    optional: true
 
   compare-func@2.0.0:
     dependencies:
@@ -8929,6 +8804,7 @@ snapshots:
       utils-merge: 1.0.1
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   content-disposition@0.5.4:
     dependencies:
@@ -9087,7 +8963,8 @@ snapshots:
 
   empathic@2.0.1: {}
 
-  encodeurl@1.0.2: {}
+  encodeurl@1.0.2:
+    optional: true
 
   encodeurl@2.0.0: {}
 
@@ -9107,6 +8984,7 @@ snapshots:
   error-stack-parser@2.1.4:
     dependencies:
       stackframe: 1.3.4
+    optional: true
 
   es-define-property@1.0.1: {}
 
@@ -9282,13 +9160,15 @@ snapshots:
       d: 1.0.2
       es5-ext: 0.10.64
 
-  event-target-shim@5.0.1: {}
+  event-target-shim@5.0.1:
+    optional: true
 
   exit-hook@2.2.1: {}
 
   expect-type@1.3.0: {}
 
-  exponential-backoff@3.1.3: {}
+  exponential-backoff@3.1.3:
+    optional: true
 
   express@4.22.2:
     dependencies:
@@ -9365,11 +9245,13 @@ snapshots:
     dependencies:
       format: 0.2.2
 
-  fb-dotslash@0.5.8: {}
+  fb-dotslash@0.5.8:
+    optional: true
 
   fb-watchman@2.0.2:
     dependencies:
       bser: 2.1.1
+    optional: true
 
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
@@ -9398,6 +9280,7 @@ snapshots:
       unpipe: 1.0.0
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   finalhandler@1.3.2:
     dependencies:
@@ -9423,7 +9306,8 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  flow-enums-runtime@0.0.6: {}
+  flow-enums-runtime@0.0.6:
+    optional: true
 
   flush-microtasks@1.0.1: {}
 
@@ -9648,19 +9532,24 @@ snapshots:
       property-information: 7.1.0
       space-separated-tokens: 2.0.2
 
-  hermes-compiler@250829098.0.10: {}
+  hermes-compiler@250829098.0.10:
+    optional: true
 
-  hermes-estree@0.33.3: {}
+  hermes-estree@0.33.3:
+    optional: true
 
-  hermes-estree@0.35.0: {}
+  hermes-estree@0.35.0:
+    optional: true
 
   hermes-parser@0.33.3:
     dependencies:
       hermes-estree: 0.33.3
+    optional: true
 
   hermes-parser@0.35.0:
     dependencies:
       hermes-estree: 0.35.0
+    optional: true
 
   hls.js@1.6.16: {}
 
@@ -9688,6 +9577,7 @@ snapshots:
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   human-id@4.1.3: {}
 
@@ -9708,6 +9598,7 @@ snapshots:
   image-size@1.2.1:
     dependencies:
       queue: 6.0.2
+    optional: true
 
   immediate@3.0.6: {}
 
@@ -9731,6 +9622,7 @@ snapshots:
   invariant@2.2.4:
     dependencies:
       loose-envify: 1.4.0
+    optional: true
 
   ipaddr.js@1.9.1: {}
 
@@ -9749,7 +9641,8 @@ snapshots:
 
   is-decimal@2.0.1: {}
 
-  is-docker@2.2.1: {}
+  is-docker@2.2.1:
+    optional: true
 
   is-extendable@0.1.1: {}
 
@@ -9788,6 +9681,7 @@ snapshots:
   is-wsl@2.2.0:
     dependencies:
       is-docker: 2.2.1
+    optional: true
 
   isbot@5.1.40: {}
 
@@ -9817,7 +9711,8 @@ snapshots:
 
   javascript-stringify@2.1.0: {}
 
-  jest-get-type@29.6.3: {}
+  jest-get-type@29.6.3:
+    optional: true
 
   jest-util@29.7.0:
     dependencies:
@@ -9827,6 +9722,7 @@ snapshots:
       ci-info: 3.9.0
       graceful-fs: 4.2.11
       picomatch: 2.3.2
+    optional: true
 
   jest-validate@29.7.0:
     dependencies:
@@ -9836,6 +9732,7 @@ snapshots:
       jest-get-type: 29.6.3
       leven: 3.1.0
       pretty-format: 29.7.0
+    optional: true
 
   jest-worker@29.7.0:
     dependencies:
@@ -9843,6 +9740,7 @@ snapshots:
       jest-util: 29.7.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
+    optional: true
 
   jiti@2.6.1: {}
 
@@ -9859,7 +9757,8 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  jsc-safe-url@0.2.4: {}
+  jsc-safe-url@0.2.4:
+    optional: true
 
   jsesc@3.0.2: {}
 
@@ -9881,8 +9780,6 @@ snapshots:
 
   kind-of@6.0.3: {}
 
-  konva@10.3.0: {}
-
   leva@0.10.1(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       '@radix-ui/react-portal': 1.1.10(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -9902,7 +9799,8 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
-  leven@3.1.0: {}
+  leven@3.1.0:
+    optional: true
 
   lie@3.3.0:
     dependencies:
@@ -9914,6 +9812,7 @@ snapshots:
       marky: 1.3.0
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   lightningcss-android-arm64@1.32.0:
     optional: true
@@ -9984,7 +9883,8 @@ snapshots:
 
   lodash.startcase@4.4.0: {}
 
-  lodash.throttle@4.1.1: {}
+  lodash.throttle@4.1.1:
+    optional: true
 
   lodash@4.18.1: {}
 
@@ -10026,10 +9926,12 @@ snapshots:
   makeerror@1.0.12:
     dependencies:
       tmpl: 1.0.5
+    optional: true
 
   markdown-extensions@2.0.0: {}
 
-  marky@1.3.0: {}
+  marky@1.3.0:
+    optional: true
 
   math-intrinsics@1.1.0: {}
 
@@ -10163,7 +10065,8 @@ snapshots:
 
   media-typer@0.3.0: {}
 
-  memoize-one@5.2.1: {}
+  memoize-one@5.2.1:
+    optional: true
 
   memoize-one@6.0.0: {}
 
@@ -10171,7 +10074,8 @@ snapshots:
 
   merge-descriptors@1.0.3: {}
 
-  merge-stream@2.0.0: {}
+  merge-stream@2.0.0:
+    optional: true
 
   merge-value@1.0.0:
     dependencies:
@@ -10199,10 +10103,12 @@ snapshots:
       nullthrows: 1.1.1
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   metro-cache-key@0.84.4:
     dependencies:
       flow-enums-runtime: 0.0.6
+    optional: true
 
   metro-cache@0.84.4:
     dependencies:
@@ -10212,6 +10118,7 @@ snapshots:
       metro-core: 0.84.4
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   metro-config@0.84.4:
     dependencies:
@@ -10227,12 +10134,14 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    optional: true
 
   metro-core@0.84.4:
     dependencies:
       flow-enums-runtime: 0.0.6
       lodash.throttle: 4.1.1
       metro-resolver: 0.84.4
+    optional: true
 
   metro-file-map@0.84.4:
     dependencies:
@@ -10247,20 +10156,24 @@ snapshots:
       walker: 1.0.8
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   metro-minify-terser@0.84.4:
     dependencies:
       flow-enums-runtime: 0.0.6
       terser: 5.48.0
+    optional: true
 
   metro-resolver@0.84.4:
     dependencies:
       flow-enums-runtime: 0.0.6
+    optional: true
 
   metro-runtime@0.84.4:
     dependencies:
       '@babel/runtime': 7.29.2
       flow-enums-runtime: 0.0.6
+    optional: true
 
   metro-source-map@0.84.4:
     dependencies:
@@ -10275,6 +10188,7 @@ snapshots:
       vlq: 1.0.1
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   metro-symbolicate@0.84.4:
     dependencies:
@@ -10286,6 +10200,7 @@ snapshots:
       vlq: 1.0.1
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   metro-transform-plugins@0.84.4:
     dependencies:
@@ -10297,6 +10212,7 @@ snapshots:
       nullthrows: 1.1.1
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   metro-transform-worker@0.84.4:
     dependencies:
@@ -10317,6 +10233,7 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    optional: true
 
   metro@0.84.4:
     dependencies:
@@ -10363,6 +10280,7 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    optional: true
 
   micromark-core-commonmark@2.0.3:
     dependencies:
@@ -10603,6 +10521,7 @@ snapshots:
   mime-types@3.0.2:
     dependencies:
       mime-db: 1.54.0
+    optional: true
 
   mime@1.6.0: {}
 
@@ -10617,7 +10536,8 @@ snapshots:
       for-in: 1.0.2
       is-extendable: 1.0.1
 
-  mkdirp@1.0.4: {}
+  mkdirp@1.0.4:
+    optional: true
 
   mlly@1.8.2:
     dependencies:
@@ -10652,7 +10572,8 @@ snapshots:
 
   negotiator@0.6.4: {}
 
-  negotiator@1.0.0: {}
+  negotiator@1.0.0:
+    optional: true
 
   next-tick@1.1.0: {}
 
@@ -10663,15 +10584,18 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  node-int64@0.4.0: {}
+  node-int64@0.4.0:
+    optional: true
 
   node-releases@2.0.46: {}
 
-  nullthrows@1.1.1: {}
+  nullthrows@1.1.1:
+    optional: true
 
   ob1@0.84.4:
     dependencies:
       flow-enums-runtime: 0.0.6
+    optional: true
 
   object-assign@4.1.1: {}
 
@@ -10693,6 +10617,7 @@ snapshots:
     dependencies:
       is-docker: 2.2.1
       is-wsl: 2.2.0
+    optional: true
 
   outdent@0.5.0: {}
 
@@ -10868,6 +10793,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
       react-is: 18.3.1
+    optional: true
 
   promise-worker-transferable@1.0.4:
     dependencies:
@@ -10877,6 +10803,7 @@ snapshots:
   promise@8.3.0:
     dependencies:
       asap: 2.0.6
+    optional: true
 
   prop-types@15.8.1:
     dependencies:
@@ -10904,6 +10831,7 @@ snapshots:
   queue@6.0.2:
     dependencies:
       inherits: 2.0.4
+    optional: true
 
   range-parser@1.2.1: {}
 
@@ -10926,16 +10854,11 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+    optional: true
 
   react-devtools-inline@4.4.0:
     dependencies:
       es6-symbol: 3.1.4
-
-  react-dom@18.3.1(react@18.3.1):
-    dependencies:
-      loose-envify: 1.4.0
-      react: 18.3.1
-      scheduler: 0.23.2
 
   react-dom@19.2.6(react@19.2.6):
     dependencies:
@@ -10958,19 +10881,8 @@ snapshots:
 
   react-is@17.0.2: {}
 
-  react-is@18.3.1: {}
-
-  react-konva@19.2.4(@types/react@19.2.15)(konva@10.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
-    dependencies:
-      '@types/react-reconciler': 0.33.0(@types/react@19.2.15)
-      its-fine: 2.0.0(@types/react@19.2.15)(react@19.2.6)
-      konva: 10.3.0
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
-      react-reconciler: 0.33.0(react@19.2.6)
-      scheduler: 0.27.0
-    transitivePeerDependencies:
-      - '@types/react'
+  react-is@18.3.1:
+    optional: true
 
   react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6):
     dependencies:
@@ -11016,11 +10928,7 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  react-reconciler@0.33.0(react@19.2.6):
-    dependencies:
-      react: 19.2.6
-      scheduler: 0.27.0
+    optional: true
 
   react-refresh@0.14.2: {}
 
@@ -11091,21 +10999,11 @@ snapshots:
     optionalDependencies:
       react-dom: 19.2.6(react@19.2.6)
 
-  react-zdog@1.2.2:
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      resize-observer-polyfill: 1.5.1
-
   react95@4.0.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(styled-components@6.4.2(react-dom@19.2.6(react@19.2.6))(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)):
     dependencies:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
       styled-components: 6.4.2(react-dom@19.2.6(react@19.2.6))(react-native@0.85.3(@babel/core@7.29.0)(@types/react@19.2.15)(react@19.2.6))(react@19.2.6)
-
-  react@18.3.1:
-    dependencies:
-      loose-envify: 1.4.0
 
   react@19.2.6: {}
 
@@ -11156,7 +11054,8 @@ snapshots:
       hastscript: 9.0.1
       parse-entities: 4.0.2
 
-  regenerator-runtime@0.13.11: {}
+  regenerator-runtime@0.13.11:
+    optional: true
 
   regexparam@3.0.0: {}
 
@@ -11247,8 +11146,6 @@ snapshots:
   require-from-string@2.0.2: {}
 
   require-like@0.1.2: {}
-
-  resize-observer-polyfill@1.5.1: {}
 
   resolve-from@4.0.0: {}
 
@@ -11355,10 +11252,6 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.6
 
-  scheduler@0.23.2:
-    dependencies:
-      loose-envify: 1.4.0
-
   scheduler@0.27.0: {}
 
   search-insights@2.17.3: {}
@@ -11390,7 +11283,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  serialize-error@2.1.0: {}
+  serialize-error@2.1.0:
+    optional: true
 
   serve-static@1.16.3:
     dependencies:
@@ -11490,11 +11384,13 @@ snapshots:
 
   stackback@0.0.2: {}
 
-  stackframe@1.3.4: {}
+  stackframe@1.3.4:
+    optional: true
 
   stacktrace-parser@0.1.11:
     dependencies:
       type-fest: 0.7.1
+    optional: true
 
   static-browser-server@1.0.3:
     dependencies:
@@ -11510,7 +11406,8 @@ snapshots:
 
   stats.js@0.17.0: {}
 
-  statuses@1.5.0: {}
+  statuses@1.5.0:
+    optional: true
 
   statuses@2.0.2: {}
 
@@ -11593,6 +11490,7 @@ snapshots:
       acorn: 8.16.0
       commander: 2.20.3
       source-map-support: 0.5.21
+    optional: true
 
   three-mesh-bvh@0.8.3(three@0.184.0):
     dependencies:
@@ -11610,7 +11508,8 @@ snapshots:
 
   three@0.184.0: {}
 
-  throat@5.0.0: {}
+  throat@5.0.0:
+    optional: true
 
   tinybench@2.9.0: {}
 
@@ -11625,7 +11524,8 @@ snapshots:
 
   tinyrainbow@3.1.0: {}
 
-  tmpl@1.0.5: {}
+  tmpl@1.0.5:
+    optional: true
 
   to-regex-range@5.0.1:
     dependencies:
@@ -11714,7 +11614,8 @@ snapshots:
       '@turbo/windows-64': 2.9.16
       '@turbo/windows-arm64': 2.9.16
 
-  type-fest@0.7.1: {}
+  type-fest@0.7.1:
+    optional: true
 
   type-is@1.6.18:
     dependencies:
@@ -11974,13 +11875,15 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
-  vlq@1.0.1: {}
+  vlq@1.0.1:
+    optional: true
 
   w3c-keyname@2.2.8: {}
 
   walker@1.0.8:
     dependencies:
       makeerror: 1.0.12
+    optional: true
 
   web-namespaces@2.0.1: {}
 
@@ -11990,7 +11893,8 @@ snapshots:
 
   webidl-conversions@3.0.1: {}
 
-  whatwg-fetch@3.6.20: {}
+  whatwg-fetch@3.6.20:
+    optional: true
 
   whatwg-url@5.0.0:
     dependencies:
@@ -12025,7 +11929,8 @@ snapshots:
       string-width: 7.2.0
       strip-ansi: 7.2.0
 
-  ws@7.5.10: {}
+  ws@7.5.10:
+    optional: true
 
   ws@8.20.1: {}
 
@@ -12061,8 +11966,6 @@ snapshots:
       yargs-parser: 22.0.0
 
   yocto-queue@0.1.0: {}
-
-  zdog@1.1.3: {}
 
   zod@4.4.3: {}
 

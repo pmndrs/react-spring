@@ -21,7 +21,7 @@ export const meta = formatFrontmatterToRemixMeta(frontmatter)
 
 When a target is discussed it is sometimes in reference to the platform, e.g. you create a client side react application
 chances are it's targeted at the browser. However, if you write a server-side application then you're targeting node.
-Whilst `react-spring` does support the targets `web` and `native` and _can_ be server-side rendered. This is not the type
+Whilst `react-spring` does support the targets `web` and `three` and _can_ be server-side rendered. This is not the type
 of target we're referring to.
 
 A target in `react-spring` is a `react reconciler` a.k.a `react renderer`. That is, a custom renderer that can process different
@@ -31,10 +31,7 @@ a `reconciler`, it handles DOM elements _exclusively_ and understands how to app
 Therefore, in `react-spring` we have the following targets that correspond to their respective reconcilers:
 
 - `web` - `react-dom`
-- `native` - `react-native`
 - `three` - `react-three-fiber`
-- `konva` - `react-konva`
-- `zdog` - `react-zdog`
 
 To download a target you can use the `@react-spring/[target]` format:
 
@@ -80,7 +77,7 @@ interface HostConfig {
 
 Whilst the entire config object is wrapped in `Partial`, meaning that the keys are optional, realistically `applyAnimatedValues` is
 required. This is the logic for how the `Animated` components apply their `SpringValues`, this typically would come from the reconciler
-either attached to the `instance` in the case of `react-konva` or an exported function like in `@react-three/fiber`.
+either attached to the `instance` or an exported function like in `@react-three/fiber`.
 
 The `createAnimatedStyle` key of the config object by default takes wraps the `style` prop in an `AnimatedObject` instance which has
 generic rules on applying keys. In the case of `@react-spring/web`, we pass a custom function which is how we support shorthands for

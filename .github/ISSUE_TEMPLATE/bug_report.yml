@@ -29,9 +29,6 @@ body:
       options:
         - label: '`@react-spring/web`'
         - label: '`@react-spring/three`'
-        - label: '`@react-spring/native`'
-        - label: '`@react-spring/konva`'
-        - label: '`@react-spring/zdog`'
   - type: input
     attributes:
       label: What version of react-spring are you using?

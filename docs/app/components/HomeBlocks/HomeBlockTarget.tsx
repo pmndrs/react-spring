@@ -24,22 +24,6 @@ const webHtml = /* html */ `<div data-line="1" class="highlight-line" data-highl
 </div><div data-line="14" class="highlight-line" data-highlighted="false"><span class="token punctuation">}</span>
 </div>`
 
-const nativeHtml = /* html */ `<div data-line="1" class="highlight-line" data-highlighted="true"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/native'</span>
-</div><div data-line="2" class="highlight-line" data-highlighted="false">
-</div><div data-line="3" class="highlight-line" data-highlighted="false"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function"><span class="token maybe-class-name">MyComponent</span></span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
-</div><div data-line="4" class="highlight-line" data-highlighted="false">  <span class="token keyword">const</span> <span class="token punctuation">{</span> x <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">useSpring</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-</div><div data-line="5" class="highlight-line" data-highlighted="false">    <span class="token keyword module">from</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-</div><div data-line="6" class="highlight-line" data-highlighted="false">      x<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
-</div><div data-line="7" class="highlight-line" data-highlighted="false">    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-</div><div data-line="8" class="highlight-line" data-highlighted="false">    to<span class="token operator">:</span> <span class="token punctuation">{</span>
-</div><div data-line="9" class="highlight-line" data-highlighted="false">      x<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
-</div><div data-line="10" class="highlight-line" data-highlighted="false">    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-</div><div data-line="11" class="highlight-line" data-highlighted="false">  <span class="token punctuation">}</span><span class="token punctuation">)</span>
-</div><div data-line="12" class="highlight-line" data-highlighted="false">
-</div><div data-line="13" class="highlight-line" data-highlighted="true">  <span class="token keyword control-flow">return</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>animated.View</span> <span class="token attr-name">style</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token punctuation">{</span> x <span class="token punctuation">}</span><span class="token punctuation">}</span></span> <span class="token punctuation">/&gt;</span></span>
-</div><div data-line="14" class="highlight-line" data-highlighted="false"><span class="token punctuation">}</span>
-</div>`
-
 const threeHtml = /* html */ `<div data-line="1" class="highlight-line" data-highlighted="true"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/three'</span>
 </div><div data-line="2" class="highlight-line" data-highlighted="false">
 </div><div data-line="3" class="highlight-line" data-highlighted="false"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function"><span class="token maybe-class-name">MyComponent</span></span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
@@ -56,39 +40,7 @@ const threeHtml = /* html */ `<div data-line="1" class="highlight-line" data-hig
 </div><div data-line="14" class="highlight-line" data-highlighted="false"><span class="token punctuation">}</span>
 </div>`
 
-const konvaHtml = /* html */ `<div data-line="1" class="highlight-line" data-highlighted="true"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/konva'</span>
-</div><div data-line="2" class="highlight-line" data-highlighted="false">
-</div><div data-line="3" class="highlight-line" data-highlighted="false"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function"><span class="token maybe-class-name">MyComponent</span></span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
-</div><div data-line="4" class="highlight-line" data-highlighted="false">  <span class="token keyword">const</span> <span class="token punctuation">{</span> x <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">useSpring</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-</div><div data-line="5" class="highlight-line" data-highlighted="false">    <span class="token keyword module">from</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-</div><div data-line="6" class="highlight-line" data-highlighted="false">      x<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
-</div><div data-line="7" class="highlight-line" data-highlighted="false">    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-</div><div data-line="8" class="highlight-line" data-highlighted="false">    to<span class="token operator">:</span> <span class="token punctuation">{</span>
-</div><div data-line="9" class="highlight-line" data-highlighted="false">      x<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
-</div><div data-line="10" class="highlight-line" data-highlighted="false">    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-</div><div data-line="11" class="highlight-line" data-highlighted="false">  <span class="token punctuation">}</span><span class="token punctuation">)</span>
-</div><div data-line="12" class="highlight-line" data-highlighted="false">
-</div><div data-line="13" class="highlight-line" data-highlighted="true">  <span class="token keyword control-flow">return</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>animated.Rect</span> <span class="token attr-name">x</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>x<span class="token punctuation">}</span></span> <span class="token punctuation">/&gt;</span></span>
-</div><div data-line="14" class="highlight-line" data-highlighted="false"><span class="token punctuation">}</span>
-</div>`
-
-const zdogHtml = /* html */ `<div data-line="1" class="highlight-line" data-highlighted="true"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> animated<span class="token punctuation">,</span> useSpring <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@react-spring/zdog'</span>
-</div><div data-line="2" class="highlight-line" data-highlighted="false">
-</div><div data-line="3" class="highlight-line" data-highlighted="false"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function"><span class="token maybe-class-name">MyComponent</span></span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
-</div><div data-line="4" class="highlight-line" data-highlighted="false">  <span class="token keyword">const</span> <span class="token punctuation">{</span> x <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">useSpring</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-</div><div data-line="5" class="highlight-line" data-highlighted="false">    <span class="token keyword module">from</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-</div><div data-line="6" class="highlight-line" data-highlighted="false">      x<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
-</div><div data-line="7" class="highlight-line" data-highlighted="false">    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-</div><div data-line="8" class="highlight-line" data-highlighted="false">    to<span class="token operator">:</span> <span class="token punctuation">{</span>
-</div><div data-line="9" class="highlight-line" data-highlighted="false">      x<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
-</div><div data-line="10" class="highlight-line" data-highlighted="false">    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-</div><div data-line="11" class="highlight-line" data-highlighted="false">  <span class="token punctuation">}</span><span class="token punctuation">)</span>
-</div><div data-line="12" class="highlight-line" data-highlighted="false">
-</div><div data-line="13" class="highlight-line" data-highlighted="true">  <span class="token keyword control-flow">return</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>animated.Ellipse</span> <span class="token attr-name">diameter</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>x<span class="token punctuation">}</span></span> <span class="token punctuation">/&gt;</span></span>
-</div><div data-line="14" class="highlight-line" data-highlighted="false"><span class="token punctuation">}</span>
-</div>`
-
-const dataFixtures = [webHtml, nativeHtml, threeHtml, konvaHtml, zdogHtml]
+const dataFixtures = [webHtml, threeHtml]
 
 export const HomeBlockTarget = () => {
   const [index, setIndex] = useState(0)
@@ -129,13 +81,10 @@ export const HomeBlockTarget = () => {
           href: '/docs/concepts/targets',
         }}
       >
-        <p>Choose from our five targets:</p>
+        <p>Choose from our active targets:</p>
         <ul className={list}>
           <li>web</li>
-          <li>native</li>
           <li>three</li>
-          <li>konva</li>
-          <li>zdog</li>
         </ul>
         <p>
           Missing a target you want? Request we add it or create it yourself

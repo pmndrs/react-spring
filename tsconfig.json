@@ -7,8 +7,7 @@
     "**/*.test.ts",
     "**/*.test.tsx",
     "tests/**/*",
-    "vitest.config.ts",
-    "targets/zdog/@types/**/*"
+    "vitest.config.ts"
   ],
   "exclude": [
     "packages/*/src/types/**/*",

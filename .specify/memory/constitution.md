@@ -55,7 +55,7 @@ The library is organised in strict bottom-up layers:
 - The umbrella package MUST contain only re-exports — no logic.
 
 **Rationale**: This is the load-bearing contract that lets the same animation engine
-power web, native, three, konva, and zdog without bifurcating code. Any cross-layer
+power web and three without bifurcating code. Any cross-layer
 shortcut taken once propagates indefinitely.
 
 ### II. Target-Agnostic Core
