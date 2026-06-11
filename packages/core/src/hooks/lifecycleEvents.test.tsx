@@ -19,10 +19,11 @@ const cases: { name: string; Comp: React.FC<{ handlers: Handlers }> }[] = [
   {
     name: 'useSprings',
     Comp: ({ handlers }) => {
-      useSprings(2, [
-        { from: { x: 0 }, to: { x: 1 }, ...handlers },
-        { from: { x: 0 }, to: { x: 1 }, ...handlers },
-      ])
+      // `vi.fn()`'s Mock type isn't assignable to the event-handler params in
+      // the array overload on TS <= 5.4, so cast — the object-form hooks below
+      // accept it fine.
+      const props = { from: { x: 0 }, to: { x: 1 }, ...handlers }
+      useSprings(2, [props, props] as any)
       return null
     },
   },

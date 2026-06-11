@@ -2,7 +2,14 @@ import * as React from 'react'
 import { render } from 'vitest-browser-react'
 
 import { SpringValue } from '../SpringValue'
-import { Trail } from './Trail'
+import { Trail as TrailComponent } from './Trail'
+
+// `Trail` renders an array of nodes, which TypeScript <= 5.4 rejects as a JSX
+// element type (TS2786). Cast to a plain component type for the test — we're
+// exercising runtime behaviour, not Trail's JSX typing.
+const Trail = TrailComponent as unknown as (
+  props: any
+) => React.ReactElement | null
 
 describe('Trail', () => {
   it('renders one child per item, each with its own spring values', async () => {
