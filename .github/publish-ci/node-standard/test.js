@@ -3,7 +3,7 @@ const path = require('path')
 
 const { animated, useSpring } = require('@react-spring/web')
 
-console.log('Testing Node with CJS imports...')
+console.log('Testing Node CJS require() interop with the ESM-only package...')
 
 function checkFunctionName(fn, name, category) {
   console.log(`Checking ${category} '${name}' === '${fn.name}'`)
@@ -26,7 +26,7 @@ for (let [fn, name, category] of entries) {
   }
 }
 
-const moduleNames = [['@react-spring/web', 'dist/cjs/index.js']]
+const moduleNames = [['@react-spring/web', 'dist/react-spring_web.modern.mjs']]
 
 for (let [moduleName, expectedFilename] of moduleNames) {
   const modulePath = require.resolve(moduleName)

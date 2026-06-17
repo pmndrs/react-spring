@@ -211,7 +211,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        example: ['cra5', 'next', 'vite', 'node-standard', 'node-esm']
+        example: ['next', 'vite', 'node-standard', 'node-esm']
     defaults:
       run:
         working-directory: ./.github/publish-ci/${{ matrix.example }}
