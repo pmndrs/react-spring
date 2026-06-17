@@ -274,8 +274,6 @@ jobs:
         run: ls -l .
 
       - name: Run are-the-types-wrong
-        # TODO: unpin once https://github.com/arethetypeswrong/arethetypeswrong.github.io
-        # ships a fix for the "Cannot read properties of undefined (reading 'filename')"
-        # crash that began in 0.15.x. Pre-migration baseline yarn pack tarballs hit the
-        # same crash, so this is unrelated to yarn → pnpm.
-        run: npx @arethetypeswrong/cli@0.13.6 ./package.tgz --format table --ignore-rules false-cjs
+        # The library is ESM-only; the `esm-only` profile accepts a CJS require()
+        # resolving to ESM (works via Node's require(ESM) since 22.12/20.19).
+        run: npx @arethetypeswrong/cli@0.18.3 ./package.tgz --format table --profile esm-only
