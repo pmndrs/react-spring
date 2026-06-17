@@ -2,20 +2,14 @@
   "name": "@react-spring/animated",
   "version": "10.1.1",
   "description": "Animated component props for React",
-  "module": "./dist/react-spring_animated.legacy-esm.js",
-  "main": "./dist/cjs/index.js",
+  "type": "module",
+  "module": "./dist/react-spring_animated.modern.mjs",
   "types": "./dist/react-spring_animated.modern.d.mts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "import": {
-        "types": "./dist/react-spring_animated.modern.d.mts",
-        "default": "./dist/react-spring_animated.modern.mjs"
-      },
-      "require": {
-        "types": "./dist/cjs/react-spring_animated.development.d.ts",
-        "default": "./dist/cjs/index.js"
-      }
+      "types": "./dist/react-spring_animated.modern.d.mts",
+      "default": "./dist/react-spring_animated.modern.mjs"
     }
   },
   "files": [
