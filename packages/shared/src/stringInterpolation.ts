@@ -80,9 +80,10 @@ export const createStringInterpolator = (
   // a whole number. Whole-number keyframes are left untouched so that
   // values like the alpha channel in `rgba(…, 0)` → `rgba(…, 1)` keep
   // their natural sub-frame precision.
-  const decimalCounts = getNumbers(output[0]).map((_, pos) => {
-    const counts = output.map(value => {
-      const token = getNumbers(value)[pos]
+  const allTokens = output.map(value => getNumbers(value))
+  const decimalCounts = allTokens[0].map((_, pos) => {
+    const counts = allTokens.map(tokens => {
+      const token = tokens[pos]
       const dot = token.indexOf('.')
       return dot === -1 ? 0 : token.length - dot - 1
     })
