@@ -351,10 +351,16 @@ export type PickAnimated<Props extends object, Fwd = true> = unknown &
     : [object] extends [Props]
       ? Lookup
       : ObjectFromUnion<
-          Props extends { from: infer From } // extract prop from the `from` prop if it exists
-            ? From extends () => any
-              ? ReturnType<From>
-              : ObjectType<From>
+          // The `from` prop contributes keys, but it must be *merged* with the
+          // `to`/forward/transition values rather than replacing them — otherwise
+          // a partial `from` drops the other animated keys (e.g.
+          // `useSpring({ x, y, from: { x } })` would lose `y`).
+          Props extends { from: infer From }
+            ?
+                | (From extends () => any ? ReturnType<From> : ObjectType<From>)
+                | (TransitionKey & keyof Props extends never
+                    ? ToValues<Omit<Props, 'from'>, Fwd>
+                    : TransitionValues<Omit<Props, 'from'>>)
             : TransitionKey & keyof Props extends never
               ? ToValues<Props, Fwd>
               : TransitionValues<Props>
