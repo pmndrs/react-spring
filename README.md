@@ -100,10 +100,10 @@ And [many others...](https://github.com/pmndrs/react-spring/network/dependents)
 
 ## Backers
 
-Thank you to all our backers! 🙏 If you want to join them here, then consider contributing to our [Opencollective](https://opencollective.com/react-spring).
+Thank you to all our backers! 🙏 If you want to join them here, then consider contributing to our [Opencollective](https://opencollective.com/pmndrs).
 
-<a href="https://opencollective.com/react-spring#backers" target="_blank">
-  <img src="https://opencollective.com/react-spring/backers.svg?width=890"/>
+<a href="https://opencollective.com/pmndrs#backers" target="_blank">
+  <img src="https://opencollective.com/pmndrs/backers.svg?width=890"/>
 </a>
 
 ## Contributors
@@ -111,5 +111,5 @@ Thank you to all our backers! 🙏 If you want to join them here, then consider 
 This project exists thanks to all the people who contribute.
 
 <a href="https://github.com/react-spring/react-spring/graphs/contributors">
-  <img src="https://opencollective.com/react-spring/contributors.svg?width=890" />
+  <img src="https://opencollective.com/pmndrs/contributors.svg?width=890" />
 </a>

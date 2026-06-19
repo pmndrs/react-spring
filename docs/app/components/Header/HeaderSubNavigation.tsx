@@ -18,7 +18,7 @@ const SUB_NAV: NavigationButtonProps[] = [
   },
   {
     title: 'Support',
-    href: 'https://opencollective.com/react-spring',
+    href: 'https://opencollective.com/pmndrs',
     isExternal: true,
     Icon: Lifebuoy,
   },
