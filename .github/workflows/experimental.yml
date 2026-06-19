@@ -3,10 +3,6 @@ name: 'Experimental Releases'
 on:
   workflow_dispatch:
 
-env:
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
@@ -30,16 +26,9 @@ jobs:
       - name: Setup npmrc
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
-
-      - name: Install
-        run: pnpm install --frozen-lockfile
+          turbo-cache: 'true'
 
       - name: Build
         run: pnpm build-ci

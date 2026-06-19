@@ -4,10 +4,6 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
-env:
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
@@ -53,19 +49,10 @@ jobs:
             exit 0
           fi
 
-      - name: Setup pnpm
-        if: steps.version.outputs.NEXT_VERSION
-        uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
+      - uses: ./.github/actions/setup
         if: steps.version.outputs.NEXT_VERSION
         with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
-
-      - name: Install
-        if: steps.version.outputs.NEXT_VERSION
-        run: pnpm install --frozen-lockfile
+          turbo-cache: 'true'
 
       - name: Build
         if: steps.version.outputs.NEXT_VERSION

@@ -6,10 +6,6 @@ on:
       - 'next'
   workflow_dispatch:
 
-env:
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: false
@@ -31,22 +27,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup node
-        uses: actions/setup-node@v6
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
+          turbo-cache: 'true'
 
       # npm Trusted Publishing requires npm >= 11.5.1; Node 22 LTS still ships npm 10.x
       - name: Upgrade npm
         run: npm install -g npm@latest
-
-      - name: Install
-        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm build-ci
