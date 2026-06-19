@@ -27,6 +27,7 @@
     "build-ci": "turbo run build --filter=!@react-spring/docs",
     "build": "turbo run build",
     "changeset": "changeset",
+    "check:types": "tsc --noEmit",
     "clean": "turbo run clean",
     "dev": "turbo run dev --no-cache --parallel --continue",
     "docs:dev": "pnpm --filter @react-spring/docs dev",
@@ -37,12 +38,12 @@
     "lint": "oxlint packages/*/src targets/*/src docs/app docs/scripts demo/src",
     "package": "turbo run pack",
     "prepare": "husky",
-    "test": "pnpm test:ts && pnpm test:unit && pnpm test:e2e",
+    "test": "pnpm test:unit && pnpm test:types && pnpm test:e2e",
     "test:unit": "vitest run --project unit",
     "test:cov": "vitest run --project unit --coverage",
-    "test:ts": "tsc --noEmit",
+    "test:types": "vitest run --project types",
     "test:e2e": "vitest run --project e2e",
-    "release": "pnpm clean && pnpm install && pnpm build && pnpm test:ts && pnpm test:unit && pnpm changeset publish --no-git-tag",
+    "release": "pnpm clean && pnpm install && pnpm build && pnpm changeset publish --no-git-tag",
     "vers": "pnpm changeset version"
   },
   "commitlint": {

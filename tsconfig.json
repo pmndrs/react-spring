@@ -11,7 +11,6 @@
     "targets/zdog/@types/**/*"
   ],
   "exclude": [
-    "packages/*/src/types/**/*",
     "targets/*/src/types/**/*",
     "docs/**/*"
   ],

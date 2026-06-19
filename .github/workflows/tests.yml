@@ -165,10 +165,15 @@ jobs:
       - name: Build
         run: pnpm build-ci
 
-      - name: Test
+      - name: Check repo types
         run: |
           pnpm tsc --version
-          pnpm test:ts
+          pnpm check:types
+
+      - name: Test types
+        run: pnpm test:types
+      
+      
 
   test-e2e:
     needs: [build]
