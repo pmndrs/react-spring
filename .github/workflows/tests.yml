@@ -6,10 +6,6 @@ on:
       - 'main'
   pull_request: {}
 
-env:
-  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
@@ -35,6 +31,7 @@ jobs:
               - 'vitest.config.ts'
               - '.github/publish-ci/**/package-lock.json'
               - '.github/workflows/*.yml'
+              - '.github/actions/**'
               - 'package.json'
   build:
     needs: changes
@@ -46,17 +43,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup node
-        uses: actions/setup-node@v6
+      - uses: ./.github/actions/setup
         with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
-
-      - name: Install
-        run: pnpm install --frozen-lockfile
+          turbo-cache: 'true'
 
       - name: Build
         run: pnpm build-ci --filter=!@react-spring/docs
@@ -96,7 +85,7 @@ jobs:
 
   test-unit:
     name: 'Test:unit'
-    needs: [build]
+    needs: [changes]
     if: ${{ needs.changes.outputs.packages == 'true' }}
     runs-on: ubuntu-latest
     strategy:
@@ -107,20 +96,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup node ${{ matrix.node }}
-        uses: actions/setup-node@v6
+      - uses: ./.github/actions/setup
         with:
           node-version: ${{ matrix.node }}
-          cache: 'pnpm'
-
-      - name: Install
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm build-ci
 
       - name: Cache Playwright browsers
         uses: actions/cache@v5
@@ -136,7 +114,7 @@ jobs:
 
   test-types:
     name: 'Test:types with TS ${{ matrix.ts }}'
-    needs: [build]
+    needs: [changes]
     if: ${{ needs.changes.outputs.packages == 'true' }}
     runs-on: ubuntu-latest
     strategy:
@@ -147,17 +125,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
-
-      - name: Install
-        run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Install TypeScript ${{ matrix.ts }}
         run: pnpm add -w typescript@${{ matrix.ts }}
@@ -176,7 +144,7 @@ jobs:
       
 
   test-e2e:
-    needs: [build]
+    needs: [changes]
     if: ${{ needs.changes.outputs.packages == 'true' }}
     name: 'Test:E2E'
     runs-on: ubuntu-latest
@@ -185,17 +153,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Setup node
-        uses: actions/setup-node@v6
-        with:
-          node-version: '24.16.0'
-          cache: 'pnpm'
-
-      - name: Install
-        run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Cache Playwright browsers
         uses: actions/cache@v5

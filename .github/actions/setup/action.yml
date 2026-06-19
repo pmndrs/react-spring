@@ -1,0 +1,36 @@
+name: Setup
+description: pnpm + node + install, with optional Turbo cache. Run after checkout.
+inputs:
+  node-version:
+    description: Override node version; empty uses .nvmrc
+    default: ''
+  registry-url:
+    description: npm registry URL (release jobs only)
+    default: ''
+  turbo-cache:
+    description: Restore/save the .turbo cache (build jobs only)
+    default: 'false'
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v6
+
+    - uses: actions/setup-node@v6
+      with:
+        node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version == '' && '.nvmrc' || '' }}
+        registry-url: ${{ inputs.registry-url }}
+        cache: pnpm
+
+    - name: Install
+      run: pnpm install --frozen-lockfile
+      shell: bash
+
+    - name: Cache turbo
+      if: ${{ inputs.turbo-cache == 'true' }}
+      uses: actions/cache@v5
+      with:
+        path: .turbo
+        key: ${{ runner.os }}-turbo-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-turbo-

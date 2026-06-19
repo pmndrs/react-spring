@@ -12,7 +12,7 @@
     "build": {
       "outputs": ["dist/**", "public/build/**", "api/**"],
       "dependsOn": ["^build"],
-      "inputs": ["src/**/*.tsx", "src/**/*.ts", "../../tsup.config.base.ts"]
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "../../tsdown.config.base.mjs"]
     },
     "pack": {}
   }
