@@ -10,7 +10,6 @@
     "vitest.config.ts"
   ],
   "exclude": [
-    "packages/*/src/types/**/*",
     "targets/*/src/types/**/*",
     "docs/**/*"
   ],
