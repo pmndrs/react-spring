@@ -970,11 +970,17 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   protected _onChange(value: T, idle?: boolean) {
+    // Hand `onChange` a real AnimationResult so `result.value` matches the
+    // advertised type, mirroring how `onStart`/`onRest` dispatch their results.
+    // See #2183.
+    const result = getFinishedResult(value, false)
     if (!idle) {
       this._onStart()
-      callProp(this.animation.onChange, value, this)
+      callProp(this.animation.onChange, result, this)
     }
-    callProp(this.defaultProps.onChange, value, this)
+    callProp(this.defaultProps.onChange, result, this)
+    // Keep the internal `change` event raw — fluid observers (the animated
+    // tree, the Controller) read the value itself, not a result wrapper.
     super._onChange(value, idle)
   }
 
