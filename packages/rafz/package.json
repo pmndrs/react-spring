@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/rafz",
-  "version": "10.1.1",
+  "version": "11.0.0-beta.0",
   "description": "react-spring's fork of rafz one frameloop to rule them all",
   "type": "module",
   "module": "./dist/react-spring_rafz.modern.mjs",

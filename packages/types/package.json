@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/types",
-  "version": "10.1.1",
+  "version": "11.0.0-beta.0",
   "description": "Internal package with TypeScript stuff",
   "type": "module",
   "module": "./dist/react-spring_types.modern.mjs",

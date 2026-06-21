@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/web",
-  "version": "10.1.1",
+  "version": "11.0.0-beta.0",
   "type": "module",
   "module": "./dist/react-spring_web.modern.mjs",
   "types": "./dist/react-spring_web.modern.d.mts",

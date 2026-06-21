@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/three",
-  "version": "10.1.1",
+  "version": "11.0.0-beta.0",
   "type": "module",
   "module": "./dist/react-spring_three.modern.mjs",
   "types": "./dist/react-spring_three.modern.d.mts",

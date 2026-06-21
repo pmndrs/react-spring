@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/parallax",
-  "version": "10.1.1",
+  "version": "11.0.0-beta.0",
   "type": "module",
   "module": "./dist/react-spring_parallax.modern.mjs",
   "types": "./dist/react-spring_parallax.modern.d.mts",
