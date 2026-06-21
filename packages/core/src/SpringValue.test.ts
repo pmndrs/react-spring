@@ -70,11 +70,40 @@ describe('SpringValue', () => {
       onChange,
     })
     await global.advanceUntilIdle()
+    // `onChange` receives an AnimationResult (not the raw value); `result.value`
+    // holds the array. See #2183.
     expect(onChange.mock.calls.slice(-1)[0]).toEqual([
-      spring.animation.to,
+      { value: spring.animation.to, finished: false, cancelled: false },
       spring,
     ])
     expect(global.getFrames(spring)).toMatchSnapshot()
+  })
+
+  // Regression test for #2183: the SpringValue-level `onChange` was called with
+  // the raw value, so `result.value` (the documented field) was `undefined`.
+  it('passes an AnimationResult to onChange whose value is the current value', async () => {
+    const seen: { value: number; live: number }[] = []
+    const spring = new SpringValue(0)
+    spring.start(1, {
+      config: { duration: 10 * frameLength },
+      onChange(result, source) {
+        // `result` is an AnimationResult, never the bare number.
+        expect(result).not.toBeTypeOf('number')
+        expect(result).toMatchObject({ finished: false, cancelled: false })
+        // `result.value` is defined and tracks the spring's live value.
+        expect(typeof result.value).toBe('number')
+        expect(source).toBe(spring)
+        seen.push({ value: result.value, live: spring.get() })
+      },
+    })
+    await global.advanceUntilIdle()
+
+    // The callback fired and every result.value matched the value at call time.
+    expect(seen.length).toBeGreaterThan(0)
+    seen.forEach(({ value, live }) => expect(value).toBe(live))
+    // And it actually animated — at least one intermediate value is non-zero.
+    expect(seen.some(({ value }) => value > 0)).toBe(true)
+    expect(seen.slice(-1)[0].value).toBe(1)
   })
 
   it('can have an animated string as its target', async () => {
@@ -236,7 +265,8 @@ function describeFromProp() {
       await global.advance()
       // After the first frame the spring should have moved away from "from"
       // toward "to" — it should never have read its prior current value.
-      expect(onChange.mock.calls[0][0]).toBeGreaterThan(5)
+      // `onChange` receives an AnimationResult, so read `result.value`. See #2183.
+      expect(onChange.mock.calls[0][0].value).toBeGreaterThan(5)
       await global.advanceUntilIdle()
       expect(spring.get()).toBe(10)
     })
@@ -816,8 +846,10 @@ function describeEvents() {
       spring.start('red')
       await global.advanceUntilIdle()
 
-      const [lastValue] = onChange.mock.calls.slice(-1)[0]
-      expect(lastValue).toBe('red')
+      // `onChange` receives an AnimationResult; the value is on `result.value`.
+      // See #2183.
+      const [lastResult] = onChange.mock.calls.slice(-1)[0]
+      expect(lastResult.value).toBe('red')
     })
     it('is called by the "set" method', () => {
       const onChange = vi.fn()
