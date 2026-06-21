@@ -14,5 +14,11 @@
     "@react-spring/three": "10.1.1",
     "@react-spring/web": "10.1.1"
   },
-  "changesets": []
+  "changesets": [
+    "clever-islands-dig",
+    "esm-only",
+    "fix-pick-animated-from-keys",
+    "fix-springvalue-onchange-result",
+    "remove-deprecated-targets"
+  ]
 }

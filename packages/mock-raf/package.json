@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/mock-raf",
-  "version": "10.1.1",
+  "version": "11.0.0-beta.0",
   "private": true,
   "description": "Vendored copy of mock-raf for react-spring tests",
   "license": "MIT",

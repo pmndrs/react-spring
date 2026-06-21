@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/shared",
-  "version": "10.1.1",
+  "version": "11.0.0-beta.0",
   "description": "Globals and shared modules",
   "type": "module",
   "module": "./dist/react-spring_shared.modern.mjs",

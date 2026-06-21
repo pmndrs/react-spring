@@ -1,6 +1,6 @@
 {
   "name": "@react-spring/animated",
-  "version": "10.1.1",
+  "version": "11.0.0-beta.0",
   "description": "Animated component props for React",
   "type": "module",
   "module": "./dist/react-spring_animated.modern.mjs",
