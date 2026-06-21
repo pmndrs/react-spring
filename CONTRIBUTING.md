@@ -43,6 +43,7 @@ Vitest aliases `@react-spring/*` to the package source, so unit tests don't need
 
 - **Target branch**: `next` (the active line). `main` may exist but isn't the merge base.
 - **Commits**: follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, …). commitlint enforces this on the `commit-msg` hook.
+- **Changeset**: if your change affects published behaviour, run `pnpm changeset` and flag **only the package(s) you changed** (usually one). All `@react-spring/*` packages are version-locked (a `fixed` group in `.changeset/config.json`), so changesets bumps the rest to the same version automatically — you don't flag them yourself. Docs-only or internal-tooling changes don't need one.
 - **Pre-commit**: `oxfmt --check` runs via husky. If it fails, run `pnpm format` and re-commit.
 - **Keep PRs small and focused** — easier to review, easier to land.
 
@@ -52,15 +53,13 @@ Vitest aliases `@react-spring/*` to the package source, so unit tests don't need
 
 ### Simple release
 
-1. Add a changeset describing the change. With `react-spring` we bump every package to the same version, so flag them all:
-   ```sh
-   pnpm changeset
-   ```
-2. Apply the bump (updates package versions and internal deps):
+Changesets are added per PR (see [Sending a PR](#sending-a-pr)) and accumulate on `next`, so a release just bumps and publishes them:
+
+1. Apply the bump (updates package versions and internal deps):
    ```sh
    pnpm vers
    ```
-3. Publish. This cleans, installs, builds, type-checks, runs unit tests, and publishes via changesets:
+2. Publish. This cleans, installs, builds, type-checks, runs unit tests, and publishes via changesets:
    ```sh
    pnpm release
    ```
