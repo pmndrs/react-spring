@@ -202,7 +202,15 @@ function describeToProp() {
       expect(onStart).toBeCalledTimes(1)
     })
 
-    it.todo('avoids calling the "onRest" prop')
+    it('avoids calling the "onRest" prop', async () => {
+      const onRest = vi.fn()
+      const spring = new SpringValue(0)
+      spring.start(1, { onRest })
+      await global.advance(5)
+      spring.start(2)
+      await global.advanceUntilIdle()
+      expect(onRest).not.toBeCalled()
+    })
   })
 
   describe('when "to" prop equals current value', () => {
