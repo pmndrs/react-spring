@@ -98,15 +98,5 @@
   "packageManager": "pnpm@11.9.0",
   "engines": {
     "node": ">=24.16.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@swc/core",
-      "core-js",
-      "core-js-pure",
-      "es5-ext",
-      "esbuild"
-    ]
   }
 }
