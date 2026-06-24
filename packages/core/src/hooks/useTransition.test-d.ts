@@ -28,6 +28,29 @@ it('#1114: useTransition onDestroyed receives the typed item (not boolean/any)',
 })
 
 /**
+ * Guard for the per-key event-handler leak fixed under #2541. The per-key
+ * (object) form types `result.value` as the key's value type (here `number`).
+ * It used to leak `unknown` for `useTransition` (its `UseTransitionProps`
+ * handlers were based on `UnknownProps`); `TransitionUpdate` now sources the
+ * handler keys from a state-resolved `ControllerProps`.
+ */
+it('#2541: useTransition per-key handler resolves result.value to the key type', () => {
+  function scenario() {
+    const items: number[] = [1, 2, 3]
+    useTransition(items, {
+      from: { x: 0 },
+      onRest: {
+        x: result => expectTypeOf(result.value).toEqualTypeOf<number>(),
+      },
+      onChange: {
+        x: result => expectTypeOf(result.value).toEqualTypeOf<number>(),
+      },
+    })
+  }
+  expectTypeOf(scenario).toBeFunction()
+})
+
+/**
  * Guard for #1483 — "Type inference fails when useTransition styles are set via
  * functions".
  *
