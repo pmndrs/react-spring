@@ -22,6 +22,12 @@ type WithAnimated = {
 // For storing the animated version on the original component
 const cacheKey = Symbol.for('AnimatedComponent')
 
+// Fallback cache for component objects that are non-extensible (e.g. React
+// Native host components on Hermes after their first JSX render). We try to
+// write the cached wrapper on the component itself first; if that throws we
+// fall back to this WeakMap so that `animated(View)` keeps working.
+const fallbackCache = new WeakMap<object, any>()
+
 export const createHost = (
   components: AnimatableComponent[] | { [key: string]: AnimatableComponent },
   {
@@ -44,9 +50,18 @@ export const createHost = (
         animated[Component] ||
         (animated[Component] = withAnimated(Component, hostConfig))
     } else {
-      Component =
-        Component[cacheKey] ||
-        (Component[cacheKey] = withAnimated(Component, hostConfig))
+      let cached = Component[cacheKey] ?? fallbackCache.get(Component)
+      if (!cached) {
+        cached = withAnimated(Component, hostConfig)
+        try {
+          Component[cacheKey] = cached
+        } catch {
+          // Component is non-extensible (e.g. a Hermes-optimised React Native
+          // host component). Store in the module-level WeakMap instead.
+        }
+        fallbackCache.set(Component, cached)
+      }
+      Component = cached
     }
 
     Component.displayName = `Animated(${displayName})`
