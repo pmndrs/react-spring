@@ -757,6 +757,21 @@ function describeLoopProp() {
       expect(spring.idle).toBeFalsy()
     })
 
+    it('settles immediately when skipAnimation is enabled (#2409)', async () => {
+      const spring = new SpringValue(0)
+      Globals.assign({ skipAnimation: true })
+      spring.start(1, { loop: true })
+
+      await global.advanceUntilIdle()
+
+      // With skipAnimation, the spring must settle at its goal instead of
+      // re-entering the loop synchronously (which used to hang the tab).
+      expect(spring.get()).toBe(1)
+      expect(spring.idle).toBeTruthy()
+
+      Globals.assign({ skipAnimation: false })
+    })
+
     it('can be combined with the "reverse" prop', async () => {
       const spring = new SpringValue(0)
       spring.start(1, { config: { duration: frameLength * 3 } })

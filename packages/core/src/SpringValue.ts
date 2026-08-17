@@ -633,7 +633,10 @@ export class SpringValue<T = any> extends FrameValue<T> {
         start: this._merge.bind(this, range),
       },
     }).then(result => {
-      if (props.loop && result.finished && !(isLoop && result.noop)) {
+      // When animations are skipped (G.skipAnimation), the "finish" path runs
+      // synchronously inside _resume(). Re-entering the loop there would recurse
+      // infinitely without yielding to the event loop and hang the tab. (#2409)
+      if (props.loop && !G.skipAnimation && result.finished && !(isLoop && result.noop)) {
         const nextProps = createLoopUpdate(props)
         if (nextProps) {
           return this._update(nextProps, true)
