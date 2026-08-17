@@ -19,7 +19,7 @@ type WithAnimated = {
   [key: string]: any
 }
 
-// For storing the animated version on the original component
+/** Module-level cache so animated wrappers survive across createHost calls */
 const cacheKey = Symbol.for('AnimatedComponent')
 
 // Fallback cache for component objects that are non-extensible (e.g. React

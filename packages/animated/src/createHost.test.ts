@@ -57,6 +57,7 @@ describe('createHost', () => {
     const { animated } = createHost({ NamedComponent }, hostConfig)
 
     const A = animated(NamedComponent)
+
     expect(A.displayName).toBe('Animated(NamedComponent)')
   })
 
