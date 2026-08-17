@@ -152,8 +152,14 @@ export function runAsync<T extends AnimationTarget>(
       // Async sequence
       if (is.arr(to)) {
         animating = (async (queue: any[]) => {
-          for (const props of queue) {
-            await animate(props)
+          for (const queueProps of queue) {
+            // When the parent update has `immediate: true`, propagate it to
+            // every step in the array so that each spring starts instantly
+            // instead of animating. (#2204)
+            if (props.immediate === true && queueProps.immediate === undefined) {
+              queueProps.immediate = true
+            }
+            await animate(queueProps)
           }
         })(to)
       }

@@ -719,6 +719,22 @@ describe('Controller', () => {
       expect(onStart).toHaveBeenCalled()
       expect(onRest).toHaveBeenCalled()
     })
+
+    // Regression test for https://github.com/pmndrs/react-spring/issues/2204
+    it('applies `immediate` to every step of a `to` array chain', async () => {
+      const ctrl = new Controller<{ t: number }>({ t: 0 })
+      const { t } = ctrl.springs
+
+      ctrl.start({
+        to: [{ t: 1 }, { t: 2 }],
+        immediate: true,
+      })
+
+      await global.advanceUntilIdle()
+
+      // With `immediate`, the chain must jump straight to the last step's goal.
+      expect(t.get()).toBe(2)
+    })
   })
 
   // Regression test for https://github.com/pmndrs/react-spring/issues/2208
