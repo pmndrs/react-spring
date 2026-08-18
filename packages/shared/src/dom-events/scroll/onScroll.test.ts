@@ -7,38 +7,44 @@ describe('onScroll listener cleanup', () => {
   })
 
   it('removeEventListener is called with the same options used by addEventListener (#2384)', () => {
-    const listenerMap = new Map<string, { fn: EventListener; options?: boolean | AddEventListenerOptions }[]>()
+    const container = document.createElement('div')
+    document.body.appendChild(container)
 
-    const target = {
-      addEventListener: vi.fn((type: string, fn: EventListener, options?: boolean | AddEventListenerOptions) => {
-        const list = listenerMap.get(type) || []
-        list.push({ fn, options })
-        listenerMap.set(type, list)
-      }),
-      removeEventListener: vi.fn((type: string, fn: EventListener, options?: boolean | AddEventListenerOptions) => {
-        const list = listenerMap.get(type) || []
-        const idx = list.findIndex(
-          e => e.fn === fn && JSON.stringify(e.options) === JSON.stringify(options)
-        )
-        if (idx >= 0) list.splice(idx, 1)
-        else {
-          // Listener not found — mismatch between add/remove options
-          throw new Error(
-            `UNMATCHED removeEventListener: ${type} options=${JSON.stringify(options)}`
-          )
-        }
-      }),
-    } as unknown as HTMLElement
+    const addSpy = vi.spyOn(container, 'addEventListener')
+    const removeSpy = vi.spyOn(container, 'removeEventListener')
+    const windowAddSpy = vi.spyOn(window, 'addEventListener')
+    const windowRemoveSpy = vi.spyOn(window, 'removeEventListener')
 
-    const cleanup = onScroll(vi.fn(), { container: target })
+    try {
+      const cleanup = onScroll(vi.fn(), { container })
 
-    // Expect both add calls to have fired with { passive: true }
-    expect(target.addEventListener).toHaveBeenCalledTimes(2)
-    for (const [type] of (target.addEventListener as any).mock.calls) {
-      expect(['scroll', 'resize']).toContain(type)
+      // scroll goes on the container; resize goes on window
+      expect(addSpy).toHaveBeenCalledTimes(1)
+      expect(addSpy).toHaveBeenCalledWith(
+        'scroll',
+        expect.any(Function),
+        expect.objectContaining({ passive: true })
+      )
+      expect(windowAddSpy).toHaveBeenCalledWith(
+        'resize',
+        expect.any(Function),
+        expect.objectContaining({ passive: true })
+      )
+
+      // cleanup must not throw — remove calls pass the same options
+      expect(() => cleanup()).not.toThrow()
+      expect(removeSpy).toHaveBeenCalledWith(
+        'scroll',
+        expect.any(Function),
+        expect.objectContaining({ passive: true })
+      )
+      expect(windowRemoveSpy).toHaveBeenCalledWith(
+        'resize',
+        expect.any(Function),
+        expect.objectContaining({ passive: true })
+      )
+    } finally {
+      container.remove()
     }
-
-    // Now cleanup — remove calls must also pass { passive: true }
-    expect(() => cleanup()).not.toThrow()
   })
 })

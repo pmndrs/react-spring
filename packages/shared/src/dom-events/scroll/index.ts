@@ -108,12 +108,16 @@ export const onScroll = (
     scrollListeners.delete(container)
 
     if (listener) {
-          // Match the options used by addEventListener, otherwise the listener
-          // is not removed in strict environments (see #2384).
-          getTarget(container).removeEventListener('scroll', listener, passiveOptions)
-          window.removeEventListener('resize', listener, passiveOptions)
+      // Match the options used by addEventListener, otherwise the listener
+      // is not removed in strict environments (see #2384).
+      getTarget(container).removeEventListener(
+        'scroll',
+        listener,
+        passiveOptions
+      )
+      window.removeEventListener('resize', listener, passiveOptions)
 
-          resizeListeners.get(container)?.()
-        }
+      resizeListeners.get(container)?.()
+    }
   }
 }
