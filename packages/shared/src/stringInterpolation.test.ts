@@ -38,6 +38,6 @@ it('parses a standalone negative decimal without an integer part', () => {
     output: ['translateY(-.5px)', 'translateY(10px)'],
   })
 
-  expect(() => interpolate(0.5)).not.toThrow()
+  expect(interpolate(0.5)).toBe('translateY(4.75px)')
   expect(interpolate(1)).toBe('translateY(10px)')
 })
