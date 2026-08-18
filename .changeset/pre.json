@@ -17,8 +17,11 @@
   "changesets": [
     "clever-islands-dig",
     "esm-only",
+    "fix-number-regex-negative-decimals",
+    "fix-onscroll-listener-cleanup",
     "fix-pick-animated-from-keys",
     "fix-springvalue-onchange-result",
+    "onrest-not-on-retarget",
     "remove-deprecated-targets"
   ]
 }
