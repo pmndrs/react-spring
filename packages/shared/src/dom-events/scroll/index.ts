@@ -12,6 +12,11 @@ export type OnScrollOptions = {
   container?: HTMLElement
 }
 
+// Shared options used for both addEventListener and removeEventListener.
+// Must be passed to both calls for correct listener matching in strict
+// environments, otherwise removeEventListener silently no-ops (#2384).
+const passiveOptions: AddEventListenerOptions = { passive: true }
+
 const scrollListeners = new WeakMap<Element, () => boolean>()
 const resizeListeners = new WeakMap<Element, VoidFunction>()
 const onScrollHandlers = new WeakMap<Element, Set<ScrollHandler>>()
@@ -62,7 +67,7 @@ export const onScroll = (
      * Add resize handlers so we can correctly calculate the
      * scroll position on changes
      */
-    window.addEventListener('resize', listener, { passive: true })
+    window.addEventListener('resize', listener, passiveOptions)
 
     if (container !== document.documentElement) {
       resizeListeners.set(container, onResize(listener, { container }))
@@ -71,7 +76,7 @@ export const onScroll = (
     /**
      * Add the actual scroll listener
      */
-    target.addEventListener('scroll', listener, { passive: true })
+    target.addEventListener('scroll', listener, passiveOptions)
   }
 
   /**
@@ -103,8 +108,14 @@ export const onScroll = (
     scrollListeners.delete(container)
 
     if (listener) {
-      getTarget(container).removeEventListener('scroll', listener)
-      window.removeEventListener('resize', listener)
+      // Match the options used by addEventListener, otherwise the listener
+      // is not removed in strict environments (see #2384).
+      getTarget(container).removeEventListener(
+        'scroll',
+        listener,
+        passiveOptions
+      )
+      window.removeEventListener('resize', listener, passiveOptions)
 
       resizeListeners.get(container)?.()
     }
