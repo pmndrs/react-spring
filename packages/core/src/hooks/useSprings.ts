@@ -51,6 +51,13 @@ export function useSprings<Props extends UseSpringProps>(
 
 /**
  * Animations are updated on re-render.
+ *
+ * @remarks
+ * Unlike `useSpring` and `useTransition`, inline event-handler arguments are
+ * not inferred in the array form: `onChange: { x: result => result.value }`
+ * leaves `result` untyped (a TypeScript array-inference limitation — see #2541).
+ * Annotate the argument explicitly, e.g.
+ * `onChange: { x: (result: { value: number }) => result.value }`.
  */
 export function useSprings<Props extends UseSpringsProps>(
   length: number,

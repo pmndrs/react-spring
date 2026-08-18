@@ -452,8 +452,10 @@ function createUpdater(Component: React.ComponentType<{ args: [any, any?] }>) {
     return result
   }
 
-  type Args = Parameters<typeof useSpring>
-  const update = (...args: [Args[0], Args[1]?]) =>
+  // `useSpring` is an overloaded generic; deriving a reusable arg type via
+  // `Parameters<typeof useSpring>` freezes `Props` to `object` and rejects plain
+  // forward props. The runtime shape is exercised below, so keep this loose.
+  const update = (...args: [any, any?]) =>
     renderWithContext((prevElem = <Component args={args} />))
 
   return [update, context] as const

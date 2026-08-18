@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useContext, useRef, useMemo } from 'react'
-import { Lookup, OneOrMore, UnknownProps } from '@react-spring/types'
+import { Lookup, Merge, OneOrMore, UnknownProps } from '@react-spring/types'
 import {
   is,
   toArray,
@@ -13,6 +13,7 @@ import {
 
 import {
   Change,
+  ControllerProps,
   ControllerUpdate,
   ItemKeys,
   PickAnimated,
@@ -21,7 +22,8 @@ import {
   TransitionTo,
   UseTransitionProps,
 } from '../types'
-import { Valid } from '../types/common'
+import { EventfulProps } from '../types/common'
+import type { EventKey } from '../types/internal'
 import {
   callProp,
   detachRefs,
@@ -39,11 +41,26 @@ import { TransitionPhase } from '../TransitionPhase'
 declare function setTimeout(handler: Function, timeout?: number): number
 declare function clearTimeout(timeoutId: number): void
 
+/**
+ * The props `useTransition` accepts, with per-key event handlers typed from the
+ * inferred transition state instead of leaking `any`/`unknown` (see #2541 and
+ * `EventfulProps`). `UseTransitionProps` bases its handlers on `UnknownProps`, so
+ * the event keys are overridden from a state-resolved, `Item`-aware
+ * `ControllerProps` while the transition-specific props (and their typo checks)
+ * are kept from `UseTransitionProps`.
+ */
+type TransitionUpdate<Item, Props extends object> = EventfulProps<
+  Props,
+  Merge<
+    UseTransitionProps<Item>,
+    Pick<ControllerProps<PickAnimated<NoInfer<Props>>, Item>, EventKey>
+  >,
+  UseTransitionProps<Item>
+>
+
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
-  props: () =>
-    | UseTransitionProps<Item>
-    | (Props & Valid<Props, UseTransitionProps<Item>>),
+  props: () => TransitionUpdate<Item, Props>,
   deps?: any[]
 ): PickAnimated<Props> extends infer State
   ? State extends Lookup
@@ -53,16 +70,12 @@ export function useTransition<Item, Props extends object>(
 
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
-  props:
-    | UseTransitionProps<Item>
-    | (Props & Valid<Props, UseTransitionProps<Item>>)
+  props: TransitionUpdate<Item, Props>
 ): TransitionFn<Item, PickAnimated<Props>>
 
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
-  props:
-    | UseTransitionProps<Item>
-    | (Props & Valid<Props, UseTransitionProps<Item>>),
+  props: TransitionUpdate<Item, Props>,
   deps: any[] | undefined
 ): PickAnimated<Props> extends infer State
   ? State extends Lookup
