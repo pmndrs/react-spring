@@ -8,6 +8,7 @@ export default defineConfig({
       '@react-spring/web': path.resolve(__dirname, '../targets/web'),
       '@react-spring/parallax': path.resolve(__dirname, '../packages/parallax'),
       '@react-spring/three': path.resolve(__dirname, '../targets/three'),
+      '@react-spring/shared': path.resolve(__dirname, '../packages/shared'),
     },
   },
   server: {
