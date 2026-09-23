@@ -9,6 +9,7 @@ Thanks for helping out! This guide covers everything you need to get a local che
   ```sh
   corepack enable
   ```
+  If you use a standalone pnpm 11 install instead, its automatic version switch can't start pnpm 12. Upgrade it with `npm i -g pnpm@12`.
 
 ## Getting started
 

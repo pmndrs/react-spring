@@ -8,6 +8,8 @@
     ":labels(dependencies,kind: chore)"
   ],
   "rangeStrategy": "bump",
+  "minimumReleaseAge": "1 day",
+  "internalChecksFilter": "strict",
   "rebaseWhen": "conflicted",
   "separateMajorMinor": false,
   "separateMultipleMajor": false,
