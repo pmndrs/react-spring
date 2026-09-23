@@ -943,8 +943,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
         } else {
           oldNode.setValue(value)
         }
-        // Never emit a "change" event for the initial value.
-        if (oldNode) {
+        // Never emit a "change" event for the initial value,
+        // unless something is already observing us.
+        if (oldNode || getFluidObservers(this)) {
           raf.batchedUpdates(() => {
             this._onChange(value, idle)
           })

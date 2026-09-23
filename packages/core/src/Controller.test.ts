@@ -493,10 +493,13 @@ describe('Controller', () => {
         const ctrl = new Controller({ t: 0 })
 
         const loop = vi.fn(() => true)
-        ctrl.start({ t: 0, loop })
+        const result = await ctrl.start({ t: 0, loop })
 
-        await global.advanceUntilIdle()
-        expect(loop).toBeCalledTimes(0)
+        // The `loop` prop is consulted once, but the noop result of
+        // that first iteration stops the loop from recursing.
+        expect(loop).toBeCalledTimes(1)
+        expect(result).toMatchObject({ noop: true, finished: true })
+        expect(ctrl.idle).toBeTruthy()
       })
     })
 
