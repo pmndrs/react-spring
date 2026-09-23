@@ -2,12 +2,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "schedule:monthly",
-    ":maintainLockFilesMonthly",
+    ":maintainLockFilesWeekly",
     ":disablePeerDependencies",
     ":labels(dependencies,kind: chore)"
   ],
   "rangeStrategy": "bump",
+  "automerge": true,
   "minimumReleaseAge": "1 day",
   "internalChecksFilter": "strict",
   "rebaseWhen": "conflicted",
