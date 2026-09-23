@@ -159,7 +159,7 @@ standard workflow.
 - Never push to remote without explicit confirmation from the maintainer.
 - `vitest.config.ts`'s `resolve.alias` rewrites `@react-spring/*` to source, so
   unit and E2E tests run without `pnpm build`. Anything outside Vitest (docs,
-  publish-ci) MUST be preceded by `pnpm build`.
+  publishing) MUST be preceded by `pnpm build`.
 - Releases follow: `pnpm changeset` → `pnpm vers` → `pnpm release`. Do not bump
   versions by hand.
 

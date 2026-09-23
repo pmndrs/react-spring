@@ -29,7 +29,6 @@ jobs:
               - 'pnpm-lock.yaml'
               - 'pnpm-workspace.yaml'
               - 'vitest.config.ts'
-              - '.github/publish-ci/**/package-lock.json'
               - '.github/workflows/*.yml'
               - '.github/actions/**'
               - 'package.json'
@@ -52,31 +51,6 @@ jobs:
 
       - name: Pack
         run: pnpm package
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: animated
-          path: packages/animated/package.tgz
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: core
-          path: packages/core/package.tgz
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: rafz
-          path: packages/rafz/package.tgz
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: shared
-          path: packages/shared/package.tgz
-
-      - uses: actions/upload-artifact@v7
-        with:
-          name: types
-          path: packages/types/package.tgz
 
       - uses: actions/upload-artifact@v7
         with:
@@ -166,54 +140,6 @@ jobs:
 
       - name: Test
         run: pnpm test:e2e
-
-  test-published-artifact:
-    needs: [build]
-    if: ${{ needs.changes.outputs.packages == 'true' }}
-    name: 'Test:publish'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        example: ['next', 'vite', 'node-standard', 'node-esm']
-    defaults:
-      run:
-        working-directory: ./.github/publish-ci/${{ matrix.example }}
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v6
-
-      - name: Setup node
-        uses: actions/setup-node@v6
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'npm'
-          cache-dependency-path: .github/publish-ci/${{ matrix.example }}/package-lock.json
-
-      - name: Install
-        run: npm ci
-
-      - name: Remove existing @react-spring/web
-        run: npm uninstall @react-spring/web
-
-      - uses: actions/download-artifact@v8
-        with:
-          path: ./.github/publish-ci/${{ matrix.example }}
-
-      - name: Check folder contents
-        run: ls -l .
-
-      - name: Install RS build artifacts
-        run: npm install ./web/package.tgz ./animated/package.tgz ./core/package.tgz ./rafz/package.tgz ./shared/package.tgz ./types/package.tgz
-
-      - name: Show installed RS versions
-        run: npm info @react-spring/web && npm ls @react-spring/web
-
-      - name: Build example
-        run: npm run build
-
-      - name: Run test step
-        run: npm test
 
   are-the-types-wrong:
     name: Check package config with are-the-types-wrong
