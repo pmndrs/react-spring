@@ -25,8 +25,8 @@ Used in collaboration with [`ParallaxLayer`](/docs/components/parallax-layer) to
 This component is only available in the `@react-spring/web` package and is therefore only usable in the browser.
 :::
 
-The `Parallax` component creates a scrollable container in which `ParallaxLayer`s can be placed or `React.Fragment`s whose only
-direct `children` are `ParallaxLayer`s. Because `Parallax` is a scrollable container all scroll events are fired from the container
+The `Parallax` component creates a scrollable container in which `ParallaxLayer`s can be placed, either directly or
+from within your own components. Because `Parallax` is a scrollable container all scroll events are fired from the container
 itself therefore, listening for scroll on `window` won't work. However, if you want to attach additional events you _can_ use [`ref.current.container`](#ref)
 
 ```jsx

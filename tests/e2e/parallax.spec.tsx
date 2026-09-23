@@ -53,17 +53,24 @@ function BaseDemo({ horizontal = false }: DemoProps) {
   )
 }
 
-// Sticky layer wrapped in a component rather than passed as a direct child of
-// Parallax — the scenario reported in #2052.
-function WrappedSticky() {
-  return (
-    <ParallaxLayer sticky={{ start: 1, end: 2 }} data-testid="sticky-layer">
-      <div>Sticky</div>
-    </ParallaxLayer>
-  )
+// Sticky layer that isn't a direct child of Parallax (#2052, #1667).
+const stickyLayer = (
+  <ParallaxLayer sticky={{ start: 1, end: 2 }} data-testid="sticky-layer">
+    <div>Sticky</div>
+  </ParallaxLayer>
+)
+
+function StickyInComponent() {
+  return stickyLayer
 }
 
-function WrappedStickyDemo() {
+const stickyWrappers: [string, React.ReactNode][] = [
+  ['a component', <StickyInComponent />],
+  ['a div', <div>{stickyLayer}</div>],
+  ['a fragment', <>{stickyLayer}</>],
+]
+
+function WrappedStickyDemo({ children }: { children: React.ReactNode }) {
   return (
     <div
       style={{
@@ -76,7 +83,7 @@ function WrappedStickyDemo() {
     >
       <Parallax pages={3} data-testid="container">
         <ParallaxLayer offset={1} speed={1} data-testid="default-layer" />
-        <WrappedSticky />
+        {children}
       </Parallax>
     </div>
   )
@@ -163,27 +170,32 @@ describe('Parallax - vertical', () => {
   })
 })
 
-describe('Parallax - sticky layer wrapped in a component (#2052)', () => {
-  beforeEach(async () => {
-    await page.viewport(WIDTH, HEIGHT)
-    render(<WrappedStickyDemo />)
-  })
+describe.each(stickyWrappers)(
+  'Parallax - sticky layer in %s (#2052)',
+  (_, wrapped) => {
+    beforeEach(async () => {
+      await page.viewport(WIDTH, HEIGHT)
+      render(<WrappedStickyDemo>{wrapped}</WrappedStickyDemo>)
+    })
 
-  // Skipped: documents a known, unfixed limitation. Parallax decides DOM
-  // placement by reading `child.props.sticky` while walking its children with
-  // React.Children.map, which traverses the static element tree and never
-  // renders components — so a wrapped layer's `sticky` prop is invisible and it
-  // lands inside the scrolling content, scrolling away between start and end.
-  // A real fix moves the placement decision into the layer (e.g. createPortal).
-  // Unskip when #2052 is fixed.
-  it.skip('keeps the sticky layer a direct child of the container, not the scrolling content', async () => {
-    const sticky = page.getByTestId('sticky-layer').element() as HTMLElement
-    // A sticky layer must render as a sibling of the scrolling content div
-    // (i.e. a direct child of the container), otherwise it scrolls away and
-    // vanishes between its start and end offsets.
-    expect(sticky.parentElement?.dataset.testid).toBe('container')
-  })
-})
+    it('keeps the sticky layer a direct child of the container, not the scrolling content', async () => {
+      const sticky = page.getByTestId('sticky-layer').element() as HTMLElement
+      // A sticky layer must render as a sibling of the scrolling content div
+      // (i.e. a direct child of the container), otherwise it scrolls away and
+      // vanishes between its start and end offsets.
+      expect(sticky.parentElement?.dataset.testid).toBe('container')
+    })
+
+    it('keeps the sticky layer in view between start and end', async () => {
+      const sticky = page.getByTestId('sticky-layer').element() as HTMLElement
+      await scrollContainer(0, HEIGHT * 1.5)
+
+      await expect
+        .poll(() => Math.round(sticky.getBoundingClientRect().top))
+        .toBe(0)
+    })
+  }
+)
 
 describe('Parallax - horizontal', () => {
   beforeEach(async () => {

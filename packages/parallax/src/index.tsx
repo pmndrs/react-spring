@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useContext, useState, useRef, useEffect, CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
 import { useMemoOne, useOnce, raf } from '@react-spring/shared'
 import {
   a,
@@ -12,24 +13,6 @@ const ParentContext = React.createContext<any>(null)
 
 function getScrollType(horizontal: boolean) {
   return horizontal ? 'scrollLeft' : 'scrollTop'
-}
-
-function mapChildrenRecursive(
-  children: React.ReactNode,
-  callback: Function
-): React.ReactNode {
-  const isReactFragment = (node: any) => {
-    if (node.type) {
-      return node.type === React.Fragment
-    }
-    return node === React.Fragment
-  }
-
-  return React.Children.map(children, (child: any) =>
-    isReactFragment(child)
-      ? mapChildrenRecursive(child.props.children, callback)
-      : callback(child)
-  )
 }
 
 const START_TRANSLATE_3D = 'translate3d(0px,0px,0px)'
@@ -178,7 +161,7 @@ export const ParallaxLayer = React.memo(
           : y => `translate3d(0,${y}px,0)`
       )
 
-      return (
+      const node = (
         <a.div
           {...rest}
           ref={layerRef}
@@ -200,6 +183,12 @@ export const ParallaxLayer = React.memo(
           }}
         />
       )
+
+      // Sticky layers must be direct children of the scroll container, even
+      // when wrapped in a component Parallax can't see into. (see #2052)
+      return sticky && parent
+        ? createPortal(node, parent.container.current)
+        : node
     }
   )
 )
@@ -359,34 +348,23 @@ export const Parallax = React.memo(
         }}
       >
         {ready && (
-          <>
-            <a.div
-              ref={contentRef}
-              style={{
-                overflow: 'hidden',
-                position: 'absolute',
-                [horizontal ? 'height' : 'width']: '100%',
-                [horizontal ? 'width' : 'height']: state.space * pages,
-                WebkitTransform: START_TRANSLATE,
-                msTransform: START_TRANSLATE,
-                transform: START_TRANSLATE_3D,
-                ...props.innerStyle,
-              }}
-            >
-              <ParentContext.Provider value={state}>
-                {mapChildrenRecursive(
-                  children,
-                  (child: any) => !child.props.sticky && child
-                )}
-              </ParentContext.Provider>
-            </a.div>
+          <a.div
+            ref={contentRef}
+            style={{
+              overflow: 'hidden',
+              position: 'absolute',
+              [horizontal ? 'height' : 'width']: '100%',
+              [horizontal ? 'width' : 'height']: state.space * pages,
+              WebkitTransform: START_TRANSLATE,
+              msTransform: START_TRANSLATE,
+              transform: START_TRANSLATE_3D,
+              ...props.innerStyle,
+            }}
+          >
             <ParentContext.Provider value={state}>
-              {mapChildrenRecursive(
-                children,
-                (child: any) => child.props.sticky && child
-              )}
+              {children}
             </ParentContext.Provider>
-          </>
+          </a.div>
         )}
       </a.div>
     )
