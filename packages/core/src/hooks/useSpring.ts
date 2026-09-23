@@ -2,7 +2,7 @@ import { Lookup, Remap } from '@react-spring/types'
 import { is } from '@react-spring/shared'
 
 import { ControllerUpdate, PickAnimated, SpringValues } from '../types'
-import { Valid } from '../types/common'
+import { EventfulProps } from '../types/common'
 import { SpringRef } from '../SpringRef'
 import { useSprings } from './useSprings'
 
@@ -32,7 +32,11 @@ export type UseSpringProps<Props extends object = any> = unknown &
 export function useSpring<Props extends object>(
   props:
     | Function
-    | (() => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps),
+    | (() => EventfulProps<
+        Props,
+        UseSpringProps<NoInfer<Props>>,
+        UseSpringProps
+      >),
   deps?: readonly any[] | undefined
 ): PickAnimated<Props> extends infer State
   ? State extends Lookup
@@ -44,14 +48,14 @@ export function useSpring<Props extends object>(
  * Updated on every render, with state inferred from forward props.
  */
 export function useSpring<Props extends object>(
-  props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps
+  props: EventfulProps<Props, UseSpringProps<NoInfer<Props>>, UseSpringProps>
 ): SpringValues<PickAnimated<Props>>
 
 /**
  * Updated only when `deps` change, with state inferred from forward props.
  */
 export function useSpring<Props extends object>(
-  props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
+  props: EventfulProps<Props, UseSpringProps<NoInfer<Props>>, UseSpringProps>,
   deps: readonly any[] | undefined
 ): PickAnimated<Props> extends infer State
   ? State extends Lookup
