@@ -40,11 +40,9 @@ jobs:
         run: pnpm build-ci
 
       - name: Create release PR or publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          version: pnpm vers
-          publish: pnpm changeset publish
-          title: 'chore: version packages'
-          commit: 'chore: version packages'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          version-script: pnpm vers
+          publish-script: pnpm changeset publish
+          pr-title: 'chore: version packages'
+          commit-message: 'chore: version packages'
