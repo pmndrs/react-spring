@@ -83,7 +83,7 @@
     "three": "0.184.0",
     "tsdown": "0.22.14",
     "turbo": "2.10.9",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vite": "8.0.14",
     "vitest": "^4.1.7",
     "vitest-browser-react": "^2.2.0"
