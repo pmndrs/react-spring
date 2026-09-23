@@ -123,7 +123,7 @@ export class Controller<State extends Lookup = Lookup> {
 
   constructor(
     props?: ControllerUpdate<State> | null,
-    flush?: ControllerFlushFn<any>
+    flush?: ControllerFlushFn<Controller<any>>
   ) {
     this._onFrame = this._onFrame.bind(this)
     if (flush) {
