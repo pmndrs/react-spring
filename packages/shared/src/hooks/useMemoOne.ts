@@ -7,12 +7,10 @@ type Cache<T> = {
 
 // TODO: remove once merged (https://github.com/alexreardon/use-memo-one/pull/10)
 export function useMemoOne<T>(getResult: () => T, inputs?: any[]): T {
-  const [initial] = useState(
-    (): Cache<T> => ({
-      inputs,
-      result: getResult(),
-    })
-  )
+  const [initial] = useState((): Cache<T> => ({
+    inputs,
+    result: getResult(),
+  }))
 
   const committed = useRef<Cache<T>>(undefined)
   const prevCache = committed.current
