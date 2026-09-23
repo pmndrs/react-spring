@@ -11,8 +11,8 @@
   "dependencies": {
     "@react-spring/web": "*",
     "lorem-ipsum": "3.0.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "react-feather": "2.0.10",
     "react-scripts": "5.0.1",
     "styled-components": "6.5.3"
@@ -30,8 +30,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.7",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "typescript": "4.9.5"
   }
 }
