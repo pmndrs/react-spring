@@ -221,6 +221,68 @@ describe('useSpring', () => {
       expect(onStart).toHaveBeenCalledTimes(1)
       expect(onRest).toHaveBeenCalledTimes(1)
     })
+
+    // Regression test for #2186
+    it('uses the declared per-key `config` function when `ref.start(props)` is called', async () => {
+      const config = vi.fn((key: string) =>
+        key === 'x' ? { duration: 1000 } : { duration: 100 }
+      )
+      let springRef!: SpringRef
+      let springs!: Lookup<SpringValue>
+
+      function Component() {
+        springRef = useSpringRef()
+        springs = useSpring({ ref: springRef, from: { x: 0, y: 0 }, config })
+        return null
+      }
+
+      await render(<Component />)
+      springRef.start({ to: { x: 1, y: 1 } })
+
+      expect(config).toHaveBeenCalledWith('x')
+      expect(config).toHaveBeenCalledWith('y')
+      expect(springs.x.animation.config.duration).toBe(1000)
+      expect(springs.y.animation.config.duration).toBe(100)
+    })
+
+    it('lets a `config` passed to `ref.start(props)` override the declared one', async () => {
+      let springRef!: SpringRef
+      let springs!: Lookup<SpringValue>
+
+      function Component() {
+        springRef = useSpringRef()
+        springs = useSpring({
+          ref: springRef,
+          from: { x: 0 },
+          config: { duration: 1000 },
+        })
+        return null
+      }
+
+      await render(<Component />)
+      springRef.start({ to: { x: 1 }, config: { duration: 50 } })
+
+      expect(springs.x.animation.config.duration).toBe(50)
+    })
+
+    it('calls the declared event handlers when `ref.start(props)` is called', async () => {
+      const onStart = vi.fn()
+      const onRest = vi.fn()
+      let springRef!: SpringRef
+
+      function Component() {
+        springRef = useSpringRef()
+        useSpring({ ref: springRef, from: { x: 0 }, onStart, onRest })
+        return null
+      }
+
+      await render(<Component />)
+      springRef.start({ to: { x: 1 } })
+      await advanceUntilIdle()
+
+      expect(onStart).toHaveBeenCalledTimes(1)
+      expect(onRest).toHaveBeenCalledTimes(1)
+    })
   })
 
   // Regression tests for https://github.com/pmndrs/react-spring/issues/2361
