@@ -67,7 +67,7 @@ The `ref` for the inner container `div` of `Parallax`.
 
 ### Usage Notes
 
-- All direct `children` of `Parallax` must be `ParallaxLayer`s (or `fragment`s whose only direct `children` are `ParallaxLayer`s).
+- `ParallaxLayer`s can be direct `children` of `Parallax` or rendered by your own components.
 - `Parallax` is a scrollable container so all scroll events are fired from the container itself -- listening for scroll on `window` won't work (but you _can_ use `ref.current.container`).
 
 ## ParallaxLayer
