@@ -39,6 +39,85 @@ describe('Controller', () => {
     ).toBeTruthy()
   })
 
+  // Regression test for #2204
+  describe('when the "to" prop is an array and "immediate" is true', () => {
+    it('jumps through every step without animating', async () => {
+      const ctrl = new Controller({ x: 0 })
+      const promise = ctrl.start({
+        to: [{ x: 50 }, { x: 100 }],
+        immediate: true,
+        config: { duration: 10 * frameLength },
+      })
+
+      await global.advanceUntilIdle()
+      const frames = global.getFrames(ctrl).map(f => f.x)
+      expect(frames.every(x => x === 50 || x === 100)).toBe(true)
+      expect(ctrl.get()).toEqual({ x: 100 })
+      expect(await promise).toMatchObject({ finished: true })
+    })
+
+    it('respects a per-step "immediate" override', async () => {
+      const ctrl = new Controller({ x: 0 })
+      ctrl.start({
+        to: [{ x: 50 }, { x: 100, immediate: false }],
+        immediate: true,
+        config: { duration: 10 * frameLength },
+      })
+
+      await global.advanceUntilIdle()
+      const frames = global.getFrames(ctrl).map(f => f.x)
+      expect(frames.some(x => x > 50 && x < 100)).toBe(true)
+      expect(ctrl.get()).toEqual({ x: 100 })
+    })
+
+    it.each([
+      ['a predicate', (key: string) => key === 'x'],
+      ['an array of keys', ['x']],
+    ])('supports "immediate" as %s', async (_, immediate) => {
+      const ctrl = new Controller({ x: 0, y: 0 })
+      ctrl.start({
+        to: [
+          { x: 50, y: 50 },
+          { x: 100, y: 100 },
+        ],
+        immediate: immediate as any,
+        config: { duration: 10 * frameLength },
+      })
+
+      await global.advanceUntilIdle()
+      // Per-spring frames: `getFrames(ctrl)` aligns keys by index, not time.
+      expect(global.getFrames(ctrl.springs.x)).toEqual([50, 100])
+      expect(global.getFrames(ctrl.springs.y).length).toBeGreaterThan(2)
+      expect(ctrl.get()).toEqual({ x: 100, y: 100 })
+    })
+
+    it('does not mutate the step objects', async () => {
+      const steps = [{ x: 50 }, { x: 100 }]
+      const ctrl = new Controller({ x: 0 })
+      ctrl.start({ to: steps, immediate: true })
+
+      await global.advanceUntilIdle()
+      expect(steps).toEqual([{ x: 50 }, { x: 100 }])
+    })
+
+    it('applies to async script steps', async () => {
+      const ctrl = new Controller({ x: 0 })
+      ctrl.start({
+        to: async next => {
+          await next({ x: 50 })
+          await next({ x: 100 })
+        },
+        immediate: true,
+        config: { duration: 10 * frameLength },
+      })
+
+      await global.advanceUntilIdle()
+      const frames = global.getFrames(ctrl).map(f => f.x)
+      expect(frames.every(x => x === 50 || x === 100)).toBe(true)
+      expect(ctrl.get()).toEqual({ x: 100 })
+    })
+  })
+
   describe('when the "to" prop is an async function', () => {
     it('respects the "cancel" prop', async () => {
       const ctrl = new Controller({ from: { x: 0 } })

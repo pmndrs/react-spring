@@ -67,6 +67,11 @@ export function runAsync<T extends AnimationTarget>(
       key === 'onRest' ? undefined : value
     )
 
+    // Steps inherit `immediate` unless they define their own. (see #2204)
+    if (!is.und(props.immediate)) {
+      defaultProps.immediate = props.immediate
+    }
+
     let preventBail!: () => void
     let bail: (error: any) => void
 
