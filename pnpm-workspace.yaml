@@ -8,3 +8,5 @@ allowBuilds:
   '@swc/core': true
   es5-ext: true
   esbuild: true
+# 1 day, kept in sync with minimumReleaseAge in renovate.json
+minimumReleaseAge: 1440

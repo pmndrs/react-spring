@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Stack
 
-- **Package manager**: pnpm 9.15.9 with strict isolated `node_modules` (default). Pinned via `packageManager` in root `package.json` and activated through Corepack. Scripts assume `pnpm`.
+- **Package manager**: pnpm 12 with strict isolated `node_modules` (default). Pinned via `packageManager` in root `package.json` and activated through Corepack. Scripts assume `pnpm`.
 - **Node**: `.nvmrc` is `24.16.0`; `engines.node` in root `package.json` is `>=24.16.0`; CI runs the unit-test matrix on Node `22.x` and `24.x` and every other job off `.nvmrc`.
 - **Monorepo**: Turborepo + pnpm workspaces. Workspaces declared in `pnpm-workspace.yaml`: `packages/*`, `targets/*`, `demo`, `docs`.
 - **Bundler**: `tsdown` per package, sharing `tsdown.config.base.mjs`. The library is **ESM-only** — each package emits a single modern ESM bundle (`dist/<name>.modern.mjs`) plus its `.d.mts` types. No CJS, no legacy/pre-compiled variants.
