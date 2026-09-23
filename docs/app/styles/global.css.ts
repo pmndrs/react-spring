@@ -171,8 +171,19 @@ globalStyle('.DocSearch-Form', {
   border: `1px solid ${vars.colors.steel40}`,
 })
 
-globalStyle('.DocSearch-Input', {
-  fontSize: 'inherit',
+// DocSearch v5 sizes these in rem, which is tiny against the site's 10px root
+globalStyle('.DocSearch-Form .DocSearch-MagnifierLabel', {
+  width: 32,
+  height: 32,
+})
+
+globalStyle('.DocSearch-Form .DocSearch-MagnifierLabel svg', {
+  width: 24,
+  height: 24,
+})
+
+globalStyle('.DocSearch-Form .DocSearch-Input', {
+  fontSize: '1.2em',
   padding: `${vars.space['5']} 11px`,
   background: 'transparent',
   color: vars.colors.black,
