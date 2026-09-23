@@ -1,7 +1,7 @@
-# syntax=docker/dockerfile:1.7
+# syntax=docker/dockerfile:1.27
 
 # ----- Build stage: install + build inside the full monorepo -----
-FROM node:24-alpine AS builder
+FROM node:24.21.0-alpine AS builder
 
 RUN corepack enable
 WORKDIR /repo
@@ -20,7 +20,7 @@ RUN pnpm --filter @react-spring/docs deploy --prod /out
 RUN cp -r /repo/docs/build /out/build
 
 # ----- Runtime stage: slim image with only what's needed to serve -----
-FROM node:24-alpine
+FROM node:24.21.0-alpine
 
 WORKDIR /app
 ENV NODE_ENV=production
