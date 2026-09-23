@@ -108,6 +108,7 @@ It is the recommended approach for working with this library.
 :::warning
 When using a `SpringRef` or `api` return from a hook, any updates to the hook's configuration object are treated as `updates` and therefore
 will not trigger the animation to run. You must call `.start()` to trigger the animation, thus flushing the update queue.
+The hook's `config` and event handlers (`onStart`, `onRest`, …) are applied straight away, so they're also used by `.start(props)` calls.
 :::
 
 ## Methods

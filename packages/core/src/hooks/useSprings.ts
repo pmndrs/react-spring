@@ -245,6 +245,15 @@ export function useSprings(
         // When an injected ref exists, the update is postponed
         // until the ref has its `start` method called.
         if (ctrl.ref) {
+          // Apply the implicit default props (`config`, events) now, as an
+          // unref'd update would, so `ref.start(props)` uses them even though
+          // it skips the queue. (see #2186)
+          if (is.obj(update.default)) {
+            ctrl.start({
+              config: update.default.config,
+              default: update.default,
+            })
+          }
           // Push a shallow copy so `flushUpdate` mutations (e.g. wrapping event
           // handlers for batching) do not leak back into `updates.current[i]`,
           // which is reused across renders and StrictMode double-mounts.
