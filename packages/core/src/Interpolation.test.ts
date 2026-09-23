@@ -60,6 +60,34 @@ describe('Interpolation', () => {
     })
   })
 
+  describe('when an input is set for the first time', () => {
+    it('updates when the input had no initial value', () => {
+      const a = new SpringValue<number>()
+      const c = to([a], (a: number) => a * 2)
+      const observer = vi.fn()
+      addFluidObserver(c, observer)
+
+      a.set(5)
+      global.mockRaf.flush()
+
+      expect(c.get()).toBe(10)
+      expect(observer).toBeCalled()
+    })
+
+    it('updates when the input had an initial value', () => {
+      const a = new SpringValue(0)
+      const c = to([a], (a: number) => a * 2)
+      const observer = vi.fn()
+      addFluidObserver(c, observer)
+
+      a.set(5)
+      global.mockRaf.flush()
+
+      expect(c.get()).toBe(10)
+      expect(observer).toBeCalled()
+    })
+  })
+
   describe('when all inputs are paused', () => {
     it('leaves the frameloop', () => {
       const a = new SpringValue({ from: 0, to: 1 })
