@@ -523,9 +523,7 @@ export function getSprings<State extends Lookup>(
         // Avoid passing array/function to each spring.
         props = { ...props, to: undefined }
       }
-      prepareSprings(springs as any, props, key => {
-        return createSpring(key)
-      })
+      prepareSprings(springs as any, props)
     })
   }
   setSprings(ctrl, springs)
@@ -548,12 +546,9 @@ export function setSprings(
   })
 }
 
-function createSpring(key: string, observer?: FluidObserver<FrameValue.Event>) {
+function createSpring(key: string) {
   const spring = new SpringValue()
   spring.key = key
-  if (observer) {
-    addFluidObserver(spring, observer)
-  }
   return spring
 }
 
@@ -561,17 +556,27 @@ function createSpring(key: string, observer?: FluidObserver<FrameValue.Event>) {
  * Ensure spring objects exist for each defined key.
  *
  * Using the `props`, the `Animated` node of each `SpringValue` may
- * be created or updated.
+ * be created or updated. Newly created springs are attached to the
+ * `observer` only after their node exists, so the initial value is
+ * never reported as a change.
  */
 function prepareSprings(
   springs: SpringValues,
   props: ControllerQueue[number],
-  create: (key: string) => SpringValue
+  observer?: FluidObserver<FrameValue.Event>
 ) {
   if (props.keys) {
     each(props.keys, key => {
-      const spring = springs[key] || (springs[key] = create(key))
-      spring['_prepareNode'](props)
+      let spring = springs[key]
+      if (spring) {
+        spring['_prepareNode'](props)
+      } else {
+        spring = springs[key] = createSpring(key)
+        spring['_prepareNode'](props)
+        if (observer) {
+          addFluidObserver(spring, observer)
+        }
+      }
     })
   }
 }
@@ -584,8 +589,6 @@ function prepareSprings(
  */
 function prepareKeys(ctrl: Controller<any>, queue: ControllerQueue[number][]) {
   each(queue, props => {
-    prepareSprings(ctrl.springs, props, key => {
-      return createSpring(key, ctrl)
-    })
+    prepareSprings(ctrl.springs, props, ctrl)
   })
 }
