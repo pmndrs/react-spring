@@ -62,7 +62,7 @@
     "@commitlint/config-conventional": "21.2.3",
     "@react-spring/mock-raf": "1.1.1",
     "@react-spring/parallax": "workspace:*",
-    "@react-three/fiber": "~9.7.0",
+    "@react-three/fiber": "~9.8.0",
     "@swc/core": "1.16.2",
     "@types/fs-extra": "11.0.4",
     "@types/lodash.clamp": "4.0.9",
