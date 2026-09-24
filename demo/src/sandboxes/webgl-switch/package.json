@@ -14,7 +14,7 @@
     "@react-spring/three": "*",
     "@react-spring/web": "*",
     "@react-three/drei": "~10.7.8",
-    "@react-three/fiber": "~9.7.0",
+    "@react-three/fiber": "~9.8.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-scripts": "5.0.1",
