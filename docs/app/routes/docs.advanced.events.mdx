@@ -121,6 +121,10 @@ type OnResume = (
 
 Called when the promise for the update is resolved.
 
+[`usePresenceList`](/docs/components/use-presence-list) and
+[`usePresence`](/docs/components/use-presence) don't accept a top-level
+`onResolve`. Set it inside `enter`, `update` or `leave` instead.
+
 ```ts
 type OnResolve = (
   result: AnimationResult,
@@ -142,7 +146,7 @@ type OnProps = (
 
 ## onDestroyed
 
-Called after a transition item is unmounted.
+Called after a [`useTransition`](/docs/components/use-transition) item is unmounted. Not supported by `usePresenceList` or `usePresence`.
 
 ```ts
 type OnDestroyed = (
@@ -164,4 +168,4 @@ interface AnimationResult {
 
 ### A note on `Item`
 
-The `Item` argument is only present when using the relevant events within the [`useTransition`](/docs/components/use-transition) hook.
+The `Item` argument is only present when using the relevant events within the [`usePresenceList`](/docs/components/use-presence-list) or [`useTransition`](/docs/components/use-transition) hooks.

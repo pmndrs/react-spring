@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useTransition, animated } from '@react-spring/web'
+import { usePresenceList, animated } from '@react-spring/web'
 import shuffle from 'lodash.shuffle'
 import data from './data'
 
@@ -13,10 +13,10 @@ function List() {
   }, [])
 
   let height = 0
-  const transitions = useTransition(
+  const entries = usePresenceList(
     rows.map(data => ({ ...data, y: (height += data.height) - data.height })),
     {
-      key: (item: any) => item.name,
+      keys: item => item.name,
       from: { height: 0, opacity: 0 },
       leave: { height: 0, opacity: 0 },
       enter: ({ y, height }) => ({ y, height, opacity: 1 }),
@@ -26,10 +26,11 @@ function List() {
 
   return (
     <div className={styles.list} style={{ height }}>
-      {transitions((style, item, t, index) => (
+      {entries.map(({ key, item, springs }, index) => (
         <animated.div
+          key={key}
           className={styles.card}
-          style={{ zIndex: data.length - index, ...style }}
+          style={{ zIndex: data.length - index, ...springs }}
         >
           <div className={styles.cell}>
             <div

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  useTransition,
+  usePresenceList,
   useSpring,
   useChain,
   config,
@@ -26,7 +26,7 @@ export default function App() {
   })
 
   const transApi = useSpringRef()
-  const transition = useTransition(open ? data : [], {
+  const entries = usePresenceList(open ? data : [], {
     ref: transApi,
     trail: 400 / data.length,
     from: { opacity: 0, scale: 0 },
@@ -47,10 +47,11 @@ export default function App() {
         className={styles.container}
         onClick={() => set(open => !open)}
       >
-        {transition((style, item) => (
+        {entries.map(({ key, item, springs }) => (
           <animated.div
+            key={key}
             className={styles.item}
-            style={{ ...style, background: item.css }}
+            style={{ ...springs, background: item.css }}
           />
         ))}
       </animated.div>

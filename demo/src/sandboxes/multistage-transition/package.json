@@ -1,10 +1,10 @@
 {
   "name": "Multistage Transitions",
-  "description": "Async animation scripts for entering and leaving using useTransition",
+  "description": "Async animation scripts for entering and leaving using usePresenceList",
   "keywords": [
     "async",
     "scripts",
-    "useTransition"
+    "usePresenceList"
   ],
   "version": "1.0.0",
   "main": "src/index.tsx",

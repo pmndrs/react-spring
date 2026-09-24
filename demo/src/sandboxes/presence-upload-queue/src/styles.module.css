@@ -1,0 +1,228 @@
+.page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: linear-gradient(160deg, #eef2ff 0%, #f8fafc 60%);
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: #0f172a;
+}
+
+.panel {
+  width: min(460px, 100%);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.05),
+    0 16px 48px rgba(15, 23, 42, 0.1);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 20px 20px 12px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.header span {
+  font-size: 13px;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+.list {
+  position: relative;
+  min-height: 96px;
+}
+
+.list ul {
+  margin: 0;
+  padding: 0 8px;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px 0 12px;
+  overflow: hidden;
+}
+
+.icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.details {
+  flex: 1;
+  min-width: 0;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.size {
+  flex: none;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  height: 4px;
+  border-radius: 2px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  background: #6366f1;
+  transform-origin: left;
+  /* Matches the 300ms upload tick, so progress moves at a constant speed. */
+  transition:
+    transform 300ms linear,
+    background-color 200ms;
+}
+
+.bar[data-done='true'] {
+  background: #22c55e;
+}
+
+.tick {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.remove {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 20px;
+  cursor: pointer;
+  transition:
+    transform 150ms,
+    background-color 150ms,
+    color 150ms;
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 16px 16px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.primary,
+.secondary {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 150ms,
+    background-color 150ms;
+}
+
+.primary {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.secondary {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.primary:disabled,
+.secondary:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.primary:not(:disabled):active,
+.secondary:not(:disabled):active,
+.remove:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .primary:not(:disabled):hover {
+    background: #4338ca;
+  }
+
+  .secondary:not(:disabled):hover {
+    background: #e2e8f0;
+  }
+
+  .remove:hover {
+    background: #f1f5f9;
+    color: #475569;
+  }
+}
+
+.primary:focus-visible,
+.secondary:focus-visible,
+.remove:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}

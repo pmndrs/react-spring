@@ -1,0 +1,180 @@
+.page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f4f5;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: #18181b;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 16px 16px 16px 20px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.wallet {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wallet div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wallet span:not(.avatar) {
+  font-size: 14px;
+  color: #71717a;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: conic-gradient(from 200deg, #f472b6, #a78bfa, #60a5fa, #f472b6);
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(24, 24, 27, 0.35);
+  backdrop-filter: blur(2px);
+}
+
+.positioner {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  pointer-events: none;
+}
+
+.dialog {
+  position: relative;
+  width: min(360px, 100%);
+  padding: 28px 24px 24px;
+  border-radius: 32px;
+  background: #fff;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+  pointer-events: auto;
+  outline: none;
+}
+
+.dialog h2 {
+  margin: 16px 0 8px;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.dialog p {
+  margin: 0 0 24px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #71717a;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fee2e2;
+  color: #ef4444;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: #f4f4f5;
+  color: #71717a;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    transform 150ms,
+    background-color 150ms;
+}
+
+/* Grows the hit area to 44×44 without changing how the button looks. */
+.close::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.danger,
+.secondary {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 150ms,
+    background-color 150ms;
+}
+
+.danger:active,
+.secondary:active,
+.close:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .danger:hover {
+    background: #dc2626;
+  }
+
+  .secondary:hover,
+  .close:hover {
+    background: #e4e4e7;
+  }
+}
+
+.danger {
+  background: #ef4444;
+  color: #fff;
+}
+
+.secondary {
+  background: #f4f4f5;
+  color: #18181b;
+}
+
+.danger:focus-visible,
+.secondary:focus-visible,
+.close:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}

@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react'
-import { useTransition, animated } from '@react-spring/web'
+import { usePresenceList, animated } from '@react-spring/web'
 
 import styles from './styles.module.css'
 
 export default function App() {
   const ref = useRef<ReturnType<typeof setTimeout>[]>([])
   const [items, set] = useState<string[]>([])
-  const transitions = useTransition(items, {
+  const entries = usePresenceList(items, {
     from: {
       opacity: 0,
       height: 0,
@@ -48,8 +48,9 @@ export default function App() {
   return (
     <div className={styles.container}>
       <div className={styles.main}>
-        {transitions(({ innerHeight, ...rest }, item) => (
+        {entries.map(({ key, item, springs: { innerHeight, ...rest } }) => (
           <animated.div
+            key={key}
             className={styles.transitionsItem}
             style={rest}
             onClick={reset}

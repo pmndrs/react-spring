@@ -37,6 +37,7 @@ import { SpringContext } from '../SpringContext'
 import { SpringRef } from '../SpringRef'
 import type { SpringRef as SpringRefType } from '../SpringRef'
 import { TransitionPhase } from '../TransitionPhase'
+import { getKeys } from '../presenceDiff'
 
 declare function setTimeout(handler: Function, timeout?: number): number
 declare function clearTimeout(timeoutId: number): void
@@ -58,6 +59,10 @@ type TransitionUpdate<Item, Props extends object> = EventfulProps<
   UseTransitionProps<Item>
 >
 
+/**
+ * @deprecated Use `usePresenceList` (or `usePresence` for a boolean), which
+ * returns entries to `.map` instead of a render function.
+ */
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
   props: () => TransitionUpdate<Item, Props>,
@@ -68,11 +73,19 @@ export function useTransition<Item, Props extends object>(
     : never
   : never
 
+/**
+ * @deprecated Use `usePresenceList` (or `usePresence` for a boolean), which
+ * returns entries to `.map` instead of a render function.
+ */
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
   props: TransitionUpdate<Item, Props>
 ): TransitionFn<Item, PickAnimated<Props>>
 
+/**
+ * @deprecated Use `usePresenceList` (or `usePresence` for a boolean), which
+ * returns entries to `.map` instead of a render function.
+ */
 export function useTransition<Item, Props extends object>(
   data: OneOrMore<Item>,
   props: TransitionUpdate<Item, Props>,
@@ -156,7 +169,11 @@ export function useTransition(
   // The `key` prop can be undefined (which means the items themselves are used
   // as keys), or a function (which maps each item to its key), or an array of
   // keys (which are assigned to each item by index).
-  const keys = getKeys(items, propsFn ? propsFn() : props, prevTransitions)
+  const {
+    key: keyAlias,
+    keys: keysProp = keyAlias,
+  }: { key?: ItemKeys; keys?: ItemKeys } = propsFn ? propsFn() : props
+  const keys = getKeys(items, keysProp, prevTransitions)
 
   // Expired transitions that need clean up.
   const expired = (reset && usedTransitions.current) || []
@@ -491,33 +508,4 @@ export function useTransition(
   )
 
   return ref ? [renderTransitions, ref] : renderTransitions
-}
-
-/** Local state for auto-generated item keys */
-let nextKey = 1
-
-function getKeys(
-  items: readonly any[],
-  { key, keys = key }: { key?: ItemKeys; keys?: ItemKeys },
-  prevTransitions: TransitionState[] | null
-): readonly any[] {
-  if (keys === null) {
-    const reused = new Set()
-    return items.map(item => {
-      const t =
-        prevTransitions &&
-        prevTransitions.find(
-          t =>
-            t.item === item &&
-            t.phase !== TransitionPhase.LEAVE &&
-            !reused.has(t)
-        )
-      if (t) {
-        reused.add(t)
-        return t.key
-      }
-      return nextKey++
-    })
-  }
-  return is.und(keys) ? items : is.fun(keys) ? items.map(keys) : toArray(keys)
 }

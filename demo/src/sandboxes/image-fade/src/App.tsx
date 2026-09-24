@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useTransition, animated } from '@react-spring/web'
+import { usePresenceList, animated } from '@react-spring/web'
 import styles from './styles.module.css'
 
 const slides = [
@@ -11,8 +11,7 @@ const slides = [
 
 export default function App() {
   const [index, set] = React.useState(0)
-  const transitions = useTransition(index, {
-    key: index,
+  const entries = usePresenceList(index, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
@@ -22,16 +21,17 @@ export default function App() {
         set(state => (state + 1) % slides.length)
       }
     },
-    exitBeforeEnter: true,
+    mode: 'wait',
   })
   return (
     <div className="flex fill center">
-      {transitions((style, i) => (
+      {entries.map(({ key, item, springs }) => (
         <animated.div
+          key={key}
           className={styles.bg}
           style={{
-            ...style,
-            backgroundImage: `url(https://images.unsplash.com/${slides[i]}?w=1920&q=80&auto=format&fit=crop)`,
+            ...springs,
+            backgroundImage: `url(https://images.unsplash.com/${slides[item]}?w=1920&q=80&auto=format&fit=crop)`,
           }}
         />
       ))}

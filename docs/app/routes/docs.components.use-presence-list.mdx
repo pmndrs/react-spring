@@ -1,0 +1,232 @@
+---
+meta:
+  title: usePresenceList | React Spring
+  'og:title': usePresenceList | React Spring
+  'twitter:title': usePresenceList | React Spring
+  description: API documentation for the usePresenceList hook in React Spring.
+  'og:description': API documentation for the usePresenceList hook in React Spring.
+  'twitter:description': API documentation for the usePresenceList hook in React Spring.
+  'og:url': https://www.react-spring.dev/docs/components/use-presence-list
+  'twitter:url': https://www.react-spring.dev/docs/components/use-presence-list
+sidebar_position: 4
+isNew: true
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# usePresenceList
+
+Animate items as they are added to and removed from a list. Removed items stay
+in the returned entries until their `leave` animation has finished, so you can
+render them like any other array.
+
+For a single element that is shown or hidden by a boolean, e.g. a dialog, use
+[`usePresence`](/docs/components/use-presence).
+
+## Usage
+
+The first argument is your data, an array or a single item. The second is a
+config object describing the `from`, `enter`, `update` and `leave` states of
+each item.
+
+### With a config object
+
+```jsx lines=1,4-8,10-14
+import { usePresenceList, animated } from '@react-spring/web'
+
+function MyComponent({ data = [1, 2, 3] }) {
+  const entries = usePresenceList(data, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+  })
+
+  return entries.map(({ key, item, springs }) => (
+    <animated.div key={key} style={springs}>
+      {item}
+    </animated.div>
+  ))
+}
+```
+
+### With a function & deps
+
+Passing a function or a `deps` array returns a tuple with a
+[`SpringRef`](/docs/advanced/spring-ref), which you can use to control every
+entry at once.
+
+```jsx lines=1,4-12,14
+import { usePresenceList, animated } from '@react-spring/web'
+
+function MyComponent({ data = [1, 2, 3] }) {
+  const [entries, api] = usePresenceList(
+    data,
+    () => ({
+      from: { opacity: 0 },
+      enter: { opacity: 1 },
+      leave: { opacity: 0 },
+    }),
+    []
+  )
+
+  const fadeAll = () => api.start({ opacity: 0.5 })
+
+  return entries.map(({ key, item, springs }) => (
+    <animated.div key={key} style={springs} onClick={fadeAll}>
+      {item}
+    </animated.div>
+  ))
+}
+```
+
+`deps` only hold back `update`. Items still enter and leave when `data`
+changes, even if `deps` have not.
+
+### Entries
+
+Each entry has:
+
+- `key`, pass it to the element you render so React keeps it mounted while it
+  animates.
+- `item`, the datum from your data, or the last one seen for a leaving entry.
+- `springs`, the animated values to pass to an `animated` element.
+- `phase`, one of `'enter'`, `'update'` or `'leave'`.
+
+### Keys
+
+By default each item is its own key, which works for strings and numbers. For
+objects, pass `keys` a function returning a unique string or number, or an
+array of keys in the same order as your data.
+
+Pass `keys: null` to give every change a new key. This is useful when your
+data is a single value, such as an index, and a value coming back should enter
+as a new entry instead of reversing the one that is leaving.
+
+```jsx
+const entries = usePresenceList(index, {
+  keys: null,
+  from: { opacity: 0 },
+  enter: { opacity: 1 },
+  leave: { opacity: 0 },
+})
+```
+
+### Waiting for leaving items
+
+With `mode: 'wait'`, new items are only added once every leaving item has
+finished its `leave` animation. Use it to crossfade one item out before the
+next one comes in.
+
+```jsx
+const entries = usePresenceList(index, {
+  mode: 'wait',
+  from: { opacity: 0 },
+  enter: { opacity: 1 },
+  leave: { opacity: 0 },
+})
+```
+
+### Config & delay
+
+The top-level `config` and `delay` are passed to every spring, so a function
+is called with the spring's key, as with [`useSpring`](/docs/components/use-spring).
+`trail` adds its offset on top of `delay`.
+
+```jsx
+const entries = usePresenceList(items, {
+  from: { opacity: 0, x: -20 },
+  enter: { opacity: 1, x: 0 },
+  config: key => (key === 'x' ? { tension: 300 } : { duration: 200 }),
+})
+```
+
+For a config or delay specific to an item or phase, set it inside `enter`,
+`update` or `leave`, or inside a `next` call of an async animation:
+
+```jsx
+const entries = usePresenceList(items, {
+  from: { opacity: 0, life: '100%' },
+  enter: item => async next => {
+    await next({ opacity: 1, delay: item.delay })
+    await next({ life: '0%', config: { duration: 3000 } })
+  },
+  leave: { opacity: 0 },
+})
+```
+
+### Keeping leaving items
+
+By default an entry is removed once its `leave` animation has finished. With
+`expires: false`, leaving entries are kept in the returned entries instead.
+
+### Resetting
+
+While `reset` is `true`, every render drops all entries, including leaving
+ones, without a `leave` animation. The current items then enter again from
+`initial`, or from `from` when `initial` is not set.
+
+## Reference
+
+`Item` is inferred from the data you pass as the first argument. If you passed
+`[1, 2, 3]` then `Item` would be `number`.
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { PRESENCE_LIST_CONFIG_DATA } from '../data/fixtures'
+
+<TablesConfiguration data={PRESENCE_LIST_CONFIG_DATA} />
+
+## Typescript
+
+```tsx
+function usePresenceList<Item>(
+  data: Item | Item[],
+  configuration: ConfigObject
+): PresenceEntry<Item>[]
+
+function usePresenceList<Item>(
+  data: Item | Item[],
+  configurationFn: () => ConfigObject,
+  deps?: any[]
+): [entries: PresenceEntry<Item>[], api: SpringRef]
+
+function usePresenceList<Item>(
+  data: Item | Item[],
+  configuration: ConfigObject,
+  deps: any[]
+): [entries: PresenceEntry<Item>[], api: SpringRef]
+
+interface PresenceEntry<Item, State> {
+  key: string | number
+  item: Item
+  springs: SpringValues<State>
+  phase: 'enter' | 'update' | 'leave'
+}
+```
+
+Where `ConfigObject` is described [above](#reference)
+
+### TS Glossary
+
+- [`SpringValues`](/docs/typescript#springvalues)
+
+## Examples
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid
+  sandboxTitles={[
+    'Basic Transition',
+    'Chaining Transition and a Spring',
+    'Exit Before Enter',
+    'Presence Upload Queue',
+    'Image Fade',
+    'List Reordering',
+    'Masonry Grid',
+    'Multistage Transitions',
+    'Notification Hub',
+  ]}
+/>
+
+Can't find what you're looking for? Check out all our [examples!](/examples)

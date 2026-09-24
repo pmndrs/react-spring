@@ -1,34 +1,19 @@
 import * as React from 'react'
-import {
-  useTransition,
-  animated,
-  AnimatedProps,
-  useSpringRef,
-} from '@react-spring/web'
+import { usePresenceList, animated, useSpringRef } from '@react-spring/web'
 
 import styles from './styles.module.css'
 
-const pages: ((
-  props: AnimatedProps<{ style: React.CSSProperties }>
-) => React.ReactElement)[] = [
-  ({ style }) => (
-    <animated.div style={{ ...style, background: 'lightpink' }}>A</animated.div>
-  ),
-  ({ style }) => (
-    <animated.div style={{ ...style, background: 'lightblue' }}>B</animated.div>
-  ),
-  ({ style }) => (
-    <animated.div style={{ ...style, background: 'lightgreen' }}>
-      C
-    </animated.div>
-  ),
+const pages = [
+  { label: 'A', background: 'lightpink' },
+  { label: 'B', background: 'lightblue' },
+  { label: 'C', background: 'lightgreen' },
 ]
 
 export default function App() {
   const [index, set] = React.useState(0)
   const onClick = () => set(state => (state + 1) % 3)
   const transRef = useSpringRef()
-  const transitions = useTransition(index, {
+  const entries = usePresenceList(index, {
     ref: transRef,
     keys: null,
     from: { opacity: 0, transform: 'translate3d(100%,0,0)' },
@@ -40,10 +25,14 @@ export default function App() {
   }, [index, transRef])
   return (
     <div className={`flex fill ${styles.container}`} onClick={onClick}>
-      {transitions((style, i) => {
-        const Page = pages[i]
-        return <Page style={style} />
-      })}
+      {entries.map(({ key, item, springs }) => (
+        <animated.div
+          key={key}
+          style={{ ...springs, background: pages[item].background }}
+        >
+          {pages[item].label}
+        </animated.div>
+      ))}
     </div>
   )
 }

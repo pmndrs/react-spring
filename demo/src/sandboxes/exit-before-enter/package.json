@@ -1,10 +1,10 @@
 {
   "name": "Exit Before Enter",
-  "description": "Showcasing the exitBeforeEnter prop and animated clip-paths to give a wipe effect",
+  "description": "Showcasing mode: 'wait' and animated clip-paths to give a wipe effect",
   "keywords": [
-    "useTransition",
+    "usePresenceList",
     "useSpring",
-    "exitBeforeEnter",
+    "wait",
     "paths",
     "SpringRef"
   ],

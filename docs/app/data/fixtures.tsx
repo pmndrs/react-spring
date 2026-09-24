@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+import type { ReactNode } from 'react'
 import { DiscordLogo, GithubLogo, TwitterLogo } from 'phosphor-react'
 import type { Quote } from '~/components/Cards/CardCarouselQuote'
 import { Tile } from '~/components/Grids/NavigationGrid'
@@ -760,6 +761,201 @@ export const TRANSITION_CONFIG_DATA: CellData[][] = [
     },
   ],
   EVENTS_CELL,
+]
+
+const presenceRows = (args: string): CellData[][] => [
+  [
+    'from',
+    {
+      label: 'object | function',
+      content: <code>{`(${args}) => object`}</code>,
+    },
+    null,
+  ],
+  [
+    {
+      label: 'initial',
+      content: (
+        <p>
+          Used instead of <code>from</code> on mount and after a{' '}
+          <code>reset</code>. Use <code>null</code> to skip the{' '}
+          <code>enter</code> animation then.
+        </p>
+      ),
+    },
+    {
+      label: 'object | function | null',
+      content: <code>{`(${args}) => object`}</code>,
+    },
+    null,
+  ],
+  ...(['enter', 'update', 'leave'] as const).map((phase): CellData[] => [
+    {
+      label: phase,
+      content: (
+        <p>
+          The styles to animate to in the <code>{phase}</code> phase. May also
+          set <code>config</code>, <code>delay</code> and event props for this
+          phase.
+        </p>
+      ),
+    },
+    {
+      label: 'object | object[] | function',
+      content: (
+        <code>{`(${args}) => object | object[] | (next: (props?: object) => Promise<void>, cancel: () => void) => Promise<void>`}</code>
+      ),
+    },
+    null,
+  ]),
+]
+
+const presenceRefCell = (content: ReactNode): CellData[] => [
+  { label: 'ref', content },
+  'SpringRef',
+  null,
+]
+
+const presenceSharedRows: CellData[][] = [
+  [
+    {
+      label: 'reset',
+      content: (
+        <p>
+          While <code>true</code>, every render drops all entries without a{' '}
+          <code>leave</code> animation and the current items enter again from{' '}
+          <code>initial</code>, or <code>from</code>.
+        </p>
+      ),
+    },
+    'boolean',
+    'false',
+  ],
+  [
+    {
+      label: 'expires',
+      content: (
+        <p>
+          When <code>false</code>, leaving entries are kept after their{' '}
+          <code>leave</code> animation has finished.
+        </p>
+      ),
+    },
+    'boolean',
+    'true',
+  ],
+  [
+    {
+      label: 'delay',
+      content: (
+        <p>
+          Delay in ms before the animation starts, passed to every spring. For
+          an item-specific delay, set <code>delay</code> in a phase.
+        </p>
+      ),
+    },
+    {
+      label: 'number | function',
+      content: <code>{`(key: string) => number`}</code>,
+    },
+    null,
+  ],
+  [
+    {
+      label: 'config',
+      content: (
+        <p>
+          Spring config (mass / tension etc.) passed to every spring, see{' '}
+          <a href="/docs/advanced/config">Config</a> for more information. For a
+          phase-specific config, set <code>config</code> in a phase.
+        </p>
+      ),
+    },
+    {
+      label: 'object | function',
+      content: <code>{`(key: string) => SpringConfig`}</code>,
+    },
+    {
+      label: 'object',
+      content: <code>{`{ mass: 1, tension: 170, friction: 26 }`}</code>,
+    },
+  ],
+  EVENTS_CELL,
+]
+
+export const PRESENCE_LIST_CONFIG_DATA: CellData[][] = [
+  ...presenceRows('item: Item, index: number'),
+  [
+    {
+      label: 'keys',
+      content: (
+        <p>
+          Each item is its own key by default. Use <code>null</code> to give
+          every change a new key.
+        </p>
+      ),
+    },
+    {
+      label: 'Array<string | number> | function | null',
+      content: <code>{`(item: Item) => string | number`}</code>,
+    },
+    null,
+  ],
+  [
+    'sort',
+    {
+      label: 'function',
+      content: <code>{`(a: Item, b: Item) => number`}</code>,
+    },
+    null,
+  ],
+  ['trail', 'number', '0'],
+  [
+    {
+      label: 'reverse',
+      content: (
+        <p>
+          Reverses the order in which <code>trail</code> delays are assigned to
+          changing entries. Does not affect the order of entries, use{' '}
+          <code>sort</code> for that.
+        </p>
+      ),
+    },
+    'boolean',
+    'false',
+  ],
+  [
+    {
+      label: 'mode',
+      content: (
+        <p>
+          With <code>'wait'</code>, new items are only added once every leaving
+          entry has finished its <code>leave</code> animation.
+        </p>
+      ),
+    },
+    "'sync' | 'wait'",
+    "'sync'",
+  ],
+  presenceRefCell(
+    <p>
+      Used to access the imperative API. Animations never auto-start when{' '}
+      <code>ref</code> is defined, except items held back by{' '}
+      <code>mode: 'wait'</code>, which start once the leaving items finish.
+    </p>
+  ),
+  ...presenceSharedRows,
+]
+
+export const PRESENCE_CONFIG_DATA: CellData[][] = [
+  ...presenceRows(''),
+  presenceRefCell(
+    <p>
+      Used to access the imperative API. Animations never auto-start when{' '}
+      <code>ref</code> is defined.
+    </p>
+  ),
+  ...presenceSharedRows,
 ]
 
 export const SPRINGVALUE_PROPERTIES_DATA: CellData[][] = [
