@@ -46,6 +46,21 @@ it('usePresenceList infers the animated state from function-style props', () => 
   expectTypeOf(scenario).toBeFunction()
 })
 
+it('usePresenceList infers the animated state from mixed chained phases (#2589)', () => {
+  function scenario() {
+    const entries = usePresenceList([1], {
+      from: { opacity: 0, height: 0 },
+      enter: { opacity: 1, height: 10 },
+      leave: [{ opacity: 0 }, { height: 0 }],
+    })
+    expectTypeOf(entries[0].springs.opacity).toEqualTypeOf<
+      SpringValue<number>
+    >()
+    expectTypeOf(entries[0].springs.height).toEqualTypeOf<SpringValue<number>>()
+  }
+  expectTypeOf(scenario).toBeFunction()
+})
+
 it('usePresenceList returns a ref with function props or deps', () => {
   function scenario() {
     const withFn = usePresenceList([1], () => ({

@@ -106,13 +106,34 @@ export type AnyFn<In extends ReadonlyArray<any> = any[], Out = any> = (
 export type ObjectType<T> = T extends object ? T : {}
 
 /** Intersect a union of objects but merge property types with _unions_ */
-export type ObjectFromUnion<T extends object> = Remap<{
+export type ObjectFromUnion<T extends object> = MergeUnion<
+  OmitUndefinedMarkers<T>
+>
+
+type MergeUnion<T> = Remap<{
   [P in keyof Intersect<T>]: T extends infer U
     ? P extends keyof U
       ? U[P]
       : never
     : never
 }>
+
+/**
+ * A union of object literals (`[{ a: 0 }, { b: 0 }]`, `c ? { a: 0 } : { b: 0 }`)
+ * gets `?: undefined` for the other members' keys, which would make
+ * `Intersect` collapse to `never`
+ */
+type OmitUndefinedMarkers<T> = T extends any
+  ? {
+      [
+        P in keyof T as [T[P]] extends [undefined]
+          ? {} extends Pick<T, P>
+            ? never
+            : P
+          : P
+      ]: T[P]
+    }
+  : never
 
 /** Convert a union to an intersection */
 type Intersect<U> = (U extends any ? (k: U) => void : never) extends (
