@@ -76,3 +76,37 @@ it('#1483: useTransition infers animated state from function-style props', () =>
   }
   expectTypeOf(scenario).toBeFunction()
 })
+
+/**
+ * Guard for #2589. A phase that is an array of mixed objects, or a ternary
+ * between objects with different keys, is typed by TypeScript as a union whose
+ * members mark each other's keys `?: undefined`. That must not collapse the
+ * animated state to `SpringValue<unknown>`.
+ */
+it('#2589: useTransition infers animated state from array or ternary phases', () => {
+  function scenario(flag: boolean) {
+    const items: number[] = [1, 2, 3]
+    const chained = useTransition(items, {
+      from: { opacity: 0, height: 0 },
+      enter: { opacity: 1, height: 10 },
+      leave: [{ opacity: 0 }, { height: 0 }],
+    })
+    chained(styles => {
+      expectTypeOf(styles.opacity).toEqualTypeOf<SpringValue<number>>()
+      expectTypeOf(styles.height).toEqualTypeOf<SpringValue<number>>()
+      return null
+    })
+
+    const ternary = useTransition(items, {
+      from: { opacity: 0, x: 0 },
+      enter: { opacity: 1, x: 0 },
+      leave: flag ? { opacity: 0 } : { opacity: 0, x: 10 },
+    })
+    ternary(styles => {
+      expectTypeOf(styles.opacity).toEqualTypeOf<SpringValue<number>>()
+      expectTypeOf(styles.x).toEqualTypeOf<SpringValue<number>>()
+      return null
+    })
+  }
+  expectTypeOf(scenario).toBeFunction()
+})
