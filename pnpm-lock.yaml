@@ -276,7 +276,7 @@ importers:
         version: 10.3.1(react@19.3.0)
       '@vitejs/plugin-react':
         specifier: 6.1.1
-        version: 6.1.1(vite@8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.104.1)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0))
+        version: 6.1.1(vite@8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0))
       easing-coordinates:
         specifier: 2.0.2
         version: 2.0.2
@@ -311,8 +311,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(styled-components@6.5.3(react-dom@19.3.0(react@19.3.0))(react-native@0.85.3(@babel/core@7.29.7(supports-color@10.2.2))(@types/react@19.3.0)(react@19.3.0)(supports-color@10.2.2))(react@19.3.0))
       sass:
-        specifier: 1.104.1
-        version: 1.104.1
+        specifier: 1.105.0
+        version: 1.105.0
       styled-components:
         specifier: 6.5.3
         version: 6.5.3(react-dom@19.3.0(react@19.3.0))(react-native@0.85.3(@babel/core@7.29.7(supports-color@10.2.2))(@types/react@19.3.0)(react@19.3.0)(supports-color@10.2.2))(react@19.3.0)
@@ -5534,8 +5534,8 @@ packages:
     engines: {node: '>=20.19.0'}
     hasBin: true
 
-  sass@1.104.1:
-    resolution: {integrity: sha512-yDA+1aIG3EHgN4V/BvuhCvu61FF6hEd4e+9DxikUm9U0CAGuvdIZ/UYy7qbOxjhbbWQraoyLlMuzdRGOSV5Bmw==}
+  sass@1.105.0:
+    resolution: {integrity: sha512-4EjSuRTyG8M4yRXXY1PT9OUV5zz23xBxJkbIAprohKHqf6HOU4MCpE3U3vAC+iO1gxobBjESNbcj8rYAQZWnyA==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -8937,10 +8937,10 @@ snapshots:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.100.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
 
-  '@vitejs/plugin-react@6.1.1(vite@8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.104.1)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0))':
+  '@vitejs/plugin-react@6.1.1(vite@8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.104.1)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
+      vite: 8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
 
   '@vitest/browser-playwright@5.0.1(playwright@1.63.0)(vite@8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.100.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0))(vitest@5.0.1)':
     dependencies:
@@ -11798,7 +11798,7 @@ snapshots:
       '@parcel/watcher': 2.5.6
     optional: true
 
-  sass@1.104.1:
+  sass@1.105.0:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.5
@@ -12443,7 +12443,7 @@ snapshots:
       tsx: 4.23.15
       yaml: 2.9.0
 
-  vite@8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.104.1)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0):
+  vite@8.3.1(@types/node@25.9.1)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -12455,7 +12455,7 @@ snapshots:
       esbuild: 0.28.2
       fsevents: 2.3.3
       jiti: 2.6.1
-      sass: 1.104.1
+      sass: 1.105.0
       terser: 5.48.0
       tsx: 4.22.3
       yaml: 2.9.0
