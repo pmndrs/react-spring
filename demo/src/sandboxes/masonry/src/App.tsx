@@ -1,6 +1,6 @@
 import * as React from 'react'
 import useMeasure from 'react-use-measure'
-import { useTransition, a } from '@react-spring/web'
+import { usePresenceList, a } from '@react-spring/web'
 import shuffle from 'lodash.shuffle'
 
 import useMedia from './useMedia'
@@ -42,8 +42,8 @@ function Masonry() {
     return [heights, gridItems]
   }, [columns, items, width])
   // Hook6: Turn the static grid values into animated transitions, any addition, removal or change will be animated
-  const transitions = useTransition(gridItems, {
-    key: (item: { css: string; height: number }) => item.css,
+  const entries = usePresenceList(gridItems, {
+    keys: item => item.css,
     from: ({ x, y, width, height }) => ({ x, y, width, height, opacity: 0 }),
     enter: ({ x, y, width, height }) => ({ x, y, width, height, opacity: 1 }),
     update: ({ x, y, width, height }) => ({ x, y, width, height }),
@@ -58,8 +58,8 @@ function Masonry() {
       className={styles.list}
       style={{ height: Math.max(...heights) }}
     >
-      {transitions((style, item) => (
-        <a.div style={style}>
+      {entries.map(({ key, item, springs }) => (
+        <a.div key={key} style={springs}>
           <div
             style={{
               backgroundImage: `url(${item.css}?auto=compress&dpr=2&h=500&w=500)`,

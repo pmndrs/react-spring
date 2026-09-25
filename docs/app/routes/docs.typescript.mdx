@@ -111,7 +111,7 @@ instance, not the underlying primitive — so a prop typed as `CSSProperties` wi
 reject them. Type the receiving prop as `SpringValues` instead:
 
 ```tsx
-import { animated, SpringValues, useTransition } from '@react-spring/web'
+import { animated, SpringValues } from '@react-spring/web'
 
 const Item = ({ styles }: { styles: SpringValues<{ opacity: number }> }) => (
   <animated.div style={styles}>Hello</animated.div>

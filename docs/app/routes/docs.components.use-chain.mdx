@@ -8,7 +8,7 @@ meta:
   'twitter:description': API documentation for the useChain hook in React Spring.
   'og:url': https://www.react-spring.dev/docs/components/use-chain
   'twitter:url': https://www.react-spring.dev/docs/components/use-chain
-sidebar_position: 5
+sidebar_position: 7
 ---
 
 import { formatFrontmatterToRemixMeta } from '../helpers/meta'
@@ -19,17 +19,17 @@ export const meta = formatFrontmatterToRemixMeta(frontmatter)
 
 `useChain` is used to orchestrate animation hooks in sequence with one another.
 This is best used when you specifically want to orchestrate different types of
-animation hook e.g. [`useSpring`](/docs/components/use-spring) & [`useTransition`](/docs/components/use-transition)
+animation hook e.g. [`useSpring`](/docs/components/use-spring) & [`usePresenceList`](/docs/components/use-presence-list)
 in sequence as opposed to multiple `useSpring` hooks where you _could_ either use
 [`useSprings`](/docs/components/use-springs) or create an [async animation](/docs/advanced/async-animations).
 
 ## Usage
 
-This will first run the `useSpring` hook and then the `useTransition` hook when the component has mounted and the `useSpring` has come to rest.
+This will first run the `useSpring` hook and then the `usePresenceList` hook when the component has mounted and the `useSpring` has come to rest.
 
 ```jsx lines=1-2,6,8,13,15,21
 import {
-  useTransition,
+  usePresenceList,
   useSpring,
   useChain,
   animated,
@@ -47,7 +47,7 @@ function MyComponent() {
   })
 
   const transRef = useSpringRef()
-  const transitions = useTransition(data, {
+  const entries = usePresenceList(data, {
     ref: transRef,
     from: { scale: 0 },
     enter: { scale: 1 },
@@ -64,8 +64,9 @@ function MyComponent() {
         background: 'blue',
       }}
     >
-      {transitions((style, item) => (
+      {entries.map(({ key, item, springs: style }) => (
         <animated.div
+          key={key}
           style={{
             width: '120px',
             height: '120px',

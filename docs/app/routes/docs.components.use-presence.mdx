@@ -1,0 +1,152 @@
+---
+meta:
+  title: usePresence | React Spring
+  'og:title': usePresence | React Spring
+  'twitter:title': usePresence | React Spring
+  description: API documentation for the usePresence hook in React Spring.
+  'og:description': API documentation for the usePresence hook in React Spring.
+  'twitter:description': API documentation for the usePresence hook in React Spring.
+  'og:url': https://www.react-spring.dev/docs/components/use-presence
+  'twitter:url': https://www.react-spring.dev/docs/components/use-presence
+sidebar_position: 5
+isNew: true
+---
+
+import { formatFrontmatterToRemixMeta } from '../helpers/meta'
+
+export const meta = formatFrontmatterToRemixMeta(frontmatter)
+
+# usePresence
+
+Animate a single element in when a boolean becomes `true`, and out when it
+becomes `false`. The element stays mounted until its `leave` animation has
+finished, which makes it a good fit for dialogs, menus and tooltips.
+
+For lists, use [`usePresenceList`](/docs/components/use-presence-list).
+
+## Usage
+
+The first argument is whether the element should be shown. The second is a
+config object describing its `from`, `enter`, `update` and `leave` states.
+
+### With a config object
+
+```jsx lines=1,4-8,10
+import { usePresence, animated } from '@react-spring/web'
+
+function Dialog({ isOpen }) {
+  const presence = usePresence(isOpen, {
+    from: { opacity: 0, scale: 0.9 },
+    enter: { opacity: 1, scale: 1 },
+    leave: { opacity: 0, scale: 0.9 },
+  })
+
+  return presence && <animated.div style={presence.springs}>Hello</animated.div>
+}
+```
+
+`usePresence` returns `null` when `isOpen` is `false` and the `leave`
+animation has finished, unless `expires` is `false`, in which case it keeps
+returning the leaving element. Otherwise it returns:
+
+- `springs`, the animated values to pass to an `animated` element.
+- `phase`, one of `'enter'`, `'update'` or `'leave'`.
+
+### With a function & deps
+
+Passing a function or a `deps` array returns a tuple with a
+[`SpringRef`](/docs/advanced/spring-ref).
+
+```jsx lines=1,4-12
+import { usePresence, animated } from '@react-spring/web'
+
+function Dialog({ isOpen }) {
+  const [presence, api] = usePresence(
+    isOpen,
+    () => ({
+      from: { opacity: 0 },
+      enter: { opacity: 1 },
+      leave: { opacity: 0 },
+    }),
+    []
+  )
+
+  return presence && <animated.div style={presence.springs}>Hello</animated.div>
+}
+```
+
+`deps` only hold back `update`. The element still enters and leaves when
+`isOpen` changes, even if `deps` have not.
+
+### Config & delay
+
+The top-level `config` and `delay` are passed to every spring, so a function
+is called with the spring's key. To use a different config for entering and
+leaving, set it inside `enter` or `leave`:
+
+```jsx
+const presence = usePresence(isOpen, {
+  from: { opacity: 0 },
+  enter: { opacity: 1, config: { tension: 300 } },
+  leave: { opacity: 0, config: { duration: 150 } },
+})
+```
+
+### Resetting
+
+While `reset` is `true`, every render drops the element, even while it is
+leaving, without a `leave` animation. If `show` is `true`, it then enters
+again from `initial`, or from `from` when `initial` is not set.
+
+## Reference
+
+import { TablesConfiguration } from '../components/Tables/TablesConfig'
+import { PRESENCE_CONFIG_DATA } from '../data/fixtures'
+
+<TablesConfiguration data={PRESENCE_CONFIG_DATA} />
+
+## Typescript
+
+```tsx
+function usePresence(
+  show: boolean,
+  configuration: ConfigObject
+): Presence | null
+
+function usePresence(
+  show: boolean,
+  configurationFn: () => ConfigObject,
+  deps?: any[]
+): [presence: Presence | null, api: SpringRef]
+
+function usePresence(
+  show: boolean,
+  configuration: ConfigObject,
+  deps: any[]
+): [presence: Presence | null, api: SpringRef]
+
+interface Presence<State> {
+  springs: SpringValues<State>
+  phase: 'enter' | 'update' | 'leave'
+}
+```
+
+Where `ConfigObject` is described [above](#reference)
+
+### TS Glossary
+
+- [`SpringValues`](/docs/typescript#springvalues)
+
+## Examples
+
+import { ExampleGrid } from '../components/Grids/ExampleGrid'
+
+<ExampleGrid
+  sandboxTitles={[
+    'Presence WebGL',
+    'Presence Dialog',
+    'Presence Upload Queue',
+  ]}
+/>
+
+Can't find what you're looking for? Check out all our [examples!](/examples)

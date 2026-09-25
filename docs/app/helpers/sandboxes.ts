@@ -13,6 +13,8 @@ const COMPONENT_TAGS = [
   'useTrail',
   'useChain',
   'useTransition',
+  'usePresence',
+  'usePresenceList',
   'Parallax',
   'useSpringValue',
   'useSpringRef',

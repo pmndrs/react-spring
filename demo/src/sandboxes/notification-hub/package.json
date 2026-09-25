@@ -1,10 +1,10 @@
 {
   "name": "Notification Hub",
-  "description": "Creating toast notifications with useTransition",
+  "description": "Creating toast notifications with usePresenceList",
   "keywords": [
     "notifications",
     "toast",
-    "useTransition"
+    "usePresenceList"
   ],
   "version": "1.0.0",
   "main": "src/index.tsx",

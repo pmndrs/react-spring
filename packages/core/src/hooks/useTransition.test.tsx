@@ -121,6 +121,34 @@ describe('useTransition', () => {
     })
   })
 
+  describe('when "keys" is null', () => {
+    it('generates keys and reuses them for identical items', async () => {
+      let keys: any[] = []
+      const update = createUpdater(({ args }) => {
+        const transition = toArray(useTransition(...args))[0]
+        keys = []
+        transition((_, _item, t) => {
+          keys.push(t.key)
+          return null
+        })
+        return null
+      })
+
+      const a = {}
+      const b = {}
+      const props = { keys: null, from: { n: 0 }, enter: { n: 1 } }
+
+      await update([a], props)
+      const [keyA] = keys
+      expect(typeof keyA).toBe('number')
+
+      await update([a, b], props)
+      expect(keys[0]).toBe(keyA)
+      expect(typeof keys[1]).toBe('number')
+      expect(keys[1]).not.toBe(keyA)
+    })
+  })
+
   it('assign controllers to provided "ref"', async () => {
     const ref = SpringRef()
     const props = {

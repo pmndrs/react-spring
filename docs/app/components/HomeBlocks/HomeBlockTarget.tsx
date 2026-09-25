@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { animated, useTransition } from '@react-spring/web'
+import { animated, usePresenceList } from '@react-spring/web'
 
 import { HomeBlockCopy } from './HomeBlockCopy'
 import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicEffect'
@@ -45,7 +45,7 @@ const dataFixtures = [webHtml, threeHtml]
 export const HomeBlockTarget = () => {
   const [index, setIndex] = useState(0)
 
-  const transition = useTransition(index, {
+  const entries = usePresenceList(index, {
     from: {
       opacity: 0,
     },
@@ -99,11 +99,12 @@ export const HomeBlockTarget = () => {
             visibility: 'hidden',
           }}
         />
-        {transition((style, i) => (
+        {entries.map(({ key, item, springs }) => (
           <animated.code
+            key={key}
             className="language-jsx"
-            dangerouslySetInnerHTML={{ __html: dataFixtures[i] }}
-            style={{ ...style, position: 'absolute', top: 30, left: 30 }}
+            dangerouslySetInnerHTML={{ __html: dataFixtures[item] }}
+            style={{ ...springs, position: 'absolute', top: 30, left: 30 }}
           />
         ))}
       </pre>

@@ -8,7 +8,7 @@ meta:
   'twitter:description': API documentation for the useTransition hook in React Spring.
   'og:url': https://www.react-spring.dev/docs/components/use-transition
   'twitter:url': https://www.react-spring.dev/docs/components/use-transition
-sidebar_position: 4
+sidebar_position: 6
 ---
 
 import { formatFrontmatterToRemixMeta } from '../helpers/meta'
@@ -16,6 +16,13 @@ import { formatFrontmatterToRemixMeta } from '../helpers/meta'
 export const meta = formatFrontmatterToRemixMeta(frontmatter)
 
 # useTransition
+
+:::warning
+`useTransition` and `<Transition>` are deprecated. Use
+[`usePresenceList`](/docs/components/use-presence-list) for lists and
+[`usePresence`](/docs/components/use-presence) for a single element shown by a
+boolean. See [migrating](#migrating-to-usepresencelist) below.
+:::
 
 This hook is best suited for animating in & out datasets or items you don't particularly
 want to be left in the DOM, e.g. a dialog.
@@ -111,21 +118,97 @@ Where `ConfigObject` is described [above](#reference)
 - [`SpringValues`](/docs/typescript#springvalues)
 - [`TransitionState`](/docs/typescript#transitionstate)
 
+## Migrating to usePresenceList
+
+Instead of a render function, `usePresenceList` returns an array of entries.
+Map over it and pass each entry's `key` to the element you render.
+
+```tsx
+// before
+const transitions = useTransition(items, {
+  keys: item => item.id,
+  exitBeforeEnter: true,
+  ...props,
+})
+return transitions((style, item) => (
+  <animated.div style={style}>{item.text}</animated.div>
+))
+
+// after
+const entries = usePresenceList(items, {
+  keys: item => item.id,
+  mode: 'wait',
+  ...props,
+})
+return entries.map(({ key, item, springs }) => (
+  <animated.div key={key} style={springs}>
+    {item.text}
+  </animated.div>
+))
+```
+
+The extra render function arguments are on the entry, or come from `.map`:
+
+```tsx
+// before
+transitions((style, item, t, index) => (
+  <animated.div style={{ ...style, zIndex: index }}>{t.phase}</animated.div>
+))
+
+// after
+entries.map(({ key, springs, phase }, index) => (
+  <animated.div key={key} style={{ ...springs, zIndex: index }}>
+    {phase}
+  </animated.div>
+))
+```
+
+`<Transition>` has no component replacement. Call `usePresenceList` with the
+same props instead:
+
+```tsx
+// before
+;<Transition items={items} from={from} enter={enter} leave={leave}>
+  {(style, item) => <animated.div style={style}>{item}</animated.div>}
+</Transition>
+
+// after
+const entries = usePresenceList(items, { from, enter, leave })
+return entries.map(({ key, item, springs }) => (
+  <animated.div key={key} style={springs}>
+    {item}
+  </animated.div>
+))
+```
+
+If you pass a boolean, use `usePresence` instead:
+
+```tsx
+// before
+const transitions = useTransition(isOpen, props)
+return transitions((style, isOpen) =>
+  isOpen ? <animated.div style={style} /> : null
+)
+
+// after
+const presence = usePresence(isOpen, props)
+return presence && <animated.div style={presence.springs} />
+```
+
+Other differences:
+
+- `exitBeforeEnter: true` becomes `mode: 'wait'`, which also works with lists.
+- Move `config: (item, index, phase) => ...` into `enter`, `update` or `leave`.
+  A top-level `config` function receives the spring key.
+- A top-level `delay` function receives the spring key, not the item key. Move
+  item-specific delays into the phase.
+- Use `keys`; the singular `key` alias is not supported.
+- `deps` only hold back `update`. Items still enter and leave when `data`
+  changes and `deps` do not.
+- `expires` only accepts a boolean.
+- `onDestroyed` and a top-level `onResolve` are not accepted. `onResolve`
+  inside a phase still works.
+
 ## Examples
 
-import { ExampleGrid } from '../components/Grids/ExampleGrid'
-
-<ExampleGrid
-  sandboxTitles={[
-    'Basic Transition',
-    'Chaining Transition and a Spring',
-    'Exit Before Enter',
-    'Image Fade',
-    'List Reordering',
-    'Masonry Grid',
-    'Multistage Transitions',
-    'Notification Hub',
-  ]}
-/>
-
-Can't find what you're looking for? Check out all our [examples!](/examples)
+The examples have moved to [`usePresenceList`](/docs/components/use-presence-list#examples).

@@ -38,6 +38,9 @@ import Parallax from './sandboxes/parallax/src/App'
 import ParallaxVert from './sandboxes/parallax-vert/src/App'
 import ParallaxSticky from './sandboxes/parallax-sticky/src/App'
 import PopupModal from './sandboxes/popup-modal/src/App'
+import PresenceDialog from './sandboxes/presence-dialog/src/App'
+import PresenceUploadQueue from './sandboxes/presence-upload-queue/src/App'
+import PresenceWebGl from './sandboxes/presence-webgl/src/App'
 
 import ScrollingWave from './sandboxes/scrolling-wave/src/App'
 import SimpleTransition from './sandboxes/simple-transition/src/App'
@@ -82,6 +85,9 @@ const links = {
   'parallax-sticky': ParallaxSticky,
   'parallax-vert': ParallaxVert,
   'popup-modal': PopupModal,
+  'presence-dialog': PresenceDialog,
+  'presence-upload-queue': PresenceUploadQueue,
+  'presence-webgl': PresenceWebGl,
   'rocket-decay': DecayRocket,
   'scrolling-wave': ScrollingWave,
   'simple-transition': SimpleTransition,

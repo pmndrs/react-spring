@@ -3,7 +3,7 @@
   "description": "Basic viewport sized transition of cards animating with the imperative API",
   "keywords": [
     "imperative",
-    "useTransition",
+    "usePresenceList",
     "SpringRef"
   ],
   "version": "1.0.0",

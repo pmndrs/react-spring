@@ -1,0 +1,93 @@
+.container {
+  position: fixed;
+  inset: 0;
+  background: #07060d;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  color: #ede9fe;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+}
+
+.caption {
+  position: absolute;
+  left: 50%;
+  bottom: 96px;
+  width: min(360px, calc(100% - 32px));
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: rgba(24, 18, 43, 0.72);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  box-shadow: 0 20px 60px rgba(167, 139, 250, 0.18);
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+.caption h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.caption p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #c4b5fd;
+}
+
+.caption code {
+  font-size: 12px;
+  color: #a78bfa;
+}
+
+.button {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  background: rgba(24, 18, 43, 0.8);
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 150ms,
+    background-color 150ms;
+}
+
+/* Keeps the centring translate while pressing. */
+.button:active {
+  transform: translateX(-50%) scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    background: rgba(46, 35, 82, 0.9);
+  }
+}
+
+.button:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 2px;
+}
+
+.button kbd {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: rgba(167, 139, 250, 0.18);
+  font: 12px ui-monospace, monospace;
+  color: #c4b5fd;
+}

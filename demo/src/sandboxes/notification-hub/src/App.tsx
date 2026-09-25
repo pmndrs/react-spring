@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { loremIpsum } from 'lorem-ipsum'
 import { X } from 'react-feather'
-import { useTransition } from '@react-spring/web'
+import { usePresenceList } from '@react-spring/web'
 import { Main, Container, Message, Button, Content, Life } from './styles'
 
 let id = 0
@@ -32,13 +32,13 @@ function MessageHub({
   const cancelMap = React.useMemo(() => new WeakMap(), [])
   const [items, setItems] = React.useState<Item[]>([])
 
-  const transitions = useTransition(items, {
+  const entries = usePresenceList(items, {
     from: { opacity: 0, height: 0, life: '100%' },
     keys: item => item.key,
     enter: item => async (next, cancel) => {
       cancelMap.set(item, cancel)
       await next({ opacity: 1, height: refMap.get(item).offsetHeight })
-      await next({ life: '0%' })
+      await next({ life: '0%', config: { duration: timeout } })
     },
     leave: [{ opacity: 0 }, { height: 0 }],
     onRest: (result, ctrl, item) => {
@@ -48,8 +48,7 @@ function MessageHub({
         })
       )
     },
-    config: (item, index, phase) => key =>
-      phase === 'enter' && key === 'life' ? { duration: timeout } : config,
+    config,
   })
 
   React.useEffect(() => {
@@ -60,8 +59,8 @@ function MessageHub({
 
   return (
     <Container>
-      {transitions(({ life, ...style }, item) => (
-        <Message style={style}>
+      {entries.map(({ key, item, springs: { life, ...style } }) => (
+        <Message key={key} style={style}>
           <Content ref={(ref: HTMLDivElement) => ref && refMap.set(item, ref)}>
             <Life style={{ right: life }} />
             <p>{item.msg}</p>

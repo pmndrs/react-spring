@@ -2,9 +2,9 @@
   "name": "Chaining Transition and a Spring",
   "version": "1.0.0",
   "main": "src/index.tsx",
-  "description": "Orchestrating a useTransition and useSpring hook with the useChain hook.",
+  "description": "Orchestrating a usePresenceList and useSpring hook with the useChain hook.",
   "keywords": [
-    "useTransition",
+    "usePresenceList",
     "useSpring",
     "useChain",
     "SpringRef"

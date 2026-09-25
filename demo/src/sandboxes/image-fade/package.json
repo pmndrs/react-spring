@@ -1,10 +1,10 @@
 {
   "name": "Image Fade",
-  "description": "Simple image fading illustrating the exitBeforeEnter prop on useTransition",
+  "description": "Simple image fading illustrating mode: 'wait' on usePresenceList",
   "keywords": [
     "image",
-    "exitBeforeEnter",
-    "useTransition",
+    "wait",
+    "usePresenceList",
     "onRest"
   ],
   "version": "1.0.0",

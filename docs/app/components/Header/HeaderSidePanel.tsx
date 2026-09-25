@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router'
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'phosphor-react'
-import { animated, useTransition } from '@react-spring/web'
+import { animated, usePresence } from '@react-spring/web'
 import * as Toolbar from '@radix-ui/react-toolbar'
 
 import { HeaderNavigation } from './HeaderNavigation'
@@ -34,7 +34,7 @@ export const HeaderSidePanel = forwardRef<HTMLDivElement, HeaderSidePanelProps>(
 
     const isDocs = location.pathname.includes('/docs')
 
-    const transitions = useTransition(isOpen, {
+    const presence = usePresence(isOpen, {
       from: {
         x: '100%',
         opacity: 0,
@@ -60,46 +60,46 @@ export const HeaderSidePanel = forwardRef<HTMLDivElement, HeaderSidePanelProps>(
       }
     }
 
-    return transitions(({ opacity, x }, item) =>
-      item ? (
-        <>
-          <Dialog.Overlay forceMount asChild>
-            <animated.div className={mobileMenuOverlay} style={{ opacity }} />
-          </Dialog.Overlay>
-          {/* @ts-ignore */}
-          <Dialog.Content trapFocus={false} forceMount asChild>
-            <animated.div className={mobileMenu} ref={ref} style={{ x }}>
-              <div>
-                <header className={mobileDialogHeader}>
-                  <Dialog.Close className={mobileMenuClose}>
-                    <X />
-                  </Dialog.Close>
-                  <Toolbar.Root className={mobileThemePicker}>
-                    <SiteThemePicker />
-                  </Toolbar.Root>
-                </header>
-                <Dialog.Title className={visuallyHidden}>
-                  Main Menu
-                </Dialog.Title>
-                <HeaderNavigation
-                  className={mainNavigation({ isDocsSection: isDocs })}
-                  showSubNav={false}
-                  showThemePicker={false}
-                  showLabels={!isDocs}
-                />
-              </div>
-              <MenuDocs submenu={submenu} onNavClick={handleNavClick} />
-              <Toolbar.Root
-                className={subNavContainer({
-                  isDocsSection: isDocs,
-                })}
-              >
-                <HeaderSubNavigation showLabels={!isDocs} />
-              </Toolbar.Root>
-            </animated.div>
-          </Dialog.Content>
-        </>
-      ) : null
+    if (!presence) return null
+
+    const { opacity, x } = presence.springs
+
+    return (
+      <>
+        <Dialog.Overlay forceMount asChild>
+          <animated.div className={mobileMenuOverlay} style={{ opacity }} />
+        </Dialog.Overlay>
+        {/* @ts-ignore */}
+        <Dialog.Content trapFocus={false} forceMount asChild>
+          <animated.div className={mobileMenu} ref={ref} style={{ x }}>
+            <div>
+              <header className={mobileDialogHeader}>
+                <Dialog.Close className={mobileMenuClose}>
+                  <X />
+                </Dialog.Close>
+                <Toolbar.Root className={mobileThemePicker}>
+                  <SiteThemePicker />
+                </Toolbar.Root>
+              </header>
+              <Dialog.Title className={visuallyHidden}>Main Menu</Dialog.Title>
+              <HeaderNavigation
+                className={mainNavigation({ isDocsSection: isDocs })}
+                showSubNav={false}
+                showThemePicker={false}
+                showLabels={!isDocs}
+              />
+            </div>
+            <MenuDocs submenu={submenu} onNavClick={handleNavClick} />
+            <Toolbar.Root
+              className={subNavContainer({
+                isDocsSection: isDocs,
+              })}
+            >
+              <HeaderSubNavigation showLabels={!isDocs} />
+            </Toolbar.Root>
+          </animated.div>
+        </Dialog.Content>
+      </>
     )
   }
 )
