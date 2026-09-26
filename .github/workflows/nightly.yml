@@ -69,7 +69,7 @@ jobs:
           DIST_TAG: nightly
 
       - name: Tag
-        uses: mathieudutour/github-tag-action@v6.2
+        uses: mathieudutour/github-tag-action@v7.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: '0.0.0-${{ steps.version.outputs.NEXT_VERSION }}'
