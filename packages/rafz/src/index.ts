@@ -120,6 +120,9 @@ let pendingCount = 0
 /** When true, scheduling is disabled. */
 let sync = false
 
+/** When true, the next native frame is already booked. */
+let booked = false
+
 function schedule<T extends Function>(fn: T, queue: Queue<T>) {
   if (sync) {
     queue.delete(fn)
@@ -138,7 +141,11 @@ function schedule<T extends Function>(fn: T, queue: Queue<T>) {
 function start() {
   if (ts < 0) {
     ts = 0
-    if (raf.frameLoop !== 'demand') {
+    // A loop that just stopped still has its next frame booked. Restarting
+    // before that frame reuses it; booking another would run two loops and
+    // tick every job twice per frame.
+    if (raf.frameLoop !== 'demand' && !booked) {
+      booked = true
       nativeRaf(loop)
     }
   }
@@ -149,7 +156,9 @@ function stop() {
 }
 
 function loop() {
+  booked = false
   if (~ts) {
+    booked = true
     nativeRaf(loop)
     raf.batchedUpdates(update)
   }
@@ -244,6 +253,7 @@ export const __raf = {
   /** Clear internal state. Never call from update loop! */
   clear() {
     ts = -1
+    booked = false
     timeouts = []
     onStartQueue = makeQueue()
     updateQueue = makeQueue()
