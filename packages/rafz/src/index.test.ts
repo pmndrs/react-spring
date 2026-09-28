@@ -1,5 +1,5 @@
 import createMockRaf, { MockRaf } from '@react-spring/mock-raf'
-import { raf, __raf } from './index'
+import { raf, __raf, createRafz } from './index'
 
 let mockRaf: MockRaf
 beforeEach(() => {
@@ -72,5 +72,42 @@ describe('demand mode', () => {
     raf.setTimeout(() => {}, 100)
 
     expect(raf.onDemand).toHaveBeenCalled()
+  })
+})
+
+describe('createRafz', () => {
+  it('keeps its own queues and timeouts, apart from the default scheduler', () => {
+    const otherMockRaf = createMockRaf()
+    const other = createRafz()
+    other.use(otherMockRaf.raf)
+    other.now = otherMockRaf.now
+
+    const onDefault = vi.fn()
+    const onOther = vi.fn()
+    const onOtherTimeout = vi.fn()
+    raf(onDefault)
+    other(onOther)
+    other.setTimeout(onOtherTimeout, 0)
+
+    mockRaf.step()
+    expect(onDefault).toHaveBeenCalledTimes(1)
+    expect(onOther).not.toHaveBeenCalled()
+    expect(onOtherTimeout).not.toHaveBeenCalled()
+
+    otherMockRaf.step()
+    expect(onOther).toHaveBeenCalledTimes(1)
+    expect(onOtherTimeout).toHaveBeenCalledTimes(1)
+    expect(onDefault).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not stop the default scheduler when switched to demand mode', () => {
+    const other = createRafz()
+    other.frameLoop = 'demand'
+
+    const onDefault = vi.fn()
+    raf(onDefault)
+    mockRaf.step()
+
+    expect(onDefault).toHaveBeenCalledTimes(1)
   })
 })
