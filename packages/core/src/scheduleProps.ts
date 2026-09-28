@@ -1,4 +1,4 @@
-import { Timeout, is, raf, Globals as G } from '@react-spring/shared'
+import { Timeout, is, Globals as G, type Clock } from '@react-spring/shared'
 import { matchProp, callProp } from './helpers'
 import { AsyncResult, MatchProp } from './types'
 import { RunAsyncState, RunAsyncProps } from './runAsync'
@@ -17,6 +17,8 @@ interface ScheduledProps<T extends AnimationTarget> {
   props: InferProps<T>
   defaultProps?: DefaultProps<InferState<T>>
   state: RunAsyncState<T>
+  /** Delays count down on the clock of the spring or controller. */
+  clock: Clock
   actions: {
     pause: () => void
     resume: () => void
@@ -33,7 +35,7 @@ interface ScheduledProps<T extends AnimationTarget> {
  */
 export function scheduleProps<T extends AnimationTarget>(
   callId: number,
-  { key, props, defaultProps, state, actions }: ScheduledProps<T>
+  { key, props, defaultProps, state, clock, actions }: ScheduledProps<T>
 ): AsyncResult<T> {
   return new Promise((resolve, reject) => {
     let delay: number
@@ -69,13 +71,13 @@ export function scheduleProps<T extends AnimationTarget>(
       state.timeouts.delete(timeout)
       timeout.cancel()
       // Cache the remaining delay.
-      delay = timeout.time - raf.now()
+      delay = timeout.time - clock.raf.now()
     }
 
     function onResume() {
       if (delay > 0 && !G.skipAnimation) {
         state.delayed = true
-        timeout = raf.setTimeout(onStart, delay)
+        timeout = clock.raf.setTimeout(onStart, delay)
         state.pauseQueue.add(onPause)
         state.timeouts.add(timeout)
       } else {

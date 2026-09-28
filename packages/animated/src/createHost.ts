@@ -1,5 +1,5 @@
 import { Lookup } from '@react-spring/types'
-import { is, eachProp } from '@react-spring/shared'
+import { is, eachProp, defaultClock, type Clock } from '@react-spring/shared'
 import { AnimatableComponent, withAnimated } from './withAnimated'
 import { Animated } from './Animated'
 import { AnimatedObject } from './AnimatedObject'
@@ -11,6 +11,11 @@ export interface HostConfig {
   createAnimatedStyle: (style: Lookup) => Animated
   /** Intercept props before they're passed to an animated component */
   getComponentProps: (props: Lookup) => typeof props
+  /**
+   * @internal The clock that writes animated values to this host's nodes,
+   * so they land in the same frame the host renders.
+   */
+  clock: Clock
 }
 
 // A stub type that gets replaced by @react-spring/web and others.
@@ -28,12 +33,14 @@ export const createHost = (
     applyAnimatedValues = () => false,
     createAnimatedStyle = style => new AnimatedObject(style),
     getComponentProps = props => props,
+    clock = defaultClock,
   }: Partial<HostConfig> = {}
 ) => {
   const hostConfig: HostConfig = {
     applyAnimatedValues,
     createAnimatedStyle,
     getComponentProps,
+    clock,
   }
 
   const animated: WithAnimated = (Component: any) => {

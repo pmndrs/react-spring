@@ -1,11 +1,9 @@
 import {
   is,
-  raf,
   each,
   isEqual,
   toArray,
   eachProp,
-  frameLoop,
   flushCalls,
   getFluidValue,
   isAnimatedString,
@@ -399,7 +397,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   /** Set the current value, while stopping the current animation */
   set(value: T | FluidValue<T>) {
-    raf.batchedUpdates(() => {
+    this.clock.raf.batchedUpdates(() => {
       this._stop()
 
       // These override the current value and goal value that may have
@@ -427,7 +425,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   finish() {
     if (isAnimating(this)) {
       const { to, config } = this.animation
-      raf.batchedUpdates(() => {
+      this.clock.raf.batchedUpdates(() => {
         // Ensure the "onStart" and "onRest" props are called.
         this._onStart()
 
@@ -500,7 +498,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     stopAsync(this._state, cancel && this._lastCallId)
-    raf.batchedUpdates(() => this._stop(to, cancel))
+    this.clock.raf.batchedUpdates(() => this._stop(to, cancel))
 
     return this
   }
@@ -602,6 +600,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       props,
       defaultProps,
       state,
+      clock: this.clock,
       actions: {
         pause: () => {
           if (!isPaused(this)) {
@@ -847,7 +846,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         this._pendingCalls.add(resolve)
 
         if (anim.changed)
-          raf.batchedUpdates(() => {
+          this.clock.raf.batchedUpdates(() => {
             // Ensure `onStart` can be called after a reset.
             anim.changed = !reset
 
@@ -946,7 +945,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
         // Never emit a "change" event for the initial value,
         // unless something is already observing us.
         if (oldNode || getFluidObservers(this)) {
-          raf.batchedUpdates(() => {
+          this.clock.raf.batchedUpdates(() => {
             this._onChange(value, idle)
           })
         }
@@ -1010,7 +1009,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     if (G.skipAnimation) {
       this.finish()
     } else {
-      frameLoop.start(this)
+      this.clock.frameLoop.start(this)
     }
   }
 

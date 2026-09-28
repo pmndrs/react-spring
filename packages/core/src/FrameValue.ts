@@ -1,6 +1,7 @@
 import {
   deprecateInterpolate,
-  frameLoop,
+  currentClock,
+  type Clock,
   FluidValue,
   Globals as G,
   callFluidObservers,
@@ -26,10 +27,18 @@ export abstract class FrameValue<T = any> extends FluidValue<
 > {
   readonly id = nextId++
 
+  /** @internal The clock this value is advanced on. */
+  readonly clock: Clock
+
   abstract key?: string
   abstract get idle(): boolean
 
   protected _priority = 0
+
+  constructor(clock?: Clock) {
+    super()
+    this.clock = clock ?? currentClock()
+  }
 
   get priority() {
     return this._priority
@@ -95,7 +104,7 @@ export abstract class FrameValue<T = any> extends FluidValue<
   /** Tell our children about our new priority */
   protected _onPriorityChange(priority: number) {
     if (!this.idle) {
-      frameLoop.sort(this)
+      this.clock.frameLoop.sort(this)
     }
     callFluidObservers(this, {
       type: 'priority',
