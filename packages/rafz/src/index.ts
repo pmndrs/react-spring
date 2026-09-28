@@ -42,7 +42,7 @@ raf.setTimeout = (handler, ms) => {
   timeouts.splice(findTimeout(time), 0, timeout)
   pendingCount += 1
 
-  start()
+  wake()
   return timeout
 }
 
@@ -129,12 +129,16 @@ function schedule<T extends Function>(fn: T, queue: Queue<T>) {
     fn(0)
   } else {
     queue.add(fn)
-    start()
-    // New work was scheduled (animation start, loop/sequence restart, delay).
-    // In demand mode the host must be told, since it may have stopped driving.
-    if (raf.frameLoop === 'demand') {
-      raf.onDemand()
-    }
+    wake()
+  }
+}
+
+// New work was scheduled (animation start, loop/sequence restart, delay).
+// In demand mode the host must be told, since it may have stopped driving.
+function wake() {
+  start()
+  if (raf.frameLoop === 'demand') {
+    raf.onDemand()
   }
 }
 
