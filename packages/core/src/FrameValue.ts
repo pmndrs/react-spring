@@ -1,6 +1,6 @@
 import {
   deprecateInterpolate,
-  currentClock,
+  clockFor,
   type Clock,
   FluidValue,
   Globals as G,
@@ -37,7 +37,7 @@ export abstract class FrameValue<T = any> extends FluidValue<
 
   constructor(clock?: Clock) {
     super()
-    this.clock = clock ?? currentClock()
+    this.clock = clock ?? clockFor(new.target)
   }
 
   get priority() {

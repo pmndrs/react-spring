@@ -9,7 +9,7 @@ import {
   flushCalls,
   addFluidObserver,
   FluidObserver,
-  currentClock,
+  clockFor,
   withClock,
   type Clock,
 } from '@react-spring/shared'
@@ -130,7 +130,7 @@ export class Controller<State extends Lookup = Lookup> {
     props?: ControllerUpdate<State> | null,
     flush?: ControllerFlushFn<Controller<any>>
   ) {
-    this.clock = currentClock()
+    this.clock = clockFor(new.target)
     this._onFrame = this._onFrame.bind(this)
     if (flush) {
       this._flush = flush

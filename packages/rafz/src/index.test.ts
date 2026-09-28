@@ -100,6 +100,20 @@ describe('createRafz', () => {
     expect(onDefault).toHaveBeenCalledTimes(1)
   })
 
+  it('asks for one more frame after writing in demand mode, then stops', () => {
+    const other = createRafz()
+    other.frameLoop = 'demand'
+    other.onDemand = vi.fn()
+    other.write(() => {})
+    vi.mocked(other.onDemand).mockClear()
+
+    other.advance()
+    expect(other.onDemand).toHaveBeenCalledTimes(1)
+
+    other.advance()
+    expect(other.onDemand).toHaveBeenCalledTimes(1)
+  })
+
   it('does not stop the default scheduler when switched to demand mode', () => {
     const other = createRafz()
     other.frameLoop = 'demand'

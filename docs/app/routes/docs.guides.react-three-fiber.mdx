@@ -403,6 +403,48 @@ export default function MyComponent() {
 }
 ```
 
+## Using it alongside `@react-spring/web`
+
+Springs follow the frames of the package you import them from. Springs from `@react-spring/three`
+are advanced by React Three Fiber: its render loop, XR frames, and `advance()` when you set
+`frameloop="never"`. Springs from `@react-spring/web` are advanced by the browser, so they keep
+animating whether or not a `Canvas` is rendering.
+
+Import from `@react-spring/three` for anything inside your `Canvas`, and from `@react-spring/web`
+for the page around it:
+
+```tsx
+import { useSpring as useDomSpring, animated as a } from '@react-spring/web'
+import { useSpring, animated } from '@react-spring/three'
+import { Canvas } from '@react-three/fiber'
+
+function Box() {
+  const { scale } = useSpring({ from: { scale: 0 }, to: { scale: 1 } })
+
+  return <animated.mesh scale={scale} />
+}
+
+export default function App() {
+  const { opacity } = useDomSpring({ from: { opacity: 0 }, to: { opacity: 1 } })
+
+  return (
+    <>
+      <a.h1 style={{ opacity }}>Hello</a.h1>
+      <Canvas frameloop="demand">
+        <Box />
+      </Canvas>
+    </>
+  )
+}
+```
+
+A spring from `@react-spring/three` pauses while no `Canvas` is rendering, including when it drives
+a DOM element. `Globals.assign` clock options (`requestAnimationFrame`, `now`, `batchedUpdates`,
+`frameLoop`, `onDemand`), `raf.advance()` and `update()` only affect springs from
+`@react-spring/web`. To step springs from `@react-spring/three` yourself, set `frameloop="never"` and
+call React Three Fiber's `advance()`. You no longer need `Globals.assign({ frameLoop: 'always' })` to
+keep web springs running next to a `Canvas`.
+
 ## Troubleshooting
 
 ### Experiencing Jank?
