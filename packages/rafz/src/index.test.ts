@@ -38,6 +38,17 @@ describe('raf looping', () => {
     expect(__raf.isRunning()).toBe(false)
     expect(fn).toHaveBeenCalledTimes(2)
   })
+  it('runs one loop when restarted before the frame it already booked', () => {
+    raf(() => {})
+    mockRaf.step()
+    mockRaf.step() // finds nothing to do and stops, with the next frame booked
+
+    const fn = vi.fn(() => true)
+    raf(fn)
+    mockRaf.step()
+
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
   it('loops as long as one update loop is scheduled', () => {
     raf(() => true)
     raf(() => false)
