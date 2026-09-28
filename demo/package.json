@@ -12,8 +12,8 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@react-three/drei": "~10.7.8",
-    "@react-three/fiber": "~9.8.0",
+    "@react-three/drei": "~10.7.9",
+    "@react-three/fiber": "~9.8.1",
     "@stitches/react": "1.2.8",
     "@use-gesture/react": "10.3.1",
     "@vitejs/plugin-react": "6.1.1",
@@ -30,7 +30,7 @@
     "react95": "4.0.0",
     "sass": "1.104.1",
     "styled-components": "6.5.3",
-    "three": "0.186.0",
+    "three": "0.186.1",
     "three-stdlib": "2.36.1",
     "vec-la": "1.5.0",
     "wouter": "3.11.0"
