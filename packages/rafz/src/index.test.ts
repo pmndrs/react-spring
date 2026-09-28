@@ -58,3 +58,19 @@ describe('raf looping', () => {
     expect(__raf.isRunning()).toBe(true)
   })
 })
+
+describe('demand mode', () => {
+  afterEach(() => {
+    raf.frameLoop = 'always'
+    raf.onDemand = () => {}
+  })
+
+  it('asks the host for a frame when a timeout is set', () => {
+    raf.frameLoop = 'demand'
+    raf.onDemand = vi.fn()
+
+    raf.setTimeout(() => {}, 100)
+
+    expect(raf.onDemand).toHaveBeenCalled()
+  })
+})
