@@ -190,14 +190,20 @@ function createInstance() {
     onStartQueue.flush()
     updateQueue.flush(prevTs ? Math.min(64, ts - prevTs) : 16.667)
     onFrameQueue.flush()
-    writeQueue.flush()
+    const wrote = writeQueue.flush()
     onFinishQueue.flush()
 
     // Work remains for the next frame (e.g. an animation still in flight).
     // In demand mode, ask the host to render it — flushing re-queues via the
     // queue's internal `add`, which bypasses `schedule`, so this is the only
     // signal for a continuing animation.
-    if (raf.frameLoop === 'demand' && pendingCount > 0) {
+    //
+    // A frame that wrote to the host asks for one more: a value animated on
+    // another clock (a web spring driving a mesh) writes again next frame, and
+    // a host that stopped in between can only restart a frame late, halving
+    // its frame rate. The cost is one extra, empty frame after any animation
+    // ends, including ones on this clock.
+    if (raf.frameLoop === 'demand' && (pendingCount > 0 || wrote)) {
       raf.onDemand()
     }
   }
@@ -205,7 +211,8 @@ function createInstance() {
   interface Queue<T extends Function = any> {
     add: (fn: T) => void
     delete: (fn: T) => boolean
-    flush: (arg?: any) => void
+    /** Returns true when any function ran. */
+    flush: (arg?: any) => boolean
   }
 
   function makeQueue<T extends Function>(): Queue<T> {
@@ -221,13 +228,13 @@ function createInstance() {
         return next.delete(fn)
       },
       flush(arg) {
-        if (current.size) {
-          next = new Set()
-          pendingCount -= current.size
-          eachSafely(current, fn => fn(arg) && next.add(fn))
-          pendingCount += next.size
-          current = next
-        }
+        if (!current.size) return false
+        next = new Set()
+        pendingCount -= current.size
+        eachSafely(current, fn => fn(arg) && next.add(fn))
+        pendingCount += next.size
+        current = next
+        return true
       },
     }
   }

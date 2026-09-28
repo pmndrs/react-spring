@@ -14,8 +14,10 @@ import { Globals, Controller } from './index'
  * guard. react-spring must drive the host itself.
  *
  * The fix: rafz already knows whether it has a queue. It signals that through
- * `Globals.onDemand`; `@react-spring/three` turns the signal into an
- * `invalidate()` *deferred to after the current frame*. The deferral matters —
+ * `onDemand` (set with `Globals.assign` on the default clock here;
+ * `@react-spring/three` sets it on its own clock) and `@react-spring/three`
+ * turns the signal into an `invalidate()` *deferred to after the current
+ * frame*. The deferral matters —
  * `@react-spring/three` ticks rafz from r3f's `addEffect`, which runs in r3f's
  * *before* phase, where `invalidate()` only SETS `frames = 1` and the same
  * tick's `update()` decrements it back to `0` (cancelling the next frame). A

@@ -590,6 +590,10 @@ importers:
       three:
         specifier: '>=0.126'
         version: 0.184.0
+    devDependencies:
+      '@react-spring/web':
+        specifier: workspace:~
+        version: link:../web
 
   targets/web:
     dependencies:

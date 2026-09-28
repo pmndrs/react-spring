@@ -38,6 +38,16 @@ let current = defaultClock
 export const currentClock = () => current
 
 /**
+ * The clock for a new instance of `cls`: the class's own `clock` if it pins
+ * one (`@react-spring/three`'s `SpringValue` and `Controller` do), else the
+ * current clock.
+ *
+ * @internal
+ */
+export const clockFor = (cls: unknown): Clock =>
+  (cls as { clock?: Clock }).clock ?? current
+
+/**
  * Anything created inside `fn` (springs, controllers, interpolations) runs on
  * `clock`. Targets wrap their hooks and components with this.
  *

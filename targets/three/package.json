@@ -55,5 +55,8 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsdown --watch",
     "pack": "pnpm pack && mv *.tgz package.tgz"
+  },
+  "devDependencies": {
+    "@react-spring/web": "workspace:~"
   }
 }
