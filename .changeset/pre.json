@@ -1,24 +1,4 @@
 {
   "mode": "pre",
-  "tag": "beta",
-  "initialVersions": {
-    "@react-spring/demo": "1.0.1",
-    "@react-spring/docs": "2.0.0",
-    "@react-spring/animated": "10.1.1",
-    "@react-spring/core": "10.1.1",
-    "@react-spring/mock-raf": "10.1.1",
-    "@react-spring/parallax": "10.1.1",
-    "@react-spring/rafz": "10.1.1",
-    "@react-spring/shared": "10.1.1",
-    "@react-spring/types": "10.1.1",
-    "@react-spring/three": "10.1.1",
-    "@react-spring/web": "10.1.1"
-  },
-  "changesets": [
-    "clever-islands-dig",
-    "esm-only",
-    "fix-pick-animated-from-keys",
-    "fix-springvalue-onchange-result",
-    "remove-deprecated-targets"
-  ]
+  "tag": "beta"
 }
