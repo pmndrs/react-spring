@@ -40,9 +40,20 @@ jobs:
         run: pnpm build-ci
 
       - name: Create release PR or publish
+        id: changesets
         uses: changesets/action@v2
         with:
           version-script: pnpm vers
           publish-script: pnpm changeset publish
           pr-title: 'chore: version packages'
           commit-message: 'chore: version packages'
+
+      # changesets only tags per package, and skips GitHub releases because CHANGELOG.md is gitignored
+      - name: Create GitHub release
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(jq -r .version packages/core/package.json)
+          prerelease=$([[ "$version" == *-* ]] && echo --prerelease || true)
+          gh release create "v$version" --target "$GITHUB_SHA" --generate-notes $prerelease
