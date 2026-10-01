@@ -72,4 +72,5 @@ jobs:
         uses: mathieudutour/github-tag-action@v7.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_branches: next
           custom_tag: '0.0.0-${{ steps.version.outputs.NEXT_VERSION }}'
