@@ -63,7 +63,7 @@
     "@react-spring/mock-raf": "1.1.1",
     "@react-spring/parallax": "workspace:*",
     "@react-three/fiber": "~9.8.1",
-    "@swc/core": "1.16.2",
+    "@swc/core": "1.16.12",
     "@types/fs-extra": "11.0.4",
     "@types/lodash.clamp": "4.0.9",
     "@types/lodash.shuffle": "4.2.9",
