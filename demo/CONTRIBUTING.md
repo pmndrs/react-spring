@@ -4,20 +4,20 @@ Thanks for the interest! Before reading on, have a look at the repo's [contribut
 
 ## What's required
 
-Demos are based on the CodeSandbox `react-typescript` template. You can either copy an existing demo and tweak it, or build one in CodeSandbox and export the code into `demo/src/sandboxes/<your-demo>/`.
+Demos are standalone Vite + React + TypeScript projects. You can either copy an existing demo and tweak it, or build one in CodeSandbox and export the code into `demo/src/sandboxes/<your-demo>/`.
 
 Each demo follows this structure:
 
 ```
 demo/src/sandboxes/<your-demo>/
-├── public/
-│   └── index.html
 ├── src/
 │   ├── App.tsx        # entry point — imported by the demo hub
 │   └── index.tsx
+├── index.html
 ├── package.json
 ├── thumbnail.png      # 16:9, shown on the website
-└── tsconfig.json      # copy from an existing demo
+├── tsconfig.json      # copy from an existing demo
+└── vite.config.ts     # copy from an existing demo
 ```
 
 `App.tsx` is the entry the demo hub renders via Vite, so it must export a default component.
