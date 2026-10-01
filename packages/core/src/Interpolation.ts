@@ -1,11 +1,9 @@
 import { Arrify, InterpolatorArgs, InterpolatorFn } from '@react-spring/types'
 import {
   is,
-  raf,
   each,
   isEqual,
   toArray,
-  frameLoop,
   FluidValue,
   getFluidValue,
   createInterpolator,
@@ -53,7 +51,7 @@ export class Interpolation<
     readonly source: unknown,
     args: InterpolatorArgs<Input, Output>
   ) {
-    super()
+    super(clockOf(source))
     this.calc = createInterpolator(...args)
 
     const value = this._get()
@@ -93,10 +91,10 @@ export class Interpolation<
       })
 
       if (G.skipAnimation) {
-        raf.batchedUpdates(() => this.advance())
+        this.clock.raf.batchedUpdates(() => this.advance())
         becomeIdle(this)
       } else {
-        frameLoop.start(this)
+        this.clock.frameLoop.start(this)
       }
     }
   }
@@ -157,6 +155,11 @@ export class Interpolation<
       )
     }
   }
+}
+
+/** An interpolation runs on the clock of its first animated source. */
+function clockOf(source: unknown) {
+  return toArray(source).find(isFrameValue)?.clock
 }
 
 /** Returns true for an idle source. */

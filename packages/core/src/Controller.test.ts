@@ -1,5 +1,6 @@
 import { Controller } from './Controller'
 import { flushMicroTasks } from 'flush-microtasks'
+import { withClock } from '@react-spring/shared'
 import { getFinishedResult } from './AnimationResult'
 
 const frameLength = 1000 / 60
@@ -828,5 +829,34 @@ describe('Controller', () => {
     expect(resolved).toBe(true)
     const result = await promise
     expect(result.finished).toBe(true)
+  })
+
+  describe('clock', () => {
+    it('runs its springs on the clock it was created on, including springs added later', () => {
+      const { clock, clockRaf } = global.createTestClock()
+      const ctrl = withClock(clock, () => new Controller({ x: 0 }))
+      ctrl.start({
+        from: { y: 0 },
+        to: { x: 1, y: 1 },
+        config: { duration: 100 },
+      })
+
+      global.mockRaf.step({ count: 5 })
+      expect(ctrl.get()).toEqual({ x: 0, y: 0 })
+
+      clockRaf.step({ count: 5 })
+      expect(ctrl.get().x).toBeGreaterThan(0)
+      expect(ctrl.get().y).toBeGreaterThan(0)
+    })
+
+    it('counts delays down on the clock it was created on', () => {
+      const { clock, clockRaf } = global.createTestClock()
+      const ctrl = withClock(clock, () => new Controller({ x: 0 }))
+      ctrl.start({ x: 1, delay: 50, config: { duration: 100 } })
+
+      clockRaf.step({ count: 10 })
+
+      expect(ctrl.get().x).toBeGreaterThan(0)
+    })
   })
 })
