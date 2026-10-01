@@ -276,7 +276,7 @@ importers:
         version: 10.3.1(react@19.3.0)
       '@vitejs/plugin-react':
         specifier: 6.1.1
-        version: 6.1.1(vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.0)(tsx@4.23.15)(yaml@2.9.1))
+        version: 6.1.1(vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
       easing-coordinates:
         specifier: 2.0.2
         version: 2.0.2
@@ -311,8 +311,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(styled-components@6.5.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0))
       sass:
-        specifier: 1.105.0
-        version: 1.105.0
+        specifier: 1.105.1
+        version: 1.105.1
       styled-components:
         specifier: 6.5.3
         version: 6.5.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -4746,8 +4746,8 @@ packages:
     engines: {node: '>=20.19.0'}
     hasBin: true
 
-  sass@1.105.0:
-    resolution: {integrity: sha512-4EjSuRTyG8M4yRXXY1PT9OUV5zz23xBxJkbIAprohKHqf6HOU4MCpE3U3vAC+iO1gxobBjESNbcj8rYAQZWnyA==}
+  sass@1.105.1:
+    resolution: {integrity: sha512-1CnAWPyrrnVQzXGB/DUep1vYCKCm1CIBr+YxjjiW6wk9qtzemnGP4qicH56T2F9S4Hjtv/Ne3jDz8JqfdDU4oA==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -7559,10 +7559,10 @@ snapshots:
       '@rolldown/pluginutils': 1.0.1
       vite: 8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.104.1)(tsx@4.23.15)(yaml@2.9.1)
 
-  '@vitejs/plugin-react@6.1.1(vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.0)(tsx@4.23.15)(yaml@2.9.1))':
+  '@vitejs/plugin-react@6.1.1(vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.0)(tsx@4.23.15)(yaml@2.9.1)
+      vite: 8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
 
   '@vitest/browser-playwright@5.0.2(playwright@1.63.0)(vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.104.1)(tsx@4.23.15)(yaml@2.9.1))(vitest@5.0.2)':
     dependencies:
@@ -9776,7 +9776,7 @@ snapshots:
       '@parcel/watcher': 2.6.0
     optional: true
 
-  sass@1.105.0:
+  sass@1.105.1:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.9
@@ -10291,7 +10291,7 @@ snapshots:
       tsx: 4.23.15
       yaml: 2.9.1
 
-  vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.0)(tsx@4.23.15)(yaml@2.9.1):
+  vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -10303,7 +10303,7 @@ snapshots:
       esbuild: 0.28.2
       fsevents: 2.3.3
       jiti: 2.6.1
-      sass: 1.105.0
+      sass: 1.105.1
       tsx: 4.23.15
       yaml: 2.9.1
 
