@@ -33,7 +33,7 @@
     "three": "0.186.1",
     "three-stdlib": "2.36.1",
     "vec-la": "1.5.0",
-    "wouter": "3.12.0"
+    "wouter": "3.13.0"
   },
   "devDependencies": {
     "@types/lodash.clamp": "4.0.9",

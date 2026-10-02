@@ -326,8 +326,8 @@ importers:
         specifier: 1.5.0
         version: 1.5.0
       wouter:
-        specifier: 3.12.0
-        version: 3.12.0(react@19.3.0)
+        specifier: 3.13.0
+        version: 3.13.0(react@19.3.0)
     devDependencies:
       '@types/lodash.clamp':
         specifier: 4.0.9
@@ -548,8 +548,8 @@ importers:
         specifier: 6.1.1
         version: 6.1.1(vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.104.1)(tsx@4.23.15)(yaml@2.9.1))
       wouter:
-        specifier: 3.12.0
-        version: 3.12.0(react@19.3.0)
+        specifier: 3.13.0
+        version: 3.13.0(react@19.3.0)
 
   packages/rafz: {}
 
@@ -5340,8 +5340,8 @@ packages:
     engines: {node: '>=20.11'}
     hasBin: true
 
-  wouter@3.12.0:
-    resolution: {integrity: sha512-aJQjVAbrymRz47VFaeMbEZF71dn+5+olVm3dJR6OsHO37Pswa23DoIzy6PwsEtznGSmv9YBu9HC84OJFDMQ9Cg==}
+  wouter@3.13.0:
+    resolution: {integrity: sha512-p1RoCuVyxwb3X5jLjDdkwDzlXj+/UGZqZb+806uaJOVEHvNfGkjET0KiQ/CGiDKC90rLsALMgMj4onNVKxgNdQ==}
     peerDependencies:
       react: '>=16.8.0'
 
@@ -10355,7 +10355,7 @@ snapshots:
 
   why-is-node-running@3.2.1: {}
 
-  wouter@3.12.0(react@19.3.0):
+  wouter@3.13.0(react@19.3.0):
     dependencies:
       react: 19.3.0
       regexparam: 3.0.0
