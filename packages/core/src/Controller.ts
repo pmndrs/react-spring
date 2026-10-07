@@ -1,7 +1,6 @@
 import { OneOrMore, UnknownProps, Lookup, Falsy } from '@react-spring/types'
 import {
   is,
-  raf,
   each,
   noop,
   flush,
@@ -10,6 +9,9 @@ import {
   flushCalls,
   addFluidObserver,
   FluidObserver,
+  currentClock,
+  withClock,
+  type Clock,
 } from '@react-spring/shared'
 
 import { getDefaultProp } from './helpers'
@@ -59,6 +61,9 @@ export class Controller<State extends Lookup = Lookup> {
    * onto the `queue` instead of being auto-started.
    */
   ref?: SpringRef<State>
+
+  /** @internal The clock this controller and its springs run on. */
+  readonly clock: Clock
 
   /** Custom handler for flushing update queues */
   protected _flush?: ControllerFlushFn<this>
@@ -125,6 +130,7 @@ export class Controller<State extends Lookup = Lookup> {
     props?: ControllerUpdate<State> | null,
     flush?: ControllerFlushFn<Controller<any>>
   ) {
+    this.clock = currentClock()
     this._onFrame = this._onFrame.bind(this)
     if (flush) {
       this._flush = flush
@@ -318,7 +324,7 @@ export class Controller<State extends Lookup = Lookup> {
     }
     // The `onFrame` handler runs when a parent is changed or idle.
     else return
-    raf.onFrame(this._onFrame)
+    this.clock.raf.onFrame(this._onFrame)
   }
 }
 
@@ -439,6 +445,7 @@ export async function flushUpdate(
       scheduleProps(++ctrl['_lastAsyncId'], {
         props,
         state,
+        clock: ctrl.clock,
         actions: {
           pause: noop,
           resume: noop,
@@ -496,7 +503,7 @@ export async function flushUpdate(
     }
   }
   if (onResolve) {
-    raf.batchedUpdates(() => onResolve(result, ctrl, ctrl.item))
+    ctrl.clock.raf.batchedUpdates(() => onResolve(result, ctrl, ctrl.item))
   }
   return result
 }
@@ -523,7 +530,7 @@ export function getSprings<State extends Lookup>(
         // Avoid passing array/function to each spring.
         props = { ...props, to: undefined }
       }
-      prepareSprings(springs as any, props)
+      prepareSprings(springs as any, props, ctrl.clock)
     })
   }
   setSprings(ctrl, springs)
@@ -546,8 +553,8 @@ export function setSprings(
   })
 }
 
-function createSpring(key: string) {
-  const spring = new SpringValue()
+function createSpring(key: string, clock: Clock) {
+  const spring = withClock(clock, () => new SpringValue())
   spring.key = key
   return spring
 }
@@ -563,6 +570,7 @@ function createSpring(key: string) {
 function prepareSprings(
   springs: SpringValues,
   props: ControllerQueue[number],
+  clock: Clock,
   observer?: FluidObserver<FrameValue.Event>
 ) {
   if (props.keys) {
@@ -571,7 +579,7 @@ function prepareSprings(
       if (spring) {
         spring['_prepareNode'](props)
       } else {
-        spring = springs[key] = createSpring(key)
+        spring = springs[key] = createSpring(key, clock)
         spring['_prepareNode'](props)
         if (observer) {
           addFluidObserver(spring, observer)
@@ -589,6 +597,6 @@ function prepareSprings(
  */
 function prepareKeys(ctrl: Controller<any>, queue: ControllerQueue[number][]) {
   each(queue, props => {
-    prepareSprings(ctrl.springs, props, ctrl)
+    prepareSprings(ctrl.springs, props, ctrl.clock, ctrl)
   })
 }
