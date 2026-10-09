@@ -33,7 +33,7 @@
     "@react-spring/rafz": "workspace:^",
     "@react-spring/web": "workspace:^",
     "@use-gesture/react": "10.3.1",
-    "@vanilla-extract/css": "1.21.2",
+    "@vanilla-extract/css": "1.21.3",
     "@vanilla-extract/dynamic": "2.1.5",
     "@vanilla-extract/recipes": "0.5.7",
     "clsx": "2.1.1",
