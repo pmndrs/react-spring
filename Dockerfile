@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.27
+# syntax=docker/dockerfile:1.28
 
 # ----- Build stage: install + build inside the full monorepo -----
 FROM node:24.21.0-alpine AS builder
