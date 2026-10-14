@@ -646,7 +646,9 @@ export class SpringValue<T = any> extends FrameValue<T> {
   }
 
   /** Returns true if the given update would jump to its goal without animating. */
-  protected _isImmediateUpdate(props: SpringProps<T>): boolean {
+  protected _isImmediateUpdate(
+    props: SpringProps<T> & { to?: unknown }
+  ): boolean {
     return (
       !isAsyncTo(props.to) &&
       matchProp(this.defaultProps.immediate || props.immediate, this.key)
