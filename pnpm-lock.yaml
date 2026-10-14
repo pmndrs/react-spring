@@ -178,18 +178,12 @@ importers:
       '@commitlint/config-conventional':
         specifier: 21.2.3
         version: 21.2.3
-      '@react-spring/animated':
-        specifier: workspace:*
-        version: link:packages/animated
       '@react-spring/mock-raf':
         specifier: 1.1.1
         version: 1.1.1
       '@react-spring/parallax':
         specifier: workspace:*
         version: link:packages/parallax
-      '@react-spring/web':
-        specifier: workspace:*
-        version: link:targets/web
       '@react-three/fiber':
         specifier: ~9.8.1
         version: 9.8.1(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(three@0.186.1)

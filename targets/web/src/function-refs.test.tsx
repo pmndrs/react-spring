@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
-import { animated, SpringValue } from '@react-spring/web'
+import { animated, SpringValue } from './index'
 import { createHost } from '@react-spring/animated'
 
 it('animates a function ref prop without rendering every frame', async () => {
@@ -17,8 +17,10 @@ it('animates a function ref prop without rendering every frame', async () => {
   const element = ref.current
   expect(element).toBeInstanceOf(HTMLDivElement)
   const initialRenders = element?.dataset.renders
-  await opacity.start(1, { config: { duration: 30 } })
-  await expect.poll(() => element?.style.opacity).toBe('1')
+  const animation = opacity.start(1, { config: { duration: 30 } })
+  await advanceUntilIdle()
+  await animation
+  expect(element?.style.opacity).toBe('1')
   expect(element?.dataset.renders).toBe(initialRenders)
   await screen.unmount()
   expect(ref.current).toBeNull()
@@ -30,6 +32,7 @@ it('renders function components that do not forward their refs', async () => {
   const title = new SpringValue('first')
   const screen = await render(<Box title={title} />)
   title.set('second')
+  await advanceUntilIdle()
   await expect.element(screen.getByTitle('second')).toBeInTheDocument()
 })
 
@@ -43,6 +46,7 @@ it('falls back to rendering when a host rejects direct updates', async () => {
   const title = new SpringValue('first')
   const screen = await render(<Box title={title} />)
   title.set('second')
+  await advanceUntilIdle()
   await expect.element(screen.getByTitle('second')).toBeInTheDocument()
 })
 
@@ -63,6 +67,7 @@ it('preserves callback ref cleanup', async () => {
     />
   )
   expect(attached).toBeInstanceOf(HTMLDivElement)
+  cleaned = false
   await screen.unmount()
   expect(cleaned).toBe(true)
 })
@@ -77,5 +82,6 @@ it('continues to support forwardRef components', async () => {
   const title = new SpringValue('first')
   await render(<Box ref={ref} title={title} />)
   title.set('second')
-  await expect.poll(() => ref.current?.title).toBe('second')
+  await advanceUntilIdle()
+  expect(ref.current?.title).toBe('second')
 })
