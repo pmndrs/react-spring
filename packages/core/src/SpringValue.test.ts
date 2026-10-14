@@ -757,6 +757,48 @@ function describeLoopProp() {
       expect(spring.idle).toBeFalsy()
     })
 
+    // https://github.com/pmndrs/react-spring/issues/2409
+    it('stops after one iteration when "immediate" is true', async () => {
+      const spring = new SpringValue(0)
+      const onRest = vi.fn()
+      spring.start(1, { loop: true, immediate: true, onRest })
+
+      await global.advanceUntilIdle()
+      expect(spring.idle).toBeTruthy()
+      expect(spring.get()).toBe(1)
+      expect(onRest).toHaveBeenCalledTimes(1)
+    })
+
+    it('stops after one iteration when "immediate" is a default prop', async () => {
+      const spring = new SpringValue(0)
+      spring.start({ default: { immediate: true } })
+      spring.start(1, { loop: true })
+
+      await global.advanceUntilIdle()
+      expect(spring.idle).toBeTruthy()
+      expect(spring.get()).toBe(1)
+    })
+
+    it('keeps looping when the loop props turn "immediate" off', async () => {
+      const spring = new SpringValue(0)
+      spring.start(1, {
+        immediate: true,
+        loop: { reset: true, immediate: false },
+        config: { duration: frameLength * 3 },
+      })
+
+      await global.advanceUntilValue(spring, 1)
+      // The first iteration jumps to the goal, the next ones animate.
+      await global.advance()
+      expect(spring.idle).toBeFalsy()
+      expect(spring.get()).toBeLessThan(1)
+
+      await global.advanceUntilValue(spring, 1)
+      await global.advance()
+      expect(spring.idle).toBeFalsy()
+      expect(spring.get()).toBeLessThan(1)
+    })
+
     it('can be combined with the "reverse" prop', async () => {
       const spring = new SpringValue(0)
       spring.start(1, { config: { duration: frameLength * 3 } })

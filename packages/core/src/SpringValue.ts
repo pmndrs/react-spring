@@ -635,12 +635,22 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }).then(result => {
       if (props.loop && result.finished && !(isLoop && result.noop)) {
         const nextProps = createLoopUpdate(props)
-        if (nextProps) {
+        // An immediate iteration finishes in the frame it starts, so looping
+        // it would restart the spring on every frame and it would never rest.
+        if (nextProps && !this._isImmediateUpdate(nextProps)) {
           return this._update(nextProps, true)
         }
       }
       return result
     })
+  }
+
+  /** Returns true if the given update would jump to its goal without animating. */
+  protected _isImmediateUpdate(props: SpringProps<T>): boolean {
+    return (
+      !isAsyncTo(props.to) &&
+      matchProp(this.defaultProps.immediate || props.immediate, this.key)
+    )
   }
 
   /** Merge props into the current animation */
