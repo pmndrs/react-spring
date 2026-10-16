@@ -41,7 +41,7 @@ jobs:
 
       - name: Create release PR or publish
         id: changesets
-        uses: changesets/action@v2
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           version-script: pnpm vers
           publish-script: pnpm changeset publish

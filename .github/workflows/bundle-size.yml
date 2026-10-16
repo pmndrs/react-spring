@@ -25,6 +25,6 @@ jobs:
       - name: Build packages
         run: pnpm build --filter=!@react-spring/docs
 
-      - uses: preactjs/compressed-size-action@v2
+      - uses: preactjs/compressed-size-action@f322c295dde06a1cb7ccaef105732dd8a726d1d9 # 2.10.0
         with:
           pattern: '{**/dist/**/*.{mjs,js},packages/types/*.{js,d.ts}}'
