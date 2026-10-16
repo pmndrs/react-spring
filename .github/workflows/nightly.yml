@@ -25,6 +25,8 @@ jobs:
           access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Check for changes
         id: version
