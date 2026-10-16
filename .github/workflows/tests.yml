@@ -5,6 +5,9 @@ on:
     branches:
       - 'main'
   pull_request: {}
+permissions:
+  contents: read
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
@@ -12,6 +15,9 @@ concurrency:
 
 jobs:
   changes:
+    permissions:
+      contents: read
+      pull-requests: read
     name: Check for changes
     runs-on: ubuntu-latest
     outputs:
