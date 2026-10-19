@@ -51,16 +51,15 @@ export const useResize = ({
   )
 
   useIsomorphicLayoutEffect(() => {
+    let firstResize = true
     const cleanupScroll = onResize(
       ({ width, height }) => {
         api.start({
           width,
           height,
-          immediate:
-            sizeValues.width.get() === 0 ||
-            sizeValues.height.get() === 0 ||
-            springOptions.immediate === true,
+          immediate: firstResize || springOptions.immediate === true,
         })
+        firstResize = false
       },
       { container: container?.current || undefined }
     )
