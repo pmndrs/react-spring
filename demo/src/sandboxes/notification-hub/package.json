@@ -11,8 +11,8 @@
   "dependencies": {
     "@react-spring/web": "*",
     "lorem-ipsum": "3.0.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "react-feather": "2.0.10",
     "styled-components": "6.5.3"
   },
