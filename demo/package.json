@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@react-three/drei": "~10.7.9",
-    "@react-three/fiber": "~9.8.1",
+    "@react-three/fiber": "~9.8.2",
     "@stitches/react": "1.2.8",
     "@use-gesture/react": "10.3.1",
     "@vitejs/plugin-react": "6.1.2",
