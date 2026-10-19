@@ -58,8 +58,8 @@
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "3.0.3",
-    "@commitlint/cli": "21.2.3",
-    "@commitlint/config-conventional": "21.2.3",
+    "@commitlint/cli": "21.2.4",
+    "@commitlint/config-conventional": "21.2.4",
     "@react-spring/mock-raf": "1.1.1",
     "@react-spring/parallax": "workspace:*",
     "@react-three/fiber": "~9.8.1",
