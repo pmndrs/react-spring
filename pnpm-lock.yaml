@@ -417,8 +417,8 @@ importers:
         specifier: 2.1.7
         version: 2.1.7(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       zod:
-        specifier: 4.6.5
-        version: 4.6.5
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@mdx-js/rollup':
         specifier: 3.1.1
@@ -5602,8 +5602,8 @@ packages:
     resolution: {integrity: sha512-XrBh9ZiQK5mJVRxZBAvD6LwRyAYrK3MFtH3+onyuxFL5hFD44EC3QOmIC1FjTj6H2MMwq46/NAI+NZxLZPZgxg==}
     engines: {node: '>=14.18.0'}
 
-  zod@4.6.5:
-    resolution: {integrity: sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==}
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
   zustand@3.7.2:
     resolution: {integrity: sha512-PIJDIZKtokhof+9+60cpockVOq05sJzHCriyvaLBmEJixseQ1a5Kdov6fWZfWOu5SK9c+FhH1jU0tntLxRJYMA==}
@@ -5652,29 +5652,29 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/gateway@3.0.209(zod@4.6.5)':
+  '@ai-sdk/gateway@3.0.209(zod@4.6.7)':
     dependencies:
       '@ai-sdk/provider': 3.0.18
-      '@ai-sdk/provider-utils': 4.0.57(zod@4.6.5)
+      '@ai-sdk/provider-utils': 4.0.57(zod@4.6.7)
       '@vercel/oidc': 3.2.0
-      zod: 4.6.5
+      zod: 4.6.7
 
-  '@ai-sdk/provider-utils@4.0.57(zod@4.6.5)':
+  '@ai-sdk/provider-utils@4.0.57(zod@4.6.7)':
     dependencies:
       '@ai-sdk/provider': 3.0.18
       '@standard-schema/spec': 1.1.0
       eventsource-parser: 3.1.1
       undici: 6.29.0
-      zod: 4.6.5
+      zod: 4.6.7
 
   '@ai-sdk/provider@3.0.18':
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@3.0.303(react@19.3.0)(zod@4.6.5)':
+  '@ai-sdk/react@3.0.303(react@19.3.0)(zod@4.6.7)':
     dependencies:
-      '@ai-sdk/provider-utils': 4.0.57(zod@4.6.5)
-      ai: 6.0.300(zod@4.6.5)
+      '@ai-sdk/provider-utils': 4.0.57(zod@4.6.7)
+      ai: 6.0.300(zod@4.6.7)
       react: 19.3.0
       swr: 2.5.1(react@19.3.0)
       throttleit: 2.1.0
@@ -6285,15 +6285,15 @@ snapshots:
 
   '@docsearch/react@5.1.2(@algolia/client-search@5.59.0)(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(search-insights@2.17.3)':
     dependencies:
-      '@ai-sdk/react': 3.0.303(react@19.3.0)(zod@4.6.5)
+      '@ai-sdk/react': 3.0.303(react@19.3.0)(zod@4.6.7)
       '@algolia/autocomplete-core': 1.19.2(@algolia/client-search@5.59.0)(algoliasearch@5.59.0)(search-insights@2.17.3)
       '@base-ui/react': 1.8.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@docsearch/core': 5.1.2(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@docsearch/css': 5.1.2
-      ai: 6.0.300(zod@4.6.5)
+      ai: 6.0.300(zod@4.6.7)
       algoliasearch: 5.59.0
       marked: 16.4.2
-      zod: 4.6.5
+      zod: 4.6.7
     optionalDependencies:
       '@types/react': 19.3.0
       react: 19.3.0
@@ -8071,13 +8071,13 @@ snapshots:
 
   acorn@8.18.0: {}
 
-  ai@6.0.300(zod@4.6.5):
+  ai@6.0.300(zod@4.6.7):
     dependencies:
-      '@ai-sdk/gateway': 3.0.209(zod@4.6.5)
+      '@ai-sdk/gateway': 3.0.209(zod@4.6.7)
       '@ai-sdk/provider': 3.0.18
-      '@ai-sdk/provider-utils': 4.0.57(zod@4.6.5)
+      '@ai-sdk/provider-utils': 4.0.57(zod@4.6.7)
       '@opentelemetry/api': 1.9.1
-      zod: 4.6.5
+      zod: 4.6.7
 
   ajv@8.20.0:
     dependencies:
@@ -10774,7 +10774,7 @@ snapshots:
       '@yuku-toolchain/types': 0.19.0
       yuku-core: 0.19.0
 
-  zod@4.6.5: {}
+  zod@4.6.7: {}
 
   zustand@3.7.2(react@19.3.0):
     optionalDependencies:
