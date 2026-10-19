@@ -11,8 +11,8 @@
   "dependencies": {
     "@react-spring/web": "*",
     "lodash.shuffle": "4.2.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "react-use-measure": "2.1.7"
   },
   "scripts": {

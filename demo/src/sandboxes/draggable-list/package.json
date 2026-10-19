@@ -15,8 +15,8 @@
     "@use-gesture/react": "10.3.1",
     "lodash.clamp": "4.0.3",
     "lodash-move": "1.1.1",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "scripts": {
     "dev": "vite",
