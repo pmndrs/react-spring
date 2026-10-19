@@ -3,7 +3,6 @@ import { forwardRef, useRef, Ref, useCallback, useEffect } from 'react'
 import {
   is,
   each,
-  raf,
   useForceUpdate,
   useOnce,
   FluidEvent,
@@ -11,6 +10,7 @@ import {
   addFluidObserver,
   removeFluidObserver,
   useIsomorphicLayoutEffect,
+  type Clock,
 } from '@react-spring/shared'
 import { ElementType } from '@react-spring/types'
 
@@ -64,7 +64,7 @@ export const withAnimated = (Component: any, host: HostConfig) => {
       }
     }
 
-    const observer = new PropsObserver(callback, deps)
+    const observer = new PropsObserver(callback, deps, host.clock)
 
     const observerRef = useRef<PropsObserver>(undefined)
     useIsomorphicLayoutEffect(() => {
@@ -79,7 +79,7 @@ export const withAnimated = (Component: any, host: HostConfig) => {
           each(observerRef.current.deps, dep =>
             removeFluidObserver(dep, observerRef.current!)
           )
-          raf.cancel(observerRef.current.update)
+          host.clock.raf.cancel(observerRef.current.update)
         }
       }
     })
@@ -100,11 +100,12 @@ export const withAnimated = (Component: any, host: HostConfig) => {
 class PropsObserver {
   constructor(
     readonly update: () => void,
-    readonly deps: Set<FluidValue>
+    readonly deps: Set<FluidValue>,
+    readonly clock: Clock
   ) {}
   eventObserved(event: FluidEvent) {
     if (event.type == 'change') {
-      raf.write(this.update)
+      this.clock.raf.write(this.update)
     }
   }
 }

@@ -7,6 +7,7 @@ import {
   getFluidObservers,
   Globals,
   removeFluidObserver,
+  withClock,
 } from '@react-spring/shared'
 
 const frameLength = 1000 / 60
@@ -121,6 +122,18 @@ describe('SpringValue', () => {
 
     await global.advanceUntilIdle()
     expect(global.getFrames(spring)).toMatchSnapshot()
+  })
+
+  it('runs on the clock it was created on', () => {
+    const { clock, clockRaf } = global.createTestClock()
+    const spring = withClock(clock, () => new SpringValue(0))
+    spring.start(1, { config: { duration: 100 } })
+
+    global.mockRaf.step({ count: 5 })
+    expect(spring.get()).toBe(0)
+
+    clockRaf.step({ count: 5 })
+    expect(spring.get()).toBeGreaterThan(0)
   })
 
   describeProps()

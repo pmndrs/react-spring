@@ -1,6 +1,5 @@
 import {
   is,
-  raf,
   flush,
   eachProp,
   Timeout,
@@ -191,7 +190,7 @@ export function runAsync<T extends AnimationTarget>(
     }
 
     if (is.fun(onRest)) {
-      raf.batchedUpdates(() => {
+      target.clock.raf.batchedUpdates(() => {
         onRest(result, target, target.item)
       })
     }

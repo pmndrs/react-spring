@@ -1,5 +1,5 @@
 import type { Lookup } from '@react-spring/types'
-import type { FluidValue } from '@react-spring/shared'
+import type { Clock, FluidValue } from '@react-spring/shared'
 import type { Controller } from '../Controller'
 import type { SpringValue } from '../SpringValue'
 import type { AsyncResult, AnimationResult } from './objects'
@@ -42,6 +42,7 @@ export interface AnimationTarget<T = any> extends Readable<T> {
   start(props: any): AsyncResult<this>
   stop: Function
   item?: unknown
+  clock: Clock
 }
 
 /** @internal */

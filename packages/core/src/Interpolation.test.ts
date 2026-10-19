@@ -1,8 +1,25 @@
 import { SpringValue } from './SpringValue'
 import { to } from './interpolate'
-import { FluidValue, addFluidObserver } from '@react-spring/shared'
+import { FluidValue, addFluidObserver, withClock } from '@react-spring/shared'
 
 describe('Interpolation', () => {
+  it('runs on the clock of its source', () => {
+    const { clock, clockRaf } = global.createTestClock()
+    const source = withClock(
+      clock,
+      () => new SpringValue({ from: 0, to: 10, config: { duration: 100 } })
+    )
+    const interp = to(source, (n: number) => n * 2)
+    // Interpolations only compute while observed.
+    addFluidObserver(interp, () => {})
+
+    global.mockRaf.step({ count: 5 })
+    expect(interp.get()).toBe(0)
+
+    clockRaf.step({ count: 5 })
+    expect(interp.get()).toBeGreaterThan(0)
+  })
+
   it('can use a SpringValue', async () => {
     const source = new SpringValue({ from: 0, to: 10 })
     const interp = to(source, (n: number) => n * 2)

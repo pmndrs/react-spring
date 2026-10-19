@@ -15,6 +15,8 @@ import {
   is,
   colors,
   frameLoop,
+  createClock,
+  type Clock,
   addFluidObserver,
   removeFluidObserver,
   getFluidObservers,
@@ -46,6 +48,9 @@ declare global {
   var setTimeout: (handler: Function, ms: number) => number
 
   var setSkipAnimation: (skip: boolean) => void
+
+  /** A clock with its own mock rAF, so stepping `mockRaf` never advances it. */
+  var createTestClock: () => { clock: Clock; clockRaf: MockRaf }
 }
 
 // Allow indefinite tests, since we limit the number of animation frames
@@ -206,4 +211,12 @@ globalThis.setSkipAnimation = skip => {
   Globals.assign({
     skipAnimation: skip,
   })
+}
+
+globalThis.createTestClock = () => {
+  const clockRaf = createMockRaf()
+  const clock = createClock()
+  clock.raf.use(clockRaf.raf)
+  clock.raf.now = clockRaf.now
+  return { clock, clockRaf }
 }

@@ -2,6 +2,7 @@ import * as Globals from './globals'
 export { Globals }
 
 export * from './FrameLoop'
+export * from './clock'
 export * from './clamp'
 export * from './colors'
 export * from './colorToRgba'
