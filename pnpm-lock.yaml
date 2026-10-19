@@ -309,13 +309,13 @@ importers:
         version: 2.1.7(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react95:
         specifier: 4.0.0
-        version: 4.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        version: 4.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       sass:
         specifier: 1.105.2
         version: 1.105.2
       styled-components:
-        specifier: 6.5.3
-        version: 6.5.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 6.6.0
+        version: 6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       three:
         specifier: 0.186.1
         version: 0.186.1
@@ -2908,6 +2908,9 @@ packages:
   '@types/stats.js@0.17.4':
     resolution: {integrity: sha512-jIBvWWShCvlBqBNIZt0KAshWpvSjhkwkEu4ZUcASoAvhmrgAUI2t1dXrjSL4xXVLB4FznPrIsX3nKXFl/Dt4vA==}
 
+  '@types/stylis@4.2.7':
+    resolution: {integrity: sha512-VgDNokpBoKF+wrdvhAAfS55OMQpL6QRglwTwNC3kIgBrzZxA4WsFj+2eLfEA/uMUDzBcEhYmjSbwQakn/i3ajA==}
+
   '@types/three@0.186.0':
     resolution: {integrity: sha512-mxYSBpDC+D0pLfSP6sW4WZTcT+nrtmZcimMqnVmy36Hte3XpeYSrvgg4TRdaM1GemGog1AWzI5qL2VoIfMXbJQ==}
 
@@ -5103,8 +5106,8 @@ packages:
   style-to-object@1.0.14:
     resolution: {integrity: sha512-LIN7rULI0jBscWQYaSswptyderlarFkjQ+t79nzty8tcIAceVomEVlLzH5VP4Cmsv6MtKhs7qaAiwlcp+Mgaxw==}
 
-  styled-components@6.5.3:
-    resolution: {integrity: sha512-vAX79sfpmUerP9fsTTxoTrBDE0RuO4ahjInyWYoohNgqrdg63Ms4q6FJ/o2Fyity82NU3cujOT8Ewl9TThBdwg==}
+  styled-components@6.6.0:
+    resolution: {integrity: sha512-drKKsqvDBxVRn4ySU67iQ5nQBuo/1xyYeBfdhDde112PkqrS3+95KPnpDs5hFRcmrW+q6+gbyywYYYR14oWFtw==}
     engines: {node: '>= 16'}
     peerDependencies:
       react: '>= 16.8.0'
@@ -7758,6 +7761,8 @@ snapshots:
 
   '@types/stats.js@0.17.4': {}
 
+  '@types/stylis@4.2.7': {}
+
   '@types/three@0.186.0':
     dependencies:
       '@dimforge/rapier3d-compat': 0.12.0
@@ -9879,11 +9884,11 @@ snapshots:
     optionalDependencies:
       react-dom: 19.3.1(react@19.3.1)
 
-  react95@4.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.5.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)):
+  react95@4.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)):
     dependencies:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
-      styled-components: 6.5.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      styled-components: 6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
 
   react@19.3.1: {}
 
@@ -10312,9 +10317,10 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.7
 
-  styled-components@6.5.3(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
+  styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
+      '@types/stylis': 4.2.7
       css-to-react-native: 3.2.0
       csstype: 3.2.3
       react: 19.3.1
