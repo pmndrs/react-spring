@@ -22,25 +22,26 @@ export type AnimatableComponent = string | Exclude<ElementType, string>
 
 export const withAnimated = (Component: any, host: HostConfig) => {
   const hasInstance: boolean =
-    // Function components must use "forwardRef" to avoid being
-    // re-rendered on every animation frame.
     !is.fun(Component) ||
     (Component.prototype && Component.prototype.isReactComponent)
+  const canReceiveRef = hasInstance || parseInt(React.version, 10) >= 19
 
   return forwardRef((givenProps: any, givenRef: Ref<any>) => {
     const instanceRef = useRef<any>(null)
 
-    // The `hasInstance` value is constant, so we can safely avoid
-    // the `useCallback` invocation when `hasInstance` is false.
-    const ref =
-      hasInstance &&
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      useCallback(
-        (value: any) => {
-          instanceRef.current = updateRef(givenRef, value)
-        },
-        [givenRef]
-      )
+    const ref = useCallback(
+      (value: any) => {
+        instanceRef.current = value
+        const cleanup = updateRef(givenRef, value)
+        if (is.fun(cleanup)) {
+          return () => {
+            instanceRef.current = null
+            cleanup()
+          }
+        }
+      },
+      [givenRef]
+    )
 
     const [props, deps] = getAnimatedState(givenProps, host)
 
@@ -75,11 +76,12 @@ export const withAnimated = (Component: any, host: HostConfig) => {
 
       return () => {
         // Stop observing previous dependencies.
-        if (observerRef.current) {
-          each(observerRef.current.deps, dep =>
-            removeFluidObserver(dep, observerRef.current!)
+        const currentObserver = observerRef.current
+        if (currentObserver) {
+          each(currentObserver.deps, dep =>
+            removeFluidObserver(dep, currentObserver)
           )
-          raf.cancel(observerRef.current.update)
+          raf.cancel(currentObserver.update)
         }
       }
     })
@@ -88,12 +90,14 @@ export const withAnimated = (Component: any, host: HostConfig) => {
     useEffect(callback, [])
     // Stop observing on unmount.
     useOnce(() => () => {
-      const observer = observerRef.current!
-      each(observer.deps, dep => removeFluidObserver(dep, observer))
+      const observer = observerRef.current
+      if (observer) {
+        each(observer.deps, dep => removeFluidObserver(dep, observer))
+      }
     })
 
     const usedProps = host.getComponentProps(props.getValue())
-    return <Component {...usedProps} ref={ref} />
+    return <Component {...usedProps} ref={canReceiveRef ? ref : undefined} />
   })
 }
 
@@ -131,8 +135,7 @@ function getAnimatedState(props: any, host: HostConfig): AnimatedState {
 
 function updateRef<T>(ref: Ref<T>, value: T) {
   if (ref) {
-    if (is.fun(ref)) ref(value)
+    if (is.fun(ref)) return ref(value)
     else (ref as any).current = value
   }
-  return value
 }
