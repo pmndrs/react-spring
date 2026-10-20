@@ -14,7 +14,7 @@
     "@react-spring/three": "*",
     "@react-spring/web": "*",
     "@react-three/drei": "~10.7.9",
-    "@react-three/fiber": "~9.8.1",
+    "@react-three/fiber": "~9.8.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "three": "0.186.1"
