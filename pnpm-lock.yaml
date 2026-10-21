@@ -433,8 +433,8 @@ importers:
         specifier: 5.2.6
         version: 5.2.6(@types/node@26.6.4)(babel-plugin-macros@3.1.0)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.2)(supports-color@10.2.2)(tsx@4.23.15)(vite@8.3.4(@types/node@26.6.4)(esbuild@0.28.2)(jiti@2.6.1)(sass@1.105.2)(tsx@4.23.15)(yaml@2.9.1))(yaml@2.9.1)
       chokidar:
-        specifier: 5.0.0
-        version: 5.0.0
+        specifier: 6.0.0
+        version: 6.0.0
       concurrently:
         specifier: 10.0.6
         version: 10.0.6
@@ -3405,6 +3405,10 @@ packages:
   chokidar@5.0.0:
     resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
     engines: {node: '>= 20.19.0'}
+
+  chokidar@6.0.0:
+    resolution: {integrity: sha512-Ec2Z7wpcKBiMpR7DxteoqS/sq5G5d2A4fpxzPv6+fD7xNNdrTghn7L11YwV5EN1B3i72Erc3XVT5FkWIDx90+A==}
+    engines: {node: '>= 22.22'}
 
   clean-set@1.1.2:
     resolution: {integrity: sha512-cA8uCj0qSoG9e0kevyOWXwPaELRPVg5Pxp6WskLMwerx257Zfnh8Nl0JBH59d7wQzij2CK7qEfJQK3RjuKKIug==}
@@ -8245,6 +8249,10 @@ snapshots:
   character-reference-invalid@2.0.1: {}
 
   chokidar@5.0.0:
+    dependencies:
+      readdirp: 5.1.1
+
+  chokidar@6.0.0:
     dependencies:
       readdirp: 5.1.1
 
