@@ -27,6 +27,6 @@
     "@vitejs/plugin-react": "6.1.2",
     "sass": "1.105.2",
     "typescript": "7.0.2",
-    "vite": "8.3.4"
+    "vite": "8.3.5"
   }
 }
