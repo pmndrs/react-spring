@@ -21,19 +21,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Build everything except docs         | `pnpm build-ci`                                                                               |
 | Watch-build all packages in parallel | `pnpm dev`                                                                                    |
 | Run docs / demo dev servers          | `pnpm docs:dev` / `pnpm demo:dev`                                                             |
-| Full test suite                      | `pnpm test` (ts + unit + e2e)                                                                 |
+| Full test suite                      | `pnpm test` (unit + types + e2e)                                                              |
 | Unit tests                           | `pnpm test:unit`                                                                              |
 | Watch unit tests                     | `pnpm vitest --project unit`                                                                  |
 | Single test file                     | `pnpm vitest run packages/core/src/SpringValue.test.ts`                                       |
 | Filter by test name                  | `pnpm vitest run -t "interpolation"`                                                          |
 | Headed (visible browser) debugging   | `pnpm vitest --project unit --browser.headless=false <file>`                                  |
 | Coverage                             | `pnpm test:cov` (thresholds: 80% statements / 74% branches / 71% functions / 82% lines)       |
-| Type-check                           | `pnpm test:ts`                                                                                |
+| Type tests                           | `pnpm test:types` (needs a build first, see below)                                            |
 | Parallax E2E                         | `pnpm test:e2e` (programmatically serves `packages/parallax/test`, runs Vitest browser specs) |
 | Lint                                 | `pnpm lint` (turbo across packages)                                                           |
 | Format                               | `pnpm format` / `pnpm format:check`                                                           |
 
 Note: `vitest.config.ts` aliases `@react-spring/*` to the package source under `packages/*/src/index.ts`, so unit tests run **without** a prior build. Anything outside Vitest (docs, publishing) needs `pnpm build` first.
+
+Type tests are the exception inside Vitest: `pnpm test:types` type-checks against each package's built `dist` types. In a fresh clone or worktree, run `pnpm build-ci` first, or it fails with `Cannot find module '@react-spring/shared'`.
 
 Strict isolation: `node_modules` is non-hoisted, so a workspace can only `import` packages it declares in its own `package.json`. If you see a `Cannot find module 'foo'` error after adding an import, add `foo` to that workspace's `dependencies` / `peerDependencies` / `devDependencies` — do not add a hoist rule.
 
@@ -93,6 +95,8 @@ The library is a layered monorepo. Read packages bottom-up — each layer is tar
 
 Rendering uses `vitest-browser-react` (`import { render } from 'vitest-browser-react'`). Hook tests use the in-repo `renderHook` helper at `tests/helpers/renderHook.tsx` (imported as `@tests/helpers/renderHook`) since `vitest-browser-react` does not ship `renderHook`. `act` comes from `react` (React 19 native).
 
+Type tests (`*.test-d.ts`) assert the resolved type with `expectTypeOf(x).toEqualTypeOf<…>()`. A call that only compiles proves little: inference can fall back to `any` or `Lookup` and still pass.
+
 Vitest fake timers are enabled globally and fake all non-rAF time sources (`setTimeout`, `setInterval`, `Date`, `queueMicrotask`, `performance`). rAF is owned by `@react-spring/mock-raf` — never fake `requestAnimationFrame`.
 
 The E2E project (`pnpm test:e2e`) lives at `tests/e2e/`. `global-setup.ts` boots the parallax fixture via Vite's programmatic API on an ephemeral port and exposes the URL through Vitest's `provide`/`inject` channel (`inject('baseUrl')`).
@@ -104,17 +108,27 @@ All packages are version-locked. Workflow:
 ```sh
 pnpm changeset    # add a changeset describing the change
 pnpm vers         # bumps versions + internal deps
-pnpm release      # clean install, build, type-check, unit test, then changeset publish
+pnpm release      # clean install, build, then changeset publish
 ```
+
+Release workflows (`release.yml`, `nightly.yml`, `experimental.yml`) build and publish only. They don't re-run type or unit tests: `tests.yml` already gates every merge to `next`.
 
 For prereleases enter pre-mode first: `pnpm changeset pre enter beta|alpha|next`.
 
 ## Conventions
 
 - Commits and PR titles follow Conventional Commits (`feat:`, `fix:`, `chore:`, …). commitlint enforces this on `commit-msg`.
-- Prettier config: no semis, single quotes, 2-space tabs, ES5 trailing commas, `arrowParens: 'avoid'`, 80-col print width.
-- ESLint: `no-console` is `error` except `warn`/`error`; unused vars must be prefixed `_`; `@typescript-eslint/no-explicit-any` is **off** intentionally (the spring engine leans on `any` for variance).
+- oxfmt (`.oxfmtrc.json`): no semis, single quotes, 2-space tabs, ES5 trailing commas, `arrowParens: 'avoid'`, 80-col print width.
+- oxlint (`.oxlintrc.json`): `no-console` is `error` except `warn`/`error`; unused vars must be prefixed `_`. `any` is allowed intentionally (the spring engine leans on it for variance).
+- A PR that widens coverage (a new TypeScript or Node version, or test runner, in the matrix) drops any slot that fails and opens a follow-up issue with the failure log, instead of fixing it in the same PR.
 - The default branch is `next` (also treated as the PR base). `main` may exist but `next` is the active line.
+
+## Features, issues and the roadmap
+
+- **Check what exists first.** Before proposing a feature, find the primitive that may already cover it: FluidValue re-targeting (a spring's `to` can be another spring), `useTrail` / `useChain`, `config.velocity` with `decay`, `useScroll`, the config presets in `packages/core/src/constants.ts`.
+- **Fit the model.** Users own the springs, and `animated.*` only subscribes (`withAnimated`). Motion-style features where a component owns its animation state (`while*` props, variants, presence as props) are off-model; the react-spring form is a hook that drives the user's springs.
+- **Issues state what and why.** No release, timeline or migration framing. Cite the code anchors (files, interfaces), state non-goals, and link real user issues that double as acceptance tests, so the issue is a spec an agent could implement. Use the `[feat]` / `[bug]` templates.
+- **Roadmap.** The v11 roadmap is GitHub Discussion #2539. Edit it on GitHub, read its live state before each change, and keep no local copy.
 
 <!-- SPECKIT START -->
 
