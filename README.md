@@ -19,6 +19,9 @@
   <a href="https://discord.gg/AXfNsGx64f" target="_blank">
     <img src="https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff" alt="Chat on Discord">
   </a>
+  <a href="https://score.getplumber.io/github.com/pmndrs/react-spring" target="_blank">
+    <img src="https://score.getplumber.io/github.com/pmndrs/react-spring.svg" alt="Plumber Score" />
+  </a>
 </p>
 
 <br>
