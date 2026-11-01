@@ -84,7 +84,7 @@
     "tsdown": "0.23.1",
     "turbo": "2.11.9",
     "typescript": "7.0.2",
-    "vite": "8.3.4",
+    "vite": "8.3.5",
     "vitest": "^5.0.5",
     "vitest-browser-react": "^2.3.0"
   },
