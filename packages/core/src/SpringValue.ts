@@ -499,7 +499,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
       this._focus(this.get())
     }
 
-    stopAsync(this._state, cancel && this._lastCallId)
+    stopAsync(this._state, cancel && this._lastCallId, cancel)
     raf.batchedUpdates(() => this._stop(to, cancel))
 
     return this
@@ -582,65 +582,81 @@ export class SpringValue<T = any> extends FrameValue<T> {
         )
       )
 
-    mergeActiveFn(this, props, 'onProps')
-    sendEvent(this, 'onProps', props, this)
-
-    // Ensure the initial value can be accessed by animated components.
-    const range = this._prepareNode(props)
-
-    if (Object.isFrozen(this)) {
-      throw Error(
-        'Cannot animate a `SpringValue` object that is frozen. ' +
-          'Did you forget to pass your component to `animated(...)` before animating its props?'
+    const state = this._state
+    let stopped: AsyncResult<SpringValue<T>> | undefined
+    const onStop = (cancelled: boolean) => {
+      state.stopQueue?.delete(onStop)
+      stopped = Promise.resolve(
+        cancelled
+          ? getCancelledResult(this.get())
+          : getFinishedResult(this.get(), false)
       )
     }
+    // Own the update until its scheduler can observe a synchronous stop.
+    ;(state.stopQueue ||= new Set()).add(onStop)
+    try {
+      mergeActiveFn(this, props, 'onProps')
+      sendEvent(this, 'onProps', props, this)
 
-    const state = this._state
+      // A stopped update must not reseed a newer start's initial value.
+      const range = this._prepareNode(stopped ? {} : props)
 
-    return scheduleProps(++this._lastCallId, {
-      key,
-      props,
-      defaultProps,
-      state,
-      actions: {
-        pause: () => {
-          if (!isPaused(this)) {
-            setPausedBit(this, true)
-            flushCalls(state.pauseQueue)
-            sendEvent(
-              this,
-              'onPause',
-              getFinishedResult(this, checkFinished(this, this.animation.to)),
-              this
-            )
-          }
-        },
-        resume: () => {
-          if (isPaused(this)) {
-            setPausedBit(this, false)
-            if (isAnimating(this)) {
-              this._resume()
-            }
-            flushCalls(state.resumeQueue)
-            sendEvent(
-              this,
-              'onResume',
-              getFinishedResult(this, checkFinished(this, this.animation.to)),
-              this
-            )
-          }
-        },
-        start: this._merge.bind(this, range),
-      },
-    }).then(result => {
-      if (props.loop && result.finished && !(isLoop && result.noop)) {
-        const nextProps = createLoopUpdate(props)
-        if (nextProps) {
-          return this._update(nextProps, true)
-        }
+      if (Object.isFrozen(this)) {
+        throw Error(
+          'Cannot animate a `SpringValue` object that is frozen. ' +
+            'Did you forget to pass your component to `animated(...)` before animating its props?'
+        )
       }
-      return result
-    })
+
+      return scheduleProps(++this._lastCallId, {
+        getStoppedResult: () => stopped,
+        key,
+        target: this,
+        props,
+        defaultProps,
+        state,
+        actions: {
+          pause: () => {
+            if (!isPaused(this)) {
+              setPausedBit(this, true)
+              flushCalls(state.pauseQueue)
+              sendEvent(
+                this,
+                'onPause',
+                getFinishedResult(this, checkFinished(this, this.animation.to)),
+                this
+              )
+            }
+          },
+          resume: () => {
+            if (isPaused(this)) {
+              setPausedBit(this, false)
+              if (isAnimating(this)) {
+                this._resume()
+              }
+              flushCalls(state.resumeQueue)
+              sendEvent(
+                this,
+                'onResume',
+                getFinishedResult(this, checkFinished(this, this.animation.to)),
+                this
+              )
+            }
+          },
+          start: this._merge.bind(this, range),
+        },
+      }).then(result => {
+        if (props.loop && result.finished && !(isLoop && result.noop)) {
+          const nextProps = createLoopUpdate(props)
+          if (nextProps) {
+            return this._update(nextProps, true)
+          }
+        }
+        return result
+      })
+    } finally {
+      state.stopQueue.delete(onStop)
+    }
   }
 
   /** Merge props into the current animation */

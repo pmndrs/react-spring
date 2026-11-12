@@ -2,6 +2,7 @@ import { Timeout, is, raf, Globals as G } from '@react-spring/shared'
 import { matchProp, callProp } from './helpers'
 import { AsyncResult, MatchProp } from './types'
 import { RunAsyncState, RunAsyncProps } from './runAsync'
+import { getCancelledResult, getFinishedResult } from './AnimationResult'
 import {
   AnimationResolver,
   AnimationTarget,
@@ -14,9 +15,11 @@ type DefaultProps<T> = { cancel?: MatchProp<T>; pause?: MatchProp<T> }
 
 interface ScheduledProps<T extends AnimationTarget> {
   key?: string
+  target: T
   props: InferProps<T>
   defaultProps?: DefaultProps<InferState<T>>
   state: RunAsyncState<T>
+  getStoppedResult?: () => AsyncResult<T> | undefined
   actions: {
     pause: () => void
     resume: () => void
@@ -33,38 +36,64 @@ interface ScheduledProps<T extends AnimationTarget> {
  */
 export function scheduleProps<T extends AnimationTarget>(
   callId: number,
-  { key, props, defaultProps, state, actions }: ScheduledProps<T>
+  {
+    key,
+    target,
+    props,
+    defaultProps,
+    state,
+    actions,
+    getStoppedResult,
+  }: ScheduledProps<T>
 ): AsyncResult<T> {
   return new Promise((resolve, reject) => {
     let delay: number
     let timeout: Timeout
+    let started = false
 
-    let cancel = matchProp(props.cancel ?? defaultProps?.cancel, key)
-    if (cancel) {
-      onStart()
-    } else {
-      // The `pause` prop updates the paused flag.
-      if (!is.und(props.pause)) {
-        state.paused = matchProp(props.pause, key)
-      }
-      // The default `pause` takes precedence when true,
-      // which allows `SpringContext` to work as expected.
-      let pause = defaultProps?.pause
-      if (pause !== true) {
-        pause = state.paused || matchProp(pause, key)
-      }
-
-      delay = callProp(props.delay || 0, key)
-      if (pause) {
-        state.resumeQueue.add(onResume)
-        actions.pause()
+    let cancel: boolean
+    try {
+      cancel = matchProp(props.cancel ?? defaultProps?.cancel, key)
+      const stopped = getStoppedResult?.()
+      if (cancel) {
+        onStart()
+      } else if (stopped) {
+        resolve(stopped)
       } else {
-        actions.resume()
-        onResume()
+        ;(state.stopQueue ||= new Set()).add(onStop)
+
+        // The `pause` prop updates the paused flag.
+        if (!is.und(props.pause)) {
+          const paused = matchProp(props.pause, key)
+          if (started) return
+          state.paused = paused
+        }
+        // The default `pause` takes precedence when true,
+        // which allows `SpringContext` to work as expected.
+        let pause = defaultProps?.pause
+        if (pause !== true) {
+          pause = state.paused || matchProp(pause, key)
+        }
+
+        if (started) return
+        delay = callProp(props.delay || 0, key)
+        if (started) return
+        if (pause) {
+          state.resumeQueue.add(onResume)
+          actions.pause()
+        } else {
+          actions.resume()
+          onResume()
+        }
       }
+    } catch (error) {
+      if (state.stopQueue?.has(onStop)) cleanup()
+      started = true
+      reject(error)
     }
 
     function onPause() {
+      if (started) return
       state.resumeQueue.add(onResume)
       state.timeouts.delete(timeout)
       timeout.cancel()
@@ -73,6 +102,7 @@ export function scheduleProps<T extends AnimationTarget>(
     }
 
     function onResume() {
+      if (started) return
       if (delay > 0 && !G.skipAnimation) {
         state.delayed = true
         timeout = raf.setTimeout(onStart, delay)
@@ -83,14 +113,30 @@ export function scheduleProps<T extends AnimationTarget>(
       }
     }
 
-    function onStart() {
-      if (state.delayed) {
-        state.delayed = false
-      }
-
+    function cleanup() {
+      state.stopQueue?.delete(onStop)
+      state.resumeQueue.delete(onResume)
       state.pauseQueue.delete(onPause)
       state.timeouts.delete(timeout)
+      timeout?.cancel()
+      state.delayed = false
+    }
 
+    function onStop(cancelled: boolean) {
+      if (started) return
+      started = true
+      cleanup()
+      resolve(
+        cancelled
+          ? getCancelledResult(target.get())
+          : getFinishedResult(target.get(), false)
+      )
+    }
+
+    function onStart() {
+      if (started) return
+      started = true
+      cleanup()
       // Maybe cancelled during its delay.
       if (callId <= (state.cancelId || 0)) {
         cancel = true

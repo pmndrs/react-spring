@@ -224,7 +224,8 @@ export class Controller<State extends Lookup = Lookup> {
       const springs = this.springs as Lookup<SpringValue>
       each(toArray(keys) as string[], key => springs[key].stop(!!arg))
     } else {
-      stopAsync(this._state, this._lastAsyncId)
+      this._lastLoopId++
+      stopAsync(this._state, !!arg && ++this._lastAsyncId)
       this.each(spring => spring.stop(!!arg))
     }
     return this
@@ -416,64 +417,112 @@ export async function flushUpdate(
   }
 
   const state = ctrl['_state']
-
-  // Pause/resume the `asyncTo` when `props.pause` is true/false.
-  if (props.pause === !state.paused) {
-    state.paused = props.pause
-    flushCalls(props.pause ? state.pauseQueue : state.resumeQueue)
-  }
-  // When a controller is paused, its values are also paused.
-  else if (state.paused) {
-    props.pause = true
-  }
-
-  const promises: AsyncResult[] = (keys || Object.keys(ctrl.springs)).map(key =>
-    ctrl.springs[key]!.start(props as any)
-  )
-
   const cancel =
     props.cancel === true || getDefaultProp(props, 'cancel') === true
+  const cancelAsync = cancel && !!(asyncTo || state.asyncId)
 
-  if (asyncTo || (cancel && state.asyncId)) {
-    promises.push(
-      scheduleProps(++ctrl['_lastAsyncId'], {
-        props,
-        state,
-        actions: {
-          pause: noop,
-          resume: noop,
-          start(props, resolve) {
-            if (cancel) {
-              stopAsync(state, ctrl['_lastAsyncId'])
-              resolve(getCancelledResult(ctrl))
-            } else {
-              props.onRest = onRest
-              resolve(
-                runAsync(
-                  asyncTo as SpringChain | SpringToFn,
-                  props,
-                  state,
-                  ctrl
-                )
-              )
-            }
-          },
-        },
+  if (cancel) {
+    ctrl['_lastLoopId']++
+    stopAsync(state, ++ctrl['_lastAsyncId'])
+  }
+
+  let interrupted: boolean | undefined
+  let onResume: (() => void) | undefined
+  const onStop = (cancelled: boolean) => {
+    if (interrupted === undefined) {
+      interrupted = cancelled
+      state.stopQueue?.delete(onStop)
+      onResume?.()
+    }
+  }
+  // Own this update before a child can synchronously stop its Controller.
+  if (!cancel) (state.stopQueue ||= new Set()).add(onStop)
+
+  let combined: AnimationResult
+  try {
+    // Pause/resume the `asyncTo` when `props.pause` is true/false.
+    if (props.pause === !state.paused) {
+      state.paused = props.pause
+      flushCalls(props.pause ? state.pauseQueue : state.resumeQueue)
+    }
+    // When a controller is paused, its values are also paused.
+    else if (state.paused) {
+      props.pause = true
+    }
+
+    let pausePromise: Promise<void> | undefined
+    if (state.paused && !cancel && interrupted === undefined) {
+      pausePromise = new Promise<void>(resolve => {
+        const resume = () => {
+          state.resumeQueue.delete(resume)
+          resolve()
+        }
+        onResume = resume
+        state.resumeQueue.add(resume)
       })
+    }
+
+    const promises: AsyncResult[] = (keys || Object.keys(ctrl.springs)).map(
+      key => {
+        const spring = ctrl.springs[key]!
+        return interrupted === undefined
+          ? spring.start(props as any)
+          : Promise.resolve({
+              value: spring.get(),
+              finished: false,
+              cancelled: interrupted,
+            })
+      }
     )
-  }
 
-  // Pause after updating each spring, so they can be resumed separately
-  // and so their default `pause` and `cancel` props are updated.
-  if (state.paused) {
-    // Ensure `this` must be resumed before the returned promise
-    // is resolved and before starting the next `loop` repetition.
-    await new Promise<void>(resume => {
-      state.resumeQueue.add(resume)
-    })
-  }
+    if (cancel && (cancelAsync || !promises.length)) {
+      promises.push(
+        Promise.resolve(getCancelledResult(cancelAsync ? ctrl : ctrl.get()))
+      )
+    }
 
-  const result = getCombinedResult<any>(ctrl, await Promise.all(promises))
+    if (asyncTo && !cancel) {
+      promises.push(
+        interrupted === undefined
+          ? scheduleProps(++ctrl['_lastAsyncId'], {
+              props,
+              target: ctrl,
+              state,
+              actions: {
+                pause: noop,
+                resume: noop,
+                start(props, resolve) {
+                  props.onRest = onRest
+                  resolve(
+                    runAsync(
+                      asyncTo as SpringChain | SpringToFn,
+                      props,
+                      state,
+                      ctrl
+                    )
+                  )
+                },
+              },
+            })
+          : Promise.resolve({
+              value: ctrl.get(),
+              finished: false,
+              cancelled: interrupted,
+            })
+      )
+    }
+
+    const results = await Promise.all(promises)
+    if (pausePromise) await pausePromise
+    combined = getCombinedResult<any>(ctrl, results)
+  } finally {
+    state.stopQueue?.delete(onStop)
+    if (onResume) state.resumeQueue.delete(onResume)
+  }
+  const result =
+    interrupted === undefined
+      ? combined
+      : { ...combined, finished: false, cancelled: interrupted }
   if (
     loop &&
     result.finished &&
