@@ -29,6 +29,7 @@ export interface RunAsyncState<T extends AnimationTarget = any> {
   pauseQueue: Set<() => void>
   resumeQueue: Set<() => void>
   timeouts: Set<Timeout>
+  stopQueue?: Set<(cancelled: boolean) => void>
   delayed?: boolean
   asyncId?: number
   asyncTo?: AsyncTo<InferState<T>>
@@ -143,6 +144,7 @@ export function runAsync<T extends AnimationTarget>(
           await new Promise<void>(resume => {
             state.resumeQueue.add(resume)
           })
+          bailIfEnded(bailSignal)
         }
 
         return result
@@ -201,12 +203,18 @@ export function runAsync<T extends AnimationTarget>(
 }
 
 /** Stop the current `runAsync` call with `finished: false` (or with `cancelled: true` when `cancelId` is defined) */
-export function stopAsync(state: RunAsyncState, cancelId?: number | Falsy) {
-  flush(state.timeouts, t => t.cancel())
-  state.pauseQueue.clear()
-  state.resumeQueue.clear()
+export function stopAsync(
+  state: RunAsyncState,
+  cancelId?: number | Falsy,
+  cancelled = !!cancelId
+) {
   state.asyncId = state.asyncTo = state.promise = undefined
   if (cancelId) state.cancelId = cancelId
+  flush(state.timeouts, t => t.cancel())
+  state.pauseQueue.clear()
+  // Detach scheduled starts before waking promises that only wait for resume.
+  if (state.stopQueue) flush(state.stopQueue, stop => stop(cancelled))
+  flush(state.resumeQueue, resume => resume())
 }
 
 /** This error is thrown to signal an interrupted async animation. */
