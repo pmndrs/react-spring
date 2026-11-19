@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Callback validation</title>
+    <style>
+      body {
+        font: 17px system-ui;
+        margin: 40px;
+        background: #f7f8fa;
+        color: #152030;
+      }
+      section {
+        background: white;
+        border: 1px solid #ccd4dd;
+        border-radius: 12px;
+        padding: 22px;
+        margin: 18px 0;
+        max-width: 740px;
+      }
+      .track {
+        height: 38px;
+        background: #eef1f5;
+        margin: 18px 0;
+      }
+      .box {
+        width: 38px;
+        height: 38px;
+        background: #267463;
+        border-radius: 6px;
+      }
+      pre {
+        font: 15px monospace;
+        white-space: pre-wrap;
+      }
+      button {
+        padding: 10px 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>useTransition callback validation</h1>
+    <p>
+      Actual source, Chromium, normal animation clock. No controller or
+      scheduler mocks.
+    </p>
+    <div id="root"></div>
+    <script type="module" src="./app.jsx"></script>
+  </body>
+</html>

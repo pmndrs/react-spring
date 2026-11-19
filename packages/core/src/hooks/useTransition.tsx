@@ -102,6 +102,7 @@ export function useTransition(
   deps?: any[]
 ): any {
   const propsFn = is.fun(props) && props
+  const p = propsFn ? propsFn() : props
 
   const {
     reset,
@@ -113,7 +114,7 @@ export function useTransition(
     onDestroyed,
     ref: propsRef,
     config: propsConfig,
-  }: UseTransitionProps<any> = propsFn ? propsFn() : props
+  }: UseTransitionProps<any> = p
 
   // Return a `SpringRef` if a deps array was passed.
   const ref = useMemo(
@@ -245,7 +246,7 @@ export function useTransition(
   const forceUpdate = useForceUpdate()
 
   // These props are inherited by every phase change.
-  const defaultProps = getDefaultProps<UseTransitionProps>(props)
+  const defaultProps = getDefaultProps<UseTransitionProps>(p)
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
   const exitingTransitions = useRef(new Map<TransitionState, Change>())
