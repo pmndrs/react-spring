@@ -473,11 +473,20 @@ export async function flushUpdate(
     })
   }
 
-  const result = getCombinedResult<any>(ctrl, await Promise.all(promises))
+  const results = await Promise.all(promises)
+  const result = getCombinedResult<any>(ctrl, results)
+
+  // Loop continuation after an async `to` chain is decided by the chain's
+  // own result alone. The per-key preparation updates above keep their
+  // previous goal (no `to` of their own), so when a declarative reissue
+  // lets the new chain's steps interrupt them, their `finished: false`
+  // only means "superseded by my own replacement", not that the chain
+  // failed. Letting it veto the loop is issue #2095.
+  const loopResult = asyncTo ? results[results.length - 1]! : result
   if (
     loop &&
-    result.finished &&
-    !(isLoop && result.noop) &&
+    loopResult.finished &&
+    !(isLoop && loopResult.noop) &&
     // A newer top-level update would have bumped `_lastLoopId`; if our
     // captured id no longer matches, the user's loop intent has changed
     // (or restarted under a fresh chain) so this iteration must not
