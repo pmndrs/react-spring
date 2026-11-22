@@ -31,6 +31,32 @@ describe('Interpolation', () => {
     expect(interpolation(10.5)).toBe('scale(10.5)')
   })
 
+  it('should pick the range segment from the mapped input', () => {
+    const interpolation = createInterpolator({
+      range: [0, 0.5, 1],
+      output: [0, 100, 0],
+      map: x => 1 - x,
+    })
+
+    expect(interpolation(0)).toBe(0)
+    expect(interpolation(0.2)).toBeCloseTo(40)
+    expect(interpolation(0.5)).toBe(100)
+    expect(interpolation(0.8)).toBeCloseTo(40)
+    expect(interpolation(1)).toBe(0)
+  })
+
+  it('should clamp the mapped input', () => {
+    const interpolation = createInterpolator({
+      range: [0, 1, 2],
+      output: [0, 10, 20],
+      map: x => x * 2,
+      extrapolate: 'clamp',
+    })
+
+    expect(interpolation(0.75)).toBe(15)
+    expect(interpolation(2)).toBe(20)
+  })
+
   it('should work with range arrays as arguments', () => {
     const interpolation = createInterpolator([0, 1], [100, 200])
 
@@ -199,6 +225,17 @@ describe('Interpolation', () => {
 
       expect(interpolation(0)).toBe('0 kr')
       expect(interpolation(1)).toBe('1.500 kr')
+    })
+
+    it('applies map before the keyframe shortcut', () => {
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['0px', '100px'],
+        map: x => 1 - x,
+      })
+
+      expect(interpolation(0)).toBe('100px')
+      expect(interpolation(1)).toBe('0px')
     })
   })
 

@@ -41,17 +41,19 @@ export const createInterpolator: InterpolatorFactory = (
   const easing = config.easing || (t => t)
 
   return (input: number) => {
-    const range = findRange(input, inputRange)
+    // `map` transforms the input before interpolation, so the segment is
+    // picked with the mapped value too
+    const value = config.map ? config.map(input) : input
+    const range = findRange(value, inputRange)
     return interpolate(
-      input,
+      value,
       inputRange[range],
       inputRange[range + 1],
       outputRange[range],
       outputRange[range + 1],
       easing,
       extrapolateLeft,
-      extrapolateRight,
-      config.map
+      extrapolateRight
     )
   }
 }
@@ -64,10 +66,9 @@ function interpolate(
   outputMax: number,
   easing: EasingFunction,
   extrapolateLeft: ExtrapolateType,
-  extrapolateRight: ExtrapolateType,
-  map?: (x: number) => number
+  extrapolateRight: ExtrapolateType
 ) {
-  let result = map ? map(input) : input
+  let result = input
   // Extrapolate
   if (result < inputMin) {
     if (extrapolateLeft === 'identity') return result

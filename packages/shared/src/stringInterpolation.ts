@@ -97,7 +97,8 @@ export const createStringInterpolator = (
     // When `input` lands exactly on a keyframe, return that keyframe's
     // output verbatim so token-level formatting (trailing zeros, signs,
     // locale separators) survives the round-trip through `numberRegex`.
-    const keyIdx = inputRange.indexOf(input)
+    const mappedInput = config.map ? config.map(input) : input
+    const keyIdx = inputRange.indexOf(mappedInput)
     if (keyIdx !== -1) return output[keyIdx]
 
     // Convert numbers to units if available (allows for ["0", "100%"])
