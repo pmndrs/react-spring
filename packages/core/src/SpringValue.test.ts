@@ -799,6 +799,24 @@ function describeDelayProp() {
       expect(anim.immediate).toBeFalsy()
       expect(anim.to).toBe(0)
     })
+
+    it('keeps the remaining delay when paused and resumed', async () => {
+      const spring = new SpringValue(0)
+      const onStart = vi.fn()
+      spring.start(1, { delay: 500, onStart })
+
+      await global.advanceByTime(200)
+      spring.pause()
+      await global.advanceByTime(1000)
+      expect(onStart).not.toBeCalled()
+
+      spring.resume()
+      await global.advanceByTime(250)
+      expect(onStart).not.toBeCalled()
+
+      await global.advanceByTime(100)
+      expect(onStart).toBeCalledTimes(1)
+    })
   })
 }
 
@@ -1052,6 +1070,69 @@ function describeMethods() {
         finished: false,
         value,
       })
+    })
+  })
+
+  describe('"stop" method', () => {
+    it('resolves a start waiting on its delay without starting it', async () => {
+      const spring = new SpringValue(0)
+      const onStart = vi.fn()
+      const onRest = vi.fn()
+      const resolved = vi.fn()
+      spring.start(1, { delay: 500, onStart, onRest }).then(resolved)
+
+      await global.advance()
+      spring.stop()
+      await global.advanceByTime(1000)
+
+      expect(resolved).toBeCalledTimes(1)
+      expect(resolved.mock.calls[0][0]).toMatchObject({
+        value: 0,
+        finished: false,
+        cancelled: false,
+      })
+      expect(spring.get()).toBe(0)
+      expect(onStart).not.toBeCalled()
+      expect(onRest).not.toBeCalled()
+    })
+
+    it('resolves a delayed start as cancelled when passed true', async () => {
+      const spring = new SpringValue(0)
+      const resolved = vi.fn()
+      spring.start(1, { delay: 500 }).then(resolved)
+
+      await global.advance()
+      spring.stop(true)
+      await global.advanceByTime(1000)
+
+      expect(resolved).toBeCalledTimes(1)
+      expect(resolved.mock.calls[0][0]).toMatchObject({
+        value: 0,
+        finished: false,
+        cancelled: true,
+      })
+    })
+
+    it('resolves a paused start, which a later resume does not start', async () => {
+      const spring = new SpringValue(0)
+      const onRest = vi.fn()
+      const resolved = vi.fn()
+      spring.start(1, { pause: true, onRest }).then(resolved)
+
+      await global.advance()
+      spring.stop()
+      await global.advance()
+      expect(resolved).toBeCalledTimes(1)
+      expect(resolved.mock.calls[0][0]).toMatchObject({
+        value: 0,
+        finished: false,
+      })
+      expect(spring.goal).toBe(0)
+
+      spring.resume()
+      await global.advanceUntilIdle()
+      expect(spring.get()).toBe(0)
+      expect(onRest).not.toBeCalled()
     })
   })
 }

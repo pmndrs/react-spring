@@ -2,6 +2,7 @@ import {
   is,
   raf,
   flush,
+  flushCalls,
   eachProp,
   Timeout,
   Globals as G,
@@ -28,6 +29,8 @@ export interface RunAsyncState<T extends AnimationTarget = any> {
   paused: boolean
   pauseQueue: Set<() => void>
   resumeQueue: Set<() => void>
+  /** Settles starts still waiting on a delay or resume when `stopAsync` runs */
+  stopQueue: Set<(cancelled: boolean) => void>
   timeouts: Set<Timeout>
   delayed?: boolean
   asyncId?: number
@@ -143,6 +146,8 @@ export function runAsync<T extends AnimationTarget>(
           await new Promise<void>(resume => {
             state.resumeQueue.add(resume)
           })
+          // `stopAsync` also wakes this wait, and the script must end there.
+          bailIfEnded(bailSignal)
         }
 
         return result
@@ -203,10 +208,20 @@ export function runAsync<T extends AnimationTarget>(
 /** Stop the current `runAsync` call with `finished: false` (or with `cancelled: true` when `cancelId` is defined) */
 export function stopAsync(state: RunAsyncState, cancelId?: number | Falsy) {
   flush(state.timeouts, t => t.cancel())
+  // With every delay cancelled, a leftover `delayed` flag would keep the
+  // target from ever going idle.
+  state.delayed = false
   state.pauseQueue.clear()
-  state.resumeQueue.clear()
   state.asyncId = state.asyncTo = state.promise = undefined
   if (cancelId) state.cancelId = cancelId
+
+  // Discarding the waiters would leave their promises pending forever, so
+  // settle them instead. Scheduled starts go first, because each one removes
+  // its resume callback, which would otherwise start the stopped animation.
+  flushCalls(state.stopQueue, !!cancelId)
+  // What's left (async steps, the Controller's pause gate) sees the stop
+  // once woken and ends with `finished: false`.
+  flushCalls(state.resumeQueue)
 }
 
 /** This error is thrown to signal an interrupted async animation. */

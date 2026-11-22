@@ -6,6 +6,8 @@ import { useTransition } from './useTransition'
 import { useSpring } from './useSpring'
 import { useChain } from './useChain'
 import { SpringRef } from '../SpringRef'
+import { Controller } from '../Controller'
+import { act } from 'react'
 
 describe('useTransition', () => {
   let transition: TransitionFn
@@ -389,6 +391,57 @@ describe('useTransition', () => {
     await global.advanceUntilIdle()
 
     expect(phaseLog.some(entry => entry.endsWith(':leave'))).toBe(true)
+  })
+
+  describe('when a leaving item is stopped', () => {
+    let ctrls: Map<any, Controller>
+    const update = createUpdater(({ args }) => {
+      const t = toArray(useTransition(...args))[0] as TransitionFn
+      rendered = t((_, item, state) => {
+        ctrls.set(item, state.ctrl)
+        return item
+      }).props.children
+      return null
+    })
+    beforeEach(() => {
+      ctrls = new Map()
+    })
+
+    it('unmounts it while it animates', async () => {
+      const props = {
+        from: { n: 0 },
+        enter: { n: 1 },
+        leave: { n: 0 },
+        config: { duration: 1000 },
+      }
+      await update(true, props)
+      await global.advanceUntilIdle()
+
+      await update(false, props)
+      await global.advance(5)
+      await act(async () => ctrls.get(true)!.stop())
+      await global.advanceByTime(1000)
+
+      expect(rendered).toEqual([false])
+    })
+
+    it('unmounts it during its leave delay', async () => {
+      const props = {
+        from: { n: 0 },
+        enter: { n: 1 },
+        leave: { n: 0, delay: 500 },
+        config: { duration: 1000 },
+      }
+      await update(true, props)
+      await global.advanceUntilIdle()
+
+      await update(false, props)
+      await global.advance(5)
+      await act(async () => ctrls.get(true)!.stop())
+      await global.advanceByTime(1000)
+
+      expect(rendered).toEqual([false])
+    })
   })
 
   it('should work with both exitBeforeEnter and trail together', async () => {

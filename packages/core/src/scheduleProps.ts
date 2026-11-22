@@ -2,6 +2,7 @@ import { Timeout, is, raf, Globals as G } from '@react-spring/shared'
 import { matchProp, callProp } from './helpers'
 import { AsyncResult, MatchProp } from './types'
 import { RunAsyncState, RunAsyncProps } from './runAsync'
+import { getCancelledResult, getFinishedResult } from './AnimationResult'
 import {
   AnimationResolver,
   AnimationTarget,
@@ -14,6 +15,7 @@ type DefaultProps<T> = { cancel?: MatchProp<T>; pause?: MatchProp<T> }
 
 interface ScheduledProps<T extends AnimationTarget> {
   key?: string
+  target: T
   props: InferProps<T>
   defaultProps?: DefaultProps<InferState<T>>
   state: RunAsyncState<T>
@@ -33,7 +35,7 @@ interface ScheduledProps<T extends AnimationTarget> {
  */
 export function scheduleProps<T extends AnimationTarget>(
   callId: number,
-  { key, props, defaultProps, state, actions }: ScheduledProps<T>
+  { key, target, props, defaultProps, state, actions }: ScheduledProps<T>
 ): AsyncResult<T> {
   return new Promise((resolve, reject) => {
     let delay: number
@@ -57,6 +59,7 @@ export function scheduleProps<T extends AnimationTarget>(
       delay = callProp(props.delay || 0, key)
       if (pause) {
         state.resumeQueue.add(onResume)
+        state.stopQueue.add(onStop)
         actions.pause()
       } else {
         actions.resume()
@@ -78,9 +81,21 @@ export function scheduleProps<T extends AnimationTarget>(
         timeout = raf.setTimeout(onStart, delay)
         state.pauseQueue.add(onPause)
         state.timeouts.add(timeout)
+        state.stopQueue.add(onStop)
       } else {
         onStart()
       }
+    }
+
+    // Called by `stopAsync`, which has already cancelled the delay.
+    function onStop(cancelled: boolean) {
+      state.resumeQueue.delete(onResume)
+      // A start stopped before it began never moved or called `onStart`, so it
+      // settles without `onRest`, the same as `stop()` on an idle spring.
+      const value = target.get()
+      resolve(
+        cancelled ? getCancelledResult(value) : getFinishedResult(value, false)
+      )
     }
 
     function onStart() {
@@ -88,6 +103,7 @@ export function scheduleProps<T extends AnimationTarget>(
         state.delayed = false
       }
 
+      state.stopQueue.delete(onStop)
       state.pauseQueue.delete(onPause)
       state.timeouts.delete(timeout)
 
