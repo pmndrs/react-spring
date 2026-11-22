@@ -5,8 +5,9 @@ Thanks for helping out! This guide covers everything you need to get a local che
 ## Prerequisites
 
 - **Node**: see `.nvmrc` (`nvm use` or `fnm use` picks it up). `engines.node` is the same version.
-- **pnpm**: pinned via `packageManager` in the root `package.json`. Enable Corepack so the correct version activates automatically:
+- **pnpm**: pinned via `packageManager` in the root `package.json`. Install and enable Corepack so the correct version activates automatically (Node 25 and later no longer bundle it):
   ```sh
+  npm install -g corepack
   corepack enable
   ```
   If you use a standalone pnpm 11 install instead, its automatic version switch can't start pnpm 12. Upgrade it with `npm i -g pnpm@12`.

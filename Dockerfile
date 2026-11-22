@@ -3,7 +3,8 @@
 # ----- Build stage: install + build inside the full monorepo -----
 FROM node:26.13.1-alpine AS builder
 
-RUN corepack enable
+# Node 25+ no longer bundles Corepack
+RUN npm install -g corepack && corepack enable
 WORKDIR /repo
 
 COPY . .
