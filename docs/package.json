@@ -38,7 +38,7 @@
     "@vanilla-extract/recipes": "0.5.7",
     "clsx": "2.1.1",
     "cookie": "2.0.2",
-    "isbot": "5.2.2",
+    "isbot": "5.2.3",
     "phosphor-react": "1.4.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
