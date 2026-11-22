@@ -700,6 +700,108 @@ describe('Controller', () => {
       await global.advanceUntilIdle()
       expect(ctrl['_state'].asyncTo).toBeUndefined()
     })
+
+    it('resolves a start waiting on its delay and goes idle', async () => {
+      const ctrl = new Controller({ t: 0 })
+      const onResolve = vi.fn()
+      const resolved = vi.fn()
+      ctrl.start({ t: 1, delay: 500, onResolve }).then(resolved)
+
+      await global.advance()
+      ctrl.stop()
+      await global.advanceByTime(1000)
+
+      expect(resolved).toBeCalledTimes(1)
+      expect(resolved.mock.calls[0][0]).toMatchObject({
+        finished: false,
+        cancelled: false,
+      })
+      expect(ctrl.get().t).toBe(0)
+      expect(onResolve).toBeCalledTimes(1)
+      expect(ctrl.idle).toBeTruthy()
+    })
+
+    it('resolves a start made while paused, which a later resume does not start', async () => {
+      const ctrl = new Controller({ t: 0 })
+      const resolved = vi.fn()
+      ctrl.pause()
+      ctrl.start({ t: 1 }).then(resolved)
+
+      await global.advance()
+      ctrl.stop()
+      await global.advance()
+      expect(resolved).toBeCalledTimes(1)
+      expect(resolved.mock.calls[0][0]).toMatchObject({ finished: false })
+
+      ctrl.resume()
+      await global.advanceUntilIdle()
+      expect(ctrl.get().t).toBe(0)
+    })
+
+    it('resolves an async "to" stopped during a delayed step', async () => {
+      const ctrl = new Controller({ t: 0 })
+      const resolved = vi.fn()
+      ctrl.start({ to: [{ t: 1, delay: 500 }, { t: 2 }] }).then(resolved)
+
+      await global.advance()
+      ctrl.stop()
+      await global.advanceByTime(2000)
+
+      expect(resolved).toBeCalledTimes(1)
+      expect(resolved.mock.calls[0][0]).toMatchObject({ finished: false })
+      expect(ctrl.get().t).toBe(0)
+    })
+
+    it('ends an async script paused between steps', async () => {
+      const ctrl = new Controller({ t: 0 })
+      const afterStep = vi.fn()
+      const resolved = vi.fn()
+      ctrl
+        .start({
+          to: async next => {
+            await next({ t: 1, onRest: () => ctrl.pause() })
+            afterStep()
+          },
+          config: { duration: 50 },
+        })
+        .then(resolved)
+
+      await global.advanceUntil(() => ctrl.springs.t.isPaused)
+      await global.advance(2)
+      ctrl.stop()
+      await global.advanceByTime(500)
+
+      expect(resolved).toBeCalledTimes(1)
+      expect(resolved.mock.calls[0][0]).toMatchObject({ finished: false })
+      expect(afterStep).not.toBeCalled()
+    })
+
+    it('does not loop again when stopped during a delay', async () => {
+      const ctrl = new Controller({ t: 0 })
+      const onStart = vi.fn()
+      const resolved = vi.fn()
+      ctrl
+        .start({
+          from: { t: 0 },
+          t: 1,
+          loop: true,
+          delay: 200,
+          onStart,
+          config: { duration: 50 },
+        })
+        .then(resolved)
+
+      await global.advanceByTime(400)
+      await global.advanceUntil(() => ctrl.springs.t.isDelayed)
+      ctrl.stop()
+      const starts = onStart.mock.calls.length
+      await global.advanceByTime(2000)
+
+      expect(resolved).toBeCalledTimes(1)
+      expect(resolved.mock.calls[0][0]).toMatchObject({ finished: false })
+      expect(onStart).toBeCalledTimes(starts)
+      expect(ctrl.idle).toBeTruthy()
+    })
   })
 
   describe('events', () => {

@@ -56,4 +56,46 @@ describe('useChain', () => {
     await global.advance(10)
     expect(s2.y.get()).toBeGreaterThan(0)
   })
+
+  describe('when the first ref is stopped', () => {
+    const renderChain = async (delay: number) => {
+      const ref1 = SpringRef()
+      const ref2 = SpringRef()
+      const onStart = vi.fn()
+
+      const Comp = () => {
+        useSpring({
+          ref: ref1,
+          from: { x: 0 },
+          to: { x: 100 },
+          delay,
+          config: { duration: 1000 },
+        })
+        useSpring({ ref: ref2, from: { y: 0 }, to: { y: 100 }, onStart })
+        useChain([ref1, ref2])
+        return null
+      }
+
+      await render(<Comp />)
+      return { ref1, onStart }
+    }
+
+    it('starts the next ref while the first animates', async () => {
+      const { ref1, onStart } = await renderChain(0)
+      await global.advance(5)
+      ref1.stop()
+      await global.advanceByTime(1000)
+
+      expect(onStart).toBeCalledTimes(1)
+    })
+
+    it("starts the next ref during the first ref's delay", async () => {
+      const { ref1, onStart } = await renderChain(500)
+      await global.advance(5)
+      ref1.stop()
+      await global.advanceByTime(1000)
+
+      expect(onStart).toBeCalledTimes(1)
+    })
+  })
 })

@@ -95,6 +95,7 @@ export class Controller<State extends Lookup = Lookup> {
     paused: false,
     pauseQueue: new Set(),
     resumeQueue: new Set(),
+    stopQueue: new Set(),
     timeouts: new Set(),
   }
 
@@ -437,6 +438,7 @@ export async function flushUpdate(
   if (asyncTo || (cancel && state.asyncId)) {
     promises.push(
       scheduleProps(++ctrl['_lastAsyncId'], {
+        target: ctrl,
         props,
         state,
         actions: {

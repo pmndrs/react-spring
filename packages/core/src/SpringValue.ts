@@ -94,6 +94,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     delayed: false,
     pauseQueue: new Set(),
     resumeQueue: new Set(),
+    stopQueue: new Set(),
     timeouts: new Set(),
   }
 
@@ -599,6 +600,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
     return scheduleProps(++this._lastCallId, {
       key,
+      target: this,
       props,
       defaultProps,
       state,
