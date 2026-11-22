@@ -44,7 +44,7 @@
     "@react-spring/core": "workspace:~",
     "@react-spring/shared": "workspace:~",
     "@react-spring/types": "workspace:~",
-    "csstype": "^3.2.3"
+    "csstype": "^3.2.4"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
