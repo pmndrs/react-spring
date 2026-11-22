@@ -226,6 +226,17 @@ describe('Interpolation', () => {
       expect(interpolation(0)).toBe('0 kr')
       expect(interpolation(1)).toBe('1.500 kr')
     })
+
+    it('applies map before the keyframe shortcut', () => {
+      const interpolation = createInterpolator({
+        range: [0, 1],
+        output: ['0px', '100px'],
+        map: x => 1 - x,
+      })
+
+      expect(interpolation(0)).toBe('100px')
+      expect(interpolation(1)).toBe('0px')
+    })
   })
 
   // https://github.com/pmndrs/react-spring/issues/1461
