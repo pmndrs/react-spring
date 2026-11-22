@@ -480,6 +480,181 @@ describe('useTransition', () => {
       expect(leaveStart).toEqual([0, 1, 2])
     })
   })
+  describe('props functions', () => {
+    it.each([
+      ['factory', false, false],
+      ['factory with deps', true, false],
+      ['factory with injected ref', false, true],
+    ] as const)('%s forwards lifecycle events', async (_, deps, injected) => {
+      const onStart = vi.fn()
+      const onChange = vi.fn()
+      const onRest = vi.fn()
+      const ref = SpringRef()
+      function Component() {
+        const props = () => ({
+          from: { x: 0 },
+          enter: { x: 1 },
+          onStart,
+          onChange,
+          onRest,
+          ...(injected ? { ref } : {}),
+        })
+        const transition = toArray(
+          deps ? useTransition(true, props, []) : useTransition(true, props)
+        )[0]
+        transition(() => null)
+        return null
+      }
+      await render(<Component />)
+      if (injected) {
+        await global.advanceUntilIdle()
+        expect(ref.current[0].get().x).toBe(0)
+        expect(onStart).not.toBeCalled()
+        ref.start()
+      }
+      await global.advanceUntilIdle()
+      expect(onChange.mock.lastCall?.[0].value.x).toBe(1)
+      expect(onStart).toBeCalledTimes(1)
+      expect(onChange).toBeCalled()
+      expect(onRest).toBeCalledTimes(1)
+      expect(onStart.mock.calls[0][2]).toBe(true)
+    })
+
+    it.each([
+      ['implicit', undefined],
+      ['false', false],
+    ] as const)('%s defaults forward events', async (_, defaults) => {
+      const onRest = vi.fn()
+      function Component() {
+        const transition = toArray(
+          useTransition(true, () => ({
+            from: { x: 0 },
+            enter: { x: 1 },
+            default: defaults,
+            onRest,
+          }))
+        )[0]
+        transition(() => null)
+        return null
+      }
+      await render(<Component />)
+      await global.advanceUntilIdle()
+      expect(onRest).toBeCalledTimes(1)
+    })
+
+    it('forwards explicit default callbacks instead of top-level callbacks', async () => {
+      const topLevel = vi.fn()
+      const inherited = vi.fn()
+      function Component() {
+        const transition = toArray(
+          useTransition(true, () => ({
+            from: { x: 0 },
+            enter: { x: 1 },
+            default: { onRest: inherited },
+            onRest: topLevel,
+          }))
+        )[0]
+        transition(() => null)
+        return null
+      }
+      await render(<Component />)
+      await global.advanceUntilIdle()
+      expect(inherited).toBeCalledTimes(1)
+      expect(topLevel).not.toBeCalled()
+    })
+
+    it('applies inherited default configuration', async () => {
+      const ref = SpringRef()
+      function Component() {
+        const transition = toArray(
+          useTransition(true, () => ({
+            ref,
+            from: { x: 0 },
+            enter: { x: 1 },
+            default: { config: { duration: 123 } },
+          }))
+        )[0]
+        transition(() => null)
+        return null
+      }
+      await render(<Component />)
+      ref.start()
+      await global.advanceUntilIdle()
+      expect(ref.current[0].springs.x.animation.config.duration).toBe(123)
+      expect(ref.current[0].get().x).toBe(1)
+    })
+
+    it('forwards onProps, onPause and onResume', async () => {
+      const ref = SpringRef()
+      const onProps = vi.fn()
+      const onPause = vi.fn()
+      const onResume = vi.fn()
+      function Component() {
+        const transition = toArray(
+          useTransition(true, () => ({
+            ref,
+            from: { x: 0 },
+            enter: { x: 1 },
+            onProps,
+            onPause,
+            onResume,
+          }))
+        )[0]
+        transition(() => null)
+        return null
+      }
+      await render(<Component />)
+      ref.start()
+      expect(onProps).toBeCalled()
+      ref.pause()
+      expect(onPause).toBeCalledTimes(1)
+      ref.resume()
+      expect(onResume).toBeCalledTimes(1)
+      await global.advanceUntilIdle()
+      expect(ref.current[0].get().x).toBe(1)
+    })
+
+    it.each([{ items: [] }, { items: [1] }, { items: [1, 2] }])(
+      'resolves props once per render with initial items $items',
+      async ({ items: initialItems }) => {
+        let renders = 0
+        let target = 1
+        let getValues: () => number[] = () => []
+        const props = vi.fn(() => ({
+          keys: (item: number) => item,
+          from: { n: 0 },
+          enter: { n: target },
+          update: { n: target },
+          leave: { n: 0 },
+        }))
+        function Component({ items }: { items: number[] }) {
+          renders++
+          const [transition, api] = useTransition(items, props)
+          React.useLayoutEffect(() => {
+            getValues = () =>
+              api.current.map(ctrl => Number(ctrl.get().n)).sort()
+          })
+          transition(() => null)
+          return null
+        }
+        const view = await render(<Component items={initialItems} />)
+        await global.advanceUntilIdle()
+        expect(props).toBeCalledTimes(renders)
+        expect(getValues()).toEqual(initialItems.map(() => 1))
+
+        target = 2
+        await view.rerender(<Component items={[2, 3]} />)
+        await global.advanceUntilIdle()
+        expect(props).toBeCalledTimes(renders)
+        expect(getValues()).toEqual([2, 2])
+
+        await view.rerender(<Component items={[]} />)
+        await global.advanceUntilIdle()
+        expect(props).toBeCalledTimes(renders)
+        expect(getValues()).toEqual([])
+      }
+    )
+  })
 })
 
 let result: Awaited<ReturnType<typeof render>> | undefined
