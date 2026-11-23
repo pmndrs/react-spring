@@ -102,6 +102,7 @@ export function useTransition(
   deps?: any[]
 ): any {
   const propsFn = is.fun(props) && props
+  const p = propsFn ? propsFn() : props
 
   const {
     reset,
@@ -113,7 +114,7 @@ export function useTransition(
     onDestroyed,
     ref: propsRef,
     config: propsConfig,
-  }: UseTransitionProps<any> = propsFn ? propsFn() : props
+  }: UseTransitionProps<any> = p
 
   // Return a `SpringRef` if a deps array was passed.
   const ref = useMemo(
@@ -172,7 +173,7 @@ export function useTransition(
   const {
     key: keyAlias,
     keys: keysProp = keyAlias,
-  }: { key?: ItemKeys; keys?: ItemKeys } = propsFn ? propsFn() : props
+  }: { key?: ItemKeys; keys?: ItemKeys } = p
   const keys = getKeys(items, keysProp, prevTransitions)
 
   // Expired transitions that need clean up.
@@ -216,7 +217,7 @@ export function useTransition(
   // and ensure leaving transitions are rendered until they finish.
   if (reused.length) {
     let i = -1
-    const { leave }: UseTransitionProps<any> = propsFn ? propsFn() : props
+    const { leave }: UseTransitionProps<any> = p
     each(reused, (keyIndex, prevIndex) => {
       const t = prevTransitions![prevIndex]
       if (~keyIndex) {
@@ -245,7 +246,7 @@ export function useTransition(
   const forceUpdate = useForceUpdate()
 
   // These props are inherited by every phase change.
-  const defaultProps = getDefaultProps<UseTransitionProps>(props)
+  const defaultProps = getDefaultProps<UseTransitionProps>(p)
   // Generate changes to apply in useEffect.
   const changes = new Map<TransitionState, Change>()
   const exitingTransitions = useRef(new Map<TransitionState, Change>())
@@ -254,8 +255,6 @@ export function useTransition(
   each(transitions, (t, i) => {
     const key = t.key
     const prevPhase = t.phase
-
-    const p: UseTransitionProps<any> = propsFn ? propsFn() : props
 
     let to: TransitionTo<any>
     let phase: TransitionPhase
@@ -317,7 +316,6 @@ export function useTransition(
     }
 
     if (phase == TransitionPhase.ENTER && is.und(payload.from)) {
-      const p = propsFn ? propsFn() : props
       // The `initial` prop is used on the first render of our parent component,
       // as well as when `reset: true` is passed. It overrides the `from` prop
       // when defined, and it makes `enter` instant when null.
