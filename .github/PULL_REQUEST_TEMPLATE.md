@@ -23,6 +23,10 @@ To check an item, place an "x" in the box like so: "- [x] Documentation"
 Remove items that are irrelevant to your changes.
 -->
 
+- [ ] Linked an issue (`Resolves #…`)
+- [ ] `pnpm format:check`, `pnpm lint`, `pnpm check:types` and `pnpm test:unit` pass locally
+- [ ] New tests fail without the fix
+- [ ] Changeset added (if published behaviour changes)
 - [ ] Documentation updated
 - [ ] Demo added
 - [ ] Ready to be merged

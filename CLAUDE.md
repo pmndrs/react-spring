@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Stack
 
 - **Package manager**: pnpm 12 with strict isolated `node_modules` (default). Pinned via `packageManager` in root `package.json` and activated through Corepack. Scripts assume `pnpm`.
-- **Node**: `.nvmrc` is `24.16.0`; `engines.node` in root `package.json` is `>=24.16.0`; CI runs the unit-test matrix on Node `22.x` and `24.x` and every other job off `.nvmrc`.
+- **Node**: `.nvmrc` is `26.13.1`; `engines.node` in root `package.json` is `>=26.13.1`; CI runs the unit-test matrix on Node `22.x` and `24.x` and every other job off `.nvmrc`. Node 25+ doesn't bundle Corepack, so install it with `npm install -g corepack` before `corepack enable`.
 - **Monorepo**: Turborepo + pnpm workspaces. Workspaces declared in `pnpm-workspace.yaml`: `packages/*`, `targets/*`, `demo`, `docs`.
 - **Bundler**: `tsdown` per package, sharing `tsdown.config.base.mjs`. The library is **ESM-only** — each package emits a single modern ESM bundle (`dist/<name>.modern.mjs`) plus its `.d.mts` types. No CJS, no legacy/pre-compiled variants.
 - **Tests**: Vitest in browser mode (Chromium via Playwright) for both unit and E2E projects, `vitest-browser-react` for rendering, `tsc --noEmit` (types). Root config: `vitest.config.ts`.
@@ -79,6 +79,11 @@ The library is a layered monorepo. Read packages bottom-up — each layer is tar
 4. Each tick computes a new value, emits a `change` event, and the `Animated` tree subscribed via `withAnimated` reads it.
 5. `withAnimated` calls the target's `applyAnimatedValues` (or React's reconciler for prop changes) to write to the host node.
 
+### Logic that lives in two places
+
+- `SpringValue._update` and `Controller`'s `flushUpdate` each decide whether to start another `loop` iteration and what an update resolves with. A `Controller` runs `loop` itself and passes `loop: false` to its springs, so a fix in one path never reaches the other. Check both.
+- Hooks don't send the same props as a bare `Controller`. `useSpring` and `useSprings` add the declared `config` and handlers as `default` props on every render, which takes different branches in `SpringValue._merge`. Reproduce a hook bug through the hook.
+
 ## Testing model
 
 `packages/core/test/setup.ts` is referenced from `vitest.config.ts`'s `unit` project `setupFiles` and is the single most important file for writing animation tests:
@@ -98,6 +103,13 @@ Rendering uses `vitest-browser-react` (`import { render } from 'vitest-browser-r
 Type tests (`*.test-d.ts`) assert the resolved type with `expectTypeOf(x).toEqualTypeOf<…>()`. A call that only compiles proves little: inference can fall back to `any` or `Lookup` and still pass.
 
 Vitest fake timers are enabled globally and fake all non-rAF time sources (`setTimeout`, `setInterval`, `Date`, `queueMicrotask`, `performance`). rAF is owned by `@react-spring/mock-raf` — never fake `requestAnimationFrame`.
+
+Traps that make a test pass or fail for the wrong reason:
+
+- `advanceUntilIdle()` can return between iterations of a loop that finishes without a frame (`skipAnimation`), so the loop looks settled. Count iterations with a capped `loop: () => ++n < 5` instead.
+- A loop that never ends under `skipAnimation` freezes the browser, and the run fails with "Browser connection was closed".
+- Don't return a `start()` promise from an `async` test helper: awaiting the helper then waits for the whole animation. Return it inside an object.
+- A one-key `Controller` resolves with that spring's own result, so `value` is a number, not `{ key: number }`. `getCombinedResult` passes a single result through.
 
 The E2E project (`pnpm test:e2e`) lives at `tests/e2e/`. `global-setup.ts` boots the parallax fixture via Vite's programmatic API on an ephemeral port and exposes the URL through Vitest's `provide`/`inject` channel (`inject('baseUrl')`).
 
@@ -122,6 +134,21 @@ For prereleases enter pre-mode first: `pnpm changeset pre enter beta|alpha|next`
 - oxlint (`.oxlintrc.json`): `no-console` is `error` except `warn`/`error`; unused vars must be prefixed `_`. `any` is allowed intentionally (the spring engine leans on it for variance).
 - A PR that widens coverage (a new TypeScript or Node version, or test runner, in the matrix) drops any slot that fails and opens a follow-up issue with the failure log, instead of fixing it in the same PR.
 - The default branch is `next` (also treated as the PR base). `main` may exist but `next` is the active line.
+
+## Fixing a bug
+
+1. Reproduce it on `next` through the API the report uses, usually a hook, not only through `SpringValue` or `Controller`.
+2. Find the line that causes it, then list every path that reaches it (see "Logic that lives in two places") and every way to trigger it. A check for one trigger in one path leaves the bug open: `loop` with `immediate`, `skipAnimation` or `duration: 0` all restart forever for the same reason.
+3. Read the history before calling behaviour wrong: `git log -L` on the lines, and older issues on the same behaviour. Some of it is by design: an inline `to` array restarts on every render (#848).
+4. Write the failing tests first, in the module's existing test file (`Controller.test.ts`, `useTransition.test.tsx`), never a new file named after an issue. Assert what a user can observe: what the promise resolves with, `onRest` and `onResolve` calls, whether the animation runs, `idle`. Never assert private state such as `_state` queues, and every test must be able to fail.
+5. List what else reads the value you change: `onResolve`, the returned promise, `idle`, `useChain` advancing, `useTransition` expiring leaving items, `SpringRef`. Record each one's behaviour before and after the fix.
+6. After the fix, remove each changed line in turn and check a test fails. A line no test needs is unguarded or unnecessary.
+7. Run every CI command before opening the PR: `pnpm format:check`, `pnpm lint`, `pnpm build-ci`, `pnpm check:types`, `pnpm test:unit`, `pnpm test:types` and `pnpm test:e2e`. `check:types` catches type errors that the unit tests run straight past.
+8. Fixing behaviour that never worked is a `patch`, even when someone could notice the change (#2660: handlers that never fired). Use `major` when working behaviour changes for a common pattern (#2582 changed the `config` that `ref.start(props)` uses).
+
+## Reviewing a PR
+
+Use the `review-pr` skill (`.claude/skills/review-pr/SKILL.md`). It reproduces the PR's claims on `next`, finds the root cause, and checks the fix sits where the cause is.
 
 ## Features, issues and the roadmap
 

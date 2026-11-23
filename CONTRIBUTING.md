@@ -47,7 +47,13 @@ Vitest aliases `@react-spring/*` to the package source, so unit tests don't need
 - **Commits**: follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `chore:`, …). commitlint enforces this on the `commit-msg` hook.
 - **Changeset**: if your change affects published behaviour, run `pnpm changeset` and flag **only the package(s) you changed** (usually one). All `@react-spring/*` packages are version-locked (a `fixed` group in `.changeset/config.json`), so changesets bumps the rest to the same version automatically — you don't flag them yourself. Docs-only or internal-tooling changes don't need one.
 - **Pre-commit**: `oxfmt --check` runs via husky. If it fails, run `pnpm format` and re-commit.
-- **Keep PRs small and focused** — easier to review, easier to land.
+- **Start from an issue**: link one that describes what a user sees going wrong (`Resolves #…`). If there isn't one, open it first with the `[bug]` template, so we can agree on the problem before reviewing a fix.
+- **Keep PRs small and focused** — one fix per PR. Other behaviour changes you notice go in their own issue or PR.
+- **Fix the cause**: find the line that causes the bug and fix it there, so every way of hitting it is covered. See "Fixing a bug" in `CLAUDE.md`.
+- **Run the checks yourself**: CI doesn't run on a first-time contributor's PR until a maintainer approves it, so run `pnpm format:check`, `pnpm lint`, `pnpm check:types` and `pnpm test:unit` before opening it.
+- **Tests**: add them to the module's existing test file, check they fail without your fix, and assert what a user can observe (what a promise resolves with, which callbacks run), not internal state.
+- **Description**: say what the user sees and why it happened, and call out anything that changes for existing code. The diff covers the rest.
+- **AI tools are welcome**: read and run what they produce before you open the PR, and only claim what you've checked.
 
 ## Publishing
 
