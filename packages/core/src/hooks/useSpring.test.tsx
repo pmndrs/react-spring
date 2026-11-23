@@ -351,6 +351,48 @@ describe('useSpring', () => {
     })
   })
 
+  // https://github.com/pmndrs/react-spring/issues/2095
+  describe('when a looping async "to" is re-rendered mid-sequence', () => {
+    const renderLoop = async (to: () => any) => {
+      let spring: SpringValue<number> | undefined
+      let rerender!: () => void
+      const loop = vi.fn(() => true)
+
+      function Component() {
+        const [, setCount] = React.useState(0)
+        rerender = () => setCount(n => n + 1)
+        const springs = useSpring({
+          from: { x: 100 },
+          to: to(),
+          loop,
+          config: { duration: 200 },
+        })
+        spring = springs.x as unknown as SpringValue<number>
+        return null
+      }
+
+      await render(<Component />)
+      await advanceUntil(() => spring!.goal === 300 && spring!.get() > 220)
+      await React.act(async () => rerender())
+      loop.mockClear()
+      await advanceByTime(2000)
+      return loop
+    }
+
+    it('keeps looping an array', async () => {
+      const loop = await renderLoop(() => [{ x: 200 }, { x: 300 }])
+      expect(loop).toHaveBeenCalled()
+    })
+
+    it('keeps looping a script', async () => {
+      const loop = await renderLoop(() => async (next: any) => {
+        await next({ x: 200 })
+        await next({ x: 300 })
+      })
+      expect(loop).toHaveBeenCalled()
+    })
+  })
+
   // Regression test for https://github.com/pmndrs/react-spring/issues/1638
   // The original bug (v9.2.4): a spring with initial value 0 would not
   // animate when api.start() was called from useLayoutEffect on first render.
