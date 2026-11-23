@@ -613,6 +613,98 @@ describe('Controller', () => {
       })
     })
 
+    // https://github.com/pmndrs/react-spring/issues/2095
+    describe('when an async "to" is started again mid-sequence', () => {
+      // `useSpring` passes its declared config as a default prop on every
+      // render, which is what makes the restart reach the moving springs.
+      const sequence = (props: object = {}) => ({
+        from: { t: 0 },
+        to: [{ t: 1 }, { t: 2 }],
+        config: { duration: 200 },
+        default: { config: { duration: 200 } },
+        ...props,
+      })
+      const restartMidSequence = async (ctrl: Controller, props: object) => {
+        ctrl.start(sequence(props))
+        await global.advanceUntil(
+          () => ctrl.springs.t.goal === 2 && ctrl.get().t > 1.2
+        )
+        return { restarted: ctrl.start(sequence(props)) }
+      }
+
+      it('resolves as finished once the restarted sequence completes', async () => {
+        const ctrl = new Controller({ t: 0 })
+        const onResolve = vi.fn()
+        const resolved = vi.fn()
+        const { restarted } = await restartMidSequence(ctrl, { onResolve })
+        restarted.then(resolved)
+        await global.advanceUntilIdle()
+
+        expect(ctrl.get().t).toBe(2)
+        expect(resolved.mock.calls[0][0]).toMatchObject({ finished: true })
+        // The first call is the superseded sequence, which did not finish.
+        expect(onResolve.mock.calls.at(-1)![0]).toMatchObject({
+          finished: true,
+        })
+      })
+
+      it('calls the "loop" prop again', async () => {
+        const ctrl = new Controller({ t: 0 })
+        const loop = vi.fn(() => true)
+        await restartMidSequence(ctrl, { loop })
+        loop.mockClear()
+        await global.advanceByTime(2000)
+
+        expect(loop).toHaveBeenCalled()
+      })
+
+      it('keeps looping after a pause and resume', async () => {
+        const ctrl = new Controller({ t: 0 })
+        const loop = vi.fn(() => true)
+        await restartMidSequence(ctrl, { loop })
+        ctrl.pause()
+        await global.advanceByTime(500)
+        loop.mockClear()
+        ctrl.resume()
+        await global.advanceByTime(2000)
+
+        expect(loop).toHaveBeenCalled()
+      })
+
+      it('stops looping when restarted with "loop: false"', async () => {
+        const ctrl = new Controller({ t: 0 })
+        const loop = vi.fn(() => true)
+        ctrl.start(sequence({ loop }))
+        await global.advanceUntil(() => ctrl.springs.t.goal === 2)
+        ctrl.start(sequence({ loop: false }))
+        loop.mockClear()
+        await global.advanceUntilIdle()
+
+        expect(loop).not.toHaveBeenCalled()
+        expect(ctrl.idle).toBeTruthy()
+      })
+
+      it.each([
+        ['stop()', (ctrl: Controller) => ctrl.stop()],
+        ['stop(true)', (ctrl: Controller) => ctrl.stop(true)],
+        [
+          'the "cancel" prop',
+          (ctrl: Controller) => ctrl.start({ cancel: true }),
+        ],
+      ])('stops looping when ended with %s', async (_, end) => {
+        const ctrl = new Controller({ t: 0 })
+        const loop = vi.fn(() => true)
+        await restartMidSequence(ctrl, { loop })
+        await global.advance(3)
+        end(ctrl)
+        loop.mockClear()
+        await global.advanceByTime(2000)
+
+        expect(loop).not.toHaveBeenCalled()
+        expect(ctrl.idle).toBeTruthy()
+      })
+    })
+
     describe('when "finish" is called while paused', () => {
       async function getPausedLoop() {
         const ctrl = new Controller<{ t: number }>({
@@ -687,6 +779,18 @@ describe('Controller', () => {
       await global.advanceUntilIdle()
       expect(ctrl['_state'].timeouts.size).toBe(0)
       expect(t['_state'].timeouts.size).toBe(0)
+    })
+
+    it('resolves a stopped async "to" with its current values', async () => {
+      const ctrl = new Controller({ t: 0 })
+      const promise = ctrl.start({
+        to: [{ t: 1 }, { t: 2 }],
+        config: { duration: 200 },
+      })
+      await global.advanceUntil(() => ctrl.get().t > 0.5)
+      ctrl.stop()
+
+      expect((await promise).value).toEqual(ctrl.get())
     })
 
     it('stops the active runAsync call', async () => {

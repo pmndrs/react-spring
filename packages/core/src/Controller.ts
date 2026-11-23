@@ -435,34 +435,29 @@ export async function flushUpdate(
   const cancel =
     props.cancel === true || getDefaultProp(props, 'cancel') === true
 
+  let chain: AsyncResult | undefined
   if (asyncTo || (cancel && state.asyncId)) {
-    promises.push(
-      scheduleProps(++ctrl['_lastAsyncId'], {
-        target: ctrl,
-        props,
-        state,
-        actions: {
-          pause: noop,
-          resume: noop,
-          start(props, resolve) {
-            if (cancel) {
-              stopAsync(state, ctrl['_lastAsyncId'])
-              resolve(getCancelledResult(ctrl))
-            } else {
-              props.onRest = onRest
-              resolve(
-                runAsync(
-                  asyncTo as SpringChain | SpringToFn,
-                  props,
-                  state,
-                  ctrl
-                )
-              )
-            }
-          },
+    chain = scheduleProps(++ctrl['_lastAsyncId'], {
+      target: ctrl,
+      props,
+      state,
+      actions: {
+        pause: noop,
+        resume: noop,
+        start(props, resolve) {
+          if (cancel) {
+            stopAsync(state, ctrl['_lastAsyncId'])
+            resolve(getCancelledResult(ctrl))
+          } else {
+            props.onRest = onRest
+            resolve(
+              runAsync(asyncTo as SpringChain | SpringToFn, props, state, ctrl)
+            )
+          }
         },
-      })
-    )
+      },
+    })
+    promises.push(chain)
   }
 
   // Pause after updating each spring, so they can be resumed separately
@@ -475,7 +470,16 @@ export async function flushUpdate(
     })
   }
 
-  const result = getCombinedResult<any>(ctrl, await Promise.all(promises))
+  const results = await Promise.all(promises)
+  // With an async `to`, the springs' own results describe the animation they
+  // were in when this update arrived, which this update's chain then
+  // retargets. Only the chain knows whether the update finished. Its value
+  // is rebuilt from `ctrl.get()` because a stopped chain carries the
+  // Controller itself there.
+  const chainResult = asyncTo && (await chain!)
+  const result = chainResult
+    ? { ...chainResult, value: ctrl.get() }
+    : getCombinedResult<any>(ctrl, results)
   if (
     loop &&
     result.finished &&
