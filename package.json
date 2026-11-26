@@ -71,8 +71,8 @@
     "@types/react-dom": "^19.3.0",
     "@types/react-refresh": "^0.14.7",
     "@types/three": "0.187.0",
-    "@vitest/browser-playwright": "^5.1.1",
-    "@vitest/coverage-v8": "^5.1.1",
+    "@vitest/browser-playwright": "^5.1.2",
+    "@vitest/coverage-v8": "^5.1.2",
     "flush-microtasks": "1.0.1",
     "husky": "9.1.7",
     "oxfmt": "0.79.0",
@@ -87,7 +87,7 @@
     "turbo": "2.11.13",
     "typescript": "7.0.2",
     "vite": "8.3.8",
-    "vitest": "^5.1.1",
+    "vitest": "^5.1.2",
     "vitest-browser-react": "^2.3.0"
   },
   "publishConfig": {
