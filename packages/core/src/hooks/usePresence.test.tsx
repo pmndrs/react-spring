@@ -4,6 +4,8 @@ import { is } from '@react-spring/shared'
 import { Presence, UsePresenceProps } from '../types'
 import { usePresence } from './usePresence'
 import type { SpringRef } from '../SpringRef'
+import type { SpringValue } from '../SpringValue'
+import { renderWithFastRefresh } from '../../test/fastRefresh'
 
 type Props = UsePresenceProps | (() => UsePresenceProps)
 
@@ -106,6 +108,42 @@ describe('usePresence', () => {
     await update(true, props, [])
     expect(presence!.phase).toBe('enter')
     expect(api).toHaveProperty('start')
+  })
+
+  // Regression test for https://github.com/pmndrs/react-spring/issues/2678
+  it('finishes its enter animation after a Fast Refresh edit', async () => {
+    let n!: SpringValue<number>
+    const { edit } = await renderWithFastRefresh(
+      () =>
+        function Component() {
+          n = usePresence(true, { ...props, config: { duration: 100 } })!
+            .springs.n
+          return null
+        }
+    )
+    await global.advanceUntil(() => n.get() > 0.5)
+
+    edit()
+    await global.advanceUntilIdle()
+
+    expect(n.get()).toBe(1)
+  })
+
+  it('stops animating when the component unmounts', async () => {
+    let n!: SpringValue<number>
+    function Component() {
+      n = usePresence(true, { ...props, config: { duration: 100 } })!.springs.n
+      return null
+    }
+    const view = await render(<Component />)
+    await global.advanceUntil(() => n.get() > 0.5)
+
+    await view.unmount()
+    const valueAtUnmount = n.get()
+    await global.advance()
+
+    expect(n.idle).toBe(true)
+    expect(n.get()).toBe(valueAtUnmount)
   })
 })
 

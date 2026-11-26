@@ -9,6 +9,7 @@ import {
   usePrev,
   each,
   useIsomorphicLayoutEffect,
+  useUnmount,
 } from '@react-spring/shared'
 
 import {
@@ -153,17 +154,17 @@ export function useTransition(
       ref?.add(t.ctrl)
       t.ctrl.ref = undefined
     })
+  })
 
-    // Destroy all transitions on dismount.
-    return () => {
-      each(usedTransitions.current!, t => {
-        if (t.expired) {
-          clearTimeout(t.expirationId!)
-        }
-        detachRefs(t.ctrl, ref)
-        t.ctrl.stop(true)
-      })
-    }
+  // Destroy all transitions on dismount.
+  useUnmount(() => {
+    each(usedTransitions.current!, t => {
+      if (t.expired) {
+        clearTimeout(t.expirationId!)
+      }
+      detachRefs(t.ctrl, ref)
+      t.ctrl.stop(true)
+    })
   })
 
   // Keys help with reusing transitions between renders.

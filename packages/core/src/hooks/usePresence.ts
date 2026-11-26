@@ -7,8 +7,8 @@ import {
   toArray,
   useForceUpdate,
   useIsomorphicLayoutEffect,
-  useOnce,
   usePrev,
+  useUnmount,
 } from '@react-spring/shared'
 
 import {
@@ -380,7 +380,7 @@ function useEntries(
 
   // The controllers are kept for StrictMode's simulated remount, which
   // replays the effects above.
-  useOnce(() => () => {
+  useUnmount(() => {
     each(ctrls.current, ctrl => {
       detachRefs(ctrl, ref)
       // Lets `replaceRef` reattach an injected ref on remount (#1890).
