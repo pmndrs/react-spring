@@ -5,6 +5,7 @@
 // it to `globalThis` so existing test bodies work unchanged.
 ;(globalThis as { global?: typeof globalThis }).global = globalThis
 
+import './injectFastRefresh'
 import { beforeEach, afterEach, vi } from 'vitest'
 import { act } from 'react'
 import { configure } from 'vitest-browser-react/pure'

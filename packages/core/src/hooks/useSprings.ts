@@ -4,9 +4,9 @@ import {
   is,
   each,
   usePrev,
-  useOnce,
   useForceUpdate,
   useIsomorphicLayoutEffect,
+  useUnmount,
 } from '@react-spring/shared'
 
 import {
@@ -144,7 +144,7 @@ export function useSprings(
   // Backup of the most recently applied updates. The layout effect drains
   // `updates.current` after applying so a parent re-render with unchanged
   // deps doesn't re-apply stale entries (see #2376). StrictMode mounts
-  // twice (mount → simulated unmount via `useOnce` cleanup → mount), and the
+  // twice (mount → simulated unmount via `useUnmount` → mount), and the
   // second mount needs to restart the controllers after they've been stopped,
   // so we keep this snapshot to fall back to. Reset each render so a snapshot
   // from a previous commit can never bleed into a subsequent layout effect.
@@ -278,7 +278,7 @@ export function useSprings(
   })
 
   // Cancel the animations of all controllers on unmount.
-  useOnce(() => () => {
+  useUnmount(() => {
     each(state.ctrls, ctrl => ctrl.stop(true))
   })
 

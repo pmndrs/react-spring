@@ -7,6 +7,7 @@ import { SpringValue } from '../SpringValue'
 import { SpringRef } from '../SpringRef'
 import { useSpring } from './useSpring'
 import { useSpringRef } from './useSpringRef'
+import { renderWithFastRefresh } from '../../test/fastRefresh'
 
 describe('useSpring', () => {
   let springs: Lookup<SpringValue>
@@ -515,6 +516,52 @@ describe('useSpring', () => {
       await advanceUntilIdle()
       expect(spring.get()).toBe(0)
     })
+  })
+
+  // Regression test for https://github.com/pmndrs/react-spring/issues/2678
+  it('keeps a looped animation running after a Fast Refresh edit', async () => {
+    let x!: SpringValue<number>
+    const { edit } = await renderWithFastRefresh(
+      () =>
+        function Component() {
+          x = useSpring({
+            from: { x: 0 },
+            to: { x: 100 },
+            loop: true,
+            config: { duration: 100 },
+          }).x
+          return null
+        }
+    )
+    await advanceUntil(() => x.get() > 50)
+
+    edit()
+    const valueAtEdit = x.get()
+    await advance()
+
+    expect(x.idle).toBe(false)
+    expect(x.get()).not.toBe(valueAtEdit)
+  })
+
+  it('stops animating when the component unmounts', async () => {
+    let x!: SpringValue<number>
+    function Component() {
+      x = useSpring({
+        from: { x: 0 },
+        to: { x: 100 },
+        config: { duration: 100 },
+      }).x
+      return null
+    }
+    const { unmount } = await render(<Component />)
+    await advanceUntil(() => x.get() > 50)
+
+    await unmount()
+    const valueAtUnmount = x.get()
+    await advance()
+
+    expect(x.idle).toBe(true)
+    expect(x.get()).toBe(valueAtUnmount)
   })
 })
 

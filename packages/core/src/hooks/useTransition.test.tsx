@@ -7,6 +7,8 @@ import { useSpring } from './useSpring'
 import { useChain } from './useChain'
 import { SpringRef } from '../SpringRef'
 import { Controller } from '../Controller'
+import type { SpringValue } from '../SpringValue'
+import { renderWithFastRefresh } from '../../test/fastRefresh'
 import { act } from 'react'
 
 describe('useTransition', () => {
@@ -707,6 +709,55 @@ describe('useTransition', () => {
         expect(getValues()).toEqual([])
       }
     )
+  })
+
+  // Regression test for https://github.com/pmndrs/react-spring/issues/2678
+  it('finishes its enter animation after a Fast Refresh edit', async () => {
+    let x!: SpringValue<number>
+    const { edit } = await renderWithFastRefresh(
+      () =>
+        function Component() {
+          useTransition([1], {
+            from: { x: 0 },
+            enter: { x: 100 },
+            config: { duration: 100 },
+          })(style => {
+            x = style.x
+            return null
+          })
+          return null
+        }
+    )
+    await global.advanceUntil(() => x.get() > 50)
+
+    edit()
+    await global.advanceUntilIdle()
+
+    expect(x.get()).toBe(100)
+  })
+
+  it('stops animating when the component unmounts', async () => {
+    let x!: SpringValue<number>
+    function Component() {
+      useTransition([1], {
+        from: { x: 0 },
+        enter: { x: 100 },
+        config: { duration: 100 },
+      })(style => {
+        x = style.x
+        return null
+      })
+      return null
+    }
+    const view = await render(<Component />)
+    await global.advanceUntil(() => x.get() > 50)
+
+    await view.unmount()
+    const valueAtUnmount = x.get()
+    await global.advance()
+
+    expect(x.idle).toBe(true)
+    expect(x.get()).toBe(valueAtUnmount)
   })
 })
 
