@@ -14,7 +14,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-feather": "2.0.10",
-    "styled-components": "6.6.0"
+    "styled-components": "6.7.0"
   },
   "scripts": {
     "dev": "vite",
