@@ -37,11 +37,16 @@ type AnimatedProp<T> = [T, T] extends [infer T, infer DT]
       : DT extends object
         ? [AssignableKeys<DT, CSSProperties>] extends [never]
           ? DT extends ReadonlyArray<any>
-            ? AnimatedStyles<DT>
+            ? AnimatedStyles<DT> | AnimatedArray<DT>
             : DT
           : AnimatedStyle<T>
         : DT | AnimatedLeaf<T>
   : never
+
+// A fluid value for an array prop like `[x, y, z]`. Optional elements
+// (`order?` in `Euler`, `z?` in `Vector3`) add `undefined` to the element type.
+type AnimatedArray<T extends ReadonlyArray<any>> =
+  T extends ReadonlyArray<number | string | undefined> ? FluidValue<T> : never
 
 // An animated array of style objects
 type AnimatedStyles<T extends ReadonlyArray<any>> = {
