@@ -10,7 +10,7 @@ import {
 } from '@react-spring/shared'
 import { SpringValue, Animatable } from '@react-spring/core'
 
-import { a } from './index'
+import { a, useSpring } from './index'
 
 let mockRaf: MockRaf
 beforeEach(() => {
@@ -165,6 +165,25 @@ describe('animated component', () => {
     translate3d.set([11, 21, 31] as const)
     mockRaf.step()
     expect(wrapper.style.transform).toBe('translate3d(11px, 21px, 31px)')
+  })
+  it('moves a spring-driven element away from a unitless zero transform', async () => {
+    function Menu({ open }: { open: boolean }) {
+      const style = useSpring({
+        transform: open ? 'translateY(0)' : 'translateY(-100%)',
+        config: { duration: 100 },
+      })
+      return <a.div data-testid="menu" style={{ ...style, height: 100 }} />
+    }
+
+    const { getByTestId, rerender } = await render(<Menu open />)
+    const menu = getByTestId('menu').element()
+    const initialTop = menu.getBoundingClientRect().top
+    await rerender(<Menu open={false} />)
+    mockRaf.step({ count: 3 })
+
+    const intermediateTop = menu.getBoundingClientRect().top
+    expect(intermediateTop).toBeLessThan(initialTop)
+    expect(intermediateTop).toBeGreaterThan(initialTop - 100)
   })
   it('sets default units to unit-less values passed as transform functions', async () => {
     const { getByTestId } = await render(

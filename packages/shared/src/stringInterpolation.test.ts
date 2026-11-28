@@ -41,3 +41,23 @@ it('parses a standalone negative decimal without an integer part', () => {
   expect(interpolate(0.5)).toBe('translateY(4.75px)')
   expect(interpolate(1)).toBe('translateY(10px)')
 })
+
+it('interpolates a unitless zero to a percentage inside a transform', () => {
+  const interpolate = createStringInterpolator({
+    range: [0, 1],
+    output: ['translateY(0)', 'translateY(-100%)'],
+  })
+
+  expect(interpolate(0)).toBe('translateY(0)')
+  expect(interpolate(0.5)).toBe('translateY(-50%)')
+  expect(interpolate(1)).toBe('translateY(-100%)')
+})
+
+it('finds a missing unit at its own position in a compound string', () => {
+  const interpolate = createStringInterpolator({
+    range: [0, 1],
+    output: ['translate(0, 2px) scale(1)', 'translate(100%, 4px) scale(2)'],
+  })
+
+  expect(interpolate(0.5)).toBe('translate(50%, 3px) scale(1.5)')
+})
