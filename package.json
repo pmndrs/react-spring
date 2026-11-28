@@ -97,7 +97,7 @@
     "type": "opencollective",
     "url": "https://opencollective.com/pmndrs"
   },
-  "packageManager": "pnpm@12.21.0",
+  "packageManager": "pnpm@12.23.0",
   "engines": {
     "node": ">=26.13.1"
   }
