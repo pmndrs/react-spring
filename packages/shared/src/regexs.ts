@@ -7,8 +7,11 @@ export const numberRegex = /[+\-]?(?:(?:\d*\.\d+)|\d+)(?:[eE][+\-]?\d+)?/g
 export const colorRegex =
   /(#(?:[0-9a-f]{2}){2,4}|(#[0-9a-f]{3})|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi
 
-// Gets numbers with units when specified
-export const unitRegex = new RegExp(`(${numberRegex.source})(%|[a-z]+)`, 'i')
+// A numeric token and its own optional unit
+export const numberWithUnitRegex = new RegExp(
+  `(${numberRegex.source})(%|[a-z]+)?`,
+  'gi'
+)
 
 // get values of rgba string
 export const rgbaRegex =
