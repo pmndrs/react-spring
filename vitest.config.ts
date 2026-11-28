@@ -115,11 +115,17 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'types',
-          include: ['packages/**/src/**/*.test-d.{ts,tsx}'],
+          include: [
+            'packages/**/src/**/*.test-d.{ts,tsx}',
+            'targets/**/src/**/*.test-d.{ts,tsx}',
+          ],
           typecheck: {
             enabled: true,
             tsconfig: './tsconfig.json',
-            include: ['packages/**/src/**/*.test-d.{ts,tsx}'],
+            include: [
+              'packages/**/src/**/*.test-d.{ts,tsx}',
+              'targets/**/src/**/*.test-d.{ts,tsx}',
+            ],
           },
         },
       },
