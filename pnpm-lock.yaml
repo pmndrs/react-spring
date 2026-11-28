@@ -324,13 +324,13 @@ importers:
         version: 2.1.7(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react95:
         specifier: 4.0.0
-        version: 4.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
+        version: 4.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.7.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1))
       sass:
         specifier: 1.108.2
         version: 1.108.2
       styled-components:
-        specifier: 6.6.0
-        version: 6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 6.7.0
+        version: 6.7.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       three:
         specifier: 0.187.0
         version: 0.187.0
@@ -4995,8 +4995,8 @@ packages:
   style-to-object@2.0.2:
     resolution: {integrity: sha512-QmbXPUylqU80HAgTOJeEOdbA40W9KtxmjMhQy+tq+b8F2aoh3aQLuy82hh2jm2qsC9hR9eI0+eQidTMydKcqRA==}
 
-  styled-components@6.6.0:
-    resolution: {integrity: sha512-drKKsqvDBxVRn4ySU67iQ5nQBuo/1xyYeBfdhDde112PkqrS3+95KPnpDs5hFRcmrW+q6+gbyywYYYR14oWFtw==}
+  styled-components@6.7.0:
+    resolution: {integrity: sha512-bXQPHHWVSyNtLfCd8GM4yg4i5Cq+y7pDuj5gs/hm5+3vQ3G4QieAQ9QybKl4p1THR3qqEiDa/w4kqVDjZ/sO5Q==}
     engines: {node: '>= 16'}
     peerDependencies:
       css-to-react-native: '>= 3.2.0'
@@ -9698,11 +9698,11 @@ snapshots:
     optionalDependencies:
       react-dom: 19.3.1(react@19.3.1)
 
-  react95@4.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)):
+  react95@4.0.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(styled-components@6.7.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)):
     dependencies:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
-      styled-components: 6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      styled-components: 6.7.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
 
   react@19.3.1: {}
 
@@ -10138,7 +10138,7 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.9
 
-  styled-components@6.6.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
+  styled-components@6.7.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       '@emotion/is-prop-valid': 1.4.0
       '@types/stylis': 4.2.7
